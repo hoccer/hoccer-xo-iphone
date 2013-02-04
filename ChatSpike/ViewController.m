@@ -100,10 +100,10 @@
 
 - (IBAction)sendPressed:(id)sender
 {
+    [textField resignFirstResponder];
     if (textField.text.length > 0) {
         [chatController addMessage: textField.text];
         textField.text = @"";
-        [textField resignFirstResponder];
         [chatTable reloadData];
         [self scrollToBottom];
     }
