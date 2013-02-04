@@ -16,7 +16,7 @@
     NSManagedObjectContext * managedObjectContext;
 }
 
-@property (nonatomic, retain) NSMutableArray * chatMessages;
+@property (nonatomic, retain) NSMutableArray * messages;
 
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *) managedObjectContext;

@@ -11,7 +11,7 @@
 
 @implementation ChatController
 
-@synthesize chatMessages;
+@synthesize messages;
 
 - (id) init {
     self = [super init];
@@ -27,13 +27,13 @@
 		
 		// Execute the fetch -- create a mutable copy of the result.
 		NSError *error = nil;
-		chatMessages = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+		messages = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
         if (error) {
             NSLog(@"ERROR: %@", error);
         }
         
-		if (chatMessages == nil) {
-            self.chatMessages = [[NSMutableArray alloc] init];
+		if (messages == nil) {
+            self.messages = [[NSMutableArray alloc] init];
 		}
     }
     return self;
@@ -44,7 +44,7 @@
 	
     message.text = text;
     
-	[chatMessages addObject: message];
+	[messages addObject: message];
 	
 	NSError *error;
 	[managedObjectContext save:&error];
@@ -132,7 +132,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	NSInteger rows = 0;
 	if (section == 0) {
-		rows = [chatMessages count];
+		rows = [messages count];
 	}
 	return rows;
 }
@@ -146,7 +146,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    ChatMessage * message = [self.chatMessages objectAtIndex:indexPath.row];
+    ChatMessage * message = [self.messages objectAtIndex:indexPath.row];
     
     cell.textLabel.text = message.text;
     return cell;
