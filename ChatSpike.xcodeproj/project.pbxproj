@@ -1,0 +1,319 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6338A78F16BFE4F90056EF97 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6338A78E16BFE4F90056EF97 /* UIKit.framework */; };
+		6338A79116BFE4F90056EF97 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6338A79016BFE4F90056EF97 /* Foundation.framework */; };
+		6338A79316BFE4F90056EF97 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6338A79216BFE4F90056EF97 /* CoreGraphics.framework */; };
+		6338A79916BFE4F90056EF97 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6338A79716BFE4F90056EF97 /* InfoPlist.strings */; };
+		6338A79B16BFE4F90056EF97 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6338A79A16BFE4F90056EF97 /* main.m */; };
+		6338A79F16BFE4F90056EF97 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6338A79E16BFE4F90056EF97 /* AppDelegate.m */; };
+		6338A7A116BFE4F90056EF97 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6338A7A016BFE4F90056EF97 /* Default.png */; };
+		6338A7A316BFE4F90056EF97 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6338A7A216BFE4F90056EF97 /* Default@2x.png */; };
+		6338A7A516BFE4FA0056EF97 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6338A7A416BFE4FA0056EF97 /* Default-568h@2x.png */; };
+		6338A7A816BFE4FA0056EF97 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6338A7A716BFE4FA0056EF97 /* ViewController.m */; };
+		6338A7AB16BFE4FA0056EF97 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6338A7A916BFE4FA0056EF97 /* ViewController_iPhone.xib */; };
+		6338A7AE16BFE4FA0056EF97 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6338A7AC16BFE4FA0056EF97 /* ViewController_iPad.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6338A78B16BFE4F90056EF97 /* ChatSpike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSpike.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6338A78E16BFE4F90056EF97 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6338A79016BFE4F90056EF97 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6338A79216BFE4F90056EF97 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6338A79616BFE4F90056EF97 /* ChatSpike-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ChatSpike-Info.plist"; sourceTree = "<group>"; };
+		6338A79816BFE4F90056EF97 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6338A79A16BFE4F90056EF97 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6338A79C16BFE4F90056EF97 /* ChatSpike-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChatSpike-Prefix.pch"; sourceTree = "<group>"; };
+		6338A79D16BFE4F90056EF97 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		6338A79E16BFE4F90056EF97 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6338A7A016BFE4F90056EF97 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		6338A7A216BFE4F90056EF97 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		6338A7A416BFE4FA0056EF97 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		6338A7A616BFE4FA0056EF97 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		6338A7A716BFE4FA0056EF97 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		6338A7AA16BFE4FA0056EF97 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
+		6338A7AD16BFE4FA0056EF97 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6338A78816BFE4F90056EF97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6338A78F16BFE4F90056EF97 /* UIKit.framework in Frameworks */,
+				6338A79116BFE4F90056EF97 /* Foundation.framework in Frameworks */,
+				6338A79316BFE4F90056EF97 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6338A78216BFE4F90056EF97 = {
+			isa = PBXGroup;
+			children = (
+				6338A79416BFE4F90056EF97 /* ChatSpike */,
+				6338A78D16BFE4F90056EF97 /* Frameworks */,
+				6338A78C16BFE4F90056EF97 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6338A78C16BFE4F90056EF97 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6338A78B16BFE4F90056EF97 /* ChatSpike.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6338A78D16BFE4F90056EF97 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6338A78E16BFE4F90056EF97 /* UIKit.framework */,
+				6338A79016BFE4F90056EF97 /* Foundation.framework */,
+				6338A79216BFE4F90056EF97 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6338A79416BFE4F90056EF97 /* ChatSpike */ = {
+			isa = PBXGroup;
+			children = (
+				6338A79D16BFE4F90056EF97 /* AppDelegate.h */,
+				6338A79E16BFE4F90056EF97 /* AppDelegate.m */,
+				6338A7A616BFE4FA0056EF97 /* ViewController.h */,
+				6338A7A716BFE4FA0056EF97 /* ViewController.m */,
+				6338A7A916BFE4FA0056EF97 /* ViewController_iPhone.xib */,
+				6338A7AC16BFE4FA0056EF97 /* ViewController_iPad.xib */,
+				6338A79516BFE4F90056EF97 /* Supporting Files */,
+			);
+			path = ChatSpike;
+			sourceTree = "<group>";
+		};
+		6338A79516BFE4F90056EF97 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6338A79616BFE4F90056EF97 /* ChatSpike-Info.plist */,
+				6338A79716BFE4F90056EF97 /* InfoPlist.strings */,
+				6338A79A16BFE4F90056EF97 /* main.m */,
+				6338A79C16BFE4F90056EF97 /* ChatSpike-Prefix.pch */,
+				6338A7A016BFE4F90056EF97 /* Default.png */,
+				6338A7A216BFE4F90056EF97 /* Default@2x.png */,
+				6338A7A416BFE4FA0056EF97 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6338A78A16BFE4F90056EF97 /* ChatSpike */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6338A7B116BFE4FA0056EF97 /* Build configuration list for PBXNativeTarget "ChatSpike" */;
+			buildPhases = (
+				6338A78716BFE4F90056EF97 /* Sources */,
+				6338A78816BFE4F90056EF97 /* Frameworks */,
+				6338A78916BFE4F90056EF97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChatSpike;
+			productName = ChatSpike;
+			productReference = 6338A78B16BFE4F90056EF97 /* ChatSpike.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6338A78316BFE4F90056EF97 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Hoccer GmbH";
+			};
+			buildConfigurationList = 6338A78616BFE4F90056EF97 /* Build configuration list for PBXProject "ChatSpike" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6338A78216BFE4F90056EF97;
+			productRefGroup = 6338A78C16BFE4F90056EF97 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6338A78A16BFE4F90056EF97 /* ChatSpike */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6338A78916BFE4F90056EF97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6338A79916BFE4F90056EF97 /* InfoPlist.strings in Resources */,
+				6338A7A116BFE4F90056EF97 /* Default.png in Resources */,
+				6338A7A316BFE4F90056EF97 /* Default@2x.png in Resources */,
+				6338A7A516BFE4FA0056EF97 /* Default-568h@2x.png in Resources */,
+				6338A7AB16BFE4FA0056EF97 /* ViewController_iPhone.xib in Resources */,
+				6338A7AE16BFE4FA0056EF97 /* ViewController_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6338A78716BFE4F90056EF97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6338A79B16BFE4F90056EF97 /* main.m in Sources */,
+				6338A79F16BFE4F90056EF97 /* AppDelegate.m in Sources */,
+				6338A7A816BFE4FA0056EF97 /* ViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6338A79716BFE4F90056EF97 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6338A79816BFE4F90056EF97 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6338A7A916BFE4FA0056EF97 /* ViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6338A7AA16BFE4FA0056EF97 /* en */,
+			);
+			name = ViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		6338A7AC16BFE4FA0056EF97 /* ViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6338A7AD16BFE4FA0056EF97 /* en */,
+			);
+			name = ViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6338A7AF16BFE4FA0056EF97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6338A7B016BFE4FA0056EF97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6338A7B216BFE4FA0056EF97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ChatSpike/ChatSpike-Prefix.pch";
+				INFOPLIST_FILE = "ChatSpike/ChatSpike-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6338A7B316BFE4FA0056EF97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ChatSpike/ChatSpike-Prefix.pch";
+				INFOPLIST_FILE = "ChatSpike/ChatSpike-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6338A78616BFE4F90056EF97 /* Build configuration list for PBXProject "ChatSpike" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6338A7AF16BFE4FA0056EF97 /* Debug */,
+				6338A7B016BFE4FA0056EF97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6338A7B116BFE4FA0056EF97 /* Build configuration list for PBXNativeTarget "ChatSpike" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6338A7B216BFE4FA0056EF97 /* Debug */,
+				6338A7B316BFE4FA0056EF97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6338A78316BFE4F90056EF97 /* Project object */;
+}
