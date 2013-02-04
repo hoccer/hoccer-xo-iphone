@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ChatController.h"
 
 @interface ViewController : UIViewController
 
+@property (nonatomic, retain) ChatController * chatController;
+
 @end
+
