@@ -28,9 +28,12 @@
 		// Execute the fetch -- create a mutable copy of the result.
 		NSError *error = nil;
 		chatMessages = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+        if (error) {
+            NSLog(@"ERROR: %@", error);
+        }
         
 		if (chatMessages == nil) {
-			NSLog(@"ERROR: failed to execute fetch request!");
+            self.chatMessages = [[NSMutableArray alloc] init];
 		}
     }
     return self;
