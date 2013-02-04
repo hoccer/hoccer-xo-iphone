@@ -1,5 +1,5 @@
 //
-//  UIButton+Glossy.h
+//  UIButton+GlossyRounded.h
 //  ChatSpike
 //
 //  Created by David Siegel on 04.02.13.
@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIButton (Glossy)
+@interface UIButton (GlossyRounded)
+
+- (void) makeRoundAndGlossy;
 
 @end
