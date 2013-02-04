@@ -21,7 +21,7 @@
 		[request setEntity:entity];
 		
 		// Order the events by creation date, most recent first.
-		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:NO];
+		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending: YES];
 		NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
 		[request setSortDescriptors:sortDescriptors];
 		
@@ -43,11 +43,15 @@
 	ChatMessage * message =  (ChatMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"ChatMessage" inManagedObjectContext: self.managedObjectContext];
 	
     message.text = text;
+    message.creationDate = [NSDate date]; // XXX use server time
     
 	[messages addObject: message];
 	
 	NSError *error;
 	[managedObjectContext save:&error];
+    if (error != nil) {
+        NSLog(@"ERROR - failed to save message: %@", error);
+    }
 }
 
 #pragma mark Core Data Stack

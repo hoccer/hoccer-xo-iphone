@@ -11,6 +11,7 @@
 @implementation ChatMessage
 
 @dynamic text;
+@dynamic creationDate;
 
 @end
 
