@@ -41,7 +41,7 @@
 	
     message.text = text;
     
-	[chatMessages insertObject: message atIndex:0];
+	[chatMessages addObject: message];
 	
 	NSError *error;
 	[managedObjectContext save:&error];
