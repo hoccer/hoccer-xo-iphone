@@ -17,6 +17,9 @@
     IBOutlet UITextField * textField;
     IBOutlet UIButton *    sendButton;
 }
+
+- (void) scrollToBottom;
+
 @end
 
 
@@ -38,12 +41,22 @@
     
     self.chatController = [[ChatController alloc] init];
     chatTable.dataSource = chatController;
+    if (chatController.chatMessages.count > 0) {
+        [chatTable setContentOffset:CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+    }
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) scrollToBottom {
+    if (chatController.chatMessages.count > 0) {
+        NSIndexPath* ipath = [NSIndexPath indexPathForRow: chatController.chatMessages.count - 1 inSection: 0];
+        [chatTable scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
+    }
 }
 
 #pragma mark - Keyboard events
@@ -63,6 +76,7 @@
         frame.size.height -= kbSize.height;
         chatTable.frame = frame;
     }];
+    [self scrollToBottom];
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
@@ -86,10 +100,13 @@
 
 - (IBAction)sendPressed:(id)sender
 {
-    [chatController addMessage: textField.text];
-    textField.text = @"";
-    [textField resignFirstResponder];
-    [chatTable reloadData];
+    if (textField.text.length > 0) {
+        [chatController addMessage: textField.text];
+        textField.text = @"";
+        [textField resignFirstResponder];
+        [chatTable reloadData];
+        [self scrollToBottom];
+    }
 }
 
 @end
