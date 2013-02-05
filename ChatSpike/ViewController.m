@@ -41,7 +41,9 @@
     
     self.chatController = [[ChatController alloc] init];
     chatTable.dataSource = chatController;
-    if (chatController.messages.count > 0) {
+    chatController.tableView = chatTable;
+
+    if (chatController.messageCount > 0) {
         [chatTable setContentOffset:CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX)];
     }
 }
@@ -53,8 +55,8 @@
 }
 
 - (void) scrollToBottom {
-    if (chatController.messages.count > 0) {
-        NSIndexPath* ipath = [NSIndexPath indexPathForRow: chatController.messages.count - 1 inSection: 0];
+    if (chatController.messageCount > 0) {
+        NSIndexPath* ipath = [NSIndexPath indexPathForRow: chatController.messageCount - 1 inSection: 0];
         [chatTable scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
     }
 }
@@ -104,7 +106,6 @@
     if (textField.text.length > 0) {
         [chatController addMessage: textField.text];
         textField.text = @"";
-        [chatTable reloadData];
         [self scrollToBottom];
     }
 }

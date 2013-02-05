@@ -9,14 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@interface ChatController : NSObject <UITableViewDataSource>
+@interface ChatController : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate>
 {
     NSPersistentStoreCoordinator * persistentStoreCoordinator;
     NSManagedObjectModel * managedObjectModel;
     NSManagedObjectContext * managedObjectContext;
+    NSFetchedResultsController * resultController;
 }
 
-@property (nonatomic, retain) NSMutableArray * messages;
+@property (nonatomic, retain) UITableView * tableView;
 
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *) managedObjectContext;
@@ -24,5 +25,6 @@
 - (NSString *)applicationDocumentsDirectory;
 
 - (void) addMessage: (NSString*) text;
+- (unsigned long) messageCount;
 
 @end
