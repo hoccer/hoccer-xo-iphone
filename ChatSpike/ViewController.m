@@ -40,8 +40,12 @@
     textField.clipsToBounds = YES;
     
     self.chatController = [[ChatController alloc] init];
+    
+    // XXX
     chatTable.dataSource = chatController;
+    chatTable.delegate = chatController;
     chatController.tableView = chatTable;
+
 
     if (chatController.messageCount > 0) {
         [chatTable setContentOffset:CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX)];

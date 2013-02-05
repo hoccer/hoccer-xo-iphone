@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@interface ChatController : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate>
+@interface ChatController : NSObject <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate>
 {
     NSPersistentStoreCoordinator * persistentStoreCoordinator;
     NSManagedObjectModel * managedObjectModel;

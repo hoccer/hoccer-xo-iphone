@@ -25,6 +25,8 @@
 		63C3183B16C04531009A8555 /* ChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183A16C04531009A8555 /* ChatMessage.m */; };
 		63C3183D16C045C8009A8555 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C3183C16C045C7009A8555 /* CoreData.framework */; };
 		63C3184016C0496B009A8555 /* ChatMessageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */; };
+		63C3188516C1530E009A8555 /* ChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C3188416C1530D009A8555 /* ChatCell.m */; };
+		63C3188716C156CD009A8555 /* ChatCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C3188616C156CD009A8555 /* ChatCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +56,9 @@
 		63C3183A16C04531009A8555 /* ChatMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessage.m; sourceTree = "<group>"; };
 		63C3183C16C045C7009A8555 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		63C3183F16C0496B009A8555 /* ChatMessageModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatMessageModel.xcdatamodel; sourceTree = "<group>"; };
+		63C3188316C1530D009A8555 /* ChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCell.h; sourceTree = "<group>"; };
+		63C3188416C1530D009A8555 /* ChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatCell.m; sourceTree = "<group>"; };
+		63C3188616C156CD009A8555 /* ChatCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,16 +112,19 @@
 			children = (
 				6338A79D16BFE4F90056EF97 /* AppDelegate.h */,
 				6338A79E16BFE4F90056EF97 /* AppDelegate.m */,
+				63C3188316C1530D009A8555 /* ChatCell.h */,
+				63C3188416C1530D009A8555 /* ChatCell.m */,
+				63C3188616C156CD009A8555 /* ChatCell.xib */,
 				63C3183616C0366E009A8555 /* ChatController.h */,
 				63C3183716C0366E009A8555 /* ChatController.m */,
 				63C3183916C04531009A8555 /* ChatMessage.h */,
 				63C3183A16C04531009A8555 /* ChatMessage.m */,
+				63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */,
 				6338A79516BFE4F90056EF97 /* Supporting Files */,
 				6338A7A616BFE4FA0056EF97 /* ViewController.h */,
 				6338A7A716BFE4FA0056EF97 /* ViewController.m */,
 				6338A7AC16BFE4FA0056EF97 /* ViewController_iPad.xib */,
 				6338A7A916BFE4FA0056EF97 /* ViewController_iPhone.xib */,
-				63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */,
 			);
 			path = ChatSpike;
 			sourceTree = "<group>";
@@ -201,6 +209,7 @@
 				6338A7A516BFE4FA0056EF97 /* Default-568h@2x.png in Resources */,
 				6338A7AB16BFE4FA0056EF97 /* ViewController_iPhone.xib in Resources */,
 				6338A7AE16BFE4FA0056EF97 /* ViewController_iPad.xib in Resources */,
+				63C3188716C156CD009A8555 /* ChatCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +227,7 @@
 				63C3183816C0366E009A8555 /* ChatController.m in Sources */,
 				63C3183B16C04531009A8555 /* ChatMessage.m in Sources */,
 				63C3184016C0496B009A8555 /* ChatMessageModel.xcdatamodeld in Sources */,
+				63C3188516C1530E009A8555 /* ChatCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

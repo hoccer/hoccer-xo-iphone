@@ -8,6 +8,7 @@
 
 #import "ChatController.h"
 #import "ChatMessage.h"
+#import "ChatCell.h"
 
 @implementation ChatController
 
@@ -107,7 +108,7 @@
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell: (ChatCell*)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
 
         case NSFetchedResultsChangeMove:
@@ -219,23 +220,29 @@
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"ChatMessageCell";
-    
-    UITableViewCell *cell = [aTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    ChatCell *cell = (ChatCell*)[aTableView dequeueReusableCellWithIdentifier: [ChatCell reuseIdentifier]];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        NSLog(@"new cell");
+        cell = [ChatCell cell];
+//        cell = [[ChatCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: [ChatCell reuseIdentifier]];
     }
     
     [self configureCell: cell atIndexPath: indexPath];
     return cell;
 }
 
-
-
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ChatMessage * msg = [resultController objectAtIndexPath:indexPath];
-    cell.textLabel.text = msg.text;
+    NSLog(@"height: %f", [ChatCell heightForText: msg.text]);
+    return [ChatCell heightForText: msg.text];
+}
+
+
+- (void)configureCell:(ChatCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    ChatMessage * msg = [resultController objectAtIndexPath:indexPath];
+    cell.label.text = msg.text;
 }
 
 
