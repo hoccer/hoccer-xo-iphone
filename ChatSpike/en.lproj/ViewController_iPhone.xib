@@ -71,6 +71,7 @@
 								<string key="NSFrame">{{253, 9}, {57, 26}}</string>
 								<reference key="NSSuperview" ref="100146246"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
@@ -154,10 +155,10 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIBarStyle">1</int>
-						<array class="NSMutableArray" key="IBUIItems">
+						<array key="IBUIItems">
 							<object class="IBUINavigationItem" id="639217471">
 								<reference key="IBUINavigationBar" ref="355207046"/>
-								<string key="IBUITitle">Hoccer</string>
+								<string key="IBUITitle">HoccerChat</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 						</array>
