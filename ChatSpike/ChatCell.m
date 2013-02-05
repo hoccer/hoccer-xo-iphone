@@ -24,7 +24,6 @@
 
 + (ChatCell *)cell
 {
-    NSLog(@"cell identifier: %@", [self reuseIdentifier]);
     return [[[NSBundle mainBundle] loadNibNamed:[self reuseIdentifier] owner:self options:nil] objectAtIndex:0];
 }
 

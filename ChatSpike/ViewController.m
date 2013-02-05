@@ -36,8 +36,9 @@
     
     [sendButton makeRoundAndGlossy];
     
-    textField.layer.cornerRadius = 17;
-    textField.clipsToBounds = YES;
+    //textField.layer.cornerRadius = 17;
+    //textField.clipsToBounds = YES;
+    textField.delegate = self;
     
     self.chatController = [[ChatController alloc] init];
     
@@ -114,4 +115,11 @@
     }
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)aTextField {
+    if (aTextField == textField) {
+        [self sendPressed: nil];
+        return NO;
+    }
+    return YES;
+}
 @end

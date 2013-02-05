@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ChatController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, retain) ChatController * chatController;
 

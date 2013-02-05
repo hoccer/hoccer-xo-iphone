@@ -17,6 +17,9 @@
 - (id) init {
     self = [super init];
     if (self != nil) {
+
+        [self insertMessageDummies: 1000];
+
         // TODO: create fetched results controller lazily
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		NSEntityDescription *entity = [NSEntityDescription entityForName:@"ChatMessage" inManagedObjectContext: self.managedObjectContext];
@@ -37,20 +40,11 @@
 
         NSError *error;
         BOOL success = [resultController performFetch:&error];
-		// Execute the fetch -- create a mutable copy of the result.
         if ( ! success) {
             NSLog(@"Error fetching chat messages: %@", error);
         }
-        /*
-		messages = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-        if (error) {
-            NSLog(@"ERROR: %@", error);
-        }
         
-		if (messages == nil) {
-            self.messages = [[NSMutableArray alloc] init];
-		}
-        */
+        NSLog(@"chat message count: %lu", self.messageCount);
     }
     return self;
 }
@@ -70,6 +64,49 @@
 
 - (unsigned long) messageCount {
     return [resultController.fetchedObjects count];
+}
+
+- (void) insertMessageDummies: (unsigned long) total {
+    NSArray * dummys = [NSArray arrayWithObjects:
+                        @"Käffchen?"
+                        , @"k, bin in 10min da..."
+                        , @"bis gloich"
+                        , @"Was geht heute abend?"
+                        , @"bin schon verabredet. Aber wir könnten am WE einen trinken gehen. In der Panke ist irgendwie HipHop party... Backyard Joints"
+                        , @"Mein Router ist abgeraucht :-/. Kannst Du ein ordentliches DSL Modem empfehlen?"
+                        , @"Ich würde mal bei den Fritzboxen von AVM gucken. Das ist echt ordentliche Hardware."
+                        , @"Check mal deine mail..."
+                        , @"kewl! Will ich haben."
+                        , nil
+                        ];
+    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] init];
+    [importContext setPersistentStoreCoordinator: self.persistentStoreCoordinator];
+    [importContext setUndoManager:nil];
+
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ChatMessage" inManagedObjectContext: importContext];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setFetchBatchSize:20];
+
+    NSError *error;
+    unsigned long count = [importContext countForFetchRequest: fetchRequest error: &error];
+
+    if (count >= total) {
+        return;
+    }
+
+    do {
+        ChatMessage * message =  (ChatMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"ChatMessage" inManagedObjectContext: importContext];
+
+        message.text = [dummys objectAtIndex: count % dummys.count];
+        message.creationDate = [NSDate date]; // XXX randomize smartly
+    } while (++count < total);
+
+    [importContext save:&error];
+    if (error != nil) {
+        NSLog(@"ERROR - failed to save message: %@", error);
+    }
+
 }
 
 #pragma mark Fetched Results Controller
@@ -222,9 +259,7 @@
 {
     ChatCell *cell = (ChatCell*)[aTableView dequeueReusableCellWithIdentifier: [ChatCell reuseIdentifier]];
     if (cell == nil) {
-        NSLog(@"new cell");
         cell = [ChatCell cell];
-//        cell = [[ChatCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: [ChatCell reuseIdentifier]];
     }
     
     [self configureCell: cell atIndexPath: indexPath];
@@ -234,7 +269,6 @@
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ChatMessage * msg = [resultController objectAtIndexPath:indexPath];
-    NSLog(@"height: %f", [ChatCell heightForText: msg.text]);
     return [ChatCell heightForText: msg.text];
 }
 

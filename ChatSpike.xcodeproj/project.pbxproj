@@ -27,6 +27,7 @@
 		63C3184016C0496B009A8555 /* ChatMessageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */; };
 		63C3188516C1530E009A8555 /* ChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C3188416C1530D009A8555 /* ChatCell.m */; };
 		63C3188716C156CD009A8555 /* ChatCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C3188616C156CD009A8555 /* ChatCell.xib */; };
+		63C3188C16C1B02C009A8555 /* message_dummys.txt in Resources */ = {isa = PBXBuildFile; fileRef = 63C3188B16C1B02B009A8555 /* message_dummys.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		63C3188316C1530D009A8555 /* ChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCell.h; sourceTree = "<group>"; };
 		63C3188416C1530D009A8555 /* ChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatCell.m; sourceTree = "<group>"; };
 		63C3188616C156CD009A8555 /* ChatCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatCell.xib; sourceTree = "<group>"; };
+		63C3188B16C1B02B009A8555 /* message_dummys.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = message_dummys.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,9 +82,6 @@
 		6338A78216BFE4F90056EF97 = {
 			isa = PBXGroup;
 			children = (
-				63C3183C16C045C7009A8555 /* CoreData.framework */,
-				63C3183416C01F43009A8555 /* QuartzCore.framework */,
-				63C3183016C01D20009A8555 /* Helpers */,
 				6338A79416BFE4F90056EF97 /* ChatSpike */,
 				6338A78D16BFE4F90056EF97 /* Frameworks */,
 				6338A78C16BFE4F90056EF97 /* Products */,
@@ -100,9 +99,11 @@
 		6338A78D16BFE4F90056EF97 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6338A78E16BFE4F90056EF97 /* UIKit.framework */,
-				6338A79016BFE4F90056EF97 /* Foundation.framework */,
+				63C3183C16C045C7009A8555 /* CoreData.framework */,
 				6338A79216BFE4F90056EF97 /* CoreGraphics.framework */,
+				6338A79016BFE4F90056EF97 /* Foundation.framework */,
+				63C3183416C01F43009A8555 /* QuartzCore.framework */,
+				6338A78E16BFE4F90056EF97 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -110,6 +111,7 @@
 		6338A79416BFE4F90056EF97 /* ChatSpike */ = {
 			isa = PBXGroup;
 			children = (
+				63C3188B16C1B02B009A8555 /* message_dummys.txt */,
 				6338A79D16BFE4F90056EF97 /* AppDelegate.h */,
 				6338A79E16BFE4F90056EF97 /* AppDelegate.m */,
 				63C3188316C1530D009A8555 /* ChatCell.h */,
@@ -120,11 +122,12 @@
 				63C3183916C04531009A8555 /* ChatMessage.h */,
 				63C3183A16C04531009A8555 /* ChatMessage.m */,
 				63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */,
-				6338A79516BFE4F90056EF97 /* Supporting Files */,
 				6338A7A616BFE4FA0056EF97 /* ViewController.h */,
 				6338A7A716BFE4FA0056EF97 /* ViewController.m */,
 				6338A7AC16BFE4FA0056EF97 /* ViewController_iPad.xib */,
 				6338A7A916BFE4FA0056EF97 /* ViewController_iPhone.xib */,
+				63C3183016C01D20009A8555 /* Helpers */,
+				6338A79516BFE4F90056EF97 /* Supporting Files */,
 			);
 			path = ChatSpike;
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 				63C3183216C01D97009A8555 /* UIButton+GlossyRounded.m */,
 			);
 			name = Helpers;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,6 +214,7 @@
 				6338A7AB16BFE4FA0056EF97 /* ViewController_iPhone.xib in Resources */,
 				6338A7AE16BFE4FA0056EF97 /* ViewController_iPad.xib in Resources */,
 				63C3188716C156CD009A8555 /* ChatCell.xib in Resources */,
+				63C3188C16C1B02C009A8555 /* message_dummys.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
