@@ -19,15 +19,19 @@
 		6338A7A816BFE4FA0056EF97 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6338A7A716BFE4FA0056EF97 /* ViewController.m */; };
 		6338A7AB16BFE4FA0056EF97 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6338A7A916BFE4FA0056EF97 /* ViewController_iPhone.xib */; };
 		6338A7AE16BFE4FA0056EF97 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6338A7AC16BFE4FA0056EF97 /* ViewController_iPad.xib */; };
+		6360F0C016C2940F007A8411 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6360F0BF16C2940F007A8411 /* AutoheightLabel.m */; };
+		6360F0C316C2BD9F007A8411 /* schlumpf_papa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6360F0C116C2BD9F007A8411 /* schlumpf_papa.jpg */; };
+		6360F0C416C2BD9F007A8411 /* schlumpf_schlumpfine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6360F0C216C2BD9F007A8411 /* schlumpf_schlumpfine.jpg */; };
+		6360F0C716C3BF8A007A8411 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6360F0C616C3BF8A007A8411 /* Contact.m */; };
+		6360F0C916C50F50007A8411 /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 6360F0C816C50F50007A8411 /* azrael.png */; };
 		63C3183316C01D97009A8555 /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183216C01D97009A8555 /* UIButton+GlossyRounded.m */; };
 		63C3183516C01F43009A8555 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C3183416C01F43009A8555 /* QuartzCore.framework */; };
 		63C3183816C0366E009A8555 /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183716C0366E009A8555 /* ChatController.m */; };
 		63C3183B16C04531009A8555 /* ChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183A16C04531009A8555 /* ChatMessage.m */; };
 		63C3183D16C045C8009A8555 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C3183C16C045C7009A8555 /* CoreData.framework */; };
-		63C3184016C0496B009A8555 /* ChatMessageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */; };
+		63C3184016C0496B009A8555 /* ChatSpikeModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C3183E16C0496B009A8555 /* ChatSpikeModel.xcdatamodeld */; };
 		63C3188516C1530E009A8555 /* ChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C3188416C1530D009A8555 /* ChatCell.m */; };
 		63C3188716C156CD009A8555 /* ChatCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C3188616C156CD009A8555 /* ChatCell.xib */; };
-		63C3188C16C1B02C009A8555 /* message_dummys.txt in Resources */ = {isa = PBXBuildFile; fileRef = 63C3188B16C1B02B009A8555 /* message_dummys.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +52,13 @@
 		6338A7A716BFE4FA0056EF97 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		6338A7AA16BFE4FA0056EF97 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		6338A7AD16BFE4FA0056EF97 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		6360F0BE16C2940F007A8411 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
+		6360F0BF16C2940F007A8411 /* AutoheightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoheightLabel.m; sourceTree = "<group>"; };
+		6360F0C116C2BD9F007A8411 /* schlumpf_papa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_papa.jpg; sourceTree = "<group>"; };
+		6360F0C216C2BD9F007A8411 /* schlumpf_schlumpfine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_schlumpfine.jpg; sourceTree = "<group>"; };
+		6360F0C516C3BF8A007A8411 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
+		6360F0C616C3BF8A007A8411 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
+		6360F0C816C50F50007A8411 /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
 		63C3183116C01D97009A8555 /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIButton+GlossyRounded.h"; path = "ChatSpike/Helpers/UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
 		63C3183216C01D97009A8555 /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIButton+GlossyRounded.m"; path = "ChatSpike/Helpers/UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63C3183416C01F43009A8555 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -56,11 +67,10 @@
 		63C3183916C04531009A8555 /* ChatMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessage.h; sourceTree = "<group>"; };
 		63C3183A16C04531009A8555 /* ChatMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessage.m; sourceTree = "<group>"; };
 		63C3183C16C045C7009A8555 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		63C3183F16C0496B009A8555 /* ChatMessageModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatMessageModel.xcdatamodel; sourceTree = "<group>"; };
+		63C3183F16C0496B009A8555 /* ChatSpikeModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatSpikeModel.xcdatamodel; sourceTree = "<group>"; };
 		63C3188316C1530D009A8555 /* ChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCell.h; sourceTree = "<group>"; };
 		63C3188416C1530D009A8555 /* ChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatCell.m; sourceTree = "<group>"; };
 		63C3188616C156CD009A8555 /* ChatCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatCell.xib; sourceTree = "<group>"; };
-		63C3188B16C1B02B009A8555 /* message_dummys.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = message_dummys.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,9 +121,13 @@
 		6338A79416BFE4F90056EF97 /* ChatSpike */ = {
 			isa = PBXGroup;
 			children = (
-				63C3188B16C1B02B009A8555 /* message_dummys.txt */,
+				6360F0C816C50F50007A8411 /* azrael.png */,
+				6360F0C116C2BD9F007A8411 /* schlumpf_papa.jpg */,
+				6360F0C216C2BD9F007A8411 /* schlumpf_schlumpfine.jpg */,
 				6338A79D16BFE4F90056EF97 /* AppDelegate.h */,
 				6338A79E16BFE4F90056EF97 /* AppDelegate.m */,
+				6360F0BE16C2940F007A8411 /* AutoheightLabel.h */,
+				6360F0BF16C2940F007A8411 /* AutoheightLabel.m */,
 				63C3188316C1530D009A8555 /* ChatCell.h */,
 				63C3188416C1530D009A8555 /* ChatCell.m */,
 				63C3188616C156CD009A8555 /* ChatCell.xib */,
@@ -121,7 +135,9 @@
 				63C3183716C0366E009A8555 /* ChatController.m */,
 				63C3183916C04531009A8555 /* ChatMessage.h */,
 				63C3183A16C04531009A8555 /* ChatMessage.m */,
-				63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */,
+				63C3183E16C0496B009A8555 /* ChatSpikeModel.xcdatamodeld */,
+				6360F0C516C3BF8A007A8411 /* Contact.h */,
+				6360F0C616C3BF8A007A8411 /* Contact.m */,
 				6338A7A616BFE4FA0056EF97 /* ViewController.h */,
 				6338A7A716BFE4FA0056EF97 /* ViewController.m */,
 				6338A7AC16BFE4FA0056EF97 /* ViewController_iPad.xib */,
@@ -214,7 +230,9 @@
 				6338A7AB16BFE4FA0056EF97 /* ViewController_iPhone.xib in Resources */,
 				6338A7AE16BFE4FA0056EF97 /* ViewController_iPad.xib in Resources */,
 				63C3188716C156CD009A8555 /* ChatCell.xib in Resources */,
-				63C3188C16C1B02C009A8555 /* message_dummys.txt in Resources */,
+				6360F0C316C2BD9F007A8411 /* schlumpf_papa.jpg in Resources */,
+				6360F0C416C2BD9F007A8411 /* schlumpf_schlumpfine.jpg in Resources */,
+				6360F0C916C50F50007A8411 /* azrael.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,8 +249,10 @@
 				63C3183316C01D97009A8555 /* UIButton+GlossyRounded.m in Sources */,
 				63C3183816C0366E009A8555 /* ChatController.m in Sources */,
 				63C3183B16C04531009A8555 /* ChatMessage.m in Sources */,
-				63C3184016C0496B009A8555 /* ChatMessageModel.xcdatamodeld in Sources */,
+				63C3184016C0496B009A8555 /* ChatSpikeModel.xcdatamodeld in Sources */,
 				63C3188516C1530E009A8555 /* ChatCell.m in Sources */,
+				6360F0C016C2940F007A8411 /* AutoheightLabel.m in Sources */,
+				6360F0C716C3BF8A007A8411 /* Contact.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,13 +390,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		63C3183E16C0496B009A8555 /* ChatMessageModel.xcdatamodeld */ = {
+		63C3183E16C0496B009A8555 /* ChatSpikeModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				63C3183F16C0496B009A8555 /* ChatMessageModel.xcdatamodel */,
+				63C3183F16C0496B009A8555 /* ChatSpikeModel.xcdatamodel */,
 			);
-			currentVersion = 63C3183F16C0496B009A8555 /* ChatMessageModel.xcdatamodel */;
-			path = ChatMessageModel.xcdatamodeld;
+			currentVersion = 63C3183F16C0496B009A8555 /* ChatSpikeModel.xcdatamodel */;
+			path = ChatSpikeModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

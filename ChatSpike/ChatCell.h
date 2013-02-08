@@ -9,11 +9,18 @@
 #import <UIKit/UIKit.h>
 
 @interface ChatCell : UITableViewCell
-
-@property (nonatomic,weak) IBOutlet UILabel* label;
+{
+    BOOL isIncoming;
+}
 
 + (ChatCell*) cell;
 + (NSString *)reuseIdentifier;
 + (float) heightForText: (NSString*) text;
+
+- (void) layout: (BOOL) isIncoming;
+
+@property (nonatomic) NSString* messageText;
+@property (nonatomic) UIImage* avatar;
+@property (nonatomic) NSString* nickName;
 
 @end

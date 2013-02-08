@@ -15,6 +15,9 @@
     NSManagedObjectModel * managedObjectModel;
     NSManagedObjectContext * managedObjectContext;
     NSFetchedResultsController * resultController;
+
+    NSString * myNick;
+    UIImage * myAvatar;
 }
 
 @property (nonatomic, retain) UITableView * tableView;

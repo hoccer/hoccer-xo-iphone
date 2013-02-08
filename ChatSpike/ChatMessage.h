@@ -7,6 +7,7 @@
 //
 
 #import <CoreData/CoreData.h>
+#import "Contact.h"
 
 @interface ChatMessage : NSManagedObject
 {
@@ -14,6 +15,7 @@
 }
 
 @property (nonatomic, retain) NSString * text;
-@property (nonatomic, retain) NSString * creationDate;
+@property (nonatomic, retain) NSDate * creationDate;
+@property (nonatomic, retain) Contact * contact;
 
 @end

@@ -12,6 +12,7 @@
 
 @dynamic text;
 @dynamic creationDate;
+@dynamic contact;
 
 @end
 

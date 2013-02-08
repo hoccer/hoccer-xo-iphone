@@ -6,9 +6,12 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+
 #import "ChatController.h"
 #import "ChatMessage.h"
 #import "ChatCell.h"
+#import "Contact.h"
 
 @implementation ChatController
 
@@ -18,7 +21,7 @@
     self = [super init];
     if (self != nil) {
 
-        [self insertMessageDummies: 1000];
+        [self insertDummies: 5000];
 
         // TODO: create fetched results controller lazily
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -43,8 +46,9 @@
         if ( ! success) {
             NSLog(@"Error fetching chat messages: %@", error);
         }
-        
-        NSLog(@"chat message count: %lu", self.messageCount);
+
+        myAvatar = [UIImage imageNamed: @"azrael.png"];
+        myNick = @"Azrael";
     }
     return self;
 }
@@ -66,9 +70,47 @@
     return [resultController.fetchedObjects count];
 }
 
-- (void) insertMessageDummies: (unsigned long) total {
-    NSArray * dummys = [NSArray arrayWithObjects:
-                        @"Käffchen?"
+- (void) insertDummies: (unsigned long) total {
+
+    NSArray * nicks    = @[ @"Schlumpfine", @"Daddy S" ];
+    NSArray * avatars  = @[ @"schlumpf_schlumpfine.jpg", @"schlumpf_papa.jpg" ];
+
+    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] init];
+    [importContext setPersistentStoreCoordinator: self.persistentStoreCoordinator];
+    [importContext setUndoManager:nil];
+
+    NSFetchRequest *contactRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription * contactEntity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: importContext];
+    [contactRequest setEntity:contactEntity];
+
+    NSError *error;
+    unsigned long contactCount = [importContext countForFetchRequest: contactRequest error: &error];
+    if (contactCount == 0) {
+        [self createDirectory: @"avatars" atFilePath: [self applicationDocumentsDirectory]];
+        int index = 0;
+        for (NSString* avatar in avatars) {
+
+            UIImage * image = [UIImage imageNamed: avatar];
+            NSData *imgData = UIImageJPEGRepresentation(image, 1);
+
+            NSString  *path = [[[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"avatars"] stringByAppendingPathComponent: avatar];
+            [imgData writeToFile: path atomically:YES];
+            NSURL * url = [NSURL fileURLWithPath: path];
+            NSString * nick = [nicks objectAtIndex: index++];
+
+            Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
+
+            contact.nickName = nick;
+            contact.avatarURL = [url absoluteString];
+        }
+        [importContext save:&error];
+        if (error != nil) {
+            NSLog(@"ERROR - failed to save message: %@", error);
+        }
+    }
+    NSArray * contacts = [importContext executeFetchRequest: contactRequest error: &error];
+
+    NSArray * messages = @[ @"Käffchen?"
                         , @"k, bin in 10min da..."
                         , @"bis gloich"
                         , @"Was geht heute abend?"
@@ -77,36 +119,93 @@
                         , @"Ich würde mal bei den Fritzboxen von AVM gucken. Das ist echt ordentliche Hardware."
                         , @"Check mal deine mail..."
                         , @"kewl! Will ich haben."
-                        , nil
                         ];
-    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] init];
-    [importContext setPersistentStoreCoordinator: self.persistentStoreCoordinator];
-    [importContext setUndoManager:nil];
 
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ChatMessage" inManagedObjectContext: importContext];
-    [fetchRequest setEntity:entity];
-    [fetchRequest setFetchBatchSize:20];
+    NSFetchRequest *messageRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription * messageEntity = [NSEntityDescription entityForName:@"ChatMessage" inManagedObjectContext: importContext];
+    [messageRequest setEntity:messageEntity];
 
-    NSError *error;
-    unsigned long count = [importContext countForFetchRequest: fetchRequest error: &error];
+    unsigned long messageCount = [importContext countForFetchRequest: messageRequest error: &error];
 
-    if (count >= total) {
+    if (messageCount >= total) {
         return;
     }
 
     do {
         ChatMessage * message =  (ChatMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"ChatMessage" inManagedObjectContext: importContext];
 
-        message.text = [dummys objectAtIndex: count % dummys.count];
-        message.creationDate = [NSDate date]; // XXX randomize smartly
-    } while (++count < total);
+        message.text = [messages objectAtIndex: messageCount % messages.count];
+        message.creationDate = [NSDate date];
+        if (messageCount % 2 == 0) {
+            message.contact = [contacts objectAtIndex: 0];
+            //NSLog(@"contact %@", message.contact);
+        } else {
+            //NSLog(@"no contact %@", message.contact);
+        }
+    } while (++messageCount < total);
 
     [importContext save:&error];
     if (error != nil) {
         NSLog(@"ERROR - failed to save message: %@", error);
     }
 
+}
+
+- (NSArray*) createDummyContacts {
+
+    NSArray * nicks    = @[ @"Schlumpfine", @"Daddy S" ];
+    NSArray * avatars  = @[ @"schlumpf_schlumpfine.jpg", @"schlumpf_papa.jpg" ];
+
+    [self createDirectory: @"avatars" atFilePath: [self applicationDocumentsDirectory]];
+
+    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] init];
+    [importContext setPersistentStoreCoordinator: self.persistentStoreCoordinator];
+    [importContext setUndoManager:nil];
+
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: importContext];
+    [fetchRequest setEntity:entity];
+
+    NSError *error;
+    unsigned long count = [importContext countForFetchRequest: fetchRequest error: &error];
+
+    if (count < [nicks count]) {
+        int index = 0;
+        for (NSString* avatar in avatars) {
+            UIImage * image = [UIImage imageNamed: avatar];
+            NSData *imgData = UIImageJPEGRepresentation(image, 1);
+
+            NSString  *path = [[[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"avatars"] stringByAppendingPathComponent: avatar];
+
+            [imgData writeToFile: path atomically:YES];
+            NSURL * url = [NSURL fileURLWithPath: path];
+            NSString * nick = [nicks objectAtIndex: index++];
+
+            Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
+
+            contact.nickName = nick;
+            contact.avatarURL = [url absoluteString];
+        }
+        [importContext save:&error];
+        if (error != nil) {
+            NSLog(@"ERROR - failed to save message: %@", error);
+        }
+    }
+    return [importContext executeFetchRequest: fetchRequest error: &error];
+}
+
+-(void)createDirectory:(NSString *)directoryName atFilePath:(NSString *)filePath
+{
+    NSString *filePathAndDirectory = [filePath stringByAppendingPathComponent:directoryName];
+    NSError *error;
+
+    if (![[NSFileManager defaultManager] createDirectoryAtPath:filePathAndDirectory
+                                   withIntermediateDirectories:NO
+                                                    attributes:nil
+                                                         error:&error])
+    {
+        NSLog(@"Create directory error: %@", error);
+    }
 }
 
 #pragma mark Fetched Results Controller
@@ -201,7 +300,7 @@
     if (managedObjectModel != nil) {
         return managedObjectModel;
     }
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"ChatMessageModel" ofType:@"momd"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"ChatSpikeModel" ofType:@"momd"];
     NSURL *momURL = [NSURL fileURLWithPath:path];
     managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:momURL];
     return managedObjectModel;
@@ -276,7 +375,12 @@
 - (void)configureCell:(ChatCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     ChatMessage * msg = [resultController objectAtIndexPath:indexPath];
-    cell.label.text = msg.text;
+    [cell layout: msg.contact != nil];
+    cell.messageText = msg.text;
+    cell.nickName = msg.contact != nil ? msg.contact.nickName : myNick;
+    if ( ! msg.contact) {
+        cell.avatar = myAvatar;
+    }
 }
 
 
