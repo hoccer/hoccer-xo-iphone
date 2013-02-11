@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6310F03116C90D5900C29398 /* missing_avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 6310F03016C90D5900C29398 /* missing_avatar.png */; };
 		6338A78F16BFE4F90056EF97 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6338A78E16BFE4F90056EF97 /* UIKit.framework */; };
 		6338A79116BFE4F90056EF97 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6338A79016BFE4F90056EF97 /* Foundation.framework */; };
 		6338A79316BFE4F90056EF97 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6338A79216BFE4F90056EF97 /* CoreGraphics.framework */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6310F03016C90D5900C29398 /* missing_avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = missing_avatar.png; sourceTree = "<group>"; };
 		6338A78B16BFE4F90056EF97 /* ChatSpike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSpike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6338A78E16BFE4F90056EF97 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6338A79016BFE4F90056EF97 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -121,6 +123,7 @@
 		6338A79416BFE4F90056EF97 /* ChatSpike */ = {
 			isa = PBXGroup;
 			children = (
+				6310F03016C90D5900C29398 /* missing_avatar.png */,
 				6360F0C816C50F50007A8411 /* azrael.png */,
 				6360F0C116C2BD9F007A8411 /* schlumpf_papa.jpg */,
 				6360F0C216C2BD9F007A8411 /* schlumpf_schlumpfine.jpg */,
@@ -233,6 +236,7 @@
 				6360F0C316C2BD9F007A8411 /* schlumpf_papa.jpg in Resources */,
 				6360F0C416C2BD9F007A8411 /* schlumpf_schlumpfine.jpg in Resources */,
 				6360F0C916C50F50007A8411 /* azrael.png in Resources */,
+				6310F03116C90D5900C29398 /* missing_avatar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
