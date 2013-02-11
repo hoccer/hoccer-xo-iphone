@@ -11,7 +11,7 @@
 @implementation Contact
 
 @dynamic nickName;
-@dynamic avatarURL;
+@dynamic avatarImage;
 @dynamic messages;
 
 @end

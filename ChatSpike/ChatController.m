@@ -90,18 +90,14 @@
         int index = 0;
         for (NSString* avatar in avatars) {
 
-            UIImage * image = [UIImage imageNamed: avatar];
-            NSData *imgData = UIImageJPEGRepresentation(image, 1);
-
-            NSString  *path = [[[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"avatars"] stringByAppendingPathComponent: avatar];
-            [imgData writeToFile: path atomically:YES];
-            NSURL * url = [NSURL fileURLWithPath: path];
             NSString * nick = [nicks objectAtIndex: index++];
+            UIImage * image = [UIImage imageNamed: avatar];
+            NSData *imageData = UIImageJPEGRepresentation(image, 1);
 
             Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
 
             contact.nickName = nick;
-            contact.avatarURL = [url absoluteString];
+            contact.avatarImage = imageData;
         }
         [importContext save:&error];
         if (error != nil) {
@@ -137,7 +133,7 @@
         message.text = [messages objectAtIndex: messageCount % messages.count];
         message.creationDate = [NSDate date];
         if (messageCount % 2 == 0) {
-            message.contact = [contacts objectAtIndex: 0];
+            message.contact = [contacts objectAtIndex: 1];
             //NSLog(@"contact %@", message.contact);
         } else {
             //NSLog(@"no contact %@", message.contact);
@@ -149,49 +145,6 @@
         NSLog(@"ERROR - failed to save message: %@", error);
     }
 
-}
-
-- (NSArray*) createDummyContacts {
-
-    NSArray * nicks    = @[ @"Schlumpfine", @"Daddy S" ];
-    NSArray * avatars  = @[ @"schlumpf_schlumpfine.jpg", @"schlumpf_papa.jpg" ];
-
-    [self createDirectory: @"avatars" atFilePath: [self applicationDocumentsDirectory]];
-
-    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] init];
-    [importContext setPersistentStoreCoordinator: self.persistentStoreCoordinator];
-    [importContext setUndoManager:nil];
-
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: importContext];
-    [fetchRequest setEntity:entity];
-
-    NSError *error;
-    unsigned long count = [importContext countForFetchRequest: fetchRequest error: &error];
-
-    if (count < [nicks count]) {
-        int index = 0;
-        for (NSString* avatar in avatars) {
-            UIImage * image = [UIImage imageNamed: avatar];
-            NSData *imgData = UIImageJPEGRepresentation(image, 1);
-
-            NSString  *path = [[[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"avatars"] stringByAppendingPathComponent: avatar];
-
-            [imgData writeToFile: path atomically:YES];
-            NSURL * url = [NSURL fileURLWithPath: path];
-            NSString * nick = [nicks objectAtIndex: index++];
-
-            Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
-
-            contact.nickName = nick;
-            contact.avatarURL = [url absoluteString];
-        }
-        [importContext save:&error];
-        if (error != nil) {
-            NSLog(@"ERROR - failed to save message: %@", error);
-        }
-    }
-    return [importContext executeFetchRequest: fetchRequest error: &error];
 }
 
 -(void)createDirectory:(NSString *)directoryName atFilePath:(NSString *)filePath
@@ -378,9 +331,7 @@
     [cell layout: msg.contact != nil];
     cell.messageText = msg.text;
     cell.nickName = msg.contact != nil ? msg.contact.nickName : myNick;
-    if ( ! msg.contact) {
-        cell.avatar = myAvatar;
-    }
+    cell.avatar = msg.contact != nil ? [UIImage imageWithData: msg.contact.avatarImage] : myAvatar;
 }
 
 

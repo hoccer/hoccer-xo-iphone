@@ -14,7 +14,7 @@
 }
 
 @property (nonatomic, retain) NSString * nickName;
-@property (nonatomic, retain) NSString * avatarURL;
+@property (nonatomic, retain) NSData * avatarImage;
 @property (nonatomic, retain) NSMutableSet * messages;
 
 @end
