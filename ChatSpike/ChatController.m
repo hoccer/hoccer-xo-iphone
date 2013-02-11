@@ -86,18 +86,12 @@
     NSError *error;
     unsigned long contactCount = [importContext countForFetchRequest: contactRequest error: &error];
     if (contactCount == 0) {
-        [self createDirectory: @"avatars" atFilePath: [self applicationDocumentsDirectory]];
         int index = 0;
         for (NSString* avatar in avatars) {
 
-            NSString * nick = [nicks objectAtIndex: index++];
-            UIImage * image = [UIImage imageNamed: avatar];
-            NSData *imageData = UIImageJPEGRepresentation(image, 1);
-
             Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
-
-            contact.nickName = nick;
-            contact.avatarImage = imageData;
+            contact.nickName = [nicks objectAtIndex: index++];
+            contact.avatarImage = UIImageJPEGRepresentation([UIImage imageNamed: avatar], 1.0);
         }
         [importContext save:&error];
         if (error != nil) {
@@ -133,10 +127,7 @@
         message.text = [messages objectAtIndex: messageCount % messages.count];
         message.creationDate = [NSDate date];
         if (messageCount % 2 == 0) {
-            message.contact = [contacts objectAtIndex: 1];
-            //NSLog(@"contact %@", message.contact);
-        } else {
-            //NSLog(@"no contact %@", message.contact);
+            message.contact = [contacts objectAtIndex: 0];
         }
     } while (++messageCount < total);
 
@@ -145,20 +136,6 @@
         NSLog(@"ERROR - failed to save message: %@", error);
     }
 
-}
-
--(void)createDirectory:(NSString *)directoryName atFilePath:(NSString *)filePath
-{
-    NSString *filePathAndDirectory = [filePath stringByAppendingPathComponent:directoryName];
-    NSError *error;
-
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:filePathAndDirectory
-                                   withIntermediateDirectories:NO
-                                                    attributes:nil
-                                                         error:&error])
-    {
-        NSLog(@"Create directory error: %@", error);
-    }
 }
 
 #pragma mark Fetched Results Controller
