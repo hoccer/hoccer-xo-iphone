@@ -1,0 +1,9 @@
+h1. iPhone Chat Spikes
+
+h2. ChatSpike
+
+This is the first spike. It is a single view application using core data. It implements a simple chat view with text messages, avatar images and nick names.
+
+h2. Hoccenger
+
+A second spike using a navigation controller with a master view for contacts and a detail view for the actual chat dialog. It uses storyboards to implement the user interface and a refactored version of the ChatSpike dialog view.

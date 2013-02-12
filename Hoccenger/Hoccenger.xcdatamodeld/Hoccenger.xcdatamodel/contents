@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Contact">
+        <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="lastMessageTime" optional="YES" attributeType="Date">
+            <userInfo/>
+        </attribute>
+        <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="contact" inverseEntity="Message" syncable="YES"/>
+        <userInfo/>
+    </entity>
+    <entity name="Message" syncable="YES">
+        <attribute name="isOutgoing" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Contact" positionX="261" positionY="189" width="128" height="105"/>
+        <element name="Message" positionX="160" positionY="192" width="128" height="105"/>
+    </elements>
+</model>

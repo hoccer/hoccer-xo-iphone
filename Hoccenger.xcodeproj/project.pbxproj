@@ -1,0 +1,375 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
+		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
+		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
+		63AEE2DE16CA4D0200522F92 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DD16CA4D0200522F92 /* CoreData.framework */; };
+		63AEE2E416CA4D0200522F92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2E216CA4D0200522F92 /* InfoPlist.strings */; };
+		63AEE2E616CA4D0200522F92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2E516CA4D0200522F92 /* main.m */; };
+		63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2E916CA4D0200522F92 /* AppDelegate.m */; };
+		63AEE2EC16CA4D0200522F92 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2EB16CA4D0200522F92 /* Default.png */; };
+		63AEE2EE16CA4D0300522F92 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2ED16CA4D0300522F92 /* Default@2x.png */; };
+		63AEE2F016CA4D0300522F92 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2EF16CA4D0300522F92 /* Default-568h@2x.png */; };
+		63AEE2F316CA4D0300522F92 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */; };
+		63AEE2F616CA4D0300522F92 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */; };
+		63AEE2F916CA4D0300522F92 /* Hoccenger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2F716CA4D0300522F92 /* Hoccenger.xcdatamodeld */; };
+		63AEE2FC16CA4D0300522F92 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FB16CA4D0300522F92 /* ContactListViewController.m */; };
+		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
+		63AEE30816CA566B00522F92 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30716CA566B00522F92 /* Contact.m */; };
+		63AEE30B16CA6B1900522F92 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* Message.m */; };
+		63D4916516CA999300FD395F /* schlumpf_papa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63D4916316CA999300FD395F /* schlumpf_papa.jpg */; };
+		63D4916616CA999300FD395F /* schlumpf_schlumpfine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		63AEE2D416CA4D0200522F92 /* Hoccenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hoccenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		63AEE2DD16CA4D0200522F92 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		63AEE2E116CA4D0200522F92 /* Hoccenger-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Hoccenger-Info.plist"; sourceTree = "<group>"; };
+		63AEE2E316CA4D0200522F92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		63AEE2E516CA4D0200522F92 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		63AEE2E716CA4D0200522F92 /* Hoccenger-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hoccenger-Prefix.pch"; sourceTree = "<group>"; };
+		63AEE2E816CA4D0200522F92 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		63AEE2E916CA4D0200522F92 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		63AEE2EB16CA4D0200522F92 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		63AEE2ED16CA4D0300522F92 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		63AEE2EF16CA4D0300522F92 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		63AEE2F216CA4D0300522F92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		63AEE2F516CA4D0300522F92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		63AEE2F816CA4D0300522F92 /* Hoccenger.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Hoccenger.xcdatamodel; sourceTree = "<group>"; };
+		63AEE2FA16CA4D0300522F92 /* ContactListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
+		63AEE2FB16CA4D0300522F92 /* ContactListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactListViewController.m; sourceTree = "<group>"; };
+		63AEE2FD16CA4D0300522F92 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		63AEE2FE16CA4D0300522F92 /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		63AEE30616CA566B00522F92 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
+		63AEE30716CA566B00522F92 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
+		63AEE30916CA6B1900522F92 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		63AEE30A16CA6B1900522F92 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		63D4916316CA999300FD395F /* schlumpf_papa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_papa.jpg; sourceTree = "<group>"; };
+		63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_schlumpfine.jpg; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		63AEE2D116CA4D0200522F92 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */,
+				63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */,
+				63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */,
+				63AEE2DE16CA4D0200522F92 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		63AEE2CB16CA4D0200522F92 = {
+			isa = PBXGroup;
+			children = (
+				63AEE2DF16CA4D0200522F92 /* Hoccenger */,
+				63AEE2D616CA4D0200522F92 /* Frameworks */,
+				63AEE2D516CA4D0200522F92 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		63AEE2D516CA4D0200522F92 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				63AEE2D416CA4D0200522F92 /* Hoccenger.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				63AEE2D716CA4D0200522F92 /* UIKit.framework */,
+				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
+				63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */,
+				63AEE2DD16CA4D0200522F92 /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		63AEE2DF16CA4D0200522F92 /* Hoccenger */ = {
+			isa = PBXGroup;
+			children = (
+				63D4916316CA999300FD395F /* schlumpf_papa.jpg */,
+				63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */,
+				63AEE30516CA562F00522F92 /* Models */,
+				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
+				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
+				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
+				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
+				63AEE2FA16CA4D0300522F92 /* ContactListViewController.h */,
+				63AEE2FB16CA4D0300522F92 /* ContactListViewController.m */,
+				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
+				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
+				63AEE2F716CA4D0300522F92 /* Hoccenger.xcdatamodeld */,
+				63AEE2E016CA4D0200522F92 /* Supporting Files */,
+			);
+			path = Hoccenger;
+			sourceTree = "<group>";
+		};
+		63AEE2E016CA4D0200522F92 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				63AEE2E116CA4D0200522F92 /* Hoccenger-Info.plist */,
+				63AEE2E216CA4D0200522F92 /* InfoPlist.strings */,
+				63AEE2E516CA4D0200522F92 /* main.m */,
+				63AEE2E716CA4D0200522F92 /* Hoccenger-Prefix.pch */,
+				63AEE2EB16CA4D0200522F92 /* Default.png */,
+				63AEE2ED16CA4D0300522F92 /* Default@2x.png */,
+				63AEE2EF16CA4D0300522F92 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		63AEE30516CA562F00522F92 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				63AEE30616CA566B00522F92 /* Contact.h */,
+				63AEE30716CA566B00522F92 /* Contact.m */,
+				63AEE30916CA6B1900522F92 /* Message.h */,
+				63AEE30A16CA6B1900522F92 /* Message.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		63AEE2D316CA4D0200522F92 /* Hoccenger */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "Hoccenger" */;
+			buildPhases = (
+				63AEE2D016CA4D0200522F92 /* Sources */,
+				63AEE2D116CA4D0200522F92 /* Frameworks */,
+				63AEE2D216CA4D0200522F92 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Hoccenger;
+			productName = Hoccenger;
+			productReference = 63AEE2D416CA4D0200522F92 /* Hoccenger.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		63AEE2CC16CA4D0200522F92 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Hoccer GmbH";
+			};
+			buildConfigurationList = 63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "Hoccenger" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 63AEE2CB16CA4D0200522F92;
+			productRefGroup = 63AEE2D516CA4D0200522F92 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				63AEE2D316CA4D0200522F92 /* Hoccenger */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		63AEE2D216CA4D0200522F92 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63AEE2E416CA4D0200522F92 /* InfoPlist.strings in Resources */,
+				63AEE2EC16CA4D0200522F92 /* Default.png in Resources */,
+				63AEE2EE16CA4D0300522F92 /* Default@2x.png in Resources */,
+				63AEE2F016CA4D0300522F92 /* Default-568h@2x.png in Resources */,
+				63AEE2F316CA4D0300522F92 /* MainStoryboard_iPhone.storyboard in Resources */,
+				63AEE2F616CA4D0300522F92 /* MainStoryboard_iPad.storyboard in Resources */,
+				63D4916516CA999300FD395F /* schlumpf_papa.jpg in Resources */,
+				63D4916616CA999300FD395F /* schlumpf_schlumpfine.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		63AEE2D016CA4D0200522F92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
+				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
+				63AEE2F916CA4D0300522F92 /* Hoccenger.xcdatamodeld in Sources */,
+				63AEE2FC16CA4D0300522F92 /* ContactListViewController.m in Sources */,
+				63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */,
+				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
+				63AEE30B16CA6B1900522F92 /* Message.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		63AEE2E216CA4D0200522F92 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63AEE2E316CA4D0200522F92 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63AEE2F216CA4D0300522F92 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63AEE2F516CA4D0300522F92 /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		63AEE30016CA4D0300522F92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		63AEE30116CA4D0300522F92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		63AEE30316CA4D0300522F92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Hoccenger/Hoccenger-Prefix.pch";
+				INFOPLIST_FILE = "Hoccenger/Hoccenger-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		63AEE30416CA4D0300522F92 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Hoccenger/Hoccenger-Prefix.pch";
+				INFOPLIST_FILE = "Hoccenger/Hoccenger-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "Hoccenger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63AEE30016CA4D0300522F92 /* Debug */,
+				63AEE30116CA4D0300522F92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "Hoccenger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63AEE30316CA4D0300522F92 /* Debug */,
+				63AEE30416CA4D0300522F92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		63AEE2F716CA4D0300522F92 /* Hoccenger.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				63AEE2F816CA4D0300522F92 /* Hoccenger.xcdatamodel */,
+			);
+			currentVersion = 63AEE2F816CA4D0300522F92 /* Hoccenger.xcdatamodel */;
+			path = Hoccenger.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 63AEE2CC16CA4D0200522F92 /* Project object */;
+}
