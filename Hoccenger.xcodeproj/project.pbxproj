@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 6343B4E116CD5D7C00B3A29E /* azrael.png */; };
+		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
+		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -26,9 +29,16 @@
 		63AEE30B16CA6B1900522F92 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* Message.m */; };
 		63D4916516CA999300FD395F /* schlumpf_papa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63D4916316CA999300FD395F /* schlumpf_papa.jpg */; };
 		63D4916616CA999300FD395F /* schlumpf_schlumpfine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */; };
+		63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */; };
+		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6343B4E116CD5D7C00B3A29E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
+		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
+		63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoheightLabel.m; sourceTree = "<group>"; };
+		63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableViewController.h; sourceTree = "<group>"; };
+		63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableViewController.m; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hoccenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -56,6 +66,9 @@
 		63AEE30A16CA6B1900522F92 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		63D4916316CA999300FD395F /* schlumpf_papa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_papa.jpg; sourceTree = "<group>"; };
 		63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_schlumpfine.jpg; sourceTree = "<group>"; };
+		63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
+		63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
+		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */,
 				63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */,
 				63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */,
 				63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */,
@@ -93,10 +107,11 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				63AEE2D716CA4D0200522F92 /* UIKit.framework */,
-				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
-				63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */,
 				63AEE2DD16CA4D0200522F92 /* CoreData.framework */,
+				63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */,
+				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
+				63D4916B16CAA26A00FD395F /* QuartzCore.framework */,
+				63AEE2D716CA4D0200522F92 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -104,19 +119,23 @@
 		63AEE2DF16CA4D0200522F92 /* Hoccenger */ = {
 			isa = PBXGroup;
 			children = (
-				63D4916316CA999300FD395F /* schlumpf_papa.jpg */,
-				63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */,
-				63AEE30516CA562F00522F92 /* Models */,
+				6343B4E116CD5D7C00B3A29E /* azrael.png */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
-				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
-				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
-				63AEE2FA16CA4D0300522F92 /* ContactListViewController.h */,
-				63AEE2FB16CA4D0300522F92 /* ContactListViewController.m */,
+				63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */,
+				63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
+				63AEE2FA16CA4D0300522F92 /* ContactListViewController.h */,
+				63AEE2FB16CA4D0300522F92 /* ContactListViewController.m */,
 				63AEE2F716CA4D0300522F92 /* Hoccenger.xcdatamodeld */,
+				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
+				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
+				63AEE30516CA562F00522F92 /* Models */,
+				63D4916316CA999300FD395F /* schlumpf_papa.jpg */,
+				63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */,
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
+				63D4916716CAA17D00FD395F /* Views */,
 			);
 			path = Hoccenger;
 			sourceTree = "<group>";
@@ -144,6 +163,17 @@
 				63AEE30A16CA6B1900522F92 /* Message.m */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		63D4916716CAA17D00FD395F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */,
+				63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */,
+				63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */,
+				63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,6 +235,7 @@
 				63AEE2F616CA4D0300522F92 /* MainStoryboard_iPad.storyboard in Resources */,
 				63D4916516CA999300FD395F /* schlumpf_papa.jpg in Resources */,
 				63D4916616CA999300FD395F /* schlumpf_schlumpfine.jpg in Resources */,
+				6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +253,9 @@
 				63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */,
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* Message.m in Sources */,
+				63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */,
+				63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */,
+				63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

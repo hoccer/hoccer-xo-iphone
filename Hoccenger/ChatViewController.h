@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "Contact.h"
+#import "ChatTableViewController.h"
 
 @interface ChatViewController : UIViewController <UISplitViewControllerDelegate>
-
+{
+    ChatTableViewController * chatTableController;
+}
 @property (strong, nonatomic) Contact* partner;
 
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+@property (weak, nonatomic) IBOutlet UITextField * textField;
+@property (weak, nonatomic) IBOutlet UIButton *    sendButton;
 
 @end

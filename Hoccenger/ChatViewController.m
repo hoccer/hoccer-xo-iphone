@@ -7,6 +7,7 @@
 //
 
 #import "ChatViewController.h"
+#import "UIButton+GlossyRounded.h"
 
 @interface ChatViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -19,9 +20,12 @@
 
 - (void)setPartner:(Contact*) newPartner
 {
+    NSLog(@"setPartner ChatViewController");
+
     if (_partner != newPartner) {
         _partner = newPartner;
-        
+
+        [chatTableController setPartner: newPartner];
         // Update the view.
         [self configureView];
     }
@@ -36,7 +40,6 @@
     // Update the user interface for the detail item.
 
     if (self.partner) {
-        self.detailDescriptionLabel.text = self.partner.nickName;
         self.title = self.partner.nickName;
     }
 }
@@ -45,7 +48,19 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+
+    NSLog(@"viewDidLoad");
+    chatTableController = (ChatTableViewController*)[self.childViewControllers objectAtIndex: 0];
+    [chatTableController setPartner: _partner];
+    
     [self configureView];
+}
+
+- (void)viewDidLayoutSubviews {
+    [self.sendButton makeRoundAndGlossy];
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,6 +83,36 @@
     // Called when the view is shown again in the split view, invalidating the button and popover controller.
     [self.navigationItem setLeftBarButtonItem:nil animated:YES];
     self.masterPopoverController = nil;
+}
+
+#pragma mark - Keyboard events
+
+// TODO: correctly handle orientation changes 
+
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+
+    [UIView animateWithDuration: duration animations:^{
+        CGRect frame = self.view.frame;
+        frame.origin.y -= keyboardSize.height;
+        self.view.frame = frame;
+    }];
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+
+    [UIView animateWithDuration: duration animations:^{
+        CGRect frame = self.view.frame;
+        frame.origin.y += keyboardSize.height;
+        self.view.frame = frame;
+    }];
 }
 
 @end

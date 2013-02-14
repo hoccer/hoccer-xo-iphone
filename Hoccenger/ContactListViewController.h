@@ -14,7 +14,7 @@
 
 @interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
-@property (strong, nonatomic) ChatViewController *detailViewController;
+@property (strong, nonatomic) ChatViewController *chatViewController;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

@@ -13,7 +13,7 @@
 
 @property (nonatomic, retain) NSString* text;
 @property (nonatomic, retain) NSDate*   timeStamp;
-@property (nonatomic)         BOOL      isOutgoing;
+@property (nonatomic)         NSNumber* isOutgoing;
 
 @property (nonatomic, retain) Contact*  contact;
 

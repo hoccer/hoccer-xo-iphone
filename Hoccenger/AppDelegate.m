@@ -218,11 +218,10 @@
     do {
         Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: importContext];
 
-        message.text = [messages objectAtIndex: messageCount % messages.count];
+        message.text = [messages objectAtIndex: count % messages.count];
         message.timeStamp = [NSDate date];
-        if (messageCount % 2 == 0) {
-            message.contact = [contacts objectAtIndex: 0];
-        }
+        message.contact = [contacts objectAtIndex: 0];
+        message.isOutgoing = [NSNumber numberWithBool: count % 2 == 0 ? NO : YES];
     } while (++count < messageCount);
 
     [importContext save:&error];

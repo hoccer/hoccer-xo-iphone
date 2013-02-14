@@ -35,7 +35,7 @@
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
-    self.detailViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
 - (void)didReceiveMemoryWarning
@@ -116,12 +116,14 @@
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.detailViewController.partner = contact;
+        self.chatViewController.partner = contact;
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSLog(@"id: %@", [segue identifier]);
+    
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [[self fetchedResultsController] objectAtIndexPath:indexPath];
