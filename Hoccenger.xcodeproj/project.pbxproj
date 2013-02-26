@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 6343B4E116CD5D7C00B3A29E /* azrael.png */; };
+		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
 		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
@@ -35,6 +36,8 @@
 
 /* Begin PBXFileReference section */
 		6343B4E116CD5D7C00B3A29E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
+		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
+		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
 		63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoheightLabel.m; sourceTree = "<group>"; };
 		63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableViewController.h; sourceTree = "<group>"; };
@@ -119,7 +122,6 @@
 		63AEE2DF16CA4D0200522F92 /* Hoccenger */ = {
 			isa = PBXGroup;
 			children = (
-				6343B4E116CD5D7C00B3A29E /* azrael.png */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
 				63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */,
@@ -132,8 +134,6 @@
 				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
 				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
 				63AEE30516CA562F00522F92 /* Models */,
-				63D4916316CA999300FD395F /* schlumpf_papa.jpg */,
-				63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */,
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
 				63D4916716CAA17D00FD395F /* Views */,
 			);
@@ -143,6 +143,9 @@
 		63AEE2E016CA4D0200522F92 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6343B4E116CD5D7C00B3A29E /* azrael.png */,
+				63D4916316CA999300FD395F /* schlumpf_papa.jpg */,
+				63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */,
 				63AEE2E116CA4D0200522F92 /* Hoccenger-Info.plist */,
 				63AEE2E216CA4D0200522F92 /* InfoPlist.strings */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
@@ -172,6 +175,8 @@
 				63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */,
 				63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */,
 				63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */,
+				6343B4E316CD604700B3A29E /* MessageCell.h */,
+				6343B4E416CD604700B3A29E /* MessageCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -256,6 +261,7 @@
 				63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */,
 				63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */,
 				63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */,
+				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

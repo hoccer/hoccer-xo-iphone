@@ -9,6 +9,7 @@
 #import "ChatTableViewController.h"
 #import "AppDelegate.h"
 #import "Message.h"
+#import "MessageCell.h"
 
 @interface ChatTableViewController ()
 
@@ -30,6 +31,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.messageCell = [self.tableView dequeueReusableCellWithIdentifier: [MessageCell reuseIdentifier]];
 
 
     // Uncomment the following line to preserve selection between presentations.
@@ -60,12 +63,15 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"ChatMessageCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: [MessageCell reuseIdentifier] forIndexPath:indexPath];
     
     [self configureCell: cell atIndexPath: indexPath];
     
     return cell;
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    [self.tableView reloadData];
 }
 
 /*
@@ -120,6 +126,19 @@
      */
 }
 
+- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // TODO: iPad sizes, &c.
+    // this ain't nice. it shouldn't be neccessary to hard code the screen size here...
+    float width = UIDeviceOrientationIsPortrait(self.interfaceOrientation) ? 320 : 480;
+
+    Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
+    CGRect oldFrame = self.messageCell.frame;
+    self.messageCell.frame = CGRectMake(oldFrame.origin.x, oldFrame.origin.y, width, oldFrame.size.height);
+    return [self.messageCell heightForText: message.text];
+}
+
 #pragma mark - Fetched results controller
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -134,7 +153,6 @@
 
 // XXX use a better key than the nickName
 - (void) setPartner: (Contact*) partner {
-    NSLog(@"setPartner");
     [self.tableView beginUpdates];
     if (resultsControllers == nil) {
         resultsControllers = [[NSMutableDictionary alloc] init];
@@ -177,46 +195,6 @@
     [self.tableView endUpdates];
 }
 
-/*
-- (NSFetchedResultsController *)fetchedResultsController
-{
-    if (_fetchedResultsController != nil) {
-        return _fetchedResultsController;
-    }
-
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
-
-    // Set the batch size to a suitable number.
-    [fetchRequest setFetchBatchSize:20];
-
-    //NSPredicate * predicate = [NSPredicate predicateWithFormat:<#(NSString *), ...#>]
-
-    // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending: YES];
-    NSArray *sortDescriptors = @[sortDescriptor];
-
-    [fetchRequest setSortDescriptors:sortDescriptors];
-
-    // Edit the section name key path and cache name if appropriate.
-    // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Contacts"];
-    aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
-
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
-        // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
-
-    return _fetchedResultsController;
-}
-*/
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
@@ -279,20 +257,19 @@
  */
 
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(MessageCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     Message * message = (Message*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
-    UILabel * messageLabel = (UILabel*)[cell viewWithTag: 100];
-    messageLabel.text = message.text;
-    UIImageView * yourAvatar = (UIImageView*)[cell viewWithTag: 101];
-    UIImageView * myAvatar = (UIImageView*)[cell viewWithTag: 102];
+    cell.message.text = message.text;
     if ([message.isOutgoing boolValue] == YES) {
-        yourAvatar.image = [UIImage imageWithData: message.contact.avatar];
-        myAvatar.hidden = YES;
+        cell.yourAvatar.hidden = NO;
+        cell.yourAvatar.image = [UIImage imageWithData: message.contact.avatar];
+        cell.myAvatar.hidden = YES;
     } else {
-        yourAvatar.hidden = YES;
-        myAvatar.image = [UIImage imageNamed: @"azrael.png"];
+        cell.myAvatar.hidden = NO;
+        cell.myAvatar.image = [UIImage imageNamed: @"azrael.png"];
+        cell.yourAvatar.hidden = YES;
     }
 }
 

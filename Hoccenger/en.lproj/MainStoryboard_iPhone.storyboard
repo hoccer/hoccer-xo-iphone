@@ -77,6 +77,7 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5x6-4c-VVf">
                                         <rect key="frame" x="251" y="7" width="61" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.34354670370000001" green="0.32605708329999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                         <state key="normal" title="Send">
@@ -88,6 +89,7 @@
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="RGJ-80-HQx">
                                         <rect key="frame" x="8" y="6" width="235" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -124,24 +126,24 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ChatMessageCell" rowHeight="72" id="0l8-2L-Hj7">
+                            <tableViewCell tag="100" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="MessageCell" rowHeight="72" id="0l8-2L-Hj7" customClass="MessageCell">
                                 <rect key="frame" x="0.0" y="22" width="320" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="71"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" id="Led-HR-p51">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_papa.jpg" id="Led-HR-p51">
                                             <rect key="frame" x="10" y="10" width="52" height="52"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" tag="102" contentMode="scaleToFill" id="TaE-I6-ENh">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_schlumpfine.jpg" id="TaE-I6-ENh">
                                             <rect key="frame" x="259" y="10" width="52" height="52"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="left" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mHV-EM-N0R" customClass="AutoheightLabel">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mHV-EM-N0R" customClass="AutoheightLabel">
                                             <rect key="frame" x="70" y="10" width="181" height="14"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -149,6 +151,11 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <connections>
+                                    <outlet property="message" destination="mHV-EM-N0R" id="1kg-Yv-kgN"/>
+                                    <outlet property="myAvatar" destination="TaE-I6-ENh" id="jbn-P3-jDv"/>
+                                    <outlet property="yourAvatar" destination="Led-HR-p51" id="LYg-tl-NEU"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                     </tableView>
@@ -159,6 +166,36 @@
             <point key="canvasLocation" x="1386" y="118"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="schlumpf_papa.jpg" width="52" height="52"/>
+        <image name="schlumpf_schlumpfine.jpg" width="52" height="52"/>
+    </resources>
+    <classes>
+        <class className="AutoheightLabel" superclassName="UILabel">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutoheightLabel.h"/>
+        </class>
+        <class className="ChatTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableViewController.h"/>
+        </class>
+        <class className="ChatViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="textField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="ContactListViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
+        </class>
+        <class className="MessageCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
+                <relationship kind="outlet" name="myAvatar" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="yourAvatar" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -18,10 +18,7 @@
 
 #pragma mark - Managing the detail item
 
-- (void)setPartner:(Contact*) newPartner
-{
-    NSLog(@"setPartner ChatViewController");
-
+- (void)setPartner:(Contact*) newPartner {
     if (_partner != newPartner) {
         _partner = newPartner;
 
@@ -52,7 +49,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 
-    NSLog(@"viewDidLoad");
     chatTableController = (ChatTableViewController*)[self.childViewControllers objectAtIndex: 0];
     [chatTableController setPartner: _partner];
     

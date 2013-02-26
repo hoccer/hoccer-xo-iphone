@@ -122,8 +122,6 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"id: %@", [segue identifier]);
-    
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [[self fetchedResultsController] objectAtIndexPath:indexPath];

@@ -9,10 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "Contact.h"
 
+@class MessageCell;
+
 @interface ChatTableViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     NSMutableDictionary        *resultsControllers;
 }
+
+@property (strong) MessageCell* messageCell;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
