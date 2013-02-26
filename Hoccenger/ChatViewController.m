@@ -111,4 +111,15 @@
     }];
 }
 
+#pragma mark - Actions
+
+- (IBAction)sendPressed:(id)sender
+{
+    [self.textField resignFirstResponder];
+    if (self.textField.text.length > 0) {
+        self.textField.text = @"";
+    }
+}
+
+
 @end

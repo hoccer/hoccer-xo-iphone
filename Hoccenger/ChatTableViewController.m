@@ -70,10 +70,6 @@
     return cell;
 }
 
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    [self.tableView reloadData];
-}
-
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -151,6 +147,17 @@
     return _managedObjectContext;
 }
 
+- (NSManagedObjectModel *)managedObjectModel
+{
+    if (_managedObjectContext != nil) {
+        return _managedObjectModel;
+    }
+
+    _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
+    return _managedObjectModel;
+}
+
+
 // XXX use a better key than the nickName
 - (void) setPartner: (Contact*) partner {
     [self.tableView beginUpdates];
@@ -159,25 +166,14 @@
     }
     _fetchedResultsController = [resultsControllers objectForKey: partner.nickName];
     if (_fetchedResultsController == nil) {
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        // Edit the entity name as appropriate.
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
-        [fetchRequest setEntity:entity];
+        NSDictionary * vars = @{ @"nickName" : partner.nickName };
+        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByNickName" substitutionVariables: vars];
 
-        // Set the batch size to a suitable number.
-        [fetchRequest setFetchBatchSize:20];
-
-        NSPredicate * predicate = [NSPredicate predicateWithFormat: @"contact.nickName LIKE %@", partner.nickName];
-        [fetchRequest setPredicate: predicate];
-
-        // Edit the sort key as appropriate.
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending: YES];
         NSArray *sortDescriptors = @[sortDescriptor];
 
         [fetchRequest setSortDescriptors:sortDescriptors];
 
-        // Edit the section name key path and cache name if appropriate.
-        // nil for section name key path means "no sections".
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName: [NSString stringWithFormat: @"Messages-%@", partner.nickName]];
         _fetchedResultsController.delegate = self;
 
@@ -185,14 +181,12 @@
 
         NSError *error = nil;
         if (![_fetchedResultsController performFetch:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
     }
-    [self.tableView reloadData];
     [self.tableView endUpdates];
+    //[self scrollToBottom];
 }
 
 
@@ -246,6 +240,11 @@
     [self.tableView endUpdates];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    [self scrollToBottom];
+}
+
 /*
  // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
 
@@ -270,6 +269,15 @@
         cell.myAvatar.hidden = NO;
         cell.myAvatar.image = [UIImage imageNamed: @"azrael.png"];
         cell.yourAvatar.hidden = YES;
+    }
+}
+
+- (void) scrollToBottom {
+    // XXX handle sections
+    int count = [self.fetchedResultsController.fetchedObjects count];
+    if (count > 0) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  count -1 inSection:0];
+        [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionTop animated: NO];
     }
 }
 
