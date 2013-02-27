@@ -18,6 +18,6 @@
     <fetchRequest name="MessagesByNickName" entity="Message" predicateString="contact.nickName LIKE $nickName"/>
     <elements>
         <element name="Contact" positionX="261" positionY="189" width="128" height="105"/>
-        <element name="Message" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="Message" positionX="-261" positionY="63" width="128" height="105"/>
     </elements>
 </model>
