@@ -15,6 +15,8 @@
     ChatTableViewController * chatTableController;
 }
 @property (strong, nonatomic) Contact* partner;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
 
 @property (weak, nonatomic) IBOutlet UITextField * textField;
 @property (weak, nonatomic) IBOutlet UIButton *    sendButton;

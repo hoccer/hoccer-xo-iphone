@@ -8,6 +8,8 @@
 
 #import "ChatViewController.h"
 #import "UIButton+GlossyRounded.h"
+#import "Message.h"
+#import "AppDelegate.h"
 
 @interface ChatViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -50,7 +52,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 
     chatTableController = (ChatTableViewController*)[self.childViewControllers objectAtIndex: 0];
+
     [chatTableController setPartner: _partner];
+
     
     [self configureView];
 }
@@ -63,6 +67,16 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    if (_managedObjectContext != nil) {
+        return _managedObjectContext;
+    }
+
+    _managedObjectContext = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).managedObjectContext;
+    return _managedObjectContext;
 }
 
 #pragma mark - Split view
@@ -117,6 +131,12 @@
 {
     [self.textField resignFirstResponder];
     if (self.textField.text.length > 0) {
+        Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.managedObjectContext];
+
+        message.text = self.textField.text;
+        message.timeStamp = [NSDate date];
+        message.contact = self.partner;
+        message.isOutgoing = [NSNumber numberWithBool: YES];
         self.textField.text = @"";
     }
 }
