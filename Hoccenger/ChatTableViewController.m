@@ -273,7 +273,7 @@
     int count = [self.fetchedResultsController.fetchedObjects count];
     if (count > 0) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  count -1 inSection:0];
-        [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionTop animated: animated];
+        [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionBottom animated: animated];
     }
 }
 

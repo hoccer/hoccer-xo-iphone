@@ -57,10 +57,12 @@
 
     
     [self configureView];
+
 }
 
 - (void)viewDidLayoutSubviews {
     [self.sendButton makeRoundAndGlossy];
+    NSLog(@"viewDidLayoutSubviews");
 }
 
 - (void)didReceiveMemoryWarning
@@ -99,28 +101,29 @@
 
 // TODO: correctly handle orientation changes 
 
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    NSLog(@"keyboardWasShown");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     [UIView animateWithDuration: duration animations:^{
         CGRect frame = self.view.frame;
-        frame.origin.y -= keyboardSize.height;
+        frame.size.height -= keyboardSize.height;
         self.view.frame = frame;
-    }];
+        NSLog(@"post frame h %f", frame.size.height);
+    } completion: ^(BOOL finished){NSLog(@"done");[chatTableController scrollToBottom: NO]; }];
 }
 
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    NSLog(@"keyboardWillBeHidden");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     [UIView animateWithDuration: duration animations:^{
         CGRect frame = self.view.frame;
-        frame.origin.y += keyboardSize.height;
+        frame.size.height += keyboardSize.height;
         self.view.frame = frame;
     }];
 }

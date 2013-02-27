@@ -14,6 +14,7 @@
 {
     ChatTableViewController * chatTableController;
 }
+
 @property (strong, nonatomic) Contact* partner;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
