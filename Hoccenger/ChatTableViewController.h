@@ -23,6 +23,6 @@
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 - (void) setPartner: (Contact*) partner;
-- (void) scrollToBottom;
+- (void) scrollToBottom: (BOOL) animated;
 
 @end

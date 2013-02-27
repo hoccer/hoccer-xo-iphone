@@ -126,7 +126,8 @@
 {
     // TODO: iPad sizes, &c.
     // this ain't nice. it shouldn't be neccessary to hard code the screen size here...
-    float width = UIDeviceOrientationIsPortrait(self.interfaceOrientation) ? 320 : 480;
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    float width = UIDeviceOrientationIsPortrait(self.interfaceOrientation) ? screenSize.width : screenSize.height;
 
     Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
@@ -160,7 +161,9 @@
 
 // XXX use a better key than the nickName
 - (void) setPartner: (Contact*) partner {
-    [self.tableView beginUpdates];
+    if (partner == nil) {
+        return;
+    }
     if (resultsControllers == nil) {
         resultsControllers = [[NSMutableDictionary alloc] init];
     }
@@ -185,10 +188,9 @@
             abort();
         }
     }
-    [self.tableView endUpdates];
-    //[self scrollToBottom];
+    [self.tableView reloadData];
+    [self scrollToBottom: NO];
 }
-
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
@@ -218,6 +220,9 @@
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            /* TODO: find out how to do this...
+             [tableView scrollToRowAtIndexPath: newIndexPath atScrollPosition: UITableViewScrollPositionTop animated:YES];
+             */
             break;
 
         case NSFetchedResultsChangeDelete:
@@ -238,23 +243,14 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
+    // XXX not generic ... see TODO above
+    [self scrollToBottom: YES];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
-    [self scrollToBottom];
+    [self scrollToBottom: NO];
 }
-
-/*
- // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
- {
- // In the simplest, most efficient, case, reload the table view.
- [self.tableView reloadData];
- }
- */
-
 
 - (void)configureCell:(MessageCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
@@ -262,22 +258,22 @@
 
     cell.message.text = message.text;
     if ([message.isOutgoing boolValue] == YES) {
-        cell.yourAvatar.hidden = NO;
-        cell.yourAvatar.image = [UIImage imageWithData: message.contact.avatar];
-        cell.myAvatar.hidden = YES;
-    } else {
         cell.myAvatar.hidden = NO;
         cell.myAvatar.image = [UIImage imageNamed: @"azrael.png"];
         cell.yourAvatar.hidden = YES;
+    } else {
+        cell.yourAvatar.hidden = NO;
+        cell.yourAvatar.image = [UIImage imageWithData: message.contact.avatar];
+        cell.myAvatar.hidden = YES;
     }
 }
 
-- (void) scrollToBottom {
+- (void) scrollToBottom: (BOOL) animated {
     // XXX handle sections
     int count = [self.fetchedResultsController.fetchedObjects count];
     if (count > 0) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  count -1 inSection:0];
-        [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionTop animated: NO];
+        [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionTop animated: animated];
     }
 }
 
