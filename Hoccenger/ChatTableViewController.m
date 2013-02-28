@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "Message.h"
 #import "MessageCell.h"
+#import "SectionHeaderCell.h"
 
 @interface ChatTableViewController ()
 
@@ -64,9 +65,22 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: [MessageCell reuseIdentifier] forIndexPath:indexPath];
-    
+
+    // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
+    // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/
+    cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
+
     [self configureCell: cell atIndexPath: indexPath];
     
+    return cell;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: @"SectionHeaderCell"];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    cell.label.text = sectionInfo.name;
+    cell.label.shadowColor  = [UIColor whiteColor];
+    cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
     return cell;
 }
 
