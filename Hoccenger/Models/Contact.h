@@ -13,7 +13,10 @@
 @property (nonatomic, retain) NSData*       avatar;
 @property (nonatomic, retain) NSDate*       lastMessageTime;
 @property (nonatomic, retain) NSString*     nickName;
+@property (nonatomic, retain) NSString*     currentTimeSection;
 
 @property (nonatomic, retain) NSMutableSet* messages;
+
+- (NSString*) sectionTitleForMessageTime: (NSDate*) date;
 
 @end

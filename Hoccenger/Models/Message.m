@@ -13,6 +13,7 @@
 @dynamic isOutgoing;
 @dynamic text;
 @dynamic timeStamp;
+@dynamic timeSection;
 
 @dynamic contact;
 

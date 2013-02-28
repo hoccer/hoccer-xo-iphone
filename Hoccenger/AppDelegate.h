@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ChatBackend.h"
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
@@ -15,9 +17,9 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, retain) ChatBackend * chatBackend;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-- (void) insertDummies: (unsigned long) messageCount;
 
 @end

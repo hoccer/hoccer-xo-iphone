@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
+		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 6343B4E116CD5D7C00B3A29E /* azrael.png */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
@@ -35,6 +37,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBackend.h; sourceTree = "<group>"; };
+		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBackend.m; sourceTree = "<group>"; };
+		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DummyChatBackend.h; sourceTree = "<group>"; };
+		6320D7C616DF622E00E58478 /* DummyChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DummyChatBackend.m; sourceTree = "<group>"; };
 		6343B4E116CD5D7C00B3A29E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
@@ -124,12 +130,16 @@
 			children = (
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
+				6320D7C216DF620800E58478 /* ChatBackend.h */,
+				6320D7C316DF620900E58478 /* ChatBackend.m */,
 				63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */,
 				63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
 				63AEE2FA16CA4D0300522F92 /* ContactListViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ContactListViewController.m */,
+				6320D7C516DF622D00E58478 /* DummyChatBackend.h */,
+				6320D7C616DF622E00E58478 /* DummyChatBackend.m */,
 				63AEE2F716CA4D0300522F92 /* Hoccenger.xcdatamodeld */,
 				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
 				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
@@ -262,6 +272,8 @@
 				63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */,
 				63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
+				6320D7C416DF620900E58478 /* ChatBackend.m in Sources */,
+				6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

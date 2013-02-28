@@ -70,6 +70,11 @@
     return cell;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    return [sectionInfo name];
+}
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -177,7 +182,7 @@
 
         [fetchRequest setSortDescriptors:sortDescriptors];
 
-        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName: [NSString stringWithFormat: @"Messages-%@", partner.nickName]];
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.nickName]];
         _fetchedResultsController.delegate = self;
 
         [resultsControllers setObject: _fetchedResultsController forKey: partner.nickName];
@@ -270,9 +275,9 @@
 
 - (void) scrollToBottom: (BOOL) animated {
     // XXX handle sections
-    int count = [self.fetchedResultsController.fetchedObjects count];
-    if (count > 0) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  count -1 inSection:0];
+    if ([self.fetchedResultsController.fetchedObjects count]) {
+        NSInteger lastSection = [self numberOfSectionsInTableView: self.tableView] - 1;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  [self tableView: self.tableView numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
         [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionBottom animated: animated];
     }
 }

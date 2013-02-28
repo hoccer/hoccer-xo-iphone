@@ -11,6 +11,7 @@
 #import "ContactListViewController.h"
 #import "Contact.h"
 #import "Message.h"
+#import "DummyChatBackend.h"
 
 @implementation AppDelegate
 
@@ -20,22 +21,23 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self insertDummies: 5000];
+    self.chatBackend = [[DummyChatBackend alloc] init];
 
     // Override point for customization after application launch.
+    ContactListViewController * controller = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
         UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
         splitViewController.delegate = (id)navigationController.topViewController;
         
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-        ContactListViewController *controller = (ContactListViewController *)masterNavigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
+        controller = (ContactListViewController *)masterNavigationController.topViewController;
     } else {
         UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-        ContactListViewController *controller = (ContactListViewController *)navigationController.topViewController;
-        controller.managedObjectContext = self.managedObjectContext;
+        controller = (ContactListViewController *)navigationController.topViewController;        
     }
+    // TODO: be lazy
+    controller.managedObjectContext = self.managedObjectContext;
     return YES;
 }
 							
@@ -159,77 +161,8 @@
 #pragma mark - Application's Documents directory
 
 // Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory
-{
+- (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-- (void) insertDummies: (unsigned long) messageCount {
-
-    NSArray * nicks    = @[ @"Schlumpfine", @"Daddy S" ];
-    NSArray * avatars  = @[ @"schlumpf_schlumpfine.jpg", @"schlumpf_papa.jpg" ];
-
-    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] init];
-    [importContext setPersistentStoreCoordinator: self.persistentStoreCoordinator];
-    [importContext setUndoManager:nil];
-
-    NSFetchRequest *contactRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription * contactEntity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: importContext];
-    [contactRequest setEntity:contactEntity];
-
-    NSError *error;
-    unsigned long contactCount = [importContext countForFetchRequest: contactRequest error: &error];
-
-    if (contactCount == 0) {
-        int index = 0;
-        for (NSString* avatar in avatars) {
-
-            Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
-            contact.nickName = [nicks objectAtIndex: index++];
-            contact.avatar = UIImageJPEGRepresentation([UIImage imageNamed: avatar], 1.0);
-        }
-        [importContext save:&error];
-        if (error != nil) {
-            NSLog(@"ERROR - failed to save message: %@", error);
-        }
-    }
-    NSArray * contacts = [importContext executeFetchRequest: contactRequest error: &error];
-
-    NSArray * messages = @[ @"Käffchen?"
-                            , @"k, bin in 10min da..."
-                            , @"bis gloich"
-                            , @"Was geht heute abend?"
-                            , @"bin schon verabredet. Aber wir könnten am WE einen trinken gehen. In der Panke ist irgendwie HipHop party... Backyard Joints. Lorem ipsum blah fasel blub..."
-                            , @"Mein Router ist abgeraucht :-/. Kannst Du ein ordentliches DSL Modem empfehlen?"
-                            , @"Ich würde mal bei den Fritzboxen von AVM gucken. Das ist echt ordentliche Hardware."
-                            , @"Check mal deine mail..."
-                            , @"kewl! Will ich haben."
-                            ];
-
-    NSFetchRequest *messageRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription * messageEntity = [NSEntityDescription entityForName:@"Message" inManagedObjectContext: importContext];
-    [messageRequest setEntity:messageEntity];
-
-    unsigned long count = [importContext countForFetchRequest: messageRequest error: &error];
-
-    if (count >= messageCount) {
-        return;
-    }
-
-    do {
-        Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: importContext];
-
-        message.text = [messages objectAtIndex: count % messages.count];
-        message.timeStamp = [NSDate date];
-        message.contact = [contacts objectAtIndex: 0];
-        message.isOutgoing = [NSNumber numberWithBool: count % 2 == 0 ? NO : YES];
-    } while (++count < messageCount);
-
-    [importContext save:&error];
-    if (error != nil) {
-        NSLog(@"ERROR - failed to save message: %@", error);
-    }
-    
 }
 
 @end

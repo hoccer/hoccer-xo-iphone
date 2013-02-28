@@ -18,30 +18,10 @@
 
 @implementation ChatViewController
 
+@synthesize managedObjectContext = _managedObjectContext;
+@synthesize chatBackend = _chatBackend;
+
 #pragma mark - Managing the detail item
-
-- (void)setPartner:(Contact*) newPartner {
-    if (_partner != newPartner) {
-        _partner = newPartner;
-
-        [chatTableController setPartner: newPartner];
-        // Update the view.
-        [self configureView];
-    }
-
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }        
-}
-
-- (void)configureView
-{
-    // Update the user interface for the detail item.
-
-    if (self.partner) {
-        self.title = self.partner.nickName;
-    }
-}
 
 - (void)viewDidLoad
 {
@@ -62,13 +42,35 @@
 
 - (void)viewDidLayoutSubviews {
     [self.sendButton makeRoundAndGlossy];
-    NSLog(@"viewDidLayoutSubviews");
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)setPartner:(Contact*) newPartner {
+    if (_partner != newPartner) {
+        _partner = newPartner;
+
+        [chatTableController setPartner: newPartner];
+        // Update the view.
+        [self configureView];
+    }
+
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+- (void)configureView
+{
+    // Update the user interface for the detail item.
+
+    if (self.partner) {
+        self.title = self.partner.nickName;
+    }
 }
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -79,6 +81,16 @@
 
     _managedObjectContext = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     return _managedObjectContext;
+}
+
+- (ChatBackend*) chatBackend {
+    if (_chatBackend != nil) {
+        return _chatBackend;
+    }
+
+    _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
+    return _chatBackend;
+
 }
 
 #pragma mark - Split view
@@ -102,7 +114,7 @@
 // TODO: correctly handle orientation changes 
 
 - (void)keyboardWasShown:(NSNotification*)aNotification {
-    NSLog(@"keyboardWasShown");
+    //NSLog(@"keyboardWasShown");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
@@ -111,12 +123,11 @@
         CGRect frame = self.view.frame;
         frame.size.height -= keyboardSize.height;
         self.view.frame = frame;
-        NSLog(@"post frame h %f", frame.size.height);
-    } completion: ^(BOOL finished){NSLog(@"done");[chatTableController scrollToBottom: NO]; }];
+    } completion: ^(BOOL finished){ [chatTableController scrollToBottom: NO]; }];
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    NSLog(@"keyboardWillBeHidden");
+    //NSLog(@"keyboardWillBeHidden");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
@@ -134,12 +145,7 @@
 {
     [self.textField resignFirstResponder];
     if (self.textField.text.length > 0) {
-        Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.managedObjectContext];
-
-        message.text = self.textField.text;
-        message.timeStamp = [NSDate date];
-        message.contact = self.partner;
-        message.isOutgoing = [NSNumber numberWithBool: YES];
+        [self.chatBackend sendMessage: self.textField.text toContact: self.partner];
         self.textField.text = @"";
     }
 }
