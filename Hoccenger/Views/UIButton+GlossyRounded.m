@@ -23,7 +23,7 @@ void UIButton_GlossyRounded_touch()
     CALayer *thisLayer = self.layer;
     
     // Add a border
-    thisLayer.cornerRadius = 0.5 * self.frame.size.height;
+    thisLayer.cornerRadius = 8.0; // 0.5 * self.frame.size.height;
     thisLayer.masksToBounds = NO;
     thisLayer.borderWidth = 1.0f;
     thisLayer.borderColor = [[UIColor colorWithWhite: 0.0 alpha: 0.8] CGColor];
