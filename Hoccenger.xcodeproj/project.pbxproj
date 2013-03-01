@@ -10,6 +10,7 @@
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
+		6320D7CD16E0C79B00E58478 /* AvatarBezelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */; };
 		6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 6343B4E116CD5D7C00B3A29E /* azrael.png */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
@@ -44,6 +45,8 @@
 		6320D7C616DF622E00E58478 /* DummyChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DummyChatBackend.m; sourceTree = "<group>"; };
 		6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderCell.h; sourceTree = "<group>"; };
 		6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderCell.m; sourceTree = "<group>"; };
+		6320D7CB16E0C79A00E58478 /* AvatarBezelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarBezelView.h; sourceTree = "<group>"; };
+		6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvatarBezelView.m; sourceTree = "<group>"; };
 		6343B4E116CD5D7C00B3A29E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
@@ -192,6 +195,8 @@
 				6343B4E416CD604700B3A29E /* MessageCell.m */,
 				6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */,
 				6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */,
+				6320D7CB16E0C79A00E58478 /* AvatarBezelView.h */,
+				6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -280,6 +285,7 @@
 				6320D7C416DF620900E58478 /* ChatBackend.m in Sources */,
 				6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */,
 				6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */,
+				6320D7CD16E0C79B00E58478 /* AvatarBezelView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

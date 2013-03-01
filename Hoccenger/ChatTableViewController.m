@@ -11,6 +11,7 @@
 #import "Message.h"
 #import "MessageCell.h"
 #import "SectionHeaderCell.h"
+#import "AvatarBezelView.h"
 
 @interface ChatTableViewController ()
 
@@ -77,6 +78,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: @"SectionHeaderCell"];
+    cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     cell.label.text = sectionInfo.name;
     cell.label.shadowColor  = [UIColor whiteColor];
@@ -87,6 +89,11 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo name];
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    // TODO: do a similar prototype trick as with 'normal' cells
+    return 48;
 }
 
 /*
@@ -275,15 +282,24 @@
 {
     Message * message = (Message*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
-    cell.message.text = message.text;
+    // TODO: move this stuff to the cell
+    cell.myMessage.arrowLeft = NO;
+    cell.yourMessage.arrowLeft = YES;
     if ([message.isOutgoing boolValue] == YES) {
+        cell.myMessage.hidden = NO;
+        cell.myMessage.text = message.text;
         cell.myAvatar.hidden = NO;
         cell.myAvatar.image = [UIImage imageNamed: @"azrael.png"];
         cell.yourAvatar.hidden = YES;
+        cell.yourMessage.hidden = YES;
+
     } else {
+        cell.yourMessage.hidden = NO;
+        cell.yourMessage.text = message.text;
         cell.yourAvatar.hidden = NO;
         cell.yourAvatar.image = [UIImage imageWithData: message.contact.avatar];
         cell.myAvatar.hidden = YES;
+        cell.myMessage.hidden = YES;
     }
 }
 

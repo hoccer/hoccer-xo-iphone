@@ -10,10 +10,10 @@
 
 @implementation MessageCell
 
-enum { kMessagePadding = 10 };
+enum { kMessagePadding = 20 };
 
 - (float) heightForText: (NSString*) text {
-    return MAX(kMessagePadding + [self.message calculateSize: text].height + kMessagePadding,
+    return MAX(kMessagePadding + [self.myMessage calculateSize: text].height + kMessagePadding,
                self.frame.size.height);
 }
 

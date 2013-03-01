@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "AutoheightLabel.h"
 
+@class AvatarBezelView;
+
 @interface MessageCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet AutoheightLabel *message;
-@property (strong, nonatomic) IBOutlet UIImageView *myAvatar;
-@property (strong, nonatomic) IBOutlet UIImageView *yourAvatar;
+@property (strong, nonatomic) IBOutlet AutoheightLabel *myMessage;
+@property (strong, nonatomic) IBOutlet AvatarBezelView *myAvatar;
+@property (strong, nonatomic) IBOutlet AvatarBezelView *yourAvatar;
+@property (strong, nonatomic) IBOutlet AutoheightLabel *yourMessage;
 
 - (float) heightForText: (NSString*) text;
 + (NSString *)reuseIdentifier;

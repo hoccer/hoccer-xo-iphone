@@ -10,10 +10,13 @@
 
 @interface AutoheightLabel : UILabel
 {
-    double minHeight;
 }
 
 @property (nonatomic) double minHeight;
+@property (nonatomic) double arrowWidth;
+@property (nonatomic) double arrowHeight;
+@property (nonatomic) double arrowHCenter;
+@property (nonatomic) BOOL arrowLeft;
 
 - (CGSize) calculateSize: (NSString*) text;
 
