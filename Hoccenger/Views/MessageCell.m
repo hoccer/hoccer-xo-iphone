@@ -12,14 +12,13 @@
 
 enum { kMessagePadding = 20 };
 
-- (float) heightForText: (NSString*) text {
-    return MAX(kMessagePadding + [self.myMessage calculateSize: text].height + kMessagePadding,
-               self.frame.size.height);
+- (void) awakeFromNib {
+    [super awakeFromNib];
 }
 
-+ (NSString *)reuseIdentifier
-{
-    return NSStringFromClass(self);
+- (float) heightForText: (NSString*) text {
+    return MAX(kMessagePadding + [self.message calculateSize: text].height + kMessagePadding,
+               self.frame.size.height);
 }
 
 @end

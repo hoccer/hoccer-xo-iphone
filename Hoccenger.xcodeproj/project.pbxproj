@@ -11,10 +11,13 @@
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
 		6320D7CD16E0C79B00E58478 /* AvatarBezelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */; };
+		6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */; };
+		6320D7D316E4C11200E58478 /* RightMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7D216E4C11200E58478 /* RightMessageCell.m */; };
 		6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 6343B4E116CD5D7C00B3A29E /* azrael.png */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
 		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
+		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -47,6 +50,11 @@
 		6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderCell.m; sourceTree = "<group>"; };
 		6320D7CB16E0C79A00E58478 /* AvatarBezelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarBezelView.h; sourceTree = "<group>"; };
 		6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvatarBezelView.m; sourceTree = "<group>"; };
+		6320D7CE16E4C0F400E58478 /* LeftMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftMessageCell.h; sourceTree = "<group>"; };
+		6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftMessageCell.m; sourceTree = "<group>"; };
+		6320D7D116E4C11200E58478 /* RightMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightMessageCell.h; sourceTree = "<group>"; };
+		6320D7D216E4C11200E58478 /* RightMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightMessageCell.m; sourceTree = "<group>"; };
+		633C7BA616E4DDB0004FC867 /* CornerRadius.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CornerRadius.h; sourceTree = "<group>"; };
 		6343B4E116CD5D7C00B3A29E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
@@ -54,6 +62,8 @@
 		63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoheightLabel.m; sourceTree = "<group>"; };
 		63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableViewController.h; sourceTree = "<group>"; };
 		63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableViewController.m; sourceTree = "<group>"; };
+		63540A9016E500D20087D24E /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleView.h; sourceTree = "<group>"; };
+		63540A9116E500D20087D24E /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleView.m; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hoccenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -189,14 +199,21 @@
 			children = (
 				63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */,
 				63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */,
-				63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */,
-				63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */,
-				6343B4E316CD604700B3A29E /* MessageCell.h */,
-				6343B4E416CD604700B3A29E /* MessageCell.m */,
-				6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */,
-				6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */,
 				6320D7CB16E0C79A00E58478 /* AvatarBezelView.h */,
 				6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */,
+				63540A9016E500D20087D24E /* BubbleView.h */,
+				63540A9116E500D20087D24E /* BubbleView.m */,
+				633C7BA616E4DDB0004FC867 /* CornerRadius.h */,
+				6320D7CE16E4C0F400E58478 /* LeftMessageCell.h */,
+				6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */,
+				6343B4E316CD604700B3A29E /* MessageCell.h */,
+				6343B4E416CD604700B3A29E /* MessageCell.m */,
+				6320D7D116E4C11200E58478 /* RightMessageCell.h */,
+				6320D7D216E4C11200E58478 /* RightMessageCell.m */,
+				6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */,
+				6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */,
+				63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */,
+				63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -286,6 +303,9 @@
 				6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */,
 				6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */,
 				6320D7CD16E0C79B00E58478 /* AvatarBezelView.m in Sources */,
+				6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */,
+				6320D7D316E4C11200E58478 /* RightMessageCell.m in Sources */,
+				63540A9216E500D20087D24E /* BubbleView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

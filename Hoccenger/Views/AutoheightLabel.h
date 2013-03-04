@@ -9,14 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @interface AutoheightLabel : UILabel
-{
-}
+
+@property (nonatomic) UIEdgeInsets padding;
 
 @property (nonatomic) double minHeight;
 @property (nonatomic) double arrowWidth;
-@property (nonatomic) double arrowHeight;
-@property (nonatomic) double arrowHCenter;
 @property (nonatomic) BOOL arrowLeft;
+@property (nonatomic) UIColor * bubbleColor;
+
 
 - (CGSize) calculateSize: (NSString*) text;
 

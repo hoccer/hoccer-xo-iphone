@@ -10,7 +10,10 @@
 // Inspired by https://github.com/GeorgeMcMullen/UIButton-Glossy but still needs some tweaking
 
 #import "UIButton+GlossyRounded.h"
+
 #import <QuartzCore/QuartzCore.h>
+
+#import "CornerRadius.h"
 
 void UIButton_GlossyRounded_touch()
 {
@@ -23,7 +26,7 @@ void UIButton_GlossyRounded_touch()
     CALayer *thisLayer = self.layer;
     
     // Add a border
-    thisLayer.cornerRadius = 8.0; // 0.5 * self.frame.size.height;
+    thisLayer.cornerRadius = kCornerRadius; // 0.5 * self.frame.size.height;
     thisLayer.masksToBounds = NO;
     thisLayer.borderWidth = 1.0f;
     thisLayer.borderColor = [[UIColor colorWithWhite: 0.0 alpha: 0.8] CGColor];

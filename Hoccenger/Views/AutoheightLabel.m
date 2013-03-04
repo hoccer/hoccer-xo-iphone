@@ -9,12 +9,22 @@
 #import "AutoheightLabel.h"
 #import <QuartzCore/QuartzCore.h>
 
+#import "CornerRadius.h"
 
-//TODO: move bubble code in a separate view, because bubbles may also contain attachments
+
+// TODO: move bubble code to a separate view, because bubbles may also contain attachments
+// TODO: add gradient and shadow
+// TODO: respect margins in text size computation
 
 @interface AutoheightLabel ()
 
+@property (nonatomic) double arrowHCenter;
+@property (nonatomic) UIBezierPath* bubblePath;
+@property (nonatomic) CAGradientLayer* gradientLayer;
+@property (nonatomic) CAShapeLayer* shapeLayer;
+
 - (void)updateSize;
+- (void)createBubblePath;
 
 @end
 
@@ -22,16 +32,35 @@
 
 - (void) awakeFromNib {
     self.minHeight = self.bounds.size.height;
-    self.arrowWidth = 15.0;
-    self.arrowHCenter = self.minHeight * 0.5;
-    self.arrowHeight = 2 * self.arrowWidth;
-    self.arrowLeft = NO;
-    self.layer.masksToBounds = YES;
+    self.arrowWidth = 10.0;
+    self.arrowHCenter = self.bounds.size.height * 0.5;
+
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowOpacity = 0.3f;
+    self.layer.shadowOffset = CGSizeMake(2.0f, 2.0f);
+    self.layer.shadowRadius = 3.0f;
+    self.layer.masksToBounds = NO;
+
+    self.gradientLayer = [self bubbleGradient];
+    //[self.layer insertSublayer: self.gradientLayer atIndex: 0];
+    self.shapeLayer = [CAShapeLayer layer];
+
+
+    self.padding = UIEdgeInsetsMake(15, 15, 15, 15);
+}
+
+- (UIEdgeInsets) calculateTextRect {
+    return UIEdgeInsetsMake(self.padding.top,
+                            self.padding.left + (self.arrowLeft ? self.arrowWidth : 0),
+                            self.padding.bottom,
+                            self.padding.right + (self.arrowLeft ? 0 : self.arrowWidth));
 }
 
 - (CGSize) calculateSize: (NSString*) text {
-    CGSize constraint = CGSizeMake(self.frame.size.width - self.arrowWidth, 20000.0f);
-    return [text sizeWithFont:self.font constrainedToSize: constraint lineBreakMode: NSLineBreakByWordWrapping];
+    CGSize constraint = CGSizeMake(self.frame.size.width - (self.arrowWidth  + self.padding.left + self.padding.right), 20000.0f);
+    CGSize size = [text sizeWithFont:self.font constrainedToSize: constraint lineBreakMode: NSLineBreakByWordWrapping];
+    size.height += self.padding.top + self.padding.bottom;
+    return size;
 }
 
 - (void)updateSize {
@@ -55,7 +84,29 @@
     [self updateSize];
 }
 
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    [self createBubblePath];
+    self.gradientLayer.frame = self.bounds;
+    self.shapeLayer.path = self.bubblePath.CGPath;
+
+    self.gradientLayer.mask = self.shapeLayer;
+
+}
+
+- (void) setArrowLeft:(BOOL)arrowLeft {
+    _arrowLeft = arrowLeft;
+    [self createBubblePath];
+}
+
 - (void) drawRect:(CGRect)rect {
+    [self.bubbleColor set];
+    [self.bubblePath fill];
+
+    [[UIColor colorWithWhite: 0.0 alpha: 0.5] set];
+    [self.bubblePath stroke];
+    
+    /*
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetShouldAntialias(context, YES);
 
@@ -63,61 +114,113 @@
     [self bubblePathInRect: rect context: context];
     CGContextFillPath(context);
 
+    UIColor * start = [UIColor colorWithWhite: 0.0 alpha: 0.0];
+    UIColor * end = [UIColor colorWithWhite: 0.0 alpha: 0.1];
+
+    [self bubblePathInRect: rect context: context];
+    drawLinearGradient(context, rect, start.CGColor, end.CGColor);
+
     [[UIColor darkGrayColor] set];
     CGContextSetLineWidth(context, 1.0);
     [self bubblePathInRect: rect context: context];
     CGContextStrokePath(context);
+     */
 
     [super drawRect: rect];
 }
 
+- (void) createBubblePath {
+    CGRect rect = CGRectMake(self.bounds.origin.x + 0.5 + (self.arrowLeft ? self.arrowWidth : 0),
+                      self.bounds.origin.y + 0.5,
+                      self.bounds.size.width - self.arrowWidth - 1, self.bounds.size.height - 1);
 
-- (void) bubblePathInRect: (CGRect) rect context: (CGContextRef) context {
-    rect = CGRectMake(rect.origin.x + 0.5 + (self.arrowLeft ? self.arrowWidth : 0),
-                      rect.origin.y + 0.5,
-                      rect.size.width - self.arrowWidth - 1, rect.size.height - 1);
-    CGFloat radius = 4.0;
-
-    CGContextMoveToPoint(context, rect.origin.x, rect.origin.y + radius);
+    UIBezierPath * path = [[UIBezierPath alloc] init];
+    [path moveToPoint: CGPointMake(rect.origin.x, rect.origin.y + kCornerRadius)];
 
     if (self.arrowLeft == YES) {
-        [self addLeftArrow: rect context: context];
+        // TODO: add arc
+        [path addLineToPoint: CGPointMake(rect.origin.x, self.arrowHCenter - self.arrowWidth)];
+        [path addLineToPoint: CGPointMake(rect.origin.x - self.arrowWidth, self.arrowHCenter)];
+        [path addLineToPoint: CGPointMake(rect.origin.x, self.arrowHCenter + self.arrowWidth)];
+        // TODO: add arc
     }
 
-    CGContextAddLineToPoint(context, rect.origin.x, rect.origin.y + rect.size.height - radius);
-    CGContextAddArc(context, rect.origin.x + radius, rect.origin.y + rect.size.height - radius,
-                    radius, M_PI, M_PI / 2, 1); //STS fixed
-    CGContextAddLineToPoint(context, rect.origin.x + rect.size.width - radius,
-                            rect.origin.y + rect.size.height);
-    CGContextAddArc(context, rect.origin.x + rect.size.width - radius,
-                    rect.origin.y + rect.size.height - radius, radius, M_PI / 2, 0.0f, 1);
+    [path addLineToPoint: CGPointMake(rect.origin.x, rect.origin.y + rect.size.height - kCornerRadius)];
+    [path addArcWithCenter: CGPointMake(rect.origin.x + kCornerRadius, rect.origin.y + rect.size.height - kCornerRadius)
+                    radius: kCornerRadius startAngle: M_PI endAngle: M_PI / 2 clockwise: NO];
+    [path addLineToPoint: CGPointMake(rect.origin.x + rect.size.width - kCornerRadius, rect.origin.y + rect.size.height)];
+    [path addArcWithCenter: CGPointMake(rect.origin.x + rect.size.width - kCornerRadius, rect.origin.y + rect.size.height - kCornerRadius)
+                    radius: kCornerRadius startAngle: M_PI / 2 endAngle: 0.0 clockwise: NO];
 
     if (self.arrowLeft == NO) {
-        [self addRightArrow: rect context: context];
+        // TODO: add arc
+        [path addLineToPoint: CGPointMake(rect.origin.x + rect.size.width, self.arrowHCenter + self.arrowWidth)];
+        [path addLineToPoint: CGPointMake(rect.origin.x + rect.size.width + self.arrowWidth, self.arrowHCenter)];
+        [path addLineToPoint: CGPointMake(rect.origin.x + rect.size.width, self.arrowHCenter - self.arrowWidth)];
+        // TODO: add arc
     }
-    CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, rect.origin.y + radius);
-    CGContextAddArc(context, rect.origin.x + rect.size.width - radius, rect.origin.y + radius,
-                    radius, 0.0f, -M_PI / 2, 1);
-    CGContextAddLineToPoint(context, rect.origin.x + radius, rect.origin.y);
-    CGContextAddArc(context, rect.origin.x + radius, rect.origin.y + radius, radius,
-                    -M_PI / 2, M_PI, 1);
+
+    [path addLineToPoint: CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + kCornerRadius)];
+    [path addArcWithCenter: CGPointMake(rect.origin.x + rect.size.width - kCornerRadius, rect.origin.y + kCornerRadius)
+                    radius: kCornerRadius startAngle: 0.0 endAngle: -M_PI / 2 clockwise: NO];
+    [path addLineToPoint: CGPointMake(rect.origin.x + kCornerRadius, rect.origin.y)];
+    [path addArcWithCenter: CGPointMake(rect.origin.x + kCornerRadius, rect.origin.y + kCornerRadius)
+                    radius: kCornerRadius startAngle: -M_PI / 2 endAngle: M_PI clockwise: NO];
+
+    self.bubblePath = path;
+    self.layer.shadowPath = path.CGPath;
 }
 
-- (void) addRightArrow: (CGRect) rect context: (CGContextRef) context {
-    CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, self.arrowHCenter + self.arrowWidth);
-    CGContextAddLineToPoint(context, rect.origin.x + rect.size.width + self.arrowWidth, self.arrowHCenter);
-    CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, self.arrowHCenter - self.arrowWidth);
+- (CAGradientLayer*) bubbleGradient {
+    UIColor *colorOne = [UIColor colorWithWhite:0.9 alpha:1.0];
+    UIColor *colorTwo = [UIColor colorWithHue:0.625 saturation:0.0 brightness:0.85 alpha:1.0];
+    UIColor *colorThree     = [UIColor colorWithHue:0.625 saturation:0.0 brightness:0.7 alpha:1.0];
+    UIColor *colorFour = [UIColor colorWithHue:0.625 saturation:0.0 brightness:0.4 alpha:1.0];
+    
+    NSArray *colors =  @[(id)colorOne.CGColor, (id)colorTwo.CGColor, (id)colorThree.CGColor, (id)colorFour.CGColor];
+
+    NSNumber *stopOne = [NSNumber numberWithFloat:0.0];
+    NSNumber *stopTwo = [NSNumber numberWithFloat:0.02];
+    NSNumber *stopThree     = [NSNumber numberWithFloat:0.99];
+    NSNumber *stopFour = [NSNumber numberWithFloat:1.0];
+
+    NSArray *locations = [NSArray arrayWithObjects:stopOne, stopTwo, stopThree, stopFour, nil];
+    CAGradientLayer *layer = [CAGradientLayer layer];
+    layer.colors = colors;
+    layer.locations = locations;
+
+    return layer;
 }
 
-- (void) addLeftArrow: (CGRect) rect context: (CGContextRef) context {
-    CGContextAddLineToPoint(context, rect.origin.x, self.arrowHCenter - self.arrowWidth);
-    CGContextAddLineToPoint(context, rect.origin.x - self.arrowWidth, self.arrowHCenter);
-    CGContextAddLineToPoint(context, rect.origin.x, self.arrowHCenter + self.arrowWidth);
+
+void drawLinearGradient(CGContextRef context, CGRect rect, CGColorRef startColor,
+                        CGColorRef  endColor) {
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGFloat locations[] = { 0.0, 1.0 };
+
+    NSArray *colors = @[(__bridge id)startColor, (__bridge id)endColor];
+
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)(colors), locations);
+    CGPoint startPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect) - 10);
+    CGPoint endPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
+
+    CGContextSaveGState(context);
+    //CGContextAddRect(context, rect);
+    CGContextClip(context);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
+    CGContextRestoreGState(context);
+
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(colorSpace);
 }
 
+//- (CGRect) textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 
 - (void)drawTextInRect:(CGRect)rect {
-    UIEdgeInsets insets = {5, 5 + (self.arrowLeft ? self.arrowWidth : 0), 5, 5 + (self.arrowLeft ? 0 : self.arrowWidth)};
+    UIEdgeInsets insets = UIEdgeInsetsMake(self.padding.top,
+                                           self.padding.left + (self.arrowLeft ? self.arrowWidth : 0),
+                                           self.padding.bottom,
+                                           self.padding.right + (self.arrowLeft ? 0 : self.arrowWidth));
     return [super drawTextInRect:UIEdgeInsetsInsetRect(rect, insets)];
 }
 

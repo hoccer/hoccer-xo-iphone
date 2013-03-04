@@ -8,13 +8,14 @@
 
 #import "AvatarBezelView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "CornerRadius.h"
 
 @implementation AvatarBezelView
 
 - (void) awakeFromNib {
     [super awakeFromNib];
     [self.layer setMasksToBounds: YES];
-    self.layer.cornerRadius = 8.0;
+    self.layer.cornerRadius = kCornerRadius;
     [self.layer setBorderColor: [[UIColor darkGrayColor] CGColor]];
     [self.layer setBorderWidth: 1.0];
 }

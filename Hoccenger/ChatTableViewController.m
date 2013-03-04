@@ -9,13 +9,14 @@
 #import "ChatTableViewController.h"
 #import "AppDelegate.h"
 #import "Message.h"
-#import "MessageCell.h"
+#import "LeftMessageCell.h"
+#import "RightMessageCell.h"
 #import "SectionHeaderCell.h"
 #import "AvatarBezelView.h"
 
 @interface ChatTableViewController ()
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)configureCell:(UITableViewCell *)cell forMessage:(Message *) message;
 
 @end
 
@@ -34,7 +35,7 @@
 {
     [super viewDidLoad];
 
-    self.messageCell = [self.tableView dequeueReusableCellWithIdentifier: [MessageCell reuseIdentifier]];
+    self.messageCell = [self.tableView dequeueReusableCellWithIdentifier: [LeftMessageCell reuseIdentifier]];
 
 
     // Uncomment the following line to preserve selection between presentations.
@@ -63,15 +64,16 @@
     return [sectionInfo numberOfObjects];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: [MessageCell reuseIdentifier] forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Message * message = (Message*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+
+    MessageCell *cell = (MessageCell*)[tableView dequeueReusableCellWithIdentifier: ([message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier]) forIndexPath:indexPath];
 
     // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
     // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/
     cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
 
-    [self configureCell: cell atIndexPath: indexPath];
+    [self configureCell: cell forMessage: message];
     
     return cell;
 }
@@ -256,8 +258,11 @@
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+        {
+            Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
             break;
+        }
 
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -278,10 +283,11 @@
     [self scrollToBottom: NO];
 }
 
-- (void)configureCell:(MessageCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    Message * message = (Message*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+- (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
 
+    cell.message.text = message.text;
+    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael.png"] : [UIImage imageWithData: message.contact.avatar];
+    /*
     // TODO: move this stuff to the cell
     cell.myMessage.arrowLeft = NO;
     cell.yourMessage.arrowLeft = YES;
@@ -301,6 +307,7 @@
         cell.myAvatar.hidden = YES;
         cell.myMessage.hidden = YES;
     }
+     */
 }
 
 - (void) scrollToBottom: (BOOL) animated {
