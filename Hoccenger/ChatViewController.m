@@ -35,6 +35,7 @@
 
     [chatTableController setPartner: _partner];
 
+    self.chatbar.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_gradient"]];
     
     [self configureView];
 

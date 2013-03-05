@@ -21,8 +21,9 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) ChatBackend * chatBackend;
 
-@property (weak, nonatomic) IBOutlet UITextField * textField;
-@property (weak, nonatomic) IBOutlet UIButton *    sendButton;
+@property (strong, nonatomic) IBOutlet UITextField * textField;
+@property (strong, nonatomic) IBOutlet UIButton *    sendButton;
+@property (strong, nonatomic) IBOutlet UIView *      chatbar;
 
 - (IBAction)sendPressed:(id)sender;
 

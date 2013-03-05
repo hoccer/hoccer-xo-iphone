@@ -112,6 +112,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Chat" id="26"/>
                     <connections>
+                        <outlet property="chatbar" destination="129-Xd-O4Y" id="4Iz-Jw-fS7"/>
                         <outlet property="sendButton" destination="5x6-4c-VVf" id="WvI-ca-kGo"/>
                         <outlet property="textField" destination="RGJ-80-HQx" id="YbC-lO-noI"/>
                     </connections>
@@ -259,57 +260,6 @@
         <image name="schlumpf_papa.jpg" width="52" height="52"/>
         <image name="schlumpf_schlumpfine.jpg" width="52" height="52"/>
     </resources>
-    <classes>
-        <class className="AutoheightLabel" superclassName="UILabel">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutoheightLabel.h"/>
-        </class>
-        <class className="AvatarBezelView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AvatarBezelView.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-            </relationships>
-        </class>
-        <class className="BubbleView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleView.h"/>
-            <relationships>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="ChatTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableViewController.h"/>
-        </class>
-        <class className="ChatViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="sendPressed:"/>
-                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="textField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="ContactListViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
-        </class>
-        <class className="LeftMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
-        </class>
-        <class className="MessageCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="AvatarBezelView"/>
-                <relationship kind="outlet" name="bubble" candidateClass="BubbleView"/>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="RightMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
-        </class>
-        <class className="SectionHeaderCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SectionHeaderCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
