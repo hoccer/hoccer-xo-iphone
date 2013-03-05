@@ -18,6 +18,10 @@
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
 		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
+		63540A9816E61B880087D24E /* bubble-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540A9416E61B880087D24E /* bubble-left.png */; };
+		63540A9916E61B880087D24E /* bubble-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540A9516E61B880087D24E /* bubble-left@2x.png */; };
+		63540A9A16E61B880087D24E /* bubble-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540A9616E61B880087D24E /* bubble-right.png */; };
+		63540A9B16E61B880087D24E /* bubble-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540A9716E61B880087D24E /* bubble-right@2x.png */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -54,7 +58,6 @@
 		6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftMessageCell.m; sourceTree = "<group>"; };
 		6320D7D116E4C11200E58478 /* RightMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightMessageCell.h; sourceTree = "<group>"; };
 		6320D7D216E4C11200E58478 /* RightMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightMessageCell.m; sourceTree = "<group>"; };
-		633C7BA616E4DDB0004FC867 /* CornerRadius.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CornerRadius.h; sourceTree = "<group>"; };
 		6343B4E116CD5D7C00B3A29E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
@@ -64,6 +67,10 @@
 		63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableViewController.m; sourceTree = "<group>"; };
 		63540A9016E500D20087D24E /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleView.h; sourceTree = "<group>"; };
 		63540A9116E500D20087D24E /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleView.m; sourceTree = "<group>"; };
+		63540A9416E61B880087D24E /* bubble-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-left.png"; sourceTree = "<group>"; };
+		63540A9516E61B880087D24E /* bubble-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-left@2x.png"; sourceTree = "<group>"; };
+		63540A9616E61B880087D24E /* bubble-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-right.png"; sourceTree = "<group>"; };
+		63540A9716E61B880087D24E /* bubble-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-right@2x.png"; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hoccenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -112,6 +119,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63540A9316E61B420087D24E /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				63540A9416E61B880087D24E /* bubble-left.png */,
+				63540A9516E61B880087D24E /* bubble-left@2x.png */,
+				63540A9616E61B880087D24E /* bubble-right.png */,
+				63540A9716E61B880087D24E /* bubble-right@2x.png */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +164,7 @@
 			children = (
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
+				63540A9316E61B420087D24E /* Assets */,
 				6320D7C216DF620800E58478 /* ChatBackend.h */,
 				6320D7C316DF620900E58478 /* ChatBackend.m */,
 				63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */,
@@ -203,7 +222,6 @@
 				6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */,
 				63540A9016E500D20087D24E /* BubbleView.h */,
 				63540A9116E500D20087D24E /* BubbleView.m */,
-				633C7BA616E4DDB0004FC867 /* CornerRadius.h */,
 				6320D7CE16E4C0F400E58478 /* LeftMessageCell.h */,
 				6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */,
 				6343B4E316CD604700B3A29E /* MessageCell.h */,
@@ -278,6 +296,10 @@
 				63D4916516CA999300FD395F /* schlumpf_papa.jpg in Resources */,
 				63D4916616CA999300FD395F /* schlumpf_schlumpfine.jpg in Resources */,
 				6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */,
+				63540A9816E61B880087D24E /* bubble-left.png in Resources */,
+				63540A9916E61B880087D24E /* bubble-left@2x.png in Resources */,
+				63540A9A16E61B880087D24E /* bubble-right.png in Resources */,
+				63540A9B16E61B880087D24E /* bubble-right@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

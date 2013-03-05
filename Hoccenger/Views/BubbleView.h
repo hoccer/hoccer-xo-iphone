@@ -14,8 +14,7 @@
 
 @property (nonatomic) UIEdgeInsets padding;
 @property (strong, nonatomic) IBOutlet AutoheightLabel* message;
-@property (nonatomic) double minHeight;
-@property (nonatomic) double pointWidth;
+//@property (nonatomic) double minHeight;
 @property (strong, nonatomic) UIColor* bubbleColor;
 
 

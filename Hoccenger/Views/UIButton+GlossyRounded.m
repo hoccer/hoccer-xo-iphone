@@ -13,7 +13,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "CornerRadius.h"
+
+static const double kButtonCornerRadius = 4.0;
 
 void UIButton_GlossyRounded_touch()
 {
@@ -26,7 +27,7 @@ void UIButton_GlossyRounded_touch()
     CALayer *thisLayer = self.layer;
     
     // Add a border
-    thisLayer.cornerRadius = kCornerRadius; // 0.5 * self.frame.size.height;
+    thisLayer.cornerRadius = kButtonCornerRadius; // 0.5 * self.frame.size.height;
     thisLayer.masksToBounds = NO;
     thisLayer.borderWidth = 1.0f;
     thisLayer.borderColor = [[UIColor colorWithWhite: 0.0 alpha: 0.8] CGColor];

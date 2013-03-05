@@ -9,9 +9,6 @@
 #import "AutoheightLabel.h"
 #import <QuartzCore/QuartzCore.h>
 
-#import "CornerRadius.h"
-
-
 // TODO: move bubble code to a separate view, because bubbles may also contain attachments
 // TODO: add gradient
 

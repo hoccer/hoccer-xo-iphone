@@ -8,7 +8,8 @@
 
 #import "AvatarBezelView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "CornerRadius.h"
+
+static const double kCornerRadius = 3.0;
 
 @implementation AvatarBezelView
 
