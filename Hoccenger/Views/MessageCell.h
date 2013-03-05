@@ -7,14 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AutoheightLabel.h"
 
+@class AutoheightLabel;
 @class AvatarBezelView;
+@class BubbleView;
 
 @interface MessageCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet AutoheightLabel *message;
 @property (strong, nonatomic) IBOutlet AvatarBezelView *avatar;
+@property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
 - (float) heightForText: (NSString*) text;
 

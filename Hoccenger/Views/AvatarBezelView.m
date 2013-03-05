@@ -16,6 +16,7 @@
     [super awakeFromNib];
     [self.layer setMasksToBounds: YES];
     self.layer.cornerRadius = kCornerRadius;
+
     [self.layer setBorderColor: [[UIColor darkGrayColor] CGColor]];
     [self.layer setBorderWidth: 1.0];
 }

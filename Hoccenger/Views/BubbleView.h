@@ -8,8 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+@class AutoheightLabel;
+
 @interface BubbleView : UIView
 
 @property (nonatomic) UIEdgeInsets padding;
+@property (strong, nonatomic) IBOutlet AutoheightLabel* message;
+@property (nonatomic) double minHeight;
+@property (nonatomic) double pointWidth;
+@property (strong, nonatomic) UIColor* bubbleColor;
+
+
+- (id) initWithCoder:(NSCoder *)aDecoder;
+- (void) awakeFromNib;
+
+- (double) heightForText: (NSString*) text;
 
 @end

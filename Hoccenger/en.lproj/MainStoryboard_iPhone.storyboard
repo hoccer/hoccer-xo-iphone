@@ -136,15 +136,25 @@
                                     <rect key="frame" x="10" y="1" width="300" height="71"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Your Message" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZUO-SE-br1" customClass="AutoheightLabel">
-                                            <rect key="frame" x="70" y="10" width="221" height="52"/>
+                                        <view contentMode="scaleToFill" id="EPb-qJ-hTJ" customClass="BubbleView">
+                                            <rect key="frame" x="60" y="10" width="240" height="52"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </label>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Your Message" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZUO-SE-br1" customClass="AutoheightLabel">
+                                                    <rect key="frame" x="30" y="17" width="192" height="18"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.60784246480000004" green="0.81582589260000005" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <outlet property="message" destination="ZUO-SE-br1" id="T1T-nw-bXQ"/>
+                                            </connections>
+                                        </view>
                                         <view contentMode="scaleToFill" id="ySj-fp-FS8" customClass="AvatarBezelView">
-                                            <rect key="frame" x="10" y="10" width="52" height="52"/>
+                                            <rect key="frame" x="0.0" y="10" width="52" height="52"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_papa.jpg" id="snV-pN-Cz9">
@@ -163,6 +173,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="avatar" destination="ySj-fp-FS8" id="oUd-uy-lMU"/>
+                                    <outlet property="bubble" destination="EPb-qJ-hTJ" id="MR4-Vq-Ps0"/>
                                     <outlet property="message" destination="ZUO-SE-br1" id="L37-lE-0Jv"/>
                                 </connections>
                             </tableViewCell>
@@ -173,16 +184,9 @@
                                     <rect key="frame" x="10" y="0.0" width="300" height="71"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="My Message" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bdr-Sy-0Rp" customClass="AutoheightLabel">
-                                            <rect key="frame" x="10" y="10" width="221" height="52"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </label>
                                         <view contentMode="scaleToFill" id="Cno-Jk-bEs" customClass="AvatarBezelView">
-                                            <rect key="frame" x="239" y="10" width="52" height="52"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <rect key="frame" x="248" y="10" width="52" height="52"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_schlumpfine.jpg" id="xwH-BV-3Xh">
                                                     <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
@@ -194,13 +198,31 @@
                                                 <outlet property="imageView" destination="xwH-BV-3Xh" id="oFY-62-7QS"/>
                                             </connections>
                                         </view>
+                                        <view contentMode="scaleToFill" id="0ZM-ei-DlY" customClass="BubbleView">
+                                            <rect key="frame" x="0.0" y="10" width="240" height="52"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="My Message" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bBR-97-cwW" customClass="AutoheightLabel">
+                                                    <rect key="frame" x="18" y="17" width="192" height="18"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.94000000000000006" alpha="1" colorSpace="calibratedWhite"/>
+                                            <connections>
+                                                <outlet property="message" destination="bBR-97-cwW" id="Pxo-w4-hWh"/>
+                                            </connections>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="avatar" destination="Cno-Jk-bEs" id="khl-GA-6Vh"/>
-                                    <outlet property="message" destination="bdr-Sy-0Rp" id="rMi-nJ-wY4"/>
+                                    <outlet property="bubble" destination="0ZM-ei-DlY" id="8C7-GB-Pis"/>
+                                    <outlet property="message" destination="bBR-97-cwW" id="nKd-0X-EAY"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SectionHeaderCell" rowHeight="44" id="pm9-dW-0Rw" customClass="SectionHeaderCell">
@@ -247,6 +269,12 @@
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
             </relationships>
         </class>
+        <class className="BubbleView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleView.h"/>
+            <relationships>
+                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
+            </relationships>
+        </class>
         <class className="ChatTableViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableViewController.h"/>
         </class>
@@ -268,6 +296,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="avatar" candidateClass="AvatarBezelView"/>
+                <relationship kind="outlet" name="bubble" candidateClass="BubbleView"/>
                 <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
             </relationships>
         </class>

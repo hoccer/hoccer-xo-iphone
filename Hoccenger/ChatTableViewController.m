@@ -13,6 +13,7 @@
 #import "RightMessageCell.h"
 #import "SectionHeaderCell.h"
 #import "AvatarBezelView.h"
+#import "AutoheightLabel.h"
 
 @interface ChatTableViewController ()
 
@@ -154,8 +155,10 @@
 {
     // TODO: iPad sizes, &c.
     // this ain't nice. it shouldn't be neccessary to hard code the screen size here...
-    CGSize screenSize = [UIScreen mainScreen].bounds.size;
-    float width = UIDeviceOrientationIsPortrait(self.interfaceOrientation) ? screenSize.width : screenSize.height;
+    //CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    //float width = UIDeviceOrientationIsPortrait(self.interfaceOrientation) ? screenSize.width : screenSize.height;
+
+    double width = self.tableView.frame.size.width;
 
     Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 

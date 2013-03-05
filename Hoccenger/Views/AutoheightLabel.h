@@ -10,13 +10,7 @@
 
 @interface AutoheightLabel : UILabel
 
-@property (nonatomic) UIEdgeInsets padding;
-
 @property (nonatomic) double minHeight;
-@property (nonatomic) double arrowWidth;
-@property (nonatomic) BOOL arrowLeft;
-@property (nonatomic) UIColor * bubbleColor;
-
 
 - (CGSize) calculateSize: (NSString*) text;
 

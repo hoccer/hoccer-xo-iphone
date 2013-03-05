@@ -10,15 +10,6 @@
 
 @implementation RightMessageCell
 
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    self.message.arrowLeft = NO;
-    self.message.bubbleColor = [UIColor colorWithRed: 242.0 / 255
-                                               green: 242.0 / 255
-                                                blue: 242.0 / 255
-                                               alpha: 1];
-}
-
 + (NSString *)reuseIdentifier {
     return NSStringFromClass(self);
 }
