@@ -13,7 +13,6 @@
 		6320D7CD16E0C79B00E58478 /* AvatarBezelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */; };
 		6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */; };
 		6320D7D316E4C11200E58478 /* RightMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7D216E4C11200E58478 /* RightMessageCell.m */; };
-		6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 6343B4E116CD5D7C00B3A29E /* azrael.png */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
 		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
@@ -24,6 +23,12 @@
 		63540A9B16E61B880087D24E /* bubble-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540A9716E61B880087D24E /* bubble-right@2x.png */; };
 		63540A9D16E65A7B0087D24E /* chatbar_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540A9C16E65A7B0087D24E /* chatbar_gradient.png */; };
 		63540A9F16E6604E0087D24E /* chatbar_gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540A9E16E6604E0087D24E /* chatbar_gradient@2x.png */; };
+		63540AA216E662900087D24E /* schlumpf_schlumpfine.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA016E662900087D24E /* schlumpf_schlumpfine.png */; };
+		63540AA316E662900087D24E /* schlumpf_schlumpfine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA116E662900087D24E /* schlumpf_schlumpfine@2x.png */; };
+		63540AA616E6640D0087D24E /* schlumpf_papa.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA416E6640D0087D24E /* schlumpf_papa.png */; };
+		63540AA716E6640D0087D24E /* schlumpf_papa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA516E6640D0087D24E /* schlumpf_papa@2x.png */; };
+		63540AAA16E665AC0087D24E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA816E665AC0087D24E /* azrael.png */; };
+		63540AAB16E665AC0087D24E /* azrael@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA916E665AC0087D24E /* azrael@2x.png */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -41,8 +46,6 @@
 		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
 		63AEE30816CA566B00522F92 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30716CA566B00522F92 /* Contact.m */; };
 		63AEE30B16CA6B1900522F92 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* Message.m */; };
-		63D4916516CA999300FD395F /* schlumpf_papa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63D4916316CA999300FD395F /* schlumpf_papa.jpg */; };
-		63D4916616CA999300FD395F /* schlumpf_schlumpfine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */; };
 		63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
@@ -60,7 +63,6 @@
 		6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftMessageCell.m; sourceTree = "<group>"; };
 		6320D7D116E4C11200E58478 /* RightMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightMessageCell.h; sourceTree = "<group>"; };
 		6320D7D216E4C11200E58478 /* RightMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RightMessageCell.m; sourceTree = "<group>"; };
-		6343B4E116CD5D7C00B3A29E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
@@ -75,6 +77,12 @@
 		63540A9716E61B880087D24E /* bubble-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-right@2x.png"; sourceTree = "<group>"; };
 		63540A9C16E65A7B0087D24E /* chatbar_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatbar_gradient.png; sourceTree = "<group>"; };
 		63540A9E16E6604E0087D24E /* chatbar_gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_gradient@2x.png"; sourceTree = "<group>"; };
+		63540AA016E662900087D24E /* schlumpf_schlumpfine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = schlumpf_schlumpfine.png; sourceTree = "<group>"; };
+		63540AA116E662900087D24E /* schlumpf_schlumpfine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "schlumpf_schlumpfine@2x.png"; sourceTree = "<group>"; };
+		63540AA416E6640D0087D24E /* schlumpf_papa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = schlumpf_papa.png; sourceTree = "<group>"; };
+		63540AA516E6640D0087D24E /* schlumpf_papa@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "schlumpf_papa@2x.png"; sourceTree = "<group>"; };
+		63540AA816E665AC0087D24E /* azrael.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = azrael.png; sourceTree = "<group>"; };
+		63540AA916E665AC0087D24E /* azrael@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "azrael@2x.png"; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hoccenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -100,8 +108,6 @@
 		63AEE30716CA566B00522F92 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		63AEE30916CA6B1900522F92 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		63AEE30A16CA6B1900522F92 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
-		63D4916316CA999300FD395F /* schlumpf_papa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_papa.jpg; sourceTree = "<group>"; };
-		63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = schlumpf_schlumpfine.jpg; sourceTree = "<group>"; };
 		63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
 		63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -126,6 +132,12 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				63540AA816E665AC0087D24E /* azrael.png */,
+				63540AA916E665AC0087D24E /* azrael@2x.png */,
+				63540AA416E6640D0087D24E /* schlumpf_papa.png */,
+				63540AA516E6640D0087D24E /* schlumpf_papa@2x.png */,
+				63540AA016E662900087D24E /* schlumpf_schlumpfine.png */,
+				63540AA116E662900087D24E /* schlumpf_schlumpfine@2x.png */,
 				63540A9E16E6604E0087D24E /* chatbar_gradient@2x.png */,
 				63540A9416E61B880087D24E /* bubble-left.png */,
 				63540A9516E61B880087D24E /* bubble-left@2x.png */,
@@ -194,9 +206,6 @@
 		63AEE2E016CA4D0200522F92 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6343B4E116CD5D7C00B3A29E /* azrael.png */,
-				63D4916316CA999300FD395F /* schlumpf_papa.jpg */,
-				63D4916416CA999300FD395F /* schlumpf_schlumpfine.jpg */,
 				63AEE2E116CA4D0200522F92 /* Hoccenger-Info.plist */,
 				63AEE2E216CA4D0200522F92 /* InfoPlist.strings */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
@@ -299,15 +308,18 @@
 				63AEE2F016CA4D0300522F92 /* Default-568h@2x.png in Resources */,
 				63AEE2F316CA4D0300522F92 /* MainStoryboard_iPhone.storyboard in Resources */,
 				63AEE2F616CA4D0300522F92 /* MainStoryboard_iPad.storyboard in Resources */,
-				63D4916516CA999300FD395F /* schlumpf_papa.jpg in Resources */,
-				63D4916616CA999300FD395F /* schlumpf_schlumpfine.jpg in Resources */,
-				6343B4E216CD5D7C00B3A29E /* azrael.png in Resources */,
 				63540A9816E61B880087D24E /* bubble-left.png in Resources */,
 				63540A9916E61B880087D24E /* bubble-left@2x.png in Resources */,
 				63540A9A16E61B880087D24E /* bubble-right.png in Resources */,
 				63540A9B16E61B880087D24E /* bubble-right@2x.png in Resources */,
 				63540A9D16E65A7B0087D24E /* chatbar_gradient.png in Resources */,
 				63540A9F16E6604E0087D24E /* chatbar_gradient@2x.png in Resources */,
+				63540AA216E662900087D24E /* schlumpf_schlumpfine.png in Resources */,
+				63540AA316E662900087D24E /* schlumpf_schlumpfine@2x.png in Resources */,
+				63540AA616E6640D0087D24E /* schlumpf_papa.png in Resources */,
+				63540AA716E6640D0087D24E /* schlumpf_papa@2x.png in Resources */,
+				63540AAA16E665AC0087D24E /* azrael.png in Resources */,
+				63540AAB16E665AC0087D24E /* azrael@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

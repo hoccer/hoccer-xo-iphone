@@ -76,7 +76,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5x6-4c-VVf">
-                                        <rect key="frame" x="251" y="7" width="61" height="31"/>
+                                        <rect key="frame" x="251" y="8" width="61" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.34354670370000001" green="0.32605708329999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
@@ -91,7 +91,7 @@
                                         </connections>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="RGJ-80-HQx">
-                                        <rect key="frame" x="8" y="6" width="235" height="31"/>
+                                        <rect key="frame" x="8" y="8" width="235" height="31"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -158,7 +158,7 @@
                                             <rect key="frame" x="0.0" y="10" width="52" height="52"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_papa.jpg" id="snV-pN-Cz9">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_papa.png" id="snV-pN-Cz9">
                                                     <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -189,7 +189,7 @@
                                             <rect key="frame" x="248" y="10" width="52" height="52"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_schlumpfine.jpg" id="xwH-BV-3Xh">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="schlumpf_schlumpfine.png" id="xwH-BV-3Xh">
                                                     <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -257,8 +257,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="schlumpf_papa.jpg" width="52" height="52"/>
-        <image name="schlumpf_schlumpfine.jpg" width="52" height="52"/>
+        <image name="schlumpf_papa.png" width="52" height="52"/>
+        <image name="schlumpf_schlumpfine.png" width="52" height="52"/>
     </resources>
     <classes>
         <class className="AutoheightLabel" superclassName="UILabel">
