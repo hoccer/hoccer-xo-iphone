@@ -72,7 +72,8 @@
 
     // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
     // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/
-    cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
+    // ... for now just use the private API
+    // cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
 
     [self configureCell: cell forMessage: message];
     
