@@ -74,6 +74,9 @@ void UIButton_GlossyRounded_touch()
                             [NSNumber numberWithFloat:1.0f],
                             nil];
     [backgroundLayer addSublayer:glossLayer];
+
+    self.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
+    [self setTitleShadowColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
 }
 
 @end
