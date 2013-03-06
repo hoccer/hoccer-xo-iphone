@@ -8,7 +8,13 @@
 
 #import "RightMessageCell.h"
 
+#import "BubbleView.h"
+
 @implementation RightMessageCell
+
+- (void) awakeFromNib {
+    self.bubble.pointingRight = YES;
+}
 
 + (NSString *)reuseIdentifier {
     return NSStringFromClass(self);

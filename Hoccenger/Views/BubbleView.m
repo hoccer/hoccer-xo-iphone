@@ -18,7 +18,6 @@ static const double kBubbleCapTop   = 32.0;
 
 @interface BubbleView ()
 
-@property (nonatomic) BOOL pointingRight;
 @property (strong, nonatomic) UIImageView * background;
 
 @end
@@ -27,7 +26,7 @@ static const double kBubbleCapTop   = 32.0;
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder: aDecoder];
-    if (self != nil) {
+    if (self != nil) {  
         //self.minHeight =  0.0; //self.frame.size.height;
         self.bubbleColor = self.backgroundColor;
         self.backgroundColor = [UIColor clearColor];
@@ -38,22 +37,10 @@ static const double kBubbleCapTop   = 32.0;
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    double left = self.message.frame.origin.x;
-    double right = self.frame.size.width - (left + self.message.frame.size.width);
-    double x_padding;
-    if (left > right) {
-//        self.pointWidth = left - right;
-        x_padding = right;
-        _pointingRight = NO;
-    } else {
-//        self.pointWidth = right - left;
-        x_padding = left;
-        _pointingRight = YES;
-    }
     self.padding = UIEdgeInsetsMake(self.message.frame.origin.y,
-                                    x_padding,
+                                    0.0,
                                     self.message.frame.origin.y,
-                                    x_padding);
+                                    0.0);
 
     NSString * file = _pointingRight == YES ? @"bubble-right" : @"bubble-left";
     UIImage * bubble = [[UIImage imageNamed: file] stretchableImageWithLeftCapWidth: _pointingRight == YES ? kRightBubbleCapLeft : kLeftBubbleCapLeft topCapHeight: kBubbleCapTop];

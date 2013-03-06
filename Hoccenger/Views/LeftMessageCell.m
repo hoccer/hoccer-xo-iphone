@@ -8,7 +8,13 @@
 
 #import "LeftMessageCell.h"
 
+#import "BubbleView.h"
+
 @implementation LeftMessageCell
+
+- (void) awakeFromNib {
+    self.bubble.pointingRight = NO;
+}
 
 + (NSString *)reuseIdentifier {
     return NSStringFromClass(self);
