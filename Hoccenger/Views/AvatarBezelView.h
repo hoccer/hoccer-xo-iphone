@@ -10,7 +10,6 @@
 
 @interface AvatarBezelView : UIView
 
-@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) UIImage *image;
 
 - (void) awakeFromNib;

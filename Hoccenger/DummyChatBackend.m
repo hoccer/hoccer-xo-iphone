@@ -16,17 +16,15 @@
 - (id) init {
     self = [super init];
     if (self != nil) {
-        [self addDummies: 5000];
+        [self addDummies: 100];
     }
     return self;
 }
 
 - (void) addDummies: (long) messageCount {
-
-
     AppDelegate * appDelegate = ((AppDelegate *)[[UIApplication sharedApplication] delegate]);
 
-    NSArray * avatars  = @[ @"schlumpf_schlumpfine.jpg", @"schlumpf_papa.jpg" ];
+    NSArray * avatars  = @[ @"schlumpf_schlumpfine", @"schlumpf_papa" ];
     NSArray * nicks    = @[ @"Schlumpfine", @"Daddy S" ];
     NSArray * messages = @[ @[ @"Käffchen?"
                              , @"k, bin in 10min da..."
@@ -70,11 +68,10 @@
 
             Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
             contact.nickName = [nicks objectAtIndex: contactIndex];
-            contact.avatar = UIImageJPEGRepresentation([UIImage imageNamed: avatar], 1.0);
+            contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatar]);
             
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - (60*60*24*30)];
             contact.lastMessageTime = date;
-
             
             for(int i = 0; i < messageCount; ++i) {
                 Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: importContext];
@@ -97,6 +94,10 @@
             NSLog(@"ERROR - failed to save message: %@", error);
         }
     }
+}
+
+- (void) sendRandomMessage {
+
 }
 
 @end

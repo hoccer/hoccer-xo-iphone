@@ -18,16 +18,13 @@ static const double kCornerRadius = 3.0;
     [self.layer setMasksToBounds: YES];
     self.layer.cornerRadius = kCornerRadius;
 
-    [self.layer setBorderColor: [[UIColor darkGrayColor] CGColor]];
-    [self.layer setBorderWidth: 1.0];
-}
-
-- (UIImage*) image {
-    return self.imageView.image;
+    self.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    self.layer.borderWidth = 1.0;
 }
 
 - (void) setImage:(UIImage *)image {
-    self.imageView.image = image;
+    self.layer.contents = (id)image.CGImage;
+    _image = image;
 }
 
 @end

@@ -19,6 +19,17 @@ const float kTimeSectionInterval = 2 * 60;
 
 @dynamic messages;
 
+@synthesize avatarImage = _avatarImage;
+
+- (UIImage*) avatarImage {
+    if (_avatarImage != nil) {
+        return _avatarImage;
+    }
+
+    _avatarImage = [UIImage imageWithData: self.avatar];
+
+    return _avatarImage;
+}
 
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date {
     if (self.lastMessageTime == nil) {

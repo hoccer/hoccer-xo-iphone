@@ -17,6 +17,8 @@
 
 @property (nonatomic, retain) NSMutableSet* messages;
 
+@property (readonly, retain) UIImage* avatarImage;
+
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date;
 
 @end

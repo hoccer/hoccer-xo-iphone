@@ -256,7 +256,6 @@
              [tableView scrollToRowAtIndexPath: newIndexPath atScrollPosition: UITableViewScrollPositionTop animated:YES];
              */
             break;
-
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
@@ -290,28 +289,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
 
     cell.message.text = message.text;
-    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael.png"] : [UIImage imageWithData: message.contact.avatar];
-    /*
-    // TODO: move this stuff to the cell
-    cell.myMessage.arrowLeft = NO;
-    cell.yourMessage.arrowLeft = YES;
-    if ([message.isOutgoing boolValue] == YES) {
-        cell.myMessage.hidden = NO;
-        cell.myMessage.text = message.text;
-        cell.myAvatar.hidden = NO;
-        cell.myAvatar.image = [UIImage imageNamed: @"azrael.png"];
-        cell.yourAvatar.hidden = YES;
-        cell.yourMessage.hidden = YES;
-
-    } else {
-        cell.yourMessage.hidden = NO;
-        cell.yourMessage.text = message.text;
-        cell.yourAvatar.hidden = NO;
-        cell.yourAvatar.image = [UIImage imageWithData: message.contact.avatar];
-        cell.myAvatar.hidden = YES;
-        cell.myMessage.hidden = YES;
-    }
-     */
+    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael.png"] : message.contact.avatarImage;
 }
 
 - (void) scrollToBottom: (BOOL) animated {
