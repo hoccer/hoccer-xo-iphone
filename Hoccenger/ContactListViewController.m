@@ -8,8 +8,9 @@
 
 #import "ContactListViewController.h"
 
-#import "ChatViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
+#import "ChatViewController.h"
 #import "Contact.h"
 
 @interface ContactListViewController ()
@@ -232,6 +233,20 @@
 {
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = contact.nickName;
+
+    UIButton * button = [UIButton buttonWithType: UIButtonTypeCustom];
+    [button setTitle: @"23" forState: UIControlStateNormal];
+    button.titleLabel.textColor = [UIColor whiteColor];
+    button.backgroundColor = [UIColor redColor];
+    button.frame = CGRectMake(0, 0, 40, 20);
+    button.layer.cornerRadius = button.frame.size.height / 2;
+    button.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size: 17.0];
+    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    button.layer.borderColor = [UIColor blackColor].CGColor;
+    button.layer.borderWidth = 1.0;
+    // TODO: state pressed
+
+    cell.accessoryView = button;
 }
 
 @end
