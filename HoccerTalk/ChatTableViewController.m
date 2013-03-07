@@ -17,6 +17,8 @@
 
 @interface ChatTableViewController ()
 
+@property (nonatomic,strong) NSIndexPath * firstNewMessage;
+
 - (void)configureCell:(UITableViewCell *)cell forMessage:(Message *) message;
 
 @end
@@ -99,45 +101,6 @@
     return 48;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -153,11 +116,6 @@
 
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO: iPad sizes, &c.
-    // this ain't nice. it shouldn't be neccessary to hard code the screen size here...
-    //CGSize screenSize = [UIScreen mainScreen].bounds.size;
-    //float width = UIDeviceOrientationIsPortrait(self.interfaceOrientation) ? screenSize.width : screenSize.height;
-
     double width = self.tableView.frame.size.width;
 
     Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
@@ -190,7 +148,6 @@
 }
 
 
-// XXX use a better key than the nickName
 - (void) setPartner: (Contact*) partner {
     if (partner == nil) {
         return;
@@ -198,20 +155,20 @@
     if (resultsControllers == nil) {
         resultsControllers = [[NSMutableDictionary alloc] init];
     }
-    _fetchedResultsController = [resultsControllers objectForKey: partner.nickName];
+    _fetchedResultsController = [resultsControllers objectForKey: partner.objectID];
     if (_fetchedResultsController == nil) {
-        NSDictionary * vars = @{ @"nickName" : partner.nickName };
-        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByNickName" substitutionVariables: vars];
+        NSDictionary * vars = @{ @"contact" : partner };
+        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByContact" substitutionVariables: vars];
 
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending: YES];
         NSArray *sortDescriptors = @[sortDescriptor];
 
         [fetchRequest setSortDescriptors:sortDescriptors];
 
-        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.nickName]];
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
         _fetchedResultsController.delegate = self;
 
-        [resultsControllers setObject: _fetchedResultsController forKey: partner.nickName];
+        [resultsControllers setObject: _fetchedResultsController forKey: partner.objectID];
 
         NSError *error = nil;
         if (![_fetchedResultsController performFetch:&error]) {
@@ -251,9 +208,9 @@
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            /* TODO: find out how to do this...
-             [tableView scrollToRowAtIndexPath: newIndexPath atScrollPosition: UITableViewScrollPositionTop animated:YES];
-             */
+            if (self.firstNewMessage == nil) {
+                self.firstNewMessage = newIndexPath;
+            }
             break;
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -276,8 +233,10 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
-    // XXX not generic ... see TODO above
-    //[self scrollToBottom: YES];
+    if (self.firstNewMessage != nil) {
+        [self.tableView scrollToRowAtIndexPath: self.firstNewMessage atScrollPosition: UITableViewScrollPositionBottom animated: YES];
+        self.firstNewMessage = nil;
+    }
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -300,7 +259,6 @@
 }
 
 - (void) scrollToBottom: (BOOL) animated {
-    // XXX handle sections
     if ([self.fetchedResultsController.fetchedObjects count]) {
         NSInteger lastSection = [self numberOfSectionsInTableView: self.tableView] - 1;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  [self tableView: self.tableView numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
