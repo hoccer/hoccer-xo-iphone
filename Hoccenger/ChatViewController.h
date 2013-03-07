@@ -24,6 +24,8 @@
 @property (strong, nonatomic) IBOutlet UITextField * textField;
 @property (strong, nonatomic) IBOutlet UIButton *    sendButton;
 @property (strong, nonatomic) IBOutlet UIView *      chatbar;
+@property (strong, nonatomic) IBOutlet UIView *      chatTableContainer;
+
 
 - (IBAction)sendPressed:(id)sender;
 

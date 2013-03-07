@@ -7,6 +7,9 @@
 //
 
 #import "ChatViewController.h"
+
+#import <QuartzCore/QuartzCore.h>
+
 #import "UIButton+GlossyRounded.h"
 #import "Message.h"
 #import "AppDelegate.h"
@@ -33,16 +36,17 @@
 
     chatTableController = (ChatTableViewController*)[self.childViewControllers objectAtIndex: 0];
 
+    self.chatbar.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_gradient"]];
+
     [chatTableController setPartner: _partner];
 
-    self.chatbar.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_gradient"]];
-    
     [self configureView];
 
 }
 
 - (void)viewDidLayoutSubviews {
     [self.sendButton makeRoundAndGlossy];
+    self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -149,6 +153,32 @@
         [self.chatBackend sendMessage: self.textField.text toContact: self.partner];
         self.textField.text = @"";
     }
+}
+
+- (UIImage *)radialGradient {
+    CGSize size = self.chatTableContainer.frame.size
+    ;
+    CGPoint center = CGPointMake(0.5 * size.width, 0.5 * size.height) ;
+
+    UIGraphicsBeginImageContextWithOptions(size, YES, 1);
+
+    // Drawing code
+    CGContextRef cx = UIGraphicsGetCurrentContext();
+
+    CGContextSaveGState(cx);
+    CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
+
+    CGFloat comps[] = {1.0,1.0,1.0,1.0,
+        0.9,0.9,0.9,1.0};
+    CGFloat locs[] = {0,1};
+    CGGradientRef g = CGGradientCreateWithColorComponents(space, comps, locs, 2);
+
+    CGContextDrawRadialGradient(cx, g, center, 0.0f, center, size.width > size.height ? 0.5 * size.width : 0.5 * size.height, kCGGradientDrawsAfterEndLocation);
+
+    CGContextRestoreGState(cx);
+
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    return image;
 }
 
 
