@@ -13,8 +13,10 @@
 
 @property (nonatomic, retain) NSString* text;
 @property (nonatomic, retain) NSDate*   timeStamp;
-@property (nonatomic)         NSNumber* isOutgoing;
+@property (nonatomic, retain) NSNumber* isOutgoing;
 @property (nonatomic, retain) NSString* timeSection;
+@property (nonatomic, retain) NSNumber* isRead;
+
 
 @property (nonatomic, retain) Contact*  contact;
 

@@ -14,6 +14,7 @@
 @dynamic text;
 @dynamic timeStamp;
 @dynamic timeSection;
+@dynamic isRead;
 
 @dynamic contact;
 

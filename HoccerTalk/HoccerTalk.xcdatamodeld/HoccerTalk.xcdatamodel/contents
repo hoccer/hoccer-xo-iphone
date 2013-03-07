@@ -12,6 +12,7 @@
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="isOutgoing" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeSection" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
@@ -20,6 +21,6 @@
     <fetchRequest name="MessagesByNickName" entity="Message" predicateString="contact.nickName LIKE $nickName"/>
     <elements>
         <element name="Contact" positionX="261" positionY="189" width="128" height="120"/>
-        <element name="Message" positionX="-261" positionY="63" width="128" height="120"/>
+        <element name="Message" positionX="-261" positionY="63" width="128" height="135"/>
     </elements>
 </model>

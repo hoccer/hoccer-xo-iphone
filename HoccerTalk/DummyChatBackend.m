@@ -11,12 +11,16 @@
 #import "Contact.h"
 #import "Message.h"
 
+
 @implementation DummyChatBackend
 
 - (id) init {
     self = [super init];
     if (self != nil) {
         [self addDummies: 100];
+        self.blubberMessages = @[@"blub", @"blah", @"fasel", @"flup flup", @"brizzel", @"brazzel", @"brubbel", @"fizzel"];
+        [self blubber];
+
     }
     return self;
 }
@@ -94,10 +98,41 @@
             NSLog(@"ERROR - failed to save message: %@", error);
         }
     }
+
 }
 
-- (void) sendRandomMessage {
 
+- (void) blubber {
+    [self receiveRandomMessage];
+    [NSTimer scheduledTimerWithTimeInterval: rand() % 60
+                                     target:self
+                                   selector:@selector(blubber)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+- (void) receiveRandomMessage {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+
+    NSError *error = nil;
+    NSArray *contacts = [self.managedObjectContext executeFetchRequest: fetchRequest error:&error];
+    if (contacts == nil)
+    {
+        NSLog(@"Error: %@", error);
+        abort();
+    }
+
+    Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.managedObjectContext];
+    Contact * contact = [contacts objectAtIndex: rand() % contacts.count];
+    message.text = [self.blubberMessages objectAtIndex: rand() % self.blubberMessages.count];
+    message.timeStamp = [NSDate date];
+    message.contact = contact;
+    message.isOutgoing = @NO;
+    message.isRead = @NO;
+    message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
+    contact.lastMessageTime = message.timeStamp;
 }
 
 @end

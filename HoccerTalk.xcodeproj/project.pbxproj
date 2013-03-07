@@ -216,8 +216,8 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
-				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
+				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				63AEE2D516CA4D0200522F92 /* Products */,
 			);

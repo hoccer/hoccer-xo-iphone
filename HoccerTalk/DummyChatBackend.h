@@ -10,6 +10,8 @@
 
 @interface DummyChatBackend : ChatBackend
 
+@property (nonatomic, strong) NSArray* blubberMessages;
+
 - (id) init;
 - (void) addDummies: (long) messageCount;
 
