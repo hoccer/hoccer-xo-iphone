@@ -277,7 +277,7 @@
 {
     [self.tableView endUpdates];
     // XXX not generic ... see TODO above
-    [self scrollToBottom: YES];
+    //[self scrollToBottom: YES];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -286,6 +286,14 @@
 }
 
 - (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
+
+    if ([message.isRead isEqualToNumber: @NO]) {
+        // TODO: find a better way to do this...
+        [message.contact willChangeValueForKey: @"unreadMessages"];
+        message.isRead = @YES;
+        [self.managedObjectContext refreshObject:message.contact mergeChanges:YES];
+        [message.contact didChangeValueForKey: @"unreadMessages"];
+    }
 
     cell.message.text = message.text;
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael.png"] : message.contact.avatarImage;

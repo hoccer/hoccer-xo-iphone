@@ -14,6 +14,7 @@
 @property (nonatomic, retain) NSDate*       lastMessageTime;
 @property (nonatomic, retain) NSString*     nickName;
 @property (nonatomic, retain) NSString*     currentTimeSection;
+@property (nonatomic, retain) NSArray*      unreadMessages;
 
 @property (nonatomic, retain) NSMutableSet* messages;
 

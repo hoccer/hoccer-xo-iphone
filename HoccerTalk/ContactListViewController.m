@@ -229,13 +229,12 @@
 }
  */
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = contact.nickName;
 
     UIButton * button = [UIButton buttonWithType: UIButtonTypeCustom];
-    [button setTitle: @"23" forState: UIControlStateNormal];
+    [button setTitle: [NSNumber numberWithInt: [contact.unreadMessages count]].stringValue forState: UIControlStateNormal];
     [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     button.backgroundColor = [UIColor redColor];
     button.frame = CGRectMake(0, 0, 40, 20);

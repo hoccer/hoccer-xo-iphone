@@ -8,6 +8,9 @@
         </attribute>
         <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="contact" inverseEntity="Message" syncable="YES"/>
+        <fetchedProperty name="unreadMessages" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Message" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
+        </fetchedProperty>
         <userInfo/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
@@ -20,7 +23,7 @@
     </entity>
     <fetchRequest name="MessagesByNickName" entity="Message" predicateString="contact.nickName LIKE $nickName"/>
     <elements>
-        <element name="Contact" positionX="261" positionY="189" width="128" height="120"/>
+        <element name="Contact" positionX="261" positionY="189" width="128" height="149"/>
         <element name="Message" positionX="-261" positionY="63" width="128" height="135"/>
     </elements>
 </model>

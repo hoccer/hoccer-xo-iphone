@@ -84,6 +84,7 @@
                 message.timeStamp = date;
                 message.contact = contact;
                 message.isOutgoing = i % 2 == 0 ? @NO : @YES;
+                message.isRead = @NO;
 
                 message.timeSection = [contact sectionTitleForMessageTime: date];
                 contact.lastMessageTime = date;
@@ -96,6 +97,7 @@
         [importContext save:&error];
         if (error != nil) {
             NSLog(@"ERROR - failed to save message: %@", error);
+            abort();
         }
     }
 
@@ -130,9 +132,14 @@
     message.timeStamp = [NSDate date];
     message.contact = contact;
     message.isOutgoing = @NO;
-    message.isRead = @NO;
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
     contact.lastMessageTime = message.timeStamp;
+
+    // TODO: find a better way to do this...
+    [message.contact willChangeValueForKey: @"unreadMessages"];
+    message.isRead = @NO;
+    [self.managedObjectContext refreshObject: contact mergeChanges:YES];
+    [message.contact didChangeValueForKey: @"unreadMessages"];
 }
 
 @end

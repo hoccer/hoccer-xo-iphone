@@ -16,6 +16,7 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic lastMessageTime;
 @dynamic nickName;
 @dynamic currentTimeSection;
+@dynamic unreadMessages;
 
 @dynamic messages;
 
