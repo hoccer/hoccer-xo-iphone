@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  Hoccenger
+//  HoccerTalk
 //
 //  Created by David Siegel on 12.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -109,7 +109,7 @@
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Hoccenger" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"HoccerTalk" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
@@ -122,7 +122,7 @@
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Hoccenger.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"HoccerTalk.sqlite"];
     
     NSError *error = nil;
 
