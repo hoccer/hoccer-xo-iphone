@@ -14,12 +14,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-static const double kButtonCornerRadius = 4.0;
-
-void UIButton_GlossyRounded_touch()
-{
-    NSLog(@"Do nothing, just to make categories link correctly for static files.");
-}
+static const double kButtonCornerRadius = 5.0;
 
 @implementation UIButton (GlossyRounded)
 
