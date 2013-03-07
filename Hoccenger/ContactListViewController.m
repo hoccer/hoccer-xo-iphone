@@ -236,7 +236,7 @@
 
     UIButton * button = [UIButton buttonWithType: UIButtonTypeCustom];
     [button setTitle: @"23" forState: UIControlStateNormal];
-    button.titleLabel.textColor = [UIColor whiteColor];
+    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     button.backgroundColor = [UIColor redColor];
     button.frame = CGRectMake(0, 0, 40, 20);
     button.layer.cornerRadius = button.frame.size.height / 2;

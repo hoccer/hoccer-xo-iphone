@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		630D9ED216E7CB94000CCA65 /* avatar_bezel.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9ED116E7CB94000CCA65 /* avatar_bezel.png */; };
+		630D9EDE16E8CD1D000CCA65 /* hoccer-talk-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EDD16E8CD1C000CCA65 /* hoccer-talk-app-icon.png */; };
+		630D9EE016E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EDF16E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png */; };
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
@@ -52,6 +55,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		630D9ED116E7CB94000CCA65 /* avatar_bezel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_bezel.png; sourceTree = "<group>"; };
+		630D9EDD16E8CD1C000CCA65 /* hoccer-talk-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hoccer-talk-app-icon.png"; path = "../hoccer-talk-app-icon.png"; sourceTree = "<group>"; };
+		630D9EDF16E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hoccer-talk-app-icon@2x.png"; path = "../hoccer-talk-app-icon@2x.png"; sourceTree = "<group>"; };
 		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBackend.h; sourceTree = "<group>"; };
 		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBackend.m; sourceTree = "<group>"; };
 		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DummyChatBackend.h; sourceTree = "<group>"; };
@@ -135,6 +141,7 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				630D9ED116E7CB94000CCA65 /* avatar_bezel.png */,
 				63540AA816E665AC0087D24E /* azrael.png */,
 				63540AA916E665AC0087D24E /* azrael@2x.png */,
 				63540AA416E6640D0087D24E /* schlumpf_papa.png */,
@@ -209,6 +216,8 @@
 		63AEE2E016CA4D0200522F92 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				630D9EDF16E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png */,
+				630D9EDD16E8CD1C000CCA65 /* hoccer-talk-app-icon.png */,
 				63AEE2E116CA4D0200522F92 /* Hoccenger-Info.plist */,
 				63AEE2E216CA4D0200522F92 /* InfoPlist.strings */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
@@ -325,6 +334,9 @@
 				63540AA716E6640D0087D24E /* schlumpf_papa@2x.png in Resources */,
 				63540AAA16E665AC0087D24E /* azrael.png in Resources */,
 				63540AAB16E665AC0087D24E /* azrael@2x.png in Resources */,
+				630D9ED216E7CB94000CCA65 /* avatar_bezel.png in Resources */,
+				630D9EDE16E8CD1D000CCA65 /* hoccer-talk-app-icon.png in Resources */,
+				630D9EE016E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
