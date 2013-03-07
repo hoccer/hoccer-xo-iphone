@@ -46,7 +46,7 @@
 
 - (void)viewDidLayoutSubviews {
     [self.sendButton makeRoundAndGlossy];
-    //self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
+    self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -154,6 +154,8 @@
         self.textField.text = @"";
     }
 }
+
+#pragma mark - Graphics Utilities
 
 - (UIImage *)radialGradient {
     CGSize size = self.chatTableContainer.frame.size
