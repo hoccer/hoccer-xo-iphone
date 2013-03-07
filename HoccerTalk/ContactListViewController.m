@@ -12,6 +12,8 @@
 
 #import "ChatViewController.h"
 #import "Contact.h"
+#import "ContactCell.h"
+#import "AvatarBezelView.h"
 
 @interface ContactListViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -80,7 +82,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
@@ -123,7 +125,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
+    if ([[segue identifier] isEqualToString:@"showChat"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         [[segue destinationViewController] setPartner: contact];
@@ -229,23 +231,19 @@
 }
  */
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = contact.nickName;
-
-    UIButton * button = [UIButton buttonWithType: UIButtonTypeCustom];
-    [button setTitle: [NSNumber numberWithInt: [contact.unreadMessages count]].stringValue forState: UIControlStateNormal];
-    [button setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
-    button.backgroundColor = [UIColor redColor];
-    button.frame = CGRectMake(0, 0, 40, 20);
-    button.layer.cornerRadius = button.frame.size.height / 2;
-    button.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size: 17.0];
-    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    button.layer.borderColor = [UIColor blackColor].CGColor;
-    button.layer.borderWidth = 1.0;
-    // TODO: state pressed
-
-    cell.accessoryView = button;
+    cell.nickName.text = contact.nickName;
+    cell.avatar.image = contact.avatarImage;
+    if (contact.unreadMessages.count > 0) {
+        NSLog(@"configure cell %d > 0", contact.unreadMessages.count);
+        cell.messageCount.text = [NSNumber numberWithInt: contact.unreadMessages.count].stringValue;
+        cell.messageCount.backgroundColor = [UIColor redColor];
+    } else {
+        NSLog(@"configure cell %d == 0", contact.unreadMessages.count);
+        cell.messageCount.text = [NSNumber numberWithInt: contact.messages.count].stringValue;
+        cell.messageCount.backgroundColor = [UIColor lightGrayColor];
+    }
 }
 
 @end
