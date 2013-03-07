@@ -51,9 +51,51 @@
 		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
 		63AEE30816CA566B00522F92 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30716CA566B00522F92 /* Contact.m */; };
 		63AEE30B16CA6B1900522F92 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* Message.m */; };
+		63C413B116E8FBA4004E1F6D /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */; };
+		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
+		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
+		63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B816E8FD15004E1F6D /* Security.framework */; };
 		63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		63C413A916E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F6B2082D1450F597009315AF;
+			remoteInfo = SocketRocket;
+		};
+		63C413AB16E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F668C880153E91210044DBAC;
+			remoteInfo = SocketRocketOSX;
+		};
+		63C413AD16E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F6BDA802145900D200FE3253;
+			remoteInfo = SRWebSocketTests;
+		};
+		63C413AF16E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F62417E314D52F3C003CE997;
+			remoteInfo = TestChat;
+		};
+		63C413B216E8FBB0004E1F6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F6B2082C1450F597009315AF;
+			remoteInfo = SocketRocket;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		630D9ED116E7CB94000CCA65 /* avatar_bezel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_bezel.png; sourceTree = "<group>"; };
@@ -119,6 +161,10 @@
 		63AEE30716CA566B00522F92 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		63AEE30916CA6B1900522F92 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		63AEE30A16CA6B1900522F92 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = 3rdParty/SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
+		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		63C413B816E8FD15004E1F6D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
 		63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -129,6 +175,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */,
+				63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */,
+				63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */,
+				63C413B116E8FBA4004E1F6D /* libSocketRocket.a in Frameworks */,
 				63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */,
 				63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */,
 				63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */,
@@ -166,6 +216,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				63AEE2D516CA4D0200522F92 /* Products */,
@@ -183,6 +234,9 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63C413B816E8FD15004E1F6D /* Security.framework */,
+				63C413B616E8FD0D004E1F6D /* CFNetwork.framework */,
+				63C413B416E8FD02004E1F6D /* libicucore.dylib */,
 				63AEE2DD16CA4D0200522F92 /* CoreData.framework */,
 				63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */,
 				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
@@ -243,6 +297,25 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
+			isa = PBXGroup;
+			children = (
+				63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */,
+			);
+			name = 3rdParty;
+			sourceTree = "<group>";
+		};
+		63C413A316E8FA0C004E1F6D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */,
+				63C413AC16E8FA0C004E1F6D /* SocketRocket.framework */,
+				63C413AE16E8FA0C004E1F6D /* SRWebSocketTests.octest */,
+				63C413B016E8FA0C004E1F6D /* TestChat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		63D4916716CAA17D00FD395F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -282,6 +355,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				63C413B316E8FBB0004E1F6D /* PBXTargetDependency */,
 			);
 			name = HoccerTalk;
 			productName = Hoccenger;
@@ -307,12 +381,49 @@
 			mainGroup = 63AEE2CB16CA4D0200522F92;
 			productRefGroup = 63AEE2D516CA4D0200522F92 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 63C413A316E8FA0C004E1F6D /* Products */;
+					ProjectRef = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				63AEE2D316CA4D0200522F92 /* HoccerTalk */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSocketRocket.a;
+			remoteRef = 63C413A916E8FA0C004E1F6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		63C413AC16E8FA0C004E1F6D /* SocketRocket.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SocketRocket.framework;
+			remoteRef = 63C413AB16E8FA0C004E1F6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		63C413AE16E8FA0C004E1F6D /* SRWebSocketTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SRWebSocketTests.octest;
+			remoteRef = 63C413AD16E8FA0C004E1F6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		63C413B016E8FA0C004E1F6D /* TestChat.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = TestChat.app;
+			remoteRef = 63C413AF16E8FA0C004E1F6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		63AEE2D216CA4D0200522F92 /* Resources */ = {
@@ -374,6 +485,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		63C413B316E8FBB0004E1F6D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SocketRocket;
+			targetProxy = 63C413B216E8FBB0004E1F6D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		63AEE2E216CA4D0200522F92 /* InfoPlist.strings */ = {
@@ -467,7 +586,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerTalk/HoccerTalk-Prefix.pch";
 				INFOPLIST_FILE = "HoccerTalk/HoccerTalk-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "Hoccer Talk";
+				USER_HEADER_SEARCH_PATHS = 3rdParty/SocketRocket;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -478,7 +602,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerTalk/HoccerTalk-Prefix.pch";
 				INFOPLIST_FILE = "HoccerTalk/HoccerTalk-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "Hoccer Talk";
+				USER_HEADER_SEARCH_PATHS = 3rdParty/SocketRocket;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
