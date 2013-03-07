@@ -10,6 +10,7 @@
 		630D9ED216E7CB94000CCA65 /* avatar_bezel.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9ED116E7CB94000CCA65 /* avatar_bezel.png */; };
 		630D9EDE16E8CD1D000CCA65 /* hoccer-talk-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EDD16E8CD1C000CCA65 /* hoccer-talk-app-icon.png */; };
 		630D9EE016E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EDF16E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png */; };
+		630D9EE216E8DB34000CCA65 /* avatar_bezel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EE116E8DB34000CCA65 /* avatar_bezel@2x.png */; };
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
@@ -58,6 +59,7 @@
 		630D9ED116E7CB94000CCA65 /* avatar_bezel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_bezel.png; sourceTree = "<group>"; };
 		630D9EDD16E8CD1C000CCA65 /* hoccer-talk-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hoccer-talk-app-icon.png"; path = "../hoccer-talk-app-icon.png"; sourceTree = "<group>"; };
 		630D9EDF16E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hoccer-talk-app-icon@2x.png"; path = "../hoccer-talk-app-icon@2x.png"; sourceTree = "<group>"; };
+		630D9EE116E8DB34000CCA65 /* avatar_bezel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_bezel@2x.png"; sourceTree = "<group>"; };
 		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBackend.h; sourceTree = "<group>"; };
 		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBackend.m; sourceTree = "<group>"; };
 		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DummyChatBackend.h; sourceTree = "<group>"; };
@@ -92,15 +94,15 @@
 		63540AA916E665AC0087D24E /* azrael@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "azrael@2x.png"; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
-		63AEE2D416CA4D0200522F92 /* Hoccenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hoccenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer Talk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		63AEE2DD16CA4D0200522F92 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		63AEE2E116CA4D0200522F92 /* Hoccenger-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Hoccenger-Info.plist"; sourceTree = "<group>"; };
+		63AEE2E116CA4D0200522F92 /* Hoccer Talk-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Hoccer Talk-Info.plist"; sourceTree = "<group>"; };
 		63AEE2E316CA4D0200522F92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63AEE2E516CA4D0200522F92 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		63AEE2E716CA4D0200522F92 /* Hoccenger-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hoccenger-Prefix.pch"; sourceTree = "<group>"; };
+		63AEE2E716CA4D0200522F92 /* Hoccer Talk-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hoccer Talk-Prefix.pch"; sourceTree = "<group>"; };
 		63AEE2E816CA4D0200522F92 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		63AEE2E916CA4D0200522F92 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		63AEE2EB16CA4D0200522F92 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				630D9EE116E8DB34000CCA65 /* avatar_bezel@2x.png */,
 				630D9ED116E7CB94000CCA65 /* avatar_bezel.png */,
 				63540AA816E665AC0087D24E /* azrael.png */,
 				63540AA916E665AC0087D24E /* azrael@2x.png */,
@@ -161,7 +164,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
-				63AEE2DF16CA4D0200522F92 /* Hoccenger */,
+				63AEE2DF16CA4D0200522F92 /* Hoccer Talk */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				63AEE2D516CA4D0200522F92 /* Products */,
 			);
@@ -170,7 +173,7 @@
 		63AEE2D516CA4D0200522F92 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				63AEE2D416CA4D0200522F92 /* Hoccenger.app */,
+				63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -187,7 +190,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		63AEE2DF16CA4D0200522F92 /* Hoccenger */ = {
+		63AEE2DF16CA4D0200522F92 /* Hoccer Talk */ = {
 			isa = PBXGroup;
 			children = (
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
@@ -210,7 +213,8 @@
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
 				63D4916716CAA17D00FD395F /* Views */,
 			);
-			path = Hoccenger;
+			name = "Hoccer Talk";
+			path = HoccerTalk;
 			sourceTree = "<group>";
 		};
 		63AEE2E016CA4D0200522F92 /* Supporting Files */ = {
@@ -218,10 +222,10 @@
 			children = (
 				630D9EDF16E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png */,
 				630D9EDD16E8CD1C000CCA65 /* hoccer-talk-app-icon.png */,
-				63AEE2E116CA4D0200522F92 /* Hoccenger-Info.plist */,
+				63AEE2E116CA4D0200522F92 /* Hoccer Talk-Info.plist */,
 				63AEE2E216CA4D0200522F92 /* InfoPlist.strings */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
-				63AEE2E716CA4D0200522F92 /* Hoccenger-Prefix.pch */,
+				63AEE2E716CA4D0200522F92 /* Hoccer Talk-Prefix.pch */,
 				63AEE2EB16CA4D0200522F92 /* Default.png */,
 				63AEE2ED16CA4D0300522F92 /* Default@2x.png */,
 				63AEE2EF16CA4D0300522F92 /* Default-568h@2x.png */,
@@ -268,9 +272,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		63AEE2D316CA4D0200522F92 /* Hoccenger */ = {
+		63AEE2D316CA4D0200522F92 /* Hoccer Talk */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "Hoccenger" */;
+			buildConfigurationList = 63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "Hoccer Talk" */;
 			buildPhases = (
 				63AEE2D016CA4D0200522F92 /* Sources */,
 				63AEE2D116CA4D0200522F92 /* Frameworks */,
@@ -280,9 +284,9 @@
 			);
 			dependencies = (
 			);
-			name = Hoccenger;
+			name = "Hoccer Talk";
 			productName = Hoccenger;
-			productReference = 63AEE2D416CA4D0200522F92 /* Hoccenger.app */;
+			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -294,7 +298,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Hoccer GmbH";
 			};
-			buildConfigurationList = 63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "Hoccenger" */;
+			buildConfigurationList = 63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "Hoccer Talk" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -306,7 +310,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				63AEE2D316CA4D0200522F92 /* Hoccenger */,
+				63AEE2D316CA4D0200522F92 /* Hoccer Talk */,
 			);
 		};
 /* End PBXProject section */
@@ -337,6 +341,7 @@
 				630D9ED216E7CB94000CCA65 /* avatar_bezel.png in Resources */,
 				630D9EDE16E8CD1D000CCA65 /* hoccer-talk-app-icon.png in Resources */,
 				630D9EE016E8CD25000CCA65 /* hoccer-talk-app-icon@2x.png in Resources */,
+				630D9EE216E8DB34000CCA65 /* avatar_bezel@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,9 +466,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Hoccenger/Hoccenger-Prefix.pch";
-				INFOPLIST_FILE = "Hoccenger/Hoccenger-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "HoccerTalk/Hoccer Talk-Prefix.pch";
+				INFOPLIST_FILE = "HoccerTalk/Hoccer Talk-Info.plist";
+				PRODUCT_NAME = "Hoccer Talk";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -472,9 +477,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Hoccenger/Hoccenger-Prefix.pch";
-				INFOPLIST_FILE = "Hoccenger/Hoccenger-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "HoccerTalk/Hoccer Talk-Prefix.pch";
+				INFOPLIST_FILE = "HoccerTalk/Hoccer Talk-Info.plist";
+				PRODUCT_NAME = "Hoccer Talk";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -482,7 +487,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "Hoccenger" */ = {
+		63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "Hoccer Talk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				63AEE30016CA4D0300522F92 /* Debug */,
@@ -491,7 +496,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "Hoccenger" */ = {
+		63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "Hoccer Talk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				63AEE30316CA4D0300522F92 /* Debug */,

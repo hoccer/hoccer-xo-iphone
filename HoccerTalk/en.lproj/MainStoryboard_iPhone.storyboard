@@ -102,6 +102,7 @@
                             <containerView contentMode="scaleToFill" id="2ZD-Kx-uba">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.95999999999999996" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <segue destination="F8J-Sv-dTA" kind="embed" id="FY2-pJ-xMQ"/>
                                 </connections>

@@ -46,7 +46,7 @@
 
 - (void)viewDidLayoutSubviews {
     [self.sendButton makeRoundAndGlossy];
-    self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
+    //self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
 }
 
 - (void)didReceiveMemoryWarning

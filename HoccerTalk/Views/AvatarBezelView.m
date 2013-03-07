@@ -9,7 +9,8 @@
 #import "AvatarBezelView.h"
 #import <QuartzCore/QuartzCore.h>
 
-static const double kCornerRadius = 3.0;
+static const double kCornerRadius = 4.0;
+
 
 @implementation AvatarBezelView
 
@@ -17,11 +18,6 @@ static const double kCornerRadius = 3.0;
     [super awakeFromNib];
     [self.layer setMasksToBounds: YES];
     self.layer.cornerRadius = kCornerRadius;
-
-    /*
-    self.layer.borderColor = [UIColor darkGrayColor].CGColor;
-    self.layer.borderWidth = 1.0;
-    */
 
     CALayer * layer = [CALayer layer];
     layer.contents = (id)[UIImage imageNamed: @"avatar_bezel"].CGImage;
