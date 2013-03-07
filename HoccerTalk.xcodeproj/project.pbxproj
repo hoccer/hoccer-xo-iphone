@@ -55,6 +55,7 @@
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
 		63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B816E8FD15004E1F6D /* Security.framework */; };
+		63C413BC16E94735004E1F6D /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C413BB16E94735004E1F6D /* ContactCell.m */; };
 		63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
@@ -165,6 +166,8 @@
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		63C413B816E8FD15004E1F6D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		63C413BA16E94735004E1F6D /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
+		63C413BB16E94735004E1F6D /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
 		63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
 		63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -325,18 +328,20 @@
 				6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */,
 				63540A9016E500D20087D24E /* BubbleView.h */,
 				63540A9116E500D20087D24E /* BubbleView.m */,
+				63C413BA16E94735004E1F6D /* ContactCell.h */,
+				63C413BB16E94735004E1F6D /* ContactCell.m */,
 				6320D7CE16E4C0F400E58478 /* LeftMessageCell.h */,
 				6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */,
 				6343B4E316CD604700B3A29E /* MessageCell.h */,
 				6343B4E416CD604700B3A29E /* MessageCell.m */,
+				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
+				63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */,
 				6320D7D116E4C11200E58478 /* RightMessageCell.h */,
 				6320D7D216E4C11200E58478 /* RightMessageCell.m */,
 				6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */,
 				6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */,
 				63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */,
 				63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */,
-				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
-				63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -481,6 +486,7 @@
 				6320D7D316E4C11200E58478 /* RightMessageCell.m in Sources */,
 				63540A9216E500D20087D24E /* BubbleView.m in Sources */,
 				63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */,
+				63C413BC16E94735004E1F6D /* ContactCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
