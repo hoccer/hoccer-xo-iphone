@@ -21,6 +21,7 @@
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
     </entity>
+    <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
     <fetchRequest name="MessagesByNickName" entity="Message" predicateString="contact.nickName LIKE $nickName"/>
     <elements>
         <element name="Contact" positionX="261" positionY="189" width="128" height="149"/>
