@@ -232,19 +232,16 @@
  */
 
 - (void)configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickName;
     cell.avatar.image = contact.avatarImage;
     if (contact.unreadMessages.count > 0) {
-        NSLog(@"configure cell %d > 0", contact.unreadMessages.count);
         cell.messageCount = contact.unreadMessages.count;
         cell.hasUnreadMessages = YES;
-        //cell.messageCount.backgroundColor = [UIColor redColor];
     } else {
-        NSLog(@"configure cell %d == 0", contact.unreadMessages.count);
         cell.messageCount = contact.messages.count;
         cell.hasUnreadMessages = NO;
-        //cell.messageCount.backgroundColor = [UIColor lightGrayColor];
     }
 }
 
