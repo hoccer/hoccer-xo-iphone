@@ -237,12 +237,14 @@
     cell.avatar.image = contact.avatarImage;
     if (contact.unreadMessages.count > 0) {
         NSLog(@"configure cell %d > 0", contact.unreadMessages.count);
-        cell.messageCount.text = [NSNumber numberWithInt: contact.unreadMessages.count].stringValue;
-        cell.messageCount.backgroundColor = [UIColor redColor];
+        cell.messageCount = contact.unreadMessages.count;
+        cell.hasUnreadMessages = YES;
+        //cell.messageCount.backgroundColor = [UIColor redColor];
     } else {
         NSLog(@"configure cell %d == 0", contact.unreadMessages.count);
-        cell.messageCount.text = [NSNumber numberWithInt: contact.messages.count].stringValue;
-        cell.messageCount.backgroundColor = [UIColor lightGrayColor];
+        cell.messageCount = contact.messages.count;
+        cell.hasUnreadMessages = NO;
+        //cell.messageCount.backgroundColor = [UIColor lightGrayColor];
     }
 }
 

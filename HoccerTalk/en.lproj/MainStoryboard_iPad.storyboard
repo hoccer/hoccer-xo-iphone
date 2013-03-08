@@ -138,7 +138,7 @@
                                 </view>
                                 <connections>
                                     <outlet property="avatar" destination="aPx-8R-JlE" id="9D6-EY-FU7"/>
-                                    <outlet property="messageCount" destination="ecg-2A-iKw" id="t6P-nm-qCS"/>
+                                    <outlet property="messageCountLabel" destination="ecg-2A-iKw" id="Vx5-ZM-tfy"/>
                                     <outlet property="nickName" destination="GUs-lt-iK5" id="yvr-xh-PVO"/>
                                 </connections>
                             </tableViewCell>

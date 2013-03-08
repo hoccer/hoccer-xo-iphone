@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "AutoheightLabel.h"
+#import "AssetStore.h"
 
 static const double kLeftBubbleCapLeft  = 11.0;
 static const double kRightBubbleCapLeft = 5.0;
@@ -27,7 +28,6 @@ static const double kBubbleCapTop   = 32.0;
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder: aDecoder];
     if (self != nil) {  
-        //self.minHeight =  0.0; //self.frame.size.height;
         self.bubbleColor = self.backgroundColor;
         self.backgroundColor = [UIColor clearColor];
 
@@ -42,8 +42,8 @@ static const double kBubbleCapTop   = 32.0;
                                     self.message.frame.origin.y,
                                     0.0);
 
-    NSString * file = _pointingRight == YES ? @"bubble-right" : @"bubble-left";
-    UIImage * bubble = [[UIImage imageNamed: file] stretchableImageWithLeftCapWidth: _pointingRight == YES ? kRightBubbleCapLeft : kLeftBubbleCapLeft topCapHeight: kBubbleCapTop];
+    NSString * file = _pointingRight ? @"bubble-right" : @"bubble-left";
+    UIImage * bubble = [AssetStore stretchableImageNamed: file withLeftCapWidth: _pointingRight ? kRightBubbleCapLeft : kLeftBubbleCapLeft topCapHeight:kBubbleCapTop];
     self.background = [[UIImageView alloc] initWithImage: bubble];
 	//self.background.frame = self.frame;
     self.background.autoresizingMask = UIViewAutoresizingFlexibleWidth;

@@ -14,7 +14,9 @@
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet AvatarBezelView * avatar;
-@property (nonatomic,strong) IBOutlet UILabel * messageCount;
+@property (nonatomic, assign) NSInteger messageCount;
+
+@property (nonatomic,assign) BOOL hasUnreadMessages;
 
 + (NSString *)reuseIdentifier;
 

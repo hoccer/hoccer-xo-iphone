@@ -37,7 +37,7 @@
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mH8-ys-z78" userLabel="Nick Name">
                                             <rect key="frame" x="60" y="-1" width="151" height="44"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -49,7 +49,7 @@
                                         </view>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="23" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FD6-dp-Qbn" userLabel="Message Count">
                                             <rect key="frame" x="241" y="11" width="39" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -60,7 +60,7 @@
                                 </view>
                                 <connections>
                                     <outlet property="avatar" destination="lkO-00-gch" id="nsl-sr-5Ze"/>
-                                    <outlet property="messageCount" destination="FD6-dp-Qbn" id="s2a-co-I7F"/>
+                                    <outlet property="messageCountLabel" destination="FD6-dp-Qbn" id="wu5-Gd-rxt"/>
                                     <outlet property="nickName" destination="mH8-ys-z78" id="3A2-m8-Q55"/>
                                     <segue destination="21" kind="push" identifier="showChat" id="IGP-WO-2UC"/>
                                 </connections>
@@ -254,67 +254,6 @@
             <point key="canvasLocation" x="1386" y="118"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="AutoheightLabel" superclassName="UILabel">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutoheightLabel.h"/>
-        </class>
-        <class className="AvatarBezelView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AvatarBezelView.h"/>
-        </class>
-        <class className="BubbleView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleView.h"/>
-            <relationships>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="ChatTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableViewController.h"/>
-        </class>
-        <class className="ChatViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="sendPressed:"/>
-                <relationship kind="outlet" name="chatTableContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
-                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="textField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="ContactCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="AvatarBezelView"/>
-                <relationship kind="outlet" name="messageCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ContactListViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
-        </class>
-        <class className="LeftMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
-        </class>
-        <class className="MessageCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="AvatarBezelView"/>
-                <relationship kind="outlet" name="bubble" candidateClass="BubbleView"/>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
-        </class>
-        <class className="RightMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
-        </class>
-        <class className="SectionHeaderCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SectionHeaderCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
