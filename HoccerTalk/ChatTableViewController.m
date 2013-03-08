@@ -155,6 +155,9 @@
     if (resultsControllers == nil) {
         resultsControllers = [[NSMutableDictionary alloc] init];
     }
+    if (_fetchedResultsController != nil) {
+        _fetchedResultsController.delegate = nil;
+    }
     _fetchedResultsController = [resultsControllers objectForKey: partner.objectID];
     if (_fetchedResultsController == nil) {
         NSDictionary * vars = @{ @"contact" : partner };
@@ -175,7 +178,10 @@
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
+    } else {
+        _fetchedResultsController.delegate = self;
     }
+    self.firstNewMessage = nil;
     [self.tableView reloadData];
     [self scrollToBottom: NO];
 }
