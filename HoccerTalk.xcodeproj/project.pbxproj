@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		630D9ED216E7CB94000CCA65 /* avatar_bezel.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9ED116E7CB94000CCA65 /* avatar_bezel.png */; };
-		630D9EE216E8DB34000CCA65 /* avatar_bezel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EE116E8DB34000CCA65 /* avatar_bezel@2x.png */; };
 		630D9EEB16E8F0B8000CCA65 /* hoccer-talk-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EE916E8F0B8000CCA65 /* hoccer-talk-app-icon.png */; };
 		630D9EEC16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EEA16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png */; };
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
@@ -104,8 +102,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		630D9ED116E7CB94000CCA65 /* avatar_bezel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_bezel.png; sourceTree = "<group>"; };
-		630D9EE116E8DB34000CCA65 /* avatar_bezel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_bezel@2x.png"; sourceTree = "<group>"; };
 		630D9EE916E8F0B8000CCA65 /* hoccer-talk-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-talk-app-icon.png"; sourceTree = "<group>"; };
 		630D9EEA16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-talk-app-icon@2x.png"; sourceTree = "<group>"; };
 		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBackend.h; sourceTree = "<group>"; };
@@ -213,8 +209,6 @@
 				63C413C016EA3549004E1F6D /* bg_message-count-red@2x.png */,
 				630D9EE916E8F0B8000CCA65 /* hoccer-talk-app-icon.png */,
 				630D9EEA16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png */,
-				630D9EE116E8DB34000CCA65 /* avatar_bezel@2x.png */,
-				630D9ED116E7CB94000CCA65 /* avatar_bezel.png */,
 				63540AA816E665AC0087D24E /* azrael.png */,
 				63540AA916E665AC0087D24E /* azrael@2x.png */,
 				63540AA416E6640D0087D24E /* schlumpf_papa.png */,
@@ -470,8 +464,6 @@
 				63540AA716E6640D0087D24E /* schlumpf_papa@2x.png in Resources */,
 				63540AAA16E665AC0087D24E /* azrael.png in Resources */,
 				63540AAB16E665AC0087D24E /* azrael@2x.png in Resources */,
-				630D9ED216E7CB94000CCA65 /* avatar_bezel.png in Resources */,
-				630D9EE216E8DB34000CCA65 /* avatar_bezel@2x.png in Resources */,
 				630D9EEB16E8F0B8000CCA65 /* hoccer-talk-app-icon.png in Resources */,
 				630D9EEC16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png in Resources */,
 				63C413C116EA3549004E1F6D /* bg_message-count-grey.png in Resources */,

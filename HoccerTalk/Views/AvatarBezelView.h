@@ -12,6 +12,9 @@
 
 @property (strong, nonatomic) UIImage *image;
 
-- (void) awakeFromNib;
+@property (assign, nonatomic) double    cornerRadius;
+@property (strong, nonatomic) UIColor * bezelColor;
+@property (strong, nonatomic) UIColor * innerShadowColor;
+@property (strong, nonatomic) UIColor * insetColor;
 
 @end
