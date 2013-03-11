@@ -26,6 +26,7 @@
         self.cornerRadius = 4;
 
         self.imageLayer = [CALayer layer];
+        self.imageLayer.cornerRadius = self.cornerRadius;
         [self.layer insertSublayer: self.imageLayer atIndex: 0];
 
         self.insetLayer = [CAShapeLayer layer];
@@ -45,6 +46,10 @@
 
         self.layer.backgroundColor = [UIColor clearColor].CGColor;
         self.layer.masksToBounds = YES;
+        if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] && [[UIScreen mainScreen] scale] == 2) {
+            self.layer.rasterizationScale=2.0;
+        }
+        self.layer.shouldRasterize = YES;
     }
     return self;
 }
@@ -69,14 +74,15 @@
     CAShapeLayer * imageMask = [CAShapeLayer layer];
     imageMask.path = self.bezelLayer.path;
     imageMask.frame = self.bounds;
-    imageMask.strokeColor = imageMask.fillColor = [UIColor blackColor].CGColor;
-    self.imageLayer.mask = imageMask;
+    imageMask.strokeColor = imageMask.fillColor = [UIColor whiteColor].CGColor;
+    //self.imageLayer.mask = imageMask;
+    //self.imageLayer.masksToBounds = YES;
 
 
     CAShapeLayer * mask = [CAShapeLayer layer];
     mask.path = [self roundedRect: insetRect].CGPath;
     mask.frame = self.bounds;
-    mask.strokeColor = mask.fillColor = [UIColor blackColor].CGColor;
+    mask.strokeColor = mask.fillColor = [UIColor whiteColor].CGColor;
     self.layer.mask = mask;
 }
 

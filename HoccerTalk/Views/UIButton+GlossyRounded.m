@@ -31,7 +31,7 @@ static const double kButtonCornerRadius = 5.0;
     if ([thisLayer respondsToSelector:@selector(shadowOpacity)]) // For compatibility, check if shadow is supported
     {
         thisLayer.shadowOpacity = 1.0;
-        thisLayer.shadowColor = [[UIColor whiteColor] CGColor];
+        thisLayer.shadowColor = [[UIColor colorWithWhite: 1.0 alpha: 0.8] CGColor];
         thisLayer.shadowOffset = CGSizeMake(0.0, 1.0);
         thisLayer.shadowRadius = 0.0;
         
@@ -51,16 +51,16 @@ static const double kButtonCornerRadius = 5.0;
     backgroundLayer.backgroundColor=self.backgroundColor.CGColor;
     [thisLayer insertSublayer:backgroundLayer atIndex:0];
     
-    thisLayer.backgroundColor=[UIColor colorWithWhite:0.0f alpha:0.0f].CGColor;
+    thisLayer.backgroundColor=[UIColor clearColor].CGColor;
     
     // Add gloss to the background layer
     CAGradientLayer *glossLayer = [CAGradientLayer layer];
     glossLayer.frame = thisLayer.bounds;
     glossLayer.colors = [NSArray arrayWithObjects:
-                         (id)[UIColor colorWithWhite:1.0f alpha:0.4f].CGColor,
-                         (id)[UIColor colorWithWhite:1.0f alpha:0.2f].CGColor,
-                         (id)[UIColor colorWithWhite:0.75f alpha:0.0f].CGColor,
-                         (id)[UIColor colorWithWhite:1.0f alpha:0.2f].CGColor,
+                         (id)[UIColor colorWithWhite:1.0f alpha:0.3f].CGColor,
+                         (id)[UIColor colorWithWhite:1.0f alpha:0.1f].CGColor,
+                         (id)[UIColor colorWithWhite:0.0f alpha:0.0f].CGColor,
+                         (id)[UIColor colorWithWhite:0.0f alpha:0.2f].CGColor,
                          nil];
     glossLayer.locations = [NSArray arrayWithObjects:
                             [NSNumber numberWithFloat:0.0f],
@@ -71,7 +71,7 @@ static const double kButtonCornerRadius = 5.0;
     [backgroundLayer addSublayer:glossLayer];
 
     self.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
-    [self setTitleShadowColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [self setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
 }
 
 @end

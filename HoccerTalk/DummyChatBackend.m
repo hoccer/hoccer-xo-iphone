@@ -106,7 +106,7 @@
 
 - (void) blubber {
     [self receiveRandomMessage];
-    [NSTimer scheduledTimerWithTimeInterval: rand() % 30
+    [NSTimer scheduledTimerWithTimeInterval: rand() % 300
                                      target:self
                                    selector:@selector(blubber)
                                    userInfo:nil

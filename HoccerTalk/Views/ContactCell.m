@@ -24,9 +24,9 @@
 @synthesize hasUnreadMessages = _hasUnreadMessages;
 
 static const double kMessageCountBackgroundHPadding = 9;
-static const double kMessageCountBackgroundVPadding = 2;
-static const double kMessageCountBackgroundVOffset = 0.5;
+static const double kMessageCountBackgroundVOffset = -2;
 static const double kMessageCountBackgroundMinWidth = 25;
+
 + (NSString *)reuseIdentifier {
     return NSStringFromClass(self);
 }
@@ -68,7 +68,7 @@ static const double kMessageCountBackgroundMinWidth = 25;
     CGRect frame = self.messageCountLabel.frame;
     self.messageCountLabel.frame = CGRectMake(frame.origin.x + (oldWidth - frame.size.width), frame.origin.y, frame.size.width, frame.size.height);
 
-    self.messageCountBackground.frame = CGRectMake(self.messageCountLabel.frame.origin.x - kMessageCountBackgroundHPadding, self.messageCountLabel.frame.origin.y + kMessageCountBackgroundVOffset - kMessageCountBackgroundVPadding, MAX(self.messageCountLabel.frame.size.width + 2 * kMessageCountBackgroundHPadding, kMessageCountBackgroundMinWidth), self.messageCountLabel.frame.size.height + 2 * kMessageCountBackgroundVPadding);
+    self.messageCountBackground.frame = CGRectMake(self.messageCountLabel.frame.origin.x - kMessageCountBackgroundHPadding, self.messageCountLabel.frame.origin.y + kMessageCountBackgroundVOffset, MAX(self.messageCountLabel.frame.size.width + 2 * kMessageCountBackgroundHPadding, kMessageCountBackgroundMinWidth), self.messageCountBackground.frame.size.height);
 }
 
 

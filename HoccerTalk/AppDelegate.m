@@ -13,6 +13,8 @@
 #import "Message.h"
 #import "DummyChatBackend.h"
 
+#import "JsonRpcWebSocket.h"
+
 @implementation AppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -22,6 +24,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.chatBackend = [[DummyChatBackend alloc] init];
+
+    //[[JsonRpcWebSocket alloc] initWithURLRequest: nil];
 
     // Override point for customization after application launch.
     ContactListViewController * controller = nil;

@@ -36,17 +36,27 @@
 
     chatTableController = (ChatTableViewController*)[self.childViewControllers objectAtIndex: 0];
 
-    self.chatbar.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_gradient"]];
+    self.chatbar.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg"]];
 
     [chatTableController setPartner: _partner];
 
+    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    [self.textField setBackground: textfieldBackground];
+    self.textField.backgroundColor = [UIColor clearColor];
+    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
+    self.textField.leftView = paddingView;
+    self.textField.leftViewMode = UITextFieldViewModeAlways;
+
+    UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:5 topCapHeight:13];
+    [self.sendButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
+    [self.sendButton setBackgroundColor: [UIColor clearColor]];
+    self.sendButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
+    [self.sendButton setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
+
+    self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
+
     [self configureView];
 
-}
-
-- (void)viewDidLayoutSubviews {
-    [self.sendButton makeRoundAndGlossy];
-    self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
 }
 
 - (void)didReceiveMemoryWarning
