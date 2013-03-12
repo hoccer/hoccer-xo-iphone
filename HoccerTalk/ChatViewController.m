@@ -36,7 +36,10 @@
 
     chatTableController = (ChatTableViewController*)[self.childViewControllers objectAtIndex: 0];
 
-    self.chatbar.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg"]];
+    UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg"]];
+    self.chatbar.backgroundColor = barBackground;
+    self.attachmentBar.backgroundColor = barBackground;
+    [self setAttachmentBarVisibility: NO animated: NO];
 
     [chatTableController setPartner: _partner];
 
@@ -162,13 +165,17 @@
 
 #pragma mark - Actions
 
-- (IBAction)sendPressed:(id)sender
-{
+- (IBAction)sendPressed:(id)sender {
     [self.textField resignFirstResponder];
     if (self.textField.text.length > 0) {
         [self.chatBackend sendMessage: self.textField.text toContact: self.partner];
         self.textField.text = @"";
     }
+}
+
+- (IBAction) addAttachmentPressed:(id)sender {
+    [sender setSelected: ! [sender isSelected]];
+    [self setAttachmentBarVisibility: [sender isSelected] animated: YES];
 }
 
 #pragma mark - Graphics Utilities
@@ -199,5 +206,40 @@
     return image;
 }
 
+#pragma mark - Attachments
 
+- (void) setAttachmentBarVisibility: (BOOL) visible animated: (BOOL) animated {
+    CGRect barFrame = self.attachmentBar.frame;
+    CGRect tableFrame = self.chatTableContainer.frame;
+    CGFloat height = barFrame.size.height;
+    UIScrollView * scrollView = (UIScrollView*)[self.chatTableContainer.subviews objectAtIndex: 0];
+    CGPoint contentOffset = scrollView.contentOffset;
+    if (visible) {
+        barFrame = CGRectMake(barFrame.origin.x, barFrame.origin.y - height, barFrame.size.width, height);
+        tableFrame = CGRectMake(tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height - height);
+        contentOffset.y += height;
+    } else {
+        barFrame = CGRectMake(barFrame.origin.x, barFrame.origin.y + height, barFrame.size.width, height);
+        tableFrame = CGRectMake(tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height + height);
+        contentOffset.y -= height;
+    }
+
+    void (^adjustFrames)() = ^() {
+        self.attachmentBar.frame = barFrame;
+        self.chatTableContainer.frame = tableFrame;
+        scrollView.contentOffset = contentOffset;
+    };
+
+    if (animated) {
+        [UIView animateWithDuration: 0.2 animations: adjustFrames];
+    } else {
+        adjustFrames();
+    }
+}
+
+- (void)viewDidUnload {
+    [self setAttachmentBar:nil];
+    [self setAttachmentButton:nil];
+    [super viewDidUnload];
+}
 @end

@@ -25,8 +25,12 @@
 @property (strong, nonatomic) IBOutlet UIButton *    sendButton;
 @property (strong, nonatomic) IBOutlet UIView *      chatbar;
 @property (strong, nonatomic) IBOutlet UIView *      chatTableContainer;
+@property (strong, nonatomic) IBOutlet UITableView *      chatTable;
 
+@property (strong, nonatomic) IBOutlet UIView *attachmentBar;
+@property (strong, nonatomic) IBOutlet UIButton *attachmentButton;
 
 - (IBAction)sendPressed:(id)sender;
+- (IBAction) addAttachmentPressed:(id)sender;
 
 @end
