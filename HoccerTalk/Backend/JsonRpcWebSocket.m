@@ -21,6 +21,8 @@ static const NSInteger kJsonRpcInternal       = -32603;
 @interface JsonRpcWebSocket () <SRWebSocketDelegate>
 {
     SRWebSocket * _websocket;
+    long long _id;
+    NSMutableDictionary * _responseHandlers;
 }
 
 @end
@@ -30,10 +32,8 @@ static const NSInteger kJsonRpcInternal       = -32603;
 - (id) initWithURLRequest: (NSURLRequest*) request {
     self = [super init];
     if (self != nil) {
-        [self unmarshall: @"{blub"];
-        [self unmarshall: @"{\"blub\": \"blah\"}"];
-
-        return self;
+        _id = 0;
+        _responseHandlers = [[NSMutableDictionary alloc] init];
         _websocket = [[SRWebSocket alloc] initWithURLRequest: request];
         _websocket.delegate = self;
         [_websocket open];
@@ -55,15 +55,19 @@ static const NSInteger kJsonRpcInternal       = -32603;
 }
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-
+    if ([self.delegate respondsToSelector:@selector(webSocketDidOpen:)]) {
+        [self.delegate webSocketDidOpen: webSocket];
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    [self.delegate didFailWithError: error];
+    [self.delegate webSocketDidFailWithError: error];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    
+    if ([self.delegate respondsToSelector:@selector(webSocket:didCloseWithCode:reason:wasClean:)]) {
+        [self.delegate webSocket: webSocket didCloseWithCode: code reason: reason wasClean: wasClean];
+    }
 }
 
 #pragma mark - JSON RPC
@@ -98,39 +102,58 @@ static const NSInteger kJsonRpcInternal       = -32603;
             [self emitJsonRpcError: @"message does not have a 'jsonrpc' field with value '2.0'" code: kJsonRpcInvalidRequest data: nil];
             return;
         }
-/*
         if ([message objectForKey: @"method"] != nil) {
-            if ([message objectForKey: @"result"] != nil || [message objectForKey: @"error"] != nil) {
-                [self emitJsonRpcError: @"method message contains an 'error' or 'result' field" code: kJsonRpcInvalidRequest data: nil];
-                return;
-            }
-        } else if ([message objectForKey: @"result"] != nil) {
-            if ([message objectForKey: @"method"] != nil || [message objectForKey: @"error"] != nil) {
-                [self emitJsonRpcError: @"result message contains an 'error' or 'method' field" code: kJsonRpcInvalidRequest data: nil];
-                return;
-            }
-            if ([message objectForKey: @"id"] == nil) {
-                [self emitJsonRpcError: @"result message does not contain an 'id' field" code: 0 data: nil];
-                return;
-            }
-        } else if ([json objectForKey: @"error"] != nil) {
-            if ([json objectForKey: @"method"] != nil || [json objectForKey: @"result"]) {
-                [self emitJsonRpcError: @"error message contains a 'method' or 'result' field"];
-                return NO;
-            }
-            if ([json objectForKey: @"id"] == nil) {
-                [self emitJsonRpcError: @"error message does not contain an 'id' field"];
-                return NO;
-            }
+            [self processRequest: message];
         } else {
-            [self emitJsonRpcError: @"message does not contain the 'method', 'result' or 'error' field"];
-            return NO;
+            [self processResponse: message];
         }
- */
-
     } else {
-        // error
+        // kaputt
     }
+}
+
+- (void) processRequest: (NSDictionary*) request {
+}
+
+- (void) processResponse: (NSDictionary*) responseOrError {
+    NSNumber * theId = [responseOrError objectForKey: @"id"];
+    if (theId == nil) {
+        [self emitJsonRpcError: @"Got response without id" code: 0 data: nil];
+        return;
+    }
+
+    SEL handler = NSSelectorFromString([_responseHandlers objectForKey: theId]);
+    [_responseHandlers removeObjectForKey: theId];
+
+    if ([responseOrError objectForKey: @"result"] != nil || [responseOrError objectForKey: @"error"] != nil) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self.delegate performSelector: handler withObject: responseOrError];
+#pragma clang diagnostic pop
+    } else {
+        // kaputt
+    }
+}
+
+- (void) notify: (NSString*) method withParams: (NSDictionary*) params {
+    NSDictionary * notification = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params};
+
+    [_websocket send: notification];
+}
+
+- (void) invoke: (NSString*) method withParams: (NSDictionary*) params onResponse: (SEL) handler {
+    NSNumber * theId = [self nextId];
+    NSDictionary * methodCall = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params, @"id": theId};
+    [_responseHandlers setObject:  NSStringFromSelector(handler) forKey: theId];
+    [_websocket send: methodCall];
+}
+
+- (void) sendJson: (NSDictionary*) jsonObject {
+    [_websocket send: [[NSString alloc] initWithData: [NSJSONSerialization dataWithJSONObject: jsonObject options: 0 error: nil]  encoding:NSUTF8StringEncoding]];
+}
+
+- (NSNumber*) nextId {
+    return [NSNumber numberWithLongLong: _id++];
 }
 
 - (void) emitJsonRpcError: (NSString*) message code: (NSInteger) code data: (NSDictionary*) data {
@@ -141,13 +164,12 @@ static const NSInteger kJsonRpcInternal       = -32603;
         errorDict = @{ @"code": [NSNumber numberWithInteger: code], @"message": message};
     }
 
-    NSLog(@"%@", [[NSString alloc] initWithData: [NSJSONSerialization dataWithJSONObject: errorDict options: NSJSONWritingPrettyPrinted error: nil]  encoding:NSUTF8StringEncoding]);
-    
-    // TODO: write to web socket
-    
+    [self sendJson: errorDict];
+
     NSError * error = [NSError errorWithDomain: @"JSON RPC Error"
                                           code: code
                                       userInfo: data != nil ? @{@"NSDebugDescription": message, @"data": data} : @{@"NSDebugDescription": message}];
-    [self.delegate didFailWithError: error];
+    [self.delegate didReceiveInvalidJsonRpcMessage: error];
 }
+
 @end
