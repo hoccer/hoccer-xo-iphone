@@ -16,7 +16,6 @@
     NSMutableDictionary        *resultsControllers;
 }
 
-@property (strong) MessageCell* messageCell;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

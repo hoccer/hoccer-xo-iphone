@@ -6,7 +6,11 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
+
 #import "ChatTableViewController.h"
+
+#import <QuartzCore/QuartzCore.h>
+
 #import "AppDelegate.h"
 #import "Message.h"
 #import "LeftMessageCell.h"
@@ -14,10 +18,14 @@
 #import "SectionHeaderCell.h"
 #import "AvatarBezelView.h"
 #import "AutoheightLabel.h"
+#import "BubbleView.h"
+#import "ImageAttachment.h"
 
 @interface ChatTableViewController ()
 
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
+@property (strong) MessageCell* messageCell;
+@property (strong) UITableViewCell* headerCell;
 
 - (void)configureCell:(UITableViewCell *)cell forMessage:(Message *) message;
 
@@ -39,6 +47,7 @@
     [super viewDidLoad];
 
     self.messageCell = [self.tableView dequeueReusableCellWithIdentifier: [LeftMessageCell reuseIdentifier]];
+    self.headerCell  = [self.tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -82,7 +91,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: @"SectionHeaderCell"];
+    SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
     cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     cell.label.text = sectionInfo.name;
@@ -95,11 +104,13 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo name];
 }
-/*
+
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    // TODO: do a similar prototype trick as with 'normal' cells
-    return 48;
-}*/
+    // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
+    //     because the table view assuemes there is a 1px separator. However, sometimes the
+    //     grey line still appears ... 
+    return self.headerCell.frame.size.height - 1;
+}
 
 #pragma mark - Table view delegate
 
@@ -120,9 +131,16 @@
 
     Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
-    CGRect oldFrame = self.messageCell.frame;
-    self.messageCell.frame = CGRectMake(oldFrame.origin.x, oldFrame.origin.y, width, oldFrame.size.height);
-    return [self.messageCell heightForText: message.text];
+    CGRect frame = self.messageCell.frame;
+    self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
+
+    float height = [self.messageCell heightForText: message.text];
+
+    if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
+        ImageAttachment * imageAttachment = (ImageAttachment*)message.attachment;
+        height += ([imageAttachment.height floatValue] / [imageAttachment.width floatValue]) * self.messageCell.message.frame.size.width;
+    }
+    return height;
 }
 
 #pragma mark - Fetched results controller
@@ -261,7 +279,21 @@
     }
 
     cell.message.text = message.text;
-    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael.png"] : message.contact.avatarImage;
+    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael"] : message.contact.avatarImage;
+    
+    if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
+        UIImageView * imageView = [[UIImageView alloc] initWithImage: [UIImage imageWithContentsOfFile: message.attachment.filePath]];
+        /*
+        imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+        imageView.layer.shadowOffset = CGSizeMake(0, 2);
+        imageView.layer.shadowOpacity = 0.8;
+        imageView.layer.shadowRadius = 3;
+        imageView.layer.masksToBounds = NO;
+         */
+        cell.bubble.attachmentView = imageView;
+    } else {
+        cell.bubble.attachmentView = nil;
+    }
 }
 
 - (void) scrollToBottom: (BOOL) animated {

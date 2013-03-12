@@ -16,7 +16,7 @@
 @property (strong, nonatomic) IBOutlet AutoheightLabel* message;
 @property (strong, nonatomic) UIColor* bubbleColor;
 @property (nonatomic) BOOL pointingRight;
-
+@property (strong,nonatomic) UIView * attachmentView;
 
 
 - (id) initWithCoder:(NSCoder *)aDecoder;

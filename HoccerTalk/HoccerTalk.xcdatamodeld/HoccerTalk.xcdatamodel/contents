@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Attachment" representedClassName="Attachment" syncable="YES">
+        <attribute name="filePath" attributeType="String" syncable="YES"/>
+        <relationship name="message" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="attachment" inverseEntity="Message" syncable="YES"/>
+    </entity>
     <entity name="Contact" representedClassName="Contact">
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="currentTimeSection" optional="YES" attributeType="String" syncable="YES"/>
@@ -13,18 +17,25 @@
         </fetchedProperty>
         <userInfo/>
     </entity>
+    <entity name="ImageAttachment" representedClassName="ImageAttachment" parentEntity="Attachment" syncable="YES">
+        <attribute name="height" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="width" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+    </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="isOutgoing" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeSection" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
     <fetchRequest name="MessagesByNickName" entity="Message" predicateString="contact.nickName LIKE $nickName"/>
     <elements>
-        <element name="Contact" positionX="261" positionY="189" width="128" height="149"/>
-        <element name="Message" positionX="-261" positionY="63" width="128" height="135"/>
+        <element name="Attachment" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ImageAttachment" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Message" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

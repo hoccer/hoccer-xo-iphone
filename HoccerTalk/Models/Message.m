@@ -17,5 +17,6 @@
 @dynamic isRead;
 
 @dynamic contact;
+@dynamic attachment;
 
 @end

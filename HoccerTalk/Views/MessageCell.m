@@ -14,10 +14,6 @@
 
 static const double kCellPadding = 10.0;
 
-- (void) awakeFromNib {
-    [super awakeFromNib];
-}
-
 - (float) heightForText: (NSString*) text {
     return MAX(kCellPadding + [self.bubble heightForText: text] + kCellPadding,
                self.frame.size.height);

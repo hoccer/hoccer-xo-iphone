@@ -8,6 +8,7 @@
 
 #import <CoreData/CoreData.h>
 #import "Contact.h"
+#import "Attachment.h"
 
 @interface Message : NSManagedObject
 
@@ -19,5 +20,6 @@
 
 
 @property (nonatomic, retain) Contact*  contact;
+@property (nonatomic, retain) Attachment * attachment;
 
 @end

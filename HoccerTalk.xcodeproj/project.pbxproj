@@ -11,8 +11,6 @@
 		630D9EEC16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630D9EEA16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png */; };
 		631254C116EC0A5F009A6584 /* chatbar_input-text.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254BF16EC0A5F009A6584 /* chatbar_input-text.png */; };
 		631254C216EC0A5F009A6584 /* chatbar_input-text@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254C016EC0A5F009A6584 /* chatbar_input-text@2x.png */; };
-		631254C416EC1094009A6584 /* hoccer-talk-app-icon-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254C316EC1094009A6584 /* hoccer-talk-app-icon-ipad.png */; };
-		631254C616EC109B009A6584 /* hoccer-talk-app-icon-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254C516EC109B009A6584 /* hoccer-talk-app-icon-ipad@2x.png */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		631254CD16ECDAE9009A6584 /* chatbar_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254CB16ECDAE9009A6584 /* chatbar_bg.png */; };
 		631254CE16ECDAE9009A6584 /* chatbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254CC16ECDAE9009A6584 /* chatbar_bg@2x.png */; };
@@ -20,6 +18,11 @@
 		631254D216ECF8ED009A6584 /* chatbar_btn-send@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */; };
 		6314579D16EF558100AA8EB9 /* chatbar_btn_add-content.png in Resources */ = {isa = PBXBuildFile; fileRef = 6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */; };
 		6314579E16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */; };
+		631457A316EF8A7100AA8EB9 /* angry_wet_coala.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 631457A216EF8A7100AA8EB9 /* angry_wet_coala.jpg */; };
+		631457A616EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 631457A416EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad.png */; };
+		631457A716EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631457A516EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad@2x.png */; };
+		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
+		631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457AF16EF975B00AA8EB9 /* ImageAttachment.m */; };
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
@@ -117,8 +120,6 @@
 		630D9EEA16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-talk-app-icon@2x.png"; sourceTree = "<group>"; };
 		631254BF16EC0A5F009A6584 /* chatbar_input-text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_input-text.png"; sourceTree = "<group>"; };
 		631254C016EC0A5F009A6584 /* chatbar_input-text@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_input-text@2x.png"; sourceTree = "<group>"; };
-		631254C316EC1094009A6584 /* hoccer-talk-app-icon-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hoccer-talk-app-icon-ipad.png"; path = "../../hoccer-talk-app-icon-ipad.png"; sourceTree = "<group>"; };
-		631254C516EC109B009A6584 /* hoccer-talk-app-icon-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hoccer-talk-app-icon-ipad@2x.png"; path = "../../hoccer-talk-app-icon-ipad@2x.png"; sourceTree = "<group>"; };
 		631254C816EC198E009A6584 /* JsonRpcWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonRpcWebSocket.h; sourceTree = "<group>"; };
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
 		631254CB16ECDAE9009A6584 /* chatbar_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatbar_bg.png; sourceTree = "<group>"; };
@@ -127,6 +128,13 @@
 		631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn-send@2x.png"; sourceTree = "<group>"; };
 		6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content.png"; sourceTree = "<group>"; };
 		6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content@2x.png"; sourceTree = "<group>"; };
+		631457A216EF8A7100AA8EB9 /* angry_wet_coala.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = angry_wet_coala.jpg; sourceTree = "<group>"; };
+		631457A416EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-talk-app-icon-ipad.png"; sourceTree = "<group>"; };
+		631457A516EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-talk-app-icon-ipad@2x.png"; sourceTree = "<group>"; };
+		631457A816EF96B400AA8EB9 /* Attachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Attachment.h; sourceTree = "<group>"; };
+		631457A916EF96B500AA8EB9 /* Attachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Attachment.m; sourceTree = "<group>"; };
+		631457AE16EF975B00AA8EB9 /* ImageAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachment.h; sourceTree = "<group>"; };
+		631457AF16EF975B00AA8EB9 /* ImageAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachment.m; sourceTree = "<group>"; };
 		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBackend.h; sourceTree = "<group>"; };
 		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBackend.m; sourceTree = "<group>"; };
 		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DummyChatBackend.h; sourceTree = "<group>"; };
@@ -235,10 +243,7 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */,
-				6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */,
-				631254CF16ECF8ED009A6584 /* chatbar_btn-send.png */,
-				631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */,
+				631457A216EF8A7100AA8EB9 /* angry_wet_coala.jpg */,
 				63540AA816E665AC0087D24E /* azrael.png */,
 				63540AA916E665AC0087D24E /* azrael@2x.png */,
 				63C413BD16EA3549004E1F6D /* bg_message-count-grey.png */,
@@ -251,12 +256,16 @@
 				63540A9716E61B880087D24E /* bubble-right@2x.png */,
 				631254CB16ECDAE9009A6584 /* chatbar_bg.png */,
 				631254CC16ECDAE9009A6584 /* chatbar_bg@2x.png */,
+				631254CF16ECF8ED009A6584 /* chatbar_btn-send.png */,
+				631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */,
+				6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */,
+				6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */,
 				63540A9C16E65A7B0087D24E /* chatbar_gradient.png */,
 				63540A9E16E6604E0087D24E /* chatbar_gradient@2x.png */,
 				631254BF16EC0A5F009A6584 /* chatbar_input-text.png */,
 				631254C016EC0A5F009A6584 /* chatbar_input-text@2x.png */,
-				631254C316EC1094009A6584 /* hoccer-talk-app-icon-ipad.png */,
-				631254C516EC109B009A6584 /* hoccer-talk-app-icon-ipad@2x.png */,
+				631457A416EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad.png */,
+				631457A516EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad@2x.png */,
 				630D9EE916E8F0B8000CCA65 /* hoccer-talk-app-icon.png */,
 				630D9EEA16E8F0B8000CCA65 /* hoccer-talk-app-icon@2x.png */,
 				63540AA416E6640D0087D24E /* schlumpf_papa.png */,
@@ -346,6 +355,10 @@
 		63AEE30516CA562F00522F92 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				631457AE16EF975B00AA8EB9 /* ImageAttachment.h */,
+				631457AF16EF975B00AA8EB9 /* ImageAttachment.m */,
+				631457A816EF96B400AA8EB9 /* Attachment.h */,
+				631457A916EF96B500AA8EB9 /* Attachment.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				63AEE30916CA6B1900522F92 /* Message.h */,
@@ -515,14 +528,15 @@
 				63C413C416EA3549004E1F6D /* bg_message-count-red@2x.png in Resources */,
 				631254C116EC0A5F009A6584 /* chatbar_input-text.png in Resources */,
 				631254C216EC0A5F009A6584 /* chatbar_input-text@2x.png in Resources */,
-				631254C416EC1094009A6584 /* hoccer-talk-app-icon-ipad.png in Resources */,
-				631254C616EC109B009A6584 /* hoccer-talk-app-icon-ipad@2x.png in Resources */,
 				631254CD16ECDAE9009A6584 /* chatbar_bg.png in Resources */,
 				631254CE16ECDAE9009A6584 /* chatbar_bg@2x.png in Resources */,
 				631254D116ECF8ED009A6584 /* chatbar_btn-send.png in Resources */,
 				631254D216ECF8ED009A6584 /* chatbar_btn-send@2x.png in Resources */,
 				6314579D16EF558100AA8EB9 /* chatbar_btn_add-content.png in Resources */,
 				6314579E16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png in Resources */,
+				631457A316EF8A7100AA8EB9 /* angry_wet_coala.jpg in Resources */,
+				631457A616EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad.png in Resources */,
+				631457A716EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,6 +569,8 @@
 				63C413BC16E94735004E1F6D /* ContactCell.m in Sources */,
 				63C413C716EA397F004E1F6D /* AssetStore.m in Sources */,
 				631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */,
+				631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */,
+				631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

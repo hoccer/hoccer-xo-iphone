@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "Contact.h"
 #import "Message.h"
-
+#import "ImageAttachment.h"
 
 @implementation DummyChatBackend
 
@@ -89,6 +89,11 @@
                 message.timeSection = [contact sectionTitleForMessageTime: date];
                 contact.lastMessageTime = date;
 
+                if (rand() % 10 == 0) {
+                    [self attachAttachment: message moc: importContext];
+                }
+
+
                 int interval = rand() % (int)(2.5 * 60);
                 date = [NSDate dateWithTimeInterval: interval sinceDate: date];
             }
@@ -101,6 +106,16 @@
         }
     }
 
+}
+
+- (void) attachAttachment: (Message*) message moc: (NSManagedObjectContext*) moc{
+    ImageAttachment * attachment =  (ImageAttachment*)[NSEntityDescription insertNewObjectForEntityForName:@"ImageAttachment" inManagedObjectContext: moc];
+    NSString * path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"angry_wet_coala.jpg"];
+    attachment.filePath = path;
+    UIImage * image = [UIImage imageNamed: @"angry_wet_coala.jpg"];
+    attachment.width = [NSNumber numberWithFloat: image.size.width];
+    attachment.height = [NSNumber numberWithFloat: image.size.height];
+    message.attachment = attachment;
 }
 
 
@@ -134,6 +149,10 @@
     message.isOutgoing = @NO;
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
     contact.lastMessageTime = message.timeStamp;
+
+    if (rand() % 4 == 0) {
+        [self attachAttachment: message moc: self.managedObjectContext];
+    }
 
     // TODO: find a better way to do this...
     [message.contact willChangeValueForKey: @"unreadMessages"];

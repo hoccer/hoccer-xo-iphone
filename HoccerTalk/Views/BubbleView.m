@@ -16,6 +16,7 @@
 static const double kLeftBubbleCapLeft  = 11.0;
 static const double kRightBubbleCapLeft = 5.0;
 static const double kBubbleCapTop   = 32.0;
+static const double kAttachmentPadding = 10;
 
 @interface BubbleView ()
 
@@ -48,16 +49,42 @@ static const double kBubbleCapTop   = 32.0;
 	//self.background.frame = self.frame;
     self.background.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[self insertSubview: self.background atIndex: 0];
+
+    CGRect of = self.message.frame;
+    CGFloat d = kLeftBubbleCapLeft - kRightBubbleCapLeft;
+    self.message.frame = CGRectMake(_pointingRight ? of.origin.x : of.origin.x + d, of.origin.y, of.size.width - d, of.size.height);
+}
+
+- (void) setAttachmentView: (UIView*) view {
+    if (_attachmentView != nil) {
+        [_attachmentView removeFromSuperview];
+    }
+    _attachmentView = view;
+    if (_attachmentView != nil) {
+        // XXX
+        _attachmentView.contentMode = UIViewContentModeScaleAspectFit;
+        CGFloat aspect = ((UIImageView*)_attachmentView).image.size.height / ((UIImageView*)_attachmentView).image.size.width;
+        _attachmentView.frame = CGRectMake(self.message.frame.origin.x, self.message.frame.origin.y + self.message.frame.size.height + kAttachmentPadding,
+                                           self.message.frame.size.width, self.message.frame.size.width * aspect);
+        [self addSubview: view];
+    }
+    [self setNeedsLayout];
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
-    return CGSizeMake(self.frame.size.width, self.message.frame.size.height + self.padding.top + self.padding.bottom);
+    // TODO: get rit of awkward + 5
+    CGFloat height = self.message.frame.size.height + self.padding.top + self.padding.bottom + 5;
+    if (self.attachmentView != nil) {
+        height += kAttachmentPadding + self.attachmentView.frame.size.height;
+        
+    }
+    return CGSizeMake(self.frame.size.width, height);
 }
 
 - (void) layoutSubviews {
     [super layoutSubviews];
     [self sizeToFit];
-    self.background.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height + 5);
+    self.background.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 }
 
 - (double) heightForText: (NSString*) text {
