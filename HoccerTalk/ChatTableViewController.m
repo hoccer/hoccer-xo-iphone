@@ -95,11 +95,11 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo name];
 }
-
+/*
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     // TODO: do a similar prototype trick as with 'normal' cells
     return 48;
-}
+}*/
 
 #pragma mark - Table view delegate
 

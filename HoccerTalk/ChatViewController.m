@@ -112,7 +112,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Contacts", @"Contacts");
+    barButtonItem.title = NSLocalizedString(@"Contacts", @"Contacts Navigation Bar Title");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }
@@ -126,30 +126,36 @@
 
 #pragma mark - Keyboard events
 
-// TODO: correctly handle orientation changes 
+// TODO: correctly handle orientation changes while keyboard is visible
 
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     //NSLog(@"keyboardWasShown");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
+
+    UIScrollView * scrollView = (UIScrollView*)[self.chatTableContainer.subviews objectAtIndex: 0];
+    CGPoint contentOffset = scrollView.contentOffset;
+    contentOffset.y += keyboardHeight;
 
     [UIView animateWithDuration: duration animations:^{
         CGRect frame = self.view.frame;
-        frame.size.height -= keyboardSize.height;
+        frame.size.height -= keyboardHeight;
         self.view.frame = frame;
-    } completion: ^(BOOL finished){ [chatTableController scrollToBottom: NO]; }];
+        scrollView.contentOffset = contentOffset;
+    }];
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    //NSLog(@"keyboardWillBeHidden");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
     double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     [UIView animateWithDuration: duration animations:^{
         CGRect frame = self.view.frame;
-        frame.size.height += keyboardSize.height;
+        frame.size.height += keyboardHeight;
         self.view.frame = frame;
     }];
 }

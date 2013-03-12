@@ -27,18 +27,30 @@
 
     //[[JsonRpcWebSocket alloc] initWithURLRequest: nil];
 
+    UIColor * navigationBarTint = [UIColor colorWithRed: 0.08 green: 0.08 blue: 0.08 alpha: 1.0];
+
     // Override point for customization after application launch.
     ContactListViewController * controller = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
         UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+        UINavigationBar *bar = [navigationController navigationBar];
+        [bar setTintColor: navigationBarTint];
+
         splitViewController.delegate = (id)navigationController.topViewController;
-        
+
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
+
+        bar = [navigationController navigationBar];
+        [bar setTintColor:navigationBarTint];
+
         controller = (ContactListViewController *)masterNavigationController.topViewController;
     } else {
         UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-        controller = (ContactListViewController *)navigationController.topViewController;        
+        UINavigationBar *bar = [navigationController navigationBar];
+        [bar setTintColor: navigationBarTint];
+
+        controller = (ContactListViewController *)navigationController.topViewController;
     }
     // TODO: be lazy
     controller.managedObjectContext = self.managedObjectContext;

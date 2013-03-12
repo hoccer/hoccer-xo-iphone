@@ -18,6 +18,8 @@
 		631254CE16ECDAE9009A6584 /* chatbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254CC16ECDAE9009A6584 /* chatbar_bg@2x.png */; };
 		631254D116ECF8ED009A6584 /* chatbar_btn-send.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254CF16ECF8ED009A6584 /* chatbar_btn-send.png */; };
 		631254D216ECF8ED009A6584 /* chatbar_btn-send@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */; };
+		6314579D16EF558100AA8EB9 /* chatbar_btn_add-content.png in Resources */ = {isa = PBXBuildFile; fileRef = 6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */; };
+		6314579E16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */; };
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
@@ -123,6 +125,8 @@
 		631254CC16ECDAE9009A6584 /* chatbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_bg@2x.png"; sourceTree = "<group>"; };
 		631254CF16ECF8ED009A6584 /* chatbar_btn-send.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn-send.png"; sourceTree = "<group>"; };
 		631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn-send@2x.png"; sourceTree = "<group>"; };
+		6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content.png"; sourceTree = "<group>"; };
+		6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content@2x.png"; sourceTree = "<group>"; };
 		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBackend.h; sourceTree = "<group>"; };
 		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBackend.m; sourceTree = "<group>"; };
 		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DummyChatBackend.h; sourceTree = "<group>"; };
@@ -231,6 +235,8 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */,
+				6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */,
 				631254CF16ECF8ED009A6584 /* chatbar_btn-send.png */,
 				631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */,
 				63540AA816E665AC0087D24E /* azrael.png */,
@@ -515,6 +521,8 @@
 				631254CE16ECDAE9009A6584 /* chatbar_bg@2x.png in Resources */,
 				631254D116ECF8ED009A6584 /* chatbar_btn-send.png in Resources */,
 				631254D216ECF8ED009A6584 /* chatbar_btn-send@2x.png in Resources */,
+				6314579D16EF558100AA8EB9 /* chatbar_btn_add-content.png in Resources */,
+				6314579E16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

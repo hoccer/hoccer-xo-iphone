@@ -55,7 +55,7 @@
     
     // If appropriate, configure the new managed object.
     // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    newContact.nickName = @"New Contact";
+    newContact.nickName = NSLocalizedString(@"New Contact", @"New Contact Initial Name");
     
     // Save the context.
     NSError *error = nil;
