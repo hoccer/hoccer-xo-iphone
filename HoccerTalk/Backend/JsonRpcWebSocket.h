@@ -10,6 +10,8 @@
 
 @class SRWebSocket;
 
+typedef void (^ResponseBlock)(id responseOrError, BOOL success);
+
 @protocol JsonRpcWebSocketDelegate <NSObject>
 
 - (void) webSocketDidFailWithError: (NSError*) error;
@@ -27,6 +29,7 @@
 @property (nonatomic,strong) id<JsonRpcWebSocketDelegate> delegate;
 
 - (id) initWithURLRequest: (NSURLRequest*) request;
-- (void) notify: (NSString*) method withParams: (NSDictionary*) params;
-- (void) invoke: (NSString*) method withParams: (NSDictionary*) params onResponse: (SEL) handler;
+- (void) open;
+- (void) notify: (NSString*) method withParams: (id) params;
+- (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler;
 @end

@@ -11,7 +11,7 @@
 @implementation Message
 
 @dynamic isOutgoing;
-@dynamic text;
+@dynamic body;
 @dynamic timeStamp;
 @dynamic timeSection;
 @dynamic isRead;

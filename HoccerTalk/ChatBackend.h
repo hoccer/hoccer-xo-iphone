@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @class Contact;
+@class Message;
 
 @interface ChatBackend : NSObject
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
-- (void) sendMessage: (NSString*) text toContact: (Contact*) contact;
+- (Message*) sendMessage: (NSString*) text toContact: (Contact*) contact;
 
 @end

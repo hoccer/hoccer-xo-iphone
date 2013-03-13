@@ -18,12 +18,16 @@ static const NSInteger kJsonRpcInternal       = -32603;
 
 //-32000 to -32099	Server error
 
+static const NSTimeInterval kResponseTimeout = 10;
+
 @interface JsonRpcWebSocket () <SRWebSocketDelegate>
 {
     SRWebSocket * _websocket;
     long long _id;
     NSMutableDictionary * _responseHandlers;
 }
+
+- (void) serverDidNotRespond: (NSNumber*) jsonRpcId;
 
 @end
 
@@ -36,9 +40,12 @@ static const NSInteger kJsonRpcInternal       = -32603;
         _responseHandlers = [[NSMutableDictionary alloc] init];
         _websocket = [[SRWebSocket alloc] initWithURLRequest: request];
         _websocket.delegate = self;
-        [_websocket open];
     }
     return self;
+}
+
+- (void) open {
+    [_websocket open];
 }
 
 #pragma mark - Web Socket Delegate
@@ -122,30 +129,30 @@ static const NSInteger kJsonRpcInternal       = -32603;
         return;
     }
 
-    SEL handler = NSSelectorFromString([_responseHandlers objectForKey: theId]);
+    ResponseBlock handler = [_responseHandlers objectForKey: theId];
     [_responseHandlers removeObjectForKey: theId];
 
-    if ([responseOrError objectForKey: @"result"] != nil || [responseOrError objectForKey: @"error"] != nil) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [self.delegate performSelector: handler withObject: responseOrError];
-#pragma clang diagnostic pop
+    if ([responseOrError objectForKey: @"result"] != nil) {
+        handler([responseOrError objectForKey: @"result"], YES);
+    } else if ([responseOrError objectForKey: @"error"] != nil) {
+        handler([responseOrError objectForKey: @"error"], NO);
     } else {
         // kaputt
     }
 }
 
-- (void) notify: (NSString*) method withParams: (NSDictionary*) params {
+- (void) notify: (NSString*) method withParams: (id) params {
     NSDictionary * notification = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params};
-
-    [_websocket send: notification];
+    [self sendJson: notification];
 }
 
-- (void) invoke: (NSString*) method withParams: (NSDictionary*) params onResponse: (SEL) handler {
+- (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler {
     NSNumber * theId = [self nextId];
     NSDictionary * methodCall = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params, @"id": theId};
-    [_responseHandlers setObject:  NSStringFromSelector(handler) forKey: theId];
-    [_websocket send: methodCall];
+    [_responseHandlers setObject:  [handler copy] forKey: theId];
+    [NSTimer timerWithTimeInterval: kResponseTimeout target: self selector: @selector(serverDidNotRespond) userInfo: theId repeats: NO];
+
+    [self sendJson: methodCall];
 }
 
 - (void) sendJson: (NSDictionary*) jsonObject {
@@ -154,6 +161,11 @@ static const NSInteger kJsonRpcInternal       = -32603;
 
 - (NSNumber*) nextId {
     return [NSNumber numberWithLongLong: _id++];
+}
+
+- (void) serverDidNotRespond: (NSNumber*) jsonRpcId {
+    NSLog(@"Server did not respond withing %f seconds.", kResponseTimeout);
+    [_responseHandlers removeObjectForKey: jsonRpcId];
 }
 
 - (void) emitJsonRpcError: (NSString*) message code: (NSInteger) code data: (NSDictionary*) data {

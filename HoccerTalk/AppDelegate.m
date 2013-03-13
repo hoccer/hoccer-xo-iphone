@@ -8,12 +8,16 @@
 
 #import "AppDelegate.h"
 
+#import <Foundation/NSObjCRuntime.h>
+#import <objc/runtime.h>
+
 #import "ContactListViewController.h"
 #import "Contact.h"
 #import "Message.h"
 #import "DummyChatBackend.h"
 
 #import "JsonRpcWebSocket.h"
+
 
 @implementation AppDelegate
 
@@ -24,6 +28,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.chatBackend = [[DummyChatBackend alloc] init];
+    self.realChatBackend = [[HoccerTalkBackend alloc] init];
 
     //[[JsonRpcWebSocket alloc] initWithURLRequest: nil];
 

@@ -80,7 +80,7 @@
             for(int i = 0; i < messageCount; ++i) {
                 Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: importContext];
 
-                message.text = [[messages objectAtIndex: contactIndex] objectAtIndex: i % ((NSArray*)[messages objectAtIndex: contactIndex]).count];
+                message.body = [[messages objectAtIndex: contactIndex] objectAtIndex: i % ((NSArray*)[messages objectAtIndex: contactIndex]).count];
                 message.timeStamp = date;
                 message.contact = contact;
                 message.isOutgoing = i % 2 == 0 ? @NO : @YES;
@@ -143,7 +143,7 @@
 
     Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.managedObjectContext];
     Contact * contact = [contacts objectAtIndex: rand() % contacts.count];
-    message.text = [self.blubberMessages objectAtIndex: rand() % self.blubberMessages.count];
+    message.body = [self.blubberMessages objectAtIndex: rand() % self.blubberMessages.count];
     message.timeStamp = [NSDate date];
     message.contact = contact;
     message.isOutgoing = @NO;

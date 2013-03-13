@@ -134,7 +134,7 @@
     CGRect frame = self.messageCell.frame;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
 
-    float height = [self.messageCell heightForText: message.text];
+    float height = [self.messageCell heightForText: message.body];
 
     if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
         ImageAttachment * imageAttachment = (ImageAttachment*)message.attachment;
@@ -278,7 +278,7 @@
         [message.contact didChangeValueForKey: @"unreadMessages"];
     }
 
-    cell.message.text = message.text;
+    cell.message.text = message.body;
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael"] : message.contact.avatarImage;
     
     if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
