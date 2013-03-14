@@ -27,11 +27,13 @@
         NSURL * url = [NSURL URLWithString: @"ws://development.hoccer.com:7000/"];
         _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [[NSURLRequest alloc] initWithURL: url]];
         _serverConnection.delegate = self;
+        [_serverConnection registerIncomingCall: @"pipapo" withSelector:@selector(piPaPo:) isNotification: NO];
         [_serverConnection open];
     }
     return self;
 }
 
+#pragma mark - Outgoing RPC Calls
 
 - (void) identify {
     [_serverConnection invoke: @"identify" withParams: @[@"david - who else?"] onResponse: ^(id responseOrError, BOOL success) {
@@ -41,6 +43,15 @@
             NSLog(@"got error: %@", responseOrError);
         }
     }];
+}
+
+#pragma mark - Incoming RPC Calls
+
+- (id) piPaPo: (NSArray*) params {
+    if ([params count] == 0) {
+        return [JsonRpcError errorWithMessage:@"Got no params - that's not good." code: 23 data: nil];
+    }
+    return @[@"pi", @"pa", @"po"];
 }
 
 #pragma mark - JSON RPC WebSocket Delegate
@@ -62,5 +73,8 @@
     NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
 }
 
+- (void) incomingMethodCallDidFail: (NSError*) error {
+    NSLog(@"incoming JSON RPC method call failed: %@", error);
+}
 
 @end
