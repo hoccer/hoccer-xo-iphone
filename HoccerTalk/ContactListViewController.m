@@ -18,6 +18,9 @@
 #import "Message.h"
 
 @interface ContactListViewController ()
+
+@property (nonatomic,strong) ContactCell* contactCell;
+
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
 
@@ -29,6 +32,7 @@
         self.clearsSelectionOnViewWillAppear = NO;
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
     }
+    self.contactCell = [self.tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
     [super awakeFromNib];
 }
 
@@ -244,6 +248,7 @@
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickName;
     cell.avatar.image = contact.avatarImage;
+    cell.latestMessage.frame = self.contactCell.latestMessage.frame;
     cell.latestMessage.text = [contact.latestMessage[0] body];
     [cell.latestMessage sizeToFit];
 
