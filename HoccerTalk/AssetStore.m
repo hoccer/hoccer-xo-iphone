@@ -41,10 +41,10 @@ static AssetStore *sharedStore;
 
 - (UIImage*) stretchableImageNamed: (NSString*) name withLeftCapWidth: (NSUInteger) w topCapHeight: (NSUInteger) h {
     NSString * key = [NSString stringWithFormat: @"%@-w:%d-h:%d", name, w, h];
-    UIImage * image = [self.store objectForKey: key];
+    UIImage * image = self.store[key];
     if (image == nil) {
         image = [[UIImage imageNamed: name] stretchableImageWithLeftCapWidth: w topCapHeight: h];
-        [self.store setObject: image forKey: key];
+        self.store[key] = image;
     }
     return image;
 }

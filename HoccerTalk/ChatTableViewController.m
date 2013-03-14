@@ -71,7 +71,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo numberOfObjects];
 }
 
@@ -93,7 +93,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
     cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     cell.label.text = sectionInfo.name;
     cell.label.shadowColor  = [UIColor whiteColor];
     cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
@@ -101,7 +101,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo name];
 }
 
