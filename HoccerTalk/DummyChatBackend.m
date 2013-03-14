@@ -18,7 +18,10 @@
     self = [super init];
     if (self != nil) {
         [self addDummies: 100];
-        self.blubberMessages = @[@"blub", @"blah", @"fasel", @"flup flup", @"brizzel", @"brazzel", @"brubbel", @"fizzel"];
+        self.blubberMessages = @[@"Gemüsequark mit Pizza Leberwurst-Tunfisch auf Feldsalatbett mit Hackbraten und Rollmops auf Toast",
+                                 @"Gratinierte Ochsenbacken mit Wurzelgemüse im Speckmantel auf Steinpilzrisotto mit Riesengarnelenomlett",
+                                 @"Kamelhöcker gefüllt mit Oliven auf Provinzjemüse mit Süsskrartoffelkroketten und Rosenkohlsalat",
+                                 @"fasel", @"flup flup", @"brizzel", @"brazzel", @"brubbel", @"fizzel"];
         [self blubber];
 
     }
@@ -75,7 +78,7 @@
             contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatar]);
             
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - (60*60*24*30)];
-            contact.lastMessageTime = date;
+            contact.latestMessageTime = date;
             
             for(int i = 0; i < messageCount; ++i) {
                 Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: importContext];
@@ -87,7 +90,7 @@
                 message.isRead = @NO;
 
                 message.timeSection = [contact sectionTitleForMessageTime: date];
-                contact.lastMessageTime = date;
+                contact.latestMessageTime = date;
 
                 if (rand() % 10 == 0) {
                     [self attachAttachment: message moc: importContext];
@@ -121,7 +124,7 @@
 
 - (void) blubber {
     [self receiveRandomMessage];
-    [NSTimer scheduledTimerWithTimeInterval: rand() % 300
+    [NSTimer scheduledTimerWithTimeInterval: rand() % 30
                                      target:self
                                    selector:@selector(blubber)
                                    userInfo:nil
@@ -148,7 +151,7 @@
     message.contact = contact;
     message.isOutgoing = @NO;
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
-    contact.lastMessageTime = message.timeStamp;
+    contact.latestMessageTime = message.timeStamp;
 
     if (rand() % 4 == 0) {
         [self attachAttachment: message moc: self.managedObjectContext];

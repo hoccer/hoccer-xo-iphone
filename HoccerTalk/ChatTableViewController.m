@@ -271,11 +271,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
 
     if ([message.isRead isEqualToNumber: @NO]) {
-        // TODO: find a better way to do this...
-        [message.contact willChangeValueForKey: @"unreadMessages"];
         message.isRead = @YES;
-        [self.managedObjectContext refreshObject:message.contact mergeChanges:YES];
-        [message.contact didChangeValueForKey: @"unreadMessages"];
     }
 
     cell.message.text = message.body;

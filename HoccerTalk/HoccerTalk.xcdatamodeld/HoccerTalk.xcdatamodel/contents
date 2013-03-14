@@ -7,11 +7,14 @@
     <entity name="Contact" representedClassName="Contact">
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="currentTimeSection" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastMessageTime" optional="YES" attributeType="Date">
+        <attribute name="latestMessageTime" optional="YES" attributeType="Date">
             <userInfo/>
         </attribute>
         <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="contact" inverseEntity="Message" syncable="YES"/>
+        <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Message" predicateString="contact == $FETCH_SOURCE AND timeStamp == $FETCH_SOURCE.latestMessageTime"/>
+        </fetchedProperty>
         <fetchedProperty name="unreadMessages" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Message" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
         </fetchedProperty>
@@ -31,11 +34,10 @@
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
-    <fetchRequest name="MessagesByNickName" entity="Message" predicateString="contact.nickName LIKE $nickName"/>
     <elements>
-        <element name="Attachment" positionX="-641" positionY="27" width="128" height="75"/>
-        <element name="Contact" positionX="-108" positionY="13" width="128" height="149"/>
-        <element name="ImageAttachment" positionX="-639" positionY="-171" width="128" height="75"/>
-        <element name="Message" positionX="-414" positionY="-15" width="128" height="150"/>
+        <element name="Attachment" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Contact" positionX="0" positionY="0" width="128" height="164"/>
+        <element name="ImageAttachment" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Message" positionX="0" positionY="0" width="128" height="150"/>
     </elements>
 </model>

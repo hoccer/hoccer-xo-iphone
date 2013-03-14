@@ -13,10 +13,11 @@ const float kTimeSectionInterval = 2 * 60;
 @implementation Contact
 
 @dynamic avatar;
-@dynamic lastMessageTime;
+@dynamic latestMessageTime;
 @dynamic nickName;
 @dynamic currentTimeSection;
 @dynamic unreadMessages;
+@dynamic latestMessage;
 
 @dynamic messages;
 
@@ -33,10 +34,10 @@ const float kTimeSectionInterval = 2 * 60;
 }
 
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date {
-    if (self.lastMessageTime == nil) {
-        self.lastMessageTime = [NSDate date];
+    if (self.latestMessageTime == nil) {
+        self.latestMessageTime = [NSDate date];
     }
-    if ([date timeIntervalSinceDate: self.lastMessageTime] > kTimeSectionInterval || self.currentTimeSection == nil) {
+    if ([date timeIntervalSinceDate: self.latestMessageTime] > kTimeSectionInterval || self.currentTimeSection == nil) {
         NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
         [formatter setDateStyle:NSDateFormatterMediumStyle];
         [formatter setTimeStyle:NSDateFormatterShortStyle];

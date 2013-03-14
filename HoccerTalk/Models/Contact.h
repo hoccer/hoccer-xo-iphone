@@ -11,10 +11,11 @@
 @interface Contact : NSManagedObject
 
 @property (nonatomic, retain) NSData*       avatar;
-@property (nonatomic, retain) NSDate*       lastMessageTime;
+@property (nonatomic, retain) NSDate*       latestMessageTime;
 @property (nonatomic, retain) NSString*     nickName;
 @property (nonatomic, retain) NSString*     currentTimeSection;
 @property (nonatomic, retain) NSArray*      unreadMessages;
+@property (nonatomic, retain) NSArray*      latestMessage;
 
 @property (nonatomic, retain) NSMutableSet* messages;
 

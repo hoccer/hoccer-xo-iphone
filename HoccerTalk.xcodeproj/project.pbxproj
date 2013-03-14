@@ -49,6 +49,7 @@
 		63540AAA16E665AC0087D24E /* azrael.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA816E665AC0087D24E /* azrael.png */; };
 		63540AAB16E665AC0087D24E /* azrael@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63540AA916E665AC0087D24E /* azrael@2x.png */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
+		637847A516F24E5700DE03C2 /* contact_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* contact_cell_bg@2x.png */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -176,6 +177,7 @@
 		63540AA916E665AC0087D24E /* azrael@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "azrael@2x.png"; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
+		637847A416F24E5700DE03C2 /* contact_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_cell_bg@2x.png"; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer Talk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -256,8 +258,6 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				631457B116EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected.png */,
-				631457B216EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected@2x.png */,
 				631457A216EF8A7100AA8EB9 /* angry_wet_coala.jpg */,
 				63540AA816E665AC0087D24E /* azrael.png */,
 				63540AA916E665AC0087D24E /* azrael@2x.png */,
@@ -275,10 +275,13 @@
 				631254D016ECF8ED009A6584 /* chatbar_btn-send@2x.png */,
 				6314579B16EF558100AA8EB9 /* chatbar_btn_add-content.png */,
 				6314579C16EF558100AA8EB9 /* chatbar_btn_add-content@2x.png */,
+				631457B116EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected.png */,
+				631457B216EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected@2x.png */,
 				63540A9C16E65A7B0087D24E /* chatbar_gradient.png */,
 				63540A9E16E6604E0087D24E /* chatbar_gradient@2x.png */,
 				631254BF16EC0A5F009A6584 /* chatbar_input-text.png */,
 				631254C016EC0A5F009A6584 /* chatbar_input-text@2x.png */,
+				637847A416F24E5700DE03C2 /* contact_cell_bg@2x.png */,
 				631457A416EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad.png */,
 				631457A516EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad@2x.png */,
 				630D9EE916E8F0B8000CCA65 /* hoccer-talk-app-icon.png */,
@@ -550,6 +553,7 @@
 				631457A716EF8FD000AA8EB9 /* hoccer-talk-app-icon-ipad@2x.png in Resources */,
 				631457B316EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected.png in Resources */,
 				631457B416EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected@2x.png in Resources */,
+				637847A516F24E5700DE03C2 /* contact_cell_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

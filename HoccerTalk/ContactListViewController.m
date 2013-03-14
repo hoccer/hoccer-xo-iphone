@@ -14,6 +14,8 @@
 #import "Contact.h"
 #import "ContactCell.h"
 #import "AvatarBezelView.h"
+#include "AssetStore.h"
+#import "Message.h"
 
 @interface ContactListViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -82,10 +84,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
+    ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
+    if (cell.backgroundView == nil) {
+        cell.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"contact_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0]];
+        [self engraveLabel: cell.latestMessage];
+        [self engraveLabel: cell.latestMessageTime];
+    }
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
+
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -149,7 +157,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"latestMessageTime" ascending: NO];
     NSArray *sortDescriptors = @[sortDescriptor];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -236,13 +244,31 @@
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickName;
     cell.avatar.image = contact.avatarImage;
-    if (contact.unreadMessages.count > 0) {
-        cell.messageCount = contact.unreadMessages.count;
-        cell.hasUnreadMessages = YES;
+    cell.latestMessage.text = [contact.latestMessage[0] body];
+    [cell.latestMessage sizeToFit];
+
+    NSDate * latestMessageTime = [contact.latestMessage[0] timeStamp];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
+    NSDate *today = [calendar dateFromComponents:components];
+
+    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: latestMessageTime];
+    NSDate *latestMessageDate = [calendar dateFromComponents:components];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    if([today isEqualToDate: latestMessageDate]) {
+        [formatter setDateStyle:NSDateFormatterNoStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
     } else {
-        cell.messageCount = contact.messages.count;
-        cell.hasUnreadMessages = NO;
+        [formatter setDateStyle:NSDateFormatterMediumStyle];
+        [formatter setTimeStyle:NSDateFormatterNoStyle];
     }
+    cell.latestMessageTime.text = [formatter stringFromDate: latestMessageTime];
 }
 
+- (void) engraveLabel: (UILabel*) label {
+    label.textColor = [UIColor darkGrayColor];
+    label.shadowColor = [UIColor whiteColor];
+    label.shadowOffset = CGSizeMake(0.0, 1.0);
+
+}
 @end
