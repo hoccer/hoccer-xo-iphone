@@ -16,13 +16,14 @@
 
 @synthesize managedObjectContext = _managedObjectContext;
 
-- (void) sendMessage:(NSString *) text toContact: (Contact*) contact {
+- (Message*) sendMessage:(NSString *) text toContact: (Contact*) contact {
     Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.managedObjectContext];
-    message.text = text;
+    message.body = text;
     message.timeStamp = [NSDate date];
     message.contact = contact;
     message.isOutgoing = @YES;
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
+    return message;
 }
 
 - (NSManagedObjectContext *)managedObjectContext {

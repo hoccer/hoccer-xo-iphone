@@ -25,6 +25,7 @@
 		631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457AF16EF975B00AA8EB9 /* ImageAttachment.m */; };
 		631457B316EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 631457B116EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected.png */; };
 		631457B416EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631457B216EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected@2x.png */; };
+		631457CA16F0E76D00AA8EB9 /* HoccerTalkBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */; };
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
@@ -139,10 +140,12 @@
 		631457AF16EF975B00AA8EB9 /* ImageAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachment.m; sourceTree = "<group>"; };
 		631457B116EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content_selected.png"; sourceTree = "<group>"; };
 		631457B216EFBE7C00AA8EB9 /* chatbar_btn_add-content_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content_selected@2x.png"; sourceTree = "<group>"; };
-		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBackend.h; sourceTree = "<group>"; };
-		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBackend.m; sourceTree = "<group>"; };
-		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DummyChatBackend.h; sourceTree = "<group>"; };
-		6320D7C616DF622E00E58478 /* DummyChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DummyChatBackend.m; sourceTree = "<group>"; };
+		631457C816F0E76D00AA8EB9 /* HoccerTalkBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoccerTalkBackend.h; sourceTree = "<group>"; };
+		631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoccerTalkBackend.m; sourceTree = "<group>"; };
+		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatBackend.h; path = ../ChatBackend.h; sourceTree = "<group>"; };
+		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatBackend.m; path = ../ChatBackend.m; sourceTree = "<group>"; };
+		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DummyChatBackend.h; path = ../DummyChatBackend.h; sourceTree = "<group>"; };
+		6320D7C616DF622E00E58478 /* DummyChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DummyChatBackend.m; path = ../DummyChatBackend.m; sourceTree = "<group>"; };
 		6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderCell.h; sourceTree = "<group>"; };
 		6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderCell.m; sourceTree = "<group>"; };
 		6320D7CB16E0C79A00E58478 /* AvatarBezelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarBezelView.h; sourceTree = "<group>"; };
@@ -240,6 +243,12 @@
 			children = (
 				631254C816EC198E009A6584 /* JsonRpcWebSocket.h */,
 				631254C916EC198E009A6584 /* JsonRpcWebSocket.m */,
+				631457C816F0E76D00AA8EB9 /* HoccerTalkBackend.h */,
+				631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */,
+				6320D7C216DF620800E58478 /* ChatBackend.h */,
+				6320D7C316DF620900E58478 /* ChatBackend.m */,
+				6320D7C516DF622D00E58478 /* DummyChatBackend.h */,
+				6320D7C616DF622E00E58478 /* DummyChatBackend.m */,
 			);
 			path = Backend;
 			sourceTree = "<group>";
@@ -324,16 +333,12 @@
 				63540A9316E61B420087D24E /* Assets */,
 				63C413C516EA397E004E1F6D /* AssetStore.h */,
 				63C413C616EA397E004E1F6D /* AssetStore.m */,
-				6320D7C216DF620800E58478 /* ChatBackend.h */,
-				6320D7C316DF620900E58478 /* ChatBackend.m */,
 				63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */,
 				63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
 				63AEE2FA16CA4D0300522F92 /* ContactListViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ContactListViewController.m */,
-				6320D7C516DF622D00E58478 /* DummyChatBackend.h */,
-				6320D7C616DF622E00E58478 /* DummyChatBackend.m */,
 				63AEE2F716CA4D0300522F92 /* HoccerTalk.xcdatamodeld */,
 				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
 				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
@@ -361,12 +366,12 @@
 		63AEE30516CA562F00522F92 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				631457AE16EF975B00AA8EB9 /* ImageAttachment.h */,
-				631457AF16EF975B00AA8EB9 /* ImageAttachment.m */,
 				631457A816EF96B400AA8EB9 /* Attachment.h */,
 				631457A916EF96B500AA8EB9 /* Attachment.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
 				63AEE30716CA566B00522F92 /* Contact.m */,
+				631457AE16EF975B00AA8EB9 /* ImageAttachment.h */,
+				631457AF16EF975B00AA8EB9 /* ImageAttachment.m */,
 				63AEE30916CA6B1900522F92 /* Message.h */,
 				63AEE30A16CA6B1900522F92 /* Message.m */,
 			);
@@ -579,6 +584,7 @@
 				631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */,
 				631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */,
 				631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */,
+				631457CA16F0E76D00AA8EB9 /* HoccerTalkBackend.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

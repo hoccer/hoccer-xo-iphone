@@ -34,7 +34,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 
-    chatTableController = (ChatTableViewController*)[self.childViewControllers objectAtIndex: 0];
+    chatTableController = (ChatTableViewController*)self.childViewControllers[0];
 
     UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg"]];
     self.chatbar.backgroundColor = barBackground;
@@ -134,11 +134,11 @@
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     //NSLog(@"keyboardWasShown");
     NSDictionary* info = [aNotification userInfo];
-    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    double duration = [info[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
 
-    UIScrollView * scrollView = (UIScrollView*)[self.chatTableContainer.subviews objectAtIndex: 0];
+    UIScrollView * scrollView = (UIScrollView*)self.chatTableContainer.subviews[0];
     CGPoint contentOffset = scrollView.contentOffset;
     contentOffset.y += keyboardHeight;
 
@@ -152,9 +152,9 @@
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     NSDictionary* info = [aNotification userInfo];
-    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
-    double duration = [[info objectForKey: UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    double duration = [info[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     [UIView animateWithDuration: duration animations:^{
         CGRect frame = self.view.frame;
@@ -212,7 +212,7 @@
     CGRect barFrame = self.attachmentBar.frame;
     CGRect tableFrame = self.chatTableContainer.frame;
     CGFloat height = barFrame.size.height;
-    UIScrollView * scrollView = (UIScrollView*)[self.chatTableContainer.subviews objectAtIndex: 0];
+    UIScrollView * scrollView = (UIScrollView*)self.chatTableContainer.subviews[0];
     CGPoint contentOffset = scrollView.contentOffset;
     if (visible) {
         barFrame = CGRectMake(barFrame.origin.x, barFrame.origin.y - height, barFrame.size.width, height);

@@ -71,7 +71,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo numberOfObjects];
 }
 
@@ -93,7 +93,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
     cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     cell.label.text = sectionInfo.name;
     cell.label.shadowColor  = [UIColor whiteColor];
     cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
@@ -101,7 +101,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo name];
 }
 
@@ -134,7 +134,7 @@
     CGRect frame = self.messageCell.frame;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
 
-    float height = [self.messageCell heightForText: message.text];
+    float height = [self.messageCell heightForText: message.body];
 
     if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
         ImageAttachment * imageAttachment = (ImageAttachment*)message.attachment;
@@ -278,7 +278,7 @@
         [message.contact didChangeValueForKey: @"unreadMessages"];
     }
 
-    cell.message.text = message.text;
+    cell.message.text = message.body;
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael"] : message.contact.avatarImage;
     
     if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {

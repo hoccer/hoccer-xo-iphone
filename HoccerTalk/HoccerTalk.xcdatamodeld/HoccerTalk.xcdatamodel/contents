@@ -22,9 +22,9 @@
         <attribute name="width" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isOutgoing" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeSection" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
@@ -33,9 +33,9 @@
     <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
     <fetchRequest name="MessagesByNickName" entity="Message" predicateString="contact.nickName LIKE $nickName"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="ImageAttachment" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Message" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Attachment" positionX="-641" positionY="27" width="128" height="75"/>
+        <element name="Contact" positionX="-108" positionY="13" width="128" height="149"/>
+        <element name="ImageAttachment" positionX="-639" positionY="-171" width="128" height="75"/>
+        <element name="Message" positionX="-414" positionY="-15" width="128" height="150"/>
     </elements>
 </model>

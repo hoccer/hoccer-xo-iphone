@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "ChatBackend.h"
+#import "HoccerTalkBackend.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -18,6 +19,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, retain) ChatBackend * chatBackend;
+@property (nonatomic, retain) HoccerTalkBackend * realChatBackend;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

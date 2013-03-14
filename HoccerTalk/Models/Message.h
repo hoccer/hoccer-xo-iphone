@@ -12,7 +12,7 @@
 
 @interface Message : NSManagedObject
 
-@property (nonatomic, retain) NSString* text;
+@property (nonatomic, retain) NSString* body;
 @property (nonatomic, retain) NSDate*   timeStamp;
 @property (nonatomic, retain) NSNumber* isOutgoing;
 @property (nonatomic, retain) NSString* timeSection;
