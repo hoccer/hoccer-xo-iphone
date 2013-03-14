@@ -18,10 +18,11 @@
     self = [super init];
     if (self != nil) {
         [self addDummies: 100];
-        self.blubberMessages = @[@"Gemüsequark mit Pizza Leberwurst-Tunfisch auf Feldsalatbett mit Hackbraten und Rollmops auf Toast",
+        self.blubberMessages = @[@"Gemüsequark mit Pizza Leberwurst-Tunfisch auf Feldbettsalat mit Hackbraten und Rollmops auf Toast",
                                  @"Gratinierte Ochsenbacken mit Wurzelgemüse im Speckmantel auf Steinpilzrisotto mit Riesengarnelenomlett",
                                  @"Kamelhöcker gefüllt mit Oliven auf Provinzjemüse mit Süsskrartoffelkroketten und Rosenkohlsalat",
-                                 @"fasel", @"flup flup", @"brizzel", @"brazzel", @"brubbel", @"fizzel"];
+                                 @"Spiegelei, Spinat, Kartoffelpüree!",
+                                 @"brizzel", @"brazzel", @"bruzzel"];
         [self blubber];
 
     }
