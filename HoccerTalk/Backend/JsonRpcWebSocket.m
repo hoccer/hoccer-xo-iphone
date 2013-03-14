@@ -50,15 +50,21 @@ static const NSTimeInterval kResponseTimeout = 10;
     if (self != nil) {
         _id = 0;
         _responseHandlers = [[NSMutableDictionary alloc] init];
+        _rpcMethods = [[NSMutableDictionary alloc] init];
+
         _websocket = [[SRWebSocket alloc] initWithURLRequest: request];
         _websocket.delegate = self;
-        
-        _rpcMethods = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
 - (void) open {
+    [_websocket open];
+}
+
+- (void) reopenWithURLRequest:(NSURLRequest *)request {
+    _websocket = [[SRWebSocket alloc] initWithURLRequest: request];
+    _websocket.delegate = self;
     [_websocket open];
 }
 

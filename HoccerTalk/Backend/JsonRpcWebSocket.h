@@ -19,9 +19,6 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 - (void) webSocketDidFailWithError: (NSError*) error;
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error;
 - (void) incomingMethodCallDidFail: (NSError*) error;
-
-@optional
-
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket;
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 
@@ -43,6 +40,7 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 
 - (id) initWithURLRequest: (NSURLRequest*) request;
 - (void) open;
+- (void) reopenWithURLRequest: (NSURLRequest*) request;
 - (void) notify: (NSString*) method withParams: (id) params;
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler;
 - (void) registerIncomingCall: (NSString*) methodName withSelector: (SEL) selector isNotification: (BOOL) notificationFlag;
