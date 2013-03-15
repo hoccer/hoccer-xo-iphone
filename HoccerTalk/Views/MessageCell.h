@@ -11,6 +11,7 @@
 @class AutoheightLabel;
 @class AvatarBezelView;
 @class BubbleView;
+@class Message;
 
 @interface MessageCell : UITableViewCell
 
@@ -18,6 +19,6 @@
 @property (strong, nonatomic) IBOutlet AvatarBezelView *avatar;
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
-- (float) heightForText: (NSString*) text;
+- (CGFloat) heightForMessage: (Message*) message;
 
 @end

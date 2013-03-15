@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12C2034" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -11,6 +11,10 @@
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="blackOpaque" id="4">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="4nm-mG-zhE">
+                        <rect key="frame" x="0.0" y="416" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="12" kind="relationship" relationship="rootViewController" id="19"/>
                     </connections>
@@ -36,7 +40,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Mr. Mister" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mH8-ys-z78" userLabel="Nick Name">
-                                            <rect key="frame" x="75" y="10" width="167" height="17"/>
+                                            <rect key="frame" x="75" y="9" width="167" height="17"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <nil key="highlightedColor"/>
@@ -47,14 +51,14 @@
                                             <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         </view>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BYf-td-Ce8" userLabel="Latest Message">
-                                            <rect key="frame" x="75" y="27" width="205" height="27"/>
+                                            <rect key="frame" x="75" y="24" width="205" height="27"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TRS-dL-kmg" userLabel="Latest Message">
-                                            <rect key="frame" x="180" y="11" width="100" height="16"/>
+                                            <rect key="frame" x="180" y="10" width="100" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -374,72 +378,6 @@
         <image name="chatbar_btn_add-content.png" width="37" height="27"/>
         <image name="chatbar_btn_add-content_selected.png" width="37" height="27"/>
     </resources>
-    <classes>
-        <class className="AutoheightLabel" superclassName="UILabel">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutoheightLabel.h"/>
-        </class>
-        <class className="AvatarBezelView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AvatarBezelView.h"/>
-        </class>
-        <class className="BubbleView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleView.h"/>
-            <relationships>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="ChatTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableViewController.h"/>
-        </class>
-        <class className="ChatViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addAttachmentPressed:"/>
-                <relationship kind="action" name="sendPressed:"/>
-                <relationship kind="outlet" name="attachmentBar" candidateClass="UIView"/>
-                <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="chatTable" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="chatTableContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
-                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="textField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="ContactCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="AvatarBezelView"/>
-                <relationship kind="outlet" name="latestMessage" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="latestMessageTime" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ContactListViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
-        </class>
-        <class className="LeftMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
-        </class>
-        <class className="MessageCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="AvatarBezelView"/>
-                <relationship kind="outlet" name="bubble" candidateClass="BubbleView"/>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
-        </class>
-        <class className="RightMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
-        </class>
-        <class className="SectionHeaderCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SectionHeaderCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

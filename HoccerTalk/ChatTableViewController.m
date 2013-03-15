@@ -20,6 +20,7 @@
 #import "AutoheightLabel.h"
 #import "BubbleView.h"
 #import "ImageAttachment.h"
+#import "AttachmentViewFactory.h"
 
 @interface ChatTableViewController ()
 
@@ -125,7 +126,7 @@
      */
 }
 
-- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     double width = self.tableView.frame.size.width;
 
@@ -134,13 +135,7 @@
     CGRect frame = self.messageCell.frame;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
 
-    float height = [self.messageCell heightForText: message.body];
-
-    if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
-        ImageAttachment * imageAttachment = (ImageAttachment*)message.attachment;
-        height += ([imageAttachment.height floatValue] / [imageAttachment.width floatValue]) * self.messageCell.message.frame.size.width;
-    }
-    return height;
+    return [self.messageCell heightForMessage: message];
 }
 
 #pragma mark - Fetched results controller
@@ -278,15 +273,8 @@
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael"] : message.contact.avatarImage;
     
     if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
-        UIImageView * imageView = [[UIImageView alloc] initWithImage: [UIImage imageWithContentsOfFile: message.attachment.filePath]];
-        /*
-        imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-        imageView.layer.shadowOffset = CGSizeMake(0, 2);
-        imageView.layer.shadowOpacity = 0.8;
-        imageView.layer.shadowRadius = 3;
-        imageView.layer.masksToBounds = NO;
-         */
-        cell.bubble.attachmentView = imageView;
+        UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
+        cell.bubble.attachmentView = attachmentView;
     } else {
         cell.bubble.attachmentView = nil;
     }

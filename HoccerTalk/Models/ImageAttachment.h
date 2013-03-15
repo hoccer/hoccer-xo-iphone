@@ -15,5 +15,6 @@
 
 @property (nonatomic, retain) NSNumber * width;
 @property (nonatomic, retain) NSNumber * height;
+@property (nonatomic,readonly) CGFloat aspectRatio;
 
 @end

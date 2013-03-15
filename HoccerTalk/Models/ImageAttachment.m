@@ -14,4 +14,7 @@
 @dynamic width;
 @dynamic height;
 
+- (CGFloat) aspectRatio {
+    return self.height.floatValue / self.width.floatValue;
+}
 @end

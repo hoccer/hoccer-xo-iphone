@@ -9,13 +9,14 @@
 #import "MessageCell.h"
 #import "AutoheightLabel.h"
 #import "BubbleView.h"
+#import "Message.h"
 
 @implementation MessageCell
 
 static const double kCellPadding = 10.0;
 
-- (float) heightForText: (NSString*) text {
-    return MAX(kCellPadding + [self.bubble heightForText: text] + kCellPadding,
+- (CGFloat) heightForMessage: (Message*) message {
+    return MAX(kCellPadding + [self.bubble heightForMessage: message] + kCellPadding,
                self.frame.size.height);
 }
 
