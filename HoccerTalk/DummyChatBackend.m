@@ -115,7 +115,7 @@
 - (void) attachAttachment: (Message*) message moc: (NSManagedObjectContext*) moc{
     ImageAttachment * attachment =  (ImageAttachment*)[NSEntityDescription insertNewObjectForEntityForName:@"ImageAttachment" inManagedObjectContext: moc];
     NSString * path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"angry_wet_coala.jpg"];
-    attachment.filePath = path;
+    attachment.localURL = [[NSURL fileURLWithPath: path] absoluteString];
     UIImage * image = [UIImage imageNamed: @"angry_wet_coala.jpg"];
     attachment.width = [NSNumber numberWithFloat: image.size.width];
     attachment.height = [NSNumber numberWithFloat: image.size.height];

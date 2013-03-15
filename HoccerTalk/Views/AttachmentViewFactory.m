@@ -8,9 +8,10 @@
 
 #import "AttachmentViewFactory.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "Attachment.h"
 #import "ImageAttachment.h"
-#import <QuartzCore/QuartzCore.h>
 
 @implementation AttachmentViewFactory
 
@@ -18,7 +19,15 @@
     if (attachment == nil) {
         return nil;
     } else if ([attachment isKindOfClass: [ImageAttachment class]]) {
-        UIImageView * imageView = [[UIImageView alloc] initWithImage: [UIImage imageWithContentsOfFile: attachment.filePath]];
+        UIImageView * imageView = [[UIImageView alloc] init];
+        ImageAttachment * imageAttachment = (ImageAttachment*)attachment;
+        [imageAttachment loadImage:^(UIImage* image, NSError* error) {
+            if (image) {
+                imageView.image = image;
+            } else {
+                NSLog(@"Failed to get image: %@", error);
+            }
+        }];
         /*
         imageView.layer.shadowColor = [UIColor blackColor].CGColor;
         imageView.layer.shadowOffset = CGSizeMake(0, 2);

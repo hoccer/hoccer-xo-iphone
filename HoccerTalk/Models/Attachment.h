@@ -13,7 +13,7 @@
 
 @interface Attachment : NSManagedObject
 
-@property (nonatomic, retain) NSString * filePath;
+@property (nonatomic, retain) NSString * localURL;
 @property (nonatomic, retain) Message *message;
 
 @end

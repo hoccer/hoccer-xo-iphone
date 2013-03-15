@@ -12,7 +12,7 @@
 
 @implementation Attachment
 
-@dynamic filePath;
+@dynamic localURL;
 @dynamic message;
 
 @end

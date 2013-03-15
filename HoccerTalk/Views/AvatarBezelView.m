@@ -20,38 +20,50 @@
 
 @implementation AvatarBezelView
 
+- (id) init {
+    self = [super init];
+    if (self != nil) {
+        [self commonInit];
+    }
+    return self;
+}
+
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder: aDecoder];
     if (self != nil) {
-        self.cornerRadius = 4;
-
-        self.imageLayer = [CALayer layer];
-        self.imageLayer.cornerRadius = self.cornerRadius;
-        [self.layer insertSublayer: self.imageLayer atIndex: 0];
-
-        self.insetLayer = [CAShapeLayer layer];
-        self.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.8];
-        self.insetLayer.fillColor = [UIColor clearColor].CGColor;
-        [self.layer insertSublayer: self.insetLayer atIndex: 1];
-
-        self.innerShadowLayer = [CAShapeLayer layer];
-        self.innerShadowColor = [UIColor colorWithWhite: 0.0 alpha: 0.25];
-        self.innerShadowLayer.fillColor = [UIColor clearColor].CGColor;
-        [self.layer insertSublayer: self.innerShadowLayer atIndex: 2];
-
-        self.bezelLayer = [CAShapeLayer layer];
-        self.bezelColor = [UIColor colorWithWhite: 0.2 alpha: 1.0];
-        self.bezelLayer.fillColor = [UIColor clearColor].CGColor;
-        [self.layer insertSublayer: self.bezelLayer atIndex: 3];
-
-        self.layer.backgroundColor = [UIColor clearColor].CGColor;
-        self.layer.masksToBounds = YES;
-        if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] && [[UIScreen mainScreen] scale] == 2) {
-            self.layer.rasterizationScale=2.0;
-        }
-        self.layer.shouldRasterize = YES;
+        [self commonInit];
     }
     return self;
+}
+
+- (void) commonInit {
+    self.cornerRadius = 4;
+
+    self.imageLayer = [CALayer layer];
+    self.imageLayer.cornerRadius = self.cornerRadius;
+    [self.layer insertSublayer: self.imageLayer atIndex: 0];
+
+    self.insetLayer = [CAShapeLayer layer];
+    self.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.8];
+    self.insetLayer.fillColor = [UIColor clearColor].CGColor;
+    [self.layer insertSublayer: self.insetLayer atIndex: 1];
+
+    self.innerShadowLayer = [CAShapeLayer layer];
+    self.innerShadowColor = [UIColor colorWithWhite: 0.0 alpha: 0.25];
+    self.innerShadowLayer.fillColor = [UIColor clearColor].CGColor;
+    [self.layer insertSublayer: self.innerShadowLayer atIndex: 2];
+
+    self.bezelLayer = [CAShapeLayer layer];
+    self.bezelColor = [UIColor colorWithWhite: 0.2 alpha: 1.0];
+    self.bezelLayer.fillColor = [UIColor clearColor].CGColor;
+    [self.layer insertSublayer: self.bezelLayer atIndex: 3];
+
+    self.layer.backgroundColor = [UIColor clearColor].CGColor;
+    self.layer.masksToBounds = YES;
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] && [[UIScreen mainScreen] scale] == 2) {
+        self.layer.rasterizationScale=2.0;
+    }
+    self.layer.shouldRasterize = YES;
 }
 
 - (void) layoutSubviews {
@@ -75,7 +87,7 @@
     imageMask.path = self.bezelLayer.path;
     imageMask.frame = self.bounds;
     imageMask.strokeColor = imageMask.fillColor = [UIColor whiteColor].CGColor;
-    //self.imageLayer.mask = imageMask;
+    self.imageLayer.mask = imageMask;
     //self.imageLayer.masksToBounds = YES;
 
 
@@ -89,6 +101,20 @@
 - (void) setImage:(UIImage *)image {
     self.imageLayer.contents = (id)image.CGImage;
     _image = image;
+
+    // TODO: handle image aspect
+/*
+    CGFloat imageAspect = image.size.width / image.size.height;
+    CGFloat frameAspect = self.bounds.size.width / self.bounds.size.height;
+
+    NSLog(@"w: %f h: %f", image.size.width, image.size.height);
+
+    if (imageAspect > frameAspect) {
+        NSLog(@"fit height");
+    } else {
+        NSLog(@"fit width");
+    }
+ */
 }
 
 - (UIBezierPath*) roundedRect: (CGRect) rect {
