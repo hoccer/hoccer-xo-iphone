@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "Contact.h"
 #import "ChatTableViewController.h"
+#import "AttachmentPickerController.h"
 
 @class ChatBackend;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPcikerControllerDelegate,UIActionSheetDelegate>
 {
     ChatTableViewController * chatTableController;
 }
@@ -27,7 +28,6 @@
 @property (strong, nonatomic) IBOutlet UIView *      chatTableContainer;
 @property (strong, nonatomic) IBOutlet UITableView *      chatTable;
 
-@property (strong, nonatomic) IBOutlet UIView *attachmentBar;
 @property (strong, nonatomic) IBOutlet UIButton *attachmentButton;
 
 - (IBAction)sendPressed:(id)sender;

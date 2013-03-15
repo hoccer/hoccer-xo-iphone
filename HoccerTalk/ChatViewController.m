@@ -13,9 +13,15 @@
 #import "UIButton+GlossyRounded.h"
 #import "Message.h"
 #import "AppDelegate.h"
+#import "AttachmentPickerController.h"
+#import "AvatarBezelView.h"
 
 @interface ChatViewController ()
+
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
+@property (strong, readonly) AttachmentPickerController* attachmentPicker;
+@property (strong, nonatomic) UIView* attachmentPreview;
+
 - (void)configureView;
 @end
 
@@ -23,6 +29,7 @@
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize chatBackend = _chatBackend;
+@synthesize attachmentPicker = _attachmentPicker;
 
 #pragma mark - Managing the detail item
 
@@ -38,19 +45,18 @@
 
     UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg"]];
     self.chatbar.backgroundColor = barBackground;
-    self.attachmentBar.backgroundColor = barBackground;
-    [self setAttachmentBarVisibility: NO animated: NO];
 
     [chatTableController setPartner: _partner];
 
-    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:12 topCapHeight:0];
     [self.textField setBackground: textfieldBackground];
     self.textField.backgroundColor = [UIColor clearColor];
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
     self.textField.leftView = paddingView;
     self.textField.leftViewMode = UITextFieldViewModeAlways;
 
-    UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:5 topCapHeight:13];
+    // TODO: make the send button image smaller
+    UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
     [self.sendButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
     [self.sendButton setBackgroundColor: [UIColor clearColor]];
     self.sendButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
@@ -174,8 +180,66 @@
 }
 
 - (IBAction) addAttachmentPressed:(id)sender {
-    [sender setSelected: ! [sender isSelected]];
-    [self setAttachmentBarVisibility: [sender isSelected] animated: YES];
+    [self.attachmentPicker showInView: self.view];
+}
+
+- (IBAction) attachmentPressed: (id)sender {
+    [self showAttachmentOptions];
+}
+
+#pragma mark - Attachments
+
+- (AttachmentPickerController*) attachmentPicker {
+    if (_attachmentPicker == nil) {
+        _attachmentPicker = [[AttachmentPickerController alloc] initWithViewController: self delegate: self];
+        
+    }
+    return _attachmentPicker;
+}
+
+- (void) didPickAttachment: (id) attachmentInfo {
+    if (attachmentInfo == nil) {
+        return;
+    }
+    if (attachmentInfo[@"UIImagePickerControllerOriginalImage"]) {
+        AvatarBezelView* preview = [[AvatarBezelView alloc] init];
+        self.attachmentPreview = preview;
+        preview.frame = _attachmentButton.frame;
+        preview.image = attachmentInfo[@"UIImagePickerControllerOriginalImage"];
+        preview.bezelColor = [UIColor blackColor];
+        preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
+        [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.chatbar addSubview: preview];
+        _attachmentButton.hidden = YES;
+    }
+}
+
+- (void) showAttachmentOptions {
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", nil)
+                                                        delegate: self
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                          destructiveButtonTitle: nil
+                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", nil)/*, NSLocalizedString(@"View Attachment", nil)*/, nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    [sheet showInView: self.view];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        return;
+    }
+    switch (buttonIndex) {
+        case 0:
+            [self.attachmentPreview removeFromSuperview];
+            self.attachmentPreview = nil;
+            self.attachmentButton.hidden = NO;
+            break;
+        case 1:
+            NSLog(@"Viewing attachments not yet implemented");
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark - Graphics Utilities
@@ -206,40 +270,4 @@
     return image;
 }
 
-#pragma mark - Attachments
-
-- (void) setAttachmentBarVisibility: (BOOL) visible animated: (BOOL) animated {
-    CGRect barFrame = self.attachmentBar.frame;
-    CGRect tableFrame = self.chatTableContainer.frame;
-    CGFloat height = barFrame.size.height;
-    UIScrollView * scrollView = (UIScrollView*)self.chatTableContainer.subviews[0];
-    CGPoint contentOffset = scrollView.contentOffset;
-    if (visible) {
-        barFrame = CGRectMake(barFrame.origin.x, barFrame.origin.y - height, barFrame.size.width, height);
-        tableFrame = CGRectMake(tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height - height);
-        contentOffset.y += height;
-    } else {
-        barFrame = CGRectMake(barFrame.origin.x, barFrame.origin.y + height, barFrame.size.width, height);
-        tableFrame = CGRectMake(tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height + height);
-        contentOffset.y -= height;
-    }
-
-    void (^adjustFrames)() = ^() {
-        self.attachmentBar.frame = barFrame;
-        self.chatTableContainer.frame = tableFrame;
-        scrollView.contentOffset = contentOffset;
-    };
-
-    if (animated) {
-        [UIView animateWithDuration: 0.2 animations: adjustFrames];
-    } else {
-        adjustFrames();
-    }
-}
-
-- (void)viewDidUnload {
-    [self setAttachmentBar:nil];
-    [self setAttachmentButton:nil];
-    [super viewDidUnload];
-}
 @end
