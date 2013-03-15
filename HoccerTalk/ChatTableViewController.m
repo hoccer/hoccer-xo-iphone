@@ -189,7 +189,7 @@
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
         _fetchedResultsController.delegate = self;
 
-        [resultsControllers setObject: _fetchedResultsController forKey: partner.objectID];
+        resultsControllers[partner.objectID] = _fetchedResultsController;
 
         NSError *error = nil;
         if (![_fetchedResultsController performFetch:&error]) {
