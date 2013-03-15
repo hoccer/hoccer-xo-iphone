@@ -15,6 +15,7 @@
 #import "Contact.h"
 #import "Message.h"
 #import "DummyChatBackend.h"
+#import "AssetStore.h"
 
 #import "JsonRpcWebSocket.h"
 
@@ -30,35 +31,26 @@
     self.chatBackend = [[DummyChatBackend alloc] init];
     self.realChatBackend = [[HoccerTalkBackend alloc] init];
 
-    //[[JsonRpcWebSocket alloc] initWithURLRequest: nil];
-
-    UIColor * navigationBarTint = [UIColor colorWithRed: 0.08 green: 0.08 blue: 0.08 alpha: 1.0];
-
     // Override point for customization after application launch.
     ContactListViewController * controller = nil;
+    UINavigationController * navigationController;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-        UINavigationBar *bar = [navigationController navigationBar];
-        [bar setTintColor: navigationBarTint];
-
+        navigationController = [splitViewController.viewControllers lastObject];
         splitViewController.delegate = (id)navigationController.topViewController;
-
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-
-        bar = [navigationController navigationBar];
-        [bar setTintColor:navigationBarTint];
-
         controller = (ContactListViewController *)masterNavigationController.topViewController;
     } else {
-        UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-        UINavigationBar *bar = [navigationController navigationBar];
-        [bar setTintColor: navigationBarTint];
-
+        navigationController = (UINavigationController *)self.window.rootViewController;
         controller = (ContactListViewController *)navigationController.topViewController;
     }
     // TODO: be lazy
     controller.managedObjectContext = self.managedObjectContext;
+
+    UINavigationBar *bar = [navigationController navigationBar];
+    [bar setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar-bg" withLeftCapWidth: 65 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
+
+
     return YES;
 }
 							
