@@ -18,7 +18,7 @@
     self = [super init];
     if (self != nil) {
         [self addDummies: 100];
-        self.blubberMessages = @[@"Gemüsequark mit Pizza Leberwurst-Tunfisch auf Feldbettsalat mit Hackbraten und Rollmops auf Toast",
+        self.blubberMessages = @[@"Pizza Leberwurst-Tunfisch mit Gemüsequark auf Feldbettsalat mit Hackbraten und Rollmops auf Toast",
                                  @"Gratinierte Ochsenbacken mit Wurzelgemüse im Speckmantel auf Steinpilzrisotto mit Riesengarnelenomlett",
                                  @"Kamelhöcker gefüllt mit Oliven auf Provinzjemüse mit Süsskrartoffelkroketten und Rosenkohlsalat",
                                  @"Spiegelei, Spinat, Kartoffelpüree!",
@@ -125,7 +125,7 @@
 
 - (void) blubber {
     [self receiveRandomMessage];
-    [NSTimer scheduledTimerWithTimeInterval: rand() % 30
+    [NSTimer scheduledTimerWithTimeInterval: rand() % 300
                                      target:self
                                    selector:@selector(blubber)
                                    userInfo:nil
