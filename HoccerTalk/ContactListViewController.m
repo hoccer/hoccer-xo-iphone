@@ -40,10 +40,17 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    UIImage * bg = [[UIImage imageNamed: @"navbar-btn-default"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
+    UIImage * icon = [UIImage imageNamed: @"navbar-icon-menu"];
+    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonPressed:)];
+    [menuButton setBackgroundImage: bg forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
+    self.navigationItem.leftBarButtonItem = menuButton;
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    icon = [UIImage imageNamed: @"navbar-icon-contacts"];
+    UIBarButtonItem *contactsButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(contactsButtonPressed:)];
+    [contactsButton setBackgroundImage: bg forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
+    self.navigationItem.rightBarButtonItem = contactsButton;
+
     self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
@@ -53,6 +60,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+- (IBAction) menuButtonPressed:(id)sender {
+    NSLog(@"Menu button pressed");
+}
+
+- (IBAction) contactsButtonPressed:(id)sender {
+    NSLog(@"Contacts button pressed");
+}
+
+// TODO: remove this
 - (void)insertNewObject:(id)sender
 {
     NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
@@ -102,7 +119,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
