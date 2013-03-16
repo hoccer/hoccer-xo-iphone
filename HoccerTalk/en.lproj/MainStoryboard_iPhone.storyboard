@@ -152,7 +152,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Chat" id="26"/>
+                    <navigationItem key="navigationItem" title="Mr. Mister" id="26"/>
                     <connections>
                         <outlet property="attachmentButton" destination="sMD-1M-Mcj" id="RZT-5t-YDG"/>
                         <outlet property="chatTableContainer" destination="2ZD-Kx-uba" id="zKH-oT-g6g"/>
@@ -306,7 +306,6 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addAttachmentPressed:"/>
-                <relationship kind="action" name="attachmentPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="chatTable" candidateClass="UITableView"/>
