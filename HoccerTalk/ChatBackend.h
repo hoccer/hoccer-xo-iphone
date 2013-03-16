@@ -16,5 +16,6 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 - (Message*) sendMessage: (NSString*) text toContact: (Contact*) contact;
+- (NSDictionary*) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 
 @end

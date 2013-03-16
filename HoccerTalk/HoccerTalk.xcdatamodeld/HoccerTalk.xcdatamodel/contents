@@ -6,11 +6,13 @@
     </entity>
     <entity name="Contact" representedClassName="Contact">
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="clientId" attributeType="String" syncable="YES"/>
         <attribute name="currentTimeSection" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latestMessageTime" optional="YES" attributeType="Date">
             <userInfo/>
         </attribute>
         <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="contact" inverseEntity="Message" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Message" predicateString="contact == $FETCH_SOURCE AND timeStamp == $FETCH_SOURCE.latestMessageTime"/>
@@ -20,6 +22,11 @@
         </fetchedProperty>
         <userInfo/>
     </entity>
+    <entity name="Delivery" representedClassName="Delivery" syncable="YES">
+        <attribute name="state" attributeType="String" defaultValueString="new" syncable="YES"/>
+        <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="deliveries" inverseEntity="Message" syncable="YES"/>
+        <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
+    </entity>
     <entity name="ImageAttachment" representedClassName="ImageAttachment" parentEntity="Attachment" syncable="YES">
         <attribute name="height" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="width" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -28,16 +35,20 @@
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isOutgoing" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="messageId" attributeType="String" syncable="YES"/>
+        <attribute name="messageTag" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeSection" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
     </entity>
     <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="ImageAttachment" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Message" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Attachment" positionX="79" positionY="-84" width="128" height="75"/>
+        <element name="Contact" positionX="727" positionY="-146" width="128" height="194"/>
+        <element name="ImageAttachment" positionX="81" positionY="-219" width="128" height="75"/>
+        <element name="Message" positionX="333" positionY="-144" width="128" height="195"/>
+        <element name="Delivery" positionX="520" positionY="24" width="128" height="90"/>
     </elements>
 </model>

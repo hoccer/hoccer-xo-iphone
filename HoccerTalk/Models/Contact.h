@@ -10,7 +10,9 @@
 
 @interface Contact : NSManagedObject
 
+
 @property (nonatomic, retain) NSData*       avatar;
+@property (nonatomic, retain) NSString*     clientId;
 @property (nonatomic, retain) NSDate*       latestMessageTime;
 @property (nonatomic, retain) NSString*     nickName;
 @property (nonatomic, retain) NSString*     currentTimeSection;

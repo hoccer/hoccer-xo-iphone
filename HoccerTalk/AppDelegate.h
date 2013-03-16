@@ -19,7 +19,6 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, retain) ChatBackend * chatBackend;
-@property (nonatomic, retain) HoccerTalkBackend * realChatBackend;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

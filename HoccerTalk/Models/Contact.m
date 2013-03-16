@@ -13,6 +13,7 @@ const float kTimeSectionInterval = 2 * 60;
 @implementation Contact
 
 @dynamic avatar;
+@dynamic clientId;
 @dynamic latestMessageTime;
 @dynamic nickName;
 @dynamic currentTimeSection;

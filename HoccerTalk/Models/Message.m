@@ -15,8 +15,15 @@
 @dynamic timeStamp;
 @dynamic timeSection;
 @dynamic isRead;
+@dynamic messageId;
+@dynamic messageTag;
 
 @dynamic contact;
 @dynamic attachment;
+@dynamic deliveries;
+
+- (NSDictionary*) rpcKeys {
+    return @{ @"body": @"body"};
+}
 
 @end

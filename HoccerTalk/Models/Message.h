@@ -7,8 +7,10 @@
 //
 
 #import <CoreData/CoreData.h>
-#import "Contact.h"
-#import "Attachment.h"
+
+@class Contact;
+@class Attachment;
+@class Delivery;
 
 @interface Message : NSManagedObject
 
@@ -17,9 +19,11 @@
 @property (nonatomic, retain) NSNumber* isOutgoing;
 @property (nonatomic, retain) NSString* timeSection;
 @property (nonatomic, retain) NSNumber* isRead;
-
+@property (nonatomic, retain) NSString* messageId;
+@property (nonatomic, retain) NSString* messageTag;
 
 @property (nonatomic, retain) Contact*  contact;
 @property (nonatomic, retain) Attachment * attachment;
+@property (nonatomic, retain) NSMutableSet * deliveries;
 
 @end

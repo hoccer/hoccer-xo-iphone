@@ -77,6 +77,7 @@
             Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
             contact.nickName = nicks[contactIndex];
             contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatar]);
+            contact.clientId = [NSString stringWithFormat: @"clientId of %@", nicks[contactIndex]];
             
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - (60*60*24*30)];
             contact.latestMessageTime = date;
@@ -89,6 +90,7 @@
                 message.contact = contact;
                 message.isOutgoing = i % 2 == 0 ? @NO : @YES;
                 message.isRead = @NO;
+                message.messageId = @"";
 
                 message.timeSection = [contact sectionTitleForMessageTime: date];
                 contact.latestMessageTime = date;
