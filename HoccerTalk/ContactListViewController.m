@@ -52,6 +52,8 @@
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
+    self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
+
     self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
