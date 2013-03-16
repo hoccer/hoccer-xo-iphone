@@ -14,7 +14,7 @@
 #import "Message.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
-#import "AvatarBezelView.h"
+#import "BezeledImageView.h"
 
 @interface ChatViewController ()
 
@@ -202,7 +202,7 @@
         return;
     }
     if (attachmentInfo[@"UIImagePickerControllerOriginalImage"]) {
-        AvatarBezelView* preview = [[AvatarBezelView alloc] init];
+        BezeledImageView* preview = [[BezeledImageView alloc] init];
         self.attachmentPreview = preview;
         preview.frame = _attachmentButton.frame;
         preview.image = attachmentInfo[@"UIImagePickerControllerOriginalImage"];

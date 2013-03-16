@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "AvatarBezelView.h"
+#import "BezeledImageView.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface AvatarBezelView ()
+@interface BezeledImageView ()
 
 @property (nonatomic,strong) CALayer* imageLayer;
 @property (nonatomic,strong) CAShapeLayer* insetLayer;
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation AvatarBezelView
+@implementation BezeledImageView
 
 - (id) init {
     self = [super init];

@@ -16,7 +16,7 @@
 #import "LeftMessageCell.h"
 #import "RightMessageCell.h"
 #import "SectionHeaderCell.h"
-#import "AvatarBezelView.h"
+#import "BezeledImageView.h"
 #import "AutoheightLabel.h"
 #import "BubbleView.h"
 #import "ImageAttachment.h"

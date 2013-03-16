@@ -14,7 +14,7 @@
 		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
 		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
-		6320D7CD16E0C79B00E58478 /* AvatarBezelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */; };
+		6320D7CD16E0C79B00E58478 /* BezeledImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* BezeledImageView.m */; };
 		6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */; };
 		6320D7D316E4C11200E58478 /* RightMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7D216E4C11200E58478 /* RightMessageCell.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
@@ -172,8 +172,8 @@
 		6320D7C616DF622E00E58478 /* DummyChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DummyChatBackend.m; path = ../DummyChatBackend.m; sourceTree = "<group>"; };
 		6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderCell.h; sourceTree = "<group>"; };
 		6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderCell.m; sourceTree = "<group>"; };
-		6320D7CB16E0C79A00E58478 /* AvatarBezelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarBezelView.h; sourceTree = "<group>"; };
-		6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvatarBezelView.m; sourceTree = "<group>"; };
+		6320D7CB16E0C79A00E58478 /* BezeledImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BezeledImageView.h; sourceTree = "<group>"; };
+		6320D7CC16E0C79A00E58478 /* BezeledImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezeledImageView.m; sourceTree = "<group>"; };
 		6320D7CE16E4C0F400E58478 /* LeftMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftMessageCell.h; sourceTree = "<group>"; };
 		6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftMessageCell.m; sourceTree = "<group>"; };
 		6320D7D116E4C11200E58478 /* RightMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RightMessageCell.h; sourceTree = "<group>"; };
@@ -586,8 +586,8 @@
 				637847A916F2864E00DE03C2 /* AttachmentViewFactory.m */,
 				63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */,
 				63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */,
-				6320D7CB16E0C79A00E58478 /* AvatarBezelView.h */,
-				6320D7CC16E0C79A00E58478 /* AvatarBezelView.m */,
+				6320D7CB16E0C79A00E58478 /* BezeledImageView.h */,
+				6320D7CC16E0C79A00E58478 /* BezeledImageView.m */,
 				63540A9016E500D20087D24E /* BubbleView.h */,
 				63540A9116E500D20087D24E /* BubbleView.m */,
 				63C413BA16E94735004E1F6D /* ContactCell.h */,
@@ -791,7 +791,7 @@
 				6320D7C416DF620900E58478 /* ChatBackend.m in Sources */,
 				6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */,
 				6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */,
-				6320D7CD16E0C79B00E58478 /* AvatarBezelView.m in Sources */,
+				6320D7CD16E0C79B00E58478 /* BezeledImageView.m in Sources */,
 				6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */,
 				6320D7D316E4C11200E58478 /* RightMessageCell.m in Sources */,
 				63540A9216E500D20087D24E /* BubbleView.m in Sources */,

@@ -9,14 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @class AutoheightLabel;
-@class AvatarBezelView;
+@class BezeledImageView;
 @class BubbleView;
 @class Message;
 
 @interface MessageCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet AutoheightLabel *message;
-@property (strong, nonatomic) IBOutlet AvatarBezelView *avatar;
+@property (strong, nonatomic) IBOutlet BezeledImageView *avatar;
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
 - (CGFloat) heightForMessage: (Message*) message;

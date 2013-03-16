@@ -13,7 +13,7 @@
 #import "ChatViewController.h"
 #import "Contact.h"
 #import "ContactCell.h"
-#import "AvatarBezelView.h"
+#import "BezeledImageView.h"
 #include "AssetStore.h"
 #import "Message.h"
 

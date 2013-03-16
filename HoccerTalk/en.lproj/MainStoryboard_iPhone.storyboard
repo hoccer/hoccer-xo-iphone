@@ -45,7 +45,7 @@
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" id="lkO-00-gch" userLabel="Avatar" customClass="AvatarBezelView">
+                                        <view contentMode="scaleToFill" id="lkO-00-gch" userLabel="Avatar" customClass="BezeledImageView">
                                             <rect key="frame" x="10" y="10" width="44" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -198,7 +198,7 @@
                                                 <outlet property="message" destination="ZUO-SE-br1" id="T1T-nw-bXQ"/>
                                             </connections>
                                         </view>
-                                        <view contentMode="scaleToFill" id="ySj-fp-FS8" customClass="AvatarBezelView">
+                                        <view contentMode="scaleToFill" id="ySj-fp-FS8" customClass="BezeledImageView">
                                             <rect key="frame" x="12" y="10" width="45" height="45"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -220,7 +220,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" id="Cno-Jk-bEs" customClass="AvatarBezelView">
+                                        <view contentMode="scaleToFill" id="Cno-Jk-bEs" customClass="BezeledImageView">
                                             <rect key="frame" x="261" y="10" width="45" height="45"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

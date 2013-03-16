@@ -128,7 +128,7 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <view contentMode="scaleToFill" id="aPx-8R-JlE" userLabel="Avatar" customClass="AvatarBezelView">
+                                        <view contentMode="scaleToFill" id="aPx-8R-JlE" userLabel="Avatar" customClass="BezeledImageView">
                                             <rect key="frame" x="20" y="6" width="32" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -204,7 +204,7 @@
                                                 <outlet property="message" destination="9Nd-MF-ScL" id="ppT-cz-Dr5"/>
                                             </connections>
                                         </view>
-                                        <view contentMode="scaleToFill" id="BCS-am-703" customClass="AvatarBezelView">
+                                        <view contentMode="scaleToFill" id="BCS-am-703" customClass="BezeledImageView">
                                             <rect key="frame" x="20" y="14" width="64" height="64"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -242,7 +242,7 @@
                                                 <outlet property="message" destination="jBu-Xd-fgw" id="StQ-wQ-UiH"/>
                                             </connections>
                                         </view>
-                                        <view contentMode="scaleToFill" id="CuN-Sc-1n4" customClass="AvatarBezelView">
+                                        <view contentMode="scaleToFill" id="CuN-Sc-1n4" customClass="BezeledImageView">
                                             <rect key="frame" x="619" y="14" width="64" height="64"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>

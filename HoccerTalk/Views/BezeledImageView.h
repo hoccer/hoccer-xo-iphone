@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AvatarBezelView : UIControl
+@interface BezeledImageView : UIControl
 
 @property (strong, nonatomic) UIImage *image;
 
