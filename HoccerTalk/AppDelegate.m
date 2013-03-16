@@ -50,6 +50,10 @@
     UINavigationBar *bar = [navigationController navigationBar];
     [bar setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar-bg" withLeftCapWidth: 65 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
 
+    UIImage * navigationButtonBackground = [[UIImage imageNamed: @"navbar-btn-default"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
+    [[UIBarButtonItem appearance] setBackgroundImage: navigationButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
+    UIImage * navigationBackButtonBackground = [[UIImage imageNamed: @"navbar-btn-back"] stretchableImageWithLeftCapWidth: 17 topCapHeight: 0];
+    [[UIBarButtonItem appearance] setBackButtonBackgroundImage: navigationBackButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
     return YES;
 }

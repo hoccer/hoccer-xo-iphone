@@ -40,16 +40,17 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    UIImage * bg = [[UIImage imageNamed: @"navbar-btn-default"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
     UIImage * icon = [UIImage imageNamed: @"navbar-icon-menu"];
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonPressed:)];
-    [menuButton setBackgroundImage: bg forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
     self.navigationItem.leftBarButtonItem = menuButton;
 
     icon = [UIImage imageNamed: @"navbar-icon-contacts"];
     UIBarButtonItem *contactsButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(contactsButtonPressed:)];
-    [contactsButton setBackgroundImage: bg forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
     self.navigationItem.rightBarButtonItem = contactsButton;
+
+    icon = [UIImage imageNamed: @"navbar-icon-home"];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backButton;
 
     self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
