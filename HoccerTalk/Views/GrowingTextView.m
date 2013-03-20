@@ -213,10 +213,11 @@
     delegate = aDelegate;
 }
 
+- (void) setMaxHeight:(CGFloat)maxHeight {
+    _maxHeight = maxHeight;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark UITextView properties
-///////////////////////////////////////////////////////////////////////////////////////////////////
+    [self performSelector: @selector(textViewDidChange:) withObject: self];
+}
 
 - (void) setText:(NSString *)newText {
     BOOL originalValue = self.scrollEnabled;

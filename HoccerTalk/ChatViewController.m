@@ -172,6 +172,10 @@
         self.view.frame = frame;
         scrollView.contentOffset = contentOffset;
     }];
+
+
+    // this catches orientation changes, too
+    _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height;
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
@@ -274,9 +278,7 @@
 
 #pragma mark - Gowing Text View Delegate
 
-- (void)growingTextView:(GrowingTextView *)growingTextView willChangeHeight:(float)height
-{
-    NSLog(@"willChangeSize");
+- (void)growingTextView:(GrowingTextView *)growingTextView willChangeHeight:(float)height {
     float diff = (growingTextView.frame.size.height - height);
 
 	CGRect r = _chatbar.frame;

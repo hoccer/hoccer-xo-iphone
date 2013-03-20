@@ -22,9 +22,9 @@
 
 @interface GrowingTextView : UITextView <UITextViewDelegate>
 
-@property CGFloat maxHeight;
-@property BOOL animateHeightChange;
-@property (assign) UIEdgeInsets padding;
+@property (nonatomic, assign) CGFloat maxHeight;
+@property (nonatomic, assign) BOOL animateHeightChange;
+@property (nonatomic, assign) UIEdgeInsets padding;
 @property(nonatomic,unsafe_unretained) id<UITextViewDelegate,GrowingTextViewDelegate> delegate;
 
 @end
