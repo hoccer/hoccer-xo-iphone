@@ -33,5 +33,19 @@
     return dictionary;
 }
 
+- (void) updateWithDictionary: (NSDictionary*) dict {
+    NSDictionary * rpcKeys = [self rpcKeys];
+    for (id key in dict) {
+        if (rpcKeys[key] == nil) {
+            NSLog(@"unhandled key '%@' in update dictionary", key);
+            continue;
+        }
+        if ( ! [dict[key] isEqualToString: [self valueForKeyPath: rpcKeys[key]]]) {
+            NSLog(@"updating value for key '%@'", key);
+            [self setValue: dict[key] forKeyPath: rpcKeys[key]];
+        }
+    }
+}
+
 - (NSDictionary*) rpcKeys { return @{}; }
 @end

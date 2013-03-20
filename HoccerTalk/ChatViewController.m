@@ -43,17 +43,31 @@
 
     chatTableController = (ChatTableViewController*)self.childViewControllers[0];
 
-    UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg"]];
-    self.chatbar.backgroundColor = barBackground;
+    UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg_noise"]];
+    _chatbar.backgroundColor = barBackground;
+    UIImageView * backgroundGradient = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"chatbar_bg_gradient"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 0, 0, 0) resizingMode: UIImageResizingModeStretch]];
+    backgroundGradient.frame = _chatbar.bounds;
+    [_chatbar addSubview: backgroundGradient];
+    backgroundGradient.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
 
     [chatTableController setPartner: _partner];
 
-    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:12 topCapHeight:0];
-    [self.textField setBackground: textfieldBackground];
-    self.textField.backgroundColor = [UIColor clearColor];
-    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
-    self.textField.leftView = paddingView;
-    self.textField.leftViewMode = UITextFieldViewModeAlways;
+    _textField.delegate = self;
+    _textField.backgroundColor = [UIColor clearColor];
+    CGRect frame = _textField.frame;
+    CGRect bgframe = _textField.frame;
+    frame.size.width -= 6;
+    frame.origin.x += 3;
+    _textField.frame = frame;
+
+    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    UIImageView * textViewBackgroundView = [[UIImageView alloc] initWithImage: textfieldBackground];
+    [_chatbar addSubview: textViewBackgroundView];
+    bgframe.origin.y -= 1;
+    bgframe.size.height = 27;
+    textViewBackgroundView.frame = bgframe;
+    textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     // TODO: make the send button image smaller
     UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
@@ -62,11 +76,15 @@
     self.sendButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
     [self.sendButton setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
 
+    [_chatbar sendSubviewToBack: textViewBackgroundView];
+    [_chatbar sendSubviewToBack: backgroundGradient];
+
     self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
 
     [self configureView];
 
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -173,17 +191,20 @@
 
 - (IBAction)sendPressed:(id)sender {
     [self.textField resignFirstResponder];
-    if (self.textField.text.length > 0) {
+    if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
         [self.chatBackend sendMessage: self.textField.text toContact: self.partner];
         self.textField.text = @"";
     }
+    [self removeAttachmentPreview];
 }
 
 - (IBAction) addAttachmentPressed:(id)sender {
+    [self.textField resignFirstResponder];
     [self.attachmentPicker showInView: self.view];
 }
 
 - (IBAction) attachmentPressed: (id)sender {
+    [self.textField resignFirstResponder];
     [self showAttachmentOptions];
 }
 
@@ -208,6 +229,7 @@
         preview.image = attachmentInfo[@"UIImagePickerControllerOriginalImage"];
         preview.bezelColor = [UIColor blackColor];
         preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
+        preview.autoresizingMask = _attachmentButton.autoresizingMask;
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.chatbar addSubview: preview];
         _attachmentButton.hidden = YES;
@@ -219,7 +241,9 @@
                                                         delegate: self
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                           destructiveButtonTitle: nil
-                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", nil)/*, NSLocalizedString(@"View Attachment", nil)*/, nil];
+                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", nil)/*,
+                                                                  NSLocalizedString(@"View Attachment", nil)*/,
+                                                                  nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView: self.view];
 }
@@ -230,9 +254,7 @@
     }
     switch (buttonIndex) {
         case 0:
-            [self.attachmentPreview removeFromSuperview];
-            self.attachmentPreview = nil;
-            self.attachmentButton.hidden = NO;
+            [self removeAttachmentPreview];
             break;
         case 1:
             NSLog(@"Viewing attachments not yet implemented");
@@ -240,6 +262,27 @@
         default:
             break;
     }
+}
+
+- (void) removeAttachmentPreview {
+    if (self.attachmentPreview != nil) {
+        [self.attachmentPreview removeFromSuperview];
+        self.attachmentPreview = nil;
+        self.attachmentButton.hidden = NO;
+    }
+}
+
+#pragma mark - Gowing Text View Delegate
+
+- (void)growingTextView:(GrowingTextView *)growingTextView willChangeHeight:(float)height
+{
+    NSLog(@"willChangeSize");
+    float diff = (growingTextView.frame.size.height - height);
+
+	CGRect r = _chatbar.frame;
+    r.size.height -= diff;
+    r.origin.y += diff;
+	_chatbar.frame = r;
 }
 
 #pragma mark - Graphics Utilities

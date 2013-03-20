@@ -19,8 +19,6 @@
 
 @property (nonatomic, retain) Contact* receiver;
 
-- (void) updateWithDictionary: (NSDictionary*) dict;
-
 + (NSString*) stateNew;
 + (NSString*) stateDelivering;
 + (NSString*) stateDelivered;

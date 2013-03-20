@@ -14,6 +14,7 @@
 @interface ChatBackend : NSObject
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 - (Message*) sendMessage: (NSString*) text toContact: (Contact*) contact;
 - (NSDictionary*) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;

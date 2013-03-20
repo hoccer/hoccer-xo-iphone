@@ -83,20 +83,24 @@
 
 #pragma mark - Incoming RPC Calls
 
-- (id) incomingDelivery: (NSArray*) params {
+- (void) incomingDelivery: (NSArray*) params {
     if (params.count != 2) {
-        NSString* error = [NSString stringWithFormat: @"incomingDelivery requires an array of two parameters (delivery, message), but %d parameters are given.", params.count];
-        return [JsonRpcError errorWithMessage: error code: 0 data: nil];
+        //NSString* error = [NSString stringWithFormat: @"incomingDelivery requires an array of two parameters (delivery, message), but %d parameters are given.", params.count];
+        return; // [JsonRpcError errorWithMessage: error code: 0 data: nil];
     }
     if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
-        return [JsonRpcError errorWithMessage: @"incomingDelivery: parameter 0 must be an object" code: 0 data: nil];
+        return; // [JsonRpcError errorWithMessage: @"incomingDelivery: parameter 0 must be an object" code: 0 data: nil];
     }
     NSDictionary * deliveryDict = params[0];
     if ( ! [params[1] isKindOfClass: [NSDictionary class]]) {
-        return [JsonRpcError errorWithMessage: @"incomingDelivery: parameter 1 must be an object" code: 0 data: nil];
+        return;// [JsonRpcError errorWithMessage: @"incomingDelivery: parameter 1 must be an object" code: 0 data: nil];
     }
     NSDictionary * messageDict = params[1];
-    return [self receiveMessage: messageDict withDelivery: deliveryDict];
+    [self receiveMessage: messageDict withDelivery: deliveryDict];
+}
+
+- (void) outgoingDelivery: (NSArray*) params {
+
 }
 
 #pragma mark - JSON RPC WebSocket Delegate

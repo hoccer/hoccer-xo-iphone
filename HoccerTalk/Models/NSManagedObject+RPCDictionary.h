@@ -11,5 +11,6 @@
 @interface NSManagedObject (RPCDictionary)
 
 - (NSMutableDictionary*) rpcDictionary;
+- (void) updateWithDictionary: (NSDictionary*) dict;
 
 @end

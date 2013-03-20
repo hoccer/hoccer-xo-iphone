@@ -43,12 +43,13 @@
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
     </entity>
+    <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
     <elements>
         <element name="Attachment" positionX="79" positionY="-84" width="128" height="75"/>
         <element name="Contact" positionX="727" positionY="-146" width="128" height="194"/>
+        <element name="Delivery" positionX="520" positionY="24" width="128" height="90"/>
         <element name="ImageAttachment" positionX="81" positionY="-219" width="128" height="75"/>
         <element name="Message" positionX="333" positionY="-144" width="128" height="195"/>
-        <element name="Delivery" positionX="520" positionY="24" width="128" height="90"/>
     </elements>
 </model>

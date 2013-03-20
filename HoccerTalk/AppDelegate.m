@@ -26,7 +26,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     self.chatBackend = [[HoccerTalkBackend alloc] init];
-    [[DummyChatBackend alloc] init]; // still need to call this to get some contacts
+    (void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
 
     // Override point for customization after application launch.
     ContactListViewController * controller = nil;
