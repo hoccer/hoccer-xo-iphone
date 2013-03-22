@@ -6,17 +6,17 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactCell.h"
+#import "ConversationCell.h"
 
 #import <QuartzCore/QuartzCore.h>
 
 #import "AssetStore.h"
 
-@interface ContactCell ()
+@interface ConversationCell ()
 
 @end
 
-@implementation ContactCell
+@implementation ConversationCell
 
 + (NSString *)reuseIdentifier {
     return NSStringFromClass(self);

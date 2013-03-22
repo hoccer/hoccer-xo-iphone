@@ -97,17 +97,17 @@
             </objects>
             <point key="canvasLocation" x="-687" y="-630"/>
         </scene>
-        <!--Contact List View Controller - Master-->
+        <!--Conversation View Controller - Master-->
         <scene sceneID="24">
             <objects>
-                <tableViewController storyboardIdentifier="" title="Master" clearsSelectionOnViewWillAppear="NO" id="19" customClass="ContactListViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="" title="Master" clearsSelectionOnViewWillAppear="NO" id="19" customClass="ConversationViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="20">
                         <rect key="frame" x="0.0" y="64" width="320" height="704"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ContactCell" id="klq-RR-SOm" customClass="ContactCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ContactCell" id="klq-RR-SOm" customClass="ConversationCell">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -311,17 +311,6 @@
                 <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="textField" candidateClass="UITextField"/>
             </relationships>
-        </class>
-        <class className="ContactCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="AvatarBezelView"/>
-                <relationship kind="outlet" name="messageCount" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ContactListViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
         </class>
         <class className="LeftMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>

@@ -10,7 +10,7 @@
 
 @class BezeledImageView;
 
-@interface ContactCell : UITableViewCell
+@interface ConversationCell : UITableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet BezeledImageView * avatar;

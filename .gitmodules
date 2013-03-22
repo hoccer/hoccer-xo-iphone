@@ -1,3 +1,6 @@
 [submodule "3rdParty/SocketRocket"]
 	path = 3rdParty/SocketRocket
 	url = https://github.com/square/SocketRocket.git
+[submodule "3rdParty/MFSideMenu"]
+	path = 3rdParty/MFSideMenu
+	url = https://github.com/mikefrederick/MFSideMenu.git

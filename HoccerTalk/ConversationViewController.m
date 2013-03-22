@@ -6,25 +6,26 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactListViewController.h"
+#import "ConversationViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
 #import "ChatViewController.h"
 #import "Contact.h"
-#import "ContactCell.h"
+#import "ConversationCell.h"
 #import "BezeledImageView.h"
 #include "AssetStore.h"
 #import "Message.h"
+#import "MFSideMenu.h"
 
-@interface ContactListViewController ()
+@interface ConversationViewController ()
 
-@property (nonatomic,strong) ContactCell* contactCell;
+@property (nonatomic,strong) ConversationCell* conversationCell;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
 
-@implementation ContactListViewController
+@implementation ConversationViewController
 
 - (void)awakeFromNib
 {
@@ -32,20 +33,24 @@
         self.clearsSelectionOnViewWillAppear = NO;
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
     }
-    self.contactCell = [self.tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
+    self.conversationCell = [self.tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier]];
     [super awakeFromNib];
 }
 
 - (void)viewDidLoad
 {
+    NSLog(@"viewDidLoad");
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     UIImage * icon = [UIImage imageNamed: @"navbar-icon-menu"];
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonPressed:)];
     self.navigationItem.leftBarButtonItem = menuButton;
 
+    NSLog(@"navigationController: %@ sideMenu: %@", self.navigationController, self.navigationController.sideMenu);
+
+
     icon = [UIImage imageNamed: @"navbar-icon-contacts"];
-    UIBarButtonItem *contactsButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(contactsButtonPressed:)];
+    UIBarButtonItem *contactsButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target: self action:@selector(contactsButtonPressed:)];
     self.navigationItem.rightBarButtonItem = contactsButton;
 
     icon = [UIImage imageNamed: @"navbar-icon-home"];
@@ -69,7 +74,7 @@
 }
 
 - (IBAction) contactsButtonPressed:(id)sender {
-    NSLog(@"Contacts button pressed");
+    [self.navigationController.sideMenu toggleRightSideMenu];
 }
 
 // TODO: remove this
@@ -108,7 +113,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
+    ConversationCell *cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath:indexPath];
     if (cell.backgroundView == nil) {
         cell.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"contact_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0]];
         [self engraveLabel: cell.latestMessage];
@@ -263,12 +268,12 @@
 }
  */
 
-- (void)configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     //cell.selectionStyle = UITableViewCellSelectionStyleNone;
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickName;
     cell.avatar.image = contact.avatarImage;
-    cell.latestMessage.frame = self.contactCell.latestMessage.frame;
+    cell.latestMessage.frame = self.conversationCell.latestMessage.frame;
     cell.latestMessage.text = [contact.latestMessage[0] body];
     [cell.latestMessage sizeToFit];
 

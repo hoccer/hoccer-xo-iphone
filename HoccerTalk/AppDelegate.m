@@ -11,11 +11,13 @@
 #import <Foundation/NSObjCRuntime.h>
 #import <objc/runtime.h>
 
-#import "ContactListViewController.h"
+#import "ConversationViewController.h"
 #import "Contact.h"
 #import "Message.h"
 #import "DummyChatBackend.h"
 #import "AssetStore.h"
+
+#import "MFSideMenu.h"
 
 @implementation AppDelegate
 
@@ -24,22 +26,26 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    NSLog(@"applicationDidFinishLaunching");
 
     self.chatBackend = [[HoccerTalkBackend alloc] init];
     (void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
 
     // Override point for customization after application launch.
-    ContactListViewController * controller = nil;
-    UINavigationController * navigationController;
+    ConversationViewController * controller = nil;
+    UIStoryboard *storyboard = nil;
+    UINavigationController * navigationController = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
         navigationController = [splitViewController.viewControllers lastObject];
         splitViewController.delegate = (id)navigationController.topViewController;
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-        controller = (ContactListViewController *)masterNavigationController.topViewController;
+        controller = (ConversationViewController *)masterNavigationController.topViewController;
+        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
         navigationController = (UINavigationController *)self.window.rootViewController;
-        controller = (ContactListViewController *)navigationController.topViewController;
+        controller = (ConversationViewController *)navigationController.topViewController;
+        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
     // TODO: be lazy
     controller.managedObjectContext = self.managedObjectContext;
@@ -52,9 +58,19 @@
     UIImage * navigationBackButtonBackground = [[UIImage imageNamed: @"navbar-btn-back"] stretchableImageWithLeftCapWidth: 17 topCapHeight: 0];
     [[UIBarButtonItem appearance] setBackButtonBackgroundImage: navigationBackButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
+    UIViewController *contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
+    navigationController.sideMenu = [MFSideMenu menuWithNavigationController:navigationController
+                                              leftSideMenuController:nil
+                                             rightSideMenuController:contactListViewController];
+    NSLog(@"AppDelegate: navigationController: %@ sideMenu: %@", navigationController, navigationController.sideMenu);
+
     return YES;
 }
-							
+
+- (void) attachSideMenu {
+
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

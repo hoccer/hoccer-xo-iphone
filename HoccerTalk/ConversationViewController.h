@@ -12,7 +12,7 @@
 
 #import <CoreData/CoreData.h>
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface ConversationViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
 @property (strong, nonatomic) ChatViewController *chatViewController;
 
