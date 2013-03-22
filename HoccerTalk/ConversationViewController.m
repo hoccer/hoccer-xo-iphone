@@ -27,8 +27,7 @@
 
 @implementation ConversationViewController
 
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.clearsSelectionOnViewWillAppear = NO;
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
@@ -37,17 +36,12 @@
     [super awakeFromNib];
 }
 
-- (void)viewDidLoad
-{
-    NSLog(@"viewDidLoad");
+- (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     UIImage * icon = [UIImage imageNamed: @"navbar-icon-menu"];
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonPressed:)];
     self.navigationItem.leftBarButtonItem = menuButton;
-
-    NSLog(@"navigationController: %@ sideMenu: %@", self.navigationController, self.navigationController.sideMenu);
-
 
     icon = [UIImage imageNamed: @"navbar-icon-contacts"];
     UIBarButtonItem *contactsButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target: self action:@selector(contactsButtonPressed:)];
@@ -77,27 +71,6 @@
     [self.navigationController.sideMenu toggleRightSideMenu];
 }
 
-// TODO: remove this
-- (void)insertNewObject:(id)sender
-{
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    Contact * newContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
-    
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    newContact.nickName = NSLocalizedString(@"New Contact", @"New Contact Initial Name");
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
-         // Replace this implementation with code to handle the error appropriately.
-         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}
-
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -115,7 +88,7 @@
 {
     ConversationCell *cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath:indexPath];
     if (cell.backgroundView == nil) {
-        cell.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"contact_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0]];
+        cell.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"conversation_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0]];
         [self engraveLabel: cell.latestMessage];
         [self engraveLabel: cell.latestMessageTime];
     }

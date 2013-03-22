@@ -19,6 +19,11 @@
 		6320D7D316E4C11200E58478 /* RightMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7D216E4C11200E58478 /* RightMessageCell.m */; };
 		633048FB16FC693C0045E64E /* MFSideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 633048F816FC693C0045E64E /* MFSideMenu.m */; };
 		633048FC16FC693C0045E64E /* UINavigationController+MFSideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 633048FA16FC693C0045E64E /* UINavigationController+MFSideMenu.m */; };
+		633048FE16FC95A10045E64E /* conversation_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 633048FD16FC95A10045E64E /* conversation_cell_bg.png */; };
+		6330490116FC966F0045E64E /* contact_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490016FC966F0045E64E /* contact_cell_bg@2x.png */; };
+		6330490416FC99820045E64E /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330490316FC99820045E64E /* ContactCell.m */; };
+		6330490716FC9A030045E64E /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330490616FC9A030045E64E /* ContactListViewController.m */; };
+		6330490916FCA4B80045E64E /* searchbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490816FCA4B80045E64E /* searchbar_bg@2x.png */; };
 		633129D716F95220008F5B04 /* GrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633129D616F95220008F5B04 /* GrowingTextView.m */; };
 		633129DC16F95D4B008F5B04 /* chatbar_bg_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129DB16F95D4B008F5B04 /* chatbar_bg_noise.png */; };
 		633129DE16F96337008F5B04 /* chatbar_bg_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129DD16F96337008F5B04 /* chatbar_bg_gradient.png */; };
@@ -28,7 +33,7 @@
 		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
-		637847A516F24E5700DE03C2 /* contact_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* contact_cell_bg@2x.png */; };
+		637847A516F24E5700DE03C2 /* conversation_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */; };
 		637847AA16F2864E00DE03C2 /* AttachmentViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 637847A916F2864E00DE03C2 /* AttachmentViewFactory.m */; };
 		637847ED16F348E400DE03C2 /* hoccer-talk-app-icon-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847BB16F348E300DE03C2 /* hoccer-talk-app-icon-ipad.png */; };
 		637847EE16F348E400DE03C2 /* hoccer-talk-app-icon-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847BC16F348E300DE03C2 /* hoccer-talk-app-icon-ipad@2x.png */; };
@@ -188,6 +193,13 @@
 		633048F816FC693C0045E64E /* MFSideMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSideMenu.m; sourceTree = "<group>"; };
 		633048F916FC693C0045E64E /* UINavigationController+MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+MFSideMenu.h"; sourceTree = "<group>"; };
 		633048FA16FC693C0045E64E /* UINavigationController+MFSideMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+MFSideMenu.m"; sourceTree = "<group>"; };
+		633048FD16FC95A10045E64E /* conversation_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = conversation_cell_bg.png; sourceTree = "<group>"; };
+		6330490016FC966F0045E64E /* contact_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_cell_bg@2x.png"; sourceTree = "<group>"; };
+		6330490216FC99820045E64E /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
+		6330490316FC99820045E64E /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
+		6330490516FC9A020045E64E /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
+		6330490616FC9A030045E64E /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListViewController.m; sourceTree = "<group>"; };
+		6330490816FCA4B80045E64E /* searchbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "searchbar_bg@2x.png"; sourceTree = "<group>"; };
 		633129D516F95220008F5B04 /* GrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingTextView.h; sourceTree = "<group>"; };
 		633129D616F95220008F5B04 /* GrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingTextView.m; sourceTree = "<group>"; };
 		633129DB16F95D4B008F5B04 /* chatbar_bg_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatbar_bg_noise.png; sourceTree = "<group>"; };
@@ -203,7 +215,7 @@
 		63540A9116E500D20087D24E /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleView.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
-		637847A416F24E5700DE03C2 /* contact_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_cell_bg@2x.png"; sourceTree = "<group>"; };
+		637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation_cell_bg@2x.png"; sourceTree = "<group>"; };
 		637847A816F2864E00DE03C2 /* AttachmentViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentViewFactory.h; sourceTree = "<group>"; };
 		637847A916F2864E00DE03C2 /* AttachmentViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentViewFactory.m; sourceTree = "<group>"; };
 		637847BB16F348E300DE03C2 /* hoccer-talk-app-icon-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-talk-app-icon-ipad.png"; sourceTree = "<group>"; };
@@ -364,6 +376,15 @@
 			path = ../3rdParty/MFSideMenu/MFSideMenu;
 			sourceTree = "<group>";
 		};
+		633048FF16FC966F0045E64E /* ContactList */ = {
+			isa = PBXGroup;
+			children = (
+				6330490816FCA4B80045E64E /* searchbar_bg@2x.png */,
+				6330490016FC966F0045E64E /* contact_cell_bg@2x.png */,
+			);
+			path = ContactList;
+			sourceTree = "<group>";
+		};
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,7 +396,9 @@
 				63C413C016EA3549004E1F6D /* bg_message-count-red@2x.png */,
 				637847BF16F348E300DE03C2 /* Bubbles */,
 				637847C416F348E300DE03C2 /* ChatBar */,
-				637847A416F24E5700DE03C2 /* contact_cell_bg@2x.png */,
+				633048FF16FC966F0045E64E /* ContactList */,
+				633048FD16FC95A10045E64E /* conversation_cell_bg.png */,
+				637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */,
 				637847DE16F348E300DE03C2 /* Dummies */,
 				637847E616F348E400DE03C2 /* NavBar */,
 			);
@@ -543,6 +566,8 @@
 				63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
+				6330490516FC9A020045E64E /* ContactListViewController.h */,
+				6330490616FC9A030045E64E /* ContactListViewController.m */,
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 				63AEE2F716CA4D0300522F92 /* HoccerTalk.xcdatamodeld */,
@@ -621,6 +646,8 @@
 				6320D7CC16E0C79A00E58478 /* BezeledImageView.m */,
 				63540A9016E500D20087D24E /* BubbleView.h */,
 				63540A9116E500D20087D24E /* BubbleView.m */,
+				6330490216FC99820045E64E /* ContactCell.h */,
+				6330490316FC99820045E64E /* ContactCell.m */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
 				633129D516F95220008F5B04 /* GrowingTextView.h */,
@@ -740,7 +767,7 @@
 				63C413C216EA3549004E1F6D /* bg_message-count-grey@2x.png in Resources */,
 				63C413C316EA3549004E1F6D /* bg_message-count-red.png in Resources */,
 				63C413C416EA3549004E1F6D /* bg_message-count-red@2x.png in Resources */,
-				637847A516F24E5700DE03C2 /* contact_cell_bg@2x.png in Resources */,
+				637847A516F24E5700DE03C2 /* conversation_cell_bg@2x.png in Resources */,
 				637847ED16F348E400DE03C2 /* hoccer-talk-app-icon-ipad.png in Resources */,
 				637847EE16F348E400DE03C2 /* hoccer-talk-app-icon-ipad@2x.png in Resources */,
 				637847EF16F348E400DE03C2 /* hoccer-talk-app-icon.png in Resources */,
@@ -803,6 +830,9 @@
 				633129DC16F95D4B008F5B04 /* chatbar_bg_noise.png in Resources */,
 				633129DE16F96337008F5B04 /* chatbar_bg_gradient.png in Resources */,
 				633129E216F96872008F5B04 /* chatbar_bg_gradient@2x.png in Resources */,
+				633048FE16FC95A10045E64E /* conversation_cell_bg.png in Resources */,
+				6330490116FC966F0045E64E /* contact_cell_bg@2x.png in Resources */,
+				6330490916FCA4B80045E64E /* searchbar_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -846,6 +876,8 @@
 				633129D716F95220008F5B04 /* GrowingTextView.m in Sources */,
 				633048FB16FC693C0045E64E /* MFSideMenu.m in Sources */,
 				633048FC16FC693C0045E64E /* UINavigationController+MFSideMenu.m in Sources */,
+				6330490416FC99820045E64E /* ContactCell.m in Sources */,
+				6330490716FC9A030045E64E /* ContactListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

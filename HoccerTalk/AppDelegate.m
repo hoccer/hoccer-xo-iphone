@@ -26,8 +26,6 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSLog(@"applicationDidFinishLaunching");
-
     self.chatBackend = [[HoccerTalkBackend alloc] init];
     (void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
 
@@ -62,8 +60,6 @@
     navigationController.sideMenu = [MFSideMenu menuWithNavigationController:navigationController
                                               leftSideMenuController:nil
                                              rightSideMenuController:contactListViewController];
-    NSLog(@"AppDelegate: navigationController: %@ sideMenu: %@", navigationController, navigationController.sideMenu);
-
     return YES;
 }
 
