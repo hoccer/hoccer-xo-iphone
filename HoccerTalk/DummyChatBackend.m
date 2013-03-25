@@ -11,6 +11,7 @@
 #import "Contact.h"
 #import "Message.h"
 #import "ImageAttachment.h"
+#import "NSString+UUID.h"
 
 @implementation DummyChatBackend
 
@@ -33,7 +34,7 @@
     AppDelegate * appDelegate = ((AppDelegate *)[[UIApplication sharedApplication] delegate]);
 
     NSArray * avatars  = @[ @"schlumpf_schlumpfine", @"schlumpf_papa" ];
-    NSArray * nicks    = @[ @"Schlumpfine", @"Daddy S" ];
+    NSArray * nicks    = @[ @"Schlumpfine", @"Daddy S", @"Mr. Mister" ];
     NSArray * messages = @[ @[ @"Käffchen?"
                              , @"k, bin in 10min da..."
                              , @"bis gloich"
@@ -53,6 +54,13 @@
                              , @"Sei Sonnatg bitte pünktlich. Wir essen zeitig."
                              , @"Ja, Papa Schlumpf..."
                              ]
+                          , @[ @"Hallo?"
+                             , @"Ja... ?"
+                             , @"Öm..."
+                             , @"Ja... ?"
+                             , @"Bist Du der der ich glaube der Du bist?"
+                             , @"Öh..."
+                            ]
                           ];
 
 
@@ -72,11 +80,13 @@
         NSLog(@"adding dummy messages");
 
         int contactIndex = 0;
-        for (NSString* avatar in avatars) {
+        for (NSString* nick in nicks) {
 
             Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
             contact.nickName = nicks[contactIndex];
-            contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatar]);
+            if (contactIndex < [avatars count]) {
+                contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatars[contactIndex]]);
+            }
             contact.clientId = [NSString stringWithFormat: @"clientId of %@", nicks[contactIndex]];
             
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - (60*60*24*30)];
@@ -90,7 +100,8 @@
                 message.contact = contact;
                 message.isOutgoing = i % 2 == 0 ? @NO : @YES;
                 message.isRead = @NO;
-                message.messageId = @"";
+                message.messageId = [NSString stringWithUUID];
+                message.messageTag = [NSString stringWithUUID];
 
                 message.timeSection = [contact sectionTitleForMessageTime: date];
                 contact.latestMessageTime = date;
@@ -154,6 +165,8 @@
     message.contact = contact;
     message.isOutgoing = @NO;
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
+    message.messageId = [NSString stringWithUUID];
+    message.messageTag = [NSString stringWithUUID];
     contact.latestMessageTime = message.timeStamp;
 
     if (rand() % 4 == 0) {
