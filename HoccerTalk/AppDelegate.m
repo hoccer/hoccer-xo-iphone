@@ -26,10 +26,12 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+
     self.chatBackend = [[HoccerTalkBackend alloc] init];
     (void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
 
-    // Override point for customization after application launch.
     ConversationViewController * controller = nil;
     UIStoryboard *storyboard = nil;
     UINavigationController * navigationController = nil;
@@ -60,11 +62,12 @@
     navigationController.sideMenu = [MFSideMenu menuWithNavigationController:navigationController
                                               leftSideMenuController:nil
                                              rightSideMenuController:contactListViewController];
+
+    if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
+        // TODO: jump to conversation
+        NSLog(@"Launched by remote notification.");
+    }
     return YES;
-}
-
-- (void) attachSideMenu {
-
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -190,5 +193,23 @@
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
+
+#pragma mark - Apple Push Notifications
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+    // TODO: do we need this?
+    //self.registered = YES;
+    [self.chatBackend sendAPNDeviceToken: devToken]; // custom method
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    NSLog(@"Error in APN registration. Error: %@", err);
+}
+
+/* nothing to do here ... ?
+- (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+}
+*/
+
 
 @end

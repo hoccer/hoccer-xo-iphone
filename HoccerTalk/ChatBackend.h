@@ -19,4 +19,6 @@
 - (Message*) sendMessage: (NSString*) text toContact: (Contact*) contact;
 - (NSDictionary*) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 
+- (void) sendAPNDeviceToken: (NSData*) deviceToken;
+
 @end

@@ -78,6 +78,11 @@
     return [delivery rpcDictionary];
 }
 
+- (void) sendAPNDeviceToken: (NSData*) deviceToken {
+    // TODO: send device token to server
+    NSLog(@"TODO: send device token to server");
+}
+
 - (NSManagedObjectContext*) managedObjectContext {
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
