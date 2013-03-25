@@ -40,7 +40,7 @@
     self.cornerRadius = 4;
 
     self.imageLayer = [CALayer layer];
-    self.imageLayer.cornerRadius = self.cornerRadius;
+    //self.imageLayer.cornerRadius = self.cornerRadius;
     [self.layer insertSublayer: self.imageLayer atIndex: 0];
 
     self.insetLayer = [CAShapeLayer layer];
