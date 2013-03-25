@@ -32,13 +32,13 @@
         <attribute name="width" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
-        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isOutgoing" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="body" attributeType="String" syncable="YES"/>
+        <attribute name="isOutgoing" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="messageId" attributeType="String" syncable="YES"/>
-        <attribute name="messageTag" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="timeSection" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="messageTag" attributeType="String" syncable="YES"/>
+        <attribute name="timeSection" attributeType="String" syncable="YES"/>
+        <attribute name="timeStamp" attributeType="Date" syncable="YES"/>
         <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
