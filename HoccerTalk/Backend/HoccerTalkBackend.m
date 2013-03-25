@@ -17,6 +17,7 @@
 {
     JsonRpcWebSocket * _serverConnection;
     BOOL _isConnected;
+    double _backoffTime;
 }
 
 - (void) identify;
@@ -28,6 +29,7 @@
 - (id) init {
     self = [super init];
     if (self != nil) {
+        _backoffTime = 0.0;
         _isConnected = NO;
         _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest]];
         _serverConnection.delegate = self;
@@ -35,6 +37,22 @@
         [_serverConnection open];
     }
     return self;
+}
+
+- (void) reconnectWitBackoff {
+    NSLog(@"reconnecting in %f seconds", _backoffTime);
+    if (_backoffTime == 0) {
+        [self reconnect];
+        _backoffTime = (double)rand() / RAND_MAX;
+    } else {
+        [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnect) userInfo: nil repeats: NO];
+        _backoffTime = MIN(2 * _backoffTime, 10);
+    }
+}
+
+- (void) reconnect {
+    NSLog(@"reconnect");
+    [_serverConnection reopenWithURLRequest: [self urlRequest]];
 }
 
 - (NSURLRequest*) urlRequest {
@@ -102,7 +120,7 @@
         return;
     }
     NSDictionary * messageDict = params[1];
-    NSLog(@"==== incomingDelivery() called... tada!");
+    NSLog(@"==== incomingDelivery() called - delivery: %@ message: %@", deliveryDict, messageDict);
     [self receiveMessage: messageDict withDelivery: deliveryDict];
 }
 
@@ -122,7 +140,7 @@
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@", error);
     _isConnected = NO;
-    [_serverConnection reopenWithURLRequest: [self urlRequest]];
+    [self reconnectWitBackoff];
 }
 
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error {
@@ -131,13 +149,14 @@
 
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket {
     NSLog(@"webSocketDidOpen");
+    _backoffTime = 0.0;
     [self identify];
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
     _isConnected = NO;
-    [_serverConnection reopenWithURLRequest: [self urlRequest]];
+    [self reconnectWitBackoff];
 }
 
 - (void) incomingMethodCallDidFail: (NSError*) error {
