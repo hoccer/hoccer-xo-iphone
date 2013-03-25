@@ -29,13 +29,17 @@
     self = [super init];
     if (self != nil) {
         _isConnected = NO;
-        NSURL * url = [NSURL URLWithString: @"ws://development.hoccer.com:7000/"];
-        _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [[NSURLRequest alloc] initWithURL: url]];
+        _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest]];
         _serverConnection.delegate = self;
         [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection open];
     }
     return self;
+}
+
+- (NSURLRequest*) urlRequest {
+    NSURL * url = [NSURL URLWithString: @"ws://development.hoccer.com:7000/"];
+    return [[NSURLRequest alloc] initWithURL: url];
 }
 
 - (Message*) sendMessage:(NSString *)text toContact:(Contact *)contact {
@@ -53,9 +57,9 @@
         if (success) {
             _isConnected = YES;
             // TODO: flush queue by sending all deliveries with state 'new'
-            NSLog(@"got result: %@", responseOrError);
+            NSLog(@"identify(): got result: %@", responseOrError);
         } else {
-            NSLog(@"got error: %@", responseOrError);
+            NSLog(@"identify(): got error: %@", responseOrError);
         }
     }];
 }
@@ -85,22 +89,32 @@
 
 - (void) incomingDelivery: (NSArray*) params {
     if (params.count != 2) {
-        //NSString* error = [NSString stringWithFormat: @"incomingDelivery requires an array of two parameters (delivery, message), but %d parameters are given.", params.count];
-        return; // [JsonRpcError errorWithMessage: error code: 0 data: nil];
+        NSLog(@"incomingDelivery requires an array of two parameters (delivery, message), but got %d parameters.", params.count);
+        return;
     }
     if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
-        return; // [JsonRpcError errorWithMessage: @"incomingDelivery: parameter 0 must be an object" code: 0 data: nil];
+        NSLog(@"incomingDelivery: parameter 0 must be an object");
+        return;
     }
     NSDictionary * deliveryDict = params[0];
     if ( ! [params[1] isKindOfClass: [NSDictionary class]]) {
-        return;// [JsonRpcError errorWithMessage: @"incomingDelivery: parameter 1 must be an object" code: 0 data: nil];
+        NSLog(@"incomingDelivery: parameter 1 must be an object");
+        return;
     }
     NSDictionary * messageDict = params[1];
+    NSLog(@"==== incomingDelivery() called... tada!");
     [self receiveMessage: messageDict withDelivery: deliveryDict];
 }
 
 - (void) outgoingDelivery: (NSArray*) params {
-
+    if (params.count != 1) {
+        NSLog(@"incomingDelivery requires an array of two parameters (delivery, message), but got %d parameters.", params.count);
+        return;
+    }
+    if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
+        return;
+    }
+    NSDictionary * deliveryDict = params[0];
 }
 
 #pragma mark - JSON RPC WebSocket Delegate
@@ -108,7 +122,7 @@
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@", error);
     _isConnected = NO;
-    // TODO: reconnect
+    [_serverConnection reopenWithURLRequest: [self urlRequest]];
 }
 
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error {
@@ -123,7 +137,7 @@
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
     _isConnected = NO;
-    // TODO: reconnect
+    [_serverConnection reopenWithURLRequest: [self urlRequest]];
 }
 
 - (void) incomingMethodCallDidFail: (NSError*) error {
