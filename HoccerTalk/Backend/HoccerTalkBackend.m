@@ -71,7 +71,9 @@
 #pragma mark - Outgoing RPC Calls
 
 - (void) identify {
-    [_serverConnection invoke: @"identify" withParams: @[@"david - who else?"] onResponse: ^(id responseOrError, BOOL success) {
+    NSString * clientId = [self.delegate clientId];
+    NSLog(@"identify() clientId: %@", clientId);
+    [_serverConnection invoke: @"identify" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             _isConnected = YES;
             // TODO: flush queue by sending all deliveries with state 'new'
@@ -83,12 +85,13 @@
 }
 
 - (void) deliveryRequest: (Message*) message {
-    NSDictionary * messageDict = [message rpcDictionary];
+    NSMutableDictionary * messageDict = [message rpcDictionary];
     NSArray * orderedDeliveries = [message.deliveries allObjects];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
     for (Delivery * delivery in orderedDeliveries) {
         [deliveryDicts addObject: [delivery rpcDictionary]];
     }
+    NSLog(@"deliveryRequest: %@", messageDict);
     [_serverConnection invoke: @"deliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"returned deliveries: %@", responseOrError);

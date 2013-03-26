@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileViewController : UIViewController
+@interface ProfileViewController : UIViewController <UITextFieldDelegate>
+
+@property (strong, nonatomic) IBOutlet UITextField *clientIdField;
 
 @end

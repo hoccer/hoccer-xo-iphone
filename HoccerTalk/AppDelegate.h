@@ -11,14 +11,14 @@
 #import "ChatBackend.h"
 #import "HoccerTalkBackend.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, HoccerTalkDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain) ChatBackend * chatBackend;
+@property (nonatomic, retain) HoccerTalkBackend * chatBackend;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

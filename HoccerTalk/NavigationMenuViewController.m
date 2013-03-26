@@ -45,12 +45,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"selected: %@ %@", _menuItems[indexPath.row][@"storyboardId"], self.sideMenu);
-
     NSString * storyboardId =  _menuItems[indexPath.row][@"storyboardId"];
     UIViewController * viewController = [self getViewControllerByStoryboardId: storyboardId];
     NSArray *controllers = [NSArray arrayWithObject: viewController];
-    self.sideMenu.navigationController.viewControllers = controllers;
+    [self.sideMenu.navigationController setViewControllers: controllers animated: NO];
     
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
 }

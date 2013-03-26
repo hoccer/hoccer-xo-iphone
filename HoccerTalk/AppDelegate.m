@@ -17,6 +17,7 @@
 #import "DummyChatBackend.h"
 #import "AssetStore.h"
 #import "NavigationMenuViewController.h"
+#import "NSString+UUID.h"
 
 #import "MFSideMenu.h"
 
@@ -31,6 +32,7 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
     self.chatBackend = [[HoccerTalkBackend alloc] init];
+    self.chatBackend.delegate = self;
     (void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
 
     ConversationViewController * controller = nil;
@@ -216,5 +218,15 @@
 }
 */
 
+#pragma mark - Hoccer Talk Delegate
 
+- (NSString*) clientId {
+    NSString * clientId = [[NSUserDefaults standardUserDefaults] stringForKey: @"clientId"];
+    if (clientId == nil) {
+        clientId = [NSString stringWithUUID];
+        [[NSUserDefaults standardUserDefaults] setObject: clientId forKey: @"clientId"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    return clientId;
+}
 @end

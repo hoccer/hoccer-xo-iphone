@@ -48,7 +48,7 @@
     [message.deliveries addObject: delivery];
     delivery.message = message;
 
-    NSDictionary * vars = @{ @"clientId" : deliveryDictionary[@"receiverId"]};
+    NSDictionary * vars = @{ @"clientId" : messageDictionary[@"senderId"]};
     NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
     NSError *error;
     NSArray *array = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];

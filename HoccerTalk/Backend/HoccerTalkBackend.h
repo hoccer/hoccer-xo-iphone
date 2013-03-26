@@ -11,7 +11,15 @@
 #import "JsonRpcWebSocket.h"
 #import "ChatBackend.h"
 
+@protocol HoccerTalkDelegate <NSObject>
+
+- (NSString*) clientId;
+
+@end
+
 @interface HoccerTalkBackend : ChatBackend <JsonRpcWebSocketDelegate>
+
+@property (nonatomic, weak) id<HoccerTalkDelegate> delegate;
 
 - (id) init;
 

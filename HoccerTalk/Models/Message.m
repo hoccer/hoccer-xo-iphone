@@ -23,7 +23,9 @@
 @dynamic deliveries;
 
 - (NSDictionary*) rpcKeys {
-    return @{ @"body": @"body"};
+    return @{ @"body": @"body",
+              @"messageId": @"messageId"
+            };
 }
 
 @end
