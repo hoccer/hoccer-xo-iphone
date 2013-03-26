@@ -16,6 +16,7 @@
 #import "Message.h"
 #import "DummyChatBackend.h"
 #import "AssetStore.h"
+#import "NavigationMenuViewController.h"
 
 #import "MFSideMenu.h"
 
@@ -58,10 +59,14 @@
     UIImage * navigationBackButtonBackground = [[UIImage imageNamed: @"navbar-btn-back"] stretchableImageWithLeftCapWidth: 17 topCapHeight: 0];
     [[UIBarButtonItem appearance] setBackButtonBackgroundImage: navigationBackButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
-    UIViewController *contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
+    UIViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
+    NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
     navigationController.sideMenu = [MFSideMenu menuWithNavigationController:navigationController
-                                              leftSideMenuController:nil
+                                              leftSideMenuController:navigationMenuViewController
                                              rightSideMenuController:contactListViewController];
+
+    [navigationMenuViewController cacheViewController: controller withStoryboardId: @"conversationViewController"];
+    navigationMenuViewController.sideMenu = navigationController.sideMenu;
 
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation

@@ -64,7 +64,7 @@
 
 
 - (IBAction) menuButtonPressed:(id)sender {
-    NSLog(@"Menu button pressed");
+    [self.navigationController.sideMenu toggleLeftSideMenu];
 }
 
 - (IBAction) contactsButtonPressed:(id)sender {
