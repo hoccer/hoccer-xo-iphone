@@ -42,7 +42,7 @@
     return message;
 }
 
-- (NSDictionary*) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
+- (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
     Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.managedObjectContext];
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName:@"Delivery" inManagedObjectContext: self.managedObjectContext];
     [message.deliveries addObject: delivery];
@@ -57,10 +57,18 @@
         NSLog(@"Fetch request failed: %@", error);
         abort();
     }
-    Contact * contact = array[0];
+    Contact * contact = nil;
+    // TODO: getr rid of this ...
+    if (array.count > 0) {
+        contact = array[0];
+    } else {
+        NSLog(@"Ignoring message from unknown clientId %@", messageDictionary[@"senderId"]);
+        [self.managedObjectContext deleteObject: message];
+        [self.managedObjectContext deleteObject: delivery];
+        return;
+    }
 
     [delivery updateWithDictionary: deliveryDictionary];
-    delivery.state = [Delivery stateDelivered];
 
     // TODO: handle the actual message
     message.isOutgoing = NO;
@@ -74,8 +82,7 @@
     contact.latestMessageTime = message.timeStamp;
 
     [self.managedObjectContext refreshObject: contact mergeChanges: YES];
-
-    return [delivery rpcDictionary];
+    [self deliveryConfirm: message.messageId withDelivery: delivery];
 }
 
 - (void) sendAPNDeviceToken: (NSData*) deviceToken {
@@ -99,6 +106,10 @@
     AppDelegate * appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     _managedObjectModel = appDelegate.managedObjectModel;
     return _managedObjectModel;
+}
+
+- (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
+    NSLog(@"ChatBackend deliveryConfirm called but must be overloaded in derived class");
 }
 
 @end

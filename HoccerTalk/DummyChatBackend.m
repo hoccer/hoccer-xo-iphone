@@ -24,7 +24,7 @@
                                  @"Kamelhöcker gefüllt mit Oliven auf Provinzjemüse mit Süsskrartoffelkroketten und Rosenkohlsalat",
                                  @"Spiegelei, Spinat, Kartoffelpüree!",
                                  @"brizzel", @"brazzel", @"bruzzel"];
-        [self blubber];
+        //[self blubber];
 
     }
     return self;

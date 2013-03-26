@@ -94,7 +94,7 @@
     NSLog(@"deliveryRequest: %@", messageDict);
     [_serverConnection invoke: @"deliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"returned deliveries: %@", responseOrError);
+            NSLog(@"deliveryRequest() returned deliveries: %@", responseOrError);
             NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
             int i = 0;
             for (Delivery * delivery in orderedDeliveries) {
@@ -102,6 +102,17 @@
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);
+        }
+    }];
+}
+
+- (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
+    [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
+            [delivery updateWithDictionary: responseOrError];
+        } else {
+            NSLog(@"deliveryConfirm() failed: %@", responseOrError);
         }
     }];
 }

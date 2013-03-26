@@ -191,6 +191,7 @@ static const NSTimeInterval kResponseTimeout = 10;
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler {
     NSNumber * theId = [self nextId];
     NSDictionary * methodCall = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params, @"id": theId};
+    NSLog(@"jsonrpc method: %@", methodCall);
     _responseHandlers[theId] = @{ @"handler": [handler copy],
                                   @"timer": 
                                       [NSTimer scheduledTimerWithTimeInterval: kResponseTimeout target: self selector: @selector(serverDidNotRespond:) userInfo: theId repeats: NO]

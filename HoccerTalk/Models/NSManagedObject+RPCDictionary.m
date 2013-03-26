@@ -21,6 +21,7 @@
 
 - (void) updateWithDictionary: (NSDictionary*) dict {
     NSDictionary * rpcKeys = [self rpcKeys];
+    NSLog(@"Updatig object of type %@", NSStringFromClass([self class]));
     for (id key in dict) {
         if (rpcKeys[key] == nil) {
             NSLog(@"unhandled key '%@' in update dictionary", key);

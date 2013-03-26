@@ -10,6 +10,7 @@
 
 @class Contact;
 @class Message;
+@class Delivery;
 
 @interface ChatBackend : NSObject
 
@@ -17,7 +18,9 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 - (Message*) sendMessage: (NSString*) text toContact: (Contact*) contact;
-- (NSDictionary*) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
+- (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
+
+- (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
 
 - (void) sendAPNDeviceToken: (NSData*) deviceToken;
 
