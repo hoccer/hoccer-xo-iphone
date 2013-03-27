@@ -65,9 +65,6 @@
     // TODO: find a way to move this to the app delegate
     if ( ! [[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
         [self performSegueWithIdentifier: @"showFirstRunScreen" sender: nil];
-    } else {
-        AppDelegate * appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDelegate.chatBackend start];
     }
 }
 

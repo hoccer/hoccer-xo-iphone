@@ -13,6 +13,7 @@
 #import "Message.h"
 #import "NSString+UUID.h"
 #import "ImageAttachment.h"
+#import "AppDelegate.h"
 
 @implementation FirstRunViewController
 
@@ -86,6 +87,8 @@
     [self saveDummyProfile];
     [self addDummies];
     [[NSUserDefaults standardUserDefaults] setBool: YES forKey: @"firstRunDone"];
+    AppDelegate * appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate setupDone];
 }
 
 - (UIPickerView*) pickerInputViewForTextField: (UITextField*) textField {

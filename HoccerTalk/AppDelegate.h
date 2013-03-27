@@ -22,5 +22,6 @@
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
+- (void) setupDone;
 
 @end

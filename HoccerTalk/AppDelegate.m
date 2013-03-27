@@ -70,12 +70,21 @@
     [navigationMenuViewController cacheViewController: controller withStoryboardId: @"conversationViewController"];
     navigationMenuViewController.sideMenu = navigationController.sideMenu;
 
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
+        [self setupDone];
+    }
+
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation
         NSLog(@"Launched by remote notification.");
     }
     
     return YES;
+}
+
+- (void) setupDone {
+    [self.chatBackend start];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
