@@ -66,6 +66,7 @@
     navigationController.sideMenu = [MFSideMenu menuWithNavigationController:navigationController
                                               leftSideMenuController:navigationMenuViewController
                                              rightSideMenuController:contactListViewController];
+    navigationController.sideMenu.menuWidth = 256;
 
     [navigationMenuViewController cacheViewController: controller withStoryboardId: @"conversationViewController"];
     navigationMenuViewController.sideMenu = navigationController.sideMenu;
