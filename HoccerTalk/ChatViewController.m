@@ -15,6 +15,7 @@
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
 #import "BezeledImageView.h"
+#import "MFSideMenu.h"
 
 @interface ChatViewController ()
 
@@ -37,6 +38,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    UIImage * icon = [UIImage imageNamed: @"navbar-icon-contacts"];
+    UIBarButtonItem *contactsButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target: self action:@selector(contactsButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = contactsButton;
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
@@ -210,6 +215,10 @@
 - (IBAction) attachmentPressed: (id)sender {
     [self.textField resignFirstResponder];
     [self showAttachmentOptions];
+}
+
+- (IBAction) contactsButtonPressed:(id)sender {
+    [self.navigationController.sideMenu toggleRightSideMenu];
 }
 
 #pragma mark - Attachments
