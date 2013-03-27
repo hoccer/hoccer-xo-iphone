@@ -27,8 +27,8 @@
 }
 
 - (void) viewDidLoad {
-    _menuItems = @[ @{ @"title": @"Conversations", @"storyboardId": @"conversationViewController"},
-                   @{ @"title": @"Profile", @"storyboardId": @"profileViewController"}
+    _menuItems = @[ @{ @"title": @"Chats",   @"icon": @"navigation_button_chats",  @"storyboardId": @"conversationViewController"},
+                    @{ @"title": @"Profile", @"icon": @"navigation_button_profile", @"storyboardId": @"profileViewController"}
                    ];
 }
 
@@ -37,9 +37,13 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"navigationMenuCell"];
+    if (cell.backgroundView == nil) {
+        cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
+        cell.backgroundView.frame = cell.frame;
+    }
     cell.textLabel.text = _menuItems[indexPath.row][@"title"];
+    cell.imageView.image = [UIImage imageNamed: _menuItems[indexPath.row][@"icon"]];
 
     return cell;
 }
