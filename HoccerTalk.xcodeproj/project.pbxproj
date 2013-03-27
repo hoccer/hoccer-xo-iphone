@@ -110,6 +110,9 @@
 		6378484616F4000500DE03C2 /* Delivery.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484516F4000500DE03C2 /* Delivery.m */; };
 		6378484A16F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484916F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m */; };
 		6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484C16F4210A00DE03C2 /* NSString+UUID.m */; };
+		63AE4516170350750099F0CB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4513170350750099F0CB /* Default.png */; };
+		63AE4517170350750099F0CB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4514170350750099F0CB /* Default@2x.png */; };
+		63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE451A1703519B0099F0CB /* Default-568h@2x.png */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -311,6 +314,9 @@
 		6378484916F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+RPCDictionary.m"; sourceTree = "<group>"; };
 		6378484B16F4210900DE03C2 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
 		6378484C16F4210A00DE03C2 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
+		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		63AE4514170350750099F0CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		63AE451A1703519B0099F0CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer Talk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -428,6 +434,7 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				63AE4511170350750099F0CB /* Default */,
 				6330490B170044940045E64E /* Avatar */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
 				637847BA16F348E300DE03C2 /* AppIcons */,
@@ -556,6 +563,16 @@
 				6378482016F3634D00DE03C2 /* actionsheet_btn_red@2x.png */,
 			);
 			path = Actionsheet;
+			sourceTree = "<group>";
+		};
+		63AE4511170350750099F0CB /* Default */ = {
+			isa = PBXGroup;
+			children = (
+				63AE451A1703519B0099F0CB /* Default-568h@2x.png */,
+				63AE4513170350750099F0CB /* Default.png */,
+				63AE4514170350750099F0CB /* Default@2x.png */,
+			);
+			path = Default;
 			sourceTree = "<group>";
 		};
 		63AEE2CB16CA4D0200522F92 = {
@@ -890,6 +907,9 @@
 				63304919170044940045E64E /* avatar_default_group@2x.png in Resources */,
 				6330491A170044940045E64E /* avatar_default_nearby.png in Resources */,
 				6330491B170044940045E64E /* avatar_default_nearby@2x.png in Resources */,
+				63AE4516170350750099F0CB /* Default.png in Resources */,
+				63AE4517170350750099F0CB /* Default@2x.png in Resources */,
+				63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
