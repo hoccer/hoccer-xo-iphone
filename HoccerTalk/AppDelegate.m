@@ -67,6 +67,19 @@
                                               leftSideMenuController:navigationMenuViewController
                                              rightSideMenuController:contactListViewController];
     navigationController.sideMenu.menuWidth = 256;
+    navigationController.sideMenu.menuStateEventBlock = ^(MFSideMenuStateEvent event) {
+        switch (event) {
+            case MFSideMenuStateEventMenuWillOpen:
+                break;
+            case MFSideMenuStateEventMenuDidOpen:
+                break;
+            case MFSideMenuStateEventMenuWillClose:
+                [contactListViewController.view endEditing: YES];
+                break;
+            case MFSideMenuStateEventMenuDidClose:
+                break;
+        }
+    };
 
     [navigationMenuViewController cacheViewController: controller withStoryboardId: @"conversationViewController"];
     navigationMenuViewController.sideMenu = navigationController.sideMenu;

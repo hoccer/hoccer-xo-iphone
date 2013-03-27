@@ -20,7 +20,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.searchBar.backgroundImage = [[UIImage imageNamed: @"searchbar_bg"]  resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
-}
+    UIImage *searchFieldImage = [[UIImage imageNamed:@"searchbar_input-text"]
+                                 resizableImageWithCapInsets:UIEdgeInsetsMake(14, 14, 15, 14)];
+    [self.searchBar setSearchFieldBackgroundImage:searchFieldImage forState:UIControlStateNormal];
+    for (UIView *subview in self.searchBar.subviews){
+        if([subview isKindOfClass: UITextField.class]){
+            [(UITextField*)subview setTextColor: [UIColor whiteColor]];
+        }
+    }}
 
 - (void)didReceiveMemoryWarning
 {
@@ -86,12 +93,10 @@
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
-        // TODO: switch to conversation
-    }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.searchBar resignFirstResponder];
+    Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
+    // TODO: switch to conversation
 }
 
 
