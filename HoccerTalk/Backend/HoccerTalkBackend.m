@@ -137,7 +137,6 @@
         return;
     }
     NSDictionary * messageDict = params[1];
-    NSLog(@"==== incomingDelivery() called - delivery: %@ message: %@", deliveryDict, messageDict);
     [self receiveMessage: messageDict withDelivery: deliveryDict];
 }
 
@@ -150,6 +149,7 @@
         return;
     }
     NSDictionary * deliveryDict = params[0];
+    NSLog(@"================= outgoingDelivery() called - %@", deliveryDict);
 }
 
 #pragma mark - JSON RPC WebSocket Delegate

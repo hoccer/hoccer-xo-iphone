@@ -50,6 +50,7 @@
         cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
         cell.backgroundView.frame = cell.frame;
         cell.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.2];
+        cell.avatar.bezelColor = [UIColor blackColor];
     }
 
     [self configureCell:cell atIndexPath:indexPath];
