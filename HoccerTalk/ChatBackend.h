@@ -24,4 +24,5 @@
 
 - (void) sendAPNDeviceToken: (NSData*) deviceToken;
 
+- (void) start;
 @end

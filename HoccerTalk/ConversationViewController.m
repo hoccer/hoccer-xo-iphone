@@ -17,6 +17,7 @@
 #include "AssetStore.h"
 #import "Message.h"
 #import "MFSideMenu.h"
+#import "AppDelegate.h"
 
 @interface ConversationViewController ()
 
@@ -33,6 +34,8 @@
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
     }
     self.conversationCell = [self.tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier]];
+
+
     [super awakeFromNib];
 }
 
@@ -54,6 +57,18 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
     self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear: animated];
+
+    // TODO: find a way to move this to the app delegate
+    if ( ! [[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
+        [self performSegueWithIdentifier: @"showFirstRunScreen" sender: nil];
+    } else {
+        AppDelegate * appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.chatBackend start];
+    }
 }
 
 - (void)didReceiveMemoryWarning

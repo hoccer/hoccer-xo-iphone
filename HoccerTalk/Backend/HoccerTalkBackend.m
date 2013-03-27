@@ -34,9 +34,12 @@
         _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest]];
         _serverConnection.delegate = self;
         [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
-        [_serverConnection open];
     }
     return self;
+}
+
+- (void) start {
+    [_serverConnection open];
 }
 
 - (void) reconnectWitBackoff {

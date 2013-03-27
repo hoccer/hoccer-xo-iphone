@@ -109,7 +109,11 @@
 }
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
-    NSLog(@"ChatBackend deliveryConfirm called but must be overloaded in derived class");
+    NSLog(@"ChatBackend deliveryConfirm() called but must be overloaded in derived class");
+}
+
+- (void) start {
+    NSLog(@"ChatBackend start() called but must be overloaded in derived class");
 }
 
 @end

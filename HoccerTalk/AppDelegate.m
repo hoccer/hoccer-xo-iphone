@@ -33,7 +33,7 @@
 
     self.chatBackend = [[HoccerTalkBackend alloc] init];
     self.chatBackend.delegate = self;
-    (void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
+    //(void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
 
     ConversationViewController * controller = nil;
     UIStoryboard *storyboard = nil;
@@ -74,6 +74,7 @@
         // TODO: jump to conversation
         NSLog(@"Launched by remote notification.");
     }
+    
     return YES;
 }
 
@@ -134,6 +135,7 @@
     if (coordinator != nil) {
         _managedObjectContext = [[NSManagedObjectContext alloc] init];
         [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+        [_managedObjectContext setUndoManager: nil];
     }
     return _managedObjectContext;
 }
@@ -221,12 +223,6 @@
 #pragma mark - Hoccer Talk Delegate
 
 - (NSString*) clientId {
-    NSString * clientId = [[NSUserDefaults standardUserDefaults] stringForKey: @"clientId"];
-    if (clientId == nil) {
-        clientId = [NSString stringWithUUID];
-        [[NSUserDefaults standardUserDefaults] setObject: clientId forKey: @"clientId"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    return clientId;
+    return [[NSUserDefaults standardUserDefaults] stringForKey: @"clientId"];
 }
 @end

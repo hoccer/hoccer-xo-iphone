@@ -27,6 +27,7 @@
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (strong) MessageCell* messageCell;
 @property (strong) UITableViewCell* headerCell;
+@property (strong) UIImage* avatarImage;
 
 - (void)configureCell:(UITableViewCell *)cell forMessage:(Message *) message;
 
@@ -265,12 +266,16 @@
 
 - (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
 
+    if (self.avatarImage == nil) {
+        self.avatarImage = [UIImage imageWithData: [[NSUserDefaults standardUserDefaults] objectForKey: @"avatarImage"]];
+    }
+
     if ([message.isRead isEqualToNumber: @NO]) {
         message.isRead = @YES;
     }
 
     cell.message.text = message.body;
-    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? [UIImage imageNamed: @"azrael"] : message.contact.avatarImage;
+    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : message.contact.avatarImage;
     
     if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
         UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
