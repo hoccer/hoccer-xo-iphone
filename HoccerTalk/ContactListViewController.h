@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ContactListViewController : UITableViewController
+@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end
