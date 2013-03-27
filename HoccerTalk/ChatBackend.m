@@ -71,8 +71,8 @@
     [delivery updateWithDictionary: deliveryDictionary];
 
     // TODO: handle the actual message
-    message.isOutgoing = NO;
-    message.isRead = NO;
+    message.isOutgoing = @NO;
+    message.isRead = @NO;
     message.timeStamp = [NSDate date]; // TODO: use actual timestamp
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
     message.contact = contact;
