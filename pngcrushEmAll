@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if ["$1" -eq ""]; then
+    NAME=`basename $0`
+    echo "Usage: $NAME <dir>"
+    exit 1
+fi
+
+for png in `find $1 -name "*.png"`; do
+    echo "crushing $png"
+    pngcrush -rem allb -brute "$png" temp.png
+    mv -f temp.png $png
+done;
+
