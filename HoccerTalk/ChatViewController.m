@@ -280,7 +280,7 @@
     }
 }
 
-#pragma mark - Gowing Text View Delegate
+#pragma mark - Growing Text View Delegate
 
 - (void)growingTextView:(GrowingTextView *)growingTextView willChangeHeight:(float)height {
     float diff = (growingTextView.frame.size.height - height);
@@ -312,6 +312,7 @@
     CGGradientRef g = CGGradientCreateWithColorComponents(space, comps, locs, 2);
 
     CGContextDrawRadialGradient(cx, g, center, 0.0f, center, size.width > size.height ? 0.5 * size.width : 0.5 * size.height, kCGGradientDrawsAfterEndLocation);
+    CGGradientRelease(g);
 
     CGContextRestoreGState(cx);
 
