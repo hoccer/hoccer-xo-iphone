@@ -272,6 +272,7 @@
 
     if ([message.isRead isEqualToNumber: @NO]) {
         message.isRead = @YES;
+        [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
     }
 
     cell.message.text = message.body;

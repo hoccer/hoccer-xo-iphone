@@ -49,7 +49,7 @@
     return [sectionInfo numberOfObjects];
 }
 
-- (ContactCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
     if (cell.backgroundView == nil) {
         // TODO: do this right ...
@@ -183,7 +183,7 @@
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self configureCell: [tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell: (ContactCell*)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
 
         case NSFetchedResultsChangeMove:
@@ -213,6 +213,8 @@
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickName;
     cell.avatar.image = contact.avatarImage;
+    BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
+    [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];
 }
 
 @end

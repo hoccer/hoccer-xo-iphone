@@ -15,6 +15,8 @@
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet BezeledImageView * avatar;
 
+
 + (NSString *)reuseIdentifier;
+- (void) setMessageCount: (NSInteger) count isUnread: (BOOL) unreadFlag;
 
 @end

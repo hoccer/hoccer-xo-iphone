@@ -429,6 +429,7 @@
 		633048FF16FC966F0045E64E /* ContactList */ = {
 			isa = PBXGroup;
 			children = (
+				63AE453D170451860099F0CB /* MessageCountBackgrounds */,
 				63AE451C170358270099F0CB /* contact_cell_bg.png */,
 				63AE451D170358270099F0CB /* contact_cell_new_bg.png */,
 				63AE451E170358270099F0CB /* contact_cell_new_bg@2x.png */,
@@ -464,10 +465,6 @@
 				6330490B170044940045E64E /* Avatar */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
 				637847BA16F348E300DE03C2 /* AppIcons */,
-				63C413BD16EA3549004E1F6D /* bg_message-count-grey.png */,
-				63C413BE16EA3549004E1F6D /* bg_message-count-grey@2x.png */,
-				63C413BF16EA3549004E1F6D /* bg_message-count-red.png */,
-				63C413C016EA3549004E1F6D /* bg_message-count-red@2x.png */,
 				637847BF16F348E300DE03C2 /* Bubbles */,
 				637847C416F348E300DE03C2 /* ChatBar */,
 				633048FF16FC966F0045E64E /* ContactList */,
@@ -616,6 +613,17 @@
 				63AE45321703650C0099F0CB /* navigation_button_tutorial@2x.png */,
 			);
 			path = NavigationMenu;
+			sourceTree = "<group>";
+		};
+		63AE453D170451860099F0CB /* MessageCountBackgrounds */ = {
+			isa = PBXGroup;
+			children = (
+				63C413BD16EA3549004E1F6D /* bg_message-count-grey.png */,
+				63C413BE16EA3549004E1F6D /* bg_message-count-grey@2x.png */,
+				63C413BF16EA3549004E1F6D /* bg_message-count-red.png */,
+				63C413C016EA3549004E1F6D /* bg_message-count-red@2x.png */,
+			);
+			path = MessageCountBackgrounds;
 			sourceTree = "<group>";
 		};
 		63AEE2CB16CA4D0200522F92 = {
