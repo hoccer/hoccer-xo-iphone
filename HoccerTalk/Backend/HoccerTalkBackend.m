@@ -145,8 +145,7 @@
 
 - (void) flushPendingMessages {
     // TODO: test this...
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveriesWithStateNew"
-                                                                                substitutionVariables: nil];
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"DeliveriesWithStateNew"];
     NSError *error;
     NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (deliveries == nil)
@@ -163,11 +162,14 @@
     for (Message * message in pendingMessages) {
         NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
         for (Delivery * delivery in message.deliveries) {
-            if (delivery.state == [Delivery stateNew]) {
+            if ([delivery.state isEqualToString: [Delivery stateNew]]) {
                 [newDeliveries addObject: delivery];
             }
         }
-        [self deliveryRequest: message withDeliveries: newDeliveries];
+        if (newDeliveries.count > 0) {
+            NSLog(@"======= resending message: %@ %@", message, newDeliveries);
+            [self deliveryRequest: message withDeliveries: newDeliveries];
+        }
     }
 }
 
@@ -256,8 +258,10 @@
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@", error);
     _isConnected = NO;
-    // if we get an error add a little initial backoff 
-    _backoffTime = (double)rand() / RAND_MAX;
+    // if we get an error add a little initial backoff
+    if (_backoffTime == 0) {
+        _backoffTime = (double)rand() / RAND_MAX;
+    }
     [self reconnectWitBackoff];
 }
 
