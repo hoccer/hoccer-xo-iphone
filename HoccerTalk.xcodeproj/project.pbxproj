@@ -127,6 +127,7 @@
 		63AE453A1703650C0099F0CB /* navigation_button_settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE45301703650C0099F0CB /* navigation_button_settings@2x.png */; };
 		63AE453B1703650C0099F0CB /* navigation_button_tutorial.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE45311703650C0099F0CB /* navigation_button_tutorial.png */; };
 		63AE453C1703650C0099F0CB /* navigation_button_tutorial@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE45321703650C0099F0CB /* navigation_button_tutorial@2x.png */; };
+		63AE4540170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE453F170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.m */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -340,6 +341,8 @@
 		63AE45301703650C0099F0CB /* navigation_button_settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigation_button_settings@2x.png"; sourceTree = "<group>"; };
 		63AE45311703650C0099F0CB /* navigation_button_tutorial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigation_button_tutorial.png; sourceTree = "<group>"; };
 		63AE45321703650C0099F0CB /* navigation_button_tutorial@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigation_button_tutorial@2x.png"; sourceTree = "<group>"; };
+		63AE453E170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+HoccerTalkSideMenuButtons.h"; sourceTree = "<group>"; };
+		63AE453F170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+HoccerTalkSideMenuButtons.m"; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer Talk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -626,6 +629,20 @@
 			path = MessageCountBackgrounds;
 			sourceTree = "<group>";
 		};
+		63AE4541170490B50099F0CB /* Supporting View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6330492B1702FAF20045E64E /* FirstRunViewController.h */,
+				6330492C1702FAF20045E64E /* FirstRunViewController.m */,
+				633049281701B3390045E64E /* ProfileViewController.h */,
+				633049291701B3390045E64E /* ProfileViewController.m */,
+				633049251701A3A80045E64E /* NavigationMenuViewController.h */,
+				633049261701A3A80045E64E /* NavigationMenuViewController.m */,
+			);
+			name = "Supporting View Controllers";
+			path = SupportingViewControllers;
+			sourceTree = "<group>";
+		};
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
@@ -663,6 +680,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerTalk */ = {
 			isa = PBXGroup;
 			children = (
+				63AE4541170490B50099F0CB /* Supporting View Controllers */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
 				63540A9316E61B420087D24E /* Assets */,
@@ -679,20 +697,16 @@
 				6330490616FC9A030045E64E /* ContactListViewController.m */,
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
-				6330492B1702FAF20045E64E /* FirstRunViewController.h */,
-				6330492C1702FAF20045E64E /* FirstRunViewController.m */,
 				63AEE2F716CA4D0300522F92 /* HoccerTalk.xcdatamodeld */,
 				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
 				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
 				633048F616FC69170045E64E /* MFSideMenu */,
 				63AEE30516CA562F00522F92 /* Models */,
-				633049251701A3A80045E64E /* NavigationMenuViewController.h */,
-				633049261701A3A80045E64E /* NavigationMenuViewController.m */,
 				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
 				6378484C16F4210A00DE03C2 /* NSString+UUID.m */,
-				633049281701B3390045E64E /* ProfileViewController.h */,
-				633049291701B3390045E64E /* ProfileViewController.m */,
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
+				63AE453E170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.h */,
+				63AE453F170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.m */,
 				63D4916716CAA17D00FD395F /* Views */,
 			);
 			path = HoccerTalk;
@@ -1051,6 +1065,7 @@
 				633049271701A3A80045E64E /* NavigationMenuViewController.m in Sources */,
 				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
 				6330492D1702FAF30045E64E /* FirstRunViewController.m in Sources */,
+				63AE4540170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

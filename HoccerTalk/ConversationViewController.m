@@ -18,6 +18,7 @@
 #import "Message.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
+#import "UIViewController+HoccerTalkSideMenuButtons.h"
 
 @interface ConversationViewController ()
 
@@ -42,15 +43,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    UIImage * icon = [UIImage imageNamed: @"navbar-icon-menu"];
-    UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target:self action:@selector(menuButtonPressed:)];
-    self.navigationItem.leftBarButtonItem = menuButton;
+    self.navigationItem.leftBarButtonItem = [self hoccerTalkMenuButton];
+    self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
 
-    icon = [UIImage imageNamed: @"navbar-icon-contacts"];
-    UIBarButtonItem *contactsButton = [[UIBarButtonItem alloc] initWithImage: icon landscapeImagePhone: icon style:UIBarButtonItemStylePlain target: self action:@selector(contactsButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = contactsButton;
-
-    icon = [UIImage imageNamed: @"navbar-icon-home"];
+    UIImage * icon = [UIImage imageNamed: @"navbar-icon-home"];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
@@ -79,15 +75,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-
-- (IBAction) menuButtonPressed:(id)sender {
-    [self.navigationController.sideMenu toggleLeftSideMenu];
-}
-
-- (IBAction) contactsButtonPressed:(id)sender {
-    [self.navigationController.sideMenu toggleRightSideMenu];
 }
 
 #pragma mark - Table View

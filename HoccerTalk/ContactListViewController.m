@@ -100,7 +100,8 @@
     Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
     // TODO: switch to conversation
     [_conversationViewController.chatViewController setPartner: contact];
-    [self.sideMenu.navigationController setViewControllers: @[_conversationViewController, _conversationViewController.chatViewController]];
+    NSArray * viewControllers = @[_conversationViewController, _conversationViewController.chatViewController];
+    [self.sideMenu.navigationController setViewControllers: viewControllers animated: NO];
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
 }
 

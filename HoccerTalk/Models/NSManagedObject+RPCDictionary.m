@@ -21,14 +21,14 @@
 
 - (void) updateWithDictionary: (NSDictionary*) dict {
     NSDictionary * rpcKeys = [self rpcKeys];
-    NSLog(@"Updatig object of type %@", NSStringFromClass([self class]));
+    //NSLog(@"Updatig object of type %@", NSStringFromClass([self class]));
     for (id key in dict) {
         if (rpcKeys[key] == nil) {
             NSLog(@"unhandled key '%@' in update dictionary", key);
             continue;
         }
         if ( ! [dict[key] isEqualToString: [self valueForKeyPath: rpcKeys[key]]]) {
-            NSLog(@"updating value for key '%@'", key);
+            //NSLog(@"updating value for key '%@'", key);
             [self setValue: dict[key] forKeyPath: rpcKeys[key]];
         }
     }

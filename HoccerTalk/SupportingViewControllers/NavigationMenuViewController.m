@@ -27,8 +27,11 @@
 }
 
 - (void) viewDidLoad {
-    _menuItems = @[ @{ @"title": @"Chats",   @"icon": @"navigation_button_chats",  @"storyboardId": @"conversationViewController"},
-                    @{ @"title": @"Profile", @"icon": @"navigation_button_profile", @"storyboardId": @"profileViewController"}
+    _menuItems = @[ @{ @"title": @"Chats",    @"icon": @"navigation_button_chats",    @"storyboardId": @"conversationViewController"},
+                    @{ @"title": @"Profile",  @"icon": @"navigation_button_profile",  @"storyboardId": @"profileViewController"},
+                    @{ @"title": @"Settings", @"icon": @"navigation_button_settings", @"storyboardId": @"settingsViewController"},
+                    @{ @"title": @"Tutorial", @"icon": @"navigation_button_tutorial", @"storyboardId": @"tutorialViewController"},
+                    @{ @"title": @"About",    @"icon": @"navigation_button_about",    @"storyboardId": @"aboutViewController"}
                    ];
 }
 
