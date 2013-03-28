@@ -157,6 +157,8 @@
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@", error);
     _isConnected = NO;
+    // if we get an error add a little initial backoff 
+    _backoffTime = (double)rand() / RAND_MAX;
     [self reconnectWitBackoff];
 }
 
