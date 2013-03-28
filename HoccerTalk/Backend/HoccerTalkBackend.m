@@ -31,8 +31,6 @@
 
 @implementation HoccerTalkBackend
 
-
-
 - (id) init {
     self = [super init];
     if (self != nil) {
@@ -45,10 +43,7 @@
     return self;
 }
 
-
-
-
-
+// TODO: contact should be an array of contacts
 - (Message*) sendMessage:(NSString *) text toContact: (Contact*) contact {
     Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
@@ -70,7 +65,7 @@
 
 
     if (_isConnected) {
-        [self deliveryRequest: message];
+        [self deliveryRequest: message withDeliveries: @[delivery]];
     }
     return message;
 }
@@ -84,16 +79,16 @@
     NSDictionary * vars = @{ @"clientId" : messageDictionary[@"senderId"]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
     NSError *error;
-    NSArray *array = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (array == nil)
+    NSArray *contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (contacts == nil)
     {
         NSLog(@"Fetch request failed: %@", error);
         abort();
     }
     Contact * contact = nil;
     // TODO: getr rid of this ...
-    if (array.count > 0) {
-        contact = array[0];
+    if (contacts.count > 0) {
+        contact = contacts[0];
     } else {
         NSLog(@"Ignoring message from unknown clientId %@", messageDictionary[@"senderId"]);
         [self.delegate.managedObjectContext deleteObject: message];
@@ -123,24 +118,6 @@
     NSLog(@"TODO: send device token to server");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 - (void) start {
     [_serverConnection open];
 }
@@ -166,6 +143,34 @@
     return [[NSURLRequest alloc] initWithURL: url];
 }
 
+- (void) flushPendingMessages {
+    // TODO: test this...
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveriesWithStateNew"
+                                                                                substitutionVariables: nil];
+    NSError *error;
+    NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (deliveries == nil)
+    {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    NSMutableSet * pendingMessages = [[NSMutableSet alloc] init];
+    for (Delivery * delivery in deliveries) {
+        if (! [pendingMessages containsObject: delivery.message]) {
+            [pendingMessages addObject: delivery.message];
+        }
+    }
+    for (Message * message in pendingMessages) {
+        NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
+        for (Delivery * delivery in message.deliveries) {
+            if (delivery.state == [Delivery stateNew]) {
+                [newDeliveries addObject: delivery];
+            }
+        }
+        [self deliveryRequest: message withDeliveries: newDeliveries];
+    }
+}
+
 #pragma mark - Outgoing RPC Calls
 
 - (void) identify {
@@ -174,19 +179,18 @@
     [_serverConnection invoke: @"identify" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             _isConnected = YES;
-            // TODO: flush queue by sending all deliveries with state 'new'
             NSLog(@"identify(): got result: %@", responseOrError);
+            [self flushPendingMessages];
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
         }
     }];
 }
 
-- (void) deliveryRequest: (Message*) message {
+- (void) deliveryRequest: (Message*) message withDeliveries: (NSArray*) deliveries {
     NSMutableDictionary * messageDict = [message rpcDictionary];
-    NSArray * orderedDeliveries = [message.deliveries allObjects];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
-    for (Delivery * delivery in orderedDeliveries) {
+    for (Delivery * delivery in deliveries) {
         [deliveryDicts addObject: [delivery rpcDictionary]];
     }
     NSLog(@"deliveryRequest: %@", messageDict);
@@ -195,7 +199,7 @@
             NSLog(@"deliveryRequest() returned deliveries: %@", responseOrError);
             NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
             int i = 0;
-            for (Delivery * delivery in orderedDeliveries) {
+            for (Delivery * delivery in deliveries) {
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
             }
         } else {
