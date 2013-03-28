@@ -11,6 +11,9 @@
 #import "BezeledImageView.h"
 #import "Contact.h"
 #import "AppDelegate.h"
+#import "ConversationViewController.h"
+#import "ChatViewController.h"
+#import "MFSideMenu.h"
 
 @interface ContactListViewController ()
 @end
@@ -96,6 +99,9 @@
     [self.searchBar resignFirstResponder];
     Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
     // TODO: switch to conversation
+    [_conversationViewController.chatViewController setPartner: contact];
+    [self.sideMenu.navigationController setViewControllers: @[_conversationViewController, _conversationViewController.chatViewController]];
+    [self.sideMenu setMenuState:MFSideMenuStateClosed];
 }
 
 

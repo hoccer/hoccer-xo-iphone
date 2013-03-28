@@ -53,7 +53,6 @@
     UIViewController * viewController = [self getViewControllerByStoryboardId: storyboardId];
     NSArray *controllers = [NSArray arrayWithObject: viewController];
     [self.sideMenu.navigationController setViewControllers: controllers animated: NO];
-    
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
 }
 

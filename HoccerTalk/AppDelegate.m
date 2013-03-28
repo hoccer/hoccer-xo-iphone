@@ -8,14 +8,12 @@
 
 #import "AppDelegate.h"
 
-#import <Foundation/NSObjCRuntime.h>
-#import <objc/runtime.h>
-
 #import "ConversationViewController.h"
 #import "Contact.h"
 #import "Message.h"
 #import "AssetStore.h"
 #import "NavigationMenuViewController.h"
+#import "ContactListViewController.h"
 #import "NSString+UUID.h"
 
 #import "MFSideMenu.h"
@@ -59,7 +57,7 @@
     UIImage * navigationBackButtonBackground = [[UIImage imageNamed: @"navbar-btn-back"] stretchableImageWithLeftCapWidth: 17 topCapHeight: 0];
     [[UIBarButtonItem appearance] setBackButtonBackgroundImage: navigationBackButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
-    UIViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
+    ContactListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
     NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
     navigationController.sideMenu = [MFSideMenu menuWithNavigationController:navigationController
                                               leftSideMenuController:navigationMenuViewController
@@ -82,6 +80,8 @@
     [navigationMenuViewController cacheViewController: controller withStoryboardId: @"conversationViewController"];
     navigationMenuViewController.sideMenu = navigationController.sideMenu;
 
+    contactListViewController.sideMenu = navigationController.sideMenu;
+    contactListViewController.conversationViewController = controller;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
         [self setupDone];

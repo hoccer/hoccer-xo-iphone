@@ -56,7 +56,14 @@
 
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
-    self.chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    _chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+}
+
+- (ChatViewController*) chatViewController {
+    if (_chatViewController == nil) {
+        _chatViewController = [self.storyboard instantiateViewControllerWithIdentifier: @"chatViewController"];
+    }
+    return _chatViewController;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -108,7 +115,6 @@
     return cell;
 }
 
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
@@ -150,7 +156,8 @@
     if ([[segue identifier] isEqualToString:@"showChat"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        [[segue destinationViewController] setPartner: contact];
+        _chatViewController = [segue destinationViewController];
+        [_chatViewController setPartner: contact];
     }
 }
 
