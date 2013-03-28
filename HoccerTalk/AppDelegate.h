@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ChatBackend.h"
 #import "HoccerTalkBackend.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, HoccerTalkDelegate>

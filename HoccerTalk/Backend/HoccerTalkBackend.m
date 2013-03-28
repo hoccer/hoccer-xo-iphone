@@ -12,6 +12,11 @@
 #import "NSManagedObject+RPCDictionary.h"
 #import "Message.h"
 #import "Delivery.h"
+#import "Contact.h"
+#import "AppDelegate.h"
+#import "NSString+UUID.h"
+
+
 
 @interface HoccerTalkBackend ()
 {
@@ -26,6 +31,8 @@
 
 @implementation HoccerTalkBackend
 
+
+
 - (id) init {
     self = [super init];
     if (self != nil) {
@@ -37,6 +44,102 @@
     }
     return self;
 }
+
+
+
+
+
+- (Message*) sendMessage:(NSString *) text toContact: (Contact*) contact {
+    Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.delegate.managedObjectContext];
+    message.body = text;
+    message.timeStamp = [NSDate date];
+    message.contact = contact;
+    message.isOutgoing = @YES;
+    message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
+    message.messageId = @"";
+    message.messageTag = [NSString stringWithUUID];
+
+    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName:@"Delivery" inManagedObjectContext: self.delegate.managedObjectContext];
+    [message.deliveries addObject: delivery];
+    delivery.message = message;
+    delivery.receiver = contact;
+
+    contact.latestMessageTime = message.timeStamp;
+
+    [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
+
+
+    if (_isConnected) {
+        [self deliveryRequest: message];
+    }
+    return message;
+}
+
+- (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
+    Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.delegate.managedObjectContext];
+    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName:@"Delivery" inManagedObjectContext: self.delegate.managedObjectContext];
+    [message.deliveries addObject: delivery];
+    delivery.message = message;
+
+    NSDictionary * vars = @{ @"clientId" : messageDictionary[@"senderId"]};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *array = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (array == nil)
+    {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    Contact * contact = nil;
+    // TODO: getr rid of this ...
+    if (array.count > 0) {
+        contact = array[0];
+    } else {
+        NSLog(@"Ignoring message from unknown clientId %@", messageDictionary[@"senderId"]);
+        [self.delegate.managedObjectContext deleteObject: message];
+        [self.delegate.managedObjectContext deleteObject: delivery];
+        return;
+    }
+
+    [delivery updateWithDictionary: deliveryDictionary];
+
+    // TODO: handle the actual message
+    message.isOutgoing = @NO;
+    message.isRead = @NO;
+    message.timeStamp = [NSDate date]; // TODO: use actual timestamp
+    message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
+    message.contact = contact;
+    [contact.messages addObject: message];
+    [message updateWithDictionary: messageDictionary];
+
+    contact.latestMessageTime = message.timeStamp;
+
+    [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
+    [self deliveryConfirm: message.messageId withDelivery: delivery];
+}
+
+- (void) sendAPNDeviceToken: (NSData*) deviceToken {
+    // TODO: send device token to server
+    NSLog(@"TODO: send device token to server");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - (void) start {
     [_serverConnection open];
@@ -61,14 +164,6 @@
 - (NSURLRequest*) urlRequest {
     NSURL * url = [NSURL URLWithString: @"ws://development.hoccer.com:7000/"];
     return [[NSURLRequest alloc] initWithURL: url];
-}
-
-- (Message*) sendMessage:(NSString *)text toContact:(Contact *)contact {
-    Message * message = [super sendMessage: text toContact: contact];
-    if (_isConnected) {
-        [self deliveryRequest: message];
-    }
-    return message;
 }
 
 #pragma mark - Outgoing RPC Calls

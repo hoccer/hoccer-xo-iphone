@@ -9,19 +9,45 @@
 #import <Foundation/Foundation.h>
 
 #import "JsonRpcWebSocket.h"
-#import "ChatBackend.h"
+
+@class Contact;
+@class Delivery;
+@class Message;
 
 @protocol HoccerTalkDelegate <NSObject>
 
 - (NSString*) clientId;
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 @end
 
-@interface HoccerTalkBackend : ChatBackend <JsonRpcWebSocketDelegate>
+@interface HoccerTalkBackend : NSObject <JsonRpcWebSocketDelegate>
 
 @property (nonatomic, weak) id<HoccerTalkDelegate> delegate;
 
 - (id) init;
+
+
+
+
+- (Message*) sendMessage: (NSString*) text toContact: (Contact*) contact;
+- (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
+
+- (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
+
+- (void) sendAPNDeviceToken: (NSData*) deviceToken;
+
+- (void) start;
+
+
+
+
+
+
+
+
+
 
 - (void) webSocketDidFailWithError: (NSError*) error;
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error;

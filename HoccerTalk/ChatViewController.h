@@ -12,7 +12,7 @@
 #import "AttachmentPickerController.h"
 #import "GrowingTextView.h"
 
-@class ChatBackend;
+@class HoccerTalkBackend;
 
 @interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPcikerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate>
 {
@@ -21,7 +21,7 @@
 
 @property (strong, nonatomic) Contact* partner;
 @property (readonly, strong, nonatomic) NSManagedObjectContext * managedObjectContext;
-@property (readonly, strong, nonatomic) ChatBackend *            chatBackend;
+@property (readonly, strong, nonatomic) HoccerTalkBackend *            chatBackend;
 
 @property (strong, nonatomic) IBOutlet GrowingTextView * textField;
 @property (strong, nonatomic) IBOutlet UIButton *        sendButton;

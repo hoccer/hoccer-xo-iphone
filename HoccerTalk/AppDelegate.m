@@ -14,7 +14,6 @@
 #import "ConversationViewController.h"
 #import "Contact.h"
 #import "Message.h"
-#import "DummyChatBackend.h"
 #import "AssetStore.h"
 #import "NavigationMenuViewController.h"
 #import "NSString+UUID.h"
@@ -33,7 +32,6 @@
 
     self.chatBackend = [[HoccerTalkBackend alloc] init];
     self.chatBackend.delegate = self;
-    //(void)[[DummyChatBackend alloc] init]; // still need to call this to get some dummy contacts
 
     ConversationViewController * controller = nil;
     UIStoryboard *storyboard = nil;

@@ -11,8 +11,6 @@
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
 		631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457AF16EF975B00AA8EB9 /* ImageAttachment.m */; };
 		631457CA16F0E76D00AA8EB9 /* HoccerTalkBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */; };
-		6320D7C416DF620900E58478 /* ChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C316DF620900E58478 /* ChatBackend.m */; };
-		6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C616DF622E00E58478 /* DummyChatBackend.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
 		6320D7CD16E0C79B00E58478 /* BezeledImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* BezeledImageView.m */; };
 		6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */; };
@@ -204,10 +202,6 @@
 		631457AF16EF975B00AA8EB9 /* ImageAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachment.m; sourceTree = "<group>"; };
 		631457C816F0E76D00AA8EB9 /* HoccerTalkBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoccerTalkBackend.h; sourceTree = "<group>"; };
 		631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoccerTalkBackend.m; sourceTree = "<group>"; };
-		6320D7C216DF620800E58478 /* ChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatBackend.h; path = ../ChatBackend.h; sourceTree = "<group>"; };
-		6320D7C316DF620900E58478 /* ChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatBackend.m; path = ../ChatBackend.m; sourceTree = "<group>"; };
-		6320D7C516DF622D00E58478 /* DummyChatBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DummyChatBackend.h; path = ../DummyChatBackend.h; sourceTree = "<group>"; };
-		6320D7C616DF622E00E58478 /* DummyChatBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DummyChatBackend.m; path = ../DummyChatBackend.m; sourceTree = "<group>"; };
 		6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderCell.h; sourceTree = "<group>"; };
 		6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderCell.m; sourceTree = "<group>"; };
 		6320D7CB16E0C79A00E58478 /* BezeledImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BezeledImageView.h; sourceTree = "<group>"; };
@@ -412,10 +406,6 @@
 		631254C716EC190E009A6584 /* Backend */ = {
 			isa = PBXGroup;
 			children = (
-				6320D7C216DF620800E58478 /* ChatBackend.h */,
-				6320D7C316DF620900E58478 /* ChatBackend.m */,
-				6320D7C516DF622D00E58478 /* DummyChatBackend.h */,
-				6320D7C616DF622E00E58478 /* DummyChatBackend.m */,
 				631457C816F0E76D00AA8EB9 /* HoccerTalkBackend.h */,
 				631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */,
 				631254C816EC198E009A6584 /* JsonRpcWebSocket.h */,
@@ -1028,8 +1018,6 @@
 				63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */,
 				63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
-				6320D7C416DF620900E58478 /* ChatBackend.m in Sources */,
-				6320D7C716DF622E00E58478 /* DummyChatBackend.m in Sources */,
 				6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */,
 				6320D7CD16E0C79B00E58478 /* BezeledImageView.m in Sources */,
 				6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */,

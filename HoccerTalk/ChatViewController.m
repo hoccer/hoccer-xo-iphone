@@ -130,7 +130,7 @@
     return _managedObjectContext;
 }
 
-- (ChatBackend*) chatBackend {
+- (HoccerTalkBackend*) chatBackend {
     if (_chatBackend != nil) {
         return _chatBackend;
     }
