@@ -11,6 +11,7 @@
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
 		631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457AF16EF975B00AA8EB9 /* ImageAttachment.m */; };
 		631457CA16F0E76D00AA8EB9 /* HoccerTalkBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */; };
+		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
 		6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */; };
 		6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* InsetImageView.m */; };
 		6320D7D016E4C0F500E58478 /* LeftMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CF16E4C0F400E58478 /* LeftMessageCell.m */; };
@@ -209,6 +210,8 @@
 		631457C816F0E76D00AA8EB9 /* HoccerTalkBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoccerTalkBackend.h; sourceTree = "<group>"; };
 		631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoccerTalkBackend.m; sourceTree = "<group>"; };
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ScaleAndCrop.h"; sourceTree = "<group>"; };
+		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
 		6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderCell.h; sourceTree = "<group>"; };
 		6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderCell.m; sourceTree = "<group>"; };
 		6320D7CB16E0C79A00E58478 /* InsetImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetImageView.h; sourceTree = "<group>"; };
@@ -427,6 +430,19 @@
 				631254C916EC198E009A6584 /* JsonRpcWebSocket.m */,
 			);
 			path = Backend;
+			sourceTree = "<group>";
+		};
+		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
+			isa = PBXGroup;
+			children = (
+				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
+				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
+				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
+				6378484C16F4210A00DE03C2 /* NSString+UUID.m */,
+				631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */,
+				631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */,
+			);
+			path = UtilityCategories;
 			sourceTree = "<group>";
 		};
 		633048F616FC69170045E64E /* MFSideMenu */ = {
@@ -716,7 +732,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerTalk */ = {
 			isa = PBXGroup;
 			children = (
-				63AE45521705E18D0099F0CB /* Storyboards */,
+				631F6CDA170654A600FB28D5 /* UtilityCategories */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
 				63540A9316E61B420087D24E /* Assets */,
@@ -736,15 +752,12 @@
 				63AEE2F716CA4D0300522F92 /* HoccerTalk.xcdatamodeld */,
 				633048F616FC69170045E64E /* MFSideMenu */,
 				63AEE30516CA562F00522F92 /* Models */,
-				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
-				6378484C16F4210A00DE03C2 /* NSString+UUID.m */,
+				63AE45521705E18D0099F0CB /* Storyboards */,
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
 				63AE4541170490B50099F0CB /* Supporting View Controllers */,
 				63AE453E170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.h */,
 				63AE453F170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.m */,
 				63D4916716CAA17D00FD395F /* Views */,
-				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
-				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
 			);
 			path = HoccerTalk;
 			sourceTree = "<group>";
@@ -1106,6 +1119,7 @@
 				63AE45471704945C0099F0CB /* TutorialViewController.m in Sources */,
 				63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */,
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
+				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
