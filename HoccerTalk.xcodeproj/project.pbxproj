@@ -132,6 +132,8 @@
 		63AE45471704945C0099F0CB /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE45461704945C0099F0CB /* TutorialViewController.m */; };
 		63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE4549170494AF0099F0CB /* AboutViewController.m */; };
 		63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE454C1705ADAF0099F0CB /* NSData+HexString.m */; };
+		63AE45501705E1440099F0CB /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */; };
+		63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
 		63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */; };
@@ -139,8 +141,6 @@
 		63AEE2E416CA4D0200522F92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2E216CA4D0200522F92 /* InfoPlist.strings */; };
 		63AEE2E616CA4D0200522F92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2E516CA4D0200522F92 /* main.m */; };
 		63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2E916CA4D0200522F92 /* AppDelegate.m */; };
-		63AEE2F316CA4D0300522F92 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */; };
-		63AEE2F616CA4D0300522F92 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */; };
 		63AEE2F916CA4D0300522F92 /* HoccerTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2F716CA4D0300522F92 /* HoccerTalk.xcdatamodeld */; };
 		63AEE2FC16CA4D0300522F92 /* ConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */; };
 		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
@@ -355,6 +355,8 @@
 		63AE4549170494AF0099F0CB /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		63AE454B1705ADAE0099F0CB /* NSData+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+HexString.h"; sourceTree = "<group>"; };
 		63AE454C1705ADAF0099F0CB /* NSData+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+HexString.m"; sourceTree = "<group>"; };
+		63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer Talk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -366,11 +368,6 @@
 		63AEE2E716CA4D0200522F92 /* HoccerTalk-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerTalk-Prefix.pch"; sourceTree = "<group>"; };
 		63AEE2E816CA4D0200522F92 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		63AEE2E916CA4D0200522F92 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		63AEE2EB16CA4D0200522F92 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		63AEE2ED16CA4D0300522F92 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		63AEE2EF16CA4D0300522F92 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		63AEE2F216CA4D0300522F92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
-		63AEE2F516CA4D0300522F92 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		63AEE2F816CA4D0300522F92 /* HoccerTalk.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoccerTalk.xcdatamodel; sourceTree = "<group>"; };
 		63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationViewController.h; sourceTree = "<group>"; };
 		63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationViewController.m; sourceTree = "<group>"; };
@@ -661,10 +658,18 @@
 			path = SupportingViewControllers;
 			sourceTree = "<group>";
 		};
+		63AE45521705E18D0099F0CB /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */,
+				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
-				6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */,
 				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
 				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
@@ -683,13 +688,14 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				63C413B816E8FD15004E1F6D /* Security.framework */,
+				6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */,
 				63C413B616E8FD0D004E1F6D /* CFNetwork.framework */,
-				63C413B416E8FD02004E1F6D /* libicucore.dylib */,
 				63AEE2DD16CA4D0200522F92 /* CoreData.framework */,
 				63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */,
 				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
+				63C413B416E8FD02004E1F6D /* libicucore.dylib */,
 				63D4916B16CAA26A00FD395F /* QuartzCore.framework */,
+				63C413B816E8FD15004E1F6D /* Security.framework */,
 				63AEE2D716CA4D0200522F92 /* UIKit.framework */,
 			);
 			name = Frameworks;
@@ -698,6 +704,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerTalk */ = {
 			isa = PBXGroup;
 			children = (
+				63AE45521705E18D0099F0CB /* Storyboards */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
 				63540A9316E61B420087D24E /* Assets */,
@@ -715,8 +722,6 @@
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 				63AEE2F716CA4D0300522F92 /* HoccerTalk.xcdatamodeld */,
-				63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */,
-				63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */,
 				633048F616FC69170045E64E /* MFSideMenu */,
 				63AEE30516CA562F00522F92 /* Models */,
 				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
@@ -739,9 +744,6 @@
 				63AEE2E216CA4D0200522F92 /* InfoPlist.strings */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
 				63AEE2E716CA4D0200522F92 /* HoccerTalk-Prefix.pch */,
-				63AEE2EB16CA4D0200522F92 /* Default.png */,
-				63AEE2ED16CA4D0300522F92 /* Default@2x.png */,
-				63AEE2EF16CA4D0300522F92 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -909,8 +911,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				63AEE2E416CA4D0200522F92 /* InfoPlist.strings in Resources */,
-				63AEE2F316CA4D0300522F92 /* MainStoryboard_iPhone.storyboard in Resources */,
-				63AEE2F616CA4D0300522F92 /* MainStoryboard_iPad.storyboard in Resources */,
 				63C413C116EA3549004E1F6D /* bg_message-count-grey.png in Resources */,
 				63C413C216EA3549004E1F6D /* bg_message-count-grey@2x.png in Resources */,
 				63C413C316EA3549004E1F6D /* bg_message-count-red.png in Resources */,
@@ -1008,6 +1008,8 @@
 				63AE453A1703650C0099F0CB /* navigation_button_settings@2x.png in Resources */,
 				63AE453B1703650C0099F0CB /* navigation_button_tutorial.png in Resources */,
 				63AE453C1703650C0099F0CB /* navigation_button_tutorial@2x.png in Resources */,
+				63AE45501705E1440099F0CB /* MainStoryboard_iPad.storyboard in Resources */,
+				63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1110,22 +1112,6 @@
 				63AEE2E316CA4D0200522F92 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		63AEE2F116CA4D0300522F92 /* MainStoryboard_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				63AEE2F216CA4D0300522F92 /* en */,
-			);
-			name = MainStoryboard_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		63AEE2F416CA4D0300522F92 /* MainStoryboard_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				63AEE2F516CA4D0300522F92 /* en */,
-			);
-			name = MainStoryboard_iPad.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
