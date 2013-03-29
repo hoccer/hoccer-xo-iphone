@@ -7,7 +7,7 @@
 //
 
 #import "FirstRunViewController.h"
-#import "BezeledImageView.h"
+#import "InsetImageView.h"
 #import "AppDelegate.h"
 #import "Contact.h"
 #import "Message.h"

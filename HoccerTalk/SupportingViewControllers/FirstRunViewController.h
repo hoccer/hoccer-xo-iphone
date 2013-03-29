@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class BezeledImageView;
+@class InsetImageView;
 
 @interface FirstRunViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate>
 {
     IBOutlet UITextField * identityTextField;
-    IBOutlet BezeledImageView * avatarView;
+    IBOutlet InsetImageView * avatarView;
   	NSArray * identities;
     NSArray * avatars;
     UIPickerView * identityPicker;

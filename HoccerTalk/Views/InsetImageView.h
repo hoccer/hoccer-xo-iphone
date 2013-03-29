@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BezeledImageView : UIControl
+@interface InsetImageView : UIControl
 
 @property (strong, nonatomic) UIImage *image;
 
 @property (assign, nonatomic) double    cornerRadius;
-@property (strong, nonatomic) UIColor * bezelColor;
-@property (strong, nonatomic) UIColor * innerShadowColor;
+@property (strong, nonatomic) UIColor * borderColor;
 @property (strong, nonatomic) UIColor * insetColor;
+@property (strong, nonatomic) UIColor * shadowColor;
+@property (assign, nonatomic) double    shadowBlurRadius;
+@property (assign, nonatomic) CGSize    shadowOffset;
 
 @end

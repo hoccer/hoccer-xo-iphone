@@ -8,7 +8,7 @@
 
 #import "ContactListViewController.h"
 #import "ContactCell.h"
-#import "BezeledImageView.h"
+#import "InsetImageView.h"
 #import "Contact.h"
 #import "AppDelegate.h"
 #import "ConversationViewController.h"
@@ -69,7 +69,7 @@
         cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
         cell.backgroundView.frame = cell.frame;
         cell.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.2];
-        cell.avatar.bezelColor = [UIColor blackColor];
+        cell.avatar.borderColor = [UIColor blackColor];
     }
     [self fetchedResultsController: [self currentFetchedResultsController]
                      configureCell: cell atIndexPath: indexPath];

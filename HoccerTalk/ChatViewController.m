@@ -14,7 +14,7 @@
 #import "Message.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
-#import "BezeledImageView.h"
+#import "InsetImageView.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
 
@@ -250,11 +250,11 @@
         return;
     }
     if (attachmentInfo[@"UIImagePickerControllerOriginalImage"]) {
-        BezeledImageView* preview = [[BezeledImageView alloc] init];
+        InsetImageView* preview = [[InsetImageView alloc] init];
         self.attachmentPreview = preview;
         preview.frame = _attachmentButton.frame;
         preview.image = attachmentInfo[@"UIImagePickerControllerOriginalImage"];
-        preview.bezelColor = [UIColor blackColor];
+        preview.borderColor = [UIColor blackColor];
         preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
         preview.autoresizingMask = _attachmentButton.autoresizingMask;
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];

@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class BezeledImageView;
+@class InsetImageView;
 
 @interface ConversationCell : UITableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
-@property (nonatomic,strong) IBOutlet BezeledImageView * avatar;
+@property (nonatomic,strong) IBOutlet InsetImageView * avatar;
 @property (nonatomic,strong) IBOutlet UILabel* latestMessage;
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageTime;
 
