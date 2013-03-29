@@ -7,9 +7,15 @@
 //
 
 #import "InsetImageView.h"
+
 #import <QuartzCore/QuartzCore.h>
 
+#import "UIImage+ScaleAndCrop.h"
+
 @implementation InsetImageView
+{
+    UIImage * _resizedImage;
+}
 
 - (id) init {
     self = [super init];
@@ -47,6 +53,22 @@
     _shadowBlurRadius = 1;
 }
 
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    [self resizeImage];
+}
+
+- (void) setImage:(UIImage *)image {
+    _image = image;
+    [self resizeImage];
+}
+
+- (void) resizeImage {
+    CGFloat scale = [UIScreen mainScreen].scale;
+    CGSize targetSize = CGSizeMake(scale * (self.bounds.size.width - 2), scale * (self.bounds.size.height - 3));
+    _resizedImage = [_image imageByScalingAndCroppingForSize: targetSize];
+}
+
 - (void) drawRect: (CGRect)rect {
     CGRect insetRectangleRect = CGRectMake(0.5, 1.5, self.bounds.size.width -1, self.bounds.size.height -2);
     CGFloat insetRectangleCornerRadius = 4;
@@ -67,7 +89,7 @@
     UIBezierPath* borderRectanglePath = [UIBezierPath bezierPathWithRoundedRect: borderRectangleRect cornerRadius: borderRectangleCornerRadius];
     CGContextSaveGState(context);
     [borderRectanglePath addClip];
-    [_image drawInRect: borderRectangleRect];
+    [_resizedImage drawInRect: borderRectangleRect];
     CGContextRestoreGState(context);
 
     // Border Rectangle Inner Shadow
