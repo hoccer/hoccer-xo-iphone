@@ -80,13 +80,32 @@
     self.sendButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
     [self.sendButton setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
 
+    // Ok, we don't want to do this to often but let's relayout the chatbar for the localized send button title
+    frame = self.sendButton.frame;
+    CGFloat initialTitleWidth = _sendButton.titleLabel.frame.size.width;
+    [_sendButton setTitle: NSLocalizedString(@"Send", @"Chat Send Button Title") forState: UIControlStateNormal];
+    CGFloat newTitleWidth = [_sendButton.titleLabel.text sizeWithFont: self.sendButton.titleLabel.font].width;
+    CGFloat dx = newTitleWidth - initialTitleWidth;
+    frame.origin.x -= dx;
+    frame.size.width += dx;
+    _sendButton.frame = frame;
+    frame = _textField.frame;
+    frame.size.width -= dx;
+    _textField.frame = frame;
+    frame = textViewBackgroundView.frame;
+    frame.size.width -= dx;
+    textViewBackgroundView.frame = frame;
+
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     [_chatbar sendSubviewToBack: backgroundGradient];
 
     self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
 
     [self configureView];
+}
 
+- (void) awakeFromNib {
+    
 }
 
 
@@ -245,12 +264,12 @@
 }
 
 - (void) showAttachmentOptions {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", @"Actionsheet Title")
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
                                           destructiveButtonTitle: nil
-                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", nil)/*,
-                                                                  NSLocalizedString(@"View Attachment", nil)*/,
+                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", @"Actionsheet Button Title")/*,
+                                                                  NSLocalizedString(@"View Attachment", @"Actionsheet Button Title")*/,
                                                                   nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView: self.view];

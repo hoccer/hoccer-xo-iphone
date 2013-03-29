@@ -43,14 +43,14 @@ typedef enum AttachmentTypes {
 - (void) probeAttachmentTypes {
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Choose Photo", nil);
+        item.localizedButtonTitle = NSLocalizedString(@"Choose Photo", @"Action Sheet Button Ttitle");
         item.type = AttachmentTypePhotoFromLibrary;
         [_supportedItems addObject: item];
     }
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         // TODO: test for video support
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Take Photo", nil);
+        item.localizedButtonTitle = NSLocalizedString(@"Take Photo", @"Action Sheet Button Ttitle");
         item.type = AttachmentTypePhotoFromCamera;
         [_supportedItems addObject: item];
     }
@@ -58,7 +58,7 @@ typedef enum AttachmentTypes {
 }
 
 - (void) showInView: (UIView*) view {
-    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Add Attachement", @"Attachment Action Sheet Title")
+    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Add Attachement", @"Attachment Actionsheet Title")
                                                                  delegate: self
                                                         cancelButtonTitle: nil
                                                    destructiveButtonTitle: nil
@@ -69,7 +69,7 @@ typedef enum AttachmentTypes {
     for (AttachmentPickerItem * item in _supportedItems) {
         [attachmentSheet addButtonWithTitle: item.localizedButtonTitle];
     }
-    attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"Cancel", @"Cancel attachment selection")];
+    attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")];
     
     [attachmentSheet showInView: view];
 }

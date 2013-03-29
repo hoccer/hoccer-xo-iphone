@@ -1,0 +1,7 @@
+#!/bin/sh
+
+dir=`dirname $0`/HoccerTalk
+for sourcefile in `find $dir -name "*.m"`; do
+    sourcefiles="$sourcefiles $sourcefile"
+done;
+genstrings $sourcefiles -o HoccerTalk/Localizations/en.lproj

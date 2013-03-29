@@ -35,6 +35,7 @@
         }
     }
     self.searchBar.delegate = self;
+    self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
 }
 
 - (void)didReceiveMemoryWarning
