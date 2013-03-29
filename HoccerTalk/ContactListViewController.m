@@ -16,9 +16,12 @@
 #import "MFSideMenu.h"
 
 @interface ContactListViewController ()
+@property (nonatomic, retain) NSFetchedResultsController *searchFetchedResultsController;
 @end
 
 @implementation ContactListViewController
+
+@synthesize fetchedResultsController = _fetchedResultsController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -30,7 +33,9 @@
         if([subview isKindOfClass: UITextField.class]){
             [(UITextField*)subview setTextColor: [UIColor whiteColor]];
         }
-    }}
+    }
+    self.searchBar.delegate = self;
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -38,18 +43,22 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (NSFetchedResultsController *)currentFetchedResultsController {
+    return self.searchBar.text.length ? self.searchFetchedResultsController : self.fetchedResultsController;
+}
+
 
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.fetchedResultsController sections] count];
+    return [self currentFetchedResultsController].sections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self currentFetchedResultsController].sections[section];
+    return sectionInfo.numberOfObjects;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -61,8 +70,8 @@
         cell.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.2];
         cell.avatar.bezelColor = [UIColor blackColor];
     }
-
-    [self configureCell:cell atIndexPath:indexPath];
+    [self fetchedResultsController: [self currentFetchedResultsController]
+                     configureCell: cell atIndexPath: indexPath];
     return cell;
 }
 
@@ -98,13 +107,31 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.searchBar resignFirstResponder];
     Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
-    // TODO: switch to conversation
     [_conversationViewController.chatViewController setPartner: contact];
     NSArray * viewControllers = @[_conversationViewController, _conversationViewController.chatViewController];
     [self.sideMenu.navigationController setViewControllers: viewControllers animated: NO];
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
 }
 
+#pragma mark - Filtering
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSInteger)scope
+{
+    // update the filter, in this case just blow away the FRC and let lazy evaluation create another with the relevant search info
+    self.searchFetchedResultsController.delegate = nil;
+    self.searchFetchedResultsController = nil;
+    // if you care about the scope save off the index to be used by the serchFetchedResultsController
+    //self.savedScopeButtonIndex = scope;
+}
+
+
+#pragma mark - Search Bar
+
+- (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    self.searchFetchedResultsController.delegate = nil;
+    self.searchFetchedResultsController = nil;
+    [self.tableView reloadData];
+}
 
 #pragma mark - Fetched results controller
 
@@ -118,42 +145,84 @@
     return _managedObjectContext;
 }
 
-- (NSFetchedResultsController *)fetchedResultsController
-{
-    if (_fetchedResultsController != nil) {
-        return _fetchedResultsController;
-    }
+- (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
+    NSArray *sortDescriptors = @[sortDescriptor];
 
+    //NSArray *sortDescriptors = // your sort descriptors here
+    NSPredicate *filterPredicate = nil; // your predicate here
+
+    /*
+     Set up the fetched results controller.
+     */
+    // Create the fetch request for the entity.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
+    NSEntityDescription *callEntity = [NSEntityDescription entityForName: @"Contact" inManagedObjectContext: self.managedObjectContext];
+    [fetchRequest setEntity:callEntity];
+
+    NSMutableArray *predicateArray = [NSMutableArray array];
+    if(searchString.length) {
+        // your search predicate(s) are added to this array
+        [predicateArray addObject:[NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
+        // finally add the filter predicate for this view
+        if(filterPredicate)
+        {
+            filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray], nil]];
+        }
+        else
+        {
+            filterPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
+        }
+    }
+    [fetchRequest setPredicate:filterPredicate];
 
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
-
-    // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
-    NSArray *sortDescriptors = @[sortDescriptor];
 
     [fetchRequest setSortDescriptors:sortDescriptors];
 
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Contacts"];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+                                                                                                managedObjectContext:self.managedObjectContext
+                                                                                                  sectionNameKeyPath:nil
+                                                                                                           cacheName:nil];
     aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
 
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
-        // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
+    NSError *error = nil;
+    if (![aFetchedResultsController performFetch:&error]) {
+        /*
+         Replace this implementation with code to handle the error appropriately.
 
+         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
+         */
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+
+    return aFetchedResultsController;
+}
+
+- (NSFetchedResultsController *)fetchedResultsController {
+    if (_fetchedResultsController != nil)
+    {
+        return _fetchedResultsController;
+    }
+    _fetchedResultsController = [self newFetchedResultsControllerWithSearch:nil];
     return _fetchedResultsController;
 }
+
+- (NSFetchedResultsController *)searchFetchedResultsController {
+    if (_searchFetchedResultsController != nil)
+    {
+        return _searchFetchedResultsController;
+    }
+    _searchFetchedResultsController = [self newFetchedResultsControllerWithSearch:self.searchBar.text];
+    return _searchFetchedResultsController;
+}
+
+
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
@@ -178,24 +247,23 @@
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    UITableView *tableView = self.tableView;
 
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self configureCell: (ContactCell*)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self fetchedResultsController: controller configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
 
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -215,9 +283,13 @@
  }
  */
 
-- (void)configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+
+- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
+                   configureCell:(ContactCell *)cell
+                     atIndexPath:(NSIndexPath *)indexPath
+{
+    // your cell guts here
+    Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickName;
     cell.avatar.image = contact.avatarImage;
     BOOL hasUnreadMessages = contact.unreadMessages.count > 0;

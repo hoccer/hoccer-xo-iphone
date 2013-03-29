@@ -11,14 +11,14 @@
 @class ConversationViewController;
 @class MFSideMenu;
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
 
 @property (nonatomic, assign) ConversationViewController * conversationViewController;
 @property (nonatomic, assign) MFSideMenu *sideMenu;
 
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic, readonly) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end
