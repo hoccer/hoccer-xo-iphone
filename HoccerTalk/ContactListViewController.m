@@ -113,18 +113,6 @@
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
 }
 
-#pragma mark - Filtering
-
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSInteger)scope
-{
-    // update the filter, in this case just blow away the FRC and let lazy evaluation create another with the relevant search info
-    self.searchFetchedResultsController.delegate = nil;
-    self.searchFetchedResultsController = nil;
-    // if you care about the scope save off the index to be used by the serchFetchedResultsController
-    //self.savedScopeButtonIndex = scope;
-}
-
-
 #pragma mark - Search Bar
 
 - (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
