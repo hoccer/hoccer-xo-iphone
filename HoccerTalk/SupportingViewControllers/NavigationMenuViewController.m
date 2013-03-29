@@ -45,7 +45,7 @@
         cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
         cell.backgroundView.frame = cell.frame;
     }
-    cell.textLabel.text = _menuItems[indexPath.row][@"title"];
+    cell.textLabel.text = NSLocalizedString(_menuItems[indexPath.row][@"title"], nil);
     cell.imageView.image = [UIImage imageNamed: _menuItems[indexPath.row][@"icon"]];
 
     return cell;
@@ -54,6 +54,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString * storyboardId =  _menuItems[indexPath.row][@"storyboardId"];
     UIViewController * viewController = [self getViewControllerByStoryboardId: storyboardId];
+    if ( ! [_menuItems[indexPath.row][@"title"] isEqualToString: @"Chats"]) {
+        viewController.title = NSLocalizedString(_menuItems[indexPath.row][@"title"], nil);
+    }
     NSArray *controllers = [NSArray arrayWithObject: viewController];
     [self.sideMenu.navigationController setViewControllers: controllers animated: NO];
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
