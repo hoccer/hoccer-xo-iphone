@@ -55,18 +55,19 @@
 
 - (void) layoutSubviews {
     [super layoutSubviews];
-    [self resizeImage];
+    [self updateResizedImage];
 }
 
 - (void) setImage:(UIImage *)image {
     _image = image;
-    [self resizeImage];
+    [self updateResizedImage];
 }
 
-- (void) resizeImage {
+- (void) updateResizedImage {
     CGFloat scale = [UIScreen mainScreen].scale;
     CGSize targetSize = CGSizeMake(scale * (self.bounds.size.width - 2), scale * (self.bounds.size.height - 3));
     _resizedImage = [_image imageByScalingAndCroppingForSize: targetSize];
+    [self setNeedsDisplay];
 }
 
 - (void) drawRect: (CGRect)rect {
