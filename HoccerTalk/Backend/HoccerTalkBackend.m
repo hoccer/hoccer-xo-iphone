@@ -15,7 +15,7 @@
 #import "Contact.h"
 #import "AppDelegate.h"
 #import "NSString+UUID.h"
-
+#import "NSData+HexString.h"
 
 
 @interface HoccerTalkBackend ()
@@ -23,6 +23,7 @@
     JsonRpcWebSocket * _serverConnection;
     BOOL _isConnected;
     double _backoffTime;
+    NSString * _apnsDeviceToken;
 }
 
 - (void) identify;
@@ -36,6 +37,7 @@
     if (self != nil) {
         _backoffTime = 0.0;
         _isConnected = NO;
+        _apnsDeviceToken = nil;
         _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest]];
         _serverConnection.delegate = self;
         [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
@@ -113,9 +115,12 @@
     [self deliveryConfirm: message.messageId withDelivery: delivery];
 }
 
-- (void) sendAPNDeviceToken: (NSData*) deviceToken {
+- (void) gotAPNSDeviceToken: (NSData*) deviceToken {
     // TODO: send device token to server
-    NSLog(@"TODO: send device token to server");
+    _apnsDeviceToken = [deviceToken hexadecimalString];
+    if (_isConnected) {
+        [self registerApns: _apnsDeviceToken];
+    }
 }
 
 - (void) start {
@@ -144,7 +149,7 @@
 }
 
 - (void) flushPendingMessages {
-    // TODO: test this...
+    // fetch all deliveries with state 'new'
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"DeliveriesWithStateNew"];
     NSError *error;
     NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
@@ -153,12 +158,14 @@
         NSLog(@"Fetch request failed: %@", error);
         abort();
     }
+    // collect all messages that have a delivery with state 'new'
     NSMutableSet * pendingMessages = [[NSMutableSet alloc] init];
     for (Delivery * delivery in deliveries) {
         if (! [pendingMessages containsObject: delivery.message]) {
             [pendingMessages addObject: delivery.message];
         }
     }
+    // paranoid but safe: for each message collect those deliveries that have state 'new' and send them out
     for (Message * message in pendingMessages) {
         NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
         for (Delivery * delivery in message.deliveries) {
@@ -166,10 +173,8 @@
                 [newDeliveries addObject: delivery];
             }
         }
-        if (newDeliveries.count > 0) {
-            NSLog(@"======= resending message: %@ %@", message, newDeliveries);
-            [self deliveryRequest: message withDeliveries: newDeliveries];
-        }
+        NSLog(@"======= resending pending message: %@ %@", message, newDeliveries);
+        [self deliveryRequest: message withDeliveries: newDeliveries];
     }
 }
 
@@ -183,6 +188,9 @@
             _isConnected = YES;
             NSLog(@"identify(): got result: %@", responseOrError);
             [self flushPendingMessages];
+            if (_apnsDeviceToken) {
+                [self registerApns: _apnsDeviceToken];
+            }
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
         }
@@ -217,6 +225,19 @@
             [delivery updateWithDictionary: responseOrError];
         } else {
             NSLog(@"deliveryConfirm() failed: %@", responseOrError);
+        }
+    }];
+}
+
+- (void) registerApns: (NSString*) token {
+    NSLog(@"registerApns: %@", token);
+    [_serverConnection invoke: @"registerApns" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"registerApns(): got result: %@", responseOrError);
+            _apnsDeviceToken = nil; // XXX: this is not nice...
+        } else {
+            // TODO retry?
+            NSLog(@"registerApns(): failed: %@", responseOrError);
         }
     }];
 }

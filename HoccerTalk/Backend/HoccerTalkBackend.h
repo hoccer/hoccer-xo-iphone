@@ -36,18 +36,9 @@
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
 
-- (void) sendAPNDeviceToken: (NSData*) deviceToken;
+- (void) gotAPNSDeviceToken: (NSData*) deviceToken;
 
 - (void) start;
-
-
-
-
-
-
-
-
-
 
 - (void) webSocketDidFailWithError: (NSError*) error;
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error;

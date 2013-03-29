@@ -15,6 +15,7 @@
 #import "NavigationMenuViewController.h"
 #import "ContactListViewController.h"
 #import "NSString+UUID.h"
+#import "NSData+HexString.h"
 
 #import "MFSideMenu.h"
 
@@ -226,10 +227,11 @@
 
 #pragma mark - Apple Push Notifications
 
-- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSLog(@"got APNS deviceToken: %@ ", [deviceToken hexadecimalString]);
     // TODO: do we need this?
     //self.registered = YES;
-    [self.chatBackend sendAPNDeviceToken: devToken]; // custom method
+    [self.chatBackend gotAPNSDeviceToken: deviceToken];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
