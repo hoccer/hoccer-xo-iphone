@@ -16,7 +16,7 @@
 #import "AttachmentViewFactory.h"
 
 static const double kLeftBubbleCapLeft  = 11.0;
-static const double kRightBubbleCapLeft = 5.0;
+static const double kRightBubbleCapLeft = 4.0;
 static const double kBubbleCapTop   = 32.0;
 static const double kAttachmentPadding = 10;
 
