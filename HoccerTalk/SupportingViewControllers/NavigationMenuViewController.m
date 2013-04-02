@@ -8,6 +8,7 @@
 
 #import "NavigationMenuViewController.h"
 #import "MFSideMenu.h"
+#import "../iOSVersionChecks.h"
 
 @interface NavigationMenuViewController ()
 {
@@ -55,7 +56,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"navigationMenuCell"];
+    UITableViewCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
+        [tableView dequeueReusableCellWithIdentifier: @"navigationMenuCell" forIndexPath:indexPath] :
+        [tableView dequeueReusableCellWithIdentifier: @"navigationMenuCell"];
     if (cell.backgroundView == nil) {
         cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
         cell.backgroundView.frame = cell.frame;

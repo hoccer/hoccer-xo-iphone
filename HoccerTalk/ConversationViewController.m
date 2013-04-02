@@ -19,6 +19,7 @@
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "iOSVersionChecks.h"
 
 @interface ConversationViewController ()
 
@@ -90,9 +91,10 @@
     return [sectionInfo numberOfObjects];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    ConversationCell *cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    ConversationCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
+            [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath:indexPath] :
+            [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier]];
     if (cell.backgroundView == nil) {
         cell.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"conversation_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0]];
         [self engraveLabel: cell.latestMessage];

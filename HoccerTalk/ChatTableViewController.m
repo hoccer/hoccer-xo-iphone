@@ -21,6 +21,7 @@
 #import "BubbleView.h"
 #import "ImageAttachment.h"
 #import "AttachmentViewFactory.h"
+#import "iOSVersionChecks.h"
 
 @interface ChatTableViewController ()
 
@@ -80,7 +81,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     Message * message = (Message*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
-    MessageCell *cell = (MessageCell*)[tableView dequeueReusableCellWithIdentifier: ([message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier]) forIndexPath:indexPath];
+    NSString * identifier = [message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier];
+    MessageCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
+            [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath:indexPath] :
+            [tableView dequeueReusableCellWithIdentifier: identifier];
+
 
     // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
     // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/

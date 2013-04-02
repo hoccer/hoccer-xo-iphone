@@ -215,6 +215,7 @@
 		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
 		631F6CE7170AF67200FB28D5 /* CustomNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationBar.h; sourceTree = "<group>"; };
 		631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationBar.m; sourceTree = "<group>"; };
+		631F6CEA170B360C00FB28D5 /* iOSVersionChecks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iOSVersionChecks.h; sourceTree = "<group>"; };
 		6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionHeaderCell.h; sourceTree = "<group>"; };
 		6320D7C916DFB9DD00E58478 /* SectionHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionHeaderCell.m; sourceTree = "<group>"; };
 		6320D7CB16E0C79A00E58478 /* InsetImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetImageView.h; sourceTree = "<group>"; };
@@ -761,6 +762,7 @@
 				63AE453E170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.h */,
 				63AE453F170488FB0099F0CB /* UIViewController+HoccerTalkSideMenuButtons.m */,
 				63D4916716CAA17D00FD395F /* Views */,
+				631F6CEA170B360C00FB28D5 /* iOSVersionChecks.h */,
 			);
 			path = HoccerTalk;
 			sourceTree = "<group>";
