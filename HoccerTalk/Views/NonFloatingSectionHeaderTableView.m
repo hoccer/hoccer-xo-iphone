@@ -10,6 +10,7 @@
 
 @implementation NonFloatingSectionHeaderTableView
 
+
 - (BOOL) allowsHeaderViewsToFloat {
     return NO;
 }

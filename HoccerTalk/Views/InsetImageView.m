@@ -45,7 +45,7 @@
     self.backgroundColor = [UIColor clearColor];
     self.opaque = NO;
 
-    _borderColor = [UIColor colorWithWhite: 0.1 alpha: 1.0];
+    _borderColor = [UIColor colorWithWhite: 0.2 alpha: 1.0];
     _shadowColor = [UIColor colorWithWhite:0 alpha: 0.6];
     _insetColor = [UIColor whiteColor];
 
