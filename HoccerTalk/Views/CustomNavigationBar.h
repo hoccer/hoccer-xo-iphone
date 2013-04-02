@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class CAShapeLayer;
+
 @interface CustomNavigationBar : UINavigationBar
+{
+    CAShapeLayer * _mask;
+}
 
 @end
