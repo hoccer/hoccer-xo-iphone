@@ -57,8 +57,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 
-//    chatTableController = (ChatTableViewController*)self.childViewControllers[0];
-
     UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg_noise"]];
     _chatbar.backgroundColor = barBackground;
     UIImageView * backgroundGradient = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"chatbar_bg_gradient"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 0, 0, 0) resizingMode: UIImageResizingModeStretch]];
@@ -66,8 +64,6 @@
     [_chatbar addSubview: backgroundGradient];
     backgroundGradient.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 
-
-//    [chatTableController setPartner: _partner];
 
     _textField.delegate = self;
     _textField.backgroundColor = [UIColor clearColor];
@@ -111,8 +107,7 @@
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     [_chatbar sendSubviewToBack: backgroundGradient];
 
-    // TODO: set table background...
-    //self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
 
     self.messageCell = [self.tableView dequeueReusableCellWithIdentifier: [LeftMessageCell reuseIdentifier]];
     self.headerCell  = [self.tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
@@ -329,20 +324,6 @@
     return image;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -422,7 +403,7 @@
     return [self.messageCell heightForMessage: message];
 }
 
-#pragma mark - Fetched results controller
+#pragma mark - Core Data Stack
 
 - (NSManagedObjectContext *)managedObjectContext
 {
@@ -483,8 +464,6 @@
     } else {
         _fetchedResultsController.delegate = self;
     }
-
-
 
     if (self.masterPopoverController != nil) {
         [self.masterPopoverController dismissPopoverAnimated:YES];
