@@ -65,11 +65,11 @@
     frame.origin.x += 3;
     _textField.frame = frame;
 
-    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:14 topCapHeight:14];
     UIImageView * textViewBackgroundView = [[UIImageView alloc] initWithImage: textfieldBackground];
     [_chatbar addSubview: textViewBackgroundView];
-    bgframe.origin.y -= 1;
-    bgframe.size.height = 27;
+    bgframe.origin.y -= 3;
+    bgframe.size.height = 30;
     textViewBackgroundView.frame = bgframe;
     textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 

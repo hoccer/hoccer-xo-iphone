@@ -393,7 +393,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5x6-4c-VVf">
-                                        <rect key="frame" x="263" y="7" width="49" height="27"/>
+                                        <rect key="frame" x="265" y="5" width="49" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         <color key="backgroundColor" red="0.17254901960784313" green="0.54509803921568623" blue="0.74509803921568629" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
@@ -408,7 +408,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sMD-1M-Mcj" userLabel="Button - Add Attachment">
-                                        <rect key="frame" x="7" y="7" width="37" height="27"/>
+                                        <rect key="frame" x="5" y="5" width="50" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="chatbar_btn_add-content.png">
@@ -424,7 +424,7 @@
                                         </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ucn-hM-11L" customClass="GrowingTextView">
-                                        <rect key="frame" x="52" y="8" width="203" height="24"/>
+                                        <rect key="frame" x="61" y="8" width="198" height="30"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <inset key="scrollIndicatorInsets" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
@@ -568,8 +568,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="chatbar_btn_add-content.png" width="37" height="27"/>
-        <image name="chatbar_btn_add-content_selected.png" width="37" height="27"/>
+        <image name="chatbar_btn_add-content.png" width="50" height="30"/>
+        <image name="chatbar_btn_add-content_selected.png" width="16" height="16"/>
     </resources>
     <classes>
         <class className="AboutViewController" superclassName="UIViewController">
