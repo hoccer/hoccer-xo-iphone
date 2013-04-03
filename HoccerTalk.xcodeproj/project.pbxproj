@@ -43,7 +43,6 @@
 		633129E216F96872008F5B04 /* chatbar_bg_gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129E116F96872008F5B04 /* chatbar_bg_gradient@2x.png */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
-		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		637847A516F24E5700DE03C2 /* conversation_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */; };
@@ -260,8 +259,6 @@
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
 		63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoheightLabel.m; sourceTree = "<group>"; };
-		63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableViewController.h; sourceTree = "<group>"; };
-		63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableViewController.m; sourceTree = "<group>"; };
 		63540A9016E500D20087D24E /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleView.h; sourceTree = "<group>"; };
 		63540A9116E500D20087D24E /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleView.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
@@ -745,8 +742,6 @@
 				6378482716F37E9500DE03C2 /* AttachmentPickerController.h */,
 				6378482816F37E9500DE03C2 /* AttachmentPickerController.m */,
 				631254C716EC190E009A6584 /* Backend */,
-				63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */,
-				63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
 				6330490516FC9A020045E64E /* ContactListViewController.h */,
@@ -1094,7 +1089,6 @@
 				63AEE30B16CA6B1900522F92 /* Message.m in Sources */,
 				63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */,
 				63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */,
-				63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
 				6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */,
 				6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */,
