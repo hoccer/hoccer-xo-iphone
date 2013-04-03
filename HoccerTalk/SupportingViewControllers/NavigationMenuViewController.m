@@ -53,7 +53,7 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
-    if([self.tableView indexPathForSelectedRow] == nil) {    
+    if([self.tableView indexPathForSelectedRow] == nil) {
         NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:0];
         [self.tableView selectRowAtIndexPath:indexPath animated:YES  scrollPosition:UITableViewScrollPositionBottom];
     }
