@@ -243,6 +243,21 @@
     }];
 }
 
+
+- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
+    NSLog(@"generateToken:");
+    [_serverConnection invoke: @"generateToken" withParams: @[purpose, [NSNumber numberWithInt:seconds]] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"generateToken(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"generateToken(): failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+
 #pragma mark - Incoming RPC Calls
 
 - (void) incomingDelivery: (NSArray*) params {

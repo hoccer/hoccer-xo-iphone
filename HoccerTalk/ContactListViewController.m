@@ -15,17 +15,22 @@
 #import "ChatViewController.h"
 #import "MFSideMenu.h"
 #import "iOSVersionChecks.h"
+#import "HoccerTalkBackend.h"
 
 @interface ContactListViewController ()
 @property (nonatomic, retain) NSFetchedResultsController *searchFetchedResultsController;
 @end
 
+static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 7; // one week
+
 @implementation ContactListViewController
 
 @synthesize fetchedResultsController = _fetchedResultsController;
+@synthesize chatBackend = _chatBackend;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     self.searchBar.backgroundImage = [[UIImage imageNamed: @"searchbar_bg"]  resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
     UIImage *searchFieldImage = [[UIImage imageNamed:@"searchbar_input-text"]
                                  resizableImageWithCapInsets:UIEdgeInsetsMake(14, 14, 15, 14)];
@@ -37,6 +42,8 @@
     }
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
+
+    self.tableView.contentOffset = CGPointMake(0, 44);
 }
 
 - (void)didReceiveMemoryWarning
@@ -287,6 +294,63 @@
     cell.avatar.image = contact.avatarImage;
     BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
     [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];
+}
+
+#pragma mark - Invitations
+
+- (IBAction) invitePressed:(id)sender {
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
+                                                        delegate: self
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
+                                          destructiveButtonTitle: nil
+                                               otherButtonTitles: NSLocalizedString(@"SMS", @"Invite Actionsheet Button Title"),
+                                                                  NSLocalizedString(@"Mail",@"Invite Actionsheet Button Title"),
+                                                                  nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    [sheet showInView: self.view];
+
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"bonked button %d", buttonIndex);
+    NSString * urlString = nil;
+    switch (buttonIndex) {
+        case 0:
+            break;
+        case 1:
+        {
+            NSString * subject = NSLocalizedString(@"invitation_mail_subject", @"Mail Invitation Subject");
+            NSString * body = NSLocalizedString(@"invitation_mail_body", @"Mail Invitation Body");
+            urlString = [NSString stringWithFormat: @"mailto:?body=%@&subject=%@", body, subject];
+            break;
+        }
+        case 2:
+            return ;// cancled
+        default:
+            NSLog(@"Unhandled button index %d", buttonIndex);
+            break;
+    }
+    NSLog(@"URL string: %@", urlString);
+
+    [self inviteWithURL: urlString];
+}
+
+- (void) inviteWithURL: (NSString*) urlString {
+    [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
+        if (token == nil) {
+            return;
+        }
+        NSString * url = [[NSString stringWithFormat: urlString, token] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        NSLog(@"URL: %@", urlString);
+        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: url]];
+    }];
+}
+
+- (HoccerTalkBackend*) chatBackend {
+    if (_chatBackend == nil) {
+        _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
+    }
+    return _chatBackend;
 }
 
 @end
