@@ -43,3 +43,8 @@
 /* Actionsheet Button Title */
 "View Attachment" = "View Attachment";
 
+/* Push Notifictaion: One New Message */
+"apn_one_new_message" = "You have a new message!";
+
+/* Push Notifictaion: New Messages */
+"apn_new_messages" = "You have %@ new messages!";

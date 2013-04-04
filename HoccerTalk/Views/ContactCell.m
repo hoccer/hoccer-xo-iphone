@@ -29,11 +29,17 @@ static const CGFloat kMessageCountBackgroundPadding = 8.0;
 - (void) awakeFromNib {
     [super awakeFromNib];
     _messageCountBackground = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"bg_message-count-grey" withLeftCapWidth: 10 topCapHeight: 10]];
-    CGRect frame = _messageCount.frame;
-    frame.size.height = _messageCountBackground.image.size.height;
-    _messageCountBackground.frame = frame;
     [self addSubview: _messageCountBackground];
     [self sendSubviewToBack: _messageCountBackground];
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    CGRect frame = _messageCount.frame;
+    frame.size.height = _messageCountBackground.image.size.height;
+    frame.origin.x -= kMessageCountBackgroundPadding;
+    frame.size.width += 2 * kMessageCountBackgroundPadding;
+    _messageCountBackground.frame = frame;
 }
 
 - (void) setMessageCount: (NSInteger) count isUnread: (BOOL) unreadFlag {
