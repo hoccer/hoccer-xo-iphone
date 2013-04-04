@@ -9,6 +9,7 @@
         <attribute name="localURL" attributeType="String" syncable="YES"/>
         <attribute name="mediaType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mimeType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ownedURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="message" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="attachment" inverseEntity="Message" syncable="YES"/>
     </entity>
     <entity name="Contact" representedClassName="Contact">
@@ -34,10 +35,6 @@
         <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="deliveries" inverseEntity="Message" syncable="YES"/>
         <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
     </entity>
-    <entity name="ImageAttachment" representedClassName="ImageAttachment" parentEntity="Attachment" syncable="YES">
-        <attribute name="height" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="width" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-    </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="body" attributeType="String" syncable="YES"/>
         <attribute name="isOutgoing" attributeType="Boolean" syncable="YES"/>
@@ -54,10 +51,9 @@
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
     <elements>
-        <element name="Attachment" positionX="79" positionY="-54" width="128" height="180"/>
+        <element name="Attachment" positionX="79" positionY="-54" width="128" height="195"/>
         <element name="Contact" positionX="727" positionY="-113" width="128" height="194"/>
         <element name="Delivery" positionX="520" positionY="81" width="128" height="90"/>
-        <element name="ImageAttachment" positionX="81" positionY="-219" width="128" height="75"/>
         <element name="Message" positionX="333" positionY="-144" width="128" height="195"/>
     </elements>
 </model>

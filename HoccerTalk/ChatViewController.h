@@ -37,5 +37,8 @@
 - (void) scrollToBottom: (BOOL) animated;
 - (IBAction)sendPressed:(id)sender;
 - (IBAction) addAttachmentPressed:(id)sender;
+- (void) decorateAttachmentButton:(UIImage *) theImage;
+- (void) trashCurrentAttachment;
+
 
 @end

@@ -9,6 +9,7 @@
 #import "Attachment.h"
 #import "Message.h"
 #import <Foundation/NSURL.h>
+#import <MediaPlayer/MPMoviePlayerController.h>
 
 @implementation Attachment
 
@@ -24,16 +25,15 @@
 @dynamic message;
 @synthesize image;
 
-- (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage anOtherURL:(NSString *)theOtherURL {
-    self.mediaType = @"image";
-    self.mimeType = @"image/jpeg";
+
+- (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     NSURL * url = [NSURL URLWithString: theURL];
     if ([url.scheme isEqualToString: @"file"]) {
         self.localURL = theURL;
     } else if ([url.scheme isEqualToString: @"assets-library"]) {
         self.assetURL = theURL;
     } else {
-        NSLog(@"unhandled URL scheme %@", url.scheme);        
+        NSLog(@"unhandled URL scheme %@", url.scheme);
     }
     if (theOtherURL != nil) {
         NSURL* anOtherUrl = [NSURL URLWithString: theOtherURL];
@@ -45,6 +45,14 @@
             NSLog(@"unhandled URL otherURL scheme %@", anOtherUrl.scheme);
         }
     }
+}
+
+- (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage {
+    self.mediaType = @"image";
+    self.mimeType = @"image/jpeg";
+    
+    [self useURLs: theURL anOtherURL:nil];
+    
     if (theImage != nil) {
         self.image = theImage;
         self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
@@ -60,6 +68,18 @@
     }
 }
 
+- (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
+    self.mediaType = @"video";
+    self.mimeType = @"video/mpeg";
+    
+    [self useURLs: theURL anOtherURL: theOtherURL];
+    
+    MPMoviePlayerController * movie = [[MPMoviePlayerController alloc]
+                                      initWithContentURL:[NSURL URLWithString:theURL]];
+    self.image = [movie thumbnailImageAtTime:0.0 timeOption:MPMovieTimeOptionExact];
+    self.aspectRatio = (double)(self.image.size.width) / self.image.size.height;
+}
+                 
 
 - (UIImage *) symbolImage {
     return nil;

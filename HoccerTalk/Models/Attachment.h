@@ -33,6 +33,11 @@ typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
 @property (nonatomic, readonly) UIImage *symbolImage;
 
 - (void) loadImage: (ImageLoaderBlock) block;
-- (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage anOtherURL:(NSString *)theOtherURL;
 
+- (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage;
+- (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
+
+- (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
+
+                 
 @end
