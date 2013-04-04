@@ -11,7 +11,6 @@
 		501F1B34170C676E00F559F0 /* contact_cell_bg_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 501F1B32170C676E00F559F0 /* contact_cell_bg_selected@2x.png */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
-		631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457AF16EF975B00AA8EB9 /* ImageAttachment.m */; };
 		631457CA16F0E76D00AA8EB9 /* HoccerTalkBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */; };
 		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
 		631F6CE9170AF67300FB28D5 /* CustomNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */; };
@@ -160,6 +159,7 @@
 		63C413C716EA397F004E1F6D /* AssetStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C413C616EA397E004E1F6D /* AssetStore.m */; };
 		63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
+		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -207,8 +207,6 @@
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
 		631457A816EF96B400AA8EB9 /* Attachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Attachment.h; sourceTree = "<group>"; };
 		631457A916EF96B500AA8EB9 /* Attachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Attachment.m; sourceTree = "<group>"; };
-		631457AE16EF975B00AA8EB9 /* ImageAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachment.h; sourceTree = "<group>"; };
-		631457AF16EF975B00AA8EB9 /* ImageAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachment.m; sourceTree = "<group>"; };
 		631457C816F0E76D00AA8EB9 /* HoccerTalkBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoccerTalkBackend.h; sourceTree = "<group>"; };
 		631457C916F0E76D00AA8EB9 /* HoccerTalkBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoccerTalkBackend.m; sourceTree = "<group>"; };
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -399,6 +397,7 @@
 		63D4916816CAA1BC00FD395F /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
 		63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -406,6 +405,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */,
 				6378482B16F3AE9100DE03C2 /* AssetsLibrary.framework in Frameworks */,
 				63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */,
 				63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */,
@@ -699,6 +699,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				E9949464170DB39700F67B07 /* MobileCoreServices.framework */,
 				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
 				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
@@ -782,8 +783,6 @@
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				6378484416F4000500DE03C2 /* Delivery.h */,
 				6378484516F4000500DE03C2 /* Delivery.m */,
-				631457AE16EF975B00AA8EB9 /* ImageAttachment.h */,
-				631457AF16EF975B00AA8EB9 /* ImageAttachment.m */,
 				63AEE30916CA6B1900522F92 /* Message.h */,
 				63AEE30A16CA6B1900522F92 /* Message.m */,
 				6378484816F4040C00DE03C2 /* NSManagedObject+RPCDictionary.h */,
@@ -1100,7 +1099,6 @@
 				63C413C716EA397F004E1F6D /* AssetStore.m in Sources */,
 				631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */,
 				631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */,
-				631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */,
 				631457CA16F0E76D00AA8EB9 /* HoccerTalkBackend.m in Sources */,
 				637847AA16F2864E00DE03C2 /* AttachmentViewFactory.m in Sources */,
 				6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */,

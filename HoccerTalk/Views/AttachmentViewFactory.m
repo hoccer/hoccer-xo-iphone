@@ -11,23 +11,16 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Attachment.h"
-#import "ImageAttachment.h"
 
 @implementation AttachmentViewFactory
 
 + (UIView*) viewForAttachment: (Attachment*) attachment {
     if (attachment == nil) {
         return nil;
-    } else if ([attachment isKindOfClass: [ImageAttachment class]]) {
+    } else if ([attachment.mediaType isEqualToString:@"image"]) {
         UIImageView * imageView = [[UIImageView alloc] init];
-        ImageAttachment * imageAttachment = (ImageAttachment*)attachment;
-        [imageAttachment loadImage:^(UIImage* image, NSError* error) {
-            if (image) {
-                imageView.image = image;
-            } else {
-                NSLog(@"Failed to get image: %@", error);
-            }
-        }];
+        imageView.image = attachment.image;
+
         /*
         imageView.layer.shadowColor = [UIColor blackColor].CGColor;
         imageView.layer.shadowOffset = CGSizeMake(0, 2);
@@ -45,9 +38,8 @@
 + (CGFloat) heightOfAttachmentView: (Attachment*) attachment withViewOfWidth: (CGFloat) width {
     if (attachment == nil) {
         return 0;
-    } else if ([attachment isKindOfClass: [ImageAttachment class]]) {
-        ImageAttachment * imageAttachment = (ImageAttachment*)attachment;
-        return width * imageAttachment.aspectRatio;
+    } else if ([attachment.mediaType isEqualToString:@"image"]) {
+        return width / attachment.aspectRatio;
     } else {
         NSLog(@"Unhandled attachment type");
     }

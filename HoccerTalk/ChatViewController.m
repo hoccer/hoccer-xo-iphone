@@ -9,6 +9,8 @@
 #import "ChatViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
+#import <MobileCoreServices/UTType.h>
+#import <MobileCoreServices/UTCoreTypes.h>
 
 #import "Message.h"
 #import "AppDelegate.h"
@@ -21,7 +23,7 @@
 #import "SectionHeaderCell.h"
 #import "iOSVersionChecks.h"
 #import "AutoheightLabel.h"
-#import "ImageAttachment.h"
+#import "Attachment.h"
 #import "AttachmentViewFactory.h"
 #import "BubbleView.h"
 
@@ -241,9 +243,21 @@
         return;
     }
     NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
-    
+
     NSString * mediaType = attachmentInfo[@"UIImagePickerControllerMediaType"];
-//    if ([mediaType isEqualToString: kUTTypeImage])
+
+    self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName:@"Attachment"
+                                                                    inManagedObjectContext: self.managedObjectContext];
+    
+    if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeImage)) {
+        NSURL * myURL = attachmentInfo[@"UIImagePickerControllerReferenceURL"];
+        [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                              image: attachmentInfo[@"UIImagePickerControllerOriginalImage"]
+                                              anOtherURL: nil];
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo)) {
+
+        
+    }
     
     if (attachmentInfo[@"UIImagePickerControllerOriginalImage"]) {
         InsetImageView* preview = [[InsetImageView alloc] init];
@@ -295,6 +309,11 @@
         self.attachmentPreview = nil;
         self.attachmentButton.hidden = NO;
     }
+    if (self.currentAttachment != nil) {
+        // delete current attachment
+        [self.managedObjectContext deleteObject: self.currentAttachment];
+        self.currentAttachment = nil;
+    }
 }
 
 #pragma mark - Growing Text View Delegate
@@ -335,19 +354,6 @@
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     return image;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #pragma mark - Table view data source
@@ -581,7 +587,7 @@
     cell.message.text = message.body;
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : message.contact.avatarImage;
 
-    if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
+    if (message.attachment && [message.attachment.mediaType isEqualToString:@"image"]) {
         UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
         cell.bubble.attachmentView = attachmentView;
     } else {

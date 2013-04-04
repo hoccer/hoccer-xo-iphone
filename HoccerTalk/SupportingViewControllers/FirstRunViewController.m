@@ -12,7 +12,7 @@
 #import "Contact.h"
 #import "Message.h"
 #import "NSString+UUID.h"
-#import "ImageAttachment.h"
+#import "Attachment.h"
 #import "AppDelegate.h"
 
 @implementation FirstRunViewController
@@ -209,13 +209,14 @@
 
 }
 
-- (void) attachAttachment: (Message*) message moc: (NSManagedObjectContext*) moc{
-    ImageAttachment * attachment =  (ImageAttachment*)[NSEntityDescription insertNewObjectForEntityForName:@"ImageAttachment" inManagedObjectContext: moc];
+- (void) attachAttachment: (Message*) message moc: (NSManagedObjectContext*) moc {
+
     NSString * path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"angry_wet_coala.jpg"];
-    attachment.localURL = [[NSURL fileURLWithPath: path] absoluteString];
     UIImage * image = [UIImage imageNamed: @"angry_wet_coala.jpg"];
-    attachment.width = [NSNumber numberWithFloat: image.size.width];
-    attachment.height = [NSNumber numberWithFloat: image.size.height];
+
+    Attachment * attachment =  (Attachment*)[NSEntityDescription insertNewObjectForEntityForName:@"Attachment" inManagedObjectContext: moc];
+    [attachment makeImageAttachment:[[NSURL fileURLWithPath: path] absoluteString] image: image anOtherURL: nil];
+        
     message.attachment = attachment;
 }
 

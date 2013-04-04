@@ -8,13 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+
 
 @class Message;
+
+typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
 
 @interface Attachment : NSManagedObject
 
 @property (nonatomic, strong) NSString * assetURL; // a url that typically starts with "assets-library://"
 @property (nonatomic)         int64_t    contentSize; // file size in bytes
+@property (nonatomic)         double     aspectRatio; // ratio image width/height
 @property (nonatomic, strong) NSString * humanReadableFileName; // an optional human readable filename with any path component, mostly used for audio files
 @property (nonatomic, strong) NSString * localURL; // a file url
 @property (nonatomic, strong) NSString * ownedURL; // a file url to a file that is owned this attachment and will be removed when the Attachment is removed
@@ -23,6 +28,11 @@
 
 @property (nonatomic, strong) Message *message;
 
+@property (nonatomic, strong) UIImage *image;
+
 @property (nonatomic, readonly) UIImage *symbolImage;
+
+- (void) loadImage: (ImageLoaderBlock) block;
+- (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage anOtherURL:(NSString *)theOtherURL;
 
 @end
