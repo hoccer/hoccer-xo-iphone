@@ -10,15 +10,15 @@
 
 @class Attachment;
 
-@protocol AttachmentPcikerControllerDelegate
+@protocol AttachmentPickerControllerDelegate
 - (void) didPickAttachment: (id) attachmentInfo;
 @end
 
 @interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
-@property (nonatomic, weak) id<AttachmentPcikerControllerDelegate> delegate;
+@property (nonatomic, weak) id<AttachmentPickerControllerDelegate> delegate;
 
-- (id) initWithViewController: (UIViewController*) viewController delegate: (id<AttachmentPcikerControllerDelegate>) delegate;
+- (id) initWithViewController: (UIViewController*) viewController delegate: (id<AttachmentPickerControllerDelegate>) delegate;
 - (void) showInView: (UIView*) view;
 
 @end

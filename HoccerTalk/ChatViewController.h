@@ -13,10 +13,12 @@
 
 @class HoccerTalkBackend;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPcikerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate>
+
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate>
 {
     NSMutableDictionary        *resultsControllers;
 }
+
 
 @property (strong, nonatomic) Contact *                      partner;
 @property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
@@ -28,6 +30,8 @@
 @property (strong, nonatomic) NSFetchedResultsController *   fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *       managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *         managedObjectModel;
+
+@property (strong, nonatomic) Attachment * currentAttachment;
 
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottom: (BOOL) animated;

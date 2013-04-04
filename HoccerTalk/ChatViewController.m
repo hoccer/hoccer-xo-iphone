@@ -235,6 +235,11 @@
     if (attachmentInfo == nil) {
         return;
     }
+    NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
+    
+    NSString * mediaType = attachmentInfo[@"UIImagePickerControllerMediaType"];
+//    if ([mediaType isEqualToString: kUTTypeImage])
+    
     if (attachmentInfo[@"UIImagePickerControllerOriginalImage"]) {
         InsetImageView* preview = [[InsetImageView alloc] init];
         self.attachmentPreview = preview;
@@ -246,6 +251,8 @@
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.chatbar addSubview: preview];
         _attachmentButton.hidden = YES;
+    } else {
+        NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
     }
 }
 

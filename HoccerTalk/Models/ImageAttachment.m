@@ -55,4 +55,9 @@
         block(nil, nil);
     }
 }
+
+- (UIImage *) symbolImage {
+    return nil;
+}
+
 @end

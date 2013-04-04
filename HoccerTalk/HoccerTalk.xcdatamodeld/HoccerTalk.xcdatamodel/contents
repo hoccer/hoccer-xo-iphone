@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
+        <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contentSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="humanReadableFileName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localURL" attributeType="String" syncable="YES"/>
+        <attribute name="mediaType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mimeType" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="message" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="attachment" inverseEntity="Message" syncable="YES"/>
     </entity>
     <entity name="Contact" representedClassName="Contact">
@@ -47,7 +52,7 @@
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
     <elements>
-        <element name="Attachment" positionX="79" positionY="-54" width="128" height="75"/>
+        <element name="Attachment" positionX="79" positionY="-54" width="128" height="150"/>
         <element name="Contact" positionX="727" positionY="-113" width="128" height="194"/>
         <element name="Delivery" positionX="520" positionY="81" width="128" height="90"/>
         <element name="ImageAttachment" positionX="81" positionY="-219" width="128" height="75"/>
