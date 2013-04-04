@@ -407,7 +407,6 @@
                                             <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <state key="selected" image="chatbar_btn_add-content_selected.png"/>
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -555,7 +554,6 @@
     </scenes>
     <resources>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
-        <image name="chatbar_btn_add-content_selected.png" width="16" height="16"/>
     </resources>
     <classes>
         <class className="AboutViewController" superclassName="UIViewController">
@@ -574,6 +572,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addAttachmentPressed:"/>
+                <relationship kind="action" name="attachmentPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
