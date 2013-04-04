@@ -19,8 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    identities = @[@"Azrael", @"Schlumpfine", @"Daddy S", @"Mr. Mister"];
-    avatars = @[ @"azrael", @"schlumpf_schlumpfine", @"schlumpf_papa" ];
+    identities = @[@"Azrael", @"Schlumpfine", @"Daddy S", @"Gargamel", @"Mr. Mister", ];
+    avatars = @[ @"azrael", @"schlumpf_schlumpfine", @"schlumpf_papa", @"gargamel"];
 
     identityPicker = [self pickerInputViewForTextField: identityTextField];
 
@@ -29,6 +29,10 @@
 
 
     messageCounts = [[NSMutableArray alloc] init];
+    [messageCounts addObject: [@1 stringValue]];
+    [messageCounts addObject: [@5 stringValue]];
+    [messageCounts addObject: [@10 stringValue]];
+    [messageCounts addObject: [@50 stringValue]];
     [messageCounts addObject: [@100 stringValue]];
     for (int i = 500; i <= 10000; i += 500) {
         [messageCounts addObject: [[NSNumber numberWithInt: i] stringValue]];
@@ -142,6 +146,13 @@
                                  , @"Ja, Papa Schlumpf..."
                                  , @"Sei Sonnatg bitte pünktlich. Wir essen zeitig."
                                  , @"Ja, Papa Schlumpf..."
+                                 ]
+                            , @[ @"Ich HASSE Schlümpfe"
+                                 , @"Aha."
+                                 , @"Ich HASSE sie."
+                                 , @"Ja, schon verstanden."
+                                 , @"Ich HASSE sie!"
+                                 , @"Iss ja gut jetzt."
                                  ]
                             , @[ @"Hallo?"
                                  , @"Ja... ?"

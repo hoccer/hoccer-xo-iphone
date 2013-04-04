@@ -31,8 +31,8 @@
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
-@property (strong) MessageCell* messageCell;
-@property (strong) UITableViewCell* headerCell;
+@property (nonatomic, readonly) MessageCell* messageCell;
+@property (nonatomic, readonly) SectionHeaderCell* headerCell;
 @property (strong) UIImage* avatarImage;
 
 - (void)configureCell:(UITableViewCell *)cell forMessage:(Message *) message;
@@ -44,8 +44,8 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize chatBackend = _chatBackend;
 @synthesize attachmentPicker = _attachmentPicker;
-
-#pragma mark - Managing the detail item
+@synthesize messageCell = _messageCell;
+@synthesize headerCell = _headerCell;
 
 - (void)viewDidLoad
 {
@@ -53,17 +53,25 @@
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
 
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 
+    [self.view bringSubviewToFront: _chatbar];
+
     UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg_noise"]];
     _chatbar.backgroundColor = barBackground;
-    UIImageView * backgroundGradient = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"chatbar_bg_gradient"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 0, 0, 0) resizingMode: UIImageResizingModeStretch]];
+
+    UIImage * backgroundGradientImage = [UIImage imageNamed: @"chatbar_bg_gradient"];
+    if ([backgroundGradientImage respondsToSelector: @selector(resizableImageWithCapInsets:resizingMode:)]) {
+        backgroundGradientImage = [backgroundGradientImage resizableImageWithCapInsets:UIEdgeInsetsMake(2, 0, 0, 0) resizingMode: UIImageResizingModeStretch];
+    } else {
+        backgroundGradientImage = [backgroundGradientImage stretchableImageWithLeftCapWidth:0 topCapHeight:12];
+    }
+    UIImageView * backgroundGradient = [[UIImageView alloc] initWithImage: backgroundGradientImage];
+
     backgroundGradient.frame = _chatbar.bounds;
     [_chatbar addSubview: backgroundGradient];
     backgroundGradient.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-
 
     _textField.delegate = self;
     _textField.backgroundColor = [UIColor clearColor];
@@ -108,9 +116,6 @@
     [_chatbar sendSubviewToBack: backgroundGradient];
 
     self.view.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
-
-    self.messageCell = [self.tableView dequeueReusableCellWithIdentifier: [LeftMessageCell reuseIdentifier]];
-    self.headerCell  = [self.tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
 
     [self configureView];
 }
@@ -326,6 +331,21 @@
     return image;
 }
 
+- (MessageCell*) messageCell {
+    if (_messageCell == nil) {
+        _messageCell = [self.tableView dequeueReusableCellWithIdentifier: [LeftMessageCell reuseIdentifier]];
+    }
+    return _messageCell;
+}
+
+
+- (SectionHeaderCell*) headerCell {
+    if (_headerCell == nil) {
+        _headerCell = [self.tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
+    }
+    return _headerCell;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -477,8 +497,7 @@
     [self configureView];
 }
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView beginUpdates];
 }
 
