@@ -64,6 +64,7 @@
                                               leftSideMenuController:navigationMenuViewController
                                              rightSideMenuController:contactListViewController];
     navigationController.sideMenu.menuWidth = 256;
+    navigationController.sideMenu.shadowOpacity = 1.0;
     navigationController.sideMenu.menuStateEventBlock = ^(MFSideMenuStateEvent event) {
         switch (event) {
             case MFSideMenuStateEventMenuWillOpen:

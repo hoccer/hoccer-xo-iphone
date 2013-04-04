@@ -10,20 +10,32 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "UIButton+GlossyRounded.h"
 #import "Message.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
 #import "InsetImageView.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "LeftMessageCell.h"
+#import "RightMessageCell.h"
+#import "SectionHeaderCell.h"
+#import "iOSVersionChecks.h"
+#import "AutoheightLabel.h"
+#import "ImageAttachment.h"
+#import "AttachmentViewFactory.h"
+#import "BubbleView.h"
 
 @interface ChatViewController ()
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, nonatomic) UIView* attachmentPreview;
+@property (nonatomic,strong) NSIndexPath * firstNewMessage;
+@property (strong) MessageCell* messageCell;
+@property (strong) UITableViewCell* headerCell;
+@property (strong) UIImage* avatarImage;
 
+- (void)configureCell:(UITableViewCell *)cell forMessage:(Message *) message;
 - (void)configureView;
 @end
 
@@ -45,7 +57,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 
-    chatTableController = (ChatTableViewController*)self.childViewControllers[0];
+//    chatTableController = (ChatTableViewController*)self.childViewControllers[0];
 
     UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg_noise"]];
     _chatbar.backgroundColor = barBackground;
@@ -55,7 +67,7 @@
     backgroundGradient.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 
 
-    [chatTableController setPartner: _partner];
+//    [chatTableController setPartner: _partner];
 
     _textField.delegate = self;
     _textField.backgroundColor = [UIColor clearColor];
@@ -65,11 +77,11 @@
     frame.origin.x += 3;
     _textField.frame = frame;
 
-    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:14 topCapHeight:14];
     UIImageView * textViewBackgroundView = [[UIImageView alloc] initWithImage: textfieldBackground];
     [_chatbar addSubview: textViewBackgroundView];
-    bgframe.origin.y -= 1;
-    bgframe.size.height = 27;
+    bgframe.origin.y -= 3;
+    bgframe.size.height = 30;
     textViewBackgroundView.frame = bgframe;
     textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
@@ -99,7 +111,11 @@
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     [_chatbar sendSubviewToBack: backgroundGradient];
 
-    self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
+    // TODO: set table background...
+    //self.chatTableContainer.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
+
+    self.messageCell = [self.tableView dequeueReusableCellWithIdentifier: [LeftMessageCell reuseIdentifier]];
+    self.headerCell  = [self.tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
 
     [self configureView];
 }
@@ -115,20 +131,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setPartner:(Contact*) newPartner {
-    if (_partner != newPartner) {
-        _partner = newPartner;
-
-        [chatTableController setPartner: newPartner];
-        // Update the view.
-        [self configureView];
-    }
-
-    if (self.masterPopoverController != nil) {
-        [self.masterPopoverController dismissPopoverAnimated:YES];
-    }
-}
-
 - (void)configureView
 {
     // Update the user interface for the detail item.
@@ -136,16 +138,6 @@
     if (self.partner) {
         self.title = self.partner.nickName;
     }
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
-    }
-
-    _managedObjectContext = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).managedObjectContext;
-    return _managedObjectContext;
 }
 
 - (HoccerTalkBackend*) chatBackend {
@@ -185,15 +177,14 @@
     double duration = [info[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
 
-    UIScrollView * scrollView = (UIScrollView*)self.chatTableContainer.subviews[0];
-    CGPoint contentOffset = scrollView.contentOffset;
+    CGPoint contentOffset = self.tableView.contentOffset;
     contentOffset.y += keyboardHeight;
 
     [UIView animateWithDuration: duration animations:^{
         CGRect frame = self.view.frame;
         frame.size.height -= keyboardHeight;
         self.view.frame = frame;
-        scrollView.contentOffset = contentOffset;
+        self.tableView.contentOffset = contentOffset;
     }];
 
 
@@ -320,8 +311,7 @@
 #pragma mark - Graphics Utilities
 
 - (UIImage *)radialGradient {
-    CGSize size = self.chatTableContainer.frame.size
-    ;
+    CGSize size = self.tableView.frame.size;
     CGPoint center = CGPointMake(0.5 * size.width, 0.5 * size.height) ;
 
     UIGraphicsBeginImageContextWithOptions(size, YES, 1);
@@ -344,6 +334,267 @@
 
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     return image;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return [[self.fetchedResultsController sections] count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Message * message = (Message*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+
+    NSString * identifier = [message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier];
+    MessageCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
+    [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath:indexPath] :
+    [tableView dequeueReusableCellWithIdentifier: identifier];
+
+
+    // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
+    // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/
+    // ... for now just use the private API
+    // cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
+
+    [self configureCell: cell forMessage: message];
+
+    return cell;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
+    cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    cell.label.text = sectionInfo.name;
+    cell.label.shadowColor  = [UIColor whiteColor];
+    cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
+    return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo name];
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
+    //     because the table view assuemes there is a 1px separator. However, sometimes the
+    //     grey line still appears ...
+    return self.headerCell.frame.size.height - 1;
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Navigation logic may go here. Create and push another view controller.
+    /*
+     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+     // ...
+     // Pass the selected object to the new view controller.
+     [self.navigationController pushViewController:detailViewController animated:YES];
+     */
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    double width = self.tableView.frame.size.width;
+
+    Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
+    CGRect frame = self.messageCell.frame;
+    self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
+
+    return [self.messageCell heightForMessage: message];
+}
+
+#pragma mark - Fetched results controller
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    if (_managedObjectContext != nil) {
+        return _managedObjectContext;
+    }
+
+    _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
+    return _managedObjectContext;
+}
+
+- (NSManagedObjectModel *)managedObjectModel
+{
+    if (_managedObjectContext != nil) {
+        return _managedObjectModel;
+    }
+
+    _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
+    return _managedObjectModel;
+}
+
+
+- (void) setPartner: (Contact*) partner {
+    if (partner == nil) {
+        return;
+    }
+    if (_partner == partner) {
+        return;
+    }
+    _partner = partner;
+
+    if (resultsControllers == nil) {
+        resultsControllers = [[NSMutableDictionary alloc] init];
+    }
+    if (_fetchedResultsController != nil) {
+        _fetchedResultsController.delegate = nil;
+    }
+    _fetchedResultsController = [resultsControllers objectForKey: partner.objectID];
+    if (_fetchedResultsController == nil) {
+        NSDictionary * vars = @{ @"contact" : partner };
+        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByContact" substitutionVariables: vars];
+
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending: YES];
+        NSArray *sortDescriptors = @[sortDescriptor];
+
+        [fetchRequest setSortDescriptors:sortDescriptors];
+
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
+        _fetchedResultsController.delegate = self;
+
+        resultsControllers[partner.objectID] = _fetchedResultsController;
+
+        NSError *error = nil;
+        if (![_fetchedResultsController performFetch:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    } else {
+        _fetchedResultsController.delegate = self;
+    }
+
+
+
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+
+    self.firstNewMessage = nil;
+    [self.tableView reloadData];
+    [self scrollToBottom: NO];
+    [self configureView];
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+{
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    UITableView *tableView = self.tableView;
+
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            if (self.firstNewMessage == nil) {
+                self.firstNewMessage = newIndexPath;
+            }
+            break;
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+
+        case NSFetchedResultsChangeUpdate:
+        {
+            Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+            break;
+        }
+
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+    if (self.firstNewMessage != nil) {
+        [self.tableView scrollToRowAtIndexPath: self.firstNewMessage atScrollPosition: UITableViewScrollPositionBottom animated: YES];
+        self.firstNewMessage = nil;
+    }
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    [self scrollToBottom: NO];
+}
+
+- (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
+
+    if (self.avatarImage == nil) {
+        self.avatarImage = [UIImage imageWithData: [[NSUserDefaults standardUserDefaults] objectForKey: @"avatarImage"]];
+    }
+
+    if ([message.isRead isEqualToNumber: @NO]) {
+        message.isRead = @YES;
+        [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
+    }
+
+    cell.message.text = message.body;
+    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : message.contact.avatarImage;
+
+    if (message.attachment && [message.attachment isKindOfClass: [ImageAttachment class]]) {
+        UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
+        cell.bubble.attachmentView = attachmentView;
+    } else {
+        cell.bubble.attachmentView = nil;
+    }
+}
+
+- (void) scrollToBottom: (BOOL) animated {
+    if ([self.fetchedResultsController.fetchedObjects count]) {
+        NSInteger lastSection = [self numberOfSectionsInTableView: self.tableView] - 1;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  [self tableView: self.tableView numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
+        [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionBottom animated: animated];
+    }
 }
 
 @end

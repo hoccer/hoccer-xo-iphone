@@ -51,6 +51,14 @@
                    ];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    if([self.tableView indexPathForSelectedRow] == nil) {
+        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:0];
+        [self.tableView selectRowAtIndexPath:indexPath animated:YES  scrollPosition:UITableViewScrollPositionBottom];
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_menuItems count];
 }
@@ -62,6 +70,8 @@
     if (cell.backgroundView == nil) {
         cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
         cell.backgroundView.frame = cell.frame;
+        cell.selectedBackgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg_selected"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
+        cell.selectedBackgroundView.frame = cell.frame;
     }
     cell.textLabel.text = _menuItems[indexPath.row][@"title"];
     cell.imageView.image = [UIImage imageNamed: _menuItems[indexPath.row][@"icon"]];

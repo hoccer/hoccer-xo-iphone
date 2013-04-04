@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		501F1B33170C676E00F559F0 /* contact_cell_bg_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 501F1B31170C676E00F559F0 /* contact_cell_bg_selected.png */; };
+		501F1B34170C676E00F559F0 /* contact_cell_bg_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 501F1B32170C676E00F559F0 /* contact_cell_bg_selected@2x.png */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
 		631457B016EF975B00AA8EB9 /* ImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457AF16EF975B00AA8EB9 /* ImageAttachment.m */; };
@@ -41,7 +43,6 @@
 		633129E216F96872008F5B04 /* chatbar_bg_gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129E116F96872008F5B04 /* chatbar_bg_gradient@2x.png */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
-		63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		637847A516F24E5700DE03C2 /* conversation_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */; };
@@ -74,8 +75,6 @@
 		6378480616F348E400DE03C2 /* chatbar_btn-send@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847D716F348E300DE03C2 /* chatbar_btn-send@2x.png */; };
 		6378480716F348E400DE03C2 /* chatbar_btn_add-content.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847D816F348E300DE03C2 /* chatbar_btn_add-content.png */; };
 		6378480816F348E400DE03C2 /* chatbar_btn_add-content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847D916F348E300DE03C2 /* chatbar_btn_add-content@2x.png */; };
-		6378480916F348E400DE03C2 /* chatbar_btn_add-content_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847DA16F348E300DE03C2 /* chatbar_btn_add-content_selected.png */; };
-		6378480A16F348E400DE03C2 /* chatbar_btn_add-content_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847DB16F348E300DE03C2 /* chatbar_btn_add-content_selected@2x.png */; };
 		6378480B16F348E400DE03C2 /* chatbar_input-text.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847DC16F348E300DE03C2 /* chatbar_input-text.png */; };
 		6378480C16F348E400DE03C2 /* chatbar_input-text@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847DD16F348E300DE03C2 /* chatbar_input-text@2x.png */; };
 		6378480D16F348E400DE03C2 /* angry_wet_coala.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 637847DF16F348E400DE03C2 /* angry_wet_coala.jpg */; };
@@ -202,6 +201,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		501F1B31170C676E00F559F0 /* contact_cell_bg_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact_cell_bg_selected.png; sourceTree = "<group>"; };
+		501F1B32170C676E00F559F0 /* contact_cell_bg_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_cell_bg_selected@2x.png"; sourceTree = "<group>"; };
 		631254C816EC198E009A6584 /* JsonRpcWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonRpcWebSocket.h; sourceTree = "<group>"; };
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
 		631457A816EF96B400AA8EB9 /* Attachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Attachment.h; sourceTree = "<group>"; };
@@ -258,8 +259,6 @@
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
 		63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoheightLabel.m; sourceTree = "<group>"; };
-		63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableViewController.h; sourceTree = "<group>"; };
-		63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableViewController.m; sourceTree = "<group>"; };
 		63540A9016E500D20087D24E /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleView.h; sourceTree = "<group>"; };
 		63540A9116E500D20087D24E /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleView.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
@@ -295,8 +294,6 @@
 		637847D716F348E300DE03C2 /* chatbar_btn-send@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn-send@2x.png"; sourceTree = "<group>"; };
 		637847D816F348E300DE03C2 /* chatbar_btn_add-content.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content.png"; sourceTree = "<group>"; };
 		637847D916F348E300DE03C2 /* chatbar_btn_add-content@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content@2x.png"; sourceTree = "<group>"; };
-		637847DA16F348E300DE03C2 /* chatbar_btn_add-content_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content_selected.png"; sourceTree = "<group>"; };
-		637847DB16F348E300DE03C2 /* chatbar_btn_add-content_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content_selected@2x.png"; sourceTree = "<group>"; };
 		637847DC16F348E300DE03C2 /* chatbar_input-text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_input-text.png"; sourceTree = "<group>"; };
 		637847DD16F348E300DE03C2 /* chatbar_input-text@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_input-text@2x.png"; sourceTree = "<group>"; };
 		637847DF16F348E400DE03C2 /* angry_wet_coala.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = angry_wet_coala.jpg; sourceTree = "<group>"; };
@@ -464,6 +461,8 @@
 		633048FF16FC966F0045E64E /* ContactList */ = {
 			isa = PBXGroup;
 			children = (
+				501F1B31170C676E00F559F0 /* contact_cell_bg_selected.png */,
+				501F1B32170C676E00F559F0 /* contact_cell_bg_selected@2x.png */,
 				63AE453D170451860099F0CB /* MessageCountBackgrounds */,
 				63AE451C170358270099F0CB /* contact_cell_bg.png */,
 				63AE451D170358270099F0CB /* contact_cell_new_bg.png */,
@@ -546,8 +545,6 @@
 				637847D716F348E300DE03C2 /* chatbar_btn-send@2x.png */,
 				637847D816F348E300DE03C2 /* chatbar_btn_add-content.png */,
 				637847D916F348E300DE03C2 /* chatbar_btn_add-content@2x.png */,
-				637847DA16F348E300DE03C2 /* chatbar_btn_add-content_selected.png */,
-				637847DB16F348E300DE03C2 /* chatbar_btn_add-content_selected@2x.png */,
 				637847DC16F348E300DE03C2 /* chatbar_input-text.png */,
 				637847DD16F348E300DE03C2 /* chatbar_input-text@2x.png */,
 			);
@@ -745,8 +742,6 @@
 				6378482716F37E9500DE03C2 /* AttachmentPickerController.h */,
 				6378482816F37E9500DE03C2 /* AttachmentPickerController.m */,
 				631254C716EC190E009A6584 /* Backend */,
-				63477F4316CBBF4B00FBAF62 /* ChatTableViewController.h */,
-				63477F4416CBBF4B00FBAF62 /* ChatTableViewController.m */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
 				6330490516FC9A020045E64E /* ContactListViewController.h */,
@@ -976,8 +971,6 @@
 				6378480616F348E400DE03C2 /* chatbar_btn-send@2x.png in Resources */,
 				6378480716F348E400DE03C2 /* chatbar_btn_add-content.png in Resources */,
 				6378480816F348E400DE03C2 /* chatbar_btn_add-content@2x.png in Resources */,
-				6378480916F348E400DE03C2 /* chatbar_btn_add-content_selected.png in Resources */,
-				6378480A16F348E400DE03C2 /* chatbar_btn_add-content_selected@2x.png in Resources */,
 				6378480B16F348E400DE03C2 /* chatbar_input-text.png in Resources */,
 				6378480C16F348E400DE03C2 /* chatbar_input-text@2x.png in Resources */,
 				6378480D16F348E400DE03C2 /* angry_wet_coala.jpg in Resources */,
@@ -1044,6 +1037,8 @@
 				63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
+				501F1B33170C676E00F559F0 /* contact_cell_bg_selected.png in Resources */,
+				501F1B34170C676E00F559F0 /* contact_cell_bg_selected@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1094,7 +1089,6 @@
 				63AEE30B16CA6B1900522F92 /* Message.m in Sources */,
 				63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */,
 				63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */,
-				63477F4516CBBF4B00FBAF62 /* ChatTableViewController.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
 				6320D7CA16DFB9DD00E58478 /* SectionHeaderCell.m in Sources */,
 				6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */,

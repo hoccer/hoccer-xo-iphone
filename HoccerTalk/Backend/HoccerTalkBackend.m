@@ -219,6 +219,7 @@
 }
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
+    NSLog(@"deliveryConfirm: %@", delivery);
     [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
@@ -263,15 +264,17 @@
 }
 
 - (void) outgoingDelivery: (NSArray*) params {
+    /* TODO: implement outgoing delivery
     if (params.count != 1) {
-        NSLog(@"incomingDelivery requires an array of two parameters (delivery, message), but got %d parameters.", params.count);
+        NSLog(@"outgoing requires an array of two parameters (delivery, message), but got %d parameters.", params.count);
         return;
     }
     if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
         return;
     }
     NSDictionary * deliveryDict = params[0];
-    NSLog(@"================= outgoingDelivery() called - %@", deliveryDict);
+     */
+    NSLog(@"================= outgoingDelivery() called");
 }
 
 #pragma mark - JSON RPC WebSocket Delegate
