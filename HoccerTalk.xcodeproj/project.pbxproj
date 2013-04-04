@@ -162,6 +162,7 @@
 		63D4916A16CAA1BC00FD395F /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
+		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -402,6 +403,7 @@
 		63D4916916CAA1BC00FD395F /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -409,6 +411,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */,
 				E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */,
 				6378482B16F3AE9100DE03C2 /* AssetsLibrary.framework in Frameworks */,
 				63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */,
@@ -705,6 +708,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				E9BFF00D170E0143001CB203 /* MediaPlayer.framework */,
 				E9949464170DB39700F67B07 /* MobileCoreServices.framework */,
 				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
 				63C413A116E8F9E5004E1F6D /* 3rdParty */,

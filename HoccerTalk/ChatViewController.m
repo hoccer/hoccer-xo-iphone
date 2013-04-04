@@ -11,6 +11,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/UTType.h>
 #import <MobileCoreServices/UTCoreTypes.h>
+#import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 #import "Message.h"
 #import "AppDelegate.h"
@@ -239,26 +241,73 @@
     }
     NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
-    NSString * mediaType = attachmentInfo[@"UIImagePickerControllerMediaType"];
+    NSString * mediaType = attachmentInfo[UIImagePickerControllerMediaType];
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName:@"Attachment"
                                                                     inManagedObjectContext: self.managedObjectContext];
     
     if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeImage)) {
-        NSURL * myURL = attachmentInfo[@"UIImagePickerControllerReferenceURL"];
-        [self.currentAttachment makeImageAttachment: [myURL absoluteString]
-                                              image: attachmentInfo[@"UIImagePickerControllerOriginalImage"]
-                                              anOtherURL: nil];
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo)) {
-
-        
+        __block NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+        if (attachmentInfo[UIImagePickerControllerMediaMetadata] != nil) {
+            // Image was just taken and is not yet in album
+            UIImage * image = attachmentInfo[UIImagePickerControllerOriginalImage];
+            
+            // funky method using ALAssetsLibrary
+            ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
+                if (!error) {
+                    myURL = assetURL;
+                    [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                                          image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
+                    [self decorateAttachmentButton: image];
+                } else {
+                    NSLog(@"Error saving image in Library, error = %@", error);
+                    [self trashCurrentAttachment];
+                }
+            };
+            
+            if(image) {
+                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                [library writeImageToSavedPhotosAlbum:[image CGImage]
+                                          orientation:(ALAssetOrientation)[image imageOrientation]
+                                      completionBlock:completeBlock];
+            }
+        } else {
+            // image from album
+            [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                                  image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
+            [self decorateAttachmentButton: attachmentInfo[UIImagePickerControllerOriginalImage]];
+        }
+        return;
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
+        NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+        NSURL * myURL2 = attachmentInfo[UIImagePickerControllerMediaURL];
+        NSString *tempFilePath = [myURL2 path];
+        if (myURL == nil) { // video was just recorded
+            if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
+            {
+                UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, nil, nil, nil);
+                NSString * myTempURL = [myURL2 absoluteString];
+                NSLog(@"video myTempURL = %@", myTempURL);
+                self.currentAttachment.ownedURL = [myTempURL copy];
+            } else {
+                NSLog(@"didPickAttachment: failed to save video in album at path = %@",tempFilePath);
+                [self trashCurrentAttachment];
+            }
+        }
+        [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil];
+        [self decorateAttachmentButton: self.currentAttachment.image];
+        return;
     }
-    
-    if (attachmentInfo[@"UIImagePickerControllerOriginalImage"]) {
+    // Do no do anything here because some functions above will finish asynchronously
+    [self trashCurrentAttachment];
+}
+
+- (void) decorateAttachmentButton:(UIImage *) theImage {
+    if (theImage) {
         InsetImageView* preview = [[InsetImageView alloc] init];
         self.attachmentPreview = preview;
         preview.frame = _attachmentButton.frame;
-        preview.image = attachmentInfo[@"UIImagePickerControllerOriginalImage"];
+        preview.image = theImage;
         preview.borderColor = [UIColor blackColor];
         preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
         preview.autoresizingMask = _attachmentButton.autoresizingMask;
@@ -266,8 +315,15 @@
         [self.chatbar addSubview: preview];
         _attachmentButton.hidden = YES;
     } else {
-        NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
     }
+}
+
+- (void) trashCurrentAttachment {
+    if (self.currentAttachment != nil) {
+        [self.managedObjectContext deleteObject: self.currentAttachment];
+        self.currentAttachment = nil;
+    }
+   
 }
 
 - (void) showAttachmentOptions {
@@ -304,11 +360,7 @@
         self.attachmentPreview = nil;
         self.attachmentButton.hidden = NO;
     }
-    if (self.currentAttachment != nil) {
-        // delete current attachment
-        [self.managedObjectContext deleteObject: self.currentAttachment];
-        self.currentAttachment = nil;
-    }
+    [self trashCurrentAttachment];
 }
 
 #pragma mark - Growing Text View Delegate
@@ -576,6 +628,10 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self scrollToBottom: NO];
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [self trashCurrentAttachment];
 }
 
 - (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
