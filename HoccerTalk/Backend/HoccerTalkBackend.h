@@ -14,6 +14,8 @@
 @class Delivery;
 @class Message;
 
+typedef void (^InviteTokenHanlder)(NSString*);
+
 @protocol HoccerTalkDelegate <NSObject>
 
 - (NSString*) clientId;
@@ -35,6 +37,7 @@
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
 
 - (void) gotAPNSDeviceToken: (NSData*) deviceToken;
 
