@@ -13,6 +13,17 @@
 @implementation Attachment
 
 @dynamic localURL;
+@dynamic mimeType;
+@dynamic assetURL;
+@dynamic mediaType;
+@dynamic ownedURL;
+@dynamic humanReadableFileName;
+@dynamic contentSize;
+
 @dynamic message;
+
+- (UIImage *) symbolImage {
+    return nil;
+}
 
 @end

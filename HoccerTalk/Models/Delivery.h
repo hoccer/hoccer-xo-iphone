@@ -14,10 +14,10 @@
 
 @interface Delivery : NSManagedObject
 
-@property (nonatomic, retain) NSString * state;
-@property (nonatomic, retain) Message *message;
+@property (nonatomic, strong) NSString * state;
+@property (nonatomic, strong) Message *message;
 
-@property (nonatomic, retain) Contact* receiver;
+@property (nonatomic, strong) Contact* receiver;
 
 + (NSString*) stateNew;
 + (NSString*) stateDelivering;

@@ -14,16 +14,16 @@
 
 @interface Message : NSManagedObject
 
-@property (nonatomic, retain) NSString* body;
-@property (nonatomic, retain) NSDate*   timeStamp;
-@property (nonatomic, retain) NSNumber* isOutgoing;
-@property (nonatomic, retain) NSString* timeSection;
-@property (nonatomic, retain) NSNumber* isRead;
-@property (nonatomic, retain) NSString* messageId;
-@property (nonatomic, retain) NSString* messageTag;
+@property (nonatomic, strong) NSString* body;
+@property (nonatomic, strong) NSDate*   timeStamp;
+@property (nonatomic, strong) NSNumber* isOutgoing;
+@property (nonatomic, strong) NSString* timeSection;
+@property (nonatomic, strong) NSNumber* isRead;
+@property (nonatomic, strong) NSString* messageId;
+@property (nonatomic, strong) NSString* messageTag;
 
-@property (nonatomic, retain) Contact*  contact;
-@property (nonatomic, retain) Attachment * attachment;
-@property (nonatomic, retain) NSMutableSet * deliveries;
+@property (nonatomic, strong) Contact*  contact;
+@property (nonatomic, strong) Attachment * attachment;
+@property (nonatomic, strong) NSMutableSet * deliveries;
 
 @end

@@ -29,7 +29,7 @@ typedef enum AttachmentTypes {
 
 @implementation AttachmentPickerController
 
-- (id) initWithViewController: (UIViewController*) viewController delegate:(id<AttachmentPcikerControllerDelegate>)delegate {
+- (id) initWithViewController: (UIViewController*) viewController delegate:(id<AttachmentPickerControllerDelegate>)delegate {
     self = [super init];
     if (self != nil) {
         self.delegate = delegate;
@@ -43,14 +43,14 @@ typedef enum AttachmentTypes {
 - (void) probeAttachmentTypes {
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Choose Photo", @"Action Sheet Button Ttitle");
+        item.localizedButtonTitle = NSLocalizedString(@"Choose Photo/Video", @"Action Sheet Button Ttitle");
         item.type = AttachmentTypePhotoFromLibrary;
         [_supportedItems addObject: item];
     }
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         // TODO: test for video support
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Take Photo", @"Action Sheet Button Ttitle");
+        item.localizedButtonTitle = NSLocalizedString(@"Take Photo/Video", @"Action Sheet Button Ttitle");
         item.type = AttachmentTypePhotoFromCamera;
         [_supportedItems addObject: item];
     }
@@ -98,6 +98,14 @@ typedef enum AttachmentTypes {
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     picker.sourceType = sourceType;
+    if (sourceType == UIImagePickerControllerSourceTypeCamera){
+        picker.mediaTypes =[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+        picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+    }
+    else {
+        picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+    }
     [_viewController presentViewController: picker animated: YES completion: nil];
 
 }

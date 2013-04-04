@@ -14,8 +14,8 @@ typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
 
 @interface ImageAttachment : Attachment
 
-@property (nonatomic, retain) NSNumber * width;
-@property (nonatomic, retain) NSNumber * height;
+@property (nonatomic, strong) NSNumber * width;
+@property (nonatomic, strong) NSNumber * height;
 @property (nonatomic,readonly) CGFloat aspectRatio;
 
 - (void) loadImage: (ImageLoaderBlock) block;

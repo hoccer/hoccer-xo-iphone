@@ -14,7 +14,7 @@
 
 @class HoccerTalkBackend;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPcikerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate>
 {
     ChatTableViewController * chatTableController;
 }
@@ -22,6 +22,9 @@
 @property (strong, nonatomic) Contact* partner;
 @property (readonly, strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 @property (readonly, strong, nonatomic) HoccerTalkBackend *            chatBackend;
+
+@property (strong, nonatomic) Attachment * currentAttachment;
+
 
 @property (strong, nonatomic) IBOutlet GrowingTextView * textField;
 @property (strong, nonatomic) IBOutlet UIButton *        sendButton;
