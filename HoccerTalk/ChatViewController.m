@@ -115,11 +115,6 @@
     [self configureView];
 }
 
-- (void) awakeFromNib {
-    
-}
-
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
