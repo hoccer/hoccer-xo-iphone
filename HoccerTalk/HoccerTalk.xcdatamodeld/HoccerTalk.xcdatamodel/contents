@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="contentSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="downloadedSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="downloadURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="humanReadableFileName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="localURL" attributeType="String" syncable="YES"/>
+        <attribute name="localURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mediaType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mimeType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ownedURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uploadedSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="uploadURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="message" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="attachment" inverseEntity="TalkMessage" syncable="YES"/>
     </entity>
     <entity name="Contact" representedClassName="Contact">
@@ -47,13 +51,14 @@
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
     </entity>
+    <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="uploadURL != &quot;&quot; AND downloadURL == &quot;&quot; AND uploadedSize != contentSize"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="MessagesByContact" entity="TalkMessage" predicateString="contact == $contact"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Delivery" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="TalkMessage" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Attachment" positionX="-785" positionY="-18" width="128" height="255"/>
+        <element name="Contact" positionX="-596" positionY="-248" width="128" height="194"/>
+        <element name="Delivery" positionX="-110" positionY="-180" width="128" height="90"/>
+        <element name="TalkMessage" positionX="-414" positionY="144" width="128" height="195"/>
     </elements>
 </model>

@@ -16,6 +16,8 @@
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 
+#import "Attachment.h"
+
 
 @interface HoccerTalkBackend ()
 {
@@ -31,6 +33,8 @@
 
 @implementation HoccerTalkBackend
 
+@synthesize userAgent;
+
 - (id) init {
     self = [super init];
     if (self != nil) {
@@ -45,7 +49,7 @@
 }
 
 // TODO: contact should be an array of contacts
-- (TalkMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact {
+- (TalkMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
     TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeStamp = [NSDate date];
@@ -54,6 +58,12 @@
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
+    
+    attachment.uploadURL =  [[self newUploadURL] absoluteString];
+    attachment.uploadedSize = 0;
+
+    message.attachment = attachment;
+    NSLog(@"sendMessage: message.attachment = %@", message.attachment);
 
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
@@ -64,10 +74,11 @@
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
-
     if (_isConnected) {
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
+    [self uploadAttachment: attachment];
+    
     return message;
 }
 
@@ -153,7 +164,7 @@
     NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (deliveries == nil)
     {
-        NSLog(@"Fetch request failed: %@", error);
+        NSLog(@"Fetch request 'DeliveriesWithStateNew' failed: %@", error);
         abort();
     }
     // collect all messages that have a delivery with state 'new'
@@ -175,6 +186,90 @@
     }
 }
 
+#pragma mark - Attachment upload and download
+
+- (void) flushPendingAttachmentUploads {
+    // fetch all not yet transferred uploads
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotUploaded"];
+    NSError *error;
+    NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (unfinishedAttachments == nil)
+    {
+        NSLog(@"Fetch request 'AttachmentsNotUploaded' failed: %@", error);
+        abort();
+    }
+    for (Attachment * attachment in unfinishedAttachments) {
+        [self uploadAttachment: attachment];
+    }
+}
+
+- (void) uploadAttachment:(Attachment *) myAttachment {
+    if (myAttachment.uploadConnection != nil) {
+        // do something about it
+        NSLog(@"upload of attachment still running");
+        return;
+    }
+    [myAttachment withUploadData:^(NSData * myData, NSError * myError) {
+        if (myError == nil) {
+            myAttachment.uploadConnection = [self httpRequest:@"PUT"
+                                                  absoluteURI:[myAttachment uploadURL]
+                                                      payload:myData
+                                                      headers:[myAttachment uploadHttpHeaders]
+                                                     delegate:[myAttachment uploadDelegate]
+                                             ];
+            
+        } else {
+            NSLog(@"uploadAttachment error=%@",myError);
+        }
+    }];
+}
+
+
+- (NSURLConnection *)httpRequest:(NSString *)method
+                absoluteURI:(NSString *)URLString
+                    payload:(NSData *)payload
+                     headers:(NSDictionary *)headers
+                   delegate:(id < NSURLConnectionDelegate >)connectionDelegate
+    {
+	
+    NSLog(@"httpRequest method: %@ url: %@", method, URLString);
+    NSURL *url = [NSURL URLWithString:URLString];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+	
+	[request addValue:self.userAgent forHTTPHeaderField:@"User-Agent"];
+	for (NSString *key in headers) {
+		[request addValue:[headers objectForKey:key] forHTTPHeaderField:key];
+	}
+    
+	[request setHTTPMethod:method];
+	[request setHTTPBody:payload];
+	[request setTimeoutInterval:60 * 60];
+	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+    
+    NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:connectionDelegate];
+    return connection;
+}
+
+- (NSString *) userAgent {
+	if (userAgent == nil) {
+		NSMutableString *buffer = [NSMutableString string];
+		[buffer appendFormat:@"%@ ", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]];
+		[buffer appendFormat:@"%@ / ", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+		[buffer appendFormat:@"%@ / ", [UIDevice currentDevice].model];
+		[buffer appendFormat:@"%@ %@", [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion];
+		userAgent = buffer;
+	}
+	return userAgent;
+}
+
+#define FILECACHE_URI @"https://filecache.hoccer.com/v3/"
+#define FILECACHE_SANDBOX_URI @"https://filecache-experimental.hoccer.com/v3/"
+
+- (NSURL *) newUploadURL {
+    NSString * myURL = [FILECACHE_SANDBOX_URI stringByAppendingString:[NSString stringWithUUID]];
+    return [NSURL URLWithString: myURL];
+}
+
 #pragma mark - Outgoing RPC Calls
 
 - (void) identify {
@@ -185,6 +280,7 @@
             _isConnected = YES;
             NSLog(@"identify(): got result: %@", responseOrError);
             [self flushPendingMessages];
+            [self flushPendingAttachmentUploads];
             if (_apnsDeviceToken) {
                 [self registerApns: _apnsDeviceToken];
             }

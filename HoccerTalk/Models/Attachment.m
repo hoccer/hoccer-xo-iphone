@@ -22,8 +22,17 @@
 @dynamic contentSize;
 @dynamic aspectRatio;
 
+@dynamic uploadURL;
+@dynamic uploadedSize;
+
+@dynamic downloadURL;
+@dynamic downloadedSize;
+
 @dynamic message;
+
 @synthesize image;
+
+@synthesize uploadConnection;
 
 
 - (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
@@ -169,5 +178,125 @@
         block(nil, nil);
     }
 }
+
+- (void) assetDataLoader: (DataSetterBlock) block url:(NSString*)theAssetURL {
+    
+    ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
+    {
+        ALAssetRepresentation *rep = [myasset defaultRepresentation];
+        NSError * myError = nil;
+        int64_t mySize = [rep size];
+        Byte *buffer = (Byte *)malloc(mySize);
+        NSUInteger bufferLen = [rep getBytes: buffer fromOffset:0 length:mySize error:&myError];
+        NSData * myData = [NSData dataWithBytesNoCopy: buffer length: bufferLen];
+        block(myData, myError);
+    };
+    
+    ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
+    {
+        NSLog(@"Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
+        block(0, myerror);
+    };
+    
+    ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
+    [assetslibrary assetForURL: [NSURL URLWithString: theAssetURL]
+                   resultBlock: resultblock
+                  failureBlock: failureblock];
+    
+}
+
+
+-(void) withUploadData: (DataSetterBlock) execution {
+    if (self.localURL != nil) {
+        NSLog(@"Attachment uploadData self.localURL=%@", self.localURL);
+        NSString * myPath = [[NSURL URLWithString: self.localURL] path];
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:myPath];
+        NSLog(@"Attachment return uploadData len=%d, path=%@", [data length], myPath);
+        execution(data, nil); // TODO: error handling
+        return;
+    }
+    if (self.assetURL != nil) {
+        NSLog(@"Attachment uploadData assetURL=%@", self.assetURL);
+        [self assetDataLoader: execution url: self.assetURL];
+        return;
+    }
+    execution(nil, [NSError errorWithDomain:@"HoccerTalk" code:1000 userInfo: nil]);
+}
+
+-(NSDictionary*) uploadHttpHeaders {
+    NSString * myPath = nil;
+    if (self.localURL != nil) {
+        myPath = [[NSURL URLWithString: self.localURL] path];
+    } else {
+        myPath = @"unknown";
+    }
+	
+    NSString *contentDisposition = [NSString stringWithFormat:@"attachment; filename=\"%@\"", myPath];
+    NSDictionary * headers = [NSDictionary dictionaryWithObjectsAndKeys:
+                              contentDisposition, @"Content-Disposition",
+                              [NSString stringWithFormat:@"%lli", [self contentSize]], @"Content-Length",
+                              nil
+                   ];
+    return headers;
+    
+}
+
+// connection delegate methods
+
+- (id < NSURLConnectionDelegate >) uploadDelegate {
+    return self;
+}
+
+-(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
+{
+    NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
+    if (connection == uploadConnection) {
+        NSLog(@"Attachment uploadConnection didReceiveResponse %@, status=%ld, %@",
+              httpResponse, (long)[httpResponse statusCode],
+              [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+    } else {
+        NSLog(@"ERROR: Attachment uploadConnection didReceiveResponse without valid connection");        
+    }
+}
+
+-(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
+{
+    if (connection == uploadConnection) {
+        NSLog(@"Attachment uploadConnection didReceiveData %@", data);
+    } else {
+        NSLog(@"ERROR: Attachment uploadConnection didReceiveResponse without valid connection");
+    }
+}
+
+-(void)connection:(NSURLConnection*)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
+{
+    if (connection == uploadConnection) {
+        NSLog(@"Attachment uploadConnection didSendBodyData %d", bytesWritten);
+        self.uploadedSize = totalBytesWritten;
+    } else {
+        NSLog(@"ERROR: Attachment uploadConnection didSendBodyData without valid connection");
+    }
+}
+
+-(void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
+{
+    if (connection == uploadConnection) {
+        NSLog(@"Attachment uploadConnection didFailWithError %@", error);
+        self.uploadConnection = nil;
+    } else {
+        NSLog(@"ERROR: Attachment uploadConnection didFailWithError without valid connection");
+    }
+}
+
+-(void)connectionDidFinishLoading:(NSURLConnection*)connection
+{
+    if (connection == uploadConnection) {
+        NSLog(@"Attachment uploadConnection connectionDidFinishLoading %@", connection);
+        self.uploadConnection = nil;
+    } else {
+        NSLog(@"ERROR: Attachment uploadConnection connectionDidFinishLoading without valid connection");
+    }
+}
+
 
 @end

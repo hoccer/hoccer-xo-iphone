@@ -209,7 +209,8 @@
 - (IBAction)sendPressed:(id)sender {
     [self.textField resignFirstResponder];
     if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
-        [self.chatBackend sendMessage: self.textField.text toContact: self.partner];
+        [self.chatBackend sendMessage: self.textField.text toContact: self.partner withAttachment: self.currentAttachment];
+        self.currentAttachment = nil;
         self.textField.text = @"";
     }
     [self removeAttachmentPreview];
@@ -648,6 +649,11 @@
     cell.message.text = message.body;
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : message.contact.avatarImage;
 
+    NSLog(@"configureCell msgtext=%@, message.attachment = %@", message.body, message.attachment);
+    if (message.attachment != nil) {
+        NSLog(@"configureCell message.attachment.mediaType = %@", message.attachment.mediaType);
+    }
+    
     if (message.attachment && [message.attachment.mediaType isEqualToString:@"image"]) {
         UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
         cell.bubble.attachmentView = attachmentView;
