@@ -15,8 +15,10 @@
 #import "AppDelegate.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
-
 #import "Attachment.h"
+
+NSString *const kHoccerTalkServerDevelopment = @"ws://development.hoccer.com:7000/";
+NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
 
 
 @interface HoccerTalkBackend ()
@@ -58,7 +60,7 @@
     message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
-    
+
     attachment.remoteURL =  [[self newUploadURL] absoluteString];
     attachment.transferSize = 0;
 
@@ -159,7 +161,8 @@
 }
 
 - (NSURLRequest*) urlRequest {
-    NSURL * url = [NSURL URLWithString: @"ws://development.hoccer.com:7000/"];
+    // TODO: make server adjustable
+    NSURL * url = [NSURL URLWithString: kHoccerTalkServerDevelopment];
     return [[NSURLRequest alloc] initWithURL: url];
 }
 
