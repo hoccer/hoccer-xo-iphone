@@ -17,7 +17,6 @@
 #import "MFSideMenu.h"
 #import "iOSVersionChecks.h"
 #import "HoccerTalkBackend.h"
-#import "UIButton+GlossyRounded.h"
 
 @interface ContactListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;

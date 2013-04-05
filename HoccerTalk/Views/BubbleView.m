@@ -78,7 +78,6 @@ static const double kAttachmentPadding = 10;
     CGFloat height = self.message.frame.size.height + self.padding.top + self.padding.bottom + 5;
     if (self.attachmentView != nil) {
         height += kAttachmentPadding + self.attachmentView.frame.size.height;
-        
     }
     return CGSizeMake(self.frame.size.width, height);
 }
