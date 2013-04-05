@@ -36,22 +36,43 @@
     self.chatBackend = [[HoccerTalkBackend alloc] init];
     self.chatBackend.delegate = self;
 
-    ConversationViewController * controller = nil;
+    ConversationViewController * conversationViewController = nil;
     UIStoryboard *storyboard = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
         self.navigationController = [splitViewController.viewControllers lastObject];
         splitViewController.delegate = (id)self.navigationController.topViewController;
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-        controller = (ConversationViewController *)masterNavigationController.topViewController;
+        conversationViewController = (ConversationViewController *)masterNavigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
         self.navigationController = (UINavigationController *)self.window.rootViewController;
-        controller = (ConversationViewController *)self.navigationController.topViewController;
+        conversationViewController = (ConversationViewController *)self.navigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
     // TODO: be lazy
-    controller.managedObjectContext = self.managedObjectContext;
+    conversationViewController.managedObjectContext = self.managedObjectContext;
+
+    [self customizeNavigationBar];
+
+    [self setupSideMenusWithStoryboard: storyboard andConversationViewController: conversationViewController];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
+        [self setupDone];
+    }
+
+    if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
+        // TODO: jump to conversation
+        NSLog(@"Launched by remote notification.");
+    }
+
+    return YES;
+}
+
+- (void) customizeNavigationBar {
+    // TODO: handle other bar metrics?
+    // this is visible in the message/mail compose view controllers
+    [[UINavigationBar appearance] setBackgroundImage: [UIImage imageNamed: @"message_navbar_bg"] forBarMetrics: UIBarMetricsDefault];
 
     UINavigationBar *bar = [self.navigationController navigationBar];
     [bar setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar-bg" withLeftCapWidth: 65 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
@@ -60,12 +81,14 @@
     [[UIBarButtonItem appearance] setBackgroundImage: navigationButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
     UIImage * navigationBackButtonBackground = [[UIImage imageNamed: @"navbar-btn-back"] stretchableImageWithLeftCapWidth: 17 topCapHeight: 0];
     [[UIBarButtonItem appearance] setBackButtonBackgroundImage: navigationBackButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
+}
 
+- (void) setupSideMenusWithStoryboard: (UIStoryboard*) storyboard andConversationViewController: (ConversationViewController*) controller {
     ContactListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
     NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
     self.navigationController.sideMenu = [MFSideMenu menuWithNavigationController:self.navigationController
-                                              leftSideMenuController:navigationMenuViewController
-                                             rightSideMenuController:contactListViewController];
+                                                           leftSideMenuController:navigationMenuViewController
+                                                          rightSideMenuController:contactListViewController];
     self.navigationController.sideMenu.menuWidth = 256;
     self.navigationController.sideMenu.shadowOpacity = 1.0;
     self.navigationController.sideMenu.menuStateEventBlock = ^(MFSideMenuStateEvent event) {
@@ -87,17 +110,6 @@
 
     contactListViewController.sideMenu = self.navigationController.sideMenu;
     contactListViewController.conversationViewController = controller;
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
-        [self setupDone];
-    }
-
-    if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
-        // TODO: jump to conversation
-        NSLog(@"Launched by remote notification.");
-    }
-    
-    return YES;
 }
 
 - (void) setupDone {

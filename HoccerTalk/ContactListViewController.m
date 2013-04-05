@@ -17,7 +17,6 @@
 #import "MFSideMenu.h"
 #import "iOSVersionChecks.h"
 #import "HoccerTalkBackend.h"
-#import "UIButton+GlossyRounded.h"
 
 @interface ContactListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
@@ -404,9 +403,8 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 - (void)mailComposeController:(MFMailComposeViewController*)controller
           didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
 
-	// Notifies users about errors associated with the interface
-	switch (result)
-	{
+    // TODO: handle mail result?
+	switch (result) {
 		case MFMailComposeResultCancelled:
 			break;
 		case MFMailComposeResultSaved:
@@ -418,8 +416,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 		default:
 			break;
 	}
-    [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: YES];
-    [NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
+    [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
+    [self reopenMenu];
+    //[NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
 }
 
 - (void) reopenMenu {
@@ -427,14 +426,11 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 
-// Dismisses the message composition interface when users tap Cancel or Send. Proceeds to update the
-// feedback message field with the result of the operation.
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
                  didFinishWithResult:(MessageComposeResult)result {
 
-	// Notifies users about errors associated with the interface
-	switch (result)
-	{
+    // TODO: handle message result?
+	switch (result) {
 		case MessageComposeResultCancelled:
 			break;
 		case MessageComposeResultSent:
@@ -444,8 +440,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 		default:
 			break;
 	}
-    [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: YES];
-    [self.sideMenu setMenuState: MFSideMenuStateRightMenuOpen];
+    [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
+    [self reopenMenu];
+    //[NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
 }
 
 
