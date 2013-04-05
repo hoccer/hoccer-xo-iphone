@@ -8,6 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface InviteCodeViewController : UIViewController
+@class HoccerTalkBackend;
+
+@interface InviteCodeViewController : UIViewController <UITextFieldDelegate>
+{
+    BOOL _newTokenButtonPressed;
+}
+
+@property (nonatomic, readonly) HoccerTalkBackend * chatBackend;
+@property (strong, nonatomic) IBOutlet UITextField * codeTextField;
+@property (strong, nonatomic) IBOutlet UILabel *label;
+@property (strong, nonatomic) IBOutlet UIButton *clipboardButton;
+@property (strong, nonatomic) IBOutlet UINavigationItem *navigationItem;
 
 @end

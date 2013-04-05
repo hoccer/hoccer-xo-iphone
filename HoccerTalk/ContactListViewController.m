@@ -17,6 +17,7 @@
 #import "MFSideMenu.h"
 #import "iOSVersionChecks.h"
 #import "HoccerTalkBackend.h"
+#import "InviteCodeViewController.h"
 
 @interface ContactListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
@@ -69,6 +70,10 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
         channel.handler = @selector(inviteByMail);
         [self.invitationChannels addObject: channel];
     }
+    InvitationChannel * channel = [[InvitationChannel alloc] init];
+    channel.localizedButtonTitle = NSLocalizedString(@"Invite Code", @"Invite Actionsheet Button Title");
+    channel.handler = @selector(inviteByCode);
+    [self.invitationChannels addObject: channel];
 }
 
 - (void)didReceiveMemoryWarning
@@ -388,6 +393,21 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     }];
 }
 
+- (void) inviteByCode {
+    UIStoryboard * storyboard;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
+    } else {
+        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
+    }
+
+    InviteCodeViewController * controller = [storyboard instantiateViewControllerWithIdentifier:@"inviteCodeView"];
+
+    [self.sideMenu setMenuState:MFSideMenuStateClosed];
+    [self.sideMenu.navigationController.topViewController presentModalViewController: controller animated: YES];
+
+}
+
 - (NSString*) inviteURL: (NSString*) token {
     return [NSString stringWithFormat: @"hctalk://%@", token];
 }
@@ -425,7 +445,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     [self.sideMenu setMenuState: MFSideMenuStateRightMenuOpen];
 }
 
-
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
                  didFinishWithResult:(MessageComposeResult)result {
 
@@ -445,8 +464,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     //[NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
 }
 
-
-
 - (HoccerTalkBackend*) chatBackend {
     if (_chatBackend == nil) {
         _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
@@ -458,6 +475,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     [self setInviteButton:nil];
     [super viewDidUnload];
 }
+
 @end
 
 @implementation InvitationChannel
