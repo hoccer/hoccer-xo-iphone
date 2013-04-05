@@ -34,8 +34,18 @@
             continue;
         }
         if ( ! [dict[key] isEqualToString: [self valueForKeyPath: rpcKeys[key]]]) {
-            //NSLog(@"updating value for key '%@'", key);
-            [self setValue: dict[key] forKeyPath: rpcKeys[key]];
+            NSLog(@"updating value for key '%@'", key);
+            if ([key isEqualToString:@"attachmentSize"]) {
+                // TODO: find generic solution for numeric values here
+                NSString * aString =  dict[key];
+                long long scannedNumber;
+                NSScanner *scanner = [NSScanner scannerWithString:aString];
+                [scanner scanLongLong:&scannedNumber];
+                NSNumber *number = [NSNumber numberWithLongLong: scannedNumber];
+                [self setValue: number forKeyPath: rpcKeys[key]];
+            } else {
+                [self setValue: dict[key] forKeyPath: rpcKeys[key]];
+            }
         }
     }
 }

@@ -17,7 +17,8 @@
 + (UIView*) viewForAttachment: (Attachment*) attachment {
     if (attachment == nil) {
         return nil;
-    } else if ([attachment.mediaType isEqualToString:@"image"]) {
+    } else if ([attachment.mediaType isEqualToString:@"image"] ||
+               [attachment.mediaType isEqualToString:@"video"]) {
         UIImageView * imageView = [[UIImageView alloc] init];
         CGRect frame = imageView.frame;
         
@@ -48,7 +49,8 @@
 + (CGFloat) heightOfAttachmentView: (Attachment*) attachment withViewOfWidth: (CGFloat) width {
     if (attachment == nil) {
         return 0;
-    } else if ([attachment.mediaType isEqualToString:@"image"]) {
+    } else if ([attachment.mediaType isEqualToString:@"image"] ||
+               [attachment.mediaType isEqualToString:@"video"]) {
         return width / attachment.aspectRatio;
     } else {
         NSLog(@"Unhandled attachment type");

@@ -654,7 +654,10 @@
         NSLog(@"configureCell message.attachment.mediaType = %@", message.attachment.mediaType);
     }
     
-    if (message.attachment && [message.attachment.mediaType isEqualToString:@"image"]) {
+    if (message.attachment &&
+        ([message.attachment.mediaType isEqualToString:@"image"] ||
+         [message.attachment.mediaType isEqualToString:@"video"]))
+    {
         UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
         cell.bubble.attachmentView = attachmentView;
     } else {
