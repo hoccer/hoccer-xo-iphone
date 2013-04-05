@@ -66,3 +66,7 @@
 
 /* Invite Actionsheet Button Title */
 "SMS" = "per SMS";
+
+/* Invite Actionsheet Button Title */
+"Invite Code" = "per Einladungs Kode";
+
