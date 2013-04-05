@@ -59,8 +59,8 @@
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
     
-    attachment.uploadURL =  [[self newUploadURL] absoluteString];
-    attachment.uploadedSize = 0;
+    attachment.remoteURL =  [[self newUploadURL] absoluteString];
+    attachment.transferSize = 0;
 
     message.attachment = attachment;
     NSLog(@"sendMessage: message.attachment = %@", message.attachment);
@@ -83,10 +83,16 @@
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
-    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
-    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    TalkMessage * message = [NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    Delivery * delivery = [NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
+    
+    Attachment * attachment = nil;
+    if (messageDictionary[@"attachmentUrl"] != nil) {
+        attachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+        message.attachment = attachment;
+    }
 
     NSDictionary * vars = @{ @"clientId" : messageDictionary[@"senderId"]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
@@ -212,7 +218,7 @@
     [myAttachment withUploadData:^(NSData * myData, NSError * myError) {
         if (myError == nil) {
             myAttachment.uploadConnection = [self httpRequest:@"PUT"
-                                                  absoluteURI:[myAttachment uploadURL]
+                                                  absoluteURI:[myAttachment remoteURL]
                                                       payload:myData
                                                       headers:[myAttachment uploadHttpHeaders]
                                                      delegate:[myAttachment uploadDelegate]

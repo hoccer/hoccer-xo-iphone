@@ -31,11 +31,8 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 @property (nonatomic, strong) NSString * mediaType; // image, audio, video, contact, other
 @property (nonatomic, strong) NSString * mimeType; // mime type of the attachment
 
-@property (nonatomic, strong) NSString * uploadURL; // remote URL where the file should/was uploaded
-@property (nonatomic)         int64_t    uploadedSize; // number of bytes uploaded
-
-@property (nonatomic, strong) NSString * downloadURL; // remote URL where the file should/was downloaded
-@property (nonatomic)         int64_t    downloadedSize; // number of bytes downloaded
+@property (nonatomic, strong) NSString * remoteURL; // remote URL where the file should/was uploaded
+@property (nonatomic)         int64_t    transferSize; // number of bytes uploaded
 
 @property (nonatomic, strong) TalkMessage *message;
 

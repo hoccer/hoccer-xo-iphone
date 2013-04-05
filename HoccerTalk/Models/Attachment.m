@@ -22,11 +22,8 @@
 @dynamic contentSize;
 @dynamic aspectRatio;
 
-@dynamic uploadURL;
-@dynamic uploadedSize;
-
-@dynamic downloadURL;
-@dynamic downloadedSize;
+@dynamic remoteURL;
+@dynamic transferSize;
 
 @dynamic message;
 
@@ -272,7 +269,7 @@
 {
     if (connection == uploadConnection) {
         NSLog(@"Attachment uploadConnection didSendBodyData %d", bytesWritten);
-        self.uploadedSize = totalBytesWritten;
+        self.transferSize = totalBytesWritten;
     } else {
         NSLog(@"ERROR: Attachment uploadConnection didSendBodyData without valid connection");
     }
