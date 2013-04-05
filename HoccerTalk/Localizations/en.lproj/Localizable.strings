@@ -45,7 +45,7 @@
 "View Attachment" = "View Attachment";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hi,\nI've seen your profile on the internet. I'd like to chat with you.\n\nGet Hoccer Talk:\niOS: %@\nAndroid: %@\n\nAccept invitation: %@\n";
+"invitation_mail_body" = "Hi,\nlet's join Hoccer Talk and chat\n\nGet Hoccer Talk:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact: %@\n";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Hoccer Talk Invitation";

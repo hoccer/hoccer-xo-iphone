@@ -6,9 +6,13 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "NSManagedObject+RPCDictionary.h"
+#import "HoccerTalkModel.h"
 
-@implementation NSManagedObject (RPCDictionary)
+@implementation HoccerTalkModel
+
++ (NSString*) entityName {
+    return NSStringFromClass(self);
+}
 
 - (NSMutableDictionary*) rpcDictionary {
     NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] init];
@@ -35,4 +39,5 @@
 }
 
 - (NSDictionary*) rpcKeys { return @{}; }
+
 @end

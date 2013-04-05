@@ -8,9 +8,13 @@
 
 #import <CoreData/CoreData.h>
 
-@interface NSManagedObject (RPCDictionary)
+#import "HoccerTalkModel.h"
+
+@interface HoccerTalkModel : NSManagedObject
 
 - (NSMutableDictionary*) rpcDictionary;
 - (void) updateWithDictionary: (NSDictionary*) dict;
+
++ (NSString*) entityName;
 
 @end

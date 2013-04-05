@@ -10,13 +10,14 @@
 #import <CoreData/CoreData.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
+#import "HoccerTalkModel.h"
 
 @class TalkMessage;
 
 typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError*);
 
-@interface Attachment : NSManagedObject
+@interface Attachment : HoccerTalkModel
 
 @property (nonatomic, strong) NSString * assetURL; // a url that typically starts with "assets-library://"
 @property (nonatomic)         int64_t    contentSize; // file size in bytes

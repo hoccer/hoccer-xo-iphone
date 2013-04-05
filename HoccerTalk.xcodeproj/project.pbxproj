@@ -112,7 +112,7 @@
 		6378484216F3CF1C00DE03C2 /* navbar-icon-menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 6378483616F3CF1C00DE03C2 /* navbar-icon-menu.png */; };
 		6378484316F3CF1C00DE03C2 /* navbar-icon-menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6378483716F3CF1C00DE03C2 /* navbar-icon-menu@2x.png */; };
 		6378484616F4000500DE03C2 /* Delivery.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484516F4000500DE03C2 /* Delivery.m */; };
-		6378484A16F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484916F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m */; };
+		6378484A16F4040C00DE03C2 /* HoccerTalkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484916F4040C00DE03C2 /* HoccerTalkModel.m */; };
 		6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484C16F4210A00DE03C2 /* NSString+UUID.m */; };
 		63AE4516170350750099F0CB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4513170350750099F0CB /* Default.png */; };
 		63AE4517170350750099F0CB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4514170350750099F0CB /* Default@2x.png */; };
@@ -340,8 +340,8 @@
 		6378483716F3CF1C00DE03C2 /* navbar-icon-menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-icon-menu@2x.png"; sourceTree = "<group>"; };
 		6378484416F4000500DE03C2 /* Delivery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Delivery.h; sourceTree = "<group>"; };
 		6378484516F4000500DE03C2 /* Delivery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Delivery.m; sourceTree = "<group>"; };
-		6378484816F4040C00DE03C2 /* NSManagedObject+RPCDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+RPCDictionary.h"; sourceTree = "<group>"; };
-		6378484916F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+RPCDictionary.m"; sourceTree = "<group>"; };
+		6378484816F4040C00DE03C2 /* HoccerTalkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoccerTalkModel.h; sourceTree = "<group>"; };
+		6378484916F4040C00DE03C2 /* HoccerTalkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoccerTalkModel.m; sourceTree = "<group>"; };
 		6378484B16F4210900DE03C2 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
 		6378484C16F4210A00DE03C2 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
 		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -806,10 +806,10 @@
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				6378484416F4000500DE03C2 /* Delivery.h */,
 				6378484516F4000500DE03C2 /* Delivery.m */,
+				6378484816F4040C00DE03C2 /* HoccerTalkModel.h */,
+				6378484916F4040C00DE03C2 /* HoccerTalkModel.m */,
 				63AEE30916CA6B1900522F92 /* TalkMessage.h */,
 				63AEE30A16CA6B1900522F92 /* TalkMessage.m */,
-				6378484816F4040C00DE03C2 /* NSManagedObject+RPCDictionary.h */,
-				6378484916F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1132,7 +1132,7 @@
 				637847AA16F2864E00DE03C2 /* AttachmentViewFactory.m in Sources */,
 				6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */,
 				6378484616F4000500DE03C2 /* Delivery.m in Sources */,
-				6378484A16F4040C00DE03C2 /* NSManagedObject+RPCDictionary.m in Sources */,
+				6378484A16F4040C00DE03C2 /* HoccerTalkModel.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				633129D716F95220008F5B04 /* GrowingTextView.m in Sources */,
 				633048FB16FC693C0045E64E /* MFSideMenu.m in Sources */,

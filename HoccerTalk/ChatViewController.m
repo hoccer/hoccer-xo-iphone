@@ -243,7 +243,7 @@
 
     NSString * mediaType = attachmentInfo[UIImagePickerControllerMediaType];
 
-    self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName:@"Attachment"
+    self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                     inManagedObjectContext: self.managedObjectContext];
     
     if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeImage)) {

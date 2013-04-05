@@ -232,10 +232,14 @@
 #pragma mark - Apple Push Notifications
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    NSLog(@"got APNS deviceToken: %@ ", [deviceToken hexadecimalString]);
-    // TODO: do we need this?
-    //self.registered = YES;
-    [self.chatBackend gotAPNSDeviceToken: deviceToken];
+    if (deviceToken != nil) {
+        // NSLog(@"got APNS deviceToken: %@ ", [deviceToken hexadecimalString]);
+        // TODO: do we need this?
+        //self.registered = YES;
+        [self.chatBackend gotAPNSDeviceToken: deviceToken];
+    } else {
+        NSLog(@"ERROR: APN device token is nil");
+    }
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
@@ -251,10 +255,10 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     if ([[url scheme] isEqualToString:@"hctalk"]) {
-        NSLog(@"got invite token: %@", url.host);
+        //NSLog(@"got invite token: %@", url.host);
         // TODO: input verification
         [self.chatBackend pairByToken: url.host pairingHandler: ^(BOOL success) {
-            NSLog(@"pairing %@", success ? @"successful" : @"failed");
+            NSLog(@"pairing using device token %@ %@", url.host, success ? @"successful" : @"failed");
         }];
     }
     return NO;
