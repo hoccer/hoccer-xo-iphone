@@ -13,6 +13,7 @@
 @class Contact;
 @class Delivery;
 @class TalkMessage;
+@class Attachment;
 
 FOUNDATION_EXPORT NSString * const kHoccerTalkServerDevelopment;
 FOUNDATION_EXPORT NSString * const kHoccerTalkServerProduction;
@@ -30,14 +31,16 @@ typedef void (^PairingHandler)(BOOL);
 
 @interface HoccerTalkBackend : NSObject <JsonRpcWebSocketDelegate>
 
+{
+    NSString *userAgent;
+}
+
 @property (nonatomic, weak) id<HoccerTalkDelegate> delegate;
+@property (nonatomic, strong) NSString * userAgent;
 
 - (id) init;
 
-
-
-
-- (TalkMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact;
+- (TalkMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;

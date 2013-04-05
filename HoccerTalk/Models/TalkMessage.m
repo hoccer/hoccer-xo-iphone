@@ -24,8 +24,13 @@
 
 - (NSDictionary*) rpcKeys {
     return @{ @"body": @"body",
-              @"messageId": @"messageId"
+              @"messageId": @"messageId",
+              @"attachmentSize": @"attachment.contentSize",
+              @"attachmentMediaType": @"attachment.mediaType",
+              @"attachmentMimeType": @"attachment.mimeType",
+              @"attachmentUrl": @"attachment.remoteURL"
             };
 }
+
 
 @end

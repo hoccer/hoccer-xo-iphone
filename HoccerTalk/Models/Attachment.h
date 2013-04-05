@@ -14,13 +14,16 @@
 
 @class TalkMessage;
 
-typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
-typedef void(^SizeSetterBlock)(int64_t theSize,NSError*);
+typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
+typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
+typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 
-@interface Attachment : HoccerTalkModel
+@interface Attachment : HoccerTalkModel < NSURLConnectionDelegate >
+
+// persistent properties from model
 
 @property (nonatomic, strong) NSString * assetURL; // a url that typically starts with "assets-library://"
-@property (nonatomic)         int64_t    contentSize; // file size in bytes
+@property (nonatomic)         int64_t    contentSize; // authoritative file size in bytes
 @property (nonatomic)         double     aspectRatio; // ratio image width/height
 @property (nonatomic, strong) NSString * humanReadableFileName; // an optional human readable filename with any path component, mostly used for audio files
 @property (nonatomic, strong) NSString * localURL; // a file url
@@ -28,9 +31,22 @@ typedef void(^SizeSetterBlock)(int64_t theSize,NSError*);
 @property (nonatomic, strong) NSString * mediaType; // image, audio, video, contact, other
 @property (nonatomic, strong) NSString * mimeType; // mime type of the attachment
 
+@property (nonatomic, strong) NSString * remoteURL; // remote URL where the file should/was uploaded
+@property (nonatomic)         int64_t    transferSize; // number of bytes uploaded
+
 @property (nonatomic, strong) TalkMessage *message;
 
+// These are non-persistent properties
+
 @property (nonatomic, strong) UIImage *image;
+
+@property (nonatomic, strong) NSURLConnection *uploadConnection;
+
+@property (readonly, strong) NSDictionary * uploadHttpHeaders;
+
+-(void) withUploadData: (DataSetterBlock) execution;
+
+- (id < NSURLConnectionDelegate >) uploadDelegate;
 
 - (void) loadImage: (ImageLoaderBlock) block;
 

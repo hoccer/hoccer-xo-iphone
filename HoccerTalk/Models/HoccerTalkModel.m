@@ -18,7 +18,9 @@
     NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] init];
     NSDictionary * rpcKeys = [self rpcKeys];
     for (id key in rpcKeys) {
-        dictionary[key] = [self valueForKeyPath: rpcKeys[key]];
+        if ([self valueForKeyPath: rpcKeys[key]] != nil) {
+            dictionary[key] = [self valueForKeyPath: rpcKeys[key]];
+        }
     }
     return dictionary;
 }
