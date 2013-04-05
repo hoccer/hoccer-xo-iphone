@@ -33,8 +33,14 @@
             NSLog(@"unhandled key '%@' in update dictionary", key);
             continue;
         }
-        if ( ! [dict[key] isEqualToString: [self valueForKeyPath: rpcKeys[key]]]) {
-            NSLog(@"updating value for key '%@'", key);
+        // NSLog(@"check value for key '%@'", key);
+        id oldCoreDataValue = [self valueForKeyPath: rpcKeys[key]];
+        // NSLog(@"oldCoreDataValue = '%@'", oldCoreDataValue);
+        id newIncomingValue = dict[key];
+        // NSLog(@"newIncomingValue = '%@'", newIncomingValue);
+
+        if ( ! [newIncomingValue isEqual: oldCoreDataValue]) {
+            // NSLog(@"updating value for key '%@'", key);
             if ([key isEqualToString:@"attachmentSize"]) {
                 // TODO: find generic solution for numeric values here
                 NSString * aString =  dict[key];
@@ -44,7 +50,7 @@
                 NSNumber *number = [NSNumber numberWithLongLong: scannedNumber];
                 [self setValue: number forKeyPath: rpcKeys[key]];
             } else {
-                [self setValue: dict[key] forKeyPath: rpcKeys[key]];
+                [self setValue: newIncomingValue forKeyPath: rpcKeys[key]];
             }
         }
     }
