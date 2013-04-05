@@ -65,7 +65,7 @@ static const double kAttachmentPadding = 10;
     if (_attachmentView != nil) {
         // XXX
         _attachmentView.contentMode = UIViewContentModeScaleAspectFit;
-        CGFloat aspect = ((UIImageView*)_attachmentView).image.size.height / ((UIImageView*)_attachmentView).image.size.width;
+        CGFloat aspect = ((UIImageView*)_attachmentView).frame.size.height / ((UIImageView*)_attachmentView).frame.size.width;
         _attachmentView.frame = CGRectMake(self.message.frame.origin.x, self.message.frame.origin.y + self.message.frame.size.height + kAttachmentPadding,
                                            self.message.frame.size.width, self.message.frame.size.width * aspect);
         [self addSubview: view];

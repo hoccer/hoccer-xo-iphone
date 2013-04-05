@@ -19,15 +19,25 @@
         return nil;
     } else if ([attachment.mediaType isEqualToString:@"image"]) {
         UIImageView * imageView = [[UIImageView alloc] init];
-        imageView.image = attachment.image;
-
-        /*
-        imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-        imageView.layer.shadowOffset = CGSizeMake(0, 2);
-        imageView.layer.shadowOpacity = 0.8;
-        imageView.layer.shadowRadius = 3;
-        imageView.layer.masksToBounds = NO;
-         */
+        CGRect frame = imageView.frame;
+        
+        // preset frame to correct aspect ratio before actual image is loaded
+        frame.size.width = attachment.aspectRatio;
+        frame.size.height = 1.0;
+        imageView.frame = frame;
+        
+        if (attachment.image == nil) {
+            [attachment loadImage:^(UIImage * image, NSError * error) {
+                if (error == nil) {
+                    imageView.image = image;
+                    attachment.image = image;
+                } else {
+                    NSLog(@"viewForAttachment: failed to load attachment image, error=%@",error);
+                }
+            }];
+        } else {
+            imageView.image = attachment.image;
+        }
         return imageView;
     } else {
         NSLog(@"Unhandled attachment type");

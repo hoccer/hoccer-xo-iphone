@@ -62,6 +62,25 @@
     }
 }
 
+- (void) loadImage: (ImageLoaderBlock) block {
+    if ([self.mediaType isEqualToString: @"image"]) {
+        [self loadImageAttachmentImage: block];
+    } else if ([self.mediaType isEqualToString: @"video"]) {
+        [self loadVideoAttachmentImage: block];
+    }
+}
+
+- (void) loadImageIntoCache {
+    [self loadImage:^(UIImage* theImage, NSError* error) {
+        if (theImage) {
+            self.image = theImage;
+            self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+        } else {
+            NSLog(@"Failed to get image: %@", error);
+        }
+    }];
+}
+
 - (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage {
     self.mediaType = @"image";
     self.mimeType = @"image/jpeg";
@@ -72,14 +91,7 @@
         self.image = theImage;
         self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
     } else {
-        [self loadImage:^(UIImage* theImage, NSError* error) {
-            if (theImage) {
-                self.image = theImage;
-                self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
-            } else {
-                NSLog(@"Failed to get image: %@", error);
-            }
-        }];
+        [self loadImageIntoCache];
     }
 }
 
@@ -87,12 +99,8 @@
     self.mediaType = @"video";
     self.mimeType = @"video/mpeg";
     
-    [self useURLs: theURL anOtherURL: theOtherURL];
-    
-    MPMoviePlayerController * movie = [[MPMoviePlayerController alloc]
-                                      initWithContentURL:[NSURL URLWithString:theURL]];
-    self.image = [movie thumbnailImageAtTime:0.0 timeOption:MPMovieTimeOptionExact];
-    self.aspectRatio = (double)(self.image.size.width) / self.image.size.height;
+    [self useURLs: theURL anOtherURL: theOtherURL];    
+    [self loadImageIntoCache];  
 }
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
@@ -117,8 +125,17 @@
 
 }
 
+- (void) loadVideoAttachmentImage: (ImageLoaderBlock) block {
 
-- (void) loadImage: (ImageLoaderBlock) block {
+    // synchronous loading, maybe make it async at some point
+    MPMoviePlayerController * movie = [[MPMoviePlayerController alloc]
+                                       initWithContentURL:[NSURL URLWithString:self.localURL]];
+    UIImage * myImage = [movie thumbnailImageAtTime:0.0 timeOption:MPMovieTimeOptionExact];
+    block(myImage, nil);
+}
+
+
+- (void) loadImageAttachmentImage: (ImageLoaderBlock) block {
     if (self.localURL != nil) {
         block([UIImage imageWithContentsOfFile: [[NSURL URLWithString: self.localURL] path]], nil);
     } else if (self.assetURL != nil) {

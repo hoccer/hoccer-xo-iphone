@@ -32,12 +32,8 @@ typedef void(^SizeSetterBlock)(int64_t theSize,NSError*);
 @property (nonatomic, strong) UIImage *image;
 
 - (void) loadImage: (ImageLoaderBlock) block;
-- (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL;
 
 - (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage;
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
-
-- (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
-
                  
 @end
