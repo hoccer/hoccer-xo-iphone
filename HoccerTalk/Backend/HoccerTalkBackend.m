@@ -16,6 +16,8 @@
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 
+NSString *const kHoccerTalkServerDevelopment = @"ws://development.hoccer.com:7000/";
+NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
 
 @interface HoccerTalkBackend ()
 {
@@ -142,7 +144,8 @@
 }
 
 - (NSURLRequest*) urlRequest {
-    NSURL * url = [NSURL URLWithString: @"ws://development.hoccer.com:7000/"];
+    // TODO: make server adjustable
+    NSURL * url = [NSURL URLWithString: kHoccerTalkServerDevelopment];
     return [[NSURLRequest alloc] initWithURL: url];
 }
 

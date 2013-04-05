@@ -14,6 +14,9 @@
 @class Delivery;
 @class TalkMessage;
 
+FOUNDATION_EXPORT NSString * const kHoccerTalkServerDevelopment;
+FOUNDATION_EXPORT NSString * const kHoccerTalkServerProduction;
+
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^PairingHandler)(BOOL);
 
