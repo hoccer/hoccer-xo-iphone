@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "Message.h"
+#import "TalkMessage.h"
 
-@implementation Message
+@implementation TalkMessage
 
 @dynamic isOutgoing;
 @dynamic body;

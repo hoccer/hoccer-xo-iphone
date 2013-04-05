@@ -11,7 +11,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 
 
-@class Message;
+@class TalkMessage;
 
 typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
 
@@ -26,7 +26,7 @@ typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
 @property (nonatomic, strong) NSString * mediaType; // image, audio, video, contact, other
 @property (nonatomic, strong) NSString * mimeType; // mime type of the attachment
 
-@property (nonatomic, strong) Message *message;
+@property (nonatomic, strong) TalkMessage *message;
 
 @property (nonatomic, strong) UIImage *image;
 

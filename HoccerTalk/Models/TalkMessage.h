@@ -12,7 +12,7 @@
 @class Attachment;
 @class Delivery;
 
-@interface Message : NSManagedObject
+@interface TalkMessage : NSManagedObject
 
 @property (nonatomic, strong) NSString* body;
 @property (nonatomic, strong) NSDate*   timeStamp;

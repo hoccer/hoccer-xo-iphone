@@ -14,7 +14,7 @@
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
-#import "Message.h"
+#import "TalkMessage.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
 #import "InsetImageView.h"
@@ -39,7 +39,7 @@
 @property (nonatomic, readonly) SectionHeaderCell* headerCell;
 @property (strong) UIImage* avatarImage;
 
-- (void)configureCell:(UITableViewCell *)cell forMessage:(Message *) message;
+- (void)configureCell:(UITableViewCell *)cell forMessage:(TalkMessage *) message;
 - (void)configureView;
 @end
 
@@ -430,7 +430,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    Message * message = (Message*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    TalkMessage * message = (TalkMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
     NSString * identifier = [message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier];
     MessageCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
@@ -487,7 +487,7 @@
 {
     double width = self.tableView.frame.size.width;
 
-    Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
     CGRect frame = self.messageCell.frame;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
@@ -604,7 +604,7 @@
 
         case NSFetchedResultsChangeUpdate:
         {
-            Message * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            TalkMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
             [self configureCell:[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
             break;
         }
@@ -634,7 +634,7 @@
     [self trashCurrentAttachment];
 }
 
-- (void)configureCell:(MessageCell *)cell forMessage:(Message *) message {
+- (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
         self.avatarImage = [UIImage imageWithData: [[NSUserDefaults standardUserDefaults] objectForKey: @"avatarImage"]];

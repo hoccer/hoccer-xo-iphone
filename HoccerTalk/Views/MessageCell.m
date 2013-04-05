@@ -9,13 +9,13 @@
 #import "MessageCell.h"
 #import "AutoheightLabel.h"
 #import "BubbleView.h"
-#import "Message.h"
+#import "TalkMessage.h"
 
 @implementation MessageCell
 
 static const double kCellPadding = 10.0;
 
-- (CGFloat) heightForMessage: (Message*) message {
+- (CGFloat) heightForMessage: (TalkMessage*) message {
     return MAX(kCellPadding + [self.bubble heightForMessage: message] + kCellPadding,
                self.frame.size.height);
 }

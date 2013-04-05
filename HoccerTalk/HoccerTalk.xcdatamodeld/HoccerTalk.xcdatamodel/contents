@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -10,7 +10,7 @@
         <attribute name="mediaType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mimeType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ownedURL" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="message" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="attachment" inverseEntity="Message" syncable="YES"/>
+        <relationship name="message" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="attachment" inverseEntity="TalkMessage" syncable="YES"/>
     </entity>
     <entity name="Contact" representedClassName="Contact">
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -21,21 +21,21 @@
         </attribute>
         <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
-        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="contact" inverseEntity="Message" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="contact" inverseEntity="TalkMessage" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="Message" predicateString="contact == $FETCH_SOURCE AND timeStamp == $FETCH_SOURCE.latestMessageTime"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND timeStamp == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
         <fetchedProperty name="unreadMessages" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="Message" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
         </fetchedProperty>
         <userInfo/>
     </entity>
     <entity name="Delivery" representedClassName="Delivery" syncable="YES">
         <attribute name="state" attributeType="String" defaultValueString="new" syncable="YES"/>
-        <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="deliveries" inverseEntity="Message" syncable="YES"/>
+        <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="deliveries" inverseEntity="TalkMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
     </entity>
-    <entity name="Message" representedClassName="Message" syncable="YES">
+    <entity name="TalkMessage" representedClassName="TalkMessage" syncable="YES">
         <attribute name="body" attributeType="String" syncable="YES"/>
         <attribute name="isOutgoing" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -49,11 +49,11 @@
     </entity>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
-    <fetchRequest name="MessagesByContact" entity="Message" predicateString="contact == $contact"/>
+    <fetchRequest name="MessagesByContact" entity="TalkMessage" predicateString="contact == $contact"/>
     <elements>
-        <element name="Attachment" positionX="79" positionY="-54" width="128" height="195"/>
-        <element name="Contact" positionX="727" positionY="-113" width="128" height="194"/>
-        <element name="Delivery" positionX="520" positionY="81" width="128" height="90"/>
-        <element name="Message" positionX="333" positionY="-144" width="128" height="195"/>
+        <element name="Attachment" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Delivery" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="TalkMessage" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

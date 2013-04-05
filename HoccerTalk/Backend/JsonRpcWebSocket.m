@@ -147,10 +147,12 @@ static const NSTimeInterval kResponseTimeout = 10;
     JsonRpcHandler * handler = _rpcMethods[request[@"method"]];
     if (handler != nil && [self.delegate respondsToSelector: handler.selector]) {
         if (handler.isNotification) {
-            // TODO: investigate these warnings
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             [self.delegate performSelector: handler.selector withObject: request[@"params"]];
         } else {
             id resultOrError = [self.delegate performSelector: handler.selector withObject: request[@"params"]];
+#pragma clang diagnostic pop
             if ([resultOrError isKindOfClass: [JsonRpcError class]]) {
                 [self respondWithError: resultOrError id: request[@"id"]];
             } else {

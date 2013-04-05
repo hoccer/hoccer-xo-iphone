@@ -13,7 +13,6 @@
 /* Navigation Menu Item */
 "Chats" = "Chats";
 
-
 /* Contacts Navigation Bar Title */
 "Contacts" = "Kontakte";
 
@@ -49,3 +48,18 @@
 
 /* Push Notifictaion: New Messages */
 "apn_new_messages" = "Du hast %@ neue Nachrichten!";
+
+/* Mail Invitation Body */
+"invitation_mail_body" = "Hallo,\nlass uns mit Hoccer Talk chatten. Klickst Du hier:\n\n%@\n";
+
+/* Mail Invitation Subject */
+"invitation_mail_subject" = "Einladung zu Hoccer Talk";
+
+/* Actionsheet Title */
+"Invite by" = "Einladung";
+
+/* Invite Actionsheet Button Title */
+"Mail" = "per Mail";
+
+/* Invite Actionsheet Button Title */
+"SMS" = "per SMS";

@@ -8,14 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+
 @class ConversationViewController;
 @class MFSideMenu;
 @class HoccerTalkBackend;
 
-@interface ContactListViewController : UIViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIActionSheetDelegate>
+@interface ContactListViewController : UIViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic,strong) IBOutlet UITableView* tableView;
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
+@property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 
 @property (nonatomic, assign) ConversationViewController * conversationViewController;
 @property (nonatomic, assign) MFSideMenu *sideMenu;

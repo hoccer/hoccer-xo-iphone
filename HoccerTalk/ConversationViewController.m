@@ -15,7 +15,7 @@
 #import "ConversationCell.h"
 #import "InsetImageView.h"
 #include "AssetStore.h"
-#import "Message.h"
+#import "TalkMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"

@@ -7,7 +7,7 @@
 //
 
 #import "Attachment.h"
-#import "Message.h"
+#import "TalkMessage.h"
 #import <Foundation/NSURL.h>
 #import <MediaPlayer/MPMoviePlayerController.h>
 

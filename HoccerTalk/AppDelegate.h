@@ -18,6 +18,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) HoccerTalkBackend * chatBackend;
+@property (nonatomic, strong) UINavigationController * navigationController;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

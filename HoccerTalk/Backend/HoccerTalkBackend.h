@@ -12,9 +12,10 @@
 
 @class Contact;
 @class Delivery;
-@class Message;
+@class TalkMessage;
 
 typedef void (^InviteTokenHanlder)(NSString*);
+typedef void (^PairingHandler)(BOOL);
 
 @protocol HoccerTalkDelegate <NSObject>
 
@@ -33,11 +34,12 @@ typedef void (^InviteTokenHanlder)(NSString*);
 
 
 
-- (Message*) sendMessage: (NSString*) text toContact: (Contact*) contact;
+- (TalkMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact;
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
+- (void) pairByToken: (NSString*) token pairingHandler: (PairingHandler) handler;
 
 - (void) gotAPNSDeviceToken: (NSData*) deviceToken;
 

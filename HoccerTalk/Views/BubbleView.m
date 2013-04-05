@@ -12,7 +12,7 @@
 
 #import "AutoheightLabel.h"
 #import "AssetStore.h"
-#import "Message.h"
+#import "TalkMessage.h"
 #import "AttachmentViewFactory.h"
 
 static const double kLeftBubbleCapLeft  = 11.0;
@@ -89,7 +89,7 @@ static const double kAttachmentPadding = 10;
     self.background.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 }
 
-- (CGFloat) heightForMessage: (Message*) message {
+- (CGFloat) heightForMessage: (TalkMessage*) message {
     CGFloat height = self.padding.top + [self.message calculateSize: message.body].height + self.padding.bottom;
     if (message.attachment != nil) {
         height += kAttachmentPadding + [AttachmentViewFactory heightOfAttachmentView: message.attachment withViewOfWidth: self.message.frame.size.width];

@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Message;
+@class TalkMessage;
 @class Contact;
 
 @interface Delivery : NSManagedObject
 
 @property (nonatomic, strong) NSString * state;
-@property (nonatomic, strong) Message *message;
+@property (nonatomic, strong) TalkMessage *message;
 
 @property (nonatomic, strong) Contact* receiver;
 

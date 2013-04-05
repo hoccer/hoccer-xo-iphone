@@ -10,7 +10,7 @@
 #import "InsetImageView.h"
 #import "AppDelegate.h"
 #import "Contact.h"
-#import "Message.h"
+#import "TalkMessage.h"
 #import "NSString+UUID.h"
 #import "Attachment.h"
 #import "AppDelegate.h"
@@ -186,7 +186,7 @@
             contact.latestMessageTime = date;
 
             for(int i = 0; i < messageCount; ++i) {
-                Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: importContext];
+                TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"TalkMessage" inManagedObjectContext: importContext];
 
                 message.body = messages[contactIndex][i % ((NSArray*)messages[contactIndex]).count];
                 message.timeStamp = date;
@@ -220,7 +220,7 @@
 
 }
 
-- (void) attachAttachment: (Message*) message moc: (NSManagedObjectContext*) moc {
+- (void) attachAttachment: (TalkMessage*) message moc: (NSManagedObjectContext*) moc {
 
     NSString * path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"angry_wet_coala.jpg"];
     UIImage * image = [UIImage imageNamed: @"angry_wet_coala.jpg"];

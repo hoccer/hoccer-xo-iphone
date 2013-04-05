@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class AutoheightLabel;
-@class Message;
+@class TalkMessage;
 
 @interface BubbleView : UIView
 
@@ -23,6 +23,6 @@
 - (id) initWithCoder:(NSCoder *)aDecoder;
 - (void) awakeFromNib;
 
-- (CGFloat) heightForMessage: (Message*) message;
+- (CGFloat) heightForMessage: (TalkMessage*) message;
 
 @end

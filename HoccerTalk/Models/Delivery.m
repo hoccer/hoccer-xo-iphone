@@ -7,7 +7,7 @@
 //
 
 #import "Delivery.h"
-#import "Message.h"
+#import "TalkMessage.h"
 
 
 @implementation Delivery

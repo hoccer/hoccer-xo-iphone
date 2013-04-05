@@ -11,7 +11,7 @@
 @class AutoheightLabel;
 @class InsetImageView;
 @class BubbleView;
-@class Message;
+@class TalkMessage;
 
 @interface MessageCell : UITableViewCell
 
@@ -19,6 +19,6 @@
 @property (strong, nonatomic) IBOutlet InsetImageView *avatar;
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
-- (CGFloat) heightForMessage: (Message*) message;
+- (CGFloat) heightForMessage: (TalkMessage*) message;
 
 @end

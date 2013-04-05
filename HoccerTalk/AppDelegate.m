@@ -10,7 +10,7 @@
 
 #import "ConversationViewController.h"
 #import "Contact.h"
-#import "Message.h"
+#import "TalkMessage.h"
 #import "AssetStore.h"
 #import "NavigationMenuViewController.h"
 #import "ContactListViewController.h"
@@ -25,6 +25,10 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    return YES;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -34,23 +38,22 @@
 
     ConversationViewController * controller = nil;
     UIStoryboard *storyboard = nil;
-    UINavigationController * navigationController = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        navigationController = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate = (id)navigationController.topViewController;
+        self.navigationController = [splitViewController.viewControllers lastObject];
+        splitViewController.delegate = (id)self.navigationController.topViewController;
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
         controller = (ConversationViewController *)masterNavigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
-        navigationController = (UINavigationController *)self.window.rootViewController;
-        controller = (ConversationViewController *)navigationController.topViewController;
+        self.navigationController = (UINavigationController *)self.window.rootViewController;
+        controller = (ConversationViewController *)self.navigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
     // TODO: be lazy
     controller.managedObjectContext = self.managedObjectContext;
 
-    UINavigationBar *bar = [navigationController navigationBar];
+    UINavigationBar *bar = [self.navigationController navigationBar];
     [bar setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar-bg" withLeftCapWidth: 65 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
 
     UIImage * navigationButtonBackground = [[UIImage imageNamed: @"navbar-btn-default"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
@@ -60,12 +63,12 @@
 
     ContactListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
     NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
-    navigationController.sideMenu = [MFSideMenu menuWithNavigationController:navigationController
+    self.navigationController.sideMenu = [MFSideMenu menuWithNavigationController:self.navigationController
                                               leftSideMenuController:navigationMenuViewController
                                              rightSideMenuController:contactListViewController];
-    navigationController.sideMenu.menuWidth = 256;
-    navigationController.sideMenu.shadowOpacity = 1.0;
-    navigationController.sideMenu.menuStateEventBlock = ^(MFSideMenuStateEvent event) {
+    self.navigationController.sideMenu.menuWidth = 256;
+    self.navigationController.sideMenu.shadowOpacity = 1.0;
+    self.navigationController.sideMenu.menuStateEventBlock = ^(MFSideMenuStateEvent event) {
         switch (event) {
             case MFSideMenuStateEventMenuWillOpen:
                 break;
@@ -80,9 +83,9 @@
     };
 
     [navigationMenuViewController cacheViewController: controller withStoryboardId: @"conversationViewController"];
-    navigationMenuViewController.sideMenu = navigationController.sideMenu;
+    navigationMenuViewController.sideMenu = self.navigationController.sideMenu;
 
-    contactListViewController.sideMenu = navigationController.sideMenu;
+    contactListViewController.sideMenu = self.navigationController.sideMenu;
     contactListViewController.conversationViewController = controller;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
@@ -243,6 +246,19 @@
 - (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
 }
 */
+
+#pragma mark - URL Handling
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if ([[url scheme] isEqualToString:@"hctalk"]) {
+        NSLog(@"got invite token: %@", url.host);
+        // TODO: input verification
+        [self.chatBackend pairByToken: url.host pairingHandler: ^(BOOL success) {
+            NSLog(@"pairing %@", success ? @"successful" : @"failed");
+        }];
+    }
+    return NO;
+}
 
 #pragma mark - Hoccer Talk Delegate
 

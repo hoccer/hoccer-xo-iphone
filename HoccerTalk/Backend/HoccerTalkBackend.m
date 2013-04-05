@@ -10,7 +10,7 @@
 
 #import "JsonRpcWebSocket.h"
 #import "NSManagedObject+RPCDictionary.h"
-#import "Message.h"
+#import "TalkMessage.h"
 #import "Delivery.h"
 #import "Contact.h"
 #import "AppDelegate.h"
@@ -46,8 +46,8 @@
 }
 
 // TODO: contact should be an array of contacts
-- (Message*) sendMessage:(NSString *) text toContact: (Contact*) contact {
-    Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.delegate.managedObjectContext];
+- (TalkMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact {
+    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"TalkMessage" inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeStamp = [NSDate date];
     message.contact = contact;
@@ -73,7 +73,7 @@
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
-    Message * message =  (Message*)[NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext: self.delegate.managedObjectContext];
+    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"TalkMessage" inManagedObjectContext: self.delegate.managedObjectContext];
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName:@"Delivery" inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
@@ -166,7 +166,7 @@
         }
     }
     // paranoid but safe: for each message collect those deliveries that have state 'new' and send them out
-    for (Message * message in pendingMessages) {
+    for (TalkMessage * message in pendingMessages) {
         NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
         for (Delivery * delivery in message.deliveries) {
             if ([delivery.state isEqualToString: [Delivery stateNew]]) {
@@ -197,7 +197,7 @@
     }];
 }
 
-- (void) deliveryRequest: (Message*) message withDeliveries: (NSArray*) deliveries {
+- (void) deliveryRequest: (TalkMessage*) message withDeliveries: (NSArray*) deliveries {
     NSMutableDictionary * messageDict = [message rpcDictionary];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
     for (Delivery * delivery in deliveries) {
@@ -243,7 +243,6 @@
     }];
 }
 
-
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
     NSLog(@"generateToken:");
     [_serverConnection invoke: @"generateToken" withParams: @[purpose, [NSNumber numberWithInt:seconds]] onResponse: ^(id responseOrError, BOOL success) {
@@ -257,7 +256,19 @@
     }];
 }
 
+- (void) pairByToken: (NSString*) token pairingHandler: (PairingHandler) handler {
+    NSLog(@"pairByToken:");
+    [_serverConnection invoke: @"pairByToken" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"pairByToken(): got result: %@", responseOrError);
+            handler([responseOrError boolValue]);
+        } else {
+            NSLog(@"generateToken(): failed: %@", responseOrError);
+            handler(NO);
+        }
+    }];
 
+}
 #pragma mark - Incoming RPC Calls
 
 - (void) incomingDelivery: (NSArray*) params {

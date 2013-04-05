@@ -9,7 +9,6 @@
 #import "CustomNavigationBar.h"
 
 #import <QuartzCore/QuartzCore.h>
-#import <UIKit/UINavigationBar.h>
 
 static const CGFloat kButtonWidth = 49;
 static const CGFloat kButtonColumnWidth = 63;
