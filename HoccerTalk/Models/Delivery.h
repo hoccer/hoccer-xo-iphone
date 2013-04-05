@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#import "HoccerTalkModel.h"
+
 @class TalkMessage;
 @class Contact;
 
-@interface Delivery : NSManagedObject
+@interface Delivery : HoccerTalkModel
 
 @property (nonatomic, strong) NSString * state;
 @property (nonatomic, strong) TalkMessage *message;

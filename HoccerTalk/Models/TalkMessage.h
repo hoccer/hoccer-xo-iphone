@@ -12,7 +12,9 @@
 @class Attachment;
 @class Delivery;
 
-@interface TalkMessage : NSManagedObject
+#import "HoccerTalkModel.h"
+
+@interface TalkMessage : HoccerTalkModel
 
 @property (nonatomic, strong) NSString* body;
 @property (nonatomic, strong) NSDate*   timeStamp;

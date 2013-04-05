@@ -9,7 +9,6 @@
 #import "HoccerTalkBackend.h"
 
 #import "JsonRpcWebSocket.h"
-#import "NSManagedObject+RPCDictionary.h"
 #import "TalkMessage.h"
 #import "Delivery.h"
 #import "Contact.h"
@@ -47,7 +46,7 @@
 
 // TODO: contact should be an array of contacts
 - (TalkMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact {
-    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"TalkMessage" inManagedObjectContext: self.delegate.managedObjectContext];
+    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeStamp = [NSDate date];
     message.contact = contact;
@@ -56,7 +55,7 @@
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
 
-    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName:@"Delivery" inManagedObjectContext: self.delegate.managedObjectContext];
+    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
     delivery.receiver = contact;
@@ -73,8 +72,8 @@
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
-    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"TalkMessage" inManagedObjectContext: self.delegate.managedObjectContext];
-    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName:@"Delivery" inManagedObjectContext: self.delegate.managedObjectContext];
+    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
 
@@ -139,7 +138,6 @@
 }
 
 - (void) reconnect {
-    NSLog(@"reconnect");
     [_serverConnection reopenWithURLRequest: [self urlRequest]];
 }
 
@@ -173,7 +171,6 @@
                 [newDeliveries addObject: delivery];
             }
         }
-        NSLog(@"======= resending pending message: %@ %@", message, newDeliveries);
         [self deliveryRequest: message withDeliveries: newDeliveries];
     }
 }
@@ -263,7 +260,7 @@
             NSLog(@"pairByToken(): got result: %@", responseOrError);
             handler([responseOrError boolValue]);
         } else {
-            NSLog(@"generateToken(): failed: %@", responseOrError);
+            NSLog(@"pairByToken(): failed: %@", responseOrError);
             handler(NO);
         }
     }];
@@ -320,7 +317,7 @@
 }
 
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket {
-    NSLog(@"webSocketDidOpen");
+    //NSLog(@"webSocketDidOpen");
     _backoffTime = 0.0;
     [self identify];
 }

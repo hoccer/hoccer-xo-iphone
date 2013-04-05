@@ -184,7 +184,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     // Create the fetch request for the entity.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *callEntity = [NSEntityDescription entityForName: @"Contact" inManagedObjectContext: self.managedObjectContext];
+    NSEntityDescription *callEntity = [NSEntityDescription entityForName: [Contact entityName] inManagedObjectContext: self.managedObjectContext];
     [fetchRequest setEntity:callEntity];
 
     NSMutableArray *predicateArray = [NSMutableArray array];
@@ -341,7 +341,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"bonked button %d", buttonIndex);
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
     }

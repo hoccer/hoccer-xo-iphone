@@ -43,7 +43,6 @@
 }
 
 -(void)pickerDoneClicked {
-  	NSLog(@"Done Clicked");
     [identityTextField resignFirstResponder];
     [messageCountTextField resignFirstResponder];
 }
@@ -51,7 +50,6 @@
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     return 1;
 }
-
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
     if ([pickerView isEqual: identityPicker]) {
@@ -168,14 +166,12 @@
     AppDelegate * appDelegate = ((AppDelegate *)[[UIApplication sharedApplication] delegate]);
     NSManagedObjectContext *importContext = appDelegate.managedObjectContext;
 
-    NSLog(@"adding dummy messages");
-
     int contactIndex = 0;
     for (NSString* nick in identities) {
         if ( ! [nick isEqualToString: identityTextField.text]) {
             NSLog(@"adding dummy conversation with %@", identities[contactIndex]);
 
-            Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext: importContext];
+            Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: importContext];
             contact.nickName = identities[contactIndex];
             if (contactIndex < [avatars count]) {
                 contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatars[contactIndex]]);
@@ -186,7 +182,7 @@
             contact.latestMessageTime = date;
 
             for(int i = 0; i < messageCount; ++i) {
-                TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName:@"TalkMessage" inManagedObjectContext: importContext];
+                TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: importContext];
 
                 message.body = messages[contactIndex][i % ((NSArray*)messages[contactIndex]).count];
                 message.timeStamp = date;
@@ -225,7 +221,7 @@
     NSString * path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"angry_wet_coala.jpg"];
     UIImage * image = [UIImage imageNamed: @"angry_wet_coala.jpg"];
 
-    Attachment * attachment =  (Attachment*)[NSEntityDescription insertNewObjectForEntityForName:@"Attachment" inManagedObjectContext: moc];
+    Attachment * attachment =  (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: moc];
     [attachment makeImageAttachment:[[NSURL fileURLWithPath: path] absoluteString] image: image];
         
     message.attachment = attachment;

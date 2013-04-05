@@ -8,8 +8,9 @@
 
 #import <CoreData/CoreData.h>
 
-@interface Contact : NSManagedObject
+#import "HoccerTalkModel.h"
 
+@interface Contact : HoccerTalkModel
 
 @property (nonatomic, strong) NSData*       avatar;
 @property (nonatomic, strong) NSString*     clientId;
