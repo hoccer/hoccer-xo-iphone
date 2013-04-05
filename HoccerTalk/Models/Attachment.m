@@ -45,6 +45,21 @@
             NSLog(@"unhandled URL otherURL scheme %@", anOtherUrl.scheme);
         }
     }
+    NSError *myError = nil;
+    if (self.localURL != nil) {
+        NSString * myPath = [[NSURL URLWithString: self.localURL] path];
+        self.contentSize = [[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError] fileSize];
+        if (myError != nil) {
+            NSLog(@"can not determine size of file '%@'", myPath);
+        }
+        NSLog(@"Size = %lld (of file '%@')", self.contentSize, myPath);
+    }
+    if (self.assetURL != nil) {
+        [self assetSizer:^(int64_t theSize, NSError * theError) {
+            self.contentSize = theSize;
+            NSLog(@"Asset Size = %lld (of file '%@')", self.contentSize, self.assetURL);
+        } url:self.assetURL];
+    }
 }
 
 - (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage {
@@ -79,11 +94,29 @@
     self.image = [movie thumbnailImageAtTime:0.0 timeOption:MPMovieTimeOptionExact];
     self.aspectRatio = (double)(self.image.size.width) / self.image.size.height;
 }
-                 
 
-- (UIImage *) symbolImage {
-    return nil;
+- (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
+    
+    ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
+    {
+        ALAssetRepresentation *rep = [myasset defaultRepresentation];
+        int64_t mySize = [rep size];
+        block(mySize, nil);
+    };
+    
+    ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
+    {
+        NSLog(@"Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
+        block(0, myerror);
+    };
+    
+    ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
+    [assetslibrary assetForURL: [NSURL URLWithString: theAssetURL]
+                   resultBlock: resultblock
+                  failureBlock: failureblock];
+
 }
+
 
 - (void) loadImage: (ImageLoaderBlock) block {
     if (self.localURL != nil) {

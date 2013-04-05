@@ -14,6 +14,7 @@
 @class TalkMessage;
 
 typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
+typedef void(^SizeSetterBlock)(int64_t theSize,NSError*);
 
 @interface Attachment : NSManagedObject
 
@@ -30,9 +31,8 @@ typedef void(^ImageLoaderBlock)(UIImage*,NSError*);
 
 @property (nonatomic, strong) UIImage *image;
 
-@property (nonatomic, readonly) UIImage *symbolImage;
-
 - (void) loadImage: (ImageLoaderBlock) block;
+- (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL;
 
 - (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage;
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
