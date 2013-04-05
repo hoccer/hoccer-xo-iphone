@@ -29,7 +29,6 @@ const float kTimeSectionInterval = 2 * 60;
         return _avatarImage;
     }
 
-
     _avatarImage = self.avatar != nil ? [UIImage imageWithData: self.avatar] : [UIImage imageNamed: @"avatar_default_contact"];
 
     return _avatarImage;

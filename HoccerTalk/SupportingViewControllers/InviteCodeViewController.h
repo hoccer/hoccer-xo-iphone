@@ -21,4 +21,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *clipboardButton;
 @property (strong, nonatomic) IBOutlet UINavigationItem *navigationItem;
 
++ (void) showPairingAlert: (BOOL) success;
+
 @end

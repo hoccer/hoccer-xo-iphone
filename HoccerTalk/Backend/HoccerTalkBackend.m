@@ -233,7 +233,6 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
     }];
 }
 
-
 - (NSURLConnection *)httpRequest:(NSString *)method
                 absoluteURI:(NSString *)URLString
                     payload:(NSData *)payload
@@ -345,6 +344,19 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
     }];
 }
 
+- (void) unregisterApns {
+    NSLog(@"unregisterApns:");
+    [_serverConnection invoke: @"unregisterApns" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"unregisterApns(): got result: %@", responseOrError);
+        } else {
+            // TODO retry?
+            NSLog(@"registerApns(): failed: %@", responseOrError);
+        }
+    }];
+}
+
+
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
     NSLog(@"generateToken:");
     [_serverConnection invoke: @"generateToken" withParams: @[purpose, [NSNumber numberWithInt:seconds]] onResponse: ^(id responseOrError, BOOL success) {
@@ -404,6 +416,11 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
      */
     NSLog(@"================= outgoingDelivery() called");
 }
+
+- (void) pushNotRegistered: (NSArray*) unused {
+    [self registerApns: [self.delegate apnDeviceToken]];
+}
+
 
 #pragma mark - JSON RPC WebSocket Delegate
 

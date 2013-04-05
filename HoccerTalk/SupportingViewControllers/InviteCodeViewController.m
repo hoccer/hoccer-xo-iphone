@@ -81,14 +81,7 @@
     NSLog(@"onDone");
     if ( ! _newTokenButtonPressed) {
         [self.chatBackend pairByToken: self.codeTextField.text pairingHandler:^(BOOL success) {
-            if ( ! success) {
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Invite failed"
-                                                                  message:@"The server rejected your invite code."
-                                                                 delegate:nil
-                                                        cancelButtonTitle:@"OK"
-                                                        otherButtonTitles:nil];
-                [message show];
-            }
+            [InviteCodeViewController showPairingAlert: success];
         }];
     }
     [self dismissModalViewControllerAnimated: YES];
@@ -116,6 +109,24 @@
         _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
     }
     return _chatBackend;
+}
+
++ (void) showPairingAlert: (BOOL) success {
+    NSString * title;
+    NSString * message;
+    if (success) {
+        title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
+        message = NSLocalizedString(@"Invite successful", @"Invite Alert Message");
+    } else {
+        title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
+        message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                                    message: message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

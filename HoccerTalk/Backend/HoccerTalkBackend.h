@@ -24,6 +24,7 @@ typedef void (^PairingHandler)(BOOL);
 @protocol HoccerTalkDelegate <NSObject>
 
 - (NSString*) clientId;
+- (NSString*) apnDeviceToken;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
 
@@ -48,6 +49,7 @@ typedef void (^PairingHandler)(BOOL);
 - (void) pairByToken: (NSString*) token pairingHandler: (PairingHandler) handler;
 
 - (void) gotAPNSDeviceToken: (NSData*) deviceToken;
+- (void) unregisterApns;
 
 - (void) start;
 

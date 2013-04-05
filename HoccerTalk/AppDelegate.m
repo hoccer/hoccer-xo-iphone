@@ -16,6 +16,7 @@
 #import "ContactListViewController.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
+#import "InviteCodeViewController.h"
 
 #import "MFSideMenu.h"
 
@@ -248,6 +249,7 @@
         // NSLog(@"got APNS deviceToken: %@ ", [deviceToken hexadecimalString]);
         // TODO: do we need this?
         //self.registered = YES;
+        [[NSUserDefaults standardUserDefaults] setValue: deviceToken forKey: @"apnDeviceToken"];
         [self.chatBackend gotAPNSDeviceToken: deviceToken];
     } else {
         NSLog(@"ERROR: APN device token is nil");
@@ -270,7 +272,7 @@
         //NSLog(@"got invite token: %@", url.host);
         // TODO: input verification
         [self.chatBackend pairByToken: url.host pairingHandler: ^(BOOL success) {
-            NSLog(@"pairing using device token %@ %@", url.host, success ? @"successful" : @"failed");
+            [InviteCodeViewController showPairingAlert: success];
         }];
     }
     return NO;
@@ -281,4 +283,9 @@
 - (NSString*) clientId {
     return [[NSUserDefaults standardUserDefaults] stringForKey: @"clientId"];
 }
+
+- (NSString*) apnDeviceToken {
+    return [[NSUserDefaults standardUserDefaults] stringForKey: @"apnDeviceToken"];
+}
+
 @end
