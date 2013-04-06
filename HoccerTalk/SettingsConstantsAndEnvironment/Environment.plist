@@ -11,6 +11,8 @@
 	<dict>
 		<key>development</key>
 		<string>ws://development.hoccer.com:7000</string>
+		<key>production</key>
+		<string>ws://development.hoccer.com:7000</string>
 	</dict>
 	<key>fileCacheURI</key>
 	<dict>
