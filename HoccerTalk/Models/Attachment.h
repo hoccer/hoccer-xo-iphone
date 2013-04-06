@@ -13,6 +13,7 @@
 #import "HoccerTalkModel.h"
 
 @class TalkMessage;
+@class HoccerTalkBackend;
 
 typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
@@ -40,17 +41,29 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 
 @property (nonatomic, strong) UIImage *image;
 
-@property (nonatomic, strong) NSURLConnection *uploadConnection;
+@property (nonatomic, strong) NSURLConnection *transferConnection;
 
 @property (readonly, strong) NSDictionary * uploadHttpHeaders;
+@property (readonly, strong) NSDictionary * downloadHttpHeaders;
+
+@property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
 
 -(void) withUploadData: (DataSetterBlock) execution;
 
 - (id < NSURLConnectionDelegate >) uploadDelegate;
+- (id < NSURLConnectionDelegate >) downloadDelegate;
 
 - (void) loadImage: (ImageLoaderBlock) block;
 
+- (void) upload;
+- (void) download;
+- (void) downloadLater: (NSTimer*) theTimer;
+
 - (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage;
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
+
+- (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
+
+- (NSString *) fileExtensionFromMimeType;
                  
 @end

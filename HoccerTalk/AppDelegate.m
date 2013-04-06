@@ -26,6 +26,8 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+@synthesize userAgent;
+
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     return YES;
 }
@@ -34,8 +36,7 @@
 
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
-    self.chatBackend = [[HoccerTalkBackend alloc] init];
-    self.chatBackend.delegate = self;
+    self.chatBackend = [[HoccerTalkBackend alloc] initWithDelegate: self];
 
     ConversationViewController * conversationViewController = nil;
     UIStoryboard *storyboard = nil;
@@ -240,6 +241,20 @@
 // Returns the URL to the application's Documents directory.
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+#pragma mark - Application's user Agent string for http request
+
+- (NSString *) userAgent {
+	if (userAgent == nil) {
+        userAgent = [NSString stringWithFormat: @"%@ %@ / %@ / %@ %@",
+                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
+                     [UIDevice currentDevice].model,
+                     [UIDevice currentDevice].systemName,
+                     [UIDevice currentDevice].systemVersion];
+	}
+	return userAgent;
 }
 
 #pragma mark - Apple Push Notifications

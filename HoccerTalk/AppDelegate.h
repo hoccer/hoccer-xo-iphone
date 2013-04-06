@@ -20,6 +20,8 @@
 @property (nonatomic, strong) HoccerTalkBackend * chatBackend;
 @property (nonatomic, strong) UINavigationController * navigationController;
 
+@property (nonatomic, strong) NSString * userAgent;
+
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 - (void) setupDone;

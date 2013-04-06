@@ -37,9 +37,8 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
 
 @implementation HoccerTalkBackend
 
-@synthesize userAgent;
 
-- (id) init {
+- (id) initWithDelegate: (AppDelegate *) theAppDelegate {
     self = [super init];
     if (self != nil) {
         _backoffTime = 0.0;
@@ -50,6 +49,7 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
         [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery" withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
+        _delegate = theAppDelegate;
     }
     return self;
 }
@@ -83,7 +83,7 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
     if (_isConnected) {
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
-    [self uploadAttachment: attachment];
+    [attachment upload];
     
     return message;
 }
@@ -135,6 +135,11 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     [self deliveryConfirm: message.messageId withDelivery: delivery];
+    
+    if (attachment) {
+        [NSTimer scheduledTimerWithTimeInterval:2.0 target:attachment selector: @selector(downloadLater:) userInfo:nil repeats:NO];
+        //[attachment download];
+    }
 }
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken {
@@ -212,71 +217,51 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
         abort();
     }
     for (Attachment * attachment in unfinishedAttachments) {
-        [self uploadAttachment: attachment];
+        [attachment upload];
     }
 }
 
-- (void) uploadAttachment:(Attachment *) myAttachment {
-    if (myAttachment.uploadConnection != nil) {
-        // do something about it
-        NSLog(@"upload of attachment still running");
-        return;
-    }
-    [myAttachment withUploadData:^(NSData * myData, NSError * myError) {
-        if (myError == nil) {
-            myAttachment.uploadConnection = [self httpRequest:@"PUT"
-                                                  absoluteURI:[myAttachment remoteURL]
-                                                      payload:myData
-                                                      headers:[myAttachment uploadHttpHeaders]
-                                                     delegate:[myAttachment uploadDelegate]
-                                             ];
-            
-        } else {
-            NSLog(@"uploadAttachment error=%@",myError);
-        }
-    }];
-}
-
-- (NSURLConnection *)httpRequest:(NSString *)method
-                absoluteURI:(NSString *)URLString
-                    payload:(NSData *)payload
-                     headers:(NSDictionary *)headers
-                   delegate:(id < NSURLConnectionDelegate >)connectionDelegate
+- (void) flushPendingAttachmentDownloads {
+    // fetch all not yet transferred uploads
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotDownloaded"];
+    NSError *error;
+    NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (unfinishedAttachments == nil)
     {
+        NSLog(@"Fetch request 'AttachmentsNotDownloaded' failed: %@", error);
+        abort();
+    }
+    for (Attachment * attachment in unfinishedAttachments) {
+        [attachment download];
+    }
+}
+
+- (NSURL *) newUploadURL {
+    NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
+    return [NSURL URLWithString: myURL];
+}
+
+- (NSMutableURLRequest *)httpRequest:(NSString *)method
+                         absoluteURI:(NSString *)URLString
+                             payload:(NSData *)payload
+                             headers:(NSDictionary *)headers
+{
 	
     NSLog(@"httpRequest method: %@ url: %@", method, URLString);
     NSURL *url = [NSURL URLWithString:URLString];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	
-	[request addValue:self.userAgent forHTTPHeaderField:@"User-Agent"];
+	[request addValue:self.delegate.userAgent forHTTPHeaderField:@"User-Agent"];
 	for (NSString *key in headers) {
 		[request addValue:[headers objectForKey:key] forHTTPHeaderField:key];
 	}
     
 	[request setHTTPMethod:method];
 	[request setHTTPBody:payload];
-	[request setTimeoutInterval:60 * 60];
+	[request setTimeoutInterval:60];
 	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
     
-    NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:connectionDelegate];
-    return connection;
-}
-
-- (NSString *) userAgent {
-	if (userAgent == nil) {
-        userAgent = [NSString stringWithFormat: @"%@ %@ / %@ / %@ %@",
-                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
-                     [UIDevice currentDevice].model,
-                     [UIDevice currentDevice].systemName,
-                     [UIDevice currentDevice].systemVersion];
-	}
-	return userAgent;
-}
-
-- (NSURL *) newUploadURL {
-    NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
-    return [NSURL URLWithString: myURL];
+    return request;
 }
 
 #pragma mark - Outgoing RPC Calls
@@ -293,6 +278,7 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
             }
             [self flushPendingMessages];
             [self flushPendingAttachmentUploads];
+            [self flushPendingAttachmentDownloads];
             _isConnected = YES;
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);

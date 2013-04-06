@@ -14,6 +14,7 @@
 @class Delivery;
 @class TalkMessage;
 @class Attachment;
+@class AppDelegate;
 
 FOUNDATION_EXPORT NSString * const kHoccerTalkServerDevelopment;
 FOUNDATION_EXPORT NSString * const kHoccerTalkServerProduction;
@@ -38,10 +39,9 @@ typedef void (^PairingHandler)(BOOL);
     NSString *userAgent;
 }
 
-@property (nonatomic, weak) id<HoccerTalkDelegate> delegate;
-@property (nonatomic, strong) NSString * userAgent;
+@property (nonatomic, weak) AppDelegate * delegate;
 
-- (id) init;
+- (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
 - (TalkMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
@@ -61,5 +61,9 @@ typedef void (^PairingHandler)(BOOL);
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket;
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 
+- (NSMutableURLRequest *)httpRequest:(NSString *)method
+                         absoluteURI:(NSString *)URLString
+                             payload:(NSData *)payload
+                             headers:(NSDictionary *)headers;
 
 @end
