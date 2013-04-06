@@ -249,8 +249,9 @@
         // NSLog(@"got APNS deviceToken: %@ ", [deviceToken hexadecimalString]);
         // TODO: do we need this?
         //self.registered = YES;
-        [[NSUserDefaults standardUserDefaults] setValue: deviceToken forKey: @"apnDeviceToken"];
-        [self.chatBackend gotAPNSDeviceToken: deviceToken];
+        NSString * tokenString = [deviceToken hexadecimalString];
+        [[NSUserDefaults standardUserDefaults] setValue: tokenString forKey: @"apnDeviceToken"];
+        [self.chatBackend gotAPNSDeviceToken: tokenString];
     } else {
         NSLog(@"ERROR: APN device token is nil");
     }

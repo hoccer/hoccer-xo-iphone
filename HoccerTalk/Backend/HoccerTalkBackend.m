@@ -46,6 +46,8 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
         _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest]];
         _serverConnection.delegate = self;
         [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"outgoingDelivery" withSelector:@selector(outgoingDelivery:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
     }
     return self;
 }
@@ -133,11 +135,11 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
     [self deliveryConfirm: message.messageId withDelivery: delivery];
 }
 
-- (void) gotAPNSDeviceToken: (NSData*) deviceToken {
-    // TODO: send device token to server
-    _apnsDeviceToken = [deviceToken hexadecimalString];
+- (void) gotAPNSDeviceToken: (NSString*) deviceToken {
     if (_isConnected) {
-        [self registerApns: _apnsDeviceToken];
+        [self registerApns: deviceToken];
+    } else {
+        _apnsDeviceToken = deviceToken;
     }
 }
 
@@ -285,13 +287,14 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
     NSLog(@"identify() clientId: %@", clientId);
     [_serverConnection invoke: @"identify" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            _isConnected = YES;
             NSLog(@"identify(): got result: %@", responseOrError);
-            [self flushPendingMessages];
-            [self flushPendingAttachmentUploads];
             if (_apnsDeviceToken) {
                 [self registerApns: _apnsDeviceToken];
+                _apnsDeviceToken = nil; // XXX: this is not nice...
             }
+            [self flushPendingMessages];
+            [self flushPendingAttachmentUploads];
+            _isConnected = YES;
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
         }
@@ -336,7 +339,6 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
     [_serverConnection invoke: @"registerApns" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"registerApns(): got result: %@", responseOrError);
-            _apnsDeviceToken = nil; // XXX: this is not nice...
         } else {
             // TODO retry?
             NSLog(@"registerApns(): failed: %@", responseOrError);

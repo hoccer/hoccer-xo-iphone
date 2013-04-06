@@ -48,7 +48,7 @@ typedef void (^PairingHandler)(BOOL);
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
 - (void) pairByToken: (NSString*) token pairingHandler: (PairingHandler) handler;
 
-- (void) gotAPNSDeviceToken: (NSData*) deviceToken;
+- (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;
 
 - (void) start;
