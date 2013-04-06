@@ -269,7 +269,7 @@
 }
 
 - (NSURL *) newUploadURL {
-    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
+    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingPathComponent:[NSString stringWithUUID]];
     return [NSURL URLWithString: myURL];
 }
 
