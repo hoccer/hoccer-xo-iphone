@@ -54,16 +54,16 @@
     NSError *myError = nil;
     if (self.localURL != nil) {
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
-        self.contentSize = [[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError] fileSize];
+        self.contentSize = @([[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError] fileSize]);
         if (myError != nil) {
             NSLog(@"can not determine size of file '%@'", myPath);
         }
-        NSLog(@"Size = %lld (of file '%@')", self.contentSize, myPath);
+        NSLog(@"Size = %@ (of file '%@')", self.contentSize, myPath);
     }
     if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
-            self.contentSize = theSize;
-            NSLog(@"Asset Size = %lld (of file '%@')", self.contentSize, self.assetURL);
+            self.contentSize = @(theSize);
+            NSLog(@"Asset Size = %@ (of file '%@')", self.contentSize, self.assetURL);
         } url:self.assetURL];
     }
 }
@@ -231,7 +231,7 @@
     NSString *contentDisposition = [NSString stringWithFormat:@"attachment; filename=\"%@\"", myPath];
     NSDictionary * headers = [NSDictionary dictionaryWithObjectsAndKeys:
                               contentDisposition, @"Content-Disposition",
-                              [NSString stringWithFormat:@"%lli", [self contentSize]], @"Content-Length",
+                              [self contentSize].stringValue, @"Content-Length",
                               nil
                    ];
     return headers;
@@ -269,7 +269,7 @@
 {
     if (connection == uploadConnection) {
         NSLog(@"Attachment uploadConnection didSendBodyData %d", bytesWritten);
-        self.transferSize = totalBytesWritten;
+        self.transferSize = @(totalBytesWritten);
     } else {
         NSLog(@"ERROR: Attachment uploadConnection didSendBodyData without valid connection");
     }
@@ -295,5 +295,17 @@
     }
 }
 
+#pragma mark - Custom Getters and Setters
+
+- (void) setContentSize:(id)contentSize {
+    if ([contentSize isKindOfClass:[NSString class]]) {
+        NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
+        contentSize = [formatter numberFromString: contentSize];
+    }
+    [self willChangeValueForKey:@"contentSize"];
+    [self setPrimitiveValue: contentSize forKey: @"contentSize"];
+    [self didChangeValueForKey:@"contentSize"];
+    //[self setValue: contentSize forKey:@"contentSize"];
+}
 
 @end
