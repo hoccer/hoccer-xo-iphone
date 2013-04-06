@@ -49,7 +49,7 @@ static const double kAttachmentPadding = 10;
     UIImage * bubble = [AssetStore stretchableImageNamed: file withLeftCapWidth: _pointingRight ? kRightBubbleCapLeft : kLeftBubbleCapLeft topCapHeight:kBubbleCapTop];
     self.background = [[UIImageView alloc] initWithImage: bubble];
 	//self.background.frame = self.frame;
-    self.background.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[self insertSubview: self.background atIndex: 0];
 
     CGRect of = self.message.frame;
@@ -69,6 +69,7 @@ static const double kAttachmentPadding = 10;
         _attachmentView.frame = CGRectMake(self.message.frame.origin.x, self.message.frame.origin.y + self.message.frame.size.height + kAttachmentPadding,
                                            self.message.frame.size.width, self.message.frame.size.width * aspect);
         [self addSubview: view];
+        view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
     [self setNeedsLayout];
 }

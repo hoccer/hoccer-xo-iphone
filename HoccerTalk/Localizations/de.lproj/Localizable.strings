@@ -1,4 +1,4 @@
-﻿/* Navigation Menu Item */
+/* Navigation Menu Item */
 "About" = "Über Hoccer Talk";
 
 /* Attachment Actionsheet Title */
@@ -13,8 +13,44 @@
 /* Navigation Menu Item */
 "Chats" = "Chats";
 
+/* Action Sheet Button Ttitle */
+"Choose Photo/Video" = "Foto/Video wählen";
+
 /* Contacts Navigation Bar Title */
 "Contacts" = "Kontakte";
+
+/* Invite Code Copy/Paste Button */
+"Copy" = "Kopieren";
+
+/* Mail Invitation Body */
+"invitation_mail_body" = "Hallo,\nlass uns mit Hoccer Talk chatten.\n\nHol Dir Hoccer Talk:\nApp Store: %@\nAndroid: %@\n\nDanch bestätige meinen Kontakt: %@\n";
+
+/* Mail Invitation Subject */
+"invitation_mail_subject" = "Einladung zu Hoccer Talk";
+
+/* SMS Invitation Body */
+"invitation_sms_text" = "Chatte mit mir! Lade Dir Hoccer Talk im App Store. Danach klick diesen Link: %@";
+
+/* Actionsheet Title */
+"Invite by" = "Einladung";
+
+/* Invite Actionsheet Button Title */
+"Invite Code" = "per Einladungs Kode";
+
+/* Invite Alert Title */
+"Invite failed" = "Einladung fehlgeschlagen";
+
+/* Invite Alert Title */
+"Invite successful" = "Einladung erfolgreich";
+
+/* Invite Actionsheet Button Title */
+"Mail" = "per Mail";
+
+/* Invite Token View Controller */
+"or" = "oder";
+
+/* Invite Code Copy/Paste Button */
+"Paste" = "Einfügen";
 
 /* Navigation Menu Item */
 "Profile" = "Profil";
@@ -28,14 +64,23 @@
 /* Chat Send Button Title */
 "Send" = "Senden";
 
+/* Invite Token View Controller */
+"Send this token to a friend:" = "Sende diesen Kode an einen Freund:";
+
 /* Navigation Menu Item */
 "Settings" = "Einstellungen";
+
+/* Invite Actionsheet Button Title */
+"SMS" = "per SMS";
 
 /* Action Sheet Button Ttitle */
 "Take Photo/Video" = "Foto/Video aufnehmen";
 
-/* Action Sheet Button Ttitle */
-"Choose Photo/Video" = "Foto/Video wählen";
+/* Invite Alert Message */
+"The server accepted your code" = "Der Server hat den Kode akzeptiert";
+
+/* Invite Alert Message */
+"The server rejected your invite code" = "Der Server hat den Kode abgelehnt";
 
 /* Navigation Menu Item */
 "Tutorial" = "Anleitung";
@@ -43,30 +88,9 @@
 /* Actionsheet Button Title */
 "View Attachment" = "Anhang anzeigen";
 
-/* Push Notifictaion: One New Message */
-"apn_one_new_message" = "Du hast eine neue Nachricht!";
-
-/* Push Notifictaion: New Messages */
+/* APN new messages */
 "apn_new_messages" = "Du hast %@ neue Nachrichten!";
 
-/* Mail Invitation Body */
-"invitation_mail_body" = "Hallo,\nlass uns mit Hoccer Talk chatten. Hol Dir Hoccer Talk:\nApp Store: %@\nAndroid: %@\n\nDanch bestätige meinen Kontakt: %@\n";
-
-/* Mail Invitation Subject */
-"invitation_mail_subject" = "Einladung zu Hoccer Talk";
-
-/* SMS Invitation Body */
-"invitation_sms_text" = "Chatte mit mir! Lade Dir Hoccer Talk im App Store. Danach klick diesen Link: %@";
-
-/* Actionsheet Title */
-"Invite by" = "Einladung";
-
-/* Invite Actionsheet Button Title */
-"Mail" = "per Mail";
-
-/* Invite Actionsheet Button Title */
-"SMS" = "per SMS";
-
-/* Invite Actionsheet Button Title */
-"Invite Code" = "per Einladungs Kode";
+/* APN one new message */
+"apn_one_new_message" = "Du hast eine neue Nachricht!";
 

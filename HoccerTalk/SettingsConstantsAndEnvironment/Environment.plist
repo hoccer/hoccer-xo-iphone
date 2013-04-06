@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>_validEnvironments</key>
+	<array>
+		<string>production</string>
+		<string>development</string>
+	</array>
+	<key>talkServer</key>
+	<dict>
+		<key>development</key>
+		<string>ws://development.hoccer.com:7000</string>
+		<key>production</key>
+		<string>ws://development.hoccer.com:7000</string>
+	</dict>
+	<key>fileCacheURI</key>
+	<dict>
+		<key>development</key>
+		<string>https://filecache-experimental.hoccer.com/v3/</string>
+		<key>production</key>
+		<string>https://filecache.hoccer.com/v3/</string>
+	</dict>
+</dict>
+</plist>

@@ -7,6 +7,7 @@
 //
 
 #import "FirstRunViewController.h"
+
 #import "InsetImageView.h"
 #import "AppDelegate.h"
 #import "Contact.h"
@@ -14,6 +15,7 @@
 #import "NSString+UUID.h"
 #import "Attachment.h"
 #import "AppDelegate.h"
+#import "HTUserDefaults.h"
 
 @implementation FirstRunViewController
 
@@ -88,7 +90,7 @@
     [self dismissModalViewControllerAnimated: YES];
     [self saveDummyProfile];
     [self addDummies];
-    [[NSUserDefaults standardUserDefaults] setBool: YES forKey: @"firstRunDone"];
+    [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
     AppDelegate * appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate setupDone];
 }
@@ -113,10 +115,10 @@
 }
 
 - (void) saveDummyProfile {
-    [[NSUserDefaults standardUserDefaults] setObject: identityTextField.text forKey: @"clientId"];
-    [[NSUserDefaults standardUserDefaults] setObject: identityTextField.text forKey: @"nickName"];
-    [[NSUserDefaults standardUserDefaults] setObject: UIImagePNGRepresentation(avatarView.image) forKey:@"avatarImage"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[HTUserDefaults standardUserDefaults] setObject: identityTextField.text forKey: kHTClientId];
+    [[HTUserDefaults standardUserDefaults] setObject: identityTextField.text forKey: kHTNickName];
+    [[HTUserDefaults standardUserDefaults] setObject: UIImagePNGRepresentation(avatarView.image) forKey: kHTAvatarImage];
+    [[HTUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void) addDummies {

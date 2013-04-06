@@ -445,17 +445,25 @@
 
 #pragma mark - Custom Getters and Setters
 
-- (void) setContentSize:(id)contentSize {
-    if ([contentSize isKindOfClass:[NSString class]]) {
+- (void) setContentSize:(id)size {
+    if ([size isKindOfClass:[NSString class]]) {
         NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
-        contentSize = [formatter numberFromString: contentSize];
+        size = [formatter numberFromString: size];
     }
     [self willChangeValueForKey:@"contentSize"];
-    [self setPrimitiveValue: contentSize forKey: @"contentSize"];
+    [self setPrimitiveValue: size forKey: @"contentSize"];
     [self didChangeValueForKey:@"contentSize"];
-    //[self setValue: contentSize forKey:@"contentSize"];
 }
 
+- (void) setTransferSize:(id)size {
+    if ([size isKindOfClass:[NSString class]]) {
+        NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
+        size = [formatter numberFromString: size];
+    }
+    [self willChangeValueForKey:@"transferSize"];
+    [self setPrimitiveValue: size forKey: @"transferSize"];
+    [self didChangeValueForKey:@"transferSize"];
+}
 
 
 @end

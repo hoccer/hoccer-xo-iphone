@@ -28,6 +28,7 @@
 #import "Attachment.h"
 #import "AttachmentViewFactory.h"
 #import "BubbleView.h"
+#import "HTUserDefaults.h"
 
 @interface ChatViewController ()
 
@@ -638,7 +639,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        self.avatarImage = [UIImage imageWithData: [[NSUserDefaults standardUserDefaults] objectForKey: @"avatarImage"]];
+        self.avatarImage = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
     }
 
     if ([message.isRead isEqualToNumber: @NO]) {
@@ -649,11 +650,6 @@
     cell.message.text = message.body;
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : message.contact.avatarImage;
 
-    NSLog(@"configureCell msgtext=%@, message.attachment = %@", message.body, message.attachment);
-    if (message.attachment != nil) {
-        NSLog(@"configureCell message.attachment.mediaType = %@", message.attachment.mediaType);
-    }
-    
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
          [message.attachment.mediaType isEqualToString:@"video"]))
@@ -671,6 +667,11 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  [self tableView: self.tableView numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
         [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionBottom animated: animated];
     }
+}
+
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    // trigger relayout on orientation change. However, there has to be a better way to do this...
+    [self.tableView reloadData];
 }
 
 @end

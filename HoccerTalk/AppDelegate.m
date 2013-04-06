@@ -17,6 +17,8 @@
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 #import "InviteCodeViewController.h"
+#import "HTUserDefaults.h"
+#import "Environment.h"
 
 #import "MFSideMenu.h"
 
@@ -33,6 +35,7 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
 
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
@@ -59,7 +62,7 @@
 
     [self setupSideMenusWithStoryboard: storyboard andConversationViewController: conversationViewController];
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
+    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         [self setupDone];
     }
 
@@ -265,7 +268,7 @@
         // TODO: do we need this?
         //self.registered = YES;
         NSString * tokenString = [deviceToken hexadecimalString];
-        [[NSUserDefaults standardUserDefaults] setValue: tokenString forKey: @"apnDeviceToken"];
+        [[HTUserDefaults standardUserDefaults] setValue: tokenString forKey: kHTAPNDeviceToken];
         [self.chatBackend gotAPNSDeviceToken: tokenString];
     } else {
         NSLog(@"ERROR: APN device token is nil");
@@ -296,11 +299,11 @@
 #pragma mark - Hoccer Talk Delegate
 
 - (NSString*) clientId {
-    return [[NSUserDefaults standardUserDefaults] stringForKey: @"clientId"];
+    return [[HTUserDefaults standardUserDefaults] stringForKey: kHTClientId];
 }
 
 - (NSString*) apnDeviceToken {
-    return [[NSUserDefaults standardUserDefaults] stringForKey: @"apnDeviceToken"];
+    return [[HTUserDefaults standardUserDefaults] stringForKey: kHTAPNDeviceToken];
 }
 
 @end
