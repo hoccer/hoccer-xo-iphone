@@ -469,7 +469,7 @@
     // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
     //     because the table view assuemes there is a 1px separator. However, sometimes the
     //     grey line still appears ...
-    return self.headerCell.frame.size.height - 1;
+    return self.headerCell.frame.size.height;
 }
 
 #pragma mark - Table view delegate
@@ -650,11 +650,6 @@
     cell.message.text = message.body;
     cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : message.contact.avatarImage;
 
-    NSLog(@"configureCell msgtext=%@, message.attachment = %@", message.body, message.attachment);
-    if (message.attachment != nil) {
-        NSLog(@"configureCell message.attachment.mediaType = %@", message.attachment.mediaType);
-    }
-    
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
          [message.attachment.mediaType isEqualToString:@"video"]))
