@@ -264,12 +264,12 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
 
 - (NSString *) userAgent {
 	if (userAgent == nil) {
-		NSMutableString *buffer = [NSMutableString string];
-		[buffer appendFormat:@"%@ ", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]];
-		[buffer appendFormat:@"%@ / ", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
-		[buffer appendFormat:@"%@ / ", [UIDevice currentDevice].model];
-		[buffer appendFormat:@"%@ %@", [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion];
-		userAgent = buffer;
+        userAgent = [NSString stringWithFormat: @"%@ %@ / %@ / %@ %@",
+                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
+                     [UIDevice currentDevice].model,
+                     [UIDevice currentDevice].systemName,
+                     [UIDevice currentDevice].systemVersion];
 	}
 	return userAgent;
 }
