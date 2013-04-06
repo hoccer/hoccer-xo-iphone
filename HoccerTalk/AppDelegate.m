@@ -270,7 +270,6 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     if ([[url scheme] isEqualToString:@"hctalk"]) {
-        //NSLog(@"got invite token: %@", url.host);
         // TODO: input verification
         [self.chatBackend pairByToken: url.host pairingHandler: ^(BOOL success) {
             [InviteCodeViewController showPairingAlert: success];

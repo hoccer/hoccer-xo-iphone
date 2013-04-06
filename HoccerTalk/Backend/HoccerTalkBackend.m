@@ -419,7 +419,10 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
 }
 
 - (void) pushNotRegistered: (NSArray*) unused {
-    [self registerApns: [self.delegate apnDeviceToken]];
+    NSString * apnDeviceToken = [self.delegate apnDeviceToken];
+    if (apnDeviceToken != nil) {
+        [self registerApns: apnDeviceToken];
+    }
 }
 
 
