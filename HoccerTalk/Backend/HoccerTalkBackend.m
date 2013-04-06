@@ -17,8 +17,10 @@
 #import "NSData+HexString.h"
 #import "Attachment.h"
 
-NSString *const kHoccerTalkServerDevelopment = @"ws://development.hoccer.com:7000/";
-NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
+NSString * const kHoccerTalkServerDevelopment = @"ws://development.hoccer.com:7000/";
+NSString * const kHoccerTalkServerProduction = @"TODO: production server URL";
+NSString * const kFileCacheProductionURI = @"https://filecache.hoccer.com/v3/";
+NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoccer.com/v3/";
 
 
 @interface HoccerTalkBackend ()
@@ -272,11 +274,8 @@ NSString *const kHoccerTalkServerProduction = @"TODO: production server URL";
 	return userAgent;
 }
 
-#define FILECACHE_URI @"https://filecache.hoccer.com/v3/"
-#define FILECACHE_SANDBOX_URI @"https://filecache-experimental.hoccer.com/v3/"
-
 - (NSURL *) newUploadURL {
-    NSString * myURL = [FILECACHE_SANDBOX_URI stringByAppendingString:[NSString stringWithUUID]];
+    NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
     return [NSURL URLWithString: myURL];
 }
 

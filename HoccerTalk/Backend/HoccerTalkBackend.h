@@ -17,6 +17,8 @@
 
 FOUNDATION_EXPORT NSString * const kHoccerTalkServerDevelopment;
 FOUNDATION_EXPORT NSString * const kHoccerTalkServerProduction;
+FOUNDATION_EXPORT NSString * const kFileCacheProductionURI;
+FOUNDATION_EXPORT NSString * const kFileCacheDevelopmentURI;
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^PairingHandler)(BOOL);
