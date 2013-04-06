@@ -23,7 +23,7 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 // persistent properties from model
 
 @property (nonatomic, strong) NSString * assetURL;              // a url that typically starts with "assets-library://"
-@property (nonatomic)         NSNumber * contentSize;           // authoritative file size in bytes
+@property (nonatomic)         NSNumber * contentSize;           // authoritative file size in bytes; supports assignment by string
 @property (nonatomic)         double     aspectRatio;           // ratio image width/height
 @property (nonatomic, strong) NSString * humanReadableFileName; // an optional human readable filename with any path component, mostly used for audio files
 @property (nonatomic, strong) NSString * localURL;              // a file url
@@ -32,7 +32,7 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 @property (nonatomic, strong) NSString * mimeType;              // mime type of the attachment
 
 @property (nonatomic, strong) NSString * remoteURL;             // remote URL where the file should/was uploaded
-@property (nonatomic)         NSNumber * transferSize;          // number of bytes uploaded
+@property (nonatomic)         NSNumber * transferSize;          // number of bytes uploaded; supports assignment by string
 
 @property (nonatomic, strong) TalkMessage *message;
 
