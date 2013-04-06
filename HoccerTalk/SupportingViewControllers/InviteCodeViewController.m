@@ -116,7 +116,7 @@
     NSString * message;
     if (success) {
         title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
-        message = NSLocalizedString(@"Invite successful", @"Invite Alert Message");
+        message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
     } else {
         title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
         message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
