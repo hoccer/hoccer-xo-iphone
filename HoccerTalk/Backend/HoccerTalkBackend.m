@@ -16,11 +16,7 @@
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 #import "Attachment.h"
-
-NSString * const kHoccerTalkServerDevelopment = @"ws://development.hoccer.com:7000/";
-NSString * const kHoccerTalkServerProduction  = @"TODO: production server URL";
-NSString * const kFileCacheProductionURI      = @"https://filecache.hoccer.com/v3/";
-NSString * const kFileCacheDevelopmentURI     = @"https://filecache-experimental.hoccer.com/v3/";
+#import "Environment.h"
 
 @interface HoccerTalkBackend ()
 {
@@ -164,7 +160,7 @@ NSString * const kFileCacheDevelopmentURI     = @"https://filecache-experimental
 
 - (NSURLRequest*) urlRequest {
     // TODO: make server adjustable
-    NSURL * url = [NSURL URLWithString: kHoccerTalkServerDevelopment];
+    NSURL * url = [NSURL URLWithString: [[Environment sharedEnvironment] talkServer]];
     return [[NSURLRequest alloc] initWithURL: url];
 }
 
@@ -273,7 +269,7 @@ NSString * const kFileCacheDevelopmentURI     = @"https://filecache-experimental
 }
 
 - (NSURL *) newUploadURL {
-    NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
+    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
     return [NSURL URLWithString: myURL];
 }
 

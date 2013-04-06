@@ -9,6 +9,7 @@
 #import "ProfileViewController.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "HTUserDefaults.h"
 
 @implementation ProfileViewController
 
@@ -23,14 +24,14 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
-    self.clientIdField.text = [[NSUserDefaults standardUserDefaults] objectForKey: @"clientId"];
+    self.clientIdField.text = [[HTUserDefaults standardUserDefaults] objectForKey: kHTClientId];
 }
 
 - (void) textFieldDidEndEditing:(UITextField *)textField {
     if (textField == self.clientIdField) {
         NSLog(@"new clientId: %@", textField.text);
-        [[NSUserDefaults standardUserDefaults] setObject: textField.text forKey: @"clientId"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[HTUserDefaults standardUserDefaults] setObject: textField.text forKey: kHTClientId];
+        [[HTUserDefaults standardUserDefaults] synchronize];
     }
 }
 

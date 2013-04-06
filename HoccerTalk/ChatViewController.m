@@ -28,6 +28,7 @@
 #import "Attachment.h"
 #import "AttachmentViewFactory.h"
 #import "BubbleView.h"
+#import "HTUserDefaults.h"
 
 @interface ChatViewController ()
 
@@ -638,7 +639,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        self.avatarImage = [UIImage imageWithData: [[NSUserDefaults standardUserDefaults] objectForKey: @"avatarImage"]];
+        self.avatarImage = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
     }
 
     if ([message.isRead isEqualToNumber: @NO]) {

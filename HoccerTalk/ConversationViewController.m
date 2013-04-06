@@ -20,6 +20,7 @@
 #import "AppDelegate.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
 #import "iOSVersionChecks.h"
+#import "HTUserDefaults.h"
 
 @interface ConversationViewController ()
 
@@ -67,7 +68,7 @@
     [super viewDidAppear: animated];
 
     // TODO: find a way to move this to the app delegate
-    if ( ! [[NSUserDefaults standardUserDefaults] boolForKey: @"firstRunDone"]) {
+    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         [self performSegueWithIdentifier: @"showFirstRunScreen" sender: nil];
     }
 }
