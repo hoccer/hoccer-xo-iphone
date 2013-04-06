@@ -18,10 +18,9 @@
 #import "Attachment.h"
 
 NSString * const kHoccerTalkServerDevelopment = @"ws://development.hoccer.com:7000/";
-NSString * const kHoccerTalkServerProduction = @"TODO: production server URL";
-NSString * const kFileCacheProductionURI = @"https://filecache.hoccer.com/v3/";
-NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoccer.com/v3/";
-
+NSString * const kHoccerTalkServerProduction  = @"TODO: production server URL";
+NSString * const kFileCacheProductionURI      = @"https://filecache.hoccer.com/v3/";
+NSString * const kFileCacheDevelopmentURI     = @"https://filecache-experimental.hoccer.com/v3/";
 
 @interface HoccerTalkBackend ()
 {
@@ -122,7 +121,6 @@ NSString * const kFileCacheDevelopmentURI = @"https://filecache-experimental.hoc
 
     [delivery updateWithDictionary: deliveryDictionary];
 
-    // TODO: handle the actual message
     message.isOutgoing = @NO;
     message.isRead = @NO;
     message.timeStamp = [NSDate date]; // TODO: use actual timestamp
