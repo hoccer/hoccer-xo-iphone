@@ -669,4 +669,9 @@
     }
 }
 
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    // trigger relayout on orientation change. However, there has to be a better way to do this...
+    [self.tableView reloadData];
+}
+
 @end
