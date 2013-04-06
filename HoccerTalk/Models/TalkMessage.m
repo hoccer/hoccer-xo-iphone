@@ -29,6 +29,7 @@
               @"attachmentSize": @"attachment.contentSize",
               @"attachmentMediaType": @"attachment.mediaType",
               @"attachmentMimeType": @"attachment.mimeType",
+              @"attachmentAspectRatio": @"attachment.aspectRatio",
               @"attachmentUrl": @"attachment.remoteURL"
             };
 }
