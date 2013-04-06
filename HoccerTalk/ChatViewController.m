@@ -469,7 +469,7 @@
     // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
     //     because the table view assuemes there is a 1px separator. However, sometimes the
     //     grey line still appears ...
-    return self.headerCell.frame.size.height;
+    return self.headerCell.frame.size.height - 1;
 }
 
 #pragma mark - Table view delegate
