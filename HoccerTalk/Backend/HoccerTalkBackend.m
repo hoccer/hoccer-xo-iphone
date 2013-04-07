@@ -84,9 +84,10 @@
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
-    // ignore duplicate messages. This happens if a message is offered to us by the server multiple times
-    // while we are in the background. Another solution would be to disconnect while we are in background
-    // but currently I prefer it this way
+    // Ignore duplicate messages. This happens if a message is offered to us by the server multiple times
+    // while we are in the background. These messages end up in the input buffer of the socket and are delivered
+    // when we enter foreground before the connection times out. Another solution would be to disconnect while
+    // we are in background but currently I prefer it this way.
     NSError *error;
     NSDictionary * vars = @{ @"messageId" : messageDictionary[@"messageId"]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessageByMessageId" substitutionVariables: vars];
