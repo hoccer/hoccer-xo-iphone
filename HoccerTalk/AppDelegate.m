@@ -77,10 +77,7 @@
 - (void) customizeNavigationBar {
     // TODO: handle other bar metrics?
     // this is visible in the message/mail compose view controllers
-    [[UINavigationBar appearance] setBackgroundImage: [UIImage imageNamed: @"message_navbar_bg"] forBarMetrics: UIBarMetricsDefault];
-
-    UINavigationBar *bar = [self.navigationController navigationBar];
-    [bar setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar-bg" withLeftCapWidth: 65 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage: [UIImage imageNamed: @"navbar_bg_plain"] forBarMetrics: UIBarMetricsDefault];
 
     UIImage * navigationButtonBackground = [[UIImage imageNamed: @"navbar-btn-default"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
     [[UIBarButtonItem appearance] setBackgroundImage: navigationButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];

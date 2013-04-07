@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileViewController : UIViewController <UITextFieldDelegate>
+@interface ProfileViewController : UITableViewController <UITextFieldDelegate>
+{
+    NSArray * _profileItems;
+    UIImage * _previousNavigationBarBackgroundImage;
+}
 
-@property (strong, nonatomic) IBOutlet UITextField *clientIdField;
+@property (nonatomic,strong) UITableView* tableView;
 
 @end

@@ -629,6 +629,9 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
+
+    [self setNavigationBarBackgroundWithLines];
+
     [self scrollToBottom: NO];
 }
 

@@ -64,6 +64,11 @@
     return _chatViewController;
 }
 
+- (void) viewWillAppear:(BOOL)animated  {
+    [super viewWillAppear: animated];
+    [self setNavigationBarBackgroundWithLines];
+}
+
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
 

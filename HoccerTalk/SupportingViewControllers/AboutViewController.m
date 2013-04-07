@@ -18,4 +18,9 @@
     self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
 }
 
+- (void) viewWillAppear:(BOOL)animated  {
+    [super viewWillAppear: animated];
+    [self setNavigationBarBackgroundWithLines];
+}
+
 @end

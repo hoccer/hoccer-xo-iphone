@@ -19,6 +19,7 @@
 #import "HoccerTalkBackend.h"
 #import "InviteCodeViewController.h"
 
+
 @interface ContactListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, strong) NSMutableArray * invitationChannels;

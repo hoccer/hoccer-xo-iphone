@@ -13,4 +13,7 @@
 - (UIBarButtonItem*) hoccerTalkMenuButton;
 - (UIBarButtonItem*) hoccerTalkContactsButton;
 
+- (void) setNavigationBarBackgroundWithLines;
+- (void) setNavigationBarBackgroundPlain;
+
 @end
