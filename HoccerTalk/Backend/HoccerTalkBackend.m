@@ -84,6 +84,23 @@
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
+    // ignore duplicate messages. This happens if a message is offered to us by the server multiple times
+    // while we are in the background. Another solution would be to disconnect while we are in background
+    // but currently I prefer it this way
+    NSError *error;
+    NSDictionary * vars = @{ @"messageId" : messageDictionary[@"messageId"]};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessageByMessageId" substitutionVariables: vars];
+    NSArray *messages = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (messages == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    if (messages.count > 0) {
+        NSLog(@"receiveMessage: already have message with id %@", vars[@"messageId"]);
+        // TODO: send delivery confirm (again)?
+        return;
+    }
+
     TalkMessage * message = [NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     Delivery * delivery = [NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
@@ -95,9 +112,9 @@
         message.attachment = attachment;
     }
 
-    NSDictionary * vars = @{ @"clientId" : messageDictionary[@"senderId"]};
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
-    NSError *error;
+    vars = @{ @"clientId" : messageDictionary[@"senderId"]};
+    fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
+    error = nil;
     NSArray *contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (contacts == nil)
     {
