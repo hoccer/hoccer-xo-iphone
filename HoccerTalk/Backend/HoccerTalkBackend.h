@@ -56,6 +56,9 @@ typedef void (^PairingHandler)(BOOL);
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket;
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 
+- (void) downloadFinished:(Attachment *)theAttachment;
+
+
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
                          absoluteURI:(NSString *)URLString
                              payload:(NSData *)payload

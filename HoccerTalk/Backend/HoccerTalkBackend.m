@@ -230,6 +230,11 @@
     }
 }
 
+- (void) downloadFinished:(Attachment *)theAttachment {
+    [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
+}
+
+
 - (NSURL *) newUploadURL {
     // NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
     NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingPathComponent:[NSString stringWithUUID]];

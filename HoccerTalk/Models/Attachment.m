@@ -433,6 +433,7 @@
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);
                 self.localURL = self.ownedURL;
                 // TODO: maybe do some UI refresh here, or use an observer for this
+                [_chatBackend downloadFinished: self];
             } else {
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
                 // TODO: trigger some retry
