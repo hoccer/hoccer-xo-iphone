@@ -71,8 +71,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="avatarCell" rowHeight="151" id="pbv-ut-8ho" customClass="ProfileAvatarCell">
+                                <rect key="frame" x="0.0" y="46" width="320" height="152"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="1" width="300" height="150"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" id="5Da-Qq-TAt" customClass="ProfileAvatarView">
+                                            <rect key="frame" x="75" y="0.0" width="150" height="150"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <outlet property="avatar" destination="5Da-Qq-TAt" id="1PU-n9-wlS"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="profileCell" id="6vp-wp-ICK">
-                                <rect key="frame" x="0.0" y="46" width="320" height="46"/>
+                                <rect key="frame" x="0.0" y="198" width="320" height="45"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -665,7 +684,6 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addAttachmentPressed:"/>
-                <relationship kind="action" name="attachmentPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
@@ -749,11 +767,17 @@
         <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
         </class>
+        <class className="ProfileAvatarCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileAvatarCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="avatar" candidateClass="ProfileAvatarView"/>
+            </relationships>
+        </class>
+        <class className="ProfileAvatarView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileAvatarView.h"/>
+        </class>
         <class className="ProfileViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="onEdit:"/>
-            </relationships>
         </class>
         <class className="RightMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>

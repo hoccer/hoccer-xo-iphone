@@ -12,6 +12,8 @@
 #import "HTUserDefaults.h"
 #import "iOSVersionChecks.h"
 #import "AssetStore.h"
+#import "ProfileAvatarCell.h"
+#import "ProfileAvatarView.h"
 
 @interface ProfileItem : NSObject
 
@@ -25,10 +27,6 @@
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self != nil) {
-        ProfileItem * avatarItem = [[ProfileItem alloc] init];
-        avatarItem.icon = nil;
-        avatarItem.userDefaultsKey = kHTAvatarImage;
-
         ProfileItem * nickNameItem = [[ProfileItem alloc] init];
         nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
         nickNameItem.userDefaultsKey = kHTNickName;
@@ -49,6 +47,8 @@
     backgroundView.backgroundColor = [UIColor whiteColor];
     self.tableView.backgroundView = backgroundView;
 
+    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: @"avatarCell"];
+    _normalCell = [self.tableView dequeueReusableCellWithIdentifier: @"profileCell"];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -56,20 +56,44 @@
     [self setNavigationBarBackgroundPlain];
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_profileItems count];
+    if (section == 0) {
+        return 1;
+    } else {
+        return [_profileItems count];
+    }
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return _avatarCell.bounds.size.height;
+    } else {
+        return _normalCell.bounds.size.height;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
-        [tableView dequeueReusableCellWithIdentifier: @"profileCell" forIndexPath:indexPath] :
-        [tableView dequeueReusableCellWithIdentifier: @"profileCell"];
-    ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
+    UITableViewCell * cell = nil;
+    if (indexPath.section == 0) {
+        cell = [tableView dequeueReusableCellWithIdentifier: @"avatarCell" forIndexPath:indexPath];
+        cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
+        ((ProfileAvatarCell*)cell).avatar.image = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier: @"profileCell" forIndexPath:indexPath];
+        ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
 
-    cell.textLabel.text = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
-    cell.imageView.image = item.icon;
-
+        cell.textLabel.text = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
+        cell.textLabel.textColor = [UIColor colorWithWhite: 0.2 alpha: 1.0];
+        cell.imageView.image = item.icon;
+    }
     return cell;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 0;
 }
 
 - (void) textFieldDidEndEditing:(UITextField *)textField {

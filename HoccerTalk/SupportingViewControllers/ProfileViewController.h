@@ -12,6 +12,8 @@
 {
     NSArray * _profileItems;
     UIImage * _previousNavigationBarBackgroundImage;
+    UITableViewCell * _avatarCell;
+    UITableViewCell * _normalCell;
 }
 
 @property (nonatomic,strong) UITableView* tableView;
