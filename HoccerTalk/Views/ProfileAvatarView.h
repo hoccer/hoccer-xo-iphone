@@ -12,4 +12,10 @@
 
 @property (nonatomic,strong) UIImage * image;
 
+@property (nonatomic,strong) UIColor * gradientTopColor;
+@property (nonatomic,strong) UIColor * gradientBottomColor;
+
+@property (nonatomic,strong) UIColor * shadowColor;
+@property (nonatomic,assign) CGFloat   shadowRadius;
+@property (nonatomic,assign) CGSize    shadowOffset;
 @end

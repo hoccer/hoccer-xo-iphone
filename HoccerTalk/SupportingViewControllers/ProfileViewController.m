@@ -14,6 +14,7 @@
 #import "AssetStore.h"
 #import "ProfileAvatarCell.h"
 #import "ProfileAvatarView.h"
+#import "RadialGradientView.h"
 
 @interface ProfileItem : NSObject
 
@@ -27,6 +28,7 @@
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self != nil) {
+
         ProfileItem * nickNameItem = [[ProfileItem alloc] init];
         nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
         nickNameItem.userDefaultsKey = kHTNickName;
@@ -43,8 +45,8 @@
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(onEdit:)];
     self.navigationItem.rightBarButtonItem = editButton;
 
-    UIView * backgroundView = [[UIView alloc] initWithFrame: self.tableView.bounds];
-    backgroundView.backgroundColor = [UIColor whiteColor];
+    UIView * backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.bounds];
+    //backgroundView.backgroundColor = [UIColor colorWithWhite: 0.95 alpha: 1];
     self.tableView.backgroundView = backgroundView;
 
     _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: @"avatarCell"];

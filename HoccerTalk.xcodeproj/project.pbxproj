@@ -54,6 +54,7 @@
 		636492D41711E1E800E35514 /* navbar_bg_plain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 636492D21711E1E800E35514 /* navbar_bg_plain@2x.png */; };
 		636492D71711E97900E35514 /* ProfileAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* ProfileAvatarView.m */; };
 		636492DA1711F4B000E35514 /* ProfileAvatarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D91711F4B000E35514 /* ProfileAvatarCell.m */; };
+		636492DD1711FEB900E35514 /* RadialGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492DC1711FEB900E35514 /* RadialGradientView.m */; };
 		6366C5F6170DB00D00AA7DBE /* gargamel.png in Resources */ = {isa = PBXBuildFile; fileRef = 6366C5F4170DB00D00AA7DBE /* gargamel.png */; };
 		6366C5F7170DB00D00AA7DBE /* gargamel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6366C5F5170DB00D00AA7DBE /* gargamel@2x.png */; };
 		636D3FFA170F370E00304EDF /* InviteCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D3FF9170F370E00304EDF /* InviteCodeViewController.m */; };
@@ -291,6 +292,8 @@
 		636492D61711E97900E35514 /* ProfileAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileAvatarView.m; sourceTree = "<group>"; };
 		636492D81711F4B000E35514 /* ProfileAvatarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileAvatarCell.h; sourceTree = "<group>"; };
 		636492D91711F4B000E35514 /* ProfileAvatarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileAvatarCell.m; sourceTree = "<group>"; };
+		636492DB1711FEB900E35514 /* RadialGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadialGradientView.h; sourceTree = "<group>"; };
+		636492DC1711FEB900E35514 /* RadialGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadialGradientView.m; sourceTree = "<group>"; };
 		6366C5F4170DB00D00AA7DBE /* gargamel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gargamel.png; sourceTree = "<group>"; };
 		6366C5F5170DB00D00AA7DBE /* gargamel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gargamel@2x.png"; sourceTree = "<group>"; };
 		636D3FF8170F370E00304EDF /* InviteCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteCodeViewController.h; sourceTree = "<group>"; };
@@ -916,6 +919,8 @@
 				636492D91711F4B000E35514 /* ProfileAvatarCell.m */,
 				636492D51711E97900E35514 /* ProfileAvatarView.h */,
 				636492D61711E97900E35514 /* ProfileAvatarView.m */,
+				636492DB1711FEB900E35514 /* RadialGradientView.h */,
+				636492DC1711FEB900E35514 /* RadialGradientView.m */,
 				6320D7D116E4C11200E58478 /* RightMessageCell.h */,
 				6320D7D216E4C11200E58478 /* RightMessageCell.m */,
 				6320D7C816DFB9DD00E58478 /* SectionHeaderCell.h */,
@@ -1214,6 +1219,7 @@
 				636D4007171072CE00304EDF /* HTUserDefaults.m in Sources */,
 				636492D71711E97900E35514 /* ProfileAvatarView.m in Sources */,
 				636492DA1711F4B000E35514 /* ProfileAvatarCell.m in Sources */,
+				636492DD1711FEB900E35514 /* RadialGradientView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
