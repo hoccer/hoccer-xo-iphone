@@ -233,6 +233,10 @@
 }
 
 - (void) loadAudioAttachmentImage: (ImageLoaderBlock) block {
+    if (self.localURL == nil) {
+        block(nil, nil);
+        return;
+    }
     // TODO - find a way how to retrieve artwork from an a file
     NSArray * myArtworkImages = [[self class]artworksForFileAtFileURL: self.localURL];
     if ([myArtworkImages count]) {
