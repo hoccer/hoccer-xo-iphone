@@ -61,6 +61,7 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 
 - (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage;
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
+- (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
 
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
 

@@ -13,6 +13,9 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <AVFoundation/AVAsset.h>
+#import <AVFoundation/AVAssetExportSession.h>
+#import <AVFoundation/AVMediaFormat.h>
 
 #import "TalkMessage.h"
 #import "AppDelegate.h"
@@ -237,68 +240,187 @@
     return _attachmentPicker;
 }
 
++ (NSString *)sanitizeFileNameString:(NSString *)fileName {
+    NSCharacterSet* illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>"];
+    return [[fileName componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@"_"];
+}
+
++ (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory {
+    
+	if (![[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:theFilename]]) {
+		return theFilename;
+	};
+	
+	NSString *ext = [theFilename pathExtension];
+	NSString *baseFilename = [theFilename stringByDeletingPathExtension];
+	
+	NSInteger i = 1;
+	NSString* newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [[NSNumber numberWithInteger:i] stringValue]];
+    
+    if ((ext == nil) || (ext.length <= 0)) {
+        ext = @"";
+        //NSLog(@"empty ext 3");
+    }
+	newFilename = [newFilename stringByAppendingPathExtension: ext];
+	while ([[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:newFilename]]) {
+		newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [[NSNumber numberWithInteger:i] stringValue]];
+		newFilename = [newFilename stringByAppendingPathExtension: ext];
+		
+		i++;
+	}
+	
+	return newFilename;
+}
+
+
 - (void) didPickAttachment: (id) attachmentInfo {
     if (attachmentInfo == nil) {
         return;
     }
     NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
-    NSString * mediaType = attachmentInfo[UIImagePickerControllerMediaType];
-
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
-                                                                    inManagedObjectContext: self.managedObjectContext];
+                                                                        inManagedObjectContext: self.managedObjectContext];
     
-    if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeImage)) {
-        __block NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
-        if (attachmentInfo[UIImagePickerControllerMediaMetadata] != nil) {
-            // Image was just taken and is not yet in album
-            UIImage * image = attachmentInfo[UIImagePickerControllerOriginalImage];
-            
-            // funky method using ALAssetsLibrary
-            ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
-                if (!error) {
-                    myURL = assetURL;
-                    [self.currentAttachment makeImageAttachment: [myURL absoluteString]
-                                                          image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
-                    [self decorateAttachmentButton: image];
+    if ([attachmentInfo isKindOfClass: [MPMediaItem class]]) {
+
+        // probably an audio item media library
+        MPMediaItem * song = (MPMediaItem*)attachmentInfo;
+        
+        // make a nice and unique filename
+        NSString * newFileName = [NSString stringWithFormat:@"%@ - %@.%@",[song valueForProperty:MPMediaItemPropertyArtist],[song valueForProperty:MPMediaItemPropertyTitle],@"m4a" ];
+        newFileName = [[self class]sanitizeFileNameString: newFileName];
+  
+        NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+        NSString * myDocDir = [appDocDir path];
+        NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];        
+        NSString * exportFile = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
+        
+        NSLog(@"exportFile = %@", exportFile);
+        
+        NSURL *assetURL = [song valueForProperty:MPMediaItemPropertyAssetURL];
+        NSLog(@"audio assetURL = %@", assetURL);
+        
+        AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
+        
+        if ([songAsset hasProtectedContent] == YES) {
+            // TODO: user dialog here
+            NSLog(@"Media is protected by DRM");
+            [self trashCurrentAttachment];
+            return;
+        }
+        
+        AVAssetExportSession *exporter = [[AVAssetExportSession alloc]
+                                          initWithAsset: songAsset
+                                          presetName: AVAssetExportPresetAppleM4A];
+        
+                
+        exporter.outputURL = [NSURL fileURLWithPath:exportFile];
+        exporter.outputFileType = AVFileTypeAppleM4A;
+        exporter.shouldOptimizeForNetworkUse = YES;
+        // exporter.shouldOptimizeForNetworkUse = NO;
+        
+        [exporter exportAsynchronouslyWithCompletionHandler:^{
+            int exportStatus = exporter.status;
+            switch (exportStatus) {
+                case AVAssetExportSessionStatusFailed: {
+                    // log error to text view
+                    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:NSLocalizedString(@"Error_Media_Export_Failed", nil) forKey:NSLocalizedDescriptionKey];
+                    NSError *error = [NSError errorWithDomain:@"media export failed" code:796 userInfo:userInfo];
+                    NSLog(@"AVAssetExportSessionStatusFailed = %@", error);
+                    [self trashCurrentAttachment];
+                    break;
+                }
+                case AVAssetExportSessionStatusCompleted: {
+                    NSLog (@"AVAssetExportSessionStatusCompleted");
+                    
+                    [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[exporter.outputURL absoluteString]];
+
+                     // set up artwork image
+                     MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
+                     // NSLog(@"createThumb1: artwork=%@", artwork);
+                     UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];
+                     
+                     if (artworkImage != nil){
+                         [self decorateAttachmentButton: artworkImage];
+                     }
+                     else {
+                         [self decorateAttachmentButton: [UIImage imageNamed:@"chatbar_btn_audio.png"]];
+                     }
+
+                     
+                    break;
+                }
+                case AVAssetExportSessionStatusUnknown: {
+                    NSLog (@"AVAssetExportSessionStatusUnknown"); break;}
+                case AVAssetExportSessionStatusExporting: {
+                    NSLog (@"AVAssetExportSessionStatusExporting"); break;}
+                case AVAssetExportSessionStatusCancelled: {
+                    NSLog (@"AVAssetExportSessionStatusCancelled"); break;}
+                case AVAssetExportSessionStatusWaiting: {
+                    NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
+                default: { NSLog (@"didn't get export status"); break;}
+            }
+        }];
+
+        
+    } else if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
+        // image or movie form camera or album
+        
+        NSString * mediaType = attachmentInfo[UIImagePickerControllerMediaType];
+                
+        if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeImage)) {
+            __block NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+            if (attachmentInfo[UIImagePickerControllerMediaMetadata] != nil) {
+                // Image was just taken and is not yet in album
+                UIImage * image = attachmentInfo[UIImagePickerControllerOriginalImage];
+                
+                // funky method using ALAssetsLibrary
+                ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
+                    if (!error) {
+                        myURL = assetURL;
+                        [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                                              image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
+                        [self decorateAttachmentButton: image];
+                    } else {
+                        NSLog(@"Error saving image in Library, error = %@", error);
+                        [self trashCurrentAttachment];
+                    }
+                };
+                
+                if(image) {
+                    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                    [library writeImageToSavedPhotosAlbum:[image CGImage]
+                                              orientation:(ALAssetOrientation)[image imageOrientation]
+                                          completionBlock:completeBlock];
+                }
+            } else {
+                // image from album
+                [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                                      image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
+                [self decorateAttachmentButton: attachmentInfo[UIImagePickerControllerOriginalImage]];
+            }
+            return;
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
+            NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+            NSURL * myURL2 = attachmentInfo[UIImagePickerControllerMediaURL];
+            NSString *tempFilePath = [myURL2 path];
+            if (myURL == nil) { // video was just recorded
+                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
+                {
+                    UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, nil, nil, nil);
+                    NSString * myTempURL = [myURL2 absoluteString];
+                    NSLog(@"video myTempURL = %@", myTempURL);
+                    self.currentAttachment.ownedURL = [myTempURL copy];
                 } else {
-                    NSLog(@"Error saving image in Library, error = %@", error);
+                    NSLog(@"didPickAttachment: failed to save video in album at path = %@",tempFilePath);
                     [self trashCurrentAttachment];
                 }
-            };
-            
-            if(image) {
-                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                [library writeImageToSavedPhotosAlbum:[image CGImage]
-                                          orientation:(ALAssetOrientation)[image imageOrientation]
-                                      completionBlock:completeBlock];
             }
-        } else {
-            // image from album
-            [self.currentAttachment makeImageAttachment: [myURL absoluteString]
-                                                  image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
-            [self decorateAttachmentButton: attachmentInfo[UIImagePickerControllerOriginalImage]];
+            [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil];
+            [self decorateAttachmentButton: self.currentAttachment.image];
+            return;
         }
-        return;
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
-        NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
-        NSURL * myURL2 = attachmentInfo[UIImagePickerControllerMediaURL];
-        NSString *tempFilePath = [myURL2 path];
-        if (myURL == nil) { // video was just recorded
-            if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
-            {
-                UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, nil, nil, nil);
-                NSString * myTempURL = [myURL2 absoluteString];
-                NSLog(@"video myTempURL = %@", myTempURL);
-                self.currentAttachment.ownedURL = [myTempURL copy];
-            } else {
-                NSLog(@"didPickAttachment: failed to save video in album at path = %@",tempFilePath);
-                [self trashCurrentAttachment];
-            }
-        }
-        [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil];
-        [self decorateAttachmentButton: self.currentAttachment.image];
-        return;
     }
     // Do no do anything here because some functions above will finish asynchronously
     [self trashCurrentAttachment];

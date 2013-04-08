@@ -8,12 +8,15 @@
 
 #import "AttachmentPickerController.h"
 
-typedef enum AttachmentTypes {
-    AttachmentTypePhotoFromLibrary,
-    AttachmentTypePhotoFromCamera,
+#import <MediaPlayer/MPMediaItemCollection.h>
+
+typedef enum AttachmentPickerTypes {
+    AttachmentPickerTypePhotoVideoFromLibrary,
+    AttachmentPickerTypePhotoVideoFromCamera,
+    AttachmentPickerTypeMediaFromLibrary
 //    AttachmentTypeContact
 // TODO: add more attachment types
-} AttachmentType;
+} AttachmentPickerType;
 
 @interface AttachmentPickerController ()
 {
@@ -24,7 +27,7 @@ typedef enum AttachmentTypes {
 
 @interface AttachmentPickerItem : NSObject
 @property (nonatomic,strong) NSString* localizedButtonTitle;
-@property (nonatomic, assign) AttachmentType type;
+@property (nonatomic, assign) AttachmentPickerType type;
 @end
 
 @implementation AttachmentPickerController
@@ -44,15 +47,20 @@ typedef enum AttachmentTypes {
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"Choose Photo/Video", @"Action Sheet Button Ttitle");
-        item.type = AttachmentTypePhotoFromLibrary;
+        item.type = AttachmentPickerTypePhotoVideoFromLibrary;
         [_supportedItems addObject: item];
     }
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
-        // TODO: test for video support
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"Take Photo/Video", @"Action Sheet Button Ttitle");
-        item.type = AttachmentTypePhotoFromCamera;
+        item.type = AttachmentPickerTypePhotoVideoFromCamera;
         [_supportedItems addObject: item];
+    }
+    if (YES) {
+        AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+        item.localizedButtonTitle = NSLocalizedString(@"Choose Audio", @"Action Sheet Button Ttitle");
+        item.type = AttachmentPickerTypeMediaFromLibrary;
+        [_supportedItems addObject: item];        
     }
     // TODO: add other types
 }
@@ -83,13 +91,16 @@ typedef enum AttachmentTypes {
     [self showPickerForType: item.type];
 }
 
-- (void) showPickerForType: (AttachmentType) type {
+- (void) showPickerForType: (AttachmentPickerType) type {
     switch (type) {
-        case AttachmentTypePhotoFromLibrary:
+        case AttachmentPickerTypePhotoVideoFromLibrary:
             [self showImagePickerWithSource: UIImagePickerControllerSourceTypePhotoLibrary];
             break;
-        case AttachmentTypePhotoFromCamera:
+        case AttachmentPickerTypePhotoVideoFromCamera:
             [self showImagePickerWithSource: UIImagePickerControllerSourceTypeCamera];
+            break;
+        case AttachmentPickerTypeMediaFromLibrary:
+            [self showMediaPicker];
             break;
     }
 }
@@ -109,6 +120,35 @@ typedef enum AttachmentTypes {
     [_viewController presentViewController: picker animated: YES completion: nil];
 
 }
+
+- (void) showMediaPicker {
+    
+    MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeAny];
+    
+    mediaPicker.delegate = self;
+    mediaPicker.allowsPickingMultipleItems = NO;
+    mediaPicker.prompt = nil;
+
+    [_viewController presentModalViewController:mediaPicker animated:YES];
+}
+
+- (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
+    NSLog(@"mediaPickerDidCancel");    
+    [mediaPicker dismissModalViewControllerAnimated: YES];
+}
+
+- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
+    
+    if (mediaItemCollection) {
+        NSLog(@"mediaPicker Picked mediaItemCollection %@", mediaItemCollection);
+        
+        MPMediaItem * mediaItem = [[mediaItemCollection items ]objectAtIndex:0];
+        [self.delegate didPickAttachment: mediaItem];
+                
+    }
+    [mediaPicker dismissModalViewControllerAnimated: YES];
+}
+
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [_viewController dismissViewControllerAnimated: YES completion: nil];

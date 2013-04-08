@@ -15,6 +15,8 @@
 #import <MediaPlayer/MPMoviePlayerController.h>
 #import <MobileCoreServices/UTType.h>
 #import <MobileCoreServices/UTCoreTypes.h>
+#import <AVFoundation/AVAsset.h>
+#import <AVFoundation/AVFoundation.h>
 
 @implementation Attachment
 
@@ -63,7 +65,7 @@
     NSURL * url = [NSURL URLWithString: theURL];
     if ([url.scheme isEqualToString: @"file"]) {
         self.localURL = theURL;
-    } else if ([url.scheme isEqualToString: @"assets-library"]) {
+    } else if ([url.scheme isEqualToString: @"assets-library"] || [url.scheme isEqualToString: @"ipod-library"]) {
         self.assetURL = theURL;
     } else {
         NSLog(@"unhandled URL scheme %@", url.scheme);
@@ -72,7 +74,7 @@
         NSURL* anOtherUrl = [NSURL URLWithString: theOtherURL];
         if ([anOtherUrl.scheme isEqualToString: @"file"]) {
             self.localURL = theURL;
-        } else if ([anOtherUrl.scheme isEqualToString: @"assets-library"]) {
+        } else if ([anOtherUrl.scheme isEqualToString: @"assets-library"] || [url.scheme isEqualToString: @"ipod-library"]) {
             self.assetURL = theURL;
         } else {
             NSLog(@"unhandled URL otherURL scheme %@", anOtherUrl.scheme);
@@ -103,6 +105,8 @@
         [self loadImageAttachmentImage: block];
     } else if ([self.mediaType isEqualToString: @"video"]) {
         [self loadVideoAttachmentImage: block];
+    } else if ([self.mediaType isEqualToString: @"audio"]) {
+        [self loadAudioAttachmentImage: block];
     }
 }
 
@@ -139,6 +143,16 @@
     [self loadImageIntoCache];  
 }
 
+- (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
+    // TODO: handle also mp3 etc.
+    self.mediaType = @"audio";
+    self.mimeType = @"audio/mp4";
+    
+    [self useURLs: theURL anOtherURL: theOtherURL];
+    [self loadImageIntoCache];
+}
+
+
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
     
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
@@ -170,6 +184,41 @@
     block(myImage, nil);
 }
 
++ (NSArray *)artworksForFileAtPath:(NSString *)path {
+    NSMutableArray *artworkImages = [NSMutableArray array];
+    NSURL *u = [NSURL fileURLWithPath:path];
+    AVURLAsset *a = [AVURLAsset URLAssetWithURL:u options:nil];
+    NSArray *artworks = [AVMetadataItem metadataItemsFromArray:a.commonMetadata  withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
+    
+    for (AVMetadataItem *i in artworks)
+    {
+        NSString *keySpace = i.keySpace;
+        UIImage *im = nil;
+        
+        if ([keySpace isEqualToString:AVMetadataKeySpaceID3])
+        {
+            NSDictionary *d = [i.value copyWithZone:nil];
+            im = [UIImage imageWithData:[d objectForKey:@"data"]];
+        }
+        else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes])
+            im = [UIImage imageWithData:[i.value copyWithZone:nil]];
+        
+        if (im)
+            [artworkImages addObject:im];
+    }
+    NSLog(@"array description is %@", [artworkImages description]);
+    return artworkImages;
+}
+
+- (void) loadAudioAttachmentImage: (ImageLoaderBlock) block {
+    // TODO - find a way how to retrieve artwork from an a file
+    NSArray * myArtworkImages = [[self class]artworksForFileAtPath: self.localURL];
+    if ([myArtworkImages count]) {
+        block(myArtworkImages[0], nil);
+    } else {
+        block([UIImage imageNamed:@"chatbar_btn_audio.png"], nil);
+    }
+}
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block {
     if (self.localURL != nil) {
@@ -258,7 +307,7 @@
 }
 
 - (void) download {
-    NSLog(@"downloadAttachment %@", self);
+    NSLog(@"downloadAttachment remoteURL=%@, attachment=%@", self.remoteURL, self );
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoing = %@", self.message.isOutgoing);
         return;
@@ -434,6 +483,7 @@
                 self.localURL = self.ownedURL;
                 // TODO: maybe do some UI refresh here, or use an observer for this
                 [_chatBackend downloadFinished: self];
+                NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);                
             } else {
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
                 // TODO: trigger some retry

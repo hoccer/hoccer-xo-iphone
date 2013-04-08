@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @class Attachment;
 
@@ -14,7 +15,7 @@
 - (void) didPickAttachment: (id) attachmentInfo;
 @end
 
-@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, weak) id<AttachmentPickerControllerDelegate> delegate;
 
