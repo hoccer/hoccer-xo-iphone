@@ -10,15 +10,15 @@
 #import "Contact.h"
 #import "AttachmentPickerController.h"
 #import "GrowingTextView.h"
+#import "MessageCell.h"
 
 @class HoccerTalkBackend;
 
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, AttachmentViewControllerDelegate>
 {
     NSMutableDictionary        *resultsControllers;
 }
-
 
 @property (strong, nonatomic) Contact *                      partner;
 @property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
@@ -33,12 +33,14 @@
 
 @property (strong, nonatomic) Attachment * currentAttachment;
 
+
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottom: (BOOL) animated;
 - (IBAction)sendPressed:(id)sender;
 - (IBAction) addAttachmentPressed:(id)sender;
 - (void) decorateAttachmentButton:(UIImage *) theImage;
 - (void) trashCurrentAttachment;
+- (void) presentAttachmentViewForCell: (MessageCell *) theCell;
 
 
 @end

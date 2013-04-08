@@ -42,6 +42,8 @@
 @property (nonatomic, readonly) MessageCell* messageCell;
 @property (nonatomic, readonly) SectionHeaderCell* headerCell;
 @property (strong) UIImage* avatarImage;
+@property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
+
 
 - (void)configureCell:(UITableViewCell *)cell forMessage:(TalkMessage *) message;
 - (void)configureView;
@@ -54,6 +56,7 @@
 @synthesize attachmentPicker = _attachmentPicker;
 @synthesize messageCell = _messageCell;
 @synthesize headerCell = _headerCell;
+@synthesize moviePlayerViewController = _moviePlayerViewController;
 
 - (void)viewDidLoad
 {
@@ -558,6 +561,8 @@
     // ... for now just use the private API
     // cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
 
+    cell.indexPath = indexPath;
+    cell.delegate = self;
     [self configureCell: cell forMessage: message];
 
     return cell;
@@ -771,12 +776,36 @@
          [message.attachment.mediaType isEqualToString:@"video"] ||
          [message.attachment.mediaType isEqualToString:@"audio"]))
     {
-        UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
+        UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment inCell: cell];
         cell.bubble.attachmentView = attachmentView;
     } else {
         cell.bubble.attachmentView = nil;
     }
 }
+
+- (void) presentAttachmentViewForCell: (MessageCell *) theCell {
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    NSLog(@"@presentAttachmentViewForCell attachment = %@", message.attachment);
+    
+    Attachment * myAttachment = message.attachment;
+    if ([myAttachment.mediaType isEqual: @"video"]) {
+        _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
+        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
+        [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
+    } else  if ([myAttachment.mediaType isEqual: @"audio"]) {
+        _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
+        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
+        
+        UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.image];
+        myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+        [_moviePlayerViewController.moviePlayer.view addSubview:myView];
+
+        [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
+    } else  if ([myAttachment.mediaType isEqual: @"image"]) {
+    }
+
+}
+
 
 - (void) scrollToBottom: (BOOL) animated {
     if ([self.fetchedResultsController.fetchedObjects count]) {

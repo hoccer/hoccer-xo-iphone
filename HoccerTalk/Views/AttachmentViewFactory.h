@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @class Attachment;
+@class MessageCell;
 
 @interface AttachmentViewFactory : NSObject
 
-+ (UIView*) viewForAttachment: (Attachment*) attachment;
++ (UIView*) viewForAttachment: (Attachment*) attachment inCell:(MessageCell*) cell;
 + (CGFloat) heightOfAttachmentView: (Attachment*) attachment withViewOfWidth: (CGFloat) width;
 
 @end

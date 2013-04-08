@@ -61,6 +61,15 @@
     
 }
 
+- (NSURL *) contentURL {
+    if (self.localURL != nil) {
+        return [NSURL URLWithString: self.localURL];
+    } else if (self.assetURL != nil) {
+        return [NSURL URLWithString: self.assetURL];
+    }
+    return nil;
+};
+
 - (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     NSURL * url = [NSURL URLWithString: theURL];
     if ([url.scheme isEqualToString: @"file"]) {
@@ -545,6 +554,8 @@
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
     }
 }
+
+
 
 #pragma mark - Custom Getters and Setters
 
