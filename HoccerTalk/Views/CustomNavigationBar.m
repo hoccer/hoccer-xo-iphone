@@ -32,6 +32,8 @@ static const CGFloat kButtonXOffset = 0.5 * (kButtonColumnWidth - kButtonWidth);
     self.layer.shadowRadius = 3;
     _mask = [CAShapeLayer layer];
     self.layer.mask = _mask;
+    self.flexibleLeftButton = NO;
+    self.flexibleRightButton = NO;
 }
 
 - (void) layoutSubviews {
@@ -52,10 +54,15 @@ static const CGFloat kButtonXOffset = 0.5 * (kButtonColumnWidth - kButtonWidth);
     for (UIView * subview in self.subviews) {
         if ([NSStringFromClass([subview class]) isEqualToString: @"UINavigationButton"]) {
             CGRect frame = subview.frame;
-            frame.size.width = kButtonWidth;
             if (frame.origin.x > 0.5 * screenWidth ) {
-                frame.origin.x = (screenWidth - kButtonColumnWidth) + kButtonXOffset;
+                if ( ! self.flexibleRightButton) {
+                    frame.size.width = kButtonWidth;
+                }
+                frame.origin.x = screenWidth - kButtonXOffset - frame.size.width;
             } else {
+                if ( ! self.flexibleLeftButton) {
+                    frame.size.width = kButtonWidth;
+                }
                 frame.origin.x = kButtonXOffset;
             }
             subview.frame = frame;

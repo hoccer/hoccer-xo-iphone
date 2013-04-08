@@ -10,9 +10,11 @@
 
 @class ProfileAvatarCell;
 @class ProfileTextCell;
+@class AvatarItem;
 
 @interface ProfileViewController : UITableViewController <UITextFieldDelegate>
 {
+    AvatarItem *        _avatarItem;
     NSMutableArray *    _profileItems;
     ProfileAvatarCell * _avatarCell;
     ProfileTextCell *   _textCell;

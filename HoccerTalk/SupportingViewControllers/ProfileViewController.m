@@ -16,17 +16,26 @@
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
 #import "ProfileTextCell.h"
+#import "CustomNavigationBar.h"
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 @interface ProfileItem : NSObject
 
-@property (nonatomic,strong) UIImage * icon;
+@property (nonatomic,strong) UIImage  * icon;
 @property (nonatomic,strong) NSString * userDefaultsKey;
+@property (nonatomic,strong) NSString * currentValue;
 @property (nonatomic,strong) NSString * editLabel;
 @property (nonatomic,strong) NSString * cellIdentifier;
 @property (nonatomic,strong) NSString * placeholder;
 @property (nonatomic,assign) UIKeyboardType keyboardType;
+
+@end
+
+@interface AvatarItem : NSObject
+
+@property (nonatomic,strong) UIImage* image;
+@property (nonatomic,assign) CGRect   croppingRect;
 
 @end
 
@@ -36,6 +45,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     self = [super initWithCoder:aDecoder];
     if (self != nil) {
         _editing = NO;
+
+        _avatarItem = [[AvatarItem alloc] init];
+
         _profileItems = [[NSMutableArray alloc] init];
 
         ProfileItem * nickNameItem = [[ProfileItem alloc] init];
@@ -71,7 +83,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     self.navigationItem.leftBarButtonItem =  self.hoccerTalkMenuButton;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
@@ -86,6 +98,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
+
+    [self populateItems];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -117,7 +131,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
         cell = [tableView dequeueReusableCellWithIdentifier: item.cellIdentifier forIndexPath:indexPath];
         if ([item.cellIdentifier isEqualToString: [ProfileTextCell reuseIdentifier]]) {
-            [self configureTextCell: (ProfileTextCell*)cell withItem: item];
+            [self configureTextCell: (ProfileTextCell*)cell withItem: item atIndexPath: indexPath];
         } else {
             NSLog(@"ProfileViewController cellForRowAtIndexPath: unhandled cell type %@", item.cellIdentifier);
         }
@@ -125,14 +139,15 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return cell;
 }
 
-- (void) configureTextCell: (ProfileTextCell*) cell withItem: (ProfileItem*) item {
-    NSString * value = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
+- (void) configureTextCell: (ProfileTextCell*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    NSString * value = item.currentValue;
     cell.imageView.image = item.icon;
     cell.textField.text = value;
     cell.textField.enabled = _editing;
     cell.textField.hidden = _editing;
     cell.textField.alpha = _editing ? 1.0 : 0.0;
     cell.textField.placeholder = item.placeholder;
+    cell.textField.tag = indexPath.row;
     cell.textInputBackground.alpha = _editing ? 1.0 : 0.0;
 
     if (_editing) {
@@ -164,6 +179,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) textFieldDidEndEditing:(UITextField *)textField {
+    ((ProfileItem*)_profileItems[textField.tag]).currentValue = textField.text;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -174,6 +190,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
     // do not call super class
     NSLog(@"editing");
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onCancel:)];
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(onDone:)];
     [self.navigationItem setLeftBarButtonItem: cancelButton animated:YES];
@@ -234,28 +252,44 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (IBAction)onCancel:(id)sender {
+    [self reloadProfile];
     [self restoreNonEditButtons];
     [self animateTableCells];
-    [self reloadProfile];
 }
 
 - (IBAction)onDone:(id)sender {
+    [self saveProfile];
     [self restoreNonEditButtons];
     [self animateTableCells];
-    [self saveProfile];
+}
+
+- (void) populateItems {
+    for (ProfileItem* item in _profileItems) {
+        item.currentValue = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
+    }
 }
 
 - (void) saveProfile {
-
+    for (ProfileItem* item in _profileItems) {
+        [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.userDefaultsKey];
+    }
+    [[HTUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void) reloadProfile {
+    [self populateItems];
 
 }
 
 - (void) restoreNonEditButtons {
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     [self.navigationItem setLeftBarButtonItem: self.hoccerTalkMenuButton animated:YES];
     [self.navigationItem setRightBarButtonItem: self.editButtonItem animated:YES];
+    [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector: @selector(makeLeftButtonFixedWidth) userInfo:nil repeats:NO];
+}
+
+- (void) makeLeftButtonFixedWidth {
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
 }
 
 - (void)viewDidUnload {
@@ -264,4 +298,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 @end
 
 @implementation ProfileItem
+@end
+
+@implementation AvatarItem
 @end
