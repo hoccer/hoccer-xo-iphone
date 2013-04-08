@@ -22,8 +22,8 @@
         self.gradientBottomColor = [UIColor whiteColor];
         self.gradientTopColor    = [UIColor colorWithWhite: 0.85 alpha: 1];
         
-        self.innerShadowColor    = [UIColor colorWithWhite: 0 alpha: 0.5];
-        self.innerShadowOffset = CGSizeMake(0.1, 5.1);
+        self.innerShadowColor    = [UIColor colorWithWhite: 0 alpha: 0.3];
+        self.innerShadowOffset = CGSizeMake(0.1, 4.1);
         self.innerShadowBlurRadius = 5;
 
         self.outerShadowColor    = [UIColor whiteColor];
@@ -53,7 +53,7 @@
     UIImage* image = self.image;
 
     //// Frames
-    CGRect frame = self.bounds;
+    CGRect frame = CGRectInset(self.bounds, -10, -10);
     
 
 
@@ -71,7 +71,7 @@
 
 
     //// Oval 2 Drawing
-    CGRect oval2Rect = CGRectMake(CGRectGetMinX(frame) + 17, CGRectGetMinY(frame) + 17, CGRectGetWidth(frame) - 34, CGRectGetHeight(frame) - 34);
+    CGRect oval2Rect = CGRectMake(CGRectGetMinX(frame) + 32, CGRectGetMinY(frame) + 32, CGRectGetWidth(frame) - 64, CGRectGetHeight(frame) - 64);
     UIBezierPath* oval2Path = [UIBezierPath bezierPathWithOvalInRect: oval2Rect];
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, outerShadowOffset, outerShadowBlurRadius, outerShadow.CGColor);
@@ -87,11 +87,11 @@
 
 
     //// Oval Drawing
-    CGRect ovalRect = CGRectMake(CGRectGetMinX(frame) + 28, CGRectGetMinY(frame) + 28, CGRectGetWidth(frame) - 56, CGRectGetHeight(frame) - 56);
+    CGRect ovalRect = CGRectMake(CGRectGetMinX(frame) + 43, CGRectGetMinY(frame) + 43, CGRectGetWidth(frame) - 86, CGRectGetHeight(frame) - 86);
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: ovalRect];
     CGContextSaveGState(context);
     [ovalPath addClip];
-    [image drawInRect: CGRectMake(floor(CGRectGetMinX(ovalRect) + 0.5), floor(CGRectGetMinY(ovalRect) + 0.5), ovalRect.size.width, ovalRect.size.height)];
+    [image drawInRect: ovalRect];
     CGContextRestoreGState(context);
 
     ////// Oval Inner Shadow
@@ -121,10 +121,13 @@
     CGContextRestoreGState(context);
     
     
+    
     //// Cleanup
     CGGradientRelease(gradient);
     CGColorSpaceRelease(colorSpace);
     
+
+
 
 }
 

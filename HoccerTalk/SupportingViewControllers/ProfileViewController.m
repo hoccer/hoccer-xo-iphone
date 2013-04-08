@@ -151,7 +151,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     cell.textField.keyboardType = item.keyboardType;
     if (cell.textInputBackground.image == nil) {
         cell.textInputBackground.image = [AssetStore stretchableImageNamed: @"profile_text_input_bg" withLeftCapWidth:3 topCapHeight:3];
-        cell.textInputBackground.frame = CGRectInset(cell.textField.frame, -8, 0);
+        cell.textInputBackground.frame = CGRectInset(cell.textField.frame, -8, 2);
         cell.textField.delegate = self;
         cell.textField.backgroundColor = [UIColor clearColor];
         cell.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];

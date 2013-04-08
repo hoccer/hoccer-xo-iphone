@@ -71,15 +71,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="avatarCell" rowHeight="151" id="pbv-ut-8ho" customClass="ProfileAvatarCell">
-                                <rect key="frame" x="0.0" y="46" width="320" height="152"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="avatarCell" rowHeight="160" id="pbv-ut-8ho" customClass="ProfileAvatarCell">
+                                <rect key="frame" x="0.0" y="46" width="320" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="10" y="1" width="300" height="150"/>
+                                    <rect key="frame" x="10" y="1" width="300" height="159"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" id="5Da-Qq-TAt" customClass="ProfileAvatarView">
-                                            <rect key="frame" x="75" y="0.0" width="150" height="150"/>
+                                            <rect key="frame" x="50" y="-10" width="200" height="200"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         </view>
@@ -91,7 +91,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ProfileTextCell" id="6vp-wp-ICK" customClass="ProfileTextCell">
-                                <rect key="frame" x="0.0" y="198" width="320" height="45"/>
+                                <rect key="frame" x="0.0" y="207" width="320" height="45"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="10" y="0.0" width="300" height="43"/>
