@@ -17,6 +17,7 @@
 #import "RadialGradientView.h"
 #import "ProfileTextCell.h"
 #import "CustomNavigationBar.h"
+#import "UIImage+ScaleAndCrop.h"
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 
@@ -291,6 +292,15 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) saveProfile {
+    // TODO: proper size handling
+    CGFloat scale;
+    if (_avatarItem.image.size.height > _avatarItem.image.size.width) {
+        scale = 128.0 / _avatarItem.image.size.width;
+    } else {
+        scale = 128.0 / _avatarItem.image.size.height;
+    }
+    CGSize size = CGSizeMake(_avatarItem.image.size.width * scale, _avatarItem.image.size.height * scale);
+    [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.image imageScaledToSize: size]) forKey: _avatarItem.userDefaultsKey];
     for (ProfileItem* item in _profileItems) {
         [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.userDefaultsKey];
     }
