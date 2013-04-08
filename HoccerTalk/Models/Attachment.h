@@ -65,6 +65,8 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
 
-- (NSString *) fileExtensionFromMimeType;
-                 
++ (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
++ (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;
++ (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;
+
 @end

@@ -18,7 +18,8 @@
     if (attachment == nil) {
         return nil;
     } else if ([attachment.mediaType isEqualToString:@"image"] ||
-               [attachment.mediaType isEqualToString:@"video"]) {
+               [attachment.mediaType isEqualToString:@"video"] ||
+               [attachment.mediaType isEqualToString:@"audio"]) {
         UIImageView * imageView = [[UIImageView alloc] init];
         CGRect frame = imageView.frame;
         
@@ -50,7 +51,8 @@
     if (attachment == nil) {
         return 0;
     } else if ([attachment.mediaType isEqualToString:@"image"] ||
-               [attachment.mediaType isEqualToString:@"video"]) {
+               [attachment.mediaType isEqualToString:@"video"] ||
+               [attachment.mediaType isEqualToString:@"audio"]) {
         return width / attachment.aspectRatio;
     } else {
         NSLog(@"Unhandled attachment type");

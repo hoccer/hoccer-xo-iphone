@@ -47,7 +47,7 @@
         NSLog(@"can not determine size of file '%@'", myPath);
         result = @(-1);
     }
-    NSLog(@"Size = %@ (of file '%@')", result, myPath);
+    NSLog(@"Attachment filesize = %@ (of file '%@')", result, myPath);
     return result;
 }
 
@@ -73,26 +73,24 @@
     if (theOtherURL != nil) {
         NSURL* anOtherUrl = [NSURL URLWithString: theOtherURL];
         if ([anOtherUrl.scheme isEqualToString: @"file"]) {
-            self.localURL = theURL;
+            self.localURL = theOtherURL;
         } else if ([anOtherUrl.scheme isEqualToString: @"assets-library"] || [url.scheme isEqualToString: @"ipod-library"]) {
-            self.assetURL = theURL;
+            self.assetURL = theOtherURL;
         } else {
             NSLog(@"unhandled URL otherURL scheme %@", anOtherUrl.scheme);
         }
     }
+    if (self.mimeType == nil && self.localURL != nil) {
+        self.mimeType = [Attachment mimeTypeFromURLExtension: self.localURL];
+    }
+    if (self.mimeType == nil && self.assetURL != nil) {
+        self.mimeType = [Attachment mimeTypeFromURLExtension: self.assetURL];
+    }
+    
     NSError *myError = nil;
     if (self.localURL != nil) {
         self.contentSize = [Attachment fileSize: self.localURL withError:&myError];
-        /*
-        NSString * myPath = [[NSURL URLWithString: self.localURL] path];
-        self.contentSize = @([[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError] fileSize]);
-        if (myError != nil) {
-            NSLog(@"can not determine size of file '%@'", myPath);
-        }
-        NSLog(@"Size = %@ (of file '%@')", self.contentSize, myPath);
-         */
-    }
-    if (self.assetURL != nil) {
+    } else  if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
             self.contentSize = @(theSize);
             NSLog(@"Asset Size = %@ (of file '%@')", self.contentSize, self.assetURL);
@@ -100,6 +98,8 @@
     }
 }
 
+// loads or creates an image representation of the attachment and calls ImageLoaderBlock when ready
+// Note: this function will not modify attachment object
 - (void) loadImage: (ImageLoaderBlock) block {
     if ([self.mediaType isEqualToString: @"image"]) {
         [self loadImageAttachmentImage: block];
@@ -110,11 +110,15 @@
     }
 }
 
+// loads or creates an image representation of the attachment and sets its image and aspectRatio fields
 - (void) loadImageIntoCache {
+    NSLog(@"loadImageIntoCache");
     [self loadImage:^(UIImage* theImage, NSError* error) {
+        NSLog(@"loadImageIntoCache done");
         if (theImage) {
             self.image = theImage;
             self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+            NSLog(@"loadImageIntoCache block: sets attachment to image width = %f, heigt = %f, aspect = %f ", theImage.size.width, theImage.size.height, self.aspectRatio);
         } else {
             NSLog(@"Failed to get image: %@", error);
         }
@@ -123,9 +127,13 @@
 
 - (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage {
     self.mediaType = @"image";
-    self.mimeType = @"image/jpeg";
     
     [self useURLs: theURL anOtherURL:nil];
+    
+    if (self.mimeType == nil) {
+        NSLog(@"WARNING: could not determine mime type, setting default for image/jpeg");
+        self.mimeType = @"image/jpeg";        
+    }
     
     if (theImage != nil) {
         self.image = theImage;
@@ -137,29 +145,43 @@
 
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     self.mediaType = @"video";
-    self.mimeType = @"video/mpeg";
     
-    [self useURLs: theURL anOtherURL: theOtherURL];    
-    [self loadImageIntoCache];  
+    [self useURLs: theURL anOtherURL: theOtherURL];
+    
+    if (self.mimeType == nil) {
+        NSLog(@"WARNING: could not determine mime type, setting default for video/quicktime");
+        self.mimeType = @"video/quicktime";
+    }
+
+    [self loadImageIntoCache];
 }
 
 - (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     // TODO: handle also mp3 etc.
     self.mediaType = @"audio";
     self.mimeType = @"audio/mp4";
-    
+
+    NSLog(@"makeAudioAttachment theURL=%@, theOtherURL=%@", theURL, theOtherURL);
+
     [self useURLs: theURL anOtherURL: theOtherURL];
+    if (self.mimeType == nil) {
+        NSLog(@"WARNING: could not determine mime type, setting default for audio/mp4");
+        self.mimeType = @"audio/mp4";
+    }
+    
     [self loadImageIntoCache];
 }
 
-
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
-    
+    NSLog(@"assetSizer");
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
     {
+        NSLog(@"assetSizer result");
         ALAssetRepresentation *rep = [myasset defaultRepresentation];
         int64_t mySize = [rep size];
+        NSLog(@"assetSizer calling block");
         block(mySize, nil);
+        NSLog(@"assetSizer calling ready");
     };
     
     ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
@@ -184,11 +206,11 @@
     block(myImage, nil);
 }
 
-+ (NSArray *)artworksForFileAtPath:(NSString *)path {
++ (NSArray *)artworksForFileAtFileURL:(NSString *)fileURL {
     NSMutableArray *artworkImages = [NSMutableArray array];
-    NSURL *u = [NSURL fileURLWithPath:path];
-    AVURLAsset *a = [AVURLAsset URLAssetWithURL:u options:nil];
-    NSArray *artworks = [AVMetadataItem metadataItemsFromArray:a.commonMetadata  withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
+    NSURL *URL = [NSURL URLWithString: fileURL];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:URL options:nil];
+    NSArray *artworks = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata  withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
     
     for (AVMetadataItem *i in artworks)
     {
@@ -212,9 +234,10 @@
 
 - (void) loadAudioAttachmentImage: (ImageLoaderBlock) block {
     // TODO - find a way how to retrieve artwork from an a file
-    NSArray * myArtworkImages = [[self class]artworksForFileAtPath: self.localURL];
+    NSArray * myArtworkImages = [[self class]artworksForFileAtFileURL: self.localURL];
     if ([myArtworkImages count]) {
-        block(myArtworkImages[0], nil);
+        UIImage * myfirstImage = myArtworkImages[0];
+        block(myfirstImage, nil);
     } else {
         block([UIImage imageNamed:@"chatbar_btn_audio.png"], nil);
     }
@@ -224,14 +247,18 @@
     if (self.localURL != nil) {
         block([UIImage imageWithContentsOfFile: [[NSURL URLWithString: self.localURL] path]], nil);
     } else if (self.assetURL != nil) {
+        NSLog(@"loadImageAttachmentImage assetURL");
         //TODO: handle different resolutions. For now just load a representation that is suitable for a chat bubble
         ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
         {
+            NSLog(@"loadImageAttachmentImage assetURL result");
             ALAssetRepresentation *rep = [myasset defaultRepresentation];
             //CGImageRef iref = [rep fullResolutionImage];
             CGImageRef iref = [rep fullScreenImage];
             if (iref) {
+                NSLog(@"loadImageAttachmentImage assetURL calling block");
                 block([UIImage imageWithCGImage:iref], nil);
+                NSLog(@"loadImageAttachmentImage assetURL calling block done");
             }
         };
         
@@ -282,6 +309,7 @@
 }
 
 - (void) upload {
+    NSLog(@"Attachment:upload remoteURL=%@, attachment=%@", self.remoteURL, self );
     if ([self.message.isOutgoing isEqualToNumber: @NO]) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
         return;
@@ -293,6 +321,7 @@
     }
     [self withUploadData:^(NSData * myData, NSError * myError) {
         if (myError == nil) {
+            NSLog(@"Attachment:upload starting withUploadData");
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
                                              absoluteURI:[self remoteURL]
                                                  payload:myData
@@ -301,13 +330,13 @@
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             
         } else {
-            NSLog(@"uploadAttachment error=%@",myError);
+            NSLog(@"Attachment:upload error=%@",myError);
         }
     }];
 }
 
 - (void) download {
-    NSLog(@"downloadAttachment remoteURL=%@, attachment=%@", self.remoteURL, self );
+    NSLog(@"Attachment download remoteURL=%@, attachment=%@", self.remoteURL, self );
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoing = %@", self.message.isOutgoing);
         return;
@@ -328,8 +357,8 @@
         [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
     }
     
-    NSLog(@"downloadAttachment: ownedURL = %@", self.ownedURL);
-    NSLog(@"downloadAttachment: remoteURL = %@", self.remoteURL);
+    NSLog(@"Attachment:download ownedURL = %@", self.ownedURL);
+    NSLog(@"Attachment:download remoteURL = %@", self.remoteURL);
     
     NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"GET"
                                      absoluteURI:[self remoteURL]
@@ -388,14 +417,32 @@
     NSString * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
     NSString * myRemoteFileName = myRemoteURL.lastPathComponent;
     NSURL * myNewFile = [NSURL URLWithString:myRemoteFileName relativeToURL:theDirectory];
-    NSString * myNewFilename = [[[myNewFile absoluteString] stringByAppendingString:@"." ] stringByAppendingString: [self fileExtensionFromMimeType]];
+    NSString * myNewFilename = [[[myNewFile absoluteString] stringByAppendingString:@"." ] stringByAppendingString: [Attachment fileExtensionFromMimeType: self.mimeType]];
     return myNewFilename;
 }
 
-- (NSString *) fileExtensionFromMimeType {
-    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(self.mimeType), NULL);
++ (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType {
+    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(theMimeType), NULL);
     CFStringRef extension = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension);
     return (__bridge NSString *)(extension);
+}
+
++ (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString {
+    NSURL * myURL = [NSURL URLWithString: theURLString];
+    if ([myURL isFileURL]) {
+        return [Attachment mimeTypeFromfileExtension:[myURL pathExtension]];
+    } else {
+        NSString * myExtension = [myURL pathExtension];
+        NSLog(@"mimeTypeFromfileURLExtension: Extension from non-file URL: %@ is '%@'", myURL, myExtension);
+        return [Attachment mimeTypeFromfileExtension:[myURL pathExtension]];        
+    }
+    return nil;
+}
+
++ (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension {
+    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)(theExtension), NULL);
+    CFStringRef mimetype = UTTypeCopyPreferredTagWithClass (uti, kUTTagClassMIMEType);
+    return (__bridge NSString *)(mimetype);
 }
 
 // connection delegate methods
@@ -482,7 +529,8 @@
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);
                 self.localURL = self.ownedURL;
                 // TODO: maybe do some UI refresh here, or use an observer for this
-                [_chatBackend downloadFinished: self];
+                [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
+                // [_chatBackend downloadFinished: self];
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);                
             } else {
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
