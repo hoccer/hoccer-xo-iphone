@@ -144,7 +144,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     cell.imageView.image = item.icon;
     cell.textField.text = value;
     cell.textField.enabled = _editing;
-    cell.textField.hidden = _editing;
     cell.textField.alpha = _editing ? 1.0 : 0.0;
     cell.textField.placeholder = item.placeholder;
     cell.textField.tag = indexPath.row;
