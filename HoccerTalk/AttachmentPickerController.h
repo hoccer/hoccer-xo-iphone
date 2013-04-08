@@ -28,6 +28,7 @@ typedef enum AttachmentPickerTypes {
 
 - (BOOL) wantsAttachmentsOfType: (AttachmentPickerType) type;
 - (NSString*) attachmentPickerActionSheetTitle;
+- (BOOL) allowsEditing;
 
 @end
 

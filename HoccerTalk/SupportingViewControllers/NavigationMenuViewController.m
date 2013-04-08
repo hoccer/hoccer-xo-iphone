@@ -85,8 +85,7 @@
     if ( ! [_menuItems[indexPath.row][@"title"] isEqualToString: @"Chats"]) {
         viewController.title = _menuItems[indexPath.row][@"title"];
     }
-    NSArray *controllers = [NSArray arrayWithObject: viewController];
-    [self.sideMenu.navigationController setViewControllers: controllers animated: NO];
+    [self.sideMenu.navigationController setViewControllers: @[viewController] animated: NO];
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
 }
 

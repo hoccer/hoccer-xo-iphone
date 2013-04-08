@@ -348,9 +348,13 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return _attachmentPicker;
 }
 
+- (BOOL) allowsEditing {
+    return YES;
+}
+
 - (void) didPickAttachment:(id)attachmentInfo {
     NSLog(@"attachment picked");
-    UIImage * image = attachmentInfo[UIImagePickerControllerOriginalImage];
+    UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
     _avatarItem.image = image;
     [self.tableView reloadData];
 }

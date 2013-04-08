@@ -136,6 +136,9 @@
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     picker.sourceType = sourceType;
+    if ([self.delegate respondsToSelector:@selector(allowsEditing)]) {
+        picker.allowsEditing = [self.delegate allowsEditing];
+    }
     if (sourceType == UIImagePickerControllerSourceTypeCamera){
         if (videoFlag) {
             picker.mediaTypes =[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
