@@ -57,4 +57,26 @@
     return newImage;
 }
 
+- (void)drawInRect:(CGRect)drawRect fromRect:(CGRect)fromRect blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    CGImageRef drawImage = CGImageCreateWithImageInRect(self.CGImage, fromRect);
+    if (drawImage != NULL) {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(context);
+
+        CGContextSetBlendMode(context, blendMode);
+        CGContextSetAlpha(context, alpha);
+
+        // Handle coordinate system flip
+        CGContextTranslateCTM(context, 0, drawRect.origin.y + fromRect.size.height);
+        CGContextScaleCTM(context, 1.0, -1.0);
+
+        drawRect.origin.y = 0.0f;
+
+        CGContextDrawImage(context, drawRect, drawImage);
+
+        CGImageRelease(drawImage);
+        CGContextRestoreGState(context);
+    }
+}
+
 @end

@@ -11,5 +11,6 @@
 @interface UIImage (ScaleAndCrop)
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize;
+- (void)drawInRect:(CGRect)drawRect fromRect:(CGRect)fromRect blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
 
 @end

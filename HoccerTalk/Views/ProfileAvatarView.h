@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileAvatarView : UIView
+@interface ProfileAvatarView : UIControl
 
 @property (nonatomic,strong) UIImage * image;
 

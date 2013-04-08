@@ -9,14 +9,7 @@
 #import "AttachmentPickerController.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
-
-typedef enum AttachmentPickerTypes {
-    AttachmentPickerTypePhotoVideoFromLibrary,
-    AttachmentPickerTypePhotoVideoFromCamera,
-    AttachmentPickerTypeMediaFromLibrary
-//    AttachmentTypeContact
-// TODO: add more attachment types
-} AttachmentPickerType;
+#import <MobileCoreServices/UTCoreTypes.h>
 
 @interface AttachmentPickerController ()
 {
@@ -45,18 +38,32 @@ typedef enum AttachmentPickerTypes {
 
 - (void) probeAttachmentTypes {
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
-        AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Choose Photo/Video", @"Action Sheet Button Ttitle");
-        item.type = AttachmentPickerTypePhotoVideoFromLibrary;
-        [_supportedItems addObject: item];
+        if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Choose Photo/Video", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypePhotoVideoFromLibrary;
+            [_supportedItems addObject: item];
+        } else if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoFromLibrary]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Choose Photo", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypePhotoFromLibrary;
+            [_supportedItems addObject: item];
+        }
     }
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
-        AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Take Photo/Video", @"Action Sheet Button Ttitle");
-        item.type = AttachmentPickerTypePhotoVideoFromCamera;
-        [_supportedItems addObject: item];
+        if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromCamera]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Take Photo/Video", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypePhotoVideoFromCamera;
+            [_supportedItems addObject: item];
+        } else if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoFromCamera]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Take Photo", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypePhotoFromCamera;
+            [_supportedItems addObject: item];
+        }
     }
-    if (YES) {
+    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeMediaFromLibrary]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"Choose Audio", @"Action Sheet Button Ttitle");
         item.type = AttachmentPickerTypeMediaFromLibrary;
@@ -65,8 +72,21 @@ typedef enum AttachmentPickerTypes {
     // TODO: add other types
 }
 
+- (BOOL) delegateWantsAttachmentsOfType: (AttachmentPickerType) type {
+    if ([self.delegate respondsToSelector:@selector(wantsAttachmentsOfType:)]) {
+        return [self.delegate wantsAttachmentsOfType: type];
+    }
+    return YES;
+}
+
 - (void) showInView: (UIView*) view {
-    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Add Attachement", @"Attachment Actionsheet Title")
+    NSString * title;
+    if ([self.delegate respondsToSelector:@selector(attachmentPickerActionSheetTitle)]) {
+        title = [self.delegate attachmentPickerActionSheetTitle];
+    } else {
+        title = NSLocalizedString(@"Add Attachement", @"Attachment Actionsheet Title");
+    }
+    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: title
                                                                  delegate: self
                                                         cancelButtonTitle: nil
                                                    destructiveButtonTitle: nil
@@ -92,12 +112,19 @@ typedef enum AttachmentPickerTypes {
 }
 
 - (void) showPickerForType: (AttachmentPickerType) type {
+    BOOL wantsVideo = YES;
     switch (type) {
+        case AttachmentPickerTypePhotoFromLibrary:
+            wantsVideo = NO;
+            // no break
         case AttachmentPickerTypePhotoVideoFromLibrary:
-            [self showImagePickerWithSource: UIImagePickerControllerSourceTypePhotoLibrary];
+            [self showImagePickerWithSource: UIImagePickerControllerSourceTypePhotoLibrary withVideo: wantsVideo];
             break;
+        case AttachmentPickerTypePhotoFromCamera:
+            wantsVideo = NO;
+            // no break
         case AttachmentPickerTypePhotoVideoFromCamera:
-            [self showImagePickerWithSource: UIImagePickerControllerSourceTypeCamera];
+            [self showImagePickerWithSource: UIImagePickerControllerSourceTypeCamera withVideo: wantsVideo];
             break;
         case AttachmentPickerTypeMediaFromLibrary:
             [self showMediaPicker];
@@ -105,17 +132,24 @@ typedef enum AttachmentPickerTypes {
     }
 }
 
-- (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType {
+- (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType withVideo: (BOOL) videoFlag {
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     picker.sourceType = sourceType;
     if (sourceType == UIImagePickerControllerSourceTypeCamera){
-        picker.mediaTypes =[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-        picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
-    }
-    else {
-        picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-        picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+        if (videoFlag) {
+            picker.mediaTypes =[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+            picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+        } else {
+            picker.mediaTypes = @[(id)kUTTypeImage];
+        }
+    } else {
+        if (videoFlag) {
+            picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+            picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+        } else {
+            picker.mediaTypes = @[(id)kUTTypeImage];
+        }
     }
     [_viewController presentViewController: picker animated: YES completion: nil];
 
@@ -133,7 +167,6 @@ typedef enum AttachmentPickerTypes {
 }
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
-    NSLog(@"mediaPickerDidCancel");    
     [mediaPicker dismissModalViewControllerAnimated: YES];
 }
 

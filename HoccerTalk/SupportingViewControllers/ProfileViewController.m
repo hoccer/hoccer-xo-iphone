@@ -34,12 +34,21 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 @interface AvatarItem : NSObject
 
-@property (nonatomic,strong) UIImage* image;
-@property (nonatomic,assign) CGRect   croppingRect;
+@property (nonatomic,strong) UIImage*  image;
+@property (nonatomic,assign) CGRect    croppingRect;
+@property (nonatomic,strong) NSString* userDefaultsKey;
+
+@end
+
+@interface ProfileViewController ()
+
+@property (strong, readonly) AttachmentPickerController* attachmentPicker;
 
 @end
 
 @implementation ProfileViewController
+
+@synthesize attachmentPicker = _attachmentPicker;
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -47,6 +56,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         _editing = NO;
 
         _avatarItem = [[AvatarItem alloc] init];
+        _avatarItem.userDefaultsKey = kHTAvatarImage;
 
         _profileItems = [[NSMutableArray alloc] init];
 
@@ -125,8 +135,16 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     UITableViewCell * cell = nil;
     if (indexPath.section == 0) {
         cell = [tableView dequeueReusableCellWithIdentifier: @"avatarCell" forIndexPath:indexPath];
-        cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
-        ((ProfileAvatarCell*)cell).avatar.image = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
+        cell.backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+        ProfileAvatarCell * avatarCell = (ProfileAvatarCell*)cell;
+        avatarCell.avatar.image = _avatarItem.image;
+        avatarCell.avatar.enabled = _editing;
+        [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
+
+        UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc]
+                                                 initWithTarget:self action:@selector(avatarPanned:)];
+        [avatarCell.avatar addGestureRecognizer:panRecognizer];
+        
     } else {
         ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
         cell = [tableView dequeueReusableCellWithIdentifier: item.cellIdentifier forIndexPath:indexPath];
@@ -208,6 +226,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
                 profileCell.textField.alpha = alpha;
                 profileCell.textField.enabled = ! _editing;
                 profileCell.textInputBackground.alpha = alpha;
+            } else if ([cell isKindOfClass: [ProfileAvatarCell class]]) {
+                ProfileAvatarCell * avatarCell = (ProfileAvatarCell*) cell;
+                avatarCell.avatar.enabled = ! _editing;
             }
         }
     } completion:^(BOOL finished) {
@@ -263,6 +284,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) populateItems {
+    _avatarItem.image = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] valueForKey: _avatarItem.userDefaultsKey]];
     for (ProfileItem* item in _profileItems) {
         item.currentValue = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
     }
@@ -289,6 +311,52 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) makeLeftButtonFixedWidth {
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
+}
+
+#pragma marl - Avatar Handling
+
+- (IBAction)avatarTapped:(id)sender {
+    NSLog(@"avatar tapped");
+    [self.attachmentPicker showInView: self.view];
+}
+
+- (IBAction)avatarPanned:(id)sender {
+    NSLog(@"avatar panned");
+}
+
+- (IBAction)avatarPinched:(id)sender {
+    NSLog(@"avatar pinched");
+}
+
+#pragma mark - Attachment Picker Controller
+
+- (AttachmentPickerController*) attachmentPicker {
+    if (_attachmentPicker == nil) {
+        _attachmentPicker = [[AttachmentPickerController alloc] initWithViewController: self delegate: self];
+
+    }
+    return _attachmentPicker;
+}
+
+- (void) didPickAttachment:(id)attachmentInfo {
+    NSLog(@"attachment picked");
+    UIImage * image = attachmentInfo[UIImagePickerControllerOriginalImage];
+    _avatarItem.image = image;
+    [self.tableView reloadData];
+}
+
+- (BOOL) wantsAttachmentsOfType:(AttachmentPickerType)type {
+    switch (type) {
+        case AttachmentPickerTypePhotoFromCamera:
+        case AttachmentPickerTypePhotoFromLibrary:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
+- (NSString*) attachmentPickerActionSheetTitle {
+    return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
 }
 
 - (void)viewDidUnload {

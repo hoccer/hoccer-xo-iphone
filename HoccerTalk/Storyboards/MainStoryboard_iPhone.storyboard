@@ -86,6 +86,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <gestureRecognizers/>
                                 <connections>
                                     <outlet property="avatar" destination="5Da-Qq-TAt" id="1PU-n9-wlS"/>
                                 </connections>
@@ -792,7 +793,7 @@
                 <relationship kind="outlet" name="avatar" candidateClass="ProfileAvatarView"/>
             </relationships>
         </class>
-        <class className="ProfileAvatarView" superclassName="UIView">
+        <class className="ProfileAvatarView" superclassName="UIControl">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileAvatarView.h"/>
         </class>
         <class className="ProfileTextCell" superclassName="UITableViewCell">

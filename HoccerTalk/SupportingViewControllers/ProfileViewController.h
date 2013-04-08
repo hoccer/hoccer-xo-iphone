@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import "AttachmentPickerController.h"
+
 @class ProfileAvatarCell;
 @class ProfileTextCell;
 @class AvatarItem;
 
-@interface ProfileViewController : UITableViewController <UITextFieldDelegate>
+@interface ProfileViewController : UITableViewController <UITextFieldDelegate,UIScrollViewDelegate,AttachmentPickerControllerDelegate>
 {
     AvatarItem *        _avatarItem;
     NSMutableArray *    _profileItems;

@@ -11,8 +11,24 @@
 
 @class Attachment;
 
-@protocol AttachmentPickerControllerDelegate
+typedef enum AttachmentPickerTypes {
+    AttachmentPickerTypePhotoFromLibrary,
+    AttachmentPickerTypePhotoVideoFromLibrary,
+    AttachmentPickerTypePhotoFromCamera,
+    AttachmentPickerTypePhotoVideoFromCamera,
+    AttachmentPickerTypeMediaFromLibrary
+    //    AttachmentTypeContact
+    // TODO: add more attachment types
+} AttachmentPickerType;
+
+@protocol AttachmentPickerControllerDelegate <NSObject>
 - (void) didPickAttachment: (id) attachmentInfo;
+
+@optional
+
+- (BOOL) wantsAttachmentsOfType: (AttachmentPickerType) type;
+- (NSString*) attachmentPickerActionSheetTitle;
+
 @end
 
 @interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate>

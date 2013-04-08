@@ -135,5 +135,9 @@
     _outerShadowColor = outerShadowColor;
     [self setNeedsDisplay];
 }
+- (void) setImage:(UIImage *)image {
+    _image = image;
+    [self setNeedsDisplay];
+}
 
 @end
