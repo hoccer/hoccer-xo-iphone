@@ -18,20 +18,49 @@
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
         self.clipsToBounds = NO;
+
+        self.gradientBottomColor = [UIColor whiteColor];
+        self.gradientTopColor    = [UIColor colorWithWhite: 0.85 alpha: 1];
+        
+        self.innerShadowColor    = [UIColor colorWithWhite: 0 alpha: 0.5];
+        self.innerShadowOffset = CGSizeMake(0.1, 5.1);
+        self.innerShadowBlurRadius = 5;
+
+        self.outerShadowColor    = [UIColor whiteColor];
+        self.outerShadowOffset = CGSizeMake(0.1, -0.1);
+        self.outerShadowBlurRadius = 20;
+
     }
     return self;
 }
 
 - (void) drawRect:(CGRect)rect {
+    //// Color Declarations
+    UIColor* gardientBottom = self.gradientBottomColor;
+    UIColor* gradientTop = self.gradientTopColor;
+    UIColor* innerShadowColor = self.innerShadowColor;
+    UIColor* outerShadowColor = self.outerShadowColor;
+
+    //// Shadow Declarations
+    UIColor* innerShadow = innerShadowColor;
+    CGSize innerShadowOffset = self.innerShadowOffset;
+    CGFloat innerShadowBlurRadius = self.innerShadowBlurRadius;
+    UIColor* outerShadow = outerShadowColor;
+    CGSize outerShadowOffset = self.outerShadowOffset;
+    CGFloat outerShadowBlurRadius = self.outerShadowBlurRadius;
+
+    //// Image Declarations
+    UIImage* image = self.image;
+
+    //// Frames
+    CGRect frame = self.bounds;
+    
+
+
     //// General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
 
-    //// Color Declarations
-    UIColor* gardientBottom = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
-    UIColor* gradientTop = [UIColor colorWithRed: 0.851 green: 0.851 blue: 0.851 alpha: 1];
-    UIColor* innerShadowColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.536];
-    UIColor* outerShadowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
 
     //// Gradient Declarations
     NSArray* gradientColors = [NSArray arrayWithObjects:
@@ -39,20 +68,6 @@
                                (id)gardientBottom.CGColor, nil];
     CGFloat gradientLocations[] = {0, 1};
     CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
-
-    //// Shadow Declarations
-    UIColor* innerShadow = innerShadowColor;
-    CGSize innerShadowOffset = CGSizeMake(0.1, 5.1);
-    CGFloat innerShadowBlurRadius = 5;
-    UIColor* outerShadow = outerShadowColor;
-    CGSize outerShadowOffset = CGSizeMake(0.1, -0.1);
-    CGFloat outerShadowBlurRadius = 20;
-
-    //// Image Declarations
-    UIImage* image = self.image;
-
-    //// Frames
-    CGRect frame = self.bounds;
 
 
     //// Oval 2 Drawing
@@ -106,12 +121,16 @@
     CGContextRestoreGState(context);
     
     
-    
     //// Cleanup
     CGGradientRelease(gradient);
     CGColorSpaceRelease(colorSpace);
     
 
+}
+
+- (void) setOuterShadowColor:(UIColor *)outerShadowColor {
+    _outerShadowColor = outerShadowColor;
+    [self setNeedsDisplay];
 }
 
 @end

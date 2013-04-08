@@ -15,7 +15,12 @@
 @property (nonatomic,strong) UIColor * gradientTopColor;
 @property (nonatomic,strong) UIColor * gradientBottomColor;
 
-@property (nonatomic,strong) UIColor * shadowColor;
-@property (nonatomic,assign) CGFloat   shadowRadius;
-@property (nonatomic,assign) CGSize    shadowOffset;
+@property (nonatomic,strong) UIColor * innerShadowColor;
+@property (nonatomic,assign) CGFloat   innerShadowBlurRadius;
+@property (nonatomic,assign) CGSize    innerShadowOffset;
+
+@property (nonatomic,strong) UIColor * outerShadowColor;
+@property (nonatomic,assign) CGFloat   outerShadowBlurRadius;
+@property (nonatomic,assign) CGSize    outerShadowOffset;
+
 @end

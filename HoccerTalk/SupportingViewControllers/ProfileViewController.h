@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class ProfileAvatarCell;
+@class ProfileTextCell;
+
 @interface ProfileViewController : UITableViewController <UITextFieldDelegate>
 {
-    NSArray * _profileItems;
-    UIImage * _previousNavigationBarBackgroundImage;
-    UITableViewCell * _avatarCell;
-    UITableViewCell * _normalCell;
+    NSMutableArray *    _profileItems;
+    ProfileAvatarCell * _avatarCell;
+    ProfileTextCell *   _textCell;
+    BOOL                _editing;
 }
 
 @property (nonatomic,strong) UITableView* tableView;
