@@ -189,6 +189,7 @@
 		63C413C416EA3549004E1F6D /* bg_message-count-red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C413C016EA3549004E1F6D /* bg_message-count-red@2x.png */; };
 		63C413C716EA397F004E1F6D /* AssetStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C413C616EA397E004E1F6D /* AssetStore.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
+		63DC01411713191800609513 /* ExternalLocalizationKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01401713191800609513 /* ExternalLocalizationKeys.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
@@ -465,6 +466,7 @@
 		63C413C516EA397E004E1F6D /* AssetStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetStore.h; sourceTree = "<group>"; };
 		63C413C616EA397E004E1F6D /* AssetStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetStore.m; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		63DC01401713191800609513 /* ExternalLocalizationKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExternalLocalizationKeys.m; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -886,6 +888,7 @@
 				63AEE2E116CA4D0200522F92 /* HoccerTalk-Info.plist */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
 				63AEE2E716CA4D0200522F92 /* HoccerTalk-Prefix.pch */,
+				63DC01401713191800609513 /* ExternalLocalizationKeys.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1274,6 +1277,7 @@
 				636492DA1711F4B000E35514 /* ProfileAvatarCell.m in Sources */,
 				636492DD1711FEB900E35514 /* RadialGradientView.m in Sources */,
 				636492E317121D7500E35514 /* ProfileTextCell.m in Sources */,
+				63DC01411713191800609513 /* ExternalLocalizationKeys.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,7 +1,17 @@
-#!/bin/sh
+#!/bin/bash
+
 
 dir=`dirname $0`/HoccerTalk
-for sourcefile in `find $dir -name "*.m"`; do
-    sourcefiles="$sourcefiles $sourcefile"
-done;
+sourcefiles=`find $dir -name "*.m"`
+
+iconv -f UTF-8 -t UTF-16 HoccerTalk/Localizations/en.lproj/Localizable.strings \
+                       > HoccerTalk/Localizations/en.lproj/ttt.strings
+mv HoccerTalk/Localizations/en.lproj/ttt.strings \
+   HoccerTalk/Localizations/en.lproj/Localizable.strings
+
 genstrings $sourcefiles -o HoccerTalk/Localizations/en.lproj
+
+iconv -f UTF-16 -t UTF-8 HoccerTalk/Localizations/en.lproj/Localizable.strings \
+                       > HoccerTalk/Localizations/en.lproj/ttt.strings
+mv HoccerTalk/Localizations/en.lproj/ttt.strings \
+   HoccerTalk/Localizations/en.lproj/Localizable.strings
