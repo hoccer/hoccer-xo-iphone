@@ -280,6 +280,7 @@
     if (attachmentInfo == nil) {
         return;
     }
+    [self setSpinningAttachmentButton];
     NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
@@ -423,6 +424,9 @@
 
 - (void) decorateAttachmentButton:(UIImage *) theImage {
     if (theImage) {
+        if (self.attachmentPreview != nil) {
+            [self.attachmentPreview removeFromSuperview];
+        }
         InsetImageView* preview = [[InsetImageView alloc] init];
         self.attachmentPreview = preview;
         preview.frame = _attachmentButton.frame;
@@ -434,15 +438,28 @@
         [self.chatbar addSubview: preview];
         _attachmentButton.hidden = YES;
     } else {
+        self.attachmentPreview = nil;
     }
 }
+
+
+- (void) setSpinningAttachmentButton {
+    UIActivityIndicatorView * preview = [[UIActivityIndicatorView alloc] init];
+    self.attachmentPreview = preview;
+    preview.frame = _attachmentButton.frame;
+    preview.autoresizingMask = _attachmentButton.autoresizingMask;
+    [preview startAnimating];
+    [self.chatbar addSubview: preview];
+    _attachmentButton.hidden = YES;
+}
+
 
 - (void) trashCurrentAttachment {
     if (self.currentAttachment != nil) {
         [self.managedObjectContext deleteObject: self.currentAttachment];
         self.currentAttachment = nil;
     }
-   
+    [self decorateAttachmentButton:nil];
 }
 
 - (void) showAttachmentOptions {
