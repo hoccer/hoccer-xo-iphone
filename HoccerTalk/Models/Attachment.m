@@ -206,6 +206,7 @@
 
 }
 
+#if CHEESY_PLAYER
 - (void) loadVideoAttachmentImage: (ImageLoaderBlock) block {
 
     // synchronous loading, maybe make it async at some point
@@ -214,6 +215,22 @@
     UIImage * myImage = [movie thumbnailImageAtTime:0.0 timeOption:MPMovieTimeOptionExact];
     block(myImage, nil);
 }
+
+#else
+
+- (void) loadVideoAttachmentImage: (ImageLoaderBlock) block {
+    
+    AVURLAsset * asset = [[AVURLAsset alloc] initWithURL:[NSURL URLWithString:self.localURL] options:nil];
+    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    NSError *err = NULL;
+    CMTime time = CMTimeMake(1, 60);
+    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+    
+    NSLog(@"loadVideoAttachmentImage err==%@, imageRef==%@", err, imgRef);
+    
+    block([[UIImage alloc] initWithCGImage:imgRef], nil);
+}
+#endif
 
 + (NSArray *)artworksForFileAtFileURL:(NSString *)fileURL {
     NSMutableArray *artworkImages = [NSMutableArray array];
