@@ -12,6 +12,14 @@
 @class InsetImageView;
 @class BubbleView;
 @class TalkMessage;
+@class MessageCell;
+
+
+@protocol AttachmentViewControllerDelegate <NSObject>
+
+- (void) presentAttachmentViewForCell: (MessageCell *) theCell;
+
+@end
 
 @interface MessageCell : UITableViewCell
 
@@ -19,6 +27,11 @@
 @property (strong, nonatomic) IBOutlet InsetImageView *avatar;
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
+@property (weak, nonatomic) id<AttachmentViewControllerDelegate> delegate;
+@property (strong, nonatomic) NSIndexPath * indexPath;
+
 - (CGFloat) heightForMessage: (TalkMessage*) message;
+
+- (void)pressedButton: (id)sender;
 
 @end

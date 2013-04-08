@@ -14,19 +14,36 @@
 
 @implementation AttachmentViewFactory
 
-+ (UIView*) viewForAttachment: (Attachment*) attachment {
++ (UIView*) viewForAttachment: (Attachment*) attachment inCell:(MessageCell*) cell {
     if (attachment == nil) {
         return nil;
     } else if ([attachment.mediaType isEqualToString:@"image"] ||
                [attachment.mediaType isEqualToString:@"video"] ||
-               [attachment.mediaType isEqualToString:@"audio"]) {
+               [attachment.mediaType isEqualToString:@"audio"])
+    {
+        UIView * attachmentView = [[UIView alloc] init];
+        attachmentView.userInteractionEnabled = YES;
+        CGRect frame = attachmentView.frame;
+        
         UIImageView * imageView = [[UIImageView alloc] init];
-        CGRect frame = imageView.frame;
         
         // preset frame to correct aspect ratio before actual image is loaded
         frame.size.width = attachment.aspectRatio;
         frame.size.height = 1.0;
         imageView.frame = frame;
+        //imageView.userInteractionEnabled = YES;
+        imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        
+        [attachmentView addSubview:imageView];
+        attachmentView.frame = frame;
+        
+        UIButton * myButton = [[UIButton alloc] initWithFrame: frame];
+        [myButton setTitle:@"Open" forState:UIControlStateNormal];
+        myButton.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        
+        [myButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [attachmentView addSubview:myButton];
         
         if (attachment.image == nil) {
             [attachment loadImage:^(UIImage * image, NSError * error) {
@@ -40,7 +57,7 @@
         } else {
             imageView.image = attachment.image;
         }
-        return imageView;
+        return attachmentView;
     } else {
         NSLog(@"Unhandled attachment type");
     }

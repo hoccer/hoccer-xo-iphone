@@ -63,6 +63,8 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
 - (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
 
+- (NSURL *) contentURL; // best Effort content URL for playback, display etc.
+
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
