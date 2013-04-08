@@ -278,7 +278,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) reloadProfile {
     [self populateItems];
-
+    [self.tableView reloadData];
 }
 
 - (void) restoreNonEditButtons {
