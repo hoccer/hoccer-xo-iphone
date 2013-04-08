@@ -94,3 +94,15 @@
 /* APN one new message */
 "apn_one_new_message" = "Du hast eine neue Nachricht!";
 
+"profile_name_label" = "Name";
+
+"profile_name_placeholder" = "Dein Name";
+
+"profile_phone_label" = "Telefon";
+
+"profile_phone_placeholder" = "Telefonnummer";
+
+"profile_mail_label" = "Mail";
+
+"profile_mail_placeholder" = "Mail Adresse";
+

@@ -333,22 +333,14 @@
                 }
                 case AVAssetExportSessionStatusCompleted: {
                     NSLog (@"AVAssetExportSessionStatusCompleted");
-                    
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[exporter.outputURL absoluteString]];
+                    [self decorateAttachmentButton: self.currentAttachment.image];
 
                      // set up artwork image
-                     MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
+                     // MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
                      // NSLog(@"createThumb1: artwork=%@", artwork);
-                     UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];
-                     
-                     if (artworkImage != nil){
-                         [self decorateAttachmentButton: artworkImage];
-                     }
-                     else {
-                         [self decorateAttachmentButton: [UIImage imageNamed:@"chatbar_btn_audio.png"]];
-                     }
-
-                     
+                     // UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];
+                    
                     break;
                 }
                 case AVAssetExportSessionStatusUnknown: {
@@ -362,7 +354,7 @@
                 default: { NSLog (@"didn't get export status"); break;}
             }
         }];
-
+        return;
         
     } else if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
         // image or movie form camera or album
@@ -776,7 +768,8 @@
 
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
-         [message.attachment.mediaType isEqualToString:@"video"]))
+         [message.attachment.mediaType isEqualToString:@"video"] ||
+         [message.attachment.mediaType isEqualToString:@"audio"]))
     {
         UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment];
         cell.bubble.attachmentView = attachmentView;

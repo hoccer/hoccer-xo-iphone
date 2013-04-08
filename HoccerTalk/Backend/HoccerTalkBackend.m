@@ -218,6 +218,12 @@
 
 #pragma mark - Attachment upload and download
 
+- (void) flushPendingAttachments {
+    [self performSelectorOnMainThread:@selector(flushPendingAttachmentUploads) withObject:nil waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(flushPendingAttachmentDownloads) withObject:nil waitUntilDone:NO];
+}
+
+
 - (void) flushPendingAttachmentUploads {
     // fetch all not yet transferred uploads
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotUploaded"];
@@ -249,6 +255,7 @@
 }
 
 - (void) downloadFinished:(Attachment *)theAttachment {
+    NSLog(@"downloadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
 }
 
@@ -295,8 +302,7 @@
                 _apnsDeviceToken = nil; // XXX: this is not nice...
             }
             [self flushPendingMessages];
-            [self flushPendingAttachmentUploads];
-            [self flushPendingAttachmentDownloads];
+            [self flushPendingAttachments];
             _isConnected = YES;
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
