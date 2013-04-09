@@ -7,6 +7,10 @@
 //
 
 #import "Contact.h"
+#import "Crypto.h"
+#import "NSData_Base64Extensions.h"
+#import "RSA.h"
+
 
 const float kTimeSectionInterval = 2 * 60;
 
@@ -22,6 +26,7 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic currentTimeSection;
 @dynamic unreadMessages;
 @dynamic latestMessage;
+@dynamic publicKey;
 
 @dynamic messages;
 
@@ -37,6 +42,16 @@ const float kTimeSectionInterval = 2 * 60;
     return _avatarImage;
 }
 
+@dynamic publicKeyString;
+
+-(NSString*) publicKeyString {
+    return [self.publicKey asBase64EncodedString];
+}
+
+-(void) setPublicKeyString:(NSString*) theB64String {
+    self.publicKey = [NSData dataWithBase64EncodedString:theB64String];
+}
+
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date {
     if (self.latestMessageTime == nil) {
         self.latestMessageTime = [NSDate date];
@@ -49,4 +64,19 @@ const float kTimeSectionInterval = 2 * 60;
     }
     return self.currentTimeSection;
 }
+
+- (SecKeyRef) getPublicKeyRef {
+    RSA * rsa = [RSA sharedInstance];
+    SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
+    if (myResult == nil) {
+        // store public key from contact in key store
+        [rsa addPublicKey: self.publicKeyString withTag: self.clientId];
+        myResult = [rsa getPeerKeyRef:self.clientId];
+        if (myResult == nil) {
+            NSLog(@"Contact:getPublicKeyRef: failed.");
+        }
+    }
+    return myResult;
+}
+
 @end

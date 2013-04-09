@@ -26,5 +26,10 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 @property (nonatomic, strong) TalkMessage *message;
 
 @property (nonatomic, strong) Contact* receiver;
+@property (nonatomic, strong) NSData* keyCiphertext; // encrypted message crypto key
+
+@property (nonatomic) NSString* keyCiphertextString; // encrypted message crypto key as b64-string
+
+@property (nonatomic) NSData* keyCleartext;
 
 @end

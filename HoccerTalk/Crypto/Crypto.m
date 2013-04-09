@@ -16,7 +16,7 @@
 #import "RSA.h"
 #import "PublicKeyManager.h"
 
-static NSData* RandomSalt() {
+static NSData * RandomSalt() {
     NSMutableData *data = [NSMutableData data];
     
     for (NSInteger i = 0; i < 32 / sizeof(u_int32_t); i++) {
@@ -27,7 +27,8 @@ static NSData* RandomSalt() {
     return data;
 }
 
-static NSData *NotSoRandomSalt() {
+// fixed salt for testing
+static NSData * NotSoRandomSalt() {
     NSMutableData *data = [NSMutableData data];
     
     for (NSInteger i = 1; i < 33; i++) {
@@ -38,6 +39,14 @@ static NSData *NotSoRandomSalt() {
     return data;    
 }
 
+static NSData * RandomBytes(size_t count) {
+    NSMutableData* data = [NSMutableData dataWithLength:count];
+    int err = SecRandomCopyBytes(kSecRandomDefault, count, [data mutableBytes]);
+    if (err != 0) {
+        NSLog(@"RandomBytes; RNG error = %d", errno);
+    }
+    return data;
+}
 
 @implementation NoCryptor
 
@@ -71,6 +80,10 @@ static NSData *NotSoRandomSalt() {
 
 @implementation AESCryptor
 
++ (NSData *)random256BitKey {
+    return RandomBytes(32);
+}
+
 - (id)initWithKey: (NSString *)theKey {
     return [self initWithKey:theKey salt:RandomSalt()];
 }
@@ -85,7 +98,6 @@ static NSData *NotSoRandomSalt() {
 }
 
 - (id)initWithRandomKey{
-
     NSString *theKey = [[RSA sharedInstance] genRandomString:64];
     return [self initWithKey:theKey salt:RandomSalt()];
 }

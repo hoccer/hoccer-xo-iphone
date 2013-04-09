@@ -19,15 +19,12 @@
 - (id)init {
     self = [super init];
     if (self) {
-        
         collectedKeys = [[NSMutableArray alloc]initWithArray:[[NSUserDefaults standardUserDefaults]arrayForKey:@"keyStore"]];
         
         if (collectedKeys == nil){
             collectedKeys = [[NSMutableArray alloc] initWithCapacity:1];
         }
-        
     }
-    
     return self;
 }
 
@@ -38,7 +35,7 @@
 
 -(BOOL)storeKey:(NSString *)theKey forClient:(NSDictionary *)client{
     
-    NSString *theTag = [NSString stringWithFormat:@"com.hoccer.publickey.store.%@",[client objectForKey:@"id"]];
+    NSString *theTag = [NSString stringWithFormat:@"com.hoccertalk.publickey.store.%@",[client objectForKey:@"id"]];
     
     BOOL safed = [[RSA sharedInstance] addPublicKey:theKey withTag:theTag];
     
@@ -51,25 +48,21 @@
             [collectedKeys removeObject:storedClient];
         }
         
-
-        
         NSDictionary *keyDicitonary = [[NSDictionary alloc]initWithObjectsAndKeys:theKey,@"key",[client objectForKey:@"id"], @"clientId", [client objectForKey:@"name"], @"clientName", nil];
         [collectedKeys addObject:keyDicitonary];
         [[NSUserDefaults standardUserDefaults] setObject:collectedKeys forKey:@"keyStore"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    
     return safed;
 }
 
 -(SecKeyRef)getKeyForClient:(NSDictionary *)client{
     
-    NSString *theName = [NSString stringWithFormat:@"com.hoccer.publickey.store.%@",[client objectForKey:@"id"]];
+    NSString *theName = [NSString stringWithFormat:@"com.hoccertalk.publickey.store.%@",[client objectForKey:@"id"]];
 
     SecKeyRef theKey = [[RSA sharedInstance] getPeerKeyRef:theName];
     
     if (theKey != nil){
-        
         return theKey;
     }
     else {
@@ -79,7 +72,7 @@
 -(BOOL)checkForKeyChange:(NSDictionary *)client withHash:(NSString *)theHash{
     
     BOOL result = YES;
-    NSString *theName = [NSString stringWithFormat:@"com.hoccer.publickey.store.%@",[client objectForKey:@"id"]];
+    NSString *theName = [NSString stringWithFormat:@"com.hoccertalk.publickey.store.%@",[client objectForKey:@"id"]];
 
     NSData *storedKey = [[RSA sharedInstance] getKeyBitsForPeerRef:theName];
     
@@ -99,7 +92,6 @@
         if ( ![[storedClient objectForKey:@"clientName"] isEqualToString:[client objectForKey:@"name"]] || ![storedHash isEqualToString: [client objectForKey:@"pubkey_id"]]){
                 result = YES;
         }
-    
     }
     
     return result;
@@ -117,7 +109,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:collectedKeys forKey:@"keyStore"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    NSString *theName = [NSString stringWithFormat:@"com.hoccer.publickey.store.%@",theId];
+    NSString *theName = [NSString stringWithFormat:@"com.hoccertalk.publickey.store.%@",theId];
     [[RSA sharedInstance]removePeerPublicKey:theName];
 }
 

@@ -22,13 +22,15 @@
 @interface NoCryptor : NSObject <Cryptor> 
 @end
 
-@class HCLinccer;
-@interface AESCryptor: NSObject <Cryptor> {
+@interface AESCryptor: NSObject <Cryptor>
+
+{
 @private
     NSString *key;
     NSData *salt;
 }
 
++ (NSData *) random256BitKey;
 
 - (id)initWithKey:(NSString *)key;
 - (id)initWithKey:(NSString *)key salt: (NSData *)salt;

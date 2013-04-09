@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -22,6 +22,7 @@
             <userInfo/>
         </attribute>
         <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="publicKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="contact" inverseEntity="TalkMessage" syncable="YES"/>
         <relationship name="relationship" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Relationship" inverseName="contact" inverseEntity="Relationship" syncable="YES"/>
@@ -34,6 +35,7 @@
         <userInfo/>
     </entity>
     <entity name="Delivery" representedClassName="Delivery" syncable="YES">
+        <attribute name="keyCiphertext" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="state" attributeType="String" defaultValueString="new" syncable="YES"/>
         <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="deliveries" inverseEntity="TalkMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
@@ -64,8 +66,8 @@
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="209"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="TalkMessage" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="Relationship" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="Delivery" positionX="-180" positionY="-186" width="128" height="105"/>
+        <element name="Relationship" positionX="412" positionY="90" width="128" height="90"/>
+        <element name="TalkMessage" positionX="376" positionY="-234" width="128" height="195"/>
     </elements>
 </model>
