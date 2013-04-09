@@ -134,7 +134,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell = nil;
     if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier: @"avatarCell" forIndexPath:indexPath];
+        cell = [tableView dequeueReusableCellWithIdentifier: [ProfileAvatarCell reuseIdentifier] forIndexPath:indexPath];
         cell.backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
         ProfileAvatarCell * avatarCell = (ProfileAvatarCell*)cell;
         avatarCell.avatar.image = _avatarItem.image;

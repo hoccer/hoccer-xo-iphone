@@ -71,7 +71,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="avatarCell" rowHeight="160" id="pbv-ut-8ho" customClass="ProfileAvatarCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ProfileAvatarCell" rowHeight="160" id="pbv-ut-8ho" customClass="ProfileAvatarCell">
                                 <rect key="frame" x="0.0" y="46" width="320" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -787,7 +787,6 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addAttachmentPressed:"/>
-                <relationship kind="action" name="attachmentPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
@@ -908,6 +907,13 @@
         </class>
         <class className="ProfileViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="avatarPanned:"/>
+                <relationship kind="action" name="avatarPinched:"/>
+                <relationship kind="action" name="avatarTapped:"/>
+                <relationship kind="action" name="onCancel:"/>
+                <relationship kind="action" name="onDone:"/>
+            </relationships>
         </class>
         <class className="RightMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
