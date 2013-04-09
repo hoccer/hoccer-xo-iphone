@@ -1,5 +1,5 @@
 //
-//  ProfileTextCell.h
+//  ProfileAvatarCell.h
 //  HoccerTalk
 //
 //  Created by David Siegel on 07.04.13.
@@ -8,11 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileTextCell : UITableViewCell
+#import "HoccerTalkTableViewCell.h"
+
+@class ProfileAvatarView;
+
+@interface ProfileAvatarCell : HoccerTalkTableViewCell
+
+@property (nonatomic,strong) IBOutlet ProfileAvatarView * avatar;
+
+@end
+
+
+@interface ProfileTextCell : HoccerTalkTableViewCell
 
 @property (nonatomic,strong) IBOutlet UITextField * textField;
 @property (nonatomic,strong) IBOutlet UIImageView * textInputBackground;
-
-+ (NSString *)reuseIdentifier;
 
 @end

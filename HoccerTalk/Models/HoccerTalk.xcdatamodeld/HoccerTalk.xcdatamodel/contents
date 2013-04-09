@@ -25,6 +25,7 @@
         <attribute name="publicKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="contact" inverseEntity="TalkMessage" syncable="YES"/>
+        <relationship name="relationship" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Relationship" inverseName="contact" inverseEntity="Relationship" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND timeStamp == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
@@ -38,6 +39,11 @@
         <attribute name="state" attributeType="String" defaultValueString="new" syncable="YES"/>
         <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="deliveries" inverseEntity="TalkMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
+    </entity>
+    <entity name="Relationship" representedClassName="Relationship" syncable="YES">
+        <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="contact" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="relationship" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="TalkMessage" representedClassName="TalkMessage" syncable="YES">
         <attribute name="body" attributeType="String" syncable="YES"/>
@@ -60,7 +66,8 @@
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="209"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="105"/>
-        <element name="TalkMessage" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="Delivery" positionX="-180" positionY="-186" width="128" height="105"/>
+        <element name="Relationship" positionX="412" positionY="90" width="128" height="90"/>
+        <element name="TalkMessage" positionX="376" positionY="-234" width="128" height="195"/>
     </elements>
 </model>

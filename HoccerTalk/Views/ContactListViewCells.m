@@ -6,7 +6,10 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactCell.h"
+#import "ContactListViewCells.h"
+
+#import <QuartzCore/QuartzCore.h>
+
 #import "AssetStore.h"
 
 @interface ContactCell ()
@@ -21,10 +24,6 @@
 static const CGFloat kMessageCountBackgroundPadding = 8.0;
 
 @implementation ContactCell
-
-+ (NSString *)reuseIdentifier {
-    return NSStringFromClass(self);
-}
 
 - (void) awakeFromNib {
     [super awakeFromNib];
@@ -56,6 +55,14 @@ static const CGFloat kMessageCountBackgroundPadding = 8.0;
     frame.origin.x -= kMessageCountBackgroundPadding;
     frame.size.width += 2 * kMessageCountBackgroundPadding;
     _messageCountBackground.frame = frame;
+}
+
+@end
+
+@implementation ContactSectionHeaderCell
+
+- (void) awakeFromNib {
+    self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];
 }
 
 @end

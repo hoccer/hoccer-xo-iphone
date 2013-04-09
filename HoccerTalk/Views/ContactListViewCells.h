@@ -8,15 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+#import "HoccerTalkTableViewCell.h"
+
 @class InsetImageView;
 
-@interface ContactCell : UITableViewCell
+@interface ContactCell : HoccerTalkTableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet InsetImageView * avatar;
 
-
-+ (NSString *)reuseIdentifier;
 - (void) setMessageCount: (NSInteger) count isUnread: (BOOL) unreadFlag;
 
+@end
+
+@interface ContactSectionHeaderCell : HoccerTalkTableViewCell
+
+@property (nonatomic,strong) IBOutlet UILabel     * title;
+@property (nonatomic,strong) IBOutlet UIImageView * icon;
 @end

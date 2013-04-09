@@ -12,6 +12,10 @@
 #import "NSData_Base64Extensions.h"
 #import "RSA.h"
 
+NSString * const kDeliveryStateNew        = @"new";
+NSString * const kDeliveryStateDelivering = @"delivering";
+NSString * const kDeliverySatteDevilered  = @"delivered";
+NSString * const kDeliveryStateFailed     = @"failed";
 
 @implementation Delivery
 
@@ -39,18 +43,13 @@
               };
 }
 
-+ (NSString*) stateNew        { return @"new";        }
-+ (NSString*) stateDelivering { return @"delivering"; }
-+ (NSString*) stateDelivered  { return @"delivered";  }
-+ (NSString*) stateFailed     { return @"failed";     }
-
 
 // this function will yield the plaintext the keyCiphertext by decrypting it with the private key
 - (NSData *) keyCleartext {
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         return nil; // can not decrypt outgoing key
     }
-    if (![self.state isEqualToString:[Delivery stateNew]]) {
+    if (![self.state isEqualToString:kDeliveryStateNew]) {
         return nil;
     }
     if (self.message.cryptoKey == nil) {
@@ -69,7 +68,7 @@
     if ([self.message.isOutgoing isEqualToNumber: @NO]) {
         return;
     }
-    if (![self.state isEqualToString:[Delivery stateNew]]) {
+    if (![self.state isEqualToString:kDeliveryStateNew]) {
         return;
     }
     if (self.receiver == nil) {

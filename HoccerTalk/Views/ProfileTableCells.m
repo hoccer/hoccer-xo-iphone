@@ -6,8 +6,10 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ProfileAvatarCell.h"
+#import "ProfileTableCells.h"
 
 @implementation ProfileAvatarCell
+@end
 
+@implementation ProfileTextCell
 @end

@@ -8,7 +8,7 @@
 
 #import "ContactListViewController.h"
 
-#import "ContactCell.h"
+#import "ContactListViewCells.h"
 #import "InsetImageView.h"
 #import "Contact.h"
 #import "AppDelegate.h"
@@ -18,6 +18,7 @@
 #import "iOSVersionChecks.h"
 #import "HoccerTalkBackend.h"
 #import "InviteCodeViewController.h"
+#import "Relationship.h"
 
 
 @interface ContactListViewController ()
@@ -105,7 +106,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     ContactCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
     [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath] :
     [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
-    
+
     if (cell.backgroundView == nil) {
         // TODO: do this right ...
         cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
@@ -118,6 +119,24 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     return cell;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo name];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    ContactSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
+        cell.title.text = NSLocalizedString(@"contact_group_none", nil);
+    } else if ([sectionInfo.name isEqualToString: kRelationStateFriend]) {
+        cell.title.text = NSLocalizedString(@"contact_group_friend", nil);
+    } else if ([sectionInfo.name isEqualToString: kRelationStateBlocked]) {
+        cell.title.text = NSLocalizedString(@"contact_group_blocked", nil);
+    }
+
+    return cell;
+}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -217,7 +236,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     // nil for section name key path means "no sections".
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                                                 managedObjectContext:self.managedObjectContext
-                                                                                                  sectionNameKeyPath:nil
+                                                                                                  sectionNameKeyPath: @"relationship.state"
                                                                                                            cacheName:nil];
     aFetchedResultsController.delegate = self;
 
@@ -439,7 +458,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 	}
     [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
     [self reopenMenu];
-    //[NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
 }
 
 - (void) reopenMenu {
@@ -462,7 +480,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 	}
     [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
     [self reopenMenu];
-    //[NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
 }
 
 - (HoccerTalkBackend*) chatBackend {

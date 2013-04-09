@@ -12,10 +12,9 @@
 #import "HTUserDefaults.h"
 #import "iOSVersionChecks.h"
 #import "AssetStore.h"
-#import "ProfileAvatarCell.h"
+#import "ProfileTableCells.h"
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
-#import "ProfileTextCell.h"
 #import "CustomNavigationBar.h"
 #import "UIImage+ScaleAndCrop.h"
 
@@ -102,7 +101,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     //backgroundView.backgroundColor = [UIColor colorWithWhite: 0.95 alpha: 1];
     self.tableView.backgroundView = backgroundView;
 
-    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: @"avatarCell"];
+    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: [ProfileAvatarCell reuseIdentifier]];
     _textCell = [self.tableView dequeueReusableCellWithIdentifier: [ProfileTextCell reuseIdentifier]];
 }
 
@@ -135,7 +134,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell = nil;
     if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier: @"avatarCell" forIndexPath:indexPath];
+        cell = [tableView dequeueReusableCellWithIdentifier: [ProfileAvatarCell reuseIdentifier] forIndexPath:indexPath];
         cell.backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
         ProfileAvatarCell * avatarCell = (ProfileAvatarCell*)cell;
         avatarCell.avatar.image = _avatarItem.image;
@@ -230,6 +229,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
             } else if ([cell isKindOfClass: [ProfileAvatarCell class]]) {
                 ProfileAvatarCell * avatarCell = (ProfileAvatarCell*) cell;
                 avatarCell.avatar.enabled = ! _editing;
+                avatarCell.avatar.outerShadowColor = _editing ? [UIColor whiteColor] : [UIColor orangeColor];
             }
         }
     } completion:^(BOOL finished) {
@@ -353,10 +353,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) didPickAttachment:(id)attachmentInfo {
-    NSLog(@"attachment picked");
-    UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
-    _avatarItem.image = image;
-    [self.tableView reloadData];
+    if (attachmentInfo != nil) {
+        NSLog(@"avatar picked %@", attachmentInfo);
+        UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
+        _avatarItem.image = image;
+        [self.tableView reloadData];
+    } else {
+        NSLog(@"avatar chooser cancel");
+    }
 }
 
 - (BOOL) wantsAttachmentsOfType:(AttachmentPickerType)type {

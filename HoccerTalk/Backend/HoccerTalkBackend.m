@@ -17,6 +17,7 @@
 #import "NSData+HexString.h"
 #import "Attachment.h"
 #import "Environment.h"
+#import "Relationship.h"
 
 @interface HoccerTalkBackend ()
 {
@@ -208,12 +209,52 @@
     for (TalkMessage * message in pendingMessages) {
         NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
         for (Delivery * delivery in message.deliveries) {
-            if ([delivery.state isEqualToString: [Delivery stateNew]]) {
+            if ([delivery.state isEqualToString: kDeliveryStateNew]) {
                 [newDeliveries addObject: delivery];
             }
         }
         [self deliveryRequest: message withDeliveries: newDeliveries];
     }
+}
+
+
+
+
+
+- (NSDate*) getLatestChangeDateFromRelationships {
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    [request setEntity:entity];
+    [request setResultType:NSDictionaryResultType];
+    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:@"lastChanged"];
+    NSExpression *maxLastChangedExpression = [NSExpression expressionForFunction:@"max:"
+                                                                  arguments:[NSArray arrayWithObject:keyPathExpression]];
+    NSExpressionDescription *expressionDescription = [[NSExpressionDescription alloc] init];
+    [expressionDescription setName:@"latestChange"];
+    [expressionDescription setExpression: maxLastChangedExpression];
+    [expressionDescription setExpressionResultType: NSDateAttributeType];
+
+    [request setPropertiesToFetch:[NSArray arrayWithObject:
+                                        expressionDescription]];
+    NSError *error = nil;
+    NSArray *fetchResults = [self.delegate.managedObjectContext
+                             executeFetchRequest:request
+                             error:&error];
+
+    NSDate * latest = [[fetchResults lastObject] valueForKey:@"latestChange"];
+    if (latest == nil) {
+        NSLog(@"Failed to get last relationship changed date: %@", error);
+        abort();
+    }
+    return latest;
+}
+
+
+- (void) updateRelationships {
+    NSDate * latestChange = [self getLatestChangeDateFromRelationships];
+    NSLog(@"latest date %@", latestChange);
+    [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
+    }];
 }
 
 #pragma mark - Attachment upload and download
@@ -303,6 +344,7 @@
             }
             [self flushPendingMessages];
             [self flushPendingAttachments];
+            [self updateRelationships];
             _isConnected = YES;
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
@@ -394,6 +436,21 @@
     }];
 
 }
+
+- (void) getRelationships: (NSDate*) lastKnown relationshipHandler: (RelationshipHandler) handler {
+    NSLog(@"getRelationships:");
+    NSNumber * lastKnownMillis = [NSNumber numberWithLongLong: [lastKnown timeIntervalSince1970] * 1000];
+    [_serverConnection invoke: @"getRelationships" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"getRelationships(): got result: %@", responseOrError);
+            //handler([responseOrError boolValue]);
+        } else {
+            NSLog(@"getRelationships(): failed: %@", responseOrError);
+            //handler(NO);
+        }
+    }];
+}
+
 #pragma mark - Incoming RPC Calls
 
 - (void) incomingDelivery: (NSArray*) params {

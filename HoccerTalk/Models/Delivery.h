@@ -14,6 +14,12 @@
 @class TalkMessage;
 @class Contact;
 
+FOUNDATION_EXPORT NSString * const kDeliveryStateNew;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDelivering;
+FOUNDATION_EXPORT NSString * const kDeliverySatteDevilered;
+FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
+
+
 @interface Delivery : HoccerTalkModel
 
 @property (nonatomic, strong) NSString * state;
@@ -25,10 +31,5 @@
 @property (nonatomic) NSString* keyCiphertextString; // encrypted message crypto key as b64-string
 
 @property (nonatomic) NSData* keyCleartext;
-
-+ (NSString*) stateNew;
-+ (NSString*) stateDelivering;
-+ (NSString*) stateDelivered;
-+ (NSString*) stateFailed;
 
 @end

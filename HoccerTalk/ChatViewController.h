@@ -10,7 +10,7 @@
 #import "Contact.h"
 #import "AttachmentPickerController.h"
 #import "GrowingTextView.h"
-#import "MessageCell.h"
+#import "ChatTableCells.h"
 
 @class HoccerTalkBackend;
 

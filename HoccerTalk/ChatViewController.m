@@ -23,9 +23,7 @@
 #import "InsetImageView.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
-#import "LeftMessageCell.h"
-#import "RightMessageCell.h"
-#import "SectionHeaderCell.h"
+#import "ChatTableCells.h"
 #import "iOSVersionChecks.h"
 #import "AutoheightLabel.h"
 #import "Attachment.h"
@@ -41,7 +39,7 @@
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (nonatomic, readonly) MessageCell* messageCell;
-@property (nonatomic, readonly) SectionHeaderCell* headerCell;
+@property (nonatomic, readonly) ChatTableSectionHeaderCell* headerCell;
 @property (strong) UIImage* avatarImage;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
@@ -547,9 +545,9 @@
     return _messageCell;
 }
 
-- (SectionHeaderCell*) headerCell {
+- (ChatTableSectionHeaderCell*) headerCell {
     if (_headerCell == nil) {
-        _headerCell = [self.tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
+        _headerCell = [self.tableView dequeueReusableCellWithIdentifier: [ChatTableSectionHeaderCell reuseIdentifier]];
     }
     return _headerCell;
 }
@@ -588,7 +586,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    SectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [SectionHeaderCell reuseIdentifier]];
+    ChatTableSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ChatTableSectionHeaderCell reuseIdentifier]];
     cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     cell.label.text = sectionInfo.name;

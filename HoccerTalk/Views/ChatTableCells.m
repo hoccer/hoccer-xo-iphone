@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "MessageCell.h"
+#import "ChatTableCells.h"
 #import "AutoheightLabel.h"
 #import "BubbleView.h"
 #import "TalkMessage.h"
@@ -29,3 +29,26 @@ static const double kCellPadding = 10.0;
 }
 
 @end
+
+
+@implementation LeftMessageCell
+
+- (void) awakeFromNib {
+    self.bubble.pointingRight = NO;
+}
+
+@end
+
+
+@implementation RightMessageCell
+
+- (void) awakeFromNib {
+    self.bubble.pointingRight = YES;
+}
+
+@end
+
+
+@implementation ChatTableSectionHeaderCell
+@end
+

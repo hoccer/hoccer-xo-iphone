@@ -256,7 +256,7 @@
                                     <outlet property="message" destination="jBu-Xd-fgw" id="oFa-Ny-Cx3"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="SectionHeaderCell" rowHeight="56" id="f6F-Fd-lzC" customClass="SectionHeaderCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="SectionHeaderCell" rowHeight="56" id="f6F-Fd-lzC" customClass="ChatTableSectionHeaderCell">
                                 <rect key="frame" x="0.0" y="208" width="703" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -328,12 +328,6 @@
         </class>
         <class className="RightMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
-        </class>
-        <class className="SectionHeaderCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SectionHeaderCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
-            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
