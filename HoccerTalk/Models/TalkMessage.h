@@ -28,4 +28,9 @@
 @property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) NSMutableSet * deliveries;
 
+@property (nonatomic, strong) NSData * cryptoKey;
+// @property (nonatomic)         NSString * cryptoKeyString;
+
+@property (nonatomic) NSString* bodyCipherText;
+
 @end

@@ -13,7 +13,6 @@
     NSData *privateTag;
 }
 
-
 + (RSA*)sharedInstance;
 
 - (void)generateKeyPairKeys;
@@ -24,8 +23,8 @@
 - (SecKeyRef)getPublicKeyRef;
 - (NSData *)getPrivateKeyBits;
 
-- (void)decryptWithPrivateKey:(uint8_t *)cipherBuffer plainBuffer:(uint8_t *)plainBuffer;
-- (void)encryptWithPublicKey:(uint8_t *)plainBuffer cipherBuffer:(uint8_t *)cipherBuffer;
+// - (void)decryptWithPrivateKey:(uint8_t *)cipherBuffer plainBuffer:(uint8_t *)plainBuffer;
+// - (void)encryptWithPublicKey:(uint8_t *)plainBuffer cipherBuffer:(uint8_t *)cipherBuffer;
 
 - (NSData *)encryptWithKey:(SecKeyRef)key plainData:(NSData *)plainData;
 - (NSData *)decryptWithKey: (SecKeyRef)key cipherData: (NSData *)cipherData;

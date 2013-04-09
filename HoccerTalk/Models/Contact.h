@@ -19,11 +19,15 @@
 @property (nonatomic, strong) NSString*     currentTimeSection;
 @property (nonatomic, strong) NSArray*      unreadMessages;
 @property (nonatomic, strong) NSArray*      latestMessage;
+@property (nonatomic, strong) NSData*       publicKey; // encrypted message crypto key
+
+@property (nonatomic) NSString* publicKeyString; // encrypted message crypto key as b64-string
 
 @property (nonatomic, strong) NSMutableSet* messages;
 
 @property (readonly) UIImage* avatarImage;
 
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date;
+- (SecKeyRef) getPublicKeyRef;
 
 @end

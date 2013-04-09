@@ -6,6 +6,7 @@
 //  Created by Robert Palmer on 23.06.11.
 //  Copyright 2011 Hoccer GmbH. All rights reserved.
 //
+//
 
 #import "RSA.h"
 #import "NSData_Base64Extensions.h"
@@ -18,29 +19,26 @@ const size_t BUFFER_SIZE = 64;
 const size_t CIPHER_BUFFER_SIZE = 1024;
 const uint32_t PADDING = kSecPaddingPKCS1;
 
-static const uint8_t publicKeyIdentifier[]  = "com.hoccer.client.publickey";
-static const uint8_t privateKeyIdentifier[] = "com.hoccer.client.privatekey";
+static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.publickey";
+static const uint8_t privateKeyIdentifier[] = "com.hoccertalk.client.privatekey";
 
 SecKeyRef publicKey;
 SecKeyRef privateKey; 
 
 static RSA *instance;
 
-
 + (RSA*)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[RSA alloc] init];
         if ([instance getPrivateKeyRef] == nil || [instance getPublicKeyRef] == nil) {
-            //NSLog(@"There are no keys! PANIC!");
+            NSLog(@"There are no RSA keys, generate them...");
             [instance generateKeyPairKeys];
         }
     }); 
     //[instance getCertificate];
     return instance;
 }
-
-
 
 - (id)init
 {
@@ -52,7 +50,6 @@ static RSA *instance;
 
     return self;
 }
-
 
 - (NSString *)genRandomString:(int)length {
     
@@ -79,7 +76,7 @@ static RSA *instance;
 
 - (void)generateKeyPairKeys
 {
-    //NSLog(@"Generating Keys");
+    NSLog(@"Generating RSA Keys");
     OSStatus status = noErr;	
     NSMutableDictionary *privateKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *publicKeyAttr = [[NSMutableDictionary alloc] init];
@@ -103,9 +100,9 @@ static RSA *instance;
     status = SecKeyGeneratePair((__bridge CFDictionaryRef)keyPairAttr, &publicKey, &privateKey);
     
     if (status != noErr) {
-        //NSLog(@"something went wrong %d", (int)status);
+        NSLog(@"generateKeyPairKeys: something went wrong %d", (int)status);
     }else {
-        //NSLog(@"New key");
+        NSLog(@"generateKeyPairKeys: successfully generated RSA key pairs");
     }
 }
 
@@ -146,7 +143,7 @@ static RSA *instance;
                            &cipherBufferSize);
     
     if (status != noErr) {
-        //NSLog(@"Error encypring, OSStatus: %d", (NSInteger)status);
+        //NSLog(@"Error encrypring, OSStatus: %d", (NSInteger)status);
     }
         
     cipher = [NSData dataWithBytes:(const void *)cipherBuffer length:(NSUInteger)cipherBufferSize];
@@ -189,6 +186,7 @@ static RSA *instance;
 }
 
 
+/* do we need that? - pavel
 - (void)encryptWithPublicKey:(uint8_t *)plainBuffer cipherBuffer:(uint8_t *)cipherBuffer
 {	
     OSStatus status = noErr;	
@@ -197,8 +195,6 @@ static RSA *instance;
     size_t cipherBufferSize = CIPHER_BUFFER_SIZE;
 	SecKeyRef key = [self getPublicKeyRef];
     //NSLog(@"SecKeyGetBlockSize() public = %d", (int)SecKeyGetBlockSize(key));
-    
-    
     
     //  Error handling
     // Encrypt using the public.
@@ -212,6 +208,7 @@ static RSA *instance;
     //NSLog(@"encryption result code: %d (size: %d)", (int)status, (int)cipherBufferSize);
     //NSLog(@"encrypted text: %s", cipherBuffer);
 }
+ 
 
 - (void)decryptWithPrivateKey:(uint8_t *)cipherBuffer plainBuffer:(uint8_t *)plainBuffer
 {
@@ -237,6 +234,9 @@ static RSA *instance;
     //NSLog(@"FINAL decrypted text: %s", plainBuffer);
 	
 }
+ 
+ */
+
 
 - (SecKeyRef)getPublicKeyRef {
     OSStatus resultCode = noErr;
@@ -262,7 +262,6 @@ static RSA *instance;
         publicKey = publicKeyReference;
     } 
 	
-
     return publicKey;
 }
 
@@ -312,7 +311,6 @@ static RSA *instance;
         privateKey = privateKeyReference;
     }
     
-
     return privateKey;
 }
 
@@ -402,7 +400,7 @@ static RSA *instance;
 - (BOOL)addPublicKey:(NSString *)key withTag:(NSString *)tag
 {
     NSString *s_key = key;
-        // This will be base64 encoded, decode it.
+    // This will be base64 encoded, decode it.
     NSData *d_key = [NSData dataWithBase64EncodedString:s_key];
     //d_key = [self stripPublicKeyHeader:d_key];
     if (d_key == nil) return(FALSE);
@@ -435,8 +433,7 @@ static RSA *instance;
     
     [publicKey removeObjectForKey:(__bridge id)kSecValueData];
     [publicKey removeObjectForKey:(__bridge id)kSecReturnPersistentRef];
-    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef
-     ];
+    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&keyRef);
         
@@ -444,8 +441,6 @@ static RSA *instance;
     
     return(TRUE);
 }
-
-
 
 - (void)removePeerPublicKey:(NSString *)peerName {
 	
@@ -465,8 +460,6 @@ static RSA *instance;
     SecItemDelete((__bridge CFDictionaryRef)publicKey);
     
     [self generateKeyPairKeys];
-    
-
 }
 
 - (SecKeyRef)getKeyRefWithPersistentKeyRef:(CFTypeRef)persistentRef {
@@ -501,7 +494,6 @@ static RSA *instance;
 
 - (SecKeyRef)getPeerKeyRef:(NSString *)peerName {
     SecKeyRef persistentRef = NULL;
-	
 	
     NSData *d_tag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
