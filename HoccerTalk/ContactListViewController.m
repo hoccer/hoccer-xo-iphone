@@ -24,6 +24,7 @@
 @interface ContactListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, strong) NSMutableArray * invitationChannels;
+@property (nonatomic,readonly) NSFetchedResultsController * currentFetchedResultsController;
 @end
 
 static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
@@ -120,13 +121,13 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
     return [sectionInfo name];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     ContactSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
     if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
         cell.title.text = NSLocalizedString(@"contact_group_none", nil);
     } else if ([sectionInfo.name isEqualToString: kRelationStateFriend]) {
@@ -147,8 +148,8 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-        [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+        NSManagedObjectContext *context = [self.currentFetchedResultsController managedObjectContext];
+        [context deleteObject:[self.currentFetchedResultsController objectAtIndexPath:indexPath]];
 
         NSError *error = nil;
         if (![context save:&error]) {
@@ -196,8 +197,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
-    NSArray *sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *groupSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"relationship.state" ascending: YES];
+    NSSortDescriptor *nameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
+    NSArray *sortDescriptors = @[groupSortDescriptor, nameSortDescriptor];
 
     //NSArray *sortDescriptors = // your sort descriptors here
     NSPredicate *filterPredicate = nil; // your predicate here
