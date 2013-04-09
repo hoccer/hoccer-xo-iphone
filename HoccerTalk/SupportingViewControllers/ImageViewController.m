@@ -42,8 +42,19 @@
 
     self.savedButtonImage = [[UIBarButtonItem appearance] backgroundImageForState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setBackgroundImage: nil forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
+    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleBlackTranslucent animated:YES];
 
     self.imageView.image = self.image;
+
+    [self updateZoomScale];
+
+}
+
+- (void)updateZoomScale {
+    // reset the zoom to one - avoids problems with interface orientation changes
+    // and frame changes when updating the picture
+    self.scrollView.zoomScale = 1.0;
+
     self.imageView.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size = self.image.size};
 
     self.scrollView.contentSize = self.image.size;
@@ -58,8 +69,6 @@
     self.scrollView.zoomScale = minScale;
 
     [self centerScrollViewContents];
-
-    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleBlackTranslucent animated:YES];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -122,6 +131,20 @@
 
 - (IBAction)donePressed:(id)sender {
     [self dismissModalViewControllerAnimated: YES];
+}
+
+-(void)didRotateFromInterfaceOrientation: (UIInterfaceOrientation)toInterfaceOrientation {
+    NSLog(@"didRotate");
+    [self updateZoomScale];
+}
+
+- (void) setImage:(UIImage *)image {
+    _image = image;
+    // view might not be fully realized yet
+    if (self.imageView != nil) {
+        self.imageView.image = self.image;
+        [self updateZoomScale];
+    }
 }
 
 - (void)viewDidUnload {
