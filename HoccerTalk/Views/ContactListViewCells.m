@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactCell.h"
+#import "ContactListViewCells.h"
 #import "AssetStore.h"
 
 @interface ContactCell ()
@@ -21,10 +21,6 @@
 static const CGFloat kMessageCountBackgroundPadding = 8.0;
 
 @implementation ContactCell
-
-+ (NSString *)reuseIdentifier {
-    return NSStringFromClass(self);
-}
 
 - (void) awakeFromNib {
     [super awakeFromNib];

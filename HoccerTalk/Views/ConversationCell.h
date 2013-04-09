@@ -8,15 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import "HoccerTalkTableViewCell.h"
+
 @class InsetImageView;
 
-@interface ConversationCell : UITableViewCell
+@interface ConversationCell : HoccerTalkTableViewCell   
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet InsetImageView * avatar;
 @property (nonatomic,strong) IBOutlet UILabel* latestMessage;
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageTime;
-
-+ (NSString *)reuseIdentifier;
 
 @end

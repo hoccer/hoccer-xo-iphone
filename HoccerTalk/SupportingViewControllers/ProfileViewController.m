@@ -12,10 +12,9 @@
 #import "HTUserDefaults.h"
 #import "iOSVersionChecks.h"
 #import "AssetStore.h"
-#import "ProfileAvatarCell.h"
+#import "ProfileTableCells.h"
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
-#import "ProfileTextCell.h"
 #import "CustomNavigationBar.h"
 #import "UIImage+ScaleAndCrop.h"
 
@@ -102,7 +101,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     //backgroundView.backgroundColor = [UIColor colorWithWhite: 0.95 alpha: 1];
     self.tableView.backgroundView = backgroundView;
 
-    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: @"avatarCell"];
+    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: [ProfileAvatarCell reuseIdentifier]];
     _textCell = [self.tableView dequeueReusableCellWithIdentifier: [ProfileTextCell reuseIdentifier]];
 }
 

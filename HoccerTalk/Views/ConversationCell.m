@@ -18,8 +18,4 @@
 
 @implementation ConversationCell
 
-+ (NSString *)reuseIdentifier {
-    return NSStringFromClass(self);
-}
-
 @end

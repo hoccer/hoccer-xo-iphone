@@ -461,6 +461,16 @@
                                             <outlet property="nickName" destination="qQm-Kx-F0x" id="L85-cY-131"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ContactSectionHeaderCell" rowHeight="22" id="k4W-y1-DIO">
+                                        <rect key="frame" x="0.0" y="110" width="320" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="21"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="ZcT-dr-dsA" id="F3Z-Bw-qIx"/>
@@ -639,7 +649,7 @@
                                             <outlet property="message" destination="nf2-Io-swE" id="bQJ-dj-bNr"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SectionHeaderCell" rowHeight="60" id="Yvg-nI-GJq" customClass="SectionHeaderCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ChatTableSectionHeaderCell" rowHeight="60" id="Yvg-nI-GJq" customClass="ChatTableSectionHeaderCell">
                                         <rect key="frame" x="0.0" y="154" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -748,10 +758,17 @@
                 <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
             </relationships>
         </class>
+        <class className="ChatTableSectionHeaderCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableSectionHeaderCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+            </relationships>
+        </class>
         <class className="ChatViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addAttachmentPressed:"/>
+                <relationship kind="action" name="attachmentPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
@@ -760,7 +777,7 @@
                 <relationship kind="outlet" name="textField" candidateClass="GrowingTextView"/>
             </relationships>
         </class>
-        <class className="ContactCell" superclassName="UITableViewCell">
+        <class className="ContactCell" superclassName="HoccerTalkTableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
@@ -774,12 +791,13 @@
         <class className="ContactListViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
             <relationships>
+                <relationship kind="action" name="invitePressed:"/>
                 <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
                 <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
             </relationships>
         </class>
-        <class className="ConversationCell" superclassName="UITableViewCell">
+        <class className="ConversationCell" superclassName="HoccerTalkTableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
@@ -806,6 +824,9 @@
         <class className="GrowingTextView" superclassName="UITextView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowingTextView.h"/>
         </class>
+        <class className="HoccerTalkTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HoccerTalkTableViewCell.h"/>
+        </class>
         <class className="ImageViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageViewController.h"/>
             <relationships>
@@ -830,7 +851,7 @@
         <class className="LeftMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
         </class>
-        <class className="MessageCell" superclassName="UITableViewCell">
+        <class className="MessageCell" superclassName="HoccerTalkTableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
@@ -844,7 +865,7 @@
         <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
         </class>
-        <class className="ProfileAvatarCell" superclassName="UITableViewCell">
+        <class className="ProfileAvatarCell" superclassName="HoccerTalkTableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileAvatarCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="avatar" candidateClass="ProfileAvatarView"/>
@@ -853,7 +874,7 @@
         <class className="ProfileAvatarView" superclassName="UIControl">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileAvatarView.h"/>
         </class>
-        <class className="ProfileTextCell" superclassName="UITableViewCell">
+        <class className="ProfileTextCell" superclassName="HoccerTalkTableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileTextCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="textField" candidateClass="UITextField"/>
@@ -865,12 +886,6 @@
         </class>
         <class className="RightMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
-        </class>
-        <class className="SectionHeaderCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SectionHeaderCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
-            </relationships>
         </class>
         <class className="SettingsViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>

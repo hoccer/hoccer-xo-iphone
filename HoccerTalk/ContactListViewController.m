@@ -8,7 +8,7 @@
 
 #import "ContactListViewController.h"
 
-#import "ContactCell.h"
+#import "ContactListViewCells.h"
 #import "InsetImageView.h"
 #import "Contact.h"
 #import "AppDelegate.h"
@@ -118,6 +118,10 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     return cell;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo name];
+}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -217,7 +221,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     // nil for section name key path means "no sections".
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                                                 managedObjectContext:self.managedObjectContext
-                                                                                                  sectionNameKeyPath:nil
+                                                                                                  sectionNameKeyPath: @"relationship.state"
                                                                                                            cacheName:nil];
     aFetchedResultsController.delegate = self;
 

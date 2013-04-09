@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "HoccerTalkTableViewCell.h"
+
 @class AutoheightLabel;
 @class InsetImageView;
 @class BubbleView;
@@ -21,7 +23,7 @@
 
 @end
 
-@interface MessageCell : UITableViewCell
+@interface MessageCell : HoccerTalkTableViewCell
 
 @property (strong, nonatomic) IBOutlet AutoheightLabel *message;
 @property (strong, nonatomic) IBOutlet InsetImageView *avatar;
@@ -35,3 +37,18 @@
 - (void)pressedButton: (id)sender;
 
 @end
+
+
+@interface LeftMessageCell : MessageCell
+@end
+
+
+@interface RightMessageCell : MessageCell
+@end
+
+@interface ChatTableSectionHeaderCell : HoccerTalkTableViewCell
+
+@property (strong, nonatomic) IBOutlet UILabel *label;
+
+@end
+
