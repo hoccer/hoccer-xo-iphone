@@ -183,6 +183,7 @@
 
             Relationship * relationship =  (Relationship*)[NSEntityDescription insertNewObjectForEntityForName: [Relationship entityName] inManagedObjectContext: importContext];
             relationship.state = kRelationStateNone;
+            relationship.lastChanged = [NSDate dateWithTimeIntervalSince1970: 0];
             contact.relationship = relationship;
 
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - (60*60*24*30)];

@@ -18,6 +18,7 @@
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^PairingHandler)(BOOL);
+typedef void (^RelationshipHandler)(NSArray*);
 
 @protocol HoccerTalkDelegate <NSObject>
 
@@ -57,6 +58,8 @@ typedef void (^PairingHandler)(BOOL);
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 
 - (void) downloadFinished:(Attachment *)theAttachment;
+
+- (void) updateRelationships;
 
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method

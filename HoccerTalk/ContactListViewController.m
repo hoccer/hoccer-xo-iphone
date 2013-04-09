@@ -116,7 +116,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     }
     [self fetchedResultsController: [self currentFetchedResultsController]
                      configureCell: cell atIndexPath: indexPath];
-
     return cell;
 }
 
@@ -459,7 +458,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 	}
     [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
     [self reopenMenu];
-    //[NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
 }
 
 - (void) reopenMenu {
@@ -482,7 +480,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 	}
     [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
     [self reopenMenu];
-    //[NSTimer scheduledTimerWithTimeInterval: 0.6 target: self selector: @selector(reopenMenu) userInfo:nil repeats:NO];
 }
 
 - (HoccerTalkBackend*) chatBackend {
