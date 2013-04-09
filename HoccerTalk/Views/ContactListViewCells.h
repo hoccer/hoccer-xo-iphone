@@ -20,3 +20,9 @@
 - (void) setMessageCount: (NSInteger) count isUnread: (BOOL) unreadFlag;
 
 @end
+
+@interface ContactSectionHeaderCell : HoccerTalkTableViewCell
+
+@property (nonatomic,strong) IBOutlet UILabel     * title;
+@property (nonatomic,strong) IBOutlet UIImageView * icon;
+@end

@@ -16,6 +16,9 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic clientId;
 @dynamic latestMessageTime;
 @dynamic nickName;
+@dynamic state;
+@dynamic relationship;
+
 @dynamic currentTimeSection;
 @dynamic unreadMessages;
 @dynamic latestMessage;

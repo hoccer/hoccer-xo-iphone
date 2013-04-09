@@ -18,6 +18,7 @@
 #import "iOSVersionChecks.h"
 #import "HoccerTalkBackend.h"
 #import "InviteCodeViewController.h"
+#import "Relationship.h"
 
 
 @interface ContactListViewController ()
@@ -105,7 +106,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     ContactCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
     [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath] :
     [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
-    
+
     if (cell.backgroundView == nil) {
         // TODO: do this right ...
         cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
@@ -115,12 +116,27 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     }
     [self fetchedResultsController: [self currentFetchedResultsController]
                      configureCell: cell atIndexPath: indexPath];
+
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo name];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    ContactSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
+        cell.title.text = NSLocalizedString(@"contact_group_none", nil);
+    } else if ([sectionInfo.name isEqualToString: kRelationStateFriend]) {
+        cell.title.text = NSLocalizedString(@"contact_group_friend", nil);
+    } else if ([sectionInfo.name isEqualToString: kRelationStateBlocked]) {
+        cell.title.text = NSLocalizedString(@"contact_group_blocked", nil);
+    }
+
+    return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

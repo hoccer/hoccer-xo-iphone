@@ -9,6 +9,10 @@
 #import "Delivery.h"
 #import "TalkMessage.h"
 
+NSString * const kDeliveryStateNew        = @"new";
+NSString * const kDeliveryStateDelivering = @"delivering";
+NSString * const kDeliverySatteDevilered  = @"delivered";
+NSString * const kDeliveryStateFailed     = @"failed";
 
 @implementation Delivery
 
@@ -23,12 +27,5 @@
               @"messageId" : @"message.messageId"
               };
 }
-
-
-+ (NSString*) stateNew        { return @"new";        }
-+ (NSString*) stateDelivering { return @"delivering"; }
-+ (NSString*) stateDelivered  { return @"delivered";  }
-+ (NSString*) stateFailed     { return @"failed";     }
-
 
 @end

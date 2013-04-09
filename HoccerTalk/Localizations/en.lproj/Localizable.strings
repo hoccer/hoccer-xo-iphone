@@ -106,5 +106,10 @@
 
 "profile_mail_placeholder" = "Mail Address";
 
+"contact_group_none" = "None";
+
+"contact_group_friend" = "Friends";
+
+"contact_group_blocked" = "Blocked";
 
 

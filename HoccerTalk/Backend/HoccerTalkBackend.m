@@ -208,7 +208,7 @@
     for (TalkMessage * message in pendingMessages) {
         NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
         for (Delivery * delivery in message.deliveries) {
-            if ([delivery.state isEqualToString: [Delivery stateNew]]) {
+            if ([delivery.state isEqualToString: kDeliveryStateNew]) {
                 [newDeliveries addObject: delivery];
             }
         }

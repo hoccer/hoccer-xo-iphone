@@ -16,6 +16,7 @@
 #import "Attachment.h"
 #import "AppDelegate.h"
 #import "HTUserDefaults.h"
+#import "Relationship.h"
 
 @implementation FirstRunViewController
 
@@ -179,6 +180,10 @@
                 contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatars[contactIndex]]);
             }
             contact.clientId = identities[contactIndex];
+
+            Relationship * relationship =  (Relationship*)[NSEntityDescription insertNewObjectForEntityForName: [Relationship entityName] inManagedObjectContext: importContext];
+            relationship.state = kRelationStateNone;
+            contact.relationship = relationship;
 
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - (60*60*24*30)];
             contact.latestMessageTime = date;

@@ -7,6 +7,9 @@
 //
 
 #import "ContactListViewCells.h"
+
+#import <QuartzCore/QuartzCore.h>
+
 #import "AssetStore.h"
 
 @interface ContactCell ()
@@ -52,6 +55,14 @@ static const CGFloat kMessageCountBackgroundPadding = 8.0;
     frame.origin.x -= kMessageCountBackgroundPadding;
     frame.size.width += 2 * kMessageCountBackgroundPadding;
     _messageCountBackground.frame = frame;
+}
+
+@end
+
+@implementation ContactSectionHeaderCell
+
+- (void) awakeFromNib {
+    self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];
 }
 
 @end

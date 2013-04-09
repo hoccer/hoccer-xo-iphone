@@ -14,16 +14,17 @@
 @class TalkMessage;
 @class Contact;
 
+FOUNDATION_EXPORT NSString * const kDeliveryStateNew;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDelivering;
+FOUNDATION_EXPORT NSString * const kDeliverySatteDevilered;
+FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
+
+
 @interface Delivery : HoccerTalkModel
 
 @property (nonatomic, strong) NSString * state;
 @property (nonatomic, strong) TalkMessage *message;
 
 @property (nonatomic, strong) Contact* receiver;
-
-+ (NSString*) stateNew;
-+ (NSString*) stateDelivering;
-+ (NSString*) stateDelivered;
-+ (NSString*) stateFailed;
 
 @end
