@@ -32,6 +32,7 @@
 #import "AttachmentViewFactory.h"
 #import "BubbleView.h"
 #import "HTUserDefaults.h"
+#import "ImageViewController.h"
 
 @interface ChatViewController ()
 
@@ -43,7 +44,7 @@
 @property (nonatomic, readonly) SectionHeaderCell* headerCell;
 @property (strong) UIImage* avatarImage;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
-
+@property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 
 - (void)configureCell:(UITableViewCell *)cell forMessage:(TalkMessage *) message;
 - (void)configureView;
@@ -57,6 +58,7 @@
 @synthesize messageCell = _messageCell;
 @synthesize headerCell = _headerCell;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
+@synthesize imageViewController = _imageViewController;
 
 - (void)viewDidLoad
 {
@@ -806,6 +808,7 @@
     
     Attachment * myAttachment = message.attachment;
     if ([myAttachment.mediaType isEqual: @"video"]) {
+        // TODO: lazily allocate _moviePlayerController once
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
@@ -819,10 +822,18 @@
 
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
+        self.imageViewController.image = myAttachment.image;
+        [self presentModalViewController: self.imageViewController animated: YES];
     }
 
 }
 
+- (ImageViewController*) imageViewController {
+    if (_imageViewController == nil) {
+        _imageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ImageViewController"];
+    }
+    return _imageViewController;
+}
 
 - (void) scrollToBottom: (BOOL) animated {
     if ([self.fetchedResultsController.fetchedObjects count]) {
