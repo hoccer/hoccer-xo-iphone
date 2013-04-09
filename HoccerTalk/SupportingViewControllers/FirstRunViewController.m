@@ -182,7 +182,13 @@
             contact.clientId = identities[contactIndex];
 
             Relationship * relationship =  (Relationship*)[NSEntityDescription insertNewObjectForEntityForName: [Relationship entityName] inManagedObjectContext: importContext];
-            relationship.state = kRelationStateNone;
+            if ([contact.nickName isEqualToString: @"Gargamel"]) {
+                relationship.state = kRelationStateBlocked;
+            } else if ([contact.nickName isEqualToString: @"Daddy S"]) {
+                relationship.state = kRelationStateNone;
+            } else {
+                relationship.state = kRelationStateFriend;
+            }
             relationship.lastChanged = [NSDate dateWithTimeIntervalSince1970: 0];
             contact.relationship = relationship;
 

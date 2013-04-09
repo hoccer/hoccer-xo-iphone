@@ -22,6 +22,7 @@
 @end
 
 static const CGFloat kMessageCountBackgroundPadding = 8.0;
+static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
 @implementation ContactCell
 
@@ -63,6 +64,17 @@ static const CGFloat kMessageCountBackgroundPadding = 8.0;
 
 - (void) awakeFromNib {
     self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];
+}
+
+- (void) layoutSubviews {
+    CGFloat r = kSectionHeaderShadowRaius;
+    [super layoutSubviews];
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowOpacity = 0.8;
+    self.layer.shadowRadius = r;
+    self.layer.shadowOffset = CGSizeMake(0.0, r);
+    CGRect shadowRect = CGRectMake(- 2 * r, 0, self.bounds.size.width + 4 * r, self.bounds.size.height);
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRect: shadowRect].CGPath;
 }
 
 @end
