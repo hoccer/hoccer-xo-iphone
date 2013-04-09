@@ -230,6 +230,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
             } else if ([cell isKindOfClass: [ProfileAvatarCell class]]) {
                 ProfileAvatarCell * avatarCell = (ProfileAvatarCell*) cell;
                 avatarCell.avatar.enabled = ! _editing;
+                avatarCell.avatar.outerShadowColor = _editing ? [UIColor whiteColor] : [UIColor orangeColor];
             }
         }
     } completion:^(BOOL finished) {
