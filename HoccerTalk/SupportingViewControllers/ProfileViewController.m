@@ -354,10 +354,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) didPickAttachment:(id)attachmentInfo {
-    NSLog(@"attachment picked");
-    UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
-    _avatarItem.image = image;
-    [self.tableView reloadData];
+    if (attachmentInfo != nil) {
+        NSLog(@"avatar picked %@", attachmentInfo);
+        UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
+        _avatarItem.image = image;
+        [self.tableView reloadData];
+    } else {
+        NSLog(@"avatar chooser cancel");
+    }
 }
 
 - (BOOL) wantsAttachmentsOfType:(AttachmentPickerType)type {
