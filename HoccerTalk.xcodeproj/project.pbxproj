@@ -1034,7 +1034,7 @@
 				63DC017B17151FCB00609513 /* switch_thumb.png */,
 				63DC017C17151FCB00609513 /* switch_thumb@2x.png */,
 			);
-			name = Switch;
+			path = Switch;
 			sourceTree = "<group>";
 		};
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
