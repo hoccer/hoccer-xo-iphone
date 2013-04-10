@@ -112,4 +112,6 @@
 
 "contact_group_blocked" = "Blocked";
 
+"setting_save_incoming_media" = "Save incoming Media";
 
+"setting_save_incoming_media_info" = "Automatically save images and videos in your photo album. Contacts are saved to your address book.";

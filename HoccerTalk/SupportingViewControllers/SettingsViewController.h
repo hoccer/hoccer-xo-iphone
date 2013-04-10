@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingsViewController : UITableViewController
+{
+    NSArray * _items;
+}
 
 @end

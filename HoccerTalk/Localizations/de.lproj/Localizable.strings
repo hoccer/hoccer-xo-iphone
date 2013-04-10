@@ -111,3 +111,5 @@
 "contact_group_friend" = "Freunde";
 
 "contact_group_blocked" = "Blockiert";
+
+"setting_save_incoming_media" = "Eingehende Medien speichern";
