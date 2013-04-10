@@ -65,7 +65,7 @@
     <fetchRequest name="MessagesByContact" entity="TalkMessage" predicateString="contact == $contact"/>
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="225"/>
-        <element name="Contact" positionX="0" positionY="0" width="128" height="209"/>
+        <element name="Contact" positionX="90" positionY="-344" width="128" height="209"/>
         <element name="Delivery" positionX="-180" positionY="-186" width="128" height="105"/>
         <element name="Relationship" positionX="412" positionY="90" width="128" height="90"/>
         <element name="TalkMessage" positionX="376" positionY="-234" width="128" height="195"/>

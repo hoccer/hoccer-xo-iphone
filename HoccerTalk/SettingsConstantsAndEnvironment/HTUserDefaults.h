@@ -14,6 +14,8 @@ FOUNDATION_EXPORT NSString * const kHTAPNDeviceToken;
 FOUNDATION_EXPORT NSString * const kHTClientId;
 FOUNDATION_EXPORT NSString * const kHTAvatarImage;
 FOUNDATION_EXPORT NSString * const kHTNickName;
+FOUNDATION_EXPORT NSString * const kHTAvatarURL;
+FOUNDATION_EXPORT NSString * const kHTUserStatus;
 
 
 

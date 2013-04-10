@@ -36,6 +36,7 @@ typedef void (^RelationshipHandler)(NSArray*);
 }
 
 @property (nonatomic, weak) AppDelegate * delegate;
+@property (nonatomic, strong) NSURLConnection *avatarUploadConnection;
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 

@@ -31,7 +31,12 @@ NSString * const kDeliveryStateFailed     = @"failed";
 }
 
 -(void) setKeyCiphertextString:(NSString*) theB64String {
-    self.keyCiphertext = [NSData dataWithBase64EncodedString:theB64String];
+    NSLog(@"Delivery: setKeyCiphertextString: ‘%@‘", theB64String);
+    if ([theB64String isKindOfClass:[NSString class]]) {
+        self.keyCiphertext = [NSData dataWithBase64EncodedString:theB64String];
+    } else {
+        NSLog(@"Delivery: setKeyCiphertextString: nil key in message");
+    }
 }
 
 - (NSDictionary*) rpcKeys {
