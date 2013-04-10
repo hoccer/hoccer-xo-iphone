@@ -65,7 +65,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         nickNameItem.userDefaultsKey = kHTNickName;
         nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
         nickNameItem.placeholder = NSLocalizedString(@"profile_name_placeholder", @"Profile Placeholder Nick Name");
-        nickNameItem.cellIdentifier = [ProfileTextCell reuseIdentifier];
+        nickNameItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
         nickNameItem.keyboardType = UIKeyboardTypeDefault;
         [_profileItems addObject: nickNameItem];
 
@@ -74,7 +74,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         phoneItem.userDefaultsKey = @"phoneNumber";
         phoneItem.editLabel = NSLocalizedString(@"profile_phone_label", @"Profile Edit Label Phone Number");
         phoneItem.placeholder = NSLocalizedString(@"profile_phone_placeholder", @"Profile Placeholder Phone Number");
-        phoneItem.cellIdentifier = [ProfileTextCell reuseIdentifier];
+        phoneItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
         phoneItem.keyboardType = UIKeyboardTypePhonePad;
         [_profileItems addObject: phoneItem];
 
@@ -83,7 +83,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         mailItem.userDefaultsKey = @"mailAddress";
         mailItem.editLabel = NSLocalizedString(@"profile_mail_label", @"Profile Edit Label Mail Address");
         mailItem.placeholder = NSLocalizedString(@"profile_mail_placeholder", @"Profile Placeholder MAil Address");
-        mailItem.cellIdentifier = [ProfileTextCell reuseIdentifier];
+        mailItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
         mailItem.keyboardType = UIKeyboardTypeEmailAddress;
         [_profileItems addObject: mailItem];
 
@@ -91,8 +91,20 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return self;
 }
 
+- (void) registerNibForCellClass: (id) cellClass {
+    UIUserInterfaceIdiom userInterfaceIdiom = [[UIDevice currentDevice] userInterfaceIdiom];
+    NSString * userInterfaceIdiomString = userInterfaceIdiom == UIUserInterfaceIdiomPad ? @"iPad" : @"iPhone";
+    NSString * nibName = [NSString stringWithFormat: @"%@_%@", [cellClass reuseIdentifier], userInterfaceIdiomString];
+    UINib * nib = [UINib nibWithNibName: nibName bundle: [NSBundle mainBundle]];
+    [self.tableView registerNib: nib forCellReuseIdentifier: [cellClass reuseIdentifier]];
+}
+
 - (void) viewDidLoad {
     [super viewDidLoad];
+
+    [self registerNibForCellClass: [UserDefaultsCellTextInput class]];
+    [self registerNibForCellClass: [UserDefaultsCellAvatarPicker class]];
+
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     self.navigationItem.leftBarButtonItem =  self.hoccerTalkMenuButton;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -101,8 +113,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     //backgroundView.backgroundColor = [UIColor colorWithWhite: 0.95 alpha: 1];
     self.tableView.backgroundView = backgroundView;
 
-    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: [ProfileAvatarCell reuseIdentifier]];
-    _textCell = [self.tableView dequeueReusableCellWithIdentifier: [ProfileTextCell reuseIdentifier]];
+    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: [UserDefaultsCellAvatarPicker reuseIdentifier]];
+    _textCell = [self.tableView dequeueReusableCellWithIdentifier: [UserDefaultsCellTextInput reuseIdentifier]];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -134,22 +146,17 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell = nil;
     if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier: [ProfileAvatarCell reuseIdentifier] forIndexPath:indexPath];
+        cell = [tableView dequeueReusableCellWithIdentifier: [UserDefaultsCellAvatarPicker reuseIdentifier] forIndexPath:indexPath];
         cell.backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-        ProfileAvatarCell * avatarCell = (ProfileAvatarCell*)cell;
+        UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*)cell;
         avatarCell.avatar.image = _avatarItem.image;
         avatarCell.avatar.enabled = _editing;
         [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
-
-        UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc]
-                                                 initWithTarget:self action:@selector(avatarPanned:)];
-        [avatarCell.avatar addGestureRecognizer:panRecognizer];
-        
     } else {
         ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
         cell = [tableView dequeueReusableCellWithIdentifier: item.cellIdentifier forIndexPath:indexPath];
-        if ([item.cellIdentifier isEqualToString: [ProfileTextCell reuseIdentifier]]) {
-            [self configureTextCell: (ProfileTextCell*)cell withItem: item atIndexPath: indexPath];
+        if ([item.cellIdentifier isEqualToString: [UserDefaultsCellTextInput reuseIdentifier]]) {
+            [self configureTextCell: (UserDefaultsCellTextInput*)cell withItem: item atIndexPath: indexPath];
         } else {
             NSLog(@"ProfileViewController cellForRowAtIndexPath: unhandled cell type %@", item.cellIdentifier);
         }
@@ -157,7 +164,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return cell;
 }
 
-- (void) configureTextCell: (ProfileTextCell*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
+- (void) configureTextCell: (UserDefaultsCellTextInput*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
     NSString * value = item.currentValue;
     cell.imageView.image = item.icon;
     cell.textField.text = value;
@@ -221,13 +228,13 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     CGFloat alpha = _editing ? 0.0 : 1.0;
     [UIView animateWithDuration: kProfileEditAnimationDuration animations:^{
         for (UITableViewCell * cell in self.tableView.visibleCells) {
-            if ([cell isKindOfClass: [ProfileTextCell class]]) {
-                ProfileTextCell * profileCell = (ProfileTextCell*)cell;
+            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
+                UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
                 profileCell.textField.alpha = alpha;
                 profileCell.textField.enabled = ! _editing;
                 profileCell.textInputBackground.alpha = alpha;
-            } else if ([cell isKindOfClass: [ProfileAvatarCell class]]) {
-                ProfileAvatarCell * avatarCell = (ProfileAvatarCell*) cell;
+            } else if ([cell isKindOfClass: [UserDefaultsCellAvatarPicker class]]) {
+                UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*) cell;
                 avatarCell.avatar.enabled = ! _editing;
                 avatarCell.avatar.outerShadowColor = _editing ? [UIColor whiteColor] : [UIColor orangeColor];
             }
@@ -237,8 +244,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }];
     [UIView animateWithDuration: 0.5 * kProfileEditAnimationDuration animations:^{
         for (UITableViewCell * cell in self.tableView.visibleCells) {
-            if ([cell isKindOfClass: [ProfileTextCell class]]) {
-                ProfileTextCell * profileCell = (ProfileTextCell*)cell;
+            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
+                UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
                 profileCell.textLabel.alpha = 0.0;
             }
         }
@@ -247,8 +254,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         NSArray * indexPaths = self.tableView.indexPathsForVisibleRows;
         for (UITableViewCell * cell in self.tableView.visibleCells) {
             ProfileItem * item = _profileItems[((NSIndexPath*)indexPaths[index++]).row];
-            if ([cell isKindOfClass: [ProfileTextCell class]]) {
-                ProfileTextCell * profileCell = (ProfileTextCell*)cell;
+            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
+                UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
                 if (_editing) {
                     if (profileCell.textField.text == nil || [profileCell.textField.text isEqualToString: @""]) {
                         profileCell.textLabel.text = profileCell.textField.placeholder;
@@ -262,8 +269,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         }
         [UIView animateWithDuration: 0.5 * kProfileEditAnimationDuration animations:^{
             for (UITableViewCell * cell in self.tableView.visibleCells) {
-                if ([cell isKindOfClass: [ProfileTextCell class]]) {
-                    ProfileTextCell * profileCell = (ProfileTextCell*)cell;
+                if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
+                    UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
                     profileCell.textLabel.alpha = [profileCell.textLabel.text isEqualToString: profileCell.textField.placeholder] ? 0.5 : 1.0;
                 }
             }
@@ -328,14 +335,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (IBAction)avatarTapped:(id)sender {
     NSLog(@"avatar tapped");
     [self.attachmentPicker showInView: self.view];
-}
-
-- (IBAction)avatarPanned:(id)sender {
-    NSLog(@"avatar panned");
-}
-
-- (IBAction)avatarPinched:(id)sender {
-    NSLog(@"avatar pinched");
 }
 
 #pragma mark - Attachment Picker Controller

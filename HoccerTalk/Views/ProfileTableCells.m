@@ -8,8 +8,8 @@
 
 #import "ProfileTableCells.h"
 
-@implementation ProfileAvatarCell
+@implementation UserDefaultsCellAvatarPicker
 @end
 
-@implementation ProfileTextCell
+@implementation UserDefaultsCellTextInput
 @end

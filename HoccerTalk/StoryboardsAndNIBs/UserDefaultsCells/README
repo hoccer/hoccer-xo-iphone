@@ -1,0 +1,9 @@
+Problem:
+The application settings and the profile table view are basically identical. They both
+present a table view with the same look. They also have very similar table cells. There
+is no way to share table cell prototypes in one storyboard between different scenes.
+
+Solution:
+We load the table view cell prototypes from separate NIBs and share them in two different
+tables. This is better than to duplicate the table cell prototypes in the storyboard, because
+it avoids inconsistencies.

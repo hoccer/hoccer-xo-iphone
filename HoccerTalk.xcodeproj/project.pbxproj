@@ -174,6 +174,8 @@
 		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
 		63AEE30816CA566B00522F92 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30716CA566B00522F92 /* Contact.m */; };
 		63AEE30B16CA6B1900522F92 /* TalkMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* TalkMessage.m */; };
+		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
+		63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */; };
 		63C413B116E8FBA4004E1F6D /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
@@ -198,7 +200,7 @@
 		63DC018117151FCB00609513 /* switch_thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DC017B17151FCB00609513 /* switch_thumb.png */; };
 		63DC018217151FCB00609513 /* switch_thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DC017C17151FCB00609513 /* switch_thumb@2x.png */; };
 		63DC01851715205300609513 /* HTSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01841715205300609513 /* HTSwitch.m */; };
-		63DC01881715FF3400609513 /* UserDefaultsCellTextInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DC01871715FF3400609513 /* UserDefaultsCellTextInput.xib */; };
+		63DC01881715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */; };
 		E96CB012171217D3005F8FFA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB011171217D3005F8FFA /* AVFoundation.framework */; };
 		E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB01717137D37005F8FFA /* CoreMedia.framework */; };
 		E96CB029171457F9005F8FFA /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB022171457F9005F8FFA /* Crypto.m */; };
@@ -463,6 +465,8 @@
 		63AEE30716CA566B00522F92 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		63AEE30916CA6B1900522F92 /* TalkMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TalkMessage.h; sourceTree = "<group>"; };
 		63AEE30A16CA6B1900522F92 /* TalkMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalkMessage.m; sourceTree = "<group>"; };
+		63C1355F1716054C00969B0B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellAvatarPicker_iPhone.xib; sourceTree = "<group>"; };
 		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = 3rdParty/SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -494,7 +498,7 @@
 		63DC017C17151FCB00609513 /* switch_thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "switch_thumb@2x.png"; sourceTree = "<group>"; };
 		63DC01831715205300609513 /* HTSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTSwitch.h; sourceTree = "<group>"; };
 		63DC01841715205300609513 /* HTSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTSwitch.m; sourceTree = "<group>"; };
-		63DC01871715FF3400609513 /* UserDefaultsCellTextInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellTextInput.xib; sourceTree = "<group>"; };
+		63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellTextInput_iPhone.xib; sourceTree = "<group>"; };
 		E96CB011171217D3005F8FFA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E96CB01717137D37005F8FFA /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		E96CB021171457F9005F8FFA /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
@@ -1043,7 +1047,9 @@
 		63DC01861715FE8B00609513 /* UserDefaultsCells */ = {
 			isa = PBXGroup;
 			children = (
-				63DC01871715FF3400609513 /* UserDefaultsCellTextInput.xib */,
+				63C1355F1716054C00969B0B /* README */,
+				63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */,
+				63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */,
 			);
 			path = UserDefaultsCells;
 			sourceTree = "<group>";
@@ -1292,7 +1298,9 @@
 				63DC018017151FCB00609513 /* switch_right_track@2x.png in Resources */,
 				63DC018117151FCB00609513 /* switch_thumb.png in Resources */,
 				63DC018217151FCB00609513 /* switch_thumb@2x.png in Resources */,
-				63DC01881715FF3400609513 /* UserDefaultsCellTextInput.xib in Resources */,
+				63DC01881715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib in Resources */,
+				63C135601716054C00969B0B /* README in Resources */,
+				63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

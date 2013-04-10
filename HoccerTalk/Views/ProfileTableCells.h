@@ -12,14 +12,14 @@
 
 @class ProfileAvatarView;
 
-@interface ProfileAvatarCell : HoccerTalkTableViewCell
+@interface UserDefaultsCellAvatarPicker : HoccerTalkTableViewCell
 
 @property (nonatomic,strong) IBOutlet ProfileAvatarView * avatar;
 
 @end
 
 
-@interface ProfileTextCell : HoccerTalkTableViewCell
+@interface UserDefaultsCellTextInput : HoccerTalkTableViewCell
 
 @property (nonatomic,strong) IBOutlet UITextField * textField;
 @property (nonatomic,strong) IBOutlet UIImageView * textInputBackground;

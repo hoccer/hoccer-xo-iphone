@@ -10,16 +10,16 @@
 
 #import "AttachmentPickerController.h"
 
-@class ProfileAvatarCell;
-@class ProfileTextCell;
+@class UserDefaultsCellAvatarPicker;
+@class UserDefaultsCellTextInput;
 @class AvatarItem;
 
-@interface ProfileViewController : UITableViewController <UITextFieldDelegate,UIScrollViewDelegate,AttachmentPickerControllerDelegate>
+@interface ProfileViewController : UITableViewController <UITextFieldDelegate,AttachmentPickerControllerDelegate>
 {
     AvatarItem *        _avatarItem;
     NSMutableArray *    _profileItems;
-    ProfileAvatarCell * _avatarCell;
-    ProfileTextCell *   _textCell;
+    UserDefaultsCellAvatarPicker * _avatarCell;
+    UserDefaultsCellTextInput *   _textCell;
     BOOL                _editing;
 }
 
