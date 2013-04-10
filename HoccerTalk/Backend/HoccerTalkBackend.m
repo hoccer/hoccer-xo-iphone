@@ -261,6 +261,13 @@
     }];
 }
 
+- (void) updatePresences {
+    NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0];
+    NSLog(@"latest date %@", latestChange);
+    [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
+    }];
+}
+
 #pragma mark - Attachment upload and download
 
 - (void) flushPendingFiletransfers {
@@ -350,6 +357,8 @@
             [self flushPendingMessages];
             [self flushPendingFiletransfers];
             [self updateRelationships];
+            [self updatePresences];
+            
             _isConnected = YES;
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
@@ -390,14 +399,15 @@
     }];
 }
 
-- (void) updatePresence: (NSString*) clientName withStatus: clientStatus withAvatar: avatarURL {
+- (void) updatePresence: (NSString*) clientName withStatus: clientStatus withAvatar: (NSString*)avatarURL withKey: (NSData*)keyId {
     NSLog(@"updatePresence: %@, %@, %@", clientName, clientStatus, avatarURL);
     NSDictionary *params = @{
                              @"clientName" : clientName,
                              @"clientStatus" : clientStatus,
                              @"avatarUrl" : avatarURL,
+                             @"keyId" : [keyId hexadecimalString]
                              };
-    [_serverConnection invoke: @"updatePresence" withParams: params onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"updatePresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"updatePresence() got result: %@", responseOrError);
         } else {
@@ -413,17 +423,20 @@
    // NSString * myStatus = [[HTUserDefaults standardUserDefaults] objectForKey: kHTUserStatus];
     NSString * myStatus = @"I am.";
     
-    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL];
+    NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
+    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    
+    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: myKeyId];
 }
 
-
-- (void) updateKey: (NSString*) publicKey {
+- (void) updateKey: (NSData*) publicKey {
     NSLog(@"updateKey: %@", publicKey);
+    NSData * myKeyId = [[publicKey SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
     NSDictionary *params = @{
-                             @"publicKey" : publicKey
+                             @"key" :   [publicKey asBase64EncodedString], 
+                             @"keyId" : [myKeyId hexadecimalString]
                              };
-    //[_serverConnection invoke: @"updateKey" withParams: @[publicKey] onResponse: ^(id responseOrError, BOOL success) {
-    [_serverConnection invoke: @"updateKey" withParams: params onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"updateKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"updateKey() got result: %@", responseOrError);
         } else {
@@ -431,10 +444,10 @@
         }
     }];
 }
-- (void) updateKey {
 
+- (void) updateKey {
     NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
-    [self updateKey: [myKeyBits asBase64EncodedString]];
+    [self updateKey: myKeyBits];
 }
 
 - (void) registerApns: (NSString*) token {
@@ -497,6 +510,20 @@
             //handler([responseOrError boolValue]);
         } else {
             NSLog(@"getRelationships(): failed: %@", responseOrError);
+            //handler(NO);
+        }
+    }];
+}
+
+- (void) getPresences: (NSDate*) lastKnown presenceHandler: (PresenceHandler) handler {
+    NSLog(@"getPresences:");
+    NSNumber * lastKnownMillis = [NSNumber numberWithLongLong: [lastKnown timeIntervalSince1970] * 1000];
+    [_serverConnection invoke: @"getPresences" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"getPresences(): got result: %@", responseOrError);
+            //handler([responseOrError boolValue]);
+        } else {
+            NSLog(@"getPresences(): failed: %@", responseOrError);
             //handler(NO);
         }
     }];
