@@ -146,16 +146,13 @@
                                     <rect key="frame" x="10" y="1" width="300" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="yJd-Gf-Ntf">
-                                            <rect key="frame" x="203" y="8" width="79" height="27"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        </switch>
+                                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="CWj-NJ-pE3" customClass="HTSwitch">
+                                            <rect key="frame" x="233" y="11" width="49" height="23"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </slider>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
-                                <connections>
-                                    <outlet property="toggle" destination="yJd-Gf-Ntf" id="cuG-Jw-iVE"/>
-                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="SettingTextCell" id="psN-tI-5O3" customClass="SettingTextCell">
                                 <rect key="frame" x="0.0" y="91" width="320" height="45"/>
@@ -877,6 +874,9 @@
         </class>
         <class className="GrowingTextView" superclassName="UITextView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowingTextView.h"/>
+        </class>
+        <class className="HTSwitch" superclassName="UISlider">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HTSwitch.h"/>
         </class>
         <class className="HoccerTalkTableViewCell" superclassName="UITableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/HoccerTalkTableViewCell.h"/>
