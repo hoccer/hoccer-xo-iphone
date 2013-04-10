@@ -20,6 +20,8 @@ typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^PairingHandler)(BOOL);
 typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
+// typedef void (^PublicKeyHandler)(NSArray*);
+typedef void (^PublicKeyHandler)(NSDictionary*);
 
 @protocol HoccerTalkDelegate <NSObject>
 

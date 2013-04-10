@@ -17,16 +17,18 @@ const float kTimeSectionInterval = 2 * 60;
 @implementation Contact
 
 @dynamic avatar;
+@dynamic avatarURL;
 @dynamic clientId;
 @dynamic latestMessageTime;
 @dynamic nickName;
-@dynamic state;
+@dynamic status;
 @dynamic relationship;
 
 @dynamic currentTimeSection;
 @dynamic unreadMessages;
 @dynamic latestMessage;
 @dynamic publicKey;
+@dynamic publicKeyId;
 
 @dynamic messages;
 
@@ -36,7 +38,6 @@ const float kTimeSectionInterval = 2 * 60;
     if (_avatarImage != nil) {
         return _avatarImage;
     }
-
     _avatarImage = self.avatar != nil ? [UIImage imageWithData: self.avatar] : [UIImage imageNamed: @"avatar_default_contact"];
 
     return _avatarImage;
@@ -51,6 +52,7 @@ const float kTimeSectionInterval = 2 * 60;
 -(void) setPublicKeyString:(NSString*) theB64String {
     self.publicKey = [NSData dataWithBase64EncodedString:theB64String];
 }
+
 
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date {
     if (self.latestMessageTime == nil) {

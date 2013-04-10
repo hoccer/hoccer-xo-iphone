@@ -52,6 +52,7 @@
         [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery" withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"presenceUpdated" withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
         _delegate = theAppDelegate;
     }
     return self;
@@ -121,6 +122,7 @@
         message.attachment = attachment;
     }
 
+    // TODO: Refactor: use function getContactByClientId below
     vars = @{ @"clientId" : messageDictionary[@"senderId"]};
     fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
     error = nil;
@@ -160,6 +162,25 @@
         [NSTimer scheduledTimerWithTimeInterval:2.0 target:attachment selector: @selector(downloadLater:) userInfo:nil repeats:NO];
         //[attachment download];
     }
+}
+
+-(Contact *) getContactByClientId:(NSString *) theClientId {
+    NSDictionary * vars = @{ @"clientId" : theClientId};    
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (contacts == nil)
+    {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    Contact * contact = nil;
+    if (contacts.count > 0) {
+        contact = contacts[0];
+    } else {
+        NSLog(@"ClientId %@ not in contacts", theClientId);
+    }
+    return contact;
 }
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken {
@@ -253,7 +274,6 @@
     return latest;
 }
 
-
 - (void) updateRelationships {
     NSDate * latestChange = [self getLatestChangeDateFromRelationships];
     NSLog(@"latest date %@", latestChange);
@@ -265,7 +285,67 @@
     NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
+        for (id presence in changedPresences) {
+            NSLog(@"updatePresences presence=%@",presence);
+            [self presenceUpdated:presence];
+        }
     }];
+}
+/*
+- (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
+    [self getKey:theContact.clientId withId:theId keyHandler:^(NSArray * keys) {
+        for (NSDictionary * keyRecord in keys) {
+            if ([theId isEqualToString: keyRecord[@"keyId"]]) {
+                theContact.publicKey = keyRecord[@"key"];
+                theContact.publicKeyId = keyRecord[@"keyId"];
+                NSLog(@"Key for contact updated: %@", theContact);
+            } else {
+                NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
+            }
+        }
+    }];
+}
+ */
+- (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
+    [self getKey:theContact.clientId withId:theId keyHandler:^(NSDictionary * keyRecord) {
+        if ([theId isEqualToString: keyRecord[@"keyId"]]) {
+            theContact.publicKeyString = keyRecord[@"key"];
+            theContact.publicKeyId = keyRecord[@"keyId"];
+            NSLog(@"Key for contact updated: %@", theContact);
+        } else {
+            NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
+        }
+    }];
+}
+
+- (void) presenceUpdated:(NSDictionary *) thePresence {
+    NSString * myClient = thePresence[@"clientId"];
+    Contact * myContact = [self getContactByClientId:myClient];
+    myContact.nickName = thePresence[@"clientName"];
+    myContact.status = thePresence[@"clientStatus"];
+    if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]]) {
+        // fetch key
+        [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
+    }
+    if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
+        NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
+        NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
+        NSError * myError = nil;
+        myContact.avatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
+        if (myError == nil) {
+            myContact.avatarURL = thePresence[@"avatarUrl"];
+            NSLog(@"presenceUpdated, avatar downloaded");
+        }
+    }
+}
+
+
+- (void) presenceUpdatedNotification: (NSArray*) params {
+    //TODO: Error checking
+    for (id presence in params) {
+        NSLog(@"updatePresences presence=%@",presence);
+        [self presenceUpdated:presence];
+    }
 }
 
 #pragma mark - Attachment upload and download
@@ -521,10 +601,30 @@
     [_serverConnection invoke: @"getPresences" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"getPresences(): got result: %@", responseOrError);
-            //handler([responseOrError boolValue]);
+            handler(responseOrError);
         } else {
             NSLog(@"getPresences(): failed: %@", responseOrError);
-            //handler(NO);
+            handler(nil);
+        }
+    }];
+}
+
+- (void) getKey: (NSString*)forClientId withId:(NSString*) keyId keyHandler:(PublicKeyHandler) handler {
+    NSLog(@"getKey:");
+    /*
+    NSDictionary *params = @{
+                             @"clientId" :  forClientId,
+                             @"keyId" : keyId
+                             };
+     [_serverConnection invoke: @"getKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
+     */
+     [_serverConnection invoke: @"getKey" withParams: @[forClientId,keyId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"getKey(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"getKey(): failed: %@", responseOrError);
+            handler(nil);
         }
     }];
 }
