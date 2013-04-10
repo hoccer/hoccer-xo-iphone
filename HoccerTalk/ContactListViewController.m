@@ -24,7 +24,9 @@
 @interface ContactListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, strong) NSMutableArray * invitationChannels;
-@property (nonatomic,readonly) NSFetchedResultsController * currentFetchedResultsController;
+@property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
+@property (nonatomic, readonly) ContactCell * contactCellPrototype;
+@property (nonatomic, readonly) ContactSectionHeaderCell * sectionHeaderPrototype;
 @end
 
 static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
@@ -38,6 +40,8 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize chatBackend = _chatBackend;
+@synthesize contactCellPrototype = _contactCellPrototype;
+@synthesize sectionHeaderPrototype = _sectionHeaderPrototype;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -91,6 +95,28 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 
 #pragma mark - Table View
+
+- (ContactCell*) contactCellPrototype {
+    if (_contactCellPrototype == nil) {
+        _contactCellPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
+    }
+    return _contactCellPrototype;
+}
+
+- (ContactSectionHeaderCell*) sectionHeaderPrototype {
+    if (_sectionHeaderPrototype == nil) {
+        _sectionHeaderPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
+    }
+    return _sectionHeaderPrototype;
+}
+
+- (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return self.contactCellPrototype.frame.size.height;
+}
+
+- (CGFloat) tableView: (UITableView*) tableView heightForHeaderInSection:(NSInteger)section {
+    return self.sectionHeaderPrototype.frame.size.height;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
