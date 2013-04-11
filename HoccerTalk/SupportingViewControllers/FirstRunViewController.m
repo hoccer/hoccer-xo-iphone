@@ -89,9 +89,9 @@
 
 - (IBAction) donePressed: (id) sender {
     [self dismissModalViewControllerAnimated: YES];
-    [self saveDummyProfile];
     [self addDummies];
     [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
+    [self saveDummyProfile];
     AppDelegate * appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate setupDone];
 }

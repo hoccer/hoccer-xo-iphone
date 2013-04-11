@@ -18,6 +18,8 @@
 #import "CustomNavigationBar.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "UserDefaultsViewController.h"
+#import "NSString+UUID.h"
+#import "AppDelegate.h"
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 
@@ -66,7 +68,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [super viewDidLoad];
 
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-    self.navigationItem.leftBarButtonItem =  self.hoccerTalkMenuButton;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
@@ -74,7 +75,17 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
 
+    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+        self.navigationItem.leftBarButtonItem =  self.hoccerTalkMenuButton;
+    }
     //[self populateItems];
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear: animated];
+    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+        [self setEditing: YES animated: YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -92,7 +103,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*)cell;
         avatarCell.avatar.image = _avatarItem.image;
         avatarCell.avatar.enabled = _editing;
-        avatarCell.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact"];
+        if (avatarCell.avatar.defaultImage == nil) {
+            avatarCell.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact_large"];
+        }
         [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     } else {
         ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
@@ -158,9 +171,11 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     NSLog(@"editing");
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onCancel:)];
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(onDone:)];
-    [self.navigationItem setLeftBarButtonItem: cancelButton animated:YES];
+    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onCancel:)];
+        [self.navigationItem setLeftBarButtonItem: cancelButton animated:YES];
+    }
     [self.navigationItem setRightBarButtonItem: doneButton animated:YES];
 
     [self animateTableCells];
@@ -289,6 +304,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         NSLog(@"saving %@ as %@", item.currentValue, item.userDefaultsKey);
         [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.userDefaultsKey];
     }
+
+    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+        [[HTUserDefaults standardUserDefaults] setValue: [NSString stringWithUUID] forKey: kHTClientId];
+        [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
+        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone];
+        [self dismissModalViewControllerAnimated: YES];
+    }
+
     [[HTUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -320,7 +343,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (AttachmentPickerController*) attachmentPicker {
     if (_attachmentPicker == nil) {
         _attachmentPicker = [[AttachmentPickerController alloc] initWithViewController: self delegate: self];
-
     }
     return _attachmentPicker;
 }
@@ -331,7 +353,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) didPickAttachment:(id)attachmentInfo {
     if (attachmentInfo != nil) {
-        NSLog(@"avatar picked %@", attachmentInfo);
         UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
         _avatarItem.image = image;
         [self.tableView reloadData];

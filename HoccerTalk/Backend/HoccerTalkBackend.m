@@ -307,11 +307,14 @@
     NSArray *fetchResults = [self.delegate.managedObjectContext
                              executeFetchRequest:request
                              error:&error];
+    if (fetchResults == nil) {
+        NSLog(@"ERROR: getLatestChangeDateFromRelationships: fetch request failed: %@", error);
+        abort();
+    }
 
     NSDate * latest = [[fetchResults lastObject] valueForKey:@"latestChange"];
     if (latest == nil) {
-        NSLog(@"Failed to get last relationship changed date: %@", error);
-        abort();
+        latest = [NSDate dateWithTimeIntervalSince1970: 0];
     }
     return latest;
 }
