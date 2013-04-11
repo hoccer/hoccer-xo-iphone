@@ -266,6 +266,15 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     nickNameItem.keyboardType = UIKeyboardTypeDefault;
     [_profileItems addObject: nickNameItem];
 
+    ProfileItem * clientIdItem = [[ProfileItem alloc] init];
+    //nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
+    clientIdItem.userDefaultsKey = kHTClientId;
+    clientIdItem.editLabel = @"Client Id";
+    clientIdItem.placeholder = @"Your Client Id";
+    clientIdItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
+    clientIdItem.keyboardType = UIKeyboardTypeDefault;
+    [_profileItems addObject: clientIdItem];
+
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
     phoneItem.userDefaultsKey = @"phoneNumber";
