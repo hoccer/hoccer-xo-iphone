@@ -17,9 +17,9 @@
 	<key>fileCacheURI</key>
 	<dict>
 		<key>development</key>
-		<string>https://filecache-experimental.hoccer.com/v3/</string>
+		<string>https://filecache-development.hoccer.com/v3/</string>
 		<key>production</key>
-		<string>https://filecache.hoccer.com/v3/</string>
+		<string>https://filecache-development.hoccer.com/v3/</string>
 	</dict>
 </dict>
 </plist>

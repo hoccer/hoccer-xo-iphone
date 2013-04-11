@@ -560,8 +560,10 @@
 }
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
-    [self uploadAvatarIfNeeded];
-    [self updatePresence];
+    if (_isConnected) {
+        [self uploadAvatarIfNeeded];
+        [self updatePresence];
+    }
 }
 
 
