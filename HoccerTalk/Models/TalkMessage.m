@@ -9,7 +9,7 @@
 #import "TalkMessage.h"
 #import "Delivery.h"
 #import "Crypto.h"
-#import "NSData_Base64Extensions.h"
+#import "NSData+Base64.h"
 #import "NSData+CommonCrypto.h"
 #import "NSString+StringWithData.h"
 

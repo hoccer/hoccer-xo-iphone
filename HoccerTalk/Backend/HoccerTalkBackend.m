@@ -20,7 +20,7 @@
 #import "Relationship.h"
 #import "HTUserDefaults.h"
 #import "NSData+CommonCrypto.h"
-#import "NSData_Base64Extensions.h"
+#import "NSData+Base64.h"
 #import "RSA.h"
 
 @interface HoccerTalkBackend ()

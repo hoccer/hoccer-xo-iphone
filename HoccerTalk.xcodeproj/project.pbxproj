@@ -210,7 +210,7 @@
 		E96CB02C171457F9005F8FFA /* RSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB028171457F9005F8FFA /* RSA.m */; };
 		E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB02E17145979005F8FFA /* NSString+StringWithData.m */; };
 		E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03017145ABF005F8FFA /* Base64Transcoder.c */; };
-		E96CB03517145AC0005F8FFA /* NSData_Base64Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData_Base64Extensions.m */; };
+		E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
@@ -512,12 +512,12 @@
 		E96CB026171457F9005F8FFA /* PublicKeyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicKeyManager.m; sourceTree = "<group>"; };
 		E96CB027171457F9005F8FFA /* RSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSA.h; sourceTree = "<group>"; };
 		E96CB028171457F9005F8FFA /* RSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSA.m; sourceTree = "<group>"; };
-		E96CB02D17145979005F8FFA /* NSString+StringWithData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+StringWithData.h"; sourceTree = "<group>"; };
-		E96CB02E17145979005F8FFA /* NSString+StringWithData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+StringWithData.m"; sourceTree = "<group>"; };
+		E96CB02D17145979005F8FFA /* NSString+StringWithData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+StringWithData.h"; path = "../Crypto/NSString+StringWithData.h"; sourceTree = "<group>"; };
+		E96CB02E17145979005F8FFA /* NSString+StringWithData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+StringWithData.m"; path = "../Crypto/NSString+StringWithData.m"; sourceTree = "<group>"; };
 		E96CB03017145ABF005F8FFA /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
 		E96CB03117145ABF005F8FFA /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
-		E96CB03217145ABF005F8FFA /* NSData_Base64Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSData_Base64Extensions.h; sourceTree = "<group>"; };
-		E96CB03317145AC0005F8FFA /* NSData_Base64Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSData_Base64Extensions.m; sourceTree = "<group>"; };
+		E96CB03217145ABF005F8FFA /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Base64.h"; path = "../Crypto/NSData+Base64.h"; sourceTree = "<group>"; };
+		E96CB03317145AC0005F8FFA /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "../Crypto/NSData+Base64.m"; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -562,6 +562,10 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
+				E96CB02D17145979005F8FFA /* NSString+StringWithData.h */,
+				E96CB02E17145979005F8FFA /* NSString+StringWithData.m */,
+				E96CB03317145AC0005F8FFA /* NSData+Base64.m */,
+				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
 				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
 				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
 				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
@@ -1064,10 +1068,6 @@
 			children = (
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
-				E96CB03217145ABF005F8FFA /* NSData_Base64Extensions.h */,
-				E96CB03317145AC0005F8FFA /* NSData_Base64Extensions.m */,
-				E96CB02D17145979005F8FFA /* NSString+StringWithData.h */,
-				E96CB02E17145979005F8FFA /* NSString+StringWithData.m */,
 				E96CB021171457F9005F8FFA /* Crypto.h */,
 				E96CB022171457F9005F8FFA /* Crypto.m */,
 				E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */,
@@ -1398,7 +1398,7 @@
 				E96CB02C171457F9005F8FFA /* RSA.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
 				E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */,
-				E96CB03517145AC0005F8FFA /* NSData_Base64Extensions.m in Sources */,
+				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015517146EBC00609513 /* Relationship.m in Sources */,
 				63DC015B17147B1700609513 /* HoccerTalkTableViewCell.m in Sources */,
 				63DC016C1714E1CA00609513 /* SettingsCells.m in Sources */,

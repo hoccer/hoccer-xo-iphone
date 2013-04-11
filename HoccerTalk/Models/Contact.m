@@ -8,7 +8,7 @@
 
 #import "Contact.h"
 #import "Crypto.h"
-#import "NSData_Base64Extensions.h"
+#import "NSData+Base64.h"
 #import "RSA.h"
 
 

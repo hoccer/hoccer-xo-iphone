@@ -9,7 +9,7 @@
 #import "Delivery.h"
 #import "Contact.h"
 #import "TalkMessage.h"
-#import "NSData_Base64Extensions.h"
+#import "NSData+Base64.h"
 #import "RSA.h"
 
 NSString * const kDeliveryStateNew        = @"new";

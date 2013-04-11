@@ -10,7 +10,7 @@
 
 #import "Crypto.h"
 #import "NSString+StringWithData.h"
-#import "NSData_Base64Extensions.h"
+#import "NSData+Base64.h"
 //#import "NSString+Regexp.h"
 //#import "NSString+URLHelper.h"
 #import "RSA.h"

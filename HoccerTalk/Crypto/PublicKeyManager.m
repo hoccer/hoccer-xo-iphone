@@ -8,7 +8,8 @@
 
 #import "PublicKeyManager.h"
 #import "RSA.h"
-#import "NSData_Base64Extensions.h"
+#import "NSData+Base64.h"
+#import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
 #import "NSString+StringWithData.h"
 
@@ -78,7 +79,7 @@
     
     NSString *keyAsString = [storedKey asBase64EncodedString];
     
-    NSString *storedHash = [[[[keyAsString dataUsingEncoding:NSUTF8StringEncoding] SHA256Hash] hexString] substringToIndex:8];
+    NSString *storedHash = [[[[keyAsString dataUsingEncoding:NSUTF8StringEncoding] SHA256Hash] hexadecimalString] substringToIndex:8];
     
     if ([storedHash isEqualToString:theHash]){
         result =  NO;

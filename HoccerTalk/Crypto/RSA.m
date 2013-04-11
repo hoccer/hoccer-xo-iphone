@@ -9,7 +9,7 @@
 //
 
 #import "RSA.h"
-#import "NSData_Base64Extensions.h"
+#import "NSData+Base64.h"
 
 
 

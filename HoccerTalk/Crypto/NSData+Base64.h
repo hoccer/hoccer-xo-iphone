@@ -29,15 +29,11 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- * @category NSObject (NSData_Base64Extensions)
- */
-@interface NSData (NSData_Base64Extensions)
+
+@interface NSData (Base64)
 
 + (id)dataWithBase64EncodedString:(NSString *)inString NS_RETURNS_RETAINED;
 - (NSString *)asBase64EncodedString;
 - (NSString *)asBase64EncodedString:(NSInteger)inFlags;
-
-- (NSString*) hexString;
 
 @end
