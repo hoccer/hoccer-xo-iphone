@@ -59,7 +59,7 @@
     _chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 
     // TODO: ask @zutrinken
-    //self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
+    self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
 }
 
 - (ChatViewController*) chatViewController {

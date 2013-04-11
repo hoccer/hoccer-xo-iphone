@@ -52,10 +52,10 @@
         _apnsDeviceToken = nil;
         _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest]];
         _serverConnection.delegate = self;
-        [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
-        [_serverConnection registerIncomingCall: @"outgoingDelivery" withSelector:@selector(outgoingDelivery:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"incomingDelivery"  withSelector:@selector(incomingDelivery:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"outgoingDelivery"  withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
-        [_serverConnection registerIncomingCall: @"presenceUpdated" withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"presenceUpdated"   withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
         _delegate = theAppDelegate;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(profileUpdatedByUser:)
@@ -329,6 +329,20 @@
     NSDate * latestChange = [self getLatestChangeDateFromRelationships];
     NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
+        for (NSDictionary * relationshipDict in changedRelationships) {
+            NSString * clientId = relationshipDict[@"otherClientID"];
+            Contact * contact = [self getContactByClientId: clientId];
+            if (contact == nil) {
+                contact = (Contact*)[NSEntityDescription entityForName:[Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+                contact.clientId = clientId;
+            }
+            if (contact.relationship == nil) {
+                Relationship * relationship = (Relationship*)[NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+                contact.relationship = relationship;
+                relationship.contact = contact;
+            }
+            [contact.relationship updateWithDictionary: relationshipDict];
+        }
     }];
 }
 

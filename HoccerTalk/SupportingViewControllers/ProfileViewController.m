@@ -12,7 +12,7 @@
 #import "HTUserDefaults.h"
 #import "iOSVersionChecks.h"
 #import "AssetStore.h"
-#import "ProfileTableCells.h"
+#import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
@@ -167,6 +167,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+    if (_editing == editing ) {
+        return;
+    }
     // do not call super class
     NSLog(@"editing");
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
