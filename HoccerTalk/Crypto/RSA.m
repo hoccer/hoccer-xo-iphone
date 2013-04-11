@@ -85,10 +85,10 @@ static RSA *instance;
     publicKey = NULL;
     privateKey = NULL;
 	
-    [privateKeyAttr setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecAttrIsPermanent];
+    [privateKeyAttr setObject: @YES forKey:(__bridge id)kSecAttrIsPermanent];
     [privateKeyAttr setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
     
-    [publicKeyAttr setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecAttrIsPermanent];
+    [publicKeyAttr setObject: @YES forKey:(__bridge id)kSecAttrIsPermanent];
 	[publicKeyAttr setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     
     [keyPairAttr setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
@@ -249,7 +249,7 @@ static RSA *instance;
         [queryPublicKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
         [queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
         [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-        [queryPublicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+        [queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 		
 		// Get the key.
         resultCode = SecItemCopyMatching((__bridge CFDictionaryRef)queryPublicKey, (CFTypeRef *)&publicKeyReference);
@@ -275,7 +275,7 @@ static RSA *instance;
     [queryPublicKey setObject:(__bridge id)kSecClassCertificate forKey:(__bridge id)kSecClass];
     [queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    [queryPublicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+    [queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 	
 	// Get the key.
     resultCode = SecItemCopyMatching((__bridge CFDictionaryRef)queryPublicKey, (CFTypeRef *)&publicKeyCeritificate);
@@ -299,7 +299,7 @@ static RSA *instance;
         [queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
         [queryPrivateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
         [queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-        [queryPrivateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+        [queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 		
         // Get the key.
         resultCode = SecItemCopyMatching((__bridge CFDictionaryRef)queryPrivateKey, (CFTypeRef *)&privateKeyReference);
@@ -323,7 +323,7 @@ static RSA *instance;
 	[queryPublicKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
 	[queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
 	[queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-	[queryPublicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnData];
+	[queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     
     CFDataRef publicKeyBitsCF;
 	sanityCheck = SecItemCopyMatching((__bridge CFDictionaryRef)queryPublicKey, (CFTypeRef *)&publicKeyBitsCF);
@@ -347,7 +347,7 @@ static RSA *instance;
 	[queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
 	[queryPrivateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
 	[queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-	[queryPrivateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnData];
+	[queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     
     CFDataRef privateKeyBitsCF;
 	sanityCheck = SecItemCopyMatching((__bridge CFDictionaryRef)queryPrivateKey, (CFTypeRef *)&privateKeyBitsCF);
@@ -419,7 +419,7 @@ static RSA *instance;
     // Add persistent version of the key to system keychain
     [publicKey setObject:d_key forKey:(__bridge id)kSecValueData];
     [publicKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
-    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
+    [publicKey setObject: @YES forKey:(__bridge id)kSecReturnPersistentRef];
     
     OSStatus secStatus = SecItemAdd((__bridge CFDictionaryRef)publicKey, &persistKey);
     if (persistKey != nil) CFRelease(persistKey);
@@ -433,7 +433,7 @@ static RSA *instance;
     
     [publicKey removeObjectForKey:(__bridge id)kSecValueData];
     [publicKey removeObjectForKey:(__bridge id)kSecReturnPersistentRef];
-    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+    [publicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&keyRef);
         
@@ -469,7 +469,7 @@ static RSA *instance;
 	
 	// Set the SecKeyRef query dictionary.
 	[queryKey setObject:(__bridge id)persistentRef forKey:(__bridge id)kSecValuePersistentRef];
-	[queryKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+	[queryKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 	
 	// Get the persistent key reference.
 	SecItemCopyMatching((__bridge CFDictionaryRef)queryKey, (CFTypeRef *)&keyRef);
@@ -484,7 +484,7 @@ static RSA *instance;
 	
 	// Set the PersistentKeyRef key query dictionary.
 	[queryKey setObject:(__bridge id)keyRef forKey:(__bridge id)kSecValueRef];
-	[queryKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
+	[queryKey setObject: @YES forKey:(__bridge id)kSecReturnPersistentRef];
 	
 	// Get the persistent key reference.
 	 SecItemCopyMatching((__bridge CFDictionaryRef)queryKey, (CFTypeRef *)&persistentRef);
@@ -500,7 +500,7 @@ static RSA *instance;
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
-    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+    [publicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];    
     [publicKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
     SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&persistentRef);
@@ -519,7 +519,7 @@ static RSA *instance;
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
-    [publicKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnData];
+    [publicKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     
     CFDataRef publicKeyBitsCF;
 	sanityCheck = SecItemCopyMatching((__bridge CFDictionaryRef)publicKey, (CFTypeRef *)&publicKeyBitsCF);
