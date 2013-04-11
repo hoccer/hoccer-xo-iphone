@@ -373,6 +373,11 @@
 - (void) presenceUpdated:(NSDictionary *) thePresence {
     NSString * myClient = thePresence[@"clientId"];
     Contact * myContact = [self getContactByClientId:myClient];
+    if (myContact == nil) {
+        NSLog(@"presenceUpdated failed for unknown clientId, creating new contact: %@", myClient);
+        myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    }
+    
     if (myContact) {
         myContact.nickName = thePresence[@"clientName"];
         myContact.status = thePresence[@"clientStatus"];
@@ -395,7 +400,7 @@
         }
         [self.delegate.managedObjectContext refreshObject: myContact mergeChanges:YES];
     } else {
-        NSLog(@"presenceUpdated failed for unknown clientId: %@", myClient);
+        NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }
 }
 
