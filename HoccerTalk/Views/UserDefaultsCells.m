@@ -13,10 +13,11 @@
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    self.textLabel.textColor = [UIColor colorWithWhite: 0.2 alpha: 1.0];
     self.textLabel.shadowColor = [UIColor whiteColor];
     self.textLabel.shadowOffset = CGSizeMake(0, 1);
+    self.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];
     self.textLabel.backgroundColor = [UIColor clearColor];
+
 }
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {

@@ -155,8 +155,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         cell.textInputBackground.frame = CGRectInset(cell.textField.frame, -8, 2);
         cell.textField.delegate = self;
         cell.textField.backgroundColor = [UIColor clearColor];
-        cell.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];
-        cell.textLabel.backgroundColor = [UIColor clearColor];
     }
 }
 
@@ -282,12 +280,16 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (IBAction)onCancel:(id)sender {
+    [self.tableView endEditing: NO];
+
     [self reloadProfile];
     [self restoreNonEditButtons];
     [self animateTableCells];
 }
 
 - (IBAction)onDone:(id)sender {
+    [self.tableView endEditing: NO];
+
     [self saveProfile];
     [self restoreNonEditButtons];
     [self animateTableCells];
@@ -376,7 +378,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) saveProfile {
-    [self.tableView endEditing: NO];
     // TODO: proper size handling
     CGFloat scale;
     if (_avatarItem.image.size.height > _avatarItem.image.size.width) {
@@ -406,6 +407,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) reloadProfile {
     //[self populateItems];
+    // TODO: this causes a weird artifact in the table background. Not reloading the data causes
+    // inconsistencies in the avatar cell... let's be consistent for now and deal with the artifact later
     [self.tableView reloadData];
 }
 
