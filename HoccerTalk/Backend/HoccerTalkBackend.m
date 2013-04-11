@@ -375,6 +375,7 @@
     if (myContact == nil) {
         NSLog(@"presenceUpdated failed for unknown clientId, creating new contact: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+        myContact.clientId = myClient;
     }
     
     if (myContact) {

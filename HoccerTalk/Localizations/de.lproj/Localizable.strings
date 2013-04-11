@@ -115,3 +115,6 @@
 "contact_group_blocked" = "Blockiert";
 
 "setting_save_incoming_media" = "Eingehende Medien speichern";
+
+"no_messages_exchanged" = "Bisher keine Nachrichten.";
+

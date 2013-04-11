@@ -273,7 +273,13 @@
     cell.nickName.text = contact.nickName;
     cell.avatar.image = contact.avatarImage;
     cell.latestMessage.frame = self.conversationCell.latestMessage.frame;
-    cell.latestMessage.text = [contact.latestMessage[0] body];
+    NSDate * latestMessageTime = nil;
+    if ([contact.latestMessage count] == 0){
+        cell.latestMessage.text = NSLocalizedString(@"no_messages_exchanged", nil);
+    } else {
+        cell.latestMessage.text = [contact.latestMessage[0] body];
+        latestMessageTime = [contact.latestMessage[0] timeStamp];
+    }
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
         [cell.latestMessage sizeToFit];
     } else {
@@ -285,22 +291,25 @@
         label.frame = frame;
     }
 
-    NSDate * latestMessageTime = [contact.latestMessage[0] timeStamp];
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
-    NSDate *today = [calendar dateFromComponents:components];
-
-    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: latestMessageTime];
-    NSDate *latestMessageDate = [calendar dateFromComponents:components];
-    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-    if([today isEqualToDate: latestMessageDate]) {
-        [formatter setDateStyle:NSDateFormatterNoStyle];
-        [formatter setTimeStyle:NSDateFormatterShortStyle];
+    if (latestMessageTime) {
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
+        NSDate *today = [calendar dateFromComponents:components];
+        
+        components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: latestMessageTime];
+        NSDate *latestMessageDate = [calendar dateFromComponents:components];
+        NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+        if([today isEqualToDate: latestMessageDate]) {
+            [formatter setDateStyle:NSDateFormatterNoStyle];
+            [formatter setTimeStyle:NSDateFormatterShortStyle];
+        } else {
+            [formatter setDateStyle:NSDateFormatterMediumStyle];
+            [formatter setTimeStyle:NSDateFormatterNoStyle];
+        }
+        cell.latestMessageTime.text = [formatter stringFromDate: latestMessageTime];
     } else {
-        [formatter setDateStyle:NSDateFormatterMediumStyle];
-        [formatter setTimeStyle:NSDateFormatterNoStyle];
+        cell.latestMessageTime.text = @"-";
     }
-    cell.latestMessageTime.text = [formatter stringFromDate: latestMessageTime];
 }
 
 - (void) engraveLabel: (UILabel*) label {
