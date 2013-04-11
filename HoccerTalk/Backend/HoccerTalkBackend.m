@@ -22,6 +22,8 @@
 #import "NSData+CommonCrypto.h"
 #import "NSData+Base64.h"
 #import "RSA.h"
+#import "NSString+URLHelper.h"
+#import "NSDictionary+CSURLParams.h"
 
 @interface HoccerTalkBackend ()
 {
@@ -54,6 +56,10 @@
         [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"presenceUpdated" withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
         _delegate = theAppDelegate;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(profileUpdatedByUser:)
+                                                     name:@"profileUpdatedByUser"
+                                                   object:nil];
     }
     return self;
 }
@@ -291,21 +297,7 @@
         }
     }];
 }
-/*
-- (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
-    [self getKey:theContact.clientId withId:theId keyHandler:^(NSArray * keys) {
-        for (NSDictionary * keyRecord in keys) {
-            if ([theId isEqualToString: keyRecord[@"keyId"]]) {
-                theContact.publicKey = keyRecord[@"key"];
-                theContact.publicKeyId = keyRecord[@"keyId"];
-                NSLog(@"Key for contact updated: %@", theContact);
-            } else {
-                NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
-            }
-        }
-    }];
-}
- */
+
 - (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
     [self getKey:theContact.clientId withId:theId keyHandler:^(NSDictionary * keyRecord) {
         if ([theId isEqualToString: keyRecord[@"keyId"]]) {
@@ -321,21 +313,29 @@
 - (void) presenceUpdated:(NSDictionary *) thePresence {
     NSString * myClient = thePresence[@"clientId"];
     Contact * myContact = [self getContactByClientId:myClient];
-    myContact.nickName = thePresence[@"clientName"];
-    myContact.status = thePresence[@"clientStatus"];
-    if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]]) {
-        // fetch key
-        [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
-    }
-    if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
-        NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
-        NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
-        NSError * myError = nil;
-        myContact.avatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
-        if (myError == nil) {
-            myContact.avatarURL = thePresence[@"avatarUrl"];
-            NSLog(@"presenceUpdated, avatar downloaded");
+    if (myContact) {
+        myContact.nickName = thePresence[@"clientName"];
+        myContact.status = thePresence[@"clientStatus"];
+        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]]) {
+            // fetch key
+            [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
         }
+        if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
+            NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
+            NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
+            NSError * myError = nil;
+            NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
+            if (myNewAvatar != nil) {
+                NSLog(@"presenceUpdated, avatar downloaded");
+                myContact.avatar = myNewAvatar;
+                myContact.avatarURL = thePresence[@"avatarUrl"];
+            } else {
+                NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+            }
+        }
+        [self.delegate.managedObjectContext refreshObject: myContact mergeChanges:YES];
+    } else {
+        NSLog(@"presenceUpdated failed for unknown clientId: %@", myClient);
     }
 }
 
@@ -387,7 +387,15 @@
 - (NSURL *) newUploadURL {
     // NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
     NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingPathComponent:[NSString stringWithUUID]];
+    NSDictionary *params = [NSDictionary dictionaryWithObject:[[NSNumber numberWithDouble:60*24*365*3] stringValue] forKey:@"expires_in"];
+	myURL = [myURL stringByAppendingQuery:[params URLParams]];
     return [NSURL URLWithString: myURL];
+}
+
+- (NSString *) appendExpirationParams:(NSString*) theURL {
+    NSDictionary *params = [NSDictionary dictionaryWithObject:[[NSNumber numberWithDouble:60*24*365*3] stringValue] forKey:@"expires_in"];
+	theURL = [theURL stringByAppendingQuery:[params URLParams]];
+    return theURL;
 }
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
@@ -395,6 +403,11 @@
                              payload:(NSData *)payload
                              headers:(NSDictionary *)headers
 {
+    // hack, remove after better filestore comes online
+    if ([method isEqualToString:@"PUT"]) {
+        URLString = [self appendExpirationParams: URLString];
+    }
+    // end hack
 	
     NSLog(@"httpRequest method: %@ url: %@", method, URLString);
     NSURL *url = [NSURL URLWithString:URLString];
@@ -500,6 +513,12 @@
     [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: myKeyId];
 }
 
+- (void) profileUpdatedByUser:(NSNotification*)aNotification {
+    [self uploadAvatarIfNeeded];
+    [self updatePresence];
+}
+
+
 - (void) updateKey: (NSData*) publicKey {
     NSLog(@"updateKey: %@", publicKey);
     NSData * myKeyId = [[publicKey SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
@@ -602,13 +621,7 @@
 
 - (void) getKey: (NSString*)forClientId withId:(NSString*) keyId keyHandler:(PublicKeyHandler) handler {
     NSLog(@"getKey:");
-    /*
-    NSDictionary *params = @{
-                             @"clientId" :  forClientId,
-                             @"keyId" : keyId
-                             };
-     [_serverConnection invoke: @"getKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
-     */
+
      [_serverConnection invoke: @"getKey" withParams: @[forClientId,keyId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"getKey(): got result: %@", responseOrError);
@@ -825,6 +838,7 @@
             [[HTUserDefaults standardUserDefaults] setObject: _avatarUploadURL forKey: kHTAvatarURL];
             [[HTUserDefaults standardUserDefaults] synchronize];
             NSLog(@"_avatarUploadConnection successfully uploaded avatar of size %d", _avatarBytesTotal);
+            [self updatePresence];
         } else {
             NSLog(@"ERROR: _avatarUploadConnection only uploaded %d bytes, should be %d",_avatarBytesUploaded, _avatarBytesTotal);
         }

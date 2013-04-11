@@ -211,6 +211,8 @@
 		E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB02E17145979005F8FFA /* NSString+StringWithData.m */; };
 		E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03017145ABF005F8FFA /* Base64Transcoder.c */; };
 		E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
+		E96CB03B1716CAFB005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03A1716CAFB005F8FFA /* NSString+URLHelper.m */; };
+		E96CB0411716CD03005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0401716CD03005F8FFA /* NSDictionary+CSURLParams.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
@@ -518,6 +520,10 @@
 		E96CB03117145ABF005F8FFA /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		E96CB03217145ABF005F8FFA /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		E96CB03317145AC0005F8FFA /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		E96CB0391716CAFB005F8FFA /* NSString+URLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLHelper.h"; sourceTree = "<group>"; };
+		E96CB03A1716CAFB005F8FFA /* NSString+URLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLHelper.m"; sourceTree = "<group>"; };
+		E96CB03F1716CD03005F8FFA /* NSDictionary+CSURLParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CSURLParams.h"; sourceTree = "<group>"; };
+		E96CB0401716CD03005F8FFA /* NSDictionary+CSURLParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CSURLParams.m"; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -562,6 +568,10 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
+				E96CB03F1716CD03005F8FFA /* NSDictionary+CSURLParams.h */,
+				E96CB0401716CD03005F8FFA /* NSDictionary+CSURLParams.m */,
+				E96CB0391716CAFB005F8FFA /* NSString+URLHelper.h */,
+				E96CB03A1716CAFB005F8FFA /* NSString+URLHelper.m */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
 				E96CB03317145AC0005F8FFA /* NSData+Base64.m */,
 				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
@@ -1404,6 +1414,8 @@
 				63DC016C1714E1CA00609513 /* SettingsCells.m in Sources */,
 				63DC01851715205300609513 /* HTSwitch.m in Sources */,
 				63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */,
+				E96CB03B1716CAFB005F8FFA /* NSString+URLHelper.m in Sources */,
+				E96CB0411716CD03005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
