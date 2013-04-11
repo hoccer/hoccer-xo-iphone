@@ -292,8 +292,31 @@
 }
 
 - (void) didPairWithStatus: (BOOL) success { // pregnant...
-    [InviteCodeViewController showPairingAlert: success];
+    [self showPairingAlert: success];
 }
+
+- (void) showPairingAlert: (BOOL) success {
+    NSString * title;
+    NSString * message;
+    if (success) {
+        title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
+        message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
+    } else {
+        title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
+        message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                                    message: message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+
+    // Work around for an issue with the side menu. When opening an alert while the side menu is open or in
+    // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
+    // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
+    [NSTimer scheduledTimerWithTimeInterval: 0.5 target: alert selector: @selector(show) userInfo: nil repeats: NO];
+}
+
 
 #pragma mark - Hoccer Talk Delegate
 
