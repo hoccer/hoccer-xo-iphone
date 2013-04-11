@@ -92,6 +92,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*)cell;
         avatarCell.avatar.image = _avatarItem.image;
         avatarCell.avatar.enabled = _editing;
+        avatarCell.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact"];
         [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     } else {
         ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
@@ -351,6 +352,17 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (NSString*) attachmentPickerActionSheetTitle {
     return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
+}
+
+- (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
+    if (_avatarItem.image != nil) {
+        actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_delete_avatar_button_title", nil)];
+    }
+}
+
+- (void) additionalButtonPressed:(NSUInteger)buttonIndex {
+    _avatarItem.image = nil;
+    [self.tableView reloadData];
 }
 
 - (void)viewDidUnload {

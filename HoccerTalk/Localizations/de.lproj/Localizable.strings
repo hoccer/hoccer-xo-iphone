@@ -106,6 +106,8 @@
 
 "profile_mail_placeholder" = "Mail Adresse";
 
+"profile_delete_avatar_button_title" = "Avatar löschen";
+
 "contact_group_none" = "Keine";
 
 "contact_group_friend" = "Freunde";
