@@ -460,7 +460,7 @@
 }
 
 - (NSString *) appendExpirationParams:(NSString*) theURL {
-    NSDictionary *params = [NSDictionary dictionaryWithObject:[[NSNumber numberWithDouble:60*24*365*3] stringValue] forKey:@"expires_in"];
+    NSDictionary *params = [NSDictionary dictionaryWithObject:[@(60*24*365*3) stringValue] forKey:@"expires_in"];
 	theURL = [theURL stringByAppendingQuery:[params URLParams]];
     return theURL;
 }

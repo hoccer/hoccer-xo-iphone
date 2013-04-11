@@ -34,6 +34,9 @@
     twoFingerTapRecognizer.numberOfTapsRequired = 1;
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
+    self.scrollView.alwaysBounceHorizontal = YES;
+    self.scrollView.alwaysBounceVertical   = YES;
+    self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"bg-noise"]];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
