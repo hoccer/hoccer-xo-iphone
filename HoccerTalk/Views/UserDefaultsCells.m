@@ -17,7 +17,6 @@
     self.textLabel.shadowColor = [UIColor whiteColor];
     self.textLabel.shadowOffset = CGSizeMake(0, 1);
     self.textLabel.backgroundColor = [UIColor clearColor];
-    self.backgroundColor = [UIColor colorWithWhite: 0.9 alpha: 1.0];
 }
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
@@ -56,5 +55,15 @@
 @end
 
 @implementation UserDefaultsCellInfoText
+
+@end
+
+@implementation UserDefaultsCellDisclosure
+
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    self.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
+}
+
 
 @end

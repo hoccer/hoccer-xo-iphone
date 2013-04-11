@@ -44,3 +44,6 @@
 
 @end
 
+@interface UserDefaultsCellDisclosure : UserDefaultsCell
+
+@end

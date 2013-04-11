@@ -108,6 +108,22 @@
 
 "profile_delete_avatar_button_title" = "Delete Avatar";
 
+"profile_twitter_label" = "Twitter";
+
+"profile_twitter_placeholder" = "@twitter";
+
+"profile_facebook_label" = "Facebook";
+
+"profile_facebook_placeholder" = "@facebook";
+
+"profile_google_plus_label" = "Google+";
+
+"profile_google_plus_placeholder" = "@google+";
+
+"profile_github_label" = "GitHub";
+
+"profile_github_placeholder" = "@github";
+
 "contact_group_none" = "None";
 
 "contact_group_friend" = "Friends";
