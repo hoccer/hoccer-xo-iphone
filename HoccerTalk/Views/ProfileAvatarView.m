@@ -50,7 +50,7 @@
     CGFloat outerShadowBlurRadius = self.outerShadowBlurRadius;
 
     //// Image Declarations
-    UIImage* image = self.image;
+    UIImage* image = self.image != nil ? self.image : self.defaultImage;
 
     //// Frames
     CGRect frame = CGRectInset(self.bounds, -10, -10);

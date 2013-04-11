@@ -10,6 +10,7 @@
 
 @interface ProfileAvatarView : UIControl
 
+@property (nonatomic, strong) UIImage * defaultImage;
 @property (nonatomic,strong) UIImage * image;
 
 @property (nonatomic,strong) UIColor * gradientTopColor;
