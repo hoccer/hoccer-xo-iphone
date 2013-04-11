@@ -313,6 +313,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
 
     [[HTUserDefaults standardUserDefaults] synchronize];
+    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 - (void) reloadProfile {

@@ -65,6 +65,8 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 - (void) downloadFinished:(Attachment *)theAttachment;
 
 - (void) updateRelationships;
+- (void) updatePresence;
+
 
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
