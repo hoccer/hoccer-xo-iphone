@@ -12,12 +12,13 @@
 #import "TalkMessage.h"
 #import "Delivery.h"
 #import "Contact.h"
+#import "Attachment.h"
+#import "Relationship.h"
+#import "Invite.h"
 #import "AppDelegate.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
-#import "Attachment.h"
 #import "Environment.h"
-#import "Relationship.h"
 #import "HTUserDefaults.h"
 #import "NSData+CommonCrypto.h"
 #import "NSData+Base64.h"
@@ -183,6 +184,32 @@
     return contact;
 }
 
+- (void) acceptInvitation: (NSString*) token {
+    if (_isConnected) {
+        [self pairByToken: token];
+    } else {
+        if ( ! [self isInviteTokenInDatabase: token]) {
+            Invite * invite =  (Invite*)[NSEntityDescription insertNewObjectForEntityForName: [Invite entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+            invite.token = token;
+        }
+    }
+}
+
+- (BOOL) isInviteTokenInDatabase: (NSString *) token {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription * inviteEntity = [NSEntityDescription entityForName: [Invite entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    [fetchRequest setEntity: inviteEntity];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.token == %@", token];
+    [fetchRequest setPredicate: predicate];
+    NSError *error;
+    NSArray *invites = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (invites == nil) {
+        NSLog(@"ERROR: isInviteTokenInDatabase: failed to execute fetch request: %@", error);
+        abort();
+    }
+    return invites.count > 0;
+}
+
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken {
     if (_isConnected) {
         [self registerApns: deviceToken];
@@ -245,6 +272,21 @@
     }
 }
 
+- (void) flushPendingInvites {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription * inviteEntity = [NSEntityDescription entityForName: [Invite entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    [fetchRequest setEntity: inviteEntity];
+    NSError *error;
+    NSArray *invites = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (invites == nil) {
+        NSLog(@"ERROR: flushPendingInvites: failed to execute fetch request: %@", error);
+        abort();
+    }
+    for (Invite * invite in invites) {
+        [self pairByToken: invite.token];
+        [self.delegate.managedObjectContext deleteObject: invite];
+    }
+}
 
 - (NSDate*) getLatestChangeDateFromRelationships {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -342,9 +384,9 @@
 #pragma mark - Attachment upload and download
 
 - (void) flushPendingFiletransfers {
-    [self performSelectorOnMainThread:@selector(uploadAvatarIfNeeded) withObject:nil waitUntilDone:NO];
-    [self performSelectorOnMainThread:@selector(flushPendingAttachmentUploads) withObject:nil waitUntilDone:NO];
-    [self performSelectorOnMainThread:@selector(flushPendingAttachmentDownloads) withObject:nil waitUntilDone:NO];
+    [self uploadAvatarIfNeeded];
+    [self flushPendingAttachmentUploads];
+    [self flushPendingAttachmentDownloads];
 }
 
 
@@ -429,6 +471,7 @@
             [self flushPendingFiletransfers];
             [self updateRelationships];
             [self updatePresences];
+            [self flushPendingInvites];
             
             _isConnected = YES;
         } else {
@@ -558,18 +601,16 @@
     }];
 }
 
-- (void) pairByToken: (NSString*) token pairingHandler: (PairingHandler) handler {
+- (void) pairByToken: (NSString*) token {
     NSLog(@"pairByToken:");
     [_serverConnection invoke: @"pairByToken" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
+        [self.delegate didPairWithStatus: success];
         if (success) {
             NSLog(@"pairByToken(): got result: %@", responseOrError);
-            handler([responseOrError boolValue]);
         } else {
             NSLog(@"pairByToken(): failed: %@", responseOrError);
-            handler(NO);
         }
     }];
-
 }
 
 - (void) getRelationships: (NSDate*) lastKnown relationshipHandler: (RelationshipHandler) handler {

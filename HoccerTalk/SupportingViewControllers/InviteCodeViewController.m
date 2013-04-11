@@ -80,9 +80,7 @@
 - (void) onDone:(id) sender {
     NSLog(@"onDone");
     if ( ! _newTokenButtonPressed) {
-        [self.chatBackend pairByToken: self.codeTextField.text pairingHandler:^(BOOL success) {
-            [InviteCodeViewController showPairingAlert: success];
-        }];
+        [self.chatBackend pairByToken: self.codeTextField.text];
     }
     [self dismissModalViewControllerAnimated: YES];
 }
