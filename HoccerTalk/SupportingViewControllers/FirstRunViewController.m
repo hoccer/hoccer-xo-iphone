@@ -38,7 +38,7 @@
     [messageCounts addObject: [@50 stringValue]];
     [messageCounts addObject: [@100 stringValue]];
     for (int i = 500; i <= 10000; i += 500) {
-        [messageCounts addObject: [[NSNumber numberWithInt: i] stringValue]];
+        [messageCounts addObject: [@(i) stringValue]];
     }
 
     messageCountPicker = [self pickerInputViewForTextField: messageCountTextField];

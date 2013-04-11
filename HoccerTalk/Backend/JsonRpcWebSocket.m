@@ -207,7 +207,7 @@ static const NSTimeInterval kResponseTimeout = 10;
 }
 
 - (NSNumber*) nextId {
-    return [NSNumber numberWithLongLong: _id++];
+    return @(_id++);
 }
 
 - (void) serverDidNotRespond: (NSNumber*) jsonRpcId {
@@ -224,7 +224,7 @@ static const NSTimeInterval kResponseTimeout = 10;
     NSDictionary * response =@{ @"jsonrpc": @"2.0",
                                 @"id": theId,
                                 @"error": @{ @"message": error.message,
-                                             @"code": [NSNumber numberWithInt: error.code],
+                                             @"code": @(error.code),
                                              @"data": error.data
                                            }
                                 };
@@ -235,9 +235,9 @@ static const NSTimeInterval kResponseTimeout = 10;
 - (void) emitJsonRpcError: (NSString*) message code: (NSInteger) code data: (NSDictionary*) data {
     NSDictionary * errorDict;
     if (data != nil) {
-        errorDict = @{ @"code": [NSNumber numberWithInteger: code], @"message": message, @"data": data};
+        errorDict = @{ @"code": @(code), @"message": message, @"data": data};
     } else {
-        errorDict = @{ @"code": [NSNumber numberWithInteger: code], @"message": message};
+        errorDict = @{ @"code": @(code), @"message": message};
     }
 
     [self sendJson: errorDict];

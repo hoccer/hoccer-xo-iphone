@@ -44,7 +44,7 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
 - (void) setMessageCount: (NSInteger) count isUnread: (BOOL) unreadFlag {
 
-    _messageCount.text = [[NSNumber numberWithInteger: count] stringValue];
+    _messageCount.text = [@(count) stringValue];
     _messageCount.highlighted = unreadFlag;
     CGFloat rightEdge = _messageCount.frame.origin.x + _messageCount.frame.size.width;
     [_messageCount sizeToFit];

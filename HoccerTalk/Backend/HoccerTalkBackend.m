@@ -556,7 +556,7 @@
 
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
     NSLog(@"generateToken:");
-    [_serverConnection invoke: @"generateToken" withParams: @[purpose, [NSNumber numberWithInt:seconds]] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"generateToken" withParams: @[purpose, @(seconds)] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"generateToken(): got result: %@", responseOrError);
             handler(responseOrError);
@@ -583,7 +583,7 @@
 
 - (void) getRelationships: (NSDate*) lastKnown relationshipHandler: (RelationshipHandler) handler {
     NSLog(@"getRelationships:");
-    NSNumber * lastKnownMillis = [NSNumber numberWithLongLong: [lastKnown timeIntervalSince1970] * 1000];
+    NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getRelationships" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"getRelationships(): got result: %@", responseOrError);
@@ -597,7 +597,7 @@
 
 - (void) getPresences: (NSDate*) lastKnown presenceHandler: (PresenceHandler) handler {
     NSLog(@"getPresences:");
-    NSNumber * lastKnownMillis = [NSNumber numberWithLongLong: [lastKnown timeIntervalSince1970] * 1000];
+    NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getPresences" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"getPresences(): got result: %@", responseOrError);

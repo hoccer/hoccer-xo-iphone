@@ -258,7 +258,7 @@
 	NSString *baseFilename = [theFilename stringByDeletingPathExtension];
 	
 	NSInteger i = 1;
-	NSString* newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [[NSNumber numberWithInteger:i] stringValue]];
+	NSString* newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [@(i) stringValue]];
     
     if ((ext == nil) || (ext.length <= 0)) {
         ext = @"";
@@ -266,7 +266,7 @@
     }
 	newFilename = [newFilename stringByAppendingPathExtension: ext];
 	while ([[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:newFilename]]) {
-		newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [[NSNumber numberWithInteger:i] stringValue]];
+		newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [@(i) stringValue]];
 		newFilename = [newFilename stringByAppendingPathExtension: ext];
 		
 		i++;
