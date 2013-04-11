@@ -10,7 +10,9 @@
 
 #import "HoccerTalkModel.h"
 
-@class Relationship;
+FOUNDATION_EXPORT NSString * const kRelationStateNone;
+FOUNDATION_EXPORT NSString * const kRelationStateFriend;
+FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
 @interface Contact : HoccerTalkModel
 
@@ -21,13 +23,15 @@
 @property (nonatomic, strong) NSString*      nickName;
 @property (nonatomic, strong) NSString*      status;
 
-@property (nonatomic, strong) Relationship * relationship;
 @property (nonatomic, strong) NSString*      currentTimeSection;
 @property (nonatomic, strong) NSArray*       unreadMessages;
 @property (nonatomic, strong) NSArray*       latestMessage;
 
 @property (nonatomic, strong) NSData*       publicKey; // public key of this contact
 @property (nonatomic, strong) NSString*     publicKeyId; // id of public key
+
+@property (nonatomic, retain) NSString * relationshipState;
+@property (nonatomic, retain) NSDate * relationshipLastChanged;
 
 @property (nonatomic) NSString* publicKeyString; // b64-string
 

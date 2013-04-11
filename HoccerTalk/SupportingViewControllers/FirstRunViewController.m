@@ -16,7 +16,6 @@
 #import "Attachment.h"
 #import "AppDelegate.h"
 #import "HTUserDefaults.h"
-#import "Relationship.h"
 
 @implementation FirstRunViewController
 
@@ -181,16 +180,14 @@
             }
             contact.clientId = identities[contactIndex];
 
-            Relationship * relationship =  (Relationship*)[NSEntityDescription insertNewObjectForEntityForName: [Relationship entityName] inManagedObjectContext: importContext];
             if ([contact.nickName isEqualToString: @"Gargamel"]) {
-                relationship.state = kRelationStateBlocked;
+                contact.relationshipState = kRelationStateBlocked;
             } else if ([contact.nickName isEqualToString: @"Daddy S"]) {
-                relationship.state = kRelationStateNone;
+                contact.relationshipState = kRelationStateNone;
             } else {
-                relationship.state = kRelationStateFriend;
+                contact.relationshipState = kRelationStateFriend;
             }
-            relationship.lastChanged = [NSDate dateWithTimeIntervalSince1970: 0];
-            contact.relationship = relationship;
+            contact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970: 0];
 
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - (60*60*24*30)];
             contact.latestMessageTime = date;

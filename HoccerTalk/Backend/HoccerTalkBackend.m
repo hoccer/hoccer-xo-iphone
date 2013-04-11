@@ -13,7 +13,6 @@
 #import "Delivery.h"
 #import "Contact.h"
 #import "Attachment.h"
-#import "Relationship.h"
 #import "Invite.h"
 #import "AppDelegate.h"
 #import "NSString+UUID.h"
@@ -295,6 +294,10 @@
 }
 
 - (NSDate*) getLatestChangeDateFromRelationships {
+    
+    NSDate * latest = [NSDate dateWithTimeIntervalSince1970: 0];
+
+    /*
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [request setEntity:entity];
@@ -322,6 +325,7 @@
     if (latest == nil) {
         latest = [NSDate dateWithTimeIntervalSince1970: 0];
     }
+    */
     return latest;
 }
 
@@ -337,12 +341,7 @@
                 contact = (Contact*)[NSEntityDescription entityForName:[Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
                 contact.clientId = clientId;
             }
-            if (contact.relationship == nil) {
-                Relationship * relationship = (Relationship*)[NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
-                contact.relationship = relationship;
-                relationship.contact = contact;
-            }
-            [contact.relationship updateWithDictionary: relationshipDict];
+            [contact updateWithDictionary: relationshipDict];
         }
     }];
 }
@@ -376,10 +375,9 @@
     if (myContact == nil) {
         NSLog(@"presenceUpdated failed for unknown clientId, creating new contact: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
-        myContact.clientId = myClient;
-        Relationship * relationship = (Relationship*)[NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
-        myContact.relationship = relationship;
-        relationship.contact = myContact;
+        myContact.clientId = myClient;        
+        myContact.relationshipState = kRelationStateNone;
+        myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
     }
     
     if (myContact) {

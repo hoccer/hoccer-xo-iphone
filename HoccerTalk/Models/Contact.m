@@ -22,7 +22,6 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic latestMessageTime;
 @dynamic nickName;
 @dynamic status;
-@dynamic relationship;
 
 @dynamic currentTimeSection;
 @dynamic unreadMessages;
@@ -31,6 +30,23 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic publicKeyId;
 
 @dynamic messages;
+
+NSString * const kRelationStateNone    = @"none";
+NSString * const kRelationStateFriend  = @"friend";
+NSString * const kRelationStateBlocked = @"blocked";
+
+
+@dynamic relationshipState;
+@dynamic relationshipLastChanged;
+
+- (void) setLastChanged:(id) time {
+    if ([time isKindOfClass:[NSNumber class]]) {
+        time = [NSDate dateWithTimeIntervalSince1970: [time doubleValue] / 1000.0];
+    }
+    [self willChangeValueForKey: @"lastChanged"];
+    [self setPrimitiveValue: time forKey: @"lastChanged"];
+    [self didChangeValueForKey: @"lastChanged"];
+}
 
 @synthesize avatarImage = _avatarImage;
 
@@ -79,6 +95,13 @@ const float kTimeSectionInterval = 2 * 60;
         }
     }
     return myResult;
+}
+
+
+- (NSDictionary*) rpcKeys {
+    return @{ @"state"     : @"relationshipState",
+              @"lastChanged": @"relationshipLastChanged",
+              };
 }
 
 @end

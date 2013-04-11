@@ -57,6 +57,10 @@
         if (token == nil) {
             return;
         }
+        if (![token isKindOfClass:[NSString class]]) {
+            self.codeTextField.text = @"<ERROR>";
+            return;
+        }
         self.label.text = NSLocalizedString(@"Send this token to a friend:", @"Invite Token View Controller");
 
         self.codeTextField.text = token;

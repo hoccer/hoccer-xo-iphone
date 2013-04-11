@@ -18,7 +18,6 @@
 #import "iOSVersionChecks.h"
 #import "HoccerTalkBackend.h"
 #import "InviteCodeViewController.h"
-#import "Relationship.h"
 
 
 @interface ContactListViewController ()
@@ -223,7 +222,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
-    NSSortDescriptor *groupSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"relationship.state" ascending: YES];
+    NSSortDescriptor *groupSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"relationshipState" ascending: YES];
     NSSortDescriptor *nameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
     NSArray *sortDescriptors = @[groupSortDescriptor, nameSortDescriptor];
 
@@ -264,7 +263,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     // nil for section name key path means "no sections".
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                                                 managedObjectContext:self.managedObjectContext
-                                                                                                  sectionNameKeyPath: @"relationship.state"
+                                                                                                  sectionNameKeyPath: @"relationshipState"
                                                                                                            cacheName:nil];
     aFetchedResultsController.delegate = self;
 
