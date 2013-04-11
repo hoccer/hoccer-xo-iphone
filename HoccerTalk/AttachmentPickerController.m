@@ -15,6 +15,7 @@
 {
     NSMutableArray * _supportedItems;
     UIViewController * _viewController;
+    NSUInteger _firstPickerButton;
 }
 @end
 
@@ -31,6 +32,7 @@
         self.delegate = delegate;
         _viewController = viewController;
         _supportedItems = [[NSMutableArray alloc] init];
+        _firstPickerButton = 0;
         [self probeAttachmentTypes];
     }
     return self;
@@ -93,9 +95,15 @@
                                                         otherButtonTitles: nil];
     attachmentSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 
-
+    if ([self.delegate respondsToSelector:@selector(prependAdditionalActionButtons:)]) {
+        [self.delegate prependAdditionalActionButtons: attachmentSheet];
+    }
+    _firstPickerButton = attachmentSheet.numberOfButtons;
     for (AttachmentPickerItem * item in _supportedItems) {
         [attachmentSheet addButtonWithTitle: item.localizedButtonTitle];
+    }
+    if ([self.delegate respondsToSelector:@selector(appendAdditionalActionButtons:)]) {
+        [self.delegate appendAdditionalActionButtons: attachmentSheet];
     }
     attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")];
     
@@ -107,8 +115,12 @@
         [self.delegate didPickAttachment: nil];
         return;
     }
-    AttachmentPickerItem * item = _supportedItems[buttonIndex];
-    [self showPickerForType: item.type];
+    if (buttonIndex >= _firstPickerButton && buttonIndex < _firstPickerButton + _supportedItems.count) {
+        AttachmentPickerItem * item = _supportedItems[buttonIndex - _firstPickerButton];
+        [self showPickerForType: item.type];
+    } else if ([self.delegate respondsToSelector:@selector(additionalButtonPressed:)]) {
+        [self.delegate additionalButtonPressed: buttonIndex];
+    }
 }
 
 - (void) showPickerForType: (AttachmentPickerType) type {

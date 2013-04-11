@@ -29,6 +29,9 @@ typedef enum AttachmentPickerTypes {
 - (BOOL) wantsAttachmentsOfType: (AttachmentPickerType) type;
 - (NSString*) attachmentPickerActionSheetTitle;
 - (BOOL) allowsEditing;
+- (void) prependAdditionalActionButtons: (UIActionSheet*) actionSheet;
+- (void) appendAdditionalActionButtons: (UIActionSheet*) actionSheet;
+- (void) additionalButtonPressed: (NSUInteger) buttonIndex;
 
 @end
 
