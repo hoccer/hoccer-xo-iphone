@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingsViewController : UITableViewController
-{
-    NSArray * _items;
-}
+#import "UserDefaultsViewController.h"
+
+@interface SettingsViewController : UserDefaultsViewController
 
 @end

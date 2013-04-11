@@ -176,6 +176,7 @@
 		63AEE30B16CA6B1900522F92 /* TalkMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* TalkMessage.m */; };
 		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
 		63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */; };
+		63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* UserDefaultsViewController.m */; };
 		63C413B116E8FBA4004E1F6D /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
@@ -467,6 +468,8 @@
 		63AEE30A16CA6B1900522F92 /* TalkMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalkMessage.m; sourceTree = "<group>"; };
 		63C1355F1716054C00969B0B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellAvatarPicker_iPhone.xib; sourceTree = "<group>"; };
+		63C1356617160E2E00969B0B /* UserDefaultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsViewController.h; sourceTree = "<group>"; };
+		63C1356717160E2E00969B0B /* UserDefaultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsViewController.m; sourceTree = "<group>"; };
 		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = 3rdParty/SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -844,6 +847,8 @@
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
 				63AE45451704945C0099F0CB /* TutorialViewController.h */,
 				63AE45461704945C0099F0CB /* TutorialViewController.m */,
+				63C1356617160E2E00969B0B /* UserDefaultsViewController.h */,
+				63C1356717160E2E00969B0B /* UserDefaultsViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -1398,6 +1403,7 @@
 				63DC015B17147B1700609513 /* HoccerTalkTableViewCell.m in Sources */,
 				63DC016C1714E1CA00609513 /* SettingsCells.m in Sources */,
 				63DC01851715205300609513 /* HTSwitch.m in Sources */,
+				63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

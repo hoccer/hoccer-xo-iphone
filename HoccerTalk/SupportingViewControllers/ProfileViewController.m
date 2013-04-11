@@ -17,6 +17,7 @@
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
 #import "UIImage+ScaleAndCrop.h"
+#import "UserDefaultsViewController.h"
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 
@@ -35,7 +36,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 @interface AvatarItem : NSObject
 
 @property (nonatomic,strong) UIImage*  image;
-@property (nonatomic,assign) CGRect    croppingRect;
 @property (nonatomic,strong) NSString* userDefaultsKey;
 
 @end
@@ -54,107 +54,48 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     self = [super initWithCoder:aDecoder];
     if (self != nil) {
         _editing = NO;
-
-        _avatarItem = [[AvatarItem alloc] init];
-        _avatarItem.userDefaultsKey = kHTAvatarImage;
-
-        _profileItems = [[NSMutableArray alloc] init];
-
-        ProfileItem * nickNameItem = [[ProfileItem alloc] init];
-        nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
-        nickNameItem.userDefaultsKey = kHTNickName;
-        nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
-        nickNameItem.placeholder = NSLocalizedString(@"profile_name_placeholder", @"Profile Placeholder Nick Name");
-        nickNameItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
-        nickNameItem.keyboardType = UIKeyboardTypeDefault;
-        [_profileItems addObject: nickNameItem];
-
-        ProfileItem * phoneItem = [[ProfileItem alloc] init];
-        phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
-        phoneItem.userDefaultsKey = @"phoneNumber";
-        phoneItem.editLabel = NSLocalizedString(@"profile_phone_label", @"Profile Edit Label Phone Number");
-        phoneItem.placeholder = NSLocalizedString(@"profile_phone_placeholder", @"Profile Placeholder Phone Number");
-        phoneItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
-        phoneItem.keyboardType = UIKeyboardTypePhonePad;
-        [_profileItems addObject: phoneItem];
-
-        ProfileItem * mailItem = [[ProfileItem alloc] init];
-        mailItem.icon = [UIImage imageNamed: @"icon_profile-mail"];
-        mailItem.userDefaultsKey = @"mailAddress";
-        mailItem.editLabel = NSLocalizedString(@"profile_mail_label", @"Profile Edit Label Mail Address");
-        mailItem.placeholder = NSLocalizedString(@"profile_mail_placeholder", @"Profile Placeholder MAil Address");
-        mailItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
-        mailItem.keyboardType = UIKeyboardTypeEmailAddress;
-        [_profileItems addObject: mailItem];
-
     }
     return self;
 }
 
-- (void) registerNibForCellClass: (id) cellClass {
-    UIUserInterfaceIdiom userInterfaceIdiom = [[UIDevice currentDevice] userInterfaceIdiom];
-    NSString * userInterfaceIdiomString = userInterfaceIdiom == UIUserInterfaceIdiomPad ? @"iPad" : @"iPhone";
-    NSString * nibName = [NSString stringWithFormat: @"%@_%@", [cellClass reuseIdentifier], userInterfaceIdiomString];
-    UINib * nib = [UINib nibWithNibName: nibName bundle: [NSBundle mainBundle]];
-    [self.tableView registerNib: nib forCellReuseIdentifier: [cellClass reuseIdentifier]];
+- (NSString*) itemsPlistFileName {
+    return @"ProfileItems";
 }
 
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    [self registerNibForCellClass: [UserDefaultsCellTextInput class]];
-    [self registerNibForCellClass: [UserDefaultsCellAvatarPicker class]];
-
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     self.navigationItem.leftBarButtonItem =  self.hoccerTalkMenuButton;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-
-    UIView * backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.bounds];
-    //backgroundView.backgroundColor = [UIColor colorWithWhite: 0.95 alpha: 1];
-    self.tableView.backgroundView = backgroundView;
-
-    _avatarCell = [self.tableView dequeueReusableCellWithIdentifier: [UserDefaultsCellAvatarPicker reuseIdentifier]];
-    _textCell = [self.tableView dequeueReusableCellWithIdentifier: [UserDefaultsCellTextInput reuseIdentifier]];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
 
-    [self populateItems];
+    //[self populateItems];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return 1;
-    } else {
-        return [_profileItems count];
-    }
-}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return _avatarCell.bounds.size.height;
+        return [self prototypeCellOfClass: [UserDefaultsCellAvatarPicker class]].bounds.size.height;
     } else {
-        return _textCell.bounds.size.height;
+        return [self prototypeCellOfClass: [UserDefaultsCellTextInput class]].bounds.size.height;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell = nil;
     if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier: [UserDefaultsCellAvatarPicker reuseIdentifier] forIndexPath:indexPath];
-        cell.backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+        cell = [self dequeueReusableCellOfClass: [UserDefaultsCellAvatarPicker class] forIndexPath: indexPath];
         UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*)cell;
         avatarCell.avatar.image = _avatarItem.image;
         avatarCell.avatar.enabled = _editing;
         [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     } else {
         ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
-        cell = [tableView dequeueReusableCellWithIdentifier: item.cellIdentifier forIndexPath:indexPath];
+        cell = [self dequeueReusableCellOfClass: [UserDefaultsCellTextInput class] forIndexPath: indexPath];
         if ([item.cellIdentifier isEqualToString: [UserDefaultsCellTextInput reuseIdentifier]]) {
             [self configureTextCell: (UserDefaultsCellTextInput*)cell withItem: item atIndexPath: indexPath];
         } else {
@@ -171,7 +112,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     cell.textField.enabled = _editing;
     cell.textField.alpha = _editing ? 1.0 : 0.0;
     cell.textField.placeholder = item.placeholder;
-    cell.textField.tag = indexPath.row;
+    cell.textField.tag = indexPath.row; // XXX
     cell.textInputBackground.alpha = _editing ? 1.0 : 0.0;
 
     if (_editing) {
@@ -291,14 +232,49 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [self animateTableCells];
 }
 
-- (void) populateItems {
+- (NSArray*) populateItems {
+
+    _avatarItem = [[AvatarItem alloc] init];
+    _avatarItem.userDefaultsKey = kHTAvatarImage;
+
+    _profileItems = [[NSMutableArray alloc] init];
+
+    ProfileItem * nickNameItem = [[ProfileItem alloc] init];
+    nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
+    nickNameItem.userDefaultsKey = kHTNickName;
+    nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
+    nickNameItem.placeholder = NSLocalizedString(@"profile_name_placeholder", @"Profile Placeholder Nick Name");
+    nickNameItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
+    nickNameItem.keyboardType = UIKeyboardTypeDefault;
+    [_profileItems addObject: nickNameItem];
+
+    ProfileItem * phoneItem = [[ProfileItem alloc] init];
+    phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
+    phoneItem.userDefaultsKey = @"phoneNumber";
+    phoneItem.editLabel = NSLocalizedString(@"profile_phone_label", @"Profile Edit Label Phone Number");
+    phoneItem.placeholder = NSLocalizedString(@"profile_phone_placeholder", @"Profile Placeholder Phone Number");
+    phoneItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
+    phoneItem.keyboardType = UIKeyboardTypePhonePad;
+    [_profileItems addObject: phoneItem];
+
+    ProfileItem * mailItem = [[ProfileItem alloc] init];
+    mailItem.icon = [UIImage imageNamed: @"icon_profile-mail"];
+    mailItem.userDefaultsKey = @"mailAddress";
+    mailItem.editLabel = NSLocalizedString(@"profile_mail_label", @"Profile Edit Label Mail Address");
+    mailItem.placeholder = NSLocalizedString(@"profile_mail_placeholder", @"Profile Placeholder MAil Address");
+    mailItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
+    mailItem.keyboardType = UIKeyboardTypeEmailAddress;
+    [_profileItems addObject: mailItem];
+
     _avatarItem.image = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] valueForKey: _avatarItem.userDefaultsKey]];
     for (ProfileItem* item in _profileItems) {
         item.currentValue = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
     }
+    return @[ @[_avatarItem], _profileItems];
 }
 
 - (void) saveProfile {
+    [self.tableView endEditing: NO];
     // TODO: proper size handling
     CGFloat scale;
     if (_avatarItem.image.size.height > _avatarItem.image.size.width) {
@@ -309,13 +285,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     CGSize size = CGSizeMake(_avatarItem.image.size.width * scale, _avatarItem.image.size.height * scale);
     [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.image imageScaledToSize: size]) forKey: _avatarItem.userDefaultsKey];
     for (ProfileItem* item in _profileItems) {
+        NSLog(@"saving %@ as %@", item.currentValue, item.userDefaultsKey);
         [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.userDefaultsKey];
     }
     [[HTUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void) reloadProfile {
-    [self populateItems];
+    //[self populateItems];
     [self.tableView reloadData];
 }
 

@@ -9,6 +9,10 @@
 #import "ProfileTableCells.h"
 
 @implementation UserDefaultsCellAvatarPicker
+
+- (void) awakeFromNib {
+    self.backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+}
 @end
 
 @implementation UserDefaultsCellTextInput

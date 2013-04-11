@@ -29,7 +29,6 @@
     self.navigationItem.leftBarButtonItem = [self hoccerTalkMenuButton];
     self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
 
-    self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
 
     [self populateSettingsItem];
 }
@@ -50,14 +49,6 @@
     
     _items = @[ @[saveContent, saveContentInfo ]
               ];
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _items.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_items[section] count];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 44.0; //XXX
