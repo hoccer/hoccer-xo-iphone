@@ -109,22 +109,5 @@
     return _chatBackend;
 }
 
-+ (void) showPairingAlert: (BOOL) success {
-    NSString * title;
-    NSString * message;
-    if (success) {
-        title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
-        message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
-    } else {
-        title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
-        message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
-                                                    message: message
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-}
 
 @end

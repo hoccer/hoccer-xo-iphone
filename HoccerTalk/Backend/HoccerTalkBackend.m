@@ -333,6 +333,7 @@
             NSString * clientId = relationshipDict[@"otherClientID"];
             Contact * contact = [self getContactByClientId: clientId];
             if (contact == nil) {
+                NSLog(@"================= Creating Contact");
                 contact = (Contact*)[NSEntityDescription entityForName:[Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
                 contact.clientId = clientId;
             }
@@ -508,6 +509,9 @@
             [self updateRelationships];
             [self updatePresences];
             [self flushPendingInvites];
+            [self updatePresence];
+            [self updateKey];
+
             
             _isConnected = YES;
         } else {
@@ -648,7 +652,7 @@
 - (void) pairByToken: (NSString*) token {
     NSLog(@"pairByToken:");
     [_serverConnection invoke: @"pairByToken" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
-        [self.delegate didPairWithStatus: success];
+        [self.delegate didPairWithStatus: [responseOrError boolValue]];
         if (success) {
             NSLog(@"pairByToken(): got result: %@", responseOrError);
         } else {
@@ -768,8 +772,6 @@
     //NSLog(@"webSocketDidOpen");
     _backoffTime = 0.0;
     [self identify];
-    [self updatePresence];
-    [self updateKey];
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
@@ -913,7 +915,7 @@
             // finish download
             NSError *myError = nil;
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
-            
+
             if ([self.transferSize isEqualToNumber: self.contentSize]) {
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);
                 self.localURL = self.ownedURL;
