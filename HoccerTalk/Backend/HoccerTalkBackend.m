@@ -339,15 +339,6 @@
     }
 }
 
-
-- (void) presenceUpdatedNotification: (NSArray*) params {
-    //TODO: Error checking
-    for (id presence in params) {
-        NSLog(@"updatePresences presence=%@",presence);
-        [self presenceUpdated:presence];
-    }
-}
-
 #pragma mark - Attachment upload and download
 
 - (void) flushPendingFiletransfers {
@@ -670,6 +661,13 @@
     }
 }
 
+- (void) presenceUpdatedNotification: (NSArray*) params {
+    //TODO: Error checking
+    for (id presence in params) {
+        NSLog(@"updatePresences presence=%@",presence);
+        [self presenceUpdated:presence];
+    }
+}
 
 #pragma mark - JSON RPC WebSocket Delegate
 
