@@ -167,11 +167,10 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+    // do not call super class
     if (_editing == editing ) {
         return;
     }
-    // do not call super class
-    NSLog(@"editing");
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(onDone:)];
@@ -339,7 +338,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 #pragma marl - Avatar Handling
 
 - (IBAction)avatarTapped:(id)sender {
-    NSLog(@"avatar tapped");
     [self.attachmentPicker showInView: self.view];
 }
 

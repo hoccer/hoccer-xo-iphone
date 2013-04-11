@@ -18,7 +18,6 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"navigation item: %@", self.navigationItem);
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                 target:self
                                                                                 action:@selector(canceld:)];
@@ -34,7 +33,6 @@
     [super viewWillAppear: animated];
     self.label.text = NSLocalizedString(@"or", @"Invite Token View Controller");
     [self.clipboardButton setTitle: NSLocalizedString(@"Paste", @"Invite Code Copy/Paste Button") forState: UIControlStateNormal];
-    NSLog(@"pasteboard: '%@'", [UIPasteboard generalPasteboard].string);
     if ([[UIPasteboard generalPasteboard].string isEqualToString: @""]) {
         self.clipboardButton.enabled = NO;
         self.clipboardButton.alpha = 0.5;
@@ -78,7 +76,6 @@
 }
 
 - (void) onDone:(id) sender {
-    NSLog(@"onDone");
     if ( ! _newTokenButtonPressed) {
         [self.chatBackend pairByToken: self.codeTextField.text];
     }
