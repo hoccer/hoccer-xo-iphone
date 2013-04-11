@@ -109,9 +109,12 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     } else {
         ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
-        cell = [self dequeueReusableCellOfClass: [UserDefaultsCellTextInput class] forIndexPath: indexPath];
         if ([item.cellIdentifier isEqualToString: [UserDefaultsCellTextInput reuseIdentifier]]) {
+            cell = [self dequeueReusableCellOfClass: [UserDefaultsCellTextInput class] forIndexPath: indexPath];
             [self configureTextCell: (UserDefaultsCellTextInput*)cell withItem: item atIndexPath: indexPath];
+        } else if ([item.cellIdentifier isEqualToString: [UserDefaultsCellDisclosure reuseIdentifier]]) {
+            cell = [self dequeueReusableCellOfClass: [UserDefaultsCellDisclosure class] forIndexPath: indexPath];
+            [self configureDisclosureCell: (UserDefaultsCellDisclosure*)cell withItem: item atIndexPath: indexPath];
         } else {
             NSLog(@"ProfileViewController cellForRowAtIndexPath: unhandled cell type %@", item.cellIdentifier);
         }
@@ -119,9 +122,24 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return cell;
 }
 
+- (void) configureCell: (UserDefaultsCell*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    cell.imageView.image = item.icon;
+    if (_editing) {
+        cell.textLabel.text = item.editLabel;
+        cell.textLabel.alpha = 1.0;
+    } else {
+        if (item.currentValue != nil && [item.currentValue length] > 0) {
+            cell.textLabel.text = item.currentValue;
+            cell.textLabel.alpha = 1.0;
+        } else {
+            cell.textLabel.text = item.placeholder;
+            cell.textLabel.alpha = 0.5;
+        }
+    }
+}
+
 - (void) configureTextCell: (UserDefaultsCellTextInput*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
     NSString * value = item.currentValue;
-    cell.imageView.image = item.icon;
     cell.textField.text = value;
     cell.textField.enabled = _editing;
     cell.textField.alpha = _editing ? 1.0 : 0.0;
@@ -129,29 +147,30 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     cell.textField.tag = indexPath.row; // XXX
     cell.textInputBackground.alpha = _editing ? 1.0 : 0.0;
 
-    if (_editing) {
-        cell.textLabel.text = item.editLabel;
-        cell.textLabel.alpha = 1.0;
-    } else {
-        if (value != nil && [value length] > 0) {
-            cell.textLabel.text = value;
-            cell.textLabel.alpha = 1.0;
-        } else {
-            cell.textLabel.text = item.placeholder;
-            cell.textLabel.alpha = 0.5;
-        }
-    }
-    
+    [self configureCell: cell withItem: item atIndexPath: indexPath];
+
     cell.textField.keyboardType = item.keyboardType;
     if (cell.textInputBackground.image == nil) {
         cell.textInputBackground.image = [AssetStore stretchableImageNamed: @"profile_text_input_bg" withLeftCapWidth:3 topCapHeight:3];
         cell.textInputBackground.frame = CGRectInset(cell.textField.frame, -8, 2);
         cell.textField.delegate = self;
         cell.textField.backgroundColor = [UIColor clearColor];
-        cell.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];
-        cell.textLabel.backgroundColor = [UIColor clearColor];
     }
 }
+
+- (void) configureDisclosureCell: (UserDefaultsCellDisclosure*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    [self configureCell: cell withItem: item atIndexPath: indexPath];
+    if (_editing) {
+        if (cell.accessoryView != nil) {
+            cell.accessoryView.hidden = NO; // XXX alpha does not work???
+        }
+    } else {
+        if (cell.accessoryView != nil) {
+            cell.accessoryView.hidden = YES; // XXX alpha does not work???
+        }
+    }
+}
+
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 0;
@@ -196,6 +215,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
                 UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*) cell;
                 avatarCell.avatar.enabled = ! _editing;
                 avatarCell.avatar.outerShadowColor = _editing ? [UIColor whiteColor] : [UIColor orangeColor];
+            } else if ([cell isKindOfClass: [UserDefaultsCellDisclosure class]]) {
+                UserDefaultsCellDisclosure * disclosureCell = (UserDefaultsCellDisclosure*) cell;
+                disclosureCell.accessoryView.hidden = _editing;
             }
         }
     } completion:^(BOOL finished) {
@@ -203,10 +225,12 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }];
     [UIView animateWithDuration: 0.5 * kProfileEditAnimationDuration animations:^{
         for (UITableViewCell * cell in self.tableView.visibleCells) {
-            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
-                UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
-                profileCell.textLabel.alpha = 0.0;
+            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]] ||
+                [cell isKindOfClass: [UserDefaultsCellDisclosure class]])
+            {
+                cell.textLabel.alpha = 0.0;
             }
+
         }
     } completion:^(BOOL finished) {
         int index = 0;
@@ -224,13 +248,30 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
                 } else {
                     profileCell.textLabel.text = item.editLabel;
                 }
+            } else if ([cell isKindOfClass: [UserDefaultsCellDisclosure class]]) {
+                UserDefaultsCellDisclosure * profileCell = (UserDefaultsCellDisclosure*)cell;
+                if (_editing) {
+                    if (item.currentValue == nil) {
+                        profileCell.textLabel.text = item.placeholder;
+                    } else {
+                        profileCell.textLabel.text = item.currentValue;
+                    }
+                } else {
+                    profileCell.textLabel.text = item.editLabel;
+                }
             }
+
         }
         [UIView animateWithDuration: 0.5 * kProfileEditAnimationDuration animations:^{
+            NSArray * indexPaths = self.tableView.indexPathsForVisibleRows;
+            int index = 0;
             for (UITableViewCell * cell in self.tableView.visibleCells) {
-                if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
+                ProfileItem * item = _profileItems[((NSIndexPath*)indexPaths[index++]).row];
+                if ([cell isKindOfClass: [UserDefaultsCellTextInput class]] ||
+                    [cell isKindOfClass: [UserDefaultsCellDisclosure class]])
+                {
                     UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
-                    profileCell.textLabel.alpha = [profileCell.textLabel.text isEqualToString: profileCell.textField.placeholder] ? 0.5 : 1.0;
+                    profileCell.textLabel.alpha = [profileCell.textLabel.text isEqualToString: item.placeholder] ? 0.5 : 1.0;
                 }
             }
         }];
@@ -239,12 +280,16 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (IBAction)onCancel:(id)sender {
+    [self.tableView endEditing: NO];
+
     [self reloadProfile];
     [self restoreNonEditButtons];
     [self animateTableCells];
 }
 
 - (IBAction)onDone:(id)sender {
+    [self.tableView endEditing: NO];
+
     [self saveProfile];
     [self restoreNonEditButtons];
     [self animateTableCells];
@@ -278,8 +323,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
     phoneItem.userDefaultsKey = @"phoneNumber";
-    phoneItem.editLabel = NSLocalizedString(@"profile_phone_label", @"Profile Edit Label Phone Number");
-    phoneItem.placeholder = NSLocalizedString(@"profile_phone_placeholder", @"Profile Placeholder Phone Number");
+    phoneItem.editLabel = NSLocalizedString(@"profile_phone_label", nil);
+    phoneItem.placeholder = NSLocalizedString(@"profile_phone_placeholder", nil);
     phoneItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     phoneItem.keyboardType = UIKeyboardTypePhonePad;
     [_profileItems addObject: phoneItem];
@@ -287,11 +332,43 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     ProfileItem * mailItem = [[ProfileItem alloc] init];
     mailItem.icon = [UIImage imageNamed: @"icon_profile-mail"];
     mailItem.userDefaultsKey = @"mailAddress";
-    mailItem.editLabel = NSLocalizedString(@"profile_mail_label", @"Profile Edit Label Mail Address");
-    mailItem.placeholder = NSLocalizedString(@"profile_mail_placeholder", @"Profile Placeholder MAil Address");
+    mailItem.editLabel = NSLocalizedString(@"profile_mail_label",nil);
+    mailItem.placeholder = NSLocalizedString(@"profile_mail_placeholder", nil);
     mailItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     mailItem.keyboardType = UIKeyboardTypeEmailAddress;
     [_profileItems addObject: mailItem];
+
+    ProfileItem * twitterItem = [[ProfileItem alloc] init];
+    twitterItem.icon = [UIImage imageNamed: @"icon_profile-twitter"];
+    twitterItem.userDefaultsKey = @"twitterName";
+    twitterItem.editLabel = NSLocalizedString(@"profile_twitter_label", nil);
+    twitterItem.placeholder = NSLocalizedString(@"profile_twitter_placeholder", nil);
+    twitterItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
+    [_profileItems addObject: twitterItem];
+
+    ProfileItem * facebookItem = [[ProfileItem alloc] init];
+    facebookItem.icon = [UIImage imageNamed: @"icon_profile-facebook"];
+    facebookItem.userDefaultsKey = @"facebookName";
+    facebookItem.editLabel = NSLocalizedString(@"profile_facebook_label", nil);
+    facebookItem.placeholder = NSLocalizedString(@"profile_facebook_placeholder", nil);
+    facebookItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
+    [_profileItems addObject: facebookItem];
+
+    ProfileItem * googlePlusItem = [[ProfileItem alloc] init];
+    googlePlusItem.icon = [UIImage imageNamed: @"icon_profile-googleplus"];
+    googlePlusItem.userDefaultsKey = @"googlePlusName";
+    googlePlusItem.editLabel = NSLocalizedString(@"profile_google_plus_label", nil);
+    googlePlusItem.placeholder = NSLocalizedString(@"profile_google_plus_placeholder", nil);
+    googlePlusItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
+    [_profileItems addObject: googlePlusItem];
+
+    ProfileItem * githubItem = [[ProfileItem alloc] init];
+    githubItem.icon = [UIImage imageNamed: @"icon_profile-octocat"];
+    githubItem.userDefaultsKey = @"githubName";
+    githubItem.editLabel = NSLocalizedString(@"profile_github_label", nil);
+    githubItem.placeholder = NSLocalizedString(@"profile_github_placeholder", nil);
+    githubItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
+    [_profileItems addObject: githubItem];
 
     _avatarItem.image = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] valueForKey: _avatarItem.userDefaultsKey]];
     for (ProfileItem* item in _profileItems) {
@@ -301,7 +378,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) saveProfile {
-    [self.tableView endEditing: NO];
     // TODO: proper size handling
     CGFloat scale;
     if (_avatarItem.image.size.height > _avatarItem.image.size.width) {
@@ -331,6 +407,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) reloadProfile {
     //[self populateItems];
+    // TODO: this causes a weird artifact in the table background. Not reloading the data causes
+    // inconsistencies in the avatar cell... let's be consistent for now and deal with the artifact later
     [self.tableView reloadData];
 }
 
