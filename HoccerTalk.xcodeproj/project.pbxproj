@@ -516,8 +516,8 @@
 		E96CB02E17145979005F8FFA /* NSString+StringWithData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+StringWithData.m"; path = "../Crypto/NSString+StringWithData.m"; sourceTree = "<group>"; };
 		E96CB03017145ABF005F8FFA /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
 		E96CB03117145ABF005F8FFA /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
-		E96CB03217145ABF005F8FFA /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Base64.h"; path = "../Crypto/NSData+Base64.h"; sourceTree = "<group>"; };
-		E96CB03317145AC0005F8FFA /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "../Crypto/NSData+Base64.m"; sourceTree = "<group>"; };
+		E96CB03217145ABF005F8FFA /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		E96CB03317145AC0005F8FFA /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -562,12 +562,12 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
-				E96CB02D17145979005F8FFA /* NSString+StringWithData.h */,
-				E96CB02E17145979005F8FFA /* NSString+StringWithData.m */,
-				E96CB03317145AC0005F8FFA /* NSData+Base64.m */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
+				E96CB03317145AC0005F8FFA /* NSData+Base64.m */,
 				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
 				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
+				E96CB02D17145979005F8FFA /* NSString+StringWithData.h */,
+				E96CB02E17145979005F8FFA /* NSString+StringWithData.m */,
 				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
 				6378484C16F4210A00DE03C2 /* NSString+UUID.m */,
 				631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */,
