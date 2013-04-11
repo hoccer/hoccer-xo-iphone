@@ -19,4 +19,19 @@ NSString * const kRelationStateBlocked = @"blocked";
 @dynamic lastChanged;
 @dynamic contact;
 
+- (NSDictionary*) rpcKeys {
+    return @{ @"state"     : @"state",
+              @"lastChanged": @"lastChanged",
+            };
+}
+
+- (void) setLastChanged:(id) time {
+    if ([time isKindOfClass:[NSNumber class]]) {
+        time = [NSDate dateWithTimeIntervalSince1970: [time doubleValue] / 1000.0];
+    }
+    [self willChangeValueForKey: @"lastChanged"];
+    [self setPrimitiveValue: time forKey: @"lastChanged"];
+    [self didChangeValueForKey: @"lastChanged"];
+}
+
 @end
