@@ -355,7 +355,7 @@
     NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
-            NSLog(@"updatePresences presence=%@",presence);
+            // NSLog(@"updatePresences presence=%@",presence);
             [self presenceUpdated:presence];
         }
     }];
@@ -377,7 +377,7 @@
     NSString * myClient = thePresence[@"clientId"];
     Contact * myContact = [self getContactByClientId:myClient];
     if (myContact == nil) {
-        NSLog(@"presenceUpdated failed for unknown clientId, creating new contact: %@", myClient);
+        NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         myContact.clientId = myClient;        
         myContact.relationshipState = kRelationStateNone;
@@ -411,7 +411,7 @@
                 myContact.avatarURL = @"";
             }
         }
-        NSLog(@"presenceUpdated, contact = %@", myContact);
+        // NSLog(@"presenceUpdated, contact = %@", myContact);
 
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
@@ -677,7 +677,7 @@
     NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getRelationships" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"getRelationships(): got result: %@", responseOrError);
+            // NSLog(@"getRelationships(): got result: %@", responseOrError);
             //handler([responseOrError boolValue]);
         } else {
             NSLog(@"getRelationships(): failed: %@", responseOrError);
@@ -691,7 +691,7 @@
     NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getPresences" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"getPresences(): got result: %@", responseOrError);
+            // NSLog(@"getPresences(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"getPresences(): failed: %@", responseOrError);
@@ -758,7 +758,7 @@
 - (void) presenceUpdatedNotification: (NSArray*) params {
     //TODO: Error checking
     for (id presence in params) {
-        NSLog(@"updatePresences presence=%@",presence);
+        // NSLog(@"updatePresences presence=%@",presence);
         [self presenceUpdated:presence];
     }
 }
