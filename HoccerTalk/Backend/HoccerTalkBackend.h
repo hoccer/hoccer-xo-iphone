@@ -17,7 +17,6 @@
 @class AppDelegate;
 
 typedef void (^InviteTokenHanlder)(NSString*);
-typedef void (^PairingHandler)(BOOL);
 typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
 // typedef void (^PublicKeyHandler)(NSArray*);
@@ -29,6 +28,8 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 - (NSString*) apnDeviceToken;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
+
+- (void) didPairWithStatus: (BOOL) status; // pregnant...
 
 @end
 
@@ -48,7 +49,7 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
-- (void) pairByToken: (NSString*) token pairingHandler: (PairingHandler) handler;
+- (void) pairByToken: (NSString*) token;
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;

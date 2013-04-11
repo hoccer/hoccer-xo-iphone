@@ -177,6 +177,9 @@
 		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
 		63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */; };
 		63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* UserDefaultsViewController.m */; };
+		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
+		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
+		63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */; };
 		63C413B116E8FBA4004E1F6D /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
@@ -211,8 +214,8 @@
 		E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB02E17145979005F8FFA /* NSString+StringWithData.m */; };
 		E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03017145ABF005F8FFA /* Base64Transcoder.c */; };
 		E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
-		E96CB03B1716CAFB005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03A1716CAFB005F8FFA /* NSString+URLHelper.m */; };
-		E96CB0411716CD03005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0401716CD03005F8FFA /* NSDictionary+CSURLParams.m */; };
+		E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */; };
+		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
@@ -472,6 +475,10 @@
 		63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellAvatarPicker_iPhone.xib; sourceTree = "<group>"; };
 		63C1356617160E2E00969B0B /* UserDefaultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsViewController.h; sourceTree = "<group>"; };
 		63C1356717160E2E00969B0B /* UserDefaultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsViewController.m; sourceTree = "<group>"; };
+		63C1356B1716A4AB00969B0B /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
+		63C1356C1716A4AB00969B0B /* Invite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invite.m; sourceTree = "<group>"; };
+		63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_contact_large.png; sourceTree = "<group>"; };
+		63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_contact_large@2x.png"; sourceTree = "<group>"; };
 		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = 3rdParty/SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -520,10 +527,10 @@
 		E96CB03117145ABF005F8FFA /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		E96CB03217145ABF005F8FFA /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		E96CB03317145AC0005F8FFA /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
-		E96CB0391716CAFB005F8FFA /* NSString+URLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLHelper.h"; sourceTree = "<group>"; };
-		E96CB03A1716CAFB005F8FFA /* NSString+URLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLHelper.m"; sourceTree = "<group>"; };
-		E96CB03F1716CD03005F8FFA /* NSDictionary+CSURLParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CSURLParams.h"; sourceTree = "<group>"; };
-		E96CB0401716CD03005F8FFA /* NSDictionary+CSURLParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CSURLParams.m"; sourceTree = "<group>"; };
+		E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CSURLParams.h"; sourceTree = "<group>"; };
+		E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CSURLParams.m"; sourceTree = "<group>"; };
+		E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLHelper.h"; sourceTree = "<group>"; };
+		E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLHelper.m"; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -568,10 +575,10 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
-				E96CB03F1716CD03005F8FFA /* NSDictionary+CSURLParams.h */,
-				E96CB0401716CD03005F8FFA /* NSDictionary+CSURLParams.m */,
-				E96CB0391716CAFB005F8FFA /* NSString+URLHelper.h */,
-				E96CB03A1716CAFB005F8FFA /* NSString+URLHelper.m */,
+				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
+				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
+				E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */,
+				E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
 				E96CB03317145AC0005F8FFA /* NSData+Base64.m */,
 				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
@@ -623,6 +630,8 @@
 		6330490B170044940045E64E /* Avatar */ = {
 			isa = PBXGroup;
 			children = (
+				63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */,
+				63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */,
 				6330490C170044940045E64E /* avatar_default_channel.png */,
 				6330490D170044940045E64E /* avatar_default_channel@2x.png */,
 				6330490E170044940045E64E /* avatar_default_contact.png */,
@@ -982,6 +991,8 @@
 				636D3FFB170FB2B100304EDF /* HoccerTalk.xcdatamodeld */,
 				6378484816F4040C00DE03C2 /* HoccerTalkModel.h */,
 				6378484916F4040C00DE03C2 /* HoccerTalkModel.m */,
+				63C1356B1716A4AB00969B0B /* Invite.h */,
+				63C1356C1716A4AB00969B0B /* Invite.m */,
 				63DC015317146EBC00609513 /* Relationship.h */,
 				63DC015417146EBC00609513 /* Relationship.m */,
 				63AEE30916CA6B1900522F92 /* TalkMessage.h */,
@@ -1316,6 +1327,8 @@
 				63DC01881715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib in Resources */,
 				63C135601716054C00969B0B /* README in Resources */,
 				63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */,
+				63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */,
+				63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1414,8 +1427,9 @@
 				63DC016C1714E1CA00609513 /* SettingsCells.m in Sources */,
 				63DC01851715205300609513 /* HTSwitch.m in Sources */,
 				63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */,
-				E96CB03B1716CAFB005F8FFA /* NSString+URLHelper.m in Sources */,
-				E96CB0411716CD03005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
+				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
+				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
+				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -286,11 +286,13 @@
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     if ([[url scheme] isEqualToString:@"hctalk"]) {
         // TODO: input verification
-        [self.chatBackend pairByToken: url.host pairingHandler: ^(BOOL success) {
-            [InviteCodeViewController showPairingAlert: success];
-        }];
+        [self.chatBackend pairByToken: url.host];
     }
     return NO;
+}
+
+- (void) didPairWithStatus: (BOOL) success { // pregnant...
+    [InviteCodeViewController showPairingAlert: success];
 }
 
 #pragma mark - Hoccer Talk Delegate
