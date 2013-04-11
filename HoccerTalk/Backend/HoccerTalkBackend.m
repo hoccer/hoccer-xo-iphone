@@ -400,7 +400,6 @@
                 NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
             }
         }
-        [self.delegate.managedObjectContext refreshObject: myContact mergeChanges:YES];
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }
