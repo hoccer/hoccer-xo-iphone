@@ -411,6 +411,8 @@
                 myContact.avatarURL = @"";
             }
         }
+        NSLog(@"presenceUpdated, contact = %@", myContact);
+
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }

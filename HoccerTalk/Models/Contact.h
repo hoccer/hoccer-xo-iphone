@@ -39,6 +39,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSMutableSet* messages;
 
 @property (readonly) UIImage* avatarImage;
+@property (readonly, strong) NSString* avatarImageCachedURL;
 
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date;
 - (SecKeyRef) getPublicKeyRef;
