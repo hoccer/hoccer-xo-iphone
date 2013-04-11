@@ -377,6 +377,9 @@
         NSLog(@"presenceUpdated failed for unknown clientId, creating new contact: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         myContact.clientId = myClient;
+        Relationship * relationship = (Relationship*)[NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+        myContact.relationship = relationship;
+        relationship.contact = myContact;
     }
     
     if (myContact) {
@@ -452,7 +455,7 @@
 
 - (NSURL *) newUploadURL {
     // NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
-    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingPathComponent:[NSString stringWithUUID]];
+    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
     NSDictionary *params = [NSDictionary dictionaryWithObject:[[NSNumber numberWithDouble:60*24*365*3] stringValue] forKey:@"expires_in"];
 	myURL = [myURL stringByAppendingQuery:[params URLParams]];
     return [NSURL URLWithString: myURL];
@@ -829,7 +832,7 @@
     
     NSData * myHash = [myAvatarData SHA256Hash];
     NSString * myAvatarFileName = [myHash hexadecimalString];
-    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingPathComponent:myAvatarFileName];
+    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:myAvatarFileName];
     return myURL;
     // return [NSURL URLWithString: myURL];
 }
