@@ -10,7 +10,7 @@
 
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
 #import "RadialGradientView.h"
-#import "SettingsCells.h"
+#import "UserDefaultsCells.h"
 
 @interface SettingsItem : NSObject
 
@@ -40,11 +40,11 @@
 
 - (void) populateSettingsItem {
     SettingsItem * saveContent = [SettingsItem item];
-    saveContent.cellIdentifier = [SettingSwitchCell reuseIdentifier];
+    saveContent.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
     saveContent.label = NSLocalizedString(@"setting_save_incoming_media", nil);
 
     SettingsItem * saveContentInfo = [SettingsItem item];
-    saveContentInfo.cellIdentifier = [SettingTextCell reuseIdentifier];
+    saveContentInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
     saveContentInfo.label = NSLocalizedString(@"setting_save_incoming_media_info", nil);
     
     _items = @[ @[saveContent, saveContentInfo ]
@@ -56,7 +56,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SettingsItem * item = _items[indexPath.section][indexPath.row];
-    UITableViewCell * cell = [self.tableView dequeueReusableCellWithIdentifier: item.cellIdentifier];
+    UITableViewCell * cell = [self dequeueReusableCellOfClass: NSClassFromString(item.cellIdentifier) forIndexPath:indexPath];
     cell.textLabel.text = item.label;
     return cell;
 }

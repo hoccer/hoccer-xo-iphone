@@ -8,6 +8,8 @@
 
 #import "UserDefaultsViewController.h"
 #import "RadialGradientView.h"
+#import "AssetStore.h"
+#import "UserDefaultsCells.h"
 
 @interface UserDefaultsViewController ()
 
@@ -40,20 +42,22 @@
     return _prototypes[cellClass];
 }
 
-- (UITableViewCell*) dequeueReusableCellOfClass:(id)cellClass forIndexPath:(NSIndexPath *)indexPath {
-    if (_prototypes[cellClass] == nil) {
-        [self registerNibForCellClass: cellClass];
-        _prototypes[cellClass] = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
-    }
-    return [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier] forIndexPath: indexPath];
+- (UserDefaultsCell*) dequeueReusableCellOfClass:(id)cellClass forIndexPath:(NSIndexPath *)indexPath {
+    [self registerNibForCellClass: cellClass];
+    UserDefaultsCell * cell = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier] forIndexPath: indexPath];
+    [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
+    return cell;
 }
 
 - (void) registerNibForCellClass: (id) cellClass {
-    UIUserInterfaceIdiom userInterfaceIdiom = [[UIDevice currentDevice] userInterfaceIdiom];
-    NSString * userInterfaceIdiomString = userInterfaceIdiom == UIUserInterfaceIdiomPad ? @"iPad" : @"iPhone";
-    NSString * nibName = [NSString stringWithFormat: @"%@_%@", [cellClass reuseIdentifier], userInterfaceIdiomString];
-    UINib * nib = [UINib nibWithNibName: nibName bundle: [NSBundle mainBundle]];
-    [self.tableView registerNib: nib forCellReuseIdentifier: [cellClass reuseIdentifier]];
+    if (_prototypes[cellClass] == nil) {
+        UIUserInterfaceIdiom userInterfaceIdiom = [[UIDevice currentDevice] userInterfaceIdiom];
+        NSString * userInterfaceIdiomString = userInterfaceIdiom == UIUserInterfaceIdiomPad ? @"iPad" : @"iPhone";
+        NSString * nibName = [NSString stringWithFormat: @"%@_%@", [cellClass reuseIdentifier], userInterfaceIdiomString];
+        UINib * nib = [UINib nibWithNibName: nibName bundle: [NSBundle mainBundle]];
+        [self.tableView registerNib: nib forCellReuseIdentifier: [cellClass reuseIdentifier]];
+        _prototypes[cellClass] = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
+    }
 }
 
 - (NSArray*) populateItems {

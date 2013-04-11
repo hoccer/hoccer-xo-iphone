@@ -12,7 +12,7 @@
 #import "HTUserDefaults.h"
 #import "iOSVersionChecks.h"
 #import "AssetStore.h"
-#import "ProfileTableCells.h"
+#import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
