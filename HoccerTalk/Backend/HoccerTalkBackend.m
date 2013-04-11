@@ -382,6 +382,7 @@
         myContact.clientId = myClient;        
         myContact.relationshipState = kRelationStateNone;
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
+        myContact.avatarURL = @"";
     }
     
     if (myContact) {
@@ -392,16 +393,22 @@
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
         }
         if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
-            NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
-            NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
-            NSError * myError = nil;
-            NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
-            if (myNewAvatar != nil) {
-                NSLog(@"presenceUpdated, avatar downloaded");
-                myContact.avatar = myNewAvatar;
-                myContact.avatarURL = thePresence[@"avatarUrl"];
+            if ([thePresence[@"avatarUrl"] length]) {
+                NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
+                NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
+                NSError * myError = nil;
+                NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
+                if (myNewAvatar != nil) {
+                    NSLog(@"presenceUpdated, avatar downloaded");
+                    myContact.avatar = myNewAvatar;
+                    myContact.avatarURL = thePresence[@"avatarUrl"];
+                } else {
+                    NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+                }
             } else {
-                NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+                // no avatar
+                myContact.avatar = nil;
+                myContact.avatarURL = @"";
             }
         }
     } else {
@@ -572,7 +579,6 @@
 }
 
 - (void) updatePresence {
-    // NSString * myAvatarURL =[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarURL];
     NSString * myAvatarURL = [self calcAvatarURL];
     NSString * myNickName = [[HTUserDefaults standardUserDefaults] objectForKey: kHTNickName];
    // NSString * myStatus = [[HTUserDefaults standardUserDefaults] objectForKey: kHTUserStatus];
@@ -793,7 +799,12 @@
     NSString * myDesiredURL = [self calcAvatarURL];
     NSString * myCurrentAvatarURL =[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarURL];
     if (![myCurrentAvatarURL isEqualToString: myDesiredURL]) {
-        [self uploadAvatar: myDesiredURL];
+        if ([myDesiredURL length] != 0) {
+            [self uploadAvatar: myDesiredURL];
+        } else {
+            [[HTUserDefaults standardUserDefaults] setObject: @"" forKey: kHTAvatarURL];
+            [[HTUserDefaults standardUserDefaults] synchronize];
+        }
     }
 }
 
@@ -826,7 +837,12 @@
 }
 
 - (NSString *) calcAvatarURL {
-    NSMutableData * myAvatarData = [NSMutableData dataWithData:[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
+    NSData * myAvatarImmutableData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+    if (myAvatarImmutableData == nil || [myAvatarImmutableData length] == 0) {
+        return @"";
+    }
+    NSMutableData * myAvatarData = [NSMutableData dataWithData:myAvatarImmutableData];
+    
     NSString * myClientID =[[HTUserDefaults standardUserDefaults] objectForKey: kHTClientId];
     [myAvatarData appendData:[myClientID dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -834,7 +850,6 @@
     NSString * myAvatarFileName = [myHash hexadecimalString];
     NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:myAvatarFileName];
     return myURL;
-    // return [NSURL URLWithString: myURL];
 }
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
