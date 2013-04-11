@@ -55,6 +55,7 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 - (void) unregisterApns;
 
 - (void) start;
+- (void) stop;
 
 - (void) webSocketDidFailWithError: (NSError*) error;
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error;

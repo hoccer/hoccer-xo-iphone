@@ -227,6 +227,10 @@
     [_serverConnection open];
 }
 
+- (void) stop {
+    [_serverConnection close];
+}
+
 - (void) reconnectWitBackoff {
     NSLog(@"reconnecting in %f seconds", _backoffTime);
     if (_backoffTime == 0) {

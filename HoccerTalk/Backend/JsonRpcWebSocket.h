@@ -40,6 +40,7 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 
 - (id) initWithURLRequest: (NSURLRequest*) request;
 - (void) open;
+- (void) close;
 - (void) reopenWithURLRequest: (NSURLRequest*) request;
 - (void) notify: (NSString*) method withParams: (id) params;
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler;

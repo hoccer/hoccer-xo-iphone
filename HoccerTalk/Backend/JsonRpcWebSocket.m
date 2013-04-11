@@ -62,6 +62,10 @@ static const NSTimeInterval kResponseTimeout = 10;
     [_websocket open];
 }
 
+- (void) close {
+    [_websocket close];
+}
+
 - (void) reopenWithURLRequest:(NSURLRequest *)request {
     _websocket = [[SRWebSocket alloc] initWithURLRequest: request];
     _websocket.delegate = self;
