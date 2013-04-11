@@ -138,7 +138,7 @@ static NSData * RandomBytes(size_t count) {
         if (cryptedPassword!=nil){
             NSDictionary *encryption = [NSDictionary dictionaryWithObjectsAndKeys:
                                     @"AES", @"method",
-                                    @(256), @"keysize",
+                                    @256, @"keysize",
                                     [salt asBase64EncodedString], @"salt", 
                                     @"SHA256", @"hash", cryptedPassword, @"password", nil];
 
@@ -153,7 +153,7 @@ static NSData * RandomBytes(size_t count) {
     else {
         NSDictionary *encryption = [NSDictionary dictionaryWithObjectsAndKeys:
                                     @"AES", @"method",
-                                    @(256), @"keysize",
+                                    @256, @"keysize",
                                     [salt asBase64EncodedString], @"salt", 
                                     @"SHA256", @"hash", nil];
         

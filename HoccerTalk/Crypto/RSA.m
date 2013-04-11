@@ -92,7 +92,7 @@ static RSA *instance;
 	[publicKeyAttr setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     
     [keyPairAttr setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    [keyPairAttr setObject:@(1024) forKey:(__bridge id)kSecAttrKeySizeInBits];
+    [keyPairAttr setObject:@1024 forKey:(__bridge id)kSecAttrKeySizeInBits];
     
     [keyPairAttr setObject:privateKeyAttr forKey:(__bridge id)kSecPrivateKeyAttrs];
 	[keyPairAttr setObject:publicKeyAttr forKey:(__bridge id)kSecPublicKeyAttrs];
