@@ -227,6 +227,10 @@
     [_serverConnection open];
 }
 
+- (void) stop {
+    [_serverConnection close];
+}
+
 - (void) reconnectWitBackoff {
     NSLog(@"reconnecting in %f seconds", _backoffTime);
     if (_backoffTime == 0) {
@@ -351,7 +355,7 @@
     NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
-            NSLog(@"updatePresences presence=%@",presence);
+            // NSLog(@"updatePresences presence=%@",presence);
             [self presenceUpdated:presence];
         }
     }];
@@ -373,11 +377,12 @@
     NSString * myClient = thePresence[@"clientId"];
     Contact * myContact = [self getContactByClientId:myClient];
     if (myContact == nil) {
-        NSLog(@"presenceUpdated failed for unknown clientId, creating new contact: %@", myClient);
+        NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         myContact.clientId = myClient;        
         myContact.relationshipState = kRelationStateNone;
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
+        myContact.avatarURL = @"";
     }
     
     if (myContact) {
@@ -388,18 +393,26 @@
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
         }
         if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
-            NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
-            NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
-            NSError * myError = nil;
-            NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
-            if (myNewAvatar != nil) {
-                NSLog(@"presenceUpdated, avatar downloaded");
-                myContact.avatar = myNewAvatar;
-                myContact.avatarURL = thePresence[@"avatarUrl"];
+            if ([thePresence[@"avatarUrl"] length]) {
+                NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
+                NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
+                NSError * myError = nil;
+                NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
+                if (myNewAvatar != nil) {
+                    NSLog(@"presenceUpdated, avatar downloaded");
+                    myContact.avatar = myNewAvatar;
+                    myContact.avatarURL = thePresence[@"avatarUrl"];
+                } else {
+                    NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+                }
             } else {
-                NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+                // no avatar
+                myContact.avatar = nil;
+                myContact.avatarURL = @"";
             }
         }
+        // NSLog(@"presenceUpdated, contact = %@", myContact);
+
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }
@@ -568,7 +581,6 @@
 }
 
 - (void) updatePresence {
-    // NSString * myAvatarURL =[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarURL];
     NSString * myAvatarURL = [self calcAvatarURL];
     NSString * myNickName = [[HTUserDefaults standardUserDefaults] objectForKey: kHTNickName];
    // NSString * myStatus = [[HTUserDefaults standardUserDefaults] objectForKey: kHTUserStatus];
@@ -665,7 +677,7 @@
     NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getRelationships" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"getRelationships(): got result: %@", responseOrError);
+            // NSLog(@"getRelationships(): got result: %@", responseOrError);
             //handler([responseOrError boolValue]);
         } else {
             NSLog(@"getRelationships(): failed: %@", responseOrError);
@@ -679,7 +691,7 @@
     NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getPresences" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"getPresences(): got result: %@", responseOrError);
+            // NSLog(@"getPresences(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"getPresences(): failed: %@", responseOrError);
@@ -746,7 +758,7 @@
 - (void) presenceUpdatedNotification: (NSArray*) params {
     //TODO: Error checking
     for (id presence in params) {
-        NSLog(@"updatePresences presence=%@",presence);
+        // NSLog(@"updatePresences presence=%@",presence);
         [self presenceUpdated:presence];
     }
 }
@@ -789,7 +801,12 @@
     NSString * myDesiredURL = [self calcAvatarURL];
     NSString * myCurrentAvatarURL =[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarURL];
     if (![myCurrentAvatarURL isEqualToString: myDesiredURL]) {
-        [self uploadAvatar: myDesiredURL];
+        if ([myDesiredURL length] != 0) {
+            [self uploadAvatar: myDesiredURL];
+        } else {
+            [[HTUserDefaults standardUserDefaults] setObject: @"" forKey: kHTAvatarURL];
+            [[HTUserDefaults standardUserDefaults] synchronize];
+        }
     }
 }
 
@@ -822,7 +839,12 @@
 }
 
 - (NSString *) calcAvatarURL {
-    NSMutableData * myAvatarData = [NSMutableData dataWithData:[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
+    NSData * myAvatarImmutableData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+    if (myAvatarImmutableData == nil || [myAvatarImmutableData length] == 0) {
+        return @"";
+    }
+    NSMutableData * myAvatarData = [NSMutableData dataWithData:myAvatarImmutableData];
+    
     NSString * myClientID =[[HTUserDefaults standardUserDefaults] objectForKey: kHTClientId];
     [myAvatarData appendData:[myClientID dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -830,7 +852,6 @@
     NSString * myAvatarFileName = [myHash hexadecimalString];
     NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:myAvatarFileName];
     return myURL;
-    // return [NSURL URLWithString: myURL];
 }
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response

@@ -777,7 +777,12 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        self.avatarImage = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
+        NSData * myImageData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+        if (myImageData != nil) {
+            self.avatarImage = [UIImage imageWithData: myImageData];
+        } else {
+            self.avatarImage = [UIImage imageNamed: @"avatar_default_contact"];
+        }
     }
 
     if ([message.isRead isEqualToNumber: @NO]) {

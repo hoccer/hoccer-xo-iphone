@@ -49,12 +49,15 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 @synthesize avatarImage = _avatarImage;
+@synthesize avatarImageCachedURL = _avatarImageCachedURL;
 
 - (UIImage*) avatarImage {
-    if (_avatarImage != nil) {
+    if (_avatarImage != nil && [_avatarImageCachedURL isEqualToString:self.avatarURL]) {
         return _avatarImage;
     }
+
     _avatarImage = self.avatar != nil ? [UIImage imageWithData: self.avatar] : [UIImage imageNamed: @"avatar_default_contact"];
+    _avatarImageCachedURL = self.avatarURL;
 
     return _avatarImage;
 }
