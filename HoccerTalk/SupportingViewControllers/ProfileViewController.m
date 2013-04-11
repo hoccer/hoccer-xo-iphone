@@ -317,7 +317,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
 
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        [[HTUserDefaults standardUserDefaults] setValue: [NSString stringWithUUID] forKey: kHTClientId];
+        NSLog(@"==================== WARNING: Client Id generation disabled ==============");
+        //[[HTUserDefaults standardUserDefaults] setValue: [NSString stringWithUUID] forKey: kHTClientId];
         [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
         [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone];
         [self dismissModalViewControllerAnimated: YES];
