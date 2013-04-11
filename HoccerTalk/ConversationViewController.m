@@ -21,6 +21,7 @@
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
 #import "iOSVersionChecks.h"
 #import "HTUserDefaults.h"
+#import "RadialGradientView.h"
 
 @interface ConversationViewController ()
 
@@ -55,6 +56,9 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
     _chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+
+    // TODO: ask @zutrinken
+    //self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
 }
 
 - (ChatViewController*) chatViewController {
