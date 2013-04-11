@@ -18,6 +18,10 @@
 #import "Attachment.h"
 #import "Environment.h"
 #import "Relationship.h"
+#import "HTUserDefaults.h"
+#import "NSData+CommonCrypto.h"
+#import "NSData_Base64Extensions.h"
+#import "RSA.h"
 
 @interface HoccerTalkBackend ()
 {
@@ -25,6 +29,10 @@
     BOOL _isConnected;
     double _backoffTime;
     NSString * _apnsDeviceToken;
+    NSURLConnection * _avatarUploadConnection;
+    NSString * _avatarUploadURL;
+    NSInteger _avatarBytesUploaded;
+    NSInteger _avatarBytesTotal;
 }
 
 - (void) identify;
@@ -32,7 +40,6 @@
 @end
 
 @implementation HoccerTalkBackend
-
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate {
     self = [super init];
@@ -45,6 +52,7 @@
         [_serverConnection registerIncomingCall: @"incomingDelivery" withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery" withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"presenceUpdated" withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
         _delegate = theAppDelegate;
     }
     return self;
@@ -114,6 +122,7 @@
         message.attachment = attachment;
     }
 
+    // TODO: Refactor: use function getContactByClientId below
     vars = @{ @"clientId" : messageDictionary[@"senderId"]};
     fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
     error = nil;
@@ -153,6 +162,25 @@
         [NSTimer scheduledTimerWithTimeInterval:2.0 target:attachment selector: @selector(downloadLater:) userInfo:nil repeats:NO];
         //[attachment download];
     }
+}
+
+-(Contact *) getContactByClientId:(NSString *) theClientId {
+    NSDictionary * vars = @{ @"clientId" : theClientId};    
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (contacts == nil)
+    {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    Contact * contact = nil;
+    if (contacts.count > 0) {
+        contact = contacts[0];
+    } else {
+        NSLog(@"ClientId %@ not in contacts", theClientId);
+    }
+    return contact;
 }
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken {
@@ -218,9 +246,6 @@
 }
 
 
-
-
-
 - (NSDate*) getLatestChangeDateFromRelationships {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
@@ -249,7 +274,6 @@
     return latest;
 }
 
-
 - (void) updateRelationships {
     NSDate * latestChange = [self getLatestChangeDateFromRelationships];
     NSLog(@"latest date %@", latestChange);
@@ -257,9 +281,77 @@
     }];
 }
 
+- (void) updatePresences {
+    NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0];
+    NSLog(@"latest date %@", latestChange);
+    [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
+        for (id presence in changedPresences) {
+            NSLog(@"updatePresences presence=%@",presence);
+            [self presenceUpdated:presence];
+        }
+    }];
+}
+/*
+- (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
+    [self getKey:theContact.clientId withId:theId keyHandler:^(NSArray * keys) {
+        for (NSDictionary * keyRecord in keys) {
+            if ([theId isEqualToString: keyRecord[@"keyId"]]) {
+                theContact.publicKey = keyRecord[@"key"];
+                theContact.publicKeyId = keyRecord[@"keyId"];
+                NSLog(@"Key for contact updated: %@", theContact);
+            } else {
+                NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
+            }
+        }
+    }];
+}
+ */
+- (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
+    [self getKey:theContact.clientId withId:theId keyHandler:^(NSDictionary * keyRecord) {
+        if ([theId isEqualToString: keyRecord[@"keyId"]]) {
+            theContact.publicKeyString = keyRecord[@"key"];
+            theContact.publicKeyId = keyRecord[@"keyId"];
+            NSLog(@"Key for contact updated: %@", theContact);
+        } else {
+            NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
+        }
+    }];
+}
+
+- (void) presenceUpdated:(NSDictionary *) thePresence {
+    NSString * myClient = thePresence[@"clientId"];
+    Contact * myContact = [self getContactByClientId:myClient];
+    myContact.nickName = thePresence[@"clientName"];
+    myContact.status = thePresence[@"clientStatus"];
+    if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]]) {
+        // fetch key
+        [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
+    }
+    if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
+        NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
+        NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
+        NSError * myError = nil;
+        myContact.avatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
+        if (myError == nil) {
+            myContact.avatarURL = thePresence[@"avatarUrl"];
+            NSLog(@"presenceUpdated, avatar downloaded");
+        }
+    }
+}
+
+
+- (void) presenceUpdatedNotification: (NSArray*) params {
+    //TODO: Error checking
+    for (id presence in params) {
+        NSLog(@"updatePresences presence=%@",presence);
+        [self presenceUpdated:presence];
+    }
+}
+
 #pragma mark - Attachment upload and download
 
-- (void) flushPendingAttachments {
+- (void) flushPendingFiletransfers {
+    [self performSelectorOnMainThread:@selector(uploadAvatarIfNeeded) withObject:nil waitUntilDone:NO];
     [self performSelectorOnMainThread:@selector(flushPendingAttachmentUploads) withObject:nil waitUntilDone:NO];
     [self performSelectorOnMainThread:@selector(flushPendingAttachmentDownloads) withObject:nil waitUntilDone:NO];
 }
@@ -343,8 +435,10 @@
                 _apnsDeviceToken = nil; // XXX: this is not nice...
             }
             [self flushPendingMessages];
-            [self flushPendingAttachments];
+            [self flushPendingFiletransfers];
             [self updateRelationships];
+            [self updatePresences];
+            
             _isConnected = YES;
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
@@ -385,6 +479,57 @@
     }];
 }
 
+- (void) updatePresence: (NSString*) clientName withStatus: clientStatus withAvatar: (NSString*)avatarURL withKey: (NSData*)keyId {
+    NSLog(@"updatePresence: %@, %@, %@", clientName, clientStatus, avatarURL);
+    NSDictionary *params = @{
+                             @"clientName" : clientName,
+                             @"clientStatus" : clientStatus,
+                             @"avatarUrl" : avatarURL,
+                             @"keyId" : [keyId hexadecimalString]
+                             };
+    [_serverConnection invoke: @"updatePresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"updatePresence() got result: %@", responseOrError);
+        } else {
+            NSLog(@"updatePresence() failed: %@", responseOrError);
+        }
+    }];
+}
+
+- (void) updatePresence {
+    // NSString * myAvatarURL =[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarURL];
+    NSString * myAvatarURL = [self calcAvatarURL];
+    NSString * myNickName = [[HTUserDefaults standardUserDefaults] objectForKey: kHTNickName];
+   // NSString * myStatus = [[HTUserDefaults standardUserDefaults] objectForKey: kHTUserStatus];
+    NSString * myStatus = @"I am.";
+    
+    NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
+    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    
+    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: myKeyId];
+}
+
+- (void) updateKey: (NSData*) publicKey {
+    NSLog(@"updateKey: %@", publicKey);
+    NSData * myKeyId = [[publicKey SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    NSDictionary *params = @{
+                             @"key" :   [publicKey asBase64EncodedString], 
+                             @"keyId" : [myKeyId hexadecimalString]
+                             };
+    [_serverConnection invoke: @"updateKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"updateKey() got result: %@", responseOrError);
+        } else {
+            NSLog(@"updateKey() failed: %@", responseOrError);
+        }
+    }];
+}
+
+- (void) updateKey {
+    NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
+    [self updateKey: myKeyBits];
+}
+
 - (void) registerApns: (NSString*) token {
     NSLog(@"registerApns: %@", token);
     [_serverConnection invoke: @"registerApns" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
@@ -408,7 +553,6 @@
         }
     }];
 }
-
 
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
     NSLog(@"generateToken:");
@@ -447,6 +591,40 @@
         } else {
             NSLog(@"getRelationships(): failed: %@", responseOrError);
             //handler(NO);
+        }
+    }];
+}
+
+- (void) getPresences: (NSDate*) lastKnown presenceHandler: (PresenceHandler) handler {
+    NSLog(@"getPresences:");
+    NSNumber * lastKnownMillis = [NSNumber numberWithLongLong: [lastKnown timeIntervalSince1970] * 1000];
+    [_serverConnection invoke: @"getPresences" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"getPresences(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"getPresences(): failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+- (void) getKey: (NSString*)forClientId withId:(NSString*) keyId keyHandler:(PublicKeyHandler) handler {
+    NSLog(@"getKey:");
+    /*
+    NSDictionary *params = @{
+                             @"clientId" :  forClientId,
+                             @"keyId" : keyId
+                             };
+     [_serverConnection invoke: @"getKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
+     */
+     [_serverConnection invoke: @"getKey" withParams: @[forClientId,keyId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSLog(@"getKey(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"getKey(): failed: %@", responseOrError);
+            handler(nil);
         }
     }];
 }
@@ -513,6 +691,8 @@
     //NSLog(@"webSocketDidOpen");
     _backoffTime = 0.0;
     [self identify];
+    [self updatePresence];
+    [self updateKey];
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
@@ -524,5 +704,155 @@
 - (void) incomingMethodCallDidFail: (NSError*) error {
     NSLog(@"incoming JSON RPC method call failed: %@", error);
 }
+
+#pragma mark - Avatar uploading
+
+- (void) uploadAvatarIfNeeded {
+    NSString * myDesiredURL = [self calcAvatarURL];
+    NSString * myCurrentAvatarURL =[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarURL];
+    if (![myCurrentAvatarURL isEqualToString: myDesiredURL]) {
+        [self uploadAvatar: myDesiredURL];
+    }
+}
+
+- (void) uploadAvatar: (NSString*)toURL {
+    if (self.avatarUploadConnection != nil) {
+        NSLog(@"avatar is still being uploaded");
+        return;
+    }
+    NSData * myAvatarData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+    NSLog(@"uploadAvatar starting");
+    _avatarBytesTotal = [myAvatarData length];
+    _avatarUploadURL = toURL;
+    NSURLRequest *myRequest  = [self httpRequest:@"PUT"
+                                     absoluteURI:toURL
+                                         payload:myAvatarData
+                                         headers:[self httpHeaderWithContentLength: _avatarBytesTotal]
+                                ];
+    _avatarBytesUploaded = 0;
+    _avatarUploadConnection = [NSURLConnection connectionWithRequest:myRequest delegate:self];
+}
+
+-(NSDictionary*) httpHeaderWithContentLength: (NSUInteger) theLength {
+	
+    NSDictionary * headers = [NSDictionary dictionaryWithObjectsAndKeys:
+                              [NSString stringWithFormat:@"%u", theLength], @"Content-Length",
+                              nil
+                              ];
+    return headers;
+    
+}
+
+- (NSString *) calcAvatarURL {
+    NSMutableData * myAvatarData = [NSMutableData dataWithData:[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage]];
+    NSString * myClientID =[[HTUserDefaults standardUserDefaults] objectForKey: kHTClientId];
+    [myAvatarData appendData:[myClientID dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSData * myHash = [myAvatarData SHA256Hash];
+    NSString * myAvatarFileName = [myHash hexadecimalString];
+    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingPathComponent:myAvatarFileName];
+    return myURL;
+    // return [NSURL URLWithString: myURL];
+}
+
+-(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
+{
+    NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
+    if (connection == _avatarUploadConnection) {
+        NSLog(@"_avatarUploadConnection didReceiveResponse %@, status=%ld, %@",
+              httpResponse, (long)[httpResponse statusCode],
+              [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+    } else {
+        NSLog(@"ERROR: HoccerTalkBackend didReceiveResponse without valid connection");
+    }
+}
+
+-(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
+{
+    if (connection == _avatarUploadConnection) {
+        /*
+        NSLog(@"_avatarUploadConnection didReceiveData len=%lu", (unsigned long)[data length]);
+        if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+            NSURL * myURL = [NSURL URLWithString: self.ownedURL];
+            NSString * myPath = [myURL path];
+            NSOutputStream * stream = [[NSOutputStream alloc] initToFileAtPath: myPath append:YES];
+            [stream open];
+            NSUInteger left = [data length];
+            NSUInteger nwr = 0;
+            do {
+                nwr = [stream write:[data bytes] maxLength:left];
+                if (-1 == nwr) break;
+                left -= nwr;
+            } while (left > 0);
+            if (left) {
+                NSLog(@"ERROR: HoccerTalkBackend didReceiveData, stream error: %@", [stream streamError]);
+            }
+            [stream close];
+        } else {
+            NSLog(@"ERROR: HoccerTalkBackend didReceiveData on outgoing (upload) connection");
+        }
+         */
+    } else {
+        NSLog(@"ERROR: HoccerTalkBackend didReceiveData without valid connection");
+    }
+}
+
+-(void)connection:(NSURLConnection*)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
+{
+    if (connection == _avatarUploadConnection) {
+        NSLog(@"_avatarUploadConnection didSendBodyData %d", bytesWritten);
+        _avatarBytesUploaded = totalBytesWritten;
+    } else {
+        NSLog(@"ERROR: HoccerTalkBackend didSendBodyData without valid connection");
+    }
+}
+
+-(void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
+{
+    if (connection == _avatarUploadConnection) {
+        NSLog(@"_avatarUploadConnection didFailWithError %@", error);
+        _avatarUploadConnection = nil;
+    } else {
+        NSLog(@"ERROR: HoccerTalkBackend didFailWithError without valid connection");
+    }
+}
+
+-(void)connectionDidFinishLoading:(NSURLConnection*)connection
+{
+    if (connection == _avatarUploadConnection) {
+        NSLog(@"_avatarUploadConnection connectionDidFinishLoading %@", connection);
+        _avatarUploadConnection = nil;
+        if (_avatarBytesUploaded == _avatarBytesTotal) {
+            // set avatar url to new successfully uploaded version
+            [[HTUserDefaults standardUserDefaults] setObject: _avatarUploadURL forKey: kHTAvatarURL];
+            [[HTUserDefaults standardUserDefaults] synchronize];
+            NSLog(@"_avatarUploadConnection successfully uploaded avatar of size %d", _avatarBytesTotal);
+        } else {
+            NSLog(@"ERROR: _avatarUploadConnection only uploaded %d bytes, should be %d",_avatarBytesUploaded, _avatarBytesTotal);
+        }
+        /*
+        if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+            // finish download
+            NSError *myError = nil;
+            self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
+            
+            if ([self.transferSize isEqualToNumber: self.contentSize]) {
+                NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);
+                self.localURL = self.ownedURL;
+                // TODO: maybe do some UI refresh here, or use an observer for this
+                [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
+                // [_chatBackend downloadFinished: self];
+                NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
+            } else {
+                NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
+                // TODO: trigger some retry
+            }
+        }
+     */
+    } else {
+        NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
+    }
+}
+
 
 @end

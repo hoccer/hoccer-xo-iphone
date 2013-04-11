@@ -13,7 +13,9 @@ NSString * const kHTFirstRunDone   = @"firstRunDone";
 NSString * const kHTAPNDeviceToken = @"apnDeviceToken";
 NSString * const kHTClientId       = @"clientId";
 NSString * const kHTAvatarImage    = @"avatarImage";
+NSString * const kHTAvatarURL      = @"avatarURL";
 NSString * const kHTNickName       = @"nickName";
+NSString * const kHTUserStatus     = @"userStatus";
 
 NSString * const kHTDefaultsDefaultsFile = @"HTUserDefaultsDefaults";
 
