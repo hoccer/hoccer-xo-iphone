@@ -202,7 +202,6 @@
 		63C413C716EA397F004E1F6D /* AssetStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C413C616EA397E004E1F6D /* AssetStore.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 		63DC01511713976B00609513 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01501713976B00609513 /* ImageViewController.m */; };
-		63DC015517146EBC00609513 /* Relationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC015417146EBC00609513 /* Relationship.m */; };
 		63DC015B17147B1700609513 /* HoccerTalkTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC015A17147B1600609513 /* HoccerTalkTableViewCell.m */; };
 		63DC015E1714895A00609513 /* contact_section_header_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DC015C1714895800609513 /* contact_section_header_bg.png */; };
 		63DC015F1714895A00609513 /* contact_section_header_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DC015D1714895900609513 /* contact_section_header_bg@2x.png */; };
@@ -513,8 +512,6 @@
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		63DC014F1713976B00609513 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		63DC01501713976B00609513 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
-		63DC015317146EBC00609513 /* Relationship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Relationship.h; sourceTree = "<group>"; };
-		63DC015417146EBC00609513 /* Relationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Relationship.m; sourceTree = "<group>"; };
 		63DC015917147B1600609513 /* HoccerTalkTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoccerTalkTableViewCell.h; sourceTree = "<group>"; };
 		63DC015A17147B1600609513 /* HoccerTalkTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoccerTalkTableViewCell.m; sourceTree = "<group>"; };
 		63DC015C1714895800609513 /* contact_section_header_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact_section_header_bg.png; sourceTree = "<group>"; };
@@ -1018,8 +1015,6 @@
 				6378484916F4040C00DE03C2 /* HoccerTalkModel.m */,
 				63C1356B1716A4AB00969B0B /* Invite.h */,
 				63C1356C1716A4AB00969B0B /* Invite.m */,
-				63DC015317146EBC00609513 /* Relationship.h */,
-				63DC015417146EBC00609513 /* Relationship.m */,
 				63AEE30916CA6B1900522F92 /* TalkMessage.h */,
 				63AEE30A16CA6B1900522F92 /* TalkMessage.m */,
 			);
@@ -1457,7 +1452,6 @@
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
 				E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */,
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
-				63DC015517146EBC00609513 /* Relationship.m in Sources */,
 				63DC015B17147B1700609513 /* HoccerTalkTableViewCell.m in Sources */,
 				63DC01851715205300609513 /* HTSwitch.m in Sources */,
 				63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */,

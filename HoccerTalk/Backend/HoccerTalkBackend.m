@@ -413,7 +413,6 @@
     [self flushPendingAttachmentDownloads];
 }
 
-
 - (void) flushPendingAttachmentUploads {
     // fetch all not yet transferred uploads
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotUploaded"];
@@ -453,8 +452,6 @@
 - (NSURL *) newUploadURL {
     // NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
     NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
-    NSDictionary *params = [NSDictionary dictionaryWithObject:[[NSNumber numberWithDouble:60*24*365*3] stringValue] forKey:@"expires_in"];
-	myURL = [myURL stringByAppendingQuery:[params URLParams]];
     return [NSURL URLWithString: myURL];
 }
 
@@ -655,6 +652,8 @@
         [self.delegate didPairWithStatus: [responseOrError boolValue]];
         if (success) {
             NSLog(@"pairByToken(): got result: %@", responseOrError);
+            [self updatePresence];
+            [self updatePresences];
         } else {
             NSLog(@"pairByToken(): failed: %@", responseOrError);
         }
