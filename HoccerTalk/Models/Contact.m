@@ -39,13 +39,13 @@ NSString * const kRelationStateBlocked = @"blocked";
 @dynamic relationshipState;
 @dynamic relationshipLastChanged;
 
-- (void) setLastChanged:(id) time {
+- (void) setRelationshipLastChanged:(id) time {
     if ([time isKindOfClass:[NSNumber class]]) {
         time = [NSDate dateWithTimeIntervalSince1970: [time doubleValue] / 1000.0];
     }
-    [self willChangeValueForKey: @"lastChanged"];
-    [self setPrimitiveValue: time forKey: @"lastChanged"];
-    [self didChangeValueForKey: @"lastChanged"];
+    [self willChangeValueForKey: @"relationshipLastChanged"];
+    [self setPrimitiveValue: time forKey: @"relationshipLastChanged"];
+    [self didChangeValueForKey: @"relationshipLastChanged"];
 }
 
 @synthesize avatarImage = _avatarImage;

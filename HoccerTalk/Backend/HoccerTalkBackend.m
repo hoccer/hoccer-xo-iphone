@@ -343,10 +343,10 @@
     // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
         for (NSDictionary * relationshipDict in changedRelationships) {
-            NSString * clientId = relationshipDict[@"otherClientID"];
+            NSString * clientId = relationshipDict[@"otherClientId"];
             Contact * contact = [self getContactByClientId: clientId];
             if (contact == nil) {
-                NSLog(@"================= Creating Contact");
+                // NSLog(@"================= Creating Contact");
                 contact = (Contact*)[NSEntityDescription entityForName:[Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
                 contact.clientId = clientId;
             }
@@ -684,10 +684,10 @@
     [_serverConnection invoke: @"getRelationships" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"getRelationships(): got result: %@", responseOrError);
-            //handler([responseOrError boolValue]);
+            handler(responseOrError);
         } else {
             NSLog(@"getRelationships(): failed: %@", responseOrError);
-            //handler(NO);
+            handler(NO);
         }
     }];
 }
