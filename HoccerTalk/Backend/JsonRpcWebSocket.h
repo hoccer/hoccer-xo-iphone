@@ -38,7 +38,7 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 
 @property (nonatomic,strong) id<JsonRpcWebSocketDelegate> delegate;
 
-- (id) initWithURLRequest: (NSURLRequest*) request;
+- (id) initWithURLRequest: (NSURLRequest*) request protocols: (NSArray*) protcols;
 - (void) open;
 - (void) close;
 - (void) reopenWithURLRequest: (NSURLRequest*) request;

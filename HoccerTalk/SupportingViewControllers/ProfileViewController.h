@@ -18,9 +18,10 @@
 
 @interface ProfileViewController : UserDefaultsViewController <UITextFieldDelegate,AttachmentPickerControllerDelegate>
 {
-    AvatarItem *        _avatarItem;
-    NSMutableArray *    _profileItems;
-    BOOL                _editing;
+    AvatarItem *      _avatarItem;
+    NSArray *         _profileItems;
+    NSMutableArray *  _allProfileItems;
+    BOOL              _editing;
 }
 
 @property (nonatomic,strong) UITableView* tableView;

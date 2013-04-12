@@ -25,6 +25,8 @@
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
 
+const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
+
 @interface HoccerTalkBackend ()
 {
     JsonRpcWebSocket * _serverConnection;
@@ -49,7 +51,7 @@
         _backoffTime = 0.0;
         _isConnected = NO;
         _apnsDeviceToken = nil;
-        _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest]];
+        _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol]];
         _serverConnection.delegate = self;
         [_serverConnection registerIncomingCall: @"incomingDelivery"  withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery"  withSelector:@selector(outgoingDelivery:) isNotification: YES];
@@ -346,8 +348,7 @@
             NSString * clientId = relationshipDict[@"otherClientId"];
             Contact * contact = [self getContactByClientId: clientId];
             if (contact == nil) {
-                // NSLog(@"================= Creating Contact");
-                contact = (Contact*)[NSEntityDescription entityForName:[Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+                contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
                 contact.clientId = clientId;
             }
             [contact updateWithDictionary: relationshipDict];

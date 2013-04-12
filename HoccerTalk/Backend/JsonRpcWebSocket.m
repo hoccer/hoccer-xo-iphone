@@ -55,7 +55,7 @@ static const NSTimeInterval kResponseTimeout = 10;
     return _verbosityLevel;
 }
 
-- (id) initWithURLRequest: (NSURLRequest*) request {
+- (id) initWithURLRequest: (NSURLRequest*) request protocols: (NSArray*) protcols {
     self = [super init];
     if (self != nil) {
         _id = 0;

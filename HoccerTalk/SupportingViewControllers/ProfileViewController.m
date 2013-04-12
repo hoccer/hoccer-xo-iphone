@@ -60,15 +60,13 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return self;
 }
 
-- (NSString*) itemsPlistFileName {
-    return @"ProfileItems";
-}
-
 - (void) viewDidLoad {
     [super viewDidLoad];
 
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.editButtonItem.target = self;
+    self.editButtonItem.action = @selector(enableEditing);
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -84,7 +82,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        [self setEditing: YES animated: YES];
+        [self enableEditing];
     }
 }
 
@@ -108,7 +106,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         }
         [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     } else {
-        ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
+        ProfileItem * item = (ProfileItem*)_items[indexPath.section][indexPath.row];
         if ([item.cellIdentifier isEqualToString: [UserDefaultsCellTextInput reuseIdentifier]]) {
             cell = [self dequeueReusableCellOfClass: [UserDefaultsCellTextInput class] forIndexPath: indexPath];
             [self configureTextCell: (UserDefaultsCellTextInput*)cell withItem: item atIndexPath: indexPath];
@@ -185,11 +183,11 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return NO;
 }
 
-- (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+- (void) enableEditing {
     // do not call super class
-    if (_editing == editing ) {
-        return;
-    }
+    _items = [self filterItems:  YES];
+    [self.tableView reloadData];
+
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(onDone:)];
@@ -236,7 +234,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         int index = 0;
         NSArray * indexPaths = self.tableView.indexPathsForVisibleRows;
         for (UITableViewCell * cell in self.tableView.visibleCells) {
-            ProfileItem * item = _profileItems[((NSIndexPath*)indexPaths[index++]).row];
+            NSIndexPath * indexPath = (NSIndexPath*)indexPaths[index++];
+            ProfileItem * item = _items[indexPath.section][indexPath.row];
             if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
                 UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
                 if (_editing) {
@@ -280,7 +279,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (IBAction)onCancel:(id)sender {
-    [self.tableView endEditing: NO];
+    _items = [self filterItems:  NO];
+    [self.tableView reloadData]; // TODO: get rid of reloadData
 
     [self reloadProfile];
     [self restoreNonEditButtons];
@@ -288,7 +288,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (IBAction)onDone:(id)sender {
-    [self.tableView endEditing: NO];
+
+    _items = [self filterItems:  NO];
+    [self.tableView reloadData]; // TODO: get rid of reloadData
 
     [self saveProfile];
     [self restoreNonEditButtons];
@@ -300,7 +302,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     _avatarItem = [[AvatarItem alloc] init];
     _avatarItem.userDefaultsKey = kHTAvatarImage;
 
-    _profileItems = [[NSMutableArray alloc] init];
+    _allProfileItems = [[NSMutableArray alloc] init];
 
     ProfileItem * nickNameItem = [[ProfileItem alloc] init];
     nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
@@ -309,7 +311,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     nickNameItem.placeholder = NSLocalizedString(@"profile_name_placeholder", @"Profile Placeholder Nick Name");
     nickNameItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     nickNameItem.keyboardType = UIKeyboardTypeDefault;
-    [_profileItems addObject: nickNameItem];
+    [_allProfileItems addObject: nickNameItem];
 
     ProfileItem * clientIdItem = [[ProfileItem alloc] init];
     //nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
@@ -318,7 +320,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     clientIdItem.placeholder = @"Your Client Id";
     clientIdItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     clientIdItem.keyboardType = UIKeyboardTypeDefault;
-    [_profileItems addObject: clientIdItem];
+    [_allProfileItems addObject: clientIdItem];
 
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
@@ -327,7 +329,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     phoneItem.placeholder = NSLocalizedString(@"profile_phone_placeholder", nil);
     phoneItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     phoneItem.keyboardType = UIKeyboardTypePhonePad;
-    [_profileItems addObject: phoneItem];
+    [_allProfileItems addObject: phoneItem];
 
     ProfileItem * mailItem = [[ProfileItem alloc] init];
     mailItem.icon = [UIImage imageNamed: @"icon_profile-mail"];
@@ -336,7 +338,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     mailItem.placeholder = NSLocalizedString(@"profile_mail_placeholder", nil);
     mailItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     mailItem.keyboardType = UIKeyboardTypeEmailAddress;
-    [_profileItems addObject: mailItem];
+    [_allProfileItems addObject: mailItem];
 
     ProfileItem * twitterItem = [[ProfileItem alloc] init];
     twitterItem.icon = [UIImage imageNamed: @"icon_profile-twitter"];
@@ -344,7 +346,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     twitterItem.editLabel = NSLocalizedString(@"profile_twitter_label", nil);
     twitterItem.placeholder = NSLocalizedString(@"profile_twitter_placeholder", nil);
     twitterItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: twitterItem];
+    [_allProfileItems addObject: twitterItem];
 
     ProfileItem * facebookItem = [[ProfileItem alloc] init];
     facebookItem.icon = [UIImage imageNamed: @"icon_profile-facebook"];
@@ -352,7 +354,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     facebookItem.editLabel = NSLocalizedString(@"profile_facebook_label", nil);
     facebookItem.placeholder = NSLocalizedString(@"profile_facebook_placeholder", nil);
     facebookItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: facebookItem];
+    [_allProfileItems addObject: facebookItem];
 
     ProfileItem * googlePlusItem = [[ProfileItem alloc] init];
     googlePlusItem.icon = [UIImage imageNamed: @"icon_profile-googleplus"];
@@ -360,7 +362,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     googlePlusItem.editLabel = NSLocalizedString(@"profile_google_plus_label", nil);
     googlePlusItem.placeholder = NSLocalizedString(@"profile_google_plus_placeholder", nil);
     googlePlusItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: googlePlusItem];
+    [_allProfileItems addObject: googlePlusItem];
 
     ProfileItem * githubItem = [[ProfileItem alloc] init];
     githubItem.icon = [UIImage imageNamed: @"icon_profile-octocat"];
@@ -368,14 +370,26 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     githubItem.editLabel = NSLocalizedString(@"profile_github_label", nil);
     githubItem.placeholder = NSLocalizedString(@"profile_github_placeholder", nil);
     githubItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: githubItem];
+    [_allProfileItems addObject: githubItem];
 
     _avatarItem.image = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] valueForKey: _avatarItem.userDefaultsKey]];
-    for (ProfileItem* item in _profileItems) {
+    for (ProfileItem* item in _allProfileItems) {
         item.currentValue = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
     }
-    return @[ @[_avatarItem], _profileItems];
+    return [self filterItems: _editing];
 }
+
+- (NSArray*) filterItems: (BOOL) editing {
+    NSArray * items;
+    if (editing) {
+        items = _allProfileItems;
+    } else {
+        NSPredicate * itemsWithValues = [NSPredicate predicateWithFormat: @"currentValue != nil"];
+        items = [_allProfileItems filteredArrayUsingPredicate: itemsWithValues];
+    }
+    return @[ @[_avatarItem], items];
+}
+
 
 - (void) saveProfile {
     // TODO: proper size handling
@@ -388,7 +402,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     CGSize size = CGSizeMake(_avatarItem.image.size.width * scale, _avatarItem.image.size.height * scale);
     [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.image imageScaledToSize: size]) forKey: _avatarItem.userDefaultsKey];
     for (ProfileItem* item in _profileItems) {
-        NSLog(@"saving %@ as %@", item.currentValue, item.userDefaultsKey);
         [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.userDefaultsKey];
     }
 
@@ -447,8 +460,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
         _avatarItem.image = image;
         [self.tableView reloadData];
-    } else {
-        NSLog(@"avatar chooser cancel");
     }
 }
 
