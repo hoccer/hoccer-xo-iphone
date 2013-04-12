@@ -50,7 +50,7 @@
                     },
                     @{ @"title": NSLocalizedString(@"FAQ", nil),
                        @"icon": @"navigation_button_faq",
-                       @"storyboardId": @"tutorialViewController" // TODO
+                       @"storyboardId": @"tutorialViewController" // TODO: @"faqViewController"
                        },
                     @{ @"title": NSLocalizedString(@"About", nil),
                        @"icon": @"navigation_button_about",

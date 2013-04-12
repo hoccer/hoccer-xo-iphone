@@ -124,7 +124,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell height: %f", self.contactCellPrototype.frame.size.height);
     return self.contactCellPrototype.frame.size.height;
 }
 
