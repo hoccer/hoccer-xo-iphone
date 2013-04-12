@@ -15,7 +15,7 @@
 @class MFSideMenu;
 @class HoccerTalkBackend;
 
-@interface ContactListViewController : UIViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
+@interface ContactQuickListViewController : UIViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic,strong) IBOutlet UITableView* tableView;
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;

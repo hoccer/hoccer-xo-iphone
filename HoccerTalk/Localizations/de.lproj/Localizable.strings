@@ -118,3 +118,5 @@
 
 "no_messages_exchanged" = "Bisher keine Nachrichten.";
 
+"empty_conversation_list_label" = "Gespräche";
+
