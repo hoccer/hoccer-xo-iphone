@@ -8,6 +8,10 @@
 
 #import "ImageViewController.h"
 
+#import <QuartzCore/QuartzCore.h>
+
+static const CGFloat kImageViewerOversize = 1.03;
+
 @interface ImageViewController ()
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -34,9 +38,15 @@
     twoFingerTapRecognizer.numberOfTapsRequired = 1;
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
+    
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical   = YES;
     self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"bg-noise"]];
+
+    self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.imageView.layer.shadowOpacity = 0.8;
+    self.imageView.layer.shadowRadius  = 10;
+    self.imageView.layer.shadowOffset = CGSizeMake(0, 0);
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -58,14 +68,14 @@
     // and frame changes when updating the picture
     self.scrollView.zoomScale = 1.0;
 
-    self.imageView.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size = self.image.size};
+    self.imageView.frame = CGRectMake(0.0f, 0.0f, self.image.size.width, self.image.size.height);
 
-    self.scrollView.contentSize = self.image.size;
+    self.scrollView.contentSize = CGSizeMake(self.image.size.width * kImageViewerOversize, self.image.size.height * kImageViewerOversize);
 
     CGRect scrollViewFrame = self.scrollView.frame;
     CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
     CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
-    CGFloat minScale = MIN(scaleWidth, scaleHeight);
+    CGFloat minScale = MIN(scaleWidth, scaleHeight) / kImageViewerOversize;
     self.scrollView.minimumZoomScale = minScale;
 
     self.scrollView.maximumZoomScale = 1.0f;
@@ -96,6 +106,12 @@
     }
 
     self.imageView.frame = contentsFrame;
+}
+
+- (void) scrollViewTapped: (id) sender {
+    [UIView animateWithDuration: 0.3 animations:^{
+        self.navigationBar.alpha = 1.0 - self.navigationBar.alpha;
+    }];
 }
 
 - (void)scrollViewDoubleTapped:(UITapGestureRecognizer*)recognizer {

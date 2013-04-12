@@ -135,3 +135,6 @@
 "setting_save_incoming_media_info" = "Automatically save images and videos in your photo album. Contacts are saved to your address book.";
 
 "no_messages_exchanged" = "No messages yet.";
+
+"empty_conversation_list_label" = "Conversations";
+

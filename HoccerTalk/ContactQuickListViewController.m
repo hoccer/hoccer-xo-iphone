@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactListViewController.h"
+#import "ContactQuickListViewController.h"
 
 #import "ContactListViewCells.h"
 #import "InsetImageView.h"
@@ -20,7 +20,7 @@
 #import "InviteCodeViewController.h"
 
 
-@interface ContactListViewController ()
+@interface ContactQuickListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, strong) NSMutableArray * invitationChannels;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
@@ -35,7 +35,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 @property (nonatomic, assign) SEL handler;
 @end
 
-@implementation ContactListViewController
+@implementation ContactQuickListViewController
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize chatBackend = _chatBackend;

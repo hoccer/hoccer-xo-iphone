@@ -13,7 +13,7 @@
 #import "TalkMessage.h"
 #import "AssetStore.h"
 #import "NavigationMenuViewController.h"
-#import "ContactListViewController.h"
+#import "ContactQuickListViewController.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 #import "InviteCodeViewController.h"
@@ -86,7 +86,7 @@
 }
 
 - (void) setupSideMenusWithStoryboard: (UIStoryboard*) storyboard andConversationViewController: (ConversationViewController*) controller {
-    ContactListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
+    ContactQuickListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
     NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
     self.navigationController.sideMenu = [MFSideMenu menuWithNavigationController:self.navigationController
                                                            leftSideMenuController:navigationMenuViewController
