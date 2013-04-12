@@ -38,7 +38,15 @@
         attachmentView.frame = frame;
         
         UIButton * myButton = [[UIButton alloc] initWithFrame: frame];
-        [myButton setTitle:@"Open" forState:UIControlStateNormal];
+        // [myButton setTitle:@"Open" forState:UIControlStateNormal];
+
+        if ( [attachment.mediaType isEqualToString:@"video"]) {
+            [myButton setImage: [UIImage imageNamed:@"button-video"] forState:UIControlStateNormal];            
+        }
+        if ([attachment.mediaType isEqualToString:@"audio"]) {
+            [myButton setImage: [UIImage imageNamed:@"button-audio"] forState:UIControlStateNormal];
+        }
+
         myButton.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         
         [myButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
