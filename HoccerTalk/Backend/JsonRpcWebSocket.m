@@ -10,6 +10,8 @@
 
 #import "SocketRocket/SRWebSocket.h"
 
+#import "HTUserDefaults.h"
+
 static const NSInteger kJsonRpcParseError     = -32700;
 static const NSInteger kJsonRpcInvalidRequest = -32600;
 static const NSInteger kJsonRpcMethodNotFound = -32601;
@@ -28,6 +30,7 @@ static const NSTimeInterval kResponseTimeout = 10;
     long long _id;
     NSMutableDictionary * _responseHandlers;
     NSMutableDictionary * _rpcMethods;
+    NSString * _verbosityLevel;
 }
 
 - (void) serverDidNotRespond: (NSNumber*) jsonRpcId;
@@ -44,6 +47,13 @@ static const NSTimeInterval kResponseTimeout = 10;
 @end
 
 @implementation JsonRpcWebSocket
+
+- (NSString *) verbosityLevel {
+    if (_verbosityLevel == nil) {
+        _verbosityLevel = [[HTUserDefaults standardUserDefaults] valueForKey: @"jsonrpcverbosity"];
+    }
+    return _verbosityLevel;
+}
 
 - (id) initWithURLRequest: (NSURLRequest*) request {
     self = [super init];
@@ -76,6 +86,7 @@ static const NSTimeInterval kResponseTimeout = 10;
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass: [NSString class]]) {
+        if ([[self verbosityLevel]isEqualToString:@"dump"]) {NSLog(@"JSON RECV<-: %@",message);}
         [self unmarshall: message];
     } else if ([message isKindOfClass: [NSData class]]) {
         NSLog(@"ERROR: got binary message, but binary messages are not implemented");
@@ -149,6 +160,7 @@ static const NSTimeInterval kResponseTimeout = 10;
 
 - (void) processRequest: (NSDictionary*) request {
     JsonRpcHandler * handler = _rpcMethods[request[@"method"]];
+    if ([[self verbosityLevel]isEqualToString:@"trace"]) {NSLog(@"JSON request<-: %@ id:%@",request[@"method"], request[@"id"]);}
     if (handler != nil && [self.delegate respondsToSelector: handler.selector]) {
         if (handler.isNotification) {
 #pragma clang diagnostic push
@@ -169,6 +181,12 @@ static const NSTimeInterval kResponseTimeout = 10;
 }
 
 - (void) processResponse: (NSDictionary*) responseOrError {
+    if ([[self verbosityLevel]isEqualToString:@"trace"]) {
+        NSLog(@"JSON response<-: %@ %@ id:%@",
+              responseOrError[@"result"]?@"<result>":@"<no-result>",
+              responseOrError[@"error"]?responseOrError[@"error"]:@"<no-error>",
+              responseOrError[@"id"]);
+    }
     NSNumber * theId = responseOrError[@"id"];
     if (theId == nil) {
         [self emitJsonRpcError: @"Got response without id" code: 0 data: nil];
@@ -190,12 +208,14 @@ static const NSTimeInterval kResponseTimeout = 10;
 }
 
 - (void) notify: (NSString*) method withParams: (id) params {
+    if ([[self verbosityLevel]isEqualToString:@"trace"]) {NSLog(@"JSON notify->: %@",method);}
     NSDictionary * notification = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params};
     [self sendJson: notification];
 }
 
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler {
     NSNumber * theId = [self nextId];
+    if ([[self verbosityLevel]isEqualToString:@"trace"]) {NSLog(@"JSON invoke->: %@ id:%@",method, theId);}
     NSDictionary * methodCall = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params, @"id": theId};
     // NSLog(@"jsonrpc method: %@", methodCall);
     _responseHandlers[theId] = @{ @"handler": [handler copy],
@@ -207,7 +227,10 @@ static const NSTimeInterval kResponseTimeout = 10;
 }
 
 - (void) sendJson: (NSDictionary*) jsonObject {
-    [_websocket send: [[NSString alloc] initWithData: [NSJSONSerialization dataWithJSONObject: jsonObject options: 0 error: nil]  encoding:NSUTF8StringEncoding]];
+    NSData * myPayloaddata = [NSJSONSerialization dataWithJSONObject: jsonObject options: 0 error: nil];
+    NSString * myPayloadString = [[NSString alloc] initWithData:myPayloaddata encoding:NSUTF8StringEncoding];
+    if ([[self verbosityLevel]isEqualToString:@"dump"]) {NSLog(@"JSON SEND->: %@",myPayloadString);}
+    [_websocket send: myPayloadString];
 }
 
 - (NSNumber*) nextId {
@@ -220,11 +243,13 @@ static const NSTimeInterval kResponseTimeout = 10;
 }
 
 - (void) respondWithResult: (id) result id: (NSNumber*) theId {
+    if ([[self verbosityLevel]isEqualToString:@"trace"]) {NSLog(@"JSON response->: <result> id:%@", theId);}
     NSDictionary * response = @{@"jsonrpc": @"2.0", @"result": result, @"id": theId};
     [self sendJson: response];
 }
 
 - (void) respondWithError: (JsonRpcError*) error id: (NSNumber*) theId {
+    if ([[self verbosityLevel]isEqualToString:@"trace"]) {NSLog(@"JSON response->: <error> id:%@", theId);}
     NSDictionary * response =@{ @"jsonrpc": @"2.0",
                                 @"id": theId,
                                 @"error": @{ @"message": error.message,

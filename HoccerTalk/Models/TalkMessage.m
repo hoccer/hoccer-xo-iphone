@@ -35,15 +35,19 @@
 -(NSData*) cryptoKey {
     if (_cryptoKey == nil) {
         if ([self.isOutgoing isEqualToNumber: @YES]) {
-            _cryptoKey = [AESCryptor random256BitKey];
+            [self setupOutgoingEncryption];
         } else {
-            _cryptoKey = [(Delivery*)[self.deliveries anyObject] keyCleartext];
+            // get the key from the incoming delivery object
+            Delivery * myDelivery = (Delivery*)[self.deliveries anyObject];
+            // NSLog(@"myDelivery  =%@", myDelivery);
+            _cryptoKey = [myDelivery keyCleartext];
+            // NSLog(@"message  cryptoKey=%@", _cryptoKey);
         }
     }
     return _cryptoKey;
 }
 
--(void) setCryptokey:(NSData*) theKey {
+-(void) setCryptoKey:(NSData*) theKey {
     _cryptoKey = theKey;
     for (Delivery * d in self.deliveries) {
         d.keyCleartext = theKey;
@@ -51,7 +55,10 @@
 }
  
 - (NSString*) bodyCiphertext {
-     return [self encryptString: self.body];
+    if (self.body == nil) {
+        return nil;
+    }
+    return [self encryptString: self.body];
 }
  
 -(void) setBodyCiphertext:(NSString*) theB64String {
@@ -75,11 +82,11 @@
 }
 
 - (NSData *)encrypt:(NSData *)data {
-    return [data AES256EncryptedDataUsingKey:_cryptoKey error:nil];
+    return [data AES256EncryptedDataUsingKey:self.cryptoKey error:nil];
 }
 
 - (NSData *)decrypt:(NSData *)data {
-    return [data decryptedAES256DataUsingKey:_cryptoKey error:nil];
+    return [data decryptedAES256DataUsingKey:self.cryptoKey error:nil];
 }
 
 /* maybe not needed
@@ -96,8 +103,8 @@
 
 - (NSDictionary*) rpcKeys {
     return @{
-              // @"body": @"bodyCiphertext", // use this line to encrypt
-              @"body": @"body",
+              @"body": @"bodyCiphertext", // use this line to encrypt
+              // @"body": @"body",        // use this line to disable body encryption
               @"messageId": @"messageId",
               @"senderId": @"contact.clientId",
               @"attachmentSize": @"attachment.contentSize",
@@ -108,8 +115,8 @@
             };
 }
 
-- (void) makeRandomCryptoKey {
-    self.cryptoKey = [AESCryptor random256BitKey];
+- (void) setupOutgoingEncryption {
+    [self setCryptoKey: [AESCryptor random256BitKey]];
 }
 
 
