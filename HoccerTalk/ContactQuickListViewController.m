@@ -8,7 +8,7 @@
 
 #import "ContactQuickListViewController.h"
 
-#import "ContactListViewCells.h"
+#import "ContactQuickListViewCells.h"
 #import "InsetImageView.h"
 #import "Contact.h"
 #import "AppDelegate.h"
@@ -17,28 +17,18 @@
 #import "MFSideMenu.h"
 #import "iOSVersionChecks.h"
 #import "HoccerTalkBackend.h"
-#import "InviteCodeViewController.h"
 
 
 @interface ContactQuickListViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
-@property (nonatomic, strong) NSMutableArray * invitationChannels;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
-@property (nonatomic, readonly) ContactCell * contactCellPrototype;
-@property (nonatomic, readonly) ContactSectionHeaderCell * sectionHeaderPrototype;
-@end
-
-static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
-
-@interface InvitationChannel : NSObject
-@property (nonatomic,strong) NSString* localizedButtonTitle;
-@property (nonatomic, assign) SEL handler;
+@property (nonatomic, readonly) ContactQuickListCell * contactCellPrototype;
+@property (nonatomic, readonly) ContactQuickListSectionHeaderCell * sectionHeaderPrototype;
 @end
 
 @implementation ContactQuickListViewController
 
 @synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize chatBackend = _chatBackend;
 @synthesize contactCellPrototype = _contactCellPrototype;
 @synthesize sectionHeaderPrototype = _sectionHeaderPrototype;
 
@@ -63,23 +53,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     [self.inviteButton setBackgroundImage: inviteButtonBackground forState: UIControlStateNormal];
     [self.inviteButton setBackgroundColor: [UIColor clearColor]];
 
-    self.invitationChannels = [[NSMutableArray alloc] initWithCapacity: 2];
-    if ([MFMessageComposeViewController canSendText]) {
-        InvitationChannel * channel = [[InvitationChannel alloc] init];
-        channel.localizedButtonTitle = NSLocalizedString(@"SMS",@"Invite Actionsheet Button Title");
-        channel.handler = @selector(inviteBySMS);
-        [self.invitationChannels addObject: channel];
-    }
-    if ([MFMailComposeViewController canSendMail]) {
-        InvitationChannel * channel = [[InvitationChannel alloc] init];
-        channel.localizedButtonTitle = NSLocalizedString(@"Mail",@"Invite Actionsheet Button Title");
-        channel.handler = @selector(inviteByMail);
-        [self.invitationChannels addObject: channel];
-    }
-    InvitationChannel * channel = [[InvitationChannel alloc] init];
-    channel.localizedButtonTitle = NSLocalizedString(@"Invite Code", @"Invite Actionsheet Button Title");
-    channel.handler = @selector(inviteByCode);
-    [self.invitationChannels addObject: channel];
 }
 
 - (void)didReceiveMemoryWarning
@@ -95,16 +68,16 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 #pragma mark - Table View
 
-- (ContactCell*) contactCellPrototype {
+- (ContactQuickListCell*) contactCellPrototype {
     if (_contactCellPrototype == nil) {
-        _contactCellPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
+        _contactCellPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier]];
     }
     return _contactCellPrototype;
 }
 
-- (ContactSectionHeaderCell*) sectionHeaderPrototype {
+- (ContactQuickListSectionHeaderCell*) sectionHeaderPrototype {
     if (_sectionHeaderPrototype == nil) {
-        _sectionHeaderPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
+        _sectionHeaderPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactQuickListSectionHeaderCell reuseIdentifier]];
     }
     return _sectionHeaderPrototype;
 }
@@ -129,9 +102,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ContactCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
-    [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath] :
-    [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
+    ContactQuickListCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
+    [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier] forIndexPath:indexPath] :
+    [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier]];
 
     if (cell.backgroundView == nil) {
         // TODO: do this right ...
@@ -151,7 +124,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    ContactSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
+    ContactQuickListSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactQuickListSectionHeaderCell reuseIdentifier]];
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
     if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
         cell.title.text = NSLocalizedString(@"contact_group_none", nil);
@@ -335,7 +308,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self fetchedResultsController: controller configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self fetchedResultsController: controller configureCell: (ContactQuickListCell*)[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
 
         case NSFetchedResultsChangeMove:
@@ -362,7 +335,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
-                   configureCell:(ContactCell *)cell
+                   configureCell:(ContactQuickListCell *)cell
                      atIndexPath:(NSIndexPath *)indexPath
 {
     // your cell guts here
@@ -373,149 +346,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];
 }
 
-#pragma mark - Invitations
-
-- (IBAction) invitePressed:(id)sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
-                                                        delegate: self
-                                               cancelButtonTitle: nil
-                                          destructiveButtonTitle: nil
-                                               otherButtonTitles: nil];
-    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    for (InvitationChannel * channel in self.invitationChannels) {
-        [sheet addButtonWithTitle: channel.localizedButtonTitle];
-    }
-    sheet.cancelButtonIndex = [sheet addButtonWithTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")];
-
-    [sheet showInView: self.view];
-
-}
-
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        return;
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector: ((InvitationChannel*)self.invitationChannels[buttonIndex]).handler];
-#pragma clang diagnostic pop
-}
-
-- (void) inviteByMail {
-    [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
-        if (token == nil) {
-            return;
-        }
-        MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
-        picker.mailComposeDelegate = self;
-
-        [picker setSubject: NSLocalizedString(@"invitation_mail_subject", @"Mail Invitation Subject")];
-
-        NSString * body = NSLocalizedString(@"invitation_mail_body", @"Mail Invitation Body");
-        NSString * inviteLink = [self inviteURL: token];
-        NSString * appStoreLink = [self appStoreURL];
-        NSString * androidLink = [self androidURL];
-        body = [NSString stringWithFormat: body, appStoreLink, androidLink, inviteLink];
-        [picker setMessageBody:body isHTML:NO];
-
-        [self.sideMenu setMenuState:MFSideMenuStateClosed];
-        [self.sideMenu.navigationController.topViewController presentModalViewController: picker animated: YES];
-    }];
-}
-
-- (void) inviteBySMS {
-    [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
-        if (token == nil) {
-            return;
-        }
-        MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
-        picker.messageComposeDelegate = self;
-
-        NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
-        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token]];
-        
-        [self.sideMenu setMenuState:MFSideMenuStateClosed];
-        [self.sideMenu.navigationController.topViewController presentModalViewController: picker animated: YES];
-
-    }];
-}
-
-- (void) inviteByCode {
-    UIStoryboard * storyboard;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
-    } else {
-        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
-    }
-
-    InviteCodeViewController * controller = [storyboard instantiateViewControllerWithIdentifier:@"inviteCodeView"];
-
-    [self.sideMenu setMenuState:MFSideMenuStateClosed];
-    [self.sideMenu.navigationController.topViewController presentModalViewController: controller animated: YES];
-
-}
-
-- (NSString*) inviteURL: (NSString*) token {
-    return [NSString stringWithFormat: @"hctalk://%@", token];
-}
-
-- (NSString*) appStoreURL {
-    return @"itms-apps://itunes.com/apps/hoccertalk";
-}
-
-- (NSString*) androidURL {
-    return @"http://google.com";
-}
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-
-    // TODO: handle mail result?
-	switch (result) {
-		case MFMailComposeResultCancelled:
-			break;
-		case MFMailComposeResultSaved:
-			break;
-		case MFMailComposeResultSent:
-			break;
-		case MFMailComposeResultFailed:
-			break;
-		default:
-			break;
-	}
-    [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
-    [self reopenMenu];
-}
-
-- (void) reopenMenu {
-    [self.sideMenu setMenuState: MFSideMenuStateRightMenuOpen];
-}
-
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
-                 didFinishWithResult:(MessageComposeResult)result {
-
-    // TODO: handle message result?
-	switch (result) {
-		case MessageComposeResultCancelled:
-			break;
-		case MessageComposeResultSent:
-			break;
-		case MessageComposeResultFailed:
-			break;
-		default:
-			break;
-	}
-    [self.sideMenu.navigationController.topViewController dismissModalViewControllerAnimated: NO];
-    [self reopenMenu];
-}
-
-- (HoccerTalkBackend*) chatBackend {
-    if (_chatBackend == nil) {
-        _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
-    }
-    return _chatBackend;
-}
-
 - (void)viewDidUnload {
     [self setInviteButton:nil];
     [super viewDidUnload];
@@ -523,5 +353,3 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 @end
 
-@implementation InvitationChannel
-@end

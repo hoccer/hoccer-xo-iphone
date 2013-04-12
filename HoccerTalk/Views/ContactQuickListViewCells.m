@@ -6,13 +6,13 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactListViewCells.h"
+#import "ContactQuickListViewCells.h"
 
 #import <QuartzCore/QuartzCore.h>
 
 #import "AssetStore.h"
 
-@interface ContactCell ()
+@interface ContactQuickListCell ()
 {
     UIImageView * _messageCountBackground;
 }
@@ -24,7 +24,7 @@
 static const CGFloat kMessageCountBackgroundPadding = 8.0;
 static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
-@implementation ContactCell
+@implementation ContactQuickListCell
 
 - (void) awakeFromNib {
     [super awakeFromNib];
@@ -60,7 +60,7 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
 @end
 
-@implementation ContactSectionHeaderCell
+@implementation ContactQuickListSectionHeaderCell
 
 - (void) awakeFromNib {
     self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];

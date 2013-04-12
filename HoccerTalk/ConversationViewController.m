@@ -277,11 +277,6 @@
 }
  */
 
-// iOS 5 workaround for broken sizeToFit
-- (CGFloat) heightOfTwoLines: (UILabel*) label{
-    return [@"|\n|" sizeWithFont: label.font].height;
-}
-
 - (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath {
     if ([aCell isKindOfClass: [ConversationCell class]]) {
         ConversationCell * cell = (ConversationCell*)aCell;
@@ -298,16 +293,7 @@
             cell.latestMessage.font = [UIFont systemFontOfSize: cell.latestMessage.font.pointSize];
             latestMessageTime = [contact.latestMessage[0] timeStamp];
         }
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
-            [cell.latestMessage sizeToFit];
-        } else {
-            UILabel * label = cell.latestMessage;
-            CGRect frame = label.frame;
-            frame.size.height = [self heightOfTwoLines: label];
-            CGSize size = [label.text sizeWithFont:label.font constrainedToSize:label.frame.size lineBreakMode:label.lineBreakMode];
-            frame.size = size;
-            label.frame = frame;
-        }
+        [cell.latestMessage sizeToFit];
 
         if (latestMessageTime) {
             NSCalendar *calendar = [NSCalendar currentCalendar];

@@ -28,23 +28,31 @@
 }
 
 - (void) viewDidLoad {
-    _menuItems = @[ @{ @"title": NSLocalizedString(@"Chats", @"Navigation Menu Item"),
+    _menuItems = @[ @{ @"title": NSLocalizedString(@"Chats", nil),
                        @"icon": @"navigation_button_chats",
                        @"storyboardId": @"conversationViewController"
                     },
-                    @{ @"title": NSLocalizedString(@"Profile", @"Navigation Menu Item"),
+                    @{ @"title": NSLocalizedString(@"contacts_menu_item", nil),
+                       @"icon": @"navigation_button_contacts",
+                       @"storyboardId": @"contactsViewController"
+                       },
+                    @{ @"title": NSLocalizedString(@"Profile", nil),
                        @"icon": @"navigation_button_profile",
                        @"storyboardId": @"profileViewController"
                     },
-                    @{ @"title": NSLocalizedString(@"Settings", @"Navigation Menu Item"),
+                    @{ @"title": NSLocalizedString(@"Settings", nil),
                        @"icon": @"navigation_button_settings",
                        @"storyboardId": @"settingsViewController"
                     },
-                    @{ @"title": NSLocalizedString(@"Tutorial", @"Navigation Menu Item"),
+                    @{ @"title": NSLocalizedString(@"Tutorial", nil),
                        @"icon": @"navigation_button_tutorial",
                        @"storyboardId": @"tutorialViewController"
                     },
-                    @{ @"title": NSLocalizedString(@"About", @"Navigation Menu Item"),
+                    @{ @"title": NSLocalizedString(@"FAQ", nil),
+                       @"icon": @"navigation_button_faq",
+                       @"storyboardId": @"tutorialViewController" // TODO
+                       },
+                    @{ @"title": NSLocalizedString(@"About", nil),
                        @"icon": @"navigation_button_about",
                        @"storyboardId": @"aboutViewController"
                     }
