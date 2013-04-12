@@ -12,7 +12,7 @@
 
 @class InsetImageView;
 
-@interface ContactCell : HoccerTalkTableViewCell
+@interface ContactQuickListCell : HoccerTalkTableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet InsetImageView * avatar;
@@ -21,7 +21,7 @@
 
 @end
 
-@interface ContactSectionHeaderCell : HoccerTalkTableViewCell
+@interface ContactQuickListSectionHeaderCell : HoccerTalkTableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel     * title;
 @property (nonatomic,strong) IBOutlet UIImageView * icon;

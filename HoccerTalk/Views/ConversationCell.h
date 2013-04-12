@@ -9,13 +9,12 @@
 #import <UIKit/UIKit.h>
 
 #import "HoccerTalkTableViewCell.h"
+#import "ConversationAndContactsCell.h"
 
 @class InsetImageView;
 
-@interface ConversationCell : HoccerTalkTableViewCell   
+@interface ConversationCell : ConversationAndContactsCell
 
-@property (nonatomic,strong) IBOutlet UILabel * nickName;
-@property (nonatomic,strong) IBOutlet InsetImageView * avatar;
 @property (nonatomic,strong) IBOutlet UILabel* latestMessage;
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageTime;
 

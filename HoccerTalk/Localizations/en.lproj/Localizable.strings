@@ -55,6 +55,8 @@
 /* Navigation Menu Item */
 "Profile" = "Profile";
 
+"contacts_menu_item" = "Contacts";
+
 /* Actionsheet Button Title */
 "Remove Attachment" = "Remove Attachment";
 

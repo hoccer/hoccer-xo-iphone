@@ -1,5 +1,5 @@
 //
-//  ContactListViewController.h
+//  ContactCell.h
 //  HoccerTalk
 //
 //  Created by David Siegel on 12.04.13.
@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+#import "ConversationAndContactsCell.h"
 
-
+@interface ContactCell : ConversationAndContactsCell
 
 @end

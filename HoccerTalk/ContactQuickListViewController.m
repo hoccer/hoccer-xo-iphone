@@ -8,7 +8,7 @@
 
 #import "ContactQuickListViewController.h"
 
-#import "ContactListViewCells.h"
+#import "ContactQuickListViewCells.h"
 #import "InsetImageView.h"
 #import "Contact.h"
 #import "AppDelegate.h"
@@ -24,8 +24,8 @@
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, strong) NSMutableArray * invitationChannels;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
-@property (nonatomic, readonly) ContactCell * contactCellPrototype;
-@property (nonatomic, readonly) ContactSectionHeaderCell * sectionHeaderPrototype;
+@property (nonatomic, readonly) ContactQuickListCell * contactCellPrototype;
+@property (nonatomic, readonly) ContactQuickListSectionHeaderCell * sectionHeaderPrototype;
 @end
 
 static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
@@ -95,16 +95,16 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 #pragma mark - Table View
 
-- (ContactCell*) contactCellPrototype {
+- (ContactQuickListCell*) contactCellPrototype {
     if (_contactCellPrototype == nil) {
-        _contactCellPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
+        _contactCellPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier]];
     }
     return _contactCellPrototype;
 }
 
-- (ContactSectionHeaderCell*) sectionHeaderPrototype {
+- (ContactQuickListSectionHeaderCell*) sectionHeaderPrototype {
     if (_sectionHeaderPrototype == nil) {
-        _sectionHeaderPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
+        _sectionHeaderPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactQuickListSectionHeaderCell reuseIdentifier]];
     }
     return _sectionHeaderPrototype;
 }
@@ -129,9 +129,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ContactCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
-    [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath] :
-    [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
+    ContactQuickListCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
+    [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier] forIndexPath:indexPath] :
+    [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier]];
 
     if (cell.backgroundView == nil) {
         // TODO: do this right ...
@@ -151,7 +151,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    ContactSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactSectionHeaderCell reuseIdentifier]];
+    ContactQuickListSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactQuickListSectionHeaderCell reuseIdentifier]];
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
     if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
         cell.title.text = NSLocalizedString(@"contact_group_none", nil);
@@ -335,7 +335,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self fetchedResultsController: controller configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self fetchedResultsController: controller configureCell: (ContactQuickListCell*)[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
 
         case NSFetchedResultsChangeMove:
@@ -362,7 +362,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
-                   configureCell:(ContactCell *)cell
+                   configureCell:(ContactQuickListCell *)cell
                      atIndexPath:(NSIndexPath *)indexPath
 {
     // your cell guts here

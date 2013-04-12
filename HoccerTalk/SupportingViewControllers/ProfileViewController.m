@@ -192,7 +192,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(onDone:)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(onDone:)];
     if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onCancel:)];
         [self.navigationItem setLeftBarButtonItem: cancelButton animated:YES];

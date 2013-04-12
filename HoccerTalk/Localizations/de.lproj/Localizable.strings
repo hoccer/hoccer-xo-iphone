@@ -55,6 +55,8 @@
 /* Navigation Menu Item */
 "Profile" = "Profil";
 
+"contacts_menu_item" = "Kontakte";
+
 /* Actionsheet Button Title */
 "Remove Attachment" = "Anhang entfernen";
 
