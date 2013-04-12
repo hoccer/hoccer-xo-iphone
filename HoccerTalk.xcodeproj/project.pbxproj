@@ -241,6 +241,10 @@
 		E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */; };
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
+		E9A2B85017189A1200E35E7E /* button-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84C17189A1200E35E7E /* button-audio.png */; };
+		E9A2B85117189A1200E35E7E /* button-audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84D17189A1200E35E7E /* button-audio@2x.png */; };
+		E9A2B85217189A1200E35E7E /* button-video.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84E17189A1200E35E7E /* button-video.png */; };
+		E9A2B85317189A1200E35E7E /* button-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84F17189A1200E35E7E /* button-video@2x.png */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -582,6 +586,10 @@
 		E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLHelper.h"; sourceTree = "<group>"; };
 		E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLHelper.m"; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E9A2B84C17189A1200E35E7E /* button-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio.png"; sourceTree = "<group>"; };
+		E9A2B84D17189A1200E35E7E /* button-audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio@2x.png"; sourceTree = "<group>"; };
+		E9A2B84E17189A1200E35E7E /* button-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video.png"; sourceTree = "<group>"; };
+		E9A2B84F17189A1200E35E7E /* button-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video@2x.png"; sourceTree = "<group>"; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -704,6 +712,7 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				E9A2B84B17189A1200E35E7E /* Media */,
 				6327EAC31717564700AF75E1 /* ImageViewer */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
 				637847BA16F348E300DE03C2 /* AppIcons */,
@@ -1185,6 +1194,17 @@
 			path = Crypto;
 			sourceTree = "<group>";
 		};
+		E9A2B84B17189A1200E35E7E /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				E9A2B84C17189A1200E35E7E /* button-audio.png */,
+				E9A2B84D17189A1200E35E7E /* button-audio@2x.png */,
+				E9A2B84E17189A1200E35E7E /* button-video.png */,
+				E9A2B84F17189A1200E35E7E /* button-video@2x.png */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1429,6 +1449,10 @@
 				6327EAD31717689A00AF75E1 /* icon_profile-octocat.png in Resources */,
 				6327EAD41717689A00AF75E1 /* icon_profile-octocat@2x.png in Resources */,
 				6327EAD91718591600AF75E1 /* EmptyTablePlaceholderCell.xib in Resources */,
+				E9A2B85017189A1200E35E7E /* button-audio.png in Resources */,
+				E9A2B85117189A1200E35E7E /* button-audio@2x.png in Resources */,
+				E9A2B85217189A1200E35E7E /* button-video.png in Resources */,
+				E9A2B85317189A1200E35E7E /* button-video@2x.png in Resources */,
 				6327EAE8171875B200AF75E1 /* navbar-btn-blue.png in Resources */,
 				6327EAE9171875B200AF75E1 /* navbar-btn-blue@2x.png in Resources */,
 				6327EAF21718951A00AF75E1 /* navigation_button_contacts.png in Resources */,
