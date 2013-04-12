@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MFMailComposeViewController.h>
+#import <MessageUI/MessageUI.h>
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate>
-
-
+@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @end

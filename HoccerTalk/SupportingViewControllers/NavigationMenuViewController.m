@@ -33,7 +33,7 @@
                        @"storyboardId": @"conversationViewController"
                     },
                     @{ @"title": NSLocalizedString(@"contacts_menu_item", nil),
-                       @"icon": @"navbar-icon-contacts",
+                       @"icon": @"navigation_button_contacts",
                        @"storyboardId": @"contactsViewController"
                        },
                     @{ @"title": NSLocalizedString(@"Profile", nil),
@@ -48,6 +48,10 @@
                        @"icon": @"navigation_button_tutorial",
                        @"storyboardId": @"tutorialViewController"
                     },
+                    @{ @"title": NSLocalizedString(@"FAQ", nil),
+                       @"icon": @"navigation_button_faq",
+                       @"storyboardId": @"tutorialViewController" // TODO
+                       },
                     @{ @"title": NSLocalizedString(@"About", nil),
                        @"icon": @"navigation_button_about",
                        @"storyboardId": @"aboutViewController"
