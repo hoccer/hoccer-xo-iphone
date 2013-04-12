@@ -561,7 +561,7 @@
                 // TODO: maybe do some UI refresh here, or use an observer for this
                 [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
                 // [_chatBackend downloadFinished: self];
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);                
+                // NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
             } else {
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
                 // TODO: trigger some retry

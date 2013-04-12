@@ -31,9 +31,10 @@ NSString * const kDeliveryStateFailed     = @"failed";
 }
 
 -(void) setKeyCiphertextString:(NSString*) theB64String {
-    NSLog(@"Delivery: setKeyCiphertextString: ‘%@‘", theB64String);
+    // NSLog(@"Delivery: setKeyCiphertextString: ‘%@‘", theB64String);
     if ([theB64String isKindOfClass:[NSString class]]) {
         self.keyCiphertext = [NSData dataWithBase64EncodedString:theB64String];
+        // NSLog(@"Delivery: setKeyCiphertext = : ‘%@‘",  self.keyCiphertext);
     } else {
         NSLog(@"Delivery: setKeyCiphertextString: nil key in message");
     }
@@ -53,12 +54,6 @@ NSString * const kDeliveryStateFailed     = @"failed";
 - (NSData *) keyCleartext {
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         return nil; // can not decrypt outgoing key
-    }
-    if (![self.state isEqualToString:kDeliveryStateNew]) {
-        return nil;
-    }
-    if (self.message.cryptoKey == nil) {
-        return nil;
     }
     RSA * rsa = [RSA sharedInstance];
     SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRef];

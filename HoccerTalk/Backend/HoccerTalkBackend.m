@@ -87,6 +87,7 @@
     delivery.receiver = contact;
 
     contact.latestMessageTime = message.timeStamp;
+    [message setupOutgoingEncryption];
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
@@ -114,6 +115,10 @@
     if (messages.count > 0) {
         NSLog(@"receiveMessage: already have message with id %@", vars[@"messageId"]);
         // TODO: send delivery confirm (again)?
+        return;
+    }
+    if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
+        NSLog(@"receiveMessage: ignoring received message without keyCiphertext, id= %@", vars[@"messageId"]);
         return;
     }
 
@@ -335,7 +340,7 @@
 
 - (void) updateRelationships {
     NSDate * latestChange = [self getLatestChangeDateFromRelationships];
-    NSLog(@"latest date %@", latestChange);
+    // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
         for (NSDictionary * relationshipDict in changedRelationships) {
             NSString * clientId = relationshipDict[@"otherClientID"];
@@ -352,7 +357,7 @@
 
 - (void) updatePresences {
     NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0];
-    NSLog(@"latest date %@", latestChange);
+    // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
             // NSLog(@"updatePresences presence=%@",presence);
@@ -366,7 +371,8 @@
         if ([theId isEqualToString: keyRecord[@"keyId"]]) {
             theContact.publicKeyString = keyRecord[@"key"];
             theContact.publicKeyId = keyRecord[@"keyId"];
-            NSLog(@"Key for contact updated: %@", theContact);
+            // NSLog(@"Key for contact updated: %@", theContact);
+            NSLog(@"Received new public key for contact: %@", theContact.nickName);
         } else {
             NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
         }
@@ -457,7 +463,7 @@
 }
 
 - (void) downloadFinished:(Attachment *)theAttachment {
-    NSLog(@"downloadFinished of %@", theAttachment);
+    // NSLog(@"downloadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
 }
 
@@ -506,10 +512,10 @@
 
 - (void) identify {
     NSString * clientId = [self.delegate clientId];
-    NSLog(@"identify() clientId: %@", clientId);
+    // NSLog(@"identify() clientId: %@", clientId);
     [_serverConnection invoke: @"identify" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"identify(): got result: %@", responseOrError);
+            // NSLog(@"identify(): got result: %@", responseOrError);
             if (_apnsDeviceToken) {
                 [self registerApns: _apnsDeviceToken];
                 _apnsDeviceToken = nil; // XXX: this is not nice...
@@ -536,10 +542,10 @@
     for (Delivery * delivery in deliveries) {
         [deliveryDicts addObject: [delivery rpcDictionary]];
     }
-    NSLog(@"deliveryRequest: %@", messageDict);
+    // NSLog(@"deliveryRequest: %@", messageDict);
     [_serverConnection invoke: @"deliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"deliveryRequest() returned deliveries: %@", responseOrError);
+            // NSLog(@"deliveryRequest() returned deliveries: %@", responseOrError);
             NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
             int i = 0;
             for (Delivery * delivery in deliveries) {
@@ -552,10 +558,10 @@
 }
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
-    NSLog(@"deliveryConfirm: %@", delivery);
+    // NSLog(@"deliveryConfirm: %@", delivery);
     [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
+            // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
             [delivery updateWithDictionary: responseOrError];
         } else {
             NSLog(@"deliveryConfirm() failed: %@", responseOrError);
@@ -564,7 +570,7 @@
 }
 
 - (void) updatePresence: (NSString*) clientName withStatus: clientStatus withAvatar: (NSString*)avatarURL withKey: (NSData*)keyId {
-    NSLog(@"updatePresence: %@, %@, %@", clientName, clientStatus, avatarURL);
+    // NSLog(@"updatePresence: %@, %@, %@", clientName, clientStatus, avatarURL);
     NSDictionary *params = @{
                              @"clientName" : clientName,
                              @"clientStatus" : clientStatus,
@@ -573,7 +579,7 @@
                              };
     [_serverConnection invoke: @"updatePresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"updatePresence() got result: %@", responseOrError);
+            // NSLog(@"updatePresence() got result: %@", responseOrError);
         } else {
             NSLog(@"updatePresence() failed: %@", responseOrError);
         }
@@ -601,7 +607,7 @@
 
 
 - (void) updateKey: (NSData*) publicKey {
-    NSLog(@"updateKey: %@", publicKey);
+    // NSLog(@"updateKey: %@", publicKey);
     NSData * myKeyId = [[publicKey SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
     NSDictionary *params = @{
                              @"key" :   [publicKey asBase64EncodedString], 
@@ -609,7 +615,7 @@
                              };
     [_serverConnection invoke: @"updateKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"updateKey() got result: %@", responseOrError);
+            // NSLog(@"updateKey() got result: %@", responseOrError);
         } else {
             NSLog(@"updateKey() failed: %@", responseOrError);
         }
@@ -622,10 +628,10 @@
 }
 
 - (void) registerApns: (NSString*) token {
-    NSLog(@"registerApns: %@", token);
+    // NSLog(@"registerApns: %@", token);
     [_serverConnection invoke: @"registerApns" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"registerApns(): got result: %@", responseOrError);
+            // NSLog(@"registerApns(): got result: %@", responseOrError);
         } else {
             // TODO retry?
             NSLog(@"registerApns(): failed: %@", responseOrError);
@@ -634,7 +640,7 @@
 }
 
 - (void) unregisterApns {
-    NSLog(@"unregisterApns:");
+    // NSLog(@"unregisterApns:");
     [_serverConnection invoke: @"unregisterApns" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"unregisterApns(): got result: %@", responseOrError);
@@ -646,7 +652,7 @@
 }
 
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
-    NSLog(@"generateToken:");
+    // NSLog(@"generateToken:");
     [_serverConnection invoke: @"generateToken" withParams: @[purpose, @(seconds)] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSLog(@"generateToken(): got result: %@", responseOrError);
@@ -659,7 +665,7 @@
 }
 
 - (void) pairByToken: (NSString*) token {
-    NSLog(@"pairByToken:");
+    // NSLog(@"pairByToken:");
     [_serverConnection invoke: @"pairByToken" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
         [self.delegate didPairWithStatus: [responseOrError boolValue]];
         if (success) {
@@ -673,7 +679,7 @@
 }
 
 - (void) getRelationships: (NSDate*) lastKnown relationshipHandler: (RelationshipHandler) handler {
-    NSLog(@"getRelationships:");
+    // NSLog(@"getRelationships:");
     NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getRelationships" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
@@ -687,7 +693,7 @@
 }
 
 - (void) getPresences: (NSDate*) lastKnown presenceHandler: (PresenceHandler) handler {
-    NSLog(@"getPresences:");
+    // NSLog(@"getPresences:");
     NSNumber * lastKnownMillis = @([lastKnown timeIntervalSince1970] * 1000);
     [_serverConnection invoke: @"getPresences" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
@@ -701,11 +707,11 @@
 }
 
 - (void) getKey: (NSString*)forClientId withId:(NSString*) keyId keyHandler:(PublicKeyHandler) handler {
-    NSLog(@"getKey:");
+    // NSLog(@"getKey:");
 
      [_serverConnection invoke: @"getKey" withParams: @[forClientId,keyId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"getKey(): got result: %@", responseOrError);
+            // NSLog(@"getKey(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"getKey(): failed: %@", responseOrError);

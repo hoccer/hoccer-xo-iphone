@@ -33,4 +33,6 @@
 
 @property (nonatomic) NSString* bodyCipherText;
 
+- (void) setupOutgoingEncryption;
+
 @end
