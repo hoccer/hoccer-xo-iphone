@@ -56,14 +56,11 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
     self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
 
-    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-btn-blue"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addContactPressed:)];
+    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addContactPressed:)];
     self.navigationItem.rightBarButtonItem = addContactButton;
 
-    /* TODO: find out why this dow not work
     UIImage * blueBackground = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
-    NSLog(@"bg image: %@", NSStringFromCGSize(blueBackground.size));
-    [addContactButton setBackgroundImage: blueBackground forState: UIControlStateNormal style: UIBarButtonItemStylePlain barMetrics: UIBarMetricsDefault];
-     */
+    [self.navigationItem.rightBarButtonItem setBackgroundImage: blueBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
 

@@ -739,9 +739,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem id="mUy-St-hDX">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="btJ-Fq-i9T">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="7hX-Mb-wEB">
                                             <connections>
-                                                <action selector="donePressed:" destination="jBj-li-dGc" id="BpS-Er-vHf"/>
+                                                <action selector="donePressed:" destination="jBj-li-dGc" id="Wbc-w2-7VH"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -752,6 +752,7 @@
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <connections>
+                        <outlet property="doneButton" destination="7hX-Mb-wEB" id="xqi-mc-OZK"/>
                         <outlet property="imageView" destination="iD2-h4-j9B" id="9wT-Qd-nD6"/>
                         <outlet property="navigationBar" destination="T1N-2Y-4db" id="5GT-uh-NUJ"/>
                         <outlet property="scrollView" destination="CPs-zP-mUM" id="0hs-0N-tuW"/>
@@ -766,6 +767,159 @@
         <image name="btn_invite.png" width="34" height="29"/>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
     </resources>
+    <classes>
+        <class className="AboutViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AboutViewController.h"/>
+        </class>
+        <class className="AutoheightLabel" superclassName="UILabel">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutoheightLabel.h"/>
+        </class>
+        <class className="BubbleView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleView.h"/>
+            <relationships>
+                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
+            </relationships>
+        </class>
+        <class className="ChatTableSectionHeaderCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableSectionHeaderCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ChatViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addAttachmentPressed:"/>
+                <relationship kind="action" name="sendPressed:"/>
+                <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
+                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="textField" candidateClass="GrowingTextView"/>
+            </relationships>
+        </class>
+        <class className="ContactCell" superclassName="ConversationAndContactsCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactCell.h"/>
+        </class>
+        <class className="ContactListTopBar" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListTopBar.h"/>
+        </class>
+        <class className="ContactListViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
+        </class>
+        <class className="ContactQuickListCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="messageCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ContactQuickListSectionHeaderCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListSectionHeaderCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="icon" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="title" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ContactQuickListViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ConversationAndContactsCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationAndContactsCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ConversationCell" superclassName="ConversationAndContactsCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="latestMessage" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="latestMessageTime" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ConversationViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationViewController.h"/>
+        </class>
+        <class className="CustomNavigationBar" superclassName="UINavigationBar">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CustomNavigationBar.h"/>
+        </class>
+        <class className="FirstRunViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FirstRunViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="donePressed:"/>
+                <relationship kind="outlet" name="avatarView" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="identityTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="messageCountTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="GrowingTextView" superclassName="UITextView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowingTextView.h"/>
+        </class>
+        <class className="HoccerTalkTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HoccerTalkTableViewCell.h"/>
+        </class>
+        <class className="ImageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="doneButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImage"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="InsetImageView" superclassName="UIControl">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InsetImageView.h"/>
+        </class>
+        <class className="InviteCodeViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InviteCodeViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="clipboardButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="codeTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navigationItem" candidateClass="UINavigationItem"/>
+            </relationships>
+        </class>
+        <class className="LeftMessageCell" superclassName="MessageCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
+        </class>
+        <class className="MessageCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="bubble" candidateClass="BubbleView"/>
+                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
+            </relationships>
+        </class>
+        <class className="NavigationMenuViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NavigationMenuViewController.h"/>
+        </class>
+        <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
+        </class>
+        <class className="ProfileViewController" superclassName="UserDefaultsViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileViewController.h"/>
+        </class>
+        <class className="RightMessageCell" superclassName="MessageCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
+        </class>
+        <class className="SettingsViewController" superclassName="UserDefaultsViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
+        </class>
+        <class className="TutorialViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TutorialViewController.h"/>
+        </class>
+        <class className="UserDefaultsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UserDefaultsViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
