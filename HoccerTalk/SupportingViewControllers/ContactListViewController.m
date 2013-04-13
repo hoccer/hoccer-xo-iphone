@@ -82,6 +82,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     channel.handler = @selector(inviteByCode);
     [self.invitationChannels addObject: channel];
 
+    self.searchBar.delegate = self;
+    self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
+    self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
 }
 
@@ -113,8 +116,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (NSFetchedResultsController *)currentFetchedResultsController {
-    return self.fetchedResultsController;
-    //return self.searchBar.text.length ? self.searchFetchedResultsController : self.fetchedResultsController;
+    return self.searchBar.text.length ? self.searchFetchedResultsController : self.fetchedResultsController;
 }
 
 #pragma mark - Table view data source
@@ -149,36 +151,8 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     return [sectionInfo name];
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return NO;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSManagedObjectContext *context = [self.currentFetchedResultsController managedObjectContext];
-        [context deleteObject:[self.currentFetchedResultsController objectAtIndexPath:indexPath]];
-
-        NSError *error = nil;
-        if (![context save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }
-}
-
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // The table view should not be re-orderable.
-    return NO;
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    //[self.searchBar resignFirstResponder];
+    [self.searchBar resignFirstResponder];
     Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
     // TODO: open detail view
 }
@@ -276,7 +250,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     {
         return _searchFetchedResultsController;
     }
-    _searchFetchedResultsController = [self newFetchedResultsControllerWithSearch: /*self.searchBar.text*/ @""];
+    _searchFetchedResultsController = [self newFetchedResultsControllerWithSearch: self.searchBar.text];
     return _searchFetchedResultsController;
 }
 

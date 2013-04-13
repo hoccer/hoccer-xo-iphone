@@ -47,7 +47,7 @@
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
 
-    self.tableView.contentOffset = CGPointMake(0, 44);
+    self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
     
     UIImage *inviteButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
     [self.inviteButton setBackgroundImage: inviteButtonBackground forState: UIControlStateNormal];

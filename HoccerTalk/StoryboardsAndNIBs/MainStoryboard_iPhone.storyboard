@@ -104,9 +104,15 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="FRc-70-F4q">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="tintColor" white="0.84999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" rowHeight="64" id="bLT-Ef-JpH" customClass="ContactCell">
-                                <rect key="frame" x="0.0" y="22" width="320" height="64"/>
+                                <rect key="frame" x="0.0" y="66" width="320" height="64"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
@@ -138,6 +144,9 @@
                             <outlet property="delegate" destination="Aez-fu-qAl" id="pOc-oD-Lqi"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="searchBar" destination="FRc-70-F4q" id="UPT-iN-Ytg"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -806,6 +815,9 @@
         </class>
         <class className="ContactListViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
+            </relationships>
         </class>
         <class className="ContactQuickListCell" superclassName="HoccerTalkTableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListCell.h"/>
