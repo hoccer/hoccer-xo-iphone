@@ -14,6 +14,7 @@
 {
     NSArray * _menuItems;
     NSMutableDictionary * _viewControllers;
+    BOOL _viewAppeared;
 }
 @end
 
@@ -23,6 +24,7 @@
     self = [super initWithCoder: aDecoder];
     if (self != nil) {
         _viewControllers = [[NSMutableDictionary alloc] init];
+        _viewAppeared = NO;
     }
     return self;
 }
@@ -62,10 +64,8 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
-    if([self.tableView indexPathForSelectedRow] == nil) {
-        NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:0];
-        [self.tableView selectRowAtIndexPath:indexPath animated:YES  scrollPosition:UITableViewScrollPositionBottom];
-    }
+    _viewAppeared = YES;
+    [self updateSelectedItem];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -111,14 +111,20 @@
 }
 
 - (void) navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    NSLog(@"Navigation Menu didShowViewController");
+    if (_viewAppeared) {
+        [self updateSelectedItem];
+    }
+}
+
+- (void) updateSelectedItem {
     for (int i = 0; i < _viewControllers.count; ++i) {
         if ([self.sideMenu.navigationController.viewControllers[0] isEqual: _viewControllers[_menuItems[i][@"storyboardId"]]]) {
             NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: 0];
             [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionBottom];
-            break;
+            return;
         }
     }
+    NSLog(@"NavigationMenu failed to find selected view controller");
 }
 
 @end
