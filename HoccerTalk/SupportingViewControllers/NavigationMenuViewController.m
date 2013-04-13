@@ -57,6 +57,7 @@
                        @"storyboardId": @"aboutViewController"
                     }
                    ];
+
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -107,6 +108,17 @@
     }
     UIViewController * vc = _viewControllers[storyboardID] = [self.storyboard instantiateViewControllerWithIdentifier: storyboardID];
     return vc;
+}
+
+- (void) navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    NSLog(@"Navigation Menu didShowViewController");
+    for (int i = 0; i < _viewControllers.count; ++i) {
+        if ([self.sideMenu.navigationController.viewControllers[0] isEqual: _viewControllers[_menuItems[i][@"storyboardId"]]]) {
+            NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: 0];
+            [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionBottom];
+            break;
+        }
+    }
 }
 
 @end

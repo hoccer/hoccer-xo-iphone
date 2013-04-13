@@ -112,6 +112,8 @@
 
     contactListViewController.sideMenu = self.navigationController.sideMenu;
     contactListViewController.conversationViewController = controller;
+
+    self.navigationController.delegate = navigationMenuViewController;
 }
 
 - (void) setupDone {
