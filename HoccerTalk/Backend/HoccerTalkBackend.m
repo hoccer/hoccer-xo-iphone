@@ -279,7 +279,7 @@ typedef enum BackendStates {
         [self start];
         _backoffTime = (double)rand() / RAND_MAX;
     } else {
-        [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnect) userInfo: nil repeats: NO];
+        [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(start) userInfo: nil repeats: NO];
         _backoffTime = MIN(2 * _backoffTime, 10);
     }
 }
