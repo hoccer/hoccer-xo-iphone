@@ -81,6 +81,7 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
         self.title.textColor = [UIColor colorWithWhite: 0.1 alpha: 1];
         self.title.shadowColor = [UIColor colorWithWhite: 0.60 alpha:1];
         self.title.shadowOffset = CGSizeMake(0, 1);
+        self.title.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];
 
     }
