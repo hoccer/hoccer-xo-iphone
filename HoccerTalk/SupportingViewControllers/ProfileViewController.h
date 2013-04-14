@@ -16,12 +16,19 @@
 @class UserDefaultsCellTextInput;
 @class AvatarItem;
 
-@interface ProfileViewController : UserDefaultsViewController <UITextFieldDelegate,AttachmentPickerControllerDelegate>
+typedef enum ProfileViewModes {
+    ProfileViewModeFirstRun,
+    ProfileViewModeMyProfile,
+    ProfileViewModeContactProfile
+} ProfileViewMode;
+
+@interface ProfileViewController : UserDefaultsViewController <AttachmentPickerControllerDelegate>
 {
     AvatarItem *      _avatarItem;
     NSArray *         _profileItems;
     NSMutableArray *  _allProfileItems;
-    BOOL              _editing;
+    ProfileViewMode   _mode;
+    BOOL              _canceled;
 }
 
 @property (nonatomic,strong) UITableView* tableView;

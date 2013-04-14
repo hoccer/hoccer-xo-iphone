@@ -24,6 +24,7 @@
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
 #import "EmptyTablePlaceholderCell.h"
+#import "ProfileViewController.h"
 
 @interface ConversationViewController ()
 
@@ -82,8 +83,7 @@
 
     // TODO: find a way to move this to the app delegate
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        //[self performSegueWithIdentifier: @"showFirstRunScreen" sender: nil];
-        UIViewController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileViewController"];
+        UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileViewController"];
         [self.navigationController presentModalViewController: profileView animated: YES];
     }
 }
