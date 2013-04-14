@@ -27,10 +27,18 @@
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
+typedef enum BackendStates {
+    kBackendStopped,
+    kBackendConnecting,
+    kBackendIdentifying,
+    kBackendReady,
+    kBackendStopping
+} BackendState;
+
 @interface HoccerTalkBackend ()
 {
     JsonRpcWebSocket * _serverConnection;
-    BOOL _isConnected;
+    BackendState _state;
     double _backoffTime;
     NSString * _apnsDeviceToken;
     NSURLConnection * _avatarUploadConnection;
@@ -45,14 +53,39 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
 @implementation HoccerTalkBackend
 
+- (NSString*) stateString: (BackendState) state {
+    switch (state) {
+        case kBackendStopped:
+            return @"stopped";
+            break;
+        case kBackendConnecting:
+            return @"connecting";
+            break;
+        case kBackendIdentifying:
+            return @"identifying";
+            break;
+        case kBackendReady:
+            return @"ready";
+            break;
+        case kBackendStopping:
+            return @"stopping";
+            break;
+    }
+}
+
+- (void) setState: (BackendState) state {
+    NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
+    _state = state;
+}
+
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate {
     self = [super init];
     if (self != nil) {
         _backoffTime = 0.0;
-        _isConnected = NO;
-        _apnsDeviceToken = nil;
-        _serverConnection = [[JsonRpcWebSocket alloc] initWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol]];
+        _state = kBackendStopped;
+        _serverConnection = [[JsonRpcWebSocket alloc] init];
         _serverConnection.delegate = self;
+        _apnsDeviceToken = nil;
         [_serverConnection registerIncomingCall: @"incomingDelivery"  withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery"  withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
@@ -93,7 +126,7 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
-    if (_isConnected) {
+    if (_state == kBackendReady) {
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
     [attachment upload];
@@ -197,7 +230,7 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 }
 
 - (void) acceptInvitation: (NSString*) token {
-    if (_isConnected) {
+    if (_state == kBackendReady) {
         [self pairByToken: token];
     } else {
         if ( ! [self isInviteTokenInDatabase: token]) {
@@ -223,7 +256,7 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 }
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken {
-    if (_isConnected) {
+    if (_state == kBackendReady) {
         [self registerApns: deviceToken];
     } else {
         _apnsDeviceToken = deviceToken;
@@ -231,17 +264,19 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 }
 
 - (void) start {
-    [_serverConnection open];
+    [self setState: kBackendConnecting];
+    [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol]];
 }
 
 - (void) stop {
+    [self setState: kBackendStopping];
     [_serverConnection close];
 }
 
 - (void) reconnectWitBackoff {
     NSLog(@"reconnecting in %f seconds", _backoffTime);
     if (_backoffTime == 0) {
-        [self reconnect];
+        [self start];
         _backoffTime = (double)rand() / RAND_MAX;
     } else {
         [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnect) userInfo: nil repeats: NO];
@@ -249,9 +284,6 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
     }
 }
 
-- (void) reconnect {
-    [_serverConnection reopenWithURLRequest: [self urlRequest]];
-}
 
 - (NSURLRequest*) urlRequest {
     // TODO: make server adjustable
@@ -521,6 +553,8 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
                 [self registerApns: _apnsDeviceToken];
                 _apnsDeviceToken = nil; // XXX: this is not nice...
             }
+            [self setState: kBackendReady];
+
             [self flushPendingMessages];
             [self flushPendingFiletransfers];
             [self updateRelationships];
@@ -530,7 +564,6 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
             [self updateKey];
 
             
-            _isConnected = YES;
         } else {
             NSLog(@"identify(): got error: %@", responseOrError);
         }
@@ -600,7 +633,7 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 }
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
-    if (_isConnected) {
+    if (_state == kBackendReady) {
         [self uploadAvatarIfNeeded];
         [self updatePresence];
     }
@@ -721,6 +754,12 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
     }];
 }
 
+- (void) updateUnreadMessageCount: (NSUInteger) count handler: (void (^)()) handler {
+    // TODO: update message count
+    NSLog(@"TODO: updateUnreadMessageCount ...");
+    handler();
+}
+
 #pragma mark - Incoming RPC Calls
 
 - (void) incomingDelivery: (NSArray*) params {
@@ -774,7 +813,7 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@", error);
-    _isConnected = NO;
+    [self setState: kBackendStopped]; // XXX do we need/want a failed state?
     // if we get an error add a little initial backoff
     if (_backoffTime == 0) {
         _backoffTime = (double)rand() / RAND_MAX;
@@ -788,14 +827,22 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket {
     //NSLog(@"webSocketDidOpen");
+    [self setState: kBackendIdentifying];
     _backoffTime = 0.0;
     [self identify];
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
-    _isConnected = NO;
-    [self reconnectWitBackoff];
+    BackendState oldState = _state;
+    [self setState: kBackendStopped];
+    if (oldState == kBackendStopping) {
+        if ([self.delegate respondsToSelector:@selector(backendDidStop)]) {
+            [self.delegate backendDidStop];
+        }
+    } else {
+        [self reconnectWitBackoff];
+    }
 }
 
 - (void) incomingMethodCallDidFail: (NSError*) error {

@@ -38,10 +38,9 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 
 @property (nonatomic,strong) id<JsonRpcWebSocketDelegate> delegate;
 
-- (id) initWithURLRequest: (NSURLRequest*) request protocols: (NSArray*) protcols;
-- (void) open;
+- (id) init;
 - (void) close;
-- (void) reopenWithURLRequest: (NSURLRequest*) request;
+- (void) openWithURLRequest: (NSURLRequest*) request protocols: (NSArray*) protocols;
 - (void) notify: (NSString*) method withParams: (id) params;
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler;
 - (void) registerIncomingCall: (NSString*) methodName withSelector: (SEL) selector isNotification: (BOOL) notificationFlag;

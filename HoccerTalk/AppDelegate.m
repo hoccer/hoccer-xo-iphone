@@ -31,6 +31,7 @@
 @synthesize userAgent;
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    _backgroundTask = UIBackgroundTaskInvalid;
     return YES;
 }
 
@@ -131,13 +132,13 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [self saveContext];
-    [self.chatBackend stop];
-    [self updateBadgeNumber];
+    [self updateUnreadMessageCountAndStop];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    [self.chatBackend start];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -261,7 +262,7 @@
 	return userAgent;
 }
 
-#pragma mark - Message Count Badge
+#pragma mark - Message Count Handling
 
 - (NSUInteger) unreadMessageCount {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -278,8 +279,22 @@
     return numberOfRecords;
 }
 
-- (void) updateBadgeNumber {
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: [self unreadMessageCount]];
+- (void) updateUnreadMessageCountAndStop {
+    NSUInteger unreadMessages = [self unreadMessageCount];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessages;
+    _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [self.chatBackend stop];
+        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+    }];
+
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+        [self.chatBackend updateUnreadMessageCount: unreadMessages handler: ^{
+            [self.chatBackend stop];
+        }];
+    });
 }
 
 #pragma mark - Apple Push Notifications
@@ -351,6 +366,14 @@
 
 - (NSString*) apnDeviceToken {
     return [[HTUserDefaults standardUserDefaults] stringForKey: kHTAPNDeviceToken];
+}
+
+- (void) backendDidStop {
+    if (_backgroundTask != UIBackgroundTaskInvalid) {
+        NSLog(@"backendDidStop: done with shutdown");
+        [[UIApplication sharedApplication] endBackgroundTask: _backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+    }
 }
 
 @end
