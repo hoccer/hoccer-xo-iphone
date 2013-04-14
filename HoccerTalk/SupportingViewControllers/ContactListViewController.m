@@ -88,6 +88,11 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    [self setNavigationBarBackgroundWithLines];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

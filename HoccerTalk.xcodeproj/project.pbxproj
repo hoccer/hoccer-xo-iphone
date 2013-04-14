@@ -950,6 +950,8 @@
 			children = (
 				63AE4548170494AF0099F0CB /* AboutViewController.h */,
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
+				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
+				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
 				6330492B1702FAF20045E64E /* FirstRunViewController.h */,
 				6330492C1702FAF20045E64E /* FirstRunViewController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
@@ -966,8 +968,6 @@
 				63AE45461704945C0099F0CB /* TutorialViewController.m */,
 				63C1356617160E2E00969B0B /* UserDefaultsViewController.h */,
 				63C1356717160E2E00969B0B /* UserDefaultsViewController.m */,
-				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
-				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -1126,12 +1126,18 @@
 				63540A9116E500D20087D24E /* BubbleView.m */,
 				6343B4E316CD604700B3A29E /* ChatTableCells.h */,
 				6343B4E416CD604700B3A29E /* ChatTableCells.m */,
+				6327EAEA171883C200AF75E1 /* ContactCell.h */,
+				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 				6330490216FC99820045E64E /* ContactQuickListViewCells.h */,
 				6330490316FC99820045E64E /* ContactQuickListViewCells.m */,
+				6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */,
+				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
 				631F6CE7170AF67200FB28D5 /* CustomNavigationBar.h */,
 				631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */,
+				6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */,
+				6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */,
 				633129D516F95220008F5B04 /* GrowingTextView.h */,
 				633129D616F95220008F5B04 /* GrowingTextView.m */,
 				63DC015917147B1600609513 /* HoccerTalkTableViewCell.h */,
@@ -1148,12 +1154,6 @@
 				636492DC1711FEB900E35514 /* RadialGradientView.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
-				6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */,
-				6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */,
-				6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */,
-				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
-				6327EAEA171883C200AF75E1 /* ContactCell.h */,
-				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";

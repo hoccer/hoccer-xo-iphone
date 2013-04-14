@@ -65,15 +65,11 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return self;
 }
 
-- (void) viewDidLoad {
-    [super viewDidLoad];
-
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-}
-
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
+
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         _mode = ProfileViewModeFirstRun;
     } else if ([self.parentViewController isKindOfClass: [UINavigationController class]]) {
@@ -89,6 +85,12 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     if (_mode == ProfileViewModeFirstRun) {
         [self setEditing: YES animated: YES];
     }
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    NSLog(@"===== will disappear");
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
 }
 
 - (void) setupNavigationButtons: (ProfileViewMode) mode {
