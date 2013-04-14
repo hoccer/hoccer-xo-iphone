@@ -132,6 +132,7 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [self saveContext];
     [self.chatBackend stop];
+    [self updateBadgeNumber];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -258,6 +259,27 @@
                      [UIDevice currentDevice].systemVersion];
 	}
 	return userAgent;
+}
+
+#pragma mark - Message Count Badge
+
+- (NSUInteger) unreadMessageCount {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName: [TalkMessage entityName] inManagedObjectContext: self.managedObjectContext];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isRead == NO"];
+
+    NSError *error = nil;
+    NSUInteger numberOfRecords = [self.managedObjectContext countForFetchRequest:fetchRequest error:&error];
+
+    if (numberOfRecords == NSNotFound) {
+        NSLog(@"ERROR: unreadMessageCount: failed to count unread messages: %@", error);
+        abort();
+    }
+    return numberOfRecords;
+}
+
+- (void) updateBadgeNumber {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: [self unreadMessageCount]];
 }
 
 #pragma mark - Apple Push Notifications
