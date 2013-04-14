@@ -27,6 +27,10 @@
     [self.tableView endUpdates];
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    return self.emptyTablePlaceholder != nil ? nil : indexPath;
+}
+
 - (void) updateEmptyTablePlaceholderAnimated: (BOOL) animated {
     UITableViewRowAnimation animation = animated ? UITableViewRowAnimationFade : UITableViewRowAnimationNone;
     if ([self isEmpty] && self.emptyTablePlaceholder == nil) {

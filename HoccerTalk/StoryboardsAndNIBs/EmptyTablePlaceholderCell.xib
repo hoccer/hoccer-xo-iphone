@@ -42,7 +42,7 @@
 						<array class="NSMutableArray" key="NSSubviews">
 							<object class="IBUIImageView" id="997953992">
 								<reference key="NSNextResponder" ref="471092155"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">293</int>
 								<string key="NSFrame">{{96, 63}, {128, 128}}</string>
 								<reference key="NSSuperview" ref="471092155"/>
 								<reference key="NSWindow"/>
@@ -53,7 +53,7 @@
 							</object>
 							<object class="IBUILabel" id="484965801">
 								<reference key="NSNextResponder" ref="471092155"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">290</int>
 								<string key="NSFrame">{{20, 199}, {280, 34}}</string>
 								<reference key="NSSuperview" ref="471092155"/>
 								<reference key="NSWindow"/>
@@ -109,6 +109,7 @@
 				<reference key="NSNextKeyView" ref="471092155"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+				<int key="IBUISelectionStyle">0</int>
 				<reference key="IBUIContentView" ref="471092155"/>
 				<real value="254" key="IBUIRowHeight"/>
 			</object>
@@ -193,7 +194,7 @@
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">EmptyTablePlaceholderCell</string>
-					<string key="superclassName">UITableViewCell</string>
+					<string key="superclassName">HoccerTalkTableViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="icon">UIImageView</string>
 						<string key="placeholder">UILabel</string>
@@ -211,6 +212,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/EmptyTablePlaceholderCell.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">HoccerTalkTableViewCell</string>
+					<string key="superclassName">UITableViewCell</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/HoccerTalkTableViewCell.h</string>
 					</object>
 				</object>
 			</array>
