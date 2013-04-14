@@ -89,7 +89,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear: animated];
-    NSLog(@"===== will disappear");
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
 }
 
