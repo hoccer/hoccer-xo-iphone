@@ -35,7 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.searchBar.backgroundImage = [[UIImage imageNamed: @"contact_cell_bg"]  resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    self.searchBar.backgroundImage = [[UIImage imageNamed: @"searchbar_bg"]  resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     UIImage *searchFieldImage = [[UIImage imageNamed:@"searchbar_input-text"]
                                  resizableImageWithCapInsets:UIEdgeInsetsMake(14, 14, 15, 14)];
     [self.searchBar setSearchFieldBackgroundImage:searchFieldImage forState:UIControlStateNormal];
