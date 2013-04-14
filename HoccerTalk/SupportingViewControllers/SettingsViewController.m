@@ -35,7 +35,7 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundPlain];
+    [self setNavigationBarBackgroundWithLines];
 }
 
 - (void) populateSettingsItem {
