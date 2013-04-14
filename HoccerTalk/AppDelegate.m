@@ -370,7 +370,7 @@
 
 - (void) backendDidStop {
     if (_backgroundTask != UIBackgroundTaskInvalid) {
-        NSLog(@"backendDidStop: done with shutdown");
+        NSLog(@"backendDidStop: done with background task ... good night");
         [[UIApplication sharedApplication] endBackgroundTask: _backgroundTask];
         _backgroundTask = UIBackgroundTaskInvalid;
     }

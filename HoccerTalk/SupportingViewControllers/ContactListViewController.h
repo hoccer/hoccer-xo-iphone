@@ -10,7 +10,9 @@
 #import <MessageUI/MFMailComposeViewController.h>
 #import <MessageUI/MessageUI.h>
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UISearchBarDelegate>
+#import "TableViewControllerWithPlaceholder.h"
+
+@interface ContactListViewController : TableViewControllerWithPlaceholder <NSFetchedResultsControllerDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
 

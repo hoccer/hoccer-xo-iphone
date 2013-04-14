@@ -138,5 +138,7 @@
 
 "no_messages_exchanged" = "No messages yet.";
 
-"empty_conversation_list_label" = "Conversations";
+"conversation_empty_placeholder" = "Conversations";
+
+"contacts_empty_placeholder" = "Contacts";
 

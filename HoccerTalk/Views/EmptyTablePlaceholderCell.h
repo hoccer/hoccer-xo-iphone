@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EmptyTablePlaceholderCell : UITableViewCell
+#import "HoccerTalkTableViewCell.h"
+
+@interface EmptyTablePlaceholderCell : HoccerTalkTableViewCell
 
 @property (strong, nonatomic) IBOutlet UILabel *placeholder;
 @property (strong, nonatomic) IBOutlet UIImageView *icon;

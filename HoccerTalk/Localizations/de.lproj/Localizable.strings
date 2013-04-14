@@ -120,5 +120,6 @@
 
 "no_messages_exchanged" = "Bisher keine Nachrichten.";
 
-"empty_conversation_list_label" = "Gespräche";
+"conversation_empty_placeholder" = "Gespräche";
 
+"contacts_empty_placeholder" = "Kontakte";

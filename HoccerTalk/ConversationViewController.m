@@ -23,7 +23,6 @@
 #import "HTUserDefaults.h"
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
-#import "EmptyTablePlaceholderCell.h"
 #import "ProfileViewController.h"
 
 @interface ConversationViewController ()
@@ -61,9 +60,6 @@
 
     // TODO: ask @zutrinken
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
-
-    UINib * nib = [UINib nibWithNibName: @"EmptyTablePlaceholderCell" bundle: [NSBundle mainBundle]];
-    [self.tableView registerNib: nib forCellReuseIdentifier: @"EmptyTablePlaceholderCell"];
 }
 
 - (ChatViewController*) chatViewController {
@@ -96,9 +92,7 @@
 
 #pragma mark - Table View
 
-// Attempt to show a placeholder cell -- does not work, because lying about the section count does not work
 - (BOOL) isEmpty {
-    return NO;
     if (self.fetchedResultsController.sections.count == 0) {
         return YES;
     } else {
@@ -108,28 +102,37 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    //if ([self isEmpty]) {
-    //    return 1;
-    //} else {
-        return [[self.fetchedResultsController sections] count];
-    //}
+    if (self.emptyTablePlaceholder != nil) {
+        return 1;
+    }
+    return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    //if ([self isEmpty]) {
-    //    return 1;
-    //} else {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-        return [sectionInfo numberOfObjects];
-    //}
+    if (self.emptyTablePlaceholder != nil) {
+        return 1;
+    }
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString * identifier = [self isEmpty] ? @"EmptyTablePlaceholderCell" : [ConversationCell reuseIdentifier];
-    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath: indexPath];
-    [self configureCell:cell atIndexPath:indexPath];
-    return cell;
+    if (self.emptyTablePlaceholder) {
+        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"conversation_empty_placeholder", nil);
+        self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
+        return self.emptyTablePlaceholder;
+    } else {
+        UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath: indexPath];
+        [self configureCell:cell atIndexPath:indexPath];
+        return cell;
+    }
+}
 
+- (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.emptyTablePlaceholder) {
+        return self.emptyTablePlaceholder.bounds.size.height;
+    }
+    return self.conversationCell.bounds.size.height;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -217,8 +220,9 @@
     return _fetchedResultsController;
 }    
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    NSLog(@"willchangecontent");
+
     [self.tableView beginUpdates];
 }
 
@@ -260,10 +264,12 @@
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+
+    [self updateEmptyTablePlaceholder];
 }
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    NSLog(@"didchangecontent");
     [self.tableView endUpdates];
 }
 
@@ -278,46 +284,40 @@
  */
 
 - (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath {
-    if ([aCell isKindOfClass: [ConversationCell class]]) {
-        ConversationCell * cell = (ConversationCell*)aCell;
-        Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-        cell.nickName.text = contact.nickName;
-        cell.avatar.image = contact.avatarImage;
-        cell.latestMessage.frame = self.conversationCell.latestMessage.frame;
-        NSDate * latestMessageTime = nil;
-        if ([contact.latestMessage count] == 0){
-            cell.latestMessage.text = NSLocalizedString(@"no_messages_exchanged", nil);
-            cell.latestMessage.font = [UIFont italicSystemFontOfSize: cell.latestMessage.font.pointSize];
-        } else {
-            cell.latestMessage.text = [contact.latestMessage[0] body];
-            cell.latestMessage.font = [UIFont systemFontOfSize: cell.latestMessage.font.pointSize];
-            latestMessageTime = [contact.latestMessage[0] timeStamp];
-        }
-        [cell.latestMessage sizeToFit];
-
-        if (latestMessageTime) {
-            NSCalendar *calendar = [NSCalendar currentCalendar];
-            NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
-            NSDate *today = [calendar dateFromComponents:components];
-
-            components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: latestMessageTime];
-            NSDate *latestMessageDate = [calendar dateFromComponents:components];
-            NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-            if([today isEqualToDate: latestMessageDate]) {
-                [formatter setDateStyle:NSDateFormatterNoStyle];
-                [formatter setTimeStyle:NSDateFormatterShortStyle];
-            } else {
-                [formatter setDateStyle:NSDateFormatterMediumStyle];
-                [formatter setTimeStyle:NSDateFormatterNoStyle];
-            }
-            cell.latestMessageTime.text = [formatter stringFromDate: latestMessageTime];
-        } else {
-            cell.latestMessageTime.text = @"";
-        }
+    ConversationCell * cell = (ConversationCell*)aCell;
+    Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.nickName.text = contact.nickName;
+    cell.avatar.image = contact.avatarImage;
+    cell.latestMessage.frame = self.conversationCell.latestMessage.frame;
+    NSDate * latestMessageTime = nil;
+    if ([contact.latestMessage count] == 0){
+        cell.latestMessage.text = NSLocalizedString(@"no_messages_exchanged", nil);
+        cell.latestMessage.font = [UIFont italicSystemFontOfSize: cell.latestMessage.font.pointSize];
     } else {
-        EmptyTablePlaceholderCell * cell = (EmptyTablePlaceholderCell*)aCell;
-        cell.icon.image = [UIImage imageNamed: @"HoccerXOWatermark"];
-        cell.placeholder.text = NSLocalizedString(@"empty_conversation_list_label", nil);
+        cell.latestMessage.text = [contact.latestMessage[0] body];
+        cell.latestMessage.font = [UIFont systemFontOfSize: cell.latestMessage.font.pointSize];
+        latestMessageTime = [contact.latestMessage[0] timeStamp];
+    }
+    [cell.latestMessage sizeToFit];
+
+    if (latestMessageTime) {
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
+        NSDate *today = [calendar dateFromComponents:components];
+
+        components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: latestMessageTime];
+        NSDate *latestMessageDate = [calendar dateFromComponents:components];
+        NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+        if([today isEqualToDate: latestMessageDate]) {
+            [formatter setDateStyle:NSDateFormatterNoStyle];
+            [formatter setTimeStyle:NSDateFormatterShortStyle];
+        } else {
+            [formatter setDateStyle:NSDateFormatterMediumStyle];
+            [formatter setTimeStyle:NSDateFormatterNoStyle];
+        }
+        cell.latestMessageTime.text = [formatter stringFromDate: latestMessageTime];
+    } else {
+        cell.latestMessageTime.text = @"";
     }
 }
 

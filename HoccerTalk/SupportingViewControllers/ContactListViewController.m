@@ -126,26 +126,43 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 #pragma mark - Table view data source
 
+- (BOOL) isEmpty {
+    if (self.fetchedResultsController.sections.count == 0) {
+        return YES;
+    } else {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][0];
+        return [sectionInfo numberOfObjects] == 0;
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if (self.emptyTablePlaceholder != nil) {
+        return 1;
+    }
+    return [[self.fetchedResultsController sections] count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (self.emptyTablePlaceholder != nil) {
+        return 1;
+    }
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects];
+}
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return self.contactCellPrototype.frame.size.height;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [self currentFetchedResultsController].sections.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self currentFetchedResultsController].sections[section];
-    return sectionInfo.numberOfObjects;
+    return self.emptyTablePlaceholder != nil ? self.emptyTablePlaceholder.bounds.size.height : self.contactCellPrototype.bounds.size.height;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.emptyTablePlaceholder) {
+        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"contacts_empty_placeholder", nil);
+        self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
+        return self.emptyTablePlaceholder;
+    }
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
 
-        // TODO: do this right ...
+    // TODO: do this right ...
     [self fetchedResultsController: [self currentFetchedResultsController]
                      configureCell: cell atIndexPath: indexPath];
     return cell;
@@ -303,6 +320,8 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+
+    [self updateEmptyTablePlaceholder];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
