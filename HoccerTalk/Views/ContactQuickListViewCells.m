@@ -36,8 +36,8 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
     self.avatar.borderColor = [UIColor blackColor];
 
     _messageCountBackground = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"bg_message-count-grey" withLeftCapWidth: 10 topCapHeight: 10]];
-    [self addSubview: _messageCountBackground];
-    [self sendSubviewToBack: _messageCountBackground];
+    [self.contentView addSubview: _messageCountBackground];
+    [self.contentView sendSubviewToBack: _messageCountBackground];
 }
 
 - (void) layoutSubviews {
