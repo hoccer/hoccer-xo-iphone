@@ -270,7 +270,7 @@
             break;
     }
 
-    [self updateEmptyTablePlaceholder];
+    [self updateEmptyTablePlaceholderAnimated: YES];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {

@@ -23,18 +23,19 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
     [self.tableView beginUpdates];
-    [self updateEmptyTablePlaceholder];
+    [self updateEmptyTablePlaceholderAnimated: NO];
     [self.tableView endUpdates];
 }
 
-- (void) updateEmptyTablePlaceholder {
+- (void) updateEmptyTablePlaceholderAnimated: (BOOL) animated {
+    UITableViewRowAnimation animation = animated ? UITableViewRowAnimationFade : UITableViewRowAnimationNone;
     if ([self isEmpty] && self.emptyTablePlaceholder == nil) {
         NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
-        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation: animation];
         self.emptyTablePlaceholder = [self.tableView dequeueReusableCellWithIdentifier: [EmptyTablePlaceholderCell reuseIdentifier]];
     } else if ( ! [self isEmpty] && self.emptyTablePlaceholder != nil) {
         NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation: animation];
         self.emptyTablePlaceholder = nil;
     }
 }

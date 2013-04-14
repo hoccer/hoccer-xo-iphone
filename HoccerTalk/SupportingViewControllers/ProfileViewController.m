@@ -182,6 +182,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
     [super setEditing: editing animated: animated];
+
+    [self.view endEditing: editing];
+
     [self.tableView beginUpdates];
     NSUInteger row = 0;
     for (ProfileItem * item in _allProfileItems) {

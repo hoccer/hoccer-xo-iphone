@@ -15,6 +15,6 @@
 @property (nonatomic,strong) EmptyTablePlaceholderCell * emptyTablePlaceholder;
 
 - (BOOL) isEmpty;
-- (void) updateEmptyTablePlaceholder;
+- (void) updateEmptyTablePlaceholderAnimated: (BOOL) animated;
 
 @end

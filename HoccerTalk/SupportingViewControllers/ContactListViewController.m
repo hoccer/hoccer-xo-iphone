@@ -321,7 +321,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
             break;
     }
 
-    [self updateEmptyTablePlaceholder];
+    [self updateEmptyTablePlaceholderAnimated: YES];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
