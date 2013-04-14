@@ -50,6 +50,11 @@
     self.navigationItem.leftBarButtonItem = [self hoccerTalkMenuButton];
     self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
 
+    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTDefaultScreenShooting]) {
+        self.navigationItem.leftBarButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+
     UIImage * icon = [UIImage imageNamed: @"navbar-icon-home"];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;

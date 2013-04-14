@@ -16,6 +16,7 @@ FOUNDATION_EXPORT NSString * const kHTAvatarImage;
 FOUNDATION_EXPORT NSString * const kHTNickName;
 FOUNDATION_EXPORT NSString * const kHTAvatarURL;
 FOUNDATION_EXPORT NSString * const kHTUserStatus;
+FOUNDATION_EXPORT NSString * const kHTDefaultScreenShooting;
 
 
 

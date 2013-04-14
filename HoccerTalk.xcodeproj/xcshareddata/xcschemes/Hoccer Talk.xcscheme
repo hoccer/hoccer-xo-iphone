@@ -63,6 +63,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-defaultScreenShooting 1"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-jsonrpcverbosity dump"
             isEnabled = "NO">
          </CommandLineArgument>
