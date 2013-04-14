@@ -23,7 +23,7 @@
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (nonatomic, readonly) ContactQuickListCell * contactCellPrototype;
-@property (nonatomic, readonly) ContactQuickListSectionHeaderCell * sectionHeaderPrototype;
+@property (nonatomic, readonly) ContactQuickListSectionHeaderView * sectionHeaderPrototype;
 @end
 
 @implementation ContactQuickListViewController
@@ -75,9 +75,9 @@
     return _contactCellPrototype;
 }
 
-- (ContactQuickListSectionHeaderCell*) sectionHeaderPrototype {
+- (ContactQuickListSectionHeaderView*) sectionHeaderPrototype {
     if (_sectionHeaderPrototype == nil) {
-        _sectionHeaderPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactQuickListSectionHeaderCell reuseIdentifier]];
+        _sectionHeaderPrototype = [[ContactQuickListSectionHeaderView alloc] init];
     }
     return _sectionHeaderPrototype;
 }
@@ -87,7 +87,7 @@
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForHeaderInSection:(NSInteger)section {
-    return self.sectionHeaderPrototype.frame.size.height;
+    return self.sectionHeaderPrototype.bounds.size.height;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -102,17 +102,7 @@
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ContactQuickListCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
-    [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier] forIndexPath:indexPath] :
-    [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier]];
-
-    if (cell.backgroundView == nil) {
-        // TODO: do this right ...
-        cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
-        cell.backgroundView.frame = cell.frame;
-        cell.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.2];
-        cell.avatar.borderColor = [UIColor blackColor];
-    }
+    ContactQuickListCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier] forIndexPath:indexPath];
     [self fetchedResultsController: [self currentFetchedResultsController]
                      configureCell: cell atIndexPath: indexPath];
     return cell;
@@ -124,17 +114,16 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    ContactQuickListSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactQuickListSectionHeaderCell reuseIdentifier]];
+    ContactQuickListSectionHeaderView *view = [[ContactQuickListSectionHeaderView alloc] init];
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
     if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
-        cell.title.text = NSLocalizedString(@"contact_group_none", nil);
+        view.title.text = NSLocalizedString(@"contact_group_none", nil);
     } else if ([sectionInfo.name isEqualToString: kRelationStateFriend]) {
-        cell.title.text = NSLocalizedString(@"contact_group_friend", nil);
+        view.title.text = NSLocalizedString(@"contact_group_friend", nil);
     } else if ([sectionInfo.name isEqualToString: kRelationStateBlocked]) {
-        cell.title.text = NSLocalizedString(@"contact_group_blocked", nil);
+        view.title.text = NSLocalizedString(@"contact_group_blocked", nil);
     }
-
-    return cell;
+    return view;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

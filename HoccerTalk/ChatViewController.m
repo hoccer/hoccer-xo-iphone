@@ -592,7 +592,7 @@
     cell.label.text = sectionInfo.name;
     cell.label.shadowColor  = [UIColor whiteColor];
     cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
-    return cell;
+    return cell.contentView;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -604,7 +604,7 @@
     // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
     //     because the table view assuemes there is a 1px separator. However, sometimes the
     //     grey line still appears ...
-    return self.headerCell.frame.size.height - 1;
+    return self.headerCell.contentView.bounds.size.height;
 }
 
 #pragma mark - Table view delegate
