@@ -89,7 +89,6 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 }
 
 - (void) layoutSubviews {
-    NSLog(@"===== layoutSubview");
     CGFloat r = kSectionHeaderShadowRaius;
     [super layoutSubviews];
     self.layer.shadowColor = [UIColor blackColor].CGColor;
