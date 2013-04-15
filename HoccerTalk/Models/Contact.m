@@ -56,17 +56,21 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 @synthesize avatarImage = _avatarImage;
-@synthesize avatarImageCachedURL = _avatarImageCachedURL;
 
 - (UIImage*) avatarImage {
-    if (_avatarImage != nil && [_avatarImageCachedURL isEqualToString:self.avatarURL]) {
-        return _avatarImage;
+    if (_avatarImage == nil) {
+        _avatarImage = self.avatar == nil ? [UIImage imageNamed: @"avatar_default_contact"] : [UIImage imageWithData: self.avatar];
     }
-
-    _avatarImage = self.avatar != nil ? [UIImage imageWithData: self.avatar] : [UIImage imageNamed: @"avatar_default_contact"];
-    _avatarImageCachedURL = self.avatarURL;
-
     return _avatarImage;
+}
+
+- (void) setAvatar:(NSData *)avatar {
+    [self willChangeValueForKey: @"avatar"];
+    [self willChangeValueForKey: @"avatarImage"];
+    [self setPrimitiveValue: avatar forKey: @"avatar"];
+    _avatarImage = nil;
+    [self didChangeValueForKey: @"avatar"];
+    [self didChangeValueForKey: @"avatarImage"];
 }
 
 @dynamic publicKeyString;

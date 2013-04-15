@@ -49,6 +49,7 @@
 @interface ChatTableSectionHeaderCell : HoccerTalkTableViewCell
 
 @property (strong, nonatomic) IBOutlet UILabel *label;
+@property (strong, nonatomic) IBOutlet UIImageView * backgroundImage;
 
 @end
 

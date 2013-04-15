@@ -74,10 +74,13 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         _mode = ProfileViewModeFirstRun;
+        self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
     } else if (self.contact != nil) {
         _mode = ProfileViewModeContactProfile;
+        self.navigationItem.title = NSLocalizedString(@"navigation_title_contact", nil);
     } else if ([self.parentViewController isKindOfClass: [UINavigationController class]]) {
         _mode = ProfileViewModeMyProfile;
+        self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
     } else {
         NSLog(@"ProfileViewController viewWillAppear: Unknown mode");
     }

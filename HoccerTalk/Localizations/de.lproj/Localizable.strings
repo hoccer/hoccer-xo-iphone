@@ -79,10 +79,10 @@
 "Take Photo/Video" = "Foto/Video aufnehmen";
 
 /* Invite Alert Message */
-"The server accepted your code" = "Der Server hat den Kode akzeptiert";
+"The server accepted your code" = "Der Kode wurde akzeptiert";
 
 /* Invite Alert Message */
-"The server rejected your invite code" = "Der Server hat den Kode abgelehnt";
+"The server rejected your invite code" = "Der Kode wurde abgelehnt";
 
 /* Navigation Menu Item */
 "Tutorial" = "Anleitung";
@@ -123,3 +123,8 @@
 "conversation_empty_placeholder" = "Gespräche";
 
 "contacts_empty_placeholder" = "Kontakte";
+
+"navigation_title_profile" = "Profil";
+
+"navigation_title_contact" = "Kontakt";
+

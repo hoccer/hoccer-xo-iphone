@@ -50,6 +50,8 @@
 		6327EB4C171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB4A171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png */; };
 		6327EB51171B5B1B00AF75E1 /* TableViewControllerWithPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EB50171B5B1800AF75E1 /* TableViewControllerWithPlaceholder.m */; };
 		6327EB53171B610300AF75E1 /* xo.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB52171B610300AF75E1 /* xo.png */; };
+		6327EB56171C82B400AF75E1 /* date_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB54171C82B400AF75E1 /* date_cell_bg.png */; };
+		6327EB57171C82B400AF75E1 /* date_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */; };
 		633048FB16FC693C0045E64E /* MFSideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 633048F816FC693C0045E64E /* MFSideMenu.m */; };
 		633048FC16FC693C0045E64E /* UINavigationController+MFSideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 633048FA16FC693C0045E64E /* UINavigationController+MFSideMenu.m */; };
 		633048FE16FC95A10045E64E /* conversation_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 633048FD16FC95A10045E64E /* conversation_cell_bg.png */; };
@@ -348,6 +350,8 @@
 		6327EB4F171B5B1400AF75E1 /* TableViewControllerWithPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewControllerWithPlaceholder.h; sourceTree = "<group>"; };
 		6327EB50171B5B1800AF75E1 /* TableViewControllerWithPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewControllerWithPlaceholder.m; sourceTree = "<group>"; };
 		6327EB52171B610300AF75E1 /* xo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xo.png; sourceTree = "<group>"; };
+		6327EB54171C82B400AF75E1 /* date_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_cell_bg.png; sourceTree = "<group>"; };
+		6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date_cell_bg@2x.png"; sourceTree = "<group>"; };
 		633048F716FC693C0045E64E /* MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenu.h; sourceTree = "<group>"; };
 		633048F816FC693C0045E64E /* MFSideMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSideMenu.m; sourceTree = "<group>"; };
 		633048F916FC693C0045E64E /* UINavigationController+MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+MFSideMenu.h"; sourceTree = "<group>"; };
@@ -722,9 +726,6 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				6327EB52171B610300AF75E1 /* xo.png */,
-				E9A2B84B17189A1200E35E7E /* Media */,
-				6327EAC31717564700AF75E1 /* ImageViewer */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
 				637847BA16F348E300DE03C2 /* AppIcons */,
 				6330490B170044940045E64E /* Avatar */,
@@ -733,12 +734,17 @@
 				633048FF16FC966F0045E64E /* ContactQuickList */,
 				633048FD16FC95A10045E64E /* conversation_cell_bg.png */,
 				637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */,
+				6327EB54171C82B400AF75E1 /* date_cell_bg.png */,
+				6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */,
 				63AE4511170350750099F0CB /* Default */,
 				637847DE16F348E300DE03C2 /* Dummies */,
+				6327EAC31717564700AF75E1 /* ImageViewer */,
+				E9A2B84B17189A1200E35E7E /* Media */,
 				637847E616F348E400DE03C2 /* NavigationBar */,
 				63AE45281703650C0099F0CB /* NavigationMenu */,
 				636492CC1711CD3100E35514 /* Profile */,
 				63DC01761715193900609513 /* Switch */,
+				6327EB52171B610300AF75E1 /* xo.png */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -1479,6 +1485,8 @@
 				6327EB4B171A17B900AF75E1 /* profile_text_input_bg_invalid.png in Resources */,
 				6327EB4C171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png in Resources */,
 				6327EB53171B610300AF75E1 /* xo.png in Resources */,
+				6327EB56171C82B400AF75E1 /* date_cell_bg.png in Resources */,
+				6327EB57171C82B400AF75E1 /* date_cell_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
