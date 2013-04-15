@@ -92,30 +92,30 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [self currentFetchedResultsController].sections.count;
+    return self.currentFetchedResultsController.sections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self currentFetchedResultsController].sections[section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return sectionInfo.numberOfObjects;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ContactQuickListCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactQuickListCell reuseIdentifier] forIndexPath:indexPath];
-    [self fetchedResultsController: [self currentFetchedResultsController]
+    [self fetchedResultsController: self.currentFetchedResultsController
                      configureCell: cell atIndexPath: indexPath];
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return [sectionInfo name];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     ContactQuickListSectionHeaderView *view = [[ContactQuickListSectionHeaderView alloc] init];
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
         view.title.text = NSLocalizedString(@"contact_group_none", nil);
     } else if ([sectionInfo.name isEqualToString: kRelationStateFriend]) {

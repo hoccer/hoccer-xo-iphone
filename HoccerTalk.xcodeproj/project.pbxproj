@@ -327,7 +327,7 @@
 		6327EAD11717689A00AF75E1 /* icon_profile-octocat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-octocat.png"; sourceTree = "<group>"; };
 		6327EAD21717689A00AF75E1 /* icon_profile-octocat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-octocat@2x.png"; sourceTree = "<group>"; };
 		6327EAD5171841F200AF75E1 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
-		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactListViewController.m; sourceTree = "<group>"; };
+		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6327EAD81718591600AF75E1 /* EmptyTablePlaceholderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyTablePlaceholderCell.xib; sourceTree = "<group>"; };
 		6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyTablePlaceholderCell.h; sourceTree = "<group>"; };
 		6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptyTablePlaceholderCell.m; sourceTree = "<group>"; };
@@ -357,7 +357,7 @@
 		6330490216FC99820045E64E /* ContactQuickListViewCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQuickListViewCells.h; sourceTree = "<group>"; };
 		6330490316FC99820045E64E /* ContactQuickListViewCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQuickListViewCells.m; sourceTree = "<group>"; };
 		6330490516FC9A020045E64E /* ContactQuickListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQuickListViewController.h; sourceTree = "<group>"; };
-		6330490616FC9A030045E64E /* ContactQuickListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQuickListViewController.m; sourceTree = "<group>"; };
+		6330490616FC9A030045E64E /* ContactQuickListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactQuickListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6330490816FCA4B80045E64E /* searchbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "searchbar_bg@2x.png"; sourceTree = "<group>"; };
 		6330490C170044940045E64E /* avatar_default_channel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_channel.png; sourceTree = "<group>"; };
 		6330490D170044940045E64E /* avatar_default_channel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_channel@2x.png"; sourceTree = "<group>"; };

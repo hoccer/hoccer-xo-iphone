@@ -26,6 +26,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 
 @interface ContactListViewController ()
+
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, strong) NSMutableArray * invitationChannels;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
@@ -127,10 +128,10 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 #pragma mark - Table view data source
 
 - (BOOL) isEmpty {
-    if (self.fetchedResultsController.sections.count == 0) {
+    if (self.currentFetchedResultsController.sections.count == 0) {
         return YES;
     } else {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][0];
+        id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[0];
         return [sectionInfo numberOfObjects] == 0;
     }
 }
@@ -139,14 +140,14 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     if (self.emptyTablePlaceholder != nil) {
         return 1;
     }
-    return [[self.fetchedResultsController sections] count];
+    return [self.currentFetchedResultsController.sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.emptyTablePlaceholder != nil) {
         return 1;
     }
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return [sectionInfo numberOfObjects];
 }
 
@@ -163,19 +164,19 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
 
     // TODO: do this right ...
-    [self fetchedResultsController: [self currentFetchedResultsController]
+    [self fetchedResultsController: self.currentFetchedResultsController
                      configureCell: cell atIndexPath: indexPath];
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return [sectionInfo name];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.searchBar resignFirstResponder];
-    Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
+    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
     // TODO: open detail view
 }
 
