@@ -16,6 +16,8 @@ NSString * const kHTAvatarImage    = @"avatarImage";
 NSString * const kHTAvatarURL      = @"avatarURL";
 NSString * const kHTNickName       = @"nickName";
 NSString * const kHTUserStatus     = @"userStatus";
+NSString * const kHTAutoDownloadLimit   = @"autoDownloadLimit";
+NSString * const kHTAutoUploadLimit     = @"autoUploadLimit";
 
 NSString * const kHTDefaultsDefaultsFile = @"HTUserDefaultsDefaults";
 

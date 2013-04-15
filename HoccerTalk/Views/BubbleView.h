@@ -10,6 +10,7 @@
 
 @class AutoheightLabel;
 @class TalkMessage;
+@class AttachmentView;
 
 @interface BubbleView : UIView
 
@@ -17,7 +18,7 @@
 @property (strong, nonatomic) IBOutlet AutoheightLabel* message;
 @property (strong, nonatomic) UIColor* bubbleColor;
 @property (nonatomic) BOOL pointingRight;
-@property (strong,nonatomic) UIView * attachmentView;
+@property (strong,nonatomic) AttachmentView * attachmentView;
 
 
 - (id) initWithCoder:(NSCoder *)aDecoder;

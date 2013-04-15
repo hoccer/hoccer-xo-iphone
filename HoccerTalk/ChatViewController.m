@@ -798,7 +798,7 @@
          [message.attachment.mediaType isEqualToString:@"video"] ||
          [message.attachment.mediaType isEqualToString:@"audio"]))
     {
-        UIView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment inCell: cell];
+        AttachmentView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment inCell: cell];
         cell.bubble.attachmentView = attachmentView;
     } else {
         cell.bubble.attachmentView = nil;
@@ -807,7 +807,7 @@
 
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell {
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
-    NSLog(@"@presentAttachmentViewForCell attachment = %@", message.attachment);
+    // NSLog(@"@presentAttachmentViewForCell attachment = %@", message.attachment);
     
     Attachment * myAttachment = message.attachment;
     if ([myAttachment.mediaType isEqual: @"video"]) {
@@ -828,7 +828,6 @@
         self.imageViewController.image = myAttachment.image;
         [self presentModalViewController: self.imageViewController animated: YES];
     }
-
 }
 
 - (ImageViewController*) imageViewController {

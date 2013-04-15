@@ -14,6 +14,7 @@
 #import "AssetStore.h"
 #import "TalkMessage.h"
 #import "AttachmentViewFactory.h"
+#import "AttachmentView.h"
 
 static const double kLeftBubbleCapLeft  = 11.0;
 static const double kRightBubbleCapLeft = 4.0;
@@ -27,6 +28,8 @@ static const double kAttachmentPadding = 10;
 @end
 
 @implementation BubbleView
+
+@synthesize attachmentView = _attachmentView;
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder: aDecoder];
@@ -57,7 +60,7 @@ static const double kAttachmentPadding = 10;
     self.message.frame = CGRectMake(_pointingRight ? of.origin.x : of.origin.x + d, of.origin.y, of.size.width - d, of.size.height);
 }
 
-- (void) setAttachmentView: (UIView*) view {
+- (void) setAttachmentView: (AttachmentView*) view {
     if (_attachmentView != nil) {
         [_attachmentView removeFromSuperview];
     }

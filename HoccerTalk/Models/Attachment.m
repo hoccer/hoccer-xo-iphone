@@ -37,7 +37,9 @@
 @synthesize image;
 @synthesize transferConnection = _transferConnection;
 @synthesize chatBackend = _chatBackend;
+@synthesize progressIndicatorDelegate;
 
+#define CONNECTION_TRACE false
 
 + (NSNumber *) fileSize: (NSString *) fileURL withError: (NSError**) myError {
     *myError = nil;
@@ -47,7 +49,7 @@
         NSLog(@"can not determine size of file '%@'", myPath);
         result = @(-1);
     }
-    NSLog(@"Attachment filesize = %@ (of file '%@')", result, myPath);
+    // NSLog(@"Attachment filesize = %@ (of file '%@')", result, myPath);
     return result;
 }
 
@@ -226,7 +228,7 @@
     CMTime time = CMTimeMake(1, 60);
     CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
     
-    NSLog(@"loadVideoAttachmentImage err==%@, imageRef==%@", err, imgRef);
+    // NSLog(@"loadVideoAttachmentImage err==%@, imageRef==%@", err, imgRef);
     
     block([[UIImage alloc] initWithCGImage:imgRef], nil);
 }
@@ -254,7 +256,7 @@
         if (im)
             [artworkImages addObject:im];
     }
-    NSLog(@"array description is %@", [artworkImages description]);
+    // NSLog(@"array description is %@", [artworkImages description]);
     return artworkImages;
 }
 
@@ -339,7 +341,7 @@
 }
 
 - (void) upload {
-    NSLog(@"Attachment:upload remoteURL=%@, attachment=%@", self.remoteURL, self );
+    // NSLog(@"Attachment:upload remoteURL=%@, attachment=%@", self.remoteURL, self );
     if ([self.message.isOutgoing isEqualToNumber: @NO]) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
         return;
@@ -358,7 +360,9 @@
                                                  headers:[self uploadHttpHeaders]
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
-            
+            if (progressIndicatorDelegate) {
+                [progressIndicatorDelegate transferStarted];
+            }
         } else {
             NSLog(@"Attachment:upload error=%@",myError);
         }
@@ -396,12 +400,23 @@
                                          headers:[self downloadHttpHeaders]
                                 ];
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
+    if (progressIndicatorDelegate) {
+        [progressIndicatorDelegate transferStarted];
+    }
 }
 
 - (void) downloadLater: (NSTimer*) theTimer {
     [self download];
 }
 
+- (void)pressedButton: (id)sender {
+    NSLog(@"Attachment pressedButton %@", sender);
+    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+        [self upload];
+    } else {
+        [self download];
+    }
+}
 
 
 -(void) withUploadData: (DataSetterBlock) execution {
@@ -500,7 +515,7 @@
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
 {
     if (connection == _transferConnection) {
-        NSLog(@"Attachment transferConnection didReceiveData len=%lu", (unsigned long)[data length]);
+        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveData len=%lu", (unsigned long)[data length]);}
         if ([self.message.isOutgoing isEqualToNumber: @NO]) {
             NSURL * myURL = [NSURL URLWithString: self.ownedURL];
             NSString * myPath = [myURL path];
@@ -517,6 +532,11 @@
                 NSLog(@"ERROR: Attachment transferConnection didReceiveData, stream error: %@", [stream streamError]);
             }
             [stream close];
+            NSError *myError = nil;
+            self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
+            if (progressIndicatorDelegate) {
+                [progressIndicatorDelegate showTransferProgress: [self.transferSize floatValue] / [self.contentSize floatValue]];
+            }
         } else {
             NSLog(@"ERROR: Attachment transferConnection didReceiveData on outgoing (upload) connection");
         }
@@ -528,8 +548,11 @@
 -(void)connection:(NSURLConnection*)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
     if (connection == _transferConnection) {
-        NSLog(@"Attachment transferConnection didSendBodyData %d", bytesWritten);
+        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didSendBodyData %d", bytesWritten);}
         self.transferSize = @(totalBytesWritten);
+        if (progressIndicatorDelegate) {
+            [progressIndicatorDelegate showTransferProgress: (float)totalBytesWritten / (float) totalBytesExpectedToWrite];
+        }
     } else {
         NSLog(@"ERROR: Attachment transferConnection didSendBodyData without valid connection");
     }
@@ -537,9 +560,13 @@
 
 -(void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
 {
+
     if (connection == _transferConnection) {
         NSLog(@"Attachment transferConnection didFailWithError %@", error);
         self.transferConnection = nil;
+        if (progressIndicatorDelegate) {
+            [progressIndicatorDelegate transferFinished];
+        }
     } else {
         NSLog(@"ERROR: Attachment transferConnection didFailWithError without valid connection");
     }
@@ -550,6 +577,7 @@
     if (connection == _transferConnection) {
         NSLog(@"Attachment transferConnection connectionDidFinishLoading %@", connection);
         self.transferConnection = nil;
+
         if ([self.message.isOutgoing isEqualToNumber: @NO]) {
             // finish download
             NSError *myError = nil;
@@ -561,11 +589,15 @@
                 // TODO: maybe do some UI refresh here, or use an observer for this
                 [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
                 // [_chatBackend downloadFinished: self];
+                progressIndicatorDelegate = nil;
                 // NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
             } else {
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
                 // TODO: trigger some retry
             }
+        }
+        if (progressIndicatorDelegate) {
+            [progressIndicatorDelegate transferFinished];
         }
     } else {
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");

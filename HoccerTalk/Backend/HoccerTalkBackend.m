@@ -79,7 +79,7 @@
     attachment.transferSize = 0;
 
     message.attachment = attachment;
-    NSLog(@"sendMessage: message.attachment = %@", message.attachment);
+    // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
 
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
@@ -94,7 +94,11 @@
     if (_isConnected) {
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
-    [attachment upload];
+    
+    if ([attachment.contentSize longLongValue] < [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue])
+    {
+        [attachment upload];
+    }
     
     return message;
 }
@@ -170,8 +174,10 @@
     [self deliveryConfirm: message.messageId withDelivery: delivery];
     
     if (attachment) {
-        [NSTimer scheduledTimerWithTimeInterval:2.0 target:attachment selector: @selector(downloadLater:) userInfo:nil repeats:NO];
-        //[attachment download];
+        if ([attachment.contentSize longLongValue] < [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue])
+        {
+            [NSTimer scheduledTimerWithTimeInterval:2.0 target:attachment selector: @selector(downloadLater:) userInfo:nil repeats:NO];
+        }
     }
 }
 
@@ -443,7 +449,12 @@
         abort();
     }
     for (Attachment * attachment in unfinishedAttachments) {
-        [attachment upload];
+        if ([attachment.contentSize longLongValue] <
+            [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue] ||
+            [attachment.transferSize longLongValue] > 0)
+        {
+            [attachment upload];
+        }
     }
 }
 
@@ -458,7 +469,12 @@
         abort();
     }
     for (Attachment * attachment in unfinishedAttachments) {
-        [attachment download];
+        if ([attachment.contentSize longLongValue] <
+            [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue] ||
+            [attachment.transferSize longLongValue] > 0)
+        {
+            [attachment download];
+        }
     }
 }
 

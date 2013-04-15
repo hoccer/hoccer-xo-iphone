@@ -11,66 +11,37 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Attachment.h"
+#import "TalkMessage.h"
+#import "AttachmentView.h"
 
 @implementation AttachmentViewFactory
 
-+ (UIView*) viewForAttachment: (Attachment*) attachment inCell:(MessageCell*) cell {
++ (AttachmentView*) viewForAttachment: (Attachment*) attachment inCell:(MessageCell*) cell {
     if (attachment == nil) {
         return nil;
     } else if ([attachment.mediaType isEqualToString:@"image"] ||
                [attachment.mediaType isEqualToString:@"video"] ||
                [attachment.mediaType isEqualToString:@"audio"])
     {
-        UIView * attachmentView = [[UIView alloc] init];
-        attachmentView.userInteractionEnabled = YES;
-        CGRect frame = attachmentView.frame;
-        
-        UIImageView * imageView = [[UIImageView alloc] init];
-        
-        // preset frame to correct aspect ratio before actual image is loaded
-        frame.size.width = attachment.aspectRatio;
-        frame.size.height = 1.0;
-        imageView.frame = frame;
-        //imageView.userInteractionEnabled = YES;
-        imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        
-        [attachmentView addSubview:imageView];
-        attachmentView.frame = frame;
-        
-        UIButton * myButton = [[UIButton alloc] initWithFrame: frame];
-        // [myButton setTitle:@"Open" forState:UIControlStateNormal];
-
-        if ( [attachment.mediaType isEqualToString:@"video"]) {
-            [myButton setImage: [UIImage imageNamed:@"button-video"] forState:UIControlStateNormal];            
-        }
-        if ([attachment.mediaType isEqualToString:@"audio"]) {
-            [myButton setImage: [UIImage imageNamed:@"button-audio"] forState:UIControlStateNormal];
-        }
-
-        myButton.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        
-        [myButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [attachmentView addSubview:myButton];
-        
-        if (attachment.image == nil) {
-            [attachment loadImage:^(UIImage * image, NSError * error) {
-                if (error == nil) {
-                    imageView.image = image;
-                    attachment.image = image;
-                } else {
-                    NSLog(@"viewForAttachment: failed to load attachment image, error=%@",error);
-                }
-            }];
+        AttachmentView * attachmentView = nil;
+        if (attachment.progressIndicatorDelegate != nil) {
+            attachmentView = (AttachmentView*) (attachment.progressIndicatorDelegate);
+            if (attachmentView.attachment != attachment || attachmentView.cell != cell) {
+                attachment.progressIndicatorDelegate = nil;
+                return [AttachmentViewFactory viewForAttachment: attachment inCell: cell];
+            }
         } else {
-            imageView.image = attachment.image;
+            attachmentView = [[AttachmentView alloc] init];
+            attachment.progressIndicatorDelegate = attachmentView;
         }
+        [attachmentView configureViewForAttachment: attachment inCell: cell];
         return attachmentView;
     } else {
         NSLog(@"Unhandled attachment type");
     }
     return nil;
 }
+
 
 + (CGFloat) heightOfAttachmentView: (Attachment*) attachment withViewOfWidth: (CGFloat) width {
     if (attachment == nil) {

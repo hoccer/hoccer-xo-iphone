@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@class AttachmentView;
 @class Attachment;
 @class MessageCell;
 
 @interface AttachmentViewFactory : NSObject
 
-+ (UIView*) viewForAttachment: (Attachment*) attachment inCell:(MessageCell*) cell;
++ (AttachmentView *) viewForAttachment: (Attachment*) attachment inCell:(MessageCell*) cell;
 + (CGFloat) heightOfAttachmentView: (Attachment*) attachment withViewOfWidth: (CGFloat) width;
 
 @end

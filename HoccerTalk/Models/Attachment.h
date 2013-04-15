@@ -19,6 +19,15 @@ typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
 typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 
+@protocol TransferProgressIndication <NSObject>
+
+- (void) showTransferProgress:(float) theProgress;
+- (void) transferStarted;
+- (void) transferFinished;
+
+@end
+
+
 @interface Attachment : HoccerTalkModel < NSURLConnectionDelegate >
 
 // persistent properties from model
@@ -47,6 +56,8 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 @property (readonly, strong) NSDictionary * downloadHttpHeaders;
 
 @property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
+
+@property (strong, nonatomic) id<TransferProgressIndication> progressIndicatorDelegate;
 
 -(void) withUploadData: (DataSetterBlock) execution;
 

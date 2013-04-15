@@ -4,5 +4,9 @@
 <dict>
 	<key>environment</key>
 	<string>production</string>
+	<key>autoUploadLimit</key>
+	<integer>1000000000</integer>
+	<key>autoDownloadLimit</key>
+	<integer>1000000000</integer>
 </dict>
 </plist>
