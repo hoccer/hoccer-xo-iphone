@@ -54,6 +54,8 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
 - (void) pairByToken: (NSString*) token;
+- (void) acceptInvitation: (NSString*) token;
+
 - (void) updateUnreadMessageCount: (NSUInteger) count handler: (void (^)()) handler;
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;

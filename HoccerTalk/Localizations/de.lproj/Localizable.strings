@@ -14,7 +14,10 @@
 "Chats" = "Chats";
 
 /* Action Sheet Button Ttitle */
-"Choose Photo/Video" = "Foto/Video wählen";
+"Choose Photo/Video" = "Foto/Video auswählen";
+
+/* Action Sheet Button Ttitle */
+"Choose Audio" = "Audio auswählen";
 
 /* Contacts Navigation Bar Title */
 "Contacts" = "Kontakte";

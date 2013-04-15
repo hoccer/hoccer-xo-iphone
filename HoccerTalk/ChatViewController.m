@@ -837,7 +837,13 @@
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
         
         UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.image];
+        
+        CGRect myFrame = myView.frame;
+        myFrame.size = CGSizeMake(320,320);
+        myView.frame = myFrame;
+        
         myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+        
         [_moviePlayerViewController.moviePlayer.view addSubview:myView];
 
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];

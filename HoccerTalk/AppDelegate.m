@@ -326,7 +326,7 @@
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     if ([[url scheme] isEqualToString:@"hctalk"]) {
         // TODO: input verification
-        [self.chatBackend pairByToken: url.host];
+        [self.chatBackend acceptInvitation: url.host];
     }
     return NO;
 }
