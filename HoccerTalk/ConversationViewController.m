@@ -168,8 +168,7 @@
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
         self.chatViewController.partner = contact;
@@ -226,8 +225,6 @@
 }    
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    NSLog(@"willchangecontent");
-
     [self.tableView beginUpdates];
 }
 
@@ -274,7 +271,6 @@
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    NSLog(@"didchangecontent");
     [self.tableView endUpdates];
 }
 

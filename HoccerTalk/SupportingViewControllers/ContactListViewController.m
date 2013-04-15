@@ -16,6 +16,7 @@
 #import "RadialGradientView.h"
 #import "InviteCodeViewController.h"
 #import "HoccerTalkBackend.h"
+#import "ProfileViewController.h"
 
 static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
 
@@ -86,6 +87,10 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
+
+    UIImage * icon = [UIImage imageNamed: @"navbar-icon-contacts"];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backButton;
 
 }
 
@@ -174,11 +179,15 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     return [sectionInfo name];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.searchBar resignFirstResponder];
-    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    // TODO: open detail view
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"showProfile"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
+        ProfileViewController* profileView = (ProfileViewController*)[segue destinationViewController];
+        profileView.contact = contact;
+    }
 }
+
 
 #pragma mark - Search Bar
 
@@ -224,9 +233,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
         if(filterPredicate)
         {
             filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray], nil]];
-        }
-        else
-        {
+        } else {
             filterPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
         }
     }

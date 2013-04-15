@@ -777,7 +777,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        NSData * myImageData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+        NSData * myImageData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatar];
         if (myImageData != nil) {
             self.avatarImage = [UIImage imageWithData: myImageData];
         } else {

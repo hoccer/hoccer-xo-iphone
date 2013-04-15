@@ -29,6 +29,13 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic publicKey;
 @dynamic publicKeyId;
 
+@dynamic phoneNumber;
+@dynamic mailAddress;
+@dynamic twitterName;
+@dynamic facebookName;
+@dynamic googlePlusName;
+@dynamic githubName;
+
 @dynamic messages;
 
 NSString * const kRelationStateNone    = @"none";

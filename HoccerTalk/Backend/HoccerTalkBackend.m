@@ -869,7 +869,7 @@ typedef enum BackendStates {
         NSLog(@"avatar is still being uploaded");
         return;
     }
-    NSData * myAvatarData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+    NSData * myAvatarData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatar];
     NSLog(@"uploadAvatar starting");
     _avatarBytesTotal = [myAvatarData length];
     _avatarUploadURL = toURL;
@@ -893,7 +893,7 @@ typedef enum BackendStates {
 }
 
 - (NSString *) calcAvatarURL {
-    NSData * myAvatarImmutableData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+    NSData * myAvatarImmutableData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatar];
     if (myAvatarImmutableData == nil || [myAvatarImmutableData length] == 0) {
         return @"";
     }

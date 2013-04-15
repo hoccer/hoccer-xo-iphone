@@ -15,6 +15,7 @@
 @class UserDefaultsCellAvatarPicker;
 @class UserDefaultsCellTextInput;
 @class AvatarItem;
+@class Contact;
 
 typedef enum ProfileViewModes {
     ProfileViewModeFirstRun,
@@ -31,6 +32,7 @@ typedef enum ProfileViewModes {
     BOOL              _canceled;
 }
 
-@property (nonatomic,strong) UITableView* tableView;
+
+@property (nonatomic,strong) Contact* contact;
 
 @end

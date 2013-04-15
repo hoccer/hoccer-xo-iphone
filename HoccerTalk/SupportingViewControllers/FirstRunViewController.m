@@ -117,7 +117,7 @@
 - (void) saveDummyProfile {
     [[HTUserDefaults standardUserDefaults] setObject: identityTextField.text forKey: kHTClientId];
     [[HTUserDefaults standardUserDefaults] setObject: identityTextField.text forKey: kHTNickName];
-    [[HTUserDefaults standardUserDefaults] setObject: UIImagePNGRepresentation(avatarView.image) forKey: kHTAvatarImage];
+    [[HTUserDefaults standardUserDefaults] setObject: UIImagePNGRepresentation(avatarView.image) forKey: kHTAvatar];
     [[HTUserDefaults standardUserDefaults] synchronize];
 }
 
