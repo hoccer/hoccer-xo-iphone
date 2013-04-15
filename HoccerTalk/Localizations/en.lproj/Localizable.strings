@@ -79,10 +79,10 @@
 "Take Photo/Video" = "Take Photo/Video";
 
 /* Invite Alert Message */
-"The server accepted your code" = "The server accepted your code";
+"The server accepted your code" = "The code has been accepted";
 
 /* Invite Alert Message */
-"The server rejected your invite code" = "The server rejected your invite code";
+"The server rejected your invite code" = "The code has been rejected";
 
 /* Navigation Menu Item */
 "Tutorial" = "Tutorial";
@@ -138,5 +138,10 @@
 
 "no_messages_exchanged" = "No messages yet.";
 
-"empty_conversation_list_label" = "Conversations";
+"conversation_empty_placeholder" = "Conversations";
 
+"contacts_empty_placeholder" = "Contacts";
+
+"navigation_title_profile" = "Profile";
+
+"navigation_title_contact" = "Contact";

@@ -24,11 +24,21 @@
 
 @end
 
+@protocol UserDefaultsCellTextInputDelegate <NSObject>
 
-@interface UserDefaultsCellTextInput : UserDefaultsCell
+@optional
+
+- (BOOL) validateTextField: (UITextField*) textField;
+- (void) textFieldDidEndEditing: (UITextField*) textField;
+
+@end
+
+@interface UserDefaultsCellTextInput : UserDefaultsCell  <UITextFieldDelegate>
 
 @property (nonatomic,strong) IBOutlet UITextField * textField;
 @property (nonatomic,strong) IBOutlet UIImageView * textInputBackground;
+@property (nonatomic,strong) NSString* editLabel;
+@property (nonatomic,strong) id<UserDefaultsCellTextInputDelegate> delegate;
 
 @end
 
@@ -45,5 +55,7 @@
 @end
 
 @interface UserDefaultsCellDisclosure : UserDefaultsCell
+
+@property (nonatomic,strong) NSString* editLabel;
 
 @end

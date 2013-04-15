@@ -20,31 +20,38 @@
 #import "UserDefaultsViewController.h"
 #import "NSString+UUID.h"
 #import "AppDelegate.h"
+#import "ContactListViewController.h"
+#import "Contact.h"
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 
-@interface ProfileItem : NSObject
 
-@property (nonatomic,strong) UIImage  * icon;
-@property (nonatomic,strong) NSString * userDefaultsKey;
-@property (nonatomic,strong) NSString * currentValue;
-@property (nonatomic,strong) NSString * editLabel;
-@property (nonatomic,strong) NSString * cellIdentifier;
-@property (nonatomic,strong) NSString * placeholder;
+@interface ProfileItem : NSObject <UserDefaultsCellTextInputDelegate>
+
+@property (nonatomic,strong) UIImage  *     icon;
+@property (nonatomic,strong) NSString *     valueKey; // used to access the model
+@property (nonatomic,strong) NSString *     currentValue;
+@property (nonatomic,strong) NSString *     editLabel;
+@property (nonatomic,strong) NSString *     cellIdentifier;
+@property (nonatomic,strong) NSString *     placeholder;
 @property (nonatomic,assign) UIKeyboardType keyboardType;
+@property (nonatomic,assign) BOOL           required;
+@property (nonatomic,assign) BOOL           valid;
 
 @end
 
 @interface AvatarItem : NSObject
 
 @property (nonatomic,strong) UIImage*  image;
-@property (nonatomic,strong) NSString* userDefaultsKey;
+@property (nonatomic,strong) NSString* valueKey;
+@property (nonatomic,strong) NSString* contactKey;
 
 @end
 
 @interface ProfileViewController ()
 
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
+@property (strong, readonly) NSPredicate * hasValuePredicate;
 
 @end
 
@@ -55,36 +62,69 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self != nil) {
-        _editing = NO;
+        _mode = ProfileViewModeMyProfile;
     }
     return self;
-}
-
-- (NSString*) itemsPlistFileName {
-    return @"ProfileItems";
-}
-
-- (void) viewDidLoad {
-    [super viewDidLoad];
-
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
 
-    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        self.navigationItem.leftBarButtonItem =  self.hoccerTalkMenuButton;
+    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+        _mode = ProfileViewModeFirstRun;
+        self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
+    } else if (self.contact != nil) {
+        _mode = ProfileViewModeContactProfile;
+        self.navigationItem.title = NSLocalizedString(@"navigation_title_contact", nil);
+    } else if ([self.parentViewController isKindOfClass: [UINavigationController class]]) {
+        _mode = ProfileViewModeMyProfile;
+        self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
+    } else {
+        NSLog(@"ProfileViewController viewWillAppear: Unknown mode");
     }
-    //[self populateItems];
+    [self setupNavigationButtons: _mode];
+
+    [self populateValues];
+}
+
+- (NSArray*) populateValues {
+    id modelObject = _mode == ProfileViewModeContactProfile ? self.contact : [HTUserDefaults standardUserDefaults];
+    _avatarItem.image = [UIImage imageWithData: [modelObject valueForKey: _avatarItem.valueKey]];
+    for (ProfileItem* item in _allProfileItems) {
+        item.currentValue = [modelObject valueForKey: item.valueKey];
+    }
+    return [self filterItems: NO];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
-    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+    if (_mode == ProfileViewModeFirstRun) {
         [self setEditing: YES animated: YES];
+    }
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
+}
+
+- (void) setupNavigationButtons: (ProfileViewMode) mode {
+    switch (mode) {
+        case ProfileViewModeFirstRun:
+            self.navigationItem.rightBarButtonItem = self.editButtonItem;
+            self.navigationItem.leftBarButtonItem = nil;
+            break;
+        case ProfileViewModeMyProfile:
+            self.navigationItem.rightBarButtonItem = self.editButtonItem;
+            self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
+            break;
+        case ProfileViewModeContactProfile:
+            self.navigationItem.rightBarButtonItem = nil;
+            //self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton; // TODO: back button
+            break;
+
     }
 }
 
@@ -101,17 +141,12 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     if (indexPath.section == 0) {
         cell = [self dequeueReusableCellOfClass: [UserDefaultsCellAvatarPicker class] forIndexPath: indexPath];
         UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*)cell;
-        avatarCell.avatar.image = _avatarItem.image;
-        avatarCell.avatar.enabled = _editing;
-        if (avatarCell.avatar.defaultImage == nil) {
-            avatarCell.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact_large"];
-        }
-        [avatarCell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
+        [self configureAvatarCell: avatarCell withItem: _avatarItem atIndexPath: indexPath];
     } else {
-        ProfileItem * item = (ProfileItem*)_profileItems[indexPath.row];
+        ProfileItem * item = (ProfileItem*)_items[indexPath.section][indexPath.row];
         if ([item.cellIdentifier isEqualToString: [UserDefaultsCellTextInput reuseIdentifier]]) {
             cell = [self dequeueReusableCellOfClass: [UserDefaultsCellTextInput class] forIndexPath: indexPath];
-            [self configureTextCell: (UserDefaultsCellTextInput*)cell withItem: item atIndexPath: indexPath];
+            [self configureTextInputCell: (UserDefaultsCellTextInput*)cell withItem: item atIndexPath: indexPath];
         } else if ([item.cellIdentifier isEqualToString: [UserDefaultsCellDisclosure reuseIdentifier]]) {
             cell = [self dequeueReusableCellOfClass: [UserDefaultsCellDisclosure class] forIndexPath: indexPath];
             [self configureDisclosureCell: (UserDefaultsCellDisclosure*)cell withItem: item atIndexPath: indexPath];
@@ -124,258 +159,207 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) configureCell: (UserDefaultsCell*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
     cell.imageView.image = item.icon;
-    if (_editing) {
-        cell.textLabel.text = item.editLabel;
-        cell.textLabel.alpha = 1.0;
-    } else {
-        if (item.currentValue != nil && [item.currentValue length] > 0) {
-            cell.textLabel.text = item.currentValue;
-            cell.textLabel.alpha = 1.0;
-        } else {
-            cell.textLabel.text = item.placeholder;
-            cell.textLabel.alpha = 0.5;
-        }
-    }
 }
 
-- (void) configureTextCell: (UserDefaultsCellTextInput*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
+- (void) configureAvatarCell: (UserDefaultsCellAvatarPicker*) cell withItem: (AvatarItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    cell.avatar.image = _avatarItem.image;
+    if (cell.avatar.defaultImage == nil) {
+        cell.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact_large"];
+    }
+    [cell.avatar addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
+}
+
+- (void) configureTextInputCell: (UserDefaultsCellTextInput*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
     NSString * value = item.currentValue;
     cell.textField.text = value;
-    cell.textField.enabled = _editing;
-    cell.textField.alpha = _editing ? 1.0 : 0.0;
     cell.textField.placeholder = item.placeholder;
-    cell.textField.tag = indexPath.row; // XXX
-    cell.textInputBackground.alpha = _editing ? 1.0 : 0.0;
+    cell.delegate = item;
+    cell.editLabel = item.editLabel;
 
     [self configureCell: cell withItem: item atIndexPath: indexPath];
 
     cell.textField.keyboardType = item.keyboardType;
-    if (cell.textInputBackground.image == nil) {
-        cell.textInputBackground.image = [AssetStore stretchableImageNamed: @"profile_text_input_bg" withLeftCapWidth:3 topCapHeight:3];
-        cell.textInputBackground.frame = CGRectInset(cell.textField.frame, -8, 2);
-        cell.textField.delegate = self;
-        cell.textField.backgroundColor = [UIColor clearColor];
-    }
 }
 
 - (void) configureDisclosureCell: (UserDefaultsCellDisclosure*) cell withItem: (ProfileItem*) item atIndexPath: (NSIndexPath*) indexPath {
     [self configureCell: cell withItem: item atIndexPath: indexPath];
-    if (_editing) {
-        if (cell.accessoryView != nil) {
-            cell.accessoryView.hidden = NO; // XXX alpha does not work???
-        }
-    } else {
-        if (cell.accessoryView != nil) {
-            cell.accessoryView.hidden = YES; // XXX alpha does not work???
-        }
-    }
+    cell.editLabel = item.editLabel;
 }
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleNone;
+}
+
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 0;
 }
 
-- (void) textFieldDidEndEditing:(UITextField *)textField {
-    ((ProfileItem*)_profileItems[textField.tag]).currentValue = textField.text;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return NO;
-}
-
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
-    // do not call super class
-    if (_editing == editing ) {
-        return;
+    [super setEditing: editing animated: animated];
+
+    [self.view endEditing: editing];
+
+    [self.tableView beginUpdates];
+    NSUInteger row = 0;
+    for (ProfileItem * item in _allProfileItems) {
+        BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
+        if (editing && ! hasValue) {
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
+        } else if ( ! editing && ! hasValue) {
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
+        }
+        ++row;
     }
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(onDone:)];
-    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onCancel:)];
-        [self.navigationItem setLeftBarButtonItem: cancelButton animated:YES];
+    _items = [self filterItems: editing];
+    [self.tableView endUpdates];
+    for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
+        NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
+        [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
     }
-    [self.navigationItem setRightBarButtonItem: doneButton animated:YES];
-
-    [self animateTableCells];
-}
-
-- (void) animateTableCells {
-    CGFloat alpha = _editing ? 0.0 : 1.0;
-    [UIView animateWithDuration: kProfileEditAnimationDuration animations:^{
-        for (UITableViewCell * cell in self.tableView.visibleCells) {
-            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
-                UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
-                profileCell.textField.alpha = alpha;
-                profileCell.textField.enabled = ! _editing;
-                profileCell.textInputBackground.alpha = alpha;
-            } else if ([cell isKindOfClass: [UserDefaultsCellAvatarPicker class]]) {
-                UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*) cell;
-                avatarCell.avatar.enabled = ! _editing;
-                avatarCell.avatar.outerShadowColor = _editing ? [UIColor whiteColor] : [UIColor orangeColor];
-            } else if ([cell isKindOfClass: [UserDefaultsCellDisclosure class]]) {
-                UserDefaultsCellDisclosure * disclosureCell = (UserDefaultsCellDisclosure*) cell;
-                disclosureCell.accessoryView.hidden = _editing;
-            }
+    if (editing) {
+        [self validateItems];
+        if (_mode == ProfileViewModeMyProfile) {
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
+            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
         }
-    } completion:^(BOOL finished) {
-        _editing = ! _editing;
-    }];
-    [UIView animateWithDuration: 0.5 * kProfileEditAnimationDuration animations:^{
-        for (UITableViewCell * cell in self.tableView.visibleCells) {
-            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]] ||
-                [cell isKindOfClass: [UserDefaultsCellDisclosure class]])
-            {
-                cell.textLabel.alpha = 0.0;
-            }
-
+        _canceled = NO;
+    } else {
+        if ( ! _canceled) {
+            [self saveProfile];
         }
-    } completion:^(BOOL finished) {
-        int index = 0;
-        NSArray * indexPaths = self.tableView.indexPathsForVisibleRows;
-        for (UITableViewCell * cell in self.tableView.visibleCells) {
-            ProfileItem * item = _profileItems[((NSIndexPath*)indexPaths[index++]).row];
-            if ([cell isKindOfClass: [UserDefaultsCellTextInput class]]) {
-                UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
-                if (_editing) {
-                    if (profileCell.textField.text == nil || [profileCell.textField.text isEqualToString: @""]) {
-                        profileCell.textLabel.text = profileCell.textField.placeholder;
-                    } else {
-                         profileCell.textLabel.text = profileCell.textField.text;
-                    }
-                } else {
-                    profileCell.textLabel.text = item.editLabel;
-                }
-            } else if ([cell isKindOfClass: [UserDefaultsCellDisclosure class]]) {
-                UserDefaultsCellDisclosure * profileCell = (UserDefaultsCellDisclosure*)cell;
-                if (_editing) {
-                    if (item.currentValue == nil) {
-                        profileCell.textLabel.text = item.placeholder;
-                    } else {
-                        profileCell.textLabel.text = item.currentValue;
-                    }
-                } else {
-                    profileCell.textLabel.text = item.editLabel;
-                }
-            }
-
-        }
-        [UIView animateWithDuration: 0.5 * kProfileEditAnimationDuration animations:^{
-            NSArray * indexPaths = self.tableView.indexPathsForVisibleRows;
-            int index = 0;
-            for (UITableViewCell * cell in self.tableView.visibleCells) {
-                ProfileItem * item = _profileItems[((NSIndexPath*)indexPaths[index++]).row];
-                if ([cell isKindOfClass: [UserDefaultsCellTextInput class]] ||
-                    [cell isKindOfClass: [UserDefaultsCellDisclosure class]])
-                {
-                    UserDefaultsCellTextInput * profileCell = (UserDefaultsCellTextInput*)cell;
-                    profileCell.textLabel.alpha = [profileCell.textLabel.text isEqualToString: item.placeholder] ? 0.5 : 1.0;
-                }
-            }
-        }];
-    }];
-
+        ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
+        self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
+    }
 }
 
 - (IBAction)onCancel:(id)sender {
-    [self.tableView endEditing: NO];
-
-    [self reloadProfile];
-    [self restoreNonEditButtons];
-    [self animateTableCells];
-}
-
-- (IBAction)onDone:(id)sender {
-    [self.tableView endEditing: NO];
-
-    [self saveProfile];
-    [self restoreNonEditButtons];
-    [self animateTableCells];
+    _canceled = YES;
+    [self setEditing: NO animated: YES];
 }
 
 - (NSArray*) populateItems {
-
     _avatarItem = [[AvatarItem alloc] init];
-    _avatarItem.userDefaultsKey = kHTAvatarImage;
+    _avatarItem.valueKey = kHTAvatar;
+    _avatarItem.contactKey = @"avatar";
 
-    _profileItems = [[NSMutableArray alloc] init];
-
+    _allProfileItems = [[NSMutableArray alloc] init];
+    
     ProfileItem * nickNameItem = [[ProfileItem alloc] init];
     nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
-    nickNameItem.userDefaultsKey = kHTNickName;
+    nickNameItem.valueKey = kHTNickName;
     nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
     nickNameItem.placeholder = NSLocalizedString(@"profile_name_placeholder", @"Profile Placeholder Nick Name");
     nickNameItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     nickNameItem.keyboardType = UIKeyboardTypeDefault;
-    [_profileItems addObject: nickNameItem];
+    nickNameItem.required = YES;
+    [_allProfileItems addObject: nickNameItem];
 
     ProfileItem * clientIdItem = [[ProfileItem alloc] init];
     //nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
-    clientIdItem.userDefaultsKey = kHTClientId;
+    clientIdItem.valueKey = kHTClientId;
     clientIdItem.editLabel = @"Client Id";
     clientIdItem.placeholder = @"Your Client Id";
     clientIdItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     clientIdItem.keyboardType = UIKeyboardTypeDefault;
-    [_profileItems addObject: clientIdItem];
+    clientIdItem.required = YES;
+    [_allProfileItems addObject: clientIdItem];
 
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
-    phoneItem.userDefaultsKey = @"phoneNumber";
+    phoneItem.valueKey = @"phoneNumber";
     phoneItem.editLabel = NSLocalizedString(@"profile_phone_label", nil);
     phoneItem.placeholder = NSLocalizedString(@"profile_phone_placeholder", nil);
     phoneItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     phoneItem.keyboardType = UIKeyboardTypePhonePad;
-    [_profileItems addObject: phoneItem];
+    [_allProfileItems addObject: phoneItem];
 
     ProfileItem * mailItem = [[ProfileItem alloc] init];
     mailItem.icon = [UIImage imageNamed: @"icon_profile-mail"];
-    mailItem.userDefaultsKey = @"mailAddress";
+    mailItem.valueKey = @"mailAddress";
     mailItem.editLabel = NSLocalizedString(@"profile_mail_label",nil);
     mailItem.placeholder = NSLocalizedString(@"profile_mail_placeholder", nil);
     mailItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
     mailItem.keyboardType = UIKeyboardTypeEmailAddress;
-    [_profileItems addObject: mailItem];
+    [_allProfileItems addObject: mailItem];
 
     ProfileItem * twitterItem = [[ProfileItem alloc] init];
     twitterItem.icon = [UIImage imageNamed: @"icon_profile-twitter"];
-    twitterItem.userDefaultsKey = @"twitterName";
+    twitterItem.valueKey = @"twitterName";
     twitterItem.editLabel = NSLocalizedString(@"profile_twitter_label", nil);
     twitterItem.placeholder = NSLocalizedString(@"profile_twitter_placeholder", nil);
     twitterItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: twitterItem];
+    [_allProfileItems addObject: twitterItem];
 
     ProfileItem * facebookItem = [[ProfileItem alloc] init];
     facebookItem.icon = [UIImage imageNamed: @"icon_profile-facebook"];
-    facebookItem.userDefaultsKey = @"facebookName";
+    facebookItem.valueKey = @"facebookName";
     facebookItem.editLabel = NSLocalizedString(@"profile_facebook_label", nil);
     facebookItem.placeholder = NSLocalizedString(@"profile_facebook_placeholder", nil);
     facebookItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: facebookItem];
+    [_allProfileItems addObject: facebookItem];
 
     ProfileItem * googlePlusItem = [[ProfileItem alloc] init];
     googlePlusItem.icon = [UIImage imageNamed: @"icon_profile-googleplus"];
-    googlePlusItem.userDefaultsKey = @"googlePlusName";
+    googlePlusItem.valueKey = @"googlePlusName";
     googlePlusItem.editLabel = NSLocalizedString(@"profile_google_plus_label", nil);
     googlePlusItem.placeholder = NSLocalizedString(@"profile_google_plus_placeholder", nil);
     googlePlusItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: googlePlusItem];
+    [_allProfileItems addObject: googlePlusItem];
 
     ProfileItem * githubItem = [[ProfileItem alloc] init];
     githubItem.icon = [UIImage imageNamed: @"icon_profile-octocat"];
-    githubItem.userDefaultsKey = @"githubName";
+    githubItem.valueKey = @"githubName";
     githubItem.editLabel = NSLocalizedString(@"profile_github_label", nil);
     githubItem.placeholder = NSLocalizedString(@"profile_github_placeholder", nil);
     githubItem.cellIdentifier = [UserDefaultsCellDisclosure reuseIdentifier];
-    [_profileItems addObject: githubItem];
+    [_allProfileItems addObject: githubItem];
 
-    _avatarItem.image = [UIImage imageWithData: [[HTUserDefaults standardUserDefaults] valueForKey: _avatarItem.userDefaultsKey]];
-    for (ProfileItem* item in _profileItems) {
-        item.currentValue = [[HTUserDefaults standardUserDefaults] valueForKey: item.userDefaultsKey];
+    for (ProfileItem* item in _allProfileItems) {
+        [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
     }
-    return @[ @[_avatarItem], _profileItems];
+
+    return [self populateValues];
 }
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([keyPath isEqualToString: @"valid"]) {
+        [self validateItems];
+    }
+}
+
+- (void) validateItems {
+    BOOL allValid = YES;
+    for (ProfileItem* item in _allProfileItems) {
+        if ( ! item.valid) {
+            allValid = NO;
+            break;
+        }
+    }
+    self.editButtonItem.enabled = allValid;
+}
+
+- (NSArray*) filterItems: (BOOL) editing {
+    NSArray * items;
+    if (editing) {
+        items = _allProfileItems;
+    } else {
+        items = [_allProfileItems filteredArrayUsingPredicate: self.hasValuePredicate];
+    }
+    return @[ @[_avatarItem], items];
+}
+
+@synthesize hasValuePredicate = _hasValuePredicate;
+- (NSPredicate*) hasValuePredicate {
+    if (_hasValuePredicate == nil) {
+        _hasValuePredicate = [NSPredicate predicateWithFormat: @"currentValue != nil AND currentValue != ''"];
+    }
+    return _hasValuePredicate;
+}
+
 
 - (void) saveProfile {
     // TODO: proper size handling
@@ -386,10 +370,11 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         scale = 128.0 / _avatarItem.image.size.height;
     }
     CGSize size = CGSizeMake(_avatarItem.image.size.width * scale, _avatarItem.image.size.height * scale);
-    [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.image imageScaledToSize: size]) forKey: _avatarItem.userDefaultsKey];
-    for (ProfileItem* item in _profileItems) {
-        NSLog(@"saving %@ as %@", item.currentValue, item.userDefaultsKey);
-        [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.userDefaultsKey];
+    [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.image imageScaledToSize: size]) forKey: _avatarItem.valueKey];
+    for (ProfileItem* item in _allProfileItems) {
+        if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
+            [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.valueKey];
+        }
     }
 
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
@@ -405,20 +390,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
-- (void) reloadProfile {
-    //[self populateItems];
-    // TODO: this causes a weird artifact in the table background. Not reloading the data causes
-    // inconsistencies in the avatar cell... let's be consistent for now and deal with the artifact later
-    [self.tableView reloadData];
-}
-
-- (void) restoreNonEditButtons {
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-    [self.navigationItem setLeftBarButtonItem: self.hoccerTalkMenuButton animated:YES];
-    [self.navigationItem setRightBarButtonItem: self.editButtonItem animated:YES];
-    [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector: @selector(makeLeftButtonFixedWidth) userInfo:nil repeats:NO];
-}
-
 - (void) makeLeftButtonFixedWidth {
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
 }
@@ -427,6 +398,15 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (IBAction)avatarTapped:(id)sender {
     [self.attachmentPicker showInView: self.view];
+}
+
+- (void) updateAvatar: (UIImage*) image {
+    _avatarItem.image = image;
+    NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
+    UserDefaultsCellAvatarPicker * cell = (UserDefaultsCellAvatarPicker*)[self.tableView cellForRowAtIndexPath: indexPath];
+    [self.tableView beginUpdates];
+    [self configureAvatarCell: cell withItem: _avatarItem atIndexPath: indexPath];
+    [self.tableView endUpdates];
 }
 
 #pragma mark - Attachment Picker Controller
@@ -445,10 +425,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) didPickAttachment:(id)attachmentInfo {
     if (attachmentInfo != nil) {
         UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
-        _avatarItem.image = image;
-        [self.tableView reloadData];
-    } else {
-        NSLog(@"avatar chooser cancel");
+        [self updateAvatar: image];
     }
 }
 
@@ -473,16 +450,56 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) additionalButtonPressed:(NSUInteger)buttonIndex {
-    _avatarItem.image = nil;
-    [self.tableView reloadData];
+    // delete avatarImage
+    [self updateAvatar: nil];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
 }
+
+- (void) dealloc {
+    for (ProfileItem* item in _allProfileItems) {
+        [item removeObserver: self forKeyPath: @"valid"];
+    }
+}
+
 @end
 
+
 @implementation ProfileItem
+
+- (id) init {
+    self = [super init];
+    if (self != nil) {
+        self.valid = YES;
+    }
+    return self;
+}
+
+- (void) setRequired:(BOOL)required {
+    _required = required;
+    if (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""])) {
+        self.valid = NO;
+    }
+}
+
+- (void) setCurrentValue:(NSString *)currentValue {
+    _currentValue = currentValue;
+    if (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""])) {
+        self.valid = NO;
+    }
+}
+
+- (BOOL) validateTextField:(UITextField *)textField {
+    self.currentValue = textField.text;
+    if (self.required && ( textField.text == nil || [textField.text isEqualToString: @""])) {
+        self.valid = NO;
+    } else {
+        self.valid = YES;
+    }
+    return self.valid;
+}
 @end
 
 @implementation AvatarItem

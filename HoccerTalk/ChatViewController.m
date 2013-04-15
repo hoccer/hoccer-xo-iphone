@@ -568,10 +568,7 @@
     TalkMessage * message = (TalkMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
     NSString * identifier = [message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier];
-    MessageCell *cell = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") ?
-    [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath:indexPath] :
-    [tableView dequeueReusableCellWithIdentifier: identifier];
-
+    MessageCell *cell = [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath:indexPath];
 
     // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
     // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/
@@ -592,7 +589,8 @@
     cell.label.text = sectionInfo.name;
     cell.label.shadowColor  = [UIColor whiteColor];
     cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
-    return cell;
+    cell.backgroundImage.image = [UIImage imageNamed: @"date_cell_bg"];
+    return cell.contentView;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -604,7 +602,7 @@
     // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
     //     because the table view assuemes there is a 1px separator. However, sometimes the
     //     grey line still appears ...
-    return self.headerCell.frame.size.height - 1;
+    return self.headerCell.contentView.bounds.size.height;
 }
 
 #pragma mark - Table view delegate
@@ -656,13 +654,16 @@
 
 
 - (void) setPartner: (Contact*) partner {
+    if (_partner != nil) {
+        [_partner removeObserver: self forKeyPath: @"nickName"];
+    }
+    _partner = partner;
     if (partner == nil) {
         return;
     }
-    if (_partner == partner) {
-        return;
-    }
-    _partner = partner;
+    [_partner addObserver: self forKeyPath: @"nickName" options: NSKeyValueObservingOptionNew context: nil];
+    [_partner addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
+
 
     if (resultsControllers == nil) {
         resultsControllers = [[NSMutableDictionary alloc] init];
@@ -702,6 +703,22 @@
     [self.tableView reloadData];
     [self scrollToBottom: NO];
     [self configureView];
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([keyPath isEqualToString: @"nickName"]) {
+        self.title = [object nickName];
+    } else if ([keyPath isEqualToString: @"avatarImage"]) {
+        NSLog(@"======== new avatar =============");
+        NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
+        [self.tableView beginUpdates];
+        for (int i = 0; i < indexPaths.count; ++i) {
+            NSIndexPath * indexPath = indexPaths[i];
+            TalkMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+        }
+        [self.tableView endUpdates];
+    }
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
@@ -777,7 +794,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        NSData * myImageData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarImage];
+        NSData * myImageData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatar];
         if (myImageData != nil) {
             self.avatarImage = [UIImage imageWithData: myImageData];
         } else {
@@ -791,7 +808,7 @@
     }
 
     cell.message.text = message.body;
-    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : message.contact.avatarImage;
+    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : self.partner.avatarImage;
 
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
@@ -848,6 +865,11 @@
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     // trigger relayout on orientation change. However, there has to be a better way to do this...
     [self.tableView reloadData];
+}
+
+- (void) dealloc {
+    [self.partner removeObserver: self forKeyPath: @"nickName"];
+    [self.partner removeObserver: self forKeyPath: @"avatarImage"];
 }
 
 @end

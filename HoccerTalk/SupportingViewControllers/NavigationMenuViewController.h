@@ -10,7 +10,7 @@
 
 @class MFSideMenu;
 
-@interface NavigationMenuViewController : UITableViewController
+@interface NavigationMenuViewController : UITableViewController <UINavigationControllerDelegate>
 
 @property (nonatomic, assign) MFSideMenu *sideMenu;
 

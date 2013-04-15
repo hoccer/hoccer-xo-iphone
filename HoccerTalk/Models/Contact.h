@@ -22,6 +22,12 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSDate*        latestMessageTime;
 @property (nonatomic, strong) NSString*      nickName;
 @property (nonatomic, strong) NSString*      status;
+@property (nonatomic, strong) NSString*      phoneNumber;
+@property (nonatomic, strong) NSString*      mailAddress;
+@property (nonatomic, strong) NSString*      twitterName;
+@property (nonatomic, strong) NSString*      facebookName;
+@property (nonatomic, strong) NSString*      googlePlusName;
+@property (nonatomic, strong) NSString*      githubName;
 
 @property (nonatomic, strong) NSString*      currentTimeSection;
 @property (nonatomic, strong) NSArray*       unreadMessages;
@@ -39,7 +45,6 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSMutableSet* messages;
 
 @property (readonly) UIImage* avatarImage;
-@property (readonly, strong) NSString* avatarImageCachedURL;
 
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date;
 - (SecKeyRef) getPublicKeyRef;

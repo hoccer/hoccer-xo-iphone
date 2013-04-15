@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "AssetStore.h"
+#import "InsetImageView.h"
 
 @interface ContactQuickListCell ()
 {
@@ -28,9 +29,15 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
 - (void) awakeFromNib {
     [super awakeFromNib];
+
+    self.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
+    self.backgroundView.frame = self.bounds;
+    self.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.2];
+    self.avatar.borderColor = [UIColor blackColor];
+
     _messageCountBackground = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"bg_message-count-grey" withLeftCapWidth: 10 topCapHeight: 10]];
-    [self addSubview: _messageCountBackground];
-    [self sendSubviewToBack: _messageCountBackground];
+    [self.contentView addSubview: _messageCountBackground];
+    [self.contentView sendSubviewToBack: _messageCountBackground];
 }
 
 - (void) layoutSubviews {
@@ -60,10 +67,25 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
 @end
 
-@implementation ContactQuickListSectionHeaderCell
+@implementation ContactQuickListSectionHeaderView
 
-- (void) awakeFromNib {
-    self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];
+- (id) init {
+    self = [super initWithFrame: CGRectMake(0, 0, 320, 24)];
+    if (self != nil) {
+        self.icon = [[UIImageView alloc] initWithFrame: CGRectMake(25, 0, 24, 24)];
+        [self addSubview: self.icon];
+        self.title = [[UILabel alloc] initWithFrame: CGRectMake(63, 0, 237, 24)];
+        [self addSubview: self.title];
+        self.title.backgroundColor = [UIColor clearColor];
+        self.title.font = [UIFont boldSystemFontOfSize: 17];
+        self.title.textColor = [UIColor colorWithWhite: 0.1 alpha: 1];
+        self.title.shadowColor = [UIColor colorWithWhite: 0.60 alpha:1];
+        self.title.shadowOffset = CGSizeMake(0, 1);
+        self.title.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];
+
+    }
+    return self;
 }
 
 - (void) layoutSubviews {

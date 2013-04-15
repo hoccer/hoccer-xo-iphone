@@ -27,7 +27,7 @@
 
 - (void) commonInit {
     _prototypes = [[NSMutableDictionary alloc] init];
-    _items = [self populateItems];
+    _items = [self populateItems];    
 }
 
 - (void) viewDidLoad {

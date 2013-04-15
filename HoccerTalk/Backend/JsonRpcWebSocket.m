@@ -55,29 +55,23 @@ static const NSTimeInterval kResponseTimeout = 10;
     return _verbosityLevel;
 }
 
-- (id) initWithURLRequest: (NSURLRequest*) request {
+- (id) init {
     self = [super init];
     if (self != nil) {
         _id = 0;
         _responseHandlers = [[NSMutableDictionary alloc] init];
         _rpcMethods = [[NSMutableDictionary alloc] init];
-
-        _websocket = [[SRWebSocket alloc] initWithURLRequest: request];
-        _websocket.delegate = self;
     }
     return self;
 }
 
-- (void) open {
-    [_websocket open];
-}
 
 - (void) close {
     [_websocket close];
 }
 
-- (void) reopenWithURLRequest:(NSURLRequest *)request {
-    _websocket = [[SRWebSocket alloc] initWithURLRequest: request];
+- (void) openWithURLRequest:(NSURLRequest *)request protocols: (NSArray*) protocols {
+    _websocket = [[SRWebSocket alloc] initWithURLRequest: request protocols: protocols];
     _websocket.delegate = self;
     [_websocket open];
 }

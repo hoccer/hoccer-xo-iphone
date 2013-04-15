@@ -75,14 +75,14 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IrS-Lk-E4i" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="32" y="-1224"/>
+            <point key="canvasLocation" x="244" y="-1384"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="yod-vU-eey">
             <objects>
                 <tableViewController storyboardIdentifier="profileViewController" id="EIf-F7-14l" customClass="ProfileViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="afE-UW-Y54">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <connections>
@@ -94,7 +94,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jnn-H5-Wg0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="483" y="-663"/>
+            <point key="canvasLocation" x="1075" y="-663"/>
         </scene>
         <!--Contact List View Controller-->
         <scene sceneID="y7h-Kn-V4S">
@@ -104,12 +104,18 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="FRc-70-F4q">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="tintColor" white="0.84999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" rowHeight="64" id="bLT-Ef-JpH" customClass="ContactCell">
-                                <rect key="frame" x="0.0" y="22" width="320" height="64"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" rowHeight="64" id="bLT-Ef-JpH" customClass="ContactCell">
+                                <rect key="frame" x="0.0" y="66" width="320" height="64"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="63"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" id="PfX-Xf-Xsk" userLabel="Avatar" customClass="InsetImageView">
@@ -118,7 +124,7 @@
                                             <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         </view>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OWV-B2-fki">
-                                            <rect key="frame" x="72" y="22" width="228" height="21"/>
+                                            <rect key="frame" x="72" y="22" width="208" height="21"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -130,6 +136,7 @@
                                 <connections>
                                     <outlet property="avatar" destination="PfX-Xf-Xsk" id="A2e-cY-7QT"/>
                                     <outlet property="nickName" destination="OWV-B2-fki" id="1Vz-rZ-e3a"/>
+                                    <segue destination="EIf-F7-14l" kind="push" identifier="showProfile" id="lna-0K-80T"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -138,10 +145,13 @@
                             <outlet property="delegate" destination="Aez-fu-qAl" id="pOc-oD-Lqi"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="searchBar" destination="FRc-70-F4q" id="UPT-iN-Ytg"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="872" y="-663"/>
+            <point key="canvasLocation" x="494" y="-663"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="Yn7-as-2xt">
@@ -159,7 +169,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8ZJ-fD-VeF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1274" y="-663"/>
+            <point key="canvasLocation" x="1470" y="-663"/>
         </scene>
         <!--Tutorial View Controller-->
         <scene sceneID="wlt-xN-hk4">
@@ -182,7 +192,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QCl-uo-evY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1672" y="-663"/>
+            <point key="canvasLocation" x="1868" y="-663"/>
         </scene>
         <!--About View Controller-->
         <scene sceneID="ejt-cC-MZQ">
@@ -196,7 +206,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ev7-f7-ZXP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2059" y="-663"/>
+            <point key="canvasLocation" x="2255" y="-663"/>
         </scene>
         <!--First Run View Controller-->
         <scene sceneID="Ind-5f-bFV">
@@ -417,18 +427,9 @@
                                 <rect key="frame" x="0.0" y="44" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.10000000000000001" alpha="1" colorSpace="calibratedWhite"/>
-                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="search" id="bB8-3T-FcJ">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <scopeButtonTitles>
-                                        <string>Title</string>
-                                        <string>Title</string>
-                                    </scopeButtonTitles>
-                                </searchBar>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactQuickListCell" id="bW6-4n-vJc" customClass="ContactQuickListCell">
-                                        <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -437,8 +438,9 @@
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qQm-Kx-F0x">
                                                     <rect key="frame" x="63" y="11" width="211" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" id="rrk-c2-N1n" customClass="InsetImageView">
@@ -463,69 +465,25 @@
                                             <outlet property="nickName" destination="qQm-Kx-F0x" id="L85-cY-131"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ContactQuickListSectionHeaderCell" rowHeight="24" id="k4W-y1-DIO" customClass="ContactQuickListSectionHeaderCell">
-                                        <rect key="frame" x="0.0" y="110" width="320" height="24"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="23"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="HF9-YB-y1Q">
-                                                    <rect key="frame" x="25" y="0.0" width="25" height="24"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AX9-gY-gyz">
-                                                    <rect key="frame" x="63" y="-1" width="237" height="24"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                    <color key="textColor" white="0.10000000000000001" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="shadowColor" white="0.60999999999999999" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <size key="shadowOffset" width="0.0" height="1"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <connections>
-                                            <outlet property="icon" destination="HF9-YB-y1Q" id="AZq-kK-bi0"/>
-                                            <outlet property="title" destination="AX9-gY-gyz" id="vmj-DQ-GLU"/>
-                                        </connections>
-                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="ZcT-dr-dsA" id="F3Z-Bw-qIx"/>
                                     <outlet property="delegate" destination="ZcT-dr-dsA" id="Oqx-Up-zmu"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" id="fzY-82-GYW" customClass="ContactListTopBar">
+                            <searchBar contentMode="redraw" placeholder="search" id="bB8-3T-FcJ">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="c5T-hz-E1I">
-                                        <rect key="frame" x="272" y="7" width="34" height="29"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.34354670370000001" green="0.32605708329999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" size="button"/>
-                                        <state key="normal" image="btn_invite.png">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="invitePressed:" destination="ZcT-dr-dsA" eventType="touchUpInside" id="tJx-zg-VaC"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
+                                <textInputTraits key="textInputTraits"/>
+                                <scopeButtonTitles>
+                                    <string>Title</string>
+                                    <string>Title</string>
+                                </scopeButtonTitles>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <outlet property="inviteButton" destination="c5T-hz-E1I" id="4yy-d5-uNf"/>
                         <outlet property="searchBar" destination="bB8-3T-FcJ" id="5U3-TF-z2y"/>
                         <outlet property="tableView" destination="tLm-5h-Vgz" id="7gU-CQ-YYr"/>
                     </connections>
@@ -677,6 +635,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="Jow-zT-yw1">
+                                                    <rect key="frame" x="0.0" y="19" width="320" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LAg-pF-U0o">
                                                     <rect key="frame" x="0.0" y="19" width="320" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -688,6 +650,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <connections>
+                                            <outlet property="backgroundImage" destination="Jow-zT-yw1" id="fyN-6o-P0p"/>
                                             <outlet property="label" destination="LAg-pF-U0o" id="T3b-Bd-uIc"/>
                                         </connections>
                                     </tableViewCell>
@@ -739,9 +702,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem id="mUy-St-hDX">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="btJ-Fq-i9T">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="7hX-Mb-wEB">
                                             <connections>
-                                                <action selector="donePressed:" destination="jBj-li-dGc" id="BpS-Er-vHf"/>
+                                                <action selector="donePressed:" destination="jBj-li-dGc" id="Wbc-w2-7VH"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -752,6 +715,7 @@
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <connections>
+                        <outlet property="doneButton" destination="7hX-Mb-wEB" id="xqi-mc-OZK"/>
                         <outlet property="imageView" destination="iD2-h4-j9B" id="9wT-Qd-nD6"/>
                         <outlet property="navigationBar" destination="T1N-2Y-4db" id="5GT-uh-NUJ"/>
                         <outlet property="scrollView" destination="CPs-zP-mUM" id="0hs-0N-tuW"/>
@@ -763,12 +727,164 @@
         </scene>
     </scenes>
     <resources>
-        <image name="btn_invite.png" width="34" height="29"/>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
     </resources>
+    <classes>
+        <class className="AboutViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AboutViewController.h"/>
+        </class>
+        <class className="AutoheightLabel" superclassName="UILabel">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutoheightLabel.h"/>
+        </class>
+        <class className="BubbleView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleView.h"/>
+            <relationships>
+                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
+            </relationships>
+        </class>
+        <class className="ChatTableSectionHeaderCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableSectionHeaderCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="backgroundImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ChatViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addAttachmentPressed:"/>
+                <relationship kind="action" name="sendPressed:"/>
+                <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
+                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="textField" candidateClass="GrowingTextView"/>
+            </relationships>
+        </class>
+        <class className="ContactCell" superclassName="ConversationAndContactsCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactCell.h"/>
+        </class>
+        <class className="ContactListViewController" superclassName="TableViewControllerWithPlaceholder">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactListViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
+            </relationships>
+        </class>
+        <class className="ContactQuickListCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="messageCount" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ContactQuickListViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ConversationAndContactsCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationAndContactsCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ConversationCell" superclassName="ConversationAndContactsCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="latestMessage" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="latestMessageTime" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ConversationViewController" superclassName="TableViewControllerWithPlaceholder">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationViewController.h"/>
+        </class>
+        <class className="CustomNavigationBar" superclassName="UINavigationBar">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CustomNavigationBar.h"/>
+        </class>
+        <class className="FirstRunViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FirstRunViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="donePressed:"/>
+                <relationship kind="outlet" name="avatarView" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="identityTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="messageCountTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="GrowingTextView" superclassName="UITextView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowingTextView.h"/>
+        </class>
+        <class className="HoccerTalkTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HoccerTalkTableViewCell.h"/>
+        </class>
+        <class className="ImageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="doneButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImage"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="InsetImageView" superclassName="UIControl">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InsetImageView.h"/>
+        </class>
+        <class className="InviteCodeViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InviteCodeViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="clipboardButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="codeTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navigationItem" candidateClass="UINavigationItem"/>
+            </relationships>
+        </class>
+        <class className="LeftMessageCell" superclassName="MessageCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
+        </class>
+        <class className="MessageCell" superclassName="HoccerTalkTableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
+                <relationship kind="outlet" name="bubble" candidateClass="BubbleView"/>
+                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
+            </relationships>
+        </class>
+        <class className="NavigationMenuViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NavigationMenuViewController.h"/>
+        </class>
+        <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
+        </class>
+        <class className="ProfileViewController" superclassName="UserDefaultsViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileViewController.h"/>
+        </class>
+        <class className="RightMessageCell" superclassName="MessageCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
+        </class>
+        <class className="SettingsViewController" superclassName="UserDefaultsViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
+        </class>
+        <class className="TableViewControllerWithPlaceholder" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TableViewControllerWithPlaceholder.h"/>
+        </class>
+        <class className="TutorialViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TutorialViewController.h"/>
+        </class>
+        <class className="UserDefaultsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UserDefaultsViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="lna-0K-80T"/>
+    </inferredMetricsTieBreakers>
 </document>

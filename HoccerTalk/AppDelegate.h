@@ -11,7 +11,9 @@
 #import "HoccerTalkBackend.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, HoccerTalkDelegate>
-
+{
+    UIBackgroundTaskIdentifier _backgroundTask;
+}
 @property (strong, nonatomic) UIWindow *window;
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;

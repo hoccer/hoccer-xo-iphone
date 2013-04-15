@@ -21,7 +21,7 @@
 
 @end
 
-@interface ContactQuickListSectionHeaderCell : HoccerTalkTableViewCell
+@interface ContactQuickListSectionHeaderView : UIView
 
 @property (nonatomic,strong) IBOutlet UILabel     * title;
 @property (nonatomic,strong) IBOutlet UIImageView * icon;

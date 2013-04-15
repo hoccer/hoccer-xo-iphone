@@ -16,6 +16,7 @@
 #import "RadialGradientView.h"
 #import "InviteCodeViewController.h"
 #import "HoccerTalkBackend.h"
+#import "ProfileViewController.h"
 
 static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
 
@@ -26,6 +27,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 
 @interface ContactListViewController ()
+
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (nonatomic, strong) NSMutableArray * invitationChannels;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
@@ -56,14 +58,11 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
     self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
 
-    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-btn-blue"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addContactPressed:)];
+    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addContactPressed:)];
     self.navigationItem.rightBarButtonItem = addContactButton;
 
-    /* TODO: find out why this dow not work
     UIImage * blueBackground = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
-    NSLog(@"bg image: %@", NSStringFromCGSize(blueBackground.size));
-    [addContactButton setBackgroundImage: blueBackground forState: UIControlStateNormal style: UIBarButtonItemStylePlain barMetrics: UIBarMetricsDefault];
-     */
+    [self.navigationItem.rightBarButtonItem setBackgroundImage: blueBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
 
@@ -85,7 +84,19 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     channel.handler = @selector(inviteByCode);
     [self.invitationChannels addObject: channel];
 
+    self.searchBar.delegate = self;
+    self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
+    self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
+    UIImage * icon = [UIImage imageNamed: @"navbar-icon-contacts"];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backButton;
+
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+    [self setNavigationBarBackgroundWithLines];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -116,76 +127,67 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (NSFetchedResultsController *)currentFetchedResultsController {
-    return self.fetchedResultsController;
-    //return self.searchBar.text.length ? self.searchFetchedResultsController : self.fetchedResultsController;
+    return self.searchBar.text.length ? self.searchFetchedResultsController : self.fetchedResultsController;
 }
 
 #pragma mark - Table view data source
 
+- (BOOL) isEmpty {
+    if (self.currentFetchedResultsController.sections.count == 0) {
+        return YES;
+    } else {
+        id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[0];
+        return [sectionInfo numberOfObjects] == 0;
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if (self.emptyTablePlaceholder != nil) {
+        return 1;
+    }
+    return [self.currentFetchedResultsController.sections count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (self.emptyTablePlaceholder != nil) {
+        return 1;
+    }
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
+    return [sectionInfo numberOfObjects];
+}
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cell height: %f", self.contactCellPrototype.frame.size.height);
-    return self.contactCellPrototype.frame.size.height;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [self currentFetchedResultsController].sections.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self currentFetchedResultsController].sections[section];
-    return sectionInfo.numberOfObjects;
+    return self.emptyTablePlaceholder != nil ? self.emptyTablePlaceholder.bounds.size.height : self.contactCellPrototype.bounds.size.height;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.emptyTablePlaceholder) {
+        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"contacts_empty_placeholder", nil);
+        self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
+        return self.emptyTablePlaceholder;
+    }
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
 
-        // TODO: do this right ...
-    [self fetchedResultsController: [self currentFetchedResultsController]
+    // TODO: do this right ...
+    [self fetchedResultsController: self.currentFetchedResultsController
                      configureCell: cell atIndexPath: indexPath];
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return [sectionInfo name];
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return NO;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSManagedObjectContext *context = [self.currentFetchedResultsController managedObjectContext];
-        [context deleteObject:[self.currentFetchedResultsController objectAtIndexPath:indexPath]];
-
-        NSError *error = nil;
-        if (![context save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"showProfile"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
+        ProfileViewController* profileView = (ProfileViewController*)[segue destinationViewController];
+        profileView.contact = contact;
     }
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // The table view should not be re-orderable.
-    return NO;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    //[self.searchBar resignFirstResponder];
-    Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
-    // TODO: open detail view
-}
 
 #pragma mark - Search Bar
 
@@ -231,9 +233,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
         if(filterPredicate)
         {
             filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray], nil]];
-        }
-        else
-        {
+        } else {
             filterPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
         }
     }
@@ -280,7 +280,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     {
         return _searchFetchedResultsController;
     }
-    _searchFetchedResultsController = [self newFetchedResultsControllerWithSearch: /*self.searchBar.text*/ @""];
+    _searchFetchedResultsController = [self newFetchedResultsControllerWithSearch: self.searchBar.text];
     return _searchFetchedResultsController;
 }
 
@@ -328,6 +328,8 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+
+    [self updateEmptyTablePlaceholderAnimated: YES];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller

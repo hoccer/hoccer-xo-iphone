@@ -17,8 +17,7 @@ static const CGFloat kImageViewerOversize = 1.03;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
-
-@property (strong, nonatomic) UIImage * savedButtonImage;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem * doneButton;
 
 @end
 
@@ -47,15 +46,13 @@ static const CGFloat kImageViewerOversize = 1.03;
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowRadius  = 10;
     self.imageView.layer.shadowOffset = CGSizeMake(0, 0);
+
+    [self.doneButton setBackgroundImage: [UIImage imageNamed: @"navbar-btn-blue"] forState: UIControlStateNormal barMetrics:UIBarMetricsDefault];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
 
     [super viewWillAppear: animated];
-
-    self.savedButtonImage = [[UIBarButtonItem appearance] backgroundImageForState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [[UIBarButtonItem appearance] setBackgroundImage: nil forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
-    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleBlackTranslucent animated:YES];
 
     self.imageView.image = self.image;
 
@@ -84,11 +81,6 @@ static const CGFloat kImageViewerOversize = 1.03;
     [self centerScrollViewContents];
 }
 
-- (void) viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear: animated];
-    [[UIBarButtonItem appearance] setBackgroundImage: self.savedButtonImage forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
-}
-
 - (void)centerScrollViewContents {
     CGSize boundsSize = self.scrollView.bounds.size;
     CGRect contentsFrame = self.imageView.frame;
@@ -106,12 +98,6 @@ static const CGFloat kImageViewerOversize = 1.03;
     }
 
     self.imageView.frame = contentsFrame;
-}
-
-- (void) scrollViewTapped: (id) sender {
-    [UIView animateWithDuration: 0.3 animations:^{
-        self.navigationBar.alpha = 1.0 - self.navigationBar.alpha;
-    }];
 }
 
 - (void)scrollViewDoubleTapped:(UITapGestureRecognizer*)recognizer {
