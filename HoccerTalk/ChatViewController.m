@@ -142,7 +142,8 @@
     // Update the user interface for the detail item.
 
     if (self.partner) {
-        self.title = self.partner.nickName;
+        // self.title = self.partner.nickName;
+        self.title = self.partner.nickNameWithStatus;
     }
 }
 
@@ -656,12 +657,14 @@
 - (void) setPartner: (Contact*) partner {
     if (_partner != nil) {
         [_partner removeObserver: self forKeyPath: @"nickName"];
+        [_partner removeObserver: self forKeyPath: @"connectionStatus"];
     }
     _partner = partner;
     if (partner == nil) {
         return;
     }
     [_partner addObserver: self forKeyPath: @"nickName" options: NSKeyValueObservingOptionNew context: nil];
+    [_partner addObserver: self forKeyPath: @"connectionStatus" options: NSKeyValueObservingOptionNew context: nil];
     [_partner addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
 
 
@@ -706,8 +709,10 @@
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString: @"nickName"]) {
-        self.title = [object nickName];
+    if ([keyPath isEqualToString: @"nickName"] ||
+        [keyPath isEqualToString: @"connectionStatus"]) {
+        // self.title = [object nickName];
+        self.title = [object nickNameWithStatus];
     } else if ([keyPath isEqualToString: @"avatarImage"]) {
         NSLog(@"======== new avatar =============");
         NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
@@ -875,6 +880,7 @@
 
 - (void) dealloc {
     [self.partner removeObserver: self forKeyPath: @"nickName"];
+    [self.partner removeObserver: self forKeyPath: @"connectionStatus"];
     [self.partner removeObserver: self forKeyPath: @"avatarImage"];
 }
 

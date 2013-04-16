@@ -35,6 +35,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
 @property (nonatomic, strong) NSData*       publicKey; // public key of this contact
 @property (nonatomic, strong) NSString*     publicKeyId; // id of public key
+@property (nonatomic, strong) NSString*     connectionStatus;
 
 @property (nonatomic, retain) NSString * relationshipState;
 @property (nonatomic, retain) NSDate * relationshipLastChanged;
@@ -43,6 +44,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
 
 @property (nonatomic, strong) NSMutableSet* messages;
+@property (readonly) NSString * nickNameWithStatus;
 
 @property (readonly) UIImage* avatarImage;
 

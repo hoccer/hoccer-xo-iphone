@@ -354,7 +354,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 {
     // your cell guts here
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
-    cell.nickName.text = contact.nickName;
+    // cell.nickName.text = contact.nickName;
+    cell.nickName.text = contact.nickNameWithStatus;
+
     cell.avatar.image = contact.avatarImage;
 }
 

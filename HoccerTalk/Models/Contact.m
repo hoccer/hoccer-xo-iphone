@@ -28,6 +28,7 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic latestMessage;
 @dynamic publicKey;
 @dynamic publicKeyId;
+@dynamic connectionStatus;
 
 @dynamic phoneNumber;
 @dynamic mailAddress;
@@ -37,6 +38,7 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic githubName;
 
 @dynamic messages;
+@dynamic nickNameWithStatus;
 
 NSString * const kRelationStateNone    = @"none";
 NSString * const kRelationStateFriend  = @"friend";
@@ -110,6 +112,21 @@ NSString * const kRelationStateBlocked = @"blocked";
     }
     return myResult;
 }
+
+- (NSString*) nickNameWithStatus {
+    if (self.connectionStatus == nil) {
+        return self.nickName;
+    }
+    // return [NSString stringWithFormat:@"%@ [%@]", self.nickName, self.connectionStatus];
+    if ([self.connectionStatus isEqualToString:@"online"]) {
+        return [NSString stringWithFormat:@"%@ ⇄", self.nickName];
+    }
+    if ([self.connectionStatus isEqualToString:@"offline"]) {
+        return self.nickName;
+    }
+    return [NSString stringWithFormat:@"%@ [%@]", self.nickName, self.connectionStatus];
+}
+
 
 
 - (NSDictionary*) rpcKeys {

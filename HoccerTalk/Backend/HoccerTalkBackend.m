@@ -546,6 +546,7 @@ typedef enum BackendStates {
     if (myContact) {
         myContact.nickName = thePresence[@"clientName"];
         myContact.status = thePresence[@"clientStatus"];
+        myContact.connectionStatus = thePresence[@"connectionStatus"];
         if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]]) {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
