@@ -326,7 +326,8 @@
 {
     // your cell guts here
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
-    cell.nickName.text = contact.nickName;
+    // cell.nickName.text = contact.nickName;
+    cell.nickName.text = contact.nickNameWithStatus;
     cell.avatar.image = contact.avatarImage;
     BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
     [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];

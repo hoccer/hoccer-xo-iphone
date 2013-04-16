@@ -287,7 +287,8 @@
 - (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath {
     ConversationCell * cell = (ConversationCell*)aCell;
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.nickName.text = contact.nickName;
+    // cell.nickName.text = contact.nickName;
+    cell.nickName.text = contact.nickNameWithStatus;
     cell.avatar.image = contact.avatarImage;
     cell.latestMessage.frame = self.conversationCell.latestMessage.frame;
     NSDate * latestMessageTime = nil;

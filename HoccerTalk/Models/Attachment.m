@@ -370,7 +370,8 @@
 }
 
 - (void) download {
-    NSLog(@"Attachment download remoteURL=%@, attachment=%@", self.remoteURL, self );
+    // NSLog(@"Attachment download remoteURL=%@, attachment=%@", self.remoteURL, self );
+    NSLog(@"Attachment download remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoing = %@", self.message.isOutgoing);
         return;
