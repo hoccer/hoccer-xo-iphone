@@ -52,6 +52,8 @@
 		6327EB53171B610300AF75E1 /* xo.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB52171B610300AF75E1 /* xo.png */; };
 		6327EB56171C82B400AF75E1 /* date_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB54171C82B400AF75E1 /* date_cell_bg.png */; };
 		6327EB57171C82B400AF75E1 /* date_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */; };
+		6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB6E171D55DA00AF75E1 /* libcrypto.a */; };
+		6327EB70171D55E100AF75E1 /* libObjCSRP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB67171D559700AF75E1 /* libObjCSRP.a */; };
 		633048FB16FC693C0045E64E /* MFSideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 633048F816FC693C0045E64E /* MFSideMenu.m */; };
 		633048FC16FC693C0045E64E /* UINavigationController+MFSideMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 633048FA16FC693C0045E64E /* UINavigationController+MFSideMenu.m */; };
 		633048FE16FC95A10045E64E /* conversation_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 633048FD16FC95A10045E64E /* conversation_cell_bg.png */; };
@@ -257,6 +259,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6327EB66171D559700AF75E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6327EB5F171D559600AF75E1 /* ObjCSRP.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 631F6CF4170B7E8900FB28D5;
+			remoteInfo = ObjCSRP;
+		};
+		6327EB68171D559700AF75E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6327EB5F171D559600AF75E1 /* ObjCSRP.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 631F6D05170B7E8900FB28D5;
+			remoteInfo = ObjCSRPTests;
+		};
+		6327EB6A171D559700AF75E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6327EB5F171D559600AF75E1 /* ObjCSRP.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 631F6D85170B9F5800FB28D5;
+			remoteInfo = SRPDemo;
+		};
+		6327EB6C171D55C800AF75E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6327EB5F171D559600AF75E1 /* ObjCSRP.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 631F6CF3170B7E8900FB28D5;
+			remoteInfo = ObjCSRP;
+		};
 		63C413A916E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
@@ -353,6 +383,8 @@
 		6327EB52171B610300AF75E1 /* xo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xo.png; sourceTree = "<group>"; };
 		6327EB54171C82B400AF75E1 /* date_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_cell_bg.png; sourceTree = "<group>"; };
 		6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date_cell_bg@2x.png"; sourceTree = "<group>"; };
+		6327EB5F171D559600AF75E1 /* ObjCSRP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjCSRP.xcodeproj; path = ../ObjCSRP/ObjCSRP.xcodeproj; sourceTree = "<group>"; };
+		6327EB6E171D55DA00AF75E1 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libcrypto.a; path = "../ObjCSRP/3rdParty/openssl-xcode/build/Release-iphoneos/libcrypto.a"; sourceTree = "<group>"; };
 		633048F716FC693C0045E64E /* MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenu.h; sourceTree = "<group>"; };
 		633048F816FC693C0045E64E /* MFSideMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSideMenu.m; sourceTree = "<group>"; };
 		633048F916FC693C0045E64E /* UINavigationController+MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+MFSideMenu.h"; sourceTree = "<group>"; };
@@ -615,6 +647,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6327EB70171D55E100AF75E1 /* libObjCSRP.a in Frameworks */,
+				6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */,
 				E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */,
 				E96CB012171217D3005F8FFA /* AVFoundation.framework in Frameworks */,
 				63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */,
@@ -675,6 +709,16 @@
 				6327EAC81717567400AF75E1 /* bg-noise@2x.png */,
 			);
 			path = ImageViewer;
+			sourceTree = "<group>";
+		};
+		6327EB60171D559600AF75E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6327EB67171D559700AF75E1 /* libObjCSRP.a */,
+				6327EB69171D559700AF75E1 /* ObjCSRPTests.octest */,
+				6327EB6B171D559700AF75E1 /* SRPDemo.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		633048F616FC69170045E64E /* MFSideMenu */ = {
@@ -1015,6 +1059,7 @@
 				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				63AEE2D516CA4D0200522F92 /* Products */,
+				6327EB5F171D559600AF75E1 /* ObjCSRP.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1029,6 +1074,7 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6327EB6E171D55DA00AF75E1 /* libcrypto.a */,
 				E96CB01717137D37005F8FFA /* CoreMedia.framework */,
 				E96CB011171217D3005F8FFA /* AVFoundation.framework */,
 				6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */,
@@ -1135,6 +1181,8 @@
 		63D4916716CAA17D00FD395F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E9495573171C139F00FE2E1F /* AttachmentView.h */,
+				E9495574171C139F00FE2E1F /* AttachmentView.m */,
 				637847A816F2864E00DE03C2 /* AttachmentViewFactory.h */,
 				637847A916F2864E00DE03C2 /* AttachmentViewFactory.m */,
 				63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */,
@@ -1177,8 +1225,6 @@
 				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
-				E9495573171C139F00FE2E1F /* AttachmentView.h */,
-				E9495574171C139F00FE2E1F /* AttachmentView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1253,6 +1299,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				6327EB6D171D55C800AF75E1 /* PBXTargetDependency */,
 				63C413B316E8FBB0004E1F6D /* PBXTargetDependency */,
 			);
 			name = HoccerTalk;
@@ -1282,6 +1329,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 6327EB60171D559600AF75E1 /* Products */;
+					ProjectRef = 6327EB5F171D559600AF75E1 /* ObjCSRP.xcodeproj */;
+				},
+				{
 					ProductGroup = 63C413A316E8FA0C004E1F6D /* Products */;
 					ProjectRef = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
 				},
@@ -1294,6 +1345,27 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		6327EB67171D559700AF75E1 /* libObjCSRP.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObjCSRP.a;
+			remoteRef = 6327EB66171D559700AF75E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6327EB69171D559700AF75E1 /* ObjCSRPTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ObjCSRPTests.octest;
+			remoteRef = 6327EB68171D559700AF75E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6327EB6B171D559700AF75E1 /* SRPDemo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SRPDemo.app;
+			remoteRef = 6327EB6A171D559700AF75E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1608,6 +1680,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6327EB6D171D55C800AF75E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjCSRP;
+			targetProxy = 6327EB6C171D55C800AF75E1 /* PBXContainerItemProxy */;
+		};
 		63C413B316E8FBB0004E1F6D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SocketRocket;
