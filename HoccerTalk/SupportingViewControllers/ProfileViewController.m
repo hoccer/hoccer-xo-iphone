@@ -142,7 +142,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         cell = [self dequeueReusableCellOfClass: [UserDefaultsCellAvatarPicker class] forIndexPath: indexPath];
         UserDefaultsCellAvatarPicker * avatarCell = (UserDefaultsCellAvatarPicker*)cell;
         [self configureAvatarCell: avatarCell withItem: _avatarItem atIndexPath: indexPath];
-    } else {
+    } else if (indexPath.section == 1){
         ProfileItem * item = (ProfileItem*)_items[indexPath.section][indexPath.row];
         if ([item.cellIdentifier isEqualToString: [UserDefaultsCellTextInput reuseIdentifier]]) {
             cell = [self dequeueReusableCellOfClass: [UserDefaultsCellTextInput class] forIndexPath: indexPath];
@@ -152,6 +152,17 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
             [self configureDisclosureCell: (UserDefaultsCellDisclosure*)cell withItem: item atIndexPath: indexPath];
         } else {
             NSLog(@"ProfileViewController cellForRowAtIndexPath: unhandled cell type %@", item.cellIdentifier);
+        }
+    } else {
+        if (indexPath.row == 0) {
+            cell = [[UserDefaultsCell alloc] init]; // XXX
+            cell.textLabel.text = @"00:00:00:00:00:00:00:00";
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            [cell awakeFromNib]; // XXX
+            [(UserDefaultsCell*)cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection:indexPath.section]];
+        } else {
+            cell = [self dequeueReusableCellOfClass: [UserDefaultsCellInfoText class] forIndexPath: indexPath];
+            cell.textLabel.text = NSLocalizedString(@"profile_fingerprint_info", nil);
         }
     }
     return cell;
@@ -349,7 +360,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     } else {
         items = [_allProfileItems filteredArrayUsingPredicate: self.hasValuePredicate];
     }
-    return @[ @[_avatarItem], items];
+    return @[ @[_avatarItem], items, @[@"", @""]];
 }
 
 @synthesize hasValuePredicate = _hasValuePredicate;

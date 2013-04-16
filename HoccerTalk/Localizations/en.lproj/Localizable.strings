@@ -148,3 +148,5 @@
 "navigation_title_profile" = "Profile";
 
 "navigation_title_contact" = "Contact";
+
+"profile_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
