@@ -26,6 +26,6 @@
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-- (void) setupDone;
+- (void) setupDone: (BOOL) performRegistration;
 
 @end

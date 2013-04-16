@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Config.h"
 
 #import "JsonRpcWebSocket.h"
 
@@ -17,6 +18,8 @@
 @class AppDelegate;
 
 typedef void (^InviteTokenHanlder)(NSString*);
+typedef void (^GenerateIdHandler)(NSString*);
+typedef void (^SrpHanlder)(NSString*);
 typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
 // typedef void (^PublicKeyHandler)(NSArray*);
@@ -61,7 +64,7 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;
 
-- (void) start;
+- (void) start: (BOOL) performRegistration;
 - (void) stop;
 
 - (void) webSocketDidFailWithError: (NSError*) error;

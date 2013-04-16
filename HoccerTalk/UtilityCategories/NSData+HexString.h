@@ -10,6 +10,7 @@
 
 @interface NSData (HexString)
 
++ (id)dataWithHexadecimalString:(NSString *)inString NS_RETURNS_RETAINED;
 - (NSString *)hexadecimalString;
 
 @end

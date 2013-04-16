@@ -24,13 +24,15 @@
 #import "RSA.h"
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
+#import "ObjCSRP/HCSRP.h"
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
 typedef enum BackendStates {
     kBackendStopped,
     kBackendConnecting,
-    kBackendIdentifying,
+    kBackendRegistering,
+    kBackendAuthenticating,
     kBackendReady,
     kBackendStopping
 } BackendState;
@@ -38,13 +40,15 @@ typedef enum BackendStates {
 @interface HoccerTalkBackend ()
 {
     JsonRpcWebSocket * _serverConnection;
-    BackendState _state;
-    double _backoffTime;
-    NSString * _apnsDeviceToken;
-    NSURLConnection * _avatarUploadConnection;
-    NSString * _avatarUploadURL;
-    NSInteger _avatarBytesUploaded;
-    NSInteger _avatarBytesTotal;
+    BackendState       _state;
+    double             _backoffTime;
+    NSString *         _apnsDeviceToken;
+    NSURLConnection *  _avatarUploadConnection;
+    NSString *         _avatarUploadURL;
+    NSInteger          _avatarBytesUploaded;
+    NSInteger          _avatarBytesTotal;
+    BOOL               _performRegistration;
+    HCSRPUser *        _srpUser;
 }
 
 - (void) identify;
@@ -52,31 +56,6 @@ typedef enum BackendStates {
 @end
 
 @implementation HoccerTalkBackend
-
-- (NSString*) stateString: (BackendState) state {
-    switch (state) {
-        case kBackendStopped:
-            return @"stopped";
-            break;
-        case kBackendConnecting:
-            return @"connecting";
-            break;
-        case kBackendIdentifying:
-            return @"identifying";
-            break;
-        case kBackendReady:
-            return @"ready";
-            break;
-        case kBackendStopping:
-            return @"stopping";
-            break;
-    }
-}
-
-- (void) setState: (BackendState) state {
-    NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
-    _state = state;
-}
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate {
     self = [super init];
@@ -97,6 +76,34 @@ typedef enum BackendStates {
                                                    object:nil];
     }
     return self;
+}
+
+- (NSString*) stateString: (BackendState) state {
+    switch (state) {
+        case kBackendStopped:
+            return @"stopped";
+            break;
+        case kBackendConnecting:
+            return @"connecting";
+            break;
+        case kBackendRegistering:
+            return @"registering";
+            break;
+        case kBackendAuthenticating:
+            return @"authenticating";
+            break;
+        case kBackendReady:
+            return @"ready";
+            break;
+        case kBackendStopping:
+            return @"stopping";
+            break;
+    }
+}
+
+- (void) setState: (BackendState) state {
+    NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
+    _state = state;
 }
 
 // TODO: contact should be an array of contacts
@@ -216,13 +223,109 @@ typedef enum BackendStates {
     }
 }
 
+- (void) performRegistration {
+    NSLog(@"performRegistration");
+    GenerateIdHandler handler = ^(NSString * theId) {
+#ifdef HXO_USE_USERNAME_BASED_AUTHENICATION
+        [self didRegister: YES];
+#else
+        [[HTUserDefaults standardUserDefaults] setValue: theId forKey: kHTClientId];
+        _srpUser = [[HCSRPUser alloc] initWithUserName: theId andPassword: [self getPassword]];
+        NSData * salt;
+        NSData * verifier;
+        [_srpUser salt: & salt andVerificationKey: & verifier forPassword:[self getPassword]];
+        [[HTUserDefaults standardUserDefaults] setValue: [salt hexadecimalString] forKey: kHTSrpSalt];
+        [self srpRegisterWithVerifier: [verifier hexadecimalString] andSalt: [salt hexadecimalString]];
+#endif
+    };
+#ifdef HXO_USE_USER_DEFINED_CREDENTIALS
+    handler([[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId]);
+#else
+    [self generateId: handler];
+#endif
+    //[self identify];
+}
+
+- (void) didRegister: (BOOL) success {
+    NSLog(@"didRegister: %d", success);
+    if (success) {
+        _performRegistration = NO;
+        [self startAuthentication];
+    } else {
+        NSLog(@"ERROR: registration failed. What now?");
+    }
+    
+}
+
+- (void) startAuthentication {
+    [self setState: kBackendAuthenticating];
+#ifdef HXO_USE_USERNAME_BASED_AUTHENICATION
+    [self identify];
+#else
+    NSData * A = [_srpUser startAuthentication];
+    [self srpPhase1WithClientId: [[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId] A: [A hexadecimalString] andHandler:^(NSString * challenge) {
+        if (challenge == nil) {
+            NSLog(@"SRP phase 1 failed");
+        } else {
+            NSData * salt = [NSData dataWithHexadecimalString: [[HTUserDefaults standardUserDefaults] valueForKey: kHTSrpSalt]];
+            NSData * B = [NSData dataWithHexadecimalString: challenge];
+            NSData * M = [_srpUser processChallenge: salt B: B];
+            if (M == nil) {
+                NSLog(@"SRP-6a safety check violation! Closing connection.");
+                // possible man in the middle attack ... trigger reconnect by closing the socket
+                [self stopAndRetry];
+            } else {
+                [self srpPhase2: [M hexadecimalString] handler:^(NSString * HAMKString) {
+                    NSData * HAMK = [NSData dataWithHexadecimalString: HAMKString];
+                    [_srpUser verifySession: HAMK];
+                    [self didFinishLogin: _srpUser.isAuthenticated];
+                }];
+            }
+        }
+    }];
+#endif
+}
+
+- (void) didFinishLogin: (BOOL) authenticated{
+    if (authenticated) {
+        // NSLog(@"identify(): got result: %@", responseOrError);
+        if (_apnsDeviceToken) {
+            [self registerApns: _apnsDeviceToken];
+            _apnsDeviceToken = nil; // XXX: this is not nice...
+        }
+        [self setState: kBackendReady];
+
+        [self flushPendingMessages];
+        [self flushPendingFiletransfers];
+        [self updateRelationships];
+        [self updatePresences];
+        [self flushPendingInvites];
+        [self updatePresence];
+        [self updateKey];
+    } else {
+        [self stopAndRetry];
+    }
+}
+
+- (NSString*) getPassword {
+    NSString * password =  [[HTUserDefaults standardUserDefaults] valueForKey: kHTPassword];
+    if (password == nil) {
+        password = [[RSA sharedInstance] genRandomString:23];
+        [[HTUserDefaults standardUserDefaults] setValue: password forKey: kHTPassword]; // TODO: put this is in the keychain
+    }
+    return password;
+}
+
+- (NSString*) getClientId {
+    return [[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId];
+}
+
 -(Contact *) getContactByClientId:(NSString *) theClientId {
     NSDictionary * vars = @{ @"clientId" : theClientId};    
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
     NSError *error;
     NSArray *contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (contacts == nil)
-    {
+    if (contacts == nil) {
         NSLog(@"Fetch request failed: %@", error);
         abort();
     }
@@ -269,7 +372,8 @@ typedef enum BackendStates {
     }
 }
 
-- (void) start {
+- (void) start: (BOOL) performRegistration {
+    _performRegistration = performRegistration;
     [self setState: kBackendConnecting];
     [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol]];
 }
@@ -279,13 +383,22 @@ typedef enum BackendStates {
     [_serverConnection close];
 }
 
+- (void) stopAndRetry {
+    [self setState: kBackendStopped];
+    [_serverConnection close];
+}
+
+- (void) reconnect {
+    [self start: _performRegistration];
+}
+
 - (void) reconnectWitBackoff {
     NSLog(@"reconnecting in %f seconds", _backoffTime);
     if (_backoffTime == 0) {
-        [self start];
+        [self start: _performRegistration];
         _backoffTime = (double)rand() / RAND_MAX;
     } else {
-        [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(start) userInfo: nil repeats: NO];
+        [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnect) userInfo: nil repeats: NO];
         _backoffTime = MIN(2 * _backoffTime, 10);
     }
 }
@@ -563,29 +676,52 @@ typedef enum BackendStates {
     NSString * clientId = [self.delegate clientId];
     // NSLog(@"identify() clientId: %@", clientId);
     [_serverConnection invoke: @"identify" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
-        if (success) {
-            // NSLog(@"identify(): got result: %@", responseOrError);
-            if (_apnsDeviceToken) {
-                [self registerApns: _apnsDeviceToken];
-                _apnsDeviceToken = nil; // XXX: this is not nice...
-            }
-            [self setState: kBackendReady];
-
-            [self flushPendingMessages];
-            [self flushPendingFiletransfers];
-            [self updateRelationships];
-            [self updatePresences];
-            [self flushPendingInvites];
-            [self updatePresence];
-            [self updateKey];
-
-            
-        } else {
+        if (!success) {
             NSLog(@"identify(): got error: %@", responseOrError);
+        }
+        [self didFinishLogin: success];
+    }];
+}
+
+- (void) generateId: (GenerateIdHandler) handler {
+    [_serverConnection invoke: @"generateId" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(responseOrError);
+        } else {
+            NSLog(@"deliveryRequest failed: %@", responseOrError);
+            handler(nil);
         }
     }];
 }
 
+- (void) srpRegisterWithVerifier: (NSString*) verifier andSalt: (NSString*) salt{
+    [_serverConnection invoke: @"srpRegister" withParams: @[verifier, salt] onResponse: ^(id responseOrError, BOOL success) {
+        [self didRegister: success];
+    }];
+
+}
+
+- (void) srpPhase1WithClientId: (NSString*) clientId A: (NSString*) A andHandler: (SrpHanlder) handler {
+    [_serverConnection invoke: @"srpPhase1" withParams: @[clientId, A] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(responseOrError);
+        } else {
+            NSLog(@"SRP Phase 1 failed");
+            handler(nil);
+        }
+    }];
+}
+
+- (void) srpPhase2: (NSString*) M handler: (SrpHanlder) handler {
+    [_serverConnection invoke: @"srpPhase2" withParams: @[M] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(responseOrError);
+        } else {
+            NSLog(@"SRP Phase 1 failed");
+            handler(nil);
+        }
+    }];
+}
 - (void) deliveryRequest: (TalkMessage*) message withDeliveries: (NSArray*) deliveries {
     NSMutableDictionary * messageDict = [message rpcDictionary];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
@@ -842,10 +978,14 @@ typedef enum BackendStates {
 }
 
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket {
-    //NSLog(@"webSocketDidOpen");
-    [self setState: kBackendIdentifying];
+    NSLog(@"webSocketDidOpen performRegistration: %d", _performRegistration);
     _backoffTime = 0.0;
-    [self identify];
+    if (_performRegistration) {
+        [self setState: kBackendRegistering];
+        [self performRegistration];
+    } else {
+        [self startAuthentication];
+    }
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
