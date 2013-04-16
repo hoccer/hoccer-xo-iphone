@@ -10,6 +10,19 @@
 
 @implementation NSData (HexString)
 
++ (id)dataWithHexadecimalString:(NSString *)inString {
+    unsigned char byte;
+    char tmp_buffer[3] = {'\0','\0','\0'};
+    char * buffer = malloc([inString length] / 2);
+    for (int i=0; i < [inString length]/2; i++) {
+        tmp_buffer[0] = [inString characterAtIndex:i*2];
+        tmp_buffer[1] = [inString characterAtIndex:i*2+1];
+        byte = strtol(tmp_buffer, NULL, 16);
+        buffer[i] = byte;
+    }
+    return [NSData dataWithBytesNoCopy: buffer length: [inString length] / 2 freeWhenDone: YES];
+}
+
 - (NSString *)hexadecimalString {
     const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
 

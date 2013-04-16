@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 
+#import "Config.h"
+
 #import "ConversationViewController.h"
 #import "Contact.h"
 #import "TalkMessage.h"
@@ -64,8 +66,15 @@
     [self setupSideMenusWithStoryboard: storyboard andConversationViewController: conversationViewController];
 
     if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        [self setupDone];
+        [self setupDone: NO];
     }
+#ifndef HXO_USE_USER_DEFINED_CREDENTIALS
+    else
+    {
+        [self setupDone: YES];
+    }
+#endif
+
 
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation
@@ -117,8 +126,9 @@
     self.navigationController.delegate = navigationMenuViewController;
 }
 
-- (void) setupDone {
-    [self.chatBackend start];
+- (void) setupDone: (BOOL) performRegistration {
+    NSLog(@"setupDone");
+    [self.chatBackend start: performRegistration];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -138,7 +148,7 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    [self.chatBackend start];
+    [self.chatBackend start: NO];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

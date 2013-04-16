@@ -92,7 +92,7 @@
     [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
     [self saveDummyProfile];
     AppDelegate * appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate setupDone];
+    [appDelegate setupDone: YES];
 }
 
 - (UIPickerView*) pickerInputViewForTextField: (UITextField*) textField {

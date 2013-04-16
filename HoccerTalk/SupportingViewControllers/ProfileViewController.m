@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
+#import "Config.h"
 #import "ProfileViewController.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HoccerTalkSideMenuButtons.h"
@@ -269,8 +270,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     nickNameItem.required = YES;
     [_allProfileItems addObject: nickNameItem];
 
+#ifdef HXO_USE_USER_DEFINED_CREDENTIALS
     ProfileItem * clientIdItem = [[ProfileItem alloc] init];
-    //nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
+    //clientIditem.icon = [UIImage imageNamed: @"icon_profile-name"];
     clientIdItem.valueKey = kHTClientId;
     clientIdItem.editLabel = @"Client Id";
     clientIdItem.placeholder = @"Your Client Id";
@@ -278,6 +280,19 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     clientIdItem.keyboardType = UIKeyboardTypeDefault;
     clientIdItem.required = YES;
     [_allProfileItems addObject: clientIdItem];
+
+#ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION 
+    ProfileItem * passwordItem = [[ProfileItem alloc] init];
+    //passwordItem.icon = [UIImage imageNamed: @"icon_profile-name"];
+    passwordItem.valueKey = kHTPassword;
+    passwordItem.editLabel = @"Password";
+    passwordItem.placeholder = @"Your Client Id";
+    passwordItem.cellIdentifier = [UserDefaultsCellTextInput reuseIdentifier];
+    passwordItem.keyboardType = UIKeyboardTypeDefault;
+    passwordItem.required = YES;
+    [_allProfileItems addObject: passwordItem];
+#endif
+#endif
 
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
@@ -392,7 +407,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         NSLog(@"==================== WARNING: Client Id generation disabled ==============");
         //[[HTUserDefaults standardUserDefaults] setValue: [NSString stringWithUUID] forKey: kHTClientId];
         [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
-        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone];
+#ifdef HXO_USE_USER_DEFINED_CREDENTIALS
+        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+#endif
         [self dismissModalViewControllerAnimated: YES];
     }
 
