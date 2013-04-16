@@ -16,7 +16,8 @@
 
 FOUNDATION_EXPORT NSString * const kDeliveryStateNew;
 FOUNDATION_EXPORT NSString * const kDeliveryStateDelivering;
-FOUNDATION_EXPORT NSString * const kDeliverySatteDevilered;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDelivered;
+FOUNDATION_EXPORT NSString * const kDeliveryStateConfirmed;
 FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 
 
