@@ -20,7 +20,7 @@
         byte = strtol(tmp_buffer, NULL, 16);
         buffer[i] = byte;
     }
-    return [NSData dataWithBytesNoCopy: buffer length: [inString length] / 2 freeWhenDone: YES];
+    return [NSData dataWithBytesNoCopy: buffer length: [inString length] / 2];
 }
 
 - (NSString *)hexadecimalString {

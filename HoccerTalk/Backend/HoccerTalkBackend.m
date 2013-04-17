@@ -230,7 +230,7 @@ typedef enum BackendStates {
         [self didRegister: YES];
 #else
         [[HTUserDefaults standardUserDefaults] setValue: theId forKey: kHTClientId];
-        _srpUser = [[HCSRPUser alloc] initWithUserName: theId andPassword: [self getPassword]];
+        _srpUser = [[HCSRPUser alloc] initWithUserName: theId andPassword: [self getPassword] hashAlgorithm: SRP_SHA1 primeAndGenerator: SRP_NG_1024];
         NSData * salt;
         NSData * verifier;
         [_srpUser salt: & salt andVerificationKey: & verifier forPassword:[self getPassword]];
@@ -276,9 +276,13 @@ typedef enum BackendStates {
                 [self stopAndRetry];
             } else {
                 [self srpPhase2: [M hexadecimalString] handler:^(NSString * HAMKString) {
-                    NSData * HAMK = [NSData dataWithHexadecimalString: HAMKString];
-                    [_srpUser verifySession: HAMK];
-                    [self didFinishLogin: _srpUser.isAuthenticated];
+                    if (HAMKString != nil) {
+                        NSData * HAMK = [NSData dataWithHexadecimalString: HAMKString];
+                        [_srpUser verifySession: HAMK];
+                        [self didFinishLogin: _srpUser.isAuthenticated];
+                    } else {
+                        [self didFinishLogin: NO];
+                    }
                 }];
             }
         }
@@ -718,7 +722,7 @@ typedef enum BackendStates {
         if (success) {
             handler(responseOrError);
         } else {
-            NSLog(@"SRP Phase 1 failed");
+            NSLog(@"SRP Phase 2 failed");
             handler(nil);
         }
     }];
