@@ -14,7 +14,8 @@
 
 NSString * const kDeliveryStateNew        = @"new";
 NSString * const kDeliveryStateDelivering = @"delivering";
-NSString * const kDeliverySatteDevilered  = @"delivered";
+NSString * const kDeliveryStateDelivered  = @"delivered";
+NSString * const kDeliveryStateConfirmed  = @"confirmed";
 NSString * const kDeliveryStateFailed     = @"failed";
 
 @implementation Delivery

@@ -18,6 +18,7 @@
 #import <AVFoundation/AVMediaFormat.h>
 
 #import "TalkMessage.h"
+#import "Delivery.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
 #import "InsetImageView.h"
@@ -667,7 +668,6 @@
     [_partner addObserver: self forKeyPath: @"connectionStatus" options: NSKeyValueObservingOptionNew context: nil];
     [_partner addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
 
-
     if (resultsControllers == nil) {
         resultsControllers = [[NSMutableDictionary alloc] init];
     }
@@ -824,6 +824,26 @@
         cell.bubble.attachmentView = attachmentView;
     } else {
         cell.bubble.attachmentView = nil;
+    }
+    if ([message.isOutgoing isEqualToNumber: @YES]) {
+        if ([message.deliveries count] > 1) {
+            NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
+        }
+        for (Delivery * myDelivery in message.deliveries) {
+            if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
+                cell.bubble.alpha = 0.1;
+            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering]) {
+                cell.bubble.alpha = 0.25;
+            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered]) {
+                cell.bubble.alpha = 0.5;
+            } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
+                cell.bubble.alpha = 1.0;
+            } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
+                cell.backgroundColor = [UIColor redColor];
+            } else {
+                NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
+            }
+        }
     }
 }
 

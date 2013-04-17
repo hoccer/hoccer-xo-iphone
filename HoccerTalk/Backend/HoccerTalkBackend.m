@@ -760,6 +760,34 @@ typedef enum BackendStates {
     }];
 }
 
+- (void) deliveryAcknowledge: (Delivery*) delivery {
+    // NSLog(@"deliveryAcknowledge: %@", delivery);
+    [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[delivery.message.messageId, delivery.receiver.clientId]
+                   onResponse: ^(id responseOrError, BOOL success)
+    {
+        if (success) {
+            // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
+            [delivery updateWithDictionary: responseOrError];
+            [self.delegate.managedObjectContext refreshObject: delivery.message mergeChanges: YES];
+        } else {
+            NSLog(@"deliveryAcknowledge() failed: %@", responseOrError);
+        }
+    }];
+}
+
+- (void) deliveryFail: (NSString*) theMessageId forClient:(NSString*) theClientId {
+    // NSLog(@"deliveryFail: %@", delivery);
+    [_serverConnection invoke: @"deliveryFail" withParams: @[theMessageId, theClientId]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"deliveryFail() returned delivery: %@", responseOrError);
+         } else {
+             NSLog(@"deliveryFail() failed: %@", responseOrError);
+         }
+     }];
+}
+
 - (void) updatePresence: (NSString*) clientName withStatus: clientStatus withAvatar: (NSString*)avatarURL withKey: (NSData*)keyId {
     // NSLog(@"updatePresence: %@, %@, %@", clientName, clientStatus, avatarURL);
     NSDictionary *params = @{
@@ -937,18 +965,57 @@ typedef enum BackendStates {
     [self receiveMessage: messageDict withDelivery: deliveryDict];
 }
 
+
+-(Delivery *) getDeliveryMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId  {
+    NSDictionary * vars = @{ @"messageTag" : theMessageTag,
+                             @"receiverId" : theReceiverId};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndReceiverId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (deliveries == nil)
+    {
+        NSLog(@"DeliveryByMessageTagAndReceiverId: Fetch request failed: %@", error);
+        abort();
+    }
+    Delivery * delivery = nil;
+    if (deliveries.count > 0) {
+        delivery = deliveries[0];
+        if (deliveries.count > 1) {
+            NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for receiver %@ found", theMessageTag, theReceiverId);
+        }
+    } else {
+        NSLog(@"Delivery with MessageTag %@ for receiver %@ not in deliveries", theMessageTag, theReceiverId);
+    }
+    return delivery;
+}
+
+
+// called by server to notify us about status changes of outgoing deliveries we made
 - (void) outgoingDelivery: (NSArray*) params {
-    /* TODO: implement outgoing delivery
     if (params.count != 1) {
-        NSLog(@"outgoing requires an array of two parameters (delivery, message), but got %d parameters.", params.count);
+        NSLog(@"outgoingDelivery: requires an array of one parameters (delivery), but got %d parameters.", params.count);
         return;
     }
     if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
+        NSLog(@"outgoingDelivery: argument is not a valid object");
         return;
     }
     NSDictionary * deliveryDict = params[0];
-     */
-    NSLog(@"================= outgoingDelivery() called");
+    // NSLog(@"================= outgoingDelivery() called, dict = %@", deliveryDict);
+    
+    NSString * myMessageTag = deliveryDict[@"messageTag"];
+    NSString * myReceiverId = deliveryDict[@"receiverId"];
+    
+    Delivery * myDelivery = [self getDeliveryMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
+    if (myDelivery != nil) {
+        myDelivery.state = deliveryDict[@"state"];
+        [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
+        NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
+        [self deliveryAcknowledge: myDelivery];
+    } else {
+        NSLog(@"Signalling deliveryFail for unknown delivery with messageTag %@ receiver %@", myMessageTag, myReceiverId);
+        [self deliveryFail: deliveryDict[@"messageId"] forClient:myReceiverId];
+    }
 }
 
 - (void) pushNotRegistered: (NSArray*) unused {
