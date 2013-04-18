@@ -947,10 +947,26 @@ typedef enum BackendStates {
     }];
 }
 
-- (void) updateUnreadMessageCount: (NSUInteger) count handler: (void (^)()) handler {
-    // TODO: update message count
-    NSLog(@"TODO: updateUnreadMessageCount ...");
-    handler();
+- (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler {
+    //NSLog(@"hintApnsUnreadMessage");
+    [_serverConnection invoke: @"hintApnsUnreadMessage" withParams: @[@(count)] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+
+}
+
+- (void) blockClient: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"blockClient");
+    [_serverConnection invoke: @"blockClient" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+- (void) unblockClient: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"unblockClient");
+    [_serverConnection invoke: @"unblockClient" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
 }
 
 #pragma mark - Incoming RPC Calls

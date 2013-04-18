@@ -35,6 +35,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, readonly) NSPredicate * hasValuePredicate;
+@property (strong, readonly) HoccerTalkBackend * chatBackend;
 
 @end
 
@@ -455,8 +456,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     id cell = [self.tableView cellForRowAtIndexPath: sender];
     if ([_contact.relationshipState isEqualToString: @"friend"]) {
         NSLog(@"friend -> blocked");
+        [self.chatBackend blockClient: _contact.clientId handler:^(BOOL success) {
+            NSLog(@"blockClient: %@", success ? @"success" : @"failed");
+        }];
     } else if ([_contact.relationshipState isEqualToString: @"blocked"]) {
         NSLog(@"blocked -> friend");
+        [self.chatBackend unblockClient: _contact.clientId handler:^(BOOL success) {
+            NSLog(@"unblockClient: %@", success ? @"success" : @"failed");
+        }];
     } else {
         NSLog(@"ProfileViewController toggleBlockedPressed: unhandled status %@", _contact.status);
     }
@@ -507,6 +514,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) additionalButtonPressed:(NSUInteger)buttonIndex {
     // delete avatarImage
     [self updateAvatar: nil];
+}
+
+@synthesize chatBackend = _chatBackend;
+- (HoccerTalkBackend*) chatBackend {
+    if (_chatBackend == nil) {
+        _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
+    }
+    return _chatBackend;
 }
 
 
