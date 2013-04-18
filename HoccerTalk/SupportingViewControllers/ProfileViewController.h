@@ -16,6 +16,7 @@
 @class UserDefaultsCellTextInput;
 @class AvatarItem;
 @class Contact;
+@class ProfileItem;
 
 typedef enum ProfileViewModes {
     ProfileViewModeFirstRun,
@@ -26,6 +27,10 @@ typedef enum ProfileViewModes {
 @interface ProfileViewController : UserDefaultsViewController <AttachmentPickerControllerDelegate>
 {
     AvatarItem *      _avatarItem;
+    ProfileItem *     _chatWithContactItem;
+    ProfileItem *     _blockContactItem;
+    ProfileItem *     _fingerprintItem;
+    ProfileItem *     _fingerprintInfoItem;
     NSArray *         _profileItems;
     NSMutableArray *  _allProfileItems;
     ProfileViewMode   _mode;

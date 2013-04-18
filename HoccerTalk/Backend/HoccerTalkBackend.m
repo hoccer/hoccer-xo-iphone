@@ -229,7 +229,7 @@ typedef enum BackendStates {
 - (void) performRegistration {
     NSLog(@"performRegistration");
     GenerateIdHandler handler = ^(NSString * theId) {
-#ifdef HXO_USE_USERNAME_BASED_AUTHENICATION
+#ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION
         [self didRegister: YES];
 #else
         [[HTUserDefaults standardUserDefaults] setValue: theId forKey: kHTClientId];
@@ -262,7 +262,7 @@ typedef enum BackendStates {
 
 - (void) startAuthentication {
     [self setState: kBackendAuthenticating];
-#ifdef HXO_USE_USERNAME_BASED_AUTHENICATION
+#ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION
     [self identify];
 #else
     NSData * A = [_srpUser startAuthentication];

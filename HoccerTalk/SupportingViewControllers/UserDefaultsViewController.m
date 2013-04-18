@@ -27,12 +27,15 @@
 
 - (void) commonInit {
     _prototypes = [[NSMutableDictionary alloc] init];
-    _items = [self populateItems];    
 }
 
 - (void) viewDidLoad {
+    [super viewDidLoad];
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
+    [self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
+    _prototypes[(id)[UserDefaultsCell class]] = @1;
 }
+
 
 - (UITableViewCell*) prototypeCellOfClass:(id)cellClass {
     if (_prototypes[cellClass] == nil) {
