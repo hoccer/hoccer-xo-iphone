@@ -160,11 +160,13 @@ typedef enum BackendStates {
     }
     if (messages.count > 0) {
         NSLog(@"receiveMessage: already have message with id %@", vars[@"messageId"]);
-        // TODO: send delivery confirm (again)?
+        TalkMessage * oldMessage = messages[0];
+        [self deliveryConfirm: messageDictionary[@"messageId"] withDelivery: [oldMessage.deliveries anyObject]];
         return;
     }
     if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
-        NSLog(@"receiveMessage: ignoring received message without keyCiphertext, id= %@", vars[@"messageId"]);
+        NSLog(@"receiveMessage: aborting received message without keyCiphertext, id= %@", vars[@"messageId"]);
+        [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
         return;
     }
 
@@ -649,7 +651,8 @@ typedef enum BackendStates {
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
                          absoluteURI:(NSString *)URLString
-                             payload:(NSData *)payload
+                             payloadData:(NSData *)payload
+                             payloadStream:(NSInputStream*)stream
                              headers:(NSDictionary *)headers
 {
     // hack, remove after better filestore comes online
@@ -668,7 +671,12 @@ typedef enum BackendStates {
 	}
     
 	[request setHTTPMethod:method];
-	[request setHTTPBody:payload];
+    if (payload != nil) {
+        [request setHTTPBody:payload];        
+    }
+    if (stream != nil) {
+        [request setHTTPBodyStream:stream];
+    }
 	[request setTimeoutInterval:60];
 	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
     
@@ -775,15 +783,15 @@ typedef enum BackendStates {
     }];
 }
 
-- (void) deliveryFail: (NSString*) theMessageId forClient:(NSString*) theClientId {
-    // NSLog(@"deliveryFail: %@", delivery);
-    [_serverConnection invoke: @"deliveryFail" withParams: @[theMessageId, theClientId]
+- (void) deliveryAbort: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId {
+    // NSLog(@"deliveryAbort: %@", delivery);
+    [_serverConnection invoke: @"deliveryAbort" withParams: @[theMessageId, theReceiverClientId]
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
-             NSLog(@"deliveryFail() returned delivery: %@", responseOrError);
+             NSLog(@"deliveryAbort() returned delivery: %@", responseOrError);
          } else {
-             NSLog(@"deliveryFail() failed: %@", responseOrError);
+             NSLog(@"deliveryAbort() failed: %@", responseOrError);
          }
      }];
 }
@@ -1013,8 +1021,8 @@ typedef enum BackendStates {
         NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
         [self deliveryAcknowledge: myDelivery];
     } else {
-        NSLog(@"Signalling deliveryFail for unknown delivery with messageTag %@ receiver %@", myMessageTag, myReceiverId);
-        [self deliveryFail: deliveryDict[@"messageId"] forClient:myReceiverId];
+        NSLog(@"Signalling deliveryAbort for unknown delivery with messageTag %@ messageId %@ receiver %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId);
+        [self deliveryAbort: deliveryDict[@"messageId"] forClient:myReceiverId];
     }
 }
 
@@ -1103,7 +1111,8 @@ typedef enum BackendStates {
     _avatarUploadURL = toURL;
     NSURLRequest *myRequest  = [self httpRequest:@"PUT"
                                      absoluteURI:toURL
-                                         payload:myAvatarData
+                                         payloadData:myAvatarData
+                                         payloadStream:nil
                                          headers:[self httpHeaderWithContentLength: _avatarBytesTotal]
                                 ];
     _avatarBytesUploaded = 0;
