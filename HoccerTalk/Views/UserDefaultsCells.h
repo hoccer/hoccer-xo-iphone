@@ -10,11 +10,54 @@
 
 #import "HoccerTalkTableViewCell.h"
 
+@protocol UserDefaultsCellTextInputDelegate <NSObject>
+
+@optional
+
+- (BOOL) validateTextField: (UITextField*) textField;
+- (void) textFieldDidEndEditing: (UITextField*) textField;
+
+@end
+
+
+@interface ProfileItem : NSObject <UserDefaultsCellTextInputDelegate>
+
+@property (nonatomic,strong) UIImage  *      icon;
+@property (nonatomic,strong) NSString *      valueKey; // used to access the model
+@property (nonatomic,strong) NSString *      currentValue;
+@property (nonatomic,strong) NSString *      editLabel;
+@property (nonatomic,strong) id              cellClass;
+@property (nonatomic,strong) NSString *      placeholder;
+@property (nonatomic,assign) UIKeyboardType  keyboardType;
+@property (nonatomic,assign) BOOL            required;
+@property (nonatomic,assign) BOOL            valid;
+@property (nonatomic,assign) UITextAlignment textAlignment;
+@property (nonatomic, assign) BOOL           secure;
+@property (nonatomic, weak)  id              target;
+@property (nonatomic,assign) SEL             action;
+
+@end
+
+@interface AvatarItem : NSObject
+
+@property (nonatomic,strong) UIImage*  image;
+@property (nonatomic,strong) NSString* valueKey;
+@property (nonatomic,strong) NSString* contactKey;
+@property (nonatomic,strong) id        cellClass;
+@property (nonatomic,weak) id        target;
+@property (nonatomic, assign) SEL      action;
+
+@end
+
+
+
 @class ProfileAvatarView;
 
 @interface UserDefaultsCell : HoccerTalkTableViewCell
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) count;
+
+- (void) configure: (id) item;
 
 @end
 
@@ -24,14 +67,7 @@
 
 @end
 
-@protocol UserDefaultsCellTextInputDelegate <NSObject>
 
-@optional
-
-- (BOOL) validateTextField: (UITextField*) textField;
-- (void) textFieldDidEndEditing: (UITextField*) textField;
-
-@end
 
 @interface UserDefaultsCellTextInput : UserDefaultsCell  <UITextFieldDelegate>
 

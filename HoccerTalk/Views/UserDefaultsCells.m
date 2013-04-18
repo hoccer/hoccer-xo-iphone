@@ -12,15 +12,68 @@
 
 static const CGFloat kEditAnimationDuration = 0.5;
 
+
+@implementation ProfileItem
+
+- (id) init {
+    self = [super init];
+    if (self != nil) {
+        self.valid = YES;
+        self.textAlignment = UITextAlignmentLeft;
+    }
+    return self;
+}
+
+- (void) setRequired:(BOOL)required {
+    _required = required;
+    if (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""])) {
+        self.valid = NO;
+    }
+}
+
+- (void) setCurrentValue:(NSString *)currentValue {
+    _currentValue = currentValue;
+    if (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""])) {
+        self.valid = NO;
+    }
+}
+
+- (BOOL) validateTextField:(UITextField *)textField {
+    self.currentValue = textField.text;
+    if (self.required && ( textField.text == nil || [textField.text isEqualToString: @""])) {
+        self.valid = NO;
+    } else {
+        self.valid = YES;
+    }
+    return self.valid;
+}
+@end
+
+@implementation AvatarItem
+@end
+
+
+
 @implementation UserDefaultsCell
+
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self != nil) {
+        [self setupLabel];
+    }
+    return self;
+}
 
 - (void) awakeFromNib {
     [super awakeFromNib];
+    [self setupLabel];
+}
+
+- (void) setupLabel {
     self.textLabel.shadowColor = [UIColor whiteColor];
     self.textLabel.shadowOffset = CGSizeMake(0, 1);
     self.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];
     self.textLabel.backgroundColor = [UIColor clearColor];
-
 }
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
@@ -37,6 +90,14 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self.backgroundView = [[UIImageView alloc] initWithImage: image];
 }
 
+- (void) configure: (id) item {
+    self.imageView.image = [item icon];
+    self.textLabel.textAlignment = [item textAlignment];
+    self.textLabel.text = [item currentValue];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+
 @end
 
 @implementation UserDefaultsCellAvatarPicker
@@ -50,6 +111,16 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self.avatar.enabled = editing;
     self.avatar.outerShadowColor = editing ? [UIColor orangeColor] : [UIColor whiteColor];
 }
+
+- (void) configure: (id) item {
+    // does not call super class
+    self.avatar.image = [item image];
+    if (self.avatar.defaultImage == nil) {
+        self.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact_large"];
+    }
+    [self.avatar addTarget: [item target] action: [item action] forControlEvents: UIControlEventTouchUpInside];
+}
+
 @end
 
 @implementation UserDefaultsCellTextInput
@@ -118,6 +189,20 @@ static const CGFloat kEditAnimationDuration = 0.5;
     }
 }
 
+- (void) configure: (id) item {
+    [super configure: item];
+
+    NSString * value = [item currentValue];
+    self.textField.text = value;
+    self.textField.placeholder = [item placeholder];
+    self.delegate = item;
+    self.editLabel = [item editLabel];
+
+    self.textField.keyboardType = [item keyboardType];
+
+    self.textField.secureTextEntry = [item secure];
+}
+
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
@@ -166,6 +251,12 @@ static const CGFloat kEditAnimationDuration = 0.5;
     } else {
         self.textLabel.text = editing ? self.editLabel : @"TODO";
     }
+}
+
+
+- (void) configure: (id) item {
+    [super configure: item];
+    self.editLabel = [item editLabel];
 }
 
 @end

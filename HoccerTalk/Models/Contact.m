@@ -10,6 +10,7 @@
 #import "Crypto.h"
 #import "NSData+Base64.h"
 #import "RSA.h"
+#import "HTUserDefaults.h"
 
 
 const float kTimeSectionInterval = 2 * 60;
@@ -133,6 +134,13 @@ NSString * const kRelationStateBlocked = @"blocked";
     return @{ @"state"     : @"relationshipState",
               @"lastChanged": @"relationshipLastChanged",
               };
+}
+
+- (id) valueForUndefinedKey:(NSString *)key {
+    if ([key isEqualToString: kHTPassword]) {
+        return nil;
+    }
+    return [super valueForUndefinedKey: key];
 }
 
 @end
