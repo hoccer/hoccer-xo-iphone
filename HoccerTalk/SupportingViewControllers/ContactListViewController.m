@@ -357,7 +357,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
 
-    cell.avatar.image = contact.avatarImage;
+    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
 }
 
 

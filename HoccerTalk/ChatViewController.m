@@ -813,7 +813,10 @@
     }
 
     cell.message.text = message.body;
-    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : self.partner.avatarImage;
+    UIImage * avatar = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : self.partner.avatarImage;
+    avatar = avatar != nil ? avatar : [UIImage imageNamed: @"avatar_default_contact"];
+
+    cell.avatar.image = avatar;
 
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||

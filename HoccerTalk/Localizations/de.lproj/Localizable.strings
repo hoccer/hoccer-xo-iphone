@@ -133,3 +133,10 @@
 
 "profile_fingerprint_info" = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
 
+"contact_unblock" = "%@ entblockieren";
+
+"contact_block" = "%@ blockieren";
+
+"chat_with_contact" = "Mit %@ chatten";
+
+

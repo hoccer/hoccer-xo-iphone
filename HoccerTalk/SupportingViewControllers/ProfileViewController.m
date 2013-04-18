@@ -72,13 +72,27 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
     _items = [self populateItems];
     [self.tableView reloadData];
-    
-    [self populateValues];
+}
+
+- (NSString*) titleForRelationshipState: (NSString*) state {
+    if ([state isEqualToString: @"friend"]) {
+        return [NSString stringWithFormat: NSLocalizedString(@"contact_block", nil), _contact.nickName];
+    } else if ([state isEqualToString: @"blocked"]) {
+        return [NSString stringWithFormat: NSLocalizedString(@"contact_unblock", nil), _contact.nickName];
+    } else {
+        NSLog(@"ProfileViewController toggleBlockedPressed: unhandled status %@", _contact.status);
+    }
+    return @"Kaputt";
 }
 
 - (NSArray*) populateValues {
     id modelObject = _mode == ProfileViewModeContactProfile ? self.contact : [HTUserDefaults standardUserDefaults];
-    _avatarItem.image = [UIImage imageWithData: [modelObject valueForKey: _avatarItem.valueKey]];
+    _avatarItem.currentValue = [UIImage imageWithData: [modelObject valueForKey: _avatarItem.valueKey]];
+
+    if (_mode == ProfileViewModeContactProfile) {
+        _blockContactItem.currentValue = [self titleForRelationshipState: _contact.relationshipState];
+    }
+
     for (ProfileItem* item in _allProfileItems) {
         item.currentValue = [modelObject valueForKey: item.valueKey];
     }
@@ -94,7 +108,73 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
     _fingerprintItem.currentValue = [self formatKeyIdAsFingerprint: keyId];
     _fingerprintInfoItem.currentValue = NSLocalizedString(@"profile_fingerprint_info", nil);
-    return [self filterItems: NO];
+
+    if (_mode == ProfileViewModeContactProfile) {
+        [self setupContactKVO];
+    }
+    return [self filterItems: self.isEditing];
+}
+
+- (void) setupContactKVO {
+    [self setupContactPropertyKVO: _avatarItem];
+    for (ProfileItem * item in _allProfileItems) {
+        [self setupContactPropertyKVO: item];
+    }
+    [_contact addObserver: self forKeyPath: @"relationshipState" options: NSKeyValueObservingOptionNew context: nil];
+}
+
+- (void) setupContactPropertyKVO: (id) item {
+    [_contact addObserver: self forKeyPath: [item valueKey] options: NSKeyValueObservingOptionNew context: nil];
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([object isKindOfClass: [ProfileItem class]] && [keyPath isEqualToString: @"valid"]) {
+            [self validateItems];
+    } else if ([keyPath isEqualToString: @"relationshipState"]) {
+        _blockContactItem.currentValue = [self titleForRelationshipState: [object relationshipState]];
+        [self.tableView beginUpdates];
+        [self updateBlockContactCell];
+        [self.tableView endUpdates];
+    } else if ([object isKindOfClass: [Contact class]]) {
+        NSLog(@"contact keypath %@ changed", keyPath);
+        id item = _itemsByKeyPath[keyPath];
+        if ([keyPath isEqualToString: @"avatar"]) {
+            [(AvatarItem*)item setCurrentValue: [object avatarImage]];
+        } else {
+            [item setCurrentValue: [object valueForKey: keyPath]];
+            if ([keyPath isEqualToString: @"nickName"]) {
+                _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [object nickName]];
+                _blockContactItem.currentValue = [self titleForRelationshipState: [object relationshipState]];
+
+            }
+        }
+        if ([item indexPath] != nil) {
+            UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: [item indexPath]];
+            if (cell != nil) {
+                [self.tableView beginUpdates];
+                [cell configure: item];
+                if ([keyPath isEqualToString: @"nickName"]) {
+                    [self updateChatWithContactCell];
+                    [self updateBlockContactCell];
+                }
+                [self.tableView endUpdates];
+            }
+        }
+    }
+}
+
+- (void) updateChatWithContactCell {
+    UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: [_chatWithContactItem indexPath]];
+    if (cell != nil) {
+        [cell configure: _chatWithContactItem];
+    }
+}
+
+- (void) updateBlockContactCell {
+    UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: [_blockContactItem indexPath]];
+    if (cell != nil) {
+        [cell configure: _blockContactItem];
+    }
 }
 
 - (NSString*) formatKeyIdAsFingerprint: (NSString*) keyId {
@@ -121,6 +201,12 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     for (ProfileItem* item in _allProfileItems) {
         [item removeObserver: self forKeyPath: @"valid"];
     }
+    if (_contact != nil) {
+        [_contact removeObserver: self forKeyPath: @"avatar"];
+        for (ProfileItem* item in _allProfileItems) {
+            [_contact removeObserver: self forKeyPath: item.valueKey];
+        }
+    }
 }
 
 - (void) setupNavigationButtons: (ProfileViewMode) mode {
@@ -131,7 +217,13 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
             break;
         case ProfileViewModeMyProfile:
             self.navigationItem.rightBarButtonItem = self.editButtonItem;
-            self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
+            if (self.isEditing) {
+                self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
+
+            } else {
+                self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
+            }
+            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
             break;
         case ProfileViewModeContactProfile:
             self.navigationItem.rightBarButtonItem = nil;
@@ -150,6 +242,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _items[indexPath.section][indexPath.row];
+    [item setIndexPath: indexPath];
     UserDefaultsCell * cell = (UserDefaultsCell*)[self dequeueReusableCellOfClass: [item cellClass] forIndexPath: indexPath];
     [cell configure: item];
     return cell;
@@ -229,12 +322,15 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (NSArray*) populateItems {
+    _itemsByKeyPath = [[NSMutableDictionary alloc] init];
+
     _avatarItem = [[AvatarItem alloc] init];
     _avatarItem.valueKey = kHTAvatar;
     _avatarItem.contactKey = @"avatar";
     _avatarItem.cellClass = [UserDefaultsCellAvatarPicker class];
     _avatarItem.target = self;
     _avatarItem.action = @selector(avatarTapped:);
+    [_itemsByKeyPath setObject: _avatarItem forKey: _avatarItem.valueKey];
 
     _allProfileItems = [[NSMutableArray alloc] init];
     
@@ -247,6 +343,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     nickNameItem.keyboardType = UIKeyboardTypeDefault;
     nickNameItem.required = YES;
     [_allProfileItems addObject: nickNameItem];
+    [_itemsByKeyPath setObject: nickNameItem forKey: nickNameItem.valueKey];
+
 
 #ifdef HXO_USE_USER_DEFINED_CREDENTIALS
     ProfileItem * clientIdItem = [[ProfileItem alloc] init];
@@ -258,8 +356,10 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     clientIdItem.keyboardType = UIKeyboardTypeDefault;
     clientIdItem.required = YES;
     [_allProfileItems addObject: clientIdItem];
+    [_itemsByKeyPath setObject: clientIdItem forKey: clientIdItem.valueKey];
 
-#ifndef HXO_USE_USERNAME_BASED_AUTHENTICATION 
+
+#ifndef HXO_USE_USERNAME_BASED_AUTHENTICATION
     ProfileItem * passwordItem = [[ProfileItem alloc] init];
     //passwordItem.icon = [UIImage imageNamed: @"icon_profile-name"];
     passwordItem.valueKey = kHTPassword;
@@ -270,6 +370,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     passwordItem.required = YES;
     passwordItem.secure = YES;
     [_allProfileItems addObject: passwordItem];
+    [_itemsByKeyPath setObject: passwordItem forKey: password.valueKey];
+
 #endif
 #endif
 
@@ -282,6 +384,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     phoneItem.cellClass = [UserDefaultsCellTextInput class];
     phoneItem.keyboardType = UIKeyboardTypePhonePad;
     [_allProfileItems addObject: phoneItem];
+    [_itemsByKeyPath setObject: phoneItem forKey: phoneItem.valueKey];
+
 
     ProfileItem * mailItem = [[ProfileItem alloc] init];
     mailItem.icon = [UIImage imageNamed: @"icon_profile-mail"];
@@ -291,6 +395,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     mailItem.cellClass = [UserDefaultsCellTextInput class];
     mailItem.keyboardType = UIKeyboardTypeEmailAddress;
     [_allProfileItems addObject: mailItem];
+    [_itemsByKeyPath setObject: mailItem forKey: mailItem.valueKey];
+
 
     ProfileItem * twitterItem = [[ProfileItem alloc] init];
     twitterItem.icon = [UIImage imageNamed: @"icon_profile-twitter"];
@@ -299,6 +405,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     twitterItem.placeholder = NSLocalizedString(@"profile_twitter_placeholder", nil);
     twitterItem.cellClass = [UserDefaultsCellDisclosure class];
     [_allProfileItems addObject: twitterItem];
+    [_itemsByKeyPath setObject: twitterItem forKey: twitterItem.valueKey];
+
 
     ProfileItem * facebookItem = [[ProfileItem alloc] init];
     facebookItem.icon = [UIImage imageNamed: @"icon_profile-facebook"];
@@ -307,6 +415,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     facebookItem.placeholder = NSLocalizedString(@"profile_facebook_placeholder", nil);
     facebookItem.cellClass = [UserDefaultsCellDisclosure class];
     [_allProfileItems addObject: facebookItem];
+    [_itemsByKeyPath setObject: facebookItem forKey: facebookItem.valueKey];
+
 
     ProfileItem * googlePlusItem = [[ProfileItem alloc] init];
     googlePlusItem.icon = [UIImage imageNamed: @"icon_profile-googleplus"];
@@ -315,6 +425,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     googlePlusItem.placeholder = NSLocalizedString(@"profile_google_plus_placeholder", nil);
     googlePlusItem.cellClass = [UserDefaultsCellDisclosure class];
     [_allProfileItems addObject: googlePlusItem];
+    [_itemsByKeyPath setObject: googlePlusItem forKey: googlePlusItem.valueKey];
+
 
     ProfileItem * githubItem = [[ProfileItem alloc] init];
     githubItem.icon = [UIImage imageNamed: @"icon_profile-octocat"];
@@ -323,26 +435,33 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     githubItem.placeholder = NSLocalizedString(@"profile_github_placeholder", nil);
     githubItem.cellClass = [UserDefaultsCellDisclosure class];
     [_allProfileItems addObject: githubItem];
+    [_itemsByKeyPath setObject: githubItem forKey: githubItem.valueKey];
+
 
 #endif // HXO_SHOW_UNIMPLEMENTED_PROFILE_ENTRIES
 
 
     _chatWithContactItem = [[ProfileItem alloc] init];
-    _chatWithContactItem.currentValue = @"Chat with";
+    _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
     _chatWithContactItem.cellClass = [UserDefaultsCellDisclosure class];
     _chatWithContactItem.action = @selector(chatWithContactPressed:);
     _chatWithContactItem.target = self;
+    _chatWithContactItem.alwaysShowDisclosure = YES;
 
     _blockContactItem = [[ProfileItem alloc] init];
-    _blockContactItem.currentValue = @"Block";
+    _blockContactItem.currentValue = nil;
     _blockContactItem.cellClass = [UserDefaultsCell class];
     _blockContactItem.action = @selector(toggleBlockedPressed:);
     _blockContactItem.target = self;
+    //[_itemsByKeyPath setObject: _blockContactItem forKey: _blockContactItem.valueKey];
+
 
 
     _fingerprintItem = [[ProfileItem alloc] init];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
     _fingerprintItem.textAlignment = NSTextAlignmentCenter;
+    //[_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
+
 
     _fingerprintInfoItem = [[ProfileItem alloc] init];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
@@ -354,11 +473,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return [self populateValues];
 }
 
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if ([keyPath isEqualToString: @"valid"]) {
-        [self validateItems];
-    }
-}
 
 - (void) validateItems {
     BOOL allValid = YES;
@@ -398,13 +512,13 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) saveProfile {
     // TODO: proper size handling
     CGFloat scale;
-    if (_avatarItem.image.size.height > _avatarItem.image.size.width) {
-        scale = 128.0 / _avatarItem.image.size.width;
+    if (_avatarItem.currentValue.size.height > _avatarItem.currentValue.size.width) {
+        scale = 128.0 / _avatarItem.currentValue.size.width;
     } else {
-        scale = 128.0 / _avatarItem.image.size.height;
+        scale = 128.0 / _avatarItem.currentValue.size.height;
     }
-    CGSize size = CGSizeMake(_avatarItem.image.size.width * scale, _avatarItem.image.size.height * scale);
-    [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.image imageScaledToSize: size]) forKey: _avatarItem.valueKey];
+    CGSize size = CGSizeMake(_avatarItem.currentValue.size.width * scale, _avatarItem.currentValue.size.height * scale);
+    [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.currentValue imageScaledToSize: size]) forKey: _avatarItem.valueKey];
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
             [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.valueKey];
@@ -437,7 +551,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) updateAvatar: (UIImage*) image {
-    _avatarItem.image = image;
+    _avatarItem.currentValue = image;
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
     UserDefaultsCellAvatarPicker * cell = (UserDefaultsCellAvatarPicker*)[self.tableView cellForRowAtIndexPath: indexPath];
     [self.tableView beginUpdates];
@@ -467,7 +581,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     } else {
         NSLog(@"ProfileViewController toggleBlockedPressed: unhandled status %@", _contact.status);
     }
-    
+    [self.tableView beginUpdates];
+    [cell configure: item];
+    [self.tableView endUpdates];
 
 }
 
@@ -506,7 +622,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
-    if (_avatarItem.image != nil) {
+    if (_avatarItem.currentValue != nil) {
         actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_delete_avatar_button_title", nil)];
     }
 }

@@ -35,6 +35,7 @@ typedef enum ProfileViewModes {
     NSMutableArray *  _allProfileItems;
     ProfileViewMode   _mode;
     BOOL              _canceled;
+    NSMutableDictionary * _itemsByKeyPath;
 }
 
 

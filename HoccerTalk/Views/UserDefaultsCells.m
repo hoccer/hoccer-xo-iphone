@@ -93,7 +93,7 @@ static const CGFloat kEditAnimationDuration = 0.5;
 - (void) configure: (id) item {
     self.imageView.image = [item icon];
     self.textLabel.textAlignment = [item textAlignment];
-    self.textLabel.text = [item currentValue];
+    self.textLabel.text = self.isEditing ? [item editLabel] : [item currentValue];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
@@ -112,9 +112,9 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self.avatar.outerShadowColor = editing ? [UIColor orangeColor] : [UIColor whiteColor];
 }
 
-- (void) configure: (id) item {
+- (void) configure: (AvatarItem*) item {
     // does not call super class
-    self.avatar.image = [item image];
+    self.avatar.image = item.currentValue;
     if (self.avatar.defaultImage == nil) {
         self.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact_large"];
     }
@@ -135,25 +135,29 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self.textInputBackground.image = [AssetStore stretchableImageNamed: @"profile_text_input_bg" withLeftCapWidth:3 topCapHeight:3];
     self.textInputBackground.frame = CGRectInset(self.textField.frame, -8, 2);
     self.textField.backgroundColor = [UIColor clearColor];
+    self.textField.alpha = 0;
+    self.textInputBackground.alpha = 0;
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing: editing animated: animated];
-    if (animated) {
-        [UIView animateWithDuration: kEditAnimationDuration animations:^{
-            [self showEditControls: editing];
-        }];
-        [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-            self.textLabel.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.textLabel.text = editing ? self.editLabel : self.textField.text;
-            [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-                self.textLabel.alpha = 1;
+    if (editing != self.isEditing) {
+        [super setEditing: editing animated: animated];
+        if (animated) {
+            [UIView animateWithDuration: kEditAnimationDuration animations:^{
+                [self showEditControls: editing];
             }];
-        }];
-    } else {
-        [self showEditControls: editing];
-        self.textLabel.text = editing ? self.editLabel : self.textField.text;
+            [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
+                self.textLabel.alpha = 0;
+            } completion:^(BOOL finished) {
+                self.textLabel.text = editing ? self.editLabel : self.textField.text;
+                [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
+                    self.textLabel.alpha = 1;
+                }];
+            }];
+        } else {
+            [self showEditControls: editing];
+            self.textLabel.text = editing ? self.editLabel : self.textField.text;
+        }
     }
 }
 
@@ -239,17 +243,19 @@ static const CGFloat kEditAnimationDuration = 0.5;
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
     [super setEditing: editing animated: animated];
-    if (animated) {
-        [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-            self.textLabel.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.textLabel.text = editing ? self.editLabel : @"TODO";
+    if (editing != self.isEditing) {
+        if (animated) {
             [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-                self.textLabel.alpha = 1;
+                self.textLabel.alpha = 0;
+            } completion:^(BOOL finished) {
+                self.textLabel.text = editing ? self.editLabel : @"TODO";
+                [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
+                    self.textLabel.alpha = 1;
+                }];
             }];
-        }];
-    } else {
-        self.textLabel.text = editing ? self.editLabel : @"TODO";
+        } else {
+            self.textLabel.text = editing ? self.editLabel : @"TODO";
+        }
     }
 }
 
@@ -257,6 +263,9 @@ static const CGFloat kEditAnimationDuration = 0.5;
 - (void) configure: (id) item {
     [super configure: item];
     self.editLabel = [item editLabel];
+    if ([item alwaysShowDisclosure]) {
+        self.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
+    }
 }
 
 @end
