@@ -7,10 +7,10 @@
 //  Based on a demo from http://bjhomer.blogspot.de/2011/04/subclassing-nsinputstream.html
 //
 
-#import "EncryptingInputStream.h"
+#import "CryptingInputStream.h"
 
 
-@implementation EncryptingInputStream 
+@implementation CryptingInputStream 
 {
 	NSInputStream *parentStream;
 	id <NSStreamDelegate> delegate;
@@ -21,6 +21,8 @@
     NSMutableData * restBuffer;
     NSStreamStatus thisStreamStatus;
     NSError * thisStreamError;
+    NSInteger totalBytesIn;
+    NSInteger totalBytesOut;
 }
 
 @synthesize cryptoEngine = _cryptoEngine;
@@ -37,6 +39,8 @@
 		[parentStream setDelegate:self];
         thisStreamStatus = NSStreamStatusNotOpen;
         restBuffer = [[NSMutableData alloc] init];
+        totalBytesIn = 0;
+        totalBytesOut = 0;
         [self setDelegate:self];
     }
     
@@ -109,7 +113,12 @@
 
 - (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len {
     if (_cryptoEngine == nil) {
-        return [parentStream read:buffer maxLength:len];
+        NSInteger bytesRead = [parentStream read:buffer maxLength:len];
+        if (bytesRead > 0) {
+            totalBytesOut += bytesRead;
+            totalBytesIn += bytesRead;
+        }
+        return bytesRead;
     }
     if (thisStreamStatus == NSStreamStatusError) {
         return -1;
@@ -119,8 +128,9 @@
     }
     if (restBuffer.length < len) {
         // read more bytes from input stream
-        NSMutableData * myPlaintext =[NSMutableData dataWithLength:len];
-        NSInteger bytesRead = [parentStream read:[myPlaintext mutableBytes] maxLength:len];
+        NSLog(@"CryptingInputStream: restBuffer.length = %d < len=%d", restBuffer.length, len);
+        NSMutableData * mySourceData =[NSMutableData dataWithLength:len];
+        NSInteger bytesRead = [parentStream read:[mySourceData mutableBytes] maxLength:len];
         if (bytesRead < 0) {
             thisStreamError = parentStream.streamError;
             thisStreamStatus = NSStreamStatusError;
@@ -129,13 +139,18 @@
         }
         // encrypt them
         NSError * myError = nil;
-        NSData * myCiphertext = nil;
+        NSData * myTransformedData = nil;
         if (bytesRead > 0) {
-            [myPlaintext setLength:bytesRead];
-            myCiphertext = [_cryptoEngine addData:myPlaintext error:&myError];
-        } else {
-            // byteRead == 0
-            myCiphertext = [_cryptoEngine finishWithError:&myError];
+            totalBytesIn += bytesRead;
+            [mySourceData setLength:bytesRead];
+            myTransformedData = [_cryptoEngine addData:mySourceData error:&myError];
+        }
+        if (parentStream.streamStatus == NSStreamStatusAtEnd) {
+            // bytesRead == 0
+            NSData * myFinalTransformedData = [_cryptoEngine finishWithError:&myError];
+            NSMutableData * myTransformedMutableData = [NSMutableData dataWithData:myTransformedData];
+            [myTransformedMutableData appendData:myFinalTransformedData];
+            myTransformedData = myTransformedMutableData;
         }
         if (myError != nil) {
             NSLog(@"Error in EncrypingInputStream: %@", thisStreamError);
@@ -143,20 +158,24 @@
             thisStreamError = myError;
             return -1;
         }
-        [restBuffer appendData:myCiphertext];
+        [restBuffer appendData:myTransformedData];
     }
-    if (restBuffer.length <= len) {
+    if (restBuffer.length >= len) {
         // satisfy read from rest buffer
         [restBuffer getBytes:buffer length:len];
         [restBuffer replaceBytesInRange:NSMakeRange(0, len) withBytes:nil length:0];
+        totalBytesOut+= len;
+        NSLog(@"CryptingInputStream: totalIn=%d totalOut=%d returning len=%d", totalBytesIn, totalBytesOut, len);
         return len;
     }
-    // hand out whole restbuffer
+    // not enough to satisfy full reqeuested len, but hand the whole restbuffer we got if any
     [restBuffer getBytes:buffer length:restBuffer.length];
     thisStreamStatus = NSStreamStatusAtEnd;
-    NSInteger bytesRead = restBuffer.length;
+    NSInteger bytesOut = restBuffer.length;
     [restBuffer setLength:0];
-	return bytesRead;
+    totalBytesOut += bytesOut;
+    NSLog(@"CryptingInputStream: totalIn=%d totalOut=%d returning rest len=%d", totalBytesIn, totalBytesOut, bytesOut);
+	return bytesOut;
 }
 
 - (BOOL)getBuffer:(uint8_t **)buffer length:(NSUInteger *)len {
