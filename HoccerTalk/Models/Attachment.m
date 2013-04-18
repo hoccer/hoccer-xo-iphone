@@ -10,6 +10,7 @@
 #import "TalkMessage.h"
 #import "HoccerTalkBackend.h"
 #import "AppDelegate.h"
+#import "EncryptingInputStream.h"
 
 #import <Foundation/NSURL.h>
 #import <MediaPlayer/MPMoviePlayerController.h>
@@ -340,7 +341,42 @@
     
 }
 
-- (void) upload {
+- (void) assetStreamLoader: (StreamSetterBlock) block url:(NSString*)theAssetURL {
+    
+    ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
+    {
+        ALAssetRepresentation *rep = [myasset defaultRepresentation];
+        NSLog(@"Attachment assetStreamLoader for self.assetURL=%@", self.self.assetURL);
+    /*
+        NSString * myPath = [rep filename];
+        NSInputStream * myStream = [NSInputStream inputStreamWithFileAtPath:myPath];
+        NSLog(@"Attachment assetStreamLoader returning input stream for file at path=%@", myPath);
+     */
+        // Just for testing purposes, we need a AssetInputStream here
+        NSError * myError = nil;
+        int64_t mySize = [rep size];
+        Byte *buffer = (Byte *)malloc(mySize);
+        NSUInteger bufferLen = [rep getBytes: buffer fromOffset:0 length:mySize error:&myError];
+        NSData * myData = [NSData dataWithBytesNoCopy: buffer length: bufferLen];
+        NSInputStream * myStream = [NSInputStream inputStreamWithData: myData];
+        block(myStream, myError); // TODO: error handling
+        return;
+     };
+    
+    ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
+    {
+        NSLog(@"Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
+        block(0, myerror);
+    };
+    
+    ALAssetsLibrary* assetslibrary = [[ALAssetsLibrary alloc] init];
+    [assetslibrary assetForURL: [NSURL URLWithString: theAssetURL]
+                   resultBlock: resultblock
+                  failureBlock: failureblock];
+    
+}
+
+- (void) uploadData {
     // NSLog(@"Attachment:upload remoteURL=%@, attachment=%@", self.remoteURL, self );
     if ([self.message.isOutgoing isEqualToNumber: @NO]) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
@@ -356,7 +392,8 @@
             NSLog(@"Attachment:upload starting withUploadData");
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
                                              absoluteURI:[self remoteURL]
-                                                 payload:myData
+                                                 payloadData:myData
+                                                 payloadStream:nil
                                                  headers:[self uploadHttpHeaders]
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
@@ -367,6 +404,51 @@
             NSLog(@"Attachment:upload error=%@",myError);
         }
     }];
+}
+
+- (void) uploadStream {
+    // NSLog(@"Attachment:upload remoteURL=%@, attachment=%@", self.remoteURL, self );
+    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+        NSLog(@"ERROR: uploadAttachment called on incoming attachment");
+        return;
+    }
+    if (self.transferConnection != nil) {
+        // do something about it
+        NSLog(@"upload of attachment still running");
+        return;
+    }
+    [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
+        if (myError == nil) {
+            NSLog(@"Attachment:upload starting uploadStream");
+            NSData * messageKey = self.message.cryptoKey;
+            NSError * myError = nil;
+            CryptoEngine * myEngine = [[CryptoEngine alloc]
+                                       initWithOperation:kCCEncrypt
+                                       algorithm:kCCAlgorithmAES128
+                                       options:kCCOptionPKCS7Padding
+                                       key:messageKey
+                                       IV:nil
+                                       error:&myError];
+            EncryptingInputStream * myEncryptingStream = [[EncryptingInputStream alloc] initWithInputStreamAndEngine:myStream cryptoEngine:nil];
+            NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
+                                                         absoluteURI:[self remoteURL]
+                                                             payloadData:nil
+                                                             payloadStream:myEncryptingStream
+                                                             headers:[self uploadHttpHeaders]
+                                        ];
+            self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
+            if (progressIndicatorDelegate) {
+                [progressIndicatorDelegate transferStarted];
+            }
+        } else {
+            NSLog(@"Attachment:upload error=%@",myError);
+        }
+    }];
+}
+
+- (void) upload {
+    // [self uploadData];
+    [self uploadStream];
 }
 
 - (void) download {
@@ -397,8 +479,9 @@
     
     NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"GET"
                                      absoluteURI:[self remoteURL]
-                                         payload:nil
-                                         headers:[self downloadHttpHeaders]
+                                        payloadData:nil
+                                        payloadStream:nil
+                                        headers:[self downloadHttpHeaders]
                                 ];
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
     if (progressIndicatorDelegate) {
@@ -419,10 +502,9 @@
     }
 }
 
-
 -(void) withUploadData: (DataSetterBlock) execution {
     if (self.localURL != nil) {
-        NSLog(@"Attachment uploadData self.localURL=%@", self.localURL);
+        NSLog(@"Attachment withUploadData self.localURL=%@", self.localURL);
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
         NSData *data = [[NSFileManager defaultManager] contentsAtPath:myPath];
         NSLog(@"Attachment return uploadData len=%d, path=%@", [data length], myPath);
@@ -432,6 +514,23 @@
     if (self.assetURL != nil) {
         NSLog(@"Attachment uploadData assetURL=%@", self.assetURL);
         [self assetDataLoader: execution url: self.assetURL];
+        return;
+    }
+    execution(nil, [NSError errorWithDomain:@"HoccerTalk" code:1000 userInfo: nil]);
+}
+
+-(void) withUploadStream: (StreamSetterBlock) execution {
+    if (self.localURL != nil) {
+        NSLog(@"Attachment withUploadStream self.localURL=%@", self.localURL);
+        NSString * myPath = [[NSURL URLWithString: self.localURL] path];
+        NSInputStream * myStream = [NSInputStream inputStreamWithFileAtPath:myPath];
+        NSLog(@"Attachment returning input stream for file at path=%@", myPath);
+        execution(myStream, nil); // TODO: error handling
+        return;
+    }
+    if (self.assetURL != nil) {
+        NSLog(@"Attachment withUploadStream assetURL=%@", self.assetURL);
+        [self assetStreamLoader: execution url: self.assetURL];
         return;
     }
     execution(nil, [NSError errorWithDomain:@"HoccerTalk" code:1000 userInfo: nil]);
@@ -452,7 +551,6 @@
                               nil
                    ];
     return headers;
-    
 }
 
 -(NSDictionary*) downloadHttpHeaders {
@@ -561,7 +659,6 @@
 
 -(void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
 {
-
     if (connection == _transferConnection) {
         NSLog(@"Attachment transferConnection didFailWithError %@", error);
         self.transferConnection = nil;
@@ -604,7 +701,6 @@
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
     }
 }
-
 
 
 #pragma mark - Custom Getters and Setters

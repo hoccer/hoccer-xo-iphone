@@ -18,6 +18,7 @@
 typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
 typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
+typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 
 @protocol TransferProgressIndication <NSObject>
 
@@ -67,6 +68,8 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 - (void) loadImage: (ImageLoaderBlock) block;
 
 - (void) upload;
+- (void) uploadData;
+- (void) uploadStream;
 - (void) download;
 - (void) downloadLater: (NSTimer*) theTimer;
 

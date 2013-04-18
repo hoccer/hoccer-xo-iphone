@@ -30,7 +30,7 @@
     //NSLog(@"Updatig object of type %@", NSStringFromClass([self class]));
     for (id key in dict) {
         if (rpcKeys[key] == nil) {
-            NSLog(@"unhandled key '%@' in update dictionary, ignoring key:", key);
+            // NSLog(@"unhandled key '%@' in update dictionary, ignoring key:", key);
             continue;
         }
         // NSLog(@"check value for key '%@'", key);

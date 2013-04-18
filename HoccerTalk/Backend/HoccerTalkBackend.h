@@ -82,7 +82,8 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
                          absoluteURI:(NSString *)URLString
-                             payload:(NSData *)payload
+                         payloadData:(NSData *)payload
+                       payloadStream:(NSInputStream*)stream
                              headers:(NSDictionary *)headers;
 
 @end
