@@ -135,7 +135,7 @@ static const CGFloat kImageViewerOversize = 1.03;
 }
 
 - (IBAction)donePressed:(id)sender {
-    [self dismissModalViewControllerAnimated: YES];
+    [self dismissViewControllerAnimated: YES completion: nil];
 }
 
 -(void)didRotateFromInterfaceOrientation: (UIInterfaceOrientation)toInterfaceOrientation {

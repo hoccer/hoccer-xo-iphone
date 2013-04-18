@@ -874,7 +874,7 @@
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
         self.imageViewController.image = myAttachment.image;
-        [self presentModalViewController: self.imageViewController animated: YES];
+        [self presentViewController: self.imageViewController animated: YES completion: nil];
     }
 }
 

@@ -87,7 +87,7 @@
 }
 
 - (IBAction) donePressed: (id) sender {
-    [self dismissModalViewControllerAnimated: YES];
+    [self dismissViewControllerAnimated: YES completion: nil];
     [self addDummies];
     [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
     [self saveDummyProfile];

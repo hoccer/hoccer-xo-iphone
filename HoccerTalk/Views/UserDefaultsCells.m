@@ -19,7 +19,7 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self = [super init];
     if (self != nil) {
         self.valid = YES;
-        self.textAlignment = UITextAlignmentLeft;
+        self.textAlignment = NSTextAlignmentLeft;
     }
     return self;
 }

@@ -85,7 +85,7 @@
     // TODO: find a way to move this to the app delegate
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileViewController"];
-        [self.navigationController presentModalViewController: profileView animated: YES];
+        [self.navigationController presentViewController: profileView animated: YES completion: nil];
     }
 }
 

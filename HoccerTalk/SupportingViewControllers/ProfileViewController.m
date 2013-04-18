@@ -342,7 +342,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
     _fingerprintItem = [[ProfileItem alloc] init];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
-    _fingerprintItem.textAlignment = UITextAlignmentCenter;
+    _fingerprintItem.textAlignment = NSTextAlignmentCenter;
 
     _fingerprintInfoItem = [[ProfileItem alloc] init];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
@@ -418,7 +418,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 #ifdef HXO_USE_USER_DEFINED_CREDENTIALS
         [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
 #endif
-        [self dismissModalViewControllerAnimated: YES];
+        [self dismissViewControllerAnimated: YES completion: nil];
     }
 
     [[HTUserDefaults standardUserDefaults] synchronize];
