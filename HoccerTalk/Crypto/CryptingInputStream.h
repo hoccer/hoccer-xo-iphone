@@ -11,7 +11,7 @@
 #import "CryptoEngine.h"
 
 
-@interface EncryptingInputStream : NSInputStream <NSStreamDelegate>
+@interface CryptingInputStream : NSInputStream <NSStreamDelegate>
 
 @property (nonatomic, strong) CryptoEngine * cryptoEngine;
 

@@ -14,6 +14,7 @@
 
 @class TalkMessage;
 @class HoccerTalkBackend;
+@class CryptoEngine;
 
 typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
@@ -43,7 +44,8 @@ typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 @property (nonatomic, strong) NSString * mimeType;              // mime type of the attachment
 
 @property (nonatomic, strong) NSString * remoteURL;             // remote URL where the file should/was uploaded
-@property (nonatomic)         NSNumber * transferSize;          // number of bytes uploaded; supports assignment by string
+@property (nonatomic)         NSNumber * transferSize;          // number of plaintext bytes uploaded or downloaded; supports assignment by string
+@property (nonatomic)         NSNumber * cipherTransferSize;     // number of ciphertext bytes uploaded or downloaded; supports assignment by string
 
 @property (nonatomic, strong) TalkMessage *message;
 
@@ -54,11 +56,15 @@ typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 @property (nonatomic, strong) NSURLConnection *transferConnection;
 
 @property (readonly, strong) NSDictionary * uploadHttpHeaders;
+@property (readonly, strong) NSDictionary * uploadHttpHeadersWithCrypto;
 @property (readonly, strong) NSDictionary * downloadHttpHeaders;
 
 @property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
 
 @property (strong, nonatomic) id<TransferProgressIndication> progressIndicatorDelegate;
+
+@property (strong, nonatomic) CryptoEngine * decryptionEngine;
+@property (strong, nonatomic) CryptoEngine * encryptionEngine;
 
 -(void) withUploadData: (DataSetterBlock) execution;
 

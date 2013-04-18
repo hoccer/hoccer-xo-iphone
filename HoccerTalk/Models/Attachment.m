@@ -10,7 +10,7 @@
 #import "TalkMessage.h"
 #import "HoccerTalkBackend.h"
 #import "AppDelegate.h"
-#import "EncryptingInputStream.h"
+#import "CryptingInputStream.h"
 
 #import <Foundation/NSURL.h>
 #import <MediaPlayer/MPMoviePlayerController.h>
@@ -32,6 +32,7 @@
 
 @dynamic remoteURL;
 @dynamic transferSize;
+@dynamic cipherTransferSize;
 
 @dynamic message;
 
@@ -39,6 +40,8 @@
 @synthesize transferConnection = _transferConnection;
 @synthesize chatBackend = _chatBackend;
 @synthesize progressIndicatorDelegate;
+@synthesize decryptionEngine;
+@synthesize encryptionEngine;
 
 #define CONNECTION_TRACE false
 
@@ -422,19 +425,19 @@
             NSLog(@"Attachment:upload starting uploadStream");
             NSData * messageKey = self.message.cryptoKey;
             NSError * myError = nil;
-            CryptoEngine * myEngine = [[CryptoEngine alloc]
+            encryptionEngine = [[CryptoEngine alloc]
                                        initWithOperation:kCCEncrypt
                                        algorithm:kCCAlgorithmAES128
                                        options:kCCOptionPKCS7Padding
                                        key:messageKey
                                        IV:nil
                                        error:&myError];
-            EncryptingInputStream * myEncryptingStream = [[EncryptingInputStream alloc] initWithInputStreamAndEngine:myStream cryptoEngine:nil];
+            CryptingInputStream * myEncryptingStream = [[CryptingInputStream alloc] initWithInputStreamAndEngine:myStream cryptoEngine:encryptionEngine];
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
                                                          absoluteURI:[self remoteURL]
                                                              payloadData:nil
                                                              payloadStream:myEncryptingStream
-                                                             headers:[self uploadHttpHeaders]
+                                                             headers:[self uploadHttpHeadersWithCrypto]
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             if (progressIndicatorDelegate) {
@@ -477,6 +480,15 @@
     NSLog(@"Attachment:download ownedURL = %@", self.ownedURL);
     NSLog(@"Attachment:download remoteURL = %@", self.remoteURL);
     
+    NSData * messageKey = self.message.cryptoKey;
+    NSError * myError = nil;
+    self.decryptionEngine = [[CryptoEngine alloc]
+                               initWithOperation:kCCDecrypt
+                               algorithm:kCCAlgorithmAES128
+                               options:kCCOptionPKCS7Padding
+                               key:messageKey
+                               IV:nil
+                               error:&myError];
     NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"GET"
                                      absoluteURI:[self remoteURL]
                                         payloadData:nil
@@ -536,6 +548,25 @@
     execution(nil, [NSError errorWithDomain:@"HoccerTalk" code:1000 userInfo: nil]);
 }
 
+-(NSDictionary*) uploadHttpHeadersWithCrypto {
+    NSString * myPath = nil;
+    if (self.localURL != nil) {
+        myPath = [[NSURL URLWithString: self.localURL] path];
+    } else {
+        myPath = @"unknown";
+    }
+    NSString *contentDisposition = [NSString stringWithFormat:@"attachment; filename=\"%@\"", myPath];
+
+    NSNumber * myContentSize = [NSNumber numberWithInteger: [self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].integerValue]];
+    
+    NSDictionary * headers = @{@"Content-Disposition": contentDisposition,
+                               @"Content-Type"       : @"application/octet-stream",
+                               @"Content-Length"     : [myContentSize stringValue]};
+    return headers;
+}
+
+
+
 -(NSDictionary*) uploadHttpHeaders {
     NSString * myPath = nil;
     if (self.localURL != nil) {
@@ -545,11 +576,10 @@
     }
 	
     NSString *contentDisposition = [NSString stringWithFormat:@"attachment; filename=\"%@\"", myPath];
-    NSDictionary * headers = [NSDictionary dictionaryWithObjectsAndKeys:
-                              contentDisposition, @"Content-Disposition",
-                              [self contentSize].stringValue, @"Content-Length",
-                              nil
-                   ];
+
+    NSDictionary * headers = @{@"Content-Disposition": contentDisposition,
+                               @"Content-Type"       : self.mimeType,
+                               @"Content-Length" : [self contentSize].stringValue};
     return headers;
 }
 
@@ -611,27 +641,36 @@
     }
 }
 
+-(void) appendToFile:(NSString*)fileURL thisData:(NSData *) data {
+    NSURL * myURL = [NSURL URLWithString: self.ownedURL];
+    NSString * myPath = [myURL path];
+    NSOutputStream * stream = [[NSOutputStream alloc] initToFileAtPath: myPath append:YES];
+    [stream open];
+    NSUInteger left = [data length];
+    NSUInteger nwr = 0;
+    do {
+        nwr = [stream write:[data bytes] maxLength:left];
+        if (-1 == nwr) break;
+        left -= nwr;
+    } while (left > 0);
+    if (left) {
+        NSLog(@"ERROR: Attachment appendToFile, stream error: %@", [stream streamError]);
+    }
+    [stream close];
+}
+
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
 {
     if (connection == _transferConnection) {
         if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveData len=%lu", (unsigned long)[data length]);}
         if ([self.message.isOutgoing isEqualToNumber: @NO]) {
-            NSURL * myURL = [NSURL URLWithString: self.ownedURL];
-            NSString * myPath = [myURL path];
-            NSOutputStream * stream = [[NSOutputStream alloc] initToFileAtPath: myPath append:YES];
-            [stream open];
-            NSUInteger left = [data length];
-            NSUInteger nwr = 0;
-            do {
-                nwr = [stream write:[data bytes] maxLength:left];
-                if (-1 == nwr) break;
-                left -= nwr;
-            } while (left > 0);
-            if (left) {
-                NSLog(@"ERROR: Attachment transferConnection didReceiveData, stream error: %@", [stream streamError]);
-            }
-            [stream close];
             NSError *myError = nil;
+            NSData * plainTextData = [self.decryptionEngine addData:data error:&myError];
+            if (myError != nil) {
+                NSLog(@"didReceiveData: decryption error: %@",myError);
+                return;
+            }
+            [self appendToFile:self.ownedURL thisData:plainTextData];
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate showTransferProgress: [self.transferSize floatValue] / [self.contentSize floatValue]];
@@ -648,7 +687,7 @@
 {
     if (connection == _transferConnection) {
         if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didSendBodyData %d", bytesWritten);}
-        self.transferSize = @(totalBytesWritten);
+        self.cipherTransferSize = @(totalBytesWritten);
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate showTransferProgress: (float)totalBytesWritten / (float) totalBytesExpectedToWrite];
         }
@@ -679,6 +718,12 @@
         if ([self.message.isOutgoing isEqualToNumber: @NO]) {
             // finish download
             NSError *myError = nil;
+            NSData * plainTextData = [self.decryptionEngine finishWithError:&myError];
+            if (myError != nil) {
+                NSLog(@"connectionDidFinishLoading: decryption error: %@",myError);
+                return;
+            }
+            [self appendToFile:self.ownedURL thisData:plainTextData];
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
 
             if ([self.transferSize isEqualToNumber: self.contentSize]) {
@@ -693,6 +738,8 @@
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
                 // TODO: trigger some retry
             }
+        } else {
+            self.transferSize = self.contentSize;
         }
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
@@ -725,5 +772,14 @@
     [self didChangeValueForKey:@"transferSize"];
 }
 
+- (void) setCipherTransferSize:(id)size {
+    if ([size isKindOfClass:[NSString class]]) {
+        NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
+        size = [formatter numberFromString: size];
+    }
+    [self willChangeValueForKey:@"cipherTransferSize"];
+    [self setPrimitiveValue: size forKey: @"cipherTransferSize"];
+    [self didChangeValueForKey:@"cipherTransferSize"];
+}
 
 @end

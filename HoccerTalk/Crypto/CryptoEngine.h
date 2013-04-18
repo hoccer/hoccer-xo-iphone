@@ -17,4 +17,5 @@ extern NSString *const kCryptoErrorDomain;
 - (CryptoEngine *)initWithOperation:(CCOperation)operation algorithm:(CCAlgorithm)algorithm options:(CCOptions)options key:(NSData *)key IV:(NSData *)IV error:(NSError **)error;
 - (NSData *)addData:(NSData *)data error:(NSError **)error;
 - (NSData *)finishWithError:(NSError **)error;
+- (NSInteger) calcOutputLengthForInputLength:(NSInteger)length;
 @end

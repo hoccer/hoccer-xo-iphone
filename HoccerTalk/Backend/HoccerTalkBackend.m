@@ -120,6 +120,7 @@ typedef enum BackendStates {
 
     attachment.remoteURL =  [[self newUploadURL] absoluteString];
     attachment.transferSize = 0;
+    attachment.cipherTransferSize = 0;
 
     message.attachment = attachment;
     // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
