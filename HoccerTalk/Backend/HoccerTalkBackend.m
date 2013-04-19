@@ -28,6 +28,9 @@
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
+static const SRP_HashAlgorithm kSrpHashAlgorithm = SRP_SHA256;
+static const SRP_NGType kSrpPrimeAndGenerator    = SRP_NG_1024;
+
 typedef enum BackendStates {
     kBackendStopped,
     kBackendConnecting,
@@ -48,8 +51,9 @@ typedef enum BackendStates {
     NSInteger          _avatarBytesUploaded;
     NSInteger          _avatarBytesTotal;
     BOOL               _performRegistration;
-    HCSRPUser *        _srpUser;
 }
+
+@property (nonatomic,readonly) HCSRPUser * srpUser;
 
 - (void) identify;
 
@@ -133,6 +137,8 @@ typedef enum BackendStates {
 
     contact.latestMessageTime = message.timeStamp;
     [message setupOutgoingEncryption];
+
+    NSLog(@"contact: %@ moc: %@", contact, self.delegate.managedObjectContext);
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
@@ -237,11 +243,11 @@ typedef enum BackendStates {
         [self didRegister: YES];
 #else
         [[HTUserDefaults standardUserDefaults] setValue: theId forKey: kHTClientId];
-        _srpUser = [[HCSRPUser alloc] initWithUserName: theId andPassword: [self getPassword] hashAlgorithm: SRP_SHA256 primeAndGenerator: SRP_NG_1024];
         NSData * salt;
         NSData * verifier;
-        [_srpUser salt: & salt andVerificationKey: & verifier forPassword:[self getPassword]];
+        [self.srpUser salt: & salt andVerificationKey: & verifier forPassword:[self getPassword]];
         [[HTUserDefaults standardUserDefaults] setValue: [salt hexadecimalString] forKey: kHTSrpSalt];
+        [[HTUserDefaults standardUserDefaults] synchronize];
         [self srpRegisterWithVerifier: [verifier hexadecimalString] andSalt: [salt hexadecimalString]];
 #endif
     };
@@ -269,14 +275,14 @@ typedef enum BackendStates {
 #ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION
     [self identify];
 #else
-    NSData * A = [_srpUser startAuthentication];
+    NSData * A = [self.srpUser startAuthentication];
     [self srpPhase1WithClientId: [[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId] A: [A hexadecimalString] andHandler:^(NSString * challenge) {
         if (challenge == nil) {
             NSLog(@"SRP phase 1 failed");
         } else {
             NSData * salt = [NSData dataWithHexadecimalString: [[HTUserDefaults standardUserDefaults] valueForKey: kHTSrpSalt]];
             NSData * B = [NSData dataWithHexadecimalString: challenge];
-            NSData * M = [_srpUser processChallenge: salt B: B];
+            NSData * M = [self.srpUser processChallenge: salt B: B];
             if (M == nil) {
                 NSLog(@"SRP-6a safety check violation! Closing connection.");
                 // possible man in the middle attack ... trigger reconnect by closing the socket
@@ -285,8 +291,8 @@ typedef enum BackendStates {
                 [self srpPhase2: [M hexadecimalString] handler:^(NSString * HAMKString) {
                     if (HAMKString != nil) {
                         NSData * HAMK = [NSData dataWithHexadecimalString: HAMKString];
-                        [_srpUser verifySession: HAMK];
-                        [self didFinishLogin: _srpUser.isAuthenticated];
+                        [self.srpUser verifySession: HAMK];
+                        [self didFinishLogin: self.srpUser.isAuthenticated];
                     } else {
                         [self didFinishLogin: NO];
                     }
@@ -325,6 +331,15 @@ typedef enum BackendStates {
         [[HTUserDefaults standardUserDefaults] setValue: password forKey: kHTPassword]; // TODO: put this is in the keychain
     }
     return password;
+}
+
+@synthesize srpUser = _srpUser;
+- (HCSRPUser*) srpUser {
+    if (_srpUser == nil) {
+        NSString * clientId = [[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId];
+        _srpUser = [[HCSRPUser alloc] initWithUserName: clientId andPassword: [self getPassword] hashAlgorithm: kSrpHashAlgorithm primeAndGenerator: kSrpPrimeAndGenerator];
+    }
+    return _srpUser;
 }
 
 - (NSString*) getClientId {
