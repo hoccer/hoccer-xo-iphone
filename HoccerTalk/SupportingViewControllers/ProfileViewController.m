@@ -208,6 +208,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         for (ProfileItem* item in _allProfileItems) {
             [_contact removeObserver: self forKeyPath: item.valueKey];
         }
+        [_contact removeObserver: self forKeyPath: @"relationshipState"];
     }
 }
 
