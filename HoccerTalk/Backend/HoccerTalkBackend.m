@@ -1259,27 +1259,8 @@ typedef enum BackendStates {
         } else {
             NSLog(@"ERROR: _avatarUploadConnection only uploaded %d bytes, should be %d",_avatarBytesUploaded, _avatarBytesTotal);
         }
-        /*
-        if ([self.message.isOutgoing isEqualToNumber: @NO]) {
-            // finish download
-            NSError *myError = nil;
-            self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
-
-            if ([self.transferSize isEqualToNumber: self.contentSize]) {
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);
-                self.localURL = self.ownedURL;
-                // TODO: maybe do some UI refresh here, or use an observer for this
-                [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
-                // [_chatBackend downloadFinished: self];
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
-            } else {
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
-                // TODO: trigger some retry
-            }
-        }
-     */
     } else {
-        NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
+        NSLog(@"ERROR: Attachment _avatarUploadConnection connectionDidFinishLoading without valid connection");
     }
 }
 

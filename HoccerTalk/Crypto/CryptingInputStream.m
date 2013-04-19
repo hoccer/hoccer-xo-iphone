@@ -9,6 +9,7 @@
 
 #import "CryptingInputStream.h"
 
+#define CRYPTO_STREAM_DEBUG 0
 
 @implementation CryptingInputStream 
 {
@@ -56,13 +57,13 @@
 #pragma mark NSStream subclass methods
 
 - (void)open {
-    thisStreamStatus = NSStreamStatusOpening;
+    [self setThisStreamStatus:NSStreamStatusOpening];
 	[parentStream open];
-    thisStreamStatus = NSStreamStatusOpen;
+    [self setThisStreamStatus:NSStreamStatusOpen];
 }
 
 - (void)close {
-    thisStreamStatus = NSStreamStatusClosed;
+    [self setThisStreamStatus:NSStreamStatusClosed];
 	[parentStream close];
 }
 
@@ -71,6 +72,7 @@
 }
 
 - (void)setDelegate:(id<NSStreamDelegate>)aDelegate {
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream setDelegate %@", aDelegate);}
 	if (aDelegate == nil) {
 		delegate = self;
 	}
@@ -102,6 +104,27 @@
     return thisStreamStatus;
 }
 
+- (void) setThisStreamStatus:(NSStreamStatus)theNewStatus {
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"setThisStreamStatus from %d to %d", thisStreamStatus,theNewStatus);}
+    if (theNewStatus != thisStreamStatus) {
+        thisStreamStatus = theNewStatus;
+        switch (thisStreamStatus) {
+            case NSStreamStatusOpen:
+                [delegate stream:self handleEvent:NSStreamEventOpenCompleted];
+                [delegate stream:self handleEvent:NSStreamEventHasBytesAvailable];
+               break;
+            case NSStreamStatusAtEnd:
+                [delegate stream:self handleEvent:NSStreamEventEndEncountered];
+                break;
+            case NSStreamStatusError:
+                [delegate stream:self handleEvent:NSStreamEventErrorOccurred];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 - (NSError *)streamError {
     if (_cryptoEngine == nil) {
         return [parentStream streamError];
@@ -112,6 +135,7 @@
 #pragma mark NSInputStream subclass methods
 
 - (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len {
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: read len = %d, restBuffer = %d, status = %d, parentStreamStatus = %d", len, restBuffer.length, self.streamStatus, parentStream.streamStatus);}
     if (_cryptoEngine == nil) {
         NSInteger bytesRead = [parentStream read:buffer maxLength:len];
         if (bytesRead > 0) {
@@ -121,19 +145,22 @@
         return bytesRead;
     }
     if (thisStreamStatus == NSStreamStatusError) {
+        NSLog(@"CryptingInputStream: returning -1 because of NSStreamStatusError");
         return -1;
     }
     if (thisStreamStatus == NSStreamStatusAtEnd) {
+        NSLog(@"CryptingInputStream: returning 0 because of NSStreamStatusAtEnd");
         return 0;
     }
     if (restBuffer.length < len) {
         // read more bytes from input stream
-        NSLog(@"CryptingInputStream: restBuffer.length = %d < len=%d", restBuffer.length, len);
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: restBuffer.length = %d < len=%d", restBuffer.length, len);}
         NSMutableData * mySourceData =[NSMutableData dataWithLength:len];
         NSInteger bytesRead = [parentStream read:[mySourceData mutableBytes] maxLength:len];
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: request %d bytes from parent, got %d, parentStatus = %d", len, bytesRead, parentStream.streamStatus);}
         if (bytesRead < 0) {
             thisStreamError = parentStream.streamError;
-            thisStreamStatus = NSStreamStatusError;
+            [self setThisStreamStatus:NSStreamStatusError];
             NSLog(@"Error in EncrypingInputStream while reading plaintext stream%@", thisStreamError);
             return bytesRead;
         }
@@ -146,7 +173,6 @@
             myTransformedData = [_cryptoEngine addData:mySourceData error:&myError];
         }
         if (parentStream.streamStatus == NSStreamStatusAtEnd) {
-            // bytesRead == 0
             NSData * myFinalTransformedData = [_cryptoEngine finishWithError:&myError];
             NSMutableData * myTransformedMutableData = [NSMutableData dataWithData:myTransformedData];
             [myTransformedMutableData appendData:myFinalTransformedData];
@@ -154,7 +180,7 @@
         }
         if (myError != nil) {
             NSLog(@"Error in EncrypingInputStream: %@", thisStreamError);
-            thisStreamStatus = NSStreamStatusError;
+            [self setThisStreamStatus:NSStreamStatusError];
             thisStreamError = myError;
             return -1;
         }
@@ -165,16 +191,18 @@
         [restBuffer getBytes:buffer length:len];
         [restBuffer replaceBytesInRange:NSMakeRange(0, len) withBytes:nil length:0];
         totalBytesOut+= len;
-        NSLog(@"CryptingInputStream: totalIn=%d totalOut=%d returning len=%d", totalBytesIn, totalBytesOut, len);
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: totalIn=%d totalOut=%d returning len=%d", totalBytesIn, totalBytesOut, len);}
         return len;
     }
     // not enough to satisfy full reqeuested len, but hand the whole restbuffer we got if any
     [restBuffer getBytes:buffer length:restBuffer.length];
-    thisStreamStatus = NSStreamStatusAtEnd;
     NSInteger bytesOut = restBuffer.length;
+    if (parentStream.streamStatus == NSStreamStatusAtEnd) {
+        [self setThisStreamStatus:NSStreamStatusAtEnd];
+    }
     [restBuffer setLength:0];
     totalBytesOut += bytesOut;
-    NSLog(@"CryptingInputStream: totalIn=%d totalOut=%d returning rest len=%d", totalBytesIn, totalBytesOut, bytesOut);
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: totalIn=%d totalOut=%d returning rest len=%d", totalBytesIn, totalBytesOut, bytesOut);}
 	return bytesOut;
 }
 
@@ -231,48 +259,52 @@
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
 	
-	assert(aStream == parentStream);
-	
-	switch (eventCode) {
-		case NSStreamEventOpenCompleted:
-			if (requestedEvents & kCFStreamEventOpenCompleted) {
-				copiedCallback((__bridge CFReadStreamRef)self,
-							   kCFStreamEventOpenCompleted,
-							   copiedContext.info);
-			}
-			break;
-			
-		case NSStreamEventHasBytesAvailable:
-			if (requestedEvents & kCFStreamEventHasBytesAvailable) {
-				copiedCallback((__bridge CFReadStreamRef)self,
-							   kCFStreamEventHasBytesAvailable,
-							   copiedContext.info);
-			}
-			break;
-			
-		case NSStreamEventErrorOccurred:
-			if (requestedEvents & kCFStreamEventErrorOccurred) {
-				copiedCallback((__bridge CFReadStreamRef)self,
-							   kCFStreamEventErrorOccurred,
-							   copiedContext.info);
-			}
-			break;
-			
-		case NSStreamEventEndEncountered:
-			if (requestedEvents & kCFStreamEventEndEncountered) {
-				copiedCallback((__bridge CFReadStreamRef)self,
-							   kCFStreamEventEndEncountered,
-							   copiedContext.info);
-			}
-			break;
-			
-		case NSStreamEventHasSpaceAvailable:
-			// This doesn't make sense for a read stream
-			break;
-			
-		default:
-			break;
-	}
+	if (aStream == parentStream) {
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"Parentstream encountered stream event %d", eventCode);}
+    } else if (aStream == self) {
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"Stream encountered stream event %d", eventCode);}
+        
+        switch (eventCode) {
+            case NSStreamEventOpenCompleted:
+                if (requestedEvents & kCFStreamEventOpenCompleted) {
+                    copiedCallback((__bridge CFReadStreamRef)self,
+                                   kCFStreamEventOpenCompleted,
+                                   copiedContext.info);
+                }
+                break;
+                
+            case NSStreamEventHasBytesAvailable:
+                if (requestedEvents & kCFStreamEventHasBytesAvailable) {
+                    copiedCallback((__bridge CFReadStreamRef)self,
+                                   kCFStreamEventHasBytesAvailable,
+                                   copiedContext.info);
+                }
+                break;
+                
+            case NSStreamEventErrorOccurred:
+                if (requestedEvents & kCFStreamEventErrorOccurred) {
+                    copiedCallback((__bridge CFReadStreamRef)self,
+                                   kCFStreamEventErrorOccurred,
+                                   copiedContext.info);
+                }
+                break;
+                
+            case NSStreamEventEndEncountered:
+                if (requestedEvents & kCFStreamEventEndEncountered) {
+                    copiedCallback((__bridge CFReadStreamRef)self,
+                                   kCFStreamEventEndEncountered,
+                                   copiedContext.info);
+                }
+                break;
+                
+            case NSStreamEventHasSpaceAvailable:
+                // This doesn't make sense for a read stream
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 
