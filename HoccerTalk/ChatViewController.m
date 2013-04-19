@@ -159,13 +159,10 @@
 }
 
 - (HoccerTalkBackend*) chatBackend {
-    if (_chatBackend != nil) {
-        return _chatBackend;
+    if (_chatBackend == nil) {
+        _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
     }
-
-    _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
     return _chatBackend;
-
 }
 
 #pragma mark - Split view
@@ -662,21 +659,17 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
+    if (_managedObjectContext == nil) {
+        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     }
-
-    _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     return _managedObjectContext;
 }
 
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (_managedObjectContext != nil) {
-        return _managedObjectModel;
+    if (_managedObjectContext == nil) {
+        _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
     }
-
-    _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
     return _managedObjectModel;
 }
 

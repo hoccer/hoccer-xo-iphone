@@ -61,8 +61,6 @@
 
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
-    _chatViewController = (ChatViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-
     // TODO: ask @zutrinken
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
 }

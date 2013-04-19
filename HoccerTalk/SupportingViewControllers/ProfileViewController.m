@@ -208,6 +208,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         for (ProfileItem* item in _allProfileItems) {
             [_contact removeObserver: self forKeyPath: item.valueKey];
         }
+        [_contact removeObserver: self forKeyPath: @"relationshipState"];
     }
 }
 
@@ -565,11 +566,10 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 - (void) chatWithContactPressed: (id) sender {
     ConversationViewController * conversationViewController = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).conversationViewController;
-    [conversationViewController.chatViewController setPartner: self.contact];
-    NSArray * viewControllers = @[conversationViewController, conversationViewController.chatViewController];
-    [self.navigationController.sideMenu.navigationController setViewControllers: viewControllers animated: NO];
-    [self.navigationController.sideMenu setMenuState:MFSideMenuStateClosed];
-
+    ChatViewController * chatViewController = conversationViewController.chatViewController;
+    chatViewController.partner = self.contact;
+    NSArray * viewControllers = @[conversationViewController, chatViewController];
+    [self.navigationController setViewControllers: viewControllers animated: YES];
 }
 
 - (void) toggleBlockedPressed: (id) sender {

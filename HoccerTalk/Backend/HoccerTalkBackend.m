@@ -74,6 +74,7 @@ typedef enum BackendStates {
         [_serverConnection registerIncomingCall: @"pushNotRegistered"   withSelector:@selector(pushNotRegistered:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"presenceUpdated"     withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"relationshipUpdated" withSelector:@selector(relationshipUpdated:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"ping"                withSelector:@selector(ping) isNotification: NO];
         _delegate = theAppDelegate;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(profileUpdatedByUser:)
@@ -138,7 +139,7 @@ typedef enum BackendStates {
     contact.latestMessageTime = message.timeStamp;
     [message setupOutgoingEncryption];
 
-    NSLog(@"contact: %@ moc: %@", contact, self.delegate.managedObjectContext);
+    NSLog(@"sendMessage - contact %@", contact);
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
@@ -1092,6 +1093,10 @@ typedef enum BackendStates {
 
 - (void) relationshipUpdated: (NSArray*) relationship {
     [self updateRelationship: relationship[0]];
+}
+
+- (id) ping {
+    return [[NSNull alloc] init];
 }
 
 #pragma mark - JSON RPC WebSocket Delegate
