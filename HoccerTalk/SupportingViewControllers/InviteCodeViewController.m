@@ -27,6 +27,7 @@
                                                                                   action:@selector(onDone:)];
     self.navigationItem.rightBarButtonItem = doneButton;
     self.codeTextField.delegate = self;
+    self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
