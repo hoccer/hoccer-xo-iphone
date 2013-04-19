@@ -33,8 +33,12 @@
 @dynamic remoteURL;
 @dynamic transferSize;
 @dynamic cipherTransferSize;
+@dynamic transferFailures;
 
 @dynamic message;
+
+@dynamic attachmentJsonString;
+@dynamic attachmentJsonStringCipherText;
 
 @synthesize image;
 @synthesize transferConnection = _transferConnection;
@@ -636,8 +640,22 @@
         NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@",
               httpResponse, (long)[httpResponse statusCode],
               [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+        if ((long)[httpResponse statusCode] == 404) {
+            [self retryDownload];
+        }
     } else {
         NSLog(@"ERROR: Attachment transferConnection didReceiveResponse without valid connection");        
+    }
+}
+
+-(void) retryDownload {
+    if (self.transferFailures < 8) {
+        self.transferFailures = self.transferFailures + 1;
+        double randomFactor = (double)arc4random()/(double)0xffffffff;
+        // NSLog(@"randomFactor = %f",randomFactor);
+        double retryTime = (2.0 + randomFactor) * self.transferFailures * self.transferFailures;
+        NSLog(@"retryDownload: failures = %i, retryTime = %f",self.transferFailures, retryTime);
+        [NSTimer scheduledTimerWithTimeInterval:retryTime target:self selector: @selector(downloadLater:) userInfo:nil repeats:NO];
     }
 }
 
@@ -780,6 +798,50 @@
     [self willChangeValueForKey:@"cipherTransferSize"];
     [self setPrimitiveValue: size forKey: @"cipherTransferSize"];
     [self didChangeValueForKey:@"cipherTransferSize"];
+}
+
+#pragma mark - Attachment JSON Wrapping
+
+- (NSDictionary*) JsonKeys {
+    return @{
+             @"remoteURL": @"remoteURL",
+             @"contentSize": @"contentSize",
+             @"mediaType": @"mediaType",
+             @"mimeType": @"mimeType",
+             @"aspectRatio": @"aspectRatio",
+             @"humanReadableFileName": @"humanReadableFileName"
+             };
+}
+
+- (NSString*) attachmentJsonString {
+    NSDictionary * myRepresentation = [HoccerTalkModel createDictionaryFromObject:self withKeys:self.JsonKeys];
+    NSData * myJsonData = [NSJSONSerialization dataWithJSONObject: myRepresentation options: 0 error: nil];
+    NSString * myJsonUTF8String = [[NSString alloc] initWithData:myJsonData encoding:NSUTF8StringEncoding];
+    return myJsonUTF8String;
+}
+
+static const NSInteger kJsonRpcAttachmentParseError  = -32700;
+
+-  (void) setAttachmentJsonString:(NSString*) theJsonString {
+    NSError * error;
+    id json = [NSJSONSerialization JSONObjectWithData: [theJsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
+    if (json == nil) {
+        NSLog(@"setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
+        return;
+    }
+    if ([json isKindOfClass: [NSDictionary class]]) {
+        [HoccerTalkModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];        
+    } else {
+        NSLog(@"attachment json not encoded as dictionary, json string = %@", theJsonString);
+    }
+}
+    
+- (NSString*) attachmentJsonStringCipherText {
+    return [self.message encryptString: self.attachmentJsonString];
+}
+
+-(void) setAttachmentJsonStringCipherText:(NSString*) theB64String {
+    self.attachmentJsonString = [self.message decryptString:theB64String];
 }
 
 @end

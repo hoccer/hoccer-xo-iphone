@@ -29,10 +29,13 @@
 @property (nonatomic, strong) NSMutableSet * deliveries;
 
 @property (nonatomic, strong) NSData * cryptoKey;
-// @property (nonatomic)         NSString * cryptoKeyString;
 
 @property (nonatomic) NSString* bodyCipherText;
 
 - (void) setupOutgoingEncryption;
+- (NSString *)encryptString: (NSString *)string;
+- (NSString *)decryptString: (NSString *)string;
+- (NSData *)encrypt:(NSData *)data;
+- (NSData *)decrypt:(NSData *)data;
 
 @end

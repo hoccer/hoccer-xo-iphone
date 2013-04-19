@@ -14,7 +14,10 @@
 
 - (NSMutableDictionary*) rpcDictionary;
 - (void) updateWithDictionary: (NSDictionary*) dict;
+- (void) updateWithDictionary: (NSDictionary*) dict withKeys:(NSDictionary*)keys;
 
 + (NSString*) entityName;
++ (NSMutableDictionary*) createDictionaryFromObject:(id)object withKeys:(NSDictionary*)keys;
++ (void) updateObject:(id)object withDictionary:(NSDictionary*)dict withKeys:(NSDictionary*)keys;
 
 @end
