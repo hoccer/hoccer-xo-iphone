@@ -118,13 +118,14 @@ typedef enum BackendStates {
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
 
-    attachment.remoteURL =  [[self newUploadURL] absoluteString];
-    attachment.transferSize = 0;
-    attachment.cipherTransferSize = 0;
-
-    message.attachment = attachment;
-    // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
-
+    if (attachment != nil) {
+        attachment.remoteURL =  [[self newUploadURL] absoluteString];
+        attachment.transferSize = 0;
+        attachment.cipherTransferSize = 0;
+        
+        message.attachment = attachment;
+        // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
+    }
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
@@ -139,7 +140,8 @@ typedef enum BackendStates {
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
     
-    if ([attachment.contentSize longLongValue] < [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue])
+    if ((attachment != nil) &&
+        [attachment.contentSize longLongValue] < [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue])
     {
         [attachment upload];
     }
@@ -178,7 +180,8 @@ typedef enum BackendStates {
     delivery.message = message;
     
     Attachment * attachment = nil;
-    if (messageDictionary[@"attachmentUrl"] != nil) {
+    //if (messageDictionary[@"attachmentUrl"] != nil) {
+    if (messageDictionary[@"attachment"] != nil) {
         attachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         message.attachment = attachment;
     }
@@ -600,7 +603,8 @@ typedef enum BackendStates {
 
 - (void) flushPendingAttachmentUploads {
     // fetch all not yet transferred uploads
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotUploaded"];
+    NSDictionary * vars = @{ @"max_retries" : @8};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)
@@ -620,7 +624,10 @@ typedef enum BackendStates {
 
 - (void) flushPendingAttachmentDownloads {
     // fetch all not yet transferred uploads
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotDownloaded"];
+    NSDictionary * vars = @{ @"max_retries" : @8};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];
+    
+    //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotDownloaded"];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)

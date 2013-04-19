@@ -15,33 +15,44 @@
 }
 
 - (NSMutableDictionary*) rpcDictionary {
+    return [HoccerTalkModel createDictionaryFromObject:self withKeys:[self rpcKeys]];
+}
+
++ (NSMutableDictionary*) createDictionaryFromObject:(id)object withKeys:(NSDictionary*)keys {
     NSMutableDictionary * dictionary = [[NSMutableDictionary alloc] init];
-    NSDictionary * rpcKeys = [self rpcKeys];
-    for (id key in rpcKeys) {
-        if ([self valueForKeyPath: rpcKeys[key]] != nil) {
-            dictionary[key] = [self valueForKeyPath: rpcKeys[key]];
+    for (id key in keys) {
+        // NSLog(@"createDictionaryFromObject key '%@' in new dictionary", key);
+        if ([object valueForKeyPath: keys[key]] != nil) {
+            dictionary[key] = [object valueForKeyPath: keys[key]];
         }
     }
     return dictionary;
 }
 
 - (void) updateWithDictionary: (NSDictionary*) dict {
-    NSDictionary * rpcKeys = [self rpcKeys];
-    //NSLog(@"Updatig object of type %@", NSStringFromClass([self class]));
+    [self updateWithDictionary:dict withKeys:[self rpcKeys]];
+}
+
+- (void) updateWithDictionary: (NSDictionary*) dict withKeys:(NSDictionary*)keys {
+    [HoccerTalkModel updateObject:self withDictionary:dict withKeys:keys];
+}
+
++ (void) updateObject:(id)object withDictionary: (NSDictionary*) dict withKeys:(NSDictionary*)keys {
+    // NSLog(@"Updatig object of type %@", NSStringFromClass([object class]));
     for (id key in dict) {
-        if (rpcKeys[key] == nil) {
+        if (keys[key] == nil) {
             // NSLog(@"unhandled key '%@' in update dictionary, ignoring key:", key);
             continue;
         }
         // NSLog(@"check value for key '%@'", key);
-        id oldCoreDataValue = [self valueForKeyPath: rpcKeys[key]];
-        // NSLog(@"oldCoreDataValue = '%@'", oldCoreDataValue);
+        id oldValue = [object valueForKeyPath: keys[key]];
+        // NSLog(@"oldCoreDataValue = '%@'", oldValue);
         id newIncomingValue = dict[key];
         // NSLog(@"newIncomingValue = '%@'", newIncomingValue);
-
-        if ( ! [newIncomingValue isEqual: oldCoreDataValue]) {
+        
+        if ( ! [newIncomingValue isEqual: oldValue]) {
             // NSLog(@"updating value for key '%@'", key);
-            [self setValue: newIncomingValue forKeyPath: rpcKeys[key]];
+            [object setValue: newIncomingValue forKeyPath: keys[key]];
         }
     }
 }

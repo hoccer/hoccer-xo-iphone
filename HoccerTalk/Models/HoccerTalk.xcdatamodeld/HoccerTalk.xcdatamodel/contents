@@ -12,6 +12,7 @@
         <attribute name="mimeType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ownedURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transferFailures" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="transferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <relationship name="message" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="attachment" inverseEntity="TalkMessage" syncable="YES"/>
     </entity>
@@ -67,15 +68,15 @@
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
     </entity>
-    <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0"/>
-    <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0"/>
+    <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0 AND transferFailures &lt; $max_retries"/>
+    <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0 AND transferFailures &lt; $max_retries"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="DeliveryByMessageTagAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $receiverId == receiver.clientId"/>
     <fetchRequest name="MessageByMessageId" entity="TalkMessage" predicateString="messageId == $messageId"/>
     <fetchRequest name="MessagesByContact" entity="TalkMessage" predicateString="contact == $contact"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="128" height="240"/>
+        <element name="Attachment" positionX="0" positionY="0" width="128" height="255"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="389"/>
         <element name="Delivery" positionX="0" positionY="0" width="128" height="105"/>
         <element name="Invite" positionX="0" positionY="0" width="128" height="60"/>

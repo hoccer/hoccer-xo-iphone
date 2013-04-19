@@ -45,9 +45,13 @@ typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 
 @property (nonatomic, strong) NSString * remoteURL;             // remote URL where the file should/was uploaded
 @property (nonatomic)         NSNumber * transferSize;          // number of plaintext bytes uploaded or downloaded; supports assignment by string
-@property (nonatomic)         NSNumber * cipherTransferSize;     // number of ciphertext bytes uploaded or downloaded; supports assignment by string
-
+@property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
+@property (nonatomic)         NSInteger transferFailures;       // number of upload or download failures
 @property (nonatomic, strong) TalkMessage *message;
+
+// virtual properties
+@property (nonatomic) NSString * attachmentJsonString;
+@property (nonatomic) NSString * attachmentJsonStringCipherText;
 
 // These are non-persistent properties
 
@@ -65,6 +69,9 @@ typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 
 @property (strong, nonatomic) CryptoEngine * decryptionEngine;
 @property (strong, nonatomic) CryptoEngine * encryptionEngine;
+
+// encryption/decryption properties
+
 
 -(void) withUploadData: (DataSetterBlock) execution;
 

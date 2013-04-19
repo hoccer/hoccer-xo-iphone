@@ -89,18 +89,7 @@
     return [data decryptedAES256DataUsingKey:self.cryptoKey error:nil];
 }
 
-/* maybe not needed
-@synthesize cryptoKeyString;
-
--(NSString*) cryptoKeyString {
-    return [self.cryptoKey asBase64EncodedString];
-}
-
--(void) setCryptokeyString:(NSString*) theB64String {
-    self.cryptoKey = [NSData dataWithBase64EncodedString:theB64String];
-}
-*/
-
+#if 0
 - (NSDictionary*) rpcKeys {
     return @{
               @"body": @"bodyCiphertext", // use this line to encrypt
@@ -114,6 +103,17 @@
               @"attachmentUrl": @"attachment.remoteURL"
             };
 }
+#else
+- (NSDictionary*) rpcKeys {
+    return @{
+             @"body": @"bodyCiphertext", // use this line to encrypt
+             // @"body": @"body",        // use this line to disable body encryption
+             @"messageId": @"messageId",
+             @"senderId": @"contact.clientId",
+             @"attachment": @"attachment.attachmentJsonStringCipherText",
+             };
+}
+#endif
 
 - (void) setupOutgoingEncryption {
     [self setCryptoKey: [AESCryptor random256BitKey]];
