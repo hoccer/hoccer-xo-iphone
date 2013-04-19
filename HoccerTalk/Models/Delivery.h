@@ -33,4 +33,6 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 
 @property (nonatomic) NSData* keyCleartext;
 
+@property (nonatomic) NSString* receiverKeyId;
+
 @end

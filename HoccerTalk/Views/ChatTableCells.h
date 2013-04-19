@@ -17,9 +17,14 @@
 @class MessageCell;
 
 
-@protocol AttachmentViewControllerDelegate <NSObject>
+@protocol MessageViewControllerDelegate <NSObject>
 
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell;
+- (BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender;
+- (void) messageView:(MessageCell *)theCell saveToAlbum:(id)sender;
+- (void) messageView:(MessageCell *)theCell forwardItem:(id)sender;
+- (void) messageView:(MessageCell *)theCell saveInContacts:(id)sender;
+- (void) messageView:(MessageCell *)theCell copyText:(id)sender;
 
 @end
 
@@ -29,7 +34,7 @@
 @property (strong, nonatomic) IBOutlet InsetImageView *avatar;
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
-@property (weak, nonatomic) id<AttachmentViewControllerDelegate> delegate;
+@property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSIndexPath * indexPath;
 
 - (CGFloat) heightForMessage: (TalkMessage*) message;

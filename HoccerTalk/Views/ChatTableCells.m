@@ -28,6 +28,32 @@ static const double kCellPadding = 10.0;
     }
 }
 
+-(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageView:self canPerformAction:action withSender:sender];
+    }
+    return NO;
+}
+
+-(BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+-(void) saveToAlbum:(id)sender {
+    NSLog(@"saveToAlbum");
+}
+
+-(void) forwardItem:(id)sender {
+    NSLog(@"forwardItem");
+}
+
+-(void) saveInContacts:(id)sender {
+    NSLog(@"saveInContacts");
+}
+
+-(void) copyText:(id)sender {
+    NSLog(@"saveInContacts");
+}
 @end
 
 

@@ -89,31 +89,15 @@
     return [data decryptedAES256DataUsingKey:self.cryptoKey error:nil];
 }
 
-#if 0
-- (NSDictionary*) rpcKeys {
-    return @{
-              @"body": @"bodyCiphertext", // use this line to encrypt
-              // @"body": @"body",        // use this line to disable body encryption
-              @"messageId": @"messageId",
-              @"senderId": @"contact.clientId",
-              @"attachmentSize": @"attachment.contentSize",
-              @"attachmentMediaType": @"attachment.mediaType",
-              @"attachmentMimeType": @"attachment.mimeType",
-              @"attachmentAspectRatio": @"attachment.aspectRatio",
-              @"attachmentUrl": @"attachment.remoteURL"
-            };
-}
-#else
+
 - (NSDictionary*) rpcKeys {
     return @{
              @"body": @"bodyCiphertext", // use this line to encrypt
-             // @"body": @"body",        // use this line to disable body encryption
              @"messageId": @"messageId",
              @"senderId": @"contact.clientId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
              };
 }
-#endif
 
 - (void) setupOutgoingEncryption {
     [self setCryptoKey: [AESCryptor random256BitKey]];
