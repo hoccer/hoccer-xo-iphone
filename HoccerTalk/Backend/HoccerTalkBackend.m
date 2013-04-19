@@ -1213,28 +1213,8 @@ typedef enum BackendStates {
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
 {
     if (connection == _avatarUploadConnection) {
-        /*
-        NSLog(@"_avatarUploadConnection didReceiveData len=%lu", (unsigned long)[data length]);
-        if ([self.message.isOutgoing isEqualToNumber: @NO]) {
-            NSURL * myURL = [NSURL URLWithString: self.ownedURL];
-            NSString * myPath = [myURL path];
-            NSOutputStream * stream = [[NSOutputStream alloc] initToFileAtPath: myPath append:YES];
-            [stream open];
-            NSUInteger left = [data length];
-            NSUInteger nwr = 0;
-            do {
-                nwr = [stream write:[data bytes] maxLength:left];
-                if (-1 == nwr) break;
-                left -= nwr;
-            } while (left > 0);
-            if (left) {
-                NSLog(@"ERROR: HoccerTalkBackend didReceiveData, stream error: %@", [stream streamError]);
-            }
-            [stream close];
-        } else {
-            NSLog(@"ERROR: HoccerTalkBackend didReceiveData on outgoing (upload) connection");
-        }
-         */
+        /* we do not use this for avatar download, maybe at a later stage */
+        NSLog(@"ERROR: HoccerTalkBackend didReceiveData - should not be called");
     } else {
         NSLog(@"ERROR: HoccerTalkBackend didReceiveData without valid connection");
     }
