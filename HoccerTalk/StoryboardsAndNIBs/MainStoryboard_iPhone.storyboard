@@ -550,7 +550,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell opaque="NO" tag="100" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="LeftMessageCell" rowHeight="66" id="1ns-Qg-35W" customClass="LeftMessageCell">
+                                    <tableViewCell opaque="NO" tag="100" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="LeftMessageCell" rowHeight="66" id="1ns-Qg-35W" customClass="LeftMessageCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="66"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -589,7 +589,7 @@
                                             <outlet property="message" destination="JwC-hJ-GVD" id="94L-AL-Cls"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell opaque="NO" tag="100" contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="RightMessageCell" rowHeight="66" id="hPd-a0-4B8" customClass="RightMessageCell">
+                                    <tableViewCell opaque="NO" tag="100" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="RightMessageCell" rowHeight="66" id="hPd-a0-4B8" customClass="RightMessageCell">
                                         <rect key="frame" x="0.0" y="88" width="320" height="66"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -862,10 +862,6 @@
         </class>
         <class className="ProfileViewController" superclassName="UserDefaultsViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="avatarTapped:"/>
-                <relationship kind="action" name="onCancel:"/>
-            </relationships>
         </class>
         <class className="RightMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
