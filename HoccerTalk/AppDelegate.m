@@ -44,26 +44,25 @@
 
     self.chatBackend = [[HoccerTalkBackend alloc] initWithDelegate: self];
 
-    ConversationViewController * conversationViewController = nil;
     UIStoryboard *storyboard = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
         self.navigationController = [splitViewController.viewControllers lastObject];
         splitViewController.delegate = (id)self.navigationController.topViewController;
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-        conversationViewController = (ConversationViewController *)masterNavigationController.topViewController;
+        self.conversationViewController = (ConversationViewController *)masterNavigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
         self.navigationController = (UINavigationController *)self.window.rootViewController;
-        conversationViewController = (ConversationViewController *)self.navigationController.topViewController;
+        self.conversationViewController = (ConversationViewController *)self.navigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
     // TODO: be lazy
-    conversationViewController.managedObjectContext = self.managedObjectContext;
+    self.conversationViewController.managedObjectContext = self.managedObjectContext;
 
     [self customizeNavigationBar];
 
-    [self setupSideMenusWithStoryboard: storyboard andConversationViewController: conversationViewController];
+    [self setupSideMenusWithStoryboard: storyboard andConversationViewController: self.conversationViewController];
 
     if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         [self setupDone: NO];

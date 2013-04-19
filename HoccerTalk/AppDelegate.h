@@ -10,6 +10,8 @@
 
 #import "HoccerTalkBackend.h"
 
+@class ConversationViewController;
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate, HoccerTalkDelegate>
 {
     UIBackgroundTaskIdentifier _backgroundTask;
@@ -21,6 +23,7 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) HoccerTalkBackend * chatBackend;
 @property (nonatomic, strong) UINavigationController * navigationController;
+@property (nonatomic, strong) ConversationViewController * conversationViewController;
 
 @property (nonatomic, strong) NSString * userAgent;
 

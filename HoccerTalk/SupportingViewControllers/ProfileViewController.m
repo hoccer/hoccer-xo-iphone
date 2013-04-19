@@ -26,6 +26,8 @@
 #import "RSA.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
+#import "ChatViewController.h"
+#import "ConversationViewController.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
@@ -562,6 +564,11 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 #pragma mark - Profile Actions
 
 - (void) chatWithContactPressed: (id) sender {
+    ConversationViewController * conversationViewController = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).conversationViewController;
+    [conversationViewController.chatViewController setPartner: self.contact];
+    NSArray * viewControllers = @[conversationViewController, conversationViewController.chatViewController];
+    [self.navigationController.sideMenu.navigationController setViewControllers: viewControllers animated: NO];
+    [self.navigationController.sideMenu setMenuState:MFSideMenuStateClosed];
 
 }
 

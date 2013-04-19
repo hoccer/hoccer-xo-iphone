@@ -829,7 +829,10 @@ typedef enum BackendStates {
     
     NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
     NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
-    
+
+    if (myNickName == nil) {
+        myNickName = @"";
+    }
     [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: myKeyId];
 }
 

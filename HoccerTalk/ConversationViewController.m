@@ -207,8 +207,7 @@
 
     [fetchRequest setSortDescriptors:sortDescriptors];
 
-    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend'"]; // your predicate here
-
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend'"];
     [fetchRequest setPredicate: filterPredicate];
 
     // Edit the section name key path and cache name if appropriate.
