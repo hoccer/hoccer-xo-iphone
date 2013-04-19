@@ -178,11 +178,11 @@
     mediaPicker.allowsPickingMultipleItems = NO;
     mediaPicker.prompt = nil;
 
-    [_viewController presentModalViewController:mediaPicker animated:YES];
+    [_viewController presentViewController:mediaPicker animated:YES completion: nil];
 }
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
-    [mediaPicker dismissModalViewControllerAnimated: YES];
+    [mediaPicker dismissViewControllerAnimated: YES completion: nil];
 }
 
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
@@ -194,7 +194,7 @@
         [self.delegate didPickAttachment: mediaItem];
                 
     }
-    [mediaPicker dismissModalViewControllerAnimated: YES];
+    [mediaPicker dismissViewControllerAnimated: YES completion: nil];
 }
 
 

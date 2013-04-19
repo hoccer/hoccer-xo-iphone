@@ -83,12 +83,12 @@
     if ( ! _newTokenButtonPressed) {
         [self.chatBackend pairByToken: self.codeTextField.text];
     }
-    [self dismissModalViewControllerAnimated: YES];
+    [self dismissViewControllerAnimated: YES completion: nil];
 }
 
 - (void) canceld:(id) sender {
     NSLog(@"canceld");
-    [self dismissModalViewControllerAnimated: YES];
+    [self dismissViewControllerAnimated: YES completion: nil];
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{

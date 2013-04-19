@@ -22,8 +22,8 @@ typedef void (^GenerateIdHandler)(NSString*);
 typedef void (^SrpHanlder)(NSString*);
 typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
-// typedef void (^PublicKeyHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
+typedef void (^GenericResultHandler)(BOOL);
 
 @protocol HoccerTalkDelegate <NSObject>
 
@@ -59,7 +59,10 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 - (void) pairByToken: (NSString*) token;
 - (void) acceptInvitation: (NSString*) token;
 
-- (void) updateUnreadMessageCount: (NSUInteger) count handler: (void (^)()) handler;
+- (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
+
+- (void) blockClient: (NSString*) clientId handler: (GenericResultHandler) handler;
+- (void) unblockClient: (NSString*) clientId handler: (GenericResultHandler) handler;
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;

@@ -357,7 +357,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
 
-    cell.avatar.image = contact.avatarImage;
+    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
 }
 
 
@@ -390,7 +390,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
         body = [NSString stringWithFormat: body, appStoreLink, androidLink, inviteLink];
         [picker setMessageBody:body isHTML:NO];
 
-        [self.navigationController presentModalViewController: picker animated: YES];
+        [self.navigationController presentViewController: picker animated: YES completion: nil];
     }];
 }
 
@@ -405,7 +405,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
         NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
         picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token]];
 
-        [self.navigationController presentModalViewController: picker animated: YES];
+        [self.navigationController presentViewController: picker animated: YES completion: nil];
 
     }];
 }
@@ -420,7 +420,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
     InviteCodeViewController * controller = [storyboard instantiateViewControllerWithIdentifier:@"inviteCodeView"];
 
-    [self.navigationController presentModalViewController: controller animated: YES];
+    [self.navigationController presentViewController: controller animated: YES completion: nil];
 
 }
 
@@ -452,7 +452,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 		default:
 			break;
 	}
-    [self dismissModalViewControllerAnimated: NO];
+    [self dismissViewControllerAnimated: NO completion: nil];
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
@@ -469,7 +469,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 		default:
 			break;
 	}
-    [self dismissModalViewControllerAnimated: NO];
+    [self dismissViewControllerAnimated: NO completion: nil];
 }
 
 

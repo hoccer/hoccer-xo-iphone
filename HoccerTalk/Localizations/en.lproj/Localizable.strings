@@ -150,3 +150,9 @@
 "navigation_title_contact" = "Contact";
 
 "profile_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
+
+"contact_unblock" = "Unblock %@";
+
+"contact_block" = "Block %@";
+
+"chat_with_contact" = "Chat with %@";

@@ -65,10 +65,11 @@ typedef enum BackendStates {
         _serverConnection = [[JsonRpcWebSocket alloc] init];
         _serverConnection.delegate = self;
         _apnsDeviceToken = nil;
-        [_serverConnection registerIncomingCall: @"incomingDelivery"  withSelector:@selector(incomingDelivery:) isNotification: YES];
-        [_serverConnection registerIncomingCall: @"outgoingDelivery"  withSelector:@selector(outgoingDelivery:) isNotification: YES];
-        [_serverConnection registerIncomingCall: @"pushNotRegistered" withSelector:@selector(pushNotRegistered:) isNotification: YES];
-        [_serverConnection registerIncomingCall: @"presenceUpdated"   withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"incomingDelivery"    withSelector:@selector(incomingDelivery:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"outgoingDelivery"    withSelector:@selector(outgoingDelivery:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"pushNotRegistered"   withSelector:@selector(pushNotRegistered:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"presenceUpdated"     withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"relationshipUpdated" withSelector:@selector(relationshipUpdated:) isNotification: YES];
         _delegate = theAppDelegate;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(profileUpdatedByUser:)
@@ -236,7 +237,7 @@ typedef enum BackendStates {
         [self didRegister: YES];
 #else
         [[HTUserDefaults standardUserDefaults] setValue: theId forKey: kHTClientId];
-        _srpUser = [[HCSRPUser alloc] initWithUserName: theId andPassword: [self getPassword] hashAlgorithm: SRP_SHA1 primeAndGenerator: SRP_NG_1024];
+        _srpUser = [[HCSRPUser alloc] initWithUserName: theId andPassword: [self getPassword] hashAlgorithm: SRP_SHA256 primeAndGenerator: SRP_NG_1024];
         NSData * salt;
         NSData * verifier;
         [_srpUser salt: & salt andVerificationKey: & verifier forPassword:[self getPassword]];
@@ -506,15 +507,20 @@ typedef enum BackendStates {
     // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
         for (NSDictionary * relationshipDict in changedRelationships) {
-            NSString * clientId = relationshipDict[@"otherClientId"];
-            Contact * contact = [self getContactByClientId: clientId];
-            if (contact == nil) {
-                contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-                contact.clientId = clientId;
-            }
-            [contact updateWithDictionary: relationshipDict];
+            [self updateRelationship: relationshipDict];
         }
     }];
+}
+
+- (void) updateRelationship: (NSDictionary*) relationshipDict {
+    NSString * clientId = relationshipDict[@"otherClientId"];
+    Contact * contact = [self getContactByClientId: clientId];
+    if (contact == nil) {
+        contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+        contact.clientId = clientId;
+    }
+    NSLog(@"relationship Dict: %@", relationshipDict);
+    [contact updateWithDictionary: relationshipDict];
 }
 
 - (void) updatePresences {
@@ -740,6 +746,7 @@ typedef enum BackendStates {
         } else {
             NSLog(@"SRP Phase 2 failed");
             handler(nil);
+            abort();
         }
     }];
 }
@@ -955,10 +962,26 @@ typedef enum BackendStates {
     }];
 }
 
-- (void) updateUnreadMessageCount: (NSUInteger) count handler: (void (^)()) handler {
-    // TODO: update message count
-    NSLog(@"TODO: updateUnreadMessageCount ...");
-    handler();
+- (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler {
+    //NSLog(@"hintApnsUnreadMessage");
+    [_serverConnection invoke: @"hintApnsUnreadMessage" withParams: @[@(count)] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+
+}
+
+- (void) blockClient: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"blockClient");
+    [_serverConnection invoke: @"blockClient" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+- (void) unblockClient: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"unblockClient");
+    [_serverConnection invoke: @"unblockClient" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
 }
 
 #pragma mark - Incoming RPC Calls
@@ -1047,6 +1070,10 @@ typedef enum BackendStates {
         // NSLog(@"updatePresences presence=%@",presence);
         [self presenceUpdated:presence];
     }
+}
+
+- (void) relationshipUpdated: (NSArray*) relationship {
+    [self updateRelationship: relationship[0]];
 }
 
 #pragma mark - JSON RPC WebSocket Delegate

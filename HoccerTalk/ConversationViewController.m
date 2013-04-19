@@ -85,7 +85,7 @@
     // TODO: find a way to move this to the app delegate
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileViewController"];
-        [self.navigationController presentModalViewController: profileView animated: YES];
+        [self.navigationController presentViewController: profileView animated: YES completion: nil];
     }
 }
 
@@ -204,9 +204,13 @@
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"latestMessageTime" ascending: NO];
     NSArray *sortDescriptors = @[sortDescriptor];
-    
+
     [fetchRequest setSortDescriptors:sortDescriptors];
-    
+
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend'"]; // your predicate here
+
+    [fetchRequest setPredicate: filterPredicate];
+
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Contacts"];
@@ -289,7 +293,7 @@
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
-    cell.avatar.image = contact.avatarImage;
+    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
     cell.latestMessage.frame = self.conversationCell.latestMessage.frame;
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){

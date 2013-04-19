@@ -62,7 +62,7 @@ NSString * const kRelationStateBlocked = @"blocked";
 
 - (UIImage*) avatarImage {
     if (_avatarImage == nil) {
-        _avatarImage = self.avatar == nil ? [UIImage imageNamed: @"avatar_default_contact"] : [UIImage imageWithData: self.avatar];
+        _avatarImage = self.avatar == nil ? nil : [UIImage imageWithData: self.avatar];
     }
     return _avatarImage;
 }

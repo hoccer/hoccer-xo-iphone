@@ -813,7 +813,10 @@
     }
 
     cell.message.text = message.body;
-    cell.avatar.image = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : self.partner.avatarImage;
+    UIImage * avatar = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : self.partner.avatarImage;
+    avatar = avatar != nil ? avatar : [UIImage imageNamed: @"avatar_default_contact"];
+
+    cell.avatar.image = avatar;
 
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
@@ -874,7 +877,7 @@
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
         self.imageViewController.image = myAttachment.image;
-        [self presentModalViewController: self.imageViewController animated: YES];
+        [self presentViewController: self.imageViewController animated: YES completion: nil];
     }
 }
 

@@ -184,12 +184,12 @@
 }
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
-    NSSortDescriptor *groupSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"relationshipState" ascending: YES];
+    //NSSortDescriptor *groupSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"relationshipState" ascending: YES];
     NSSortDescriptor *nameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
-    NSArray *sortDescriptors = @[groupSortDescriptor, nameSortDescriptor];
+    NSArray *sortDescriptors = @[/*groupSortDescriptor,*/ nameSortDescriptor];
 
     //NSArray *sortDescriptors = // your sort descriptors here
-    NSPredicate *filterPredicate = nil; // your predicate here
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend'"]; // your predicate here
 
     /*
      Set up the fetched results controller.
@@ -328,7 +328,8 @@
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
-    cell.avatar.image = contact.avatarImage;
+    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
+
     BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
     [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];
 }
