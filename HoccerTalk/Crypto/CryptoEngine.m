@@ -11,6 +11,9 @@
 #import "CryptoEngine.h"
 #import "NSData+HexString.h"
 
+#define CRYPTO_ENGINE_DEBUG 0
+
+
 NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
 
 @interface CryptoEngine ()
@@ -25,7 +28,7 @@ NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
 
 - (CryptoEngine *)initWithOperation:(CCOperation)operation algorithm:(CCAlgorithm)algorithm options:(CCOptions)options key:(NSData *)key IV:(NSData *)IV error:(NSError **)error;
 {
-    NSLog(@"Initializing CryptoEngine with key %@", [key hexadecimalString]);
+    if (CRYPTO_ENGINE_DEBUG) {NSLog(@"Initializing CryptoEngine with key %@", [key hexadecimalString]);}
     self = [super init];
     if (self) {
         
@@ -58,7 +61,7 @@ NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
 
 - (NSData *)addData:(NSData *)data error:(NSError **)error
 {
-  NSLog(@"CryptoEngine addData len %d", data.length);
+  if (CRYPTO_ENGINE_DEBUG) {NSLog(@"CryptoEngine addData len %d", data.length);}
   NSMutableData *buffer = self.buffer;
   [buffer setLength:CCCryptorGetOutputLength(self.cryptor, [data length], true)]; // We'll reuse the buffer in -finish
 
@@ -77,7 +80,7 @@ NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
     }
     return nil;
   }
-  NSLog(@"CryptoEngine addData moved out data len %zd", dataOutMoved);
+  if (CRYPTO_ENGINE_DEBUG) {NSLog(@"CryptoEngine addData moved out data len %zd", dataOutMoved);}
 
   return [buffer subdataWithRange:NSMakeRange(0, dataOutMoved)];
 }
@@ -97,7 +100,7 @@ NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
     }
     return nil;
   }
-  NSLog(@"CryptoEngine finish moved out data len %zd", dataOutMoved);
+  if (CRYPTO_ENGINE_DEBUG) {NSLog(@"CryptoEngine finish moved out data len %zd", dataOutMoved);}
 
   return [buffer subdataWithRange:NSMakeRange(0, dataOutMoved)];
 }
