@@ -17,6 +17,7 @@
 
 - (void)generateKeyPairKeys;
 - (void)testEncryption;
+- (NSString *)generateRandomString:(NSUInteger)length;
 
 - (SecKeyRef)getPrivateKeyRef;
 - (NSData *)getPublicKeyBits;
@@ -42,7 +43,5 @@
 - (void)getCertificate;
 
 -(void)cleanKeyChain;
-
-- (NSString *)genRandomString:(int)length;
 
 @end

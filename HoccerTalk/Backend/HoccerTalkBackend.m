@@ -25,6 +25,7 @@
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
 #import "ObjCSRP/HCSRP.h"
+#import "NSString+RandomString.h"
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -326,7 +327,8 @@ typedef enum BackendStates {
 - (NSString*) getPassword {
     NSString * password =  [[HTUserDefaults standardUserDefaults] valueForKey: kHTPassword];
     if (password == nil) {
-        password = [[RSA sharedInstance] genRandomString:23];
+        password = [NSString stringWithRandomCharactersOfLength: 23];
+        NSLog(@"password: '%@'", password);
         [[HTUserDefaults standardUserDefaults] setValue: password forKey: kHTPassword]; // TODO: put this is in the keychain
     }
     return password;
