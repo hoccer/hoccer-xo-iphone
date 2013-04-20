@@ -10,6 +10,7 @@
 
 #import "RSA.h"
 #import "NSData+Base64.h"
+#import "NSString+RandomString.h"
 
 
 
@@ -51,27 +52,9 @@ static RSA *instance;
     return self;
 }
 
-- (NSString *)genRandomString:(int)length {
-    
-    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"autoPassword"]){
-        NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!§$%&/()=?";
-
-        NSMutableString *randomString = [NSMutableString stringWithCapacity: length];
-    
-        for (int i=0; i<length; i++) {
-            [randomString appendFormat: @"%c", [letters characterAtIndex: rand()%[letters length]]];
-        }
-    
-    
-        [[NSUserDefaults standardUserDefaults] setObject:randomString forKey:@"encryptionKey"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-    return randomString;
-    }
-    else {
-        return [[NSUserDefaults standardUserDefaults]stringForKey:@"encryptionKey"];
-    }
-    
+- (NSString *)generateRandomString:(NSUInteger)length {
+    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!§$%&/()=?";
+    return [NSString stringWithRandomCharactersOfLength: length usingCharacterSet: letters];
 }
 
 - (void)generateKeyPairKeys

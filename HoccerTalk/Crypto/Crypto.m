@@ -11,21 +11,8 @@
 #import "Crypto.h"
 #import "NSString+StringWithData.h"
 #import "NSData+Base64.h"
-//#import "NSString+Regexp.h"
-//#import "NSString+URLHelper.h"
 #import "RSA.h"
 #import "PublicKeyManager.h"
-
-static NSData * RandomSalt() {
-    NSMutableData *data = [NSMutableData data];
-    
-    for (NSInteger i = 0; i < 32 / sizeof(u_int32_t); i++) {
-        u_int32_t r = arc4random();
-        [data appendBytes:&r length:sizeof(u_int32_t)];
-    }
-    
-    return data;
-}
 
 // fixed salt for testing
 static NSData * NotSoRandomSalt() {
@@ -45,8 +32,13 @@ static NSData * RandomBytes(size_t count) {
     if (err != 0) {
         NSLog(@"RandomBytes; RNG error = %d", errno);
     }
-    return data;
+    return [data copy];
 }
+
+static NSData * RandomSalt() {
+    return RandomBytes(32);
+}
+
 
 @implementation NoCryptor
 
@@ -98,12 +90,12 @@ static NSData * RandomBytes(size_t count) {
 }
 
 - (id)initWithRandomKey{
-    NSString *theKey = [[RSA sharedInstance] genRandomString:64];
+    NSString *theKey = [[RSA sharedInstance] generateRandomString:64];
     return [self initWithKey:theKey salt:RandomSalt()];
 }
 
 - (id)initWithRandomKeyWithSalt:(NSData *)theSalt{
-    NSString *theKey = [[RSA sharedInstance] genRandomString:64];
+    NSString *theKey = [[RSA sharedInstance] generateRandomString:64];
     return [self initWithKey:theKey salt:theSalt];
 }
 
