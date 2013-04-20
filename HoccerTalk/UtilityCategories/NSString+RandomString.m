@@ -21,7 +21,7 @@ static const NSString * const kDefaultRandomStringCharacterSet =
 
 + (NSString*) stringWithRandomCharactersOfLength: (NSUInteger) length usingCharacterSet: (const NSString* const) characterSet {
     NSMutableString *randomString = [NSMutableString stringWithCapacity: length];
-    NSMutableData * randomness = [NSMutableData dataWithCapacity: length];
+    NSMutableData * randomness = [NSMutableData dataWithLength: length];
     SecRandomCopyBytes(kSecRandomDefault, length, [randomness mutableBytes]);
 
     for (int i=0; i<length; i++) {
@@ -29,7 +29,6 @@ static const NSString * const kDefaultRandomStringCharacterSet =
         char randomChar = [characterSet characterAtIndex: randomNumber % [characterSet length]];
         [randomString appendFormat: @"%c", randomChar];
     }
-    NSLog(@"==================== generated random string %@", randomString);
     return [randomString copy];
 }
 
