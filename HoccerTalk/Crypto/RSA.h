@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+// TODO: split this up: I have the feeling half of the key managment belongs to Contact,
+//       the other half to UserProfile. En- and decryption don't need members and should
+//       be class methods.
+
 @interface RSA : NSObject {
     NSData *publicTag;
     NSData *privateTag;
