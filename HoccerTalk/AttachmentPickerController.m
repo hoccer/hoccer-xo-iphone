@@ -98,7 +98,8 @@
             [_supportedItems addObject: item];
         }
     }
-    if ([board containsPasteboardTypes:UIPasteboardTypeListImage inItemSet:nil]) {
+    //if ([board containsPasteboardTypes:UIPasteboardTypeListImage inItemSet:nil]) {
+    if (board.image != nil) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeImageFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
             item.localizedButtonTitle = NSLocalizedString(@"Paste Image", @"Action Sheet Button Ttitle");
@@ -183,6 +184,7 @@
             [self pickAttachmentFromPasteBoard];
             break;
         case AttachmentPickerTypeImageFromPasteboard:
+            [self pickImageFromPasteBoard];
             break;
     }
 }
@@ -207,6 +209,26 @@
     [self copyCustomStringFromPasteBoard:@"com.hoccer.xo.url1"  toDict:myAttachmentInfo optional:NO];
     [self copyCustomStringFromPasteBoard:@"com.hoccer.xo.url2"  toDict:myAttachmentInfo optional:YES];
     [self.delegate didPickAttachment: myAttachmentInfo];
+}
+
+- (void) pickImageFromPasteBoard {
+    UIPasteboard * board = [UIPasteboard generalPasteboard];
+    /*
+    id myImageObject = board.image;
+    UIImage * myImage;
+    if ([myImageObject isKindOfClass: [NSData class]]) {
+        myImage = [UIImage imageWithData:myImageObject];
+    } else if ([myImageObject isKindOfClass: [UIImage class]]) {
+        myImage = (UIImage*) myImageObject;
+    }
+    */
+    UIImage * myImage = board.image;
+    if (myImage != nil) {
+        NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.pastedImage": myImage};
+        [self.delegate didPickAttachment: myAttachmentInfo];
+    } else {
+        NSLog(@"pickImageFromPasteBoard: image is nil");
+    }
 }
 
 
