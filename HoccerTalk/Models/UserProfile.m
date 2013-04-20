@@ -71,6 +71,24 @@ static const SRP_NGType         kHXOPrimeAndGenerator  = SRP_NG_1024;
     return ! [self.clientId isEqualToString: @""] && ! [self.password isEqualToString: @""] && ! [self.salt isEqualToString: @""];
 }
 
+- (NSString*) startSrpAuthentication {
+    return [[self.srpUser startAuthentication] hexadecimalString];
+}
+
+- (NSString*) processSrpChallenge: (NSString*) challenge {
+    return [[self.srpUser processChallenge: [NSData dataWithHexadecimalString: self.salt] B: [NSData dataWithHexadecimalString: challenge]] hexadecimalString];
+}
+- (BOOL) verifySrpSession: (NSString*) HAMK {
+    [self.srpUser verifySession: [NSData dataWithHexadecimalString: HAMK]];
+    return self.srpUser.isAuthenticated;
+}
+
+- (BOOL) isAuthenticated {
+    return self.srpUser.isAuthenticated;
+}
+
+
+
 - (NSString*) clientId {
     return [_accountItem objectForKey: (__bridge id)(kSecAttrAccount)];
 }

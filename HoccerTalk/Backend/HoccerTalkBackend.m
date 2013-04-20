@@ -24,13 +24,9 @@
 #import "RSA.h"
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
-#import "ObjCSRP/HCSRP.h"
-#import "NSString+RandomString.h"
+#import "UserProfile.h"
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
-
-static const SRP_HashAlgorithm kSrpHashAlgorithm = SRP_SHA256;
-static const SRP_NGType kSrpPrimeAndGenerator    = SRP_NG_1024;
 
 typedef enum BackendStates {
     kBackendStopped,
@@ -53,8 +49,6 @@ typedef enum BackendStates {
     NSInteger          _avatarBytesTotal;
     BOOL               _performRegistration;
 }
-
-@property (nonatomic,readonly) HCSRPUser * srpUser;
 
 - (void) identify;
 
@@ -243,17 +237,12 @@ typedef enum BackendStates {
 #ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION
         [self didRegister: YES];
 #else
-        [[HTUserDefaults standardUserDefaults] setValue: theId forKey: kHTClientId];
-        NSData * salt;
-        NSData * verifier;
-        [self.srpUser salt: & salt andVerificationKey: & verifier forPassword:[self getPassword]];
-        [[HTUserDefaults standardUserDefaults] setValue: [salt hexadecimalString] forKey: kHTSrpSalt];
-        [[HTUserDefaults standardUserDefaults] synchronize];
-        [self srpRegisterWithVerifier: [verifier hexadecimalString] andSalt: [salt hexadecimalString]];
+        NSString * verifier = [[UserProfile sharedProfile] registerClientAndComputeVerifier: theId];
+        [self srpRegisterWithVerifier: verifier andSalt: [UserProfile sharedProfile].salt];
 #endif
     };
 #ifdef HXO_USE_USER_DEFINED_CREDENTIALS
-    handler([[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId]);
+    handler([UserProfile  sharedProfile].clientId);
 #else
     [self generateId: handler];
 #endif
@@ -276,24 +265,20 @@ typedef enum BackendStates {
 #ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION
     [self identify];
 #else
-    NSData * A = [self.srpUser startAuthentication];
-    [self srpPhase1WithClientId: [[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId] A: [A hexadecimalString] andHandler:^(NSString * challenge) {
+    NSString * A = [[UserProfile sharedProfile] startSrpAuthentication];
+    [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge) {
         if (challenge == nil) {
             NSLog(@"SRP phase 1 failed");
         } else {
-            NSData * salt = [NSData dataWithHexadecimalString: [[HTUserDefaults standardUserDefaults] valueForKey: kHTSrpSalt]];
-            NSData * B = [NSData dataWithHexadecimalString: challenge];
-            NSData * M = [self.srpUser processChallenge: salt B: B];
+            NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge];
             if (M == nil) {
                 NSLog(@"SRP-6a safety check violation! Closing connection.");
-                // possible man in the middle attack ... trigger reconnect by closing the socket
+                // possible tampering ... trigger reconnect by closing the socket
                 [self stopAndRetry];
             } else {
-                [self srpPhase2: [M hexadecimalString] handler:^(NSString * HAMKString) {
-                    if (HAMKString != nil) {
-                        NSData * HAMK = [NSData dataWithHexadecimalString: HAMKString];
-                        [self.srpUser verifySession: HAMK];
-                        [self didFinishLogin: self.srpUser.isAuthenticated];
+                [self srpPhase2: M handler:^(NSString * HAMK) {
+                    if (HAMK != nil) {
+                        [self didFinishLogin: [[UserProfile sharedProfile] verifySrpSession: HAMK]];
                     } else {
                         [self didFinishLogin: NO];
                     }
@@ -323,29 +308,6 @@ typedef enum BackendStates {
     } else {
         [self stopAndRetry];
     }
-}
-
-- (NSString*) getPassword {
-    NSString * password =  [[HTUserDefaults standardUserDefaults] valueForKey: kHTPassword];
-    if (password == nil) {
-        password = [NSString stringWithRandomCharactersOfLength: 23];
-        NSLog(@"password: '%@'", password);
-        [[HTUserDefaults standardUserDefaults] setValue: password forKey: kHTPassword]; // TODO: put this is in the keychain
-    }
-    return password;
-}
-
-@synthesize srpUser = _srpUser;
-- (HCSRPUser*) srpUser {
-    if (_srpUser == nil) {
-        NSString * clientId = [[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId];
-        _srpUser = [[HCSRPUser alloc] initWithUserName: clientId andPassword: [self getPassword] hashAlgorithm: kSrpHashAlgorithm primeAndGenerator: kSrpPrimeAndGenerator];
-    }
-    return _srpUser;
-}
-
-- (NSString*) getClientId {
-    return [[HTUserDefaults standardUserDefaults] valueForKey: kHTClientId];
 }
 
 -(Contact *) getContactByClientId:(NSString *) theClientId {
@@ -722,7 +684,7 @@ typedef enum BackendStates {
 #pragma mark - Outgoing RPC Calls
 
 - (void) identify {
-    NSString * clientId = [self.delegate clientId];
+    NSString * clientId = [UserProfile sharedProfile].clientId;
     // NSLog(@"identify() clientId: %@", clientId);
     [_serverConnection invoke: @"identify" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (!success) {
@@ -1196,7 +1158,7 @@ typedef enum BackendStates {
     }
     NSMutableData * myAvatarData = [NSMutableData dataWithData:myAvatarImmutableData];
     
-    NSString * myClientID =[[HTUserDefaults standardUserDefaults] objectForKey: kHTClientId];
+    NSString * myClientID = [UserProfile sharedProfile].clientId;
     [myAvatarData appendData:[myClientID dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSData * myHash = [myAvatarData SHA256Hash];

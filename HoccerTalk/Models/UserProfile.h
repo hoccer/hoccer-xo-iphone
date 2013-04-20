@@ -22,6 +22,11 @@
 - (NSString*) registerClientAndComputeVerifier: (NSString*) clientId;
 - (void) deleteCredentials;
 
+- (NSString*) startSrpAuthentication;
+- (NSString*) processSrpChallenge: (NSString*) challenge;
+- (BOOL)      verifySrpSession: (NSString*) HAMK;
+- (BOOL)      isAuthenticated;
+
 + (UserProfile*) sharedProfile;
 
 @end

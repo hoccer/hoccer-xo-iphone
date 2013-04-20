@@ -381,9 +381,6 @@
 
 #pragma mark - Hoccer Talk Delegate
 
-- (NSString*) clientId {
-    return [[HTUserDefaults standardUserDefaults] stringForKey: kHTClientId];
-}
 
 - (NSString*) apnDeviceToken {
     return [[HTUserDefaults standardUserDefaults] stringForKey: kHTAPNDeviceToken];

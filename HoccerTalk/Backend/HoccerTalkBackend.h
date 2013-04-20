@@ -27,7 +27,6 @@ typedef void (^GenericResultHandler)(BOOL);
 
 @protocol HoccerTalkDelegate <NSObject>
 
-- (NSString*) clientId;
 - (NSString*) apnDeviceToken;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;

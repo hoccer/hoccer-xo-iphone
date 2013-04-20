@@ -11,9 +11,6 @@
 NSString * const kHTEnvironment           = @"environment";
 NSString * const kHTFirstRunDone          = @"firstRunDone";
 NSString * const kHTAPNDeviceToken        = @"apnDeviceToken";
-NSString * const kHTClientId              = @"clientId";
-NSString * const kHTPassword              = @"password";
-NSString * const kHTSrpSalt               = @"srpSalt";
 NSString * const kHTAvatar                = @"avatar";
 NSString * const kHTAvatarURL             = @"avatarURL";
 NSString * const kHTNickName              = @"nickName";

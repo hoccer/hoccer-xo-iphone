@@ -11,6 +11,9 @@
 @implementation NSData (HexString)
 
 + (id)dataWithHexadecimalString:(NSString *)inString {
+    if (inString == nil) {
+        return nil;
+    }
     unsigned char byte;
     char tmp_buffer[3] = {'\0','\0','\0'};
     char * buffer = malloc([inString length] / 2);
@@ -24,6 +27,9 @@
 }
 
 - (NSString *)hexadecimalString {
+    if (self == nil) {
+        return nil;
+    }
     const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
 
     if (!dataBuffer) {

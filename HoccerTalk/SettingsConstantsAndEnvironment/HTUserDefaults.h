@@ -11,7 +11,6 @@
 FOUNDATION_EXPORT NSString * const kHTEnvironment;
 FOUNDATION_EXPORT NSString * const kHTFirstRunDone;
 FOUNDATION_EXPORT NSString * const kHTAPNDeviceToken;
-FOUNDATION_EXPORT NSString * const kHTClientId;
 FOUNDATION_EXPORT NSString * const kHTPassword;
 FOUNDATION_EXPORT NSString * const kHTSrpSalt;
 FOUNDATION_EXPORT NSString * const kHTAvatar;

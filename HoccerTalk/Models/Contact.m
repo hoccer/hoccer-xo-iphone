@@ -137,7 +137,7 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 - (id) valueForUndefinedKey:(NSString *)key {
-    if ([key isEqualToString: kHTPassword]) {
+    if ([key isEqualToString: @"password"]) {
         return nil;
     }
     return [super valueForUndefinedKey: key];
