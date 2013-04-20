@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSString * userAgent;
 
 - (void)saveContext;
+- (void)saveDatabase;
 - (NSURL *)applicationDocumentsDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 

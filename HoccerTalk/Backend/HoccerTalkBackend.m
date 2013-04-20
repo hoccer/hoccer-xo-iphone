@@ -151,7 +151,7 @@ typedef enum BackendStates {
     {
         [attachment upload];
     }
-    
+    [self.delegate saveDatabase];
     return message;
 }
 
@@ -234,6 +234,7 @@ typedef enum BackendStates {
             [NSTimer scheduledTimerWithTimeInterval:2.0 target:attachment selector: @selector(downloadLater:) userInfo:nil repeats:NO];
         }
     }
+    [self.delegate saveDatabase];
 }
 
 - (void) performRegistration {
@@ -535,7 +536,7 @@ typedef enum BackendStates {
         contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         contact.clientId = clientId;
     }
-    NSLog(@"relationship Dict: %@", relationshipDict);
+    // NSLog(@"relationship Dict: %@", relationshipDict);
     [contact updateWithDictionary: relationshipDict];
 }
 
@@ -664,8 +665,14 @@ typedef enum BackendStates {
 - (void) downloadFinished:(Attachment *)theAttachment {
     // NSLog(@"downloadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
+    [self.delegate saveDatabase];
 }
 
+- (void) uploadFinished:(Attachment *)theAttachment {
+    // NSLog(@"uploadFinished of %@", theAttachment);
+    [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
+    [self.delegate saveDatabase];
+}
 
 - (NSURL *) newUploadURL {
     // NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];

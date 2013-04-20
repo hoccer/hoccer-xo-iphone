@@ -16,7 +16,11 @@ typedef enum AttachmentPickerTypes {
     AttachmentPickerTypePhotoVideoFromLibrary,
     AttachmentPickerTypePhotoFromCamera,
     AttachmentPickerTypePhotoVideoFromCamera,
-    AttachmentPickerTypeMediaFromLibrary
+    AttachmentPickerTypeMediaFromLibrary,
+    AttachmentPickerTypeImageAttachmentFromPasteboard,
+    AttachmentPickerTypeVideoAttachmentFromPasteboard,
+    AttachmentPickerTypeAudioAttachmentFromPasteboard,
+    AttachmentPickerTypeImageFromPasteboard
     //    AttachmentTypeContact
     // TODO: add more attachment types
 } AttachmentPickerType;

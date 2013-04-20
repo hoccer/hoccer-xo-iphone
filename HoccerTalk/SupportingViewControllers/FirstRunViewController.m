@@ -233,7 +233,7 @@
     UIImage * image = [UIImage imageNamed: @"angry_wet_coala.jpg"];
 
     Attachment * attachment =  (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: moc];
-    [attachment makeImageAttachment:[[NSURL fileURLWithPath: path] absoluteString] image: image];
+    [attachment makeImageAttachment:[[NSURL fileURLWithPath: path] absoluteString] anOtherURL:nil image: image withCompletion:nil];
         
     message.attachment = attachment;
 }

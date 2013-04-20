@@ -131,12 +131,10 @@
     
     // setup longpress menus
     UIMenuController *menuController = [UIMenuController sharedMenuController];
-    UIMenuItem *mySaveToAlbumMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save to Album", nil) action:@selector(saveToAlbum:)];
-    UIMenuItem *myInContactsMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save in Contacts", nil) action:@selector(saveInContacts:)];
-    UIMenuItem *myForwardMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardItem:)];
-    UIMenuItem *myCopyTextMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Copy Text", nil) action:@selector(copyText:)];
-    //[menuController setMenuItems:[NSArray arrayWithObjects:myMenuItem, nil]];
-    [menuController setMenuItems:@[mySaveToAlbumMenuItem,myInContactsMenuItem,myForwardMenuItem,myCopyTextMenuItem]];
+    UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
+    UIMenuItem *myForwardMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
+    UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
+    [menuController setMenuItems:@[mySaveMenuItem,myForwardMenuItem,myDeleteMessageMenuItem]];
     [menuController update];
 
     [self configureView];
@@ -245,10 +243,10 @@
 #pragma mark - Attachments
 
 - (AttachmentPickerController*) attachmentPicker {
-    if (_attachmentPicker == nil) {
+//    if (_attachmentPicker == nil) {
         _attachmentPicker = [[AttachmentPickerController alloc] initWithViewController: self delegate: self];
         
-    }
+//    }
     return _attachmentPicker;
 }
 
@@ -284,7 +282,6 @@
 	return newFilename;
 }
 
-
 - (void) didPickAttachment: (id) attachmentInfo {
     if (attachmentInfo == nil) {
         return;
@@ -294,6 +291,28 @@
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
+    
+    if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
+        if (attachmentInfo[@"com.hoccer.xo.mediaType"] != nil) {
+            // attachment from pasteBoard
+            NSString * myMediaType = attachmentInfo[@"com.hoccer.xo.mediaType"];
+            self.currentAttachment.mimeType = attachmentInfo[@"com.hoccer.xo.mimeType"];
+            self.currentAttachment.humanReadableFileName = attachmentInfo[@"com.hoccer.xo.fileName"];
+            
+            CompletionBlock completion  = ^(NSError *myerror) {
+                [self decorateAttachmentButton: self.currentAttachment.image];                
+            };
+            
+            if ([myMediaType isEqualToString:@"image"]) {
+                [self.currentAttachment makeImageAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] image:nil withCompletion:completion];
+            } else if ([myMediaType isEqualToString:@"video"]) {
+                [self.currentAttachment makeVideoAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+            } else if ([myMediaType isEqualToString:@"audio"]) {
+                [self.currentAttachment makeAudioAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+            }
+            return;
+        }
+    }
     
     if ([attachmentInfo isKindOfClass: [MPMediaItem class]]) {
 
@@ -346,8 +365,9 @@
                 }
                 case AVAssetExportSessionStatusCompleted: {
                     NSLog (@"AVAssetExportSessionStatusCompleted");
-                    [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[exporter.outputURL absoluteString]];
-                    [self decorateAttachmentButton: self.currentAttachment.image];
+                    [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[exporter.outputURL absoluteString] withCompletion:^(NSError *theError) {
+                        [self decorateAttachmentButton: self.currentAttachment.image];
+                    }];
 
                      // set up artwork image
                      // MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
@@ -384,9 +404,11 @@
                 ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
                     if (!error) {
                         myURL = assetURL;
-                        [self.currentAttachment makeImageAttachment: [myURL absoluteString]
-                                                              image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
-                        [self decorateAttachmentButton: image];
+                        [self.currentAttachment makeImageAttachment: [myURL absoluteString] anOtherURL:nil
+                                                              image: attachmentInfo[UIImagePickerControllerOriginalImage]
+                                                     withCompletion:^(NSError *theError) {
+                                                         [self decorateAttachmentButton: self.currentAttachment.image];
+                                                     }];
                     } else {
                         NSLog(@"Error saving image in Library, error = %@", error);
                         [self trashCurrentAttachment];
@@ -401,9 +423,11 @@
                 }
             } else {
                 // image from album
-                [self.currentAttachment makeImageAttachment: [myURL absoluteString]
-                                                      image: attachmentInfo[UIImagePickerControllerOriginalImage] ];
-                [self decorateAttachmentButton: attachmentInfo[UIImagePickerControllerOriginalImage]];
+                [self.currentAttachment makeImageAttachment: [myURL absoluteString] anOtherURL:nil
+                                                      image: attachmentInfo[UIImagePickerControllerOriginalImage]
+                                             withCompletion:^(NSError *theError) {
+                                                 [self decorateAttachmentButton: attachmentInfo[UIImagePickerControllerOriginalImage]];
+                                             }];
             }
             return;
         } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
@@ -422,8 +446,9 @@
                     [self trashCurrentAttachment];
                 }
             }
-            [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil];
-            [self decorateAttachmentButton: self.currentAttachment.image];
+            [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
+                [self decorateAttachmentButton: self.currentAttachment.image];
+            }];
             return;
         }
     }
@@ -872,50 +897,114 @@
 #pragma mark - MessageViewControllerDelegate methods
 
 -(BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
-    NSLog(@"messageView:canPerformAction:");
-    if (action == @selector(saveInContacts:)) return NO;
-    if (action == @selector(forwardItem:)) return YES;
+    // NSLog(@"messageView:canPerformAction:");
+    if (action == @selector(forwardMessage:)) return YES;
+    if (action == @selector(deleteMessage:)) return YES;
+    if (action == @selector(copy:)) {return YES;}
 
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
 
-    if (action == @selector(copyText:)) {
-        if (message.body.length > 0) {
-            return YES;
-        }
-        return NO;        
-    }
+    if (action == @selector(copy:)) {return YES;}
     
-    if (action == @selector(saveToAlbum:)) {
-        Attachment * myAttachment = message.attachment;
-        if (myAttachment != nil) {
-            if ([myAttachment.mediaType isEqual: @"video"] ||
-                [myAttachment.mediaType isEqual: @"image"]) {
-                return YES;
+    if (action == @selector(saveMessage:)) {
+        if ([message.isOutgoing isEqualToNumber: @NO]) {
+            Attachment * myAttachment = message.attachment;
+            if (myAttachment != nil) {
+                if ([myAttachment.mediaType isEqualToString: @"video"] ||
+                    [myAttachment.mediaType isEqualToString: @"image"]) {
+                    return YES;
+                }
             }
         }
         return NO;
     }
     return NO;
 }
-- (void) messageView:(MessageCell *)theCell saveToAlbum:(id)sender {
-    NSLog(@"saveToAlbum");
+- (void) messageView:(MessageCell *)theCell saveMessage:(id)sender {
+    NSLog(@"saveMessage");
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    Attachment * attachment = message.attachment;
+    
+    if ([attachment.mediaType isEqualToString: @"image"]) {
+        [attachment loadImageAttachmentImage: ^(UIImage* image, NSError* error) {
+            NSLog(@"saveMessage: loadImageAttachmentImage done");
+            if (image) {
+                // funky method using ALAssetsLibrary
+                ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
+                    if (!error) {
+                        NSLog(@"Saved image to Library");
+                    } else {
+                        NSLog(@"Error saving image in Library, error = %@", error);
+                    }
+                };
+                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                [library writeImageToSavedPhotosAlbum:[image CGImage]
+                                          orientation:(ALAssetOrientation)[image imageOrientation]
+                                      completionBlock:completeBlock];
+            } else {
+                NSLog(@"saveMessage: Failed to get image: %@", error);
+            }
+        }];
+        return;
+    }
+    if ([attachment.mediaType isEqualToString: @"video"]) {
+        NSString * myVideoFilePath = [[NSURL URLWithString: attachment.localURL] path];
+        
+        if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(myVideoFilePath)) {
+            UISaveVideoAtPathToSavedPhotosAlbum(myVideoFilePath, nil, nil, nil);
+            NSLog(@"didPickAttachment: saved video in album at path = %@",myVideoFilePath);
+        } else {
+            NSLog(@"didPickAttachment: failed to save video in album at path = %@",myVideoFilePath);
+        }
+    }
 }
-- (void) messageView:(MessageCell *)theCell forwardItem:(id)sender {
-    NSLog(@"forwardItem");
+
+- (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
+    NSLog(@"forwardMessage");
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
 }
 
-- (void) messageView:(MessageCell *)theCell saveInContacts:(id)sender {
-    NSLog(@"saveInContacts");
+- (void) messageView:(MessageCell *)theCell copy:(id)sender {
+    NSLog(@"copy");
+    UIPasteboard * board = [UIPasteboard generalPasteboard];
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
-}
 
-- (void) messageView:(MessageCell *)theCell copyText:(id)sender {
-    NSLog(@"copyText");
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    board.string = message.body; // always put in string first
+    
+    Attachment * myAttachment = message.attachment;
+    if (myAttachment != nil) {
+        NSURL * url1 = myAttachment.contentURL;
+        NSURL * url2 = myAttachment.otherContentURL;
+        
+        if (message.attachment.image != nil) {
+            NSData * myImageData = UIImagePNGRepresentation(message.attachment.image);
+            NSString * myImageType = (NSString*)kUTTypePNG;
+            [board addItems:@[ @{myImageType:myImageData}] ];
+        }
+        NSString * myURLType = (NSString*)kUTTypeURL;
+        if (url1 != nil) {
+            [board addItems:@[ @{myURLType:url1}] ];
+            [board addItems:@[ @{@"com.hoccer.xo.url1":[url1 absoluteString]}] ];
+        }
+        if (url2 != nil) {
+            [board addItems:@[ @{myURLType:url2}] ];
+            [board addItems:@[ @{@"com.hoccer.xo.url2":[url2 absoluteString]}] ];
+        }
+        if (myAttachment.mediaType != nil) {
+            [board addItems:@[ @{@"com.hoccer.xo.mediaType":myAttachment.mediaType}] ];
+        }
+        if (myAttachment.mimeType != nil) {
+            [board addItems:@[ @{@"com.hoccer.xo.mimeType":myAttachment.mimeType}] ];
+        }
+        if (myAttachment.humanReadableFileName != nil) {
+            [board addItems:@[ @{@"com.hoccer.xo.fileName":myAttachment.humanReadableFileName}] ];
+        }
+    }
 }
-
+- (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender {
+    NSLog(@"deleteMessage");
+    TalkMessage * deleteMessage = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+}
 
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell {
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];

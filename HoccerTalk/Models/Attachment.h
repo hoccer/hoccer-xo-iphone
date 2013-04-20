@@ -20,6 +20,7 @@ typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
 typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
+typedef void(^CompletionBlock)(NSError* theError);
 
 @protocol TransferProgressIndication <NSObject>
 
@@ -86,11 +87,15 @@ typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 - (void) download;
 - (void) downloadLater: (NSTimer*) theTimer;
 
-- (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage;
-- (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
-- (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL;
+- (void) makeImageAttachment:(NSString *)theURL anOtherURL:(NSString *)otherURL image:(UIImage*)theImage withCompletion:(CompletionBlock)completion;
+- (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
+- (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
 
-- (NSURL *) contentURL; // best Effort content URL for playback, display etc.
+- (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
+
+
+- (NSURL *) contentURL; // best Effort content URL for playback, display etc. (localURL if available, otherwise assetURL)
+- (NSURL *) otherContentURL; // returns assetURL if localURL is available, otherwise nil
 
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
 

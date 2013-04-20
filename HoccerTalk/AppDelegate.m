@@ -177,6 +177,18 @@
     }
 }
 
+- (void)saveDatabase
+{
+    NSString * savePolicy = [[HTUserDefaults standardUserDefaults] objectForKey: kHTSaveDatabasePolicy];
+    if ([savePolicy isEqualToString:kHTSaveDatabasePolicyPerMessage]) {
+        // NSLog(@"Saving database");
+        NSDate * start = [[NSDate alloc] init];
+        [self saveContext];
+        double elapsed = -[start timeIntervalSinceNow];
+        NSLog(@"Saving database took %f secs", elapsed);
+    }
+}
+
 // Returns the managed object context for the application.
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
 - (NSManagedObjectContext *)managedObjectContext
