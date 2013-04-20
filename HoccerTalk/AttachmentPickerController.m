@@ -69,8 +69,44 @@
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"Choose Audio", @"Action Sheet Button Ttitle");
         item.type = AttachmentPickerTypeMediaFromLibrary;
-        [_supportedItems addObject: item];        
+        [_supportedItems addObject: item];
     }
+    
+    UIPasteboard * board = [UIPasteboard generalPasteboard];
+    NSArray * myMediaTypeArray = [board valuesForPasteboardType:@"com.hoccer.xo.mediaType" inItemSet:nil];
+    if (myMediaTypeArray.count == 1) {
+        NSString * mediaType = [[NSString alloc] initWithData:myMediaTypeArray[0] encoding:NSUTF8StringEncoding];
+        if ([mediaType isEqualToString:@"image"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeImageAttachmentFromPasteboard]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Paste Image Attachment", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypeImageAttachmentFromPasteboard;
+            [_supportedItems addObject: item];
+        }
+        if ([mediaType isEqualToString:@"video"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeVideoAttachmentFromPasteboard]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Paste Video Attachment", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypeVideoAttachmentFromPasteboard;
+            [_supportedItems addObject: item];
+        }
+        if ([mediaType isEqualToString:@"audio"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromPasteboard]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Paste Audio Attachment", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypeAudioAttachmentFromPasteboard;
+            [_supportedItems addObject: item];
+        }
+    }
+    if ([board containsPasteboardTypes:UIPasteboardTypeListImage inItemSet:nil]) {
+        if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeImageFromPasteboard]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Paste Image", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypeImageFromPasteboard;
+            [_supportedItems addObject: item];
+        }
+    }
+    
     // TODO: add other types
 }
 
@@ -141,8 +177,38 @@
         case AttachmentPickerTypeMediaFromLibrary:
             [self showMediaPicker];
             break;
+        case AttachmentPickerTypeImageAttachmentFromPasteboard:
+        case AttachmentPickerTypeVideoAttachmentFromPasteboard:
+        case AttachmentPickerTypeAudioAttachmentFromPasteboard:
+            [self pickAttachmentFromPasteBoard];
+            break;
+        case AttachmentPickerTypeImageFromPasteboard:
+            break;
     }
 }
+
+- (void) copyCustomStringFromPasteBoard:(NSString*)theType toDict:(NSMutableDictionary*) theDict optional:(BOOL)optional{
+    UIPasteboard * board = [UIPasteboard generalPasteboard];
+    NSArray * myTypeArray = [board valuesForPasteboardType:theType inItemSet:nil];
+    if (myTypeArray.count == 1) {
+        theDict[theType] = [[NSString alloc] initWithData:myTypeArray[0] encoding:NSUTF8StringEncoding];
+    } else {
+        if (!optional) {
+            NSLog(@"ERROR: copyCustomStringFromPasteBoard: non-optional attachment info type not found: %@", theType);
+        }
+    }
+}
+
+- (void) pickAttachmentFromPasteBoard {
+    NSMutableDictionary *myAttachmentInfo = [[NSMutableDictionary alloc] init];
+    [self copyCustomStringFromPasteBoard:@"com.hoccer.xo.mediaType" toDict:myAttachmentInfo optional:NO];
+    [self copyCustomStringFromPasteBoard:@"com.hoccer.xo.mimeType"  toDict:myAttachmentInfo optional:NO];
+    [self copyCustomStringFromPasteBoard:@"com.hoccer.xo.fileName"  toDict:myAttachmentInfo optional:YES];
+    [self copyCustomStringFromPasteBoard:@"com.hoccer.xo.url1"  toDict:myAttachmentInfo optional:NO];
+    [self copyCustomStringFromPasteBoard:@"com.hoccer.xo.url2"  toDict:myAttachmentInfo optional:YES];
+    [self.delegate didPickAttachment: myAttachmentInfo];
+}
+
 
 - (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType withVideo: (BOOL) videoFlag {
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];

@@ -39,21 +39,30 @@ static const double kCellPadding = 10.0;
     return YES;
 }
 
--(void) saveToAlbum:(id)sender {
-    NSLog(@"saveToAlbum");
+-(void) saveMessage:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageView:self saveMessage:sender];
+    }
 }
 
--(void) forwardItem:(id)sender {
-    NSLog(@"forwardItem");
+-(void) forwardMessage:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageView:self forwardMessage:sender];
+    }
 }
 
--(void) saveInContacts:(id)sender {
-    NSLog(@"saveInContacts");
+-(void) copy:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageView:self copy:sender];
+    }
 }
 
--(void) copyText:(id)sender {
-    NSLog(@"saveInContacts");
+-(void) deleteMessage:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageView:self deleteMessage:sender];
+    }
 }
+
 @end
 
 

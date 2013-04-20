@@ -80,6 +80,15 @@
     return nil;
 };
 
+- (NSURL *) otherContentURL {
+    if (self.localURL != nil) {
+        if (self.assetURL != nil) {
+            return [NSURL URLWithString: self.assetURL];
+        }
+    }
+    return nil;
+};
+
 - (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     NSURL * url = [NSURL URLWithString: theURL];
     if ([url.scheme isEqualToString: @"file"]) {
@@ -129,25 +138,34 @@
     }
 }
 
+// can also be called by other loaders who have called loadImage
+- (void) cacheImage:(UIImage*) theImage {
+    self.image = theImage;
+    self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+    NSLog(@"cacheImage set attachment to image width = %f, heigt = %f, aspect = %f ", theImage.size.width, theImage.size.height, self.aspectRatio);
+}
+
+
 // loads or creates an image representation of the attachment and sets its image and aspectRatio fields
-- (void) loadImageIntoCache {
+- (void) loadImageIntoCacheWithCompletion:(CompletionBlock)finished {
     NSLog(@"loadImageIntoCache");
     [self loadImage:^(UIImage* theImage, NSError* error) {
         NSLog(@"loadImageIntoCache done");
         if (theImage) {
-            self.image = theImage;
-            self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
-            NSLog(@"loadImageIntoCache block: sets attachment to image width = %f, heigt = %f, aspect = %f ", theImage.size.width, theImage.size.height, self.aspectRatio);
+            [self cacheImage:theImage];
         } else {
             NSLog(@"Failed to get image: %@", error);
+        }
+        if (finished != nil) {
+            finished(nil);
         }
     }];
 }
 
-- (void) makeImageAttachment:(NSString *)theURL image:(UIImage*)theImage {
+- (void) makeImageAttachment:(NSString *)theURL anOtherURL:(NSString *)otherURL image:(UIImage*)theImage withCompletion:(CompletionBlock)completion  {
     self.mediaType = @"image";
     
-    [self useURLs: theURL anOtherURL:nil];
+    [self useURLs: theURL anOtherURL:otherURL];
     
     if (self.mimeType == nil) {
         NSLog(@"WARNING: could not determine mime type, setting default for image/jpeg");
@@ -157,12 +175,15 @@
     if (theImage != nil) {
         self.image = theImage;
         self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+        if (completion != nil) {
+            completion(nil);
+        }
     } else {
-        [self loadImageIntoCache];
+        [self loadImageIntoCacheWithCompletion: completion];
     }
 }
 
-- (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
+- (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion{
     self.mediaType = @"video";
     
     [self useURLs: theURL anOtherURL: theOtherURL];
@@ -172,10 +193,10 @@
         self.mimeType = @"video/quicktime";
     }
 
-    [self loadImageIntoCache];
+    [self loadImageIntoCacheWithCompletion:completion];
 }
 
-- (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
+- (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion{
     // TODO: handle also mp3 etc.
     self.mediaType = @"audio";
     self.mimeType = @"audio/mp4";
@@ -188,7 +209,7 @@
         self.mimeType = @"audio/mp4";
     }
     
-    [self loadImageIntoCache];
+    [self loadImageIntoCacheWithCompletion:completion];
 }
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {

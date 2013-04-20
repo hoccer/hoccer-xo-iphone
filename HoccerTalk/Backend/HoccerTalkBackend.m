@@ -139,7 +139,7 @@ typedef enum BackendStates {
     contact.latestMessageTime = message.timeStamp;
     [message setupOutgoingEncryption];
 
-    NSLog(@"sendMessage - contact %@", contact);
+    // NSLog(@"sendMessage - contact %@", contact);
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
