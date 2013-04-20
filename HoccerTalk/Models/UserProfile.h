@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+// NOT a core data model, but a model nonetheless. 
+
 @interface UserProfile : NSObject
+
+@property (nonatomic,strong) NSString * nickName;
+
++ (UserProfile*) myProfile;
 
 @end
