@@ -15,7 +15,7 @@
 @class HoccerTalkBackend;
 
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, AttachmentViewControllerDelegate>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate>
 {
     NSMutableDictionary        *resultsControllers;
 }
@@ -40,7 +40,11 @@
 - (IBAction) addAttachmentPressed:(id)sender;
 - (void) decorateAttachmentButton:(UIImage *) theImage;
 - (void) trashCurrentAttachment;
+
+// MessageViewControllerDelegate methods
+
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell;
+- (BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender;
 
 
 @end

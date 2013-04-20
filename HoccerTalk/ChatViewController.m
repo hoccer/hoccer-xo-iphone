@@ -128,6 +128,16 @@
     [_chatbar sendSubviewToBack: backgroundGradient];
 
     self.view.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
+    
+    // setup longpress menus
+    UIMenuController *menuController = [UIMenuController sharedMenuController];
+    UIMenuItem *mySaveToAlbumMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save to Album", nil) action:@selector(saveToAlbum:)];
+    UIMenuItem *myInContactsMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save in Contacts", nil) action:@selector(saveInContacts:)];
+    UIMenuItem *myForwardMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardItem:)];
+    UIMenuItem *myCopyTextMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Copy Text", nil) action:@selector(copyText:)];
+    //[menuController setMenuItems:[NSArray arrayWithObjects:myMenuItem, nil]];
+    [menuController setMenuItems:@[mySaveToAlbumMenuItem,myInContactsMenuItem,myForwardMenuItem,myCopyTextMenuItem]];
+    [menuController update];
 
     [self configureView];
 }
@@ -629,6 +639,22 @@
     return [self.messageCell heightForMessage: message];
 }
 
+#pragma mark - Table view menu delegate
+
+
+- (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+-(BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
+    return (action == @selector(copy:));
+}
+
+- (BOOL)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
+    return YES;
+}
+
+
 #pragma mark - Core Data Stack
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -842,6 +868,54 @@
         }
     }
 }
+
+#pragma mark - MessageViewControllerDelegate methods
+
+-(BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
+    NSLog(@"messageView:canPerformAction:");
+    if (action == @selector(saveInContacts:)) return NO;
+    if (action == @selector(forwardItem:)) return YES;
+
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+
+    if (action == @selector(copyText:)) {
+        if (message.body.length > 0) {
+            return YES;
+        }
+        return NO;        
+    }
+    
+    if (action == @selector(saveToAlbum:)) {
+        Attachment * myAttachment = message.attachment;
+        if (myAttachment != nil) {
+            if ([myAttachment.mediaType isEqual: @"video"] ||
+                [myAttachment.mediaType isEqual: @"image"]) {
+                return YES;
+            }
+        }
+        return NO;
+    }
+    return NO;
+}
+- (void) messageView:(MessageCell *)theCell saveToAlbum:(id)sender {
+    NSLog(@"saveToAlbum");
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+}
+- (void) messageView:(MessageCell *)theCell forwardItem:(id)sender {
+    NSLog(@"forwardItem");
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+}
+
+- (void) messageView:(MessageCell *)theCell saveInContacts:(id)sender {
+    NSLog(@"saveInContacts");
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+}
+
+- (void) messageView:(MessageCell *)theCell copyText:(id)sender {
+    NSLog(@"copyText");
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+}
+
 
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell {
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];

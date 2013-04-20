@@ -804,12 +804,12 @@
 
 - (NSDictionary*) JsonKeys {
     return @{
-             @"remoteURL": @"remoteURL",
+             @"url": @"remoteURL",
              @"contentSize": @"contentSize",
              @"mediaType": @"mediaType",
              @"mimeType": @"mimeType",
              @"aspectRatio": @"aspectRatio",
-             @"humanReadableFileName": @"humanReadableFileName"
+             @"fileName": @"humanReadableFileName"
              };
 }
 

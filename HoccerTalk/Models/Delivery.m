@@ -11,6 +11,8 @@
 #import "TalkMessage.h"
 #import "NSData+Base64.h"
 #import "RSA.h"
+#import "NSData+HexString.h"
+#import "NSData+CommonCrypto.h"
 
 NSString * const kDeliveryStateNew        = @"new";
 NSString * const kDeliveryStateDelivering = @"delivering";
@@ -26,6 +28,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic keyCiphertext;
 @dynamic keyCiphertextString;
 @dynamic keyCleartext;
+@dynamic receiverKeyId;
 
 -(NSString*) keyCiphertextString {
     return [self.keyCiphertext asBase64EncodedString];
@@ -41,11 +44,27 @@ NSString * const kDeliveryStateFailed     = @"failed";
     }
 }
 
+// for outgoing deliveries
+-(NSString*) receiverKeyId {
+    return self.receiver.publicKeyId;
+}
+
+// for incoming deliveries
+-(void) setReceiverKeyId:(NSString *) theKeyId {
+    NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
+    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    
+    if (![theKeyId isEqualToString:[myKeyId hexadecimalString]]) {
+        NSLog(@"ERROR: incoming message was encrypted with a public key with id %@, but my key id is %@ - decryption will fail",theKeyId,[myKeyId hexadecimalString]);
+    }
+}
+
 - (NSDictionary*) rpcKeys {
     return @{ @"state"     : @"state",
               @"receiverId": @"receiver.clientId",
               @"messageTag": @"message.messageTag",
               @"messageId" : @"message.messageId",
+              @"keyId"     : @"receiverKeyId",
               @"keyCiphertext" : @"keyCiphertextString"
               };
 }
