@@ -703,6 +703,8 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
+				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
+				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
 				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
 				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
 				E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */,
@@ -1272,8 +1274,6 @@
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
-				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
 				E980D445171EF8950060C1B5 /* CryptingInputStream.h */,
 				E980D446171EF8950060C1B5 /* CryptingInputStream.m */,
 				E96CB021171457F9005F8FFA /* Crypto.h */,
