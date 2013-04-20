@@ -47,6 +47,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 @property (nonatomic, strong) NSString * remoteURL;             // remote URL where the file should/was uploaded
 @property (nonatomic)         NSNumber * transferSize;          // number of plaintext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
+@property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
 @property (nonatomic)         NSInteger transferFailures;       // number of upload or download failures
 @property (nonatomic, strong) TalkMessage *message;
 

@@ -126,8 +126,8 @@ typedef enum BackendStates {
 
     if (attachment != nil) {
         attachment.remoteURL =  [[self newUploadURL] absoluteString];
-        attachment.transferSize = 0;
-        attachment.cipherTransferSize = 0;
+        attachment.transferSize = @(0);
+        attachment.cipherTransferSize = @(0);
         
         message.attachment = attachment;
         // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
@@ -619,9 +619,11 @@ typedef enum BackendStates {
 }
 
 - (void) flushPendingAttachmentUploads {
+    NSLog(@"flushPendingAttachmentUploads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : @8};
+    NSDictionary * vars = @{ @"max_retries" : @32};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
+    // NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)
@@ -629,22 +631,26 @@ typedef enum BackendStates {
         NSLog(@"Fetch request 'AttachmentsNotUploaded' failed: %@", error);
         abort();
     }
+    NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         if ([attachment.contentSize longLongValue] <
             [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue] ||
             [attachment.transferSize longLongValue] > 0)
         {
+            // if (attachment.transferSize == nil) attachment.transferSize = @(0);
+            NSLog(@"would upload attachment %@", [attachment description]);
             [attachment upload];
         }
     }
 }
 
 - (void) flushPendingAttachmentDownloads {
+    NSLog(@"flushPendingAttachmentDownloads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : @8};
+    NSDictionary * vars = @{ @"max_retries" : @32};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];
     
-    //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AttachmentsNotDownloaded"];
+    //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)
@@ -652,6 +658,7 @@ typedef enum BackendStates {
         NSLog(@"Fetch request 'AttachmentsNotDownloaded' failed: %@", error);
         abort();
     }
+    NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         if ([attachment.contentSize longLongValue] <
             [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue] ||

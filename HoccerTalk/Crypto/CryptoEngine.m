@@ -11,7 +11,7 @@
 #import "CryptoEngine.h"
 #import "NSData+HexString.h"
 
-#define CRYPTO_ENGINE_DEBUG 0
+#define CRYPTO_ENGINE_DEBUG 1
 
 
 NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";

@@ -9,7 +9,7 @@
 
 #import "CryptingInputStream.h"
 
-#define CRYPTO_STREAM_DEBUG 0
+#define CRYPTO_STREAM_DEBUG 1
 
 @implementation CryptingInputStream 
 {

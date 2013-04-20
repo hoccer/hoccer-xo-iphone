@@ -33,6 +33,7 @@
 @dynamic remoteURL;
 @dynamic transferSize;
 @dynamic cipherTransferSize;
+@dynamic cipheredSize;
 @dynamic transferFailures;
 
 @dynamic message;
@@ -47,7 +48,7 @@
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
 
-#define CONNECTION_TRACE false
+#define CONNECTION_TRACE true
 
 + (NSNumber *) fileSize: (NSString *) fileURL withError: (NSError**) myError {
     *myError = nil;
@@ -581,12 +582,13 @@
         myPath = @"unknown";
     }
     NSString *contentDisposition = [NSString stringWithFormat:@"attachment; filename=\"%@\"", myPath];
-
-    NSNumber * myContentSize = [NSNumber numberWithInteger: [self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].integerValue]];
+    
+    self.cipheredSize = [NSNumber numberWithInteger:[self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].integerValue]];
     
     NSDictionary * headers = @{@"Content-Disposition": contentDisposition,
                                @"Content-Type"       : @"application/octet-stream",
-                               @"Content-Length"     : [myContentSize stringValue]};
+                               @"Content-Length"     : [self.cipheredSize stringValue]};
+    NSLog(@"headers=%@", headers);
     return headers;
 }
 
@@ -777,9 +779,15 @@
                 // TODO: trigger some retry
             }
         } else {
-            self.transferSize = self.contentSize;
-            NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully uploaded attachment, size=%@", self.contentSize);
-            [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
+            // upload finished
+            if ([self.cipheredSize isEqualToNumber:self.cipherTransferSize]) {
+                self.transferSize = self.contentSize;
+                NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully uploaded attachment, size=%@", self.contentSize);
+                [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
+            } else {
+                NSLog(@"Attachment transferConnection connectionDidFinishLoading size mismatch, cipheredSize=%@, cipherTransferSize=%@", self.cipheredSize, self.cipherTransferSize);
+                // TODO: notity someone
+            }
         }
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
@@ -820,6 +828,16 @@
     [self willChangeValueForKey:@"cipherTransferSize"];
     [self setPrimitiveValue: size forKey: @"cipherTransferSize"];
     [self didChangeValueForKey:@"cipherTransferSize"];
+}
+
+- (void) setCipheredSize:(id)size {
+    if ([size isKindOfClass:[NSString class]]) {
+        NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
+        size = [formatter numberFromString: size];
+    }
+    [self willChangeValueForKey:@"cipheredSize"];
+    [self setPrimitiveValue: size forKey: @"cipheredSize"];
+    [self didChangeValueForKey:@"cipheredSize"];
 }
 
 #pragma mark - Attachment JSON Wrapping
