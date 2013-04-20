@@ -945,7 +945,7 @@
 
 -(BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
     // NSLog(@"messageView:canPerformAction:");
-    if (action == @selector(forwardMessage:)) return YES;
+    // if (action == @selector(forwardMessage:)) return YES;
     if (action == @selector(deleteMessage:)) return YES;
     if (action == @selector(copy:)) {return YES;}
 
