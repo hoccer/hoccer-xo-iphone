@@ -47,7 +47,7 @@
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
 
-#define CONNECTION_TRACE false
+#define CONNECTION_TRACE true
 
 + (NSNumber *) fileSize: (NSString *) fileURL withError: (NSError**) myError {
     *myError = nil;
@@ -770,7 +770,6 @@
                 self.localURL = self.ownedURL;
                 // TODO: maybe do some UI refresh here, or use an observer for this
                 [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
-                // [_chatBackend downloadFinished: self];
                 progressIndicatorDelegate = nil;
                 // NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
             } else {
@@ -779,6 +778,8 @@
             }
         } else {
             self.transferSize = self.contentSize;
+            NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully uploaded attachment, size=%@", self.contentSize);
+            [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
         }
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];

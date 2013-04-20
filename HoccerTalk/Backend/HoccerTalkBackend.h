@@ -73,6 +73,7 @@ typedef void (^GenericResultHandler)(BOOL);
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 
 - (void) downloadFinished:(Attachment *)theAttachment;
+- (void) uploadFinished:(Attachment *)theAttachment;
 
 - (void) updateRelationships;
 - (void) updatePresence;

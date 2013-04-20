@@ -20,6 +20,10 @@ FOUNDATION_EXPORT NSString * const kHTAvatarURL;
 FOUNDATION_EXPORT NSString * const kHTUserStatus;
 FOUNDATION_EXPORT NSString * const kHTAutoDownloadLimit;
 FOUNDATION_EXPORT NSString * const kHTAutoUploadLimit;
+
+FOUNDATION_EXPORT NSString * const kHTSaveDatabasePolicy;
+FOUNDATION_EXPORT NSString * const kHTSaveDatabasePolicyPerMessage;
+
 FOUNDATION_EXPORT NSString * const kHTDefaultScreenShooting;
 
 

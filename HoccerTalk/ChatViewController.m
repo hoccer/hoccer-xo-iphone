@@ -968,9 +968,9 @@
     NSLog(@"copy");
     UIPasteboard * board = [UIPasteboard generalPasteboard];
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
-    if (message.body.length > 0) {
-        board.string = message.body;
-    }
+
+    board.string = message.body; // always put in string first
+    
     Attachment * myAttachment = message.attachment;
     if (myAttachment != nil) {
         NSURL * url1 = myAttachment.contentURL;
