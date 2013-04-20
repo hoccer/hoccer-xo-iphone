@@ -529,8 +529,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
 
     if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        NSLog(@"==================== WARNING: Client Id generation disabled ==============");
-        //[[HTUserDefaults standardUserDefaults] setValue: [NSString stringWithUUID] forKey: kHTClientId];
         [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
 #ifdef HXO_USE_USER_DEFINED_CREDENTIALS
         [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];

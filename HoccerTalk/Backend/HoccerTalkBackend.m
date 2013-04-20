@@ -139,8 +139,6 @@ typedef enum BackendStates {
     contact.latestMessageTime = message.timeStamp;
     [message setupOutgoingEncryption];
 
-    // NSLog(@"sendMessage - contact %@", contact);
-
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
     if (_state == kBackendReady) {
@@ -1066,7 +1064,7 @@ typedef enum BackendStates {
         return;
     }
     NSDictionary * deliveryDict = params[0];
-    // NSLog(@"================= outgoingDelivery() called, dict = %@", deliveryDict);
+    // NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
     
     NSString * myMessageTag = deliveryDict[@"messageTag"];
     NSString * myReceiverId = deliveryDict[@"receiverId"];
