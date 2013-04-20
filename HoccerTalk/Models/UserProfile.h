@@ -14,6 +14,14 @@
 
 @property (nonatomic,strong) NSString * nickName;
 
-+ (UserProfile*) myProfile;
+// credentials - stored in keychain
+@property (nonatomic,readonly) NSString * clientId;
+@property (nonatomic,readonly) NSString * password;
+@property (nonatomic,readonly) NSString * salt;
+
+- (NSString*) registerClientAndComputeVerifier: (NSString*) clientId;
+- (void) deleteCredentials;
+
++ (UserProfile*) sharedProfile;
 
 @end
