@@ -58,6 +58,7 @@
 @synthesize headerCell = _headerCell;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
+@synthesize spinner;
 
 - (void)viewDidLoad
 {
@@ -292,6 +293,7 @@
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
     
+    // handle stuff from pasteboard
     if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
         if (attachmentInfo[@"com.hoccer.xo.mediaType"] != nil) {
             // attachment from pasteBoard
@@ -311,6 +313,47 @@
                 [self.currentAttachment makeAudioAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
             }
             return;
+        }
+        
+        // check if pasted image
+        id myImageObject = attachmentInfo[@"com.hoccer.xo.pastedImage"];
+        if (myImageObject != nil) {
+            UIImage * myImage = nil;
+            if ([myImageObject isKindOfClass: [NSData class]]) {
+                myImage = [UIImage imageWithData:myImageObject];
+            } else if ([myImageObject isKindOfClass: [UIImage class]]) {
+                myImage = (UIImage*) myImageObject;
+            }
+            if (myImage != nil) {
+                // handle image from pasteboard
+                
+                // find a suitable unique file name and path
+                NSString * newFileName = @"pastedImage.png";
+                NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+                NSString * myDocDir = [appDocDir path];
+                NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
+                NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
+                
+                NSLog(@"pastedImag savePath = %@", savePath);
+                
+                // write the image
+                [UIImagePNGRepresentation(myImage) writeToFile:savePath atomically:YES];
+                
+                // set attachment data
+                NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
+                
+                [self.currentAttachment makeImageAttachment: [myLocalURL absoluteString] anOtherURL:nil
+                                                      image: myImage
+                                             withCompletion:^(NSError *theError) {
+                                                 [self decorateAttachmentButton: myImage];
+                                             }];
+                return;
+            } else {
+                NSLog(@"didPickAttachment: com.hoccer.xo.pastedImage is not an image, object is of class = %@", [myImageObject class]);
+                [self decorateAttachmentButton:nil];
+                [self trashCurrentAttachment];
+                return;
+            }
         }
     }
     
@@ -452,7 +495,7 @@
             return;
         }
     }
-    // Do no do anything here because some functions above will finish asynchronously
+    // Do not do anything here because some functions above will finish asynchronously
     [self trashCurrentAttachment];
 }
 
@@ -478,12 +521,16 @@
 
 
 - (void) setSpinningAttachmentButton {
-    UIActivityIndicatorView * preview = [[UIActivityIndicatorView alloc] init];
-    self.attachmentPreview = preview;
-    preview.frame = _attachmentButton.frame;
-    preview.autoresizingMask = _attachmentButton.autoresizingMask;
-    [preview startAnimating];
-    [self.chatbar addSubview: preview];
+    if (self.spinner != nil) {
+        [self.spinner removeFromSuperview];
+        self.spinner = nil;
+        self.spinner = [[UIActivityIndicatorView alloc] init];
+    }
+    self.attachmentPreview = spinner;
+    spinner.frame = _attachmentButton.frame;
+    spinner.autoresizingMask = _attachmentButton.autoresizingMask;
+    [spinner startAnimating];
+    [self.chatbar addSubview: spinner];
     _attachmentButton.hidden = YES;
 }
 
@@ -968,25 +1015,41 @@
     UIPasteboard * board = [UIPasteboard generalPasteboard];
     TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
 
-    board.string = message.body; // always put in string first
+    board.string = message.body; // always put in string first to clear board
     
     Attachment * myAttachment = message.attachment;
     if (myAttachment != nil) {
         NSURL * url1 = myAttachment.contentURL;
         NSURL * url2 = myAttachment.otherContentURL;
-        
+#if 0
         if (message.attachment.image != nil) {
-            NSData * myImageData = UIImagePNGRepresentation(message.attachment.image);
-            NSString * myImageType = (NSString*)kUTTypePNG;
-            [board addItems:@[ @{myImageType:myImageData}] ];
+            if (message.body.length > 0) {
+#if 1
+                NSData * myImageData = UIImagePNGRepresentation(message.attachment.image);
+                NSString * myImageType = (NSString*)kUTTypePNG;
+                [board addItems:@[ @{myImageType:myImageData}] ];
+#else
+                // TODO: find out how to put in the UIImage without converting it to data before
+                NSString * myImageType = @"UIImage";
+                //NSString * myImageType = (NSString*)kUTTypeImage;
+                [board addItems:@[ @{myImageType:message.attachment.image}] ];
+#endif
+            } else {
+                board.image = message.attachment.image;
+            }
         }
-        NSString * myURLType = (NSString*)kUTTypeURL;
+#endif
+        if (message.attachment.image != nil) {
+            board.image = message.attachment.image;
+        }
+        if (message.body.length > 0) {
+            [board addItems:@[ @{(NSString*)kUTTypeUTF8PlainText:message.body}] ];
+        }
+        
         if (url1 != nil) {
-            [board addItems:@[ @{myURLType:url1}] ];
             [board addItems:@[ @{@"com.hoccer.xo.url1":[url1 absoluteString]}] ];
         }
         if (url2 != nil) {
-            [board addItems:@[ @{myURLType:url2}] ];
             [board addItems:@[ @{@"com.hoccer.xo.url2":[url2 absoluteString]}] ];
         }
         if (myAttachment.mediaType != nil) {

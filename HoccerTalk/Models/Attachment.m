@@ -47,7 +47,7 @@
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
 
-#define CONNECTION_TRACE true
+#define CONNECTION_TRACE false
 
 + (NSNumber *) fileSize: (NSString *) fileURL withError: (NSError**) myError {
     *myError = nil;
