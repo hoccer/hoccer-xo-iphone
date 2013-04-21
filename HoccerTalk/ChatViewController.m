@@ -32,6 +32,7 @@
 #import "BubbleView.h"
 #import "HTUserDefaults.h"
 #import "ImageViewController.h"
+#import "UserProfile.h"
 
 @interface ChatViewController ()
 
@@ -889,12 +890,8 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        NSData * myImageData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatar];
-        if (myImageData != nil) {
-            self.avatarImage = [UIImage imageWithData: myImageData];
-        } else {
-            self.avatarImage = [UIImage imageNamed: @"avatar_default_contact"];
-        }
+        UIImage * myImage = [UserProfile sharedProfile].avatar;
+        self.avatarImage = myImage != nil ? myImage : [UIImage imageNamed: @"avatar_default_contact"];
     }
 
     if ([message.isRead isEqualToNumber: @NO]) {

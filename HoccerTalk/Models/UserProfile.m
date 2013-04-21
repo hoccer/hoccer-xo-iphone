@@ -11,14 +11,15 @@
 #import <ObjCSRP/HCSRP.h>
 #import "NSString+RandomString.h"
 #import "NSData+HexString.h"
+#import "HTUserDefaults.h"
 
 static UserProfile * profileInstance;
 
 static NSString * const         kHXOAccountIdentifier = @"HXOAccount";
 static NSString * const         kHXOSaltIdentifier    = @"HXOSalt";
-static const NSUInteger         kHXOPasswordLength     = 23;
-static const SRP_HashAlgorithm  kHXOHashAlgorithm      = SRP_SHA256;
-static const SRP_NGType         kHXOPrimeAndGenerator  = SRP_NG_1024;
+static const NSUInteger         kHXOPasswordLength    = 23;
+static const SRP_HashAlgorithm  kHXOHashAlgorithm     = SRP_SHA256;
+static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 
 @interface UserProfile ()
 {
@@ -37,6 +38,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator  = SRP_NG_1024;
     if (self != nil) {
         _accountItem = [[KeychainItemWrapper alloc] initWithIdentifier: kHXOAccountIdentifier accessGroup: nil];
         _saltItem = [[KeychainItemWrapper alloc] initWithIdentifier: kHXOSaltIdentifier accessGroup: nil];
+        [self loadProfile];
     }
     return self;
 }
@@ -47,6 +49,58 @@ static const SRP_NGType         kHXOPrimeAndGenerator  = SRP_NG_1024;
 
 + (UserProfile*) sharedProfile {
     return profileInstance;
+}
+
+- (NSData*) avatarData {
+    return [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
+}
+
+- (NSString*) avatarURL {
+    return [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatarURL];
+}
+
+- (void) setAvatarURL:(NSString *)avatarURL {
+    [[HTUserDefaults standardUserDefaults] setValue: self.avatarURL forKey: kHTAvatarURL];
+    [[HTUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void) loadProfile {
+    self.nickName       = [[HTUserDefaults standardUserDefaults] valueForKey: kHTNickName];
+    NSData * avatarData = [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
+    self.status         = [[HTUserDefaults standardUserDefaults] valueForKey: kHTUserStatus];
+    self.phoneNumber    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTPhoneNumber];
+    self.mailAddress    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTMailAddress];
+    self.twitterName    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTTwitterName];
+    self.facebookName   = [[HTUserDefaults standardUserDefaults] valueForKey: kHTFacebookName];
+    self.googlePlusName = [[HTUserDefaults standardUserDefaults] valueForKey: kHTGooglePlusName];
+    self.githubName     = [[HTUserDefaults standardUserDefaults] valueForKey: kHTGithubName];
+    self.avatar = [UIImage imageWithData: avatarData];
+}
+
+- (void) saveProfile {
+    NSData * avatarData = UIImagePNGRepresentation(self.avatar);
+    [[HTUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHTNickName];
+    [[HTUserDefaults standardUserDefaults] setValue: avatarData          forKey: kHTAvatar];
+    [[HTUserDefaults standardUserDefaults] setValue: self.status         forKey: kHTUserStatus];
+    [[HTUserDefaults standardUserDefaults] setValue: self.phoneNumber    forKey: kHTPhoneNumber];
+    [[HTUserDefaults standardUserDefaults] setValue: self.mailAddress    forKey: kHTMailAddress];
+    [[HTUserDefaults standardUserDefaults] setValue: self.twitterName    forKey: kHTTwitterName];
+    [[HTUserDefaults standardUserDefaults] setValue: self.facebookName   forKey: kHTFacebookName];
+    [[HTUserDefaults standardUserDefaults] setValue: self.googlePlusName forKey: kHTGooglePlusName];
+    [[HTUserDefaults standardUserDefaults] setValue: self.githubName     forKey: kHTGithubName];
+    [[HTUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSString*) clientId {
+    return [_accountItem objectForKey: (__bridge id)(kSecAttrAccount)];
+}
+
+- (NSString*) password {
+    return [_accountItem objectForKey: (__bridge id)(kSecValueData)];
+}
+
+- (NSString*) salt {
+    return [_saltItem objectForKey: (__bridge id)(kSecValueData)];
 }
 
 - (NSString*) registerClientAndComputeVerifier: (NSString*) clientId {
@@ -67,6 +121,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator  = SRP_NG_1024;
     }
     return _srpUser;
 }
+
 - (BOOL) isRegistered {
     return ! [self.clientId isEqualToString: @""] && ! [self.password isEqualToString: @""] && ! [self.salt isEqualToString: @""];
 }
@@ -85,20 +140,6 @@ static const SRP_NGType         kHXOPrimeAndGenerator  = SRP_NG_1024;
 
 - (BOOL) isAuthenticated {
     return self.srpUser.isAuthenticated;
-}
-
-
-
-- (NSString*) clientId {
-    return [_accountItem objectForKey: (__bridge id)(kSecAttrAccount)];
-}
-
-- (NSString*) password {
-    return [_accountItem objectForKey: (__bridge id)(kSecValueData)];
-}
-
-- (NSString*) salt {
-    return [_saltItem objectForKey: (__bridge id)(kSecValueData)];
 }
 
 - (void) deleteCredentials {

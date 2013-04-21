@@ -730,7 +730,7 @@ typedef enum BackendStates {
         } else {
             NSLog(@"SRP Phase 2 failed");
             handler(nil);
-            abort();
+            //abort();
         }
     }];
 }
@@ -814,8 +814,8 @@ typedef enum BackendStates {
 
 - (void) updatePresence {
     NSString * myAvatarURL = [self calcAvatarURL];
-    NSString * myNickName = [[HTUserDefaults standardUserDefaults] objectForKey: kHTNickName];
-   // NSString * myStatus = [[HTUserDefaults standardUserDefaults] objectForKey: kHTUserStatus];
+    NSString * myNickName = [UserProfile sharedProfile].nickName;
+   // NSString * myStatus = [UserProfile sharedProfile].status;
     NSString * myStatus = @"I am.";
     
     NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
@@ -1111,13 +1111,12 @@ typedef enum BackendStates {
 
 - (void) uploadAvatarIfNeeded {
     NSString * myDesiredURL = [self calcAvatarURL];
-    NSString * myCurrentAvatarURL =[[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatarURL];
+    NSString * myCurrentAvatarURL = [UserProfile sharedProfile].avatarURL;
     if (![myCurrentAvatarURL isEqualToString: myDesiredURL]) {
         if ([myDesiredURL length] != 0) {
             [self uploadAvatar: myDesiredURL];
         } else {
-            [[HTUserDefaults standardUserDefaults] setObject: @"" forKey: kHTAvatarURL];
-            [[HTUserDefaults standardUserDefaults] synchronize];
+            [UserProfile sharedProfile].avatarURL = @"";
         }
     }
 }
@@ -1127,7 +1126,7 @@ typedef enum BackendStates {
         NSLog(@"avatar is still being uploaded");
         return;
     }
-    NSData * myAvatarData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatar];
+    NSData * myAvatarData = [UserProfile sharedProfile].avatarData;
     NSLog(@"uploadAvatar starting");
     _avatarBytesTotal = [myAvatarData length];
     _avatarUploadURL = toURL;
@@ -1152,7 +1151,7 @@ typedef enum BackendStates {
 }
 
 - (NSString *) calcAvatarURL {
-    NSData * myAvatarImmutableData = [[HTUserDefaults standardUserDefaults] objectForKey: kHTAvatar];
+    NSData * myAvatarImmutableData = [UserProfile sharedProfile].avatarData;
     if (myAvatarImmutableData == nil || [myAvatarImmutableData length] == 0) {
         return @"";
     }
@@ -1216,8 +1215,7 @@ typedef enum BackendStates {
         _avatarUploadConnection = nil;
         if (_avatarBytesUploaded == _avatarBytesTotal) {
             // set avatar url to new successfully uploaded version
-            [[HTUserDefaults standardUserDefaults] setObject: _avatarUploadURL forKey: kHTAvatarURL];
-            [[HTUserDefaults standardUserDefaults] synchronize];
+            [UserProfile sharedProfile].avatarURL = _avatarUploadURL;
             NSLog(@"_avatarUploadConnection successfully uploaded avatar of size %d", _avatarBytesTotal);
             [self updatePresence];
         } else {

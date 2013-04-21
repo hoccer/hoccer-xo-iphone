@@ -28,6 +28,7 @@
 #import "NSData+CommonCrypto.h"
 #import "ChatViewController.h"
 #import "ConversationViewController.h"
+#import "UserProfile.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
@@ -88,8 +89,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (NSArray*) populateValues {
-    id modelObject = _mode == ProfileViewModeContactProfile ? self.contact : [HTUserDefaults standardUserDefaults];
-    _avatarItem.currentValue = [UIImage imageWithData: [modelObject valueForKey: _avatarItem.valueKey]];
+    id modelObject = _mode == ProfileViewModeContactProfile ? self.contact : [UserProfile sharedProfile];
+    _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
 
     if (_mode == ProfileViewModeContactProfile) {
         _blockContactItem.currentValue = [self titleForRelationshipState: _contact.relationshipState];
@@ -521,10 +522,11 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         scale = 128.0 / _avatarItem.currentValue.size.height;
     }
     CGSize size = CGSizeMake(_avatarItem.currentValue.size.width * scale, _avatarItem.currentValue.size.height * scale);
-    [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.currentValue imageScaledToSize: size]) forKey: _avatarItem.valueKey];
+    UIImage * scaledAvatar = [_avatarItem.currentValue imageScaledToSize: size];
+    [UserProfile sharedProfile].avatar = scaledAvatar;
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
-            [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.valueKey];
+            [[UserProfile sharedProfile] setValue: item.currentValue forKey: item.valueKey];
         }
     }
 
@@ -536,7 +538,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         [self dismissViewControllerAnimated: YES completion: nil];
     }
 
-    [[HTUserDefaults standardUserDefaults] synchronize];
+    [[UserProfile sharedProfile] saveProfile];
     NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }

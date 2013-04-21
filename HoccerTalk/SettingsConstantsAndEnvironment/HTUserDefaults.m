@@ -11,10 +11,18 @@
 NSString * const kHTEnvironment           = @"environment";
 NSString * const kHTFirstRunDone          = @"firstRunDone";
 NSString * const kHTAPNDeviceToken        = @"apnDeviceToken";
+
 NSString * const kHTAvatar                = @"avatar";
 NSString * const kHTAvatarURL             = @"avatarURL";
 NSString * const kHTNickName              = @"nickName";
 NSString * const kHTUserStatus            = @"userStatus";
+NSString * const kHTPhoneNumber           = @"phoneNumber";
+NSString * const kHTMailAddress           = @"mailAddress";
+NSString * const kHTTwitterName           = @"twitterName";
+NSString * const kHTFacebookName          = @"facebookName";
+NSString * const kHTGooglePlusName        = @"googlePlusName";
+NSString * const kHTGithubName            = @"githubName";
+
 NSString * const kHTDefaultScreenShooting = @"defaultScreenShooting";
 NSString * const kHTAutoDownloadLimit     = @"autoDownloadLimit";
 NSString * const kHTAutoUploadLimit       = @"autoUploadLimit";
