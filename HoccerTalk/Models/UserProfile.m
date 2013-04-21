@@ -60,7 +60,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 }
 
 - (void) setAvatarURL:(NSString *)avatarURL {
-    [[HTUserDefaults standardUserDefaults] setValue: self.avatarURL forKey: kHTAvatarURL];
+    [[HTUserDefaults standardUserDefaults] setValue: avatarURL forKey: kHTAvatarURL];
     [[HTUserDefaults standardUserDefaults] synchronize];
 }
 
