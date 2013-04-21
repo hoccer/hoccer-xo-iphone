@@ -8,8 +8,9 @@
 //
 
 #import "CryptingInputStream.h"
+#import "HTUserDefaults.h"
 
-#define CRYPTO_STREAM_DEBUG 0
+#define CRYPTO_STREAM_DEBUG ([[self verbosityLevel]isEqualToString:@"trace"])
 
 @implementation CryptingInputStream 
 {
@@ -24,9 +25,17 @@
     NSError * thisStreamError;
     NSInteger totalBytesIn;
     NSInteger totalBytesOut;
+    NSString * _verbosityLevel;
 }
 
 @synthesize cryptoEngine = _cryptoEngine;
+
+- (NSString *) verbosityLevel {
+    if (_verbosityLevel == nil) {
+        _verbosityLevel = [[HTUserDefaults standardUserDefaults] valueForKey: @"cryptingInputStreamVerbosity"];
+    }
+    return _verbosityLevel;
+}
 
 #pragma mark Object lifecycle
 

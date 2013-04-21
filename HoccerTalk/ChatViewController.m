@@ -941,7 +941,7 @@
 
 -(BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
     // NSLog(@"messageView:canPerformAction:");
-    if (action == @selector(forwardMessage:)) return YES;
+    // if (action == @selector(forwardMessage:)) return YES;
     if (action == @selector(deleteMessage:)) return YES;
     if (action == @selector(copy:)) {return YES;}
 
@@ -1004,7 +1004,7 @@
 
 - (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
     NSLog(@"forwardMessage");
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    // TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
 }
 
 - (void) messageView:(MessageCell *)theCell copy:(id)sender {
@@ -1062,7 +1062,23 @@
 }
 - (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender {
     NSLog(@"deleteMessage");
-    TalkMessage * deleteMessage = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    
+    if (message.attachment != nil) {
+        if (message.attachment.ownedURL.length > 0) {
+            NSURL * myURL = [NSURL URLWithString:message.attachment.ownedURL];
+            if ([myURL isFileURL]) {
+                [[NSFileManager defaultManager] removeItemAtURL:myURL error:nil];
+            }
+            [self.managedObjectContext deleteObject: message.attachment];
+        }
+    }
+    
+    for (Delivery * d in message.deliveries) {
+        [self.managedObjectContext deleteObject: d];
+    }
+    
+    [self.managedObjectContext deleteObject: message];
 }
 
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell {
