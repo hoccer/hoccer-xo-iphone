@@ -33,6 +33,9 @@
 @synthesize userAgent;
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    unsigned seed;
+    SecRandomCopyBytes(kSecRandomDefault, sizeof seed, (uint8_t*)&seed);
+    srand(seed);
     _backgroundTask = UIBackgroundTaskInvalid;
     return YES;
 }
