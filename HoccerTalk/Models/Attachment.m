@@ -11,6 +11,7 @@
 #import "HoccerTalkBackend.h"
 #import "AppDelegate.h"
 #import "CryptingInputStream.h"
+#import "HTUserDefaults.h"
 
 #import <Foundation/NSURL.h>
 #import <MediaPlayer/MPMoviePlayerController.h>
@@ -20,6 +21,9 @@
 #import <AVFoundation/AVFoundation.h>
 
 @implementation Attachment
+{
+    NSString * _verbosityLevel;
+}
 
 @dynamic localURL;
 @dynamic mimeType;
@@ -48,7 +52,15 @@
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
 
-#define CONNECTION_TRACE true
+#define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"])
+
+
+- (NSString *) verbosityLevel {
+    if (_verbosityLevel == nil) {
+        _verbosityLevel = [[HTUserDefaults standardUserDefaults] valueForKey: @"attachmentVerbosity"];
+    }
+    return _verbosityLevel;
+}
 
 + (NSNumber *) fileSize: (NSString *) fileURL withError: (NSError**) myError {
     *myError = nil;
