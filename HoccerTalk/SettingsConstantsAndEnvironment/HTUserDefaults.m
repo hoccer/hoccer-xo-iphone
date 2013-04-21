@@ -22,6 +22,9 @@ NSString * const kHTDefaultScreenShooting = @"defaultScreenShooting";
 NSString * const kHTAutoDownloadLimit     = @"autoDownloadLimit";
 NSString * const kHTAutoUploadLimit       = @"autoUploadLimit";
 
+NSString * const kHTMaxAttachmentUploadRetries   = @"maxAttachmentUploadRetries";
+NSString * const kHTMaxAttachmentDownloadRetries = @"maxAttachmentDownloadRetries";
+
 NSString * const kHTSaveDatabasePolicy    = @"saveDatabasePolicy";
 NSString * const kHTSaveDatabasePolicyPerMessage  = @"perMessage";
 

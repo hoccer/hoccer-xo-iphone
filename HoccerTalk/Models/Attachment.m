@@ -23,6 +23,7 @@
 @implementation Attachment
 {
     NSString * _verbosityLevel;
+    NSError * _transferError;
 }
 
 @dynamic localURL;
@@ -47,10 +48,13 @@
 
 @synthesize image;
 @synthesize transferConnection = _transferConnection;
+@synthesize transferError = _transferError;
+@synthesize transferHttpStatusCode;
 @synthesize chatBackend = _chatBackend;
 @synthesize progressIndicatorDelegate;
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
+@synthesize transferRetryTimer;
 
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"])
 
@@ -539,8 +543,22 @@
     }
 }
 
-- (void) downloadLater: (NSTimer*) theTimer {
+- (void) downloadOnTimer: (NSTimer*) theTimer {
+    if (theTimer != transferRetryTimer) {
+        NSLog(@"downloadOnTimer: called by strange timer");
+    } else {
+        transferRetryTimer = nil;
+    }
     [self download];
+}
+
+- (void) uploadOnTimer: (NSTimer*) theTimer {
+    if (theTimer != transferRetryTimer) {
+        NSLog(@"downloadOnTimer: called by strange timer");
+    } else {
+        transferRetryTimer = nil;
+    }
+    [self upload];
 }
 
 - (void)pressedButton: (id)sender {
@@ -675,24 +693,24 @@
         NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@",
               httpResponse, (long)[httpResponse statusCode],
               [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
-        if ((long)[httpResponse statusCode] == 404) {
-            [self retryDownload];
+        self.transferHttpStatusCode = (long)[httpResponse statusCode];
+        if ((long)[httpResponse statusCode] != 200) {
+            // TODO: check if this is necessary and leads to duplicate error reporting
+            NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection didReceiveResponse http status code =%ld", self.transferHttpStatusCode];
+            NSLog(@"%@", myDescription);
+            self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+            if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+                [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+            } else {
+                [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+            }
         }
     } else {
         NSLog(@"ERROR: Attachment transferConnection didReceiveResponse without valid connection");        
     }
 }
 
--(void) retryDownload {
-    if (self.transferFailures < 8) {
-        self.transferFailures = self.transferFailures + 1;
-        double randomFactor = (double)arc4random()/(double)0xffffffff;
-        // NSLog(@"randomFactor = %f",randomFactor);
-        double retryTime = (2.0 + randomFactor) * self.transferFailures * self.transferFailures;
-        NSLog(@"retryDownload: failures = %i, retryTime = %f",self.transferFailures, retryTime);
-        [NSTimer scheduledTimerWithTimeInterval:retryTime target:self selector: @selector(downloadLater:) userInfo:nil repeats:NO];
-    }
-}
 
 -(void) appendToFile:(NSString*)fileURL thisData:(NSData *) data {
     NSURL * myURL = [NSURL URLWithString: self.ownedURL];
@@ -754,8 +772,14 @@
     if (connection == _transferConnection) {
         NSLog(@"Attachment transferConnection didFailWithError %@", error);
         self.transferConnection = nil;
+        self.transferError = error;
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
+        }
+        if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+            [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+        } else {
+            [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
         }
     } else {
         NSLog(@"ERROR: Attachment transferConnection didFailWithError without valid connection");
@@ -787,8 +811,10 @@
                 progressIndicatorDelegate = nil;
                 // NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
             } else {
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize);
-                // TODO: trigger some retry
+                NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize];
+                NSLog(@"%@", myDescription);
+                self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
             }
         } else {
             // upload finished
@@ -797,8 +823,10 @@
                 NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully uploaded attachment, size=%@", self.contentSize);
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
             } else {
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading size mismatch, cipheredSize=%@, cipherTransferSize=%@", self.cipheredSize, self.cipherTransferSize);
-                // TODO: notity someone
+                NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading size mismatch, cipheredSize=%@, cipherTransferSize=%@", self.cipheredSize, self.cipherTransferSize];
+                NSLog(@"%@", myDescription);
+                self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 666 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
             }
         }
         if (progressIndicatorDelegate) {

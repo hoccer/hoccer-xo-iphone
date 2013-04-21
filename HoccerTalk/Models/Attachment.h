@@ -55,11 +55,14 @@ typedef void(^CompletionBlock)(NSError* theError);
 @property (nonatomic) NSString * attachmentJsonString;
 @property (nonatomic) NSString * attachmentJsonStringCipherText;
 
-// These are non-persistent properties
+// These are non-persistent properties:
 
 @property (nonatomic, strong) UIImage *image;
 
 @property (nonatomic, strong) NSURLConnection *transferConnection;
+@property (nonatomic, copy) NSError * transferError;
+@property (nonatomic)       long transferHttpStatusCode;
+@property (nonatomic, strong) NSTimer *transferRetryTimer;
 
 @property (readonly, strong) NSDictionary * uploadHttpHeaders;
 @property (readonly, strong) NSDictionary * uploadHttpHeadersWithCrypto;
@@ -67,10 +70,10 @@ typedef void(^CompletionBlock)(NSError* theError);
 
 @property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
 
-@property (strong, nonatomic) id<TransferProgressIndication> progressIndicatorDelegate;
+@property (nonatomic, strong) id<TransferProgressIndication> progressIndicatorDelegate;
 
-@property (strong, nonatomic) CryptoEngine * decryptionEngine;
-@property (strong, nonatomic) CryptoEngine * encryptionEngine;
+@property (nonatomic, strong) CryptoEngine * decryptionEngine;
+@property (nonatomic, strong) CryptoEngine * encryptionEngine;
 
 // encryption/decryption properties
 
@@ -86,7 +89,8 @@ typedef void(^CompletionBlock)(NSError* theError);
 - (void) uploadData;
 - (void) uploadStream;
 - (void) download;
-- (void) downloadLater: (NSTimer*) theTimer;
+- (void) downloadOnTimer: (NSTimer*) theTimer;
+- (void) uploadOnTimer: (NSTimer*) theTimer;
 
 - (void) makeImageAttachment:(NSString *)theURL anOtherURL:(NSString *)otherURL image:(UIImage*)theImage withCompletion:(CompletionBlock)completion;
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;

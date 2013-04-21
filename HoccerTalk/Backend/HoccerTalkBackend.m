@@ -231,7 +231,7 @@ typedef enum BackendStates {
     if (attachment) {
         if ([attachment.contentSize longLongValue] < [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue])
         {
-            [NSTimer scheduledTimerWithTimeInterval:2.0 target:attachment selector: @selector(downloadLater:) userInfo:nil repeats:NO];
+            [self scheduleNewDownloadFor:attachment];
         }
     }
     [self.delegate saveDatabase];
@@ -620,7 +620,7 @@ typedef enum BackendStates {
 - (void) flushPendingAttachmentUploads {
     NSLog(@"flushPendingAttachmentUploads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : @32};
+    NSDictionary * vars = @{ @"max_retries" : [[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
     // NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
@@ -632,9 +632,10 @@ typedef enum BackendStates {
     }
     NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
-        if ([attachment.contentSize longLongValue] <
+        if ((attachment.message != nil) && // attachment attached to sent message
+            ([attachment.contentSize longLongValue] <
             [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue] ||
-            [attachment.transferSize longLongValue] > 0)
+            [attachment.transferSize longLongValue] > 0))
         {
             // if (attachment.transferSize == nil) attachment.transferSize = @(0);
             NSLog(@"would upload attachment %@", [attachment description]);
@@ -646,7 +647,7 @@ typedef enum BackendStates {
 - (void) flushPendingAttachmentDownloads {
     NSLog(@"flushPendingAttachmentDownloads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : @32};
+    NSDictionary * vars = @{ @"max_retries" : [[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];
     
     //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
@@ -680,8 +681,67 @@ typedef enum BackendStates {
     [self.delegate saveDatabase];
 }
 
+- (void) downloadFailed:(Attachment *)theAttachment {
+    // NSLog(@"downloadFinished of %@", theAttachment);
+    [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
+    [self.delegate saveDatabase];
+    theAttachment.transferFailures = theAttachment.transferFailures + 1;
+    [self scheduleNewDownloadFor:theAttachment];
+}
+
+- (void) uploadFailed:(Attachment *)theAttachment {
+    // NSLog(@"uploadFinished of %@", theAttachment);
+    [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
+    [self.delegate saveDatabase];
+    theAttachment.transferFailures = theAttachment.transferFailures + 1;
+    [self scheduleNewUploadFor:theAttachment];
+}
+
+- (double) transferRetryTimeFor:(Attachment *)theAttachment {
+    double randomFactor = (double)arc4random()/(double)0xffffffff;
+    double retryTime = (2.0 + randomFactor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
+    return retryTime;
+}
+
+-(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withRetryLimit:(long long)maxRetries withSelector:(SEL)theTransferSelector {
+    if (theAttachment.transferRetryTimer != nil) {
+        NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs",
+              theAttachment.remoteURL,
+              [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
+        [theAttachment.transferRetryTimer invalidate];
+        theAttachment.transferRetryTimer = nil;
+    }
+    if (theAttachment.transferFailures < maxRetries) {
+        NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
+                                                                            target:theAttachment
+                                                                          selector: theTransferSelector
+                                                                          userInfo:nil
+                                                                           repeats:NO];
+    } else {
+        NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
+              theAttachment.remoteURL, theAttachment.transferFailures);
+    }
+}
+
+
+-(void) scheduleNewDownloadFor:(Attachment *)theAttachment {
+    long long maxRetries = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries] longLongValue];
+    [self scheduleNewTransferFor:theAttachment
+                          inSecs:[self transferRetryTimeFor:theAttachment]
+                  withRetryLimit:maxRetries
+                    withSelector:@selector(downloadOnTimer:)];
+}
+
+-(void) scheduleNewUploadFor:(Attachment *)theAttachment {
+    long long maxRetries = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries] longLongValue];
+    [self scheduleNewTransferFor:theAttachment
+                          inSecs:[self transferRetryTimeFor:theAttachment]
+                  withRetryLimit:maxRetries
+                    withSelector:@selector(uploadOnTimer:)];
+}
+
 - (NSURL *) newUploadURL {
-    // NSString * myURL = [kFileCacheDevelopmentURI stringByAppendingString:[NSString stringWithUUID]];
     NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
     return [NSURL URLWithString: myURL];
 }
@@ -806,6 +866,7 @@ typedef enum BackendStates {
         if (success) {
             // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
             [delivery updateWithDictionary: responseOrError];
+            [self.delegate saveDatabase];
         } else {
             NSLog(@"deliveryConfirm() failed: %@", responseOrError);
         }
@@ -820,6 +881,7 @@ typedef enum BackendStates {
         if (success) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
             [delivery updateWithDictionary: responseOrError];
+            [self.delegate saveDatabase];
             [self.delegate.managedObjectContext refreshObject: delivery.message mergeChanges: YES];
         } else {
             NSLog(@"deliveryAcknowledge() failed: %@", responseOrError);
