@@ -421,14 +421,13 @@ typedef enum BackendStates {
 }
 
 - (void) reconnectWitBackoff {
-    NSLog(@"reconnecting in %f seconds", _backoffTime);
     if (_backoffTime == 0) {
-        [self start: _performRegistration];
         _backoffTime = (double)rand() / RAND_MAX;
     } else {
-        [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnect) userInfo: nil repeats: NO];
         _backoffTime = MIN(2 * _backoffTime, 10);
     }
+    NSLog(@"reconnecting in %f seconds", _backoffTime);
+    [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnect) userInfo: nil repeats: NO];
 }
 
 
@@ -1118,10 +1117,6 @@ typedef enum BackendStates {
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@", error);
     [self setState: kBackendStopped]; // XXX do we need/want a failed state?
-    // if we get an error add a little initial backoff
-    if (_backoffTime == 0) {
-        _backoffTime = (double)rand() / RAND_MAX;
-    }
     [self reconnectWitBackoff];
 }
 

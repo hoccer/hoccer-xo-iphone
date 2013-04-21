@@ -805,7 +805,6 @@
         // self.title = [object nickName];
         self.title = [object nickNameWithStatus];
     } else if ([keyPath isEqualToString: @"avatarImage"]) {
-        NSLog(@"======== new avatar =============");
         NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
         [self.tableView beginUpdates];
         for (int i = 0; i < indexPaths.count; ++i) {
