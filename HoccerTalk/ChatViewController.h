@@ -13,7 +13,7 @@
 #import "ChatTableCells.h"
 
 @class HoccerTalkBackend;
-
+@class AVAssetExportSession;
 
 @interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate>
 {
@@ -26,15 +26,17 @@
 @property (strong, nonatomic) IBOutlet UIButton *            sendButton;
 @property (strong, nonatomic) IBOutlet UIView *              chatbar;
 @property (strong, nonatomic) IBOutlet UIButton *            attachmentButton;
+@property (strong, nonatomic) IBOutlet UIButton *            cancelButton;
 @property (strong, nonatomic) IBOutlet UITableView *         tableView;
-@property (strong, nonatomic) UIActivityIndicatorView *      spinner;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView * attachmentSpinner;
 
 @property (strong, nonatomic) NSFetchedResultsController *   fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *       managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *         managedObjectModel;
 
 @property (strong, nonatomic) Attachment * currentAttachment;
-
+@property (strong, nonatomic) AVAssetExportSession * currentExportSession;
+@property (strong, nonatomic) id currentPickInfo;
 
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottom: (BOOL) animated;

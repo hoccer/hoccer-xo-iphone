@@ -58,7 +58,8 @@
 @synthesize headerCell = _headerCell;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
-@synthesize spinner;
+@synthesize currentExportSession = _currentExportSession;
+@synthesize currentPickInfo = _currentPickInfo;
 
 - (void)viewDidLoad
 {
@@ -137,6 +138,8 @@
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
     [menuController setMenuItems:@[mySaveMenuItem,myForwardMenuItem,myDeleteMessageMenuItem]];
     [menuController update];
+    
+    [self hideAttachmentSpinner];
 
     [self configureView];
 }
@@ -224,19 +227,33 @@
 - (IBAction)sendPressed:(id)sender {
     [self.textField resignFirstResponder];
     if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
-        [self.chatBackend sendMessage: self.textField.text toContact: self.partner withAttachment: self.currentAttachment];
-        self.currentAttachment = nil;
-        self.textField.text = @"";
+        if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
+            [self.chatBackend sendMessage: self.textField.text toContact: self.partner withAttachment: self.currentAttachment];
+            self.currentAttachment = nil;
+            self.textField.text = @"";
+        } else {
+            // attachment content processing in progess, probably audio export
+            NSLog(@"sendPressed called while attachment not ready, should not happen");
+            return;
+        }
     }
-    [self removeAttachmentPreview];
+    [self trashCurrentAttachment]; // will be trashed only in case it is still set
 }
 
-- (IBAction) addAttachmentPressed:(id)sender {
+- (IBAction)addAttachmentPressed:(id)sender {
+    NSLog(@"addAttachmentPressed");
     [self.textField resignFirstResponder];
     [self.attachmentPicker showInView: self.view];
 }
 
-- (IBAction) attachmentPressed: (id)sender {
+- (IBAction)attachmentPressed: (id)sender {
+    NSLog(@"attachmentPressed");
+    [self.textField resignFirstResponder];
+    [self showAttachmentOptions];
+}
+
+- (IBAction)cancelAttachmentProcessingPressed: (id)sender {
+    NSLog(@"cancelPressed");
     [self.textField resignFirstResponder];
     [self showAttachmentOptions];
 }
@@ -287,7 +304,7 @@
     if (attachmentInfo == nil) {
         return;
     }
-    [self setSpinningAttachmentButton];
+    [self startPickedAttachmentProcessingForObject:attachmentInfo];
     NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
@@ -302,7 +319,7 @@
             self.currentAttachment.humanReadableFileName = attachmentInfo[@"com.hoccer.xo.fileName"];
             
             CompletionBlock completion  = ^(NSError *myerror) {
-                [self decorateAttachmentButton: self.currentAttachment.image];                
+                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:myerror];
             };
             
             if ([myMediaType isEqualToString:@"image"]) {
@@ -345,13 +362,14 @@
                 [self.currentAttachment makeImageAttachment: [myLocalURL absoluteString] anOtherURL:nil
                                                       image: myImage
                                              withCompletion:^(NSError *theError) {
-                                                 [self decorateAttachmentButton: myImage];
+                                                 [self finishPickedAttachmentProcessingWithImage: myImage withError:theError];
                                              }];
                 return;
             } else {
-                NSLog(@"didPickAttachment: com.hoccer.xo.pastedImage is not an image, object is of class = %@", [myImageObject class]);
-                [self decorateAttachmentButton:nil];
-                [self trashCurrentAttachment];
+                NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: com.hoccer.xo.pastedImage is not an image, object is of class = %@", [myImageObject class]];
+                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 555 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+               
+                [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                 return;
             }
         }
@@ -381,37 +399,46 @@
         if ([songAsset hasProtectedContent] == YES) {
             // TODO: user dialog here
             NSLog(@"Media is protected by DRM");
-            [self trashCurrentAttachment];
+            NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: Media is protected by DRM"];
+            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 557 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+            return;
+        }
+        if (_currentExportSession != nil) {
+            NSString * myDescription = [NSString stringWithFormat:@"An audio export is still in progress"];
+            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
             return;
         }
         
-        AVAssetExportSession *exporter = [[AVAssetExportSession alloc]
-                                          initWithAsset: songAsset
-                                          presetName: AVAssetExportPresetAppleM4A];
+        _currentExportSession = [[AVAssetExportSession alloc]
+                                  initWithAsset: songAsset
+                                  presetName: AVAssetExportPresetAppleM4A];
         
-                
-        exporter.outputURL = [NSURL fileURLWithPath:exportFile];
-        exporter.outputFileType = AVFileTypeAppleM4A;
-        exporter.shouldOptimizeForNetworkUse = YES;
+        
+        _currentExportSession.outputURL = [NSURL fileURLWithPath:exportFile];
+        _currentExportSession.outputFileType = AVFileTypeAppleM4A;
+        _currentExportSession.shouldOptimizeForNetworkUse = YES;
         // exporter.shouldOptimizeForNetworkUse = NO;
         
-        [exporter exportAsynchronouslyWithCompletionHandler:^{
-            int exportStatus = exporter.status;
+        [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
+            int exportStatus = _currentExportSession.status;
             switch (exportStatus) {
                 case AVAssetExportSessionStatusFailed: {
                     // log error to text view
-                    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:NSLocalizedString(@"Error_Media_Export_Failed", nil) forKey:NSLocalizedDescriptionKey];
-                    NSError *error = [NSError errorWithDomain:@"media export failed" code:796 userInfo:userInfo];
-                    NSLog(@"AVAssetExportSessionStatusFailed = %@", error);
-                    [self trashCurrentAttachment];
+                    NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
+                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                    _currentExportSession = nil;
+                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
                     NSLog (@"AVAssetExportSessionStatusCompleted");
-                    [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[exporter.outputURL absoluteString] withCompletion:^(NSError *theError) {
-                        [self decorateAttachmentButton: self.currentAttachment.image];
+                    [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
+                        _currentExportSession = nil;
+                        [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:theError];
                     }];
-
+                     // TODO: in case we fail getting the artwork from file try get artwork from Media Item
                      // set up artwork image
                      // MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
                      // NSLog(@"createThumb1: artwork=%@", artwork);
@@ -424,7 +451,11 @@
                 case AVAssetExportSessionStatusExporting: {
                     NSLog (@"AVAssetExportSessionStatusExporting"); break;}
                 case AVAssetExportSessionStatusCancelled: {
-                    NSLog (@"AVAssetExportSessionStatusCancelled"); break;}
+                    _currentExportSession = nil;
+                    [self finishPickedAttachmentProcessingWithImage: nil withError:_currentExportSession.error];
+                    NSLog (@"AVAssetExportSessionStatusCancelled");
+                    break;
+                } 
                 case AVAssetExportSessionStatusWaiting: {
                     NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
                 default: { NSLog (@"didn't get export status"); break;}
@@ -450,11 +481,11 @@
                         [self.currentAttachment makeImageAttachment: [myURL absoluteString] anOtherURL:nil
                                                               image: attachmentInfo[UIImagePickerControllerOriginalImage]
                                                      withCompletion:^(NSError *theError) {
-                                                         [self decorateAttachmentButton: self.currentAttachment.image];
+                                                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:error];
                                                      }];
                     } else {
                         NSLog(@"Error saving image in Library, error = %@", error);
-                        [self trashCurrentAttachment];
+                        [self finishPickedAttachmentProcessingWithImage: nil withError:error];
                     }
                 };
                 
@@ -469,7 +500,8 @@
                 [self.currentAttachment makeImageAttachment: [myURL absoluteString] anOtherURL:nil
                                                       image: attachmentInfo[UIImagePickerControllerOriginalImage]
                                              withCompletion:^(NSError *theError) {
-                                                 [self decorateAttachmentButton: attachmentInfo[UIImagePickerControllerOriginalImage]];
+                                                 [self finishPickedAttachmentProcessingWithImage: attachmentInfo[UIImagePickerControllerOriginalImage]
+                                                                                       withError:theError];
                                              }];
             }
             return;
@@ -486,21 +518,26 @@
                     self.currentAttachment.ownedURL = [myTempURL copy];
                 } else {
                     NSLog(@"didPickAttachment: failed to save video in album at path = %@",tempFilePath);
-                    [self trashCurrentAttachment];
+                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
+                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                    return;
                 }
             }
             [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
-                [self decorateAttachmentButton: self.currentAttachment.image];
+                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:theError];
             }];
             return;
         }
     }
     // Do not do anything here because some functions above will finish asynchronously
-    [self trashCurrentAttachment];
+    // just in case, but we should never get here
+    [self finishPickedAttachmentProcessingWithImage: nil withError:nil];
 }
 
 - (void) decorateAttachmentButton:(UIImage *) theImage {
-    if (theImage) {
+    NSLog(@"decorateAttachmentButton with %@", theImage);
+    if (theImage != nil) {
         if (self.attachmentPreview != nil) {
             [self.attachmentPreview removeFromSuperview];
         }
@@ -515,32 +552,67 @@
         [self.chatbar addSubview: preview];
         _attachmentButton.hidden = YES;
     } else {
+        [self removeAttachmentPreview];
+    }
+}
+
+- (void) removeAttachmentPreview {
+    if (self.attachmentPreview != nil) {
+        [self.attachmentPreview removeFromSuperview];
         self.attachmentPreview = nil;
+        self.attachmentButton.hidden = NO;
     }
 }
 
 
-- (void) setSpinningAttachmentButton {
-    if (self.spinner != nil) {
-        [self.spinner removeFromSuperview];
-        self.spinner = nil;
-        self.spinner = [[UIActivityIndicatorView alloc] init];
-    }
-    self.attachmentPreview = spinner;
-    spinner.frame = _attachmentButton.frame;
-    spinner.autoresizingMask = _attachmentButton.autoresizingMask;
-    [spinner startAnimating];
-    [self.chatbar addSubview: spinner];
+- (void) startPickedAttachmentProcessingForObject:(id)info {
+    _currentPickInfo = info;
+    NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
+    [self showAttachmentSpinner];
     _attachmentButton.hidden = YES;
+}
+
+- (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
+    NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
+    _currentPickInfo = nil;
+    [self hideAttachmentSpinner];
+    if (theError == nil && theImage != nil) {
+        [self decorateAttachmentButton:theImage];
+    } else {
+        [self trashCurrentAttachment];
+    }
+}
+
+- (void) showAttachmentSpinner {
+    NSLog(@"showAttachmentSpinner");
+    _attachmentSpinner.hidden = NO;
+    [_attachmentSpinner startAnimating];
+}
+
+- (void) hideAttachmentSpinner {
+    NSLog(@"hideAttachmentSpinner");
+    [_attachmentSpinner stopAnimating];
+    _attachmentSpinner.hidden = YES;
 }
 
 
 - (void) trashCurrentAttachment {
     if (self.currentAttachment != nil) {
+        if (_currentPickInfo != nil) {
+            if (_currentExportSession != nil) {
+                [_currentExportSession cancelExport];
+                // attachment will be trashed when export session canceling will call finishPickedAttachmentProcessingWithImage
+                return;
+            } else {
+                NSLog(@"Picking still in progress, can't trash - or can I?");
+            }
+        }
+        
         [self.managedObjectContext deleteObject: self.currentAttachment];
         self.currentAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
+    _attachmentButton.hidden = NO;
 }
 
 - (void) showAttachmentOptions {
@@ -561,7 +633,8 @@
     }
     switch (buttonIndex) {
         case 0:
-            [self removeAttachmentPreview];
+            // cancel pressed
+            [self trashCurrentAttachment];
             break;
         case 1:
             NSLog(@"Viewing attachments not yet implemented");
@@ -571,14 +644,6 @@
     }
 }
 
-- (void) removeAttachmentPreview {
-    if (self.attachmentPreview != nil) {
-        [self.attachmentPreview removeFromSuperview];
-        self.attachmentPreview = nil;
-        self.attachmentButton.hidden = NO;
-    }
-    [self trashCurrentAttachment];
-}
 
 #pragma mark - Growing Text View Delegate
 

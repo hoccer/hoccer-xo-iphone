@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -519,6 +519,21 @@
                                             <action selector="sendPressed:" destination="21" eventType="touchUpInside" id="TLE-up-7TW"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" alpha="0.10000000000000001" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xPf-xg-Yss" userLabel="Button - Cancel">
+                                        <rect key="frame" x="5" y="8" width="50" height="23"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Button">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelAttachmentProcessingPressed:" destination="21" eventType="touchUpInside" id="Jjz-a4-uuj"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sMD-1M-Mcj" userLabel="Button - Add Attachment">
                                         <rect key="frame" x="5" y="5" width="50" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -542,6 +557,10 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
+                                    <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" style="white" id="Fyy-CK-c8b" userLabel="Activity Indicator - Attachment">
+                                        <rect key="frame" x="20" y="10" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -666,6 +685,8 @@
                     <navigationItem key="navigationItem" title="Mr. Mister" id="26"/>
                     <connections>
                         <outlet property="attachmentButton" destination="sMD-1M-Mcj" id="RZT-5t-YDG"/>
+                        <outlet property="attachmentSpinner" destination="Fyy-CK-c8b" id="2yz-qe-pkx"/>
+                        <outlet property="cancelButton" destination="xPf-xg-Yss" id="fTn-KF-9o0"/>
                         <outlet property="chatbar" destination="129-Xd-O4Y" id="4Iz-Jw-fS7"/>
                         <outlet property="sendButton" destination="5x6-4c-VVf" id="WvI-ca-kGo"/>
                         <outlet property="tableView" destination="V1G-wu-Gd1" id="BG6-xp-NlW"/>
@@ -755,6 +776,8 @@
                 <relationship kind="action" name="addAttachmentPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="attachmentSpinner" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
                 <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
