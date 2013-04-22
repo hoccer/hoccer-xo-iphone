@@ -28,6 +28,8 @@ NSString * const kHTMaxAttachmentDownloadRetries = @"maxAttachmentDownloadRetrie
 NSString * const kHTSaveDatabasePolicy    = @"saveDatabasePolicy";
 NSString * const kHTSaveDatabasePolicyPerMessage  = @"perMessage";
 
+NSString * const kHTPreviewImageWidth      = @"previewImageWidth";
+
 NSString * const kHTDefaultsDefaultsFile = @"HTUserDefaultsDefaults";
 
 @implementation HTUserDefaults

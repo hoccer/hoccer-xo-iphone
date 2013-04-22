@@ -319,7 +319,7 @@
             self.currentAttachment.humanReadableFileName = attachmentInfo[@"com.hoccer.xo.fileName"];
             
             CompletionBlock completion  = ^(NSError *myerror) {
-                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:myerror];
+                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:myerror];
             };
             
             if ([myMediaType isEqualToString:@"image"]) {
@@ -436,7 +436,7 @@
                     NSLog (@"AVAssetExportSessionStatusCompleted");
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
-                        [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:theError];
+                        [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
                     }];
                      // TODO: in case we fail getting the artwork from file try get artwork from Media Item
                      // set up artwork image
@@ -481,7 +481,7 @@
                         [self.currentAttachment makeImageAttachment: [myURL absoluteString] anOtherURL:nil
                                                               image: attachmentInfo[UIImagePickerControllerOriginalImage]
                                                      withCompletion:^(NSError *theError) {
-                                                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:error];
+                                                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:error];
                                                      }];
                     } else {
                         NSLog(@"Error saving image in Library, error = %@", error);
@@ -525,7 +525,7 @@
                 }
             }
             [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
-                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.image withError:theError];
+                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
             }];
             return;
         }
@@ -1104,28 +1104,35 @@
             }
         }
 #endif
-        if (message.attachment.image != nil) {
-            board.image = message.attachment.image;
-        }
-        if (message.body.length > 0) {
-            [board addItems:@[ @{(NSString*)kUTTypeUTF8PlainText:message.body}] ];
-        }
-        
-        if (url1 != nil) {
-            [board addItems:@[ @{@"com.hoccer.xo.url1":[url1 absoluteString]}] ];
-        }
-        if (url2 != nil) {
-            [board addItems:@[ @{@"com.hoccer.xo.url2":[url2 absoluteString]}] ];
-        }
-        if (myAttachment.mediaType != nil) {
-            [board addItems:@[ @{@"com.hoccer.xo.mediaType":myAttachment.mediaType}] ];
-        }
-        if (myAttachment.mimeType != nil) {
-            [board addItems:@[ @{@"com.hoccer.xo.mimeType":myAttachment.mimeType}] ];
-        }
-        if (myAttachment.humanReadableFileName != nil) {
-            [board addItems:@[ @{@"com.hoccer.xo.fileName":myAttachment.humanReadableFileName}] ];
-        }
+        [message.attachment loadImage:^(UIImage* theImage, NSError* error) {
+            NSLog(@"attachment copy loadimage done");
+            if (theImage != nil) {
+                board.image = theImage;
+            } else {
+                NSLog(@"attachment copy: Failed to get image: %@", error);
+            }
+            
+            // put in other data even if image loading fails, but we have to wat to preserve order
+            // otherwise additional board data will be wiped out when setting the image
+            if (message.body.length > 0) {
+                [board addItems:@[ @{(NSString*)kUTTypeUTF8PlainText:message.body}] ];
+            }
+            if (url1 != nil) {
+                [board addItems:@[ @{@"com.hoccer.xo.url1":[url1 absoluteString]}] ];
+            }
+            if (url2 != nil) {
+                [board addItems:@[ @{@"com.hoccer.xo.url2":[url2 absoluteString]}] ];
+            }
+            if (myAttachment.mediaType != nil) {
+                [board addItems:@[ @{@"com.hoccer.xo.mediaType":myAttachment.mediaType}] ];
+            }
+            if (myAttachment.mimeType != nil) {
+                [board addItems:@[ @{@"com.hoccer.xo.mimeType":myAttachment.mimeType}] ];
+            }
+            if (myAttachment.humanReadableFileName != nil) {
+                [board addItems:@[ @{@"com.hoccer.xo.fileName":myAttachment.humanReadableFileName}] ];
+            }
+        }];
     }
 }
 - (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender {
@@ -1163,7 +1170,7 @@
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
         
-        UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.image];
+        UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.previewImage];
         
         CGRect myFrame = myView.frame;
         myFrame.size = CGSizeMake(320,320);
@@ -1175,8 +1182,15 @@
 
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
-        self.imageViewController.image = myAttachment.image;
-        [self presentViewController: self.imageViewController animated: YES completion: nil];
+        [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
+            NSLog(@"attachment view loadimage done");
+            if (theImage != nil) {
+                self.imageViewController.image = theImage;
+                [self presentViewController: self.imageViewController animated: YES completion: nil];
+            } else {
+                NSLog(@"image attachment view: Failed to get image: %@", error);
+            }
+        }];
     }
 }
 

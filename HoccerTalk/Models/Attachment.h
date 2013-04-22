@@ -48,7 +48,8 @@ typedef void(^CompletionBlock)(NSError* theError);
 @property (nonatomic)         NSNumber * transferSize;          // number of plaintext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
-@property (nonatomic)         NSInteger transferFailures;       // number of upload or download failures
+@property (nonatomic)         NSInteger  transferFailures;       // number of upload or download failures
+@property (nonatomic, strong) NSData   * previewImageData;           // remote URL where the file should/was uploaded
 @property (nonatomic, strong) TalkMessage *message;
 
 // virtual properties
@@ -57,7 +58,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 
 // These are non-persistent properties:
 
-@property (nonatomic, strong) UIImage *image;
+//@property (nonatomic, strong) UIImage *image;
 
 @property (nonatomic, strong) NSURLConnection *transferConnection;
 @property (nonatomic, copy) NSError * transferError;
@@ -74,6 +75,9 @@ typedef void(^CompletionBlock)(NSError* theError);
 
 @property (nonatomic, strong) CryptoEngine * decryptionEngine;
 @property (nonatomic, strong) CryptoEngine * encryptionEngine;
+
+@property (nonatomic, strong) UIImage * previewImage;
+
 
 // encryption/decryption properties
 
@@ -97,7 +101,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 - (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
-
+- (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock) block;
 
 - (NSURL *) contentURL; // best Effort content URL for playback, display etc. (localURL if available, otherwise assetURL)
 - (NSURL *) otherContentURL; // returns assetURL if localURL is available, otherwise nil

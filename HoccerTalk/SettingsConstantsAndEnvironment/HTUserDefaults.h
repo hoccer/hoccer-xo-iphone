@@ -26,6 +26,8 @@ FOUNDATION_EXPORT NSString * const kHTMaxAttachmentDownloadRetries;
 FOUNDATION_EXPORT NSString * const kHTSaveDatabasePolicy;
 FOUNDATION_EXPORT NSString * const kHTSaveDatabasePolicyPerMessage;
 
+FOUNDATION_EXPORT NSString * const kHTPreviewImageWidth;
+
 FOUNDATION_EXPORT NSString * const kHTDefaultScreenShooting;
 
 
