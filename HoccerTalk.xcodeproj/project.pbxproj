@@ -257,6 +257,13 @@
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E99886B71725AFAA0089A510 /* audio_leer.png in Resources */ = {isa = PBXBuildFile; fileRef = E99886B51725AFAA0089A510 /* audio_leer.png */; };
 		E99886B81725AFAA0089A510 /* audio_leer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E99886B61725AFAA0089A510 /* audio_leer@2x.png */; };
+		E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BB1725CB3F0089A510 /* ABPersonCreator.m */; };
+		E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BD1725CB3F0089A510 /* ABPersonVCardCreator.m */; };
+		E99886C71725CB3F0089A510 /* ACAddressBookPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BF1725CB3F0089A510 /* ACAddressBookPerson.m */; };
+		E99886C81725CB3F0089A510 /* VcardParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886C11725CB3F0089A510 /* VcardParser.m */; };
+		E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886C41725CB3F0089A510 /* VcardWriter.m */; };
+		E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886CB1725CBCF0089A510 /* NSString+Regexp.m */; };
+		E99886CE1725CE0F0089A510 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99886CD1725CE0F0089A510 /* AddressBook.framework */; };
 		E9A2B85017189A1200E35E7E /* button-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84C17189A1200E35E7E /* button-audio.png */; };
 		E9A2B85117189A1200E35E7E /* button-audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84D17189A1200E35E7E /* button-audio@2x.png */; };
 		E9A2B85217189A1200E35E7E /* button-video.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84E17189A1200E35E7E /* button-video.png */; };
@@ -646,6 +653,20 @@
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E99886B51725AFAA0089A510 /* audio_leer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = audio_leer.png; sourceTree = "<group>"; };
 		E99886B61725AFAA0089A510 /* audio_leer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio_leer@2x.png"; sourceTree = "<group>"; };
+		E99886BA1725CB3F0089A510 /* ABPersonCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPersonCreator.h; sourceTree = "<group>"; };
+		E99886BB1725CB3F0089A510 /* ABPersonCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPersonCreator.m; sourceTree = "<group>"; };
+		E99886BC1725CB3F0089A510 /* ABPersonVCardCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPersonVCardCreator.h; sourceTree = "<group>"; };
+		E99886BD1725CB3F0089A510 /* ABPersonVCardCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPersonVCardCreator.m; sourceTree = "<group>"; };
+		E99886BE1725CB3F0089A510 /* ACAddressBookPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACAddressBookPerson.h; sourceTree = "<group>"; };
+		E99886BF1725CB3F0089A510 /* ACAddressBookPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACAddressBookPerson.m; sourceTree = "<group>"; };
+		E99886C01725CB3F0089A510 /* VcardParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VcardParser.h; sourceTree = "<group>"; };
+		E99886C11725CB3F0089A510 /* VcardParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VcardParser.m; sourceTree = "<group>"; };
+		E99886C21725CB3F0089A510 /* VcardParserDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VcardParserDelegate.h; sourceTree = "<group>"; };
+		E99886C31725CB3F0089A510 /* VcardWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VcardWriter.h; sourceTree = "<group>"; };
+		E99886C41725CB3F0089A510 /* VcardWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VcardWriter.m; sourceTree = "<group>"; };
+		E99886CA1725CBCF0089A510 /* NSString+Regexp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Regexp.h"; sourceTree = "<group>"; };
+		E99886CB1725CBCF0089A510 /* NSString+Regexp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Regexp.m"; sourceTree = "<group>"; };
+		E99886CD1725CE0F0089A510 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		E9A2B84C17189A1200E35E7E /* button-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio.png"; sourceTree = "<group>"; };
 		E9A2B84D17189A1200E35E7E /* button-audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio@2x.png"; sourceTree = "<group>"; };
 		E9A2B84E17189A1200E35E7E /* button-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video.png"; sourceTree = "<group>"; };
@@ -660,6 +681,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E99886CE1725CE0F0089A510 /* AddressBook.framework in Frameworks */,
 				6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */,
 				6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */,
 				E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */,
@@ -707,6 +729,8 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
+				E99886CA1725CBCF0089A510 /* NSString+Regexp.h */,
+				E99886CB1725CBCF0089A510 /* NSString+Regexp.m */,
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
 				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
@@ -1073,6 +1097,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				E99886CD1725CE0F0089A510 /* AddressBook.framework */,
 				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
 				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
@@ -1114,6 +1139,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerTalk */ = {
 			isa = PBXGroup;
 			children = (
+				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
 				63540A9316E61B420087D24E /* Assets */,
@@ -1294,6 +1320,24 @@
 				E96CB028171457F9005F8FFA /* RSA.m */,
 			);
 			path = Crypto;
+			sourceTree = "<group>";
+		};
+		E99886B91725CB3E0089A510 /* Adressbook */ = {
+			isa = PBXGroup;
+			children = (
+				E99886BA1725CB3F0089A510 /* ABPersonCreator.h */,
+				E99886BB1725CB3F0089A510 /* ABPersonCreator.m */,
+				E99886BC1725CB3F0089A510 /* ABPersonVCardCreator.h */,
+				E99886BD1725CB3F0089A510 /* ABPersonVCardCreator.m */,
+				E99886BE1725CB3F0089A510 /* ACAddressBookPerson.h */,
+				E99886BF1725CB3F0089A510 /* ACAddressBookPerson.m */,
+				E99886C01725CB3F0089A510 /* VcardParser.h */,
+				E99886C11725CB3F0089A510 /* VcardParser.m */,
+				E99886C21725CB3F0089A510 /* VcardParserDelegate.h */,
+				E99886C31725CB3F0089A510 /* VcardWriter.h */,
+				E99886C41725CB3F0089A510 /* VcardWriter.m */,
+			);
+			path = Adressbook;
 			sourceTree = "<group>";
 		};
 		E9A2B84B17189A1200E35E7E /* Media */ = {
@@ -1706,6 +1750,12 @@
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
+				E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */,
+				E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */,
+				E99886C71725CB3F0089A510 /* ACAddressBookPerson.m in Sources */,
+				E99886C81725CB3F0089A510 /* VcardParser.m in Sources */,
+				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
+				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
