@@ -436,6 +436,7 @@
                     NSLog (@"AVAssetExportSessionStatusCompleted");
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
+                        self.currentAttachment.humanReadableFileName = myUniqueNewFile;
                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
                     }];
                      // TODO: in case we fail getting the artwork from file try get artwork from Media Item

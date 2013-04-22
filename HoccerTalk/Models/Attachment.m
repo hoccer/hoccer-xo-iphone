@@ -400,7 +400,7 @@
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        block([UIImage imageNamed:@"chatbar_btn_audio.png"], nil);
+        block([UIImage imageNamed:@"audio_leer.png"], nil);
     }
 }
 

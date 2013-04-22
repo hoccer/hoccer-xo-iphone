@@ -255,6 +255,8 @@
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
+		E99886B71725AFAA0089A510 /* audio_leer.png in Resources */ = {isa = PBXBuildFile; fileRef = E99886B51725AFAA0089A510 /* audio_leer.png */; };
+		E99886B81725AFAA0089A510 /* audio_leer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E99886B61725AFAA0089A510 /* audio_leer@2x.png */; };
 		E9A2B85017189A1200E35E7E /* button-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84C17189A1200E35E7E /* button-audio.png */; };
 		E9A2B85117189A1200E35E7E /* button-audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84D17189A1200E35E7E /* button-audio@2x.png */; };
 		E9A2B85217189A1200E35E7E /* button-video.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84E17189A1200E35E7E /* button-video.png */; };
@@ -642,6 +644,8 @@
 		E980D445171EF8950060C1B5 /* CryptingInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptingInputStream.h; sourceTree = "<group>"; };
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E99886B51725AFAA0089A510 /* audio_leer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = audio_leer.png; sourceTree = "<group>"; };
+		E99886B61725AFAA0089A510 /* audio_leer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio_leer@2x.png"; sourceTree = "<group>"; };
 		E9A2B84C17189A1200E35E7E /* button-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio.png"; sourceTree = "<group>"; };
 		E9A2B84D17189A1200E35E7E /* button-audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio@2x.png"; sourceTree = "<group>"; };
 		E9A2B84E17189A1200E35E7E /* button-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video.png"; sourceTree = "<group>"; };
@@ -1295,6 +1299,8 @@
 		E9A2B84B17189A1200E35E7E /* Media */ = {
 			isa = PBXGroup;
 			children = (
+				E99886B51725AFAA0089A510 /* audio_leer.png */,
+				E99886B61725AFAA0089A510 /* audio_leer@2x.png */,
 				E9A2B84C17189A1200E35E7E /* button-audio.png */,
 				E9A2B84D17189A1200E35E7E /* button-audio@2x.png */,
 				E9A2B84E17189A1200E35E7E /* button-video.png */,
@@ -1589,6 +1595,8 @@
 				6327EB53171B610300AF75E1 /* xo.png in Resources */,
 				6327EB56171C82B400AF75E1 /* date_cell_bg.png in Resources */,
 				6327EB57171C82B400AF75E1 /* date_cell_bg@2x.png in Resources */,
+				E99886B71725AFAA0089A510 /* audio_leer.png in Resources */,
+				E99886B81725AFAA0089A510 /* audio_leer@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
