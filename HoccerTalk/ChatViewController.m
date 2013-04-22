@@ -345,7 +345,7 @@
                 // handle image from pasteboard
                 
                 // find a suitable unique file name and path
-                NSString * newFileName = @"pastedImage.png";
+                NSString * newFileName = @"pastedImage.jpg";
                 NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
                 NSString * myDocDir = [appDocDir path];
                 NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
@@ -354,7 +354,7 @@
                 NSLog(@"pastedImag savePath = %@", savePath);
                 
                 // write the image
-                [UIImagePNGRepresentation(myImage) writeToFile:savePath atomically:YES];
+                [UIImageJPEGRepresentation(myImage,1.0) writeToFile:savePath atomically:YES];
                 
                 // set attachment data
                 NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];

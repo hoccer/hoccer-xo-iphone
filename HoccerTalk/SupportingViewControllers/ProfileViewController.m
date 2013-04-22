@@ -521,7 +521,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         scale = 128.0 / _avatarItem.currentValue.size.height;
     }
     CGSize size = CGSizeMake(_avatarItem.currentValue.size.width * scale, _avatarItem.currentValue.size.height * scale);
-    [[HTUserDefaults standardUserDefaults] setValue: UIImagePNGRepresentation([_avatarItem.currentValue imageScaledToSize: size]) forKey: _avatarItem.valueKey];
+    [[HTUserDefaults standardUserDefaults] setValue: UIImageJPEGRepresentation([_avatarItem.currentValue imageScaledToSize: size],1.0) forKey: _avatarItem.valueKey];
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
             [[HTUserDefaults standardUserDefaults] setValue: item.currentValue forKey: item.valueKey];

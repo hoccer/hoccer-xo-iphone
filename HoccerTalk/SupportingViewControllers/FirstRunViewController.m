@@ -176,7 +176,7 @@
             Contact * contact =  (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: importContext];
             contact.nickName = identities[contactIndex];
             if (contactIndex < [avatars count]) {
-                contact.avatar = UIImagePNGRepresentation([UIImage imageNamed: avatars[contactIndex]]);
+                contact.avatar = UIImageJPEGRepresentation([UIImage imageNamed: avatars[contactIndex]], 1.0);
             }
             contact.clientId = identities[contactIndex];
 
