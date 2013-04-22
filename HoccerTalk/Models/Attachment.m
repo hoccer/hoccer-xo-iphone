@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "CryptingInputStream.h"
 #import "HTUserDefaults.h"
+#import "UIImage+ScaleAndCrop.h"
 
 #import <Foundation/NSURL.h>
 #import <MediaPlayer/MPMoviePlayerController.h>
@@ -40,17 +41,19 @@
 @dynamic cipherTransferSize;
 @dynamic cipheredSize;
 @dynamic transferFailures;
+@dynamic previewImageData;
 
 @dynamic message;
 
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;
 
-@synthesize image;
+//@synthesize image;
 @synthesize transferConnection = _transferConnection;
 @synthesize transferError = _transferError;
 @synthesize transferHttpStatusCode;
 @synthesize chatBackend = _chatBackend;
+@synthesize previewImage = _previewImage;
 @synthesize progressIndicatorDelegate;
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
@@ -155,6 +158,7 @@
     }
 }
 
+/*
 // can also be called by other loaders who have called loadImage
 - (void) cacheImage:(UIImage*) theImage {
     self.image = theImage;
@@ -178,6 +182,86 @@
         }
     }];
 }
+*/
+
+- (void) setPreviewImageFromImage:(UIImage*) theFullImage {
+    float previewWidth = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTPreviewImageWidth] floatValue];
+    if (previewWidth > theFullImage.size.width) {
+        previewWidth = theFullImage.size.width; // avoid scaling up preview
+    }
+    if (!(self.aspectRatio > 0)) {
+        [self setAspectRatioForImage:theFullImage];
+    }
+    self.previewImage = [theFullImage imageScaledToSize:CGSizeMake(previewWidth, previewWidth/self.aspectRatio)];
+
+#if 0
+    // as a result of this benchwork we use JPEG previews;
+    // JPEG previews are 5-10 times smaller on disk and compression is
+    // 5-10 times faster; decompression takes only 10-20% longer and
+    // are negligable anyway (< 1ms)
+    // preview sizes with a width of 200 (which is 400 pixels on 
+    NSDate * start = [NSDate date];
+    NSData * myJPEG = UIImageJPEGRepresentation(self.previewImage, 0.9);
+    NSDate * jpgReady = [NSDate date];
+    NSData * myPNG = UIImagePNGRepresentation(self.previewImage);
+    NSDate * pngReady = [NSDate date];
+    
+    NSDate * startL = [NSDate date];
+    UIImage * myJPEGImage = [UIImage imageWithData:myJPEG];
+    NSDate * jpgReadyL = [NSDate date];
+    UIImage * myPNGImage = [UIImage imageWithData:myPNG];
+    NSDate * pngReadyL = [NSDate date];
+    
+    NSLog(@"PNG size = %d, create time %f, load time %f", myPNG.length, [pngReady timeIntervalSinceDate:jpgReady],[pngReadyL timeIntervalSinceDate:pngReadyL]);
+    NSLog(@"JPG size = %d, create time %f, load time %f", myJPEG.length, [jpgReady timeIntervalSinceDate:start],[jpgReadyL timeIntervalSinceDate:startL]);
+    
+    NSLog(@"JPG orienation = %d, PNG orientation = %d", myJPEGImage.imageOrientation, myPNGImage.imageOrientation);
+    NSLog(@"JPG scale = %f, PNG scale = %f", myJPEGImage.scale, myPNGImage.scale);
+    self.previewImageData = myJPEG;
+#else
+    self.previewImageData = UIImageJPEGRepresentation(self.previewImage, 0.9);
+#endif
+}
+
+- (void) setAspectRatioForImage:(UIImage*) theImage {
+    self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+}
+
+- (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock)finished {
+    NSLog(@"loadPreviewImageIntoCacheWithCompletion");
+    if (self.previewImageData != nil) {
+        NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
+        self.previewImage = [UIImage imageWithData:self.previewImageData];
+        if (!(self.aspectRatio > 0)) {
+            [self setAspectRatioForImage:self.previewImage];
+        }
+        if (finished != nil) {
+            if (self.previewImage != nil) {
+                finished(nil);
+            } else {
+                NSString * myDescription = @"Attachment could not load preview image from database";
+                finished([NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 670 userInfo:@{NSLocalizedDescriptionKey: myDescription}]);
+            }
+        }
+    } else {
+        // create preview by loading full size image
+        [self loadImage:^(UIImage* theImage, NSError* error) {
+            NSLog(@"loadImage for preview done");
+            if (theImage) {
+                [self setPreviewImageFromImage:theImage];
+                if (finished != nil) {
+                    finished(nil);
+                }
+            } else {
+                NSLog(@"Failed to get image: %@", error);
+                if (finished != nil) {
+                    finished(error);
+                }
+            }
+        }];
+    }
+}
+
 
 - (void) makeImageAttachment:(NSString *)theURL anOtherURL:(NSString *)otherURL image:(UIImage*)theImage withCompletion:(CompletionBlock)completion  {
     self.mediaType = @"image";
@@ -190,13 +274,12 @@
     }
     
     if (theImage != nil) {
-        self.image = theImage;
-        self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+        [self setPreviewImageFromImage:theImage];
         if (completion != nil) {
             completion(nil);
         }
     } else {
-        [self loadImageIntoCacheWithCompletion: completion];
+        [self loadPreviewImageIntoCacheWithCompletion: completion];
     }
 }
 
@@ -210,7 +293,7 @@
         self.mimeType = @"video/quicktime";
     }
 
-    [self loadImageIntoCacheWithCompletion:completion];
+    [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 
 - (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion{
@@ -226,7 +309,7 @@
         self.mimeType = @"audio/mp4";
     }
     
-    [self loadImageIntoCacheWithCompletion:completion];
+    [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {

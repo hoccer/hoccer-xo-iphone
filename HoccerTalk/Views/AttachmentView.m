@@ -157,23 +157,17 @@
                 [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];                
             }
             
-            /*
-            // add longpress handler
-            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:cell action:@selector(pressedButtonLong:)];
-            [self.openButton addGestureRecognizer:longPress];
-            */
             if (self.imageView.image == nil) {
-                if (self.attachment.image == nil) {
-                    [self.attachment loadImage:^(UIImage * image, NSError * error) {
+                if (self.attachment.previewImage == nil) {
+                    [self.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError * error) {
                         if (error == nil) {
-                            self.imageView.image = image;
-                            self.attachment.image = image;
+                            self.imageView.image = self.attachment.previewImage;
                         } else {
                             NSLog(@"viewForAttachment: failed to load attachment image, error=%@",error);
                         }
                     }];
                 } else {
-                    self.imageView.image = self.attachment.image;
+                    self.imageView.image = self.attachment.previewImage;
                 }
             }
         }
