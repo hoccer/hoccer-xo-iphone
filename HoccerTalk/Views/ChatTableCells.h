@@ -35,7 +35,6 @@
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
-@property (strong, nonatomic) NSIndexPath * indexPath;
 
 - (CGFloat) heightForMessage: (TalkMessage*) message;
 
