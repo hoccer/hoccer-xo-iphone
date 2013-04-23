@@ -33,9 +33,7 @@
 @synthesize userAgent;
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    unsigned seed;
-    SecRandomCopyBytes(kSecRandomDefault, sizeof seed, (uint8_t*)&seed);
-    srand(seed);
+    [self seedRand];
     _backgroundTask = UIBackgroundTaskInvalid;
     return YES;
 }
@@ -84,6 +82,12 @@
     }
 
     return YES;
+}
+
+- (void) seedRand {
+    unsigned seed;
+    SecRandomCopyBytes(kSecRandomDefault, sizeof seed, (uint8_t*)&seed);
+    srand(seed);
 }
 
 - (void) customizeNavigationBar {
