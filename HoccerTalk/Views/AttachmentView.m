@@ -69,13 +69,27 @@
         self.imageView = [[UIImageView alloc] init];
         // preset frame to correct aspect ratio before actual image is loaded
         frame.size.width = attachment.aspectRatio;
-        frame.size.height = 1.0;
+        frame.size.height = 1;
         self.imageView.frame = frame;
-        //imageView.userInteractionEnabled = YES;
         self.imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         
         [self addSubview:imageView];
         self.frame = frame;
+         NSLog(@"configureViewForAttachment: (postInit) frame = %@", NSStringFromCGRect(frame));
+        if ([attachment.mediaType isEqualToString:@"audio"]) {
+            UILabel * myNameLabel = [[UILabel alloc] init];
+            myNameLabel.text = theAttachment.humanReadableFileName;
+            myNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
+            myNameLabel.textColor = [UIColor blackColor];
+            myNameLabel.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+            myNameLabel.textAlignment = NSTextAlignmentCenter;
+            myNameLabel.font = [UIFont italicSystemFontOfSize:10];
+            CGRect myFrame = frame;
+            myFrame.size.height = frame.size.height * 0.1;
+            myFrame.origin.y = frame.size.height * 0.8;
+            myNameLabel.frame = myFrame;
+            [self addSubview:myNameLabel];
+        }
         // NSLog(@"configureViewForAttachment: (postInit) frame = %@", NSStringFromCGRect(frame));
     } else {
         frame.size.height = frame.size.width / attachment.aspectRatio;

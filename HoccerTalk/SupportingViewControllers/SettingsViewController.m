@@ -39,6 +39,7 @@
 }
 
 - (void) populateSettingsItem {
+    /*
     SettingsItem * saveContent = [SettingsItem item];
     saveContent.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
     saveContent.label = NSLocalizedString(@"setting_save_incoming_media", nil);
@@ -46,8 +47,16 @@
     SettingsItem * saveContentInfo = [SettingsItem item];
     saveContentInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
     saveContentInfo.label = NSLocalizedString(@"setting_save_incoming_media_info", nil);
+    */
+    SettingsItem * playSoundOnMessageArrival = [SettingsItem item];
+    playSoundOnMessageArrival.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
+    playSoundOnMessageArrival.label = NSLocalizedString(@"play_sound_on_message_arrival", nil);
     
-    _items = @[ @[saveContent, saveContentInfo ]
+    SettingsItem * playSoundOnMessageArrivalInfo = [SettingsItem item];
+    playSoundOnMessageArrivalInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
+    playSoundOnMessageArrivalInfo.label = NSLocalizedString(@"play_sound_on_message_arrival", nil);
+
+    _items = @[ @[playSoundOnMessageArrival, playSoundOnMessageArrivalInfo ]
               ];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

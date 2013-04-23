@@ -78,7 +78,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 }
 
 - (void) saveProfile {
-    NSData * avatarData = UIImagePNGRepresentation(self.avatar);
+    NSData * avatarData = UIImageJPEGRepresentation(self.avatar, 1.0);
     [[HTUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHTNickName];
     [[HTUserDefaults standardUserDefaults] setValue: avatarData          forKey: kHTAvatar];
     [[HTUserDefaults standardUserDefaults] setValue: self.status         forKey: kHTUserStatus];
