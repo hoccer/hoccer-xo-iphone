@@ -724,7 +724,6 @@
     // ... for now just use the private API
     // cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
 
-    cell.indexPath = indexPath;
     cell.delegate = self;
     [self configureCell: cell forMessage: message];
 
@@ -884,6 +883,9 @@
     }
 }
 
+#pragma mark - NSFetchedResultsController delegate methods
+
+
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView beginUpdates];
 }
@@ -941,6 +943,9 @@
         self.firstNewMessage = nil;
     }
 }
+
+#pragma mark - view/cell methods
+
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
@@ -1012,7 +1017,7 @@
     if (action == @selector(deleteMessage:)) return YES;
     if (action == @selector(copy:)) {return YES;}
 
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     if (action == @selector(copy:)) {return YES;}
     
@@ -1032,7 +1037,7 @@
 }
 - (void) messageView:(MessageCell *)theCell saveMessage:(id)sender {
     NSLog(@"saveMessage");
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
     
     if ([attachment.mediaType isEqualToString: @"image"]) {
@@ -1071,13 +1076,13 @@
 
 - (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
     NSLog(@"forwardMessage");
-    // TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 }
 
 - (void) messageView:(MessageCell *)theCell copy:(id)sender {
     NSLog(@"copy");
     UIPasteboard * board = [UIPasteboard generalPasteboard];
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     board.string = message.body; // always put in string first to clear board
     
@@ -1136,7 +1141,7 @@
 }
 - (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender {
     NSLog(@"deleteMessage");
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     
     if (message.attachment != nil) {
         if (message.attachment.ownedURL.length > 0) {
@@ -1156,7 +1161,7 @@
 }
 
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell {
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: theCell.indexPath];
+    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     // NSLog(@"@presentAttachmentViewForCell attachment = %@", message.attachment);
     
     Attachment * myAttachment = message.attachment;
