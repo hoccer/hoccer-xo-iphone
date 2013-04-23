@@ -130,6 +130,7 @@ static RSA *instance;
     }
         
     cipher = [NSData dataWithBytes:(const void *)cipherBuffer length:(NSUInteger)cipherBufferSize];
+    if (cipherBuffer) { free(cipherBuffer); }
     
     return cipher;
 }

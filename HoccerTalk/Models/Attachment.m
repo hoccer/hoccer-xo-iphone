@@ -70,10 +70,12 @@
 }
 
 + (NSNumber *) fileSize: (NSString *) fileURL withError: (NSError**) myError {
-    *myError = nil;
+    if (myError != nil) {
+        *myError = nil;
+    }
     NSString * myPath = [[NSURL URLWithString: fileURL] path];
     NSNumber * result =  @([[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:myError] fileSize]);
-    if (*myError != nil) {
+    if (myError != nil && *myError != nil) {
         NSLog(@"can not determine size of file '%@'", myPath);
         result = @(-1);
     }
@@ -228,10 +230,12 @@
 }
 
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock)finished {
-    NSLog(@"loadPreviewImageIntoCacheWithCompletion");
+    // NSLog(@"loadPreviewImageIntoCacheWithCompletion");
     if (self.previewImageData != nil) {
-        NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
+        // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
+        NSDate * start = [NSDate date];
         self.previewImage = [UIImage imageWithData:self.previewImageData];
+        NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database took %f ms.", -[start timeIntervalSinceNow]*1000);
         if (!(self.aspectRatio > 0)) {
             [self setAspectRatioForImage:self.previewImage];
         }
@@ -738,7 +742,8 @@
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType {
     CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(theMimeType), NULL);
     CFStringRef extension = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension);
-    return (__bridge NSString *)(extension);
+    CFRelease(uti);
+    return CFBridgingRelease(extension);
 }
 
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString {
@@ -756,7 +761,8 @@
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension {
     CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)(theExtension), NULL);
     CFStringRef mimetype = UTTypeCopyPreferredTagWithClass (uti, kUTTagClassMIMEType);
-    return (__bridge NSString *)(mimetype);
+    CFRelease(uti);
+    return CFBridgingRelease(mimetype);
 }
 
 // connection delegate methods

@@ -679,6 +679,7 @@
 
     CGContextDrawRadialGradient(cx, g, center, 0.0f, center, size.width > size.height ? 0.5 * size.width : 0.5 * size.height, kCGGradientDrawsAfterEndLocation);
     CGGradientRelease(g);
+    CGColorSpaceRelease(space); // added by pm because analyzer leak waring
 
     CGContextRestoreGState(cx);
 
