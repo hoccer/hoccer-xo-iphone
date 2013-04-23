@@ -203,8 +203,8 @@
         frame.size.height -= keyboardHeight;
         self.view.frame = frame;
         self.tableView.contentOffset = contentOffset;
+        // NSLog(@"keyboardWasShown did set table contentOffset y to %f", contentOffset.y);
     }];
-
 
     // this catches orientation changes, too
     _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height;
@@ -775,8 +775,26 @@
     CGRect frame = self.messageCell.frame;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
 
-    return [self.messageCell heightForMessage: message];
+    CGFloat myHeight = [self.messageCell heightForMessage: message];
+    // NSLog(@"tableView:heightForRowAtIndexPath: %@ returns %f", indexPath, myHeight);
+    return myHeight;
 }
+
+
+//- (void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//    NSLog(@"scrollViewDidEndDecelerating:");
+//    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
+//}
+//
+//- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+//    NSLog(@"scrollViewDidEndScrollingAnimation:");
+//    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
+//}
+//
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    NSLog(@"scrollViewDidScroll:");
+//    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
+//}
 
 #pragma mark - Table view menu delegate
 
@@ -785,7 +803,7 @@
     return YES;
 }
 
--(BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
+- (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
     return (action == @selector(copy:));
 }
 
@@ -862,7 +880,7 @@
 
     self.firstNewMessage = nil;
     [self.tableView reloadData];
-    [self scrollToBottom: NO];
+    [self scrollToBottomAnimated: NO];
     [self configureView];
 }
 
@@ -913,8 +931,10 @@
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            // NSLog(@"didChangeObject insert");
             if (self.firstNewMessage == nil) {
                 self.firstNewMessage = newIndexPath;
+                // NSLog(@"didChangeObject insert: set firstNewMessage indexPath=%@", newIndexPath);
             }
             break;
         case NSFetchedResultsChangeDelete:
@@ -938,8 +958,11 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
+    // NSLog(@"controllerDidChangeContent");
     if (self.firstNewMessage != nil) {
-        [self.tableView scrollToRowAtIndexPath: self.firstNewMessage atScrollPosition: UITableViewScrollPositionBottom animated: YES];
+        // NSLog(@"controllerDidChangeContent scroll to indexPath: %@", self.firstNewMessage);
+        // [self.tableView scrollToRowAtIndexPath: self.firstNewMessage atScrollPosition: UITableViewScrollPositionBottom animated: YES];
+        [self performSelectorOnMainThread:@selector(scrollToBottomAnimatedWithObject:) withObject:@(YES) waitUntilDone:NO];
         self.firstNewMessage = nil;
     }
 }
@@ -948,11 +971,12 @@
 
 
 - (void) viewWillAppear:(BOOL)animated {
+    NSLog(@"ChatViewController:viewWillAppear");
     [super viewWillAppear: animated];
 
     [self setNavigationBarBackgroundWithLines];
 
-    [self scrollToBottom: NO];
+    [self scrollToBottomAnimated: NO];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -1076,7 +1100,7 @@
 
 - (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
     NSLog(@"forwardMessage");
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    // TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 }
 
 - (void) messageView:(MessageCell *)theCell copy:(id)sender {
@@ -1205,12 +1229,17 @@
     return _imageViewController;
 }
 
-- (void) scrollToBottom: (BOOL) animated {
+- (void) scrollToBottomAnimated: (BOOL) animated {
+    // NSLog(@"atscrollToBottomAnimated %d", animated);
     if ([self.fetchedResultsController.fetchedObjects count]) {
         NSInteger lastSection = [self numberOfSectionsInTableView: self.tableView] - 1;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  [self tableView: self.tableView numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
         [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionBottom animated: animated];
     }
+}
+
+- (void) scrollToBottomAnimatedWithObject:(id)theObject {
+    [self scrollToBottomAnimated: theObject != nil];
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

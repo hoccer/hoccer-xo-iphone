@@ -21,6 +21,7 @@
 #import "InviteCodeViewController.h"
 #import "HTUserDefaults.h"
 #import "Environment.h"
+#import "UserProfile.h"
 
 #import "MFSideMenu.h"
 
@@ -35,6 +36,7 @@
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self seedRand];
     _backgroundTask = UIBackgroundTaskInvalid;
+    //[[UserProfile sharedProfile] deleteCredentials];
     return YES;
 }
 

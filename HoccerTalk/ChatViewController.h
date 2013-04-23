@@ -39,7 +39,7 @@
 @property (strong, nonatomic) id currentPickInfo;
 
 - (void) setPartner: (Contact*) partner;
-- (void) scrollToBottom: (BOOL) animated;
+- (void) scrollToBottomAnimated: (BOOL) animated;
 - (IBAction)sendPressed:(id)sender;
 - (IBAction) addAttachmentPressed:(id)sender;
 - (void) decorateAttachmentButton:(UIImage *) theImage;
