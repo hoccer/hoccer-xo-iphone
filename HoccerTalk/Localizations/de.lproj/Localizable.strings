@@ -113,6 +113,10 @@
 
 "profile_delete_avatar_button_title" = "Avatar löschen";
 
+"profile_renew_keypair" = "Renew RSA Keypair";
+
+"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen händen war kannst Du hier Deine Schlüssel erneuern.";
+
 "contact_group_none" = "Keine";
 
 "contact_group_friend" = "Freunde";

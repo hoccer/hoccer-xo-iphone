@@ -129,6 +129,10 @@
 
 "profile_github_placeholder" = "@github";
 
+"profile_renew_keypair" = "Renew RSA Keypair";
+
+"profile_renew_keypair_info" = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+
 "contact_group_none" = "None";
 
 "contact_group_friend" = "Friends";

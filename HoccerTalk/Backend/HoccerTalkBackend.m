@@ -514,7 +514,7 @@ typedef enum BackendStates {
 
 - (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
     [self getKey:theContact.clientId withId:theId keyHandler:^(NSDictionary * keyRecord) {
-        if ([theId isEqualToString: keyRecord[@"keyId"]]) {
+        if (keyRecord != nil && [theId isEqualToString: keyRecord[@"keyId"]]) {
             theContact.publicKeyString = keyRecord[@"key"];
             theContact.publicKeyId = keyRecord[@"keyId"];
             // NSLog(@"Key for contact updated: %@", theContact);
@@ -1008,11 +1008,11 @@ typedef enum BackendStates {
     // NSLog(@"getKey:");
 
      [_serverConnection invoke: @"getKey" withParams: @[forClientId,keyId] onResponse: ^(id responseOrError, BOOL success) {
-        if (success) {
+        if (success && [responseOrError isKindOfClass: [NSDictionary class]]) {
             // NSLog(@"getKey(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
-            NSLog(@"getKey(): failed: %@", responseOrError);
+            NSLog(@"getKey(): failed - response: %@", responseOrError);
             handler(nil);
         }
     }];

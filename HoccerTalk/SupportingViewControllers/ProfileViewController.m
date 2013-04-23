@@ -100,6 +100,17 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         item.currentValue = [modelObject valueForKey: item.valueKey];
     }
 
+    [self updateKeyFingerprint];
+    // XXX hack to display fingerprint while editing...
+    _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
+
+    if (_mode == ProfileViewModeContactProfile) {
+        [self setupContactKVO];
+    }
+    return [self filterItems: self.isEditing];
+}
+
+- (void) updateKeyFingerprint {
     NSString * keyId;
     if (_mode == ProfileViewModeContactProfile) {
         keyId = _contact.publicKeyId;
@@ -109,14 +120,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         NSData * keyHash = [[keyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
         keyId = [keyHash hexadecimalString];
     }
+
     // XXX hack to display fingerprint while editing...
     _fingerprintItem.currentValue = _fingerprintItem.editLabel = [self formatKeyIdAsFingerprint: keyId];
-    _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
-
-    if (_mode == ProfileViewModeContactProfile) {
-        [self setupContactKVO];
-    }
-    return [self filterItems: self.isEditing];
 }
 
 - (void) setupContactKVO {
@@ -341,6 +347,19 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         }
         ++row;
     }
+
+    NSUInteger section = [self numberOfSectionsInTableView:self.tableView];
+    if (editing) {
+        [self.tableView insertSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
+    } else {
+        section -= 1;
+        [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
+    }
+
     _items = [self filterItems: editing];
     [self.tableView endUpdates];
     for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
@@ -422,7 +441,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 #endif
 #endif
 
-#ifdef HXO_SHOW_UNIMPLEMENTED_PROFILE_ENTRIES
+#ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
     phoneItem.valueKey = @"phoneNumber";
@@ -485,7 +504,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [_itemsByKeyPath setObject: githubItem forKey: githubItem.valueKey];
 
 
-#endif // HXO_SHOW_UNIMPLEMENTED_PROFILE_ENTRIES
+#endif // HXO_SHOW_UNIMPLEMENTED_FEATURES
 
 
     _chatWithContactItem = [[ProfileItem alloc] init];
@@ -509,6 +528,16 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
     _fingerprintInfoItem = [[ProfileItem alloc] init];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
+
+    _renewKeyPairItem = [[ProfileItem alloc] init];
+    _renewKeyPairItem.cellClass = [UserDefaultsCell class];
+    _renewKeyPairItem.editLabel = NSLocalizedString(@"profile_renew_keypair", nil);
+    _renewKeyPairItem.target = self;
+    _renewKeyPairItem.action = @selector(renewKeypairPressed:);
+
+    _renewKeyPairInfoItem = [[ProfileItem alloc] init];
+    _renewKeyPairInfoItem.cellClass = [UserDefaultsCellInfoText class];
+    _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
 
     for (ProfileItem* item in _allProfileItems) {
         [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
@@ -540,7 +569,11 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     if (_mode == ProfileViewModeContactProfile) {
         return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
     } else {
-        return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
+        if (editing) {
+            return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_renewKeyPairItem, _renewKeyPairInfoItem]];
+        } else {
+            return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
+        }
     }
 }
 
@@ -687,6 +720,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     return _chatBackend;
 }
 
+- (void) renewKeypairPressed: (id) sender {
+    NSLog(@"renew keypair");
+    [[RSA sharedInstance] cleanKeyChain];
+    [self updateKeyFingerprint];
+    [self.tableView beginUpdates];
+    [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: _fingerprintItem.indexPath] configure: _fingerprintItem];
+    [self.tableView endUpdates];
+}
 
 @end
 
