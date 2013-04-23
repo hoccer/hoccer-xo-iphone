@@ -113,6 +113,10 @@
 
 "profile_delete_avatar_button_title" = "Avatar löschen";
 
+"profile_renew_keypair" = "Renew RSA Keypair";
+
+"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen händen war kannst Du hier Deine Schlüssel erneuern.";
+
 "contact_group_none" = "Keine";
 
 "contact_group_friend" = "Freunde";
@@ -138,6 +142,18 @@
 "contact_block" = "%@ blockieren";
 
 "chat_with_contact" = "Mit %@ chatten";
+
+"delete_credentials_alert_title" = "Hoccer XO war schon einmal installiert";
+
+"delete_credentials_alert_text" = "Möchtest Du die alten Zugangsdaten und Kontakte löschen?";
+
+"delete_credentials_keep_title" = "Weiter Benutzen";
+
+"delete_credentials_delete_title" = "Löschen";
+
+"delete_credentials_confirm" = "Zugangsdaten Löschen";
+
+"delete_credentials_saftey_question" = "Alte Zugangsdaten:";
 
 "Paste Image Attachment" = "Einfügen (Originalbild)";
 

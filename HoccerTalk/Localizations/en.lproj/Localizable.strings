@@ -129,6 +129,10 @@
 
 "profile_github_placeholder" = "@github";
 
+"profile_renew_keypair" = "Renew RSA Keypair";
+
+"profile_renew_keypair_info" = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+
 "contact_group_none" = "None";
 
 "contact_group_friend" = "Friends";
@@ -156,6 +160,18 @@
 "contact_block" = "Block %@";
 
 "chat_with_contact" = "Chat with %@";
+
+"delete_credentials_alert_title" = "Hoccer XO was installed before";
+
+"delete_credentials_alert_text" = "Do you want to delete the old credentials loosing all contacts?";
+
+"delete_credentials_keep_title" = "Keep";
+
+"delete_credentials_delete_title" = "Delete";
+
+"delete_credentials_saftey_question" = "Old Credentials";
+
+"delete_credentials_confirm" = "Delete Credentials";
 
 "Paste Image Attachment" = "Paste (original Image)";
 

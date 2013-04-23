@@ -70,13 +70,6 @@
     if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         [self setupDone: NO];
     }
-#ifndef HXO_USE_USER_DEFINED_CREDENTIALS
-    else
-    {
-        [self setupDone: YES];
-    }
-#endif
-
 
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation

@@ -24,17 +24,19 @@ typedef enum ProfileViewModes {
     ProfileViewModeContactProfile
 } ProfileViewMode;
 
-@interface ProfileViewController : UserDefaultsViewController <AttachmentPickerControllerDelegate>
+@interface ProfileViewController : UserDefaultsViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 {
-    AvatarItem *      _avatarItem;
-    ProfileItem *     _chatWithContactItem;
-    ProfileItem *     _blockContactItem;
-    ProfileItem *     _fingerprintItem;
-    ProfileItem *     _fingerprintInfoItem;
-    NSArray *         _profileItems;
-    NSMutableArray *  _allProfileItems;
-    ProfileViewMode   _mode;
-    BOOL              _canceled;
+    AvatarItem *          _avatarItem;
+    ProfileItem *         _chatWithContactItem;
+    ProfileItem *         _blockContactItem;
+    ProfileItem *         _fingerprintItem;
+    ProfileItem *         _fingerprintInfoItem;
+    ProfileItem *         _renewKeyPairItem;
+    ProfileItem *         _renewKeyPairInfoItem;
+    NSArray *             _profileItems;
+    NSMutableArray *      _allProfileItems;
+    ProfileViewMode       _mode;
+    BOOL                  _canceled;
     NSMutableDictionary * _itemsByKeyPath;
 }
 
