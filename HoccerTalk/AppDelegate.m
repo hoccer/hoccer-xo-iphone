@@ -21,6 +21,7 @@
 #import "InviteCodeViewController.h"
 #import "HTUserDefaults.h"
 #import "Environment.h"
+#import "UserProfile.h"
 
 #import "MFSideMenu.h"
 
@@ -68,13 +69,6 @@
     if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         [self setupDone: NO];
     }
-#ifndef HXO_USE_USER_DEFINED_CREDENTIALS
-    else
-    {
-        [self setupDone: YES];
-    }
-#endif
-
 
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation

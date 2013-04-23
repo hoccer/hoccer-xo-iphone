@@ -24,7 +24,7 @@ typedef enum ProfileViewModes {
     ProfileViewModeContactProfile
 } ProfileViewMode;
 
-@interface ProfileViewController : UserDefaultsViewController <AttachmentPickerControllerDelegate>
+@interface ProfileViewController : UserDefaultsViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 {
     AvatarItem *      _avatarItem;
     ProfileItem *     _chatWithContactItem;

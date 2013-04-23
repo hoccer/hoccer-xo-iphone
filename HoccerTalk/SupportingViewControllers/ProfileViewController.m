@@ -109,8 +109,9 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         NSData * keyHash = [[keyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
         keyId = [keyHash hexadecimalString];
     }
-    _fingerprintItem.currentValue = [self formatKeyIdAsFingerprint: keyId];
-    _fingerprintInfoItem.currentValue = NSLocalizedString(@"profile_fingerprint_info", nil);
+    // XXX hack to display fingerprint while editing...
+    _fingerprintItem.currentValue = _fingerprintItem.editLabel = [self formatKeyIdAsFingerprint: keyId];
+    _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
 
     if (_mode == ProfileViewModeContactProfile) {
         [self setupContactKVO];
@@ -195,6 +196,48 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [super viewDidAppear: animated];
     if (_mode == ProfileViewModeFirstRun) {
         [self setEditing: YES animated: YES];
+        if ([UserProfile sharedProfile].isRegistered) {
+            NSLog(@"first run but old credentials found.");
+            [self showOldCredentialsAlert];
+        } else {
+            [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+        }
+    }
+}
+
+- (void) showOldCredentialsAlert {
+    NSString * title = NSLocalizedString(@"delete_credentials_alert_title", nil);
+    NSString * message = NSLocalizedString(@"delete_credentials_alert_text", nil);
+    NSString * keep = NSLocalizedString(@"delete_credentials_keep_title", nil);
+    NSString * delete = NSLocalizedString(@"delete_credentials_delete_title", nil);
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title message: message delegate: self cancelButtonTitle: delete otherButtonTitles: keep, nil];
+    [alert show];
+
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == alertView.cancelButtonIndex) {
+        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_saftey_question", nil)
+                                                            delegate: self
+                                                   cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                              destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
+                                                   otherButtonTitles: nil];
+        sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+        [sheet showInView: self.view];
+    } else {
+        NSLog(@"Keeping old credentials");
+        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: NO];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"button index %d", buttonIndex);
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        //[self showOldCredentialsAlert];
+        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: NO];
+    } else {
+        [[UserProfile sharedProfile] deleteCredentials];
+        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
     }
 }
 
@@ -459,13 +502,10 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     _blockContactItem.target = self;
     //[_itemsByKeyPath setObject: _blockContactItem forKey: _blockContactItem.valueKey];
 
-
-
     _fingerprintItem = [[ProfileItem alloc] init];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
     _fingerprintItem.textAlignment = NSTextAlignmentCenter;
     //[_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
-
 
     _fingerprintInfoItem = [[ProfileItem alloc] init];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
