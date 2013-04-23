@@ -618,7 +618,7 @@ typedef enum BackendStates {
 }
 
 - (void) flushPendingAttachmentUploads {
-    NSLog(@"flushPendingAttachmentUploads");
+    // NSLog(@"flushPendingAttachmentUploads");
     // fetch all not yet transferred uploads
     NSDictionary * vars = @{ @"max_retries" : [[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
@@ -645,7 +645,7 @@ typedef enum BackendStates {
 }
 
 - (void) flushPendingAttachmentDownloads {
-    NSLog(@"flushPendingAttachmentDownloads");
+    // NSLog(@"flushPendingAttachmentDownloads");
     // fetch all not yet transferred uploads
     NSDictionary * vars = @{ @"max_retries" : [[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];

@@ -44,8 +44,8 @@
 
 - (NSString *)name
 {
-	NSString *firstName = (__bridge NSString *) ABRecordCopyValue(personRecordRef, kABPersonFirstNameProperty);
-	NSString *lastName = (__bridge NSString *) ABRecordCopyValue(personRecordRef, kABPersonLastNameProperty);
+	NSString *firstName = CFBridgingRelease(ABRecordCopyValue(personRecordRef, kABPersonFirstNameProperty));
+	NSString *lastName = CFBridgingRelease(ABRecordCopyValue(personRecordRef, kABPersonLastNameProperty));
 	
 	if (lastName == NULL && firstName == NULL) {
 		return nil;
@@ -76,7 +76,7 @@
 	if (property == NULL)
 		return nil;
 
-	return (__bridge NSString*) property;
+	return CFBridgingRelease(property);
 }
 
 

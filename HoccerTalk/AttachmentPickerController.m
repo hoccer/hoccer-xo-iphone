@@ -39,6 +39,19 @@
 }
 
 - (void) probeAttachmentTypes {
+
+    UIPasteboard * board = [UIPasteboard generalPasteboard];
+    
+    // debug/reverse eng.: print content of pasteboard
+    NSArray * items = board.items;
+    for (NSDictionary * d in items) {
+        NSLog(@"pasteboard contains item:");
+        for (NSString * key in d) {
+            NSLog(@"key/type: %@, value class: %@, value: %@", key, [d[key] class], d[key]);
+        }
+    }
+
+    
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
@@ -72,7 +85,6 @@
         [_supportedItems addObject: item];
     }
     
-    UIPasteboard * board = [UIPasteboard generalPasteboard];
     NSArray * myMediaTypeArray = [board valuesForPasteboardType:@"com.hoccer.xo.mediaType" inItemSet:nil];
     if (myMediaTypeArray.count == 1) {
         NSString * mediaType = [[NSString alloc] initWithData:myMediaTypeArray[0] encoding:NSUTF8StringEncoding];
@@ -106,6 +118,12 @@
             item.type = AttachmentPickerTypeImageFromPasteboard;
             [_supportedItems addObject: item];
         }
+    }
+
+    NSArray * myVideoTypeArray = [board valuesForPasteboardType:@"com.apple.mobileslideshow.asset-object-id-uri" inItemSet:nil];
+    if (myVideoTypeArray.count == 1) {
+        NSString * myURL = [[NSString alloc] initWithData:myVideoTypeArray[0] encoding:NSUTF8StringEncoding];
+        NSLog(@"Video uri=%@", myURL);
     }
     
     // TODO: add other types

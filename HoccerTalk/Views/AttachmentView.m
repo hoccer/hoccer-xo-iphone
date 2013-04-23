@@ -75,7 +75,7 @@
         
         [self addSubview:imageView];
         self.frame = frame;
-         NSLog(@"configureViewForAttachment: (postInit) frame = %@", NSStringFromCGRect(frame));
+        // NSLog(@"configureViewForAttachment: (postInit) frame = %@", NSStringFromCGRect(frame));
         if ([attachment.mediaType isEqualToString:@"audio"]) {
             UILabel * myNameLabel = [[UILabel alloc] init];
             myNameLabel.text = theAttachment.humanReadableFileName;
