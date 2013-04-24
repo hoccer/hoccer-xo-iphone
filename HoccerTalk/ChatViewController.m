@@ -135,9 +135,8 @@
     // setup longpress menus
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
-    UIMenuItem *myForwardMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
-    [menuController setMenuItems:@[mySaveMenuItem,myForwardMenuItem,myDeleteMessageMenuItem]];
+    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem]];
     [menuController update];
     
     [self hideAttachmentSpinner];
@@ -855,7 +854,7 @@
         NSDictionary * vars = @{ @"contact" : partner };
         NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByContact" substitutionVariables: vars];
 
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending: YES];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeSend" ascending: YES];
         NSArray *sortDescriptors = @[sortDescriptor];
 
         [fetchRequest setSortDescriptors:sortDescriptors];
@@ -986,7 +985,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        UIImage * myImage = [UserProfile sharedProfile].avatar;
+        UIImage * myImage = [UserProfile sharedProfile].avatarImage;
         self.avatarImage = myImage != nil ? myImage : [UIImage imageNamed: @"avatar_default_contact"];
     }
 
@@ -1016,16 +1015,16 @@
             NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
         }
         for (Delivery * myDelivery in message.deliveries) {
-            if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
-                cell.bubble.alpha = 0.1;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering]) {
-                cell.bubble.alpha = 0.25;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered]) {
-                cell.bubble.alpha = 0.5;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
-                cell.bubble.alpha = 1.0;
+            if ([myDelivery.state isEqualToString:kDeliveryStateNew] ||
+                [myDelivery.state isEqualToString:kDeliveryStateDelivering])
+            {
+                cell.bubble.state = BubbleStateInTransit;
+            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered] ||
+                       [myDelivery.state isEqualToString:kDeliveryStateConfirmed])
+            {
+                cell.bubble.state = BubbleStateDelivered;
             } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-                cell.backgroundColor = [UIColor redColor];
+                cell.bubble.state = BubbleStateFailed;
             } else {
                 NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
             }
@@ -1037,7 +1036,6 @@
 
 -(BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
     // NSLog(@"messageView:canPerformAction:");
-    // if (action == @selector(forwardMessage:)) return YES;
     if (action == @selector(deleteMessage:)) return YES;
     if (action == @selector(copy:)) {return YES;}
 
@@ -1096,11 +1094,6 @@
             NSLog(@"didPickAttachment: failed to save video in album at path = %@",myVideoFilePath);
         }
     }
-}
-
-- (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
-    NSLog(@"forwardMessage");
-    // TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 }
 
 - (void) messageView:(MessageCell *)theCell copy:(id)sender {

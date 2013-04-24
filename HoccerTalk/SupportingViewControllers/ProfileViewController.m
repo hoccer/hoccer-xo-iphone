@@ -148,7 +148,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     } else if ([object isKindOfClass: [Contact class]]) {
         NSLog(@"contact keypath %@ changed", keyPath);
         id item = _itemsByKeyPath[keyPath];
-        if ([keyPath isEqualToString: @"avatar"]) {
+        if ([keyPath isEqualToString: @"avatarImage"]) {
             [(AvatarItem*)item setCurrentValue: [object avatarImage]];
         } else {
             [item setCurrentValue: [object valueForKey: keyPath]];
@@ -254,7 +254,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         [item removeObserver: self forKeyPath: @"valid"];
     }
     if (_contact != nil) {
-        [_contact removeObserver: self forKeyPath: @"avatar"];
+        [_contact removeObserver: self forKeyPath: @"avatarImage"];
         for (ProfileItem* item in _allProfileItems) {
             [_contact removeObserver: self forKeyPath: item.valueKey];
         }
@@ -391,8 +391,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     _itemsByKeyPath = [[NSMutableDictionary alloc] init];
 
     _avatarItem = [[AvatarItem alloc] init];
-    _avatarItem.valueKey = kHTAvatar;
-    _avatarItem.contactKey = @"avatar";
+    _avatarItem.valueKey = @"avatarImage";
     _avatarItem.cellClass = [UserDefaultsCellAvatarPicker class];
     _avatarItem.target = self;
     _avatarItem.action = @selector(avatarTapped:);
@@ -596,7 +595,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
     CGSize size = CGSizeMake(_avatarItem.currentValue.size.width * scale, _avatarItem.currentValue.size.height * scale);
     UIImage * scaledAvatar = [_avatarItem.currentValue imageScaledToSize: size];
-    [UserProfile sharedProfile].avatar = scaledAvatar;
+    [UserProfile sharedProfile].avatarImage = scaledAvatar;
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
             [[UserProfile sharedProfile] setValue: item.currentValue forKey: item.valueKey];

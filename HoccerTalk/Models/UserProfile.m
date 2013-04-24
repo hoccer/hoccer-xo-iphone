@@ -51,7 +51,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     return profileInstance;
 }
 
-- (NSData*) avatarData {
+- (NSData*) avatar {
     return [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
 }
 
@@ -66,7 +66,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 
 - (void) loadProfile {
     self.nickName       = [[HTUserDefaults standardUserDefaults] valueForKey: kHTNickName];
-    NSData * avatarData = [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
+    NSData * avatar     = [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
     self.status         = [[HTUserDefaults standardUserDefaults] valueForKey: kHTUserStatus];
     self.phoneNumber    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTPhoneNumber];
     self.mailAddress    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTMailAddress];
@@ -74,13 +74,13 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     self.facebookName   = [[HTUserDefaults standardUserDefaults] valueForKey: kHTFacebookName];
     self.googlePlusName = [[HTUserDefaults standardUserDefaults] valueForKey: kHTGooglePlusName];
     self.githubName     = [[HTUserDefaults standardUserDefaults] valueForKey: kHTGithubName];
-    self.avatar = [UIImage imageWithData: avatarData];
+    self.avatarImage = [UIImage imageWithData: avatar];
 }
 
 - (void) saveProfile {
-    NSData * avatarData = UIImageJPEGRepresentation(self.avatar, 1.0);
+    NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, 1.0);
     [[HTUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHTNickName];
-    [[HTUserDefaults standardUserDefaults] setValue: avatarData          forKey: kHTAvatar];
+    [[HTUserDefaults standardUserDefaults] setValue: avatar              forKey: kHTAvatar];
     [[HTUserDefaults standardUserDefaults] setValue: self.status         forKey: kHTUserStatus];
     [[HTUserDefaults standardUserDefaults] setValue: self.phoneNumber    forKey: kHTPhoneNumber];
     [[HTUserDefaults standardUserDefaults] setValue: self.mailAddress    forKey: kHTMailAddress];

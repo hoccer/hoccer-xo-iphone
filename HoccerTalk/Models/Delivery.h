@@ -25,6 +25,7 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 
 @property (nonatomic, strong) NSString * state;
 @property (nonatomic, strong) TalkMessage *message;
+@property (nonatomic, strong) NSDate * timeChanged;
 
 @property (nonatomic, strong) Contact* receiver;
 @property (nonatomic, strong) NSData* keyCiphertext; // encrypted message crypto key

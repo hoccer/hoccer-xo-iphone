@@ -12,6 +12,12 @@
 @class TalkMessage;
 @class AttachmentView;
 
+typedef enum BubbleStates {
+    BubbleStateInTransit,
+    BubbleStateDelivered,
+    BubbleStateFailed
+} BubbleState;
+
 @interface BubbleView : UIView
 
 @property (nonatomic) UIEdgeInsets padding;
@@ -19,6 +25,7 @@
 @property (strong, nonatomic) UIColor* bubbleColor;
 @property (nonatomic) BOOL pointingRight;
 @property (strong,nonatomic) AttachmentView * attachmentView;
+@property (nonatomic,assign) BubbleState state;
 
 
 - (id) initWithCoder:(NSCoder *)aDecoder;

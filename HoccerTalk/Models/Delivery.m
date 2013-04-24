@@ -29,6 +29,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic keyCiphertextString;
 @dynamic keyCleartext;
 @dynamic receiverKeyId;
+@dynamic timeChanged;
 
 -(NSString*) keyCiphertextString {
     return [self.keyCiphertext asBase64EncodedString];
@@ -60,11 +61,13 @@ NSString * const kDeliveryStateFailed     = @"failed";
 }
 
 - (NSDictionary*) rpcKeys {
-    return @{ @"state"     : @"state",
-              @"receiverId": @"receiver.clientId",
-              @"messageTag": @"message.messageTag",
-              @"messageId" : @"message.messageId",
-              @"keyId"     : @"receiverKeyId",
+    return @{ @"state"         : @"state",
+              @"receiverId"    : @"receiver.clientId",
+              @"messageTag"    : @"message.messageTag",
+              @"messageId"     : @"message.messageId",
+              @"timeAccepted"  : @"message.timeAccepted",
+              @"timeChanged"   : @"timeChanged",
+              @"keyId"         : @"receiverKeyId",
               @"keyCiphertext" : @"keyCiphertextString"
               };
 }
@@ -111,6 +114,15 @@ NSString * const kDeliveryStateFailed     = @"failed";
         return YES;
     }
     return NO;
+}
+
+- (void) setTimeChanged:(id)timeChanged {
+    if ([timeChanged isKindOfClass: [NSNumber class]]) {
+        timeChanged = [NSDate dateWithTimeIntervalSince1970: [timeChanged doubleValue] / 1000];
+    }
+    [self willChangeValueForKey:@"timeChanged"];
+    [self setPrimitiveValue: timeChanged forKey: @"timeChanged"];
+    [self didChangeValueForKey:@"timeChanged"];
 }
 
 @end
