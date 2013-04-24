@@ -17,7 +17,8 @@
 
 @dynamic isOutgoing;
 @dynamic body;
-@dynamic timeStamp;
+@dynamic timeSend;
+@dynamic timeAccepted;
 @dynamic timeSection;
 @dynamic isRead;
 @dynamic messageId;
@@ -68,9 +69,9 @@
 - (NSString *)encryptString: (NSString *)string {
     NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
     // NSLog(@"encryptString data=%@", data);
-    NSData *encripted = [self encrypt:data];
+    NSData *encrypted = [self encrypt:data];
     // NSLog(@"encryptString encripted=%@", encripted);
-    return [encripted asBase64EncodedString];
+    return [encrypted asBase64EncodedString];
 }
 
 - (NSString *)decryptString: (NSString *)string {
@@ -101,6 +102,15 @@
 
 - (void) setupOutgoingEncryption {
     [self setCryptoKey: [AESCryptor random256BitKey]];
+}
+
+- (void) setTimeAccepted:(id)timeAccepted {
+    if ([timeAccepted isKindOfClass: [NSNumber class]]) {
+        timeAccepted = [NSDate dateWithTimeIntervalSince1970: [timeAccepted doubleValue] / 1000];
+    }
+    [self willChangeValueForKey:@"timeAccepted"];
+    [self setPrimitiveValue: timeAccepted forKey: @"timeAccepted"];
+    [self didChangeValueForKey:@"timeAccepted"];
 }
 
 

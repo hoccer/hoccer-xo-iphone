@@ -111,10 +111,10 @@ typedef enum BackendStates {
 - (TalkMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
     TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
-    message.timeStamp = [NSDate date];
+    message.timeSend = [NSDate date];
     message.contact = contact;
     message.isOutgoing = @YES;
-    message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
+    message.timeSection = [contact sectionTitleForMessageTime: message.timeSend];
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
 
@@ -131,7 +131,7 @@ typedef enum BackendStates {
     delivery.message = message;
     delivery.receiver = contact;
 
-    contact.latestMessageTime = message.timeStamp;
+    contact.latestMessageTime = message.timeSend;
     [message setupOutgoingEncryption];
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
@@ -211,13 +211,13 @@ typedef enum BackendStates {
 
     message.isOutgoing = @NO;
     message.isRead = @NO;
-    message.timeStamp = [NSDate date]; // TODO: use actual timestamp
-    message.timeSection = [contact sectionTitleForMessageTime: message.timeStamp];
+    message.timeSend = [NSDate date]; // TODO: use actual timestamp
+    message.timeSection = [contact sectionTitleForMessageTime: message.timeSend];
     message.contact = contact;
     [contact.messages addObject: message];
     [message updateWithDictionary: messageDictionary];
 
-    contact.latestMessageTime = message.timeStamp;
+    contact.latestMessageTime = message.timeSend;
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     [self deliveryConfirm: message.messageId withDelivery: delivery];

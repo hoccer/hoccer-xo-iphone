@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -42,7 +42,7 @@
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="contact" inverseEntity="TalkMessage" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND timeStamp == $FETCH_SOURCE.latestMessageTime"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND timeSend == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
         <fetchedProperty name="unreadMessages" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
@@ -52,6 +52,7 @@
     <entity name="Delivery" representedClassName="Delivery" syncable="YES">
         <attribute name="keyCiphertext" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="state" attributeType="String" defaultValueString="new" syncable="YES"/>
+        <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="deliveries" inverseEntity="TalkMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
     </entity>
@@ -64,8 +65,9 @@
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="messageId" attributeType="String" syncable="YES"/>
         <attribute name="messageTag" attributeType="String" syncable="YES"/>
+        <attribute name="timeAccepted" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="timeSection" attributeType="String" syncable="YES"/>
-        <attribute name="timeStamp" attributeType="Date" syncable="YES"/>
+        <attribute name="timeSend" attributeType="Date" syncable="YES"/>
         <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
@@ -81,8 +83,8 @@
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="285"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="389"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="Delivery" positionX="0" positionY="0" width="128" height="120"/>
         <element name="Invite" positionX="0" positionY="0" width="128" height="60"/>
-        <element name="TalkMessage" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="TalkMessage" positionX="0" positionY="0" width="128" height="210"/>
     </elements>
 </model>
