@@ -25,6 +25,7 @@
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
 #import "UserProfile.h"
+#import "SoundEffectPlayer.h"
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -146,6 +147,7 @@ typedef enum BackendStates {
         [attachment upload];
     }
     [self.delegate saveDatabase];
+    [SoundEffectPlayer messageSent];
     return message;
 }
 
@@ -229,6 +231,7 @@ typedef enum BackendStates {
         }
     }
     [self.delegate saveDatabase];
+    [SoundEffectPlayer messageArrived];
 }
 
 - (void) performRegistration {
@@ -635,12 +638,14 @@ typedef enum BackendStates {
     // NSLog(@"downloadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    [SoundEffectPlayer transferFinished];
 }
 
 - (void) uploadFinished:(Attachment *)theAttachment {
     // NSLog(@"uploadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    [SoundEffectPlayer transferFinished];
 }
 
 - (void) downloadFailed:(Attachment *)theAttachment {
@@ -681,6 +686,7 @@ typedef enum BackendStates {
                                                                           userInfo:nil
                                                                            repeats:NO];
     } else {
+        [SoundEffectPlayer transferFailed];
         NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
               theAttachment.remoteURL, theAttachment.transferFailures);
     }
@@ -801,6 +807,9 @@ typedef enum BackendStates {
         }
     }];
 }
+
+// client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
+// the return result contains an array with updated deliveries
 - (void) deliveryRequest: (TalkMessage*) message withDeliveries: (NSArray*) deliveries {
     NSMutableDictionary * messageDict = [message rpcDictionary];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
@@ -1103,9 +1112,16 @@ typedef enum BackendStates {
     
     Delivery * myDelivery = [self getDeliveryMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
     if (myDelivery != nil) {
-        myDelivery.state = deliveryDict[@"state"];
-        [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
-        NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
+        if (![myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
+            myDelivery.state = deliveryDict[@"state"];
+            [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
+            NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
+            if (![myDelivery.state isEqualToString:@"delivered"]) {
+                [SoundEffectPlayer messageDelivered];
+            }
+        } else {
+            NSLog(@"Delivery state for messageTag %@ receiver %@ was already %@", myMessageTag, myReceiverId, myDelivery.state);            
+        }
         [self deliveryAcknowledge: myDelivery];
     } else {
         NSLog(@"Signalling deliveryAbort for unknown delivery with messageTag %@ messageId %@ receiver %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId);
