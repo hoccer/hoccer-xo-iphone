@@ -100,4 +100,21 @@ static const double kAttachmentPadding = 10;
     return height;
 }
 
+- (void) setState:(BubbleState)state {
+    _state = state;
+    NSString * stateString = nil;
+    switch (state) {
+        case BubbleStateInTransit:
+            stateString = @"-in_transit";
+            break;
+        case BubbleStateDelivered:
+            stateString = @"";
+            break;
+        case BubbleStateFailed:
+            stateString = @"-failed";
+            break;
+    }
+    NSString * assetName = [NSString stringWithFormat: @"bubble-%@%@", _pointingRight ? @"right" : @"left", stateString];
+    self.background.image =[AssetStore stretchableImageNamed: assetName withLeftCapWidth: _pointingRight ? kRightBubbleCapLeft : kLeftBubbleCapLeft topCapHeight:kBubbleCapTop];
+}
 @end

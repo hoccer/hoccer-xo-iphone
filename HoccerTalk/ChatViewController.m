@@ -1016,16 +1016,16 @@
             NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
         }
         for (Delivery * myDelivery in message.deliveries) {
-            if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
-                cell.bubble.alpha = 0.1;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering]) {
-                cell.bubble.alpha = 0.25;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered]) {
-                cell.bubble.alpha = 0.5;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
-                cell.bubble.alpha = 1.0;
+            if ([myDelivery.state isEqualToString:kDeliveryStateNew] ||
+                [myDelivery.state isEqualToString:kDeliveryStateDelivering])
+            {
+                cell.bubble.state = BubbleStateInTransit;
+            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered] ||
+                       [myDelivery.state isEqualToString:kDeliveryStateConfirmed])
+            {
+                cell.bubble.state = BubbleStateDelivered;
             } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-                cell.backgroundColor = [UIColor redColor];
+                cell.bubble.state = BubbleStateFailed;
             } else {
                 NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
             }
