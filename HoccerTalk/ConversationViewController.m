@@ -322,6 +322,7 @@
     } else {
         cell.latestMessageTime.text = @"";
     }
+    cell.hasNewMessages = contact.unreadMessages.count > 0;
 }
 
 @end

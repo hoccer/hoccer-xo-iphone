@@ -27,4 +27,15 @@
 
 }
 
+- (void) setHasNewMessages:(BOOL)hasNewMessages {
+    UIImage * backgroundImage = nil;
+    _hasNewMessages = hasNewMessages;
+    if (hasNewMessages) {
+        backgroundImage = [AssetStore stretchableImageNamed: @"conversation_cell_bg_new" withLeftCapWidth: 1.0 topCapHeight: 0];
+    } else {
+        backgroundImage = [AssetStore stretchableImageNamed: @"conversation_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0];
+    }
+    ((UIImageView*)self.backgroundView).image = backgroundImage;
+    [self setNeedsDisplay];
+}
 @end

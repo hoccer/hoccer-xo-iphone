@@ -974,12 +974,20 @@
     [super viewWillAppear: animated];
 
     [self setNavigationBarBackgroundWithLines];
+    if (self.fetchedResultsController != nil) {
+        self.fetchedResultsController.delegate = self;
+    }
 
     [self scrollToBottomAnimated: NO];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
     [self trashCurrentAttachment];
+
+    if (self.fetchedResultsController != nil) {
+        self.fetchedResultsController.delegate = nil;
+    }
+
 }
 
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
