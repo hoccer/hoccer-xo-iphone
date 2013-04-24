@@ -143,7 +143,7 @@ NSString * const kRelationStateBlocked = @"blocked";
 
 - (NSDictionary*) rpcKeys {
     return @{ @"state"     : @"relationshipState",
-              @"lastChanged": @"relationshipLastChanged",
+              @"lastChanged": @"relationshipLastChangedMillis",
               };
 }
 
