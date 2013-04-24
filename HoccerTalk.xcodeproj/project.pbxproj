@@ -263,6 +263,15 @@
 		E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886C41725CB3F0089A510 /* VcardWriter.m */; };
 		E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886CB1725CBCF0089A510 /* NSString+Regexp.m */; };
 		E99886CE1725CE0F0089A510 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99886CD1725CE0F0089A510 /* AddressBook.framework */; };
+		E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886DD1728135C0089A510 /* SoundEffectPlayer.m */; };
+		E99886E617282C140089A510 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99886E517282C140089A510 /* AudioToolbox.framework */; };
+		E99886EF17282C950089A510 /* catch_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886E817282C950089A510 /* catch_sound.wav */; };
+		E99886F017282C950089A510 /* chime_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886E917282C950089A510 /* chime_sound.wav */; };
+		E99886F117282C950089A510 /* sad_trombone_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EA17282C950089A510 /* sad_trombone_sound.wav */; };
+		E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EB17282C950089A510 /* sweep_in_sound.wav */; };
+		E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EC17282C950089A510 /* sweep_out_sound.wav */; };
+		E99886F417282C950089A510 /* tada_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886ED17282C950089A510 /* tada_sound.wav */; };
+		E99886F517282C950089A510 /* throw_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EE17282C950089A510 /* throw_sound.wav */; };
 		E9A2B85017189A1200E35E7E /* button-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84C17189A1200E35E7E /* button-audio.png */; };
 		E9A2B85117189A1200E35E7E /* button-audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84D17189A1200E35E7E /* button-audio@2x.png */; };
 		E9A2B85217189A1200E35E7E /* button-video.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84E17189A1200E35E7E /* button-video.png */; };
@@ -664,6 +673,16 @@
 		E99886CA1725CBCF0089A510 /* NSString+Regexp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Regexp.h"; sourceTree = "<group>"; };
 		E99886CB1725CBCF0089A510 /* NSString+Regexp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Regexp.m"; sourceTree = "<group>"; };
 		E99886CD1725CE0F0089A510 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		E99886DC1728135C0089A510 /* SoundEffectPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundEffectPlayer.h; sourceTree = "<group>"; };
+		E99886DD1728135C0089A510 /* SoundEffectPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundEffectPlayer.m; sourceTree = "<group>"; };
+		E99886E517282C140089A510 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E99886E817282C950089A510 /* catch_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = catch_sound.wav; sourceTree = "<group>"; };
+		E99886E917282C950089A510 /* chime_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = chime_sound.wav; sourceTree = "<group>"; };
+		E99886EA17282C950089A510 /* sad_trombone_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sad_trombone_sound.wav; sourceTree = "<group>"; };
+		E99886EB17282C950089A510 /* sweep_in_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_in_sound.wav; sourceTree = "<group>"; };
+		E99886EC17282C950089A510 /* sweep_out_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_out_sound.wav; sourceTree = "<group>"; };
+		E99886ED17282C950089A510 /* tada_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tada_sound.wav; sourceTree = "<group>"; };
+		E99886EE17282C950089A510 /* throw_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = throw_sound.wav; sourceTree = "<group>"; };
 		E9A2B84C17189A1200E35E7E /* button-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio.png"; sourceTree = "<group>"; };
 		E9A2B84D17189A1200E35E7E /* button-audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio@2x.png"; sourceTree = "<group>"; };
 		E9A2B84E17189A1200E35E7E /* button-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video.png"; sourceTree = "<group>"; };
@@ -678,6 +697,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E99886E617282C140089A510 /* AudioToolbox.framework in Frameworks */,
 				E99886CE1725CE0F0089A510 /* AddressBook.framework in Frameworks */,
 				6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */,
 				6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */,
@@ -811,6 +831,7 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				E99886E717282C950089A510 /* Sounds */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
 				637847BA16F348E300DE03C2 /* AppIcons */,
 				6330490B170044940045E64E /* Avatar */,
@@ -1092,6 +1113,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				E99886E517282C140089A510 /* AudioToolbox.framework */,
 				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */,
@@ -1134,6 +1156,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerTalk */ = {
 			isa = PBXGroup;
 			children = (
+				E99886DB1728135C0089A510 /* SoundEffects */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -1333,6 +1356,29 @@
 				E99886C41725CB3F0089A510 /* VcardWriter.m */,
 			);
 			path = Adressbook;
+			sourceTree = "<group>";
+		};
+		E99886DB1728135C0089A510 /* SoundEffects */ = {
+			isa = PBXGroup;
+			children = (
+				E99886DC1728135C0089A510 /* SoundEffectPlayer.h */,
+				E99886DD1728135C0089A510 /* SoundEffectPlayer.m */,
+			);
+			path = SoundEffects;
+			sourceTree = "<group>";
+		};
+		E99886E717282C950089A510 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				E99886E817282C950089A510 /* catch_sound.wav */,
+				E99886E917282C950089A510 /* chime_sound.wav */,
+				E99886EA17282C950089A510 /* sad_trombone_sound.wav */,
+				E99886EB17282C950089A510 /* sweep_in_sound.wav */,
+				E99886EC17282C950089A510 /* sweep_out_sound.wav */,
+				E99886ED17282C950089A510 /* tada_sound.wav */,
+				E99886EE17282C950089A510 /* throw_sound.wav */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 		E9A2B84B17189A1200E35E7E /* Media */ = {
@@ -1636,6 +1682,13 @@
 				6327EB57171C82B400AF75E1 /* date_cell_bg@2x.png in Resources */,
 				E99886B71725AFAA0089A510 /* audio_leer.png in Resources */,
 				E99886B81725AFAA0089A510 /* audio_leer@2x.png in Resources */,
+				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
+				E99886F017282C950089A510 /* chime_sound.wav in Resources */,
+				E99886F117282C950089A510 /* sad_trombone_sound.wav in Resources */,
+				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
+				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
+				E99886F417282C950089A510 /* tada_sound.wav in Resources */,
+				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1750,6 +1803,7 @@
 				E99886C81725CB3F0089A510 /* VcardParser.m in Sources */,
 				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
+				E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
