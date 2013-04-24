@@ -37,6 +37,7 @@
     [self seedRand];
     _backgroundTask = UIBackgroundTaskInvalid;
     //[[UserProfile sharedProfile] deleteCredentials];
+
     return YES;
 }
 
