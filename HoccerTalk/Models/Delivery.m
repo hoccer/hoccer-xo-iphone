@@ -30,6 +30,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic keyCleartext;
 @dynamic receiverKeyId;
 @dynamic timeChanged;
+@dynamic timeChangedMillis;
 
 -(NSString*) keyCiphertextString {
     return [self.keyCiphertext asBase64EncodedString];
@@ -58,18 +59,6 @@ NSString * const kDeliveryStateFailed     = @"failed";
     if (![theKeyId isEqualToString:[myKeyId hexadecimalString]]) {
         NSLog(@"ERROR: incoming message was encrypted with a public key with id %@, but my key id is %@ - decryption will fail",theKeyId,[myKeyId hexadecimalString]);
     }
-}
-
-- (NSDictionary*) rpcKeys {
-    return @{ @"state"         : @"state",
-              @"receiverId"    : @"receiver.clientId",
-              @"messageTag"    : @"message.messageTag",
-              @"messageId"     : @"message.messageId",
-              @"timeAccepted"  : @"message.timeAccepted",
-              @"timeChanged"   : @"timeChanged",
-              @"keyId"         : @"receiverKeyId",
-              @"keyCiphertext" : @"keyCiphertextString"
-              };
 }
 
 
@@ -116,13 +105,27 @@ NSString * const kDeliveryStateFailed     = @"failed";
     return NO;
 }
 
-- (void) setTimeChanged:(id)timeChanged {
-    if ([timeChanged isKindOfClass: [NSNumber class]]) {
-        timeChanged = [NSDate dateWithTimeIntervalSince1970: [timeChanged doubleValue] / 1000];
+- (NSNumber*) timeChangedMillis {
+    if (self.timeChanged == nil) {
+        return [NSNumber numberWithDouble:0];
     }
-    [self willChangeValueForKey:@"timeChanged"];
-    [self setPrimitiveValue: timeChanged forKey: @"timeChanged"];
-    [self didChangeValueForKey:@"timeChanged"];
+    return [NSNumber numberWithDouble:[self.timeChanged timeIntervalSince1970]*1000];
+}
+
+- (void) setTimeChangedMillis:(NSNumber*) milliSecondsSince1970 {
+    self.timeChanged = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
+}
+
+- (NSDictionary*) rpcKeys {
+    return @{ @"state"         : @"state",
+              @"receiverId"    : @"receiver.clientId",
+              @"messageTag"    : @"message.messageTag",
+              @"messageId"     : @"message.messageId",
+              @"timeAccepted"  : @"message.timeAcceptedMillis",
+              @"timeChanged"   : @"timeChangedMillis",
+              @"keyId"         : @"receiverKeyId",
+              @"keyCiphertext" : @"keyCiphertextString"
+              };
 }
 
 @end

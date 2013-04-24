@@ -40,6 +40,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, retain) NSString * relationshipState;
 @property (nonatomic, retain) NSDate * relationshipLastChanged;
 
+@property (nonatomic) NSNumber * relationshipLastChangedMillis;
+
 @property (nonatomic) NSString* publicKeyString; // b64-string
 
 

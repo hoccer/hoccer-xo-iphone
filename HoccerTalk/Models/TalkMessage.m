@@ -17,7 +17,7 @@
 
 @dynamic isOutgoing;
 @dynamic body;
-@dynamic timeSend;
+@dynamic timeSent;
 @dynamic timeAccepted;
 @dynamic timeSection;
 @dynamic isRead;
@@ -90,29 +90,41 @@
     return [data decryptedAES256DataUsingKey:self.cryptoKey error:nil];
 }
 
-
-- (NSDictionary*) rpcKeys {
-    return @{
-             @"body": @"bodyCiphertext", // use this line to encrypt
-             @"messageId": @"messageId",
-             @"senderId": @"contact.clientId",
-             @"attachment": @"attachment.attachmentJsonStringCipherText",
-             };
-}
-
 - (void) setupOutgoingEncryption {
     [self setCryptoKey: [AESCryptor random256BitKey]];
 }
 
-- (void) setTimeAccepted:(id)timeAccepted {
-    if ([timeAccepted isKindOfClass: [NSNumber class]]) {
-        timeAccepted = [NSDate dateWithTimeIntervalSince1970: [timeAccepted doubleValue] / 1000];
+
+- (NSNumber*) timeAcceptedMillis {
+    if (self.timeAccepted == nil) {
+        return [NSNumber numberWithDouble:0];
     }
-    [self willChangeValueForKey:@"timeAccepted"];
-    [self setPrimitiveValue: timeAccepted forKey: @"timeAccepted"];
-    [self didChangeValueForKey:@"timeAccepted"];
+    return [NSNumber numberWithDouble:[self.timeAccepted timeIntervalSince1970]*1000];
 }
 
+- (void) setTimeAcceptedMillis:(NSNumber*) milliSecondsSince1970 {
+    self.timeAccepted = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
+}
 
+- (NSNumber*) timeSentMillis {
+    if (self.timeAccepted == nil) {
+        return [NSNumber numberWithDouble:0];
+    }
+    return [NSNumber numberWithDouble:[self.timeSent timeIntervalSince1970]*1000];
+}
+
+- (void) setTimeSentMillis:(NSNumber*) milliSecondsSince1970 {
+    self.timeSent = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
+}
+
+- (NSDictionary*) rpcKeys {
+    return @{
+             @"body": @"bodyCiphertext",
+             @"messageId": @"messageId",
+             @"senderId": @"contact.clientId",
+             @"attachment": @"attachment.attachmentJsonStringCipherText",
+             @"timeSent": @"timeSentMillis" // our own time stamp
+             };
+}
 
 @end
