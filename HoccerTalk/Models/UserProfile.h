@@ -12,8 +12,8 @@
 
 @interface UserProfile : NSObject
 
-@property (nonatomic,strong) UIImage    * avatar;
-@property (nonatomic,readonly) NSData   * avatarData;
+@property (nonatomic,strong) UIImage    * avatarImage;
+@property (nonatomic,readonly) NSData   * avatar;
 @property (nonatomic,strong) NSString   * avatarURL;
 
 @property (nonatomic,strong) NSString   * nickName;

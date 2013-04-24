@@ -986,7 +986,7 @@
 - (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
 
     if (self.avatarImage == nil) {
-        UIImage * myImage = [UserProfile sharedProfile].avatar;
+        UIImage * myImage = [UserProfile sharedProfile].avatarImage;
         self.avatarImage = myImage != nil ? myImage : [UIImage imageNamed: @"avatar_default_contact"];
     }
 
