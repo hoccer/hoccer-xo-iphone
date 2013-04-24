@@ -22,7 +22,6 @@
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell;
 - (BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender;
 - (void) messageView:(MessageCell *)theCell saveMessage:(id)sender;
-- (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender;
 - (void) messageView:(MessageCell *)theCell copy:(id)sender;
 - (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender;
 

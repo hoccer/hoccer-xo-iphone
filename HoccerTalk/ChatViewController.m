@@ -135,9 +135,8 @@
     // setup longpress menus
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
-    UIMenuItem *myForwardMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
-    [menuController setMenuItems:@[mySaveMenuItem,myForwardMenuItem,myDeleteMessageMenuItem]];
+    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem]];
     [menuController update];
     
     [self hideAttachmentSpinner];
@@ -1037,7 +1036,6 @@
 
 -(BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
     // NSLog(@"messageView:canPerformAction:");
-    // if (action == @selector(forwardMessage:)) return YES;
     if (action == @selector(deleteMessage:)) return YES;
     if (action == @selector(copy:)) {return YES;}
 
@@ -1096,11 +1094,6 @@
             NSLog(@"didPickAttachment: failed to save video in album at path = %@",myVideoFilePath);
         }
     }
-}
-
-- (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
-    NSLog(@"forwardMessage");
-    // TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 }
 
 - (void) messageView:(MessageCell *)theCell copy:(id)sender {

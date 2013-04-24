@@ -45,12 +45,6 @@ static const double kCellPadding = 10.0;
     }
 }
 
--(void) forwardMessage:(id)sender {
-    if (self.delegate != nil) {
-        return [self.delegate messageView:self forwardMessage:sender];
-    }
-}
-
 -(void) copy:(id)sender {
     if (self.delegate != nil) {
         return [self.delegate messageView:self copy:sender];
