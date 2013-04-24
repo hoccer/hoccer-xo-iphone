@@ -36,4 +36,7 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 
 @property (nonatomic) NSString* receiverKeyId;
 
+@property (nonatomic) NSNumber * timeChangedMillis;
+
+
 @end

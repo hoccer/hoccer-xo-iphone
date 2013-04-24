@@ -17,7 +17,7 @@
 @interface TalkMessage : HoccerTalkModel
 
 @property (nonatomic, strong) NSString* body;
-@property (nonatomic, strong) NSDate*   timeSend;
+@property (nonatomic, strong) NSDate*   timeSent;
 @property (nonatomic, strong) NSDate*   timeAccepted;
 @property (nonatomic, strong) NSNumber* isOutgoing;
 @property (nonatomic, strong) NSString* timeSection;
@@ -32,6 +32,10 @@
 @property (nonatomic, strong) NSData * cryptoKey;
 
 @property (nonatomic) NSString* bodyCipherText;
+
+@property (nonatomic) NSNumber *   timeSentMillis;
+@property (nonatomic) NSNumber *   timeAcceptedMillis;
+
 
 - (void) setupOutgoingEncryption;
 - (NSString *)encryptString: (NSString *)string;

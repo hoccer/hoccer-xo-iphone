@@ -38,20 +38,20 @@
 }
 
 + (void) updateObject:(id)object withDictionary: (NSDictionary*) dict withKeys:(NSDictionary*)keys {
-    // NSLog(@"Updatig object of type %@", NSStringFromClass([object class]));
+    NSLog(@"Updatig object of type %@", NSStringFromClass([object class]));
     for (id key in dict) {
         if (keys[key] == nil) {
             // NSLog(@"unhandled key '%@' in update dictionary, ignoring key:", key);
             continue;
         }
-        // NSLog(@"check value for key '%@'", key);
+        NSLog(@"check value for key '%@'", key);
         id oldValue = [object valueForKeyPath: keys[key]];
-        // NSLog(@"oldCoreDataValue = '%@'", oldValue);
+        NSLog(@"oldCoreDataValue = '%@'", oldValue);
         id newIncomingValue = dict[key];
-        // NSLog(@"newIncomingValue = '%@'", newIncomingValue);
+        NSLog(@"newIncomingValue = '%@'", newIncomingValue);
         
         if ( ! [newIncomingValue isEqual: oldValue]) {
-            // NSLog(@"updating value for key '%@'", key);
+            NSLog(@"updating value for key '%@'", key);
             [object setValue: newIncomingValue forKeyPath: keys[key]];
         }
     }

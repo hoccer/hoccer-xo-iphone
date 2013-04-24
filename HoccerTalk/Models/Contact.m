@@ -48,6 +48,7 @@ NSString * const kRelationStateBlocked = @"blocked";
 
 @dynamic relationshipState;
 @dynamic relationshipLastChanged;
+@dynamic relationshipLastChangedMillis;
 
 - (void) setRelationshipLastChanged:(id) time {
     if ([time isKindOfClass:[NSNumber class]]) {
@@ -57,6 +58,18 @@ NSString * const kRelationStateBlocked = @"blocked";
     [self setPrimitiveValue: time forKey: @"relationshipLastChanged"];
     [self didChangeValueForKey: @"relationshipLastChanged"];
 }
+
+- (NSNumber*) relationshipLastChangedMillis {
+    if (self.relationshipLastChanged == nil) {
+        return [NSNumber numberWithDouble:0];
+    }
+    return [NSNumber numberWithDouble:[self.relationshipLastChanged timeIntervalSince1970]*1000];
+}
+
+- (void) setRelationshipLastChangedMillis:(NSNumber*) milliSecondsSince1970 {
+    self.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
+}
+
 
 @synthesize avatarImage = _avatarImage;
 
