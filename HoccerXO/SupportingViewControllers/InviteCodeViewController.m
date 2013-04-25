@@ -48,7 +48,7 @@
 - (IBAction) newCodePressed:(id)sender {
     _newTokenButtonPressed = YES;
     self.navigationItem.leftBarButtonItem = nil;
-    [self.chatBackend generateToken: @"pairing" validFor: 60 * 60 * 24 * 7 /* TODO: kInvitationTokenValidity*/ tokenHandler: ^(NSString* token) {
+    [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
         if (token == nil) {
             return;
         }

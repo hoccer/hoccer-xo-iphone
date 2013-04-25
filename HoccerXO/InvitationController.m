@@ -10,8 +10,6 @@
 #import "InviteCodeViewController.h"
 #import "AppDelegate.h"
 
-static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
-
 @interface InvitationChannel : NSObject
 @property (nonatomic,strong) NSString* localizedButtonTitle;
 @property (nonatomic, assign) SEL handler;

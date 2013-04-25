@@ -168,6 +168,7 @@
 		6378484616F4000500DE03C2 /* Delivery.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484516F4000500DE03C2 /* Delivery.m */; };
 		6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484916F4040C00DE03C2 /* HXOModel.m */; };
 		6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484C16F4210A00DE03C2 /* NSString+UUID.m */; };
+		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		63AE4516170350750099F0CB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4513170350750099F0CB /* Default.png */; };
 		63AE4517170350750099F0CB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4514170350750099F0CB /* Default@2x.png */; };
 		63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE451A1703519B0099F0CB /* Default-568h@2x.png */; };
@@ -543,6 +544,7 @@
 		6378484916F4040C00DE03C2 /* HXOModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOModel.m; sourceTree = "<group>"; };
 		6378484B16F4210900DE03C2 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
 		6378484C16F4210A00DE03C2 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
+		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		63AE4514170350750099F0CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		63AE451A1703519B0099F0CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -910,6 +912,7 @@
 		636D40041710724900304EDF /* SettingsConstantsAndEnvironment */ = {
 			isa = PBXGroup;
 			children = (
+				6383FF751729DC2200835C91 /* Settings.bundle */,
 				636D400117106EC000304EDF /* Environment.h */,
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
@@ -1717,6 +1720,7 @@
 				63F4CF1817289CE200699394 /* InviteFooterView.xib in Resources */,
 				633B223C172987AF00DF1E0E /* hoccer-xo-app-icon.png in Resources */,
 				633B223E1729885200DF1E0E /* hoccer-xo-app-icon@2x.png in Resources */,
+				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
