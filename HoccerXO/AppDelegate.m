@@ -218,7 +218,6 @@
     }
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"HoccerXO" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    NSLog(@"===== URL %@ model: %@", [modelURL absoluteString], _managedObjectModel);
     return _managedObjectModel;
 }
 

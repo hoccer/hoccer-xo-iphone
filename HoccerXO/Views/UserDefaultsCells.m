@@ -94,6 +94,7 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self.imageView.image = [item icon];
     self.textLabel.textAlignment = [item textAlignment];
     self.textLabel.text = self.isEditing ? [item editLabel] : [item currentValue];
+    [self.textLabel sizeToFit];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
@@ -231,6 +232,10 @@ static const CGFloat kEditAnimationDuration = 0.5;
 @end
 
 @implementation UserDefaultsCellInfoText
+
+- (CGFloat) heightForText: (NSString*) text {
+    return [self.textLabel calculateSize: text].height + 22;
+}
 
 @end
 
