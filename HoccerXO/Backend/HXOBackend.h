@@ -23,6 +23,7 @@ typedef void (^SrpHanlder)(NSString*);
 typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
+typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
 
 @protocol HXODelegate <NSObject>
