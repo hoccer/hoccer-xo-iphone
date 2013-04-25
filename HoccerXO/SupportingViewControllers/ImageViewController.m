@@ -42,10 +42,12 @@ static const CGFloat kImageViewerOversize = 1.03;
     self.scrollView.alwaysBounceVertical   = YES;
     self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"bg-noise"]];
 
+    /*
     self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowRadius  = 10;
     self.imageView.layer.shadowOffset = CGSizeMake(0, 0);
+     */
 
     [self.doneButton setBackgroundImage: [UIImage imageNamed: @"navbar-btn-blue"] forState: UIControlStateNormal barMetrics:UIBarMetricsDefault];
 }
