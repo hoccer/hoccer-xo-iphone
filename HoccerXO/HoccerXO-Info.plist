@@ -18,6 +18,8 @@
 				<string>hoccer-talk-app-icon@2x.png</string>
 				<string>hoccer-talk-app-icon-ipad.png</string>
 				<string>hoccer-talk-app-icon-ipad@2x.png</string>
+				<string>hoccer-xo-app-icon.png</string>
+				<string>hoccer-xo-app-icon@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
