@@ -18,7 +18,7 @@
 @property (nonatomic, readonly) HXOBackend * chatBackend;
 @property (strong, nonatomic) IBOutlet UITextField * codeTextField;
 @property (strong, nonatomic) IBOutlet UILabel *label;
-@property (strong, nonatomic) IBOutlet UIButton *clipboardButton;
 @property (strong, nonatomic) IBOutlet UINavigationItem *navigationItem;
+@property (strong, nonatomic) IBOutlet UIButton *getNewCodeButton;
 
 @end
