@@ -49,7 +49,23 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3400</string>
+	<string>3381</string>
+	<key>HXOClientDevelopers</key>
+	<array>
+		<string>David Siegel</string>
+		<string>Pavel Mayer</string>
+	</array>
+	<key>HXODesigners</key>
+	<array>
+		<string>Peter Amende</string>
+	</array>
+	<key>HXOReleaseName</key>
+	<string>Baby Shoes</string>
+	<key>HXOServerDevelopers</key>
+	<array>
+		<string>Ingo Albrecht</string>
+		<string>Björn Heller</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIFileSharingEnabled</key>

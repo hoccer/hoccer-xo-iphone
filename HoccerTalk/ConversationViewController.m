@@ -24,10 +24,13 @@
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
 #import "ProfileViewController.h"
+#import "InviteFooterView.h"
+#import "InvitationController.h"
 
 @interface ConversationViewController ()
 
 @property (nonatomic,strong) ConversationCell* conversationCell;
+@property (nonatomic,readonly) InviteFooterView * inviteFooter;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
@@ -129,6 +132,28 @@
         [self configureCell:cell atIndexPath:indexPath];
         return cell;
     }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return self.inviteFooter;
+}
+
+@synthesize inviteFooter = _inviteFooter;
+- (UIView*) inviteFooter {
+    if (_inviteFooter == nil) {
+        _inviteFooter = [[NSBundle mainBundle] loadNibNamed:@"InviteFooterView" owner:self options:nil][0];
+        [_inviteFooter.button addTarget: self action: @selector(inviteFriendsPressed:) forControlEvents: UIControlEventTouchUpInside];
+        NSLog(@"invite footer frame %@", NSStringFromCGRect(_inviteFooter.frame));
+    }
+    return _inviteFooter;
+}
+
+- (void) inviteFriendsPressed: (id) sender {
+    [[InvitationController sharedInvitationController] presentWithViewController: self];
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return self.inviteFooter.frame.size.height;
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

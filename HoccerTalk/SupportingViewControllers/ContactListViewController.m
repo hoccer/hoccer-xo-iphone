@@ -17,23 +17,15 @@
 #import "InviteCodeViewController.h"
 #import "HoccerTalkBackend.h"
 #import "ProfileViewController.h"
-
-static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
-
-@interface InvitationChannel : NSObject
-@property (nonatomic,strong) NSString* localizedButtonTitle;
-@property (nonatomic, assign) SEL handler;
-@end
+#import "InvitationController.h"
 
 
 @interface ContactListViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
-@property (nonatomic, strong) NSMutableArray * invitationChannels;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (strong, nonatomic, readonly) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, readonly) HoccerTalkBackend * chatBackend;
 
 @property (nonatomic, readonly) ContactCell * contactCellPrototype;
 
@@ -43,7 +35,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize contactCellPrototype = _contactCellPrototype;
-@synthesize chatBackend = _chatBackend;
 
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
@@ -66,24 +57,6 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
 
-    self.invitationChannels = [[NSMutableArray alloc] initWithCapacity: 2];
-    if ([MFMessageComposeViewController canSendText]) {
-        InvitationChannel * channel = [[InvitationChannel alloc] init];
-        channel.localizedButtonTitle = NSLocalizedString(@"SMS",@"Invite Actionsheet Button Title");
-        channel.handler = @selector(inviteBySMS);
-        [self.invitationChannels addObject: channel];
-    }
-    if ([MFMailComposeViewController canSendMail]) {
-        InvitationChannel * channel = [[InvitationChannel alloc] init];
-        channel.localizedButtonTitle = NSLocalizedString(@"Mail",@"Invite Actionsheet Button Title");
-        channel.handler = @selector(inviteByMail);
-        [self.invitationChannels addObject: channel];
-    }
-    InvitationChannel * channel = [[InvitationChannel alloc] init];
-    channel.localizedButtonTitle = NSLocalizedString(@"Invite Code", @"Invite Actionsheet Button Title");
-    channel.handler = @selector(inviteByCode);
-    [self.invitationChannels addObject: channel];
-
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
@@ -105,18 +78,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 }
 
 - (void) addContactPressed: (id) sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
-                                                        delegate: self
-                                               cancelButtonTitle: nil
-                                          destructiveButtonTitle: nil
-                                               otherButtonTitles: nil];
-    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    for (InvitationChannel * channel in self.invitationChannels) {
-        [sheet addButtonWithTitle: channel.localizedButtonTitle];
-    }
-    sheet.cancelButtonIndex = [sheet addButtonWithTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")];
-
-    [sheet showInView: self.view];
+    [[InvitationController sharedInvitationController] presentWithViewController: self];
 }
 
 - (ContactCell*) contactCellPrototype {
@@ -360,128 +322,4 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
     cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
 }
 
-
-
-
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        return;
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    [self performSelector: ((InvitationChannel*)self.invitationChannels[buttonIndex]).handler];
-#pragma clang diagnostic pop
-}
-
-- (void) inviteByMail {
-    [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
-        if (token == nil) {
-            return;
-        }
-        MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
-        picker.mailComposeDelegate = self;
-
-        [picker setSubject: NSLocalizedString(@"invitation_mail_subject", @"Mail Invitation Subject")];
-
-        NSString * body = NSLocalizedString(@"invitation_mail_body", @"Mail Invitation Body");
-        NSString * inviteLink = [self inviteURL: token];
-        NSString * appStoreLink = [self appStoreURL];
-        NSString * androidLink = [self androidURL];
-        body = [NSString stringWithFormat: body, appStoreLink, androidLink, inviteLink];
-        [picker setMessageBody:body isHTML:NO];
-
-        [self.navigationController presentViewController: picker animated: YES completion: nil];
-    }];
-}
-
-- (void) inviteBySMS {
-    [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
-        if (token == nil) {
-            return;
-        }
-        MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
-        picker.messageComposeDelegate = self;
-
-        NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
-        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token]];
-
-        [self.navigationController presentViewController: picker animated: YES completion: nil];
-
-    }];
-}
-
-- (void) inviteByCode {
-    UIStoryboard * storyboard;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
-    } else {
-        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
-    }
-
-    InviteCodeViewController * controller = [storyboard instantiateViewControllerWithIdentifier:@"inviteCodeView"];
-
-    [self.navigationController presentViewController: controller animated: YES completion: nil];
-
-}
-
-- (NSString*) inviteURL: (NSString*) token {
-    return [NSString stringWithFormat: @"hctalk://%@", token];
-}
-
-- (NSString*) appStoreURL {
-    return @"itms-apps://itunes.com/apps/hoccertalk";
-}
-
-- (NSString*) androidURL {
-    return @"http://google.com";
-}
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-
-    // TODO: handle mail result?
-	switch (result) {
-		case MFMailComposeResultCancelled:
-			break;
-		case MFMailComposeResultSaved:
-			break;
-		case MFMailComposeResultSent:
-			break;
-		case MFMailComposeResultFailed:
-			break;
-		default:
-			break;
-	}
-    [self dismissViewControllerAnimated: NO completion: nil];
-}
-
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
-                 didFinishWithResult:(MessageComposeResult)result {
-
-    // TODO: handle message result?
-	switch (result) {
-		case MessageComposeResultCancelled:
-			break;
-		case MessageComposeResultSent:
-			break;
-		case MessageComposeResultFailed:
-			break;
-		default:
-			break;
-	}
-    [self dismissViewControllerAnimated: NO completion: nil];
-}
-
-
-- (HoccerTalkBackend*) chatBackend {
-    if (_chatBackend == nil) {
-        _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
-    }
-    return _chatBackend;
-}
-
-
-@end
-
-@implementation InvitationChannel
 @end
