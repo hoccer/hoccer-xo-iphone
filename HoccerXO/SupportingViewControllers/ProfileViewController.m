@@ -72,7 +72,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
     [self setupNavigationButtons: _mode];
 
-    _items = [self populateItems];
+    if ( ! self.isEditing) {
+        _items = [self populateItems];
+    }
+
+    if (_mode == ProfileViewModeContactProfile) {
+        [self setupContactKVO];
+    }
+
     [self.tableView reloadData];
 }
 
@@ -103,9 +110,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     // XXX hack to display fingerprint while editing...
     _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
 
-    if (_mode == ProfileViewModeContactProfile) {
-        [self setupContactKVO];
-    }
     return [self filterItems: self.isEditing];
 }
 
@@ -203,12 +207,14 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
     if (_mode == ProfileViewModeFirstRun) {
-        [self setEditing: YES animated: YES];
-        if ([UserProfile sharedProfile].isRegistered) {
-            NSLog(@"first run but old credentials found.");
-            [self showOldCredentialsAlert];
-        } else {
-            [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+        if ( ! self.isEditing) {
+            [self setEditing: YES animated: YES];
+            if ([UserProfile sharedProfile].isRegistered) {
+                NSLog(@"first run but old credentials found.");
+                [self showOldCredentialsAlert];
+            } else {
+                [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+            }
         }
     }
 }
@@ -252,9 +258,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear: animated];
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
-    for (ProfileItem* item in _allProfileItems) {
-        [item removeObserver: self forKeyPath: @"valid"];
-    }
     if (_contact != nil) {
         [_contact removeObserver: self forKeyPath: @"avatarImage"];
         for (ProfileItem* item in _allProfileItems) {
@@ -376,12 +379,19 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
             ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
         }
         _canceled = NO;
+        for (ProfileItem* item in _allProfileItems) {
+            [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
+        }
+
     } else {
         if ( ! _canceled) {
             [self saveProfile];
         }
         ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
         self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
+        for (ProfileItem* item in _allProfileItems) {
+            [item removeObserver: self forKeyPath: @"valid"];
+        }
     }
 }
 
@@ -510,10 +520,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     _renewKeyPairInfoItem = [[ProfileItem alloc] init];
     _renewKeyPairInfoItem.cellClass = [UserDefaultsCellInfoText class];
     _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
-
-    for (ProfileItem* item in _allProfileItems) {
-        [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
-    }
 
     return [self populateValues];
 }
