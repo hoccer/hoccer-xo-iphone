@@ -108,12 +108,24 @@ typedef enum BackendStates {
     _state = state;
 }
 
+- (void) saveServerTime:(NSDate *) theTime {
+    self.latestKnownServerTime = theTime;
+    self.latestKnownServerTimeAtClientTime = [NSDate date];
+    self.latestKnownServerTimeOffset = [self.latestKnownServerTime timeIntervalSinceDate:self.latestKnownServerTimeAtClientTime];
+    // offest is positive if server time is ahead of client time
+    NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
+}
+
+- (NSDate*) estimatedServerTime {
+    return [NSDate dateWithTimeIntervalSinceNow:self.latestKnownServerTimeOffset];
+}
+
 // TODO: contact should be an array of contacts
 - (HXOMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
     HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeSent = [NSDate date];
-    message.timeAccepted = message.timeSent; // TODO: - offset with server time
+    message.timeAccepted = [self estimatedServerTime];
     message.contact = contact;
     message.isOutgoing = @YES;
     message.timeSection = [contact sectionTitleForMessageTime: message.timeSent];
@@ -133,7 +145,7 @@ typedef enum BackendStates {
     delivery.message = message;
     delivery.receiver = contact;
 
-    contact.latestMessageTime = message.timeSent; // this is just a preliminary setting, will be overwritten by delivery
+    // contact.latestMessageTime = message.timeSent; // we do not set it here
     [message setupOutgoingEncryption];
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
@@ -221,7 +233,7 @@ typedef enum BackendStates {
     message.isOutgoing = @NO;
     message.isRead = @NO;
     message.timeReceived = [NSDate date]; // TODO: use actual timestamp
-    message.timeSection = [contact sectionTitleForMessageTime: message.timeSent];
+    message.timeSection = [contact sectionTitleForMessageTime: message.timeAccepted];
     message.contact = contact;
     [contact.messages addObject: message];
     [message updateWithDictionary: messageDictionary];
@@ -818,7 +830,8 @@ typedef enum BackendStates {
             int i = 0;
             for (Delivery * delivery in deliveries) {
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
-                delivery.receiver.latestMessageTime = message.timeAccepted; // TODO: get rid of latestMessageTime field
+                delivery.receiver.latestMessageTime = message.timeAccepted;
+                [self saveServerTime:message.timeAccepted]; // TODO: remove when welcome call is in place
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);

@@ -15,7 +15,7 @@
 
 @interface ConversationCell : ConversationAndContactsCell
 
-@property (nonatomic,strong) IBOutlet UILabel* latestMessage;
-@property (nonatomic,strong) IBOutlet UILabel* latestMessageTime;
+@property (nonatomic,strong) IBOutlet UILabel* latestMessageLabel;
+@property (nonatomic,strong) IBOutlet UILabel* latestMessageTimeLabel;
 
 @end

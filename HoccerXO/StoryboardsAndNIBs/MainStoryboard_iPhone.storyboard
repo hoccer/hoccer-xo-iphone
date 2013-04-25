@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -422,7 +422,7 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="15.02.2013" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TRS-dL-kmg" userLabel="Latest Message">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="15.02.2013" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TRS-dL-kmg" userLabel="Latest Message Time">
                                             <rect key="frame" x="180" y="10" width="100" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -434,8 +434,8 @@
                                 </view>
                                 <connections>
                                     <outlet property="avatar" destination="lkO-00-gch" id="nsl-sr-5Ze"/>
-                                    <outlet property="latestMessage" destination="BYf-td-Ce8" id="vAG-Ju-iUY"/>
-                                    <outlet property="latestMessageTime" destination="TRS-dL-kmg" id="VJg-H2-8VW"/>
+                                    <outlet property="latestMessageLabel" destination="BYf-td-Ce8" id="Fny-Sk-V6c"/>
+                                    <outlet property="latestMessageTimeLabel" destination="TRS-dL-kmg" id="ihv-cF-LV1"/>
                                     <outlet property="nickName" destination="mH8-ys-z78" id="3A2-m8-Q55"/>
                                     <segue destination="21" kind="push" identifier="showChat" id="IGP-WO-2UC"/>
                                 </connections>

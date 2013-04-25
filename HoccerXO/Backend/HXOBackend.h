@@ -44,6 +44,10 @@ typedef void (^GenericResultHandler)(BOOL);
 @property (nonatomic, weak) AppDelegate * delegate;
 @property (nonatomic, strong) NSURLConnection *avatarUploadConnection;
 
+@property (nonatomic, strong) NSDate *latestKnownServerTime;
+@property (nonatomic, strong) NSDate *latestKnownServerTimeAtClientTime;
+@property (nonatomic) NSTimeInterval latestKnownServerTimeOffset;
+
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
 - (HXOMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
