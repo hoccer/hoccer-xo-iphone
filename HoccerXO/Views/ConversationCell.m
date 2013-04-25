@@ -20,8 +20,8 @@
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    [self engraveLabel: self.latestMessage];
-    [self engraveLabel: self.latestMessageTime];
+    [self engraveLabel: self.latestMessageLabel];
+    [self engraveLabel: self.latestMessageTimeLabel];
 }
 
 @end

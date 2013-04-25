@@ -101,10 +101,10 @@ NSString * const kRelationStateBlocked = @"blocked";
 
 
 - (NSString*) sectionTitleForMessageTime: (NSDate*) date {
-    if (self.latestMessageTime == nil) {
-        self.latestMessageTime = [NSDate date];
-    }
-    if ([date timeIntervalSinceDate: self.latestMessageTime] > kTimeSectionInterval || self.currentTimeSection == nil) {
+//    if (self.latestMessageTime == nil) {
+//        self.latestMessageTime = [NSDate date];
+//    }
+    if ((self.latestMessageTime == nil) || [date timeIntervalSinceDate: self.latestMessageTime] > kTimeSectionInterval || self.currentTimeSection == nil) {
         NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
         [formatter setDateStyle:NSDateFormatterMediumStyle];
         [formatter setTimeStyle:NSDateFormatterShortStyle];

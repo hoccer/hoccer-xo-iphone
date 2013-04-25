@@ -315,17 +315,17 @@
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
     cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
-    cell.latestMessage.frame = self.conversationCell.latestMessage.frame;
+    cell.latestMessageLabel.frame = self.conversationCell.latestMessageLabel.frame;
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){
-        cell.latestMessage.text = NSLocalizedString(@"no_messages_exchanged", nil);
-        cell.latestMessage.font = [UIFont italicSystemFontOfSize: cell.latestMessage.font.pointSize];
+        cell.latestMessageLabel.text = NSLocalizedString(@"no_messages_exchanged", nil);
+        cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
     } else {
-        cell.latestMessage.text = [contact.latestMessage[0] body];
-        cell.latestMessage.font = [UIFont systemFontOfSize: cell.latestMessage.font.pointSize];
+        cell.latestMessageLabel.text = [contact.latestMessage[0] body];
+        cell.latestMessageLabel.font = [UIFont systemFontOfSize: cell.latestMessageLabel.font.pointSize];
         latestMessageTime = [contact.latestMessage[0] timeSent];
     }
-    [cell.latestMessage sizeToFit];
+    [cell.latestMessageLabel sizeToFit];
 
     if (latestMessageTime) {
         NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -342,9 +342,9 @@
             [formatter setDateStyle:NSDateFormatterMediumStyle];
             [formatter setTimeStyle:NSDateFormatterNoStyle];
         }
-        cell.latestMessageTime.text = [formatter stringFromDate: latestMessageTime];
+        cell.latestMessageTimeLabel.text = [formatter stringFromDate: latestMessageTime];
     } else {
-        cell.latestMessageTime.text = @"";
+        cell.latestMessageTimeLabel.text = @"";
     }
     cell.hasNewMessages = contact.unreadMessages.count > 0;
 }
