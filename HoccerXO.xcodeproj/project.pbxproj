@@ -581,14 +581,14 @@
 		63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		63AE45591705EE770099F0CB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63AE455C1705EE820099F0CB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer Talk.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AEE2D416CA4D0200522F92 /* Hoccer XO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer XO.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		63AEE2DD16CA4D0200522F92 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		63AEE2E116CA4D0200522F92 /* HoccerTalk-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HoccerTalk-Info.plist"; sourceTree = "<group>"; };
+		63AEE2E116CA4D0200522F92 /* HoccerXO-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HoccerXO-Info.plist"; sourceTree = "<group>"; };
 		63AEE2E516CA4D0200522F92 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		63AEE2E716CA4D0200522F92 /* HoccerTalk-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerTalk-Prefix.pch"; sourceTree = "<group>"; };
+		63AEE2E716CA4D0200522F92 /* HoccerXO-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerXO-Prefix.pch"; sourceTree = "<group>"; };
 		63AEE2E816CA4D0200522F92 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		63AEE2E916CA4D0200522F92 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationViewController.h; sourceTree = "<group>"; };
@@ -1140,7 +1140,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
-				63AEE2DF16CA4D0200522F92 /* HoccerTalk */,
+				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */,
 				63AEE2D516CA4D0200522F92 /* Products */,
@@ -1151,7 +1151,7 @@
 		63AEE2D516CA4D0200522F92 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */,
+				63AEE2D416CA4D0200522F92 /* Hoccer XO.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1180,7 +1180,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		63AEE2DF16CA4D0200522F92 /* HoccerTalk */ = {
+		63AEE2DF16CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXGroup;
 			children = (
 				E99886B91725CB3E0089A510 /* Adressbook */,
@@ -1216,16 +1216,16 @@
 				631F6CDA170654A600FB28D5 /* UtilityCategories */,
 				63D4916716CAA17D00FD395F /* Views */,
 			);
-			path = HoccerTalk;
+			path = HoccerXO;
 			sourceTree = "<group>";
 		};
 		63AEE2E016CA4D0200522F92 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				63AE45571705EE030099F0CB /* Localizations */,
-				63AEE2E116CA4D0200522F92 /* HoccerTalk-Info.plist */,
+				63AEE2E116CA4D0200522F92 /* HoccerXO-Info.plist */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
-				63AEE2E716CA4D0200522F92 /* HoccerTalk-Prefix.pch */,
+				63AEE2E716CA4D0200522F92 /* HoccerXO-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1428,9 +1428,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		63AEE2D316CA4D0200522F92 /* HoccerTalk */ = {
+		63AEE2D316CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "HoccerTalk" */;
+			buildConfigurationList = 63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "HoccerXO" */;
 			buildPhases = (
 				63AEE2D016CA4D0200522F92 /* Sources */,
 				63AEE2D116CA4D0200522F92 /* Frameworks */,
@@ -1443,9 +1443,9 @@
 			dependencies = (
 				63C413B316E8FBB0004E1F6D /* PBXTargetDependency */,
 			);
-			name = HoccerTalk;
+			name = HoccerXO;
 			productName = Hoccenger;
-			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer Talk.app */;
+			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer XO.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1457,7 +1457,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Hoccer GmbH";
 			};
-			buildConfigurationList = 63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "HoccerTalk" */;
+			buildConfigurationList = 63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "HoccerXO" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1480,7 +1480,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				63AEE2D316CA4D0200522F92 /* HoccerTalk */,
+				63AEE2D316CA4D0200522F92 /* HoccerXO */,
 			);
 		};
 /* End PBXProject section */
@@ -1943,15 +1943,15 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerTalk/HoccerTalk-Prefix.pch";
-				INFOPLIST_FILE = "HoccerTalk/HoccerTalk-Info.plist";
+				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
+				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer Talk";
+				PRODUCT_NAME = "Hoccer XO";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp";
@@ -1965,15 +1965,15 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerTalk/HoccerTalk-Prefix.pch";
-				INFOPLIST_FILE = "HoccerTalk/HoccerTalk-Info.plist";
+				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
+				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer Talk";
+				PRODUCT_NAME = "Hoccer XO";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp";
@@ -1985,7 +1985,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "HoccerTalk" */ = {
+		63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "HoccerXO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				63AEE30016CA4D0300522F92 /* Debug */,
@@ -1994,7 +1994,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "HoccerTalk" */ = {
+		63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "HoccerXO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				63AEE30316CA4D0300522F92 /* Debug */,

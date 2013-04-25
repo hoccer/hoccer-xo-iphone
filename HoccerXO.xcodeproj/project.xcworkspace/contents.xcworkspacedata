@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:HoccerTalk.xcodeproj">
+      location = "self:HoccerXO.xcodeproj">
    </FileRef>
 </Workspace>

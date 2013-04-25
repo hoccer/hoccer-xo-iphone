@@ -41,15 +41,15 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.hoccer.hoccertalk</string>
+			<string>com.hoccer.hoccerxo</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>hctalk</string>
+				<string>hxo</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3420</string>
+	<string>3424</string>
 	<key>HXOClientDevelopers</key>
 	<array>
 		<string>David Siegel</string>
