@@ -7,6 +7,7 @@
 //
 
 #import "SoundEffectPlayer.h"
+#import "HXOUserDefaults.h"
 
 void CreateSystemSoundIDFromWAVInRessources(CFStringRef name, SystemSoundID *id);
 
@@ -64,14 +65,14 @@ void CreateSystemSoundIDFromWAVInRessources(CFStringRef name, SystemSoundID *id)
 
 // Will just play sound
 + (void)playSoundWithId: (SystemSoundID)soundId {
-	if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"playEffectSounds"] boolValue], YES) {
+	if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"playEffectSounds"] boolValue]) {
 		AudioServicesPlaySystemSound(soundId);
 	}
 }
 
 // will play sound or vibrate if phone is set to silent mode
 + (void)playAlertSoundWithId: (SystemSoundID)soundId {
-	if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"playAlertSounds"] boolValue], YES) {
+	if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"playAlertSounds"] boolValue]) {
 		AudioServicesPlayAlertSound(soundId);
 	}
 }
