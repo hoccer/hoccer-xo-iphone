@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HoccerTalkTableViewCell.h"
+#import "HXOTableViewCell.h"
 
-@implementation HoccerTalkTableViewCell
+@implementation HXOTableViewCell
 
 + (NSString*) reuseIdentifier {
     return NSStringFromClass([self class]);

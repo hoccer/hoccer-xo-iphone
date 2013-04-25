@@ -10,7 +10,7 @@
 
 #import "CryptoEngine.h"
 #import "NSData+HexString.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 #define CRYPTO_ENGINE_DEBUG ([[self verbosityLevel]isEqualToString:@"trace"])
 
@@ -32,7 +32,7 @@ NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
 
 - (NSString *) verbosityLevel {
     if (_verbosityLevel == nil) {
-        _verbosityLevel = [[HTUserDefaults standardUserDefaults] valueForKey: @"cryptoEngineVerbosity"];
+        _verbosityLevel = [[HXOUserDefaults standardUserDefaults] valueForKey: @"cryptoEngineVerbosity"];
     }
     return _verbosityLevel;
 }

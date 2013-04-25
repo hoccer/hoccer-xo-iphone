@@ -8,14 +8,14 @@
 
 #import "ContactListViewController.h"
 
-#import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "UIViewController+HXOSideMenuButtons.h"
 #import "InsetImageView.h"
 #import "Contact.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
 #import "RadialGradientView.h"
 #import "InviteCodeViewController.h"
-#import "HoccerTalkBackend.h"
+#import "HXOBackend.h"
 #import "ProfileViewController.h"
 #import "InvitationController.h"
 

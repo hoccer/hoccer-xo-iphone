@@ -13,7 +13,7 @@
 #import "RSA.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
-#import "HoccerTalkBackend.h" // for class crypto methods
+#import "HXOBackend.h" // for class crypto methods
 
 NSString * const kDeliveryStateNew        = @"new";
 NSString * const kDeliveryStateDelivering = @"delivering";
@@ -54,7 +54,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 
 // for incoming deliveries
 -(void) setReceiverKeyId:(NSString *) theKeyId {
-    NSString * myKeyIdString = [HoccerTalkBackend ownPublicKeyIdString];
+    NSString * myKeyIdString = [HXOBackend ownPublicKeyIdString];
     
     if (![theKeyId isEqualToString:myKeyIdString]) {
         NSLog(@"ERROR: incoming message was encrypted with a public key with id %@, but my key id is %@ - decryption will fail",theKeyId,myKeyIdString);

@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HoccerTalkTableViewCell.h"
+#import "HXOTableViewCell.h"
 
 @class InsetImageView;
 
-@interface ContactQuickListCell : HoccerTalkTableViewCell
+@interface ContactQuickListCell : HXOTableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet InsetImageView * avatar;

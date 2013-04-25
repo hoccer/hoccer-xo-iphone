@@ -6,16 +6,16 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HoccerTalkModel.h"
+#import "HXOModel.h"
 
-@implementation HoccerTalkModel
+@implementation HXOModel
 
 + (NSString*) entityName {
     return NSStringFromClass(self);
 }
 
 - (NSMutableDictionary*) rpcDictionary {
-    return [HoccerTalkModel createDictionaryFromObject:self withKeys:[self rpcKeys]];
+    return [HXOModel createDictionaryFromObject:self withKeys:[self rpcKeys]];
 }
 
 + (NSMutableDictionary*) createDictionaryFromObject:(id)object withKeys:(NSDictionary*)keys {
@@ -34,7 +34,7 @@
 }
 
 - (void) updateWithDictionary: (NSDictionary*) dict withKeys:(NSDictionary*)keys {
-    [HoccerTalkModel updateObject:self withDictionary:dict withKeys:keys];
+    [HXOModel updateObject:self withDictionary:dict withKeys:keys];
 }
 
 + (void) updateObject:(id)object withDictionary: (NSDictionary*) dict withKeys:(NSDictionary*)keys {

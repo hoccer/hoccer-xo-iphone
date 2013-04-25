@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 NSString * const kHTEnvironment           = @"environment";
 NSString * const kHTFirstRunDone          = @"firstRunDone";
@@ -37,7 +37,7 @@ NSString * const kHTPreviewImageWidth      = @"previewImageWidth";
 
 NSString * const kHTDefaultsDefaultsFile = @"HTUserDefaultsDefaults";
 
-@implementation HTUserDefaults
+@implementation HXOUserDefaults
 
 + (void) initialize {
     NSString * path = [[NSBundle mainBundle] pathForResource: kHTDefaultsDefaultsFile ofType: @"plist"];

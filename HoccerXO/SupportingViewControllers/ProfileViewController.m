@@ -9,8 +9,8 @@
 #import "Config.h"
 #import "ProfileViewController.h"
 #import "MFSideMenu.h"
-#import "UIViewController+HoccerTalkSideMenuButtons.h"
-#import "HTUserDefaults.h"
+#import "UIViewController+HXOSideMenuButtons.h"
+#import "HXOUserDefaults.h"
 #import "iOSVersionChecks.h"
 #import "AssetStore.h"
 #import "UserDefaultsCells.h"
@@ -38,7 +38,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, readonly) NSPredicate * hasValuePredicate;
-@property (strong, readonly) HoccerTalkBackend * chatBackend;
+@property (strong, readonly) HXOBackend * chatBackend;
 
 @end
 
@@ -59,7 +59,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [self setNavigationBarBackgroundPlain];
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
 
-    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         _mode = ProfileViewModeFirstRun;
         self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
     } else if (self.contact != nil) {
@@ -115,7 +115,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     if (_mode == ProfileViewModeContactProfile) {
         keyId = _contact.publicKeyId;
     } else {
-        keyId = [HoccerTalkBackend ownPublicKeyIdString];
+        keyId = [HXOBackend ownPublicKeyIdString];
     }
 
     // XXX hack to display fingerprint while editing...
@@ -606,8 +606,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         }
     }
 
-    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        [[HTUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
 #ifdef HXO_USE_USER_DEFINED_CREDENTIALS
         [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
 #endif
@@ -716,7 +716,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 @synthesize chatBackend = _chatBackend;
-- (HoccerTalkBackend*) chatBackend {
+- (HXOBackend*) chatBackend {
     if (_chatBackend == nil) {
         _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
     }

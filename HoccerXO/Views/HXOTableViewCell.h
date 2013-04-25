@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HoccerTalkTableViewCell : UITableViewCell
+@interface HXOTableViewCell : UITableViewCell
 
 + (NSString*) reuseIdentifier;
 

@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "HoccerTalkModel.h"
+#import "HXOModel.h"
 
 
-@interface Invite : HoccerTalkModel
+@interface Invite : HXOModel
 
 @property (nonatomic, retain) NSString * token;
 

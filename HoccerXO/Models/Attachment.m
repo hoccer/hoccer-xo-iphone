@@ -8,10 +8,10 @@
 
 #import "Attachment.h"
 #import "TalkMessage.h"
-#import "HoccerTalkBackend.h"
+#import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "CryptingInputStream.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 #import "UIImage+ScaleAndCrop.h"
 
 #import <Foundation/NSURL.h>
@@ -64,7 +64,7 @@
 
 - (NSString *) verbosityLevel {
     if (_verbosityLevel == nil) {
-        _verbosityLevel = [[HTUserDefaults standardUserDefaults] valueForKey: @"attachmentVerbosity"];
+        _verbosityLevel = [[HXOUserDefaults standardUserDefaults] valueForKey: @"attachmentVerbosity"];
     }
     return _verbosityLevel;
 }
@@ -83,7 +83,7 @@
     return result;
 }
 
-- (HoccerTalkBackend*) chatBackend {
+- (HXOBackend*) chatBackend {
     if (_chatBackend != nil) {
         return _chatBackend;
     }
@@ -187,7 +187,7 @@
 */
 
 - (void) setPreviewImageFromImage:(UIImage*) theFullImage {
-    float previewWidth = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTPreviewImageWidth] floatValue];
+    float previewWidth = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTPreviewImageWidth] floatValue];
     if (previewWidth > theFullImage.size.width) {
         previewWidth = theFullImage.size.width; // avoid scaling up preview
     }
@@ -983,7 +983,7 @@
 }
 
 - (NSString*) attachmentJsonString {
-    NSDictionary * myRepresentation = [HoccerTalkModel createDictionaryFromObject:self withKeys:self.JsonKeys];
+    NSDictionary * myRepresentation = [HXOModel createDictionaryFromObject:self withKeys:self.JsonKeys];
     NSData * myJsonData = [NSJSONSerialization dataWithJSONObject: myRepresentation options: 0 error: nil];
     NSString * myJsonUTF8String = [[NSString alloc] initWithData:myJsonData encoding:NSUTF8StringEncoding];
     return myJsonUTF8String;
@@ -999,7 +999,7 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
         return;
     }
     if ([json isKindOfClass: [NSDictionary class]]) {
-        [HoccerTalkModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];        
+        [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];        
     } else {
         NSLog(@"attachment json not encoded as dictionary, json string = %@", theJsonString);
     }

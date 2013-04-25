@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HoccerTalkTableViewCell.h"
+#import "HXOTableViewCell.h"
 
 @protocol UserDefaultsCellTextInputDelegate <NSObject>
 
@@ -56,7 +56,7 @@
 
 @class ProfileAvatarView;
 
-@interface UserDefaultsCell : HoccerTalkTableViewCell
+@interface UserDefaultsCell : HXOTableViewCell
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) count;
 

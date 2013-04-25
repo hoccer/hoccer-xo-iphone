@@ -1,16 +1,16 @@
 //
-//  UIViewController+HoccerTalkSideMenuButtons.m
+//  UIViewController+HXOSideMenuButtons.m
 //  HoccerTalk
 //
 //  Created by David Siegel on 28.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "UIViewController+HXOSideMenuButtons.h"
 #import "MFSideMenu.h"
 #import "AssetStore.h"
 
-@implementation UIViewController (HoccerTalkSideMenuButtons)
+@implementation UIViewController (HXOSideMenuButtons)
 
 - (UIBarButtonItem*) hoccerTalkMenuButton {
     UIImage * icon = [UIImage imageNamed: @"navbar-icon-menu"];

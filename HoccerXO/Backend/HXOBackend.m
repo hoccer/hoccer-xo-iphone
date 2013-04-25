@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HoccerTalkBackend.h"
+#import "HXOBackend.h"
 
 #import "JsonRpcWebSocket.h"
 #import "TalkMessage.h"
@@ -18,7 +18,7 @@
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 #import "Environment.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 #import "NSData+CommonCrypto.h"
 #import "NSData+Base64.h"
 #import "RSA.h"
@@ -38,7 +38,7 @@ typedef enum BackendStates {
     kBackendStopping
 } BackendState;
 
-@interface HoccerTalkBackend ()
+@interface HXOBackend ()
 {
     JsonRpcWebSocket * _serverConnection;
     BackendState       _state;
@@ -55,7 +55,7 @@ typedef enum BackendStates {
 
 @end
 
-@implementation HoccerTalkBackend
+@implementation HXOBackend
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate {
     self = [super init];
@@ -143,7 +143,7 @@ typedef enum BackendStates {
     }
     
     if ((attachment != nil) &&
-        [attachment.contentSize longLongValue] < [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue])
+        [attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue])
     {
         [attachment upload];
     }
@@ -177,8 +177,8 @@ typedef enum BackendStates {
         return;
     }
 
-    if (![deliveryDictionary[@"keyId"] isEqualToString:[HoccerTalkBackend ownPublicKeyIdString]]) {
-        NSLog(@"ERROR: receiveMessage: aborting received message with bad public keyId = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HoccerTalkBackend ownPublicKeyIdString]);
+    if (![deliveryDictionary[@"keyId"] isEqualToString:[HXOBackend ownPublicKeyIdString]]) {
+        NSLog(@"ERROR: receiveMessage: aborting received message with bad public keyId = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HXOBackend ownPublicKeyIdString]);
        // - (void) deliveryAbort: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId {
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
         return;
@@ -232,7 +232,7 @@ typedef enum BackendStates {
     [self deliveryConfirm: message.messageId withDelivery: delivery];
     
     if (attachment) {
-        if ([attachment.contentSize longLongValue] < [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue])
+        if ([attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue])
         {
             [self scheduleNewDownloadFor:attachment];
         }
@@ -592,7 +592,7 @@ typedef enum BackendStates {
 - (void) flushPendingAttachmentUploads {
     // NSLog(@"flushPendingAttachmentUploads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : [[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries]};
+    NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
     // NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
@@ -606,7 +606,7 @@ typedef enum BackendStates {
     for (Attachment * attachment in unfinishedAttachments) {
         if ((attachment.message != nil) && // attachment attached to sent message
             ([attachment.contentSize longLongValue] <
-            [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue] ||
+            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue] ||
             [attachment.transferSize longLongValue] > 0))
         {
             // if (attachment.transferSize == nil) attachment.transferSize = @(0);
@@ -619,7 +619,7 @@ typedef enum BackendStates {
 - (void) flushPendingAttachmentDownloads {
     // NSLog(@"flushPendingAttachmentDownloads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : [[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries]};
+    NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];
     
     //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
@@ -633,7 +633,7 @@ typedef enum BackendStates {
     NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         if ([attachment.contentSize longLongValue] <
-            [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue] ||
+            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue] ||
             [attachment.transferSize longLongValue] > 0)
         {
             [attachment download];
@@ -701,7 +701,7 @@ typedef enum BackendStates {
 
 
 -(void) scheduleNewDownloadFor:(Attachment *)theAttachment {
-    long long maxRetries = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries] longLongValue];
+    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries] longLongValue];
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
                   withRetryLimit:maxRetries
@@ -709,7 +709,7 @@ typedef enum BackendStates {
 }
 
 -(void) scheduleNewUploadFor:(Attachment *)theAttachment {
-    long long maxRetries = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries] longLongValue];
+    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries] longLongValue];
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
                   withRetryLimit:maxRetries
@@ -907,7 +907,7 @@ typedef enum BackendStates {
     if (myNickName == nil) {
         myNickName = @"";
     }
-    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: [HoccerTalkBackend ownPublicKeyId]];
+    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: [HXOBackend ownPublicKeyId]];
 }
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
@@ -924,7 +924,7 @@ typedef enum BackendStates {
 
 + (NSData *) ownPublicKeyId {
     NSData * myKeyBits = [self ownPublicKey];
-    return [HoccerTalkBackend calcKeyId:myKeyBits];
+    return [HXOBackend calcKeyId:myKeyBits];
 }
 
 + (NSData *) ownPublicKey {
@@ -942,7 +942,7 @@ typedef enum BackendStates {
 
 - (void) updateKey: (NSData*) publicKey {
     // NSLog(@"updateKey: %@", publicKey);
-    NSData * myKeyId = [HoccerTalkBackend calcKeyId:publicKey];
+    NSData * myKeyId = [HXOBackend calcKeyId:publicKey];
     NSDictionary *params = @{
                              @"key" :   [publicKey asBase64EncodedString], 
                              @"keyId" : [myKeyId hexadecimalString]
@@ -957,7 +957,7 @@ typedef enum BackendStates {
 }
 
 - (void) updateKey {
-    NSData * myKeyBits = [HoccerTalkBackend ownPublicKey];
+    NSData * myKeyBits = [HXOBackend ownPublicKey];
     [self updateKey: myKeyBits];
 }
 

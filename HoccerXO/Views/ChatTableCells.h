@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HoccerTalkTableViewCell.h"
+#import "HXOTableViewCell.h"
 
 @class AutoheightLabel;
 @class InsetImageView;
@@ -27,7 +27,7 @@
 
 @end
 
-@interface MessageCell : HoccerTalkTableViewCell
+@interface MessageCell : HXOTableViewCell
 
 @property (strong, nonatomic) IBOutlet AutoheightLabel *message;
 @property (strong, nonatomic) IBOutlet InsetImageView *avatar;
@@ -49,7 +49,7 @@
 @interface RightMessageCell : MessageCell
 @end
 
-@interface ChatTableSectionHeaderCell : HoccerTalkTableViewCell
+@interface ChatTableSectionHeaderCell : HXOTableViewCell
 
 @property (strong, nonatomic) IBOutlet UILabel *label;
 @property (strong, nonatomic) IBOutlet UIImageView * backgroundImage;

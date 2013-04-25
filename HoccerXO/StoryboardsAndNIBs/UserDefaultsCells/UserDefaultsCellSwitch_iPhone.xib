@@ -33,7 +33,7 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUITableViewCell" id="1006982348">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">1280</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIView" id="666065362">
@@ -70,7 +70,6 @@
 				</array>
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{320, 45}</string>
-				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="666065362"/>
 				<string key="IBUIRestorationIdentifier"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -195,7 +194,7 @@
 					<reference ref="723972993"/>
 				</array>
 				<boolean value="NO" key="3.showNotes"/>
-				<string key="4.CustomClassName">HTSwitch</string>
+				<string key="4.CustomClassName">HXOSwitch</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<reference key="4.IBUserGuides" ref="0"/>
 				<array key="4.IBViewMetadataConstraints">

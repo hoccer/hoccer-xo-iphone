@@ -36,7 +36,7 @@ FOUNDATION_EXPORT NSString * const kHTPreviewImageWidth;
 FOUNDATION_EXPORT NSString * const kHTDefaultScreenShooting;
 
 
-@interface HTUserDefaults : NSObject
+@interface HXOUserDefaults : NSObject
 
 + (id) standardUserDefaults;
 

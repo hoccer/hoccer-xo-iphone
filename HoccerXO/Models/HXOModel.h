@@ -8,9 +8,9 @@
 
 #import <CoreData/CoreData.h>
 
-#import "HoccerTalkModel.h"
+#import "HXOModel.h"
 
-@interface HoccerTalkModel : NSManagedObject
+@interface HXOModel : NSManagedObject
 
 - (NSMutableDictionary*) rpcDictionary;
 - (void) updateWithDictionary: (NSDictionary*) dict;

@@ -14,7 +14,7 @@
 #import "NSString+RandomString.h"
 
 
-#import "HoccerTalkBackend.h" // debug, remove later
+#import "HXOBackend.h" // debug, remove later
 
 
 
@@ -95,7 +95,7 @@ static RSA *instance;
     NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
     NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
 
-    NSLog(@"pubkeyid : %@", [HoccerTalkBackend ownPublicKeyIdString]);
+    NSLog(@"pubkeyid : %@", [HXOBackend ownPublicKeyIdString]);
 
 }
 

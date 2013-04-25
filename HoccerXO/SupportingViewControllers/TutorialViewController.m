@@ -7,7 +7,7 @@
 //
 
 #import "TutorialViewController.h"
-#import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "UIViewController+HXOSideMenuButtons.h"
 
 @implementation TutorialViewController
 

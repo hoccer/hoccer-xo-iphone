@@ -11,7 +11,7 @@
 #import <ObjCSRP/HCSRP.h>
 #import "NSString+RandomString.h"
 #import "NSData+HexString.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 static UserProfile * profileInstance;
 
@@ -52,43 +52,43 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 }
 
 - (NSData*) avatar {
-    return [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
+    return [[HXOUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
 }
 
 - (NSString*) avatarURL {
-    return [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatarURL];
+    return [[HXOUserDefaults standardUserDefaults] valueForKey: kHTAvatarURL];
 }
 
 - (void) setAvatarURL:(NSString *)avatarURL {
-    [[HTUserDefaults standardUserDefaults] setValue: avatarURL forKey: kHTAvatarURL];
-    [[HTUserDefaults standardUserDefaults] synchronize];
+    [[HXOUserDefaults standardUserDefaults] setValue: avatarURL forKey: kHTAvatarURL];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void) loadProfile {
-    self.nickName       = [[HTUserDefaults standardUserDefaults] valueForKey: kHTNickName];
-    NSData * avatar     = [[HTUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
-    self.status         = [[HTUserDefaults standardUserDefaults] valueForKey: kHTUserStatus];
-    self.phoneNumber    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTPhoneNumber];
-    self.mailAddress    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTMailAddress];
-    self.twitterName    = [[HTUserDefaults standardUserDefaults] valueForKey: kHTTwitterName];
-    self.facebookName   = [[HTUserDefaults standardUserDefaults] valueForKey: kHTFacebookName];
-    self.googlePlusName = [[HTUserDefaults standardUserDefaults] valueForKey: kHTGooglePlusName];
-    self.githubName     = [[HTUserDefaults standardUserDefaults] valueForKey: kHTGithubName];
+    self.nickName       = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTNickName];
+    NSData * avatar     = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTAvatar];
+    self.status         = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTUserStatus];
+    self.phoneNumber    = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTPhoneNumber];
+    self.mailAddress    = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTMailAddress];
+    self.twitterName    = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTTwitterName];
+    self.facebookName   = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTFacebookName];
+    self.googlePlusName = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTGooglePlusName];
+    self.githubName     = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTGithubName];
     self.avatarImage = [UIImage imageWithData: avatar];
 }
 
 - (void) saveProfile {
     NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, 1.0);
-    [[HTUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHTNickName];
-    [[HTUserDefaults standardUserDefaults] setValue: avatar              forKey: kHTAvatar];
-    [[HTUserDefaults standardUserDefaults] setValue: self.status         forKey: kHTUserStatus];
-    [[HTUserDefaults standardUserDefaults] setValue: self.phoneNumber    forKey: kHTPhoneNumber];
-    [[HTUserDefaults standardUserDefaults] setValue: self.mailAddress    forKey: kHTMailAddress];
-    [[HTUserDefaults standardUserDefaults] setValue: self.twitterName    forKey: kHTTwitterName];
-    [[HTUserDefaults standardUserDefaults] setValue: self.facebookName   forKey: kHTFacebookName];
-    [[HTUserDefaults standardUserDefaults] setValue: self.googlePlusName forKey: kHTGooglePlusName];
-    [[HTUserDefaults standardUserDefaults] setValue: self.githubName     forKey: kHTGithubName];
-    [[HTUserDefaults standardUserDefaults] synchronize];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHTNickName];
+    [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHTAvatar];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.status         forKey: kHTUserStatus];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.phoneNumber    forKey: kHTPhoneNumber];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.mailAddress    forKey: kHTMailAddress];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.twitterName    forKey: kHTTwitterName];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.facebookName   forKey: kHTFacebookName];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.googlePlusName forKey: kHTGooglePlusName];
+    [[HXOUserDefaults standardUserDefaults] setValue: self.githubName     forKey: kHTGithubName];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSString*) clientId {

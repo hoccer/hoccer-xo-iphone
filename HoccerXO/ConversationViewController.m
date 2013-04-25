@@ -18,9 +18,9 @@
 #import "TalkMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
-#import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "UIViewController+HXOSideMenuButtons.h"
 #import "iOSVersionChecks.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
 #import "ProfileViewController.h"
@@ -53,7 +53,7 @@
     self.navigationItem.leftBarButtonItem = [self hoccerTalkMenuButton];
     self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
 
-    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTDefaultScreenShooting]) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHTDefaultScreenShooting]) {
         self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
@@ -84,7 +84,7 @@
     [super viewDidAppear: animated];
 
     // TODO: find a way to move this to the app delegate
-    if ( ! [[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileViewController"];
         [self.navigationController presentViewController: profileView animated: YES completion: nil];
     }

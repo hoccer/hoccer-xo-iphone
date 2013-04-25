@@ -10,7 +10,7 @@
 
 #import "SocketRocket/SRWebSocket.h"
 
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 static const NSInteger kJsonRpcParseError     = -32700;
 static const NSInteger kJsonRpcInvalidRequest = -32600;
@@ -50,7 +50,7 @@ static const NSTimeInterval kResponseTimeout = 10;
 
 - (NSString *) verbosityLevel {
     if (_verbosityLevel == nil) {
-        _verbosityLevel = [[HTUserDefaults standardUserDefaults] valueForKey: @"jsonrpcverbosity"];
+        _verbosityLevel = [[HXOUserDefaults standardUserDefaults] valueForKey: @"jsonrpcverbosity"];
     }
     return _verbosityLevel;
 }

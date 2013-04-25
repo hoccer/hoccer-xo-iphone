@@ -10,10 +10,10 @@
 #import <CoreData/CoreData.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
-#import "HoccerTalkModel.h"
+#import "HXOModel.h"
 
 @class TalkMessage;
-@class HoccerTalkBackend;
+@class HXOBackend;
 @class CryptoEngine;
 
 typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
@@ -31,7 +31,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 @end
 
 
-@interface Attachment : HoccerTalkModel < NSURLConnectionDelegate >
+@interface Attachment : HXOModel < NSURLConnectionDelegate >
 
 // persistent properties from model
 
@@ -69,7 +69,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 @property (readonly, strong) NSDictionary * uploadHttpHeadersWithCrypto;
 @property (readonly, strong) NSDictionary * downloadHttpHeaders;
 
-@property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
+@property (readonly, strong, nonatomic) HXOBackend *  chatBackend;
 
 @property (nonatomic, strong) id<TransferProgressIndication> progressIndicatorDelegate;
 

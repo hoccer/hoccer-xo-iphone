@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-#import "HoccerTalkModel.h"
+#import "HXOModel.h"
 
 @class TalkMessage;
 @class Contact;
@@ -21,7 +21,7 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateConfirmed;
 FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 
 
-@interface Delivery : HoccerTalkModel
+@interface Delivery : HXOModel
 
 @property (nonatomic, strong) NSString * state;
 @property (nonatomic, strong) TalkMessage *message;

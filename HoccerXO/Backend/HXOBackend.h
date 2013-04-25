@@ -39,7 +39,7 @@ typedef void (^GenericResultHandler)(BOOL);
 
 @end
 
-@interface HoccerTalkBackend : NSObject <JsonRpcWebSocketDelegate>
+@interface HXOBackend : NSObject <JsonRpcWebSocketDelegate>
 
 @property (nonatomic, weak) AppDelegate * delegate;
 @property (nonatomic, strong) NSURLConnection *avatarUploadConnection;

@@ -8,7 +8,7 @@
 //
 
 #import "CryptingInputStream.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 #define CRYPTO_STREAM_DEBUG ([[self verbosityLevel]isEqualToString:@"trace"])
 
@@ -32,7 +32,7 @@
 
 - (NSString *) verbosityLevel {
     if (_verbosityLevel == nil) {
-        _verbosityLevel = [[HTUserDefaults standardUserDefaults] valueForKey: @"cryptingInputStreamVerbosity"];
+        _verbosityLevel = [[HXOUserDefaults standardUserDefaults] valueForKey: @"cryptingInputStreamVerbosity"];
     }
     return _verbosityLevel;
 }

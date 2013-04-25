@@ -16,7 +16,7 @@
 #import "ChatViewController.h"
 #import "MFSideMenu.h"
 #import "iOSVersionChecks.h"
-#import "HoccerTalkBackend.h"
+#import "HXOBackend.h"
 
 
 @interface ContactQuickListViewController ()

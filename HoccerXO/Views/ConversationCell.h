@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HoccerTalkTableViewCell.h"
+#import "HXOTableViewCell.h"
 #import "ConversationAndContactsCell.h"
 
 @class InsetImageView;

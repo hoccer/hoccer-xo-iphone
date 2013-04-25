@@ -12,9 +12,9 @@
 @class Attachment;
 @class Delivery;
 
-#import "HoccerTalkModel.h"
+#import "HXOModel.h"
 
-@interface TalkMessage : HoccerTalkModel
+@interface TalkMessage : HXOModel
 
 @property (nonatomic, strong) NSString* body;
 @property (nonatomic, strong) NSDate*   timeSent; // client time when message was sent, passed unchanged to receivers

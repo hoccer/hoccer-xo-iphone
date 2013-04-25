@@ -8,7 +8,7 @@
 
 #import "Environment.h"
 
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 static Environment * sharedEnvironment = nil;
 
@@ -55,7 +55,7 @@ NSString * const kValidEnvironments = @"_validEnvironments";
 @synthesize currentEnvironment = _currentEnvironment;
 - (NSString*) currentEnvironment {
     if (_currentEnvironment == nil) {
-        _currentEnvironment = [[HTUserDefaults standardUserDefaults] valueForKey: kHTEnvironment];
+        _currentEnvironment = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTEnvironment];
         if ([self.validEnvironments indexOfObject: _currentEnvironment] == NSNotFound) {
             NSLog(@"FATAL: environment '%@' is unknown", _currentEnvironment);
             abort();

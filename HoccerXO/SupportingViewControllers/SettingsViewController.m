@@ -8,7 +8,7 @@
 
 #import "SettingsViewController.h"
 
-#import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "UIViewController+HXOSideMenuButtons.h"
 #import "RadialGradientView.h"
 #import "UserDefaultsCells.h"
 

@@ -19,7 +19,7 @@
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 #import "InviteCodeViewController.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 #import "Environment.h"
 #import "UserProfile.h"
 
@@ -46,7 +46,7 @@
 
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
-    self.chatBackend = [[HoccerTalkBackend alloc] initWithDelegate: self];
+    self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
 
     UIStoryboard *storyboard = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -68,7 +68,7 @@
 
     [self setupSideMenusWithStoryboard: storyboard andConversationViewController: self.conversationViewController];
 
-    if ([[HTUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
         [self setupDone: NO];
     }
 
@@ -182,7 +182,7 @@
 
 - (void)saveDatabase
 {
-    NSString * savePolicy = [[HTUserDefaults standardUserDefaults] objectForKey: kHTSaveDatabasePolicy];
+    NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHTSaveDatabasePolicy];
     if ([savePolicy isEqualToString:kHTSaveDatabasePolicyPerMessage]) {
         // NSLog(@"Saving database");
         NSDate * start = [[NSDate alloc] init];
@@ -216,7 +216,7 @@
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"HoccerTalk" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"HoccerXO" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
@@ -229,7 +229,7 @@
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"HoccerTalk.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"HoccerXO.sqlite"];
     
     NSError *error = nil;
 
@@ -329,7 +329,7 @@
         // TODO: do we need this?
         //self.registered = YES;
         NSString * tokenString = [deviceToken hexadecimalString];
-        [[HTUserDefaults standardUserDefaults] setValue: tokenString forKey: kHTAPNDeviceToken];
+        [[HXOUserDefaults standardUserDefaults] setValue: tokenString forKey: kHTAPNDeviceToken];
         [self.chatBackend gotAPNSDeviceToken: tokenString];
     } else {
         NSLog(@"ERROR: APN device token is nil");
@@ -386,7 +386,7 @@
 
 
 - (NSString*) apnDeviceToken {
-    return [[HTUserDefaults standardUserDefaults] stringForKey: kHTAPNDeviceToken];
+    return [[HXOUserDefaults standardUserDefaults] stringForKey: kHTAPNDeviceToken];
 }
 
 - (void) backendDidStop {

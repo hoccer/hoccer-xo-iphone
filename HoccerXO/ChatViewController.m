@@ -23,14 +23,14 @@
 #import "AttachmentPickerController.h"
 #import "InsetImageView.h"
 #import "MFSideMenu.h"
-#import "UIViewController+HoccerTalkSideMenuButtons.h"
+#import "UIViewController+HXOSideMenuButtons.h"
 #import "ChatTableCells.h"
 #import "iOSVersionChecks.h"
 #import "AutoheightLabel.h"
 #import "Attachment.h"
 #import "AttachmentViewFactory.h"
 #import "BubbleView.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 #import "ImageViewController.h"
 #import "UserProfile.h"
 
@@ -160,7 +160,7 @@
     }
 }
 
-- (HoccerTalkBackend*) chatBackend {
+- (HXOBackend*) chatBackend {
     if (_chatBackend == nil) {
         _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
     }

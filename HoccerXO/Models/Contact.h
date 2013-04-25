@@ -8,13 +8,13 @@
 
 #import <CoreData/CoreData.h>
 
-#import "HoccerTalkModel.h"
+#import "HXOModel.h"
 
 FOUNDATION_EXPORT NSString * const kRelationStateNone;
 FOUNDATION_EXPORT NSString * const kRelationStateFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
-@interface Contact : HoccerTalkModel
+@interface Contact : HXOModel
 
 @property (nonatomic, strong) NSData*        avatar;
 @property (nonatomic, strong) NSString*      avatarURL;

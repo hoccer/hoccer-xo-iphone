@@ -21,7 +21,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 @property (nonatomic, strong) NSMutableArray * invitationChannels;
 @property (nonatomic, strong) UIViewController * viewController;
-@property (nonatomic, readonly) HoccerTalkBackend * chatBackend;
+@property (nonatomic, readonly) HXOBackend * chatBackend;
 
 
 @end
@@ -189,7 +189,7 @@ static InvitationController * _sharedInvitationController;
 
 @synthesize chatBackend = _chatBackend;
 
-- (HoccerTalkBackend*) chatBackend {
+- (HXOBackend*) chatBackend {
     if (_chatBackend == nil) {
         _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
     }

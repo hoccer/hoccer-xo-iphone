@@ -9,7 +9,7 @@
 #import "AttachmentView.h"
 #import "ChatTableCells.h"
 #import "TalkMessage.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 @implementation AttachmentView
 
@@ -116,8 +116,8 @@
             // transfer incomplete and not active
             
             BOOL isOutgoing = [self.attachment.message.isOutgoing isEqualToNumber: @YES];
-            long long outgoingLimit = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue];
-            long long incomingLimit = [[[HTUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue];
+            long long outgoingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue];
+            long long incomingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue];
             
             if (((isOutgoing && [self.attachment.contentSize longLongValue] > outgoingLimit) ||
                 (!isOutgoing && [self.attachment.contentSize longLongValue] > incomingLimit)) &&

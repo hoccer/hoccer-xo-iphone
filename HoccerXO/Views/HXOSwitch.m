@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HTSwitch.h"
+#import "HXOSwitch.h"
 
-@implementation HTSwitch
+@implementation HXOSwitch
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder: aDecoder];

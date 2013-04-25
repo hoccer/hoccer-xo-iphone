@@ -1,5 +1,5 @@
 //
-//  UIViewController+HoccerTalkSideMenuButtons.h
+//  UIViewController+HXOSideMenuButtons.h
 //  HoccerTalk
 //
 //  Created by David Siegel on 28.03.13.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIViewController (HoccerTalkSideMenuButtons)
+@interface UIViewController (HXOSideMenuButtons)
 
 - (UIBarButtonItem*) hoccerTalkMenuButton;
 - (UIBarButtonItem*) hoccerTalkContactsButton;

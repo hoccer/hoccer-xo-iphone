@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HTSwitch : UISlider
+@interface HXOSwitch : UISlider
 
 @property (nonatomic,assign) BOOL boolValue;
 

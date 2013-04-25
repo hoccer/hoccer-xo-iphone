@@ -10,7 +10,7 @@
 #import "Crypto.h"
 #import "NSData+Base64.h"
 #import "RSA.h"
-#import "HTUserDefaults.h"
+#import "HXOUserDefaults.h"
 
 
 const float kTimeSectionInterval = 2 * 60;

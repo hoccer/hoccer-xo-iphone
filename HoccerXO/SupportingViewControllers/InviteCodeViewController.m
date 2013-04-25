@@ -8,7 +8,7 @@
 
 #import "InviteCodeViewController.h"
 #import "AppDelegate.h"
-#import "HoccerTalkBackend.h"
+#import "HXOBackend.h"
 
 @implementation InviteCodeViewController
 
@@ -104,7 +104,7 @@
     [super viewDidUnload];
 }
 
-- (HoccerTalkBackend*) chatBackend {
+- (HXOBackend*) chatBackend {
     if (_chatBackend == nil) {
         _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
     }

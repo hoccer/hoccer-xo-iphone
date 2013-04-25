@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HoccerTalkBackend.h"
+#import "HXOBackend.h"
 
 @class ConversationViewController;
 
@@ -21,7 +21,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, strong) HoccerTalkBackend * chatBackend;
+@property (nonatomic, strong) HXOBackend * chatBackend;
 @property (nonatomic, strong) UINavigationController * navigationController;
 @property (nonatomic, strong) ConversationViewController * conversationViewController;
 

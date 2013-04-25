@@ -12,7 +12,7 @@
 #import "GrowingTextView.h"
 #import "ChatTableCells.h"
 
-@class HoccerTalkBackend;
+@class HXOBackend;
 @class AVAssetExportSession;
 
 @interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate>
@@ -21,7 +21,7 @@
 }
 
 @property (strong, nonatomic) Contact *                      partner;
-@property (readonly, strong, nonatomic) HoccerTalkBackend *  chatBackend;
+@property (readonly, strong, nonatomic) HXOBackend *  chatBackend;
 @property (strong, nonatomic) IBOutlet GrowingTextView *     textField;
 @property (strong, nonatomic) IBOutlet UIButton *            sendButton;
 @property (strong, nonatomic) IBOutlet UIView *              chatbar;
