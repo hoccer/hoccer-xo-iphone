@@ -187,7 +187,7 @@
 */
 
 - (void) setPreviewImageFromImage:(UIImage*) theFullImage {
-    float previewWidth = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTPreviewImageWidth] floatValue];
+    float previewWidth = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOPreviewImageWidth] floatValue];
     if (previewWidth > theFullImage.size.width) {
         previewWidth = theFullImage.size.width; // avoid scaling up preview
     }

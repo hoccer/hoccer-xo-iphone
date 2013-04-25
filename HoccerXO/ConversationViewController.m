@@ -52,7 +52,7 @@
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHTDefaultScreenShooting]) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
@@ -83,7 +83,7 @@
     [super viewDidAppear: animated];
 
     // TODO: find a way to move this to the app delegate
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
         UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileViewController"];
         [self.navigationController presentViewController: profileView animated: YES completion: nil];
     }

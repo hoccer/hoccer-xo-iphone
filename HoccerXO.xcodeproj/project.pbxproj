@@ -106,7 +106,7 @@
 		636D3FFD170FB2B100304EDF /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 636D3FFB170FB2B100304EDF /* HoccerXO.xcdatamodeld */; };
 		636D400317106EC000304EDF /* Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D400217106EC000304EDF /* Environment.m */; };
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
-		636D40091710770A00304EDF /* HTUserDefaultsDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D40081710770A00304EDF /* HTUserDefaultsDefaults.plist */; };
+		636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */; };
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
 		637847A516F24E5700DE03C2 /* conversation_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */; };
 		637847AA16F2864E00DE03C2 /* AttachmentViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 637847A916F2864E00DE03C2 /* AttachmentViewFactory.m */; };
@@ -476,7 +476,7 @@
 		636D400217106EC000304EDF /* Environment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Environment.m; sourceTree = "<group>"; };
 		636D4005171072CD00304EDF /* HXOUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOUserDefaults.h; sourceTree = "<group>"; };
 		636D4006171072CD00304EDF /* HXOUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUserDefaults.m; sourceTree = "<group>"; };
-		636D40081710770A00304EDF /* HTUserDefaultsDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HTUserDefaultsDefaults.plist; sourceTree = "<group>"; };
+		636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HXOUserDefaultsDefaults.plist; sourceTree = "<group>"; };
 		636D400A171081AB00304EDF /* Environment.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Environment.plist; sourceTree = "<group>"; };
 		637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation_cell_bg@2x.png"; sourceTree = "<group>"; };
 		637847A816F2864E00DE03C2 /* AttachmentViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentViewFactory.h; sourceTree = "<group>"; };
@@ -913,7 +913,7 @@
 				636D400117106EC000304EDF /* Environment.h */,
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
-				636D40081710770A00304EDF /* HTUserDefaultsDefaults.plist */,
+				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
 				636D4005171072CD00304EDF /* HXOUserDefaults.h */,
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
 				6327EB72171D61A200AF75E1 /* HXOConfig.h */,
@@ -1633,7 +1633,7 @@
 				501F1B34170C676E00F559F0 /* contact_cell_bg_selected@2x.png in Resources */,
 				6366C5F6170DB00D00AA7DBE /* gargamel.png in Resources */,
 				6366C5F7170DB00D00AA7DBE /* gargamel@2x.png in Resources */,
-				636D40091710770A00304EDF /* HTUserDefaultsDefaults.plist in Resources */,
+				636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */,
 				636D400B171081AB00304EDF /* Environment.plist in Resources */,
 				636492CF1711CDAB00E35514 /* icon_profile-name.png in Resources */,
 				636492D01711CDAB00E35514 /* icon_profile-name@2x.png in Resources */,

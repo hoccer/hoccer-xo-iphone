@@ -68,7 +68,7 @@
 
     [self setupSideMenusWithStoryboard: storyboard andConversationViewController: self.conversationViewController];
 
-    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
         [self setupDone: NO];
     }
 
@@ -182,8 +182,8 @@
 
 - (void)saveDatabase
 {
-    NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHTSaveDatabasePolicy];
-    if ([savePolicy isEqualToString:kHTSaveDatabasePolicyPerMessage]) {
+    NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
+    if ([savePolicy isEqualToString:kHXOSaveDatabasePolicyPerMessage]) {
         // NSLog(@"Saving database");
         NSDate * start = [[NSDate alloc] init];
         [self saveContext];
@@ -330,7 +330,7 @@
         // TODO: do we need this?
         //self.registered = YES;
         NSString * tokenString = [deviceToken hexadecimalString];
-        [[HXOUserDefaults standardUserDefaults] setValue: tokenString forKey: kHTAPNDeviceToken];
+        [[HXOUserDefaults standardUserDefaults] setValue: tokenString forKey: kHXOAPNDeviceToken];
         [self.chatBackend gotAPNSDeviceToken: tokenString];
     } else {
         NSLog(@"ERROR: APN device token is nil");
@@ -387,7 +387,7 @@
 
 
 - (NSString*) apnDeviceToken {
-    return [[HXOUserDefaults standardUserDefaults] stringForKey: kHTAPNDeviceToken];
+    return [[HXOUserDefaults standardUserDefaults] stringForKey: kHXOAPNDeviceToken];
 }
 
 - (void) backendDidStop {

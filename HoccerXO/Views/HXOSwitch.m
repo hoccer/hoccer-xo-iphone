@@ -1,5 +1,5 @@
 //
-//  HTSwitch.m
+//  HXOSwitch.m
 //  HoccerXO
 //
 //  Created by David Siegel on 10.04.13.

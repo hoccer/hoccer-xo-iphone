@@ -116,8 +116,8 @@
             // transfer incomplete and not active
             
             BOOL isOutgoing = [self.attachment.message.isOutgoing isEqualToNumber: @YES];
-            long long outgoingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue];
-            long long incomingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue];
+            long long outgoingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue];
+            long long incomingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue];
             
             if (((isOutgoing && [self.attachment.contentSize longLongValue] > outgoingLimit) ||
                 (!isOutgoing && [self.attachment.contentSize longLongValue] > incomingLimit)) &&

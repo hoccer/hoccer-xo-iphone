@@ -58,7 +58,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [self setNavigationBarBackgroundPlain];
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
 
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
         _mode = ProfileViewModeFirstRun;
         self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
     } else if (self.contact != nil) {
@@ -404,7 +404,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     
     ProfileItem * nickNameItem = [[ProfileItem alloc] init];
     nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
-    nickNameItem.valueKey = kHTNickName;
+    nickNameItem.valueKey = kHXONickName;
     nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
     nickNameItem.placeholder = NSLocalizedString(@"profile_name_placeholder", @"Profile Placeholder Nick Name");
     nickNameItem.cellClass = [UserDefaultsCellTextInput class];
@@ -412,36 +412,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     nickNameItem.required = YES;
     [_allProfileItems addObject: nickNameItem];
     [_itemsByKeyPath setObject: nickNameItem forKey: nickNameItem.valueKey];
-
-
-#ifdef HXO_USE_USER_DEFINED_CREDENTIALS
-    ProfileItem * clientIdItem = [[ProfileItem alloc] init];
-    //clientIditem.icon = [UIImage imageNamed: @"icon_profile-name"];
-    clientIdItem.valueKey = kHTClientId;
-    clientIdItem.editLabel = @"Client Id";
-    clientIdItem.placeholder = @"Your Client Id";
-    clientIdItem.cellClass = [UserDefaultsCellTextInput class];
-    clientIdItem.keyboardType = UIKeyboardTypeDefault;
-    clientIdItem.required = YES;
-    [_allProfileItems addObject: clientIdItem];
-    [_itemsByKeyPath setObject: clientIdItem forKey: clientIdItem.valueKey];
-
-
-#ifndef HXO_USE_USERNAME_BASED_AUTHENTICATION
-    ProfileItem * passwordItem = [[ProfileItem alloc] init];
-    //passwordItem.icon = [UIImage imageNamed: @"icon_profile-name"];
-    passwordItem.valueKey = kHTPassword;
-    passwordItem.editLabel = @"Password";
-    passwordItem.placeholder = @"Your Password";
-    passwordItem.cellClass = [UserDefaultsCellTextInput class];
-    passwordItem.keyboardType = UIKeyboardTypeDefault;
-    passwordItem.required = YES;
-    passwordItem.secure = YES;
-    [_allProfileItems addObject: passwordItem];
-    [_itemsByKeyPath setObject: passwordItem forKey: password.valueKey];
-
-#endif
-#endif
 
 #ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
@@ -605,11 +575,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         }
     }
 
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHTFirstRunDone]) {
-        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: kHTFirstRunDone];
-#ifdef HXO_USE_USER_DEFINED_CREDENTIALS
-        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
-#endif
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
+        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: kHXOFirstRunDone];
         [self dismissViewControllerAnimated: YES completion: nil];
     }
 

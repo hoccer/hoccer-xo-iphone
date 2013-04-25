@@ -9,10 +9,6 @@
 #ifndef HXOConfig_h
 #define HXOConfig_h
 
-//#define HXO_USE_USER_DEFINED_CREDENTIALS
-
-//#define HXO_USE_USERNAME_BASED_AUTHENTICATION
-
 //#define HXO_SHOW_UNIMPLEMENTED_FEATURES
 
 #endif

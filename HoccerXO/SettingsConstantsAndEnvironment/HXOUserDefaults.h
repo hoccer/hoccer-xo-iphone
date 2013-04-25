@@ -8,32 +8,32 @@
 
 #import <Foundation/Foundation.h>
 
-FOUNDATION_EXPORT NSString * const kHTEnvironment;
-FOUNDATION_EXPORT NSString * const kHTFirstRunDone;
-FOUNDATION_EXPORT NSString * const kHTAPNDeviceToken;
+FOUNDATION_EXPORT NSString * const kHXOEnvironment;
+FOUNDATION_EXPORT NSString * const kHXOFirstRunDone;
+FOUNDATION_EXPORT NSString * const kHXOAPNDeviceToken;
 
-FOUNDATION_EXPORT NSString * const kHTAvatar;
-FOUNDATION_EXPORT NSString * const kHTNickName;
-FOUNDATION_EXPORT NSString * const kHTAvatarURL;
-FOUNDATION_EXPORT NSString * const kHTUserStatus;
-FOUNDATION_EXPORT NSString * const kHTPhoneNumber;
-FOUNDATION_EXPORT NSString * const kHTMailAddress;
-FOUNDATION_EXPORT NSString * const kHTTwitterName;
-FOUNDATION_EXPORT NSString * const kHTFacebookName;
-FOUNDATION_EXPORT NSString * const kHTGooglePlusName;
-FOUNDATION_EXPORT NSString * const kHTGithubName;
+FOUNDATION_EXPORT NSString * const kHXOAvatar;
+FOUNDATION_EXPORT NSString * const kHXONickName;
+FOUNDATION_EXPORT NSString * const kHXOAvatarURL;
+FOUNDATION_EXPORT NSString * const kHXOUserStatus;
+FOUNDATION_EXPORT NSString * const kHXOPhoneNumber;
+FOUNDATION_EXPORT NSString * const kHXOMailAddress;
+FOUNDATION_EXPORT NSString * const kHXOTwitterName;
+FOUNDATION_EXPORT NSString * const kHXOFacebookName;
+FOUNDATION_EXPORT NSString * const kHXOGooglePlusName;
+FOUNDATION_EXPORT NSString * const kHXOGithubName;
 
-FOUNDATION_EXPORT NSString * const kHTAutoDownloadLimit;
-FOUNDATION_EXPORT NSString * const kHTAutoUploadLimit;
-FOUNDATION_EXPORT NSString * const kHTMaxAttachmentUploadRetries;
-FOUNDATION_EXPORT NSString * const kHTMaxAttachmentDownloadRetries;
+FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimit;
+FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimit;
+FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentUploadRetries;
+FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentDownloadRetries;
 
-FOUNDATION_EXPORT NSString * const kHTSaveDatabasePolicy;
-FOUNDATION_EXPORT NSString * const kHTSaveDatabasePolicyPerMessage;
+FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicy;
+FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicyPerMessage;
 
-FOUNDATION_EXPORT NSString * const kHTPreviewImageWidth;
+FOUNDATION_EXPORT NSString * const kHXOPreviewImageWidth;
 
-FOUNDATION_EXPORT NSString * const kHTDefaultScreenShooting;
+FOUNDATION_EXPORT NSString * const kHXODefaultScreenShooting;
 
 
 @interface HXOUserDefaults : NSObject

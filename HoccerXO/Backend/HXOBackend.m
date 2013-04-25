@@ -143,7 +143,7 @@ typedef enum BackendStates {
     }
     
     if ((attachment != nil) &&
-        [attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue])
+        [attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue])
     {
         [attachment upload];
     }
@@ -232,7 +232,7 @@ typedef enum BackendStates {
     [self deliveryConfirm: message.messageId withDelivery: delivery];
     
     if (attachment) {
-        if ([attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue])
+        if ([attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue])
         {
             [self scheduleNewDownloadFor:attachment];
         }
@@ -244,19 +244,10 @@ typedef enum BackendStates {
 - (void) performRegistration {
     NSLog(@"performRegistration");
     GenerateIdHandler handler = ^(NSString * theId) {
-#ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION
-        [self didRegister: YES];
-#else
         NSString * verifier = [[UserProfile sharedProfile] registerClientAndComputeVerifier: theId];
         [self srpRegisterWithVerifier: verifier andSalt: [UserProfile sharedProfile].salt];
-#endif
     };
-#ifdef HXO_USE_USER_DEFINED_CREDENTIALS
-    handler([UserProfile  sharedProfile].clientId);
-#else
     [self generateId: handler];
-#endif
-    //[self identify];
 }
 
 - (void) didRegister: (BOOL) success {
@@ -272,9 +263,6 @@ typedef enum BackendStates {
 
 - (void) startAuthentication {
     [self setState: kBackendAuthenticating];
-#ifdef HXO_USE_USERNAME_BASED_AUTHENTICATION
-    [self identify];
-#else
     NSString * A = [[UserProfile sharedProfile] startSrpAuthentication];
     [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge) {
         if (challenge == nil) {
@@ -296,7 +284,6 @@ typedef enum BackendStates {
             }
         }
     }];
-#endif
 }
 
 - (void) didFinishLogin: (BOOL) authenticated{
@@ -592,7 +579,7 @@ typedef enum BackendStates {
 - (void) flushPendingAttachmentUploads {
     // NSLog(@"flushPendingAttachmentUploads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries]};
+    NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentUploadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
     // NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
@@ -606,7 +593,7 @@ typedef enum BackendStates {
     for (Attachment * attachment in unfinishedAttachments) {
         if ((attachment.message != nil) && // attachment attached to sent message
             ([attachment.contentSize longLongValue] <
-            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoUploadLimit] longLongValue] ||
+            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue] ||
             [attachment.transferSize longLongValue] > 0))
         {
             // if (attachment.transferSize == nil) attachment.transferSize = @(0);
@@ -619,7 +606,7 @@ typedef enum BackendStates {
 - (void) flushPendingAttachmentDownloads {
     // NSLog(@"flushPendingAttachmentDownloads");
     // fetch all not yet transferred uploads
-    NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries]};
+    NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];
     
     //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
@@ -633,7 +620,7 @@ typedef enum BackendStates {
     NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         if ([attachment.contentSize longLongValue] <
-            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTAutoDownloadLimit] longLongValue] ||
+            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue] ||
             [attachment.transferSize longLongValue] > 0)
         {
             [attachment download];
@@ -701,7 +688,7 @@ typedef enum BackendStates {
 
 
 -(void) scheduleNewDownloadFor:(Attachment *)theAttachment {
-    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentDownloadRetries] longLongValue];
+    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries] longLongValue];
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
                   withRetryLimit:maxRetries
@@ -709,7 +696,7 @@ typedef enum BackendStates {
 }
 
 -(void) scheduleNewUploadFor:(Attachment *)theAttachment {
-    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHTMaxAttachmentUploadRetries] longLongValue];
+    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentUploadRetries] longLongValue];
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
                   withRetryLimit:maxRetries

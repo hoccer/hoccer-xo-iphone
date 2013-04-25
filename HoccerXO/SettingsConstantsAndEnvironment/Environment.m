@@ -55,7 +55,7 @@ NSString * const kValidEnvironments = @"_validEnvironments";
 @synthesize currentEnvironment = _currentEnvironment;
 - (NSString*) currentEnvironment {
     if (_currentEnvironment == nil) {
-        _currentEnvironment = [[HXOUserDefaults standardUserDefaults] valueForKey: kHTEnvironment];
+        _currentEnvironment = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOEnvironment];
         if ([self.validEnvironments indexOfObject: _currentEnvironment] == NSNotFound) {
             NSLog(@"FATAL: environment '%@' is unknown", _currentEnvironment);
             abort();

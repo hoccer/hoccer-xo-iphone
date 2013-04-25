@@ -8,39 +8,39 @@
 
 #import "HXOUserDefaults.h"
 
-NSString * const kHTEnvironment           = @"environment";
-NSString * const kHTFirstRunDone          = @"firstRunDone";
-NSString * const kHTAPNDeviceToken        = @"apnDeviceToken";
+NSString * const kHXOEnvironment           = @"environment";
+NSString * const kHXOFirstRunDone          = @"firstRunDone";
+NSString * const kHXOAPNDeviceToken        = @"apnDeviceToken";
 
-NSString * const kHTAvatar                = @"avatar";
-NSString * const kHTAvatarURL             = @"avatarURL";
-NSString * const kHTNickName              = @"nickName";
-NSString * const kHTUserStatus            = @"userStatus";
-NSString * const kHTPhoneNumber           = @"phoneNumber";
-NSString * const kHTMailAddress           = @"mailAddress";
-NSString * const kHTTwitterName           = @"twitterName";
-NSString * const kHTFacebookName          = @"facebookName";
-NSString * const kHTGooglePlusName        = @"googlePlusName";
-NSString * const kHTGithubName            = @"githubName";
+NSString * const kHXOAvatar                = @"avatar";
+NSString * const kHXOAvatarURL             = @"avatarURL";
+NSString * const kHXONickName              = @"nickName";
+NSString * const kHXOUserStatus            = @"userStatus";
+NSString * const kHXOPhoneNumber           = @"phoneNumber";
+NSString * const kHXOMailAddress           = @"mailAddress";
+NSString * const kHXOTwitterName           = @"twitterName";
+NSString * const kHXOFacebookName          = @"facebookName";
+NSString * const kHXOGooglePlusName        = @"googlePlusName";
+NSString * const kHXOGithubName            = @"githubName";
 
-NSString * const kHTDefaultScreenShooting = @"defaultScreenShooting";
-NSString * const kHTAutoDownloadLimit     = @"autoDownloadLimit";
-NSString * const kHTAutoUploadLimit       = @"autoUploadLimit";
+NSString * const kHXODefaultScreenShooting = @"defaultScreenShooting";
+NSString * const kHXOAutoDownloadLimit     = @"autoDownloadLimit";
+NSString * const kHXOAutoUploadLimit       = @"autoUploadLimit";
 
-NSString * const kHTMaxAttachmentUploadRetries   = @"maxAttachmentUploadRetries";
-NSString * const kHTMaxAttachmentDownloadRetries = @"maxAttachmentDownloadRetries";
+NSString * const kHXOMaxAttachmentUploadRetries   = @"maxAttachmentUploadRetries";
+NSString * const kHXOMaxAttachmentDownloadRetries = @"maxAttachmentDownloadRetries";
 
-NSString * const kHTSaveDatabasePolicy    = @"saveDatabasePolicy";
-NSString * const kHTSaveDatabasePolicyPerMessage  = @"perMessage";
+NSString * const kHXOSaveDatabasePolicy    = @"saveDatabasePolicy";
+NSString * const kHXOSaveDatabasePolicyPerMessage  = @"perMessage";
 
-NSString * const kHTPreviewImageWidth      = @"previewImageWidth";
+NSString * const kHXOPreviewImageWidth      = @"previewImageWidth";
 
-NSString * const kHTDefaultsDefaultsFile = @"HTUserDefaultsDefaults";
+NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 
 @implementation HXOUserDefaults
 
 + (void) initialize {
-    NSString * path = [[NSBundle mainBundle] pathForResource: kHTDefaultsDefaultsFile ofType: @"plist"];
+    NSString * path = [[NSBundle mainBundle] pathForResource: kHXODefaultsDefaultsFile ofType: @"plist"];
     NSDictionary * defaultsDefaults = [NSDictionary dictionaryWithContentsOfFile: path];
     [[NSUserDefaults standardUserDefaults] registerDefaults: defaultsDefaults];
 }
