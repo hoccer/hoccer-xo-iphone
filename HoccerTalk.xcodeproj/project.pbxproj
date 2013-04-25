@@ -246,6 +246,9 @@
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
 		63F4CF03172846D600699394 /* conversation_cell_bg_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F4CF01172846D600699394 /* conversation_cell_bg_new.png */; };
 		63F4CF04172846D600699394 /* conversation_cell_bg_new@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */; };
+		63F4CF10172892EB00699394 /* InvitationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF0F172892EB00699394 /* InvitationController.m */; };
+		63F4CF1817289CE200699394 /* InviteFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63F4CF1717289CE200699394 /* InviteFooterView.xib */; };
+		63F4CF1B17289DB600699394 /* InviteFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF1A17289DB600699394 /* InviteFooterView.m */; };
 		E9495575171C13A000FE2E1F /* AttachmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9495574171C139F00FE2E1F /* AttachmentView.m */; };
 		E96CB012171217D3005F8FFA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB011171217D3005F8FFA /* AVFoundation.framework */; };
 		E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB01717137D37005F8FFA /* CoreMedia.framework */; };
@@ -644,6 +647,11 @@
 		63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		63F4CF01172846D600699394 /* conversation_cell_bg_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = conversation_cell_bg_new.png; sourceTree = "<group>"; };
 		63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation_cell_bg_new@2x.png"; sourceTree = "<group>"; };
+		63F4CF0E172892EB00699394 /* InvitationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitationController.h; sourceTree = "<group>"; };
+		63F4CF0F172892EB00699394 /* InvitationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvitationController.m; sourceTree = "<group>"; };
+		63F4CF1717289CE200699394 /* InviteFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InviteFooterView.xib; sourceTree = "<group>"; };
+		63F4CF1917289DB600699394 /* InviteFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteFooterView.h; sourceTree = "<group>"; };
+		63F4CF1A17289DB600699394 /* InviteFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteFooterView.m; sourceTree = "<group>"; };
 		E9495573171C139F00FE2E1F /* AttachmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentView.h; sourceTree = "<group>"; };
 		E9495574171C139F00FE2E1F /* AttachmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentView.m; sourceTree = "<group>"; };
 		E96CB011171217D3005F8FFA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -1115,6 +1123,7 @@
 				63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */,
 				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
 				6327EAD81718591600AF75E1 /* EmptyTablePlaceholderCell.xib */,
+				63F4CF1717289CE200699394 /* InviteFooterView.xib */,
 			);
 			path = StoryboardsAndNIBs;
 			sourceTree = "<group>";
@@ -1174,7 +1183,6 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerTalk */ = {
 			isa = PBXGroup;
 			children = (
-				E99886DB1728135C0089A510 /* SoundEffects */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -1191,10 +1199,13 @@
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 				E96CB01D1714572C005F8FFA /* Crypto */,
+				63F4CF0E172892EB00699394 /* InvitationController.h */,
+				63F4CF0F172892EB00699394 /* InvitationController.m */,
 				631F6CEA170B360C00FB28D5 /* iOSVersionChecks.h */,
-				63AEE30516CA562F00522F92 /* Models */,
 				633048F616FC69170045E64E /* MFSideMenu */,
+				63AEE30516CA562F00522F92 /* Models */,
 				636D40041710724900304EDF /* SettingsConstantsAndEnvironment */,
+				E99886DB1728135C0089A510 /* SoundEffects */,
 				63AE45521705E18D0099F0CB /* StoryboardsAndNIBs */,
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
 				63AE4541170490B50099F0CB /* Supporting View Controllers */,
@@ -1293,6 +1304,8 @@
 				63DC01841715205300609513 /* HTSwitch.m */,
 				6320D7CB16E0C79A00E58478 /* InsetImageView.h */,
 				6320D7CC16E0C79A00E58478 /* InsetImageView.m */,
+				63F4CF1917289DB600699394 /* InviteFooterView.h */,
+				63F4CF1A17289DB600699394 /* InviteFooterView.m */,
 				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
 				63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */,
 				636492D51711E97900E35514 /* ProfileAvatarView.h */,
@@ -1713,6 +1726,7 @@
 				63D8EE2A17281D56000F9E53 /* bubble-right-in_transit@2x.png in Resources */,
 				63F4CF03172846D600699394 /* conversation_cell_bg_new.png in Resources */,
 				63F4CF04172846D600699394 /* conversation_cell_bg_new@2x.png in Resources */,
+				63F4CF1817289CE200699394 /* InviteFooterView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1828,6 +1842,8 @@
 				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 				E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */,
+				63F4CF10172892EB00699394 /* InvitationController.m in Sources */,
+				63F4CF1B17289DB600699394 /* InviteFooterView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
