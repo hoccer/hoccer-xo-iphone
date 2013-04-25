@@ -28,4 +28,5 @@
 @property (strong, nonatomic) IBOutlet UIView *appIconShadow;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
+@property (strong, nonatomic) IBOutlet UIView *scrolledContent;
 @end

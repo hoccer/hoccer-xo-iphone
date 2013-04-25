@@ -51,6 +51,13 @@
     [self moveView: self.designLabel by: dy];
     [self moveView: self.designList by: dy];
     dy = [self setLabel: self.designList toText: [self peopleListAsText: @"HXODesigners"] andUpdateDy: dy];
+
+    CGRect frame = self.scrolledContent.frame;
+    frame.size.height += dy + 100; // XXX
+    self.scrolledContent.frame = frame;
+    self.scrollView.contentSize = frame.size;
+
+    // XXX update scroll view content size dynamically
 }
 
 
