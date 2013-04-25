@@ -292,11 +292,20 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    id item = _items[indexPath.section][indexPath.row];
+    UITableViewCell * cell = [self prototypeCellOfClass: [item cellClass]];
+    if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
+        return [(UserDefaultsCellInfoText*)cell heightForText: [item currentValue]];
+    } else {
+        return cell.bounds.size.height;
+    }
+/*
     if (indexPath.section == 0) {
         return [self prototypeCellOfClass: [UserDefaultsCellAvatarPicker class]].bounds.size.height;
     } else {
         return [self prototypeCellOfClass: [UserDefaultsCellTextInput class]].bounds.size.height;
     }
+ */
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -519,7 +528,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 
     _renewKeyPairInfoItem = [[ProfileItem alloc] init];
     _renewKeyPairInfoItem.cellClass = [UserDefaultsCellInfoText class];
-    _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
+    _renewKeyPairInfoItem.currentValue = _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
 
     return [self populateValues];
 }

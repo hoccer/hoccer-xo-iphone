@@ -33,7 +33,7 @@
     [super viewDidLoad];
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
     [self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
-    _prototypes[(id)[UserDefaultsCell class]] = @1;
+    _prototypes[(id)[UserDefaultsCell class]] = [[UserDefaultsCell alloc] init];
 }
 
 
