@@ -705,7 +705,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) renewKeypairPressed: (id) sender {
-    NSLog(@"renew keypair");
     [[RSA sharedInstance] cleanKeyChain];
     [self updateKeyFingerprint];
     [self.tableView beginUpdates];

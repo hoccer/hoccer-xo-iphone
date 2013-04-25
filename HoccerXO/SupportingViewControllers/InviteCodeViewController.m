@@ -28,19 +28,14 @@
     self.navigationItem.rightBarButtonItem = doneButton;
     self.codeTextField.delegate = self;
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+
+     UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
+    [self.getNewCodeButton setBackgroundImage: background forState: UIControlStateNormal];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     self.label.text = NSLocalizedString(@"or", @"Invite Token View Controller");
-    [self.clipboardButton setTitle: NSLocalizedString(@"Paste", @"Invite Code Copy/Paste Button") forState: UIControlStateNormal];
-    if ([[UIPasteboard generalPasteboard].string isEqualToString: @""]) {
-        self.clipboardButton.enabled = NO;
-        self.clipboardButton.alpha = 0.5;
-    } else {
-        self.clipboardButton.enabled = YES;
-        self.clipboardButton.alpha = 1.0;
-    }
     _newTokenButtonPressed = NO;
 }
 
@@ -52,8 +47,7 @@
 
 - (IBAction) newCodePressed:(id)sender {
     _newTokenButtonPressed = YES;
-    ((UIButton*)sender).enabled = NO;
-    ((UIButton*)sender).alpha = 0.5;
+    self.navigationItem.leftBarButtonItem = nil;
     [self.chatBackend generateToken: @"pairing" validFor: 60 * 60 * 24 * 7 /* TODO: kInvitationTokenValidity*/ tokenHandler: ^(NSString* token) {
         if (token == nil) {
             return;
@@ -62,22 +56,10 @@
             self.codeTextField.text = @"<ERROR>";
             return;
         }
-        self.label.text = NSLocalizedString(@"Send this token to a friend:", @"Invite Token View Controller");
+        self.label.text = NSLocalizedString(@"Send this token to a friend:", nil);
 
         self.codeTextField.text = token;
-
-        self.clipboardButton.enabled = YES;
-        self.clipboardButton.alpha = 1.0;
-        [self.clipboardButton setTitle: NSLocalizedString(@"Copy", @"Invite Code Copy/Paste Button") forState: UIControlStateNormal];
     }];
-}
-
-- (IBAction) copyPasteButtonPressed:(id)sender {
-    if (_newTokenButtonPressed) {
-        [UIPasteboard generalPasteboard].string = self.codeTextField.text;
-    } else {
-        self.codeTextField.text = [UIPasteboard generalPasteboard].string;
-    }
 }
 
 - (void) onDone:(id) sender {
@@ -88,18 +70,12 @@
 }
 
 - (void) canceld:(id) sender {
-    NSLog(@"canceld");
     [self dismissViewControllerAnimated: YES completion: nil];
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
-    return ! _newTokenButtonPressed;
 }
 
 - (void)viewDidUnload {
     [self setCodeTextField:nil];
     [self setLabel:nil];
-    [self setClipboardButton:nil];
     [self setNavigationItem:nil];
     [super viewDidUnload];
 }
