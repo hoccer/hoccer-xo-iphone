@@ -307,6 +307,8 @@ typedef enum BackendStates {
         }
         [self setState: kBackendReady];
 
+        [self hello];
+        
         [self flushPendingMessages];
         [self flushPendingFiletransfers];
         [self updateRelationships];
@@ -814,6 +816,38 @@ typedef enum BackendStates {
     }];
 }
 
+- (void) hello:(NSNumber*) clientTime  handler:(HelloHandler) handler {
+    // NSLog(@"hello: %@", clientTime);
+    NSDictionary *params = @{
+                             @"clientTime" : clientTime
+                             };
+    [_serverConnection invoke: @"hello" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(responseOrError);
+        } else {
+            NSLog(@"hello() failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+- (void) hello {
+    NSNumber * clientTime = [self millisFromDate:[NSDate date]];
+    [self hello:clientTime handler:^(NSDictionary * result) {
+        if (result != nil) {
+            [self saveServerTime:[self dateFromMillis:result[@"serverTime"]]];
+        }
+    }];
+}
+
+- (NSNumber*) millisFromDate:(NSDate *) date {
+    return [NSNumber numberWithLongLong:[date timeIntervalSince1970]*1000];
+}
+
+- (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970 {
+    return [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0 ];
+}
+
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
 - (void) deliveryRequest: (HXOMessage*) message withDeliveries: (NSArray*) deliveries {
@@ -831,7 +865,7 @@ typedef enum BackendStates {
             for (Delivery * delivery in deliveries) {
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
                 delivery.receiver.latestMessageTime = message.timeAccepted;
-                [self saveServerTime:message.timeAccepted]; // TODO: remove when welcome call is in place
+                // [self saveServerTime:message.timeAccepted]; // TODO: remove when welcome call is in place
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);
