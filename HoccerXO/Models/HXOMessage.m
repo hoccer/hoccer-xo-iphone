@@ -1,19 +1,19 @@
 //
 //  Message.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "Delivery.h"
 #import "Crypto.h"
 #import "NSData+Base64.h"
 #import "NSData+CommonCrypto.h"
 #import "NSString+StringWithData.h"
 
-@implementation TalkMessage
+@implementation HXOMessage
 
 @dynamic isOutgoing;
 @dynamic body;

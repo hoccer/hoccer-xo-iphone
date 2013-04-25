@@ -1,6 +1,6 @@
 //
-//  HoccerTalkBackend.m
-//  HoccerTalk
+//  HoccerXOBackend.m
+//  HoccerXO
 //
 //  Created by David Siegel on 13.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -9,7 +9,7 @@
 #import "HXOBackend.h"
 
 #import "JsonRpcWebSocket.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "Delivery.h"
 #import "Contact.h"
 #import "Attachment.h"
@@ -109,8 +109,8 @@ typedef enum BackendStates {
 }
 
 // TODO: contact should be an array of contacts
-- (TalkMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
-    TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+- (HXOMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
+    HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeSent = [NSDate date];
     message.timeAccepted = message.timeSent; // TODO: - offset with server time
@@ -167,7 +167,7 @@ typedef enum BackendStates {
     }
     if (messages.count > 0) {
         NSLog(@"receiveMessage: already have message with id %@", vars[@"messageId"]);
-        TalkMessage * oldMessage = messages[0];
+        HXOMessage * oldMessage = messages[0];
         [self deliveryConfirm: messageDictionary[@"messageId"] withDelivery: [oldMessage.deliveries anyObject]];
         return;
     }
@@ -184,7 +184,7 @@ typedef enum BackendStates {
         return;
     }
 
-    TalkMessage * message = [NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    HXOMessage * message = [NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     Delivery * delivery = [NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
@@ -427,7 +427,7 @@ typedef enum BackendStates {
         }
     }
     // paranoid but safe: for each message collect those deliveries that have state 'new' and send them out
-    for (TalkMessage * message in pendingMessages) {
+    for (HXOMessage * message in pendingMessages) {
         NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
         for (Delivery * delivery in message.deliveries) {
             if ([delivery.state isEqualToString: kDeliveryStateNew]) {
@@ -817,7 +817,7 @@ typedef enum BackendStates {
 
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
-- (void) deliveryRequest: (TalkMessage*) message withDeliveries: (NSArray*) deliveries {
+- (void) deliveryRequest: (HXOMessage*) message withDeliveries: (NSArray*) deliveries {
     NSMutableDictionary * messageDict = [message rpcDictionary];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
     for (Delivery * delivery in deliveries) {
@@ -1289,7 +1289,7 @@ typedef enum BackendStates {
               httpResponse, (long)[httpResponse statusCode],
               [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
     } else {
-        NSLog(@"ERROR: HoccerTalkBackend didReceiveResponse without valid connection");
+        NSLog(@"ERROR: HXOBackend didReceiveResponse without valid connection");
     }
 }
 
@@ -1297,9 +1297,9 @@ typedef enum BackendStates {
 {
     if (connection == _avatarUploadConnection) {
         /* we do not use this for avatar download, maybe at a later stage */
-        NSLog(@"ERROR: HoccerTalkBackend didReceiveData - should not be called");
+        NSLog(@"ERROR: HXOBackend didReceiveData - should not be called");
     } else {
-        NSLog(@"ERROR: HoccerTalkBackend didReceiveData without valid connection");
+        NSLog(@"ERROR: HXOBackend didReceiveData without valid connection");
     }
 }
 
@@ -1309,7 +1309,7 @@ typedef enum BackendStates {
         NSLog(@"_avatarUploadConnection didSendBodyData %d", bytesWritten);
         _avatarBytesUploaded = totalBytesWritten;
     } else {
-        NSLog(@"ERROR: HoccerTalkBackend didSendBodyData without valid connection");
+        NSLog(@"ERROR: HXOBackend didSendBodyData without valid connection");
     }
 }
 
@@ -1319,7 +1319,7 @@ typedef enum BackendStates {
         NSLog(@"_avatarUploadConnection didFailWithError %@", error);
         _avatarUploadConnection = nil;
     } else {
-        NSLog(@"ERROR: HoccerTalkBackend didFailWithError without valid connection");
+        NSLog(@"ERROR: HXOBackend didFailWithError without valid connection");
     }
 }
 

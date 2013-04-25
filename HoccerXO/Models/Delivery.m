@@ -1,6 +1,6 @@
 //
 //  Delivery.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 16.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import "Delivery.h"
 #import "Contact.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "NSData+Base64.h"
 #import "RSA.h"
 #import "NSData+HexString.h"

@@ -1,6 +1,6 @@
 //
 //  AttachmentViewFactory.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 14.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Attachment.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "AttachmentView.h"
 
 @implementation AttachmentViewFactory

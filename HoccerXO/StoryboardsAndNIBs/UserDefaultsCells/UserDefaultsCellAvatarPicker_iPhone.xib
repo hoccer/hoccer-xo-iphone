@@ -152,11 +152,11 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
-					<string key="className">HoccerTalkTableViewCell</string>
+					<string key="className">HXOTableViewCell</string>
 					<string key="superclassName">UITableViewCell</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/HoccerTalkTableViewCell.h</string>
+						<string key="minorKey">./Classes/HXOTableViewCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -169,7 +169,7 @@
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">UserDefaultsCell</string>
-					<string key="superclassName">HoccerTalkTableViewCell</string>
+					<string key="superclassName">HXOTableViewCell</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/UserDefaultsCell.h</string>

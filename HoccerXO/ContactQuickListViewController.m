@@ -1,6 +1,6 @@
 //
 //  ContactListViewController.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 22.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -15,7 +15,6 @@
 #import "ConversationViewController.h"
 #import "ChatViewController.h"
 #import "MFSideMenu.h"
-#import "iOSVersionChecks.h"
 #import "HXOBackend.h"
 
 

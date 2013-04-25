@@ -1,13 +1,13 @@
 //
 //  Attachment.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
 #import "Attachment.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "CryptingInputStream.h"
@@ -671,7 +671,7 @@
         [self assetDataLoader: execution url: self.assetURL];
         return;
     }
-    execution(nil, [NSError errorWithDomain:@"HoccerTalk" code:1000 userInfo: nil]);
+    execution(nil, [NSError errorWithDomain:@"HoccerXO" code:1000 userInfo: nil]);
 }
 
 -(void) withUploadStream: (StreamSetterBlock) execution {
@@ -688,7 +688,7 @@
         [self assetStreamLoader: execution url: self.assetURL];
         return;
     }
-    execution(nil, [NSError errorWithDomain:@"HoccerTalk" code:1000 userInfo: nil]);
+    execution(nil, [NSError errorWithDomain:@"HoccerXO" code:1000 userInfo: nil]);
 }
 
 -(NSDictionary*) uploadHttpHeadersWithCrypto {

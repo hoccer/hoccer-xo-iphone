@@ -1,6 +1,6 @@
 //
 //  MessageCell.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 14.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -9,13 +9,13 @@
 #import "ChatTableCells.h"
 #import "AutoheightLabel.h"
 #import "BubbleView.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 
 @implementation MessageCell
 
 static const double kCellPadding = 10.0;
 
-- (CGFloat) heightForMessage: (TalkMessage*) message {
+- (CGFloat) heightForMessage: (HXOMessage*) message {
     return MAX(kCellPadding + [self.bubble heightForMessage: message] + kCellPadding,
                self.frame.size.height);
 }

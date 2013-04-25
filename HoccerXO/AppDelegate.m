@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -8,11 +8,11 @@
 
 #import "AppDelegate.h"
 
-#import "Config.h"
+#import "HXOConfig.h"
 
 #import "ConversationViewController.h"
 #import "Contact.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "AssetStore.h"
 #import "NavigationMenuViewController.h"
 #import "ContactQuickListViewController.h"
@@ -218,6 +218,7 @@
     }
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"HoccerXO" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    NSLog(@"===== URL %@ model: %@", [modelURL absoluteString], _managedObjectModel);
     return _managedObjectModel;
 }
 
@@ -290,7 +291,7 @@
 
 - (NSUInteger) unreadMessageCount {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    fetchRequest.entity = [NSEntityDescription entityForName: [TalkMessage entityName] inManagedObjectContext: self.managedObjectContext];
+    fetchRequest.entity = [NSEntityDescription entityForName: [HXOMessage entityName] inManagedObjectContext: self.managedObjectContext];
     fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isRead == NO"];
 
     NSError *error = nil;

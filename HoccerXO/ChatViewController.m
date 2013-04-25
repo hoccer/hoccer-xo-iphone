@@ -1,6 +1,6 @@
 //
 //  DetailViewController.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -17,7 +17,7 @@
 #import <AVFoundation/AVAssetExportSession.h>
 #import <AVFoundation/AVMediaFormat.h>
 
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "Delivery.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
@@ -25,7 +25,6 @@
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenuButtons.h"
 #import "ChatTableCells.h"
-#import "iOSVersionChecks.h"
 #import "AutoheightLabel.h"
 #import "Attachment.h"
 #import "AttachmentViewFactory.h"
@@ -46,7 +45,7 @@
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 
-- (void)configureCell:(UITableViewCell *)cell forMessage:(TalkMessage *) message;
+- (void)configureCell:(UITableViewCell *)cell forMessage:(HXOMessage *) message;
 - (void)configureView;
 @end
 
@@ -66,7 +65,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
+    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
@@ -713,7 +712,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TalkMessage * message = (TalkMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
     NSString * identifier = [message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier];
     MessageCell *cell = [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath:indexPath];
@@ -769,7 +768,7 @@
 {
     double width = self.tableView.frame.size.width;
 
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
     CGRect frame = self.messageCell.frame;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
@@ -893,7 +892,7 @@
         [self.tableView beginUpdates];
         for (int i = 0; i < indexPaths.count; ++i) {
             NSIndexPath * indexPath = indexPaths[i];
-            TalkMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
             [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
         }
         [self.tableView endUpdates];
@@ -942,7 +941,7 @@
 
         case NSFetchedResultsChangeUpdate:
         {
-            TalkMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
             [self configureCell:[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
             break;
         }
@@ -990,7 +989,7 @@
 
 }
 
-- (void)configureCell:(MessageCell *)cell forMessage:(TalkMessage *) message {
+- (void)configureCell:(MessageCell *)cell forMessage:(HXOMessage *) message {
 
     if (self.avatarImage == nil) {
         UIImage * myImage = [UserProfile sharedProfile].avatarImage;
@@ -1047,7 +1046,7 @@
     if (action == @selector(deleteMessage:)) return YES;
     if (action == @selector(copy:)) {return YES;}
 
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     if (action == @selector(copy:)) {return YES;}
     
@@ -1067,7 +1066,7 @@
 }
 - (void) messageView:(MessageCell *)theCell saveMessage:(id)sender {
     NSLog(@"saveMessage");
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
     
     if ([attachment.mediaType isEqualToString: @"image"]) {
@@ -1107,7 +1106,7 @@
 - (void) messageView:(MessageCell *)theCell copy:(id)sender {
     NSLog(@"copy");
     UIPasteboard * board = [UIPasteboard generalPasteboard];
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     board.string = message.body; // always put in string first to clear board
     
@@ -1166,7 +1165,7 @@
 }
 - (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender {
     NSLog(@"deleteMessage");
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     
     if (message.attachment != nil) {
         if (message.attachment.ownedURL.length > 0) {
@@ -1186,7 +1185,7 @@
 }
 
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell {
-    TalkMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     // NSLog(@"@presentAttachmentViewForCell attachment = %@", message.attachment);
     
     Attachment * myAttachment = message.attachment;

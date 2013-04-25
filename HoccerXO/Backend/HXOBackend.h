@@ -1,19 +1,19 @@
 //
-//  HoccerTalkBackend.h
-//  HoccerTalk
+//  HoccerXOBackend.h
+//  HoccerXO
 //
 //  Created by David Siegel on 13.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "Config.h"
+#import "HXOConfig.h"
 
 #import "JsonRpcWebSocket.h"
 
 @class Contact;
 @class Delivery;
-@class TalkMessage;
+@class HXOMessage;
 @class Attachment;
 @class AppDelegate;
 
@@ -25,7 +25,7 @@ typedef void (^PresenceHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
 
-@protocol HoccerTalkDelegate <NSObject>
+@protocol HXODelegate <NSObject>
 
 - (NSString*) apnDeviceToken;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -46,7 +46,7 @@ typedef void (^GenericResultHandler)(BOOL);
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
-- (TalkMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
+- (HXOMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;

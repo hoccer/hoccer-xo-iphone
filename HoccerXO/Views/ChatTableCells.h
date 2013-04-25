@@ -1,6 +1,6 @@
 //
 //  MessageCell.h
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 14.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -13,7 +13,7 @@
 @class AutoheightLabel;
 @class InsetImageView;
 @class BubbleView;
-@class TalkMessage;
+@class HXOMessage;
 @class MessageCell;
 
 
@@ -35,7 +35,7 @@
 
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 
-- (CGFloat) heightForMessage: (TalkMessage*) message;
+- (CGFloat) heightForMessage: (HXOMessage*) message;
 
 - (void)pressedButton: (id)sender;
 

@@ -1,17 +1,16 @@
 //
 //  ProfileViewController.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 26.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "Config.h"
+#import "HXOConfig.h"
 #import "ProfileViewController.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenuButtons.h"
 #import "HXOUserDefaults.h"
-#import "iOSVersionChecks.h"
 #import "AssetStore.h"
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
@@ -278,7 +277,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
                 self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
 
             } else {
-                self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
+                self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
             }
             ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
             break;
@@ -382,7 +381,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
             [self saveProfile];
         }
         ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
-        self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
+        self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
     }
 }
 

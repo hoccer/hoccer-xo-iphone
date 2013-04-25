@@ -1,6 +1,6 @@
 //
 //  Message.h
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -14,7 +14,7 @@
 
 #import "HXOModel.h"
 
-@interface TalkMessage : HXOModel
+@interface HXOMessage : HXOModel
 
 @property (nonatomic, strong) NSString* body;
 @property (nonatomic, strong) NSDate*   timeSent; // client time when message was sent, passed unchanged to receivers

@@ -1,6 +1,6 @@
 //
 //  Attachment.h
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -12,7 +12,7 @@
 
 #import "HXOModel.h"
 
-@class TalkMessage;
+@class HXOMessage;
 @class HXOBackend;
 @class CryptoEngine;
 
@@ -50,7 +50,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 @property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
 @property (nonatomic)         NSInteger  transferFailures;       // number of upload or download failures
 @property (nonatomic, strong) NSData   * previewImageData;           // remote URL where the file should/was uploaded
-@property (nonatomic, strong) TalkMessage *message;
+@property (nonatomic, strong) HXOMessage *message;
 
 // virtual properties
 @property (nonatomic) NSString * attachmentJsonString;

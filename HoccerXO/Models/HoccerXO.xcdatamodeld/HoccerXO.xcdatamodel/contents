@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -16,7 +16,7 @@
         <attribute name="remoteURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="transferFailures" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="transferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="attachment" inverseEntity="TalkMessage" syncable="YES"/>
+        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="attachment" inverseEntity="HXOMessage" syncable="YES"/>
     </entity>
     <entity name="Contact" representedClassName="Contact">
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -40,12 +40,12 @@
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="twitterName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
-        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="contact" inverseEntity="TalkMessage" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="contact" inverseEntity="HXOMessage" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND timeAccepted == $FETCH_SOURCE.latestMessageTime"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND timeAccepted == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
         <fetchedProperty name="unreadMessages" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
         </fetchedProperty>
         <userInfo/>
     </entity>
@@ -53,13 +53,10 @@
         <attribute name="keyCiphertext" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="state" attributeType="String" defaultValueString="new" syncable="YES"/>
         <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="deliveries" inverseEntity="TalkMessage" syncable="YES"/>
+        <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
     </entity>
-    <entity name="Invite" representedClassName="Invite" syncable="YES">
-        <attribute name="token" attributeType="String" syncable="YES"/>
-    </entity>
-    <entity name="TalkMessage" representedClassName="TalkMessage" syncable="YES">
+    <entity name="HXOMessage" representedClassName="HXOMessage" syncable="YES">
         <attribute name="body" attributeType="String" syncable="YES"/>
         <attribute name="isOutgoing" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -73,19 +70,22 @@
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
     </entity>
+    <entity name="Invite" representedClassName="Invite" syncable="YES">
+        <attribute name="token" attributeType="String" syncable="YES"/>
+    </entity>
     <fetchRequest name="AllOutgoingAttachments" entity="Attachment" predicateString="message.isOutgoing != 0"/>
     <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0 AND transferFailures &lt; $max_retries"/>
     <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="DeliveryByMessageTagAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $receiverId == receiver.clientId"/>
-    <fetchRequest name="MessageByMessageId" entity="TalkMessage" predicateString="messageId == $messageId"/>
-    <fetchRequest name="MessagesByContact" entity="TalkMessage" predicateString="contact == $contact"/>
+    <fetchRequest name="MessageByMessageId" entity="HXOMessage" predicateString="messageId == $messageId"/>
+    <fetchRequest name="MessagesByContact" entity="HXOMessage" predicateString="contact == $contact"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="128" height="285"/>
-        <element name="Contact" positionX="0" positionY="0" width="128" height="389"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="120"/>
-        <element name="Invite" positionX="0" positionY="0" width="128" height="60"/>
-        <element name="TalkMessage" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="Attachment" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Delivery" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Invite" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="HXOMessage" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

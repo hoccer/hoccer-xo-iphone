@@ -1,6 +1,6 @@
 //
 //  ContactListViewController.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.04.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -47,7 +47,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.leftBarButtonItem = self.hoccerTalkMenuButton;
+    self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
 
     UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addContactPressed:)];
     self.navigationItem.rightBarButtonItem = addContactButton;

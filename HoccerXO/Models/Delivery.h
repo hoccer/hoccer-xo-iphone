@@ -1,6 +1,6 @@
 //
 //  Delivery.h
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 16.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -11,7 +11,7 @@
 
 #import "HXOModel.h"
 
-@class TalkMessage;
+@class HXOMessage;
 @class Contact;
 
 FOUNDATION_EXPORT NSString * const kDeliveryStateNew;
@@ -24,7 +24,7 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 @interface Delivery : HXOModel
 
 @property (nonatomic, strong) NSString * state;
-@property (nonatomic, strong) TalkMessage *message;
+@property (nonatomic, strong) HXOMessage *message;
 @property (nonatomic, strong) NSDate * timeChanged;
 
 @property (nonatomic, strong) Contact* receiver;

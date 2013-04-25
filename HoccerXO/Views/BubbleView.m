@@ -1,6 +1,6 @@
 //
 //  BubbleView.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 04.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -12,7 +12,7 @@
 
 #import "AutoheightLabel.h"
 #import "AssetStore.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "AttachmentViewFactory.h"
 #import "AttachmentView.h"
 
@@ -92,7 +92,7 @@ static const double kAttachmentPadding = 10;
     self.background.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 }
 
-- (CGFloat) heightForMessage: (TalkMessage*) message {
+- (CGFloat) heightForMessage: (HXOMessage*) message {
     CGFloat height = self.padding.top + [self.message calculateSize: message.body].height + self.padding.bottom;
     if (message.attachment != nil) {
         height += kAttachmentPadding + [AttachmentViewFactory heightOfAttachmentView: message.attachment withViewOfWidth: self.message.frame.size.width];

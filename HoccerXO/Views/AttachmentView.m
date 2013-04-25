@@ -1,6 +1,6 @@
 //
 //  AttachmentView.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by Pavel on 15.04.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import "AttachmentView.h"
 #import "ChatTableCells.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "HXOUserDefaults.h"
 
 @implementation AttachmentView

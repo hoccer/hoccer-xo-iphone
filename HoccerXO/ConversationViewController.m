@@ -1,6 +1,6 @@
 //
 //  MasterViewController.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 12.02.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -15,11 +15,10 @@
 #import "ConversationCell.h"
 #import "InsetImageView.h"
 #import "AssetStore.h"
-#import "TalkMessage.h"
+#import "HXOMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "UIViewController+HXOSideMenuButtons.h"
-#import "iOSVersionChecks.h"
 #import "HXOUserDefaults.h"
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
@@ -50,8 +49,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = [self hoccerTalkMenuButton];
-    self.navigationItem.rightBarButtonItem = [self hoccerTalkContactsButton];
+    self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
+    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHTDefaultScreenShooting]) {
         self.navigationItem.leftBarButtonItem.enabled = NO;

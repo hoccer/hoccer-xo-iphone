@@ -1,6 +1,6 @@
 //
 //  NSData+HexString.m
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 29.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.

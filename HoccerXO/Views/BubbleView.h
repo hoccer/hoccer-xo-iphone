@@ -1,6 +1,6 @@
 //
 //  BubbleView.h
-//  HoccerTalk
+//  HoccerXO
 //
 //  Created by David Siegel on 04.03.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class AutoheightLabel;
-@class TalkMessage;
+@class HXOMessage;
 @class AttachmentView;
 
 typedef enum BubbleStates {
@@ -31,6 +31,6 @@ typedef enum BubbleStates {
 - (id) initWithCoder:(NSCoder *)aDecoder;
 - (void) awakeFromNib;
 
-- (CGFloat) heightForMessage: (TalkMessage*) message;
+- (CGFloat) heightForMessage: (HXOMessage*) message;
 
 @end
