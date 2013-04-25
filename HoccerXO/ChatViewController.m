@@ -33,6 +33,8 @@
 #import "ImageViewController.h"
 #import "UserProfile.h"
 
+static const NSUInteger kMaxMessageBytes = 10000;
+
 @interface ChatViewController ()
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -227,6 +229,16 @@
     [self.textField resignFirstResponder];
     if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
+            if ([self.textField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
+                NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"message_too_long_text", nil), kMaxMessageBytes];
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"message_too_long_title", nil)
+                                                                 message: messageText
+                                                                delegate: nil
+                                                       cancelButtonTitle: NSLocalizedString(@"message_too_long_button_title", nil)
+                                                       otherButtonTitles: nil];
+                [alert show];
+                return;
+            }
             [self.chatBackend sendMessage: self.textField.text toContact: self.partner withAttachment: self.currentAttachment];
             self.currentAttachment = nil;
             self.textField.text = @"";
