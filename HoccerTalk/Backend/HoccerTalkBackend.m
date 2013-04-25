@@ -113,6 +113,7 @@ typedef enum BackendStates {
     TalkMessage * message =  (TalkMessage*)[NSEntityDescription insertNewObjectForEntityForName: [TalkMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeSent = [NSDate date];
+    message.timeAccepted = message.timeSent; // TODO: - offset with server time
     message.contact = contact;
     message.isOutgoing = @YES;
     message.timeSection = [contact sectionTitleForMessageTime: message.timeSent];
@@ -132,7 +133,7 @@ typedef enum BackendStates {
     delivery.message = message;
     delivery.receiver = contact;
 
-    contact.latestMessageTime = message.timeSent;
+    contact.latestMessageTime = message.timeSent; // this is just a preliminary setting, will be overwritten by delivery
     [message setupOutgoingEncryption];
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
@@ -171,7 +172,14 @@ typedef enum BackendStates {
         return;
     }
     if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
-        NSLog(@"receiveMessage: aborting received message without keyCiphertext, id= %@", vars[@"messageId"]);
+        NSLog(@"ERROR: receiveMessage: aborting received message without keyCiphertext, id= %@", vars[@"messageId"]);
+        [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
+        return;
+    }
+
+    if (![deliveryDictionary[@"keyId"] isEqualToString:[HoccerTalkBackend ownPublicKeyIdString]]) {
+        NSLog(@"ERROR: receiveMessage: aborting received message with bad public keyId = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HoccerTalkBackend ownPublicKeyIdString]);
+       // - (void) deliveryAbort: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId {
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
         return;
     }
@@ -182,7 +190,6 @@ typedef enum BackendStates {
     delivery.message = message;
     
     Attachment * attachment = nil;
-    //if (messageDictionary[@"attachmentUrl"] != nil) {
     if (messageDictionary[@"attachment"] != nil) {
         attachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         message.attachment = attachment;
@@ -208,18 +215,18 @@ typedef enum BackendStates {
         [self.delegate.managedObjectContext deleteObject: delivery];
         return;
     }
-
+    
     [delivery updateWithDictionary: deliveryDictionary];
-
+    
     message.isOutgoing = @NO;
     message.isRead = @NO;
-    message.timeSent = [NSDate date]; // TODO: use actual timestamp
+    message.timeReceived = [NSDate date]; // TODO: use actual timestamp
     message.timeSection = [contact sectionTitleForMessageTime: message.timeSent];
     message.contact = contact;
     [contact.messages addObject: message];
     [message updateWithDictionary: messageDictionary];
 
-    contact.latestMessageTime = message.timeSent;
+    contact.latestMessageTime = message.timeAccepted;
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     [self deliveryConfirm: message.messageId withDelivery: delivery];
@@ -743,7 +750,7 @@ typedef enum BackendStates {
     
 	[request setHTTPMethod:method];
     if (payload != nil) {
-        [request setHTTPBody:payload];        
+        [request setHTTPBody:payload];
     }
     if (stream != nil) {
         [request setHTTPBodyStream:stream];
@@ -824,6 +831,7 @@ typedef enum BackendStates {
             int i = 0;
             for (Delivery * delivery in deliveries) {
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
+                delivery.receiver.latestMessageTime = message.timeAccepted; // TODO: get rid of latestMessageTime field
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);
@@ -896,26 +904,45 @@ typedef enum BackendStates {
    // NSString * myStatus = [UserProfile sharedProfile].status;
     NSString * myStatus = @"I am.";
     
-    NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
-    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
-
     if (myNickName == nil) {
         myNickName = @"";
     }
-    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: myKeyId];
+    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: [HoccerTalkBackend ownPublicKeyId]];
 }
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
     if (_state == kBackendReady) {
         [self uploadAvatarIfNeeded];
         [self updatePresence];
+        [self updateKey];
     }
 }
 
++ (NSString *) ownPublicKeyIdString {
+    return [self keyIdString:[self ownPublicKeyId]];
+}
+
++ (NSData *) ownPublicKeyId {
+    NSData * myKeyBits = [self ownPublicKey];
+    return [HoccerTalkBackend calcKeyId:myKeyBits];
+}
+
++ (NSData *) ownPublicKey {
+    return[[RSA sharedInstance] getPublicKeyBits];
+}
+
++ (NSData *) calcKeyId:(NSData *) myKeyBits {
+    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    return myKeyId;
+}
+
++ (NSString *) keyIdString:(NSData *) myKeyId {
+    return [myKeyId hexadecimalString];
+}
 
 - (void) updateKey: (NSData*) publicKey {
     // NSLog(@"updateKey: %@", publicKey);
-    NSData * myKeyId = [[publicKey SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    NSData * myKeyId = [HoccerTalkBackend calcKeyId:publicKey];
     NSDictionary *params = @{
                              @"key" :   [publicKey asBase64EncodedString], 
                              @"keyId" : [myKeyId hexadecimalString]
@@ -930,7 +957,7 @@ typedef enum BackendStates {
 }
 
 - (void) updateKey {
-    NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
+    NSData * myKeyBits = [HoccerTalkBackend ownPublicKey];
     [self updateKey: myKeyBits];
 }
 
@@ -1112,17 +1139,20 @@ typedef enum BackendStates {
     
     Delivery * myDelivery = [self getDeliveryMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
     if (myDelivery != nil) {
-        if (![myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
-            myDelivery.state = deliveryDict[@"state"];
-            [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
-            NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
-            if (![myDelivery.state isEqualToString:@"delivered"]) {
-                [SoundEffectPlayer messageDelivered];
-            }
-        } else {
-            NSLog(@"Delivery state for messageTag %@ receiver %@ was already %@", myMessageTag, myReceiverId, myDelivery.state);            
+        if ([myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
+            NSLog(@"Delivery state for messageTag %@ receiver %@ was already %@", myMessageTag, myReceiverId, myDelivery.state);
         }
+        [myDelivery updateWithDictionary: deliveryDict];
+        [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
+        
+        NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
+        
+        if ([myDelivery.state isEqualToString:@"delivered"] ) {
+            [SoundEffectPlayer messageDelivered];
+        }
+        
         [self deliveryAcknowledge: myDelivery];
+
     } else {
         NSLog(@"Signalling deliveryAbort for unknown delivery with messageTag %@ messageId %@ receiver %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId);
         [self deliveryAbort: deliveryDict[@"messageId"] forClient:myReceiverId];

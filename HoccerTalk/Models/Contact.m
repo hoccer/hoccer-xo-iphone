@@ -63,7 +63,7 @@ NSString * const kRelationStateBlocked = @"blocked";
     if (self.relationshipLastChanged == nil) {
         return [NSNumber numberWithDouble:0];
     }
-    return [NSNumber numberWithDouble:[self.relationshipLastChanged timeIntervalSince1970]*1000];
+    return [NSNumber numberWithLongLong:[self.relationshipLastChanged timeIntervalSince1970]*1000];
 }
 
 - (void) setRelationshipLastChangedMillis:(NSNumber*) milliSecondsSince1970 {
@@ -119,10 +119,18 @@ NSString * const kRelationStateBlocked = @"blocked";
     if (myResult == nil) {
         // store public key from contact in key store
         [rsa addPublicKey: self.publicKeyString withTag: self.clientId];
-        myResult = [rsa getPeerKeyRef:self.clientId];
-        if (myResult == nil) {
-            NSLog(@"Contact:getPublicKeyRef: failed.");
+    } else {
+        // check if correct key id in key store
+        NSData * myKeyBits = [rsa getKeyBitsForPeerRef:self.clientId];
+        if (![myKeyBits isEqualToData:self.publicKey]) {
+            [rsa removePeerPublicKey:self.clientId];
+            [rsa addPublicKey: self.publicKeyString withTag: self.clientId];
+            NSLog(@"Contact:getPublicKeyRef: changed public key of %@", self.nickName);
         }
+    }
+    myResult = [rsa getPeerKeyRef:self.clientId];
+    if (myResult == nil) {
+        NSLog(@"ERROR: Contact:getPublicKeyRef: failed.");
     }
     return myResult;
 }

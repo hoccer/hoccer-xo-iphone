@@ -13,6 +13,7 @@
 #import "RSA.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
+#import "HoccerTalkBackend.h" // for class crypto methods
 
 NSString * const kDeliveryStateNew        = @"new";
 NSString * const kDeliveryStateDelivering = @"delivering";
@@ -53,14 +54,12 @@ NSString * const kDeliveryStateFailed     = @"failed";
 
 // for incoming deliveries
 -(void) setReceiverKeyId:(NSString *) theKeyId {
-    NSData * myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
-    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    NSString * myKeyIdString = [HoccerTalkBackend ownPublicKeyIdString];
     
-    if (![theKeyId isEqualToString:[myKeyId hexadecimalString]]) {
-        NSLog(@"ERROR: incoming message was encrypted with a public key with id %@, but my key id is %@ - decryption will fail",theKeyId,[myKeyId hexadecimalString]);
+    if (![theKeyId isEqualToString:myKeyIdString]) {
+        NSLog(@"ERROR: incoming message was encrypted with a public key with id %@, but my key id is %@ - decryption will fail",theKeyId,myKeyIdString);
     }
 }
-
 
 // this function will yield the plaintext the keyCiphertext by decrypting it with the private key
 - (NSData *) keyCleartext {
@@ -109,7 +108,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
     if (self.timeChanged == nil) {
         return [NSNumber numberWithDouble:0];
     }
-    return [NSNumber numberWithDouble:[self.timeChanged timeIntervalSince1970]*1000];
+    return [NSNumber numberWithLongLong:[self.timeChanged timeIntervalSince1970]*1000];
 }
 
 - (void) setTimeChangedMillis:(NSNumber*) milliSecondsSince1970 {

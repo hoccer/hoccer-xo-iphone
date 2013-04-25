@@ -854,7 +854,7 @@
         NSDictionary * vars = @{ @"contact" : partner };
         NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByContact" substitutionVariables: vars];
 
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeSent" ascending: YES];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeAccepted" ascending: YES];
         NSArray *sortDescriptors = @[sortDescriptor];
 
         [fetchRequest setSortDescriptors:sortDescriptors];

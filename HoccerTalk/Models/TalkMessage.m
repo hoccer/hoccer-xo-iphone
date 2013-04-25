@@ -18,6 +18,7 @@
 @dynamic isOutgoing;
 @dynamic body;
 @dynamic timeSent;
+@dynamic timeReceived;
 @dynamic timeAccepted;
 @dynamic timeSection;
 @dynamic isRead;
@@ -99,7 +100,7 @@
     if (self.timeAccepted == nil) {
         return [NSNumber numberWithDouble:0];
     }
-    return [NSNumber numberWithDouble:[self.timeAccepted timeIntervalSince1970]*1000];
+    return [NSNumber numberWithLongLong:[self.timeAccepted timeIntervalSince1970]*1000];
 }
 
 - (void) setTimeAcceptedMillis:(NSNumber*) milliSecondsSince1970 {
@@ -110,7 +111,7 @@
     if (self.timeAccepted == nil) {
         return [NSNumber numberWithDouble:0];
     }
-    return [NSNumber numberWithDouble:[self.timeSent timeIntervalSince1970]*1000];
+    return [NSNumber numberWithLongLong:[self.timeSent timeIntervalSince1970]*1000];
 }
 
 - (void) setTimeSentMillis:(NSNumber*) milliSecondsSince1970 {

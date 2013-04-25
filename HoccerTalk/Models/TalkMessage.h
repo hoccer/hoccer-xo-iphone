@@ -17,8 +17,9 @@
 @interface TalkMessage : HoccerTalkModel
 
 @property (nonatomic, strong) NSString* body;
-@property (nonatomic, strong) NSDate*   timeSent;
-@property (nonatomic, strong) NSDate*   timeAccepted;
+@property (nonatomic, strong) NSDate*   timeSent; // client time when message was sent, passed unchanged to receivers
+@property (nonatomic, strong) NSDate*   timeReceived; // client time when message was received
+@property (nonatomic, strong) NSDate*   timeAccepted; // server time stamp when message was accepted by the Server, passed on via Delivery
 @property (nonatomic, strong) NSNumber* isOutgoing;
 @property (nonatomic, strong) NSString* timeSection;
 @property (nonatomic, strong) NSNumber* isRead;

@@ -10,7 +10,11 @@
 
 #import "RSA.h"
 #import "NSData+Base64.h"
+#import "NSData+HexString.h"
 #import "NSString+RandomString.h"
+
+
+#import "HoccerTalkBackend.h" // debug, remove later
 
 
 
@@ -87,6 +91,12 @@ static RSA *instance;
     }else {
         NSLog(@"generateKeyPairKeys: successfully generated RSA key pairs");
     }
+    
+    NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
+    NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
+
+    NSLog(@"pubkeyid : %@", [HoccerTalkBackend ownPublicKeyIdString]);
+
 }
 
 - (void)testEncryption {
@@ -437,11 +447,22 @@ static RSA *instance;
 }
 
 - (void)cleanKeyChain {
-    //NSLog(@"Cleaning keychain");
+    NSLog(@"Cleaning keychain");
+
+    NSMutableDictionary * privateKey = [[NSMutableDictionary alloc] init];
+	[privateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
+	[privateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
+	[privateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)privateKey);
+    NSLog(@"SecItemDelete returned %ld on privateKey dict %@", myStatus, privateKey);
+
+    
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
+	[publicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    SecItemDelete((__bridge CFDictionaryRef)publicKey);
+    myStatus = SecItemDelete((__bridge CFDictionaryRef)publicKey);
+    NSLog(@"SecItemDelete returned %ld on publicKey dict %@", myStatus, publicKey);
     
     [self generateKeyPairKeys];
 }

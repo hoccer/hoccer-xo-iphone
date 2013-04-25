@@ -76,7 +76,13 @@ typedef void (^GenericResultHandler)(BOOL);
 
 - (void) updateRelationships;
 - (void) updatePresence;
+- (void) updateKey;
 
++ (NSString *) ownPublicKeyIdString;
++ (NSData *) ownPublicKeyId;
++ (NSData *) ownPublicKey;
++ (NSData *) calcKeyId:(NSData *) myKeyBits;
++ (NSString *) keyIdString:(NSData *) myKeyId;
 
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method

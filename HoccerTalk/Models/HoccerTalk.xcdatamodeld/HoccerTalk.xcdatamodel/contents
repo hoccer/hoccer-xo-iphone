@@ -42,7 +42,7 @@
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TalkMessage" inverseName="contact" inverseEntity="TalkMessage" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND timeSent == $FETCH_SOURCE.latestMessageTime"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND timeAccepted == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
         <fetchedProperty name="unreadMessages" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="TalkMessage" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
@@ -66,8 +66,9 @@
         <attribute name="messageId" attributeType="String" syncable="YES"/>
         <attribute name="messageTag" attributeType="String" syncable="YES"/>
         <attribute name="timeAccepted" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="timeSection" attributeType="String" syncable="YES"/>
-        <attribute name="timeSent" attributeType="Date" syncable="YES"/>
+        <attribute name="timeReceived" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="timeSection" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeSent" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
@@ -85,6 +86,6 @@
         <element name="Contact" positionX="0" positionY="0" width="128" height="389"/>
         <element name="Delivery" positionX="0" positionY="0" width="128" height="120"/>
         <element name="Invite" positionX="0" positionY="0" width="128" height="60"/>
-        <element name="TalkMessage" positionX="0" positionY="0" width="128" height="210"/>
+        <element name="TalkMessage" positionX="0" positionY="0" width="128" height="225"/>
     </elements>
 </model>

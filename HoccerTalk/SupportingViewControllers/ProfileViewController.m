@@ -115,10 +115,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     if (_mode == ProfileViewModeContactProfile) {
         keyId = _contact.publicKeyId;
     } else {
-        // TODO: de-duplicate code... found again in backend
-        NSData * keyBits = [[RSA sharedInstance] getPublicKeyBits];
-        NSData * keyHash = [[keyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
-        keyId = [keyHash hexadecimalString];
+        keyId = [HoccerTalkBackend ownPublicKeyIdString];
     }
 
     // XXX hack to display fingerprint while editing...
@@ -131,6 +128,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         [self setupContactPropertyKVO: item];
     }
     [_contact addObserver: self forKeyPath: @"relationshipState" options: NSKeyValueObservingOptionNew context: nil];
+    [_contact addObserver: self forKeyPath: @"publicKeyId" options: NSKeyValueObservingOptionNew context: nil];
 }
 
 - (void) setupContactPropertyKVO: (id) item {
@@ -150,12 +148,17 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         id item = _itemsByKeyPath[keyPath];
         if ([keyPath isEqualToString: @"avatarImage"]) {
             [(AvatarItem*)item setCurrentValue: [object avatarImage]];
+        } else if ([keyPath isEqualToString: @"publicKeyId"]) {
+            [self updateKeyFingerprint];
+            [self.tableView beginUpdates];
+            UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: _fingerprintItem.indexPath];
+            [cell configure: _fingerprintItem];
+            [self.tableView endUpdates];
         } else {
             [item setCurrentValue: [object valueForKey: keyPath]];
             if ([keyPath isEqualToString: @"nickName"]) {
                 _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [object nickName]];
                 _blockContactItem.currentValue = [self titleForRelationshipState: [object relationshipState]];
-
             }
         }
         if ([item indexPath] != nil) {
@@ -259,6 +262,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
             [_contact removeObserver: self forKeyPath: item.valueKey];
         }
         [_contact removeObserver: self forKeyPath: @"relationshipState"];
+        [_contact removeObserver: self forKeyPath: @"publicKeyId"];
     }
 }
 
@@ -523,7 +527,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     _fingerprintItem = [[ProfileItem alloc] init];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
     _fingerprintItem.textAlignment = NSTextAlignmentCenter;
-    //[_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
+    // [_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
 
     _fingerprintInfoItem = [[ProfileItem alloc] init];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
@@ -726,6 +730,8 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [self.tableView beginUpdates];
     [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: _fingerprintItem.indexPath] configure: _fingerprintItem];
     [self.tableView endUpdates];
+    [self.chatBackend updateKey];
+    [self.chatBackend updatePresence];
 }
 
 @end
