@@ -41,7 +41,8 @@
 - (void) probeAttachmentTypes {
 
     UIPasteboard * board = [UIPasteboard generalPasteboard];
-    
+
+#if 0
     // debug/reverse eng.: print content of pasteboard
     NSArray * items = board.items;
     for (NSDictionary * d in items) {
@@ -50,6 +51,7 @@
             NSLog(@"key/type: %@, value class: %@, value: %@", key, [d[key] class], d[key]);
         }
     }
+#endif
 
     
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
