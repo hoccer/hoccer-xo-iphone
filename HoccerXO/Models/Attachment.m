@@ -208,7 +208,7 @@
     // NSLog(@"loadPreviewImageIntoCacheWithCompletion");
     if (self.previewImageData != nil) {
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
-        NSDate * start = [NSDate date];
+        // NSDate * start = [NSDate date];
         self.previewImage = [UIImage imageWithData:self.previewImageData];
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database took %f ms.", -[start timeIntervalSinceNow]*1000);
         if (!(self.aspectRatio > 0)) {
@@ -726,7 +726,7 @@
     if ([myURL isFileURL]) {
         return [Attachment mimeTypeFromfileExtension:[myURL pathExtension]];
     } else {
-        NSString * myExtension = [myURL pathExtension];
+        // NSString * myExtension = [myURL pathExtension];
         // NSLog(@"mimeTypeFromfileURLExtension: Extension from non-file URL: %@ is '%@'", myURL, myExtension);
         return [Attachment mimeTypeFromfileExtension:[myURL pathExtension]];        
     }

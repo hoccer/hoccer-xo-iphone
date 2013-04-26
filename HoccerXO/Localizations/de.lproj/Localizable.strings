@@ -26,13 +26,13 @@
 "Copy" = "Kopieren";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hallo,\nlass uns mit Hoccer Talk chatten.\n\nHol Dir Hoccer Talk:\nApp Store: %@\nAndroid: %@\n\nDanch bestätige meinen Kontakt: %@\n";
+"invitation_mail_body" = "Hallo,\nIch möchte vertraulich mit dir Nachrichten austauschen.\n\nInstalliere ‘Hoccer XO':\nApp Store: %@\nAndroid: %@\n\nDanach bestätige meinen Kontakt: %@\n";
 
 /* Mail Invitation Subject */
-"invitation_mail_subject" = "Einladung zu Hoccer Talk";
+"invitation_mail_subject" = "Einladung zu Hoccer XO";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Chatte mit mir! Lade Dir Hoccer Talk im App Store. Danach klick diesen Link: %@";
+"invitation_sms_text" = "Ich möchte vertraulich mit dir Nachrichten austauschen. Installiere ‘Hoccer XO‘ und klicke dann diesen Link: %@";
 
 /* Actionsheet Title */
 "Invite by" = "Einladung";

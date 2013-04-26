@@ -138,11 +138,11 @@ static InvitationController * _sharedInvitationController;
 }
 
 - (NSString*) inviteURL: (NSString*) token {
-    return [NSString stringWithFormat: @"hctalk://%@", token];
+    return [NSString stringWithFormat: @"hxo://%@", token];
 }
 
 - (NSString*) appStoreURL {
-    return @"itms-apps://itunes.com/apps/hoccertalk";
+    return @"itms-apps://itunes.com/apps/hoccer-xo";
 }
 
 - (NSString*) androidURL {

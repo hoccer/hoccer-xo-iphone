@@ -1315,7 +1315,7 @@ typedef enum BackendStates {
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
 {
-    NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
+    // NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (connection == _avatarUploadConnection) {
         // NSLog(@"_avatarUploadConnection didReceiveResponse %@, status=%ld, %@", httpResponse, (long)[httpResponse statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
     } else {
