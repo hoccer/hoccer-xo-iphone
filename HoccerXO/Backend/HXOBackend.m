@@ -1177,7 +1177,7 @@ typedef enum BackendStates {
         [myDelivery updateWithDictionary: deliveryDict];
         [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
         
-        NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
+        // NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
         
         if ([myDelivery.state isEqualToString:@"delivered"] ) {
             [SoundEffectPlayer messageDelivered];
@@ -1315,7 +1315,7 @@ typedef enum BackendStates {
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
 {
-    NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
+    // NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (connection == _avatarUploadConnection) {
         // NSLog(@"_avatarUploadConnection didReceiveResponse %@, status=%ld, %@", httpResponse, (long)[httpResponse statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
     } else {

@@ -28,7 +28,7 @@
 			<key>Key</key>
 			<string>playEffectSounds</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 	</array>
 	<key>StringsTable</key>

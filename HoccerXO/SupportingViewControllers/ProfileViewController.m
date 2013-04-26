@@ -210,7 +210,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         if ( ! self.isEditing) {
             [self setEditing: YES animated: YES];
             if ([UserProfile sharedProfile].isRegistered) {
-                NSLog(@"first run but old credentials found.");
+                NSLog(@"INFO: First run, old credentials found.");
                 [self showOldCredentialsAlert];
             } else {
                 [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];

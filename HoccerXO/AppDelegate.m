@@ -185,9 +185,9 @@
     NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
     if ([savePolicy isEqualToString:kHXOSaveDatabasePolicyPerMessage]) {
         // NSLog(@"Saving database");
-        NSDate * start = [[NSDate alloc] init];
+        // NSDate * start = [[NSDate alloc] init];
         [self saveContext];
-        double elapsed = -[start timeIntervalSinceNow];
+        // double elapsed = -[start timeIntervalSinceNow];
         // NSLog(@"Saving database took %f secs", elapsed);
     }
 }
@@ -348,7 +348,7 @@
 #pragma mark - URL Handling
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    if ([[url scheme] isEqualToString:@"hctalk"]) {
+    if ([[url scheme] isEqualToString:@"hxo"]) {
         // TODO: input verification
         [self.chatBackend acceptInvitation: url.host];
     }
