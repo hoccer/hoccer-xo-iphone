@@ -29,7 +29,7 @@
 "invitation_mail_body" = "Hi\nI want to exchange confidential messages with you. \n\nGet Hoccer Talk:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
 
 /* Mail Invitation Subject */
-"invitation_mail_subject" = "Hoccer Talk Invitation";
+"invitation_mail_subject" = "Hoccer XO Invitation";
 
 /* SMS Invitation Body */
 "invitation_sms_text" = "I want to exchange confidential messages with you. Please install 'Hoccer XO' first, then click this link: %@\n";

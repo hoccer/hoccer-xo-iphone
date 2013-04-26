@@ -142,7 +142,7 @@ static InvitationController * _sharedInvitationController;
 }
 
 - (NSString*) appStoreURL {
-    return @"itms-apps://itunes.com/apps/hoccer-xo";
+    return @"itms-apps://itunes.com/apps/hoccerxo";
 }
 
 - (NSString*) androidURL {

@@ -169,6 +169,7 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
+		6383FF8E172AEC3000835C91 /* message_ding.caf in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8D172AEC3000835C91 /* message_ding.caf */; };
 		63AE4516170350750099F0CB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4513170350750099F0CB /* Default.png */; };
 		63AE4517170350750099F0CB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4514170350750099F0CB /* Default@2x.png */; };
 		63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE451A1703519B0099F0CB /* Default-568h@2x.png */; };
@@ -274,7 +275,6 @@
 		E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886DD1728135C0089A510 /* SoundEffectPlayer.m */; };
 		E99886E617282C140089A510 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99886E517282C140089A510 /* AudioToolbox.framework */; };
 		E99886EF17282C950089A510 /* catch_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886E817282C950089A510 /* catch_sound.wav */; };
-		E99886F017282C950089A510 /* chime_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886E917282C950089A510 /* chime_sound.wav */; };
 		E99886F117282C950089A510 /* sad_trombone_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EA17282C950089A510 /* sad_trombone_sound.wav */; };
 		E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EB17282C950089A510 /* sweep_in_sound.wav */; };
 		E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EC17282C950089A510 /* sweep_out_sound.wav */; };
@@ -545,6 +545,7 @@
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
+		6383FF8D172AEC3000835C91 /* message_ding.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = message_ding.caf; sourceTree = "<group>"; };
 		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		63AE4514170350750099F0CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		63AE451A1703519B0099F0CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -694,7 +695,6 @@
 		E99886DD1728135C0089A510 /* SoundEffectPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundEffectPlayer.m; sourceTree = "<group>"; };
 		E99886E517282C140089A510 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E99886E817282C950089A510 /* catch_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = catch_sound.wav; sourceTree = "<group>"; };
-		E99886E917282C950089A510 /* chime_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = chime_sound.wav; sourceTree = "<group>"; };
 		E99886EA17282C950089A510 /* sad_trombone_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sad_trombone_sound.wav; sourceTree = "<group>"; };
 		E99886EB17282C950089A510 /* sweep_in_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_in_sound.wav; sourceTree = "<group>"; };
 		E99886EC17282C950089A510 /* sweep_out_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_out_sound.wav; sourceTree = "<group>"; };
@@ -848,17 +848,16 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				6383FF84172A0EE900835C91 /* AppIcons */,
-				63F4CF01172846D600699394 /* conversation_cell_bg_new.png */,
-				63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */,
-				E99886E717282C950089A510 /* Sounds */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
+				6383FF84172A0EE900835C91 /* AppIcons */,
 				6330490B170044940045E64E /* Avatar */,
 				637847BF16F348E300DE03C2 /* Bubbles */,
 				637847C416F348E300DE03C2 /* ChatBar */,
 				633048FF16FC966F0045E64E /* ContactQuickList */,
 				633048FD16FC95A10045E64E /* conversation_cell_bg.png */,
 				637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */,
+				63F4CF01172846D600699394 /* conversation_cell_bg_new.png */,
+				63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */,
 				6327EB54171C82B400AF75E1 /* date_cell_bg.png */,
 				6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */,
 				63AE4511170350750099F0CB /* Default */,
@@ -868,6 +867,7 @@
 				637847E616F348E400DE03C2 /* NavigationBar */,
 				63AE45281703650C0099F0CB /* NavigationMenu */,
 				636492CC1711CD3100E35514 /* Profile */,
+				E99886E717282C950089A510 /* Sounds */,
 				63DC01761715193900609513 /* Switch */,
 				6327EB52171B610300AF75E1 /* xo.png */,
 			);
@@ -1396,8 +1396,8 @@
 		E99886E717282C950089A510 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				6383FF8D172AEC3000835C91 /* message_ding.caf */,
 				E99886E817282C950089A510 /* catch_sound.wav */,
-				E99886E917282C950089A510 /* chime_sound.wav */,
 				E99886EA17282C950089A510 /* sad_trombone_sound.wav */,
 				E99886EB17282C950089A510 /* sweep_in_sound.wav */,
 				E99886EC17282C950089A510 /* sweep_out_sound.wav */,
@@ -1705,7 +1705,6 @@
 				E99886B71725AFAA0089A510 /* audio_leer.png in Resources */,
 				E99886B81725AFAA0089A510 /* audio_leer@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
-				E99886F017282C950089A510 /* chime_sound.wav in Resources */,
 				E99886F117282C950089A510 /* sad_trombone_sound.wav in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
@@ -1721,6 +1720,7 @@
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */,
 				6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */,
+				6383FF8E172AEC3000835C91 /* message_ding.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,9 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
-@interface SoundEffectPlayer : NSObject {
-
-}
+@interface SoundEffectPlayer : NSObject
 
 + (void)messageArrived;
 + (void)messageDelivered;

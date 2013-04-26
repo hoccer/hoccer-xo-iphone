@@ -124,7 +124,7 @@
 
     NSArray * myVideoTypeArray = [board valuesForPasteboardType:@"com.apple.mobileslideshow.asset-object-id-uri" inItemSet:nil];
     if (myVideoTypeArray.count == 1) {
-        NSString * myURL = [[NSString alloc] initWithData:myVideoTypeArray[0] encoding:NSUTF8StringEncoding];
+        //NSString * myURL = [[NSString alloc] initWithData:myVideoTypeArray[0] encoding:NSUTF8StringEncoding];
         // NSLog(@"Video uri=%@", myURL);
     }
     
