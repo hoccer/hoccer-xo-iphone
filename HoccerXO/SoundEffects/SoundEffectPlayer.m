@@ -9,39 +9,26 @@
 #import "SoundEffectPlayer.h"
 #import "HXOUserDefaults.h"
 
-void CreateSystemSoundIDFromWAVInRessources(CFStringRef name, SystemSoundID *id);
-
 SystemSoundID messageArrivedId = 0;
 SystemSoundID messageDeliveredId = 0;
 SystemSoundID messageSentId = 0;
 SystemSoundID transferFinishedId = 0;
 SystemSoundID transferFailedId = 0;
 
-
-@interface SoundEffectPlayer ()
-
-+ (void)playSoundWithId: (SystemSoundID)soundId;
-
-@end
-
-void CreateSystemSoundIDFromWAVInRessources(CFStringRef name, SystemSoundID *id)
-{
-	CFBundleRef bundle = CFBundleGetMainBundle();
-	CFURLRef soundUrl = CFBundleCopyResourceURL(bundle, name, CFSTR("wav"), NULL);
-	AudioServicesCreateSystemSoundID(soundUrl, id);
-	
-	CFRelease(soundUrl);
-}
-
-
 @implementation SoundEffectPlayer
 
 +  (void)initialize {
-	CreateSystemSoundIDFromWAVInRessources(CFSTR("chime_sound"), &messageArrivedId);
-	CreateSystemSoundIDFromWAVInRessources(CFSTR("catch_sound"), &messageDeliveredId);
-	CreateSystemSoundIDFromWAVInRessources(CFSTR("sweep_out_sound"), &messageSentId);
-	CreateSystemSoundIDFromWAVInRessources(CFSTR("tada_sound"), &transferFinishedId);
-	CreateSystemSoundIDFromWAVInRessources(CFSTR("sad_trombone_sound"), &transferFailedId);
+	[self createSoundWithName: @"message_ding"       ofType: @"caf" withId: &messageArrivedId];
+    [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &messageDeliveredId];
+    [self createSoundWithName: @"sweep_out_sound"    ofType: @"wav" withId: &messageSentId];
+    [self createSoundWithName: @"tada_sound"         ofType: @"wav" withId: &transferFinishedId];
+    [self createSoundWithName: @"sad_trombone_sound" ofType: @"wav" withId: &transferFailedId];
+}
+
++ (void) createSoundWithName: (NSString*) name ofType: (NSString*) type withId: (SystemSoundID*) theId {
+    NSString *path  = [[NSBundle mainBundle] pathForResource: name ofType: type];
+    NSURL *pathURL = [NSURL fileURLWithPath : path];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef) pathURL, theId);
 }
 
 + (void)messageArrived {
