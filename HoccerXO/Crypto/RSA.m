@@ -63,7 +63,7 @@ static RSA *instance;
 
 - (void)generateKeyPairKeys
 {
-    NSLog(@"Generating RSA Keys");
+    // NSLog(@"Generating RSA Keys");
     OSStatus status = noErr;	
     NSMutableDictionary *privateKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *publicKeyAttr = [[NSMutableDictionary alloc] init];
@@ -92,10 +92,10 @@ static RSA *instance;
         NSLog(@"generateKeyPairKeys: successfully generated RSA key pairs");
     }
     
-    NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
-    NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
+    // NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
+    // NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
 
-    NSLog(@"pubkeyid : %@", [HXOBackend ownPublicKeyIdString]);
+    // NSLog(@"pubkeyid : %@", [HXOBackend ownPublicKeyIdString]);
 
 }
 
@@ -447,7 +447,7 @@ static RSA *instance;
 }
 
 - (void)cleanKeyChain {
-    NSLog(@"Cleaning keychain");
+    // NSLog(@"Cleaning keychain");
 
     NSMutableDictionary * privateKey = [[NSMutableDictionary alloc] init];
 	[privateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];

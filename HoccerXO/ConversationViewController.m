@@ -142,7 +142,7 @@
     if (_inviteFooter == nil) {
         _inviteFooter = [[NSBundle mainBundle] loadNibNamed:@"InviteFooterView" owner:self options:nil][0];
         [_inviteFooter.button addTarget: self action: @selector(inviteFriendsPressed:) forControlEvents: UIControlEventTouchUpInside];
-        NSLog(@"invite footer frame %@", NSStringFromCGRect(_inviteFooter.frame));
+        // NSLog(@"invite footer frame %@", NSStringFromCGRect(_inviteFooter.frame));
     }
     return _inviteFooter;
 }

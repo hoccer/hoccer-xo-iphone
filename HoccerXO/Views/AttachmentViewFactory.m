@@ -37,7 +37,7 @@
         [attachmentView configureViewForAttachment: attachment inCell: cell];
         return attachmentView;
     } else {
-        NSLog(@"AttachmentViewFactory:viewForAttachment: Unhandled attachment type: '%@'",attachment.mediaType);
+        NSLog(@"ERROR: AttachmentViewFactory:viewForAttachment: Unhandled attachment type: '%@'",attachment.mediaType);
     }
     return nil;
 }
@@ -51,7 +51,7 @@
                [attachment.mediaType isEqualToString:@"audio"]) {
         return width / attachment.aspectRatio;
     } else {
-        NSLog(@"AttachmentViewFactory:heightOfAttachmentView: Unhandled attachment type: '%@'",attachment.mediaType);
+        NSLog(@"ERROR: AttachmentViewFactory:heightOfAttachmentView: Unhandled attachment type: '%@'",attachment.mediaType);
     }
     return 0;
 }

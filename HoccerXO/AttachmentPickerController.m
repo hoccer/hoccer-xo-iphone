@@ -125,7 +125,7 @@
     NSArray * myVideoTypeArray = [board valuesForPasteboardType:@"com.apple.mobileslideshow.asset-object-id-uri" inItemSet:nil];
     if (myVideoTypeArray.count == 1) {
         NSString * myURL = [[NSString alloc] initWithData:myVideoTypeArray[0] encoding:NSUTF8StringEncoding];
-        NSLog(@"Video uri=%@", myURL);
+        // NSLog(@"Video uri=%@", myURL);
     }
     
     // TODO: add other types
@@ -247,7 +247,7 @@
         NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.pastedImage": myImage};
         [self.delegate didPickAttachment: myAttachmentInfo];
     } else {
-        NSLog(@"pickImageFromPasteBoard: image is nil");
+        NSLog(@"ERROR: pickImageFromPasteBoard: image is nil");
     }
 }
 
@@ -296,7 +296,7 @@
 - (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
     
     if (mediaItemCollection) {
-        NSLog(@"mediaPicker Picked mediaItemCollection %@", mediaItemCollection);
+        // NSLog(@"mediaPicker Picked mediaItemCollection %@", mediaItemCollection);
         
         MPMediaItem * mediaItem = [[mediaItemCollection items ]objectAtIndex:0];
         [self.delegate didPickAttachment: mediaItem];

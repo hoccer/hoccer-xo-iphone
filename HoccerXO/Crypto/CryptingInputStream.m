@@ -154,11 +154,11 @@
         return bytesRead;
     }
     if (thisStreamStatus == NSStreamStatusError) {
-        NSLog(@"CryptingInputStream: returning -1 because of NSStreamStatusError");
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: returning -1 because of NSStreamStatusError");}
         return -1;
     }
     if (thisStreamStatus == NSStreamStatusAtEnd) {
-        NSLog(@"CryptingInputStream: returning 0 because of NSStreamStatusAtEnd");
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: returning 0 because of NSStreamStatusAtEnd");}
         return 0;
     }
     if (restBuffer.length < len) {

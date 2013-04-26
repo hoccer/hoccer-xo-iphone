@@ -166,7 +166,6 @@ static NSData * RandomSalt() {
            selectedClients = [[NSUserDefaults standardUserDefaults] arrayForKey:@"selected_clients"];
         
         if (selectedClients.count == 0 ){
-            //NSLog(@"So wird das nichts!");
             return nil;
         }
         else {

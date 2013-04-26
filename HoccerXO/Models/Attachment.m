@@ -76,7 +76,7 @@
     NSString * myPath = [[NSURL URLWithString: fileURL] path];
     NSNumber * result =  @([[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:myError] fileSize]);
     if (myError != nil && *myError != nil) {
-        NSLog(@"can not determine size of file '%@'", myPath);
+        NSLog(@"ERROR: can not determine size of file '%@'", myPath);
         result = @(-1);
     }
     // NSLog(@"Attachment filesize = %@ (of file '%@')", result, myPath);
@@ -118,7 +118,7 @@
     } else if ([url.scheme isEqualToString: @"assets-library"] || [url.scheme isEqualToString: @"ipod-library"]) {
         self.assetURL = theURL;
     } else {
-        NSLog(@"unhandled URL scheme %@", url.scheme);
+        NSLog(@"ERROR:unhandled URL scheme %@", url.scheme);
     }
     if (theOtherURL != nil) {
         NSURL* anOtherUrl = [NSURL URLWithString: theOtherURL];
@@ -127,7 +127,7 @@
         } else if ([anOtherUrl.scheme isEqualToString: @"assets-library"] || [url.scheme isEqualToString: @"ipod-library"]) {
             self.assetURL = theOtherURL;
         } else {
-            NSLog(@"unhandled URL otherURL scheme %@", anOtherUrl.scheme);
+            NSLog(@"ERROR: unhandled URL otherURL scheme %@", anOtherUrl.scheme);
         }
     }
     if (self.mimeType == nil && self.localURL != nil) {
@@ -143,7 +143,7 @@
     } else  if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
             self.contentSize = @(theSize);
-            NSLog(@"Asset Size = %@ (of file '%@')", self.contentSize, self.assetURL);
+            // NSLog(@"Asset Size = %@ (of file '%@')", self.contentSize, self.assetURL);
         } url:self.assetURL];
     }
 }
@@ -160,31 +160,6 @@
     }
 }
 
-/*
-// can also be called by other loaders who have called loadImage
-- (void) cacheImage:(UIImage*) theImage {
-    self.image = theImage;
-    self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
-    NSLog(@"cacheImage set attachment to image width = %f, heigt = %f, aspect = %f ", theImage.size.width, theImage.size.height, self.aspectRatio);
-}
-
-
-// loads or creates an image representation of the attachment and sets its image and aspectRatio fields
-- (void) loadImageIntoCacheWithCompletion:(CompletionBlock)finished {
-    NSLog(@"loadImageIntoCache");
-    [self loadImage:^(UIImage* theImage, NSError* error) {
-        NSLog(@"loadImageIntoCache done");
-        if (theImage) {
-            [self cacheImage:theImage];
-        } else {
-            NSLog(@"Failed to get image: %@", error);
-        }
-        if (finished != nil) {
-            finished(nil);
-        }
-    }];
-}
-*/
 
 - (void) setPreviewImageFromImage:(UIImage*) theFullImage {
     float previewWidth = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOPreviewImageWidth] floatValue];
@@ -235,7 +210,7 @@
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
         NSDate * start = [NSDate date];
         self.previewImage = [UIImage imageWithData:self.previewImageData];
-        NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database took %f ms.", -[start timeIntervalSinceNow]*1000);
+        // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database took %f ms.", -[start timeIntervalSinceNow]*1000);
         if (!(self.aspectRatio > 0)) {
             [self setAspectRatioForImage:self.previewImage];
         }
@@ -250,14 +225,14 @@
     } else {
         // create preview by loading full size image
         [self loadImage:^(UIImage* theImage, NSError* error) {
-            NSLog(@"loadImage for preview done");
+            // NSLog(@"loadImage for preview done");
             if (theImage) {
                 [self setPreviewImageFromImage:theImage];
                 if (finished != nil) {
                     finished(nil);
                 }
             } else {
-                NSLog(@"Failed to get image: %@", error);
+                NSLog(@"ERROR: Failed to get image: %@", error);
                 if (finished != nil) {
                     finished(error);
                 }
@@ -305,7 +280,7 @@
     self.mediaType = @"audio";
     self.mimeType = @"audio/mp4";
 
-    NSLog(@"makeAudioAttachment theURL=%@, theOtherURL=%@", theURL, theOtherURL);
+    // NSLog(@"makeAudioAttachment theURL=%@, theOtherURL=%@", theURL, theOtherURL);
 
     [self useURLs: theURL anOtherURL: theOtherURL];
     if (self.mimeType == nil) {
@@ -317,20 +292,20 @@
 }
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
-    NSLog(@"assetSizer");
+    // NSLog(@"assetSizer");
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
     {
-        NSLog(@"assetSizer result");
+        // NSLog(@"assetSizer result");
         ALAssetRepresentation *rep = [myasset defaultRepresentation];
         int64_t mySize = [rep size];
-        NSLog(@"assetSizer calling block");
+        // NSLog(@"assetSizer calling block");
         block(mySize, nil);
-        NSLog(@"assetSizer calling ready");
+        // NSLog(@"assetSizer calling ready");
     };
     
     ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
     {
-        NSLog(@"Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
+        NSLog(@"ERROR: Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
         block(0, myerror);
     };
     
@@ -412,25 +387,25 @@
     if (self.localURL != nil) {
         block([UIImage imageWithContentsOfFile: [[NSURL URLWithString: self.localURL] path]], nil);
     } else if (self.assetURL != nil) {
-        NSLog(@"loadImageAttachmentImage assetURL");
+        // NSLog(@"loadImageAttachmentImage assetURL");
         //TODO: handle different resolutions. For now just load a representation that is suitable for a chat bubble
         ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
         {
-            NSLog(@"loadImageAttachmentImage assetURL result");
+            // NSLog(@"loadImageAttachmentImage assetURL result");
             ALAssetRepresentation *rep = [myasset defaultRepresentation];
             //CGImageRef iref = [rep fullResolutionImage];
             CGImageRef iref = [rep fullScreenImage];
             if (iref) {
-                NSLog(@"loadImageAttachmentImage assetURL calling block");
+                // NSLog(@"loadImageAttachmentImage assetURL calling block");
                 block([UIImage imageWithCGImage:iref], nil);
-                NSLog(@"loadImageAttachmentImage assetURL calling block done");
+                // NSLog(@"loadImageAttachmentImage assetURL calling block done");
             }
         };
         
         //
         ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
         {
-            NSLog(@"Failed to get image %@ from asset library: %@", self.localURL, [myerror localizedDescription]);
+            NSLog(@"ERROR: Failed to get image %@ from asset library: %@", self.localURL, [myerror localizedDescription]);
             block(nil, myerror);
         };
         
@@ -442,7 +417,7 @@
                           failureBlock: failureblock];
         }
     } else {
-        NSLog(@"no image url");
+        NSLog(@"ERROR: no image url");
         block(nil, nil);
     }
 }
@@ -462,7 +437,7 @@
     
     ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
     {
-        NSLog(@"Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
+        NSLog(@"ERROR: Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
         block(0, myerror);
     };
     
@@ -478,7 +453,7 @@
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
     {
         ALAssetRepresentation *rep = [myasset defaultRepresentation];
-        NSLog(@"Attachment assetStreamLoader for self.assetURL=%@", self.self.assetURL);
+        // NSLog(@"Attachment assetStreamLoader for self.assetURL=%@", self.self.assetURL);
     /*
         NSString * myPath = [rep filename];
         NSInputStream * myStream = [NSInputStream inputStreamWithFileAtPath:myPath];
@@ -497,7 +472,7 @@
     
     ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
     {
-        NSLog(@"Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
+        NSLog(@"ERROR: Failed to get asset %@ from asset library: %@", theAssetURL, [myerror localizedDescription]);
         block(0, myerror);
     };
     
@@ -521,7 +496,7 @@
     }
     [self withUploadData:^(NSData * myData, NSError * myError) {
         if (myError == nil) {
-            NSLog(@"Attachment:upload starting withUploadData");
+            // NSLog(@"Attachment:upload starting withUploadData");
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
                                              absoluteURI:[self remoteURL]
                                                  payloadData:myData
@@ -533,7 +508,7 @@
                 [progressIndicatorDelegate transferStarted];
             }
         } else {
-            NSLog(@"Attachment:upload error=%@",myError);
+            NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
     }];
 }
@@ -546,12 +521,12 @@
     }
     if (self.transferConnection != nil) {
         // do something about it
-        NSLog(@"upload of attachment still running");
+        // NSLog(@"upload of attachment still running");
         return;
     }
     [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
         if (myError == nil) {
-            NSLog(@"Attachment:upload starting uploadStream");
+            // NSLog(@"Attachment:upload starting uploadStream");
             NSData * messageKey = self.message.cryptoKey;
             NSError * myError = nil;
             encryptionEngine = [[CryptoEngine alloc]
@@ -573,7 +548,7 @@
                 [progressIndicatorDelegate transferStarted];
             }
         } else {
-            NSLog(@"Attachment:upload error=%@",myError);
+            NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
     }];
 }
@@ -592,7 +567,7 @@
     }
     if (self.transferConnection != nil) {
         // do something about it
-        NSLog(@"download of attachment still running");
+        // NSLog(@"download of attachment still running");
         return;
     }
     
@@ -606,8 +581,8 @@
         [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
     }
     
-    NSLog(@"Attachment:download ownedURL = %@", self.ownedURL);
-    NSLog(@"Attachment:download remoteURL = %@", self.remoteURL);
+    // NSLog(@"Attachment:download ownedURL = %@", self.ownedURL);
+    // NSLog(@"Attachment:download remoteURL = %@", self.remoteURL);
     
     NSData * messageKey = self.message.cryptoKey;
     NSError * myError = nil;
@@ -632,7 +607,7 @@
 
 - (void) downloadOnTimer: (NSTimer*) theTimer {
     if (theTimer != transferRetryTimer) {
-        NSLog(@"downloadOnTimer: called by strange timer");
+        NSLog(@"WARNING: downloadOnTimer: called by strange timer");
     } else {
         transferRetryTimer = nil;
     }
@@ -641,7 +616,7 @@
 
 - (void) uploadOnTimer: (NSTimer*) theTimer {
     if (theTimer != transferRetryTimer) {
-        NSLog(@"downloadOnTimer: called by strange timer");
+        NSLog(@"WARNING: downloadOnTimer: called by strange timer");
     } else {
         transferRetryTimer = nil;
     }
@@ -649,7 +624,7 @@
 }
 
 - (void)pressedButton: (id)sender {
-    NSLog(@"Attachment pressedButton %@", sender);
+    // NSLog(@"Attachment pressedButton %@", sender);
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         [self upload];
     } else {
@@ -659,15 +634,15 @@
 
 -(void) withUploadData: (DataSetterBlock) execution {
     if (self.localURL != nil) {
-        NSLog(@"Attachment withUploadData self.localURL=%@", self.localURL);
+        // NSLog(@"Attachment withUploadData self.localURL=%@", self.localURL);
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
         NSData *data = [[NSFileManager defaultManager] contentsAtPath:myPath];
-        NSLog(@"Attachment return uploadData len=%d, path=%@", [data length], myPath);
+        // NSLog(@"Attachment return uploadData len=%d, path=%@", [data length], myPath);
         execution(data, nil); // TODO: error handling
         return;
     }
     if (self.assetURL != nil) {
-        NSLog(@"Attachment uploadData assetURL=%@", self.assetURL);
+        // NSLog(@"Attachment uploadData assetURL=%@", self.assetURL);
         [self assetDataLoader: execution url: self.assetURL];
         return;
     }
@@ -676,15 +651,15 @@
 
 -(void) withUploadStream: (StreamSetterBlock) execution {
     if (self.localURL != nil) {
-        NSLog(@"Attachment withUploadStream self.localURL=%@", self.localURL);
+        // NSLog(@"Attachment withUploadStream self.localURL=%@", self.localURL);
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
         NSInputStream * myStream = [NSInputStream inputStreamWithFileAtPath:myPath];
-        NSLog(@"Attachment returning input stream for file at path=%@", myPath);
+        // NSLog(@"Attachment returning input stream for file at path=%@", myPath);
         execution(myStream, nil); // TODO: error handling
         return;
     }
     if (self.assetURL != nil) {
-        NSLog(@"Attachment withUploadStream assetURL=%@", self.assetURL);
+        // NSLog(@"Attachment withUploadStream assetURL=%@", self.assetURL);
         [self assetStreamLoader: execution url: self.assetURL];
         return;
     }
@@ -705,7 +680,7 @@
     NSDictionary * headers = @{@"Content-Disposition": contentDisposition,
                                @"Content-Type"       : @"application/octet-stream",
                                @"Content-Length"     : [self.cipheredSize stringValue]};
-    NSLog(@"headers=%@", headers);
+    // NSLog(@"headers=%@", headers);
     return headers;
 }
 
@@ -752,7 +727,7 @@
         return [Attachment mimeTypeFromfileExtension:[myURL pathExtension]];
     } else {
         NSString * myExtension = [myURL pathExtension];
-        NSLog(@"mimeTypeFromfileURLExtension: Extension from non-file URL: %@ is '%@'", myURL, myExtension);
+        // NSLog(@"mimeTypeFromfileURLExtension: Extension from non-file URL: %@ is '%@'", myURL, myExtension);
         return [Attachment mimeTypeFromfileExtension:[myURL pathExtension]];        
     }
     return nil;
@@ -779,14 +754,12 @@
 {
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (connection == _transferConnection) {
-        NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@",
-              httpResponse, (long)[httpResponse statusCode],
-              [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+        // NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@",httpResponse, (long)[httpResponse statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
         self.transferHttpStatusCode = (long)[httpResponse statusCode];
         if ((long)[httpResponse statusCode] != 200) {
             // TODO: check if this is necessary and leads to duplicate error reporting
             NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection didReceiveResponse http status code =%ld", self.transferHttpStatusCode];
-            NSLog(@"%@", myDescription);
+            // NSLog(@"%@", myDescription);
             self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
             [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
             if ([self.message.isOutgoing isEqualToNumber: @YES]) {
@@ -827,7 +800,7 @@
             NSError *myError = nil;
             NSData * plainTextData = [self.decryptionEngine addData:data error:&myError];
             if (myError != nil) {
-                NSLog(@"didReceiveData: decryption error: %@",myError);
+                NSLog(@"ERROR: didReceiveData: decryption error: %@",myError);
                 return;
             }
             [self appendToFile:self.ownedURL thisData:plainTextData];
@@ -859,7 +832,7 @@
 -(void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
 {
     if (connection == _transferConnection) {
-        NSLog(@"Attachment transferConnection didFailWithError %@", error);
+        NSLog(@"ERROR: Attachment transferConnection didFailWithError %@", error);
         self.transferConnection = nil;
         self.transferError = error;
         if (progressIndicatorDelegate) {
@@ -878,7 +851,7 @@
 -(void)connectionDidFinishLoading:(NSURLConnection*)connection
 {
     if (connection == _transferConnection) {
-        NSLog(@"Attachment transferConnection connectionDidFinishLoading %@", connection);
+        // NSLog(@"Attachment transferConnection connectionDidFinishLoading %@", connection);
         self.transferConnection = nil;
 
         if ([self.message.isOutgoing isEqualToNumber: @NO]) {
@@ -893,7 +866,7 @@
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
 
             if ([self.transferSize isEqualToNumber: self.contentSize]) {
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);
+                // NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);
                 self.localURL = self.ownedURL;
                 // TODO: maybe do some UI refresh here, or use an observer for this
                 [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
@@ -901,7 +874,7 @@
                 // NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize];
-                NSLog(@"%@", myDescription);
+                // NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
             }
@@ -909,11 +882,11 @@
             // upload finished
             if ([self.cipheredSize isEqualToNumber:self.cipherTransferSize]) {
                 self.transferSize = self.contentSize;
-                NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully uploaded attachment, size=%@", self.contentSize);
+                // NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully uploaded attachment, size=%@", self.contentSize);
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading size mismatch, cipheredSize=%@, cipherTransferSize=%@", self.cipheredSize, self.cipherTransferSize];
-                NSLog(@"%@", myDescription);
+                // NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 666 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
             }
@@ -995,13 +968,13 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
     NSError * error;
     id json = [NSJSONSerialization JSONObjectWithData: [theJsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
     if (json == nil) {
-        NSLog(@"setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
+        NSLog(@"ERROR: setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
         return;
     }
     if ([json isKindOfClass: [NSDictionary class]]) {
         [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];        
     } else {
-        NSLog(@"attachment json not encoded as dictionary, json string = %@", theJsonString);
+        NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
     }
 }
     

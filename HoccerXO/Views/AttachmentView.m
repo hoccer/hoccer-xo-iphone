@@ -177,7 +177,7 @@
                         if (error == nil) {
                             self.imageView.image = self.attachment.previewImage;
                         } else {
-                            NSLog(@"viewForAttachment: failed to load attachment image, error=%@",error);
+                            NSLog(@"ERROR: viewForAttachment: failed to load attachment image, error=%@",error);
                         }
                     }];
                 } else {

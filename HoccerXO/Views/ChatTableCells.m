@@ -21,7 +21,7 @@ static const double kCellPadding = 10.0;
 }
 
 - (void)pressedButton: (id)sender {
-    NSLog(@"MessageCell pressedButton %@", sender);
+    // NSLog(@"MessageCell pressedButton %@", sender);
     
     if (self.delegate != nil) {
         [self.delegate presentAttachmentViewForCell: self];

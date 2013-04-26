@@ -141,7 +141,7 @@ static const CGFloat kImageViewerOversize = 1.03;
 }
 
 -(void)didRotateFromInterfaceOrientation: (UIInterfaceOrientation)toInterfaceOrientation {
-    NSLog(@"didRotate");
+    // NSLog(@"didRotate");
     [self updateZoomScale];
 }
 

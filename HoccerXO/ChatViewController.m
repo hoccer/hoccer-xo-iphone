@@ -244,7 +244,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
             self.textField.text = @"";
         } else {
             // attachment content processing in progess, probably audio export
-            NSLog(@"sendPressed called while attachment not ready, should not happen");
+            NSLog(@"ERROR: sendPressed called while attachment not ready, should not happen");
             return;
         }
     }
@@ -252,19 +252,19 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (IBAction)addAttachmentPressed:(id)sender {
-    NSLog(@"addAttachmentPressed");
+    // NSLog(@"addAttachmentPressed");
     [self.textField resignFirstResponder];
     [self.attachmentPicker showInView: self.view];
 }
 
 - (IBAction)attachmentPressed: (id)sender {
-    NSLog(@"attachmentPressed");
+    // NSLog(@"attachmentPressed");
     [self.textField resignFirstResponder];
     [self showAttachmentOptions];
 }
 
 - (IBAction)cancelAttachmentProcessingPressed: (id)sender {
-    NSLog(@"cancelPressed");
+    // NSLog(@"cancelPressed");
     [self.textField resignFirstResponder];
     [self showAttachmentOptions];
 }
@@ -316,7 +316,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
         return;
     }
     [self startPickedAttachmentProcessingForObject:attachmentInfo];
-    NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
+    // NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
@@ -362,7 +362,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
                 NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
                 
-                NSLog(@"pastedImag savePath = %@", savePath);
+                // NSLog(@"pastedImag savePath = %@", savePath);
                 
                 // write the image
                 [UIImageJPEGRepresentation(myImage,1.0) writeToFile:savePath atomically:YES];
@@ -400,10 +400,10 @@ static const NSUInteger kMaxMessageBytes = 10000;
         NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];        
         NSString * exportFile = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
         
-        NSLog(@"exportFile = %@", exportFile);
+        // NSLog(@"exportFile = %@", exportFile);
         
         NSURL *assetURL = [song valueForProperty:MPMediaItemPropertyAssetURL];
-        NSLog(@"audio assetURL = %@", assetURL);
+        // NSLog(@"audio assetURL = %@", assetURL);
         
         AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
         
@@ -444,7 +444,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
-                    NSLog (@"AVAssetExportSessionStatusCompleted");
+                    // NSLog (@"AVAssetExportSessionStatusCompleted");
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
                         self.currentAttachment.humanReadableFileName = myUniqueNewFile;
@@ -465,12 +465,12 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 case AVAssetExportSessionStatusCancelled: {
                     _currentExportSession = nil;
                     [self finishPickedAttachmentProcessingWithImage: nil withError:_currentExportSession.error];
-                    NSLog (@"AVAssetExportSessionStatusCancelled");
+                    // NSLog (@"AVAssetExportSessionStatusCancelled");
                     break;
                 } 
                 case AVAssetExportSessionStatusWaiting: {
                     NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
-                default: { NSLog (@"didn't get export status"); break;}
+                default: { NSLog (@"ERROR: AVAssetExportSessionStatusWaiting: didn't get export status"); break;}
             }
         }];
         return;
@@ -526,10 +526,9 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 {
                     UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, nil, nil, nil);
                     NSString * myTempURL = [myURL2 absoluteString];
-                    NSLog(@"video myTempURL = %@", myTempURL);
+                    // NSLog(@"video myTempURL = %@", myTempURL);
                     self.currentAttachment.ownedURL = [myTempURL copy];
                 } else {
-                    NSLog(@"didPickAttachment: failed to save video in album at path = %@",tempFilePath);
                     NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                     [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
@@ -548,7 +547,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (void) decorateAttachmentButton:(UIImage *) theImage {
-    NSLog(@"decorateAttachmentButton with %@", theImage);
+    // NSLog(@"decorateAttachmentButton with %@", theImage);
     if (theImage != nil) {
         if (self.attachmentPreview != nil) {
             [self.attachmentPreview removeFromSuperview];
@@ -579,13 +578,13 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 - (void) startPickedAttachmentProcessingForObject:(id)info {
     _currentPickInfo = info;
-    NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
+    // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
     [self showAttachmentSpinner];
     _attachmentButton.hidden = YES;
 }
 
 - (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
-    NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
+    // NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
     _currentPickInfo = nil;
     [self hideAttachmentSpinner];
     if (theError == nil && theImage != nil) {
@@ -596,13 +595,13 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (void) showAttachmentSpinner {
-    NSLog(@"showAttachmentSpinner");
+    // NSLog(@"showAttachmentSpinner");
     _attachmentSpinner.hidden = NO;
     [_attachmentSpinner startAnimating];
 }
 
 - (void) hideAttachmentSpinner {
-    NSLog(@"hideAttachmentSpinner");
+    // NSLog(@"hideAttachmentSpinner");
     [_attachmentSpinner stopAnimating];
     _attachmentSpinner.hidden = YES;
 }
@@ -616,7 +615,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 // attachment will be trashed when export session canceling will call finishPickedAttachmentProcessingWithImage
                 return;
             } else {
-                NSLog(@"Picking still in progress, can't trash - or can I?");
+                // NSLog(@"Picking still in progress, can't trash - or can I?");
             }
         }
         
@@ -981,7 +980,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 
 - (void) viewWillAppear:(BOOL)animated {
-    NSLog(@"ChatViewController:viewWillAppear");
+    // NSLog(@"ChatViewController:viewWillAppear");
     [super viewWillAppear: animated];
 
     [self setNavigationBarBackgroundWithLines];
@@ -1077,18 +1076,18 @@ static const NSUInteger kMaxMessageBytes = 10000;
     return NO;
 }
 - (void) messageView:(MessageCell *)theCell saveMessage:(id)sender {
-    NSLog(@"saveMessage");
+    // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
     
     if ([attachment.mediaType isEqualToString: @"image"]) {
         [attachment loadImageAttachmentImage: ^(UIImage* image, NSError* error) {
-            NSLog(@"saveMessage: loadImageAttachmentImage done");
+            // NSLog(@"saveMessage: loadImageAttachmentImage done");
             if (image) {
                 // funky method using ALAssetsLibrary
                 ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
                     if (!error) {
-                        NSLog(@"Saved image to Library");
+                        // NSLog(@"Saved image to Library");
                     } else {
                         NSLog(@"Error saving image in Library, error = %@", error);
                     }
@@ -1108,7 +1107,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
         
         if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(myVideoFilePath)) {
             UISaveVideoAtPathToSavedPhotosAlbum(myVideoFilePath, nil, nil, nil);
-            NSLog(@"didPickAttachment: saved video in album at path = %@",myVideoFilePath);
+            // NSLog(@"didPickAttachment: saved video in album at path = %@",myVideoFilePath);
         } else {
             NSLog(@"didPickAttachment: failed to save video in album at path = %@",myVideoFilePath);
         }
@@ -1116,7 +1115,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (void) messageView:(MessageCell *)theCell copy:(id)sender {
-    NSLog(@"copy");
+    // NSLog(@"copy");
     UIPasteboard * board = [UIPasteboard generalPasteboard];
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
@@ -1145,7 +1144,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
         }
 #endif
         [message.attachment loadImage:^(UIImage* theImage, NSError* error) {
-            NSLog(@"attachment copy loadimage done");
+            // NSLog(@"attachment copy loadimage done");
             if (theImage != nil) {
                 board.image = theImage;
             } else {
@@ -1176,7 +1175,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     }
 }
 - (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender {
-    NSLog(@"deleteMessage");
+    // NSLog(@"deleteMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     
     if (message.attachment != nil) {
@@ -1223,7 +1222,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
         [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
-            NSLog(@"attachment view loadimage done");
+            // NSLog(@"attachment view loadimage done");
             if (theImage != nil) {
                 self.imageViewController.image = theImage;
                 [self presentViewController: self.imageViewController animated: YES completion: nil];

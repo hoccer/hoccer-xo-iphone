@@ -104,7 +104,7 @@ typedef enum BackendStates {
 }
 
 - (void) setState: (BackendState) state {
-    NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
+    // NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
     _state = state;
 }
 
@@ -113,7 +113,7 @@ typedef enum BackendStates {
     self.latestKnownServerTimeAtClientTime = [NSDate date];
     self.latestKnownServerTimeOffset = [self.latestKnownServerTime timeIntervalSinceDate:self.latestKnownServerTimeAtClientTime];
     // offest is positive if server time is ahead of client time
-    NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
+    // NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
 }
 
 - (NSDate*) estimatedServerTime {
@@ -254,7 +254,7 @@ typedef enum BackendStates {
 }
 
 - (void) performRegistration {
-    NSLog(@"performRegistration");
+    // NSLog(@"performRegistration");
     GenerateIdHandler handler = ^(NSString * theId) {
         NSString * verifier = [[UserProfile sharedProfile] registerClientAndComputeVerifier: theId];
         [self srpRegisterWithVerifier: verifier andSalt: [UserProfile sharedProfile].salt];
@@ -263,7 +263,7 @@ typedef enum BackendStates {
 }
 
 - (void) didRegister: (BOOL) success {
-    NSLog(@"didRegister: %d", success);
+    // NSLog(@"didRegister: %d", success);
     if (success) {
         _performRegistration = NO;
         [self startAuthentication];
@@ -529,7 +529,7 @@ typedef enum BackendStates {
             theContact.publicKeyString = keyRecord[@"key"];
             theContact.publicKeyId = keyRecord[@"keyId"];
             // NSLog(@"Key for contact updated: %@", theContact);
-            NSLog(@"Received new public key for contact: %@", theContact.nickName);
+            // NSLog(@"Received new public key for contact: %@", theContact.nickName);
         } else {
             NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
         }
@@ -540,7 +540,7 @@ typedef enum BackendStates {
     NSString * myClient = thePresence[@"clientId"];
     Contact * myContact = [self getContactByClientId:myClient];
     if (myContact == nil) {
-        NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
+        // NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         myContact.clientId = myClient;        
         myContact.relationshipState = kRelationStateNone;
@@ -558,12 +558,12 @@ typedef enum BackendStates {
         }
         if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
             if ([thePresence[@"avatarUrl"] length]) {
-                NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
+                // NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
                 NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
                 NSError * myError = nil;
                 NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
                 if (myNewAvatar != nil) {
-                    NSLog(@"presenceUpdated, avatar downloaded");
+                    // NSLog(@"presenceUpdated, avatar downloaded");
                     myContact.avatar = myNewAvatar;
                     myContact.avatarURL = thePresence[@"avatarUrl"];
                 } else {
@@ -680,14 +680,12 @@ typedef enum BackendStates {
 
 -(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withRetryLimit:(long long)maxRetries withSelector:(SEL)theTransferSelector {
     if (theAttachment.transferRetryTimer != nil) {
-        NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs",
-              theAttachment.remoteURL,
-              [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
+        // NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
         [theAttachment.transferRetryTimer invalidate];
         theAttachment.transferRetryTimer = nil;
     }
     if (theAttachment.transferFailures < maxRetries) {
-        NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        // NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
@@ -740,7 +738,7 @@ typedef enum BackendStates {
     }
     // end hack
 	
-    NSLog(@"httpRequest method: %@ url: %@", method, URLString);
+    // NSLog(@"httpRequest method: %@ url: %@", method, URLString);
     NSURL *url = [NSURL URLWithString:URLString];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	
@@ -908,7 +906,7 @@ typedef enum BackendStates {
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
-             NSLog(@"deliveryAbort() returned delivery: %@", responseOrError);
+             // NSLog(@"deliveryAbort() returned delivery: %@", responseOrError);
          } else {
              NSLog(@"deliveryAbort() failed: %@", responseOrError);
          }
@@ -1011,7 +1009,7 @@ typedef enum BackendStates {
     // NSLog(@"unregisterApns:");
     [_serverConnection invoke: @"unregisterApns" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"unregisterApns(): got result: %@", responseOrError);
+            // NSLog(@"unregisterApns(): got result: %@", responseOrError);
         } else {
             // TODO retry?
             NSLog(@"registerApns(): failed: %@", responseOrError);
@@ -1023,7 +1021,7 @@ typedef enum BackendStates {
     // NSLog(@"generateToken:");
     [_serverConnection invoke: @"generateToken" withParams: @[purpose, @(seconds)] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSLog(@"generateToken(): got result: %@", responseOrError);
+            // NSLog(@"generateToken(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"generateToken(): failed: %@", responseOrError);
@@ -1037,7 +1035,7 @@ typedef enum BackendStates {
     [_serverConnection invoke: @"pairByToken" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
         [self.delegate didPairWithStatus: [responseOrError boolValue]];
         if (success) {
-            NSLog(@"pairByToken(): got result: %@", responseOrError);
+            // NSLog(@"pairByToken(): got result: %@", responseOrError);
             [self updatePresence];
             [self updatePresences];
         } else {
@@ -1276,7 +1274,7 @@ typedef enum BackendStates {
         return;
     }
     NSData * myAvatarData = [UserProfile sharedProfile].avatar;
-    NSLog(@"uploadAvatar starting");
+    // NSLog(@"uploadAvatar starting");
     _avatarBytesTotal = [myAvatarData length];
     _avatarUploadURL = toURL;
     NSURLRequest *myRequest  = [self httpRequest:@"PUT"
@@ -1319,9 +1317,7 @@ typedef enum BackendStates {
 {
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (connection == _avatarUploadConnection) {
-        NSLog(@"_avatarUploadConnection didReceiveResponse %@, status=%ld, %@",
-              httpResponse, (long)[httpResponse statusCode],
-              [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+        // NSLog(@"_avatarUploadConnection didReceiveResponse %@, status=%ld, %@", httpResponse, (long)[httpResponse statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
     } else {
         NSLog(@"ERROR: HXOBackend didReceiveResponse without valid connection");
     }
@@ -1340,7 +1336,7 @@ typedef enum BackendStates {
 -(void)connection:(NSURLConnection*)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
     if (connection == _avatarUploadConnection) {
-        NSLog(@"_avatarUploadConnection didSendBodyData %d", bytesWritten);
+        // NSLog(@"_avatarUploadConnection didSendBodyData %d", bytesWritten);
         _avatarBytesUploaded = totalBytesWritten;
     } else {
         NSLog(@"ERROR: HXOBackend didSendBodyData without valid connection");
@@ -1360,12 +1356,12 @@ typedef enum BackendStates {
 -(void)connectionDidFinishLoading:(NSURLConnection*)connection
 {
     if (connection == _avatarUploadConnection) {
-        NSLog(@"_avatarUploadConnection connectionDidFinishLoading %@", connection);
+        // NSLog(@"_avatarUploadConnection connectionDidFinishLoading %@", connection);
         _avatarUploadConnection = nil;
         if (_avatarBytesUploaded == _avatarBytesTotal) {
             // set avatar url to new successfully uploaded version
             [UserProfile sharedProfile].avatarURL = _avatarUploadURL;
-            NSLog(@"_avatarUploadConnection successfully uploaded avatar of size %d", _avatarBytesTotal);
+            // NSLog(@"_avatarUploadConnection successfully uploaded avatar of size %d", _avatarBytesTotal);
             [self updatePresence];
         } else {
             NSLog(@"ERROR: _avatarUploadConnection only uploaded %d bytes, should be %d",_avatarBytesUploaded, _avatarBytesTotal);

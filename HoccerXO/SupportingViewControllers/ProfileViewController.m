@@ -147,7 +147,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
         [self updateBlockContactCell];
         [self.tableView endUpdates];
     } else if ([object isKindOfClass: [Contact class]]) {
-        NSLog(@"contact keypath %@ changed", keyPath);
+        // NSLog(@"contact keypath %@ changed", keyPath);
         id item = _itemsByKeyPath[keyPath];
         if ([keyPath isEqualToString: @"avatarImage"]) {
             [(AvatarItem*)item setCurrentValue: [object avatarImage]];
@@ -245,7 +245,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"button index %d", buttonIndex);
+    // NSLog(@"button index %d", buttonIndex);
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         //[self showOldCredentialsAlert];
         [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: NO];
@@ -338,7 +338,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"selected cell %@", indexPath);
+    // NSLog(@"selected cell %@", indexPath);
     id item = _items[indexPath.section][indexPath.row];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -633,12 +633,12 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     id item = _items[[sender section]][[sender row]];
     id cell = [self.tableView cellForRowAtIndexPath: sender];
     if ([_contact.relationshipState isEqualToString: @"friend"]) {
-        NSLog(@"friend -> blocked");
+        // NSLog(@"friend -> blocked");
         [self.chatBackend blockClient: _contact.clientId handler:^(BOOL success) {
             NSLog(@"blockClient: %@", success ? @"success" : @"failed");
         }];
     } else if ([_contact.relationshipState isEqualToString: @"blocked"]) {
-        NSLog(@"blocked -> friend");
+        // NSLog(@"blocked -> friend");
         [self.chatBackend unblockClient: _contact.clientId handler:^(BOOL success) {
             NSLog(@"unblockClient: %@", success ? @"success" : @"failed");
         }];

@@ -125,7 +125,7 @@ NSString * const kRelationStateBlocked = @"blocked";
         if (![myKeyBits isEqualToData:self.publicKey]) {
             [rsa removePeerPublicKey:self.clientId];
             [rsa addPublicKey: self.publicKeyString withTag: self.clientId];
-            NSLog(@"Contact:getPublicKeyRef: changed public key of %@", self.nickName);
+            // NSLog(@"Contact:getPublicKeyRef: changed public key of %@", self.nickName);
         }
     }
     myResult = [rsa getPeerKeyRef:self.clientId];
