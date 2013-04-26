@@ -97,5 +97,13 @@ NSString * const kValidEnvironments = @"_validEnvironments";
     }
 }
 
+- (NSString*) suffixedString: (NSString*) string {
+    if ([self.currentEnvironment isEqualToString: @"production"]) {
+        return string;
+    } else {
+        return [NSString stringWithFormat: @"%@_%@", string, [self currentEnvironment]];
+    }
+}
+
 
 @end
