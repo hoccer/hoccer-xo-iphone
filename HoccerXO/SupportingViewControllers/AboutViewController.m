@@ -20,7 +20,7 @@
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-    self.appIcon.image = [UIImage imageNamed: @"hoccer-talk-app-icon-ipad"];
+    self.appIcon.image = [UIImage imageNamed: @"hoccer-xo-app-icon"];
     self.appIcon.layer.masksToBounds = YES;
     self.appIcon.layer.cornerRadius = 10.0;
     self.appIconShadow.layer.shadowColor = [UIColor blackColor].CGColor;
