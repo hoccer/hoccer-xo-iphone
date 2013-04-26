@@ -188,7 +188,7 @@
         NSDate * start = [[NSDate alloc] init];
         [self saveContext];
         double elapsed = -[start timeIntervalSinceNow];
-        NSLog(@"Saving database took %f secs", elapsed);
+        // NSLog(@"Saving database took %f secs", elapsed);
     }
 }
 

@@ -334,7 +334,7 @@ typedef enum BackendStates {
     if (contacts.count > 0) {
         contact = contacts[0];
     } else {
-        NSLog(@"ClientId %@ not in contacts", theClientId);
+        // NSLog(@"ClientId %@ not in contacts", theClientId);
     }
     return contact;
 }
