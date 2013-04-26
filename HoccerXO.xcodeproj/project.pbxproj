@@ -75,8 +75,6 @@
 		633129DC16F95D4B008F5B04 /* chatbar_bg_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129DB16F95D4B008F5B04 /* chatbar_bg_noise.png */; };
 		633129DE16F96337008F5B04 /* chatbar_bg_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129DD16F96337008F5B04 /* chatbar_bg_gradient.png */; };
 		633129E216F96872008F5B04 /* chatbar_bg_gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129E116F96872008F5B04 /* chatbar_bg_gradient@2x.png */; };
-		633B223C172987AF00DF1E0E /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B223B172987AF00DF1E0E /* hoccer-xo-app-icon.png */; };
-		633B223E1729885200DF1E0E /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B223D1729885200DF1E0E /* hoccer-xo-app-icon@2x.png */; };
 		6343B4E516CD604700B3A29E /* ChatTableCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* ChatTableCells.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
@@ -169,6 +167,8 @@
 		6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484916F4040C00DE03C2 /* HXOModel.m */; };
 		6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484C16F4210A00DE03C2 /* NSString+UUID.m */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
+		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
+		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
 		63AE4516170350750099F0CB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4513170350750099F0CB /* Default.png */; };
 		63AE4517170350750099F0CB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4514170350750099F0CB /* Default@2x.png */; };
 		63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE451A1703519B0099F0CB /* Default-568h@2x.png */; };
@@ -436,8 +436,6 @@
 		633129DB16F95D4B008F5B04 /* chatbar_bg_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatbar_bg_noise.png; sourceTree = "<group>"; };
 		633129DD16F96337008F5B04 /* chatbar_bg_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatbar_bg_gradient.png; sourceTree = "<group>"; };
 		633129E116F96872008F5B04 /* chatbar_bg_gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_bg_gradient@2x.png"; sourceTree = "<group>"; };
-		633B223B172987AF00DF1E0E /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
-		633B223D1729885200DF1E0E /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* ChatTableCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableCells.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* ChatTableCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableCells.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
@@ -545,6 +543,8 @@
 		6378484B16F4210900DE03C2 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
 		6378484C16F4210A00DE03C2 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
+		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
 		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		63AE4514170350750099F0CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		63AE451A1703519B0099F0CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -848,11 +848,11 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				6383FF84172A0EE900835C91 /* AppIcons */,
 				63F4CF01172846D600699394 /* conversation_cell_bg_new.png */,
 				63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */,
 				E99886E717282C950089A510 /* Sounds */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
-				637847BA16F348E300DE03C2 /* AppIcons */,
 				6330490B170044940045E64E /* Avatar */,
 				637847BF16F348E300DE03C2 /* Bubbles */,
 				637847C416F348E300DE03C2 /* ChatBar */,
@@ -922,15 +922,6 @@
 				6327EB72171D61A200AF75E1 /* HXOConfig.h */,
 			);
 			path = SettingsConstantsAndEnvironment;
-			sourceTree = "<group>";
-		};
-		637847BA16F348E300DE03C2 /* AppIcons */ = {
-			isa = PBXGroup;
-			children = (
-				633B223D1729885200DF1E0E /* hoccer-xo-app-icon@2x.png */,
-				633B223B172987AF00DF1E0E /* hoccer-xo-app-icon.png */,
-			);
-			path = AppIcons;
 			sourceTree = "<group>";
 		};
 		637847BF16F348E300DE03C2 /* Bubbles */ = {
@@ -1044,6 +1035,13 @@
 			path = Actionsheet;
 			sourceTree = "<group>";
 		};
+		6383FF84172A0EE900835C91 /* AppIcons */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = AppIcons;
+			sourceTree = "<group>";
+		};
 		63AE4511170350750099F0CB /* Default */ = {
 			isa = PBXGroup;
 			children = (
@@ -1136,6 +1134,8 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */,
+				6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */,
 				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */,
@@ -1718,9 +1718,9 @@
 				63F4CF03172846D600699394 /* conversation_cell_bg_new.png in Resources */,
 				63F4CF04172846D600699394 /* conversation_cell_bg_new@2x.png in Resources */,
 				63F4CF1817289CE200699394 /* InviteFooterView.xib in Resources */,
-				633B223C172987AF00DF1E0E /* hoccer-xo-app-icon.png in Resources */,
-				633B223E1729885200DF1E0E /* hoccer-xo-app-icon@2x.png in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
+				6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */,
+				6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1958,6 +1958,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
@@ -1968,6 +1970,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp";
