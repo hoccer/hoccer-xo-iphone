@@ -32,7 +32,7 @@
 "invitation_mail_subject" = "Hoccer Talk Invitation";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "I want to exchange confidential messages with you. Please install 'Hoccer XO' first and then click this link: %@\n";
+"invitation_sms_text" = "I want to exchange confidential messages with you. Please install 'Hoccer XO' first, then click this link: %@\n";
 
 /* Actionsheet Title */
 "Invite by" = "Invite by";

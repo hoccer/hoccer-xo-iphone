@@ -1177,7 +1177,7 @@ typedef enum BackendStates {
         [myDelivery updateWithDictionary: deliveryDict];
         [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
         
-        NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
+        // NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
         
         if ([myDelivery.state isEqualToString:@"delivered"] ) {
             [SoundEffectPlayer messageDelivered];
