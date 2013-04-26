@@ -26,13 +26,13 @@
 "Copy" = "Copy";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hi\nlet's chat using Hoccer Talk.\n\nGet Hoccer Talk:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
+"invitation_mail_body" = "Hi\nlet's chat using Hoccer XO.\n\nGet Hoccer XO:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
 
 /* Mail Invitation Subject */
-"invitation_mail_subject" = "Hoccer Talk Invitation";
+"invitation_mail_subject" = "Hoccer XO Invitation";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Let's join Hoccer Talk! Get Hoccer Talk on your App Store, then click this link: %@\n";
+"invitation_sms_text" = "Let's join Hoccer XO! Get Hoccer XO on your App Store, then click this link: %@\n";
 
 /* Actionsheet Title */
 "Invite by" = "Invite by";
