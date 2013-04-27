@@ -195,8 +195,17 @@
 
 "message_too_long_text" = "Message is longer than %d bytes. Please keep it brief.";
 
-"message_too_long_button_title" = "Ok";
+"ok_button_title" = "Ok";
 
 "Resend" = "Send";
 
 "delete_contact" = "Delete contact";
+
+"invite_qr_code_already_scanned_title" = "Code already scanned";
+
+"invite_qr_code_already_scanned_message" = "You have already scanned this code";
+
+"invite_not_a_hoccer_xo_qr_code_title" = "Not a Hoccer XO code";
+
+"invite_not_a_hoccer_xo_qr_code_message" = "This QR Code is not a Hoccer XO invite code";
+

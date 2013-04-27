@@ -235,7 +235,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"message_too_long_title", nil)
                                                                  message: messageText
                                                                 delegate: nil
-                                                       cancelButtonTitle: NSLocalizedString(@"message_too_long_button_title", nil)
+                                                       cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                                        otherButtonTitles: nil];
                 [alert show];
                 return;

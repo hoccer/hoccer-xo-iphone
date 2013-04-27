@@ -374,6 +374,16 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="send"/>
                             </textField>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="lUL-nN-WgG" userLabel="QR Code View">
+                                <rect key="frame" x="20" y="210" width="280" height="318"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </imageView>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" id="MKT-dw-Ytk" userLabel="QR Code Reader View" customClass="ZBarReaderView">
+                                <rect key="frame" x="20" y="210" width="280" height="318"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -382,6 +392,8 @@
                         <outlet property="getNewCodeButton" destination="ZYy-3f-Tqg" id="5Ne-ko-NGM"/>
                         <outlet property="label" destination="f1W-Tz-1h6" id="uc7-Yl-WaQ"/>
                         <outlet property="navigationItem" destination="qmV-1g-bVn" id="kQG-WW-hCR"/>
+                        <outlet property="qrCodeReaderView" destination="MKT-dw-Ytk" id="Ddb-E0-wOV"/>
+                        <outlet property="qrCodeView" destination="lUL-nN-WgG" id="roS-l4-5K0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="14N-wc-Mhv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -910,6 +922,8 @@
                 <relationship kind="outlet" name="getNewCodeButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="label" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="navigationItem" candidateClass="UINavigationItem"/>
+                <relationship kind="outlet" name="qrCodeReaderView" candidateClass="ZBarReaderView"/>
+                <relationship kind="outlet" name="qrCodeView" candidateClass="UIImageView"/>
             </relationships>
         </class>
         <class className="LeftMessageCell" superclassName="MessageCell">
@@ -949,6 +963,9 @@
         </class>
         <class className="UserDefaultsViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UserDefaultsViewController.h"/>
+        </class>
+        <class className="ZBarReaderView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ZBarReaderView.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

@@ -7,15 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZBarReaderView.h"
 
 @class HXOBackend;
 
 static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
 
 
-@interface InviteCodeViewController : UIViewController <UITextFieldDelegate>
+@interface InviteCodeViewController : UIViewController <UITextFieldDelegate, ZBarReaderViewDelegate>
 {
     BOOL _newTokenButtonPressed;
+    NSMutableSet * _scannedCodes;
 }
 
 @property (nonatomic, readonly) HXOBackend * chatBackend;
@@ -23,5 +25,8 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 @property (strong, nonatomic) IBOutlet UILabel *label;
 @property (strong, nonatomic) IBOutlet UINavigationItem *navigationItem;
 @property (strong, nonatomic) IBOutlet UIButton *getNewCodeButton;
+
+@property (strong, nonatomic) IBOutlet UIImageView *qrCodeView;
+@property (nonatomic, retain) IBOutlet ZBarReaderView *qrCodeReaderView;
 
 @end
