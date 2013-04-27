@@ -7,6 +7,8 @@
 //
 
 #import "InviteCodeViewController.h"
+#import <QuartzCore/QuartzCore.h>
+
 #import "AppDelegate.h"
 #import "HXOBackend.h"
 #import "QREncoder.h"
@@ -31,19 +33,31 @@
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
 
      UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
+    self.getNewCodeButton.backgroundColor = [UIColor clearColor];
     [self.getNewCodeButton setBackgroundImage: background forState: UIControlStateNormal];
 
     self.qrCodeView.hidden = YES;
     self.qrCodeReaderView.readerDelegate = self;
+    self.qrCodeReaderView.layer.borderColor = [UIColor blackColor].CGColor;
+    self.qrCodeReaderView.layer.borderWidth = 1;
 
     _scannedCodes = [[NSMutableSet alloc] init];
+
+#if TARGET_IPHONE_SIMULATOR
+    _qrCameraSimulator = [[ZBarCameraSimulator alloc] initWithViewController: self];
+    _qrCameraSimulator.readerView = self.qrCodeReaderView;
+#endif
+
 
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
-    self.label.text = NSLocalizedString(@"or", @"Invite Token View Controller");
+    self.label.text = NSLocalizedString(@"or", nil);
+    self.qrLabel.text = NSLocalizedString(@"or_scan_an_invite_code", nil);
+
     _newTokenButtonPressed = NO;
+
     self.qrCodeView.hidden = YES;
     self.qrCodeReaderView.hidden = NO;
 
@@ -79,7 +93,8 @@
             return;
         }
         self.label.text = NSLocalizedString(@"Send this token to a friend:", nil);
-
+        self.qrLabel.text = NSLocalizedString(@"let_a_friend_scan_this_code", nil);
+        
         self.codeTextField.text = token;
 
         [self.qrCodeReaderView stop];
@@ -90,7 +105,7 @@
 }
 
 - (void) onDone:(id) sender {
-    if ( ! _newTokenButtonPressed) {
+    if ( ! _newTokenButtonPressed && ! [self.codeTextField.text isEqualToString: @""]) {
         [self.chatBackend pairByToken: self.codeTextField.text];
     }
     [self dismissViewControllerAnimated: YES completion: nil];
@@ -112,7 +127,7 @@
 - (void) renderQRCode: (NSString*) token {
     NSString * hxoURL = [NSString stringWithFormat: @"hxo://%@", token];
     DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
-    self.qrCodeView.image = [QREncoder renderDataMatrix: qrMatrix imageDimension: self.qrCodeView.bounds.size.width];
+    self.qrCodeView.image = [QREncoder renderTransparentDataMatrix: qrMatrix imageDimension: self.qrCodeView.bounds.size.width];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation: (UIInterfaceOrientation) orient

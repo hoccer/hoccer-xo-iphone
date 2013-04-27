@@ -190,3 +190,8 @@
 "invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Kode";
 
 "invite_not_a_hoccer_xo_qr_code_message" = "Dieser QR Code ist kein Hoccer XO Einladungskode";
+
+"or_scan_an_invite_code" = "oder scanne einen QR Einladungskode:";
+
+"let_a_friend_scan_this_code" = "oder lasse diesen Kode scannen";
+
