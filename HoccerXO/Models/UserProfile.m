@@ -110,7 +110,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     NSData * salt;
     NSData * verifier;
     [self.srpUser salt: &salt andVerificationKey: &verifier forPassword: self.password];
-    [_saltItem setObject: kHXOSaltIdentifier forKey: (__bridge id)(kSecAttrAccount)];
+    [_saltItem setObject: @"hello dude?" forKey: (__bridge id)(kSecAttrAccount)]; // XXX understand why this helps
     [_saltItem setObject: [salt hexadecimalString] forKey: (__bridge id)(kSecValueData)];
     return [verifier hexadecimalString];
 }
