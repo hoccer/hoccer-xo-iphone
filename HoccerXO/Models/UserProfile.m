@@ -12,6 +12,7 @@
 #import "NSString+RandomString.h"
 #import "NSData+HexString.h"
 #import "HXOUserDefaults.h"
+#import "Environment.h"
 
 static UserProfile * profileInstance;
 
@@ -36,8 +37,8 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 - (id) init {
     self = [super init];
     if (self != nil) {
-        _accountItem = [[KeychainItemWrapper alloc] initWithIdentifier: kHXOAccountIdentifier accessGroup: nil];
-        _saltItem = [[KeychainItemWrapper alloc] initWithIdentifier: kHXOSaltIdentifier accessGroup: nil];
+        _accountItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOAccountIdentifier] accessGroup: nil];
+        _saltItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOSaltIdentifier] accessGroup: nil];
         [self loadProfile];
     }
     return self;
@@ -109,6 +110,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     NSData * salt;
     NSData * verifier;
     [self.srpUser salt: &salt andVerificationKey: &verifier forPassword: self.password];
+    [_saltItem setObject: @"hello dude?" forKey: (__bridge id)(kSecAttrAccount)]; // XXX understand why this helps
     [_saltItem setObject: [salt hexadecimalString] forKey: (__bridge id)(kSecValueData)];
     return [verifier hexadecimalString];
 }

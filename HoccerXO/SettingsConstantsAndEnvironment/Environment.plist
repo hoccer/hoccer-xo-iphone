@@ -10,7 +10,7 @@
 	<key>talkServer</key>
 	<dict>
 		<key>development</key>
-		<string>ws://development.hoccer.com:7000</string>
+		<string>ws://development.hoccer.com:7001</string>
 		<key>production</key>
 		<string>ws://development.hoccer.com:7000</string>
 	</dict>

@@ -228,8 +228,9 @@
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
-    
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"HoccerXO.sqlite"];
+
+    NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: databaseName];
     
     NSError *error = nil;
 

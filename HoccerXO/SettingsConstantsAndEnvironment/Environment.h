@@ -21,4 +21,6 @@
 @property (nonatomic, readonly) NSString * talkServer;
 @property (nonatomic, readonly) NSString * fileCacheURI;
 
+- (NSString*) suffixedString: (NSString*) string;
+
 @end

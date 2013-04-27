@@ -512,6 +512,12 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     _blockContactItem.target = self;
     //[_itemsByKeyPath setObject: _blockContactItem forKey: _blockContactItem.valueKey];
 
+    _deleteContactItem = [[ProfileItem alloc] init];
+    _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
+    _deleteContactItem.cellClass = [UserDefaultsCell class];
+    _deleteContactItem.action = @selector(deleteContactPressed:);
+    _deleteContactItem.target = self;
+
     _fingerprintItem = [[ProfileItem alloc] init];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
     _fingerprintItem.textAlignment = NSTextAlignmentCenter;
@@ -554,7 +560,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
     // just don't ask ... needs refactoring
     if (_mode == ProfileViewModeContactProfile) {
-        return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
+        return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem, _deleteContactItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
     } else {
         if (editing) {
             return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_renewKeyPairItem, _renewKeyPairInfoItem]];
@@ -649,6 +655,10 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [cell configure: item];
     [self.tableView endUpdates];
 
+}
+
+- (void) deleteContactPressed: (id) sender {
+    NSLog(@"TODO: delete contact");
 }
 
 #pragma mark - Attachment Picker Controller

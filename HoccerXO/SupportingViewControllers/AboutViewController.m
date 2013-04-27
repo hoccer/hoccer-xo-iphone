@@ -7,10 +7,18 @@
 //
 
 #import "AboutViewController.h"
+#import "Environment.h"
 
 #import <QuartzCore/QuartzCore.h>
 
 #import "UIViewController+HXOSideMenuButtons.h"
+
+#ifdef NDEBUG
+# define kReleaseBuild YES 
+#else
+# define kReleaseBuild NO
+#endif
+
 
 @implementation AboutViewController
 
@@ -20,7 +28,7 @@
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-    self.appIcon.image = [UIImage imageNamed: @"hoccer-talk-app-icon-ipad"];
+    self.appIcon.image = [UIImage imageNamed: @"hoccer-xo-app-icon"];
     self.appIcon.layer.masksToBounds = YES;
     self.appIcon.layer.cornerRadius = 10.0;
     self.appIconShadow.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -34,7 +42,12 @@
     NSString * version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
     self.appVersionLabel.text = [NSString stringWithFormat: @"Version: %@ – %@", version, buildNumber];
-    self.appReleaseName.text = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"HXOReleaseName"];
+    NSString * releaseString = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"HXOReleaseName"];
+    if ( ! [[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"] || ! kReleaseBuild) {
+        releaseString = [NSString stringWithFormat: @"%@\n%@ – %@", releaseString, [Environment sharedEnvironment].currentEnvironment, kReleaseBuild ? @"release" : @"debug"];
+    }
+    self.appReleaseName.text = releaseString;
+    [self.appReleaseName sizeToFit];
 
     float dy = 0;
     dy = [self setLabel: self.aboutProsa toText: NSLocalizedString(@"about_prosa", nil) andUpdateDy: dy];
