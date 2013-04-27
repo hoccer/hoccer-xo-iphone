@@ -7,3 +7,6 @@
 [submodule "ObjCSRP"]
 	path = ObjCSRP
 	url = git@github.com:hoccer/ObjCSRP.git
+[submodule "3rdParty/QREncoder"]
+	path = 3rdParty/QREncoder
+	url = https://github.com/myang-git/QR-Code-Encoder-for-Objective-C.git
