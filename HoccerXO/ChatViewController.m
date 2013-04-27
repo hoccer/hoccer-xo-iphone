@@ -137,7 +137,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
-    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem]];
+    UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Resend", nil) action:@selector(resendMessage:)];
+    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem, myResendMessageMenuItem]];
     [menuController update];
     
     [self hideAttachmentSpinner];
@@ -1060,6 +1061,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     if (action == @selector(copy:)) {return YES;}
+    if (action == @selector(resendMessage:)) {return YES;}
     
     if (action == @selector(saveMessage:)) {
         if ([message.isOutgoing isEqualToNumber: @NO]) {
@@ -1075,6 +1077,14 @@ static const NSUInteger kMaxMessageBytes = 10000;
     }
     return NO;
 }
+
+- (void) messageView:(MessageCell *)theCell resendMessage:(id)sender {
+    NSLog(@"resendMessage");
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
+}
+
+
 - (void) messageView:(MessageCell *)theCell saveMessage:(id)sender {
     // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];

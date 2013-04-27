@@ -45,6 +45,12 @@ static const double kCellPadding = 10.0;
     }
 }
 
+-(void) resendMessage:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageView:self resendMessage:sender];
+    }
+}
+
 -(void) copy:(id)sender {
     if (self.delegate != nil) {
         return [self.delegate messageView:self copy:sender];

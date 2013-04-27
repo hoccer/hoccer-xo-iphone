@@ -92,7 +92,8 @@
         }
         // NSLog(@"configureViewForAttachment: (postInit) frame = %@", NSStringFromCGRect(frame));
     } else {
-        frame.size.height = frame.size.width / attachment.aspectRatio;
+        frame.size.height = (attachment.aspectRatio > 0) ? frame.size.width / attachment.aspectRatio : frame.size.width;
+        // frame.size.height = frame.size.width / attachment.aspectRatio;
         self.frame = frame;
     }
     

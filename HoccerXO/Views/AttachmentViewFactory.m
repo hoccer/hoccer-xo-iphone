@@ -49,7 +49,7 @@
     } else if ([attachment.mediaType isEqualToString:@"image"] ||
                [attachment.mediaType isEqualToString:@"video"] ||
                [attachment.mediaType isEqualToString:@"audio"]) {
-        return width / attachment.aspectRatio;
+        return (attachment.aspectRatio > 0) ? width / attachment.aspectRatio : width;
     } else {
         NSLog(@"ERROR: AttachmentViewFactory:heightOfAttachmentView: Unhandled attachment type: '%@'",attachment.mediaType);
     }
