@@ -15,7 +15,7 @@
 	<key>saveDatabasePolicy</key>
 	<string>perMessage</string>
 	<key>environment</key>
-	<string>development</string>
+	<string>production</string>
 	<key>autoUploadLimit</key>
 	<integer>1000000000</integer>
 	<key>autoDownloadLimit</key>

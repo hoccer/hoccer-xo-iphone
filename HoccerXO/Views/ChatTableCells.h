@@ -24,6 +24,7 @@
 - (void) messageView:(MessageCell *)theCell saveMessage:(id)sender;
 - (void) messageView:(MessageCell *)theCell copy:(id)sender;
 - (void) messageView:(MessageCell *)theCell deleteMessage:(id)sender;
+- (void) messageView:(MessageCell *)theCell resendMessage:(id)sender;
 
 @end
 

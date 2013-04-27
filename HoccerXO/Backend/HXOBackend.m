@@ -120,6 +120,38 @@ typedef enum BackendStates {
     return [NSDate dateWithTimeIntervalSinceNow:self.latestKnownServerTimeOffset];
 }
 
+
+// calls sendmessage after cloning the attachment
+- (void) forwardMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (const Attachment*) attachment {
+    
+    Attachment * newAttachment = nil;
+    if (attachment) {
+        newAttachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+        
+        newAttachment.mediaType = attachment.mediaType;
+        newAttachment.mimeType = attachment.mimeType;
+        newAttachment.humanReadableFileName = attachment.humanReadableFileName;
+        
+        CompletionBlock completion  = ^(NSError *myerror) {
+            if (myerror == nil) {
+                [self sendMessage:text toContact:contact withAttachment:newAttachment];
+            }
+        };
+        
+        if ([newAttachment.mediaType isEqualToString:@"image"]) {
+            [newAttachment makeImageAttachment: attachment.localURL anOtherURL:attachment.assetURL image:nil withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"video"]) {
+            [newAttachment makeVideoAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"audio"]) {
+            [newAttachment makeAudioAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        }
+        return;
+    } else {
+        [self sendMessage: text toContact:contact withAttachment:newAttachment];
+    }
+}
+
+
 // TODO: contact should be an array of contacts
 - (HXOMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
     HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];

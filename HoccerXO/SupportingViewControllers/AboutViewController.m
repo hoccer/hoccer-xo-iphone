@@ -13,10 +13,10 @@
 
 #import "UIViewController+HXOSideMenuButtons.h"
 
-#ifdef NDEBUG
-# define kReleaseBuild YES 
+#ifdef DEBUG
+# define kReleaseBuild NO 
 #else
-# define kReleaseBuild NO
+# define kReleaseBuild YES
 #endif
 
 

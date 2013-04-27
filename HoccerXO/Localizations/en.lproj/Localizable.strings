@@ -26,7 +26,7 @@
 "Copy" = "Copy";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hi\nI want to exchange confidential messages with you. \n\nGet Hoccer Talk:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
+"invitation_mail_body" = "Hi\nI want to exchange confidential messages with you. \n\nGet Hoccer XO:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Hoccer XO Invitation";
@@ -196,5 +196,7 @@
 "message_too_long_text" = "Message is longer than %d bytes. Please keep it brief.";
 
 "message_too_long_button_title" = "Ok";
+
+"Resend" = "Send";
 
 "delete_contact" = "Delete contact";
