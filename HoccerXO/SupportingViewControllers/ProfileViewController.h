@@ -29,6 +29,7 @@ typedef enum ProfileViewModes {
     AvatarItem *          _avatarItem;
     ProfileItem *         _chatWithContactItem;
     ProfileItem *         _blockContactItem;
+    ProfileItem *         _deleteContactItem;
     ProfileItem *         _fingerprintItem;
     ProfileItem *         _fingerprintInfoItem;
     ProfileItem *         _renewKeyPairItem;
