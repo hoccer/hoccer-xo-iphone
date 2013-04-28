@@ -20,6 +20,18 @@
         <attribute name="timeAccepted" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
         <attribute name="timeChanged" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
     </entity>
+    <entity name="RPC_TalkKey" syncable="YES">
+        <attribute name="key" transient="YES" attributeType="String" minValueString="32" maxValueString="500" syncable="YES"/>
+        <attribute name="keyId" transient="YES" attributeType="String" minValueString="16" maxValueString="16" regularExpressionString="[0-9a-fA-F]{16}" syncable="YES"/>
+    </entity>
+    <entity name="RPC_TalkKey_in" parentEntity="RPC_TalkKey" syncable="YES">
+        <attribute name="clientId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
+        <attribute name="timestamp" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
+    </entity>
+    <entity name="RPC_TalkKey_out" parentEntity="RPC_TalkKey" syncable="YES">
+        <attribute name="clientId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
+    </entity>
     <entity name="RPC_TalkMessage" representedClassName="" syncable="YES">
         <attribute name="attachment" optional="YES" transient="YES" attributeType="String" maxValueString="1000" syncable="YES"/>
         <attribute name="body" optional="YES" transient="YES" attributeType="String" maxValueString="12000" syncable="YES"/>
@@ -60,5 +72,8 @@
         <element name="RPC_TalkPresence" positionX="160" positionY="192" width="128" height="105"/>
         <element name="RPC_TalkPresence_out" positionX="160" positionY="192" width="128" height="90"/>
         <element name="RPC_TalkPresence_in" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="RPC_TalkKey" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="RPC_TalkKey_in" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="RPC_TalkKey_out" positionX="160" positionY="192" width="128" height="75"/>
     </elements>
 </model>

@@ -565,6 +565,7 @@ typedef enum BackendStates {
 
 - (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
     [self getKey:theContact.clientId withId:theId keyHandler:^(NSDictionary * keyRecord) {
+        [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
         if (keyRecord != nil && [theId isEqualToString: keyRecord[@"keyId"]]) {
             theContact.publicKeyString = keyRecord[@"key"];
             theContact.publicKeyId = keyRecord[@"keyId"];
@@ -895,6 +896,11 @@ typedef enum BackendStates {
 
 - (BOOL) validateObject:(id)objectToValidate forEntity:(NSString*)entityName error:(out NSError **) myError {
     // NSLog(@">>> Validating Object: %@", objectToValidate);
+    if (objectToValidate == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: objectToValidate is nil"];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9900 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;        
+    }
     NSDictionary * myEntities = [_delegate.rpcObjectModel entitiesByName];
     if (myEntities == nil) {
         NSString * myDescription = [NSString stringWithFormat:@"validateObject: cant get Entities for rpcObjectModel"];
@@ -1105,6 +1111,8 @@ typedef enum BackendStates {
                              @"key" :   [publicKey asBase64EncodedString], 
                              @"keyId" : [myKeyId hexadecimalString]
                              };
+    [self validateObject: params forEntity:@"RPC_TalkKey_out"];  // TODO: Handle Validation Error
+
     [_serverConnection invoke: @"updateKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"updateKey() got result: %@", responseOrError);
