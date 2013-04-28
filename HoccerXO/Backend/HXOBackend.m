@@ -533,6 +533,7 @@ typedef enum BackendStates {
 
 - (void) updateRelationships {
     NSDate * latestChange = [self getLatestChangeDateForContactRelationships];
+    // NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
     // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
         for (NSDictionary * relationshipDict in changedRelationships) {
@@ -542,6 +543,8 @@ typedef enum BackendStates {
 }
 
 - (void) updateRelationship: (NSDictionary*) relationshipDict {
+    [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
+    
     NSString * clientId = relationshipDict[@"otherClientId"];
     Contact * contact = [self getContactByClientId: clientId];
     if (contact == nil) {
