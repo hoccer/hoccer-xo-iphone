@@ -11,6 +11,7 @@
 #import "NSData+Base64.h"
 #import "RSA.h"
 #import "HXOUserDefaults.h"
+#import "HXOBackend.h" // for date conversion
 
 
 const float kTimeSectionInterval = 2 * 60;
@@ -30,6 +31,7 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic publicKey;
 @dynamic publicKeyId;
 @dynamic connectionStatus;
+@dynamic presenceLastUpdated;
 
 @dynamic phoneNumber;
 @dynamic mailAddress;
@@ -50,24 +52,22 @@ NSString * const kRelationStateBlocked = @"blocked";
 @dynamic relationshipLastChanged;
 @dynamic relationshipLastChangedMillis;
 
-- (void) setRelationshipLastChanged:(id) time {
-    if ([time isKindOfClass:[NSNumber class]]) {
-        time = [NSDate dateWithTimeIntervalSince1970: [time doubleValue] / 1000.0];
-    }
-    [self willChangeValueForKey: @"relationshipLastChanged"];
-    [self setPrimitiveValue: time forKey: @"relationshipLastChanged"];
-    [self didChangeValueForKey: @"relationshipLastChanged"];
-}
+@dynamic presenceLastUpdatedMillis;
 
 - (NSNumber*) relationshipLastChangedMillis {
-    if (self.relationshipLastChanged == nil) {
-        return [NSNumber numberWithDouble:0];
-    }
-    return [NSNumber numberWithLongLong:[self.relationshipLastChanged timeIntervalSince1970]*1000];
+    return [HXOBackend millisFromDate:self.relationshipLastChanged];
 }
 
 - (void) setRelationshipLastChangedMillis:(NSNumber*) milliSecondsSince1970 {
-    self.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
+    self.relationshipLastChanged = [HXOBackend dateFromMillis:milliSecondsSince1970];
+}
+
+- (NSNumber*) presenceLastUpdatedMillis {
+    return [HXOBackend millisFromDate:self.presenceLastUpdated];
+}
+
+- (void) setPresenceLastUpdatedMillis:(NSNumber*) milliSecondsSince1970 {
+    self.presenceLastUpdated = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
 

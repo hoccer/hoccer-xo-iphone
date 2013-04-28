@@ -104,16 +104,15 @@ NSString * const kDeliveryStateFailed     = @"failed";
     return NO;
 }
 
+
 - (NSNumber*) timeChangedMillis {
-    if (self.timeChanged == nil) {
-        return [NSNumber numberWithDouble:0];
-    }
-    return [NSNumber numberWithLongLong:[self.timeChanged timeIntervalSince1970]*1000];
+    return [HXOBackend millisFromDate:self.timeChanged];
 }
 
 - (void) setTimeChangedMillis:(NSNumber*) milliSecondsSince1970 {
-    self.timeChanged = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
+    self.timeChanged = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
+
 
 - (NSDictionary*) rpcKeys {
     return @{ @"state"         : @"state",

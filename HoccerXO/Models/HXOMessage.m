@@ -12,6 +12,7 @@
 #import "NSData+Base64.h"
 #import "NSData+CommonCrypto.h"
 #import "NSString+StringWithData.h"
+#import "HXOBackend.h"
 
 @implementation HXOMessage
 
@@ -96,27 +97,23 @@
 }
 
 
-- (NSNumber*) timeAcceptedMillis {
-    if (self.timeAccepted == nil) {
-        return [NSNumber numberWithDouble:0];
-    }
-    return [NSNumber numberWithLongLong:[self.timeAccepted timeIntervalSince1970]*1000];
-}
-
-- (void) setTimeAcceptedMillis:(NSNumber*) milliSecondsSince1970 {
-    self.timeAccepted = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
-}
-
 - (NSNumber*) timeSentMillis {
-    if (self.timeAccepted == nil) {
-        return [NSNumber numberWithDouble:0];
-    }
-    return [NSNumber numberWithLongLong:[self.timeSent timeIntervalSince1970]*1000];
+    return [HXOBackend millisFromDate:self.timeSent];
 }
 
 - (void) setTimeSentMillis:(NSNumber*) milliSecondsSince1970 {
-    self.timeSent = [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0];
+    self.timeSent = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
+
+- (NSNumber*) timeAcceptedMillis {
+    return [HXOBackend millisFromDate:self.timeAccepted];
+}
+
+- (void) setTimeAcceptedMillis:(NSNumber*) milliSecondsSince1970 {
+    self.timeAccepted = [HXOBackend dateFromMillis:milliSecondsSince1970];
+}
+
+
 
 - (NSDictionary*) rpcKeys {
     return @{

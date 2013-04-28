@@ -487,44 +487,51 @@ typedef enum BackendStates {
     }
 }
 
-- (NSDate*) getLatestChangeDateFromRelationships {
-    
-    NSDate * latest = [NSDate dateWithTimeIntervalSince1970: 0];
+- (NSDate*) getLatestChangeDateForContactRelationships {
+    return [self getLatestDateFromEntity:[Contact entityName] forKeyPath:@"relationshipLastChanged"];
+}
 
-    /*
+- (NSDate*) getLatestChangeDateForContactPresence {
+    return [self getLatestDateFromEntity:[Contact entityName] forKeyPath:@"presenceLastUpdated"];
+}
+
+
+- (NSDate*) getLatestDateFromEntity:(NSString*) entityName forKeyPath:(NSString *) keyPath {
+    NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@", entityName, keyPath);
+
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: entityName inManagedObjectContext: self.delegate.managedObjectContext];
     [request setEntity:entity];
     [request setResultType:NSDictionaryResultType];
-    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:@"lastChanged"];
+    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:keyPath];
     NSExpression *maxLastChangedExpression = [NSExpression expressionForFunction:@"max:"
-                                                                  arguments:[NSArray arrayWithObject:keyPathExpression]];
+                                                                       arguments:[NSArray arrayWithObject:keyPathExpression]];
     NSExpressionDescription *expressionDescription = [[NSExpressionDescription alloc] init];
     [expressionDescription setName:@"latestChange"];
     [expressionDescription setExpression: maxLastChangedExpression];
     [expressionDescription setExpressionResultType: NSDateAttributeType];
-
+    
     [request setPropertiesToFetch:[NSArray arrayWithObject:
-                                        expressionDescription]];
+                                   expressionDescription]];
     NSError *error = nil;
     NSArray *fetchResults = [self.delegate.managedObjectContext
                              executeFetchRequest:request
                              error:&error];
     if (fetchResults == nil) {
-        NSLog(@"ERROR: getLatestChangeDateFromRelationships: fetch request failed: %@", error);
+        NSLog(@"ERROR: getLatestDateFromEntity: %@ forKeyPath: %@ failed, error = %@", entityName, keyPath, error);
         abort();
     }
-
+    
     NSDate * latest = [[fetchResults lastObject] valueForKey:@"latestChange"];
     if (latest == nil) {
         latest = [NSDate dateWithTimeIntervalSince1970: 0];
     }
-    */
+    NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@ latest = %@", entityName, keyPath, latest);
     return latest;
 }
 
 - (void) updateRelationships {
-    NSDate * latestChange = [self getLatestChangeDateFromRelationships];
+    NSDate * latestChange = [self getLatestChangeDateForContactRelationships];
     // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
         for (NSDictionary * relationshipDict in changedRelationships) {
@@ -545,7 +552,7 @@ typedef enum BackendStates {
 }
 
 - (void) updatePresences {
-    NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0];
+    NSDate * latestChange = [self getLatestChangeDateForContactPresence];
     // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
@@ -607,6 +614,7 @@ typedef enum BackendStates {
                 myContact.avatarURL = @"";
             }
         }
+        myContact.presenceLastUpdatedMillis = thePresence[@"timestamp"];
         // NSLog(@"presenceUpdated, contact = %@", myContact);
 
     } else {
@@ -862,19 +870,22 @@ typedef enum BackendStates {
 }
 
 - (void) hello {
-    NSNumber * clientTime = [self millisFromDate:[NSDate date]];
+    NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
     [self hello:clientTime handler:^(NSDictionary * result) {
         if (result != nil) {
-            [self saveServerTime:[self dateFromMillis:result[@"serverTime"]]];
+            [self saveServerTime:[HXOBackend dateFromMillis:result[@"serverTime"]]];
         }
     }];
 }
 
-- (NSNumber*) millisFromDate:(NSDate *) date {
++ (NSNumber*) millisFromDate:(NSDate *) date {
+    if (date == nil) {
+        return [NSNumber numberWithDouble:0];
+    }
     return [NSNumber numberWithLongLong:[date timeIntervalSince1970]*1000];
 }
 
-- (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970 {
++ (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970 {
     return [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0 ];
 }
 
