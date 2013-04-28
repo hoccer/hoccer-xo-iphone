@@ -998,6 +998,7 @@ typedef enum BackendStates {
     [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
+            [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
         } else {
@@ -1013,6 +1014,7 @@ typedef enum BackendStates {
     {
         if (success) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
+            [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
             [self.delegate.managedObjectContext refreshObject: delivery.message mergeChanges: YES];
@@ -1043,6 +1045,8 @@ typedef enum BackendStates {
                              @"avatarUrl" : avatarURL,
                              @"keyId" : [keyId hexadecimalString]
                              };
+    [self validateObject: params forEntity:@"RPC_TalkPresence_out"];  // TODO: Handle Validation Error
+
     [_serverConnection invoke: @"updatePresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"updatePresence() got result: %@", responseOrError);
@@ -1247,11 +1251,15 @@ typedef enum BackendStates {
         return;
     }
     NSDictionary * messageDict = params[1];
+
+    [self validateObject: messageDict forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
+    [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+
     [self receiveMessage: messageDict withDelivery: deliveryDict];
 }
 
-
--(Delivery *) getDeliveryMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId  {
+// utility function to avoid code duplication
+-(Delivery *) getDeliveryByMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId  {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"receiverId" : theReceiverId};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndReceiverId" substitutionVariables: vars];
@@ -1287,11 +1295,13 @@ typedef enum BackendStates {
     }
     NSDictionary * deliveryDict = params[0];
     // NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
+
+    [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
     
     NSString * myMessageTag = deliveryDict[@"messageTag"];
     NSString * myReceiverId = deliveryDict[@"receiverId"];
     
-    Delivery * myDelivery = [self getDeliveryMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
+    Delivery * myDelivery = [self getDeliveryByMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
     if (myDelivery != nil) {
         if ([myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
             NSLog(@"Delivery state for messageTag %@ receiver %@ was already %@", myMessageTag, myReceiverId, myDelivery.state);
@@ -1323,6 +1333,7 @@ typedef enum BackendStates {
 - (void) presenceUpdatedNotification: (NSArray*) params {
     //TODO: Error checking
     for (id presence in params) {
+        [self validateObject: presence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
         // NSLog(@"updatePresences presence=%@",presence);
         [self presenceUpdated:presence];
     }

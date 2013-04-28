@@ -31,7 +31,6 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-@synthesize rpcObjectContext = _rpcObjectContext;
 @synthesize rpcObjectModel = _rpcObjectModel;
 
 @synthesize userAgent;
@@ -234,21 +233,6 @@
     return _rpcObjectModel;
 }
 
-// TODO: we probably don't need that
-- (NSManagedObjectContext *)rpcObjectContext
-{
-    if (_rpcObjectContext != nil) {
-        return _rpcObjectContext;
-    }
-    
-    // NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    // if (coordinator != nil) {
-        _rpcObjectContext = [[NSManagedObjectContext alloc] init];
-        // [_rpcObjectContext setPersistentStoreCoordinator:coordinator];
-        // [_rpcObjectContext setUndoManager: nil];
-    // }
-    return _rpcObjectContext;
-}
 
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
