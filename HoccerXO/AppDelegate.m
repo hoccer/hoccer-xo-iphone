@@ -31,6 +31,9 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+@synthesize rpcObjectContext = _rpcObjectContext;
+@synthesize rpcObjectModel = _rpcObjectModel;
+
 @synthesize userAgent;
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -219,6 +222,32 @@
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"HoccerXO" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
+}
+
+- (NSManagedObjectModel *)rpcObjectModel
+{
+    if (_rpcObjectModel != nil) {
+        return _rpcObjectModel;
+    }
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RPCObjectsModel" withExtension:@"momd"];
+    _rpcObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return _rpcObjectModel;
+}
+
+// TODO: we probably don't need that
+- (NSManagedObjectContext *)rpcObjectContext
+{
+    if (_rpcObjectContext != nil) {
+        return _rpcObjectContext;
+    }
+    
+    // NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    // if (coordinator != nil) {
+        _rpcObjectContext = [[NSManagedObjectContext alloc] init];
+        // [_rpcObjectContext setPersistentStoreCoordinator:coordinator];
+        // [_rpcObjectContext setUndoManager: nil];
+    // }
+    return _rpcObjectContext;
 }
 
 // Returns the persistent store coordinator for the application.

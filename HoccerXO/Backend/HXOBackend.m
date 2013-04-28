@@ -183,6 +183,7 @@ typedef enum BackendStates {
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
     if (_state == kBackendReady) {
+        
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
     
@@ -889,6 +890,78 @@ typedef enum BackendStates {
     return [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0 ];
 }
 
+// Regex for UUID:
+// [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}
+
+- (BOOL) validateObject:(id)objectToValidate forEntity:(NSString*)entityName error:(out NSError **) myError {
+    // NSLog(@">>> Validating Object: %@", objectToValidate);
+    NSDictionary * myEntities = [_delegate.rpcObjectModel entitiesByName];
+    if (myEntities == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: cant get Entities for rpcObjectModel"];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9901 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+    NSEntityDescription * myEntity = myEntities[entityName];
+    if (myEntity == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: cant find Entity '%@'", entityName];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9902 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+    NSManagedObject * myObject = [[NSManagedObject alloc] initWithEntity:myEntity insertIntoManagedObjectContext:nil];
+    if (myObject == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: cant init object for Entity '%@'", entityName];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9903 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+#if VALIDATOR_DEBUG
+    NSDictionary * myAttributes = [myEntity attributesByName];
+    for (id attribute in myAttributes) {
+        NSLog(@"entity has attr %@, decr %@", attribute, [myAttributes[attribute] attributeValueClassName]);
+    }
+#endif
+    NSError * myOtherError = nil;
+    for (id property in objectToValidate) {
+        id myValue = objectToValidate[property];
+        if (myValue == nil) {
+            NSLog(@"WARNING: objectToValidate property %@ is nil",property);
+        }
+        if (![myObject validateValue:&myValue forKey:property error:&myOtherError]) {
+            NSString * myDescription = [NSString stringWithFormat:@"validateObject: Entity '%@', property '%@', value fails validation: %@, reason: %@", entityName, property, myValue, myOtherError];
+            *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9904 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            return NO;
+        };
+        @try {
+            // NSLog(@"try validating property %@",property);
+            [myObject setValue: myValue forKeyPath: property];
+        }
+        @catch (NSException* ex) {
+            // NSLog(@"!!!! Exception: %@\n", ex);
+            NSString * myDescription = [NSString stringWithFormat:@"validateObject: Entity '%@', property '%@', value setting failed: %@, reason: %@", entityName, property, myValue, ex];
+            *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9905 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            return NO;
+        }
+    }
+    // NSLog(@"=== Validating properties done");
+    if (![myObject validateForUpdate:myError]) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: Entity '%@', full object validation failed, reason: %@", entityName, *myError];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9906 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+    NSLog(@"! Validating Object for entity '%@' passed", entityName);
+    return YES;
+}
+
+- (BOOL) validateObject:(id)objectToValidate forEntity:(NSString*)entityName {
+    NSError * myError = nil;
+    BOOL myResult = [self validateObject:objectToValidate forEntity:entityName error:&myError];
+    if (!myResult) {
+        NSLog(@"ERROR: %@", myError);
+    }
+    return myResult;
+}
+
+
+
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
 - (void) deliveryRequest: (HXOMessage*) message withDeliveries: (NSArray*) deliveries {
@@ -897,16 +970,22 @@ typedef enum BackendStates {
     for (Delivery * delivery in deliveries) {
         [deliveryDicts addObject: [delivery rpcDictionary]];
     }
-    // NSLog(@"deliveryRequest: %@", messageDict);
+    // validate
+    for (NSDictionary * d in deliveryDicts) {
+        [self validateObject: d forEntity:@"RPC_TalkDelivery_out"];  // TODO: Handle Validation Error
+    }
+    
+    [self validateObject: messageDict forEntity:@"RPC_TalkMessage_out"]; // TODO: Handle Validation Error
+    
     [_serverConnection invoke: @"deliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"deliveryRequest() returned deliveries: %@", responseOrError);
             NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
             int i = 0;
             for (Delivery * delivery in deliveries) {
+                [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
                 delivery.receiver.latestMessageTime = message.timeAccepted;
-                // [self saveServerTime:message.timeAccepted]; // TODO: remove when welcome call is in place
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);

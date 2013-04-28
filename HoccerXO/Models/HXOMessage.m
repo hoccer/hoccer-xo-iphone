@@ -119,6 +119,7 @@
     return @{
              @"body": @"bodyCiphertext",
              @"messageId": @"messageId",
+             @"messageTag": @"messageTag",
              @"senderId": @"contact.clientId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
              @"timeSent": @"timeSentMillis" // our own time stamp

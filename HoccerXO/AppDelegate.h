@@ -21,6 +21,10 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+@property (readonly, strong, nonatomic) NSManagedObjectContext *rpcObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectModel *rpcObjectModel;
+
 @property (nonatomic, strong) HXOBackend * chatBackend;
 @property (nonatomic, strong) UINavigationController * navigationController;
 @property (nonatomic, strong) ConversationViewController * conversationViewController;
