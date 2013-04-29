@@ -20,6 +20,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSString*      avatarURL;
 @property (nonatomic, strong) NSString*      clientId;
 @property (nonatomic, strong) NSDate*        latestMessageTime;
+@property (nonatomic, strong) NSDate*        presenceLastUpdated;
 @property (nonatomic, strong) NSString*      nickName;
 @property (nonatomic, strong) NSString*      status;
 @property (nonatomic, strong) NSString*      phoneNumber;
@@ -41,6 +42,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, retain) NSDate * relationshipLastChanged;
 
 @property (nonatomic) NSNumber * relationshipLastChangedMillis;
+@property (nonatomic) NSNumber * presenceLastUpdatedMillis;
+
 
 @property (nonatomic) NSString* publicKeyString; // b64-string
 

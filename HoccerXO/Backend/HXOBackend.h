@@ -90,6 +90,8 @@ typedef void (^GenericResultHandler)(BOOL);
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;
 
++ (NSNumber*) millisFromDate:(NSDate *) date;
++ (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970;
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
                          absoluteURI:(NSString *)URLString

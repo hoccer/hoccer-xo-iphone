@@ -17,6 +17,9 @@
 "Choose Photo/Video" = "Choose Photo/Video";
 
 /* Action Sheet Button Ttitle */
+"Choose Photo" = "Choose Photo";
+
+/* Action Sheet Button Ttitle */
 "Choose Audio" = "Choose Audio";
 
 /* Contacts Navigation Bar Title */
@@ -80,6 +83,9 @@
 
 /* Action Sheet Button Ttitle */
 "Take Photo/Video" = "Take Photo/Video";
+
+/* Action Sheet Button Ttitle */
+"Take Photo" = "Take Photo";
 
 /* Invite Alert Message */
 "The server accepted your code" = "The code has been accepted";

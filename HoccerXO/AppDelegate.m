@@ -31,6 +31,8 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+@synthesize rpcObjectModel = _rpcObjectModel;
+
 @synthesize userAgent;
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -221,6 +223,17 @@
     return _managedObjectModel;
 }
 
+- (NSManagedObjectModel *)rpcObjectModel
+{
+    if (_rpcObjectModel != nil) {
+        return _rpcObjectModel;
+    }
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RPCObjectsModel" withExtension:@"momd"];
+    _rpcObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return _rpcObjectModel;
+}
+
+
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
@@ -235,7 +248,12 @@
     NSError *error = nil;
 
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+    
+    NSDictionary *migrationOptions = @{NSMigratePersistentStoresAutomaticallyOption : @(YES),
+                                        NSInferMappingModelAutomaticallyOption : @(YES)};
+     
+    
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          

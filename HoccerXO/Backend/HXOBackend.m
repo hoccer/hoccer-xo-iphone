@@ -183,6 +183,7 @@ typedef enum BackendStates {
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
     if (_state == kBackendReady) {
+        
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
     
@@ -487,44 +488,52 @@ typedef enum BackendStates {
     }
 }
 
-- (NSDate*) getLatestChangeDateFromRelationships {
-    
-    NSDate * latest = [NSDate dateWithTimeIntervalSince1970: 0];
+- (NSDate*) getLatestChangeDateForContactRelationships {
+    return [self getLatestDateFromEntity:[Contact entityName] forKeyPath:@"relationshipLastChanged"];
+}
 
-    /*
+- (NSDate*) getLatestChangeDateForContactPresence {
+    return [self getLatestDateFromEntity:[Contact entityName] forKeyPath:@"presenceLastUpdated"];
+}
+
+
+- (NSDate*) getLatestDateFromEntity:(NSString*) entityName forKeyPath:(NSString *) keyPath {
+    NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@", entityName, keyPath);
+
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName: [Relationship entityName] inManagedObjectContext: self.delegate.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: entityName inManagedObjectContext: self.delegate.managedObjectContext];
     [request setEntity:entity];
     [request setResultType:NSDictionaryResultType];
-    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:@"lastChanged"];
+    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:keyPath];
     NSExpression *maxLastChangedExpression = [NSExpression expressionForFunction:@"max:"
-                                                                  arguments:[NSArray arrayWithObject:keyPathExpression]];
+                                                                       arguments:[NSArray arrayWithObject:keyPathExpression]];
     NSExpressionDescription *expressionDescription = [[NSExpressionDescription alloc] init];
     [expressionDescription setName:@"latestChange"];
     [expressionDescription setExpression: maxLastChangedExpression];
     [expressionDescription setExpressionResultType: NSDateAttributeType];
-
+    
     [request setPropertiesToFetch:[NSArray arrayWithObject:
-                                        expressionDescription]];
+                                   expressionDescription]];
     NSError *error = nil;
     NSArray *fetchResults = [self.delegate.managedObjectContext
                              executeFetchRequest:request
                              error:&error];
     if (fetchResults == nil) {
-        NSLog(@"ERROR: getLatestChangeDateFromRelationships: fetch request failed: %@", error);
+        NSLog(@"ERROR: getLatestDateFromEntity: %@ forKeyPath: %@ failed, error = %@", entityName, keyPath, error);
         abort();
     }
-
+    
     NSDate * latest = [[fetchResults lastObject] valueForKey:@"latestChange"];
     if (latest == nil) {
         latest = [NSDate dateWithTimeIntervalSince1970: 0];
     }
-    */
+    NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@ latest = %@", entityName, keyPath, latest);
     return latest;
 }
 
 - (void) updateRelationships {
-    NSDate * latestChange = [self getLatestChangeDateFromRelationships];
+    NSDate * latestChange = [self getLatestChangeDateForContactRelationships];
+    // NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
     // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
         for (NSDictionary * relationshipDict in changedRelationships) {
@@ -534,6 +543,8 @@ typedef enum BackendStates {
 }
 
 - (void) updateRelationship: (NSDictionary*) relationshipDict {
+    [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
+    
     NSString * clientId = relationshipDict[@"otherClientId"];
     Contact * contact = [self getContactByClientId: clientId];
     if (contact == nil) {
@@ -545,7 +556,7 @@ typedef enum BackendStates {
 }
 
 - (void) updatePresences {
-    NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0];
+    NSDate * latestChange = [self getLatestChangeDateForContactPresence];
     // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
@@ -557,6 +568,7 @@ typedef enum BackendStates {
 
 - (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
     [self getKey:theContact.clientId withId:theId keyHandler:^(NSDictionary * keyRecord) {
+        [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
         if (keyRecord != nil && [theId isEqualToString: keyRecord[@"keyId"]]) {
             theContact.publicKeyString = keyRecord[@"key"];
             theContact.publicKeyId = keyRecord[@"keyId"];
@@ -607,6 +619,7 @@ typedef enum BackendStates {
                 myContact.avatarURL = @"";
             }
         }
+        myContact.presenceLastUpdatedMillis = thePresence[@"timestamp"];
         // NSLog(@"presenceUpdated, contact = %@", myContact);
 
     } else {
@@ -862,21 +875,101 @@ typedef enum BackendStates {
 }
 
 - (void) hello {
-    NSNumber * clientTime = [self millisFromDate:[NSDate date]];
+    NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
     [self hello:clientTime handler:^(NSDictionary * result) {
         if (result != nil) {
-            [self saveServerTime:[self dateFromMillis:result[@"serverTime"]]];
+            [self saveServerTime:[HXOBackend dateFromMillis:result[@"serverTime"]]];
         }
     }];
 }
 
-- (NSNumber*) millisFromDate:(NSDate *) date {
++ (NSNumber*) millisFromDate:(NSDate *) date {
+    if (date == nil) {
+        return [NSNumber numberWithDouble:0];
+    }
     return [NSNumber numberWithLongLong:[date timeIntervalSince1970]*1000];
 }
 
-- (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970 {
++ (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970 {
     return [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0 ];
 }
+
+// Regex for UUID:
+// [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}
+
+- (BOOL) validateObject:(id)objectToValidate forEntity:(NSString*)entityName error:(out NSError **) myError {
+    // NSLog(@">>> Validating Object: %@", objectToValidate);
+    if (objectToValidate == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: objectToValidate is nil"];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9900 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;        
+    }
+    NSDictionary * myEntities = [_delegate.rpcObjectModel entitiesByName];
+    if (myEntities == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: cant get Entities for rpcObjectModel"];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9901 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+    NSEntityDescription * myEntity = myEntities[entityName];
+    if (myEntity == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: cant find Entity '%@'", entityName];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9902 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+    NSManagedObject * myObject = [[NSManagedObject alloc] initWithEntity:myEntity insertIntoManagedObjectContext:nil];
+    if (myObject == nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: cant init object for Entity '%@'", entityName];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9903 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+#if VALIDATOR_DEBUG
+    NSDictionary * myAttributes = [myEntity attributesByName];
+    for (id attribute in myAttributes) {
+        NSLog(@"entity has attr %@, decr %@", attribute, [myAttributes[attribute] attributeValueClassName]);
+    }
+#endif
+    NSError * myOtherError = nil;
+    for (id property in objectToValidate) {
+        id myValue = objectToValidate[property];
+        if (myValue == nil) {
+            NSLog(@"WARNING: objectToValidate property %@ is nil",property);
+        }
+        if (![myObject validateValue:&myValue forKey:property error:&myOtherError]) {
+            NSString * myDescription = [NSString stringWithFormat:@"validateObject: Entity '%@', property '%@', value fails validation: %@, reason: %@", entityName, property, myValue, myOtherError];
+            *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9904 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            return NO;
+        };
+        @try {
+            // NSLog(@"try validating property %@",property);
+            [myObject setValue: myValue forKeyPath: property];
+        }
+        @catch (NSException* ex) {
+            // NSLog(@"!!!! Exception: %@\n", ex);
+            NSString * myDescription = [NSString stringWithFormat:@"validateObject: Entity '%@', property '%@', value setting failed: %@, reason: %@", entityName, property, myValue, ex];
+            *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9905 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            return NO;
+        }
+    }
+    // NSLog(@"=== Validating properties done");
+    if (![myObject validateForUpdate:myError]) {
+        NSString * myDescription = [NSString stringWithFormat:@"validateObject: Entity '%@', full object validation failed, reason: %@", entityName, *myError];
+        *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9906 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return NO;
+    }
+    NSLog(@"! Validating Object for entity '%@' passed", entityName);
+    return YES;
+}
+
+- (BOOL) validateObject:(id)objectToValidate forEntity:(NSString*)entityName {
+    NSError * myError = nil;
+    BOOL myResult = [self validateObject:objectToValidate forEntity:entityName error:&myError];
+    if (!myResult) {
+        NSLog(@"ERROR: %@", myError);
+    }
+    return myResult;
+}
+
+
 
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
@@ -886,16 +979,22 @@ typedef enum BackendStates {
     for (Delivery * delivery in deliveries) {
         [deliveryDicts addObject: [delivery rpcDictionary]];
     }
-    // NSLog(@"deliveryRequest: %@", messageDict);
+    // validate
+    for (NSDictionary * d in deliveryDicts) {
+        [self validateObject: d forEntity:@"RPC_TalkDelivery_out"];  // TODO: Handle Validation Error
+    }
+    
+    [self validateObject: messageDict forEntity:@"RPC_TalkMessage_out"]; // TODO: Handle Validation Error
+    
     [_serverConnection invoke: @"deliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"deliveryRequest() returned deliveries: %@", responseOrError);
             NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
             int i = 0;
             for (Delivery * delivery in deliveries) {
+                [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
                 delivery.receiver.latestMessageTime = message.timeAccepted;
-                // [self saveServerTime:message.timeAccepted]; // TODO: remove when welcome call is in place
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);
@@ -908,6 +1007,7 @@ typedef enum BackendStates {
     [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
+            [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
         } else {
@@ -923,6 +1023,7 @@ typedef enum BackendStates {
     {
         if (success) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
+            [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
             [self.delegate.managedObjectContext refreshObject: delivery.message mergeChanges: YES];
@@ -953,6 +1054,8 @@ typedef enum BackendStates {
                              @"avatarUrl" : avatarURL,
                              @"keyId" : [keyId hexadecimalString]
                              };
+    [self validateObject: params forEntity:@"RPC_TalkPresence_out"];  // TODO: Handle Validation Error
+
     [_serverConnection invoke: @"updatePresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"updatePresence() got result: %@", responseOrError);
@@ -1011,6 +1114,8 @@ typedef enum BackendStates {
                              @"key" :   [publicKey asBase64EncodedString], 
                              @"keyId" : [myKeyId hexadecimalString]
                              };
+    [self validateObject: params forEntity:@"RPC_TalkKey_out"];  // TODO: Handle Validation Error
+
     [_serverConnection invoke: @"updateKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"updateKey() got result: %@", responseOrError);
@@ -1157,11 +1262,15 @@ typedef enum BackendStates {
         return;
     }
     NSDictionary * messageDict = params[1];
+
+    [self validateObject: messageDict forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
+    [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+
     [self receiveMessage: messageDict withDelivery: deliveryDict];
 }
 
-
--(Delivery *) getDeliveryMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId  {
+// utility function to avoid code duplication
+-(Delivery *) getDeliveryByMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId  {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"receiverId" : theReceiverId};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndReceiverId" substitutionVariables: vars];
@@ -1197,11 +1306,13 @@ typedef enum BackendStates {
     }
     NSDictionary * deliveryDict = params[0];
     // NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
+
+    [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
     
     NSString * myMessageTag = deliveryDict[@"messageTag"];
     NSString * myReceiverId = deliveryDict[@"receiverId"];
     
-    Delivery * myDelivery = [self getDeliveryMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
+    Delivery * myDelivery = [self getDeliveryByMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
     if (myDelivery != nil) {
         if ([myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
             NSLog(@"Delivery state for messageTag %@ receiver %@ was already %@", myMessageTag, myReceiverId, myDelivery.state);
@@ -1233,6 +1344,7 @@ typedef enum BackendStates {
 - (void) presenceUpdatedNotification: (NSArray*) params {
     //TODO: Error checking
     for (id presence in params) {
+        [self validateObject: presence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
         // NSLog(@"updatePresences presence=%@",presence);
         [self presenceUpdated:presence];
     }

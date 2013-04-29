@@ -17,6 +17,9 @@
 "Choose Photo/Video" = "Foto/Video auswählen";
 
 /* Action Sheet Button Ttitle */
+"Choose Photo" = "Foto auswählen";
+
+/* Action Sheet Button Ttitle */
 "Choose Audio" = "Audio auswählen";
 
 /* Contacts Navigation Bar Title */
@@ -80,6 +83,9 @@
 
 /* Action Sheet Button Ttitle */
 "Take Photo/Video" = "Foto/Video aufnehmen";
+
+/* Action Sheet Button Ttitle */
+"Take Photo" = "Foto aufnehmen";
 
 /* Invite Alert Message */
 "The server accepted your code" = "Der Kode wurde akzeptiert";
