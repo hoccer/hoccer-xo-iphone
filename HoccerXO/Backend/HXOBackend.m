@@ -120,10 +120,7 @@ typedef enum BackendStates {
     return [NSDate dateWithTimeIntervalSinceNow:self.latestKnownServerTimeOffset];
 }
 
-
-// calls sendmessage after cloning the attachment
-- (void) forwardMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (const Attachment*) attachment {
-    
+- (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)attachmentCompleted {
     Attachment * newAttachment = nil;
     if (attachment) {
         newAttachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: self.delegate.managedObjectContext];
@@ -133,9 +130,7 @@ typedef enum BackendStates {
         newAttachment.humanReadableFileName = attachment.humanReadableFileName;
         
         CompletionBlock completion  = ^(NSError *myerror) {
-            if (myerror == nil) {
-                [self sendMessage:text toContact:contact withAttachment:newAttachment];
-            }
+            attachmentCompleted(newAttachment, myerror);
         };
         
         if ([newAttachment.mediaType isEqualToString:@"image"]) {
@@ -145,9 +140,26 @@ typedef enum BackendStates {
         } else if ([newAttachment.mediaType isEqualToString:@"audio"]) {
             [newAttachment makeAudioAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
         }
-        return;
-    } else {
-        [self sendMessage: text toContact:contact withAttachment:newAttachment];
+    }
+    return newAttachment;
+}
+
+
+// calls sendmessage after cloning the attachment
+- (void) forwardMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (const Attachment*) attachment {
+    
+    Attachment * newAttachment = nil;
+    
+    AttachmentCompletionBlock completion  = ^(Attachment * myAttachment, NSError *myerror) {
+        if (myerror == nil) {
+            [self sendMessage:text toContact:contact withAttachment:myAttachment];
+        }
+    };
+    
+    newAttachment = [self cloneAttachment:attachment whenReady:completion];
+    if (newAttachment == nil) {
+        // send message without attachment right now, we will not get a completion call here
+        [self sendMessage: text toContact:contact withAttachment:nil];
     }
 }
 

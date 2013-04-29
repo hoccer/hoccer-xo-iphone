@@ -25,6 +25,7 @@ typedef void (^PresenceHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
+typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 
 @protocol HXODelegate <NSObject>
 
@@ -54,6 +55,7 @@ typedef void (^GenericResultHandler)(BOOL);
 - (HXOMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 - (void) forwardMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (const Attachment*) attachment;
+- (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;

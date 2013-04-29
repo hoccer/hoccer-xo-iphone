@@ -47,6 +47,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 
+@property (strong, nonatomic) HXOMessage * messageToForward;
+
 - (void)configureCell:(UITableViewCell *)cell forMessage:(HXOMessage *) message;
 - (void)configureView;
 @end
@@ -138,7 +140,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
     UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Resend", nil) action:@selector(resendMessage:)];
-    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem, myResendMessageMenuItem]];
+    UIMenuItem *myForwardMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
+    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem, myResendMessageMenuItem, myForwardMessageMenuItem]];
     [menuController update];
     
     [self hideAttachmentSpinner];
@@ -892,6 +895,26 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [self.tableView reloadData];
     [self scrollToBottomAnimated: NO];
     [self configureView];
+    [self insertForwardedMessage];
+}
+
+- (void) insertForwardedMessage {
+    if (self.messageToForward) {
+        NSLog(@"insertForwardedMessage");
+        self.textField.text = self.messageToForward.body;
+        
+        if (self.currentAttachment) {
+            [self trashCurrentAttachment];
+        }
+        
+        AttachmentCompletionBlock completion  = ^(Attachment * myAttachment, NSError *myerror) {
+            self.currentAttachment = myAttachment;
+            NSLog(@"insertForwardedMessage: self.currentAttachment=%@",self.currentAttachment);
+            [self finishPickedAttachmentProcessingWithImage: myAttachment.previewImage withError:myerror];
+        };
+        [self.chatBackend cloneAttachment:self.messageToForward.attachment whenReady:completion];
+        self.messageToForward = nil;
+    }
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -992,6 +1015,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [self scrollToBottomAnimated: NO];
 }
 
+
 - (void) viewWillDisappear:(BOOL)animated {
     [self trashCurrentAttachment];
 
@@ -1062,6 +1086,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     if (action == @selector(copy:)) {return YES;}
     if (action == @selector(resendMessage:)) {return YES;}
+    if (action == @selector(forwardMessage:)) {return YES;}
     
     if (action == @selector(saveMessage:)) {
         if ([message.isOutgoing isEqualToNumber: @NO]) {
@@ -1084,6 +1109,11 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
 }
 
+- (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
+    NSLog(@"forwardMessage");
+    self.messageToForward = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    // [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
+}
 
 - (void) messageView:(MessageCell *)theCell saveMessage:(id)sender {
     // NSLog(@"saveMessage");
