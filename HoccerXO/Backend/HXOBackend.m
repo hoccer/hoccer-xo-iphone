@@ -547,6 +547,10 @@ typedef enum BackendStates {
     
     NSString * clientId = relationshipDict[@"otherClientId"];
     Contact * contact = [self getContactByClientId: clientId];
+    // XXX The server sends relationship updates with state 'none' even after depairing. We ignore those... 
+    if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
+        return;
+    }
     if (contact == nil) {
         contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         contact.clientId = clientId;

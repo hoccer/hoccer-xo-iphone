@@ -988,7 +988,10 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
 
 - (void) prepareForDeletion {
     [super prepareForDeletion];
-    NSLog(@"=== about to delete attachment. TODO: delete files");
+    if (self.ownedURL != nil) {
+        NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
+        [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
+    }
 }
 
 @end

@@ -43,6 +43,7 @@ typedef enum ActionSheetTags {
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, readonly) NSPredicate * hasValuePredicate;
 @property (strong, readonly) HXOBackend * chatBackend;
+@property (strong, readonly) AppDelegate * appDelegate;
 
 @end
 
@@ -218,7 +219,7 @@ typedef enum ActionSheetTags {
                 NSLog(@"INFO: First run, old credentials found.");
                 [self showOldCredentialsAlert];
             } else {
-                [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+                [self.appDelegate setupDone: YES];
             }
         }
     }
@@ -246,7 +247,7 @@ typedef enum ActionSheetTags {
         [sheet showInView: self.view];
     } else {
         NSLog(@"Keeping old credentials");
-        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: NO];
+        [self.appDelegate setupDone: NO];
     }
 }
 
@@ -255,10 +256,10 @@ typedef enum ActionSheetTags {
     if (actionSheet.tag == kActionSheetDeleteCredentials) {
         if (buttonIndex == actionSheet.cancelButtonIndex) {
             //[self showOldCredentialsAlert];
-            [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: NO];
+            [self.appDelegate setupDone: NO];
         } else if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [[UserProfile sharedProfile] deleteCredentials];
-            [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+            [self.appDelegate setupDone: YES];
         } else {
             NSLog(@"Unhandled button index %d in delete credentials action sheet", buttonIndex);
         }
@@ -642,7 +643,7 @@ typedef enum ActionSheetTags {
 #pragma mark - Profile Actions
 
 - (void) chatWithContactPressed: (id) sender {
-    ConversationViewController * conversationViewController = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).conversationViewController;
+    ConversationViewController * conversationViewController = self.appDelegate.conversationViewController;
     ChatViewController * chatViewController = conversationViewController.chatViewController;
     chatViewController.partner = self.contact;
     NSArray * viewControllers = @[conversationViewController, chatViewController];
@@ -684,10 +685,11 @@ typedef enum ActionSheetTags {
 
 - (void) deleteContact: (Contact*) contact {
     [self.navigationController popViewControllerAnimated: YES];
-    [((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend depairClient: contact.clientId handler:^(BOOL success) {
+    [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
         NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
-        NSManagedObjectContext * moc = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).managedObjectContext;
+        NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
         [moc deleteObject: contact];
+        [self.appDelegate saveDatabase];
     }];
 }
 
@@ -736,14 +738,6 @@ typedef enum ActionSheetTags {
     [self updateAvatar: nil];
 }
 
-@synthesize chatBackend = _chatBackend;
-- (HXOBackend*) chatBackend {
-    if (_chatBackend == nil) {
-        _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
-    }
-    return _chatBackend;
-}
-
 - (void) renewKeypairPressed: (id) sender {
     [[RSA sharedInstance] cleanKeyChain];
     [self updateKeyFingerprint];
@@ -752,6 +746,22 @@ typedef enum ActionSheetTags {
     [self.tableView endUpdates];
     [self.chatBackend updateKey];
     [self.chatBackend updatePresence];
+}
+
+@synthesize chatBackend = _chatBackend;
+- (HXOBackend*) chatBackend {
+    if (_chatBackend == nil) {
+        _chatBackend = self.appDelegate.chatBackend;
+    }
+    return _chatBackend;
+}
+
+@synthesize appDelegate = _appDelegate;
+- (AppDelegate*) appDelegate {
+    if (_appDelegate == nil) {
+        _appDelegate = ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
+    }
+    return _appDelegate;
 }
 
 @end
