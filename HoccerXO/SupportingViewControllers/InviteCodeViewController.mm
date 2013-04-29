@@ -22,17 +22,17 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                target:self
-                                                                                action:@selector(canceld:)];
+                                                                                  target:self
+                                                                                  action:@selector(canceld:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                  target:self
-                                                                                  action:@selector(onDone:)];
+                                                                                target:self
+                                                                                action:@selector(onDone:)];
     self.navigationItem.rightBarButtonItem = doneButton;
     self.codeTextField.delegate = self;
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
 
-     UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
+    UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
     self.getNewCodeButton.backgroundColor = [UIColor clearColor];
     [self.getNewCodeButton setBackgroundImage: background forState: UIControlStateNormal];
 
@@ -152,10 +152,7 @@
     [self.qrCodeReaderView setNeedsLayout];
 }
 
-- (void) readerView: (ZBarReaderView*) view
-     didReadSymbols: (ZBarSymbolSet*) symbols
-          fromImage: (UIImage*) img
-{
+- (void) readerView: (ZBarReaderView*) view didReadSymbols: (ZBarSymbolSet*) symbols fromImage: (UIImage*) image {
     for(ZBarSymbol *symbol in symbols) {
         [self processScannedSymbol: symbol];
     }

@@ -986,4 +986,9 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
     self.attachmentJsonString = [self.message decryptString:theB64String];
 }
 
+- (void) prepareForDeletion {
+    [super prepareForDeletion];
+    NSLog(@"=== about to delete attachment. TODO: delete files");
+}
+
 @end

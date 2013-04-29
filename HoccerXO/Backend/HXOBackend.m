@@ -1245,6 +1245,14 @@ typedef enum BackendStates {
     }];
 }
 
+- (void) depairClient: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"unblockClient");
+    [_serverConnection invoke: @"depairClient" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+
 #pragma mark - Incoming RPC Calls
 
 - (void) incomingDelivery: (NSArray*) params {

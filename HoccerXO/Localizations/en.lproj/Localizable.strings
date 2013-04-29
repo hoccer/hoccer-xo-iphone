@@ -217,5 +217,8 @@
 
 "or_scan_an_invite_code" = "or scan an invite QR code:";
 
-"let_a_friend_scan_this_code" = "or let him scan this code";
+"let_a_friend_scan_this_code" = "or let'em scan this code";
 
+"delete_contact_safety_question" = "Delete contact, chat and attachments?";
+
+"delete_contact_confirm" = "Delete Contact";
