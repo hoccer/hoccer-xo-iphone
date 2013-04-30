@@ -30,7 +30,9 @@
 
 - (CGSize) calculateSize: (NSString*) text {
     CGSize constraint = CGSizeMake(self.frame.size.width, MAXFLOAT);
-    return [text sizeWithFont:self.font constrainedToSize: constraint lineBreakMode: NSLineBreakByWordWrapping];
+    CGSize size = [text sizeWithFont:self.font constrainedToSize: constraint lineBreakMode: NSLineBreakByWordWrapping];
+    size.height = MAX(size.height, self.minHeight);
+    return size;
 }
 
 - (void)updateSize {

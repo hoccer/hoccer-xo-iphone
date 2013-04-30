@@ -986,4 +986,12 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
     self.attachmentJsonString = [self.message decryptString:theB64String];
 }
 
+- (void) prepareForDeletion {
+    [super prepareForDeletion];
+    if (self.ownedURL != nil) {
+        NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
+        [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
+    }
+}
+
 @end

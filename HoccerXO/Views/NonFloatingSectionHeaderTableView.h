@@ -11,6 +11,5 @@
 @interface NonFloatingSectionHeaderTableView : UITableView
 
 - (BOOL) allowsHeaderViewsToFloat;
-- (BOOL) allowsFooterViewsToFloat;
 
 @end

@@ -559,6 +559,10 @@ typedef enum BackendStates {
     
     NSString * clientId = relationshipDict[@"otherClientId"];
     Contact * contact = [self getContactByClientId: clientId];
+    // XXX The server sends relationship updates with state 'none' even after depairing. We ignore those... 
+    if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
+        return;
+    }
     if (contact == nil) {
         contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         contact.clientId = clientId;
@@ -703,14 +707,12 @@ typedef enum BackendStates {
     // NSLog(@"downloadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
-    [SoundEffectPlayer transferFinished];
 }
 
 - (void) uploadFinished:(Attachment *)theAttachment {
     // NSLog(@"uploadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
-    [SoundEffectPlayer transferFinished];
 }
 
 - (void) downloadFailed:(Attachment *)theAttachment {
@@ -735,7 +737,7 @@ typedef enum BackendStates {
     return retryTime;
 }
 
--(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withRetryLimit:(long long)maxRetries withSelector:(SEL)theTransferSelector {
+-(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withRetryLimit:(long long)maxRetries withSelector:(SEL)theTransferSelector withErrorKey: (NSString*) errorKey {
     if (theAttachment.transferRetryTimer != nil) {
         // NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
         [theAttachment.transferRetryTimer invalidate];
@@ -749,7 +751,14 @@ typedef enum BackendStates {
                                                                           userInfo:nil
                                                                            repeats:NO];
     } else {
-        [SoundEffectPlayer transferFailed];
+        NSString * titleKey = [NSString stringWithFormat: @"%@_title", errorKey];
+        NSString * messageKey = [NSString stringWithFormat: @"%@_message", errorKey];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(titleKey, nil)
+                                                         message: NSLocalizedString(messageKey, nil)
+                                                        delegate: nil
+                                               cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
         NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
               theAttachment.remoteURL, theAttachment.transferFailures);
     }
@@ -761,7 +770,8 @@ typedef enum BackendStates {
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
                   withRetryLimit:maxRetries
-                    withSelector:@selector(downloadOnTimer:)];
+                    withSelector:@selector(downloadOnTimer:)
+                    withErrorKey:@"attachment_download_failed"];
 }
 
 -(void) scheduleNewUploadFor:(Attachment *)theAttachment {
@@ -769,7 +779,8 @@ typedef enum BackendStates {
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
                   withRetryLimit:maxRetries
-                    withSelector:@selector(uploadOnTimer:)];
+                    withSelector:@selector(uploadOnTimer:)
+                    withErrorKey:@"attachment_upload_failed"];
 }
 
 - (NSURL *) newUploadURL {
@@ -1256,6 +1267,14 @@ typedef enum BackendStates {
         handler(success);
     }];
 }
+
+- (void) depairClient: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"unblockClient");
+    [_serverConnection invoke: @"depairClient" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
 
 #pragma mark - Incoming RPC Calls
 

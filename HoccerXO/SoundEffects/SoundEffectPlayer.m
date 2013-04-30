@@ -12,17 +12,13 @@
 SystemSoundID messageArrivedId = 0;
 SystemSoundID messageDeliveredId = 0;
 SystemSoundID messageSentId = 0;
-SystemSoundID transferFinishedId = 0;
-SystemSoundID transferFailedId = 0;
 
 @implementation SoundEffectPlayer
 
 +  (void)initialize {
-	[self createSoundWithName: @"message_ding"       ofType: @"caf" withId: &messageArrivedId];
+	[self createSoundWithName: @"new_message"        ofType: @"aif" withId: &messageArrivedId];
     [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &messageDeliveredId];
     [self createSoundWithName: @"sweep_out_sound"    ofType: @"wav" withId: &messageSentId];
-    [self createSoundWithName: @"tada_sound"         ofType: @"wav" withId: &transferFinishedId];
-    [self createSoundWithName: @"sad_trombone_sound" ofType: @"wav" withId: &transferFailedId];
 }
 
 + (void) createSoundWithName: (NSString*) name ofType: (NSString*) type withId: (SystemSoundID*) theId {
@@ -41,13 +37,6 @@ SystemSoundID transferFailedId = 0;
 
 + (void)messageSent {
 	[SoundEffectPlayer playSoundWithId: messageSentId];
-}
-
-+ (void)transferFinished {
-	[SoundEffectPlayer playSoundWithId: transferFinishedId];}
-
-+ (void)transferFailed {
-	[SoundEffectPlayer playSoundWithId: transferFailedId];
 }
 
 // Will just play sound

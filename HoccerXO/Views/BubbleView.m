@@ -117,4 +117,5 @@ static const double kAttachmentPadding = 10;
     NSString * assetName = [NSString stringWithFormat: @"bubble-%@%@", _pointingRight ? @"right" : @"left", stateString];
     self.background.image =[AssetStore stretchableImageNamed: assetName withLeftCapWidth: _pointingRight ? kRightBubbleCapLeft : kLeftBubbleCapLeft topCapHeight:kBubbleCapTop];
 }
+
 @end

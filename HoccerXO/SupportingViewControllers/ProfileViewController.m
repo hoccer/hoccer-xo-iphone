@@ -33,11 +33,17 @@
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 
+typedef enum ActionSheetTags {
+    kActionSheetDeleteCredentials = 1,
+    kActionSheetDeleteContact
+} ActionSheetTag;
+
 @interface ProfileViewController ()
 
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, readonly) NSPredicate * hasValuePredicate;
 @property (strong, readonly) HXOBackend * chatBackend;
+@property (strong, readonly) AppDelegate * appDelegate;
 
 @end
 
@@ -213,7 +219,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
                 NSLog(@"INFO: First run, old credentials found.");
                 [self showOldCredentialsAlert];
             } else {
-                [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+                [self.appDelegate setupDone: YES];
             }
         }
     }
@@ -237,21 +243,30 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
                                               destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
                                                    otherButtonTitles: nil];
         sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+        sheet.tag = kActionSheetDeleteCredentials;
         [sheet showInView: self.view];
     } else {
         NSLog(@"Keeping old credentials");
-        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: NO];
+        [self.appDelegate setupDone: NO];
     }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // NSLog(@"button index %d", buttonIndex);
-    if (buttonIndex == actionSheet.cancelButtonIndex) {
-        //[self showOldCredentialsAlert];
-        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: NO];
-    } else {
-        [[UserProfile sharedProfile] deleteCredentials];
-        [(AppDelegate*)[[UIApplication sharedApplication] delegate] setupDone: YES];
+    if (actionSheet.tag == kActionSheetDeleteCredentials) {
+        if (buttonIndex == actionSheet.cancelButtonIndex) {
+            //[self showOldCredentialsAlert];
+            [self.appDelegate setupDone: NO];
+        } else if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [[UserProfile sharedProfile] deleteCredentials];
+            [self.appDelegate setupDone: YES];
+        } else {
+            NSLog(@"Unhandled button index %d in delete credentials action sheet", buttonIndex);
+        }
+    } else if (actionSheet.tag == kActionSheetDeleteContact) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self deleteContact: self.contact];
+        }
     }
 }
 
@@ -560,7 +575,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     }
     // just don't ask ... needs refactoring
     if (_mode == ProfileViewModeContactProfile) {
-        return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem, _deleteContactItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
+        return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_deleteContactItem]];
     } else {
         if (editing) {
             return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_renewKeyPairItem, _renewKeyPairInfoItem]];
@@ -628,7 +643,7 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 #pragma mark - Profile Actions
 
 - (void) chatWithContactPressed: (id) sender {
-    ConversationViewController * conversationViewController = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).conversationViewController;
+    ConversationViewController * conversationViewController = self.appDelegate.conversationViewController;
     ChatViewController * chatViewController = conversationViewController.chatViewController;
     chatViewController.partner = self.contact;
     NSArray * viewControllers = @[conversationViewController, chatViewController];
@@ -658,7 +673,24 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
 }
 
 - (void) deleteContactPressed: (id) sender {
-    NSLog(@"TODO: delete contact");
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
+                                                        delegate: self
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
+                                               otherButtonTitles: nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    sheet.tag = kActionSheetDeleteContact;
+    [sheet showInView: self.view];
+}
+
+- (void) deleteContact: (Contact*) contact {
+    [self.navigationController popViewControllerAnimated: YES];
+    [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
+        NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
+        NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
+        [moc deleteObject: contact];
+        [self.appDelegate saveDatabase];
+    }];
 }
 
 #pragma mark - Attachment Picker Controller
@@ -706,14 +738,6 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [self updateAvatar: nil];
 }
 
-@synthesize chatBackend = _chatBackend;
-- (HXOBackend*) chatBackend {
-    if (_chatBackend == nil) {
-        _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
-    }
-    return _chatBackend;
-}
-
 - (void) renewKeypairPressed: (id) sender {
     [[RSA sharedInstance] cleanKeyChain];
     [self updateKeyFingerprint];
@@ -722,6 +746,22 @@ static const CGFloat kProfileEditAnimationDuration = 0.5;
     [self.tableView endUpdates];
     [self.chatBackend updateKey];
     [self.chatBackend updatePresence];
+}
+
+@synthesize chatBackend = _chatBackend;
+- (HXOBackend*) chatBackend {
+    if (_chatBackend == nil) {
+        _chatBackend = self.appDelegate.chatBackend;
+    }
+    return _chatBackend;
+}
+
+@synthesize appDelegate = _appDelegate;
+- (AppDelegate*) appDelegate {
+    if (_appDelegate == nil) {
+        _appDelegate = ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
+    }
+    return _appDelegate;
 }
 
 @end

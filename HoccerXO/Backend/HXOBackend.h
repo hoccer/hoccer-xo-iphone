@@ -67,6 +67,8 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 - (void) blockClient: (NSString*) clientId handler: (GenericResultHandler) handler;
 - (void) unblockClient: (NSString*) clientId handler: (GenericResultHandler) handler;
 
+- (void) depairClient: (NSString*) clientId handler: (GenericResultHandler) handler;
+
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;
 

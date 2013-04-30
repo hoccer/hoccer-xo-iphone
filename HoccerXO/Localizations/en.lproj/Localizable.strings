@@ -215,3 +215,19 @@
 
 "invite_not_a_hoccer_xo_qr_code_message" = "This QR Code is not a Hoccer XO invite code";
 
+"or_scan_an_invite_code" = "or scan an invite QR code:";
+
+"let_a_friend_scan_this_code" = "or let'em scan this code";
+
+"delete_contact_safety_question" = "Delete contact, chat and attachments?";
+
+"delete_contact_confirm" = "Delete Contact";
+
+"attachment_download_failed_title" = "Download failed";
+
+"attachment_download_failed_message" = "Failed to download an attachment";
+
+"attachment_upload_failed_title" = "Upload failed";
+
+"attachment_upload_failed_message" = "Failed to upload an attachment";
+

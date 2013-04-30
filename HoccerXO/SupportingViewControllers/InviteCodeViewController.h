@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZBarReaderView.h"
+#import "ZBarSDK.h"
 
 @class HXOBackend;
 
@@ -18,6 +18,9 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 {
     BOOL _newTokenButtonPressed;
     NSMutableSet * _scannedCodes;
+#if TARGET_IPHONE_SIMULATOR
+    ZBarCameraSimulator * _qrCameraSimulator;
+#endif
 }
 
 @property (nonatomic, readonly) HXOBackend * chatBackend;
@@ -28,5 +31,7 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 
 @property (strong, nonatomic) IBOutlet UIImageView *qrCodeView;
 @property (nonatomic, retain) IBOutlet ZBarReaderView *qrCodeReaderView;
+
+@property (strong, nonatomic) IBOutlet UILabel *qrLabel;
 
 @end

@@ -23,13 +23,12 @@
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
 #import "ProfileViewController.h"
-#import "InviteFooterView.h"
+#import "InviteCell.h"
 #import "InvitationController.h"
 
 @interface ConversationViewController ()
 
 @property (nonatomic,strong) ConversationCell* conversationCell;
-@property (nonatomic,readonly) InviteFooterView * inviteFooter;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
@@ -42,6 +41,9 @@
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
     }
     self.conversationCell = [self.tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier]];
+
+    UINib * nib = [UINib nibWithNibName: @"InviteCell" bundle: [NSBundle mainBundle]];
+    [self.tableView registerNib: nib forCellReuseIdentifier: [InviteCell reuseIdentifier]];
 
     [super awakeFromNib];
 }
@@ -100,25 +102,32 @@
 - (BOOL) isEmpty {
     if (self.fetchedResultsController.sections.count == 0) {
         return YES;
-    } else {
+    } else if (self.fetchedResultsController.sections.count == 1) {
         id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][0];
         return [sectionInfo numberOfObjects] == 0;
     }
+    return NO;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    NSInteger count;
     if (self.emptyTablePlaceholder != nil) {
-        return 1;
+        count = 1;
+    } else {
+        count = [[self.fetchedResultsController sections] count];
     }
-    return [[self.fetchedResultsController sections] count];
+    return count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger count;
     if (self.emptyTablePlaceholder != nil) {
-        return 1;
+        count = 1;
+    } else {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+        count = [sectionInfo numberOfObjects];
     }
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    return count + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -126,6 +135,10 @@
         self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"conversation_empty_placeholder", nil);
         self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
         return self.emptyTablePlaceholder;
+    } else if ([self isLastCell: indexPath]) {
+        InviteCell * cell = [tableView dequeueReusableCellWithIdentifier: [InviteCell reuseIdentifier] forIndexPath: indexPath];
+        [cell.button addTarget: self action: @selector(inviteFriendsPressed:) forControlEvents: UIControlEventTouchUpInside];
+        return cell;
     } else {
         UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath: indexPath];
         [self configureCell:cell atIndexPath:indexPath];
@@ -133,26 +146,12 @@
     }
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    return self.inviteFooter;
-}
-
-@synthesize inviteFooter = _inviteFooter;
-- (UIView*) inviteFooter {
-    if (_inviteFooter == nil) {
-        _inviteFooter = [[NSBundle mainBundle] loadNibNamed:@"InviteFooterView" owner:self options:nil][0];
-        [_inviteFooter.button addTarget: self action: @selector(inviteFriendsPressed:) forControlEvents: UIControlEventTouchUpInside];
-        // NSLog(@"invite footer frame %@", NSStringFromCGRect(_inviteFooter.frame));
-    }
-    return _inviteFooter;
+- (BOOL) isLastCell: (NSIndexPath*) indexPath {
+    return indexPath.section == [self numberOfSectionsInTableView: self.tableView] - 1 && indexPath.row == [self tableView: self.tableView numberOfRowsInSection: indexPath.section] - 1;
 }
 
 - (void) inviteFriendsPressed: (id) sender {
     [[InvitationController sharedInvitationController] presentWithViewController: self];
-}
-
-- (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    return self.inviteFooter.frame.size.height;
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
