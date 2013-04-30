@@ -275,10 +275,8 @@
 		E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886DD1728135C0089A510 /* SoundEffectPlayer.m */; };
 		E99886E617282C140089A510 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99886E517282C140089A510 /* AudioToolbox.framework */; };
 		E99886EF17282C950089A510 /* catch_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886E817282C950089A510 /* catch_sound.wav */; };
-		E99886F117282C950089A510 /* sad_trombone_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EA17282C950089A510 /* sad_trombone_sound.wav */; };
 		E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EB17282C950089A510 /* sweep_in_sound.wav */; };
 		E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EC17282C950089A510 /* sweep_out_sound.wav */; };
-		E99886F417282C950089A510 /* tada_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886ED17282C950089A510 /* tada_sound.wav */; };
 		E99886F517282C950089A510 /* throw_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EE17282C950089A510 /* throw_sound.wav */; };
 		E9A2B85017189A1200E35E7E /* button-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84C17189A1200E35E7E /* button-audio.png */; };
 		E9A2B85117189A1200E35E7E /* button-audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84D17189A1200E35E7E /* button-audio@2x.png */; };
@@ -738,10 +736,8 @@
 		E99886DD1728135C0089A510 /* SoundEffectPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundEffectPlayer.m; sourceTree = "<group>"; };
 		E99886E517282C140089A510 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		E99886E817282C950089A510 /* catch_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = catch_sound.wav; sourceTree = "<group>"; };
-		E99886EA17282C950089A510 /* sad_trombone_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sad_trombone_sound.wav; sourceTree = "<group>"; };
 		E99886EB17282C950089A510 /* sweep_in_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_in_sound.wav; sourceTree = "<group>"; };
 		E99886EC17282C950089A510 /* sweep_out_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_out_sound.wav; sourceTree = "<group>"; };
-		E99886ED17282C950089A510 /* tada_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tada_sound.wav; sourceTree = "<group>"; };
 		E99886EE17282C950089A510 /* throw_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = throw_sound.wav; sourceTree = "<group>"; };
 		E9A2B84C17189A1200E35E7E /* button-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio.png"; sourceTree = "<group>"; };
 		E9A2B84D17189A1200E35E7E /* button-audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio@2x.png"; sourceTree = "<group>"; };
@@ -1510,10 +1506,8 @@
 			children = (
 				631070EA1730106900D3936F /* new_message.aif */,
 				E99886E817282C950089A510 /* catch_sound.wav */,
-				E99886EA17282C950089A510 /* sad_trombone_sound.wav */,
 				E99886EB17282C950089A510 /* sweep_in_sound.wav */,
 				E99886EC17282C950089A510 /* sweep_out_sound.wav */,
-				E99886ED17282C950089A510 /* tada_sound.wav */,
 				E99886EE17282C950089A510 /* throw_sound.wav */,
 			);
 			path = Sounds;
@@ -1827,10 +1821,8 @@
 				E99886B71725AFAA0089A510 /* audio_leer.png in Resources */,
 				E99886B81725AFAA0089A510 /* audio_leer@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
-				E99886F117282C950089A510 /* sad_trombone_sound.wav in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
-				E99886F417282C950089A510 /* tada_sound.wav in Resources */,
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
 				63D8EE2717281D56000F9E53 /* bubble-right-failed.png in Resources */,
 				63D8EE2817281D56000F9E53 /* bubble-right-failed@2x.png in Resources */,

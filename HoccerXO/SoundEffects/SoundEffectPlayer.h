@@ -14,8 +14,6 @@
 + (void)messageArrived;
 + (void)messageDelivered;
 + (void)messageSent;
-+ (void)transferFinished;
-+ (void)transferFailed;
 
 + (void)playSoundWithId: (SystemSoundID)soundId;
 

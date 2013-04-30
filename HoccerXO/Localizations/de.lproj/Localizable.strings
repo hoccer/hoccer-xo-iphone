@@ -204,3 +204,11 @@
 "delete_contact_safety_question" = "Kontakt, Chat und Attachments löschen?";
 
 "delete_contact_confirm" = "Kontakt löschen";
+
+"attachment_download_failed_title" = "Download fehlgeschlagen";
+
+"attachment_download_failed_message" = "Ein Anhang konnte nicht herunter geladen werden.";
+
+"attachment_upload_failed_title" = "Upload fehlgeschlagen";
+
+"attachment_upload_failed_message" = "Ein Anhang konnte nicht hochgeladen werden.";

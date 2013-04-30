@@ -222,3 +222,12 @@
 "delete_contact_safety_question" = "Delete contact, chat and attachments?";
 
 "delete_contact_confirm" = "Delete Contact";
+
+"attachment_download_failed_title" = "Download failed";
+
+"attachment_download_failed_message" = "Failed to download an attachment";
+
+"attachment_upload_failed_title" = "Upload failed";
+
+"attachment_upload_failed_message" = "Failed to upload an attachment";
+
