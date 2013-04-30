@@ -6,9 +6,10 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "InviteFooterView.h"
+#import "InviteCell.h"
 
-@implementation InviteFooterView
+
+@implementation InviteCell
 
 - (void) awakeFromNib {
     [self.button setTitle: NSLocalizedString(@"invite_friends_button_title", nil) forState: UIControlStateNormal];

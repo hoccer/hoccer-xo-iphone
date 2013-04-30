@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface InviteFooterView : UIView
+#import "HXOTableViewCell.h"
+
+@interface InviteCell : HXOTableViewCell
 
 @property (nonatomic,strong) IBOutlet UIButton * button;
+
 @end
