@@ -9,7 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+#import "RecordViewController.h"
+
+
 @class Attachment;
+@class RecordViewController;
 
 typedef enum AttachmentPickerTypes {
     AttachmentPickerTypePhotoFromLibrary,
@@ -20,7 +24,8 @@ typedef enum AttachmentPickerTypes {
     AttachmentPickerTypeImageAttachmentFromPasteboard,
     AttachmentPickerTypeVideoAttachmentFromPasteboard,
     AttachmentPickerTypeAudioAttachmentFromPasteboard,
-    AttachmentPickerTypeImageFromPasteboard
+    AttachmentPickerTypeImageFromPasteboard,
+    AttachmentPickerTypeAudioRecorder
     //    AttachmentTypeContact
     // TODO: add more attachment types
 } AttachmentPickerType;
@@ -39,11 +44,13 @@ typedef enum AttachmentPickerTypes {
 
 @end
 
-@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate>
+@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate>
 
 @property (nonatomic, weak) id<AttachmentPickerControllerDelegate> delegate;
 
 - (id) initWithViewController: (UIViewController*) viewController delegate: (id<AttachmentPickerControllerDelegate>) delegate;
 - (void) showInView: (UIView*) view;
+
+@property (readonly, strong, nonatomic) RecordViewController * recordViewController;
 
 @end

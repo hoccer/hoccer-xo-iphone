@@ -7,6 +7,7 @@
 //
 
 #import "AttachmentPickerController.h"
+#import "RecordViewController.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -24,7 +25,10 @@
 @property (nonatomic, assign) AttachmentPickerType type;
 @end
 
+
 @implementation AttachmentPickerController
+
+@synthesize recordViewController = _recordViewController;
 
 - (id) initWithViewController: (UIViewController*) viewController delegate:(id<AttachmentPickerControllerDelegate>)delegate {
     self = [super init];
@@ -36,6 +40,13 @@
         [self probeAttachmentTypes];
     }
     return self;
+}
+
+- (RecordViewController*) recordViewController {
+    if (_recordViewController == nil) {
+        _recordViewController = [_viewController.storyboard instantiateViewControllerWithIdentifier:@"RecordViewController"];
+    }
+    return _recordViewController;
 }
 
 - (void) probeAttachmentTypes {
@@ -84,6 +95,12 @@
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"Choose Audio", @"Action Sheet Button Ttitle");
         item.type = AttachmentPickerTypeMediaFromLibrary;
+        [_supportedItems addObject: item];
+    }
+    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioRecorder]) {
+        AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+        item.localizedButtonTitle = NSLocalizedString(@"eEcord Audio", @"Action Sheet Button Ttitle");
+        item.type = AttachmentPickerTypeAudioRecorder;
         [_supportedItems addObject: item];
     }
     
@@ -205,6 +222,8 @@
             break;
         case AttachmentPickerTypeImageFromPasteboard:
             [self pickImageFromPasteBoard];
+        case AttachmentPickerTypeAudioRecorder:
+            [self pickAudioFromRecorder];
             break;
     }
 }
@@ -251,6 +270,14 @@
     }
 }
 
+- (void) pickAudioFromRecorder {
+    _recordViewController.delegate = self;
+    [_viewController presentViewController: self.recordViewController animated: YES completion: nil];
+}
+
+- (void)audiorecorder:(RecordViewController *)audioRecorder didRecordAudio:(NSString *)audioFileURL {
+    NSLog(@"audiorecorder didRecordAudio %@",audioFileURL);
+}
 
 - (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType withVideo: (BOOL) videoFlag {
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];

@@ -1280,6 +1280,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     return _imageViewController;
 }
 
+
 - (void) scrollToBottomAnimated: (BOOL) animated {
     // NSLog(@"atscrollToBottomAnimated %d", animated);
     if ([self.fetchedResultsController.fetchedObjects count]) {
