@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		501F1B33170C676E00F559F0 /* contact_cell_bg_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 501F1B31170C676E00F559F0 /* contact_cell_bg_selected.png */; };
 		501F1B34170C676E00F559F0 /* contact_cell_bg_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 501F1B32170C676E00F559F0 /* contact_cell_bg_selected@2x.png */; };
+		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63126C2F170E46F800A6804A /* MessageUI.framework */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
@@ -160,7 +161,6 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
-		6383FF8E172AEC3000835C91 /* message_ding.caf in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8D172AEC3000835C91 /* message_ding.caf */; };
 		63A7F660172C2E4800C0EC26 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F65B172C2E3100C0EC26 /* libqrencoder.a */; };
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
@@ -372,6 +372,7 @@
 /* Begin PBXFileReference section */
 		501F1B31170C676E00F559F0 /* contact_cell_bg_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact_cell_bg_selected.png; sourceTree = "<group>"; };
 		501F1B32170C676E00F559F0 /* contact_cell_bg_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_cell_bg_selected@2x.png"; sourceTree = "<group>"; };
+		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
 		631254C816EC198E009A6584 /* JsonRpcWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonRpcWebSocket.h; sourceTree = "<group>"; };
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
 		63126C2F170E46F800A6804A /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -558,7 +559,6 @@
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
-		6383FF8D172AEC3000835C91 /* message_ding.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = message_ding.caf; sourceTree = "<group>"; };
 		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -588,7 +588,7 @@
 		63A7F6A5172C418A00C0EC26 /* zbar-help.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "zbar-help.html"; sourceTree = "<group>"; };
 		63A7F6A6172C418A00C0EC26 /* zbar-helpicons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-helpicons.png"; sourceTree = "<group>"; };
 		63A7F6A7172C418A00C0EC26 /* zbar-samples.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-samples.png"; sourceTree = "<group>"; };
-		63A7F6B8172EBE0400C0EC26 /* HoccerXO- 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO- 3.xcdatamodel"; sourceTree = "<group>"; };
+		63A7F6B8172EBE0400C0EC26 /* HoccerXO- 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 3.xcdatamodel"; sourceTree = "<group>"; };
 		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		63AE4514170350750099F0CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		63AE451A1703519B0099F0CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -1508,7 +1508,7 @@
 		E99886E717282C950089A510 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				6383FF8D172AEC3000835C91 /* message_ding.caf */,
+				631070EA1730106900D3936F /* new_message.aif */,
 				E99886E817282C950089A510 /* catch_sound.wav */,
 				E99886EA17282C950089A510 /* sad_trombone_sound.wav */,
 				E99886EB17282C950089A510 /* sweep_in_sound.wav */,
@@ -1842,11 +1842,11 @@
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */,
 				6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */,
-				6383FF8E172AEC3000835C91 /* message_ding.caf in Resources */,
 				63A7F6A9172C418A00C0EC26 /* zbar-back.png in Resources */,
 				63A7F6AA172C418A00C0EC26 /* zbar-help.html in Resources */,
 				63A7F6AB172C418A00C0EC26 /* zbar-helpicons.png in Resources */,
 				63A7F6AC172C418A00C0EC26 /* zbar-samples.png in Resources */,
+				631070EB1730106900D3936F /* new_message.aif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

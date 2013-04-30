@@ -18,7 +18,7 @@ SystemSoundID transferFailedId = 0;
 @implementation SoundEffectPlayer
 
 +  (void)initialize {
-	[self createSoundWithName: @"message_ding"       ofType: @"caf" withId: &messageArrivedId];
+	[self createSoundWithName: @"new_mwssage"        ofType: @"aif" withId: &messageArrivedId];
     [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &messageDeliveredId];
     [self createSoundWithName: @"sweep_out_sound"    ofType: @"wav" withId: &messageSentId];
     [self createSoundWithName: @"tada_sound"         ofType: @"wav" withId: &transferFinishedId];
