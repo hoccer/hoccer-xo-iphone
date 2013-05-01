@@ -50,5 +50,6 @@
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell;
 - (BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender;
 
++ (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
 
 @end

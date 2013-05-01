@@ -28,8 +28,9 @@
 
 @property (weak) id<AudioRecorderDelegate> delegate;
 
-@property (strong, nonatomic) NSURL *soundFileURL;
+@property (strong, nonatomic) NSURL *audioFileURL;
 
+@property (strong, nonatomic) NSTimer *updateTimer;
 
 - (IBAction)recordAudio:(id)sender;
 - (IBAction)playAudio:(id)sender;

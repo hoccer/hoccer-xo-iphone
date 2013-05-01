@@ -99,7 +99,7 @@
     }
     if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioRecorder]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"eEcord Audio", @"Action Sheet Button Ttitle");
+        item.localizedButtonTitle = NSLocalizedString(@"Record Audio", @"Action Sheet Button Ttitle");
         item.type = AttachmentPickerTypeAudioRecorder;
         [_supportedItems addObject: item];
     }
@@ -271,13 +271,20 @@
 }
 
 - (void) pickAudioFromRecorder {
-    _recordViewController.delegate = self;
+    self.recordViewController.delegate = self;
     [_viewController presentViewController: self.recordViewController animated: YES completion: nil];
 }
 
-- (void)audiorecorder:(RecordViewController *)audioRecorder didRecordAudio:(NSString *)audioFileURL {
+- (void)audiorecorder:(RecordViewController *)audioRecorder didRecordAudio:(NSURL *)audioFileURL {
     NSLog(@"audiorecorder didRecordAudio %@",audioFileURL);
+    NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.mediaType": @"audio",
+                                       @"com.hoccer.xo.mimeType": @"audio/mp4",
+                                       @"com.hoccer.xo.fileName": [audioFileURL lastPathComponent],
+                                       @"com.hoccer.xo.url1": [audioFileURL absoluteString]};
+    [self.delegate didPickAttachment: myAttachmentInfo];
 }
+
+ 
 
 - (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType withVideo: (BOOL) videoFlag {
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];

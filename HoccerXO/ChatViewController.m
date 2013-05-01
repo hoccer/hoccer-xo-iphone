@@ -320,7 +320,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
         return;
     }
     [self startPickedAttachmentProcessingForObject:attachmentInfo];
-    // NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
+    NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
