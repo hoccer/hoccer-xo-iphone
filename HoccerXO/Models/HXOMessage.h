@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSDate*   timeReceived; // client time when message was received
 @property (nonatomic, strong) NSDate*   timeAccepted; // server time stamp when message was accepted by the Server, passed on via Delivery
 @property (nonatomic, strong) NSNumber* isOutgoing;
-@property (nonatomic, strong) NSString* timeSection;
+@property (nonatomic, strong) NSDate* timeSection;
 @property (nonatomic, strong) NSNumber* isRead;
 @property (nonatomic, strong) NSString* messageId;
 @property (nonatomic, strong) NSString* messageTag;

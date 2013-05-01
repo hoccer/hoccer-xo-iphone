@@ -100,18 +100,23 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 
-- (NSString*) sectionTitleForMessageTime: (NSDate*) date {
-//    if (self.latestMessageTime == nil) {
-//        self.latestMessageTime = [NSDate date];
-//    }
-    if ((self.latestMessageTime == nil) || [date timeIntervalSinceDate: self.latestMessageTime] > kTimeSectionInterval || self.currentTimeSection == nil) {
-        NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateStyle:NSDateFormatterMediumStyle];
-        [formatter setTimeStyle:NSDateFormatterShortStyle];
-        self.currentTimeSection = [formatter stringFromDate: date];
++ (NSString*) sectionTitleForMessageTime: (NSDate*) date {
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    return[formatter stringFromDate: date];
+}
+
+- (NSDate*) sectionTimeForMessageTime: (NSDate*) date {
+    if ((self.latestMessageTime == nil) ||
+        [date timeIntervalSinceDate: self.latestMessageTime] > kTimeSectionInterval ||
+        self.currentTimeSection == nil)
+    {
+        self.currentTimeSection = date;
     }
     return self.currentTimeSection;
 }
+
 
 - (SecKeyRef) getPublicKeyRef {
     RSA * rsa = [RSA sharedInstance];

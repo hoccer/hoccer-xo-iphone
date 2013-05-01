@@ -113,8 +113,11 @@ typedef enum BackendStates {
     self.latestKnownServerTimeAtClientTime = [NSDate date];
     self.latestKnownServerTimeOffset = [self.latestKnownServerTime timeIntervalSinceDate:self.latestKnownServerTimeAtClientTime];
     // offest is positive if server time is ahead of client time
-    // NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
+    NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
 }
+
+#define DEBUG_TIME_DAY (86400 * 1000)
+#define DEBUG_TIME_OFFSET (0 * DEBUG_TIME_DAY)
 
 - (NSDate*) estimatedServerTime {
     return [NSDate dateWithTimeIntervalSinceNow:self.latestKnownServerTimeOffset];
@@ -168,11 +171,11 @@ typedef enum BackendStates {
 - (HXOMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
     HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
-    message.timeSent = [NSDate date];
+    message.timeSent = [self estimatedServerTime]; // [NSDate date];
     message.timeAccepted = [self estimatedServerTime];
     message.contact = contact;
     message.isOutgoing = @YES;
-    message.timeSection = [contact sectionTitleForMessageTime: message.timeSent];
+    message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
 
@@ -278,7 +281,7 @@ typedef enum BackendStates {
     message.isOutgoing = @NO;
     message.isRead = @NO;
     message.timeReceived = [NSDate date]; // TODO: use actual timestamp
-    message.timeSection = [contact sectionTitleForMessageTime: message.timeAccepted];
+    message.timeSection = [contact sectionTimeForMessageTime: message.timeAccepted];
     message.contact = contact;
     [contact.messages addObject: message];
     [message updateWithDictionary: messageDictionary];
@@ -910,11 +913,11 @@ typedef enum BackendStates {
     if (date == nil) {
         return [NSNumber numberWithDouble:0];
     }
-    return [NSNumber numberWithLongLong:[date timeIntervalSince1970]*1000];
+    return [NSNumber numberWithLongLong:[date timeIntervalSince1970]*1000+DEBUG_TIME_OFFSET];
 }
 
 + (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970 {
-    return [NSDate dateWithTimeIntervalSince1970: [milliSecondsSince1970 doubleValue] / 1000.0 ];
+    return [NSDate dateWithTimeIntervalSince1970: ([milliSecondsSince1970 doubleValue]-DEBUG_TIME_OFFSET) / 1000.0 ];
 }
 
 // Regex for UUID:

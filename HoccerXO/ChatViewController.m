@@ -746,8 +746,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     ChatTableSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ChatTableSectionHeaderCell reuseIdentifier]];
     cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    cell.label.text = sectionInfo.name;
+    
+    cell.label.text = [self tableView:tableView titleForHeaderInSection:section];
     cell.label.shadowColor  = [UIColor whiteColor];
     cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
     cell.backgroundImage.image = [UIImage imageNamed: @"date_cell_bg"];
@@ -756,7 +756,12 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo name];
+    
+    NSArray *objects = [sectionInfo objects];
+    NSManagedObject *managedObject = objects[0];
+    NSDate *timeSection = (NSDate *)[managedObject valueForKey:@"timeSection"];
+    NSLog(@"titleForHeaderInSection: timeSection = %@",timeSection);
+    return [Contact sectionTitleForMessageTime:timeSection];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

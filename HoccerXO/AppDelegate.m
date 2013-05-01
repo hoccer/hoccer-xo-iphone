@@ -25,6 +25,9 @@
 
 #import "MFSideMenu.h"
 
+static const NSInteger kFatalDatabaseErrorAlertTag = 100;
+static const NSInteger kDatabaseDeleteAlertTag = 200;
+
 @implementation AppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -39,13 +42,17 @@
     [self seedRand];
     _backgroundTask = UIBackgroundTaskInvalid;
     //[[UserProfile sharedProfile] deleteCredentials];
-
+    
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
-
+ 
+    if ([self persistentStoreCoordinator] == nil) {
+        return NO;
+    }
+    
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
     self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
@@ -59,9 +66,13 @@
         self.conversationViewController = (ConversationViewController *)masterNavigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
-        self.navigationController = (UINavigationController *)self.window.rootViewController;
-        self.conversationViewController = (ConversationViewController *)self.navigationController.topViewController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
+        self.navigationController = (UINavigationController *)self.window.rootViewController;
+        UIViewController * myStartupVC = self.navigationController.topViewController;
+        [myStartupVC performSegueWithIdentifier:@"startupReady" sender:myStartupVC];
+        
+        self.navigationController.viewControllers = @[self.navigationController.topViewController]; // make new root controller
+        self.conversationViewController = (ConversationViewController *)self.navigationController.topViewController;
     }
     // TODO: be lazy
     self.conversationViewController.managedObjectContext = self.managedObjectContext;
@@ -234,30 +245,25 @@
 }
 
 
-// Returns the persistent store coordinator for the application.
-// If the coordinator doesn't already exist, it is created and the application's store added to it.
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
-{
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
-    }
-
+- (NSURL *)persistentStoreURL {
     NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: databaseName];
-    
-    NSError *error = nil;
+    return storeURL;
+}
 
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+- (NSPersistentStoreCoordinator *)newPersistentStoreCoordinatorWithURL:(NSURL *)storeURL {
+    NSPersistentStoreCoordinator * theNewStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     
     NSDictionary *migrationOptions = @{NSMigratePersistentStoresAutomaticallyOption : @(YES),
-                                        NSInferMappingModelAutomaticallyOption : @(YES)};
-     
+                                       NSInferMappingModelAutomaticallyOption : @(YES)};
     
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&error]) {
+    
+    NSError *error = nil;
+    if (![theNewStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
          
          Typical reasons for an error here include:
          * The persistent store is not accessible;
@@ -278,10 +284,36 @@
          
          */
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+        return nil;
+    }
+    return theNewStoreCoordinator;
+    
+}
+
+// Returns the persistent store coordinator for the application.
+// If the coordinator doesn't already exist, it is created and the application's store added to it.
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
+{
+    if (_persistentStoreCoordinator != nil) {
+        return _persistentStoreCoordinator;
+    }
+
+    NSURL *storeURL = [self persistentStoreURL];
+
+    _persistentStoreCoordinator = [self newPersistentStoreCoordinatorWithURL:storeURL];
+    
+    if (_persistentStoreCoordinator == nil) {
+        [self showDeleteDatabaseAlertWithMessage:@"The database format has been changed by the developers. Your database must be deleted to continue. Do you want to delete your database?" withTitle:@"Database too old" withTag:kDatabaseDeleteAlertTag];
     }
     
     return _persistentStoreCoordinator;
+}
+
+- (void) deleteDatabase {
+    NSURL *storeURL = [self persistentStoreURL];
+    [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
+    [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: kHXOFirstRunDone]; // enforce first run, otherwise you lose your credentials
+    // TODO: delete or recover stored files
 }
 
 #pragma mark - Application's Documents directory
@@ -400,6 +432,66 @@
     [NSTimer scheduledTimerWithTimeInterval: 1.0 target: alert selector: @selector(show) userInfo: nil repeats: NO];
 }
 
+
+- (void) showFatalErrorAlertWithMessage:  (NSString *) message withTitle:(NSString *) title withTag:(NSInteger)tag {
+    if (title == nil) {
+        title = NSLocalizedString(@"Fatal Error", @"Error Alert Title");
+    }
+    if (message == nil) {
+        message = NSLocalizedString(@"An unrecoverable Error occured and Hoccer XO will quit. If the error persists, please delete and reistall Hoccer XO", @"Error Alert Message");
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                                    message: message
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    alert.tag = tag;
+    
+    // Work around for an issue with the side menu. When opening an alert while the side menu is open or in
+    // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
+    // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
+    [alert show];
+}
+
+- (void) showDeleteDatabaseAlertWithMessage:  (NSString *) message withTitle:(NSString *) title withTag:(NSInteger)tag{
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                                    message: message
+                                                   delegate:self
+                                          cancelButtonTitle:@"No"
+                                          otherButtonTitles:@"Delete Database",nil];
+    alert.tag = tag;
+    
+    // Work around for an issue with the side menu. When opening an alert while the side menu is open or in
+    // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
+    // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
+    [alert show];
+    [NSTimer scheduledTimerWithTimeInterval: 1.0 target: alert selector: @selector(show) userInfo: nil repeats: NO];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    switch (alertView.tag) {
+        case kFatalDatabaseErrorAlertTag:
+            switch (buttonIndex) {
+                case 0:
+                    abort();
+                    break;
+                default:break;
+             }
+            break;
+        case kDatabaseDeleteAlertTag: // alert
+            switch (buttonIndex) {
+                case 0:
+                    [self showFatalErrorAlertWithMessage:@"Outdated database was not deleted. Hoccer XO will not work." withTitle:@"Database not deleted" withTag:kFatalDatabaseErrorAlertTag];
+                    break;
+                case 1:
+                    [self deleteDatabase];
+                    [self showFatalErrorAlertWithMessage:@"The database was deleted. Please restart Hoccer XO." withTitle:@"Database deleted" withTag:kFatalDatabaseErrorAlertTag];
+                    break;
+            }
+            break;
+    }
+}
 
 #pragma mark - Hoccer Talk Delegate
 
