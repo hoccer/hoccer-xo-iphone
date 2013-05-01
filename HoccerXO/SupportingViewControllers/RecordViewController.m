@@ -114,6 +114,9 @@
         _playButton.enabled = NO;
         _stopButton.enabled = YES;
         // [_audioRecorder deleteRecording];
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryRecord error:nil];
+        [session setActive:YES error:nil];
         [_audioRecorder record];
         [self startTimer];
         NSLog(@"Audiorecorder record: %d", _audioRecorder.recording);
@@ -129,6 +132,9 @@
         NSError *error;
         
         NSLog(@"Audiorecorder init url: %@", _audioRecorder.url);
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [session setActive:YES error:nil];
         _audioPlayer = [[AVAudioPlayer alloc]
                         initWithContentsOfURL:_audioRecorder.url
                         error:&error];
@@ -154,8 +160,14 @@
     if (_audioRecorder.recording) {
         [self stopTimer];
         [_audioRecorder stop];
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        int flags = AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation;
+        [session setActive:NO withOptions:flags error:nil];
         NSLog(@"_audioRecorder stopped");
     } else if (_audioPlayer.playing) {
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        int flags = AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation;
+        [session setActive:NO withOptions:flags error:nil];
         [self stopTimer];
         [_audioPlayer stop];
         NSLog(@"_audioPlayer stopped");
