@@ -99,6 +99,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 - (void) makeImageAttachment:(NSString *)theURL anOtherURL:(NSString *)otherURL image:(UIImage*)theImage withCompletion:(CompletionBlock)completion;
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
 - (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
+- (void) makeVcardAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock) block;

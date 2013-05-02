@@ -68,7 +68,7 @@
 {
 	[writer writeHeader];
 	[writer writeFormattedName: [self nameString]];
-	[writer writeOrgaization: [self organization]];
+	[writer writeOrganization: [self organization]];
 	
 	[self createMultiValueWithID: kABPersonPhoneProperty toVcardProperty: @"TEL"];
 	[self createMultiValueWithID: kABPersonEmailProperty toVcardProperty: @"EMAIL"];

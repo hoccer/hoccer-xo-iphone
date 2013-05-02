@@ -142,6 +142,8 @@ typedef enum BackendStates {
             [newAttachment makeVideoAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
         } else if ([newAttachment.mediaType isEqualToString:@"audio"]) {
             [newAttachment makeAudioAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"vcard"]) {
+            [newAttachment makeVcardAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
         }
     }
     return newAttachment;

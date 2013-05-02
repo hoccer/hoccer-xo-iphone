@@ -95,7 +95,7 @@
 }
 
 - (void) updateTimeDisplay:(NSTimer *)theTimer {
-    NSTimeInterval seconds;
+    NSTimeInterval seconds = 0;
     if (_audioRecorder.recording) {
         seconds = _audioRecorder.currentTime;
     }

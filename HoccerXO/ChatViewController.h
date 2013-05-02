@@ -50,6 +50,8 @@
 - (void) presentAttachmentViewForCell: (MessageCell *) theCell;
 - (BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender;
 
+// TODO: move to some utility functions file:
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
++ (NSString *)sanitizeFileNameString:(NSString *)fileName;
 
 @end

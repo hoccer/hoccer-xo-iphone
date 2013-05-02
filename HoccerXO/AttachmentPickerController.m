@@ -8,6 +8,7 @@
 
 #import "AttachmentPickerController.h"
 #import "RecordViewController.h"
+#import "ABPersonVCardCreator.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -103,7 +104,13 @@
         item.type = AttachmentPickerTypeAudioRecorder;
         [_supportedItems addObject: item];
     }
-    
+    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeAdressBookVcard]) {
+        AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+        item.localizedButtonTitle = NSLocalizedString(@"Choose Adressbook Item", @"Action Sheet Button Ttitle");
+        item.type = AttachmentPickerTypeAdressBookVcard;
+        [_supportedItems addObject: item];
+    }
+
     NSArray * myMediaTypeArray = [board valuesForPasteboardType:@"com.hoccer.xo.mediaType" inItemSet:nil];
     if (myMediaTypeArray.count == 1) {
         NSString * mediaType = [[NSString alloc] initWithData:myMediaTypeArray[0] encoding:NSUTF8StringEncoding];
@@ -225,6 +232,9 @@
         case AttachmentPickerTypeAudioRecorder:
             [self pickAudioFromRecorder];
             break;
+        case AttachmentPickerTypeAdressBookVcard:
+            [self pickVCardFromAdressbook];
+            break;
     }
 }
 
@@ -284,7 +294,50 @@
     [self.delegate didPickAttachment: myAttachmentInfo];
 }
 
- 
+- (void) pickVCardFromAdressbook {
+    ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
+    peoplePicker.peoplePickerDelegate = self;
+    [_viewController presentViewController:peoplePicker animated:YES completion:nil];
+}
+#pragma mark -
+#pragma mark ABPeoplePickerNavigationController delegate
+
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person {
+	
+        CFErrorRef myError;
+        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(nil, &myError);
+        ABRecordID contactId = ABRecordGetRecordID(person);
+        ABRecordRef fullPersonInfo = ABAddressBookGetPersonWithRecordID(addressBook, contactId);
+        if (fullPersonInfo != NULL){
+            ABPersonVCardCreator * abPersonVCardCreator = [[ABPersonVCardCreator alloc] initWithPerson:fullPersonInfo];
+            NSData * vcardData = [abPersonVCardCreator vcard];
+            NSString * personName = [abPersonVCardCreator previewName];
+
+            NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.vcard.data":vcardData,
+                                               @"com.hoccer.xo.vcard.name":personName,
+                                               @"com.hoccer.xo.vcard.recordid":@(contactId)};
+
+            [self.delegate didPickAttachment: myAttachmentInfo];
+            [peoplePicker dismissViewControllerAnimated:YES completion:nil];
+        }
+        CFRelease(addressBook);
+        
+    return NO;
+}
+
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
+	  shouldContinueAfterSelectingPerson:(ABRecordRef)person
+								property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
+	return NO;
+}
+
+- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
+    [peoplePicker dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark -
+#pragma mark image/video picking
+
 
 - (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType withVideo: (BOOL) videoFlag {
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];

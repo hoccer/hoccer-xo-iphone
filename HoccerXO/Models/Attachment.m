@@ -13,6 +13,11 @@
 #import "CryptingInputStream.h"
 #import "HXOUserDefaults.h"
 #import "UIImage+ScaleAndCrop.h"
+#import "ABPersonVCardCreator.h"
+#import "ABPersonCreator.h"
+#import "Vcard.h"
+
+#import "NSString+StringWithData.h"
 
 #import <Foundation/NSURL.h>
 #import <MediaPlayer/MPMoviePlayerController.h>
@@ -20,6 +25,7 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AddressBookUI/AddressBookUI.h>
 
 @implementation Attachment
 {
@@ -157,6 +163,8 @@
         [self loadVideoAttachmentImage: block];
     } else if ([self.mediaType isEqualToString: @"audio"]) {
         [self loadAudioAttachmentImage: block];
+    } else if ([self.mediaType isEqualToString: @"vcard"]) {
+        [self loadVcardAttachmentImage: block];
     }
 }
 
@@ -291,6 +299,14 @@
     [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 
+- (void) makeVcardAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion {
+    self.mediaType = @"vcard";
+    self.mimeType = @"text/vcard";    
+    [self useURLs: theURL anOtherURL: theOtherURL];
+    [self loadPreviewImageIntoCacheWithCompletion: completion];
+}
+
+
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
     // NSLog(@"assetSizer");
     ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *myasset)
@@ -382,6 +398,23 @@
         block([UIImage imageNamed:@"audio_leer.png"], nil);
     }
 }
+
+- (void) loadVcardAttachmentImage: (ImageLoaderBlock) block {
+    if (self.localURL == nil) {
+        block(nil, nil);
+        return;
+    }
+    Vcard * myVcard = [[Vcard alloc] initWithVcardURL:self.contentURL];
+    if (myVcard != nil) {
+        UIImage * myPreviewImage = [myVcard previewImageWithScale:0];
+        if (myPreviewImage) {
+            block(myPreviewImage, nil);
+            return;
+        }
+    }
+    block([UIImage imageNamed:@"vcard_error_preview.png"], nil);
+}
+
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block {
     if (self.localURL != nil) {

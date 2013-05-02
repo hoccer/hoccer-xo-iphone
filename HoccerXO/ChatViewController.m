@@ -32,6 +32,8 @@
 #import "HXOUserDefaults.h"
 #import "ImageViewController.h"
 #import "UserProfile.h"
+#import "NSString+StringWithData.h"
+
 
 static const NSUInteger kMaxMessageBytes = 10000;
 
@@ -324,6 +326,34 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
+    
+    if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
+        if (attachmentInfo[@"com.hoccer.xo.vcard.data"] != nil) {
+            NSData * vcardData = attachmentInfo[@"com.hoccer.xo.vcard.data"];
+            // NSString * vcardString = [NSString stringWithData:vcardData usingEncoding:NSUTF8StringEncoding];
+            NSString * personName = attachmentInfo[@"com.hoccer.xo.vcard.name"];
+            
+            // find a suitable unique file name and path
+            NSString * newFileName = [NSString stringWithFormat:@"%@.vcard",personName];
+            newFileName = [ChatViewController sanitizeFileNameString: newFileName];
+            
+            NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+            NSString * myDocDir = [appDocDir path];
+            NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
+            NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
+            NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
+ 
+            NSLog(@"didPickAttachment: url = %@, contentSize = %d", myLocalURL, vcardData.length);
+
+            [vcardData writeToURL:myLocalURL atomically:NO];
+            CompletionBlock completion  = ^(NSError *myerror) {
+                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:myerror];
+            };
+            self.currentAttachment.humanReadableFileName = myUniqueNewFile;
+            [self.currentAttachment makeVcardAttachment:[myLocalURL absoluteString] anOtherURL:nil withCompletion:completion];
+            return;
+        }
+    }
     
     // handle stuff from pasteboard
     if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
@@ -1051,6 +1081,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
          [message.attachment.mediaType isEqualToString:@"video"] ||
+         [message.attachment.mediaType isEqualToString:@"vcard"] ||
          [message.attachment.mediaType isEqualToString:@"audio"]))
     {
         AttachmentView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment inCell: cell];

@@ -48,7 +48,7 @@
 	[self writeProperty:@"FN" value:name paramater:nil];
 }
 
-- (void)writeOrgaization: (NSString *)organization
+- (void)writeOrganization: (NSString *)organization
 {
 	[self writeProperty:@"ORG" value:organization paramater:nil];
 	
