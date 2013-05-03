@@ -670,24 +670,26 @@ static const NSUInteger kMaxMessageBytes = 10000;
                                                         delegate: self
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
                                           destructiveButtonTitle: nil
-                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", @"Actionsheet Button Title")/*,
-                                                                  NSLocalizedString(@"View Attachment", @"Actionsheet Button Title")*/,
+                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", @"Actionsheet Button Title"),
+                                                                  NSLocalizedString(@"View Attachment", @"Actionsheet Button Title"),
                                                                   nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView: self.view];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // NSLog(@"Clicked button at index %d", buttonIndex);
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
     }
     switch (buttonIndex) {
         case 0:
-            // cancel pressed
+            // Remove Attachment pressed
             [self trashCurrentAttachment];
             break;
         case 1:
-            NSLog(@"Viewing attachments not yet implemented");
+            [self presentViewForAttachment: self.currentAttachment];
+            // NSLog(@"Viewing current attachment");
             break;
         default:
             break;
@@ -1057,7 +1059,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 
 - (void) viewWillDisappear:(BOOL)animated {
-    [self trashCurrentAttachment];
+    // [self trashCurrentAttachment];
 
     if (self.fetchedResultsController != nil) {
         self.fetchedResultsController.delegate = nil;
@@ -1280,7 +1282,10 @@ static const NSUInteger kMaxMessageBytes = 10000;
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     // NSLog(@"@presentAttachmentViewForCell attachment = %@", message.attachment);
     
-    Attachment * myAttachment = message.attachment;
+    [self presentViewForAttachment:message.attachment];
+}
+
+- (void) presentViewForAttachment:(Attachment *) myAttachment {
     if ([myAttachment.mediaType isEqual: @"video"]) {
         // TODO: lazily allocate _moviePlayerController once
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];

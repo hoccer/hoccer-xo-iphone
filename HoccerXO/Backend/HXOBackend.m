@@ -515,7 +515,7 @@ typedef enum BackendStates {
 
 
 - (NSDate*) getLatestDateFromEntity:(NSString*) entityName forKeyPath:(NSString *) keyPath {
-    NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@", entityName, keyPath);
+    // NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@", entityName, keyPath);
 
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName: entityName inManagedObjectContext: self.delegate.managedObjectContext];
@@ -544,7 +544,7 @@ typedef enum BackendStates {
     if (latest == nil) {
         latest = [NSDate dateWithTimeIntervalSince1970: 0];
     }
-    NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@ latest = %@", entityName, keyPath, latest);
+    // NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@ latest = %@", entityName, keyPath, latest);
     return latest;
 }
 
