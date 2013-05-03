@@ -25,11 +25,10 @@ typedef enum AttachmentPickerTypes {
     AttachmentPickerTypeImageAttachmentFromPasteboard,
     AttachmentPickerTypeVideoAttachmentFromPasteboard,
     AttachmentPickerTypeAudioAttachmentFromPasteboard,
+    AttachmentPickerTypeVcardAttachmentFromPasteboard,
     AttachmentPickerTypeImageFromPasteboard,
     AttachmentPickerTypeAudioRecorder,
     AttachmentPickerTypeAdressBookVcard
-    //    AttachmentTypeContact
-    // TODO: add more attachment types
 } AttachmentPickerType;
 
 @protocol AttachmentPickerControllerDelegate <NSObject>

@@ -376,6 +376,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 [self.currentAttachment makeVideoAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
             } else if ([myMediaType isEqualToString:@"audio"]) {
                 [self.currentAttachment makeAudioAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+            } else if ([myMediaType isEqualToString:@"vcard"]) {
+                [self.currentAttachment makeVcardAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
             }
             return;
         }

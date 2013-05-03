@@ -135,6 +135,13 @@
             item.type = AttachmentPickerTypeAudioAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
+        if ([mediaType isEqualToString:@"vcard"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromPasteboard]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Paste vcard Attachment", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypeVcardAttachmentFromPasteboard;
+            [_supportedItems addObject: item];
+        }
     }
     //if ([board containsPasteboardTypes:UIPasteboardTypeListImage inItemSet:nil]) {
     if (board.image != nil) {
@@ -225,6 +232,7 @@
         case AttachmentPickerTypeImageAttachmentFromPasteboard:
         case AttachmentPickerTypeVideoAttachmentFromPasteboard:
         case AttachmentPickerTypeAudioAttachmentFromPasteboard:
+        case AttachmentPickerTypeVcardAttachmentFromPasteboard:
             [self pickAttachmentFromPasteBoard];
             break;
         case AttachmentPickerTypeImageFromPasteboard:
