@@ -112,5 +112,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;
++ (UIImage *) qualityAdjustedImage:(UIImage *)theFullImage;
++ (BOOL) tooLargeImage:(UIImage *)theFullImage;
 
 @end

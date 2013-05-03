@@ -18,17 +18,23 @@
 			<key>Key</key>
 			<string>photoQuality</string>
 			<key>DefaultValue</key>
-			<integer>1000</integer>
+			<integer>250</integer>
 			<key>Titles</key>
 			<array>
-				<string>low</string>
-				<string>medium</string>
-				<string>high</string>
+				<string>p_thumb</string>
+				<string>p_low</string>
+				<string>p_medium</string>
+				<string>p_high</string>
+				<string>p_veryhigh</string>
+				<string>p_full</string>
 			</array>
 			<key>Values</key>
 			<array>
+				<integer>10</integer>
+				<integer>64</integer>
 				<integer>250</integer>
 				<integer>1000</integer>
+				<integer>4000</integer>
 				<integer>0</integer>
 			</array>
 		</dict>
@@ -40,12 +46,12 @@
 			<key>Key</key>
 			<string>videoQuality</string>
 			<key>DefaultValue</key>
-			<integer>2</integer>
+			<integer>1</integer>
 			<key>Titles</key>
 			<array>
-				<string>low</string>
-				<string>medium</string>
-				<string>high</string>
+				<string>v_low</string>
+				<string>v_medium</string>
+				<string>v_high</string>
 				<string>640 x 480</string>
 				<string>960 x 540</string>
 				<string>1280 x 720</string>

@@ -250,6 +250,30 @@
 }
 
 
++ (BOOL) tooLargeImage:(UIImage *)theFullImage {
+    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoQuality"] integerValue];
+    double fullKiloPixelCount = theFullImage.size.height * theFullImage.size.width / 1000.0;
+    if (photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) {
+        return NO;
+    }
+    return YES;
+}
+
+
++ (UIImage *) qualityAdjustedImage:(UIImage *)theFullImage {
+    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoQuality"] integerValue];
+    double fullKiloPixelCount = theFullImage.size.height * theFullImage.size.width / 1000.0;
+    if (photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) {
+        return theFullImage;
+    }
+    // too many pixels for our quality setting, lets reduce
+    double reductionFactor = sqrt(fullKiloPixelCount / photoQualityKiloPixelSetting);
+    CGSize newSize = CGSizeMake((int)(theFullImage.size.width/reductionFactor), (int)(theFullImage.size.height/reductionFactor));
+    NSLog(@"qualityAdjustedImage: original kpix %f, limit kpix %ld, new kpix %f",fullKiloPixelCount, (long)photoQualityKiloPixelSetting, newSize.width*newSize.height/1000);
+    return [theFullImage imageScaledToSize:newSize];
+}
+
+
 - (void) makeImageAttachment:(NSString *)theURL anOtherURL:(NSString *)otherURL image:(UIImage*)theImage withCompletion:(CompletionBlock)completion  {
     self.mediaType = @"image";
     

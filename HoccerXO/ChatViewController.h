@@ -53,5 +53,6 @@
 // TODO: move to some utility functions file:
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
 + (NSString *)sanitizeFileNameString:(NSString *)fileName;
++ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint;
 
 @end

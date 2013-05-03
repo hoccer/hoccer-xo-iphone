@@ -320,6 +320,17 @@ static const NSUInteger kMaxMessageBytes = 10000;
 	return newFilename;
 }
 
++ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint {
+    
+    NSString *newFileName = [ChatViewController sanitizeFileNameString: fileNameHint];
+    NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSString * myDocDir = [appDocDir path];
+    NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
+    NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
+    NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
+    return myLocalURL;
+}
+
 - (void) didPickAttachment: (id) attachmentInfo {
     if (attachmentInfo == nil) {
         return;
@@ -330,6 +341,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
     
+    // handle vcard picked from adressbook
     if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
         if (attachmentInfo[@"com.hoccer.xo.vcard.data"] != nil) {
             NSData * vcardData = attachmentInfo[@"com.hoccer.xo.vcard.data"];
@@ -338,21 +350,13 @@ static const NSUInteger kMaxMessageBytes = 10000;
             
             // find a suitable unique file name and path
             NSString * newFileName = [NSString stringWithFormat:@"%@.vcf",personName];
-            newFileName = [ChatViewController sanitizeFileNameString: newFileName];
+            NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
             
-            NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
-            NSString * myDocDir = [appDocDir path];
-            NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
-            NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
-            NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
- 
-            NSLog(@"didPickAttachment: url = %@, contentSize = %d", myLocalURL, vcardData.length);
-
             [vcardData writeToURL:myLocalURL atomically:NO];
             CompletionBlock completion  = ^(NSError *myerror) {
                 [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:myerror];
             };
-            self.currentAttachment.humanReadableFileName = myUniqueNewFile;
+            self.currentAttachment.humanReadableFileName = [myLocalURL lastPathComponent];
             [self.currentAttachment makeVcardAttachment:[myLocalURL absoluteString] anOtherURL:nil withCompletion:completion];
             return;
         }
@@ -396,19 +400,12 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 
                 // find a suitable unique file name and path
                 NSString * newFileName = @"pastedImage.jpg";
-                NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
-                NSString * myDocDir = [appDocDir path];
-                NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
-                NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
-                
-                // NSLog(@"pastedImag savePath = %@", savePath);
-                
+                NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+                                
                 // write the image
-                [UIImageJPEGRepresentation(myImage,1.0) writeToFile:savePath atomically:YES];
-                
-                // set attachment data
-                NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
-                
+                myImage = [Attachment qualityAdjustedImage:myImage];
+                [UIImageJPEGRepresentation(myImage,1.0) writeToURL:myLocalURL atomically:NO];
+                                
                 [self.currentAttachment makeImageAttachment: [myLocalURL absoluteString] anOtherURL:nil
                                                       image: myImage
                                              withCompletion:^(NSError *theError) {
@@ -432,14 +429,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
         
         // make a nice and unique filename
         NSString * newFileName = [NSString stringWithFormat:@"%@ - %@.%@",[song valueForProperty:MPMediaItemPropertyArtist],[song valueForProperty:MPMediaItemPropertyTitle],@"m4a" ];
-        newFileName = [[self class]sanitizeFileNameString: newFileName];
-  
-        NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
-        NSString * myDocDir = [appDocDir path];
-        NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];        
-        NSString * exportFile = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
-        
-        // NSLog(@"exportFile = %@", exportFile);
+
+        NSURL * myExportURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
         
         NSURL *assetURL = [song valueForProperty:MPMediaItemPropertyAssetURL];
         // NSLog(@"audio assetURL = %@", assetURL);
@@ -466,7 +457,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
                                   presetName: AVAssetExportPresetAppleM4A];
         
         
-        _currentExportSession.outputURL = [NSURL fileURLWithPath:exportFile];
+        _currentExportSession.outputURL = myExportURL;
         _currentExportSession.outputFileType = AVFileTypeAppleM4A;
         _currentExportSession.shouldOptimizeForNetworkUse = YES;
         // exporter.shouldOptimizeForNetworkUse = NO;
@@ -486,7 +477,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
                     // NSLog (@"AVAssetExportSessionStatusCompleted");
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
-                        self.currentAttachment.humanReadableFileName = myUniqueNewFile;
+                        self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
                     }];
                      // TODO: in case we fail getting the artwork from file try get artwork from Media Item
@@ -523,14 +514,16 @@ static const NSUInteger kMaxMessageBytes = 10000;
             __block NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
             if (attachmentInfo[UIImagePickerControllerMediaMetadata] != nil) {
                 // Image was just taken and is not yet in album
-                UIImage * image = attachmentInfo[UIImagePickerControllerOriginalImage];
+                UIImage * myImage = [Attachment qualityAdjustedImage:attachmentInfo[UIImagePickerControllerOriginalImage]];
                 
                 // funky method using ALAssetsLibrary
                 ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
                     if (!error) {
                         myURL = assetURL;
-                        [self.currentAttachment makeImageAttachment: [myURL absoluteString] anOtherURL:nil
-                                                              image: attachmentInfo[UIImagePickerControllerOriginalImage]
+
+                        [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                                         anOtherURL:nil
+                                                              image: myImage
                                                      withCompletion:^(NSError *theError) {
                                                          [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:error];
                                                      }];
@@ -540,18 +533,27 @@ static const NSUInteger kMaxMessageBytes = 10000;
                     }
                 };
                 
-                if(image) {
+                if(myImage) {
                     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                    [library writeImageToSavedPhotosAlbum:[image CGImage]
-                                              orientation:(ALAssetOrientation)[image imageOrientation]
+                    [library writeImageToSavedPhotosAlbum:[myImage CGImage]
+                                              orientation:(ALAssetOrientation)[myImage imageOrientation]
                                           completionBlock:completeBlock];
                 }
             } else {
                 // image from album
-                [self.currentAttachment makeImageAttachment: [myURL absoluteString] anOtherURL:nil
-                                                      image: attachmentInfo[UIImagePickerControllerOriginalImage]
+                UIImage * myImage = attachmentInfo[UIImagePickerControllerOriginalImage];
+                if ([Attachment tooLargeImage:myImage]) {
+                    myImage = [Attachment qualityAdjustedImage:myImage];
+                    NSString * newFileName = @"reducedSnapshotImage.jpg";
+                    NSURL * myURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+                    
+                    [UIImageJPEGRepresentation(myImage,0.9) writeToURL:myURL atomically:NO];
+                }
+                [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                                 anOtherURL:nil
+                                                      image: myImage
                                              withCompletion:^(NSError *theError) {
-                                                 [self finishPickedAttachmentProcessingWithImage: attachmentInfo[UIImagePickerControllerOriginalImage]
+                                                 [self finishPickedAttachmentProcessingWithImage: myImage
                                                                                        withError:theError];
                                              }];
             }

@@ -21,8 +21,8 @@
 	<key>autoDownloadLimit</key>
 	<integer>1000000000</integer>
 	<key>videoQuality</key>
-	<integer>2</integer>
+	<integer>1</integer>
 	<key>photoQuality</key>
-	<integer>1000</integer>
+	<integer>250</integer>
 </dict>
 </plist>

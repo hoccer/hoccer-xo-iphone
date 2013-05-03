@@ -53,18 +53,8 @@
 
 -(NSURL*) ensureAudioURL {
     if (self.audioFileURL == nil) {
-        NSArray *dirPaths;
-        NSString *docsDir;
-        dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        docsDir = dirPaths[0];
-        
         NSString * newFileName = @"recording.m4a";
-        // NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
-        // NSString * myDocDir = [appDocDir path];
-        NSString * myUniqueNewFile = [ChatViewController uniqueFilenameForFilename: newFileName inDirectory: docsDir];
-        NSString * savePath = [docsDir stringByAppendingPathComponent: myUniqueNewFile];
-        
-        self.audioFileURL = [NSURL fileURLWithPath:savePath];
+        self.audioFileURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];        
     }
     return self.audioFileURL;
 }
