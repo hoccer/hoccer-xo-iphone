@@ -47,7 +47,7 @@
 #pragma mark VcardParserDelegate Methods
 
 
-- (void)parser: (VcardParser*)parser didFoundFormattedName: (NSString *)name
+- (void)parser: (VcardParser*)parser didFindFormattedName: (NSString *)name
 {
 	NSArray *splittedName = [name componentsSeparatedByString:@" "];
 	
@@ -64,7 +64,7 @@
 	}
 }
 
-- (void)parser: (VcardParser*)parser didFoundOrganization: (NSString *)name
+- (void)parser: (VcardParser*)parser didFindOrganization: (NSString *)name
 {	
 	CFErrorRef error;
 	
@@ -73,7 +73,7 @@
 }
 
 
-- (void)parser: (VcardParser*)parser didFoundPhoneNumber: (NSString*)number 
+- (void)parser: (VcardParser*)parser didFindPhoneNumber: (NSString*)number 
 										  withAttributes: (NSArray *)attributes
 {
 	ABMultiValueRef currentPhoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
@@ -97,7 +97,7 @@
 }
 
 
-- (void)parser: (VcardParser*)parser didFoundEmail: (NSString*)email 
+- (void)parser: (VcardParser*)parser didFindEmail: (NSString*)email 
 									withAttributes: (NSArray *)attributes 
 {
 	ABMultiValueRef currentEmaiAddresses = ABRecordCopyValue(person, kABPersonEmailProperty);
@@ -120,7 +120,7 @@
 }
 
 
-- (void)parser: (VcardParser*)parser didFoundAddress: (NSString*)address 
+- (void)parser: (VcardParser*)parser didFindAddress: (NSString*)address 
 									  withAttributes: (NSArray *)attributes
 {
 	ABMultiValueRef currentMultiValue = ABRecordCopyValue(person, kABPersonAddressProperty);

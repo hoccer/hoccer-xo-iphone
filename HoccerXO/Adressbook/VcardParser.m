@@ -71,18 +71,18 @@
 		}
 		
 		if ([property isEqual: @"FN"]) {
-			[delegate parser: self didFoundFormattedName: value];
+			[delegate parser: self didFindFormattedName: value];
 		} else if ([property isEqual: @"TEL"]) {
-			[delegate parser: self didFoundPhoneNumber: value 
+			[delegate parser: self didFindPhoneNumber: value 
 			  withAttributes: [self attributesFromString: attributs]];
 		} else if ([property isEqual: @"EMAIL"]) {
-			[delegate parser: self didFoundEmail: value 
+			[delegate parser: self didFindEmail: value 
 			  withAttributes: [self attributesFromString: attributs]];
 		} else if ([property isEqual: @"ADR"]) {
-			[delegate parser: self didFoundAddress: value 
+			[delegate parser: self didFindAddress: value 
 			  withAttributes: [self attributesFromString: attributs]];
 		} else if ([property isEqual: @"ORG"]) {
-			[delegate parser: self didFoundOrganization: value];
+			[delegate parser: self didFindOrganization: value];
 		}
 	}
 }

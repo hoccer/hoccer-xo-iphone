@@ -12,16 +12,16 @@
 @protocol VcardParserDelegate <NSObject>
 
 @optional
-- (void)parser: (VcardParser*)parser didFoundFormattedName: (NSString *)name;
-- (void)parser: (VcardParser*)parser didFoundOrganization: (NSString *)name;
+- (void)parser: (VcardParser*)parser didFindFormattedName: (NSString *)name;
+- (void)parser: (VcardParser*)parser didFindOrganization: (NSString *)name;
 
-- (void)parser: (VcardParser*)parser didFoundPhoneNumber: (NSString*)name 
+- (void)parser: (VcardParser*)parser didFindPhoneNumber: (NSString*)name 
 										  withAttributes: (NSArray *)attributes;
 
-- (void)parser: (VcardParser*)parser didFoundEmail: (NSString*)name 
+- (void)parser: (VcardParser*)parser didFindEmail: (NSString*)name 
 									withAttributes: (NSArray *)attributes;
 
-- (void)parser: (VcardParser*)parser didFoundAddress: (NSString*)name 
+- (void)parser: (VcardParser*)parser didFindAddress: (NSString*)name 
 									  withAttributes: (NSArray *)attributes;
 
 

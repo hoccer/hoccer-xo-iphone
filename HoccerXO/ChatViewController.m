@@ -337,7 +337,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
             NSString * personName = attachmentInfo[@"com.hoccer.xo.vcard.name"];
             
             // find a suitable unique file name and path
-            NSString * newFileName = [NSString stringWithFormat:@"%@.vcard",personName];
+            NSString * newFileName = [NSString stringWithFormat:@"%@.vcf",personName];
             newFileName = [ChatViewController sanitizeFileNameString: newFileName];
             
             NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
