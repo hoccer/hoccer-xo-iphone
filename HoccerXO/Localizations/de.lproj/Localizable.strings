@@ -22,6 +22,12 @@
 /* Action Sheet Button Ttitle */
 "Choose Audio" = "Audio auswählen";
 
+/* Action Sheet Button Ttitle */
+"Record Audio" = "Audio aufnehmen";
+
+/* Action Sheet Button Ttitle */
+"Choose Adressbook Item" = "Adresseintrag auswählen";
+
 /* Contacts Navigation Bar Title */
 "Contacts" = "Kontakte";
 
@@ -166,6 +172,8 @@
 "Paste Video Attachment" = "Einfügen (Video)";
 
 "Paste Audio Attachment" = "Einfügen (Audio)";
+
+"Paste vcard Attachment" = "Einfügen (vcard)";
 
 "Paste Image" = "Einfügen (Bild)";
 
