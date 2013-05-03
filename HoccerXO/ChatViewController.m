@@ -325,7 +325,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
         return;
     }
     [self startPickedAttachmentProcessingForObject:attachmentInfo];
-    NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
+    // NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
@@ -793,7 +793,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     NSArray *objects = [sectionInfo objects];
     NSManagedObject *managedObject = objects[0];
     NSDate *timeSection = (NSDate *)[managedObject valueForKey:@"timeSection"];
-    NSLog(@"titleForHeaderInSection: timeSection = %@",timeSection);
+    // NSLog(@"titleForHeaderInSection: timeSection = %@",timeSection);
     return [Contact sectionTitleForMessageTime:timeSection];
 }
 

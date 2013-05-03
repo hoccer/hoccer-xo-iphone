@@ -229,6 +229,7 @@
             break;
         case AttachmentPickerTypeImageFromPasteboard:
             [self pickImageFromPasteBoard];
+            break;
         case AttachmentPickerTypeAudioRecorder:
             [self pickAudioFromRecorder];
             break;

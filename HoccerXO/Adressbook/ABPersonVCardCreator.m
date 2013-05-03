@@ -7,6 +7,8 @@
 //
 
 #import "ABPersonVCardCreator.h"
+#import "NSData+Base64.h"
+
 #import <AddressBook/AddressBook.h>
 
 @interface ABPersonVCardCreator (Private) 
@@ -73,8 +75,10 @@
 	[self createMultiValueWithID: kABPersonPhoneProperty toVcardProperty: @"TEL"];
 	[self createMultiValueWithID: kABPersonEmailProperty toVcardProperty: @"EMAIL"];
 	[self createAddress];
+	[self createPhoto];
 
 	[writer writeFooter];
+    // NSLog(@"generateVcard=%@",[self vcardString]);
 }
 
 
@@ -137,6 +141,14 @@
 	CFRelease(multi);
 }
 
+- (void)createPhoto
+{
+    if (ABPersonHasImageData(person)) {
+        NSData * myImageData = CFBridgingRelease(ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail));
+        NSString * myImageString = [myImageData asBase64EncodedString];
+        [writer writePhoto:myImageString];
+    }
+}
 
 - (void)createAddress
 {

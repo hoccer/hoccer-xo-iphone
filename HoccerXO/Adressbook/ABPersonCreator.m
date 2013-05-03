@@ -8,6 +8,7 @@
 
 #import "ABPersonCreator.h"
 #import "VcardParser.h"
+#import "NSData+Base64.h"
 
 @interface ABPersonCreator (Private)
 
@@ -72,8 +73,24 @@
 					 (__bridge CFTypeRef)(name), &error);
 }
 
+- (void)parser: (VcardParser*)parser didFindPhoto: (NSString*)value
+                                   withAttributes: (NSArray *)attributes {
+    // NSLog(@"vcardParser: didFindPhoto: value%@", value);
+    for (NSString * s in attributes) {
+        if (![s isEqualToString: @"JPEG"]) {
+            NSLog(@"vcardParser: didFindPhoto: strange attribute=%@", s);
+        }
+    }
+    NSData * myImage = [NSData dataWithBase64EncodedString:value];
+    if (myImage != nil && myImage.length > 0) {
+        CFErrorRef myError;
+        if (!ABPersonSetImageData(person, CFBridgingRetain(myImage), &myError)) {
+            NSLog(@"vcardParser: image error:%@", myError);
+        }
+    }
+}
 
-- (void)parser: (VcardParser*)parser didFindPhoneNumber: (NSString*)number 
+- (void)parser: (VcardParser*)parser didFindPhoneNumber: (NSString*)number
 										  withAttributes: (NSArray *)attributes
 {
 	ABMultiValueRef currentPhoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);

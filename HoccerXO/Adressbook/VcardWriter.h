@@ -20,6 +20,7 @@
 - (void)writeProperty: (NSString *)propertyName 
 				value: (NSString *)valueName
 			paramater: (NSArray *)parameter;
+- (void)writePhoto: (NSString *)b64String;
 
 - (NSString *)vcardRepresentation;  
 

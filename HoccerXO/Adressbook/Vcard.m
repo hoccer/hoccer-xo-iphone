@@ -114,13 +114,7 @@
         
         [[[NSBundle mainBundle] loadNibNamed:@"VcardPreview" owner:self options:nil] objectAtIndex:0];
         
-        NSLog(@"previewName = %@", [self previewName]);
-        NSLog(@"self.view.name = %@", self.view.name);
-        NSLog(@"self.view.name.text = %@", self.view.name.text);
-        self.view.name.text = [self previewName];
-        NSLog(@"self.view.name.text = %@", self.view.name.text);
-        
-        NSLog(@"organization = %@", [self organization]);
+        self.view.name.text = [self previewName];        
         self.view.company.text = [self organization];
         
         CFTypeRef imageData = ABPersonCopyImageData(_person);
@@ -190,18 +184,16 @@
         for (NSString *address in emails){
             otherInfo = [otherInfo stringByAppendingFormat:@"%@\n",address];
         }
-        NSLog(@"otherInfo = %@", otherInfo);
-        
-        // CGRect myRect = self.view.otherInfo.frame;
-        
+                
         self.view.otherInfo.text = otherInfo;
         
         CGSize theLabelSize = [self calcLabelSize:otherInfo withFont:[UIFont systemFontOfSize:15] maxSize:CGSizeMake(282, 640)];
         
-        self.view.otherInfo.frame = CGRectMake(12, 56, theLabelSize.width, theLabelSize.height);
+        CGPoint theLabelPos = self.view.otherInfo.frame.origin;
+        self.view.otherInfo.frame = CGRectMake(theLabelPos.x, theLabelPos.y, theLabelSize.width, theLabelSize.height);
         
         CGRect myFrame = self.view.frame;
-        myFrame.size.height = self.view.otherInfo.frame.origin.y + self.view.otherInfo.frame.size.height + 5;
+        myFrame.size.height = self.view.otherInfo.frame.origin.y + self.view.otherInfo.frame.size.height + 8;
         self.view.frame = myFrame;
         
         return self.view;

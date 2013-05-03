@@ -289,8 +289,6 @@
 		E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9D1145A1732CFE800737EF7 /* VcardPreview.xib */; };
 		E9D1145E1732E74000737EF7 /* Vcard.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D1145D1732E74000737EF7 /* Vcard.m */; };
 		E9D114641733010400737EF7 /* vcard_error_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D114631733010400737EF7 /* vcard_error_preview.png */; };
-		E9D114671733012000737EF7 /* vcard_default_contact.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D114651733012000737EF7 /* vcard_default_contact.png */; };
-		E9D114681733012000737EF7 /* vcard_default_contact@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D114661733012000737EF7 /* vcard_default_contact@2x.png */; };
 		E9D1146A173307FF00737EF7 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D11469173307FC00737EF7 /* AddressBookUI.framework */; };
 		E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F592D6171F460A00E2FFAC /* CryptoEngine.m */; };
 /* End PBXBuildFile section */
@@ -763,8 +761,6 @@
 		E9D1145C1732E73F00737EF7 /* Vcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vcard.h; sourceTree = "<group>"; };
 		E9D1145D1732E74000737EF7 /* Vcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vcard.m; sourceTree = "<group>"; };
 		E9D114631733010400737EF7 /* vcard_error_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vcard_error_preview.png; sourceTree = "<group>"; };
-		E9D114651733012000737EF7 /* vcard_default_contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vcard_default_contact.png; sourceTree = "<group>"; };
-		E9D114661733012000737EF7 /* vcard_default_contact@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vcard_default_contact@2x.png"; sourceTree = "<group>"; };
 		E9D11469173307FC00737EF7 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		E9F592D5171F460900E2FFAC /* CryptoEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoEngine.h; sourceTree = "<group>"; };
 		E9F592D6171F460A00E2FFAC /* CryptoEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoEngine.m; sourceTree = "<group>"; };
@@ -1545,8 +1541,6 @@
 		E9A2B84B17189A1200E35E7E /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				E9D114651733012000737EF7 /* vcard_default_contact.png */,
-				E9D114661733012000737EF7 /* vcard_default_contact@2x.png */,
 				E9D114631733010400737EF7 /* vcard_error_preview.png */,
 				E99886B51725AFAA0089A510 /* audio_leer.png */,
 				E99886B61725AFAA0089A510 /* audio_leer@2x.png */,
@@ -1873,8 +1867,6 @@
 				6315F00317302D1D0027BCA7 /* InviteCell.xib in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				E9D114641733010400737EF7 /* vcard_error_preview.png in Resources */,
-				E9D114671733012000737EF7 /* vcard_default_contact.png in Resources */,
-				E9D114681733012000737EF7 /* vcard_default_contact@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

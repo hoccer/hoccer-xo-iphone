@@ -43,6 +43,12 @@
 	[vcardString appendString: line];
 }
 
+- (void)writePhoto: (NSString *)b64String
+{
+    NSString * line = [NSString stringWithFormat: @"PHOTO;TYPE=JPEG;ENCODING=B:%@\r\n", b64String];
+	[vcardString appendString: line];
+}
+
 - (void)writeFormattedName: (NSString *)name
 {
 	[self writeProperty:@"FN" value:name paramater:nil];

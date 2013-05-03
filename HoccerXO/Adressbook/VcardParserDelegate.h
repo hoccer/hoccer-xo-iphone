@@ -24,6 +24,9 @@
 - (void)parser: (VcardParser*)parser didFindAddress: (NSString*)name 
 									  withAttributes: (NSArray *)attributes;
 
+- (void)parser: (VcardParser*)parser didFindPhoto: (NSString*)value
+                                     withAttributes: (NSArray *)attributes;
+
 
 
 @end
