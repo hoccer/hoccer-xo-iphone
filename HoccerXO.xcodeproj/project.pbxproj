@@ -290,6 +290,7 @@
 		E9D1145E1732E74000737EF7 /* Vcard.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D1145D1732E74000737EF7 /* Vcard.m */; };
 		E9D114641733010400737EF7 /* vcard_error_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D114631733010400737EF7 /* vcard_error_preview.png */; };
 		E9D1146A173307FF00737EF7 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D11469173307FC00737EF7 /* AddressBookUI.framework */; };
+		E9D1146C1734195700737EF7 /* system-settings-icon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E9D1146B1734195700737EF7 /* system-settings-icon.jpg */; };
 		E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F592D6171F460A00E2FFAC /* CryptoEngine.m */; };
 /* End PBXBuildFile section */
 
@@ -762,6 +763,7 @@
 		E9D1145D1732E74000737EF7 /* Vcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vcard.m; sourceTree = "<group>"; };
 		E9D114631733010400737EF7 /* vcard_error_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vcard_error_preview.png; sourceTree = "<group>"; };
 		E9D11469173307FC00737EF7 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		E9D1146B1734195700737EF7 /* system-settings-icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "system-settings-icon.jpg"; sourceTree = "<group>"; };
 		E9F592D5171F460900E2FFAC /* CryptoEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoEngine.h; sourceTree = "<group>"; };
 		E9F592D6171F460A00E2FFAC /* CryptoEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -911,6 +913,7 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				E9D1146B1734195700737EF7 /* system-settings-icon.jpg */,
 				6378481A16F3634D00DE03C2 /* Actionsheet */,
 				6383FF84172A0EE900835C91 /* AppIcons */,
 				6330490B170044940045E64E /* Avatar */,
@@ -1867,6 +1870,7 @@
 				6315F00317302D1D0027BCA7 /* InviteCell.xib in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				E9D114641733010400737EF7 /* vcard_error_preview.png in Resources */,
+				E9D1146C1734195700737EF7 /* system-settings-icon.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

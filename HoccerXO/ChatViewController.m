@@ -1126,7 +1126,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     if (action == @selector(copy:)) {return YES;}
-    if (action == @selector(resendMessage:)) {return YES;}
+    // if (action == @selector(resendMessage:)) {return YES;}
     if (action == @selector(forwardMessage:)) {return YES;}
     
     if (action == @selector(saveMessage:)) {
@@ -1284,11 +1284,11 @@ static const NSUInteger kMaxMessageBytes = 10000;
     if ([myAttachment.mediaType isEqual: @"video"]) {
         // TODO: lazily allocate _moviePlayerController once
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
-        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
+        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"audio"]) {
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
-        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeOne;
+        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
         
         UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.previewImage];
         

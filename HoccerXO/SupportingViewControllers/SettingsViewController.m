@@ -48,6 +48,7 @@
     saveContentInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
     saveContentInfo.label = NSLocalizedString(@"setting_save_incoming_media_info", nil);
     */
+/*
     SettingsItem * playSoundOnMessageArrival = [SettingsItem item];
     playSoundOnMessageArrival.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
     playSoundOnMessageArrival.label = NSLocalizedString(@"play_sound_on_message_arrival", nil);
@@ -58,6 +59,7 @@
 
     _items = @[ @[playSoundOnMessageArrival, playSoundOnMessageArrivalInfo ]
               ];
+ */
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 44.0; //XXX
@@ -69,6 +71,12 @@
     cell.textLabel.text = item.label;
     return cell;
 }
+
+//- (IBAction)launchXOSystemSettings:(id)sender {
+//    NSLog(@"launchXOSystemSettings");
+//    NSURL *myURL = [NSURL URLWithString:@"prefs://"];
+//    [[UIApplication sharedApplication] openURL:myURL];
+//}
 
 
 @end

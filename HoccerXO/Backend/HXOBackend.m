@@ -984,7 +984,7 @@ typedef enum BackendStates {
         *myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9906 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
         return NO;
     }
-    NSLog(@"! Validating Object for entity '%@' passed", entityName);
+    // NSLog(@"! Validating Object for entity '%@' passed", entityName);
     return YES;
 }
 

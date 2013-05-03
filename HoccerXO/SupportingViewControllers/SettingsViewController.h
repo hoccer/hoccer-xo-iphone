@@ -12,4 +12,7 @@
 
 @interface SettingsViewController : UserDefaultsViewController
 
+@property IBOutlet UIButton * openSystemSettings;
+
+
 @end

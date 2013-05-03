@@ -9,6 +9,7 @@
 #import "AttachmentPickerController.h"
 #import "RecordViewController.h"
 #import "ABPersonVCardCreator.h"
+#import "HXOUserDefaults.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -355,17 +356,19 @@
     if ([self.delegate respondsToSelector:@selector(allowsEditing)]) {
         picker.allowsEditing = [self.delegate allowsEditing];
     }
+    NSInteger videoQuality = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"videoQuality"] integerValue];
+
     if (sourceType == UIImagePickerControllerSourceTypeCamera){
         if (videoFlag) {
             picker.mediaTypes =[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-            picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+            picker.videoQuality = videoQuality;
         } else {
             picker.mediaTypes = @[(id)kUTTypeImage];
         }
     } else {
         if (videoFlag) {
             picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+            picker.videoQuality = videoQuality;
         } else {
             picker.mediaTypes = @[(id)kUTTypeImage];
         }

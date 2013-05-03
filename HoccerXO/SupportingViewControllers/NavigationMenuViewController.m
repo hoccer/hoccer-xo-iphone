@@ -41,11 +41,11 @@
                        @"icon": @"navigation_button_profile",
                        @"storyboardId": @"profileViewController"
                     },
-#ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
                     @{ @"title": NSLocalizedString(@"Settings", nil),
                        @"icon": @"navigation_button_settings",
                        @"storyboardId": @"settingsViewController"
                     },
+#ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
                     @{ @"title": NSLocalizedString(@"Tutorial", nil),
                        @"icon": @"navigation_button_tutorial",
                        @"storyboardId": @"tutorialViewController"
