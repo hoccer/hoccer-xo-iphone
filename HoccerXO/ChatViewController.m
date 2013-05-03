@@ -33,6 +33,7 @@
 #import "ImageViewController.h"
 #import "UserProfile.h"
 #import "NSString+StringWithData.h"
+#import "Vcard.h"
 
 
 static const NSUInteger kMaxMessageBytes = 10000;
@@ -48,6 +49,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 @property (strong) UIImage* avatarImage;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
+@property (readonly, strong, nonatomic) ABUnknownPersonViewController * vcardViewController;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
@@ -64,6 +66,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 @synthesize headerCell = _headerCell;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
+@synthesize vcardViewController = _vcardViewController;
 @synthesize currentExportSession = _currentExportSession;
 @synthesize currentPickInfo = _currentPickInfo;
 
@@ -1306,6 +1309,12 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 NSLog(@"image attachment view: Failed to get image: %@", error);
             }
         }];
+    } else  if ([myAttachment.mediaType isEqual: @"vcard"]) {
+        Vcard * myVcard = [[Vcard alloc] initWithVcardURL:myAttachment.contentURL];
+        self.vcardViewController.unknownPersonViewDelegate = self;
+        self.vcardViewController.displayedPerson = myVcard.person; // Assume person is already defined.
+        self.vcardViewController.allowsAddingToAddressBook = YES;
+        [self.navigationController pushViewController:self.vcardViewController animated:YES];
     }
 }
 
@@ -1314,6 +1323,17 @@ static const NSUInteger kMaxMessageBytes = 10000;
         _imageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ImageViewController"];
     }
     return _imageViewController;
+}
+
+- (ABUnknownPersonViewController*) vcardViewController {
+    if (_vcardViewController == nil) {
+        _vcardViewController = [[ABUnknownPersonViewController alloc] init];;
+    }
+    return _vcardViewController;
+}
+
+- (void)unknownPersonViewController:(ABUnknownPersonViewController *)unknownPersonView didResolveToPerson:(ABRecordRef)person {
+    [unknownPersonView dismissViewControllerAnimated:YES completion:nil];
 }
 
 
