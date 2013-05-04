@@ -217,18 +217,31 @@ static const NSTimeInterval kResponseTimeout = 10;
                                       [NSTimer scheduledTimerWithTimeInterval: kResponseTimeout target: self selector: @selector(serverDidNotRespond:) userInfo: theId repeats: NO]
                                   };
 
-    [self sendJson: methodCall];
+    if (![self sendJson: methodCall]) {
+        [self droppedRequest:theId];
+    };
 }
 
-- (void) sendJson: (NSDictionary*) jsonObject {
+- (BOOL) sendJson: (NSDictionary*) jsonObject {
     NSData * myPayloaddata = [NSJSONSerialization dataWithJSONObject: jsonObject options: 0 error: nil];
     NSString * myPayloadString = [[NSString alloc] initWithData:myPayloaddata encoding:NSUTF8StringEncoding];
     if ([[self verbosityLevel]isEqualToString:@"dump"]) {NSLog(@"JSON SEND->: %@",myPayloadString);}
-    [_websocket send: myPayloadString];
+    if (_websocket.readyState == SR_OPEN) {
+        [_websocket send: myPayloadString];
+        return YES;
+    } else {
+        NSLog(@"sendJson: sending failed, connection not open");
+    }
+    return NO;
 }
 
 - (NSNumber*) nextId {
     return @(_id++);
+}
+
+- (void) droppedRequest: (NSNumber*) jsonRpcId {
+    NSLog(@"JsonRpc: request %@ was dropped (no connection)", jsonRpcId);
+    [_responseHandlers removeObjectForKey: jsonRpcId];
 }
 
 - (void) serverDidNotRespond: (NSNumber*) jsonRpcId {

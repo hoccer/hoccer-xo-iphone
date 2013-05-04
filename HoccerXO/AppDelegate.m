@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
+
 #import "AppDelegate.h"
 
 #import "HXOConfig.h"
@@ -22,7 +23,6 @@
 #import "HXOUserDefaults.h"
 #import "Environment.h"
 #import "UserProfile.h"
-
 #import "MFSideMenu.h"
 
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
@@ -88,6 +88,11 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation
         NSLog(@"Launched by remote notification.");
+    }
+    
+    NSString * dumpRecordsForEntity = [[HXOUserDefaults standardUserDefaults] valueForKey: @"dumpRecordsForEntity"];
+    if (dumpRecordsForEntity.length > 0) {
+        [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
 
     return YES;
@@ -453,6 +458,11 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     [alert show];
 }
 
+- (void) showCorruptedDatabaseAlert {
+    [self showDeleteDatabaseAlertWithMessage:@"The database is corrupted. Your database must be deleted to continue. All chats will be deleted. Do you want to delete your database?" withTitle:@"Database corrupted" withTag:kDatabaseDeleteAlertTag];
+    
+}
+
 - (void) showDeleteDatabaseAlertWithMessage:  (NSString *) message withTitle:(NSString *) title withTag:(NSInteger)tag{
 
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
@@ -466,7 +476,6 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
     // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
     [alert show];
-    [NSTimer scheduledTimerWithTimeInterval: 1.0 target: alert selector: @selector(show) userInfo: nil repeats: NO];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -482,7 +491,7 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
         case kDatabaseDeleteAlertTag: // alert
             switch (buttonIndex) {
                 case 0:
-                    [self showFatalErrorAlertWithMessage:@"Outdated database was not deleted. Hoccer XO will not work." withTitle:@"Database not deleted" withTag:kFatalDatabaseErrorAlertTag];
+                    [self showFatalErrorAlertWithMessage:@"Outdated or corrupted database was not deleted. Hoccer XO will not work." withTitle:@"Database not deleted" withTag:kFatalDatabaseErrorAlertTag];
                     break;
                 case 1:
                     [self deleteDatabase];
@@ -490,6 +499,23 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
                     break;
             }
             break;
+    }
+}
+
+-(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName {
+    NSEntityDescription *entity = [NSEntityDescription entityForName:theEntityName inManagedObjectContext:self.managedObjectContext];
+    NSFetchRequest *request = [NSFetchRequest new];
+    [request setEntity:entity];
+    NSError *error;
+    NSMutableArray *fetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    int i = 0;
+    for (NSManagedObject * object in fetchResults) {
+        NSLog(@"================== Showing object %d of entity '%@' =================", i, theEntityName);
+        for (NSAttributeDescription * property in entity) {
+            // NSLog(@"property '%@'", property.name);
+            NSLog(@"property '%@' = %@", property.name, [object valueForKey:property.name]);
+        }
+        ++i;
     }
 }
 

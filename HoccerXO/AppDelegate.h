@@ -34,5 +34,6 @@
 - (void)saveDatabase;
 - (NSURL *)applicationDocumentsDirectory;
 - (void) setupDone: (BOOL) performRegistration;
+- (void) showCorruptedDatabaseAlert;
 
 @end

@@ -63,6 +63,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-dumpRecordsForEntity HXOMessage"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-attachmentVerbosity trace"
             isEnabled = "NO">
          </CommandLineArgument>

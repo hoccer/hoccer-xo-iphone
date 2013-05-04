@@ -322,7 +322,7 @@
     } else {
         cell.latestMessageLabel.text = [contact.latestMessage[0] body];
         cell.latestMessageLabel.font = [UIFont systemFontOfSize: cell.latestMessageLabel.font.pointSize];
-        latestMessageTime = [contact.latestMessage[0] timeSent];
+        latestMessageTime = [contact.latestMessage[0] timeAccepted];
     }
     [cell.latestMessageLabel sizeToFit];
 

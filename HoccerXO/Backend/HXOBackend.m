@@ -27,6 +27,8 @@
 #import "UserProfile.h"
 #import "SoundEffectPlayer.h"
 
+#define DELIVERY_TRACE YES
+
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
 typedef enum BackendStates {
@@ -282,7 +284,7 @@ typedef enum BackendStates {
     
     message.isOutgoing = @NO;
     message.isRead = @NO;
-    message.timeReceived = [NSDate date]; // TODO: use actual timestamp
+    message.timeReceived = [self estimatedServerTime];
     message.timeSection = [contact sectionTimeForMessageTime: message.timeAccepted];
     message.contact = contact;
     [contact.messages addObject: message];
@@ -1021,6 +1023,7 @@ typedef enum BackendStates {
             int i = 0;
             for (Delivery * delivery in deliveries) {
                 [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+                if (DELIVERY_TRACE) {NSLog(@"deliveryRequest returned: Delivery state '%@'->'%@' for messageTag %@ ",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"] );}
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
                 delivery.receiver.latestMessageTime = message.timeAccepted;
             }
@@ -1046,13 +1049,26 @@ typedef enum BackendStates {
 
 - (void) deliveryAcknowledge: (Delivery*) delivery {
     // NSLog(@"deliveryAcknowledge: %@", delivery);
+    
     [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[delivery.message.messageId, delivery.receiver.clientId]
                    onResponse: ^(id responseOrError, BOOL success)
     {
         if (success) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
             [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+            
+            NSString * oldState = [delivery.state copy];
             [delivery updateWithDictionary: responseOrError];
+            
+            // TODO: fix acknowledge storm on server, server should return "confirmed" status
+            if (![delivery.state isEqualToString:@"confirmed"]) {
+                NSLog(@"Bad server behavior: deliveryAcknowledge result should be state ‘confirmed' but is '%@', overriding own state to 'confirmed'", delivery.state);
+                delivery.state = @"confirmed";
+            } else {
+                if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge: state %@->%@",oldState, delivery.state);}
+            }
+            // NSLog(@"deliveryAcknowledge:response was: %@",responseOrError);
+            
             [self.delegate saveDatabase];
             [self.delegate.managedObjectContext refreshObject: delivery.message mergeChanges: YES];
         } else {
@@ -1350,8 +1366,17 @@ typedef enum BackendStates {
     
     Delivery * myDelivery = [self getDeliveryByMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
     if (myDelivery != nil) {
+        // TODO: server should not send outgoingDelivery-changes for confirmed object, we just won't answer them for now to avoid ack-storms
+        if ([myDelivery.state isEqualToString:@"confirmed"]) {
+            // we have already acknowledged and received confirmation for ack, so server should have shut up and never sent us this in the first time
+            NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery: %@", deliveryDict);
+            return;
+        }
+        
+        if (DELIVERY_TRACE) {NSLog(@"Notification: Delivery state '%@'->'%@' for messageTag %@ ",myDelivery.state, deliveryDict[@"state"], myMessageTag );}
+        
         if ([myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
-            NSLog(@"Delivery state for messageTag %@ receiver %@ was already %@", myMessageTag, myReceiverId, myDelivery.state);
+            NSLog(@"Duplicate Notification: Delivery state for messageTag %@ was already %@, timeStamps: old %@ new %@", myMessageTag, myDelivery.state, myDelivery.timeChangedMillis, deliveryDict[@"timeChanged"]);
         }
         [myDelivery updateWithDictionary: deliveryDict];
         [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
@@ -1360,8 +1385,11 @@ typedef enum BackendStates {
         
         if ([myDelivery.state isEqualToString:@"delivered"] ) {
             [SoundEffectPlayer messageDelivered];
+        } else {
+            NSLog(@"WARNING: We acknowledged Delivery state ‘%@‘ for messageTag %@ ", myDelivery.state, myMessageTag);
         }
         
+        // TODO: check if acknowleding should be done when state set to delivered - right now we acknowledge every outgoingDelivery notification
         [self deliveryAcknowledge: myDelivery];
 
     } else {

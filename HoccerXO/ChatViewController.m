@@ -925,7 +925,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
         NSError *error = nil;
         if (![_fetchedResultsController performFetch:&error]) {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
+            [(AppDelegate *)(self.chatBackend.delegate) showCorruptedDatabaseAlert];
+              return;
         }
     } else {
         _fetchedResultsController.delegate = self;

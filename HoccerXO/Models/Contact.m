@@ -108,11 +108,18 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 - (NSDate*) sectionTimeForMessageTime: (NSDate*) date {
+    return [NSDate dateWithTimeIntervalSince1970:100];
+    
     if ((self.latestMessageTime == nil) ||
         [date timeIntervalSinceDate: self.latestMessageTime] > kTimeSectionInterval ||
         self.currentTimeSection == nil)
     {
         self.currentTimeSection = date;
+    } else {
+        if ([date timeIntervalSinceDate:self.currentTimeSection] < 0) {
+            // date is before self.currentTimeSection
+            return date; // TODO: this will introduce a new time section, the proper way would be to search all existing time sections and choose the right one; however, timeAccepted and timeSection must yield the same sort order, otherwise we will crash
+        }
     }
     return self.currentTimeSection;
 }

@@ -17,8 +17,8 @@
 @interface HXOMessage : HXOModel
 
 @property (nonatomic, strong) NSString* body;
-@property (nonatomic, strong) NSDate*   timeSent; // client time when message was sent, passed unchanged to receivers
-@property (nonatomic, strong) NSDate*   timeReceived; // client time when message was received
+@property (nonatomic, strong) NSDate*   timeSent; // estimated server time when message was sent, set by client and passed unchanged to receivers in message object
+@property (nonatomic, strong) NSDate*   timeReceived; // estimated server time when message was received by client, set by client on reception, never passed
 @property (nonatomic, strong) NSDate*   timeAccepted; // server time stamp when message was accepted by the Server, passed on via Delivery
 @property (nonatomic, strong) NSNumber* isOutgoing;
 @property (nonatomic, strong) NSDate* timeSection;

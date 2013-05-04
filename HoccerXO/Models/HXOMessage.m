@@ -113,7 +113,19 @@
     self.timeAccepted = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
+/*
+- (void) setTimeAccepted:(NSDate *)newTimeAccepted {
+    if (newTimeAccepted <= self.timeSection) {
+        NSLog(@"WARNING: adjusting timeSection for message- old timeAccepted = %@, newTimeAccepted=%@, timeSection=%@",
+              self.timeAccepted, newTimeAccepted,self.timeSection);
+        self.timeSection = newTimeAccepted;
+    }
+    [self willChangeValueForKey:@"timeAccepted"];
+    [self setPrimitiveValue: newTimeAccepted forKey: @"timeAccepted"];
+    [self didChangeValueForKey:@"timeAccepted"];
 
+}
+*/
 
 - (NSDictionary*) rpcKeys {
     return @{
