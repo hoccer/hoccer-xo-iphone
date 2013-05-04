@@ -1130,7 +1130,9 @@ static const NSUInteger kMaxMessageBytes = 10000;
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     if (action == @selector(copy:)) {return YES;}
-    // if (action == @selector(resendMessage:)) {return YES;}
+#ifdef DEBUG
+    if (action == @selector(resendMessage:)) {return YES;}
+#endif
     if (action == @selector(forwardMessage:)) {return YES;}
     
     if (action == @selector(saveMessage:)) {
@@ -1151,7 +1153,9 @@ static const NSUInteger kMaxMessageBytes = 10000;
 - (void) messageView:(MessageCell *)theCell resendMessage:(id)sender {
     NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
+    for (int i = 0; i < 20;++i) {
+        [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
+    }
 }
 
 - (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
