@@ -230,9 +230,15 @@ typedef enum BackendStates {
         abort();
     }
     if (messages.count > 0) {
-        NSLog(@"receiveMessage: already have message with id %@", vars[@"messageId"]);
+        if (messages.count != 1) {
+            NSLog(@"ERROR: Database corrupted, duplicate messages with id %@ in database", messageDictionary[@"messageId"]);
+            return;
+        }
         HXOMessage * oldMessage = messages[0];
-        [self deliveryConfirm: messageDictionary[@"messageId"] withDelivery: [oldMessage.deliveries anyObject]];
+        Delivery * oldDelivery = [oldMessage.deliveries anyObject];
+        NSLog(@"#GLITCH: receiveMessage: already have message with tag %@ id %@", oldMessage.messageTag, oldMessage.messageId);
+        if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming duplicate message & delivery with state %@ for tag %@ id %@",oldDelivery.state, oldMessage.messageTag, oldMessage.messageId);}
+        [self deliveryConfirm: oldMessage.messageId withDelivery: oldDelivery];
         return;
     }
     if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
@@ -291,9 +297,9 @@ typedef enum BackendStates {
     [message updateWithDictionary: messageDictionary];
 
     contact.latestMessageTime = message.timeAccepted;
-
+    
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
-    [self deliveryConfirm: message.messageId withDelivery: delivery];
+
     
     if (attachment) {
         if ([attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue])
@@ -302,6 +308,8 @@ typedef enum BackendStates {
         }
     }
     [self.delegate saveDatabase];
+    if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state %@ for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
+    [self deliveryConfirm: message.messageId withDelivery: delivery];
     [SoundEffectPlayer messageArrived];
 }
 
@@ -1023,7 +1031,7 @@ typedef enum BackendStates {
             int i = 0;
             for (Delivery * delivery in deliveries) {
                 [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
-                if (DELIVERY_TRACE) {NSLog(@"deliveryRequest returned: Delivery state '%@'->'%@' for messageTag %@ ",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"] );}
+                if (DELIVERY_TRACE) {NSLog(@"deliveryRequest result: Delivery state '%@'->'%@' for messageTag %@ id %@",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"],updatedDeliveryDicts[i][@"messageId"] );}
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
                 delivery.receiver.latestMessageTime = message.timeAccepted;
             }
@@ -1039,6 +1047,10 @@ typedef enum BackendStates {
         if (success) {
             // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
             [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+            if (DELIVERY_TRACE) {NSLog(@"deliveryConfirm result: state %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
+            if ([delivery.state isEqualToString: responseOrError[@"state"]]) {
+                NSLog(@"#GLITCH: deliveryConfirm result: state unchanged %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);
+            }
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
         } else {
@@ -1062,10 +1074,13 @@ typedef enum BackendStates {
             
             // TODO: fix acknowledge storm on server, server should return "confirmed" status
             if (![delivery.state isEqualToString:@"confirmed"]) {
-                NSLog(@"Bad server behavior: deliveryAcknowledge result should be state ‘confirmed' but is '%@', overriding own state to 'confirmed'", delivery.state);
+                NSLog(@"#WARNING: Wrong Server Response: deliveryAcknowledge result should be state ‘confirmed' but is '%@', overriding own state to 'confirmed'", delivery.state);
                 delivery.state = @"confirmed";
             } else {
-                if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge: state %@->%@",oldState, delivery.state);}
+                if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge result: state %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);}
+                if ([oldState isEqualToString: delivery.state]) {
+                    NSLog(@"#GLITCH: deliveryAcknowledge result: duplicate state change %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);
+                }
             }
             // NSLog(@"deliveryAcknowledge:response was: %@",responseOrError);
             
@@ -1373,10 +1388,10 @@ typedef enum BackendStates {
             return;
         }
         
-        if (DELIVERY_TRACE) {NSLog(@"Notification: Delivery state '%@'->'%@' for messageTag %@ ",myDelivery.state, deliveryDict[@"state"], myMessageTag );}
+        if (DELIVERY_TRACE) {NSLog(@"outgoingDelivery Notification: Delivery state '%@'->'%@' for messageTag %@ id %@",myDelivery.state, deliveryDict[@"state"], myMessageTag, deliveryDict[@"messageId"]);}
         
         if ([myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
-            NSLog(@"Duplicate Notification: Delivery state for messageTag %@ was already %@, timeStamps: old %@ new %@", myMessageTag, myDelivery.state, myDelivery.timeChangedMillis, deliveryDict[@"timeChanged"]);
+            NSLog(@"#GLITCH: Duplicate outgoingDelivery Notification: Delivery state for messageTag %@ id %@ was already %@, timeStamps: old %@ new %@", myMessageTag, deliveryDict[@"messageId"], myDelivery.state, myDelivery.timeChangedMillis, deliveryDict[@"timeChanged"]);
         }
         [myDelivery updateWithDictionary: deliveryDict];
         [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];
@@ -1386,7 +1401,7 @@ typedef enum BackendStates {
         if ([myDelivery.state isEqualToString:@"delivered"] ) {
             [SoundEffectPlayer messageDelivered];
         } else {
-            NSLog(@"WARNING: We acknowledged Delivery state ‘%@‘ for messageTag %@ ", myDelivery.state, myMessageTag);
+            NSLog(@"#WARNING: We acknowledged Delivery state ‘%@‘ for messageTag %@ ", myDelivery.state, myMessageTag);
         }
         
         // TODO: check if acknowleding should be done when state set to delivered - right now we acknowledge every outgoingDelivery notification

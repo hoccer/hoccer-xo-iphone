@@ -13,12 +13,21 @@ SystemSoundID messageArrivedId = 0;
 SystemSoundID messageDeliveredId = 0;
 SystemSoundID messageSentId = 0;
 
+NSDate * lastAlertSoundStart;
+NSDate * lastEffectSoundStart;
+
+const double minEffectSoundInterval = 0.5;
+const double minAlertSoundInterval = 2.0;
+
+
 @implementation SoundEffectPlayer
 
 +  (void)initialize {
 	[self createSoundWithName: @"new_message"        ofType: @"aif" withId: &messageArrivedId];
     [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &messageDeliveredId];
     [self createSoundWithName: @"sweep_out_sound"    ofType: @"wav" withId: &messageSentId];
+    lastAlertSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
+    lastEffectSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
 }
 
 + (void) createSoundWithName: (NSString*) name ofType: (NSString*) type withId: (SystemSoundID*) theId {
@@ -42,14 +51,20 @@ SystemSoundID messageSentId = 0;
 // Will just play sound
 + (void)playSoundWithId: (SystemSoundID)soundId {
 	if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"playEffectSounds"] boolValue]) {
-		AudioServicesPlaySystemSound(soundId);
+        if ([lastEffectSoundStart timeIntervalSinceNow] < -minEffectSoundInterval) {
+            AudioServicesPlaySystemSound(soundId);
+            lastEffectSoundStart = [[NSDate alloc] init];
+        }
 	}
 }
 
 // will play sound or vibrate if phone is set to silent mode
 + (void)playAlertSoundWithId: (SystemSoundID)soundId {
 	if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"playAlertSounds"] boolValue]) {
-		AudioServicesPlayAlertSound(soundId);
+        if ([lastAlertSoundStart timeIntervalSinceNow] < -minAlertSoundInterval) {
+            AudioServicesPlayAlertSound(soundId);
+            lastAlertSoundStart = [[NSDate alloc] init];
+        }
 	}
 }
 
