@@ -16,6 +16,6 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 // url is set in the storyboard
-@property (strong, nonatomic) NSString * url;
+@property (strong, nonatomic) NSString * homeUrl;
 
 @end

@@ -41,7 +41,7 @@
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
     
-    if (![[self.webView.request.URL absoluteString] isEqualToString:self.url] ) {
+    if (![[self.webView.request.URL absoluteString] isEqualToString:self.homeUrl] ) {
         // in case the user has navigated somewhere else
         [self startFirstLoading];
     }
@@ -56,7 +56,7 @@
     // we will only register the caching protocol for the first page
     [NSURLProtocol registerClass:[RNCachingURLProtocol class]];
     
-    NSURL *url = [NSURL URLWithString:self.url];
+    NSURL *url = [NSURL URLWithString:self.homeUrl];
     NSURLRequest *requestURL = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:requestURL];
 }
