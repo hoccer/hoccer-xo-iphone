@@ -55,6 +55,7 @@ typedef enum ActionSheetTags {
     self = [super initWithCoder:aDecoder];
     if (self != nil) {
         _mode = ProfileViewModeMyProfile;
+        [HXOBackend registerConnectionInfoObserverFor:self];
     }
     return self;
 }
@@ -85,6 +86,7 @@ typedef enum ActionSheetTags {
     if (_mode == ProfileViewModeContactProfile) {
         [self setupContactKVO];
     }
+    [HXOBackend broadcastConnectionInfo];
 
     [self.tableView reloadData];
 }

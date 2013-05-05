@@ -65,11 +65,14 @@
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
+    [HXOBackend registerConnectionInfoObserverFor:self];
+
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
+    [HXOBackend broadcastConnectionInfo];
 }
 
 - (void)didReceiveMemoryWarning {

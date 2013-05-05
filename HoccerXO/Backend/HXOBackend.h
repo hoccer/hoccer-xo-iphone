@@ -99,6 +99,10 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 + (NSNumber*) millisFromDate:(NSDate *) date;
 + (NSDate*) dateFromMillis:(NSNumber*) milliSecondsSince1970;
 
++ (void)broadcastConnectionInfo;
++ (id) registerConnectionInfoObserverFor:(UIViewController*)controller;
+
+
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
                          absoluteURI:(NSString *)URLString
                          payloadData:(NSData *)payload

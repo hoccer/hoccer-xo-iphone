@@ -48,7 +48,7 @@
     _qrCameraSimulator.readerView = self.qrCodeReaderView;
 #endif
 
-
+    [HXOBackend registerConnectionInfoObserverFor:self];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -64,6 +64,7 @@
     UIApplication *app = [UIApplication sharedApplication];
     [self.qrCodeReaderView willRotateToInterfaceOrientation: app.statusBarOrientation
                                         duration: 0];
+    [HXOBackend broadcastConnectionInfo];
 }
 
 - (void) viewDidAppear: (BOOL) animated {

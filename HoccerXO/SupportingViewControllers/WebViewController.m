@@ -9,6 +9,13 @@
 #import "WebViewController.h"
 #import "UIViewController+HXOSideMenuButtons.h"
 #import "RNCachingURLProtocol.h"
+#import "HXOBackend.h"
+
+@interface WebViewController ()
+
+@property (strong, nonatomic) id connectionInfoObserver;
+
+@end
 
 @implementation WebViewController
 
@@ -28,7 +35,9 @@
     
     self.webView.suppressesIncrementalRendering = YES;
     self.webView.delegate = self;
-    
+
+    self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
+
 }
 
 - (void)viewDidUnload
@@ -45,6 +54,7 @@
         // in case the user has navigated somewhere else
         [self startFirstLoading];
     }
+    [HXOBackend broadcastConnectionInfo];
 }
 
 - (void) startFirstLoading {

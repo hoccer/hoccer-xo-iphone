@@ -31,6 +31,9 @@
 
 @property (nonatomic,strong) ConversationCell* conversationCell;
 
+@property (strong, nonatomic) id connectionInfoObserver;
+
+
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
 
@@ -69,20 +72,7 @@
     // TODO: ask @zutrinken
     self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
     
-    self.connectionInfoObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"connectionInfoChanged"
-                                                                                    object:nil
-                                                                                     queue:[NSOperationQueue mainQueue]
-                                                                                usingBlock:^(NSNotification *note) {
-                                                                                    
-                                                                                    NSDictionary * info = [note userInfo];
-                                                                                    if ([info[@"normal"] boolValue]) {
-                                                                                        self.navigationItem.prompt = nil;
-                                                                                    } else {
-                                                                                        self.navigationItem.prompt = info[@"statusinfo"];
-                                                                                        
-                                                                                    }
-                                                                                }];
- 
+    self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 }
 
 - (ChatViewController*) chatViewController {
@@ -95,6 +85,7 @@
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
+    [HXOBackend broadcastConnectionInfo];
 }
 
 - (void) viewDidAppear:(BOOL)animated {

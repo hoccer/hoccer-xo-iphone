@@ -150,21 +150,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [menuController update];
     
     [self hideAttachmentSpinner];
-
-    self.connectionInfoObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"connectionInfoChanged"
-                                                                                    object:nil
-                                                                                     queue:[NSOperationQueue mainQueue]
-                                                                                usingBlock:^(NSNotification *note) {
-                                                                                    
-                                                                                    NSDictionary * info = [note userInfo];
-                                                                                    if ([info[@"normal"] boolValue]) {
-                                                                                        self.navigationItem.prompt = nil;
-                                                                                    } else {
-                                                                                        self.navigationItem.prompt = info[@"statusinfo"];
-                                                                                        
-                                                                                    }
-                                                                                }];
-
+    [HXOBackend registerConnectionInfoObserverFor:self];
     
     [self configureView];
 }
@@ -1071,6 +1057,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     if (self.fetchedResultsController != nil) {
         self.fetchedResultsController.delegate = self;
     }
+    [HXOBackend broadcastConnectionInfo];
 
     [self scrollToBottomAnimated: NO];
 }

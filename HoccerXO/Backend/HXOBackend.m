@@ -110,6 +110,26 @@ typedef enum BackendStates {
     return self;
 }
 
++ (id) registerConnectionInfoObserverFor:(UIViewController*)controller {
+    id observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"connectionInfoChanged"
+                                                                                    object:nil
+                                                                                     queue:[NSOperationQueue mainQueue]
+                                                                                usingBlock:^(NSNotification *note) {
+                                                                                    
+                                                                                    NSDictionary * info = [note userInfo];
+                                                                                    if ([info[@"normal"] boolValue]) {
+                                                                                        controller.navigationItem.prompt = nil;
+                                                                                    } else {
+                                                                                        controller.navigationItem.prompt = info[@"statusinfo"];
+                                                                                    }
+                                                                                }];
+    return observer;
+}
+
++ (void)broadcastConnectionInfo {
+    [((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend updateConnectionStatusInfo];
+}
+
 - (NSString*) stateString: (BackendState) state {
     switch (state) {
         case kBackendStopped:
@@ -149,13 +169,13 @@ typedef enum BackendStates {
     } else {
         newInfo = @"no internet";
     }
-    if (![self.connectionInfo isEqualToString:newInfo]) {
+    //if (![self.connectionInfo isEqualToString:newInfo]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"connectionInfoChanged"
                                                             object:self
                                                           userInfo:@{ @"statusinfo":NSLocalizedString(newInfo, @"connection states"),
                                                                       @"normal":@(normal) }
          ];
-    }
+    //}
 }
 
 - (void) saveServerTime:(NSDate *) theTime {
