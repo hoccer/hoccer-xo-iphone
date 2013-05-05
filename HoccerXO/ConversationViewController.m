@@ -25,6 +25,7 @@
 #import "ProfileViewController.h"
 #import "InviteCell.h"
 #import "InvitationController.h"
+#import "Attachment.h"
 
 @interface ConversationViewController ()
 
@@ -334,12 +335,30 @@
     if ([contact.latestMessage count] == 0){
         cell.latestMessageLabel.text = NSLocalizedString(@"no_messages_exchanged", nil);
         cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
+        cell.latestMessageDirection.image = nil;
     } else {
-        cell.latestMessageLabel.text = [contact.latestMessage[0] body];
-        cell.latestMessageLabel.font = [UIFont systemFontOfSize: cell.latestMessageLabel.font.pointSize];
-        latestMessageTime = [contact.latestMessage[0] timeAccepted];
+        HXOMessage * message = contact.latestMessage[0];
+        if (message.body.length > 0) {
+            cell.latestMessageLabel.text = message.body;            
+            cell.latestMessageLabel.font = [UIFont systemFontOfSize: cell.latestMessageLabel.font.pointSize];
+        } else {
+            if (message.attachment != nil) {
+                cell.latestMessageLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(message.attachment.mediaType,nil)];
+            } else {
+                cell.latestMessageLabel.text = @"<>"; // should never happen
+            }
+            cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
+        }
+        latestMessageTime = message.timeAccepted;
+        if ([message.isOutgoing boolValue] == YES) {
+            cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-right"];
+        } else {
+            cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-left"];
+        }
     }
     [cell.latestMessageLabel sizeToFit];
+    
+    
 
     if (latestMessageTime) {
         NSCalendar *calendar = [NSCalendar currentCalendar];

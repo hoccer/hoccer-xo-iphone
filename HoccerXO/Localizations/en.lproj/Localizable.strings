@@ -247,5 +247,10 @@
 "stopping" = "disconnecting...";
 "no internet" = "no internet connection";
 
+"image" = "Image";
+"video" = "Video";
+"audio" = "Audio";
+"vcard" = "Adress";
+
 
 
