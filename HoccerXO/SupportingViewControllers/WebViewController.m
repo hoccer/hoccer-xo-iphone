@@ -29,13 +29,6 @@
     self.webView.suppressesIncrementalRendering = YES;
     self.webView.delegate = self;
     
-    NSLog(@"webview opening, registering RNCachingURLProtocol");
-    // we will only register the caching protocol for the first page
-    [NSURLProtocol registerClass:[RNCachingURLProtocol class]];
-    
-    NSURL *url = [NSURL URLWithString:self.url];
-    NSURLRequest *requestURL = [NSURLRequest requestWithURL:url];
-    [self.webView loadRequest:requestURL];
 }
 
 - (void)viewDidUnload
@@ -47,8 +40,33 @@
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
+    
+    if (![[self.webView.request.URL absoluteString] isEqualToString:self.url] ) {
+        // in case the user has navigated somewhere else
+        [self startFirstLoading];
+    }
 }
 
+- (void) startFirstLoading {
+    [self.activityIndicator startAnimating];
+    self.loadingOverlay.hidden = false;
+    self.loadingLabel.text = NSLocalizedString(@"Loading", @"webview");
+    
+    NSLog(@"webview opening, registering RNCachingURLProtocol");
+    // we will only register the caching protocol for the first page
+    [NSURLProtocol registerClass:[RNCachingURLProtocol class]];
+    
+    NSURL *url = [NSURL URLWithString:self.url];
+    NSURLRequest *requestURL = [NSURLRequest requestWithURL:url];
+    [self.webView loadRequest:requestURL];
+}
+
+- (void) loadingFinished {
+    [self.activityIndicator stopAnimating];
+    self.loadingOverlay.hidden = true;
+    [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
+    NSLog(@"webview finshed loading, RNCachingURLProtocol ungregistered");
+}
 
 #pragma mark - Optional UIWebViewDelegate delegate methods
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -67,9 +85,8 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    if (--_requestsRunning == 0) {
-        [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
-        NSLog(@"webview finshed loading, RNCachingURLProtocol ungregistered");
+    if (_requestsRunning && --_requestsRunning == 0) {
+        [self loadingFinished];
     }
     // NSLog(@"webview finshed loading, _requestsRunning=%d", _requestsRunning);
     
@@ -79,9 +96,8 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
-    if (--_requestsRunning == 0) {
-        [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
-        NSLog(@"webview failed to load, RNCachingURLProtocol ungregistered");
+    if (_requestsRunning && --_requestsRunning == 0) {
+        [self loadingFinished];
     }
     // NSLog(@"webview failed to load, _requestsRunning=%d", _requestsRunning);
 }
