@@ -10,3 +10,6 @@
 [submodule "3rdParty/QREncoder"]
 	path = 3rdParty/QREncoder
 	url = git@github.com:hoccer/QR-Code-Encoder-for-Objective-C.git
+[submodule "3rdParty/GCNetworkRequest"]
+	path = 3rdParty/GCNetworkRequest
+	url = git@github.com:GlennChiu/GCNetworkRequest.git

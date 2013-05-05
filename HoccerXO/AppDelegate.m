@@ -84,6 +84,9 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
         [self setupDone: NO];
     }
+    
+    self.internetReachabilty = [GCNetworkReachability reachabilityForInternetConnection];
+    [self.internetReachabilty startMonitoringNetworkReachabilityWithNotification];
 
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation

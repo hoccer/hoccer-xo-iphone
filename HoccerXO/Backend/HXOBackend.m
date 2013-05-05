@@ -51,6 +51,8 @@ typedef enum BackendStates {
     NSInteger          _avatarBytesUploaded;
     NSInteger          _avatarBytesTotal;
     BOOL               _performRegistration;
+    id                 _internetConnectionObserver;
+    NSDate *           _lastReconnectAttempt;
 }
 
 - (void) identify;
@@ -67,6 +69,7 @@ typedef enum BackendStates {
         _serverConnection = [[JsonRpcWebSocket alloc] init];
         _serverConnection.delegate = self;
         _apnsDeviceToken = nil;
+        _lastReconnectAttempt = [NSDate dateWithTimeIntervalSince1970:0];
         [_serverConnection registerIncomingCall: @"incomingDelivery"    withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery"    withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered"   withSelector:@selector(pushNotRegistered:) isNotification: YES];
@@ -78,6 +81,31 @@ typedef enum BackendStates {
                                                  selector:@selector(profileUpdatedByUser:)
                                                      name:@"profileUpdatedByUser"
                                                    object:nil];
+        
+        _internetConnectionObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kGCNetworkReachabilityDidChangeNotification
+                                                                          object:nil
+                                                                           queue:[NSOperationQueue mainQueue]
+                                                                      usingBlock:^(NSNotification *note) {
+                                                                          
+                                                                          GCNetworkReachabilityStatus status = [[note userInfo][kGCNetworkReachabilityStatusKey] integerValue];
+                                                                          
+                                                                          switch (status) {
+                                                                              case GCNetworkReachabilityStatusNotReachable:
+                                                                                  NSLog(@"No connection, disconnecting");
+                                                                                  [self disconnect];
+                                                                                  break;
+                                                                              case GCNetworkReachabilityStatusWWAN:
+                                                                                  NSLog(@"Reachable via WWAN");
+                                                                                  [self reconnectIfNecessary];
+                                                                                  break;
+                                                                              case GCNetworkReachabilityStatusWiFi:
+                                                                                  NSLog(@"Reachable via WiFi");
+                                                                                  [self reconnectIfNecessary];
+                                                                                  break;
+                                                                                  
+                                                                          }
+                                                                      }];
+
     }
     return self;
 }
@@ -106,7 +134,7 @@ typedef enum BackendStates {
 }
 
 - (void) setState: (BackendState) state {
-    // NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
+    NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
     _state = state;
 }
 
@@ -449,18 +477,45 @@ typedef enum BackendStates {
     [_serverConnection close];
 }
 
-- (void) reconnect {
-    [self start: _performRegistration];
+// called by internetReachabilty Observer when internet connection is lost
+- (void) disconnect {
+    if (_state != kBackendStopped && _state != kBackendStopping) {
+        [self stop];
+    }
 }
 
-- (void) reconnectWitBackoff {
+// called by internetReachabilty Observer when internet connection is lost
+- (void) reconnectIfNecessary {
+    if (_state == kBackendStopped ||_state == kBackendStopping) {
+        [self reconnect];
+    } else {
+        NSLog(@"reconnectIfNecessary: not neccessary, state = %@", [self stateString:_state]);
+    }
+}
+
+- (void) reconnect {
+    if ([self.delegate.internetReachabilty isReachable]) {
+        if ([[NSDate date] timeIntervalSinceDate:_lastReconnectAttempt] < 5.0) {
+            [self reconnectWithBackoff];
+            _lastReconnectAttempt = [NSDate date];
+            return;
+        }
+        [self start: _performRegistration];        
+    } else {
+        NSLog(@"reconnect: no internet connection, backing off, state = %@", [self stateString:_state]);
+        // we should not need to do that because we will be notified when the connection comes back
+        // [self reconnectWithBackoff];
+    }
+}
+
+- (void) reconnectWithBackoff {
     if (_backoffTime == 0) {
         _backoffTime = (double)rand() / RAND_MAX;
     } else {
         _backoffTime = MIN(2 * _backoffTime, 10);
     }
     NSLog(@"reconnecting in %f seconds", _backoffTime);
-    [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnect) userInfo: nil repeats: NO];
+    [NSTimer scheduledTimerWithTimeInterval: _backoffTime target: self selector: @selector(reconnectIfNecessary) userInfo: nil repeats: NO];
 }
 
 
@@ -1442,7 +1497,8 @@ typedef enum BackendStates {
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@", error);
     [self setState: kBackendStopped]; // XXX do we need/want a failed state?
-    [self reconnectWitBackoff];
+    // [self reconnectWithBackoff];
+    [self reconnect];
 }
 
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error {
@@ -1469,7 +1525,7 @@ typedef enum BackendStates {
             [self.delegate backendDidStop];
         }
     } else {
-        [self reconnectWitBackoff];
+        [self reconnect];
     }
 }
 

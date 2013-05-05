@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "HXOBackend.h"
+#import "GCNetworkReachability.h"
 
 @class ConversationViewController;
 
@@ -29,6 +30,8 @@
 @property (nonatomic, strong) ConversationViewController * conversationViewController;
 
 @property (nonatomic, strong) NSString * userAgent;
+
+@property (nonatomic, strong)  GCNetworkReachability * internetReachabilty;
 
 - (void)saveContext;
 - (void)saveDatabase;
