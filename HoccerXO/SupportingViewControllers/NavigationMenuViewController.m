@@ -45,16 +45,14 @@
                        @"icon": @"navigation_button_settings",
                        @"storyboardId": @"settingsViewController"
                     },
-#ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
                     @{ @"title": NSLocalizedString(@"Tutorial", nil),
                        @"icon": @"navigation_button_tutorial",
                        @"storyboardId": @"tutorialViewController"
                     },
                     @{ @"title": NSLocalizedString(@"FAQ", nil),
                        @"icon": @"navigation_button_faq",
-                       @"storyboardId": @"tutorialViewController" // TODO: @"faqViewController"
+                       @"storyboardId": @"faqViewController" // TODO: @"faqViewController"
                        },
-#endif
                     @{ @"title": NSLocalizedString(@"About", nil),
                        @"icon": @"navigation_button_about",
                        @"storyboardId": @"aboutViewController"

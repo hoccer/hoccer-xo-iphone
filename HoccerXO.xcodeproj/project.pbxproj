@@ -192,7 +192,7 @@
 		63AE453C1703650C0099F0CB /* navigation_button_tutorial@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE45321703650C0099F0CB /* navigation_button_tutorial@2x.png */; };
 		63AE4540170488FB0099F0CB /* UIViewController+HXOSideMenuButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE453F170488FB0099F0CB /* UIViewController+HXOSideMenuButtons.m */; };
 		63AE4544170493140099F0CB /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE4543170493140099F0CB /* SettingsViewController.m */; };
-		63AE45471704945C0099F0CB /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE45461704945C0099F0CB /* TutorialViewController.m */; };
+		63AE45471704945C0099F0CB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE45461704945C0099F0CB /* WebViewController.m */; };
 		63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE4549170494AF0099F0CB /* AboutViewController.m */; };
 		63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE454C1705ADAF0099F0CB /* NSData+HexString.m */; };
 		63AE45501705E1440099F0CB /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */; };
@@ -304,6 +304,7 @@
 		E9D1149E1736AE6900737EF7 /* mini-bubble-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D1149C1736AE6800737EF7 /* mini-bubble-left@2x.png */; };
 		E9D114A11736B17700737EF7 /* mini-bubble-right.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D1149F1736B17600737EF7 /* mini-bubble-right.png */; };
 		E9D114A21736B17700737EF7 /* mini-bubble-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9D114A01736B17600737EF7 /* mini-bubble-right@2x.png */; };
+		E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */; };
 		E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F592D6171F460A00E2FFAC /* CryptoEngine.m */; };
 /* End PBXBuildFile section */
 
@@ -631,8 +632,8 @@
 		63AE453F170488FB0099F0CB /* UIViewController+HXOSideMenuButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+HXOSideMenuButtons.m"; sourceTree = "<group>"; };
 		63AE4542170493140099F0CB /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		63AE4543170493140099F0CB /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
-		63AE45451704945C0099F0CB /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
-		63AE45461704945C0099F0CB /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		63AE45451704945C0099F0CB /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		63AE45461704945C0099F0CB /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		63AE4548170494AF0099F0CB /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		63AE4549170494AF0099F0CB /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		63AE454B1705ADAE0099F0CB /* NSData+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+HexString.h"; sourceTree = "<group>"; };
@@ -797,6 +798,8 @@
 		E9D1149C1736AE6800737EF7 /* mini-bubble-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mini-bubble-left@2x.png"; sourceTree = "<group>"; };
 		E9D1149F1736B17600737EF7 /* mini-bubble-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mini-bubble-right.png"; sourceTree = "<group>"; };
 		E9D114A01736B17600737EF7 /* mini-bubble-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mini-bubble-right@2x.png"; sourceTree = "<group>"; };
+		E9D114A41736E43E00737EF7 /* RNCachingURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNCachingURLProtocol.h; sourceTree = "<group>"; };
+		E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCachingURLProtocol.m; sourceTree = "<group>"; };
 		E9F592D5171F460900E2FFAC /* CryptoEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoEngine.h; sourceTree = "<group>"; };
 		E9F592D6171F460A00E2FFAC /* CryptoEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1261,8 +1264,8 @@
 				633049291701B3390045E64E /* ProfileViewController.m */,
 				63AE4542170493140099F0CB /* SettingsViewController.h */,
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
-				63AE45451704945C0099F0CB /* TutorialViewController.h */,
-				63AE45461704945C0099F0CB /* TutorialViewController.m */,
+				63AE45451704945C0099F0CB /* WebViewController.h */,
+				63AE45461704945C0099F0CB /* WebViewController.m */,
 				63C1356617160E2E00969B0B /* UserDefaultsViewController.h */,
 				63C1356717160E2E00969B0B /* UserDefaultsViewController.m */,
 				E9B7BAB7172EA15E00212420 /* RecordViewController.h */,
@@ -1421,6 +1424,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
 				63A7F68A172C418A00C0EC26 /* ZBarSDK */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
@@ -1616,6 +1620,16 @@
 			);
 			name = GCNetworkRequest;
 			path = 3rdParty/GCNetworkRequest;
+			sourceTree = "<group>";
+		};
+		E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */ = {
+			isa = PBXGroup;
+			children = (
+				E9D114A41736E43E00737EF7 /* RNCachingURLProtocol.h */,
+				E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */,
+			);
+			name = RNCachingURLProtocol;
+			path = 3rdParty/RNCachingURLProtocol;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2010,7 +2024,7 @@
 				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
 				63AE4540170488FB0099F0CB /* UIViewController+HXOSideMenuButtons.m in Sources */,
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
-				63AE45471704945C0099F0CB /* TutorialViewController.m in Sources */,
+				63AE45471704945C0099F0CB /* WebViewController.m in Sources */,
 				63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */,
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
@@ -2067,6 +2081,7 @@
 				E9D1148E1736702E00737EF7 /* GCNetworkReachability.m in Sources */,
 				E9D1148F1736702E00737EF7 /* GCNetworkRequest.m in Sources */,
 				E9D114901736702E00737EF7 /* GCXMLRequestOperation.m in Sources */,
+				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
