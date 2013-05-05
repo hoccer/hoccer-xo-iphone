@@ -50,6 +50,8 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 @property (nonatomic, strong) NSDate *latestKnownServerTimeAtClientTime;
 @property (nonatomic) NSTimeInterval latestKnownServerTimeOffset;
 
+@property (atomic, strong) NSString *connectionInfo;
+
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
 - (HXOMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;

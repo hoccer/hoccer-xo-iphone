@@ -38,6 +38,8 @@
 @property (strong, nonatomic) AVAssetExportSession * currentExportSession;
 @property (strong, nonatomic) id currentPickInfo;
 
+@property (strong, nonatomic) id connectionInfoObserver;
+
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottomAnimated: (BOOL) animated;
 - (IBAction)sendPressed:(id)sender;

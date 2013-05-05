@@ -239,3 +239,13 @@
 
 "attachment_upload_failed_message" = "Failed to upload an attachment";
 
+"stopped" = "not connected";
+"connecting" = "connecting...";
+"registering" = "registering...";
+"authenticating" = "authenticating...";
+"ready" = "connected";
+"stopping" = "disconnecting...";
+"no internet" = "no internet connection";
+
+
+

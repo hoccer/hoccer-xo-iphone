@@ -136,6 +136,26 @@ typedef enum BackendStates {
 - (void) setState: (BackendState) state {
     NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
     _state = state;
+    [self updateConnectionStatusInfo];
+}
+
+// notify everyone who is interested in displaying the status
+- (void) updateConnectionStatusInfo {
+    NSString * newInfo;
+    BOOL normal = NO;
+    if ([self.delegate.internetReachabilty isReachable]) {
+        newInfo = [self stateString: _state];
+        normal = (_state == kBackendReady) ;
+    } else {
+        newInfo = @"no internet";
+    }
+    if (![self.connectionInfo isEqualToString:newInfo]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"connectionInfoChanged"
+                                                            object:self
+                                                          userInfo:@{ @"statusinfo":NSLocalizedString(newInfo, @"connection states"),
+                                                                      @"normal":@(normal) }
+         ];
+    }
 }
 
 - (void) saveServerTime:(NSDate *) theTime {
@@ -265,7 +285,7 @@ typedef enum BackendStates {
         HXOMessage * oldMessage = messages[0];
         Delivery * oldDelivery = [oldMessage.deliveries anyObject];
         NSLog(@"#GLITCH: receiveMessage: already have message with tag %@ id %@", oldMessage.messageTag, oldMessage.messageId);
-        if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming duplicate message & delivery with state %@ for tag %@ id %@",oldDelivery.state, oldMessage.messageTag, oldMessage.messageId);}
+        if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming duplicate message & delivery with state '%@' for tag %@ id %@",oldDelivery.state, oldMessage.messageTag, oldMessage.messageId);}
         [self deliveryConfirm: oldMessage.messageId withDelivery: oldDelivery];
         return;
     }
@@ -336,7 +356,7 @@ typedef enum BackendStates {
         }
     }
     [self.delegate saveDatabase];
-    if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state %@ for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
+    if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
     [self deliveryConfirm: message.messageId withDelivery: delivery];
     [SoundEffectPlayer messageArrived];
 }

@@ -151,6 +151,21 @@ static const NSUInteger kMaxMessageBytes = 10000;
     
     [self hideAttachmentSpinner];
 
+    self.connectionInfoObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"connectionInfoChanged"
+                                                                                    object:nil
+                                                                                     queue:[NSOperationQueue mainQueue]
+                                                                                usingBlock:^(NSNotification *note) {
+                                                                                    
+                                                                                    NSDictionary * info = [note userInfo];
+                                                                                    if ([info[@"normal"] boolValue]) {
+                                                                                        self.navigationItem.prompt = nil;
+                                                                                    } else {
+                                                                                        self.navigationItem.prompt = info[@"statusinfo"];
+                                                                                        
+                                                                                    }
+                                                                                }];
+
+    
     [self configureView];
 }
 
