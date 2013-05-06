@@ -10,6 +10,7 @@
 #import "RecordViewController.h"
 #import "ABPersonVCardCreator.h"
 #import "HXOUserDefaults.h"
+#import "TDSemiModal.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -291,8 +292,14 @@
 }
 
 - (void) pickAudioFromRecorder {
+    NSLog(@"creating view");
     self.recordViewController.delegate = self;
-    [_viewController presentViewController: self.recordViewController animated: YES completion: nil];
+    //[_viewController presentViewController: self.recordViewController animated: YES completion: nil];
+
+    NSLog(@"adding view");
+    
+    //[UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:self.recordViewController.view];
+    [_viewController presentSemiModalViewController:self.recordViewController];
 }
 
 - (void)audiorecorder:(RecordViewController *)audioRecorder didRecordAudio:(NSURL *)audioFileURL {

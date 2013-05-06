@@ -13,3 +13,6 @@
 [submodule "3rdParty/GCNetworkRequest"]
 	path = 3rdParty/GCNetworkRequest
 	url = git@github.com:GlennChiu/GCNetworkRequest.git
+[submodule "3rdParty/TDSemiModal"]
+	path = 3rdParty/TDSemiModal
+	url = git@github.com:hoccer/TDSemiModal.git

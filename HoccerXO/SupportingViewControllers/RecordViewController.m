@@ -9,6 +9,8 @@
 #import "RecordViewController.h"
 #import "ChatViewController.h"
 
+#import "TDSemiModal.h"
+
 @interface RecordViewController ()
 
 @end
@@ -44,6 +46,54 @@
     [self updateStatusDisplay];
     [self updateTimeDisplay:nil];
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+	//slide in the filter view from the bottom
+	// [self slideIn];
+    NSLog(@"viewWillAppear");
+}
+
+- (void)slideIn {
+	
+	//set initial location at bottom of view
+    CGRect frame = self.sheetView.frame;
+    frame.origin = CGPointMake(0.0, self.view.bounds.size.height);
+    self.sheetView.frame = frame;
+    [self.view addSubview:self.sheetView];
+	
+    //animate to new location, determined by height of the view in the NIB
+    [UIView beginAnimations:@"presentWithSuperview" context:nil];
+    frame.origin = CGPointMake(0.0, self.view.bounds.size.height - self.sheetView.bounds.size.height);
+	
+    self.sheetView.frame = frame;
+    [UIView commitAnimations];
+}
+
+- (void) slideOut {
+	
+	//do what you need to do with information gathered from the custom action sheet. E.g., apply data filter on parent view.
+	
+	[UIView beginAnimations:@"removeFromSuperviewWithAnimation" context:nil];
+	
+    // Set delegate and selector to remove from superview when animation completes
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
+	
+    // Move this view to bottom of superview
+    CGRect frame = self.sheetView.frame;
+    frame.origin = CGPointMake(0.0, self.view.bounds.size.height);
+    self.sheetView.frame = frame;
+	
+    [UIView commitAnimations];
+}
+
+// Method called when removeFromSuperviewWithAnimation's animation completes
+- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    if ([animationID isEqualToString:@"removeFromSuperviewWithAnimation"]) {
+        [self.view removeFromSuperview];
+    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -167,7 +217,7 @@
 
 #pragma mark -- Navigation action methods
 
-
+#ifdef PRESENTED_VIEW
 - (IBAction)usePressed:(id)sender {
     NSLog(@"usePressed:");
     [self dismissViewControllerAnimated: YES completion: nil];
@@ -181,6 +231,28 @@
     [_audioRecorder deleteRecording];
     [self dismissViewControllerAnimated: YES completion: nil];
 }
+#else
+- (IBAction)usePressed:(id)sender {
+    NSLog(@"usePressed:");
+    //[self dismissViewControllerAnimated: YES completion: nil];
+    // [self.view removeFromSuperview];
+	[self dismissSemiModalViewController:self];
+    
+    if (self.delegate != nil) {
+        NSLog(@"usePressed calling didRecordAudio %@",self.audioFileURL);
+        [self.delegate audiorecorder:self didRecordAudio:self.audioFileURL];
+    }
+}
+
+- (IBAction)cancelPressed:(id)sender {
+    [_audioRecorder deleteRecording];
+    // [self dismissViewControllerAnimated: YES completion: nil];
+    // [self.view removeFromSuperview];
+	[self dismissSemiModalViewController:self];
+
+}
+
+#endif
 
 
 #pragma mark -- delegate methods
