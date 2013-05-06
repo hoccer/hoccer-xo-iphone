@@ -34,6 +34,8 @@
     self.appIconShadow.layer.shadowColor = [UIColor blackColor].CGColor;
     self.appIconShadow.layer.shadowOpacity = 0.8;
     self.appIconShadow.layer.shadowOffset = CGSizeMake(0, 3);
+    self.appIconShadow.layer.shouldRasterize = YES;
+    self.appIconShadow.layer.rasterizationScale = [[UIScreen mainScreen] scale];
 
     self.scrollView.alwaysBounceVertical = YES;
 
