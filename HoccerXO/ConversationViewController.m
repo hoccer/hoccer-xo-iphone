@@ -29,7 +29,8 @@
 
 @interface ConversationViewController ()
 
-@property (nonatomic,strong) ConversationCell* conversationCell;
+@property (nonatomic,strong) ConversationCell * conversationCell;
+@property (nonatomic,strong) InviteCell       * inviteCell;
 
 @property (strong, nonatomic) id connectionInfoObserver;
 
@@ -48,6 +49,7 @@
 
     UINib * nib = [UINib nibWithNibName: @"InviteCell" bundle: [NSBundle mainBundle]];
     [self.tableView registerNib: nib forCellReuseIdentifier: [InviteCell reuseIdentifier]];
+    self.inviteCell = [self.tableView dequeueReusableCellWithIdentifier: [InviteCell reuseIdentifier]];
 
     [super awakeFromNib];
 }
@@ -162,10 +164,13 @@
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.emptyTablePlaceholder) {
+    if (self.emptyTablePlaceholder && indexPath.row == 0) {
         return self.emptyTablePlaceholder.bounds.size.height;
+    } else if ([self isLastCell: indexPath]) {
+        return self.inviteCell.bounds.size.height;
+    } else {
+        return self.conversationCell.bounds.size.height;
     }
-    return self.conversationCell.bounds.size.height;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
