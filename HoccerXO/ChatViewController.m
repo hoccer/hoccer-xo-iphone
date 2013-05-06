@@ -53,6 +53,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
+@property (strong, nonatomic) NSIndexPath * lastVisibleCellBeforeRotation;
+
 - (void)configureCell:(UITableViewCell *)cell forMessage:(HXOMessage *) message;
 - (void)configureView;
 @end
@@ -1366,9 +1368,19 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [self scrollToBottomAnimated: theObject != nil];
 }
 
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    // save index path of bottom most visible cell
+    NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
+    self.lastVisibleCellBeforeRotation = [indexPaths lastObject];
+}
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     // trigger relayout on orientation change. However, there has to be a better way to do this...
     [self.tableView reloadData];
+    // scroll to bottom most cell visible before changing the orientation
+    if (self.lastVisibleCellBeforeRotation != nil) {
+        [self.tableView scrollToRowAtIndexPath: self.lastVisibleCellBeforeRotation atScrollPosition:UITableViewScrollPositionBottom animated: NO];
+        self.lastVisibleCellBeforeRotation = nil;
+    }
 }
 
 - (void) dealloc {
