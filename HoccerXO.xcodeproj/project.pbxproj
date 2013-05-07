@@ -718,11 +718,11 @@
 		63F4CF1A17289DB600699394 /* InviteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteCell.m; sourceTree = "<group>"; };
 		E9495573171C139F00FE2E1F /* AttachmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentView.h; sourceTree = "<group>"; };
 		E9495574171C139F00FE2E1F /* AttachmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentView.m; sourceTree = "<group>"; };
-		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = 3rdParty/TDSemiModal/Source/TDSemiModal.h; sourceTree = "<group>"; };
-		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = 3rdParty/TDSemiModal/Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
-		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = 3rdParty/TDSemiModal/Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
-		E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TDSemiModalExtension.h"; path = "3rdParty/TDSemiModal/Source/UIViewController+TDSemiModalExtension.h"; sourceTree = "<group>"; };
-		E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TDSemiModalExtension.m"; path = "3rdParty/TDSemiModal/Source/UIViewController+TDSemiModalExtension.m"; sourceTree = "<group>"; };
+		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
+		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
+		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
+		E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TDSemiModalExtension.h"; path = "Source/UIViewController+TDSemiModalExtension.h"; sourceTree = "<group>"; };
+		E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TDSemiModalExtension.m"; path = "Source/UIViewController+TDSemiModalExtension.m"; sourceTree = "<group>"; };
 		E96CB011171217D3005F8FFA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E96CB01717137D37005F8FFA /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		E96CB021171457F9005F8FFA /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
@@ -916,7 +916,7 @@
 				633048FA16FC693C0045E64E /* UINavigationController+MFSideMenu.m */,
 			);
 			name = MFSideMenu;
-			path = ../3rdParty/MFSideMenu/MFSideMenu;
+			path = 3rdParty/MFSideMenu/MFSideMenu;
 			sourceTree = "<group>";
 		};
 		633048FF16FC966F0045E64E /* ContactQuickList */ = {
@@ -1147,6 +1147,19 @@
 				6390949F1738751800DF889B /* server_development.der */,
 			);
 			path = Certificates;
+			sourceTree = "<group>";
+		};
+		639094AD1739380E00DF889B /* TDSemiModal */ = {
+			isa = PBXGroup;
+			children = (
+				E959F0861738553C00CD14BB /* TDSemiModal.h */,
+				E959F0871738553C00CD14BB /* TDSemiModalViewController.h */,
+				E959F0881738553C00CD14BB /* TDSemiModalViewController.m */,
+				E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */,
+				E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */,
+			);
+			name = TDSemiModal;
+			path = 3rdParty/TDSemiModal;
 			sourceTree = "<group>";
 		};
 		63A7F656172C2E3100C0EC26 /* Products */ = {
@@ -1388,7 +1401,6 @@
 				E96CB01D1714572C005F8FFA /* Crypto */,
 				63F4CF0E172892EB00699394 /* InvitationController.h */,
 				63F4CF0F172892EB00699394 /* InvitationController.m */,
-				633048F616FC69170045E64E /* MFSideMenu */,
 				63AEE30516CA562F00522F92 /* Models */,
 				636D40041710724900304EDF /* SettingsConstantsAndEnvironment */,
 				E99886DB1728135C0089A510 /* SoundEffects */,
@@ -1442,11 +1454,8 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
-				E959F0861738553C00CD14BB /* TDSemiModal.h */,
-				E959F0871738553C00CD14BB /* TDSemiModalViewController.h */,
-				E959F0881738553C00CD14BB /* TDSemiModalViewController.m */,
-				E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */,
-				E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */,
+				639094AD1739380E00DF889B /* TDSemiModal */,
+				633048F616FC69170045E64E /* MFSideMenu */,
 				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
 				63A7F68A172C418A00C0EC26 /* ZBarSDK */,
