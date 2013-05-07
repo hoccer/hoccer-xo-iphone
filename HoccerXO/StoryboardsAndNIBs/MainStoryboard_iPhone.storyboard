@@ -887,36 +887,40 @@ in the general "Settings" app.</string>
         <!--Record View Controller-->
         <scene sceneID="FjZ-uO-Mut">
             <objects>
-                <viewController storyboardIdentifier="RecordViewController" id="0cY-a5-c4A" customClass="RecordViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RecordViewController" autoresizesArchivedViewToFullSize="NO" id="0cY-a5-c4A" customClass="RecordViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Q21-YB-d0q">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" id="cZW-19-LoU">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <view opaque="NO" contentMode="bottom" id="cZW-19-LoU" userLabel="View - Sheet">
+                                <rect key="frame" x="0.0" y="383" width="320" height="185"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Recording" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OQM-8J-spu">
-                                        <rect key="frame" x="84" y="62" width="157" height="33"/>
+                                        <rect key="frame" x="11" y="20" width="157" height="33"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EIb-8o-yK0">
-                                        <rect key="frame" x="79" y="119" width="162" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <rect key="frame" x="178" y="26" width="162" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6xa-vG-3t1">
-                                        <rect key="frame" x="133" y="248" width="58" height="44"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6xa-vG-3t1">
+                                        <rect key="frame" x="233" y="74" width="77" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <state key="normal" title="Stop">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -925,12 +929,13 @@ in the general "Settings" app.</string>
                                             <action selector="stop:" destination="0cY-a5-c4A" eventType="touchUpInside" id="PyO-Pl-4g3"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zfI-0S-il5">
-                                        <rect key="frame" x="136" y="317" width="55" height="44"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zfI-0S-il5">
+                                        <rect key="frame" x="132" y="74" width="74" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" size="button"/>
                                         <state key="normal" title="Play">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted">
@@ -940,12 +945,13 @@ in the general "Settings" app.</string>
                                             <action selector="playAudio:" destination="0cY-a5-c4A" eventType="touchUpInside" id="Vth-94-4p0"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Df2-G9-Ats">
-                                        <rect key="frame" x="114" y="174" width="93" height="45"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Df2-G9-Ats">
+                                        <rect key="frame" x="11" y="74" width="93" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.79619738520408156" green="0.34345074399231762" blue="0.36073517737782634" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" size="button"/>
                                         <state key="normal" title="Record">
-                                            <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted">
@@ -955,39 +961,42 @@ in the general "Settings" app.</string>
                                             <action selector="recordAudio:" destination="0cY-a5-c4A" eventType="touchUpInside" id="4lg-QH-jo5"/>
                                         </connections>
                                     </button>
+                                    <navigationBar contentMode="scaleToFill" barStyle="blackOpaque" id="tG4-w5-IUP">
+                                        <rect key="frame" x="0.0" y="141" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <items>
+                                            <navigationItem id="V9f-yg-tRc">
+                                                <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Z9S-on-4v9">
+                                                    <connections>
+                                                        <action selector="cancelPressed:" destination="0cY-a5-c4A" id="g3t-7h-kja"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                                <barButtonItem key="rightBarButtonItem" tag="1" title="Use" style="done" id="I7D-pL-AZf" userLabel="Bar Button Item - Save">
+                                                    <connections>
+                                                        <action selector="usePressed:" destination="0cY-a5-c4A" id="9ce-vC-v6y"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                            </navigationItem>
+                                        </items>
+                                    </navigationBar>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.16575653698979587" green="0.16575653698979587" blue="0.16575653698979587" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" barStyle="blackTranslucent" id="tG4-w5-IUP">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem id="V9f-yg-tRc">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Z9S-on-4v9">
-                                            <connections>
-                                                <action selector="cancelPressed:" destination="0cY-a5-c4A" id="g3t-7h-kja"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" tag="1" title="Use" style="done" id="I7D-pL-AZf" userLabel="Bar Button Item - Save">
-                                            <connections>
-                                                <action selector="usePressed:" destination="0cY-a5-c4A" id="9ce-vC-v6y"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                     </view>
                     <toolbarItems/>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="cancelButton" destination="Z9S-on-4v9" id="lDu-bU-7O7"/>
                         <outlet property="playButton" destination="zfI-0S-il5" id="VCT-l9-ajt"/>
                         <outlet property="recordButton" destination="Df2-G9-Ats" id="7Qo-UG-rPl"/>
+                        <outlet property="sheetView" destination="cZW-19-LoU" id="2Cg-Pp-qAf"/>
                         <outlet property="statusLabel" destination="OQM-8J-spu" id="BzX-sW-2Ih"/>
                         <outlet property="stopButton" destination="6xa-vG-3t1" id="X2e-ew-wdh"/>
                         <outlet property="timeLabel" destination="EIb-8o-yK0" id="DFN-Nc-yQ9"/>
                         <outlet property="useButton" destination="I7D-pL-AZf" id="sR5-0h-m1X"/>
+                        <outlet property="view" destination="Q21-YB-d0q" id="rqC-gq-NcA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T3Q-pl-QhR" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1200,19 +1209,22 @@ in the general "Settings" app.</string>
         <class className="RadialGradientView" superclassName="UIView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RadialGradientView.h"/>
         </class>
-        <class className="RecordViewController" superclassName="UIViewController">
+        <class className="RecordViewController" superclassName="TDSemiModalViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RecordViewController.h"/>
             <relationships>
                 <relationship kind="action" name="playAudio:"/>
                 <relationship kind="action" name="recordAudio:"/>
                 <relationship kind="action" name="stop:"/>
                 <relationship kind="outlet" name="cancelButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="dimView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="playButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="recordButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="sheetView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="stopButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="timeLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="useButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="view" candidateClass="UIView"/>
             </relationships>
         </class>
         <class className="RightMessageCell" superclassName="MessageCell">
@@ -1226,6 +1238,9 @@ in the general "Settings" app.</string>
         </class>
         <class className="StartupViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/StartupViewController.h"/>
+        </class>
+        <class className="TDSemiModalViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TDSemiModalViewController.h"/>
         </class>
         <class className="TableViewControllerWithPlaceholder" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TableViewControllerWithPlaceholder.h"/>

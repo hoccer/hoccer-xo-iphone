@@ -6,16 +6,22 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
+#import "TDSemiModal.h"
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
 @protocol AudioRecorderDelegate;
 
-@interface RecordViewController : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate>
+@interface RecordViewController : TDSemiModalViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
 @property (strong, nonatomic) AVAudioRecorder *audioRecorder;
 @property (strong, nonatomic) AVAudioPlayer *audioPlayer;
+
+@property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIView *sheetView;
+@property (strong, nonatomic) IBOutlet UIView *dimView;
+
 @property (strong, nonatomic) IBOutlet UIButton *recordButton;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
 @property (strong, nonatomic) IBOutlet UIButton *stopButton;
