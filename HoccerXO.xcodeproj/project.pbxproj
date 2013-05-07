@@ -874,26 +874,26 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
-				E99886CA1725CBCF0089A510 /* NSString+Regexp.h */,
-				E99886CB1725CBCF0089A510 /* NSString+Regexp.m */,
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
-				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
-				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
-				E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */,
-				E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
 				E96CB03317145AC0005F8FFA /* NSData+Base64.m */,
 				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
 				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
+				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
+				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
+				63D8EE1417230050000F9E53 /* NSString+RandomString.h */,
+				63D8EE1517230050000F9E53 /* NSString+RandomString.m */,
+				E99886CA1725CBCF0089A510 /* NSString+Regexp.h */,
+				E99886CB1725CBCF0089A510 /* NSString+Regexp.m */,
 				E96CB02D17145979005F8FFA /* NSString+StringWithData.h */,
 				E96CB02E17145979005F8FFA /* NSString+StringWithData.m */,
+				E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */,
+				E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */,
 				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
 				6378484C16F4210A00DE03C2 /* NSString+UUID.m */,
 				631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */,
 				631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */,
-				63D8EE1417230050000F9E53 /* NSString+RandomString.h */,
-				63D8EE1517230050000F9E53 /* NSString+RandomString.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
@@ -1292,16 +1292,16 @@
 				633049261701A3A80045E64E /* NavigationMenuViewController.m */,
 				633049281701B3390045E64E /* ProfileViewController.h */,
 				633049291701B3390045E64E /* ProfileViewController.m */,
-				63AE4542170493140099F0CB /* SettingsViewController.h */,
-				63AE4543170493140099F0CB /* SettingsViewController.m */,
-				63AE45451704945C0099F0CB /* WebViewController.h */,
-				63AE45461704945C0099F0CB /* WebViewController.m */,
-				63C1356617160E2E00969B0B /* UserDefaultsViewController.h */,
-				63C1356717160E2E00969B0B /* UserDefaultsViewController.m */,
 				E9B7BAB7172EA15E00212420 /* RecordViewController.h */,
 				E9B7BAB8172EA15E00212420 /* RecordViewController.m */,
+				63AE4542170493140099F0CB /* SettingsViewController.h */,
+				63AE4543170493140099F0CB /* SettingsViewController.m */,
 				E9D1145517316DCC00737EF7 /* StartupViewController.h */,
 				E9D1145617316DCC00737EF7 /* StartupViewController.m */,
+				63C1356617160E2E00969B0B /* UserDefaultsViewController.h */,
+				63C1356717160E2E00969B0B /* UserDefaultsViewController.m */,
+				63AE45451704945C0099F0CB /* WebViewController.h */,
+				63AE45461704945C0099F0CB /* WebViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -1353,9 +1353,8 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E9D11499173679CC00737EF7 /* SystemConfiguration.framework */,
-				E9D11469173307FC00737EF7 /* AddressBookUI.framework */,
 				E99886CD1725CE0F0089A510 /* AddressBook.framework */,
+				E9D11469173307FC00737EF7 /* AddressBookUI.framework */,
 				6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */,
 				E99886E517282C140089A510 /* AudioToolbox.framework */,
 				E96CB011171217D3005F8FFA /* AVFoundation.framework */,
@@ -1374,6 +1373,7 @@
 				E9949464170DB39700F67B07 /* MobileCoreServices.framework */,
 				63D4916B16CAA26A00FD395F /* QuartzCore.framework */,
 				63C413B816E8FD15004E1F6D /* Security.framework */,
+				E9D11499173679CC00737EF7 /* SystemConfiguration.framework */,
 				63AEE2D716CA4D0200522F92 /* UIKit.framework */,
 			);
 			name = Frameworks;
@@ -1382,7 +1382,6 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXGroup;
 			children = (
-				6390949D1738751800DF889B /* Certificates */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -1420,10 +1419,11 @@
 		63AEE2E016CA4D0200522F92 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				63AE45571705EE030099F0CB /* Localizations */,
+				6390949D1738751800DF889B /* Certificates */,
 				63AEE2E116CA4D0200522F92 /* HoccerXO-Info.plist */,
-				63AEE2E516CA4D0200522F92 /* main.m */,
 				63AEE2E716CA4D0200522F92 /* HoccerXO-Prefix.pch */,
+				63AE45571705EE030099F0CB /* Localizations */,
+				63AEE2E516CA4D0200522F92 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1438,15 +1438,15 @@
 				6378484416F4000500DE03C2 /* Delivery.h */,
 				6378484516F4000500DE03C2 /* Delivery.m */,
 				636D3FFB170FB2B100304EDF /* HoccerXO.xcdatamodeld */,
+				63AEE30916CA6B1900522F92 /* HXOMessage.h */,
+				63AEE30A16CA6B1900522F92 /* HXOMessage.m */,
 				6378484816F4040C00DE03C2 /* HXOModel.h */,
 				6378484916F4040C00DE03C2 /* HXOModel.m */,
 				63C1356B1716A4AB00969B0B /* Invite.h */,
 				63C1356C1716A4AB00969B0B /* Invite.m */,
-				63AEE30916CA6B1900522F92 /* HXOMessage.h */,
-				63AEE30A16CA6B1900522F92 /* HXOMessage.m */,
+				E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */,
 				63D8EE111722EB89000F9E53 /* UserProfile.h */,
 				63D8EE121722EB89000F9E53 /* UserProfile.m */,
-				E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1454,13 +1454,13 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
-				639094AD1739380E00DF889B /* TDSemiModal */,
-				633048F616FC69170045E64E /* MFSideMenu */,
-				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
-				63A7F68A172C418A00C0EC26 /* ZBarSDK */,
+				633048F616FC69170045E64E /* MFSideMenu */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
+				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */,
+				639094AD1739380E00DF889B /* TDSemiModal */,
+				63A7F68A172C418A00C0EC26 /* ZBarSDK */,
 			);
 			name = 3rdParty;
 			sourceTree = "<group>";
