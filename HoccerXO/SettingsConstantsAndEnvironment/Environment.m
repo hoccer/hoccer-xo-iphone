@@ -52,6 +52,14 @@ NSString * const kValidEnvironments = @"_validEnvironments";
     return _fileCacheURI;
 }
 
+@synthesize certificateFiles = _certificateFiles;
+- (NSArray*) certificateFiles {
+    if (_certificateFiles == nil) {
+        _certificateFiles = [self getEnvironmentValueForKeySelector: _cmd];
+    }
+    return _certificateFiles;
+}
+
 @synthesize currentEnvironment = _currentEnvironment;
 - (NSString*) currentEnvironment {
     if (_currentEnvironment == nil) {

@@ -162,6 +162,7 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
+		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		63A7F660172C2E4800C0EC26 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F65B172C2E3100C0EC26 /* libqrencoder.a */; };
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
@@ -579,6 +580,7 @@
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
+		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -1132,6 +1134,14 @@
 			name = AppIcons;
 			sourceTree = "<group>";
 		};
+		6390949D1738751800DF889B /* Certificates */ = {
+			isa = PBXGroup;
+			children = (
+				6390949F1738751800DF889B /* server_development.der */,
+			);
+			path = Certificates;
+			sourceTree = "<group>";
+		};
 		63A7F656172C2E3100C0EC26 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1352,6 +1362,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXGroup;
 			children = (
+				6390949D1738751800DF889B /* Certificates */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -1953,6 +1964,7 @@
 				E9D1149E1736AE6900737EF7 /* mini-bubble-left@2x.png in Resources */,
 				E9D114A11736B17700737EF7 /* mini-bubble-right.png in Resources */,
 				E9D114A21736B17700737EF7 /* mini-bubble-right@2x.png in Resources */,
+				639094A11738751800DF889B /* server_development.der in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

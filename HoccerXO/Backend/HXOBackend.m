@@ -26,6 +26,7 @@
 #import "NSDictionary+CSURLParams.h"
 #import "UserProfile.h"
 #import "SoundEffectPlayer.h"
+#import "SocketRocket/SRWebSocket.h"
 
 #define DELIVERY_TRACE YES
 
@@ -560,9 +561,30 @@ typedef enum BackendStates {
 
 
 - (NSURLRequest*) urlRequest {
-    // TODO: make server adjustable
     NSURL * url = [NSURL URLWithString: [[Environment sharedEnvironment] talkServer]];
-    return [[NSURLRequest alloc] initWithURL: url];
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL: url];
+    NSArray * certificates = [self certificates];
+    if (certificates.count > 0) {
+        request.SR_SSLPinnedCertificates = certificates;
+    }
+    return request;
+}
+
+@synthesize certificates = _certificates;
+- (NSArray*) certificates {
+    if (_certificates == nil) {
+        NSArray * files = [[Environment sharedEnvironment] certificateFiles];
+        NSMutableArray * certs = [[NSMutableArray alloc] initWithCapacity: files.count];
+        for (NSString * file in files) {
+            NSString * path = [[NSBundle mainBundle] pathForResource: file ofType:@"der"];
+            NSData * certificateData = [[NSData alloc] initWithContentsOfFile: path];
+            SecCertificateRef certificate = SecCertificateCreateWithData(nil, (__bridge CFDataRef)(certificateData));
+            NSLog(@"p: %@ cert: %@", path, certificate);
+            [certs addObject: CFBridgingRelease(certificate)];
+        }
+        _certificates = [certs copy];
+    }
+    return _certificates;
 }
 
 - (void) flushPendingMessages {

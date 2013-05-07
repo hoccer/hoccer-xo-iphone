@@ -7,6 +7,15 @@
 		<string>production</string>
 		<string>development</string>
 	</array>
+	<key>certificateFiles</key>
+	<dict>
+		<key>development</key>
+		<array>
+			<string>server_development</string>
+		</array>
+		<key>production</key>
+		<array/>
+	</dict>
 	<key>talkServer</key>
 	<dict>
 		<key>development</key>

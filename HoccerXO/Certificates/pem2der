@@ -1,0 +1,26 @@
+#!/bin/bash
+# Convert PEM certificates to DER format
+
+function print_usage {
+    echo "Usage: $(basename $0) pem_certificate ..."
+    exit 1
+}
+
+function convert_pem_to_der {
+    infile="$1"
+    directory=$(dirname "$infile")
+    filename=$(basename "$infile")
+    outfile="$directory/${filename%.*}.der"
+
+    echo "$infile -> $outfile"
+    openssl x509 -in $infile -inform PEM  -outform DER -out $outfile
+}
+    
+if [ $# -lt 1 ]; then
+    print_usage
+fi
+
+for file in $*; do
+    convert_pem_to_der $file
+done
+

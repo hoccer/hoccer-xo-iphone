@@ -52,6 +52,8 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 
 @property (atomic, strong) NSString *connectionInfo;
 
+@property (readonly, nonatomic) NSArray * certificates;
+
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
 - (HXOMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
