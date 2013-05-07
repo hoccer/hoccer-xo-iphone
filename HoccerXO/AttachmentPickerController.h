@@ -11,7 +11,7 @@
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "RecordViewController.h"
-
+#import "GeoLocationPicker.h"
 
 @class Attachment;
 @class RecordViewController;
@@ -28,7 +28,8 @@ typedef enum AttachmentPickerTypes {
     AttachmentPickerTypeVcardAttachmentFromPasteboard,
     AttachmentPickerTypeImageFromPasteboard,
     AttachmentPickerTypeAudioRecorder,
-    AttachmentPickerTypeAdressBookVcard
+    AttachmentPickerTypeAdressBookVcard,
+    AttachmentPickerTypeGeoLocation
 } AttachmentPickerType;
 
 @protocol AttachmentPickerControllerDelegate <NSObject>
@@ -45,7 +46,7 @@ typedef enum AttachmentPickerTypes {
 
 @end
 
-@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate,ABPeoplePickerNavigationControllerDelegate>
+@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate,ABPeoplePickerNavigationControllerDelegate,GeoLocationPickerDelegate>
 
 @property (nonatomic, weak) id<AttachmentPickerControllerDelegate> delegate;
 
@@ -53,5 +54,6 @@ typedef enum AttachmentPickerTypes {
 - (void) showInView: (UIView*) view;
 
 @property (readonly, strong, nonatomic) RecordViewController * recordViewController;
+@property (readonly, nonatomic) GeoLocationPicker * geoLocationViewController;
 
 @end

@@ -11,6 +11,7 @@
 #import "ABPersonVCardCreator.h"
 #import "HXOUserDefaults.h"
 #import "TDSemiModal.h"
+#import "GeoLocationPicker.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -110,6 +111,12 @@
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"Choose Adressbook Item", @"Action Sheet Button Ttitle");
         item.type = AttachmentPickerTypeAdressBookVcard;
+        [_supportedItems addObject: item];
+    }
+    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeGeoLocation]) {
+        AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+        item.localizedButtonTitle = NSLocalizedString(@"Pick a Location", nil);
+        item.type = AttachmentPickerTypeGeoLocation;
         [_supportedItems addObject: item];
     }
 
@@ -246,6 +253,9 @@
         case AttachmentPickerTypeAdressBookVcard:
             [self pickVCardFromAdressbook];
             break;
+        case AttachmentPickerTypeGeoLocation:
+            [self pickGeoLocation];
+            break;
     }
 }
 
@@ -352,8 +362,30 @@
     [peoplePicker dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark -
-#pragma mark image/video picking
+#pragma mark - Geo Location Picking
+
+@synthesize geoLocationViewController = _geoLocationViewController;
+
+- (GeoLocationPicker*) geoLocationViewController {
+    if (_geoLocationViewController == nil) {
+        _geoLocationViewController = [_viewController.storyboard instantiateViewControllerWithIdentifier:@"GeoLocationViewController"];
+        _geoLocationViewController.delegate = self;
+    }
+    return _geoLocationViewController;
+}
+
+- (void) pickGeoLocation {
+    [_viewController presentViewController: self.geoLocationViewController animated: YES completion: nil];
+}
+
+- (void) locationPicker:(GeoLocationPicker *)picker didPickLocation:(CLLocationCoordinate2D)coordinate {
+    NSLog(@"picked location: %f %f", coordinate.longitude, coordinate.latitude);
+}
+
+- (void) locationPickerDidCancel:(GeoLocationPicker *)picker {
+}
+
+#pragma mark - image/video picking
 
 
 - (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType withVideo: (BOOL) videoFlag {

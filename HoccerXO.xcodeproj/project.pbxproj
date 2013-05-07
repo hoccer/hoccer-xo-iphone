@@ -163,6 +163,9 @@
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
+		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
+		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
+		639094C21739970200DF889B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094C11739970200DF889B /* CoreLocation.framework */; };
 		63A7F660172C2E4800C0EC26 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F65B172C2E3100C0EC26 /* libqrencoder.a */; };
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
@@ -583,6 +586,10 @@
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
+		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
+		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
+		639094BF1739842A00DF889B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		639094C11739970200DF889B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -818,6 +825,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				639094C21739970200DF889B /* CoreLocation.framework in Frameworks */,
+				639094C01739842A00DF889B /* MapKit.framework in Frameworks */,
 				E9D1149A173679CC00737EF7 /* SystemConfiguration.framework in Frameworks */,
 				E9D1146A173307FF00737EF7 /* AddressBookUI.framework in Frameworks */,
 				63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */,
@@ -1023,14 +1032,14 @@
 		636D40041710724900304EDF /* SettingsConstantsAndEnvironment */ = {
 			isa = PBXGroup;
 			children = (
-				6383FF751729DC2200835C91 /* Settings.bundle */,
 				636D400117106EC000304EDF /* Environment.h */,
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
-				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
+				6327EB72171D61A200AF75E1 /* HXOConfig.h */,
 				636D4005171072CD00304EDF /* HXOUserDefaults.h */,
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
-				6327EB72171D61A200AF75E1 /* HXOConfig.h */,
+				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
+				6383FF751729DC2200835C91 /* Settings.bundle */,
 			);
 			path = SettingsConstantsAndEnvironment;
 			sourceTree = "<group>";
@@ -1284,6 +1293,8 @@
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
+				639094BC1739828700DF889B /* GeoLocationPicker.h */,
+				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -1361,6 +1372,7 @@
 				63C413B616E8FD0D004E1F6D /* CFNetwork.framework */,
 				63AEE2DD16CA4D0200522F92 /* CoreData.framework */,
 				63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */,
+				639094C11739970200DF889B /* CoreLocation.framework */,
 				E96CB01717137D37005F8FFA /* CoreMedia.framework */,
 				63A7F684172C2F3100C0EC26 /* CoreVideo.framework */,
 				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
@@ -1368,6 +1380,7 @@
 				63A7F686172C2F6E00C0EC26 /* libiconv.dylib */,
 				63C413B416E8FD02004E1F6D /* libicucore.dylib */,
 				63A7F688172C328D00C0EC26 /* libstdc++.dylib */,
+				639094BF1739842A00DF889B /* MapKit.framework */,
 				E9BFF00D170E0143001CB203 /* MediaPlayer.framework */,
 				63126C2F170E46F800A6804A /* MessageUI.framework */,
 				E9949464170DB39700F67B07 /* MobileCoreServices.framework */,
@@ -1503,10 +1516,10 @@
 				6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */,
 				633129D516F95220008F5B04 /* GrowingTextView.h */,
 				633129D616F95220008F5B04 /* GrowingTextView.m */,
-				63DC015917147B1600609513 /* HXOTableViewCell.h */,
-				63DC015A17147B1600609513 /* HXOTableViewCell.m */,
 				63DC01831715205300609513 /* HXOSwitch.h */,
 				63DC01841715205300609513 /* HXOSwitch.m */,
+				63DC015917147B1600609513 /* HXOTableViewCell.h */,
+				63DC015A17147B1600609513 /* HXOTableViewCell.m */,
 				6320D7CB16E0C79A00E58478 /* InsetImageView.h */,
 				6320D7CC16E0C79A00E58478 /* InsetImageView.m */,
 				63F4CF1917289DB600699394 /* InviteCell.h */,
@@ -2117,6 +2130,7 @@
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
+				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
