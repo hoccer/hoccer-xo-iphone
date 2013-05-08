@@ -176,7 +176,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
 
 - (void) generateImageFromMap {
     float previewSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOPreviewImageWidth] floatValue];
-    UIGraphicsBeginImageContext(self.mapView.frame.size);
+    UIGraphicsBeginImageContextWithOptions(self.mapView.frame.size, YES, UIScreen.mainScreen.scale);
     [self.mapView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

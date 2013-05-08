@@ -1128,6 +1128,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
         ([message.attachment.mediaType isEqualToString:@"image"] ||
          [message.attachment.mediaType isEqualToString:@"video"] ||
          [message.attachment.mediaType isEqualToString:@"vcard"] ||
+         [message.attachment.mediaType isEqualToString:@"geolocation"] ||
          [message.attachment.mediaType isEqualToString:@"audio"]))
     {
         AttachmentView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment inCell: cell];
