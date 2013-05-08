@@ -730,6 +730,7 @@
 		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
 		E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TDSemiModalExtension.h"; path = "Source/UIViewController+TDSemiModalExtension.h"; sourceTree = "<group>"; };
 		E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TDSemiModalExtension.m"; path = "Source/UIViewController+TDSemiModalExtension.m"; sourceTree = "<group>"; };
+		E959F09C173AACBE00CD14BB /* HoccerXO-5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-5.xcdatamodel"; sourceTree = "<group>"; };
 		E96CB011171217D3005F8FFA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E96CB01717137D37005F8FFA /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		E96CB021171457F9005F8FFA /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
@@ -2316,11 +2317,12 @@
 			isa = XCVersionGroup;
 			children = (
 				E9D1144D17314BD500737EF7 /* HoccerXO-4.xcdatamodel */,
+				E959F09C173AACBE00CD14BB /* HoccerXO-5.xcdatamodel */,
 				63A7F6B8172EBE0400C0EC26 /* HoccerXO- 3.xcdatamodel */,
 				E9B7BAA9172D3E1500212420 /* HoccerXO-2.xcdatamodel */,
 				636D3FFC170FB2B100304EDF /* HoccerXO.xcdatamodel */,
 			);
-			currentVersion = E9D1144D17314BD500737EF7 /* HoccerXO-4.xcdatamodel */;
+			currentVersion = E959F09C173AACBE00CD14BB /* HoccerXO-5.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

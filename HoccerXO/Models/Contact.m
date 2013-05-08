@@ -14,7 +14,7 @@
 #import "HXOBackend.h" // for date conversion
 
 
-const float kTimeSectionInterval = 2 * 60;
+// const float kTimeSectionInterval = 2 * 60;
 
 @implementation Contact
 
@@ -25,7 +25,7 @@ const float kTimeSectionInterval = 2 * 60;
 @dynamic nickName;
 @dynamic status;
 
-@dynamic currentTimeSection;
+// @dynamic currentTimeSection;
 @dynamic unreadMessages;
 @dynamic latestMessage;
 @dynamic publicKey;
@@ -106,7 +106,7 @@ NSString * const kRelationStateBlocked = @"blocked";
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     return[formatter stringFromDate: date];
 }
-
+/*
 - (NSDate*) sectionTimeForMessageTime: (NSDate*) date {
     return [NSDate dateWithTimeIntervalSince1970:100];
     
@@ -123,7 +123,7 @@ NSString * const kRelationStateBlocked = @"blocked";
     }
     return self.currentTimeSection;
 }
-
+*/
 
 - (SecKeyRef) getPublicKeyRef {
     RSA * rsa = [RSA sharedInstance];
