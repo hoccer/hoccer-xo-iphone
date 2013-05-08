@@ -7,6 +7,12 @@
 //
 
 #import "GeoLocationPicker.h"
+#import "UIImage+ScaleAndCrop.h"
+#import "HXOUserDefaults.h"
+
+#import <QuartzCore/QuartzCore.h>
+
+static const CGFloat kGeoLocationCityZoom = 500;
 
 @interface DnDAnnotation : MKPlacemark {
 	CLLocationCoordinate2D coordinate_;
@@ -54,13 +60,17 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
+    self.mapView.showsUserLocation = YES;
+
     [self.locationManager startUpdatingLocation];
 
     self.useButton.enabled = NO;
+    _renderPreview = NO;
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear: animated];
+    [self.mapView removeAnnotation: _annotation];
     _annotation = nil;
 }
 
@@ -80,7 +90,7 @@
 #pragma mark - CLLocationManager Delegate Protocol
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(newLocation.coordinate, 500, 500);
+    MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(newLocation.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
     [self.mapView setRegion: region animated: NO];
     [self.locationManager stopUpdatingLocation];
 
@@ -89,6 +99,7 @@
 	_annotation.subtitle = [NSString	stringWithFormat:@"%f %f", _annotation.coordinate.latitude, _annotation.coordinate.longitude];
 
 	[self.mapView addAnnotation: _annotation];
+    [self.mapView selectAnnotation: _annotation animated: YES];
 
     self.useButton.enabled = YES;
 }
@@ -123,6 +134,26 @@
 	return draggablePinView;
 }
 
+- (void) mapViewWillStartLoadingMap:(MKMapView *)mapView {
+    if (_renderPreview == YES) {
+        [NSObject cancelPreviousPerformRequestsWithTarget: self];
+    }
+}
+
+- (void) mapViewDidFinishLoadingMap:(MKMapView *)mapView {
+    if (_renderPreview == YES) {
+        [self generateImageFromMap];
+    }
+    _renderPreview = NO;
+}
+
+- (void) mapViewDidFailLoadingMap:(MKMapView *)mapView withError:(NSError *)error {
+    if (_renderPreview == YES) {
+        [self generateImageFromMap];
+    }
+    _renderPreview = NO;
+}
+
 #pragma mark - Actions
 
 - (IBAction) cancelPressed:(id)sender {
@@ -131,9 +162,29 @@
 }
 
 - (IBAction) usePressed:(id)sender {
-    [self dismissViewControllerAnimated: YES completion: nil];
-    [self.delegate locationPicker: self didPickLocation: _annotation.coordinate];
+    [self renderPreview];
 }
 
+- (void) renderPreview {
+    _renderPreview = YES;
+    self.mapView.showsUserLocation = NO;
+    [self.mapView deselectAnnotation: _annotation animated: NO];
+    MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(_annotation.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
+    [self.mapView setRegion: region animated: NO];
+    [self performSelector:@selector(generateImageFromMap) withObject:nil afterDelay: 0.3];
+}
+
+- (void) generateImageFromMap {
+    float previewSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOPreviewImageWidth] floatValue];
+    UIGraphicsBeginImageContext(self.mapView.frame.size);
+    [self.mapView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    image = [image imageByScalingAndCroppingForSize: CGSizeMake(previewSize, previewSize)];
+
+    [self.delegate locationPicker: self didPickLocation: _annotation preview: image];
+    [self dismissViewControllerAnimated: YES completion: nil];
+}
 
 @end

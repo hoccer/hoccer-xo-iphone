@@ -16,6 +16,7 @@
 #import "ABPersonVCardCreator.h"
 #import "ABPersonCreator.h"
 #import "Vcard.h"
+#import "NSData+Base64.h"
 
 #import "NSString+StringWithData.h"
 
@@ -165,6 +166,10 @@
         [self loadAudioAttachmentImage: block];
     } else if ([self.mediaType isEqualToString: @"vcard"]) {
         [self loadVcardAttachmentImage: block];
+    } else if ([self.mediaType isEqualToString: @"geolocation"]) {
+        [self loadGeoLocationAttachmentImage: block];
+    } else {
+        NSLog(@"WARNING - Attachment loadImage: unhandled attachment type %@", self.mediaType);
     }
 }
 
@@ -330,6 +335,13 @@
     [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 
+- (void) makeGeoLocationAttachment: (NSString*) theURL anOtherURL: (NSString*) theOtherURL withCompletion: (CompletionBlock) completion {
+    self.mediaType = @"geolocation";
+    self.mimeType = @"application/json";
+    [self useURLs: theURL anOtherURL: theOtherURL];
+    [self loadPreviewImageIntoCacheWithCompletion: completion];
+}
+
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
     // NSLog(@"assetSizer");
@@ -437,6 +449,22 @@
         }
     }
     block([UIImage imageNamed:@"vcard_error_preview.png"], nil);
+}
+
+- (void) loadGeoLocationAttachmentImage: (ImageLoaderBlock) block {
+    if (self.localURL == nil) {
+        block(nil, nil);
+        return;
+    }
+    NSData * jsonData = [NSData dataWithContentsOfURL: self.contentURL];
+    NSError * error;
+    NSDictionary * geoLocation = [NSJSONSerialization JSONObjectWithData: jsonData options: 0 error: & error];
+    if (geoLocation == nil) {
+        block(nil, error);
+        return;
+    }
+    NSData * imageData = [NSData dataWithBase64EncodedString: geoLocation[@"previewImage"]];
+    block([UIImage imageWithData: imageData], nil);
 }
 
 

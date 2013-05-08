@@ -378,8 +378,11 @@
     [_viewController presentViewController: self.geoLocationViewController animated: YES completion: nil];
 }
 
-- (void) locationPicker:(GeoLocationPicker *)picker didPickLocation:(CLLocationCoordinate2D)coordinate {
-    NSLog(@"picked location: %f %f", coordinate.longitude, coordinate.latitude);
+- (void) locationPicker:(GeoLocationPicker *)picker didPickLocation:(MKPlacemark*)placemark preview:(UIImage *)preview {
+    NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.mediaType": @"geolocation",
+                                       @"com.hoccer.xo.geolocation": placemark,
+                                       @"com.hoccer.xo.previewImage": preview};
+    [self.delegate didPickAttachment: myAttachmentInfo];
 }
 
 - (void) locationPickerDidCancel:(GeoLocationPicker *)picker {

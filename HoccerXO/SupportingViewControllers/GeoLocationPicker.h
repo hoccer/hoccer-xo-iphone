@@ -15,12 +15,15 @@
 
 @protocol GeoLocationPickerDelegate <NSObject>
 
-- (void) locationPicker: (GeoLocationPicker*) picker didPickLocation: (CLLocationCoordinate2D) coordinate;
+- (void) locationPicker: (GeoLocationPicker*) picker didPickLocation: (MKPlacemark*) placemark preview: (UIImage*) preview;
 - (void) locationPickerDidCancel:(GeoLocationPicker*)picker;
 
 @end
 
 @interface GeoLocationPicker : UIViewController <CLLocationManagerDelegate,MKMapViewDelegate>
+{
+    BOOL _renderPreview;
+}
 
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;

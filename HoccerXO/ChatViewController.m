@@ -34,6 +34,7 @@
 #import "UserProfile.h"
 #import "NSString+StringWithData.h"
 #import "Vcard.h"
+#import "NSData+Base64.h"
 
 
 static const NSUInteger kMaxMessageBytes = 10000;
@@ -343,7 +344,36 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
-    
+
+
+    // handle geolocation
+    if ([attachmentInfo isKindOfClass: [NSDictionary class]] && [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"]) {
+        MKPlacemark * placemark = attachmentInfo[@"com.hoccer.xo.geolocation"];
+        NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
+
+        UIImage * preview = attachmentInfo[@"com.hoccer.xo.previewImage"];
+        NSData * previewData = UIImageJPEGRepresentation( preview, 1.0);
+
+        NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike: @"location.json"];
+        NSDictionary * json = @{ @"location": @{ @"type": @"point",
+                                                 @"coordinates": @[ @(placemark.coordinate.longitude), @(placemark.coordinate.latitude)]},
+                                 @"previewImage": [previewData asBase64EncodedString]};
+        NSError * error;
+        NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
+        if ( jsonData == nil) {
+            NSLog(@"failed to generate geojson: %@", error);
+            [self finishPickedAttachmentProcessingWithImage: nil withError: error];
+            return;
+        }
+        [jsonData writeToURL:myLocalURL atomically:NO];
+
+
+        [self.currentAttachment makeGeoLocationAttachment: [myLocalURL absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
+            [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError: theError];
+        }];
+        return;
+    }
+
     // handle vcard picked from adressbook
     if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
         if (attachmentInfo[@"com.hoccer.xo.vcard.data"] != nil) {
