@@ -166,6 +166,7 @@
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
 		639094C21739970200DF889B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094C11739970200DF889B /* CoreLocation.framework */; };
+		639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094C7173A871500DF889B /* UIButton+GlossyRounded.m */; };
 		63A7F660172C2E4800C0EC26 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F65B172C2E3100C0EC26 /* libqrencoder.a */; };
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
@@ -590,6 +591,8 @@
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
 		639094BF1739842A00DF889B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		639094C11739970200DF889B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		639094C6173A871500DF889B /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
+		639094C7173A871500DF889B /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -1531,6 +1534,8 @@
 				636492D61711E97900E35514 /* ProfileAvatarView.m */,
 				636492DB1711FEB900E35514 /* RadialGradientView.h */,
 				636492DC1711FEB900E35514 /* RadialGradientView.m */,
+				639094C6173A871500DF889B /* UIButton+GlossyRounded.h */,
+				639094C7173A871500DF889B /* UIButton+GlossyRounded.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
 				6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */,
@@ -2132,6 +2137,7 @@
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
+				639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

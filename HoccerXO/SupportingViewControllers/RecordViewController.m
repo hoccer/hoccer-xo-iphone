@@ -10,6 +10,7 @@
 #import "ChatViewController.h"
 
 #import "TDSemiModal.h"
+#import "UIButton+GlossyRounded.h"
 
 @interface RecordViewController ()
 @end
@@ -23,7 +24,11 @@
     [super viewDidLoad];
     
     disabledAlpha = 0.1;
-    
+
+    [self.playButton makeRoundAndGlossy];
+    [self.stopButton makeRoundAndGlossy];
+    [self.recordButton makeRoundAndGlossy];
+
     [self disablePlay];
     [self disableStop];
     [self enableRecord];
