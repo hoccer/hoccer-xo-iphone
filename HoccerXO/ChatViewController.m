@@ -786,6 +786,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
     return _headerCell;
 }
 
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -1188,7 +1190,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 - (void) messageView:(MessageCell *)theCell resendMessage:(id)sender {
     NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    for (int i = 0; i < 20;++i) {
+    for (int i = 0; i < 10;++i) {
         [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
     }
 }

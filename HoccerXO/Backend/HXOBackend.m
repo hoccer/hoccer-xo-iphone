@@ -28,7 +28,9 @@
 #import "SoundEffectPlayer.h"
 #import "SocketRocket/SRWebSocket.h"
 
-#define DELIVERY_TRACE YES
+#define DELIVERY_TRACE NO
+#define GLITCH_TRACE NO
+#define SECTION_TRACE NO
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -245,10 +247,10 @@ typedef enum BackendStates {
     HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeSent = [self estimatedServerTime]; // [NSDate date];
-    message.timeAccepted = [self estimatedServerTime];
     message.contact = contact;
+    message.timeAccepted = [self estimatedServerTime];
     message.isOutgoing = @YES;
-    message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
+    // message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
 
@@ -305,7 +307,7 @@ typedef enum BackendStates {
         }
         HXOMessage * oldMessage = messages[0];
         Delivery * oldDelivery = [oldMessage.deliveries anyObject];
-        NSLog(@"#GLITCH: receiveMessage: already have message with tag %@ id %@", oldMessage.messageTag, oldMessage.messageId);
+        if (GLITCH_TRACE) {NSLog(@"#GLITCH: receiveMessage: already have message with tag %@ id %@", oldMessage.messageTag, oldMessage.messageId);}
         if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming duplicate message & delivery with state '%@' for tag %@ id %@",oldDelivery.state, oldMessage.messageTag, oldMessage.messageId);}
         [self deliveryConfirm: oldMessage.messageId withDelivery: oldDelivery];
         return;
@@ -355,14 +357,13 @@ typedef enum BackendStates {
         return;
     }
     
-    [delivery updateWithDictionary: deliveryDictionary];
-    
     message.isOutgoing = @NO;
     message.isRead = @NO;
     message.timeReceived = [self estimatedServerTime];
-    message.timeSection = [contact sectionTimeForMessageTime: message.timeAccepted];
+    // message.timeSection = [contact sectionTimeForMessageTime: message.timeAccepted];
     message.contact = contact;
     [contact.messages addObject: message];
+    [delivery updateWithDictionary: deliveryDictionary];
     [message updateWithDictionary: messageDictionary];
 
     contact.latestMessageTime = message.timeAccepted;
@@ -684,6 +685,83 @@ typedef enum BackendStates {
             [self updateRelationship: relationshipDict];
         }
     }];
+}
+
++ (NSArray *) messagesByContactInInterval:(NSDictionary *) vars withTemplateName:(NSString*)name {
+    AppDelegate* myDelegate = ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
+    NSFetchRequest *fetchRequest = [myDelegate.managedObjectModel fetchRequestFromTemplateWithName:name substitutionVariables: vars];
+
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeAccepted" ascending: YES];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSError *myError;
+    NSArray *messages = [myDelegate.managedObjectContext executeFetchRequest:fetchRequest error:&myError];
+
+    return messages;
+}
+
+// messages >= sinceTime && < beforeTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalSinceTime:(NSDate *)sinceTime beforeTime:(NSDate*)beforeTime {
+    NSDictionary * vars = @{ @"contact" : contact , @"sinceTime": sinceTime, @"beforeTime": beforeTime};
+    return [HXOBackend messagesByContactInInterval:vars withTemplateName:@"MessagesByContactSinceTimeBeforeTime"];
+}
+
+// messages > afterTime && <= untilTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalAfterTime:(NSDate *)afterTime untilTime:(NSDate*)untilTime {
+    NSDictionary * vars = @{ @"contact" : contact , @"afterTime": afterTime, @"untilTime": untilTime};
+    return [HXOBackend messagesByContactInInterval:vars withTemplateName:@"MessagesByContactAfterTimeUntilTime"];
+}
+
+// messages >= sinceTime && <= untilTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalSinceTime:(NSDate *)sinceTime untilTime:(NSDate*)untilTime {
+    NSDictionary * vars = @{ @"contact" : contact , @"sinceTime": sinceTime, @"untilTime": untilTime};
+    return [HXOBackend messagesByContactInInterval:vars withTemplateName:@"MessagesByContactSinceTimeUntilTime"];
+}
+
+// messages > afterTime && < beforeTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalAfterTime:(NSDate *)afterTime beforeTime:(NSDate*)beforeTime {
+    NSDictionary * vars = @{ @"contact" : contact , @"afterTime": afterTime, @"beforeTime": beforeTime};
+    return [HXOBackend messagesByContactInInterval:vars withTemplateName:@"MessagesByContactAfterTimeBeforeTime"];
+}
+
++ (void)adjustTimeSectionsForMessage:(HXOMessage*) message {
+    const double sectionInterval = (2 * 60);
+    //const double sectionInterval = 0.1;
+    
+    // check for previous messages and adjust message timeSection
+    NSDate * sinceTime = [NSDate dateWithTimeInterval:-sectionInterval sinceDate:message.timeAccepted];
+    NSArray * messagesBefore = [self messagesByContact:message.contact inIntervalSinceTime:sinceTime untilTime:message.timeAccepted];
+    if ([messagesBefore count] > 1) {
+        if ([((HXOMessage*)[messagesBefore objectAtIndex:0]) isEqual:message]) {
+            // messagesBefore may have same timp stamp as message, and if message is first, pick next
+            message.timeSection = ((HXOMessage*)[messagesBefore objectAtIndex:1]).timeSection;
+        } else {
+            message.timeSection = ((HXOMessage*)[messagesBefore objectAtIndex:0]).timeSection;
+        }
+        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages before (%@-%@) = %d",sinceTime,message.timeAccepted,[messagesBefore count]);}
+    } else {
+        // no other message before in interval, start new section
+        message.timeSection = message.timeAccepted;
+        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: no other messages before in (%@-%@) count=%d, new section time%@", sinceTime,message.timeAccepted,[messagesBefore count],message.timeAccepted);}
+    }
+    // we have now processed all message with a time <= message.timeAccepted
+    // adjust time section of messages after this section
+    NSDate * untilTime = [NSDate dateWithTimeInterval:sectionInterval sinceDate:message.timeAccepted];
+    
+    NSArray * messagesAfter = [self messagesByContact:message.contact inIntervalAfterTime:message.timeAccepted untilTime:untilTime];
+    int count = [messagesAfter count];
+    if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages after (%@-%@) = %d",message.timeAccepted,untilTime,count);}
+    if (count > 0) {
+        for (int i = 0; i < count; ++i) {
+            HXOMessage * myMessage =  messagesAfter[i];
+            myMessage.timeSection = message.timeSection;
+            if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: adjusting item %d accepted %@ to timeSection %@",i, myMessage.timeAccepted,message.timeSection);}
+        }
+        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: recursing for last message");}
+        [self adjustTimeSectionsForMessage:messagesAfter.lastObject];
+    }
 }
 
 - (void) updateRelationship: (NSDictionary*) relationshipDict {
@@ -1166,7 +1244,7 @@ typedef enum BackendStates {
             [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             if (DELIVERY_TRACE) {NSLog(@"deliveryConfirm result: state %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
             if ([delivery.state isEqualToString: responseOrError[@"state"]]) {
-                NSLog(@"#GLITCH: deliveryConfirm result: state unchanged %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);
+                if (GLITCH_TRACE) {NSLog(@"#GLITCH: deliveryConfirm result: state unchanged %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
             }
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
@@ -1196,7 +1274,7 @@ typedef enum BackendStates {
             } else {
                 if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge result: state %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);}
                 if ([oldState isEqualToString: delivery.state]) {
-                    NSLog(@"#GLITCH: deliveryAcknowledge result: duplicate state change %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);
+                    if (GLITCH_TRACE) {NSLog(@"#GLITCH: deliveryAcknowledge result: duplicate state change %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);}
                 }
             }
             // NSLog(@"deliveryAcknowledge:response was: %@",responseOrError);
@@ -1501,14 +1579,15 @@ typedef enum BackendStates {
         // TODO: server should not send outgoingDelivery-changes for confirmed object, we just won't answer them for now to avoid ack-storms
         if ([myDelivery.state isEqualToString:@"confirmed"]) {
             // we have already acknowledged and received confirmation for ack, so server should have shut up and never sent us this in the first time
-            NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery: %@", deliveryDict);
+            NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery msg-id: %@", deliveryDict[@"messageId"]);
+            [self deliveryAcknowledge: myDelivery];
             return;
         }
         
         if (DELIVERY_TRACE) {NSLog(@"outgoingDelivery Notification: Delivery state '%@'->'%@' for messageTag %@ id %@",myDelivery.state, deliveryDict[@"state"], myMessageTag, deliveryDict[@"messageId"]);}
         
         if ([myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
-            NSLog(@"#GLITCH: Duplicate outgoingDelivery Notification: Delivery state for messageTag %@ id %@ was already %@, timeStamps: old %@ new %@", myMessageTag, deliveryDict[@"messageId"], myDelivery.state, myDelivery.timeChangedMillis, deliveryDict[@"timeChanged"]);
+            if (GLITCH_TRACE) {NSLog(@"#GLITCH: Duplicate outgoingDelivery Notification: Delivery state for messageTag %@ id %@ was already %@, timeStamps: old %@ new %@", myMessageTag, deliveryDict[@"messageId"], myDelivery.state, myDelivery.timeChangedMillis, deliveryDict[@"timeChanged"]);}
         }
         [myDelivery updateWithDictionary: deliveryDict];
         [self.delegate.managedObjectContext refreshObject: myDelivery.message mergeChanges: YES];

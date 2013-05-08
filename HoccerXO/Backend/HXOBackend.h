@@ -103,6 +103,7 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 
 + (void)broadcastConnectionInfo;
 + (id) registerConnectionInfoObserverFor:(UIViewController*)controller;
++ (void)adjustTimeSectionsForMessage:(HXOMessage*) message;
 
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method

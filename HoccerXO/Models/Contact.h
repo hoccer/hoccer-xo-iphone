@@ -30,7 +30,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSString*      googlePlusName;
 @property (nonatomic, strong) NSString*      githubName;
 
-@property (nonatomic, strong) NSDate*        currentTimeSection;
+// @property (nonatomic, strong) NSDate*        currentTimeSection;
 @property (nonatomic, strong) NSArray*       unreadMessages;
 @property (nonatomic, strong) NSArray*       latestMessage;
 
@@ -54,7 +54,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (readonly) UIImage* avatarImage;
 
 + (NSString*) sectionTitleForMessageTime: (NSDate*) date;
-- (NSDate*) sectionTimeForMessageTime: (NSDate*) date;
+// - (NSDate*) sectionTimeForMessageTime: (NSDate*) date;
 
 - (SecKeyRef) getPublicKeyRef;
 
