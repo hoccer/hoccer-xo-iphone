@@ -28,6 +28,8 @@
     [self.playButton makeRoundAndGlossy];
     [self.stopButton makeRoundAndGlossy];
     [self.recordButton makeRoundAndGlossy];
+    
+    self.useButton.style = UIBarButtonItemStyleDone;
 
     [self disablePlay];
     [self disableStop];

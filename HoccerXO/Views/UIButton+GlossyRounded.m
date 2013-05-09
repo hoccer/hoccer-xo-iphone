@@ -14,7 +14,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-static const double kButtonCornerRadius = 5.0;
+static const double kButtonCornerRadius = 7.0;
 
 @implementation UIButton (GlossyRounded)
 
@@ -31,7 +31,7 @@ static const double kButtonCornerRadius = 5.0;
     if ([thisLayer respondsToSelector:@selector(shadowOpacity)]) // For compatibility, check if shadow is supported
     {
         thisLayer.shadowOpacity = 1.0;
-        thisLayer.shadowColor = [[UIColor colorWithWhite: 1.0 alpha: 0.3] CGColor];
+        thisLayer.shadowColor = [[UIColor colorWithWhite: 0.5 alpha: 0.3] CGColor];
         thisLayer.shadowOffset = CGSizeMake(0.0, 1.0);
         thisLayer.shadowRadius = 0.0;
         
