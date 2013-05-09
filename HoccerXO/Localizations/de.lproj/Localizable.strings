@@ -254,6 +254,8 @@
 "video" = "Video";
 "audio" = "Audio";
 "vcard" = "Adresse";
+"geolocation" = "Ort";
+
 
 
 
