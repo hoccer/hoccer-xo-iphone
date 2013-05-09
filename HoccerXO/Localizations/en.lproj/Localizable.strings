@@ -2,7 +2,7 @@
 "About" = "About";
 
 /* Attachment Actionsheet Title */
-"Add Attachement" = "Add Attachement";
+"Add Attachement" = "Add Attachement from:";
 
 /* Actionsheet Title */
 "Attachment" = "Attachment";
@@ -10,23 +10,60 @@
 /* Actionsheet Button Title */
 "Cancel" = "Cancel";
 
+
+
+/* Action Sheet Button Ttitle */
+"Choose Photo/Video" = "Album";
+
+/* Action Sheet Button Ttitle */
+"Take Photo/Video" = "Camera";
+
+/* Action Sheet Button Ttitle */
+"Take Photo" = "Camera";
+
+/* Action Sheet Button Ttitle */
+"Choose Photo" = "Album";
+
+
+/* Action Sheet Button Ttitle */
+"Choose Audio" = "Music Library";
+
+/* Action Sheet Button Ttitle */
+"Record Audio" = "Audio Recorder";
+
+
+/* Action Sheet Button Ttitle */
+"Choose Adressbook Item" = "Adressbook";
+
+/* Action Sheet Button Ttitle */
+"Pick a Location"="Map";
+
+
+/* Action Sheet Button Ttitle */
+"Paste Image Attachment" = "Pasteboard (Image)";
+
+/* Action Sheet Button Ttitle */
+"Paste Video Attachment" = "Pasteboard (Video)";
+
+/* Action Sheet Button Ttitle */
+"Paste Audio Attachment" = "Pasteboard (Audio)";
+
+/* Action Sheet Button Ttitle */
+"Paste vcard Attachment" = "Pasteboard (vcard)";
+
+/* Action Sheet Button Ttitle */
+"Paste geolocation Attachment" = "Pasteboard (Location)";
+
+/* Action Sheet Button Ttitle */
+"Paste Image" = "Pasteboard (Image)";
+
+
+/* Profile View Avatar Chooser Action Sheet Title */
+"Pick an Avatar"="Get Avatar Image from:";
+
+
 /* Navigation Menu Item */
 "Chats" = "Chats";
-
-/* Action Sheet Button Ttitle */
-"Choose Photo/Video" = "Choose Photo/Video";
-
-/* Action Sheet Button Ttitle */
-"Choose Photo" = "Choose Photo";
-
-/* Action Sheet Button Ttitle */
-"Choose Audio" = "Choose Audio";
-
-/* Action Sheet Button Ttitle */
-"Record Audio" = "Record Audio";
-
-/* Action Sheet Button Ttitle */
-"Choose Adressbook Item" = "Choose Adressbook Item";
 
 /* Contacts Navigation Bar Title */
 "Contacts" = "Contacts";
@@ -35,13 +72,13 @@
 "Copy" = "Copy";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hi\nI want to exchange confidential messages with you. \n\nGet Hoccer XO:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
+"invitation_mail_body" = "Hi\nI want to exchange direct messages with you. \n\nGet Hoccer XO:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Hoccer XO Invitation";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "I want to exchange confidential messages with you. Please install 'Hoccer XO' first, then click this link: %@\n";
+"invitation_sms_text" = "I want to exchange direct messages with you. Please install 'Hoccer XO' first, then click this link: %@\n";
 
 /* Actionsheet Title */
 "Invite by" = "Invite by";
@@ -86,12 +123,6 @@
 
 /* Invite Actionsheet Button Title */
 "SMS" = "SMS";
-
-/* Action Sheet Button Ttitle */
-"Take Photo/Video" = "Take Photo/Video";
-
-/* Action Sheet Button Ttitle */
-"Take Photo" = "Take Photo";
 
 /* Invite Alert Message */
 "The server accepted your code" = "The code has been accepted";
@@ -184,16 +215,6 @@
 "delete_credentials_saftey_question" = "Old Credentials";
 
 "delete_credentials_confirm" = "Delete Credentials";
-
-"Paste Image Attachment" = "Paste (original Image)";
-
-"Paste Video Attachment" = "Paste (Video)";
-
-"Paste Audio Attachment" = "Paste (Audio)";
-
-"Paste vcard Attachment" = "Paste (vcard)";
-
-"Paste Image" = "Paste (Image)";
 
 "Save" = "Save";
 

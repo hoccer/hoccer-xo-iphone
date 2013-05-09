@@ -2,7 +2,7 @@
 "About" = "Über Hoccer XO";
 
 /* Attachment Actionsheet Title */
-"Add Attachement" = "Anhang hinzufügen";
+"Add Attachement" = "Anhang hinzufügen aus:";
 
 /* Actionsheet Title */
 "Attachment" = "Anhang";
@@ -10,23 +10,60 @@
 /* Actionsheet Button Title */
 "Cancel" = "Abbrechen";
 
+
+
+/* Action Sheet Button Ttitle */
+"Choose Photo/Video" = "Album";
+
+/* Action Sheet Button Ttitle */
+"Take Photo/Video" = "Kamera";
+
+/* Action Sheet Button Ttitle */
+"Take Photo" = "Kamera";
+
+/* Action Sheet Button Ttitle */
+"Choose Photo" = "Album";
+
+
+/* Action Sheet Button Ttitle */
+"Choose Audio" = "Musikbibliothek";
+
+/* Action Sheet Button Ttitle */
+"Record Audio" = "Audiorecorder";
+
+
+/* Action Sheet Button Ttitle */
+"Choose Adressbook Item" = "Adressbuch";
+
+/* Action Sheet Button Ttitle */
+"Pick a Location"="Karte";
+
+
+/* Action Sheet Button Ttitle */
+"Paste Image Attachment" = "Ablage (Bild)";
+
+/* Action Sheet Button Ttitle */
+"Paste Video Attachment" = "Ablage (Video)";
+
+/* Action Sheet Button Ttitle */
+"Paste Audio Attachment" = "Ablage (Audio)";
+
+/* Action Sheet Button Ttitle */
+"Paste vcard Attachment" = "Ablage (Adresse)";
+
+/* Action Sheet Button Ttitle */
+"Paste geolocation Attachment" = "Ablage (Ort)";
+
+/* Action Sheet Button Ttitle */
+"Paste Image" = "Ablage (Bild)";
+
+
+/* Profile View Avatar Chooser Action Sheet Title */
+"Pick an Avatar"="Wähle ein Avatarbild aus:";
+
+
 /* Navigation Menu Item */
 "Chats" = "Chats";
-
-/* Action Sheet Button Ttitle */
-"Choose Photo/Video" = "Foto/Video auswählen";
-
-/* Action Sheet Button Ttitle */
-"Choose Photo" = "Foto auswählen";
-
-/* Action Sheet Button Ttitle */
-"Choose Audio" = "Audio auswählen";
-
-/* Action Sheet Button Ttitle */
-"Record Audio" = "Audio aufnehmen";
-
-/* Action Sheet Button Ttitle */
-"Choose Adressbook Item" = "Adresseintrag auswählen";
 
 /* Contacts Navigation Bar Title */
 "Contacts" = "Kontakte";
@@ -35,13 +72,13 @@
 "Copy" = "Kopieren";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hallo,\nIch möchte vertraulich mit dir Nachrichten austauschen.\n\nInstalliere ‘Hoccer XO':\nApp Store: %@\nAndroid: %@\n\nDanach bestätige meinen Kontakt: %@\n";
+"invitation_mail_body" = "Hallo,\nIch möchte mit dir Nachrichten austauschen.\n\nInstalliere ‘Hoccer XO':\nApp Store: %@\nAndroid: %@\n\nDanach bestätige meinen Kontakt: %@\n";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Einladung zu Hoccer XO";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Ich möchte vertraulich mit dir Nachrichten austauschen. Installiere ‘Hoccer XO‘ und klicke dann diesen Link: %@";
+"invitation_sms_text" = "Ich möchte mit dir Nachrichten austauschen. Installiere ‘Hoccer XO‘ und klicke dann diesen Link: %@";
 
 /* Actionsheet Title */
 "Invite by" = "Einladung";
@@ -86,12 +123,6 @@
 
 /* Invite Actionsheet Button Title */
 "SMS" = "per SMS";
-
-/* Action Sheet Button Ttitle */
-"Take Photo/Video" = "Foto/Video aufnehmen";
-
-/* Action Sheet Button Ttitle */
-"Take Photo" = "Foto aufnehmen";
 
 /* Invite Alert Message */
 "The server accepted your code" = "Der Kode wurde akzeptiert";
@@ -166,16 +197,6 @@
 "delete_credentials_confirm" = "Zugangsdaten Löschen";
 
 "delete_credentials_saftey_question" = "Alte Zugangsdaten:";
-
-"Paste Image Attachment" = "Einfügen (Originalbild)";
-
-"Paste Video Attachment" = "Einfügen (Video)";
-
-"Paste Audio Attachment" = "Einfügen (Audio)";
-
-"Paste vcard Attachment" = "Einfügen (vcard)";
-
-"Paste Image" = "Einfügen (Bild)";
 
 "Save" = "Speichern";
 

@@ -971,7 +971,7 @@ in the general "Settings" app.</string>
                                                         <action selector="cancelPressed:" destination="0cY-a5-c4A" id="g3t-7h-kja"/>
                                                     </connections>
                                                 </barButtonItem>
-                                                <barButtonItem key="rightBarButtonItem" tag="1" title="Use" style="plain" id="I7D-pL-AZf" userLabel="Bar Button Item - Save">
+                                                <barButtonItem key="rightBarButtonItem" tag="1" title="Use" style="done" id="I7D-pL-AZf" userLabel="Bar Button Item - Save">
                                                     <color key="tintColor" red="0.16339666189999999" green="0.40835657489999999" blue="0.798828125" alpha="1" colorSpace="calibratedRGB"/>
                                                     <connections>
                                                         <action selector="usePressed:" destination="0cY-a5-c4A" id="9ce-vC-v6y"/>

@@ -120,6 +120,7 @@
         [_supportedItems addObject: item];
     }
 
+    BOOL imageAttachmentinPasteboard = NO;
     NSArray * myMediaTypeArray = [board valuesForPasteboardType:@"com.hoccer.xo.mediaType" inItemSet:nil];
     if (myMediaTypeArray.count == 1) {
         NSString * mediaType = [[NSString alloc] initWithData:myMediaTypeArray[0] encoding:NSUTF8StringEncoding];
@@ -129,6 +130,7 @@
             item.localizedButtonTitle = NSLocalizedString(@"Paste Image Attachment", @"Action Sheet Button Ttitle");
             item.type = AttachmentPickerTypeImageAttachmentFromPasteboard;
             [_supportedItems addObject: item];
+            imageAttachmentinPasteboard = YES;
         }
         if ([mediaType isEqualToString:@"video"] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypeVideoAttachmentFromPasteboard]) {
@@ -154,13 +156,13 @@
         if ([mediaType isEqualToString:@"geolocation"] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Paste geolocation", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"Paste geolocation Attachment", @"Action Sheet Button Ttitle");
             item.type = AttachmentPickerTypeGeoLocationAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
     }
     //if ([board containsPasteboardTypes:UIPasteboardTypeListImage inItemSet:nil]) {
-    if (board.image != nil) {
+    if (board.image != nil && !imageAttachmentinPasteboard) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeImageFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
             item.localizedButtonTitle = NSLocalizedString(@"Paste Image", @"Action Sheet Button Ttitle");
