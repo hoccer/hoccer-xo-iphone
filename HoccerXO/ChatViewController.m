@@ -1168,6 +1168,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 - (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
     NSLog(@"forwardMessage");
     self.messageToForward = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    [self.navigationController.sideMenu toggleRightSideMenu];
     // [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
 }
 
