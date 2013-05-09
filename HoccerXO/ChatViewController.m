@@ -415,6 +415,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
                 [self.currentAttachment makeAudioAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
             } else if ([myMediaType isEqualToString:@"vcard"]) {
                 [self.currentAttachment makeVcardAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+            } else if ([myMediaType isEqualToString:@"geolocation"]) {
+                [self.currentAttachment makeGeoLocationAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
             }
             return;
         }
@@ -1367,6 +1369,40 @@ static const NSUInteger kMaxMessageBytes = 10000;
         self.vcardViewController.displayedPerson = myVcard.person; // Assume person is already defined.
         self.vcardViewController.allowsAddingToAddressBook = YES;
         [self.navigationController pushViewController:self.vcardViewController animated:YES];
+    } else  if ([myAttachment.mediaType isEqual: @"geolocation"]) {
+        if (self.chatBackend.delegate.internetReachabilty.isReachable) {
+            // open map viewer when online
+            [myAttachment loadAttachmentDict:^(NSDictionary * geoLocation, NSError * error) {
+                if (geoLocation != nil) {
+                    Class mapItemClass = [MKMapItem class];
+                    if (mapItemClass && [mapItemClass respondsToSelector:@selector(openMapsWithItems:launchOptions:)])
+                    {
+                       // Create an MKMapItem to pass to the Maps app
+                        NSArray * coordinates = geoLocation[@"location"][@"coordinates"];
+                        NSLog(@"geoLocation=%@",geoLocation);
+                        NSLog(@"coordinates=%@",coordinates);
+                        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([coordinates[1] doubleValue], [coordinates[0] doubleValue]);
+                        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate
+                                                                       addressDictionary:nil];
+                        MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
+                        [mapItem setName:NSLocalizedString(@"The Place",@"placemark name")];
+                        // Pass the map item to the Maps app
+                        [mapItem openInMapsWithLaunchOptions:nil];
+                    }
+                }
+            }];
+        } else {
+            // open map image when offline
+            [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
+                // NSLog(@"attachment view loadimage done");
+                if (theImage != nil) {
+                    self.imageViewController.image = theImage;
+                    [self presentViewController: self.imageViewController animated: YES completion: nil];
+                } else {
+                    NSLog(@"geo attachment view: Failed to get image: %@", error);
+                }
+            }];
+        }
     }
 }
 

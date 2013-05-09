@@ -151,6 +151,13 @@
             item.type = AttachmentPickerTypeVcardAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
+        if ([mediaType isEqualToString:@"geolocation"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromPasteboard]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"Paste geolocation", @"Action Sheet Button Ttitle");
+            item.type = AttachmentPickerTypeGeoLocationAttachmentFromPasteboard;
+            [_supportedItems addObject: item];
+        }
     }
     //if ([board containsPasteboardTypes:UIPasteboardTypeListImage inItemSet:nil]) {
     if (board.image != nil) {
@@ -242,6 +249,7 @@
         case AttachmentPickerTypeVideoAttachmentFromPasteboard:
         case AttachmentPickerTypeAudioAttachmentFromPasteboard:
         case AttachmentPickerTypeVcardAttachmentFromPasteboard:
+        case AttachmentPickerTypeGeoLocationAttachmentFromPasteboard:
             [self pickAttachmentFromPasteBoard];
             break;
         case AttachmentPickerTypeImageFromPasteboard:

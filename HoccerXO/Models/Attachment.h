@@ -21,6 +21,8 @@ typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
 typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 typedef void(^CompletionBlock)(NSError* theError);
+typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
+
 
 @protocol TransferProgressIndication <NSObject>
 
@@ -104,6 +106,9 @@ typedef void(^CompletionBlock)(NSError* theError);
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock) block;
+
+- (void) loadAttachmentDict: (DictLoaderBlock) block;
+
 
 - (NSURL *) contentURL; // best Effort content URL for playback, display etc. (localURL if available, otherwise assetURL)
 - (NSURL *) otherContentURL; // returns assetURL if localURL is available, otherwise nil

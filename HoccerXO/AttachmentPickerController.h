@@ -26,6 +26,7 @@ typedef enum AttachmentPickerTypes {
     AttachmentPickerTypeVideoAttachmentFromPasteboard,
     AttachmentPickerTypeAudioAttachmentFromPasteboard,
     AttachmentPickerTypeVcardAttachmentFromPasteboard,
+    AttachmentPickerTypeGeoLocationAttachmentFromPasteboard,
     AttachmentPickerTypeImageFromPasteboard,
     AttachmentPickerTypeAudioRecorder,
     AttachmentPickerTypeAdressBookVcard,

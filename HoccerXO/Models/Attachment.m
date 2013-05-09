@@ -342,6 +342,26 @@
     [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 
+// works only for geolocations right now 
+- (void) loadAttachmentDict:(DictLoaderBlock) block {
+    if (![self.mediaType isEqualToString:@"geolocation"]) {
+        block(nil, nil);
+        return;        
+    }
+    if (self.localURL == nil) {
+        block(nil, nil);
+        return;
+    }
+    NSData * jsonData = [NSData dataWithContentsOfURL: self.contentURL];
+    NSError * error;
+    NSDictionary * geoLocation = [NSJSONSerialization JSONObjectWithData: jsonData options: 0 error: & error];
+    if (geoLocation == nil) {
+        block(nil, error);
+        return;
+    }
+    block(geoLocation, nil);
+}
+
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
     // NSLog(@"assetSizer");
@@ -452,21 +472,16 @@
 }
 
 - (void) loadGeoLocationAttachmentImage: (ImageLoaderBlock) block {
-    if (self.localURL == nil) {
-        block(nil, nil);
-        return;
-    }
-    NSData * jsonData = [NSData dataWithContentsOfURL: self.contentURL];
-    NSError * error;
-    NSDictionary * geoLocation = [NSJSONSerialization JSONObjectWithData: jsonData options: 0 error: & error];
-    if (geoLocation == nil) {
-        block(nil, error);
-        return;
-    }
-    NSData * imageData = [NSData dataWithBase64EncodedString: geoLocation[@"previewImage"]];
-    block([UIImage imageWithData: imageData], nil);
-}
 
+    [self loadAttachmentDict:^(NSDictionary * geoLocation, NSError * error) {
+        if (geoLocation != nil) {
+            NSData * imageData = [NSData dataWithBase64EncodedString: geoLocation[@"previewImage"]];
+            block([UIImage imageWithData: imageData], nil);
+        } else {
+            block(nil, error);
+        }
+    }];
+}
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block {
     if (self.localURL != nil) {

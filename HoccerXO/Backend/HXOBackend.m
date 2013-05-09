@@ -217,6 +217,8 @@ typedef enum BackendStates {
             [newAttachment makeAudioAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
         } else if ([newAttachment.mediaType isEqualToString:@"vcard"]) {
             [newAttachment makeVcardAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"geolocation"]) {
+            [newAttachment makeGeoLocationAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
         }
     }
     return newAttachment;
