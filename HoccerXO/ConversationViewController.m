@@ -334,7 +334,8 @@
     if ([contact.latestMessage count] == 0){
         cell.latestMessageLabel.text = NSLocalizedString(@"no_messages_exchanged", nil);
         cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
-        cell.latestMessageDirection.image = nil;
+        // cell.latestMessageDirection.image = nil;
+        cell.latestMessageDirectionLabel.text = nil;
     } else {
         HXOMessage * message = contact.latestMessage[0];
         if (message.body.length > 0) {
@@ -350,9 +351,12 @@
         }
         latestMessageTime = message.timeAccepted;
         if ([message.isOutgoing boolValue] == YES) {
-            cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-right"];
+            //cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-right"];
+            cell.latestMessageDirectionLabel.text = @"<";
+            //cell.latestMessageDirectionLabel.textColor = [UIColor redColor];
         } else {
-            cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-left"];
+            // cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-right"];
+            cell.latestMessageDirectionLabel.text = @">";
         }
     }
     [cell.latestMessageLabel sizeToFit];

@@ -497,16 +497,24 @@ in the general "Settings" app.</string>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="mini-bubble-left.png" id="hYj-vr-IlI">
-                                            <rect key="frame" x="56" y="24" width="16" height="18"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="hYj-vr-IlI">
+                                            <rect key="frame" x="284" y="10" width="16" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=">" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="M3L-eZ-e0N">
+                                            <rect key="frame" x="61" y="22" width="16" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <connections>
                                     <outlet property="avatar" destination="lkO-00-gch" id="nsl-sr-5Ze"/>
                                     <outlet property="latestMessageDirection" destination="hYj-vr-IlI" id="rt3-oH-sIw"/>
+                                    <outlet property="latestMessageDirectionLabel" destination="M3L-eZ-e0N" id="Blq-eS-nP6"/>
                                     <outlet property="latestMessageLabel" destination="BYf-td-Ce8" id="Fny-Sk-V6c"/>
                                     <outlet property="latestMessageTimeLabel" destination="TRS-dL-kmg" id="ihv-cF-LV1"/>
                                     <outlet property="nickName" destination="mH8-ys-z78" id="3A2-m8-Q55"/>
@@ -1099,7 +1107,6 @@ in the general "Settings" app.</string>
     </scenes>
     <resources>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
-        <image name="mini-bubble-left.png" width="16" height="18"/>
         <image name="system-settings-icon.jpg" width="180" height="183"/>
     </resources>
     <classes>
@@ -1189,6 +1196,7 @@ in the general "Settings" app.</string>
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="latestMessageDirection" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="latestMessageDirectionLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="latestMessageLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="latestMessageTimeLabel" candidateClass="UILabel"/>
             </relationships>
