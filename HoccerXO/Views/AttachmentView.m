@@ -10,6 +10,10 @@
 #import "ChatTableCells.h"
 #import "HXOMessage.h"
 #import "HXOUserDefaults.h"
+#import "BubbleView.h"
+
+#import "UIButton+GlossyRounded.h"
+
 
 @implementation AttachmentView
 
@@ -34,12 +38,12 @@
     if (progressView != nil) {
         // NSLog(@"showTransferProgress, really %f", theProgress);
         self.progressView.hidden = NO;
-        [progressView setProgress: theProgress];
+        [progressView setProgress: theProgress animated:YES];
     }
 }
 
 - (void) transferStarted {
-    // NSLog(@"transferFinished, cell = %@, attachment = %@", self.attachment, self.cell);
+    // NSLog(@"transferStarted, cell = %@, attachment = %@", self.attachment, self.cell);
     if (self.attachment != nil && self.cell != nil) {
         [self configureViewForAttachment: self.attachment inCell: self.cell];
         self.progressView.hidden = NO;
@@ -61,15 +65,21 @@
     self.userInteractionEnabled = YES;
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 
+    CGRect AVframe = [theCell.bubble calcAttachmentViewFrameForAspect:theAttachment.aspectRatio];
+    self.frame = CGRectMake(0,0,AVframe.size.width, AVframe.size.height);
     CGRect frame = self.frame;
     
-    // NSLog(@"configureViewForAttachment: frame = %@", NSStringFromCGRect(frame));
+    NSLog(@"configureViewForAttachment: frame = %@", NSStringFromCGRect(frame));
+    NSLog(@"configureViewForAttachment: bounds = %@", NSStringFromCGRect(self.bounds));
+    NSLog(@"configureViewForAttachment: AVframe = %@", NSStringFromCGRect(AVframe));
+    //NSLog(@"configureViewForAttachment: cell.frame = %@", NSStringFromCGRect(theCell.frame));
+    
+    AttachmentState attachmentState = theAttachment.state;
+    BOOL isOutgoing = [self.attachment.message.isOutgoing isEqualToNumber: @YES];
     
     if (self.imageView == nil) {
         self.imageView = [[UIImageView alloc] init];
-        // preset frame to correct aspect ratio before actual image is loaded
-        frame.size.width = attachment.aspectRatio;
-        frame.size.height = 1;
+        
         self.imageView.frame = frame;
         self.imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         
@@ -92,70 +102,83 @@
         }
         // NSLog(@"configureViewForAttachment: (postInit) frame = %@", NSStringFromCGRect(frame));
     } else {
-        frame.size.height = (attachment.aspectRatio > 0) ? frame.size.width / attachment.aspectRatio : frame.size.width;
-        // frame.size.height = frame.size.width / attachment.aspectRatio;
-        self.frame = frame;
+        self.imageView.frame = frame;        
     }
-    
+        
+    NSLog(@"configureViewForAttachment1: progressView.frame = %@", NSStringFromCGRect(progressView.frame));
     if (self.progressView == nil) {
-        // transfer ongoing, present progress bar
-        self.progressView = [[UIProgressView alloc] initWithFrame: self.frame];
+        self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        self.progressView.frame = self.frame;
+        //[self.progressView setFrame:CGRectMake(AVframe.origin.x, AVframe.origin.y, AVframe.size.width, 10)];
+        //self.progressView = [[UIProgressView alloc] init];
         self.progressView.hidden = NO;
-        self.progressView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        self.progressView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;//|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
+        self.progressView.alpha = 1.0;
+        self.progressView.contentMode = UIViewContentModeBottom;
+        NSLog(@"configureViewForAttachment2: progressView.frame = %@", NSStringFromCGRect(progressView.frame));
         [self addSubview: self.progressView];
+        NSLog(@"configureViewForAttachment3: progressView.frame = %@", NSStringFromCGRect(progressView.frame));
+    } else {
+        //[self.progressView setFrame:CGRectMake(AVframe.origin.x, AVframe.origin.y, AVframe.size.width, 10)];
+        // [self.progressView setFrame:CGRectMake(0, 10, 300, 10)];
+        NSLog(@"configureViewForAttachment4: progressView.frame = %@", NSStringFromCGRect(progressView.frame));
+        self.progressView.frame = self.frame;
+        NSLog(@"configureViewForAttachment5: progressView.frame = %@", NSStringFromCGRect(progressView.frame));
     }
+    NSLog(@"configureViewForAttachment6: self.frame = %@", NSStringFromCGRect(self.frame));
+    NSLog(@"configureViewForAttachment7: self.bounds = %@", NSStringFromCGRect(self.bounds));
 
-    if (attachment.transferConnection != nil) {
+    if (attachmentState == kAttachmentTransfering || attachmentState == kAttachmentTransferPaused) {
         [self.progressView setProgress: [attachment.transferSize doubleValue] / [attachment.contentSize doubleValue]];
         self.progressView.hidden = NO;
-        
         // TODO: cancel transfer button
-        
     } else {
-        // transfer ready or not yet started
-        if ([attachment.contentSize longLongValue] > [attachment.transferSize longLongValue]) {
-            // transfer incomplete and not active
-            
-            BOOL isOutgoing = [self.attachment.message.isOutgoing isEqualToNumber: @YES];
-            long long outgoingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue];
-            long long incomingLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue];
-            
-            if (((isOutgoing && [self.attachment.contentSize longLongValue] > outgoingLimit) ||
-                (!isOutgoing && [self.attachment.contentSize longLongValue] > incomingLimit)) &&
-                ([self.attachment.transferSize longLongValue] == 0))
-            {
-                self.progressView.hidden = NO;
-                if (self.loadButton == nil) {
-                     self.loadButton = [[UIButton alloc] initWithFrame: self.bounds];
-                    [self addSubview:self.loadButton];
-                }
-                if ([self.attachment.message.isOutgoing isEqualToNumber: @YES])  {
-                    // upload not yet started, present upload button
-                    NSString * myTitle = [NSString stringWithFormat:@"Upload %1.3f MByte",[attachment.contentSize doubleValue]/1024/1024];
-                    [self.loadButton setTitle:myTitle forState:UIControlStateNormal];
-                } else {
-                    // download not yet started, present download button
-                    NSString * myTitle = [NSString stringWithFormat:@"Download %1.3f MByte",[attachment.contentSize doubleValue]/1024/1024];
-                    [self.loadButton setTitle:myTitle forState:UIControlStateNormal];
-                }
-                [self.loadButton addTarget:attachment action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
-                
-                self.loadButton.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-                
-                //UIImage *sendButtonBackground = [UIImage imageNamed:@"chatbar_btn-send"];
-                // [self.loadButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
-                [self.loadButton setBackgroundColor: [UIColor blueColor]];
-                self.loadButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
-                [self.loadButton setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
-            }
-            return;
+        self.progressView.hidden = YES;
+    }
+    if (attachmentState == kAttachmentTransferOnHold)
+    {
+        if (self.loadButton == nil) {
+            //self.loadButton = [[UIButton alloc] initWithFrame: self.bounds];
+            self.loadButton = [[UIButton alloc] initWithFrame:self.frame];
+            self.loadButton.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+            [self.loadButton setBackgroundColor: [UIColor colorWithRed:0 green:0 blue:0.8 alpha:1]];
+            [self.loadButton makeRoundAndGlossy];
+            self.loadButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            self.loadButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+            [self.loadButton addTarget:attachment action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.loadButton];
         } else {
+            [self.loadButton undoRoundAndGlossy];
+            self.loadButton.frame = self.frame;
+            [self.loadButton makeRoundAndGlossy];
+        }
+        if ([self.attachment.message.isOutgoing isEqualToNumber: @YES])  {
+            // upload not yet started, present upload button
+            NSString * myTitle = [NSString localizedStringWithFormat:NSLocalizedString(@"Upload %@\n%1.2f MB",nil),
+                                  NSLocalizedString(attachment.mediaType, nil),
+                                  [attachment.contentSize doubleValue]/1024/1024];
+            [self.loadButton setTitle:myTitle forState:UIControlStateNormal];
+        } else {
+            // download not yet started, present download button
+            NSString * myTitle = [NSString localizedStringWithFormat:NSLocalizedString(@"Download %@\n%1.2f MB",nil),
+                                  NSLocalizedString(attachment.mediaType, nil),
+                                  [attachment.contentSize doubleValue]/1024/1024];
+            [self.loadButton setTitle:myTitle forState:UIControlStateNormal];
+        }
+                
+    } else {
+        if (self.loadButton != nil) {
+            [self.loadButton removeFromSuperview];
+            self.loadButton = nil;
+        }
+        
+        if (attachmentState == kAttachmentTransfered ||
+            (isOutgoing &&
+             (attachmentState == kAttachmentTransferPaused ||
+              attachmentState == kAttachmentTransfering)))
+        {
             // normal view with image and play/open button
-            self.progressView.hidden = YES;
-            if (self.loadButton != nil) {
-                [self.loadButton removeFromSuperview];
-                self.loadButton = nil;
-            }
+            
             if (self.openButton == nil) {
                 // NSLog(@"configureViewForAttachment: (buttoninit) frame = %@", NSStringFromCGRect(self.bounds));
                 self.openButton = [[UIButton alloc] initWithFrame: self.bounds];
@@ -169,7 +192,9 @@
                     [self.openButton setImage: [UIImage imageNamed:@"button-audio"] forState:UIControlStateNormal];
                 }
                 
-                [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];                
+                [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
+            } else {
+                self.openButton.frame = self.frame;
             }
             
             if (self.imageView.image == nil) {
@@ -185,9 +210,13 @@
                     self.imageView.image = self.attachment.previewImage;
                 }
             }
-        }
+            if (attachmentState == kAttachmentTransfering) {
+                self.imageView.alpha = 1.0;
+            } else {
+                self.imageView.alpha = 1.0;
+            }
+        } 
     }
 }
-
-
+    
 @end

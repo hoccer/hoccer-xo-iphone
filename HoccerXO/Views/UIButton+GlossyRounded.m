@@ -21,6 +21,9 @@ static const double kButtonCornerRadius = 7.0;
 - (void) makeRoundAndGlossy {
     CALayer *thisLayer = self.layer;
     
+    // NSLog(@"thisLayer.bounds=%@", NSStringFromCGRect(thisLayer.bounds));
+    // NSLog(@"self.bounds=%@", NSStringFromCGRect(self.bounds));
+    
     // Add a border
     thisLayer.cornerRadius = kButtonCornerRadius; // 0.5 * self.frame.size.height;
     thisLayer.masksToBounds = NO;
@@ -73,5 +76,12 @@ static const double kButtonCornerRadius = 7.0;
     self.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
     [self setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
 }
+
+- (void) undoRoundAndGlossy {
+    CALayer *thisLayer = self.layer;
+    thisLayer.backgroundColor = [(CALayer*)thisLayer.sublayers[0] backgroundColor];
+    [thisLayer.sublayers[0] removeFromSuperlayer]; // remove background layer
+}
+
 
 @end

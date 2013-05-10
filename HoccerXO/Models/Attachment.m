@@ -52,10 +52,14 @@
 
 @dynamic message;
 
+@dynamic transferPaused;
+@dynamic transferAborted;
+
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;
 
-//@synthesize image;
+@dynamic state;
+
 @synthesize transferConnection = _transferConnection;
 @synthesize transferError = _transferError;
 @synthesize transferHttpStatusCode;
@@ -68,6 +72,86 @@
 
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"])
 
+
++(NSString*) getStateName:(AttachmentState)state {
+
+NSArray * TransferStateName = @[@"detached",
+                                @"empty",
+                                @"transfered",
+                                @"transfers exhausted",
+                                @"transfering",
+                                @"transfer scheduled",
+                                @"incomplete",
+                                @"transfer on hold",
+                                @"wants transfer",
+                                @"transfer paused",
+                                @"transfer aborted"];
+    if (state <= kAttachmentWantsTransfer) {
+        return TransferStateName[state];
+    }
+    return nil;
+}
+
+// The attachment state is implicitly determined by the object state; there is no state variable
+// - a completed transfer is indicated when transferSize equals contentSize
+// - an ongoing transfer is indicated by a non-nil transferConnection
+// - a schedules retry is indicated by a non-nil transferRetryTimer
+// - a manual abort is indicated by a non-nil transferAborted date
+// - a manual pause is indicated by a non-nil transferPaused date
+// - an automatic hold is determined by contentSize and limit settings
+// - once a transfer has been started, it is no longer held by transfer limits, but can be paused or aborted 
+
+- (AttachmentState) state {
+    AttachmentState myState = [self stateX];
+    NSLog(@"state=%@",[Attachment getStateName:myState]);
+    return myState;
+}
+
+
+- (AttachmentState) stateX {
+    if (self.message == nil) {
+        return kAttachmentDetached;
+    }
+    if (self.contentSize == 0) {
+        return kAttachmentEmpty;
+    }
+    if ([self.transferSize isEqualToNumber: self.contentSize]) {
+        return kAttachmentTransfered;
+    }
+    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries] longLongValue];
+    if (self.transferFailures > maxRetries) {
+        return kAttachmentTransfersExhausted;
+    }
+    if (self.transferAborted != nil) {
+        return kAttachmentTransferAborted;
+    }
+    if (self.transferPaused != nil) {
+        return kAttachmentTransferPaused;
+    }
+    if (self.transferConnection != nil) {
+        return kAttachmentTransfering;
+    }
+    if (self.transferRetryTimer != nil) {
+        return kAttachmentTransferScheduled;
+    }
+    if ([self.transferSize longLongValue]> 0) {
+        return kAttachmentIncomplete;
+    }
+    // now check limits
+    if ([self.message.isOutgoing boolValue]) {
+        long long uploadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue];
+        if (uploadLimit && [self.contentSize longLongValue] > uploadLimit) {
+            return kAttachmentTransferOnHold;
+        }
+    } else {
+        // incoming
+        long long downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue];
+        if (downloadLimit && [self.contentSize longLongValue] > downloadLimit) {
+            return kAttachmentTransferOnHold;
+        }
+    }
+    return kAttachmentWantsTransfer;
+}
 
 - (NSString *) verbosityLevel {
     if (_verbosityLevel == nil) {

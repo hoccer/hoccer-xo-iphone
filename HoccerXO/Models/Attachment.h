@@ -23,6 +23,19 @@ typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 typedef void(^CompletionBlock)(NSError* theError);
 typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 
+typedef enum AttachmentStates {
+    kAttachmentDetached,
+    kAttachmentEmpty,
+    kAttachmentTransfered,
+    kAttachmentTransfersExhausted,
+    kAttachmentTransfering,
+    kAttachmentTransferScheduled,
+    kAttachmentIncomplete,
+    kAttachmentTransferOnHold,
+    kAttachmentWantsTransfer,
+    kAttachmentTransferPaused,
+    kAttachmentTransferAborted
+} AttachmentState;
 
 @protocol TransferProgressIndication <NSObject>
 
@@ -50,8 +63,10 @@ typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 @property (nonatomic)         NSNumber * transferSize;          // number of plaintext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
-@property (nonatomic)         NSInteger  transferFailures;       // number of upload or download failures
-@property (nonatomic, strong) NSData   * previewImageData;           // remote URL where the file should/was uploaded
+@property (nonatomic)         NSInteger  transferFailures;      // number of upload or download failures
+@property (nonatomic, strong) NSData   * previewImageData;      // remote URL where the file should/was uploaded
+@property (nonatomic, strong) NSDate   * transferPaused;        // if not nil it containes the date the transfer was paused by the user
+@property (nonatomic, strong) NSDate   * transferAborted;       // if not nil it containes the date the transfer was aborted by the user
 @property (nonatomic, strong) HXOMessage *message;
 
 // virtual properties
@@ -59,9 +74,6 @@ typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 @property (nonatomic) NSString * attachmentJsonStringCipherText;
 
 // These are non-persistent properties:
-
-//@property (nonatomic, strong) UIImage *image;
-
 @property (nonatomic, strong) NSURLConnection *transferConnection;
 @property (nonatomic, copy) NSError * transferError;
 @property (nonatomic)       long transferHttpStatusCode;
@@ -79,6 +91,8 @@ typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 @property (nonatomic, strong) CryptoEngine * encryptionEngine;
 
 @property (nonatomic, strong) UIImage * previewImage;
+
+@property (readonly) AttachmentState state;
 
 
 // encryption/decryption properties
@@ -109,7 +123,6 @@ typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 
 - (void) loadAttachmentDict: (DictLoaderBlock) block;
 
-
 - (NSURL *) contentURL; // best Effort content URL for playback, display etc. (localURL if available, otherwise assetURL)
 - (NSURL *) otherContentURL; // returns assetURL if localURL is available, otherwise nil
 
@@ -120,5 +133,6 @@ typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;
 + (UIImage *) qualityAdjustedImage:(UIImage *)theFullImage;
 + (BOOL) tooLargeImage:(UIImage *)theFullImage;
++( NSString*) getStateName:(AttachmentState)state;
 
 @end

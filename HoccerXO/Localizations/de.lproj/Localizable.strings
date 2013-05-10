@@ -256,6 +256,8 @@
 "vcard" = "Adresse";
 "geolocation" = "Ort";
 
+"Upload %@\n%1.2f MB"="%@ senden\n%1.2f MB";
+"Download %@\n%1.2f MB"="%@ empfangen\n%1.2f MB";
 
 
 

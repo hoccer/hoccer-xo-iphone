@@ -11,5 +11,6 @@
 @interface UIButton (GlossyRounded)
 
 - (void) makeRoundAndGlossy;
+- (void) undoRoundAndGlossy;
 
 @end

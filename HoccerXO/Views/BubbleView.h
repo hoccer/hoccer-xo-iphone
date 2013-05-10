@@ -32,5 +32,6 @@ typedef enum BubbleStates {
 - (void) awakeFromNib;
 
 - (CGFloat) heightForMessage: (HXOMessage*) message;
+- (CGRect) calcAttachmentViewFrameForAspect:(float)aspectRatio;
 
 @end

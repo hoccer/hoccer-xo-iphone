@@ -279,11 +279,10 @@ typedef enum BackendStates {
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
     
-    if ((attachment != nil) &&
-        [attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue])
-    {
-        [attachment upload];
+    if (attachment.state == kAttachmentWantsTransfer) {
+         [attachment upload];
     }
+    
     [self.delegate saveDatabase];
     [SoundEffectPlayer messageSent];
     return message;
@@ -373,11 +372,8 @@ typedef enum BackendStates {
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
     
-    if (attachment) {
-        if ([attachment.contentSize longLongValue] < [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue])
-        {
-            [self scheduleNewDownloadFor:attachment];
-        }
+    if (attachment.state == kAttachmentWantsTransfer) {
+        [self scheduleNewDownloadFor:attachment];
     }
     [self.delegate saveDatabase];
     if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
@@ -878,13 +874,10 @@ typedef enum BackendStates {
     }
     NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
-        if ((attachment.message != nil) && // attachment attached to sent message
-            ([attachment.contentSize longLongValue] <
-            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue] ||
-            [attachment.transferSize longLongValue] > 0))
+        AttachmentState attachmentState = attachment.state;
+        if (attachmentState == kAttachmentWantsTransfer ||
+            attachmentState == kAttachmentIncomplete)
         {
-            // if (attachment.transferSize == nil) attachment.transferSize = @(0);
-            NSLog(@"would upload attachment %@", [attachment description]);
             [attachment upload];
         }
     }
@@ -906,9 +899,9 @@ typedef enum BackendStates {
     }
     NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
-        if ([attachment.contentSize longLongValue] <
-            [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue] ||
-            [attachment.transferSize longLongValue] > 0)
+        AttachmentState attachmentState = attachment.state;
+        if (attachmentState == kAttachmentWantsTransfer ||
+            attachmentState == kAttachmentIncomplete)
         {
             [attachment download];
         }
@@ -949,20 +942,20 @@ typedef enum BackendStates {
     return retryTime;
 }
 
--(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withRetryLimit:(long long)maxRetries withSelector:(SEL)theTransferSelector withErrorKey: (NSString*) errorKey {
+-(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withSelector:(SEL)theTransferSelector withErrorKey: (NSString*) errorKey {
     if (theAttachment.transferRetryTimer != nil) {
         // NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
         [theAttachment.transferRetryTimer invalidate];
         theAttachment.transferRetryTimer = nil;
     }
-    if (theAttachment.transferFailures < maxRetries) {
+    if (theAttachment.state == kAttachmentIncomplete || theAttachment.state == kAttachmentWantsTransfer) {
         // NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
                                                                           userInfo:nil
                                                                            repeats:NO];
-    } else {
+    } else  if (theAttachment.state == kAttachmentTransfersExhausted) {
         NSString * titleKey = [NSString stringWithFormat: @"%@_title", errorKey];
         NSString * messageKey = [NSString stringWithFormat: @"%@_message", errorKey];
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(titleKey, nil)
@@ -978,19 +971,15 @@ typedef enum BackendStates {
 
 
 -(void) scheduleNewDownloadFor:(Attachment *)theAttachment {
-    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries] longLongValue];
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
-                  withRetryLimit:maxRetries
                     withSelector:@selector(downloadOnTimer:)
                     withErrorKey:@"attachment_download_failed"];
 }
 
 -(void) scheduleNewUploadFor:(Attachment *)theAttachment {
-    long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentUploadRetries] longLongValue];
     [self scheduleNewTransferFor:theAttachment
                           inSecs:[self transferRetryTimeFor:theAttachment]
-                  withRetryLimit:maxRetries
                     withSelector:@selector(uploadOnTimer:)
                     withErrorKey:@"attachment_upload_failed"];
 }
