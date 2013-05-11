@@ -1126,24 +1126,13 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     cell.avatar.image = avatar;
 
-//    BOOL orientation_mismatch = UIInterfaceOrientationIsPortrait(cell.cellOrientation) !=
-//        UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
-//    
-//    if (orientation_mismatch) {
-//        NSLog(@"orientation mismatch: cell=%x",(int)cell);
-//        [cell setNeedsLayout];
-//        [cell layoutIfNeeded];
-//    }
-
-    cell.cellOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    // cell.cellOrientation = [UIApplication sharedApplication].statusBarOrientation;
     
-    cell.bubble.frame = [cell.bubble bubbleFrameForCellFrame:cell.frame];
+    // cell.bubble.frame = [cell.bubble bubbleFrameForCellFrame:cell.frame];
+    cell.bubble.frame = [cell.bubble bubbleFrameForMessage:message inCellWithWidth:cell.frame.size.width];
     [cell.bubble setNeedsLayout];
     [cell.bubble layoutIfNeeded];
     
-    //[cell.message setNeedsLayout];
-    //[cell.message layoutIfNeeded];
-
     NSLog(@"configureCell BubbleView %x attachment %x time=%@",(int)(__bridge void*)cell.bubble, (int)(__bridge void*)message.attachment, message.timeAccepted);
 
     if (message.attachment &&
@@ -1469,8 +1458,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     // trigger relayout on orientation change. However, there has to be a better way to do this...
     
-    NSLog(@"didRotateFromInterfaceOrientation:%d, reloading data",fromInterfaceOrientation);
-    [self.tableView reloadData]; // does not make any difference - or does it?
+    NSLog(@"didRotateFromInterfaceOrientation:%d, (not) reloading data",fromInterfaceOrientation);
+    // [self.tableView reloadData]; // does not make any difference - or does it?
         
     //NSLog(@"didRotateFromInterfaceOrientation:%d, reloading visible cells",fromInterfaceOrientation);
     //[self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationNone];

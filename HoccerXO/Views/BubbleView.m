@@ -15,6 +15,7 @@
 #import "HXOMessage.h"
 #import "AttachmentViewFactory.h"
 #import "AttachmentView.h"
+#import "ChatTableCells.h"
 
 static const double kLeftBubbleCapLeft  = 11.0;
 static const double kRightBubbleCapLeft = 4.0;
@@ -63,6 +64,7 @@ static const double kAttachmentPadding = 10;
     self.background = [[UIImageView alloc] initWithImage: bubble];
 	//self.background.frame = self.frame;
     self.background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.background.layer.anchorPoint = CGPointMake(0.5, 0.5);
 	[self insertSubview: self.background atIndex: 0];
 
     CGRect of = self.message.frame;
@@ -100,7 +102,6 @@ static const double kAttachmentPadding = 10;
     CGFloat bubbleWidth = theCellWidth - (initialLeftPadding + initialRightPadding);
     return bubbleWidth;
 }
-
 
 - (CGFloat) messageWidthForBubbleWidth:(CGFloat)bubbleWidth {
     CGFloat initialLeftMsgPadding = self.initialMessageFrame.origin.x - self.initialFrame.origin.x;
@@ -144,30 +145,49 @@ static const double kAttachmentPadding = 10;
         // height += kAttachmentPadding + self.attachmentView.frame.size.height;
         height += kAttachmentPadding + self.message.frame.size.width / self.attachmentView.aspect;
     }
-    NSLog(@"BubbleView %x sizeThatFits before %@ after %@",(int)self,NSStringFromCGSize(size), NSStringFromCGSize(CGSizeMake(self.frame.size.width, height)));
+    CGFloat width = self.frame.size.width;
+    if (width < self.initialFrame.size.width) {
+        width = self.initialFrame.size.width;
+    }
+    NSLog(@"BubbleView %x sizeThatFits before %@ after %@",(int)self,NSStringFromCGSize(size), NSStringFromCGSize(CGSizeMake(width, height)));
 
-    return CGSizeMake(self.frame.size.width, height);
+    return CGSizeMake(width, height);
 }
 
 - (void) layoutSubviews {
     // NSLog(@"BubbleView %x:layoutSubviews before self.bounds=%@",(__bridge void*)self,NSStringFromCGRect(self.bounds));
     NSLog(@"BubbleView %x:layoutSubviews before self.frame=%@",(int)self,NSStringFromCGRect(self.frame));
     NSLog(@"BubbleView %x:layoutSubviews before message.frame=%@",(int)self,NSStringFromCGRect(self.message.frame));
+    
+    // layout message body frame first
     CGRect messageFrame = self.message.frame;
     messageFrame.size.width = [self messageWidthForCellWidth: self.superview.frame.size.width];
     messageFrame.size.height = [self.message calculateSize: self.message.text].height;
     self.message.frame = messageFrame;
+    
     if (self.attachmentView != nil) {
         _attachmentView.frame = [self calcAttachmentViewFrameForAspect:_attachmentView.aspect];
     }
     [super layoutSubviews];
     [self sizeToFit];
     self.background.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
+    [self.background layoutIfNeeded];
     //NSLog(@"BubbleView %x:layoutSubviews after self.bounds=%@",(__bridge void*)self,NSStringFromCGRect(self.bounds));
     NSLog(@"BubbleView %x:layoutSubviews after self.frame=%@",(int)self,NSStringFromCGRect(self.frame));
     NSLog(@"BubbleView %x:layoutSubviews before message.frame=%@",(int)self,NSStringFromCGRect(self.message.frame));
 }
 
+// returns a bubble frame for a particular message that should be
+// used by a parent view controller to set this views frame
+// the cell must have the message
+- (CGRect) bubbleFrameForMessage: (HXOMessage*) message inCellWithWidth:(CGFloat)cellWidth {
+    CGPoint origin = CGPointMake(initialLeftPadding, initialTopPadding);
+    CGFloat height = [self heightForMessage:message];
+    CGFloat width =  [self bubbleWidthForCellWidth:cellWidth];
+    return CGRectMake(origin.x, origin.y, width, height);
+}
+
+// return height of the bubble for a particual message
 - (CGFloat) heightForMessage: (HXOMessage*) message {
     CGFloat height = self.padding.top + [self.message calculateSize: message.body].height + self.padding.bottom;
     if (message.attachment != nil) {

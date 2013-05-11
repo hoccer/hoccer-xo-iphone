@@ -37,7 +37,7 @@
 
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 
-@property UIInterfaceOrientation cellOrientation;
+// @property UIInterfaceOrientation cellOrientation;
 
 - (CGFloat) heightForMessage: (HXOMessage*) message;
 
