@@ -17,8 +17,12 @@
 @property (strong,nonatomic) UIButton * loadButton;
 @property (strong,nonatomic) UIButton * openButton;
 @property (strong,nonatomic) UIProgressView * progressView;
+@property (strong,nonatomic) UILabel * nameLabel;
+
 @property (weak,nonatomic) Attachment * attachment;
 @property (weak,nonatomic) MessageCell * cell;
+
+@property float aspect;
 
 - (void) configureViewForAttachment: (Attachment*) theAttachment inCell:(MessageCell*) cell;
 

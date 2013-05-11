@@ -16,6 +16,7 @@
 static const double kCellPadding = 10.0;
 
 - (CGFloat) heightForMessage: (HXOMessage*) message {
+    //[self layoutIfNeeded];
     return MAX(kCellPadding + [self.bubble heightForMessage: message] + kCellPadding,
                self.frame.size.height);
 }

@@ -876,7 +876,7 @@ typedef enum BackendStates {
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
-            attachmentState == kAttachmentIncomplete)
+            attachmentState == kAttachmentUploadIncomplete)
         {
             [attachment upload];
         }
@@ -901,7 +901,7 @@ typedef enum BackendStates {
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
-            attachmentState == kAttachmentIncomplete)
+            attachmentState == kAttachmentDownloadIncomplete)
         {
             [attachment download];
         }
@@ -948,8 +948,10 @@ typedef enum BackendStates {
         [theAttachment.transferRetryTimer invalidate];
         theAttachment.transferRetryTimer = nil;
     }
-    if (theAttachment.state == kAttachmentIncomplete || theAttachment.state == kAttachmentWantsTransfer) {
-        // NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+    if (theAttachment.state == kAttachmentUploadIncomplete ||
+        theAttachment.state == kAttachmentDownloadIncomplete ||
+        theAttachment.state == kAttachmentWantsTransfer) {
+        NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector

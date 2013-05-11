@@ -13,6 +13,8 @@
 #import "Attachment.h"
 #import "HXOMessage.h"
 #import "AttachmentView.h"
+#import "ChatTableCells.h"
+#import "BubbleView.h"
 
 @implementation AttachmentViewFactory
 
@@ -27,13 +29,32 @@
     {
         AttachmentView * attachmentView = nil;
         if (attachment.progressIndicatorDelegate != nil) {
+            NSLog(@"attachment has delegate");
             attachmentView = (AttachmentView*) (attachment.progressIndicatorDelegate);
+            
+            // when the delegate points to a view that is already in use by another attachment
+            // or when it belongs to a different cell we will not reuse it and remove the delegate
+            //if (![attachmentView.attachment isEqual: attachment] || ![attachmentView.cell isEqual: cell]) {
             if (attachmentView.attachment != attachment || attachmentView.cell != cell) {
-                attachment.progressIndicatorDelegate = nil;
+                NSLog(@"attachment mismatch: %d, cell mismatch: %d", ![attachmentView.attachment isEqual: attachment], ![attachmentView.cell isEqual: cell]);
+                
+                attachment.progressIndicatorDelegate = nil; // remove delege
                 return [AttachmentViewFactory viewForAttachment: attachment inCell: cell];
             }
+            NSLog(@"reusing view");
         } else {
-            attachmentView = [[AttachmentView alloc] init];
+            if (cell.bubble.attachmentView == nil) {
+                NSLog(@"fresh view");
+                attachmentView = [[AttachmentView alloc] init];
+            } else {
+                NSLog(@"reuse view 2");
+                // check if take away some other's attachments view a remove its delegate
+                if (cell.bubble.attachmentView.attachment != attachment) {
+                    NSLog(@"reuse view 2, removing other delegate");
+                    cell.bubble.attachmentView.attachment.progressIndicatorDelegate = nil;
+                }
+                attachmentView = cell.bubble.attachmentView;
+            }
             attachment.progressIndicatorDelegate = attachmentView;
         }
         [attachmentView configureViewForAttachment: attachment inCell: cell];

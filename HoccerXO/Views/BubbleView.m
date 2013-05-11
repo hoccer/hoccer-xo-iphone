@@ -68,7 +68,9 @@ static const double kAttachmentPadding = 10;
     if (_attachmentView != nil) {
         // XXX
         _attachmentView.contentMode = UIViewContentModeScaleAspectFit;
-        CGFloat aspect = ((UIImageView*)_attachmentView).frame.size.width / ((UIImageView*)_attachmentView).frame.size.height;
+        //CGFloat aspect = ((UIImageView*)_attachmentView).frame.size.width / ((UIImageView*)_attachmentView).frame.size.height;
+        // CGFloat aspect = _attachmentView.frame.size.width / _attachmentView.frame.size.height;
+        CGFloat aspect = view.aspect;
         _attachmentView.frame = [self calcAttachmentViewFrameForAspect:aspect];
         [self addSubview: view];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -86,6 +88,7 @@ static const double kAttachmentPadding = 10;
     CGFloat height = self.message.frame.size.height + self.padding.top + self.padding.bottom + 5;
     if (self.attachmentView != nil) {
         height += kAttachmentPadding + self.attachmentView.frame.size.height;
+        //height += kAttachmentPadding + self.message.frame.size.width / self.attachmentView.aspect;
     }
     return CGSizeMake(self.frame.size.width, height);
 }

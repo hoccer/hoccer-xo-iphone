@@ -84,7 +84,7 @@
     NSData * myImage = [NSData dataWithBase64EncodedString:value];
     if (myImage != nil && myImage.length > 0) {
         CFErrorRef myError;
-        if (!ABPersonSetImageData(person, CFBridgingRetain(myImage), &myError)) {
+        if (!ABPersonSetImageData(person, (__bridge CFDataRef)(myImage), &myError)) {
             NSLog(@"vcardParser: image error:%@", myError);
         }
     }

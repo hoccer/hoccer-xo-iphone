@@ -870,7 +870,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
 
     CGFloat myHeight = [self.messageCell heightForMessage: message];
-    // NSLog(@"tableView:heightForRowAtIndexPath: %@ returns %f", indexPath, myHeight);
+    NSLog(@"tableView:heightForRowAtIndexPath: %@ returns %f", indexPath, myHeight);
     return myHeight;
 }
 
@@ -1445,7 +1445,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     // trigger relayout on orientation change. However, there has to be a better way to do this...
-    [self.tableView reloadData];
+    //[self.tableView reloadData]; // does not make any difference
     // scroll to bottom most cell visible before changing the orientation
     if (self.lastVisibleCellBeforeRotation != nil) {
         [self.tableView scrollToRowAtIndexPath: self.lastVisibleCellBeforeRotation atScrollPosition:UITableViewScrollPositionBottom animated: NO];
