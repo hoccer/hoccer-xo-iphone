@@ -33,5 +33,6 @@ typedef enum BubbleStates {
 
 - (CGFloat) heightForMessage: (HXOMessage*) message;
 - (CGRect) calcAttachmentViewFrameForAspect:(float)aspectRatio;
+- (CGRect) bubbleFrameForCellFrame:(CGRect) theCellFrame;
 
 @end

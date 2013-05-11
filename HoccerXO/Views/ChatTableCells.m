@@ -20,6 +20,14 @@ static const double kCellPadding = 10.0;
     return MAX(kCellPadding + [self.bubble heightForMessage: message] + kCellPadding,
                self.frame.size.height);
 }
+//
+//- (void)prepareForReuse {
+//    NSLog(@"prepareForReuse MessageCell %x", (int)self);
+//    if (UIInterfaceOrientationIsPortrait(self.cellOrientation) != UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+//        NSLog(@"prepareForReuse MessageCell %x orientation mismatch", (int)self);
+//        self.bubble.attachmentView = nil;
+//    }
+//}
 
 - (void)pressedButton: (id)sender {
     // NSLog(@"MessageCell pressedButton %@", sender);
@@ -70,12 +78,21 @@ static const double kCellPadding = 10.0;
     }
 }
 
+- (void) awakeFromNib {
+    NSLog(@"%@ %x awakefromNib self.frame=%@ self.superview=%x",[self class],(int)self,NSStringFromCGRect(self.frame),(int)self.superview);
+    NSLog(@"%@ %x awakefromNib bubble=%x",[self class],(int)self,(int)self.bubble);
+    NSLog(@"%@ %x awakefromNib message=%x",[self class],(int)self,(int)self.message);
+    NSLog(@"%@ %x awakefromNib avatar=%x",[self class],(int)self,(int)self.avatar);
+
+}
+
 @end
 
 
 @implementation LeftMessageCell
 
 - (void) awakeFromNib {
+    [super awakeFromNib];
     self.bubble.pointingRight = NO;
 }
 
@@ -85,6 +102,7 @@ static const double kCellPadding = 10.0;
 @implementation RightMessageCell
 
 - (void) awakeFromNib {
+    [super awakeFromNib];
     self.bubble.pointingRight = YES;
 }
 

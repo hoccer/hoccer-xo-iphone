@@ -806,8 +806,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
     NSString * identifier = [message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier];
+    
     MessageCell *cell = [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath:indexPath];
-
     // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
     // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/
     // ... for now just use the private API
@@ -1126,6 +1126,26 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     cell.avatar.image = avatar;
 
+//    BOOL orientation_mismatch = UIInterfaceOrientationIsPortrait(cell.cellOrientation) !=
+//        UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation);
+//    
+//    if (orientation_mismatch) {
+//        NSLog(@"orientation mismatch: cell=%x",(int)cell);
+//        [cell setNeedsLayout];
+//        [cell layoutIfNeeded];
+//    }
+
+    cell.cellOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    cell.bubble.frame = [cell.bubble bubbleFrameForCellFrame:cell.frame];
+    [cell.bubble setNeedsLayout];
+    [cell.bubble layoutIfNeeded];
+    
+    //[cell.message setNeedsLayout];
+    //[cell.message layoutIfNeeded];
+
+    NSLog(@"configureCell BubbleView %x attachment %x time=%@",(int)(__bridge void*)cell.bubble, (int)(__bridge void*)message.attachment, message.timeAccepted);
+
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
          [message.attachment.mediaType isEqualToString:@"video"] ||
@@ -1133,6 +1153,9 @@ static const NSUInteger kMaxMessageBytes = 10000;
          [message.attachment.mediaType isEqualToString:@"geolocation"] ||
          [message.attachment.mediaType isEqualToString:@"audio"]))
     {
+        //[cell setNeedsLayout];
+        //[cell layoutIfNeeded];
+
         AttachmentView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment inCell: cell];
         cell.bubble.attachmentView = attachmentView;
     } else {
@@ -1445,7 +1468,13 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     // trigger relayout on orientation change. However, there has to be a better way to do this...
-    //[self.tableView reloadData]; // does not make any difference
+    
+    NSLog(@"didRotateFromInterfaceOrientation:%d, reloading data",fromInterfaceOrientation);
+    [self.tableView reloadData]; // does not make any difference - or does it?
+        
+    //NSLog(@"didRotateFromInterfaceOrientation:%d, reloading visible cells",fromInterfaceOrientation);
+    //[self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationNone];
+
     // scroll to bottom most cell visible before changing the orientation
     if (self.lastVisibleCellBeforeRotation != nil) {
         [self.tableView scrollToRowAtIndexPath: self.lastVisibleCellBeforeRotation atScrollPosition:UITableViewScrollPositionBottom animated: NO];

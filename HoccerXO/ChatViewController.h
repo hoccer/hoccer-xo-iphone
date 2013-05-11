@@ -40,6 +40,8 @@
 
 @property (strong, nonatomic) id connectionInfoObserver;
 
+// @property UIInterfaceOrientation interfaceOrientation;
+
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottomAnimated: (BOOL) animated;
 - (IBAction)sendPressed:(id)sender;

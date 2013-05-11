@@ -84,6 +84,7 @@
     self.frame = CGRectMake(0,0,AVframe.size.width, AVframe.size.height);
     CGRect frame = self.frame;
     
+    NSLog(@"configureViewForAttachment BubbleView %x attachment %x",(int)(__bridge void*)self.cell.bubble, (int)(__bridge void*)theAttachment);
     NSLog(@"configureViewForAttachment: frame = %@", NSStringFromCGRect(frame));
     NSLog(@"configureViewForAttachment: bounds = %@", NSStringFromCGRect(self.bounds));
     NSLog(@"configureViewForAttachment: AVframe = %@", NSStringFromCGRect(AVframe));
