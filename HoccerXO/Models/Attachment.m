@@ -72,6 +72,8 @@
 
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"])
 
+#define CONNECTION_DELEGATE_DEBUG NO
+
 
 +(NSString*) getStateName:(AttachmentState)state {
 
@@ -103,13 +105,15 @@ NSArray * TransferStateName = @[@"detached",
 // - once a transfer has been started, it is no longer held by transfer limits, but can be paused or aborted 
 
 - (AttachmentState) state {
-    AttachmentState myState = [self stateX];
-    NSLog(@"state=%@",[Attachment getStateName:myState]);
+    AttachmentState myState = [self _state];
+    if (CONNECTION_TRACE) {
+        NSLog(@"Attachment state=%@",[Attachment getStateName:myState]);
+    }
     return myState;
 }
 
 
-- (AttachmentState) stateX {
+- (AttachmentState) _state {
     if (self.message == nil) {
         return kAttachmentDetached;
     }
@@ -695,7 +699,7 @@ NSArray * TransferStateName = @[@"detached",
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate transferStarted];
             } else {
-                NSLog(@"Attachment:uploadData - no delegate for transferStarted");
+                if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:uploadData - no delegate for transferStarted");}
             }
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
@@ -795,7 +799,7 @@ NSArray * TransferStateName = @[@"detached",
     if (progressIndicatorDelegate) {
         [progressIndicatorDelegate transferStarted];
     } else {
-        NSLog(@"Attachment:download - no delegate for transferStarted");
+        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:download - no delegate for transferStarted");}
     }
 }
 
@@ -1005,7 +1009,7 @@ NSArray * TransferStateName = @[@"detached",
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate showTransferProgress: [self.transferSize floatValue] / [self.contentSize floatValue]];
             } else {
-                NSLog(@"Attachment:didReceiveData - no delegate for showTransferProgress");
+                if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:didReceiveData - no delegate for showTransferProgress");}
             }
         } else {
             NSLog(@"ERROR: Attachment transferConnection didReceiveData on outgoing (upload) connection");
@@ -1023,7 +1027,7 @@ NSArray * TransferStateName = @[@"detached",
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate showTransferProgress: (float)totalBytesWritten / (float) totalBytesExpectedToWrite];
         } else {
-            NSLog(@"didSendBodyData - no delegate for showTransferProgress");
+            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"didSendBodyData - no delegate for showTransferProgress");}
         }
     } else {
         NSLog(@"ERROR: Attachment transferConnection didSendBodyData without valid connection");
@@ -1039,7 +1043,7 @@ NSArray * TransferStateName = @[@"detached",
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
         } else {
-            NSLog(@"didFailWithError - no delegate for transferFinished");
+            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"didFailWithError - no delegate for transferFinished");}
         }
         if ([self.message.isOutgoing isEqualToNumber: @YES]) {
             [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
@@ -1097,7 +1101,7 @@ NSArray * TransferStateName = @[@"detached",
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
         } else {
-            NSLog(@"connectionDidFinishLoading - no delegate for transferFinished");
+            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"connectionDidFinishLoading - no delegate for transferFinished");}
         }
     } else {
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");

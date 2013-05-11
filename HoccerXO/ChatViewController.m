@@ -870,7 +870,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
 
     CGFloat myHeight = [self.messageCell heightForMessage: message];
-    NSLog(@"tableView:heightForRowAtIndexPath: %@ returns %f", indexPath, myHeight);
+    // NSLog(@"tableView:heightForRowAtIndexPath: %@ returns %f", indexPath, myHeight);
     return myHeight;
 }
 
@@ -1133,7 +1133,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [cell.bubble setNeedsLayout];
     [cell.bubble layoutIfNeeded];
     
-    NSLog(@"configureCell BubbleView %x attachment %x time=%@",(int)(__bridge void*)cell.bubble, (int)(__bridge void*)message.attachment, message.timeAccepted);
+    // NSLog(@"configureCell BubbleView %x attachment %x time=%@",(int)(__bridge void*)cell.bubble, (int)(__bridge void*)message.attachment, message.timeAccepted);
 
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
