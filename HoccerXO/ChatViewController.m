@@ -341,14 +341,17 @@ static const NSUInteger kMaxMessageBytes = 10000;
         return;
     }
     [self startPickedAttachmentProcessingForObject:attachmentInfo];
-    // NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
+    //NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
 
 
     // handle geolocation
-    if ([attachmentInfo isKindOfClass: [NSDictionary class]] && [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"]) {
+    if ([attachmentInfo isKindOfClass: [NSDictionary class]] &&
+        [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"] &&
+        [attachmentInfo[@"com.hoccer.xo.previewImage"] isKindOfClass: [UIImage class]])
+    {
         MKPlacemark * placemark = attachmentInfo[@"com.hoccer.xo.geolocation"];
         NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
 
