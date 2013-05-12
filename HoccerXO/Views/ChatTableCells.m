@@ -97,5 +97,41 @@ static const double kCellPadding = 10.0;
 
 
 @implementation ChatTableSectionHeaderCell
+
+#if 0
+// We dont't need it right now, but may come in handy for doing some section navigation
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    //[self addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)]]; // add non-working longpress gesture recognizer to avoid crash
+    self.userInteractionEnabled = NO;
+    self.label.userInteractionEnabled = NO;
+    self.backgroundImage.userInteractionEnabled = NO;
+}
+-(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
+     NSLog(@"ChatTableSectionHeaderCell:canPerformAction");
+     return NO;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    NSLog(@"ChatTableSectionHeaderCell:gestureRecognizerShouldBegin");
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    NSLog(@"ChatTableSectionHeaderCell:shouldReceiveTouch");
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    NSLog(@"ChatTableSectionHeaderCell:shouldRecognizeSimultaneouslyWithGestureRecognizer");
+    return NO;
+}
+
+-(void)handleLongPress:(UILongPressGestureRecognizer*)longPressRecognizer {
+    NSLog(@"ChatTableSectionHeaderCell:handleLongPress");
+}
+#endif
+
+
 @end
 

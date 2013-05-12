@@ -827,7 +827,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     cell.label.shadowColor  = [UIColor whiteColor];
     cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
     cell.backgroundImage.image = [UIImage imageNamed: @"date_cell_bg"];
-    return cell.contentView;
+   return cell; // must NOT return cell.contentView here!
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -851,6 +851,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@",indexPath);
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
@@ -894,15 +895,33 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@",indexPath);
+    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([[myCell class] isKindOfClass:[ChatTableSectionHeaderCell class]]) {
+        NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - NO",indexPath);
+        return NO;
+    }
+    NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - YES",indexPath);
     return YES;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    return (action == @selector(copy:));
+    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([[myCell class] isKindOfClass:[MessageCell class]]) {
+        NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender ? - %@",sel_getName(action),(action == @selector(copy:))?@"YES":@"NO");
+        return (action == @selector(copy:));
+    }
+    NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender - NO",sel_getName(action));
+    return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    return YES;
+    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender",sel_getName(action));
+    if ([[myCell class] isKindOfClass:[MessageCell class]]) {
+        return YES;
+    }
+    return NO;
 }
 
 
@@ -1095,7 +1114,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     }
     [HXOBackend broadcastConnectionInfo];
 
-    [self scrollToBottomAnimated: NO];
+    // [self scrollToBottomAnimated: NO];
 }
 
 
