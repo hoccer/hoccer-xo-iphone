@@ -184,10 +184,7 @@
         [self.loadButton addTarget:attachment action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
         if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: use loadbutton, hide openbutton");}
         
-    } else {
-        self.loadButton.hidden = YES;
-        self.openButton.hidden = NO;
-        
+    } else {        
         // set proper button image
         if ( [attachment.mediaType isEqualToString:@"video"]) {
             [self.openButton setImage: [UIImage imageNamed:@"button-video"] forState:UIControlStateNormal];
@@ -196,9 +193,15 @@
         } else {
             [self.openButton setImage:nil forState:UIControlStateNormal];
         }
+        self.loadButton.hidden = YES;
+        self.openButton.hidden = NO;
         
-        [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
-        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: use openbutton, hide loadbutton");}
+        if (attachmentState == kAttachmentTransfered || isOutgoing) {
+            [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: disabled openbutton, hide loadbutton");}
+        } else {
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: enabled openbutton, hide loadbutton");}            
+        }
     }
     
     // now set imageView Image if we can
