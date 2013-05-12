@@ -55,7 +55,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
-@property (strong, nonatomic) NSIndexPath * lastVisibleCellBeforeRotation;
+// @property (strong, nonatomic) NSIndexPath * rememberedVisibleCell;
 
 - (void)configureCell:(UITableViewCell *)cell forMessage:(HXOMessage *) message;
 - (void)configureView;
@@ -995,7 +995,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     self.firstNewMessage = nil;
     [self.tableView reloadData];
-    [self scrollToBottomAnimated: NO];
+    [self scrollToRememberedCellOrToBottomIfNone];
     [self configureView];
     [self insertForwardedMessage];
 }
@@ -1097,7 +1097,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
     if (self.firstNewMessage != nil) {
         // NSLog(@"controllerDidChangeContent scroll to indexPath: %@", self.firstNewMessage);
         // [self.tableView scrollToRowAtIndexPath: self.firstNewMessage atScrollPosition: UITableViewScrollPositionBottom animated: YES];
-        [self performSelectorOnMainThread:@selector(scrollToBottomAnimatedWithObject:) withObject:@(YES) waitUntilDone:NO];
+        // [self performSelectorOnMainThread:@selector(scrollToBottomAnimatedWithObject:) withObject:@(YES) waitUntilDone:NO];
+        [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(scrollToBottomAnimated) userInfo:nil repeats:NO];
         self.firstNewMessage = nil;
     }
 }
@@ -1115,12 +1116,14 @@ static const NSUInteger kMaxMessageBytes = 10000;
     }
     [HXOBackend broadcastConnectionInfo];
 
-    // [self scrollToBottomAnimated: NO];
+    [self scrollToRememberedCellOrToBottomIfNone];
 }
 
 
 - (void) viewWillDisappear:(BOOL)animated {
     // [self trashCurrentAttachment];
+
+    [self rememberLastVisibleCell];
 
     if (self.fetchedResultsController != nil) {
         self.fetchedResultsController.delegate = nil;
@@ -1470,21 +1473,36 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [self scrollToBottomAnimated: theObject != nil];
 }
 
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void) scrollToBottomAnimated {
+    [self scrollToBottomAnimated: YES];
+}
+
+- (void) rememberLastVisibleCell {
     // save index path of bottom most visible cell
     NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
-    self.lastVisibleCellBeforeRotation = [indexPaths lastObject];
+    self.partner.rememberedLastVisibleChatCell = [indexPaths lastObject];
 }
+
+- (void) scrollToCell:(NSIndexPath*)theCell {
+    // save index path of bottom most visible cell
+    [self.tableView scrollToRowAtIndexPath: self.partner.rememberedLastVisibleChatCell atScrollPosition:UITableViewScrollPositionBottom animated: NO];
+}
+
+- (void) scrollToRememberedCellOrToBottomIfNone {
+    if (self.partner.rememberedLastVisibleChatCell != nil) {
+        [self scrollToCell:self.partner.rememberedLastVisibleChatCell];
+    } else {
+        [self scrollToBottomAnimated];
+    }
+}
+
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self rememberLastVisibleCell];
+  }
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    // trigger relayout on orientation change. However, there has to be a better way to do this...
-    
     // NSLog(@"didRotateFromInterfaceOrientation:%d, (not) reloading data",fromInterfaceOrientation);
 
-    // scroll to bottom most cell visible before changing the orientation
-    if (self.lastVisibleCellBeforeRotation != nil) {
-        [self.tableView scrollToRowAtIndexPath: self.lastVisibleCellBeforeRotation atScrollPosition:UITableViewScrollPositionBottom animated: NO];
-        self.lastVisibleCellBeforeRotation = nil;
-    }
+    [self scrollToRememberedCellOrToBottomIfNone];
 }
 
 - (void) dealloc {

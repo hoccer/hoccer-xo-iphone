@@ -44,6 +44,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic) NSNumber * relationshipLastChangedMillis;
 @property (nonatomic) NSNumber * presenceLastUpdatedMillis;
 
+@property (nonatomic, strong) NSIndexPath * rememberedLastVisibleChatCell;
+
 
 @property (nonatomic) NSString* publicKeyString; // b64-string
 

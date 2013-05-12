@@ -43,6 +43,8 @@
 @dynamic messages;
 @dynamic nickNameWithStatus;
 
+@synthesize rememberedLastVisibleChatCell;
+
 NSString * const kRelationStateNone    = @"none";
 NSString * const kRelationStateFriend  = @"friend";
 NSString * const kRelationStateBlocked = @"blocked";
