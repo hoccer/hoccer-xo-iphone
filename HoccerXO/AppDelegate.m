@@ -189,6 +189,8 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
 
 - (void)saveContext
 {
+    // NSLog(@"Saving database");
+    // NSDate * start = [[NSDate alloc] init];
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
@@ -199,17 +201,16 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
             abort();
         }
     }
+    // [self saveContext];
+    // double elapsed = -[start timeIntervalSinceNow];
+    // NSLog(@"Saving database took %f secs", elapsed);
 }
 
 - (void)saveDatabase
 {
     NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
     if ([savePolicy isEqualToString:kHXOSaveDatabasePolicyPerMessage]) {
-        // NSLog(@"Saving database");
-        // NSDate * start = [[NSDate alloc] init];
-        [self saveContext];
-        // double elapsed = -[start timeIntervalSinceNow];
-        // NSLog(@"Saving database took %f secs", elapsed);
+        [self performSelectorOnMainThread:@selector(saveContext) withObject:self waitUntilDone:NO];
     }
 }
 

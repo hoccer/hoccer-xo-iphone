@@ -70,8 +70,7 @@ static const double kCellPadding = 10.0;
 }
 
 - (void) awakeFromNib {
-    NSLog(@"%@ %x awakefromNib self.frame=%@ self.superview=%x bubble=%x message=%x avatar=%x",
-          [self class],(int)self,NSStringFromCGRect(self.frame),(int)self.superview,(int)self.bubble,(int)self.message,(int)self.avatar);
+    //NSLog(@"%@ %x awakefromNib self.frame=%@ self.superview=%x bubble=%x message=%x avatar=%x", [self class],(int)self,NSStringFromCGRect(self.frame),(int)self.superview,(int)self.bubble,(int)self.message,(int)self.avatar);
 }
 @end
 

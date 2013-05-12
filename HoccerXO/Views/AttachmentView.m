@@ -42,6 +42,8 @@
         // NSLog(@"showTransferProgress, really %f", theProgress);
         progressView.hidden = NO;
         [progressView setProgress: theProgress animated:YES];
+        self.nameLabel.text = [self getTransferedTitle];
+        self.nameLabel.hidden = NO;
     }
 }
 
@@ -158,11 +160,16 @@
         self.nameLabel = [[UILabel alloc] init];
         self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
         self.nameLabel.textColor = [UIColor blackColor];
-        self.nameLabel.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+        self.nameLabel.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.7];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.font = [UIFont italicSystemFontOfSize:10];
+        self.nameLabel.numberOfLines = 2;
         [self addSubview:self.nameLabel];
     }
+    CGRect myFrame = frame;
+    myFrame.size.height = 15;
+    myFrame.origin.y = 10; //frame.size.height - (2 * 30);
+    self.nameLabel.frame = myFrame;
     self.nameLabel.hidden = YES;
     
     if (attachmentState == kAttachmentTransferOnHold ||
@@ -202,10 +209,6 @@
     {
         if ([attachment.mediaType isEqualToString:@"audio"]) {
             self.nameLabel.text = theAttachment.humanReadableFileName;
-            CGRect myFrame = frame;
-            myFrame.size.height = frame.size.height * 0.1;
-            myFrame.origin.y = frame.size.height * 0.8;
-            self.nameLabel.frame = myFrame;
             self.nameLabel.hidden = NO;
         }
         if (self.attachment.previewImage == nil) {
@@ -266,18 +269,22 @@
 
 - (NSString *) getTransferedTitle {
     if (self.attachment.state == kAttachmentTransferScheduled) {
-        return [NSString localizedStringWithFormat:NSLocalizedString(@"Will Retry transfer %@",nil),[self.attachment.transferRetryTimer fireDate]];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"hh:mm:ss"];
+        // [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+        NSString *stringFromDate = [formatter stringFromDate:[self.attachment.transferRetryTimer fireDate]];
+        return [NSString localizedStringWithFormat:NSLocalizedString(@"Transfer starts %@",nil),stringFromDate];
     }
     if ([self.attachment.message.isOutgoing isEqualToNumber: @YES])  {
         // upload not yet started, present upload button
-        return [NSString localizedStringWithFormat:NSLocalizedString(@"Uploaded %1.3f of %1.3f MB",nil),
-                              [attachment.transferSize doubleValue]/1024/1024,
-                              [attachment.contentSize doubleValue]/1024/1024];
+        return [NSString localizedStringWithFormat:NSLocalizedString(@"Uploaded %1.03f of %1.03f MB",nil),
+                              [attachment.cipherTransferSize doubleValue]/1024/1024,
+                              [attachment.cipheredSize doubleValue]/1024/1024];
     } else {
         // download not yet started, present download button
-        return [NSString localizedStringWithFormat:NSLocalizedString(@"Downloaded %1.3f of %1.3f MB",nil),
-                              [attachment.transferSize doubleValue]/1024/1024,
-                              [attachment.contentSize doubleValue]/1024/1024];
+        return [NSString localizedStringWithFormat:NSLocalizedString(@"Downloaded %1.03f of %1.03f MB",nil),
+                              [attachment.cipherTransferSize doubleValue]/1024/1024,
+                              [attachment.cipheredSize doubleValue]/1024/1024];
     }
 }
 

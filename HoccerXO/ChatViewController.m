@@ -36,6 +36,7 @@
 #import "Vcard.h"
 #import "NSData+Base64.h"
 
+#define ACTION_MENU_DEBUG NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 
@@ -895,29 +896,29 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@",indexPath);
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@",indexPath);}
     UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
     if ([[myCell class] isKindOfClass:[ChatTableSectionHeaderCell class]]) {
-        NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - NO",indexPath);
+        if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - NO",indexPath);}
         return NO;
     }
-    NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - YES",indexPath);
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - YES",indexPath);}
     return YES;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
     UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
     if ([[myCell class] isKindOfClass:[MessageCell class]]) {
-        NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender ? - %@",sel_getName(action),(action == @selector(copy:))?@"YES":@"NO");
+        if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender ? - %@",sel_getName(action),(action == @selector(copy:))?@"YES":@"NO");}
         return (action == @selector(copy:));
     }
-    NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender - NO",sel_getName(action));
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender - NO",sel_getName(action));}
     return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
     UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
-    NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender",sel_getName(action));
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender",sel_getName(action));}
     if ([[myCell class] isKindOfClass:[MessageCell class]]) {
         return YES;
     }
@@ -1410,8 +1411,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
                     {
                        // Create an MKMapItem to pass to the Maps app
                         NSArray * coordinates = geoLocation[@"location"][@"coordinates"];
-                        NSLog(@"geoLocation=%@",geoLocation);
-                        NSLog(@"coordinates=%@",coordinates);
+                        //NSLog(@"geoLocation=%@",geoLocation);
+                        // NSLog(@"coordinates=%@",coordinates);
                         CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([coordinates[1] doubleValue], [coordinates[0] doubleValue]);
                         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate
                                                                        addressDictionary:nil];
@@ -1477,11 +1478,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     // trigger relayout on orientation change. However, there has to be a better way to do this...
     
-    NSLog(@"didRotateFromInterfaceOrientation:%d, (not) reloading data",fromInterfaceOrientation);
-    // [self.tableView reloadData]; // does not make any difference - or does it?
-        
-    //NSLog(@"didRotateFromInterfaceOrientation:%d, reloading visible cells",fromInterfaceOrientation);
-    //[self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationNone];
+    // NSLog(@"didRotateFromInterfaceOrientation:%d, (not) reloading data",fromInterfaceOrientation);
 
     // scroll to bottom most cell visible before changing the orientation
     if (self.lastVisibleCellBeforeRotation != nil) {

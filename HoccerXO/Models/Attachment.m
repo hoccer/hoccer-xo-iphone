@@ -718,6 +718,10 @@ NSArray * TransferStateName = @[@"detached",
         // NSLog(@"upload of attachment still running");
         return;
     }
+    if (self.state == kAttachmentTransfered) {
+        NSLog(@"#WARNING: Attachment uploadStream: already transfered, remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
+        return;
+    }
     [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
         if (myError == nil) {
             // NSLog(@"Attachment:upload starting uploadStream");
@@ -766,6 +770,10 @@ NSArray * TransferStateName = @[@"detached",
         // NSLog(@"download of attachment still running");
         return;
     }
+    if (self.state == kAttachmentTransfered) {
+        NSLog(@"#WARNING: Attachment download: already transfered, remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
+        return;
+    }
     
     if (self.ownedURL == nil) {
         // create new destination file for download
@@ -795,6 +803,19 @@ NSArray * TransferStateName = @[@"detached",
                                         payloadStream:nil
                                         headers:[self downloadHttpHeaders]
                                 ];
+
+    // encryptionEngine just needed to determine the cipherTransferSize
+    self.encryptionEngine = [[CryptoEngine alloc]
+                             initWithOperation:kCCEncrypt
+                             algorithm:kCCAlgorithmAES128
+                             options:kCCOptionPKCS7Padding
+                             key:messageKey
+                             IV:nil
+                             error:&myError];
+
+    self.cipherTransferSize = [NSNumber numberWithLongLong:0];
+    self.cipheredSize = [NSNumber numberWithLongLong:[self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].longLongValue]];
+
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
     if (progressIndicatorDelegate) {
         [progressIndicatorDelegate transferStarted];
@@ -1006,6 +1027,7 @@ NSArray * TransferStateName = @[@"detached",
             }
             [self appendToFile:self.ownedURL thisData:plainTextData];
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
+            self.cipherTransferSize = [NSNumber numberWithLong:[self.cipherTransferSize longLongValue]+ data.length];
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate showTransferProgress: [self.transferSize floatValue] / [self.contentSize floatValue]];
             } else {
@@ -1081,7 +1103,7 @@ NSArray * TransferStateName = @[@"detached",
                 // NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize];
-                // NSLog(@"%@", myDescription);
+                NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
             }
@@ -1093,7 +1115,7 @@ NSArray * TransferStateName = @[@"detached",
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading size mismatch, cipheredSize=%@, cipherTransferSize=%@", self.cipheredSize, self.cipherTransferSize];
-                // NSLog(@"%@", myDescription);
+                NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 666 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
             }
