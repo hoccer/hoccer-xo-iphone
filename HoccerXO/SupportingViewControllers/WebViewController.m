@@ -50,7 +50,10 @@
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
     
-    if (![[self.webView.request.URL absoluteString] isEqualToString:self.homeUrl] ) {
+    NSString * myLocalizedUrlString = NSLocalizedString(self.homeUrl,"@webview");
+    //NSLog(@"webview url: %@, localized url: %@", self.homeUrl, myLocalizedUrlString);
+    
+    if (![[self.webView.request.URL absoluteString] isEqualToString:myLocalizedUrlString] ) {
         // in case the user has navigated somewhere else
         [self startFirstLoading];
     }
@@ -66,7 +69,10 @@
     // we will only register the caching protocol for the first page
     [NSURLProtocol registerClass:[RNCachingURLProtocol class]];
     
-    NSURL *url = [NSURL URLWithString:self.homeUrl];
+    NSString * myLocalizedUrlString = NSLocalizedString(self.homeUrl,"@webview");
+    //NSLog(@"webview 2 url: '%@', localized url: '%@'", self.homeUrl, myLocalizedUrlString);
+    NSURL *url = [NSURL URLWithString:myLocalizedUrlString];
+    //NSLog(@"webview 2 requestURL=%@", url);
     NSURLRequest *requestURL = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:requestURL];
 }
@@ -81,7 +87,7 @@
 #pragma mark - Optional UIWebViewDelegate delegate methods
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    // NSLog(@"webview shouldStartLoadWithRequest %@, _requestsRunning = %d", request.URL, _requestsRunning);
+    NSLog(@"webview shouldStartLoadWithRequest %@, _requestsRunning = %d", request.URL, _requestsRunning);
     return YES;
 }
 
