@@ -908,6 +908,7 @@ typedef enum BackendStates {
     }
 }
 
+
 - (void) downloadFinished:(Attachment *)theAttachment {
     // NSLog(@"downloadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
@@ -921,18 +922,18 @@ typedef enum BackendStates {
 }
 
 - (void) downloadFailed:(Attachment *)theAttachment {
-    // NSLog(@"downloadFinished of %@", theAttachment);
+    // NSLog(@"downloadFailed of %@", theAttachment);
+    theAttachment.transferFailures = theAttachment.transferFailures + 1;
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
-    theAttachment.transferFailures = theAttachment.transferFailures + 1;
     [self scheduleNewDownloadFor:theAttachment];
 }
 
 - (void) uploadFailed:(Attachment *)theAttachment {
     // NSLog(@"uploadFinished of %@", theAttachment);
+    theAttachment.transferFailures = theAttachment.transferFailures + 1;
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
-    theAttachment.transferFailures = theAttachment.transferFailures + 1;
     [self scheduleNewUploadFor:theAttachment];
 }
 

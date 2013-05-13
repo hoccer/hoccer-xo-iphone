@@ -72,6 +72,8 @@
 
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"])
 
+#define CONNECTION_DELEGATE_DEBUG NO
+
 
 +(NSString*) getStateName:(AttachmentState)state {
 
@@ -103,13 +105,15 @@ NSArray * TransferStateName = @[@"detached",
 // - once a transfer has been started, it is no longer held by transfer limits, but can be paused or aborted 
 
 - (AttachmentState) state {
-    AttachmentState myState = [self stateX];
-    NSLog(@"state=%@",[Attachment getStateName:myState]);
+    AttachmentState myState = [self _state];
+    if (CONNECTION_TRACE) {
+        NSLog(@"Attachment state=%@",[Attachment getStateName:myState]);
+    }
     return myState;
 }
 
 
-- (AttachmentState) stateX {
+- (AttachmentState) _state {
     if (self.message == nil) {
         return kAttachmentDetached;
     }
@@ -434,22 +438,37 @@ NSArray * TransferStateName = @[@"detached",
 - (void) loadAttachmentDict:(DictLoaderBlock) block {
     if (![self.mediaType isEqualToString:@"geolocation"]) {
         block(nil, nil);
-        return;        
+        return;
     }
     if (self.localURL == nil) {
         block(nil, nil);
         return;
     }
-    NSData * jsonData = [NSData dataWithContentsOfURL: self.contentURL];
-    NSError * error;
-    NSDictionary * geoLocation = [NSJSONSerialization JSONObjectWithData: jsonData options: 0 error: & error];
-    if (geoLocation == nil) {
-        block(nil, error);
-        return;
+    NSError * error = nil;
+    NSDictionary * geoLocation = nil;
+    NSData * jsonData = nil;
+    NSURL * url = nil;
+    @try {
+        url = self.contentURL;
+        jsonData = [NSData dataWithContentsOfURL: url];
+        /*
+        NSLog(@"@jsondata 1 len=%d", jsonData.length);
+        NSString * filePath = [url path];
+        jsonData = [NSData dataWithContentsOfFile:filePath];
+        NSLog(@"@jsondata 2 len=%d path=%@", jsonData.length, filePath);
+        NSString * myPath = [[NSURL URLWithString: self.localURL] path];
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:myPath];
+        NSLog(@"@jsondata 3 len=%d path=%@", data.length, myPath);
+        
+        NSDictionary * myDict = [[NSFileManager defaultManager]attributesOfItemAtPath:myPath error:&error];
+        NSLog(@"attributes=%@, error=%@", myDict, error);
+        */
+        geoLocation = [NSJSONSerialization JSONObjectWithData: jsonData options: 0 error: & error];
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR parsing geolocation json, jsonData = %@, ex=%@, contentURL=%@", jsonData, ex, url);
     }
-    block(geoLocation, nil);
+    block(geoLocation, error);
 }
-
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
     // NSLog(@"assetSizer");
@@ -695,7 +714,7 @@ NSArray * TransferStateName = @[@"detached",
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate transferStarted];
             } else {
-                NSLog(@"Attachment:uploadData - no delegate for transferStarted");
+                if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:uploadData - no delegate for transferStarted");}
             }
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
@@ -712,6 +731,10 @@ NSArray * TransferStateName = @[@"detached",
     if (self.transferConnection != nil) {
         // do something about it
         // NSLog(@"upload of attachment still running");
+        return;
+    }
+    if (self.state == kAttachmentTransfered) {
+        NSLog(@"#WARNING: Attachment uploadStream: already transfered, remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
         return;
     }
     [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
@@ -762,6 +785,10 @@ NSArray * TransferStateName = @[@"detached",
         // NSLog(@"download of attachment still running");
         return;
     }
+    if (self.state == kAttachmentTransfered) {
+        NSLog(@"#WARNING: Attachment download: already transfered, remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
+        return;
+    }
     
     if (self.ownedURL == nil) {
         // create new destination file for download
@@ -791,11 +818,24 @@ NSArray * TransferStateName = @[@"detached",
                                         payloadStream:nil
                                         headers:[self downloadHttpHeaders]
                                 ];
+
+    // encryptionEngine just needed to determine the cipherTransferSize
+    self.encryptionEngine = [[CryptoEngine alloc]
+                             initWithOperation:kCCEncrypt
+                             algorithm:kCCAlgorithmAES128
+                             options:kCCOptionPKCS7Padding
+                             key:messageKey
+                             IV:nil
+                             error:&myError];
+
+    self.cipherTransferSize = [NSNumber numberWithLongLong:0];
+    self.cipheredSize = [NSNumber numberWithLongLong:[self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].longLongValue]];
+
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
     if (progressIndicatorDelegate) {
         [progressIndicatorDelegate transferStarted];
     } else {
-        NSLog(@"Attachment:download - no delegate for transferStarted");
+        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:download - no delegate for transferStarted");}
     }
 }
 
@@ -901,6 +941,8 @@ NSArray * TransferStateName = @[@"detached",
     return nil;
 }
 
+
+// WARNING: this version depends on remoteURLs to be unique, so is not suitable for remote URLs than are no UUIDs 
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory {
     NSString * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
     NSString * myRemoteFileName = myRemoteURL.lastPathComponent;
@@ -908,6 +950,46 @@ NSArray * TransferStateName = @[@"detached",
     NSString * myNewFilename = [[[myNewFile absoluteString] stringByAppendingString:@"." ] stringByAppendingString: [Attachment fileExtensionFromMimeType: self.mimeType]];
     return myNewFilename;
 }
+
+
+// fix url when app directory has changed - TODO: only store lastpathcomponent in localRL
+- (NSString*) localURL {
+    NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"localURL"];
+    NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
+#if 0
+    if (![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
+        NSLog(@"translated localURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
+    } else {
+        NSLog(@"translated localURLs match");        
+    }
+#endif
+    return myTranslatedURL;
+ }
+
+// fix url when app directory has changed - TODO: only store lastpathcomponent in ownedURL
+- (NSString*) ownedURL {
+    NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"ownedURL"];
+    NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
+#if 0
+    if (![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
+        NSLog(@"translated ownedURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
+    } else {
+        NSLog(@"translated ownedURL match");
+    }
+#endif
+    return myTranslatedURL;
+}
+
++ (NSString*) translateFileURLToDocumentDirectory:(NSString*)someFileURL {
+    if (someFileURL == nil) {
+        return nil;
+    }
+    NSURL *appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSString * myFileName = [someFileURL lastPathComponent];
+    NSURL * myLocalURL = [NSURL URLWithString:myFileName relativeToURL:appDocDir];
+    return [myLocalURL absoluteString];
+}
+
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType {
     if (theMimeType == nil) return nil;
@@ -1002,10 +1084,11 @@ NSArray * TransferStateName = @[@"detached",
             }
             [self appendToFile:self.ownedURL thisData:plainTextData];
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
+            self.cipherTransferSize = [NSNumber numberWithLong:[self.cipherTransferSize longLongValue]+ data.length];
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate showTransferProgress: [self.transferSize floatValue] / [self.contentSize floatValue]];
             } else {
-                NSLog(@"Attachment:didReceiveData - no delegate for showTransferProgress");
+                if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:didReceiveData - no delegate for showTransferProgress");}
             }
         } else {
             NSLog(@"ERROR: Attachment transferConnection didReceiveData on outgoing (upload) connection");
@@ -1023,7 +1106,7 @@ NSArray * TransferStateName = @[@"detached",
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate showTransferProgress: (float)totalBytesWritten / (float) totalBytesExpectedToWrite];
         } else {
-            NSLog(@"didSendBodyData - no delegate for showTransferProgress");
+            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"didSendBodyData - no delegate for showTransferProgress");}
         }
     } else {
         NSLog(@"ERROR: Attachment transferConnection didSendBodyData without valid connection");
@@ -1039,7 +1122,7 @@ NSArray * TransferStateName = @[@"detached",
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
         } else {
-            NSLog(@"didFailWithError - no delegate for transferFinished");
+            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"didFailWithError - no delegate for transferFinished");}
         }
         if ([self.message.isOutgoing isEqualToNumber: @YES]) {
             [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
@@ -1077,7 +1160,7 @@ NSArray * TransferStateName = @[@"detached",
                 // NSLog(@"Attachment transferConnection connectionDidFinishLoading, notified backend, attachment=%@", self);
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize];
-                // NSLog(@"%@", myDescription);
+                NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
             }
@@ -1089,7 +1172,7 @@ NSArray * TransferStateName = @[@"detached",
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading size mismatch, cipheredSize=%@, cipherTransferSize=%@", self.cipheredSize, self.cipherTransferSize];
-                // NSLog(@"%@", myDescription);
+                NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 666 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
             }
@@ -1097,7 +1180,7 @@ NSArray * TransferStateName = @[@"detached",
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
         } else {
-            NSLog(@"connectionDidFinishLoading - no delegate for transferFinished");
+            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"connectionDidFinishLoading - no delegate for transferFinished");}
         }
     } else {
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
@@ -1146,6 +1229,7 @@ NSArray * TransferStateName = @[@"detached",
     [self setPrimitiveValue: size forKey: @"cipheredSize"];
     [self didChangeValueForKey:@"cipheredSize"];
 }
+
 
 #pragma mark - Attachment JSON Wrapping
 

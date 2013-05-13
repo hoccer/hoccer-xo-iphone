@@ -24,6 +24,9 @@
 @synthesize attachment;
 @synthesize cell;
 
+#define ATTACHMENT_LAYOUT_DEBUG NO
+#define ATTACHMENT_STATE_DEBUG NO
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -39,11 +42,13 @@
         // NSLog(@"showTransferProgress, really %f", theProgress);
         progressView.hidden = NO;
         [progressView setProgress: theProgress animated:YES];
+        self.nameLabel.text = [self getTransferedTitle];
+        self.nameLabel.hidden = NO;
     }
 }
 
 - (void) transferStarted {
-    NSLog(@"transferStarted, cell = %@, attachment = %@", self.attachment, self.cell);
+    if (ATTACHMENT_STATE_DEBUG) {NSLog(@"transferStarted, cell = %@, attachment = %@", self.attachment, self.cell);}
     if (self.attachment != nil && self.cell != nil) {
         progressView.hidden = NO;
         [self.cell setNeedsLayout];
@@ -51,7 +56,7 @@
 }
 
 - (void) transferFinished {
-    NSLog(@"transferFinished, cell = %@, attachment = %@", self.attachment, self.cell);
+    if (ATTACHMENT_STATE_DEBUG) {NSLog(@"transferFinished, cell = %@, attachment = %@", self.attachment, self.cell);}
     if (self.attachment != nil && self.cell != nil) {
         // self.attachment.progressIndicatorDelegate = nil;
         progressView.hidden = YES;
@@ -61,7 +66,7 @@
 
 // TODO: call when transfer is scheduled
 - (void) transferScheduled {
-    NSLog(@"transferScheduled, cell = %@, attachment = %@", self.attachment, self.cell);
+    if (ATTACHMENT_STATE_DEBUG) {NSLog(@"transferScheduled, cell = %@, attachment = %@", self.attachment, self.cell);}
     if (self.attachment != nil && self.cell != nil) {
         [self.cell setNeedsLayout];
     }
@@ -78,20 +83,21 @@
     self.aspect = theAttachment.aspectRatio;
     self.userInteractionEnabled = YES;
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    // self.clipsToBounds = YES;
     
     CGRect AVframe = [theCell.bubble calcAttachmentViewFrameForAspect:theAttachment.aspectRatio];
     self.frame = CGRectMake(0,0,AVframe.size.width, AVframe.size.height);
     CGRect frame = self.frame;
     
-    NSLog(@"configureViewForAttachment BubbleView %x attachment %x",(int)(__bridge void*)self.cell.bubble, (int)(__bridge void*)theAttachment);
-    NSLog(@"configureViewForAttachment: frame = %@", NSStringFromCGRect(frame));
-    NSLog(@"configureViewForAttachment: bounds = %@", NSStringFromCGRect(self.bounds));
-    NSLog(@"configureViewForAttachment: AVframe = %@", NSStringFromCGRect(AVframe));
-    NSLog(@"configureViewForAttachment: superview class= %@", [self.superview class]);
-    NSLog(@"configureViewForAttachment: superview.frame = %@", NSStringFromCGRect(self.superview.frame));
-    NSLog(@"configureViewForAttachment: superview.bounds = %@", NSStringFromCGRect(self.superview.bounds));
-    NSLog(@"configureViewForAttachment: cell.frame = %@", NSStringFromCGRect(theCell.frame));
+    if (ATTACHMENT_LAYOUT_DEBUG) {
+        NSLog(@"configureViewForAttachment BubbleView %x attachment %x",(int)(__bridge void*)self.cell.bubble, (int)(__bridge void*)theAttachment);
+        NSLog(@"configureViewForAttachment: frame = %@", NSStringFromCGRect(frame));
+        NSLog(@"configureViewForAttachment: bounds = %@", NSStringFromCGRect(self.bounds));
+        NSLog(@"configureViewForAttachment: AVframe = %@", NSStringFromCGRect(AVframe));
+        NSLog(@"configureViewForAttachment: superview class= %@", [self.superview class]);
+        NSLog(@"configureViewForAttachment: superview.frame = %@", NSStringFromCGRect(self.superview.frame));
+        NSLog(@"configureViewForAttachment: superview.bounds = %@", NSStringFromCGRect(self.superview.bounds));
+        NSLog(@"configureViewForAttachment: cell.frame = %@", NSStringFromCGRect(theCell.frame));
+    }
     
     AttachmentState attachmentState = theAttachment.state;
     BOOL isOutgoing = [self.attachment.message.isOutgoing isEqualToNumber: @YES];
@@ -104,11 +110,11 @@
         
         [self addSubview:imageView];
         self.frame = frame;
-        NSLog(@"configureViewForAttachment: new imageview");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: new imageview");}
     } else {
         self.imageView.frame = frame;
         self.imageView.image = nil;
-        NSLog(@"configureViewForAttachment: reuse imageview");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: reuse imageview");}
     }
         
     UIColor * buttonColor;
@@ -128,14 +134,14 @@
         self.loadButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.loadButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.loadButton];
-        NSLog(@"configureViewForAttachment: new loadbutton");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: new loadbutton");}
     } else {
         // renew gloss for possibly changed dimensions
         [self.loadButton undoRoundAndGlossy];
         [self.loadButton setBackgroundColor: buttonColor];
         self.loadButton.frame = self.frame;
         [self.loadButton makeRoundAndGlossy];
-        NSLog(@"configureViewForAttachment: may reuse loadbutton");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: may reuse loadbutton");}
     }
     
     // create openButton
@@ -144,21 +150,26 @@
         self.openButton = [[UIButton alloc] initWithFrame: self.bounds];
         [self addSubview:self.openButton];
         self.openButton.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;        
-        NSLog(@"configureViewForAttachment: new openbutton");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: new openbutton");}
     } else {
         self.openButton.frame = self.frame;
-        NSLog(@"configureViewForAttachment: reuse openbutton");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: reuse openbutton");}
     }
     
     if (self.nameLabel == nil) {
         self.nameLabel = [[UILabel alloc] init];
         self.nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
         self.nameLabel.textColor = [UIColor blackColor];
-        self.nameLabel.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+        self.nameLabel.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.7];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.font = [UIFont italicSystemFontOfSize:10];
+        self.nameLabel.numberOfLines = 2;
         [self addSubview:self.nameLabel];
     }
+    CGRect myFrame = frame;
+    myFrame.size.height = 15;
+    myFrame.origin.y = 10; //frame.size.height - (2 * 30);
+    self.nameLabel.frame = myFrame;
     self.nameLabel.hidden = YES;
     
     if (attachmentState == kAttachmentTransferOnHold ||
@@ -171,12 +182,9 @@
                 
         [self.loadButton setTitle:[self getButtonTitle] forState:UIControlStateNormal];
         [self.loadButton addTarget:attachment action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
-        NSLog(@"configureViewForAttachment: use loadbutton, hide openbutton");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: use loadbutton, hide openbutton");}
         
-    } else {
-        self.loadButton.hidden = YES;
-        self.openButton.hidden = NO;
-        
+    } else {        
         // set proper button image
         if ( [attachment.mediaType isEqualToString:@"video"]) {
             [self.openButton setImage: [UIImage imageNamed:@"button-video"] forState:UIControlStateNormal];
@@ -185,9 +193,15 @@
         } else {
             [self.openButton setImage:nil forState:UIControlStateNormal];
         }
+        self.loadButton.hidden = YES;
+        self.openButton.hidden = NO;
         
-        [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
-        NSLog(@"configureViewForAttachment: use openbutton, hide loadbutton");
+        if (attachmentState == kAttachmentTransfered || isOutgoing) {
+            [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: disabled openbutton, hide loadbutton");}
+        } else {
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: enabled openbutton, hide loadbutton");}            
+        }
     }
     
     // now set imageView Image if we can
@@ -198,14 +212,10 @@
     {
         if ([attachment.mediaType isEqualToString:@"audio"]) {
             self.nameLabel.text = theAttachment.humanReadableFileName;
-            CGRect myFrame = frame;
-            myFrame.size.height = frame.size.height * 0.1;
-            myFrame.origin.y = frame.size.height * 0.8;
-            self.nameLabel.frame = myFrame;
             self.nameLabel.hidden = NO;
         }
         if (self.attachment.previewImage == nil) {
-            NSLog(@"configureViewForAttachment: load image");
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: load image");}
             [self.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError * error) {
                 if (error == nil) {
                     self.imageView.image = self.attachment.previewImage;
@@ -215,7 +225,7 @@
                 }
             }];
         } else {
-            NSLog(@"configureViewForAttachment: get image");
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: get image");}
             self.imageView.image = self.attachment.previewImage;
         }
     }
@@ -236,10 +246,10 @@
         self.progressView.hidden = NO;
         self.progressView.alpha = 1.0;
         [self addSubview: self.progressView];
-        NSLog(@"configureViewForAttachment: new progress");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: new progress");}
     } else {
         progressView.frame = self.frame;
-        NSLog(@"configureViewForAttachment: reuse progress");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: reuse progress");}
     }
 
     if (attachmentState == kAttachmentTransfering ||
@@ -248,7 +258,7 @@
     {
         [self.progressView setProgress: [attachment.transferSize doubleValue] / [attachment.contentSize doubleValue]];
         self.progressView.hidden = NO;
-        NSLog(@"configureViewForAttachment: use progress");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: use progress");}
         
         self.nameLabel.text = [self getTransferedTitle];
         self.nameLabel.hidden = NO;
@@ -256,24 +266,28 @@
         // TODO: cancel transfer button
     } else {
         self.progressView.hidden = YES;
-        NSLog(@"configureViewForAttachment: no progress");
+        if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: no progress");}
     }
 }
 
 - (NSString *) getTransferedTitle {
     if (self.attachment.state == kAttachmentTransferScheduled) {
-        return [NSString localizedStringWithFormat:NSLocalizedString(@"Will Retry transfer %@",nil),[self.attachment.transferRetryTimer fireDate]];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"hh:mm:ss"];
+        // [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+        NSString *stringFromDate = [formatter stringFromDate:[self.attachment.transferRetryTimer fireDate]];
+        return [NSString localizedStringWithFormat:NSLocalizedString(@"Transfer starts %@",nil),stringFromDate];
     }
     if ([self.attachment.message.isOutgoing isEqualToNumber: @YES])  {
         // upload not yet started, present upload button
-        return [NSString localizedStringWithFormat:NSLocalizedString(@"Uploaded %1.3f of %1.3f MB",nil),
-                              [attachment.transferSize doubleValue]/1024/1024,
-                              [attachment.contentSize doubleValue]/1024/1024];
+        return [NSString localizedStringWithFormat:NSLocalizedString(@"Uploaded %1.03f of %1.03f MB",nil),
+                              [attachment.cipherTransferSize doubleValue]/1024/1024,
+                              [attachment.cipheredSize doubleValue]/1024/1024];
     } else {
         // download not yet started, present download button
-        return [NSString localizedStringWithFormat:NSLocalizedString(@"Downloaded %1.3f of %1.3f MB",nil),
-                              [attachment.transferSize doubleValue]/1024/1024,
-                              [attachment.contentSize doubleValue]/1024/1024];
+        return [NSString localizedStringWithFormat:NSLocalizedString(@"Downloaded %1.03f of %1.03f MB",nil),
+                              [attachment.cipherTransferSize doubleValue]/1024/1024,
+                              [attachment.cipheredSize doubleValue]/1024/1024];
     }
 }
 
@@ -291,20 +305,5 @@
     }
 }
 
-/*
-- (void) layoutSubviews {
-    CGRect AVframe = [self.cell.bubble calcAttachmentViewFrameForAspect:self.aspect];
-    // self.frame = CGRectMake(0,0,AVframe.size.width, AVframe.size.height);
-    CGRect frame = AVframe;
- 
-    self.imageView.frame = frame;
-    self.openButton.frame = frame;
-    self.loadButton.frame = frame;
-    self.progressView.frame = CGRectMake(0, 0, AVframe.size.width, 9);
-
-    //[super layoutSubviews];
-    //[self sizeToFit];
-}
-*/
 
 @end

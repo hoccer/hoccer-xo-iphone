@@ -36,6 +36,7 @@
 #import "Vcard.h"
 #import "NSData+Base64.h"
 
+#define ACTION_MENU_DEBUG NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 
@@ -54,7 +55,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
-@property (strong, nonatomic) NSIndexPath * lastVisibleCellBeforeRotation;
+// @property (strong, nonatomic) NSIndexPath * rememberedVisibleCell;
 
 - (void)configureCell:(UITableViewCell *)cell forMessage:(HXOMessage *) message;
 - (void)configureView;
@@ -340,14 +341,17 @@ static const NSUInteger kMaxMessageBytes = 10000;
         return;
     }
     [self startPickedAttachmentProcessingForObject:attachmentInfo];
-    // NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
+    //NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
 
 
     // handle geolocation
-    if ([attachmentInfo isKindOfClass: [NSDictionary class]] && [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"]) {
+    if ([attachmentInfo isKindOfClass: [NSDictionary class]] &&
+        [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"] &&
+        [attachmentInfo[@"com.hoccer.xo.previewImage"] isKindOfClass: [UIImage class]])
+    {
         MKPlacemark * placemark = attachmentInfo[@"com.hoccer.xo.geolocation"];
         NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
 
@@ -827,7 +831,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     cell.label.shadowColor  = [UIColor whiteColor];
     cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
     cell.backgroundImage.image = [UIImage imageNamed: @"date_cell_bg"];
-    return cell.contentView;
+   return cell; // must NOT return cell.contentView here!
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -851,6 +855,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@",indexPath);
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
@@ -870,7 +875,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     self.messageCell.frame = CGRectMake(frame.origin.x, frame.origin.y, width, frame.size.height);
 
     CGFloat myHeight = [self.messageCell heightForMessage: message];
-    NSLog(@"tableView:heightForRowAtIndexPath: %@ returns %f", indexPath, myHeight);
+    // NSLog(@"tableView:heightForRowAtIndexPath: %@ returns %f", indexPath, myHeight);
     return myHeight;
 }
 
@@ -894,15 +899,33 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@",indexPath);}
+    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([[myCell class] isKindOfClass:[ChatTableSectionHeaderCell class]]) {
+        if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - NO",indexPath);}
+        return NO;
+    }
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - YES",indexPath);}
     return YES;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    return (action == @selector(copy:));
+    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([[myCell class] isKindOfClass:[MessageCell class]]) {
+        if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender ? - %@",sel_getName(action),(action == @selector(copy:))?@"YES":@"NO");}
+        return (action == @selector(copy:));
+    }
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender - NO",sel_getName(action));}
+    return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    return YES;
+    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender",sel_getName(action));}
+    if ([[myCell class] isKindOfClass:[MessageCell class]]) {
+        return YES;
+    }
+    return NO;
 }
 
 
@@ -975,7 +998,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     self.firstNewMessage = nil;
     [self.tableView reloadData];
-    [self scrollToBottomAnimated: NO];
+    [self scrollToRememberedCellOrToBottomIfNone];
     [self configureView];
     [self insertForwardedMessage];
 }
@@ -1077,7 +1100,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
     if (self.firstNewMessage != nil) {
         // NSLog(@"controllerDidChangeContent scroll to indexPath: %@", self.firstNewMessage);
         // [self.tableView scrollToRowAtIndexPath: self.firstNewMessage atScrollPosition: UITableViewScrollPositionBottom animated: YES];
-        [self performSelectorOnMainThread:@selector(scrollToBottomAnimatedWithObject:) withObject:@(YES) waitUntilDone:NO];
+        // [self performSelectorOnMainThread:@selector(scrollToBottomAnimatedWithObject:) withObject:@(YES) waitUntilDone:NO];
+        [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(scrollToBottomAnimated) userInfo:nil repeats:NO];
         self.firstNewMessage = nil;
     }
 }
@@ -1095,12 +1119,14 @@ static const NSUInteger kMaxMessageBytes = 10000;
     }
     [HXOBackend broadcastConnectionInfo];
 
-    [self scrollToBottomAnimated: NO];
+    [self scrollToRememberedCellOrToBottomIfNone];
 }
 
 
 - (void) viewWillDisappear:(BOOL)animated {
     // [self trashCurrentAttachment];
+
+    [self rememberLastVisibleCell];
 
     if (self.fetchedResultsController != nil) {
         self.fetchedResultsController.delegate = nil;
@@ -1133,7 +1159,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [cell.bubble setNeedsLayout];
     [cell.bubble layoutIfNeeded];
     
-    NSLog(@"configureCell BubbleView %x attachment %x time=%@",(int)(__bridge void*)cell.bubble, (int)(__bridge void*)message.attachment, message.timeAccepted);
+    // NSLog(@"configureCell BubbleView %x attachment %x time=%@",(int)(__bridge void*)cell.bubble, (int)(__bridge void*)message.attachment, message.timeAccepted);
 
     if (message.attachment &&
         ([message.attachment.mediaType isEqualToString:@"image"] ||
@@ -1391,8 +1417,8 @@ static const NSUInteger kMaxMessageBytes = 10000;
                     {
                        // Create an MKMapItem to pass to the Maps app
                         NSArray * coordinates = geoLocation[@"location"][@"coordinates"];
-                        NSLog(@"geoLocation=%@",geoLocation);
-                        NSLog(@"coordinates=%@",coordinates);
+                        //NSLog(@"geoLocation=%@",geoLocation);
+                        // NSLog(@"coordinates=%@",coordinates);
                         CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([coordinates[1] doubleValue], [coordinates[0] doubleValue]);
                         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate
                                                                        addressDictionary:nil];
@@ -1450,25 +1476,36 @@ static const NSUInteger kMaxMessageBytes = 10000;
     [self scrollToBottomAnimated: theObject != nil];
 }
 
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void) scrollToBottomAnimated {
+    [self scrollToBottomAnimated: YES];
+}
+
+- (void) rememberLastVisibleCell {
     // save index path of bottom most visible cell
     NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
-    self.lastVisibleCellBeforeRotation = [indexPaths lastObject];
+    self.partner.rememberedLastVisibleChatCell = [indexPaths lastObject];
 }
-- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    // trigger relayout on orientation change. However, there has to be a better way to do this...
-    
-    NSLog(@"didRotateFromInterfaceOrientation:%d, (not) reloading data",fromInterfaceOrientation);
-    // [self.tableView reloadData]; // does not make any difference - or does it?
-        
-    //NSLog(@"didRotateFromInterfaceOrientation:%d, reloading visible cells",fromInterfaceOrientation);
-    //[self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationNone];
 
-    // scroll to bottom most cell visible before changing the orientation
-    if (self.lastVisibleCellBeforeRotation != nil) {
-        [self.tableView scrollToRowAtIndexPath: self.lastVisibleCellBeforeRotation atScrollPosition:UITableViewScrollPositionBottom animated: NO];
-        self.lastVisibleCellBeforeRotation = nil;
+- (void) scrollToCell:(NSIndexPath*)theCell {
+    // save index path of bottom most visible cell
+    [self.tableView scrollToRowAtIndexPath: self.partner.rememberedLastVisibleChatCell atScrollPosition:UITableViewScrollPositionBottom animated: NO];
+}
+
+- (void) scrollToRememberedCellOrToBottomIfNone {
+    if (self.partner.rememberedLastVisibleChatCell != nil) {
+        [self scrollToCell:self.partner.rememberedLastVisibleChatCell];
+    } else {
+        [self scrollToBottomAnimated];
     }
+}
+
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self rememberLastVisibleCell];
+  }
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    // NSLog(@"didRotateFromInterfaceOrientation:%d, (not) reloading data",fromInterfaceOrientation);
+
+    [self scrollToRememberedCellOrToBottomIfNone];
 }
 
 - (void) dealloc {

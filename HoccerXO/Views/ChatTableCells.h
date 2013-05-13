@@ -31,11 +31,11 @@
 
 @interface MessageCell : HXOTableViewCell
 
+@property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 @property (strong, nonatomic) IBOutlet AutoheightLabel *message;
 @property (strong, nonatomic) IBOutlet InsetImageView *avatar;
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
 
-@property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 
 // @property UIInterfaceOrientation cellOrientation;
 
@@ -53,7 +53,7 @@
 @interface RightMessageCell : MessageCell
 @end
 
-@interface ChatTableSectionHeaderCell : HXOTableViewCell
+@interface ChatTableSectionHeaderCell : HXOTableViewCell <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *label;
 @property (strong, nonatomic) IBOutlet UIImageView * backgroundImage;

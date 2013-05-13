@@ -625,7 +625,7 @@
 		63A7F6A5172C418A00C0EC26 /* zbar-help.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "zbar-help.html"; sourceTree = "<group>"; };
 		63A7F6A6172C418A00C0EC26 /* zbar-helpicons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-helpicons.png"; sourceTree = "<group>"; };
 		63A7F6A7172C418A00C0EC26 /* zbar-samples.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-samples.png"; sourceTree = "<group>"; };
-		63A7F6B8172EBE0400C0EC26 /* HoccerXO- 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 3.xcdatamodel"; sourceTree = "<group>"; };
+		63A7F6B8172EBE0400C0EC26 /* HoccerXO-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-3.xcdatamodel"; sourceTree = "<group>"; };
 		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		63AE4514170350750099F0CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		63AE451A1703519B0099F0CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -783,7 +783,7 @@
 		E99886EB17282C950089A510 /* sweep_in_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_in_sound.wav; sourceTree = "<group>"; };
 		E99886EC17282C950089A510 /* sweep_out_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_out_sound.wav; sourceTree = "<group>"; };
 		E99886EE17282C950089A510 /* throw_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = throw_sound.wav; sourceTree = "<group>"; };
-		E99955E3173C6433001039E2 /* HoccerXO-6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-6.xcdatamodel"; sourceTree = "<group>"; };
+		E99955E3173C6433001039E2 /* HoccerXO-6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-6.xcdatamodel"; sourceTree = "<group>"; };
 		E9A2B84C17189A1200E35E7E /* button-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio.png"; sourceTree = "<group>"; };
 		E9A2B84D17189A1200E35E7E /* button-audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-audio@2x.png"; sourceTree = "<group>"; };
 		E9A2B84E17189A1200E35E7E /* button-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video.png"; sourceTree = "<group>"; };
@@ -2332,11 +2332,11 @@
 				E9D1144D17314BD500737EF7 /* HoccerXO-4.xcdatamodel */,
 				E959F09C173AACBE00CD14BB /* HoccerXO-5.xcdatamodel */,
 				E99955E3173C6433001039E2 /* HoccerXO-6.xcdatamodel */,
-				63A7F6B8172EBE0400C0EC26 /* HoccerXO- 3.xcdatamodel */,
+				63A7F6B8172EBE0400C0EC26 /* HoccerXO-3.xcdatamodel */,
 				E9B7BAA9172D3E1500212420 /* HoccerXO-2.xcdatamodel */,
 				636D3FFC170FB2B100304EDF /* HoccerXO.xcdatamodel */,
 			);
-			currentVersion = E959F09C173AACBE00CD14BB /* HoccerXO-5.xcdatamodel */;
+			currentVersion = E99955E3173C6433001039E2 /* HoccerXO-6.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
