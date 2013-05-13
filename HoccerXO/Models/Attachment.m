@@ -438,22 +438,37 @@ NSArray * TransferStateName = @[@"detached",
 - (void) loadAttachmentDict:(DictLoaderBlock) block {
     if (![self.mediaType isEqualToString:@"geolocation"]) {
         block(nil, nil);
-        return;        
+        return;
     }
     if (self.localURL == nil) {
         block(nil, nil);
         return;
     }
-    NSData * jsonData = [NSData dataWithContentsOfURL: self.contentURL];
-    NSError * error;
-    NSDictionary * geoLocation = [NSJSONSerialization JSONObjectWithData: jsonData options: 0 error: & error];
-    if (geoLocation == nil) {
-        block(nil, error);
-        return;
+    NSError * error = nil;
+    NSDictionary * geoLocation = nil;
+    NSData * jsonData = nil;
+    NSURL * url = nil;
+    @try {
+        url = self.contentURL;
+        jsonData = [NSData dataWithContentsOfURL: url];
+        /*
+        NSLog(@"@jsondata 1 len=%d", jsonData.length);
+        NSString * filePath = [url path];
+        jsonData = [NSData dataWithContentsOfFile:filePath];
+        NSLog(@"@jsondata 2 len=%d path=%@", jsonData.length, filePath);
+        NSString * myPath = [[NSURL URLWithString: self.localURL] path];
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:myPath];
+        NSLog(@"@jsondata 3 len=%d path=%@", data.length, myPath);
+        
+        NSDictionary * myDict = [[NSFileManager defaultManager]attributesOfItemAtPath:myPath error:&error];
+        NSLog(@"attributes=%@, error=%@", myDict, error);
+        */
+        geoLocation = [NSJSONSerialization JSONObjectWithData: jsonData options: 0 error: & error];
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR parsing geolocation json, jsonData = %@, ex=%@, contentURL=%@", jsonData, ex, url);
     }
-    block(geoLocation, nil);
+    block(geoLocation, error);
 }
-
 
 - (void) assetSizer: (SizeSetterBlock) block url:(NSString*)theAssetURL {
     // NSLog(@"assetSizer");
@@ -926,6 +941,8 @@ NSArray * TransferStateName = @[@"detached",
     return nil;
 }
 
+
+// WARNING: this version depends on remoteURLs to be unique, so is not suitable for remote URLs than are no UUIDs 
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory {
     NSString * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
     NSString * myRemoteFileName = myRemoteURL.lastPathComponent;
@@ -933,6 +950,46 @@ NSArray * TransferStateName = @[@"detached",
     NSString * myNewFilename = [[[myNewFile absoluteString] stringByAppendingString:@"." ] stringByAppendingString: [Attachment fileExtensionFromMimeType: self.mimeType]];
     return myNewFilename;
 }
+
+
+// fix url when app directory has changed - TODO: only store lastpathcomponent in localRL
+- (NSString*) localURL {
+    NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"localURL"];
+    NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
+#if 0
+    if (![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
+        NSLog(@"translated localURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
+    } else {
+        NSLog(@"translated localURLs match");        
+    }
+#endif
+    return myTranslatedURL;
+ }
+
+// fix url when app directory has changed - TODO: only store lastpathcomponent in ownedURL
+- (NSString*) ownedURL {
+    NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"ownedURL"];
+    NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
+#if 0
+    if (![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
+        NSLog(@"translated ownedURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
+    } else {
+        NSLog(@"translated ownedURL match");
+    }
+#endif
+    return myTranslatedURL;
+}
+
++ (NSString*) translateFileURLToDocumentDirectory:(NSString*)someFileURL {
+    if (someFileURL == nil) {
+        return nil;
+    }
+    NSURL *appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSString * myFileName = [someFileURL lastPathComponent];
+    NSURL * myLocalURL = [NSURL URLWithString:myFileName relativeToURL:appDocDir];
+    return [myLocalURL absoluteString];
+}
+
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType {
     if (theMimeType == nil) return nil;
@@ -1172,6 +1229,7 @@ NSArray * TransferStateName = @[@"detached",
     [self setPrimitiveValue: size forKey: @"cipheredSize"];
     [self didChangeValueForKey:@"cipheredSize"];
 }
+
 
 #pragma mark - Attachment JSON Wrapping
 
