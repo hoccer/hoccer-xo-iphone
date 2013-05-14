@@ -62,7 +62,7 @@ static InvitationController * _sharedInvitationController;
 
 - (void) presentWithViewController: (UIViewController*) viewController {
     self.viewController = viewController;
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
+    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
                                                         delegate: self
                                                cancelButtonTitle: nil
                                           destructiveButtonTitle: nil
