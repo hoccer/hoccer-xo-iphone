@@ -39,6 +39,7 @@
 #define ACTION_MENU_DEBUG NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
+static const CGFloat    kSectionHeaderHeight = 40;
 
 @interface ChatViewController ()
 
@@ -47,7 +48,6 @@ static const NSUInteger kMaxMessageBytes = 10000;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (nonatomic, readonly) MessageCell* messageCell;
-@property (nonatomic, readonly) ChatTableSectionHeaderCell* headerCell;
 @property (strong) UIImage* avatarImage;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
@@ -67,7 +67,6 @@ static const NSUInteger kMaxMessageBytes = 10000;
 @synthesize chatBackend = _chatBackend;
 @synthesize attachmentPicker = _attachmentPicker;
 @synthesize messageCell = _messageCell;
-@synthesize headerCell = _headerCell;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
 @synthesize vcardViewController = _vcardViewController;
@@ -785,15 +784,6 @@ static const NSUInteger kMaxMessageBytes = 10000;
     return _messageCell;
 }
 
-- (ChatTableSectionHeaderCell*) headerCell {
-    if (_headerCell == nil) {
-        _headerCell = [self.tableView dequeueReusableCellWithIdentifier: [ChatTableSectionHeaderCell reuseIdentifier]];
-    }
-    return _headerCell;
-}
-
-
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -824,14 +814,27 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    ChatTableSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ChatTableSectionHeaderCell reuseIdentifier]];
-    cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
-    
-    cell.label.text = [self tableView:tableView titleForHeaderInSection:section];
-    cell.label.shadowColor  = [UIColor whiteColor];
-    cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
-    cell.backgroundImage.image = [UIImage imageNamed: @"date_cell_bg"];
-   return cell; // must NOT return cell.contentView here!
+    UIView * header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kSectionHeaderHeight)];
+
+    UIImage * backgroundImage = [UIImage imageNamed: @"date_cell_bg"];
+    CGFloat y = 0.5 * (kSectionHeaderHeight - backgroundImage.size.height);
+    UIImageView * background = [[UIImageView alloc] initWithFrame: CGRectMake(0, y, 320, backgroundImage.size.height)];
+    background.image = backgroundImage;
+    background.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [header addSubview: background];
+
+    UILabel * label = [[UILabel alloc] initWithFrame: header.frame];
+    label.backgroundColor = [UIColor clearColor];
+    label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = [self tableView:tableView titleForHeaderInSection:section];
+    label.textColor = [UIColor colorWithWhite: 0.33 alpha: 1.0];
+    label.shadowColor = [UIColor whiteColor];
+    label.shadowOffset = CGSizeMake(0, 1);
+    label.font = [UIFont boldSystemFontOfSize: 9];
+    [header addSubview: label];
+
+    return header;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -845,10 +848,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
-    //     because the table view assuemes there is a 1px separator. However, sometimes the
-    //     grey line still appears ...
-    return self.headerCell.contentView.bounds.size.height;
+    return kSectionHeaderHeight;
 }
 
 #pragma mark - Table view delegate
