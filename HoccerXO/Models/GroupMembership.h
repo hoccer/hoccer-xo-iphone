@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+#import "HXOModel.h"
 
 @class Contact, Group;
 
-@interface GroupMembership : NSManagedObject
+@interface GroupMembership : HXOModel
 
 @property (nonatomic, retain) NSString * role;
 @property (nonatomic, retain) NSString * state;

@@ -75,14 +75,14 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IrS-Lk-E4i" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="244" y="-1384"/>
+            <point key="canvasLocation" x="80" y="-1388"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="yod-vU-eey">
             <objects>
                 <tableViewController storyboardIdentifier="profileViewController" id="EIf-F7-14l" customClass="ProfileViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="afE-UW-Y54">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <connections>
@@ -151,7 +151,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="494" y="-663"/>
+            <point key="canvasLocation" x="484" y="-675"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="Yn7-as-2xt">
@@ -1078,6 +1078,62 @@ in the general "Settings" app.</string>
             </objects>
             <point key="canvasLocation" x="2259" y="-663"/>
         </scene>
+        <!--Group List View Controller-->
+        <scene sceneID="yKt-X8-1q7">
+            <objects>
+                <tableViewController storyboardIdentifier="groupsViewController" id="LuP-42-HB8" userLabel="Group List View Controller" customClass="GroupListViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" id="CMZ-uC-6tS">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="hvd-Ct-IOx">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="tintColor" white="0.84999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" rowHeight="64" id="plE-mv-1MJ" customClass="ContactCell">
+                                <rect key="frame" x="0.0" y="66" width="320" height="64"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="63"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" id="S22-V8-2sd" userLabel="Avatar" customClass="InsetImageView">
+                                            <rect key="frame" x="20" y="10" width="44" height="44"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                        </view>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oBp-ON-8k0">
+                                            <rect key="frame" x="72" y="22" width="208" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <outlet property="avatar" destination="S22-V8-2sd" id="T9z-cY-NcJ"/>
+                                    <outlet property="nickName" destination="oBp-ON-8k0" id="Q3N-di-6Er"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="LuP-42-HB8" id="TbC-yr-27E"/>
+                            <outlet property="delegate" destination="LuP-42-HB8" id="HFP-wA-UoU"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="searchBar" destination="hvd-Ct-IOx" id="poE-zQ-2RR"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aAv-YK-kat" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="484" y="-1378"/>
+        </scene>
     </scenes>
     <resources>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
@@ -1117,8 +1173,6 @@ in the general "Settings" app.</string>
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addAttachmentPressed:"/>
-                <relationship kind="action" name="attachmentPressed:"/>
-                <relationship kind="action" name="cancelAttachmentProcessingPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="attachmentSpinner" candidateClass="UIActivityIndicatorView"/>
@@ -1183,6 +1237,9 @@ in the general "Settings" app.</string>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
                 <relationship kind="outlet" name="useButton" candidateClass="UIBarButtonItem"/>
             </relationships>
+        </class>
+        <class className="GroupListViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupListViewController.h"/>
         </class>
         <class className="GrowingTextView" superclassName="UITextView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowingTextView.h"/>
@@ -1296,6 +1353,6 @@ in the general "Settings" app.</string>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="09b-JC-XgT"/>
+        <segue reference="lna-0K-80T"/>
     </inferredMetricsTieBreakers>
 </document>

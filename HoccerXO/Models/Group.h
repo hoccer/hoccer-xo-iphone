@@ -13,10 +13,11 @@
 
 @interface Group : Contact
 
-@property (nonatomic, retain) NSData * groupKey;
+@property (nonatomic, retain) NSData   * groupKey;
 @property (nonatomic, retain) NSString * myRole;
 @property (nonatomic, retain) NSString * myState;
-@property (nonatomic, retain) NSSet *members;
+@property (nonatomic, retain) NSString * groupTag;
+@property (nonatomic, retain) NSSet    * members;
 @end
 
 @interface Group (CoreDataGeneratedAccessors)

@@ -6,7 +6,8 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import <CoreData/CoreData.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "HXOModel.h"
 
@@ -42,13 +43,13 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, retain) NSString * relationshipState;
 @property (nonatomic, retain) NSDate * relationshipLastChanged;
 
-@property (nonatomic) NSNumber * relationshipLastChangedMillis;
-@property (nonatomic) NSNumber * presenceLastUpdatedMillis;
+@property (nonatomic,strong) NSNumber * relationshipLastChangedMillis;
+@property (nonatomic,strong) NSNumber * presenceLastUpdatedMillis;
 
 @property (nonatomic, strong) NSIndexPath * rememberedLastVisibleChatCell;
 
 
-@property (nonatomic) NSString* publicKeyString; // b64-string
+@property (nonatomic,strong) NSString* publicKeyString; // b64-string
 
 
 @property (nonatomic, strong) NSMutableSet* messages;

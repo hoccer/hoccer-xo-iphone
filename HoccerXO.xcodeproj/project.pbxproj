@@ -217,6 +217,7 @@
 		63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* HXOMessage.m */; };
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
+		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
 		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
 		63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */; };
 		63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* UserDefaultsViewController.m */; };
@@ -684,6 +685,8 @@
 		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		63BD7D931744232D00118A7F /* GroupMembership.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMembership.h; sourceTree = "<group>"; };
 		63BD7D941744232D00118A7F /* GroupMembership.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMembership.m; sourceTree = "<group>"; };
+		63BD7D9617442C1B00118A7F /* GroupListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupListViewController.h; sourceTree = "<group>"; };
+		63BD7D9717442C1B00118A7F /* GroupListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupListViewController.m; sourceTree = "<group>"; };
 		63C1355F1716054C00969B0B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellAvatarPicker_iPhone.xib; sourceTree = "<group>"; };
 		63C1356617160E2E00969B0B /* UserDefaultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsViewController.h; sourceTree = "<group>"; };
@@ -1310,6 +1313,8 @@
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
+				63BD7D9617442C1B00118A7F /* GroupListViewController.h */,
+				63BD7D9717442C1B00118A7F /* GroupListViewController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -2158,6 +2163,7 @@
 				639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
+				63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

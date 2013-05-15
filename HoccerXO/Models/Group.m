@@ -14,6 +14,7 @@
 @dynamic groupKey;
 @dynamic myRole;
 @dynamic myState;
+@dynamic groupTag;
 @dynamic members;
 
 @end
