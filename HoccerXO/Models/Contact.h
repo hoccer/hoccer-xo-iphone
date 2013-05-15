@@ -16,6 +16,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
 @interface Contact : HXOModel
 
+@property (nonatomic, strong) NSString*      type;
 @property (nonatomic, strong) NSData*        avatar;
 @property (nonatomic, strong) NSString*      avatarURL;
 @property (nonatomic, strong) NSString*      clientId;

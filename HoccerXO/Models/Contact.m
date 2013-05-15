@@ -18,6 +18,7 @@
 
 @implementation Contact
 
+@dynamic type;
 @dynamic avatar;
 @dynamic avatarURL;
 @dynamic clientId;

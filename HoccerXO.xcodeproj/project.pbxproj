@@ -215,6 +215,8 @@
 		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
 		63AEE30816CA566B00522F92 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30716CA566B00522F92 /* Contact.m */; };
 		63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* HXOMessage.m */; };
+		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
+		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
 		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
 		63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */; };
 		63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* UserDefaultsViewController.m */; };
@@ -677,6 +679,11 @@
 		63AEE30716CA566B00522F92 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		63AEE30916CA6B1900522F92 /* HXOMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOMessage.h; sourceTree = "<group>"; };
 		63AEE30A16CA6B1900522F92 /* HXOMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOMessage.m; sourceTree = "<group>"; };
+		63BD7D84174411BD00118A7F /* HoccerXO-7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-7.xcdatamodel"; sourceTree = "<group>"; };
+		63BD7D8C174422D500118A7F /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
+		63BD7D931744232D00118A7F /* GroupMembership.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMembership.h; sourceTree = "<group>"; };
+		63BD7D941744232D00118A7F /* GroupMembership.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMembership.m; sourceTree = "<group>"; };
 		63C1355F1716054C00969B0B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellAvatarPicker_iPhone.xib; sourceTree = "<group>"; };
 		63C1356617160E2E00969B0B /* UserDefaultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsViewController.h; sourceTree = "<group>"; };
@@ -1458,6 +1465,10 @@
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				6378484416F4000500DE03C2 /* Delivery.h */,
 				6378484516F4000500DE03C2 /* Delivery.m */,
+				63BD7D8C174422D500118A7F /* Group.h */,
+				63BD7D8D174422D500118A7F /* Group.m */,
+				63BD7D931744232D00118A7F /* GroupMembership.h */,
+				63BD7D941744232D00118A7F /* GroupMembership.m */,
 				636D3FFB170FB2B100304EDF /* HoccerXO.xcdatamodeld */,
 				63AEE30916CA6B1900522F92 /* HXOMessage.h */,
 				63AEE30A16CA6B1900522F92 /* HXOMessage.m */,
@@ -2145,6 +2156,8 @@
 				639094BB17395DB200DF889B /* HXOActionSheet.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
 				639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */,
+				63BD7D8E174422D500118A7F /* Group.m in Sources */,
+				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2332,11 +2345,12 @@
 				E9D1144D17314BD500737EF7 /* HoccerXO-4.xcdatamodel */,
 				E959F09C173AACBE00CD14BB /* HoccerXO-5.xcdatamodel */,
 				E99955E3173C6433001039E2 /* HoccerXO-6.xcdatamodel */,
+				63BD7D84174411BD00118A7F /* HoccerXO-7.xcdatamodel */,
 				63A7F6B8172EBE0400C0EC26 /* HoccerXO-3.xcdatamodel */,
 				E9B7BAA9172D3E1500212420 /* HoccerXO-2.xcdatamodel */,
 				636D3FFC170FB2B100304EDF /* HoccerXO.xcdatamodel */,
 			);
-			currentVersion = E99955E3173C6433001039E2 /* HoccerXO-6.xcdatamodel */;
+			currentVersion = 63BD7D84174411BD00118A7F /* HoccerXO-7.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
