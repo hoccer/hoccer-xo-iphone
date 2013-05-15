@@ -154,7 +154,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
     
     [self hideAttachmentSpinner];
     [HXOBackend registerConnectionInfoObserverFor:self];
-    
+
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    gestureRecognizer.cancelsTouchesInView = NO;
+    [self.tableView addGestureRecognizer:gestureRecognizer];
+
     [self configureView];
 }
 
@@ -197,7 +201,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     self.masterPopoverController = nil;
 }
 
-#pragma mark - Keyboard events
+#pragma mark - Keyboard Handling
 
 // TODO: correctly handle orientation changes while keyboard is visible
 
@@ -236,10 +240,13 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }];
 }
 
+- (void) hideKeyboard {
+    [self.view endEditing: NO];
+}
+
 #pragma mark - Actions
 
 - (IBAction)sendPressed:(id)sender {
-    [self.textField resignFirstResponder];
     if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
             if ([self.textField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
@@ -894,6 +901,10 @@ static const CGFloat    kSectionHeaderHeight = 40;
 //    NSLog(@"scrollViewDidScroll:");
 //    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
 //}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self hideKeyboard];
+}
 
 #pragma mark - Table view menu delegate
 
