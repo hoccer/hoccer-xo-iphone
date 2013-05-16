@@ -33,7 +33,7 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
     self.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"contact_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0)]];
     self.backgroundView.frame = self.bounds;
     self.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.2];
-    self.avatar.borderColor = [UIColor blackColor];
+    self.avatar.borderColor = [UIColor colorWithWhite: 0 alpha: 0.66];
 
     _messageCountBackground = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"bg_message-count-grey" withLeftCapWidth: 10 topCapHeight: 10]];
     [self.contentView addSubview: _messageCountBackground];
