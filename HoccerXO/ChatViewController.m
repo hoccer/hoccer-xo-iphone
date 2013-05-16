@@ -140,8 +140,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     [_chatbar sendSubviewToBack: backgroundGradient];
-
-    self.view.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
     
     // setup longpress menus
     UIMenuController *menuController = [UIMenuController sharedMenuController];
@@ -757,33 +755,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 #pragma mark - Graphics Utilities
-
-- (UIImage *)radialGradient {
-    CGSize size = self.tableView.frame.size;
-    CGPoint center = CGPointMake(0.5 * size.width, 0.5 * size.height) ;
-
-    UIGraphicsBeginImageContextWithOptions(size, YES, 1);
-
-    // Drawing code
-    CGContextRef cx = UIGraphicsGetCurrentContext();
-
-    CGContextSaveGState(cx);
-    CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
-
-    CGFloat comps[] = {1.0,1.0,1.0,1.0,
-        0.9,0.9,0.9,1.0};
-    CGFloat locs[] = {0,1};
-    CGGradientRef g = CGGradientCreateWithColorComponents(space, comps, locs, 2);
-
-    CGContextDrawRadialGradient(cx, g, center, 0.0f, center, size.width > size.height ? 0.5 * size.width : 0.5 * size.height, kCGGradientDrawsAfterEndLocation);
-    CGGradientRelease(g);
-    CGColorSpaceRelease(space); // added by pm because analyzer leak waring
-
-    CGContextRestoreGState(cx);
-
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    return image;
-}
 
 - (MessageCell*) messageCell {
     if (_messageCell == nil) {
