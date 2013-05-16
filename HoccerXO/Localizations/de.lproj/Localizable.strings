@@ -84,7 +84,7 @@
 "Invite by" = "Einladung";
 
 /* Invite Actionsheet Button Title */
-"Invite Code" = "per Einladungs Kode";
+"Invite Code" = "per Einladungs Code";
 
 /* Invite Alert Title */
 "Invite failed" = "Einladung fehlgeschlagen";
@@ -116,7 +116,7 @@
 "Send" = "Senden";
 
 /* Invite Token View Controller */
-"Send this token to a friend:" = "Sende diesen Kode an einen Freund:";
+"Send this token to a friend:" = "Sende diesen Code an einen Freund:";
 
 /* Navigation Menu Item */
 "Settings" = "Einstellungen";
@@ -125,10 +125,10 @@
 "SMS" = "per SMS";
 
 /* Invite Alert Message */
-"The server accepted your code" = "Der Kode wurde akzeptiert";
+"The server accepted your code" = "Der Code wurde akzeptiert";
 
 /* Invite Alert Message */
-"The server rejected your invite code" = "Der Kode wurde abgelehnt";
+"The server rejected your invite code" = "Der Code wurde abgelehnt";
 
 /* Navigation Menu Item */
 "Tutorial" = "Anleitung";
@@ -218,17 +218,17 @@
 
 "delete_contact" = "Kontakt löschen";
 
-"invite_qr_code_already_scanned_title" = "Kode bereits gescannt";
+"invite_qr_code_already_scanned_title" = "Code bereits gescannt";
 
-"invite_qr_code_already_scanned_message" = "Du hast diesen Kode bereits gescannt";
+"invite_qr_code_already_scanned_message" = "Du hast diesen Code bereits gescannt";
 
-"invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Kode";
+"invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Code";
 
 "invite_not_a_hoccer_xo_qr_code_message" = "Dieser QR Code ist kein Hoccer XO Einladungskode";
 
 "or_scan_an_invite_code" = "oder scanne einen QR Einladungskode:";
 
-"let_a_friend_scan_this_code" = "oder lasse diesen Kode scannen";
+"let_a_friend_scan_this_code" = "oder lasse diesen Code scannen";
 
 "delete_contact_safety_question" = "Kontakt, Chat und Attachments löschen?";
 
