@@ -216,11 +216,12 @@ static const CGFloat    kSectionHeaderHeight = 40;
     contentOffset.y += keyboardHeight;
 
     [UIView animateWithDuration: duration animations:^{
-        CGRect frame = self.view.frame;
+        CGRect frame = self.chatViewResizer.frame;
         frame.size.height -= keyboardHeight;
-        self.view.frame = frame;
+        self.chatViewResizer.frame = frame;
         self.tableView.contentOffset = contentOffset;
         // NSLog(@"keyboardWasShown did set table contentOffset y to %f", contentOffset.y);
+
     }];
 
     // this catches orientation changes, too
@@ -234,9 +235,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
     double duration = [info[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     [UIView animateWithDuration: duration animations:^{
-        CGRect frame = self.view.frame;
+        CGRect frame = self.chatViewResizer.frame;
         frame.size.height += keyboardHeight;
-        self.view.frame = frame;
+        self.chatViewResizer.frame = frame;
     }];
 }
 
@@ -1118,7 +1119,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 #pragma mark - view/cell methods
-
 
 - (void) viewWillAppear:(BOOL)animated {
     // NSLog(@"ChatViewController:viewWillAppear");
