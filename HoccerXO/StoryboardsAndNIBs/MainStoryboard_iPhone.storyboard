@@ -491,30 +491,22 @@ in the general "Settings" app.</string>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="15.02.2013" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TRS-dL-kmg" userLabel="Latest Message Time">
-                                            <rect key="frame" x="180" y="10" width="100" height="16"/>
+                                            <rect key="frame" x="170" y="10" width="100" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="hYj-vr-IlI">
-                                            <rect key="frame" x="284" y="10" width="16" height="16"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" id="hYj-vr-IlI">
+                                            <rect key="frame" x="273" y="15" width="8" height="8"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=">" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="M3L-eZ-e0N">
-                                            <rect key="frame" x="61" y="22" width="16" height="16"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <connections>
                                     <outlet property="avatar" destination="lkO-00-gch" id="nsl-sr-5Ze"/>
                                     <outlet property="latestMessageDirection" destination="hYj-vr-IlI" id="rt3-oH-sIw"/>
-                                    <outlet property="latestMessageDirectionLabel" destination="M3L-eZ-e0N" id="Blq-eS-nP6"/>
                                     <outlet property="latestMessageLabel" destination="BYf-td-Ce8" id="Fny-Sk-V6c"/>
                                     <outlet property="latestMessageTimeLabel" destination="TRS-dL-kmg" id="ihv-cF-LV1"/>
                                     <outlet property="nickName" destination="mH8-ys-z78" id="3A2-m8-Q55"/>
@@ -1228,7 +1220,6 @@ in the general "Settings" app.</string>
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="latestMessageDirection" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="latestMessageDirectionLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="latestMessageLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="latestMessageTimeLabel" candidateClass="UILabel"/>
             </relationships>

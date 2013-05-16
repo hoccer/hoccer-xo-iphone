@@ -14,7 +14,7 @@
 @implementation ConversationAndContactsCell
 
 - (void) awakeFromNib {
-    self.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"conversation_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0]];
+    self.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: [self backgroundName] withLeftCapWidth: 1.0 topCapHeight: 0]];
     self.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
     self.avatar.borderColor = [UIColor colorWithWhite: 0 alpha: 0.6];
 
@@ -27,15 +27,7 @@
 
 }
 
-- (void) setHasNewMessages:(BOOL)hasNewMessages {
-    UIImage * backgroundImage = nil;
-    _hasNewMessages = hasNewMessages;
-    if (hasNewMessages) {
-        backgroundImage = [AssetStore stretchableImageNamed: @"conversation_cell_bg_new" withLeftCapWidth: 1.0 topCapHeight: 0];
-    } else {
-        backgroundImage = [AssetStore stretchableImageNamed: @"conversation_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0];
-    }
-    ((UIImageView*)self.backgroundView).image = backgroundImage;
-    [self setNeedsDisplay];
+- (NSString*) backgroundName {
+    return nil;
 }
 @end
