@@ -268,3 +268,6 @@
 
 "groups_empty_placeholder" = "Gruppen";
 
+"invalid_cert_title" = "Ungültiges Server Zertifikat";
+
+"invalid_cert_message" = "Hilfe! Fiese internet nazis greifen Hoccer an. Bitte rufe die avengers.";

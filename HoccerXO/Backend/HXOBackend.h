@@ -27,6 +27,7 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
+typedef void (^DoneBlock)();
 
 @protocol HXODelegate <NSObject>
 
@@ -35,6 +36,7 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 @property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 - (void) didPairWithStatus: (BOOL) status; // pregnant...
+-(void) didFailWithInvalidCertificate: (DoneBlock) done;
 
 @optional
 

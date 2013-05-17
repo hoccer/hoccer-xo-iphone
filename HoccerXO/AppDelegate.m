@@ -538,4 +538,21 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     }
 }
 
+-(void) didFailWithInvalidCertificate:(DoneBlock)done {
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invalid_cert_title", nil)
+                                                     message: NSLocalizedString(@"invalid_cert_message", nil)
+                                                    delegate: self
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    _alertDoneBlock = done;
+    [alert show];
+}
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (_alertDoneBlock != nil) {
+        _alertDoneBlock();
+    }
+    _alertDoneBlock = nil;
+}
+
 @end

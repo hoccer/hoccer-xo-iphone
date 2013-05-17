@@ -161,6 +161,9 @@ typedef enum BackendStates {
 - (void) setState: (BackendState) state {
     NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
     _state = state;
+    if (_state == kBackendReady) {
+        _backoffTime = 0.0;
+    }
     [self updateConnectionStatusInfo];
 }
 
@@ -539,10 +542,10 @@ typedef enum BackendStates {
     if ([self.delegate.internetReachabilty isReachable]) {
         if ([[NSDate date] timeIntervalSinceDate:_lastReconnectAttempt] < 5.0) {
             [self reconnectWithBackoff];
-            _lastReconnectAttempt = [NSDate date];
-            return;
+        } else {
+            [self start: _performRegistration];
         }
-        [self start: _performRegistration];        
+        _lastReconnectAttempt = [NSDate date];
     } else {
         NSLog(@"reconnect: no internet connection, backing off, state = %@", [self stateString:_state]);
         // we should not need to do that because we will be notified when the connection comes back
@@ -1643,10 +1646,17 @@ typedef enum BackendStates {
 #pragma mark - JSON RPC WebSocket Delegate
 
 - (void) webSocketDidFailWithError: (NSError*) error {
-    NSLog(@"webSocketDidFailWithError: %@", error);
-    [self setState: kBackendStopped]; // XXX do we need/want a failed state?
-    // [self reconnectWithBackoff];
-    [self reconnect];
+    NSLog(@"webSocketDidFailWithError: %@ %d", error, error.code);
+    DoneBlock done = ^{
+        [self setState: kBackendStopped]; // XXX do we need/want a failed state?
+        // [self reconnectWithBackoff];
+        [self reconnect];
+    };
+    if (error.code == 23556) { // constant found in source ... :(
+        [self.delegate didFailWithInvalidCertificate: done];
+    } else {
+        done();
+    }
 }
 
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error {
@@ -1655,7 +1665,6 @@ typedef enum BackendStates {
 
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket {
     NSLog(@"webSocketDidOpen performRegistration: %d", _performRegistration);
-    _backoffTime = 0.0;
     if (_performRegistration) {
         [self setState: kBackendRegistering];
         [self performRegistration];
