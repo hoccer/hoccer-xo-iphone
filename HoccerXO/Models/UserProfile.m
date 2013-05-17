@@ -13,6 +13,7 @@
 #import "NSData+HexString.h"
 #import "HXOUserDefaults.h"
 #import "Environment.h"
+#import "NSString+UUID.h"
 
 static UserProfile * profileInstance;
 
@@ -110,7 +111,11 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     NSData * salt;
     NSData * verifier;
     [self.srpUser salt: &salt andVerificationKey: &verifier forPassword: self.password];
-    [_saltItem setObject: @"hello dude?" forKey: (__bridge id)(kSecAttrAccount)]; // XXX understand why this helps
+    // XXX Workaround for keychain item issue:
+    // first keychain claims there is no such item. Later it complains it can not create such
+    // an item because it already exists. Using a unique identifier in kSecAttrAccount helps...
+    NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
+    [_saltItem setObject: keychainItemBugWorkaround forKey: (__bridge id)(kSecAttrAccount)]; 
     [_saltItem setObject: [salt hexadecimalString] forKey: (__bridge id)(kSecValueData)];
     return [verifier hexadecimalString];
 }

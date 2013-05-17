@@ -580,7 +580,7 @@ typedef enum BackendStates {
             NSString * path = [[NSBundle mainBundle] pathForResource: file ofType:@"der"];
             NSData * certificateData = [[NSData alloc] initWithContentsOfFile: path];
             SecCertificateRef certificate = SecCertificateCreateWithData(nil, (__bridge CFDataRef)(certificateData));
-            NSLog(@"p: %@ cert: %@", path, certificate);
+            //NSLog(@"certificate: path: %@ cert: %@", path, certificate);
             [certs addObject: CFBridgingRelease(certificate)];
         }
         _certificates = [certs copy];
