@@ -1119,14 +1119,14 @@
 		637847E616F348E400DE03C2 /* NavigationBar */ = {
 			isa = PBXGroup;
 			children = (
-				6327EB3E1719C2AF00AF75E1 /* navbar-icon-add.png */,
-				6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */,
-				6327EAE6171875B200AF75E1 /* navbar-btn-blue.png */,
-				6327EAE7171875B200AF75E1 /* navbar-btn-blue@2x.png */,
 				6378482E16F3CF1C00DE03C2 /* navbar-btn-back.png */,
 				6378482F16F3CF1C00DE03C2 /* navbar-btn-back@2x.png */,
+				6327EAE6171875B200AF75E1 /* navbar-btn-blue.png */,
+				6327EAE7171875B200AF75E1 /* navbar-btn-blue@2x.png */,
 				6378483016F3CF1C00DE03C2 /* navbar-btn-default.png */,
 				6378483116F3CF1C00DE03C2 /* navbar-btn-default@2x.png */,
+				6327EB3E1719C2AF00AF75E1 /* navbar-icon-add.png */,
+				6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */,
 				6378483216F3CF1C00DE03C2 /* navbar-icon-contacts.png */,
 				6378483316F3CF1C00DE03C2 /* navbar-icon-contacts@2x.png */,
 				6378483416F3CF1C00DE03C2 /* navbar-icon-home.png */,
