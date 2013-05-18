@@ -60,7 +60,8 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSString * mediaType;             // image, audio, video, contact, other
 @property (nonatomic, strong) NSString * mimeType;              // mime type of the attachment
 
-@property (nonatomic, strong) NSString * remoteURL;             // remote URL where the file should/was uploaded
+@property (nonatomic, strong) NSString * remoteURL;             // remote URL where the file can be downloaded
+@property (nonatomic, strong) NSString * uploadURL;             // remote URL where the file should be uploaded
 @property (nonatomic)         NSNumber * transferSize;          // number of plaintext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
@@ -94,6 +95,8 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) UIImage * previewImage;
 
 @property (readonly) AttachmentState state;
+
+@property (nonatomic) NSUInteger resumePos;
 
 
 // encryption/decryption properties

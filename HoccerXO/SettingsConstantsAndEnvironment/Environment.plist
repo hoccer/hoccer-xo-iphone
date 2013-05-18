@@ -26,7 +26,7 @@
 	<key>fileCacheURI</key>
 	<dict>
 		<key>development</key>
-		<string>https://filecache-development.hoccer.com/v3/</string>
+		<string>https://filecache-development.hoccer.com/test/</string>
 		<key>production</key>
 		<string>https://filecache-development.hoccer.com/v3/</string>
 	</dict>

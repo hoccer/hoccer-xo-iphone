@@ -15,6 +15,6 @@
 
 @property (nonatomic, strong) CryptoEngine * cryptoEngine;
 
-- (id)initWithInputStreamAndEngine:(NSInputStream *)stream cryptoEngine:(CryptoEngine*)engine;
+- (id)initWithInputStream:(NSInputStream *)stream cryptoEngine:(CryptoEngine*)engine skipOutputBytes:(NSInteger)skipOutputBytes;
 
 @end

@@ -16,6 +16,9 @@
 #import "ABPersonVCardCreator.h"
 #import "ABPersonCreator.h"
 #import "Vcard.h"
+#import "GCHTTPRequestOperation.h"
+#import "GCNetworkRequest.h"
+
 #import "NSData+Base64.h"
 
 #import "NSString+StringWithData.h"
@@ -28,11 +31,21 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AddressBookUI/AddressBookUI.h>
 
+
+@interface Attachment() {
+    
+}
+@property BOOL didResume;
+
+@end
+
 @implementation Attachment
 {
     NSString * _verbosityLevel;
     NSError * _transferError;
 }
+
+
 
 @dynamic localURL;
 @dynamic mimeType;
@@ -44,6 +57,8 @@
 @dynamic aspectRatio;
 
 @dynamic remoteURL;
+@dynamic uploadURL;
+
 @dynamic transferSize;
 @dynamic cipherTransferSize;
 @dynamic cipheredSize;
@@ -69,6 +84,9 @@
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
 @synthesize transferRetryTimer;
+@synthesize resumePos;
+
+@synthesize didResume; // DEBUG
 
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"])
 
@@ -691,7 +709,7 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) uploadData {
-    // NSLog(@"Attachment:upload remoteURL=%@, attachment=%@", self.remoteURL, self );
+    NSLog(@"Attachment:upload uploadURL=%@, attachment=%@", self.uploadURL, self );
     if ([self.message.isOutgoing isEqualToNumber: @NO]) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
         return;
@@ -705,7 +723,7 @@ NSArray * TransferStateName = @[@"detached",
         if (myError == nil) {
             // NSLog(@"Attachment:upload starting withUploadData");
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
-                                             absoluteURI:[self remoteURL]
+                                             absoluteURI:[self uploadURL]
                                                  payloadData:myData
                                                  payloadStream:nil
                                                  headers:[self uploadHttpHeaders]
@@ -723,7 +741,7 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) uploadStream {
-    // NSLog(@"Attachment:upload remoteURL=%@, attachment=%@", self.remoteURL, self );
+    // NSLog(@"Attachment:upload uploadURL=%@, attachment=%@", self.uploadURL, self );
     if ([self.message.isOutgoing isEqualToNumber: @NO]) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
         return;
@@ -734,9 +752,15 @@ NSArray * TransferStateName = @[@"detached",
         return;
     }
     if (self.state == kAttachmentTransfered) {
-        NSLog(@"#WARNING: Attachment uploadStream: already transfered, remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
+        NSLog(@"#WARNING: Attachment uploadStream: already transfered, uploadURL=%@, attachment.contentSize=%@", self.uploadURL, self.contentSize );
         return;
     }
+    if (self.cipherTransferSize != nil && [self.cipherTransferSize longLongValue] > 0) {
+        [self tryResumeUploadStream];
+        return;
+    }
+    self.didResume = NO; // just for TESTING
+    
     [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
         if (myError == nil) {
             // NSLog(@"Attachment:upload starting uploadStream");
@@ -749,13 +773,116 @@ NSArray * TransferStateName = @[@"detached",
                                        key:messageKey
                                        IV:nil
                                        error:&myError];
-            CryptingInputStream * myEncryptingStream = [[CryptingInputStream alloc] initWithInputStreamAndEngine:myStream cryptoEngine:encryptionEngine];
+            CryptingInputStream * myEncryptingStream = [[CryptingInputStream alloc] initWithInputStream:myStream cryptoEngine:encryptionEngine skipOutputBytes:0];
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
-                                                         absoluteURI:[self remoteURL]
+                                                         absoluteURI:[self uploadURL]
                                                              payloadData:nil
                                                              payloadStream:myEncryptingStream
                                                              headers:[self uploadHttpHeadersWithCrypto]
                                         ];
+            self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
+            if (progressIndicatorDelegate) {
+                [progressIndicatorDelegate transferStarted];
+            } else {
+                NSLog(@"Attachment:withUploadStream - no delegate to signal transferStarted");
+            }
+        } else {
+            NSLog(@"ERROR: Attachment:upload error=%@",myError);
+        }
+    }];
+}
+
++ (BOOL)scanContentRange:(NSString*)theRange rangeStart:(long long*)rangeStart rangeEnd:(long long*)rangeEnd contentLength:(long long*)contentLength
+{
+    NSScanner * theScanner = [NSScanner scannerWithString:theRange];
+    
+    return [theScanner scanString:@"bytes " intoString:NULL] &&
+    [theScanner scanLongLong:rangeStart] &&
+    [theScanner scanString:@"-" intoString:NULL] &&
+    [theScanner scanLongLong:rangeEnd] &&
+    [theScanner scanString:@"/" intoString:NULL] &&
+    [theScanner scanLongLong:contentLength];
+}
+
+- (void) checkResumeUploadStream {
+    NSLog(@"checkResumeUploadStream uploadURL=%@, attachment=%@", self.uploadURL, self );
+    GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:self.uploadURL HTTPMethod:@"HEAD" parameters:nil];
+    
+    GCHTTPRequestOperation *operation =
+    [GCHTTPRequestOperation HTTPRequest:request
+                          callBackQueue:nil
+                      completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
+                          NSLog(@"checkResumeUploadStream got response status = %d, headers=%@", response.statusCode, response.allHeaderFields );
+                          if (response.statusCode != 404) {
+                              NSDictionary * myHeaders = response.allHeaderFields;
+                              NSLog(@"HEAD response headers=%@",myHeaders);
+                              NSString * myContentRangeString = myHeaders[@"Content-Range"];
+                              
+                              long long rangeStart;
+                              long long rangeEnd;
+                              long long contentLength;
+                              
+                              if ([Attachment scanContentRange:myContentRangeString
+                                                    rangeStart:&rangeStart
+                                                      rangeEnd:&rangeEnd
+                                                 contentLength:&contentLength])
+                              {
+                                  [self resumeUploadStreamFromPosition:[NSNumber numberWithLongLong:rangeEnd]];
+                              }
+                              
+                          } else {
+                              NSLog(@"checkResumeUploadStream irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields);
+                          }
+                      }
+                           errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
+                               NSLog(@"checkResumeUploadStream error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                           }];
+    [operation startRequest];
+}
+
+- (void) tryResumeUploadStream {
+    NSLog(@"tryResumeUploadStream uploadURL=%@, attachment=%@", self.uploadURL, self );
+    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+        NSLog(@"ERROR: uploadAttachment called on incoming attachment");
+        return;
+    }
+    if (self.transferConnection != nil) {
+        // do something about it
+        // NSLog(@"upload of attachment still running");
+        return;
+    }
+    if (self.state == kAttachmentTransfered) {
+        NSLog(@"#WARNING: Attachment uploadStream: already transfered, uploadURL=%@, attachment.contentSize=%@", self.uploadURL, self.contentSize );
+        return;
+    }
+    [self checkResumeUploadStream];
+}
+
+- (void) resumeUploadStreamFromPosition:(NSNumber *)fromPos {
+    self.didResume = YES; // just for TESTING
+    
+    [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
+        if (myError == nil) {
+            NSLog(@"Attachment:resumeUploadStreamFromPosition: %@", fromPos);
+            NSData * messageKey = self.message.cryptoKey;
+            NSError * myError = nil;
+            encryptionEngine = [[CryptoEngine alloc]
+                                initWithOperation:kCCEncrypt
+                                algorithm:kCCAlgorithmAES128
+                                options:kCCOptionPKCS7Padding
+                                key:messageKey
+                                IV:nil
+                                error:&myError];
+            CryptingInputStream * myEncryptingStream = [[CryptingInputStream alloc] initWithInputStream:myStream
+                                                                                           cryptoEngine:encryptionEngine
+                                                                                        skipOutputBytes:[fromPos integerValue]];
+            NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
+                                                         absoluteURI:[self uploadURL]
+                                                         payloadData:nil
+                                                       payloadStream:myEncryptingStream
+                                                             headers:[self uploadHttpHeadersWithCryptoFromPos:fromPos]
+                                        ];
+            self.cipherTransferSize = fromPos;
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate transferStarted];
@@ -773,7 +900,99 @@ NSArray * TransferStateName = @[@"detached",
     [self uploadStream];
 }
 
+- (void) resumeDownload {
+    // NSLog(@"Attachment resumeDownload remoteURL=%@, attachment=%@", self.remoteURL, self );
+    NSLog(@"Attachment download remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
+    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+        NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoing = %@", self.message.isOutgoing);
+        return;
+    }
+    if (self.transferConnection != nil) {
+        // do something about it
+        // NSLog(@"download of attachment still running");
+        return;
+    }
+    if (self.state == kAttachmentTransfered) {
+        NSLog(@"#WARNING: Attachment download: already transfered, remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
+        return;
+    }
+    
+    if (self.ownedURL == nil) {
+        NSLog(@"can not resume, no local url");
+        // create new destination file for download
+        [self download];
+        return;
+    }
+    
+    NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:myPath]) {
+        NSLog(@"resumeDownload: can not resume, no file at path %@, starting over", myPath);
+        self.ownedURL = nil;
+        [self download];
+        return;
+    }
+    NSError * error = nil;
+    long long fileSize = [[Attachment fileSize:self.ownedURL withError:&error] longLongValue];
+    if (error != nil) {
+        NSLog(@"resumeDownload: can't determine size of %@, error=%@, starting over", self.ownedURL, error);
+        [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
+        [self download];
+        return;
+    }
+    if (fileSize < 16 || fileSize > [self.contentSize longLongValue]) {
+        NSLog(@"resumeDownload: size of %@ too small or too large (%lld), starting over", self.ownedURL, fileSize);
+        [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
+        [self download];
+        return;        
+    }
+    NSUInteger lastFullBlockPos = (fileSize / 16)*16 - 16;
+   
+    self.resumePos = lastFullBlockPos + 16;
+    NSLog(@"truncating file size %llu to size %u, lastFullBlockPos=%u", fileSize, self.resumePos, lastFullBlockPos);
+    [Attachment truncateFileAtPath:myPath toSize:resumePos];
+    
+    // NSLog(@"Attachment:download ownedURL = %@", self.ownedURL);
+    // NSLog(@"Attachment:download remoteURL = %@", self.remoteURL);
+    
+    NSData * messageKey = self.message.cryptoKey;
+    NSError * myError = nil;
+     
+    // encryptionEngine just needed to determine the cipherTransferSize
+    self.encryptionEngine = [[CryptoEngine alloc]
+                             initWithOperation:kCCEncrypt
+                             algorithm:kCCAlgorithmAES128
+                             options:kCCOptionPKCS7Padding
+                             key:messageKey
+                             IV:nil
+                             error:&myError];
+    
+    self.cipherTransferSize = [NSNumber numberWithLongLong:resumePos]; // set transfered size to resume position
+    self.cipheredSize = [NSNumber numberWithLongLong:[self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].longLongValue]];
+    NSNumber * lastBytePos = [NSNumber numberWithLongLong:[self.cipheredSize longLongValue]-1];
+    
+    self.decryptionEngine = nil;
+    NSDictionary * myHeaders = [self downloadHttpHeadersWithStart: [NSNumber numberWithLongLong:lastFullBlockPos] withEnd:lastBytePos];
+    
+    
+    NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"GET"
+                                                 absoluteURI:[self remoteURL]
+                                                 payloadData:nil
+                                               payloadStream:nil
+                                                     headers:myHeaders
+                                ];
+    NSLog(@"try resume download with header = %@",myHeaders);
+    self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
+    if (progressIndicatorDelegate) {
+        [progressIndicatorDelegate transferStarted];
+    } else {
+        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:download - no delegate for transferStarted");}
+    }
+}
+
 - (void) download {
+    
+    self.didResume = NO; // just for TESTING
+    
     // NSLog(@"Attachment download remoteURL=%@, attachment=%@", self.remoteURL, self );
     NSLog(@"Attachment download remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
@@ -796,8 +1015,13 @@ NSArray * TransferStateName = @[@"detached",
         self.ownedURL = [self localUrlForDownloadinDirectory: appDocDir];
     } else {
         // until we use ranged requests, let us delete the file in case it is left over
+#ifdef NO_DOWNLOAD_RESUME
         NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
         [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
+#else
+        [self resumeDownload];
+        return;
+#endif
     }
     
     // NSLog(@"Attachment:download ownedURL = %@", self.ownedURL);
@@ -902,24 +1126,29 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 -(NSDictionary*) uploadHttpHeadersWithCrypto {
-    NSString * myPath = nil;
-    if (self.localURL != nil) {
-        myPath = [[NSURL URLWithString: self.localURL] path];
-    } else {
-        myPath = @"unknown";
-    }
-    NSString *contentDisposition = [NSString stringWithFormat:@"attachment; filename=\"%@\"", myPath];
     
     self.cipheredSize = [NSNumber numberWithInteger:[self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].integerValue]];
     
-    NSDictionary * headers = @{@"Content-Disposition": contentDisposition,
-                               @"Content-Type"       : @"application/octet-stream",
+    NSDictionary * headers = @{@"Content-Type"       : @"application/octet-stream",
                                @"Content-Length"     : [self.cipheredSize stringValue]};
     // NSLog(@"headers=%@", headers);
     return headers;
 }
 
+-(NSDictionary*) uploadHttpHeadersWithCryptoFromPos:(NSNumber*) start {
+    
+    self.cipheredSize = [NSNumber numberWithInteger:[self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].integerValue]];
 
+    NSInteger end = [self.cipheredSize integerValue] - 1;
+    NSNumber * size = [NSNumber numberWithInteger:end - [start integerValue] + 1];
+    
+    
+    NSDictionary * headers = @{@"Content-Range": [NSString stringWithFormat:@"bytes %@-%d",start, end],
+                               @"Content-Type"       : @"application/octet-stream",
+                               @"Content-Length"     : size};
+     NSLog(@"uploadHttpHeadersWithCryptoFromPos: headers=%@", headers);
+    return headers;
+}
 
 -(NSDictionary*) uploadHttpHeaders {
     NSString * myPath = nil;
@@ -941,8 +1170,13 @@ NSArray * TransferStateName = @[@"detached",
     return nil;
 }
 
+// http header ranges are inclusive: first 500 bytes are 0-499
+-(NSDictionary*) downloadHttpHeadersWithStart:(NSNumber*)start withEnd:(NSNumber*)end {
+    NSDictionary * headers = @{@"Range": [NSString stringWithFormat:@"bytes %@-%@",start, end]};
+    return headers;
+}
 
-// WARNING: this version depends on remoteURLs to be unique, so is not suitable for remote URLs than are no UUIDs 
+// WARNING: this version depends on remoteURLs to be unique, so is not suitable for remote URLs than are no UUIDs
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory {
     NSString * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
     NSString * myRemoteFileName = myRemoteURL.lastPathComponent;
@@ -1033,9 +1267,9 @@ NSArray * TransferStateName = @[@"detached",
 {
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (connection == _transferConnection) {
-        // NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@",httpResponse, (long)[httpResponse statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+        NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@",httpResponse, (long)[httpResponse statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
         self.transferHttpStatusCode = (long)[httpResponse statusCode];
-        if ((long)[httpResponse statusCode] != 200) {
+        if (self.transferHttpStatusCode != 200 && self.transferHttpStatusCode != 206 ) {
             // TODO: check if this is necessary and leads to duplicate error reporting
             NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection didReceiveResponse http status code =%ld", self.transferHttpStatusCode];
             // NSLog(@"%@", myDescription);
@@ -1053,8 +1287,8 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 
--(void) appendToFile:(NSString*)fileURL thisData:(NSData *) data {
-    NSURL * myURL = [NSURL URLWithString: self.ownedURL];
++(void) appendToFile:(NSString*)fileURL thisData:(NSData *) data {
+    NSURL * myURL = [NSURL URLWithString: fileURL];
     NSString * myPath = [myURL path];
     NSOutputStream * stream = [[NSOutputStream alloc] initToFileAtPath: myPath append:YES];
     [stream open];
@@ -1071,18 +1305,114 @@ NSArray * TransferStateName = @[@"detached",
     [stream close];
 }
 
++ (NSData*)readDataFromFileAtURL:(NSURL*)url atOffset:(NSUInteger)start withSize:(NSUInteger) length {
+    NSString * myPath = [url path];
+    return [Attachment readDataFromFileAtPath:myPath atOffset:start withSize:length];
+}
+
++ (NSData*)readDataFromFileAtFileURLString:(NSString*)fileUrl atOffset:(NSUInteger)start withSize:(NSUInteger) length {
+    NSURL * myURL = [NSURL URLWithString: fileUrl];
+    return [Attachment readDataFromFileAtURL:myURL atOffset:start withSize:length];
+}
+
+
++ (NSData*)readDataFromFileAtPath:(NSString*)filePath atOffset:(NSUInteger)start withSize:(NSUInteger) length {
+        
+    int fd = open([filePath UTF8String], O_RDONLY);
+    
+    if (fd == -1) {
+        NSLog(@"ERROR: Attachment readDataFromFileAtPath, open failed, error=%d", length, errno);
+        return nil;
+    }
+    
+    int pos = lseek(fd, start, SEEK_SET);
+    if (pos != start) {
+        NSLog(@"ERROR: Attachment readDataFromFileAtPath, seek to %d returned %d, error=%d", start, pos, errno);
+        close(fd);
+        return nil;
+    }
+    
+    NSMutableData* theData = [[NSMutableData alloc] initWithLength:length];
+    
+    if (theData) {
+        void* buffer = [theData mutableBytes];
+        NSUInteger bufferSize = [theData length];
+        NSUInteger actualBytes = read(fd, buffer, bufferSize);
+        if (actualBytes < length) {
+            NSLog(@"ERROR: Attachment readDataFromFileAtPath, wanted %d bytes, got only %d", length, actualBytes);
+            theData = nil;
+        }
+    } else {
+        NSLog(@"ERROR: Attachment readDataFromFileAtPath, could not allocate NSData with len=%d", length);        
+    }
+    close(fd);
+    
+    return theData;
+}
+
++ (void)truncateFileAtPath:(NSString*)filePath toSize:(NSUInteger) length {
+    if (truncate([filePath UTF8String], length) != 0) {
+        NSLog(@"Attachment: truncateFileAtPath: %@ toSize: %d failed, errno=%d", filePath, length, errno);
+    }
+}
+
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
 {
     if (connection == _transferConnection) {
-        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveData len=%lu", (unsigned long)[data length]);}
+        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveData len=%u", [data length]);}
         if ([self.message.isOutgoing isEqualToNumber: @NO]) {
             NSError *myError = nil;
+            if (self.resumePos != 0) {
+                NSUInteger myFileSize = [[Attachment fileSize:self.ownedURL withError:&myError] unsignedLongValue];
+                if (self.resumePos != myFileSize || self.decryptionEngine != nil) {
+                    NSLog(@"ERROR: didReceiveData: can not resume; resumePos/fileSze mismatch or self.decryptionEngine!=nil; resumePos=%d fileSize=%d, decryptionEngine=%@, error=%@", self.resumePos, myFileSize, self.decryptionEngine, myError);
+                    return;
+                } else {
+                    // resume
+                    if (data.length < 16) {
+                        NSLog(@"ERROR: didReceiveData: can not resume, first data chunk < 16 bytes, chunk size = %d", data.length);
+                        return;
+                    }
+                    // set up crypto engine
+                    NSData * messageKey = self.message.cryptoKey;
+                    NSError * myError = nil;
+                    NSData * iv = [data subdataWithRange:NSMakeRange(0,16)];
+                    
+                    self.decryptionEngine = [[CryptoEngine alloc]
+                                             initWithOperation:kCCDecrypt
+                                             algorithm:kCCAlgorithmAES128
+                                             options:kCCOptionPKCS7Padding
+                                             key:messageKey
+                                             IV:iv
+                                             error:&myError];
+                    
+                    NSLog(@"response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
+                    
+                    data = [data subdataWithRange:NSMakeRange(16, data.length-16)];
+                    if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveData: resume crypto setup done, restlen=%u", [data length]);}
+                    self.resumePos = 0;
+                    self.didResume = YES;
+                }
+            }
+#ifdef LET_DOWNLOAD_FAIL
+            /// DEBUG: abort artificially
+            if (!didResume && [self.cipherTransferSize unsignedLongValue] > [self.cipheredSize unsignedLongValue]/2) {
+                [_transferConnection cancel];
+                _transferConnection = nil;
+                NSLog(@"TEST: didReceiveData: canceling transfer %@",self.cipherTransferSize);
+                return;
+            }
+#endif
             NSData * plainTextData = [self.decryptionEngine addData:data error:&myError];
             if (myError != nil) {
                 NSLog(@"ERROR: didReceiveData: decryption error: %@",myError);
                 return;
             }
-            [self appendToFile:self.ownedURL thisData:plainTextData];
+            [Attachment appendToFile:self.ownedURL thisData:plainTextData];
+            //[Attachment appendToFile:[self.ownedURL stringByAppendingString:@".crypted"] thisData:data];
+            //[Attachment appendToFile:[self.ownedURL stringByAppendingString:@".plain"] thisData:plainTextData];
+
+            
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
             self.cipherTransferSize = [NSNumber numberWithLong:[self.cipherTransferSize longLongValue]+ data.length];
             if (progressIndicatorDelegate) {
@@ -1103,6 +1433,15 @@ NSArray * TransferStateName = @[@"detached",
     if (connection == _transferConnection) {
         if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didSendBodyData %d", bytesWritten);}
         self.cipherTransferSize = @(totalBytesWritten);
+#ifdef LET_UPLOAD_FAIL
+        /// DEBUG: abort artificially
+        if (!didResume && [self.cipherTransferSize unsignedLongValue] > [self.cipheredSize unsignedLongValue]/3) {
+            [_transferConnection cancel];
+            _transferConnection = nil;
+            NSLog(@"TEST: didSendBodyData: canceling transfer %@",self.cipherTransferSize);
+            return;
+        }
+#endif
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate showTransferProgress: (float)totalBytesWritten / (float) totalBytesExpectedToWrite];
         } else {
@@ -1148,7 +1487,8 @@ NSArray * TransferStateName = @[@"detached",
                 NSLog(@"connectionDidFinishLoading: decryption error: %@",myError);
                 return;
             }
-            [self appendToFile:self.ownedURL thisData:plainTextData];
+            [Attachment appendToFile:self.ownedURL thisData:plainTextData];
+            // [Attachment appendToFile:[self.ownedURL stringByAppendingString:@".plain"] thisData:plainTextData];
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
 
             if ([self.transferSize isEqualToNumber: self.contentSize]) {

@@ -46,6 +46,11 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     return YES;
 }
 
+- (void)registerForRemoteNotifications {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+}
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
  
@@ -53,8 +58,8 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
         return NO;
     }
     
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-
+    [self registerForRemoteNotifications];
+    
     self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
 
     UIStoryboard *storyboard = nil;
@@ -385,7 +390,7 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     if (deviceToken != nil) {
-        // NSLog(@"got APNS deviceToken: %@ ", [deviceToken hexadecimalString]);
+        NSLog(@"got APNS deviceToken: %@ ", [deviceToken hexadecimalString]);
         // TODO: do we need this?
         //self.registered = YES;
         NSString * tokenString = [deviceToken hexadecimalString];

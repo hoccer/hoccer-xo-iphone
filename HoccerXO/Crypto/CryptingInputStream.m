@@ -25,6 +25,8 @@
     NSError * thisStreamError;
     NSInteger totalBytesIn;
     NSInteger totalBytesOut;
+    NSInteger totalBytesSkipped;
+    NSInteger skipBytes;
     NSString * _verbosityLevel;
 }
 
@@ -39,25 +41,27 @@
 
 #pragma mark Object lifecycle
 
-- (id)initWithInputStreamAndEngine:(NSInputStream *)stream cryptoEngine:(CryptoEngine*)engine {
-{
-    self = [super init];
-    if (self) {
-        // Initialization code here.
-        _cryptoEngine = engine;
-		parentStream = stream;
-		[parentStream setDelegate:self];
-        thisStreamStatus = NSStreamStatusNotOpen;
-        restBuffer = [[NSMutableData alloc] init];
-        totalBytesIn = 0;
-        totalBytesOut = 0;
-        [self setDelegate:self];
+- (id)initWithInputStream:(NSInputStream *)stream cryptoEngine:(CryptoEngine*)engine skipOutputBytes:(NSInteger)skipOutputBytes {
+    {
+        self = [super init];
+        if (self) {
+            // Initialization code here.
+            _cryptoEngine = engine;
+            parentStream = stream;
+            [parentStream setDelegate:self];
+            thisStreamStatus = NSStreamStatusNotOpen;
+            restBuffer = [[NSMutableData alloc] init];
+            totalBytesIn = 0;
+            totalBytesOut = 0;
+            totalBytesSkipped = 0;
+            skipBytes = skipOutputBytes;
+            [self setDelegate:self];
+        }
+        
+        return self;
     }
-    
-    return self;
 }
-    
-}
+
 
 - (void)dealloc
 {
@@ -144,7 +148,42 @@
 #pragma mark NSInputStream subclass methods
 
 - (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len {
+    // shortcut for the normal case
+    if (skipBytes == 0) {
+        return [self do_read:buffer maxLength:len];
+    }
+    
+    // skip blockwise first
+    const NSInteger blockSize = 4096;
+    NSInteger blocksToSkip = skipBytes / blockSize;
+    NSInteger blockSkipSize = blocksToSkip * blockSize;
+    totalBytesSkipped = 0;
+    NSMutableData * myBlockSkipData = [NSMutableData dataWithLength:blockSize];
+    void * myBuffer = [myBlockSkipData mutableBytes];
+    
+    while (totalBytesSkipped < blockSkipSize) {
+        NSInteger skipped = [self do_read:myBuffer maxLength:blockSize];
+        if (skipped <= 0) {
+            return skipped;
+        }
+        totalBytesSkipped += skipped;
+    }
+    // skip rest now
+    NSInteger restToSkip = skipBytes - totalBytesSkipped;
+    if (restToSkip < blockSize) {
+        NSInteger skipped = [self do_read:myBuffer maxLength:restToSkip];
+        if (skipped < restToSkip) {
+            return 0;
+        }
+        totalBytesSkipped += skipped;        
+    }
+    return [self do_read:buffer maxLength:len];    
+}
+
+
+- (NSInteger)do_read:(uint8_t *)buffer maxLength:(NSUInteger)len {
     if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: read len = %d, restBuffer = %d, status = %d, parentStreamStatus = %d", len, restBuffer.length, self.streamStatus, parentStream.streamStatus);}
+    
     if (_cryptoEngine == nil) {
         NSInteger bytesRead = [parentStream read:buffer maxLength:len];
         if (bytesRead > 0) {

@@ -257,7 +257,11 @@ typedef enum BackendStates {
     message.messageTag = [NSString stringWithUUID];
 
     if (attachment != nil) {
-        attachment.remoteURL =  [[self newUploadURL] absoluteString];
+        NSDictionary * myUrls = [self getNewTransferUrlsFor:@[contact.clientId]];
+        NSLog(@"transferUrls=%@", myUrls);
+        attachment.uploadURL = myUrls[@"upload"];
+        attachment.remoteURL = myUrls[@"download"];
+        //attachment.remoteURL =  [[self newUploadURL] absoluteString];
         attachment.transferSize = @(0);
         attachment.cipherTransferSize = @(0);
         
@@ -952,7 +956,7 @@ typedef enum BackendStates {
     if (theAttachment.state == kAttachmentUploadIncomplete ||
         theAttachment.state == kAttachmentDownloadIncomplete ||
         theAttachment.state == kAttachmentWantsTransfer) {
-        NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
@@ -968,7 +972,7 @@ typedef enum BackendStates {
                                                otherButtonTitles: nil];
         [alert show];
         NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
-              theAttachment.remoteURL, theAttachment.transferFailures);
+              [theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures);
     }
 }
 
@@ -987,10 +991,19 @@ typedef enum BackendStates {
                     withErrorKey:@"attachment_upload_failed"];
 }
 
-- (NSURL *) newUploadURL {
-    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
-    return [NSURL URLWithString: myURL];
-}
+- (NSDictionary *)getNewTransferUrlsFor:(NSArray*)receiverIds {
+    NSString * myUUID = [NSString stringWithUUID];
+    NSString * myBaseURL = [[Environment sharedEnvironment] fileCacheURI];
+    NSString * myUploadUrl = [[myBaseURL stringByAppendingString:@"upload/"] stringByAppendingString:myUUID];
+    NSString * myDownloadUrl = [[myBaseURL stringByAppendingString:@"download/"] stringByAppendingString:myUUID];
+    NSDictionary * myUrls = @{@"upload":myUploadUrl, @"download": myDownloadUrl};
+    return myUrls;
+};
+
+//- (NSURL *) newUploadURL {
+//    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
+//    return [NSURL URLWithString: myURL];
+//}
 
 - (NSString *) appendExpirationParams:(NSString*) theURL {
     NSDictionary *params = [NSDictionary dictionaryWithObject:[@(60*24*365*3) stringValue] forKey:@"expires_in"];
