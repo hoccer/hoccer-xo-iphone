@@ -223,12 +223,14 @@
 		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
 		63AEE30816CA566B00522F92 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30716CA566B00522F92 /* Contact.m */; };
 		63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* HXOMessage.m */; };
+		63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AF81911746AA1E00D007E3 /* GroupViewController.m */; };
+		63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AF819417471EFB00D007E3 /* HXONavigationItem.m */; };
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
 		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
 		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
 		63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */; };
-		63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* UserDefaultsViewController.m */; };
+		63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */; };
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
 		63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */; };
@@ -692,6 +694,10 @@
 		63AEE30716CA566B00522F92 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		63AEE30916CA6B1900522F92 /* HXOMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOMessage.h; sourceTree = "<group>"; };
 		63AEE30A16CA6B1900522F92 /* HXOMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOMessage.m; sourceTree = "<group>"; };
+		63AF81901746AA1E00D007E3 /* GroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupViewController.h; sourceTree = "<group>"; };
+		63AF81911746AA1E00D007E3 /* GroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupViewController.m; sourceTree = "<group>"; };
+		63AF819317471EFB00D007E3 /* HXONavigationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXONavigationItem.h; sourceTree = "<group>"; };
+		63AF819417471EFB00D007E3 /* HXONavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXONavigationItem.m; sourceTree = "<group>"; };
 		63BD7D84174411BD00118A7F /* HoccerXO-7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-7.xcdatamodel"; sourceTree = "<group>"; };
 		63BD7D8C174422D500118A7F /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
@@ -701,8 +707,8 @@
 		63BD7D9717442C1B00118A7F /* GroupListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupListViewController.m; sourceTree = "<group>"; };
 		63C1355F1716054C00969B0B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellAvatarPicker_iPhone.xib; sourceTree = "<group>"; };
-		63C1356617160E2E00969B0B /* UserDefaultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsViewController.h; sourceTree = "<group>"; };
-		63C1356717160E2E00969B0B /* UserDefaultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsViewController.m; sourceTree = "<group>"; };
+		63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOGroupedTableViewController.h; sourceTree = "<group>"; };
+		63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOGroupedTableViewController.m; sourceTree = "<group>"; };
 		63C1356B1716A4AB00969B0B /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
 		63C1356C1716A4AB00969B0B /* Invite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invite.m; sourceTree = "<group>"; };
 		63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_contact_large.png; sourceTree = "<group>"; };
@@ -1351,6 +1357,10 @@
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				63BD7D9617442C1B00118A7F /* GroupListViewController.h */,
 				63BD7D9717442C1B00118A7F /* GroupListViewController.m */,
+				63AF81901746AA1E00D007E3 /* GroupViewController.h */,
+				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
+				63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */,
+				63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -1365,8 +1375,6 @@
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
 				E9D1145517316DCC00737EF7 /* StartupViewController.h */,
 				E9D1145617316DCC00737EF7 /* StartupViewController.m */,
-				63C1356617160E2E00969B0B /* UserDefaultsViewController.h */,
-				63C1356717160E2E00969B0B /* UserDefaultsViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
 			);
@@ -1602,6 +1610,8 @@
 				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
+				63AF819317471EFB00D007E3 /* HXONavigationItem.h */,
+				63AF819417471EFB00D007E3 /* HXONavigationItem.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2160,7 +2170,7 @@
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
 				63DC01851715205300609513 /* HXOSwitch.m in Sources */,
-				63C1356817160E2E00969B0B /* UserDefaultsViewController.m in Sources */,
+				63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */,
 				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
 				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
@@ -2204,6 +2214,8 @@
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */,
+				63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */,
+				63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2336,7 +2348,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";

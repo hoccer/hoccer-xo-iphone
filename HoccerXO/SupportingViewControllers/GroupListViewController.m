@@ -9,7 +9,7 @@
 #import "GroupListViewController.h"
 #import "Group.h"
 #import "AppDelegate.h"
-#import "HXOBackend.h"
+#import "GroupViewController.h"
 
 @interface GroupListViewController ()
 
@@ -46,17 +46,25 @@
     return @"groups_empty_placeholder";
 }
 
-- (void) addButtonPressed: (id) sender {
-    Group * group = [self.backend createGroup];
-    group.nickName = @"Tolle Gruppe";
-}
-
-- (HXOBackend*) backend {
-    return ((AppDelegate*)UIApplication.sharedApplication.delegate).chatBackend;
-}
 
 - (NSString*) defaultAvatarName {
     return @"avatar_default_group";
+}
+
+- (void) addButtonPressed: (id) sender {
+    UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupViewController"];
+    [self presentViewController: modalGroupView animated: YES completion:nil];
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSLog(@"prepareForSegue: %@", segue.identifier);
+    Group * group = nil;
+    GroupViewController * groupViewController = (GroupViewController*)segue.destinationViewController;
+    if ([[segue identifier] isEqualToString:@"showGroup"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        group = [[self currentFetchedResultsController] objectAtIndexPath:indexPath];
+    }
+    groupViewController.group = group;
 }
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UserDefaultsViewController : UITableViewController
+@interface HXOGroupedTableViewController : UITableViewController
 {
     NSMutableDictionary * _prototypes;
     NSArray *             _items;

@@ -23,7 +23,6 @@
 @interface ContactListViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
-@property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (strong, nonatomic, readonly) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 

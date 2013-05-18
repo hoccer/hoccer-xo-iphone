@@ -17,7 +17,7 @@
 #import "RadialGradientView.h"
 #import "CustomNavigationBar.h"
 #import "UIImage+ScaleAndCrop.h"
-#import "UserDefaultsViewController.h"
+#import "HXOGroupedTableViewController.h"
 #import "NSString+UUID.h"
 #import "AppDelegate.h"
 #import "ContactListViewController.h"
@@ -627,7 +627,7 @@ typedef enum ActionSheetTags {
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
 }
 
-#pragma marl - Avatar Handling
+#pragma mark - Avatar Handling
 
 - (IBAction)avatarTapped:(id)sender {
     [self.attachmentPicker showInView: self.view];

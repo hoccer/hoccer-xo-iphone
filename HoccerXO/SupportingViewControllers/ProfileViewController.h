@@ -10,7 +10,7 @@
 
 #import "AttachmentPickerController.h"
 
-#import "UserDefaultsViewController.h"
+#import "HXOGroupedTableViewController.h"
 
 @class UserDefaultsCellAvatarPicker;
 @class UserDefaultsCellTextInput;
@@ -24,7 +24,7 @@ typedef enum ProfileViewModes {
     ProfileViewModeContactProfile
 } ProfileViewMode;
 
-@interface ProfileViewController : UserDefaultsViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
+@interface ProfileViewController : HXOGroupedTableViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 {
     AvatarItem *          _avatarItem;
     ProfileItem *         _chatWithContactItem;

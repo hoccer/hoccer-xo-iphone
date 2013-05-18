@@ -560,4 +560,8 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     _alertDoneBlock = nil;
 }
 
+- (void) connectionStatusDidChange {
+    self.navigationController.topViewController.navigationItem.prompt = @"blub";
+}
+
 @end

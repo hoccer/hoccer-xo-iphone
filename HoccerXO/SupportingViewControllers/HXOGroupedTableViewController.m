@@ -6,16 +6,16 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "UserDefaultsViewController.h"
+#import "HXOGroupedTableViewController.h"
 #import "RadialGradientView.h"
 #import "AssetStore.h"
 #import "UserDefaultsCells.h"
 
-@interface UserDefaultsViewController ()
+@interface HXOGroupedTableViewController ()
 
 @end
 
-@implementation UserDefaultsViewController
+@implementation HXOGroupedTableViewController
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder: aDecoder];

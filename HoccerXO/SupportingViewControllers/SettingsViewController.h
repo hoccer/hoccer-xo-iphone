@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "UserDefaultsViewController.h"
+#import "HXOGroupedTableViewController.h"
 
-@interface SettingsViewController : UserDefaultsViewController
+@interface SettingsViewController : HXOGroupedTableViewController
 
 @property IBOutlet UIButton * openSystemSettings;
 

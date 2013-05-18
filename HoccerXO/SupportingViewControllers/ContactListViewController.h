@@ -13,5 +13,6 @@
 @interface ContactListViewController : TableViewControllerWithPlaceholder <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
+@property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 
 @end

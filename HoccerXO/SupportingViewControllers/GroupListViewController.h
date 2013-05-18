@@ -14,6 +14,4 @@
 
 @interface GroupListViewController : ContactListViewController
 
-@property (readonly) HXOBackend * backend;
-
 @end
