@@ -49,7 +49,7 @@
 
     self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
 
-    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addContactPressed:)];
+    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addButtonPressed:)];
     self.navigationItem.rightBarButtonItem = addContactButton;
 
     UIImage * blueBackground = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
@@ -80,7 +80,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) addContactPressed: (id) sender {
+- (void) addButtonPressed: (id) sender {
     [[InvitationController sharedInvitationController] presentWithViewController: self];
 }
 
@@ -127,7 +127,7 @@
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.emptyTablePlaceholder) {
-        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"contacts_empty_placeholder", nil);
+        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString([self emptyTablePlaceholderKey], nil);
         self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
         return self.emptyTablePlaceholder;
     }
@@ -153,6 +153,9 @@
     }
 }
 
+- (NSString*) emptyTablePlaceholderKey {
+    return @"contacts_empty_placeholder";
+}
 
 #pragma mark - Search Bar
 
@@ -191,17 +194,13 @@
     [fetchRequest setEntity:callEntity];
 
     NSMutableArray *predicateArray = [NSMutableArray array];
+    [predicateArray addObject: [self contactTypePredicate]];
     if(searchString.length) {
         // your search predicate(s) are added to this array
         [predicateArray addObject:[NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
-        // finally add the filter predicate for this view
-        if(filterPredicate)
-        {
-            filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray], nil]];
-        } else {
-            filterPredicate = [NSCompoundPredicate orPredicateWithSubpredicates:predicateArray];
-        }
     }
+    // finally add the filter predicate for this view
+    filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArray];
     [fetchRequest setPredicate:filterPredicate];
 
     // Set the batch size to a suitable number.
@@ -230,6 +229,15 @@
 
     return aFetchedResultsController;
 }
+
+- (NSPredicate*) contactTypePredicate {
+    return [NSPredicate predicateWithFormat:@"type == %@", [self entityName]];
+}
+
+- (id) entityName {
+    return [Contact entityName];
+}
+
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController != nil)
@@ -322,7 +330,11 @@
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
 
-    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
+    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+}
+
+- (NSString*) defaultAvatarName {
+    return @"avatar_default_contact";
 }
 
 @end

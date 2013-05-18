@@ -37,6 +37,10 @@
                        @"icon": @"navigation_button_contacts",
                        @"storyboardId": @"contactsViewController"
                        },
+                    @{ @"title": NSLocalizedString(@"groups_menu_item", nil),
+                       @"icon": @"navigation_button_contacts", // @"navigation_button_groups",
+                       @"storyboardId": @"groupsViewController"
+                       },
                     @{ @"title": NSLocalizedString(@"Profile", nil),
                        @"icon": @"navigation_button_profile",
                        @"storyboardId": @"profileViewController"
@@ -51,7 +55,7 @@
                     },
                     @{ @"title": NSLocalizedString(@"FAQ", nil),
                        @"icon": @"navigation_button_faq",
-                       @"storyboardId": @"faqViewController" // TODO: @"faqViewController"
+                       @"storyboardId": @"faqViewController"
                        },
                     @{ @"title": NSLocalizedString(@"About", nil),
                        @"icon": @"navigation_button_about",

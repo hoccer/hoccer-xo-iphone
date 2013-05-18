@@ -14,37 +14,10 @@
 
 static const CGFloat kGeoLocationCityZoom = 500;
 
-@interface DnDAnnotation : MKPlacemark {
-	CLLocationCoordinate2D coordinate_;
-	NSString *title_;
-	NSString *subtitle_;
-}
-
-// Re-declare MKAnnotation's readonly property 'coordinate' to readwrite.
-@property (nonatomic, readwrite, assign) CLLocationCoordinate2D coordinate;
-
-@property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSString *subtitle;
-
-@end
-
-
-@implementation DnDAnnotation
-
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate addressDictionary:(NSDictionary *)addressDictionary {
-
-	if ((self = [super initWithCoordinate:coordinate addressDictionary:addressDictionary])) {
-		self.coordinate = coordinate;
-	}
-	return self;
-}
-
-@end
-
 
 @interface GeoLocationPicker ()
 {
-    DnDAnnotation * _annotation;
+    MKPlacemark * _placemark;
 }
 
 @end
@@ -70,8 +43,9 @@ static const CGFloat kGeoLocationCityZoom = 500;
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear: animated];
-    [self.mapView removeAnnotation: _annotation];
-    _annotation = nil;
+    [self.mapView removeAnnotation: _placemark];
+    _placemark = nil;
+    [self.locationManager stopUpdatingLocation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,28 +64,33 @@ static const CGFloat kGeoLocationCityZoom = 500;
 #pragma mark - CLLocationManager Delegate Protocol
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(newLocation.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
-    [self.mapView setRegion: region animated: NO];
-    [self.locationManager stopUpdatingLocation];
+    if (_placemark == nil) {
+        MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(newLocation.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
+        [self.mapView setRegion: region animated: NO];
+        _pinDraggedByUser = NO;
+        _placemark = [[MKPlacemark alloc] initWithCoordinate: newLocation.coordinate addressDictionary:nil];
+        //_annotation.title = @"Drag the Pin";
+        //_annotation.subtitle = [NSString stringWithFormat:@"%f %f", _annotation.coordinate.latitude, _annotation.coordinate.longitude];
 
-	_annotation = [[DnDAnnotation alloc] initWithCoordinate: newLocation.coordinate addressDictionary:nil];
-	_annotation.title = @"Drag the Pin";
-	_annotation.subtitle = [NSString	stringWithFormat:@"%f %f", _annotation.coordinate.latitude, _annotation.coordinate.longitude];
+        [self.mapView addAnnotation: _placemark];
+        [self.mapView selectAnnotation: _placemark animated: YES];
+        self.useButton.enabled = YES;
+    } else if ( ! _pinDraggedByUser){
+        _placemark.coordinate = newLocation.coordinate;
+    }
 
-	[self.mapView addAnnotation: _annotation];
-    [self.mapView selectAnnotation: _annotation animated: YES];
-
-    self.useButton.enabled = YES;
 }
 
 #pragma mark - MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
-
+/*
 	if (oldState == MKAnnotationViewDragStateDragging) {
 		DnDAnnotation *annotation = (DnDAnnotation *)annotationView.annotation;
 		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
 	}
+ */
+    _pinDraggedByUser = YES;
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -128,7 +107,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
 	} else {
 		draggablePinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier: kPinAnnotationIdentifier];
 		draggablePinView.draggable = YES;
-		draggablePinView.canShowCallout = YES;
+		//draggablePinView.canShowCallout = YES;
 	}
 
 	return draggablePinView;
@@ -168,8 +147,8 @@ static const CGFloat kGeoLocationCityZoom = 500;
 - (void) renderPreview {
     _renderPreview = YES;
     self.mapView.showsUserLocation = NO;
-    [self.mapView deselectAnnotation: _annotation animated: NO];
-    MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(_annotation.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
+    [self.mapView deselectAnnotation: _placemark animated: NO];
+    MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(_placemark.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
     [self.mapView setRegion: region animated: NO];
     [self performSelector:@selector(generateImageFromMap) withObject:nil afterDelay: 0.3];
 }
@@ -183,7 +162,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
 
     image = [image imageByScalingAndCroppingForSize: CGSizeMake(previewSize, previewSize)];
 
-    [self.delegate locationPicker: self didPickLocation: _annotation preview: image];
+    [self.delegate locationPicker: self didPickLocation: _placemark preview: image];
     [self dismissViewControllerAnimated: YES completion: nil];
 }
 

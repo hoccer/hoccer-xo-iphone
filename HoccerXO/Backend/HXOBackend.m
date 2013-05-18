@@ -27,6 +27,8 @@
 #import "UserProfile.h"
 #import "SoundEffectPlayer.h"
 #import "SocketRocket/SRWebSocket.h"
+#import "Group.h"
+#import "Crypto.h"
 
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
@@ -582,7 +584,7 @@ typedef enum BackendStates {
             NSString * path = [[NSBundle mainBundle] pathForResource: file ofType:@"der"];
             NSData * certificateData = [[NSData alloc] initWithContentsOfFile: path];
             SecCertificateRef certificate = SecCertificateCreateWithData(nil, (__bridge CFDataRef)(certificateData));
-            NSLog(@"p: %@ cert: %@", path, certificate);
+            //NSLog(@"certificate: path: %@ cert: %@", path, certificate);
             [certs addObject: CFBridgingRelease(certificate)];
         }
         _certificates = [certs copy];
@@ -781,6 +783,17 @@ typedef enum BackendStates {
     }
     // NSLog(@"relationship Dict: %@", relationshipDict);
     [contact updateWithDictionary: relationshipDict];
+}
+
+- (Group*) createGroup {
+    Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+    group.type = [Group entityName];
+    group.groupTag = [NSString stringWithUUID];
+    group.myRole = @"admin";
+    group.myState = @"accepted";
+    group.groupKey = [AESCryptor random256BitKey];
+    group.clientId = [NSString stringWithUUID]; // XXX use server UUID instead
+    return group;
 }
 
 - (void) updatePresences {

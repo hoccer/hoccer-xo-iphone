@@ -179,22 +179,6 @@
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-        [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
-        
-        NSError *error = nil;
-        if (![context save:&error]) {
-             // Replace this implementation with code to handle the error appropriately.
-             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }   
-}
-
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // The table view should not be re-orderable.
@@ -334,8 +318,7 @@
     if ([contact.latestMessage count] == 0){
         cell.latestMessageLabel.text = NSLocalizedString(@"no_messages_exchanged", nil);
         cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
-        // cell.latestMessageDirection.image = nil;
-        cell.latestMessageDirectionLabel.text = nil;
+        cell.latestMessageDirection.image = nil;
     } else {
         HXOMessage * message = contact.latestMessage[0];
         if (message.body.length > 0) {
@@ -351,12 +334,9 @@
         }
         latestMessageTime = message.timeAccepted;
         if ([message.isOutgoing boolValue] == YES) {
-            //cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-right"];
-            cell.latestMessageDirectionLabel.text = @"<";
-            //cell.latestMessageDirectionLabel.textColor = [UIColor redColor];
+            cell.latestMessageDirection.image = [UIImage imageNamed:@"conversation-icon-me"];
         } else {
-            // cell.latestMessageDirection.image = [UIImage imageNamed:@"mini-bubble-right"];
-            cell.latestMessageDirectionLabel.text = @">";
+            cell.latestMessageDirection.image = nil;
         }
     }
     [cell.latestMessageLabel sizeToFit];

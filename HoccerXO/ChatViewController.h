@@ -29,6 +29,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *            cancelButton;
 @property (strong, nonatomic) IBOutlet UITableView *         tableView;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView * attachmentSpinner;
+@property (strong, nonatomic) IBOutlet UIView *chatViewResizer;
 
 @property (strong, nonatomic) NSFetchedResultsController *   fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *       managedObjectContext;

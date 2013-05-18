@@ -39,6 +39,7 @@
 #define ACTION_MENU_DEBUG NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
+static const CGFloat    kSectionHeaderHeight = 40;
 
 @interface ChatViewController ()
 
@@ -47,7 +48,6 @@ static const NSUInteger kMaxMessageBytes = 10000;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (nonatomic, readonly) MessageCell* messageCell;
-@property (nonatomic, readonly) ChatTableSectionHeaderCell* headerCell;
 @property (strong) UIImage* avatarImage;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
@@ -67,7 +67,6 @@ static const NSUInteger kMaxMessageBytes = 10000;
 @synthesize chatBackend = _chatBackend;
 @synthesize attachmentPicker = _attachmentPicker;
 @synthesize messageCell = _messageCell;
-@synthesize headerCell = _headerCell;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
 @synthesize vcardViewController = _vcardViewController;
@@ -141,8 +140,6 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     [_chatbar sendSubviewToBack: backgroundGradient];
-
-    self.view.backgroundColor = [UIColor colorWithPatternImage: [self radialGradient]];
     
     // setup longpress menus
     UIMenuController *menuController = [UIMenuController sharedMenuController];
@@ -155,7 +152,11 @@ static const NSUInteger kMaxMessageBytes = 10000;
     
     [self hideAttachmentSpinner];
     [HXOBackend registerConnectionInfoObserverFor:self];
-    
+
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    gestureRecognizer.cancelsTouchesInView = NO;
+    [self.tableView addGestureRecognizer:gestureRecognizer];
+
     [self configureView];
 }
 
@@ -198,7 +199,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
     self.masterPopoverController = nil;
 }
 
-#pragma mark - Keyboard events
+#pragma mark - Keyboard Handling
 
 // TODO: correctly handle orientation changes while keyboard is visible
 
@@ -213,11 +214,12 @@ static const NSUInteger kMaxMessageBytes = 10000;
     contentOffset.y += keyboardHeight;
 
     [UIView animateWithDuration: duration animations:^{
-        CGRect frame = self.view.frame;
+        CGRect frame = self.chatViewResizer.frame;
         frame.size.height -= keyboardHeight;
-        self.view.frame = frame;
+        self.chatViewResizer.frame = frame;
         self.tableView.contentOffset = contentOffset;
         // NSLog(@"keyboardWasShown did set table contentOffset y to %f", contentOffset.y);
+
     }];
 
     // this catches orientation changes, too
@@ -231,16 +233,19 @@ static const NSUInteger kMaxMessageBytes = 10000;
     double duration = [info[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     [UIView animateWithDuration: duration animations:^{
-        CGRect frame = self.view.frame;
+        CGRect frame = self.chatViewResizer.frame;
         frame.size.height += keyboardHeight;
-        self.view.frame = frame;
+        self.chatViewResizer.frame = frame;
     }];
+}
+
+- (void) hideKeyboard {
+    [self.view endEditing: NO];
 }
 
 #pragma mark - Actions
 
 - (IBAction)sendPressed:(id)sender {
-    [self.textField resignFirstResponder];
     if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
             if ([self.textField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
@@ -751,48 +756,12 @@ static const NSUInteger kMaxMessageBytes = 10000;
 
 #pragma mark - Graphics Utilities
 
-- (UIImage *)radialGradient {
-    CGSize size = self.tableView.frame.size;
-    CGPoint center = CGPointMake(0.5 * size.width, 0.5 * size.height) ;
-
-    UIGraphicsBeginImageContextWithOptions(size, YES, 1);
-
-    // Drawing code
-    CGContextRef cx = UIGraphicsGetCurrentContext();
-
-    CGContextSaveGState(cx);
-    CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
-
-    CGFloat comps[] = {1.0,1.0,1.0,1.0,
-        0.9,0.9,0.9,1.0};
-    CGFloat locs[] = {0,1};
-    CGGradientRef g = CGGradientCreateWithColorComponents(space, comps, locs, 2);
-
-    CGContextDrawRadialGradient(cx, g, center, 0.0f, center, size.width > size.height ? 0.5 * size.width : 0.5 * size.height, kCGGradientDrawsAfterEndLocation);
-    CGGradientRelease(g);
-    CGColorSpaceRelease(space); // added by pm because analyzer leak waring
-
-    CGContextRestoreGState(cx);
-
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    return image;
-}
-
 - (MessageCell*) messageCell {
     if (_messageCell == nil) {
         _messageCell = [self.tableView dequeueReusableCellWithIdentifier: [LeftMessageCell reuseIdentifier]];
     }
     return _messageCell;
 }
-
-- (ChatTableSectionHeaderCell*) headerCell {
-    if (_headerCell == nil) {
-        _headerCell = [self.tableView dequeueReusableCellWithIdentifier: [ChatTableSectionHeaderCell reuseIdentifier]];
-    }
-    return _headerCell;
-}
-
-
 
 #pragma mark - Table view data source
 
@@ -824,14 +793,27 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    ChatTableSectionHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier: [ChatTableSectionHeaderCell reuseIdentifier]];
-    cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
-    
-    cell.label.text = [self tableView:tableView titleForHeaderInSection:section];
-    cell.label.shadowColor  = [UIColor whiteColor];
-    cell.label.shadowOffset = CGSizeMake(0.0, 1.0);
-    cell.backgroundImage.image = [UIImage imageNamed: @"date_cell_bg"];
-   return cell; // must NOT return cell.contentView here!
+    UIView * header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kSectionHeaderHeight)];
+
+    UIImage * backgroundImage = [UIImage imageNamed: @"date_cell_bg"];
+    CGFloat y = 0.5 * (kSectionHeaderHeight - backgroundImage.size.height);
+    UIImageView * background = [[UIImageView alloc] initWithFrame: CGRectMake(0, y, 320, backgroundImage.size.height)];
+    background.image = backgroundImage;
+    background.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [header addSubview: background];
+
+    UILabel * label = [[UILabel alloc] initWithFrame: header.frame];
+    label.backgroundColor = [UIColor clearColor];
+    label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = [self tableView:tableView titleForHeaderInSection:section];
+    label.textColor = [UIColor colorWithWhite: 0.33 alpha: 1.0];
+    label.shadowColor = [UIColor whiteColor];
+    label.shadowOffset = CGSizeMake(0, 1);
+    label.font = [UIFont boldSystemFontOfSize: 9];
+    [header addSubview: label];
+
+    return header;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -845,10 +827,7 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    // XXX the -1 avoids a view glitch. A light gray line appears without it. I think that is
-    //     because the table view assuemes there is a 1px separator. However, sometimes the
-    //     grey line still appears ...
-    return self.headerCell.contentView.bounds.size.height;
+    return kSectionHeaderHeight;
 }
 
 #pragma mark - Table view delegate
@@ -894,6 +873,10 @@ static const NSUInteger kMaxMessageBytes = 10000;
 //    NSLog(@"scrollViewDidScroll:");
 //    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
 //}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self hideKeyboard];
+}
 
 #pragma mark - Table view menu delegate
 
@@ -1107,7 +1090,6 @@ static const NSUInteger kMaxMessageBytes = 10000;
 }
 
 #pragma mark - view/cell methods
-
 
 - (void) viewWillAppear:(BOOL)animated {
     // NSLog(@"ChatViewController:viewWillAppear");

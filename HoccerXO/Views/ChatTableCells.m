@@ -10,6 +10,7 @@
 #import "AutoheightLabel.h"
 #import "BubbleView.h"
 #import "HXOMessage.h"
+#import "InsetImageView.h"
 
 @implementation MessageCell
 
@@ -71,6 +72,9 @@ static const double kCellPadding = 10.0;
 
 - (void) awakeFromNib {
     //NSLog(@"%@ %x awakefromNib self.frame=%@ self.superview=%x bubble=%x message=%x avatar=%x", [self class],(int)self,NSStringFromCGRect(self.frame),(int)self.superview,(int)self.bubble,(int)self.message,(int)self.avatar);
+
+    self.avatar.borderColor = [UIColor colorWithWhite: 0 alpha: 0.5];
+    self.avatar.shadowColor = [UIColor colorWithWhite: 0 alpha: 0.5];
 }
 @end
 

@@ -19,6 +19,7 @@
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageTimeLabel;
 
 @property (nonatomic,strong) IBOutlet UIImageView* latestMessageDirection;
-@property (nonatomic,strong) IBOutlet UILabel* latestMessageDirectionLabel;
+
+@property (nonatomic,assign) BOOL hasNewMessages;
 
 @end

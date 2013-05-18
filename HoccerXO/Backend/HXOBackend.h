@@ -16,6 +16,7 @@
 @class HXOMessage;
 @class Attachment;
 @class AppDelegate;
+@class Group;
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^GenerateIdHandler)(NSString*);
@@ -91,6 +92,8 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 - (void) updateRelationships;
 - (void) updatePresence;
 - (void) updateKey;
+
+- (Group*) createGroup;
 
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;

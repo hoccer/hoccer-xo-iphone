@@ -16,8 +16,8 @@
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet InsetImageView * avatar;
-@property (nonatomic,assign) BOOL hasNewMessages;
 
 - (void) engraveLabel: (UILabel*) label;
+- (NSString*) backgroundName;
 
 @end

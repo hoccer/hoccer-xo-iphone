@@ -23,6 +23,7 @@
 @interface GeoLocationPicker : UIViewController <CLLocationManagerDelegate,MKMapViewDelegate>
 {
     BOOL _renderPreview;
+    BOOL _pinDraggedByUser;
 }
 
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
