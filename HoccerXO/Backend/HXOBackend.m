@@ -404,10 +404,7 @@ typedef enum BackendStates {
     if (success) {
         _performRegistration = NO;
         [self startAuthentication];
-    } else {
-        NSLog(@"ERROR: registration failed. What now?");
     }
-    
 }
 
 - (void) startAuthentication {
@@ -570,6 +567,7 @@ typedef enum BackendStates {
 
 - (NSURLRequest*) urlRequest {
     NSURL * url = [NSURL URLWithString: [[Environment sharedEnvironment] talkServer]];
+    NSLog(@"using server: %@", [url absoluteString]);
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL: url];
     NSArray * certificates = [self certificates];
     if (certificates.count > 0) {
@@ -1085,8 +1083,12 @@ typedef enum BackendStates {
     }];
 }
 
-- (void) srpRegisterWithVerifier: (NSString*) verifier andSalt: (NSString*) salt{
+- (void) srpRegisterWithVerifier: (NSString*) verifier andSalt: (NSString*) salt {
+    //NSLog(@"srpRegisterWithVerifier: %@ andSalt: %@", verifier, salt);
     [_serverConnection invoke: @"srpRegister" withParams: @[verifier, salt] onResponse: ^(id responseOrError, BOOL success) {
+        if ( ! success) {
+            NSLog(@"ERROR - registration failed: %@", responseOrError);
+        }
         [self didRegister: success];
     }];
 
