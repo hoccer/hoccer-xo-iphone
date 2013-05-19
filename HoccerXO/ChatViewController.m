@@ -610,9 +610,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
                 {
                     UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, nil, nil, nil);
-                    NSString * myTempURL = [myURL2 absoluteString];
-                    // NSLog(@"video myTempURL = %@", myTempURL);
-                    self.currentAttachment.ownedURL = [myTempURL copy];
                 } else {
                     NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
@@ -620,7 +617,19 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     return;
                 }
             }
-            [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
+            // move file from temp directory to document directory
+            NSString * newFileName = @"video.mov";
+            NSURL * myNewURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+            NSError * myError = nil;
+            [[NSFileManager defaultManager] moveItemAtURL:myURL2 toURL:myNewURL error:&myError];
+            if (myError != nil) {
+                [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                return;
+            }
+            NSString * myNewURLString = [myNewURL absoluteString];
+            self.currentAttachment.ownedURL = myNewURLString;
+            
+            [self.currentAttachment makeVideoAttachment: myNewURLString anOtherURL: nil withCompletion:^(NSError *theError) {
                 [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
             }];
             return;
