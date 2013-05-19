@@ -161,7 +161,7 @@
     NSMutableData * myBlockSkipData = [NSMutableData dataWithLength:blockSize];
     void * myBuffer = [myBlockSkipData mutableBytes];
     
-    NSLog(@"NSInputStream: skipBytes=%d, blocksToSkip=%d, blockSkipSize=%d", skipBytes, blocksToSkip, blockSkipSize);
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%d, blocksToSkip=%d, blockSkipSize=%d", skipBytes, blocksToSkip, blockSkipSize);}
     while (totalBytesSkipped < blockSkipSize) {
         NSInteger skipped = [self do_read:myBuffer maxLength:blockSize];
         if (skipped <= 0) {
@@ -171,7 +171,7 @@
     }
     // skip rest now
     NSInteger restToSkip = skipBytes - totalBytesSkipped;
-    NSLog(@"NSInputStream: skipBytes=%d, blocksToSkip=%d, blockSkipSize=%d, totalBytesSkipped=%d, restToSkip=%d", skipBytes, blocksToSkip, blockSkipSize,totalBytesSkipped,restToSkip);
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%d, blocksToSkip=%d, blockSkipSize=%d, totalBytesSkipped=%d, restToSkip=%d", skipBytes, blocksToSkip, blockSkipSize,totalBytesSkipped,restToSkip);}
     if (restToSkip <= blockSize) {
         if (restToSkip > 0) {
             NSInteger skipped = [self do_read:myBuffer maxLength:restToSkip];
@@ -184,7 +184,7 @@
         NSLog(@"#ERROR: restToSkip > blocksize, should not happen");
         return 0;
     }
-    NSLog(@"NSInputStream: skipBytes=%d, totalBytesSkipped=%d", skipBytes, totalBytesSkipped);
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%d, totalBytesSkipped=%d", skipBytes, totalBytesSkipped);}
     return [self do_read:buffer maxLength:len];
 }
 

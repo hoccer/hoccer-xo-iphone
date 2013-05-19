@@ -957,6 +957,7 @@ typedef enum BackendStates {
 - (double) transferRetryTimeFor:(Attachment *)theAttachment {
     double randomFactor = (double)arc4random()/(double)0xffffffff;
     double retryTime = (2.0 + randomFactor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
+    //double retryTime = 2.0;
     return retryTime;
 }
 

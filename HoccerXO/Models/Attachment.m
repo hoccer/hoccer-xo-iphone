@@ -35,8 +35,8 @@
 
 #define CONNECTION_DELEGATE_DEBUG NO
 
-#define LET_UPLOAD_FAIL
-#define LET_DOWNLOAD_FAIL
+//#define LET_UPLOAD_FAIL
+//#define LET_DOWNLOAD_FAIL
 
 
 @interface Attachment() {
@@ -756,8 +756,9 @@ NSArray * TransferStateName = @[@"detached",
         [self tryResumeUploadStream];
         return;
     }
+#ifdef NO_DOWNLOAD_RESUME
     self.didResume = NO; // just for TESTING
-    
+#endif
     [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
         if (myError == nil) {
             // NSLog(@"Attachment:upload starting uploadStream");
@@ -869,8 +870,9 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) resumeUploadStreamFromPosition:(NSNumber *)fromPos {
+#ifdef NO_DOWNLOAD_RESUME
     self.didResume = YES; // just for TESTING
-    
+#endif
     if ([fromPos longLongValue] + 1 >= [self.cipheredSize longLongValue]) { // TODO: change >= to == when server bug fixed
         NSLog(@"Attachment:resumeUploadStreamFromPosition: upload has already been completed, fromPos=%@+1 == %@ (cipheredSize)", fromPos,self.cipheredSize);
         self.cipherTransferSize = self.cipheredSize;
@@ -1017,9 +1019,9 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) download {
-    
+#ifdef NO_DOWNLOAD_RESUME    
     self.didResume = NO; // just for TESTING
-    
+#endif
     if (CONNECTION_TRACE) {NSLog(@"Attachment download remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );}
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoing = %@", self.message.isOutgoing);
@@ -1298,7 +1300,7 @@ NSArray * TransferStateName = @[@"detached",
 {
     NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (connection == _transferConnection) {
-        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@",httpResponse, (long)[httpResponse statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);}
+        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@, headers=%@",httpResponse, (long)[httpResponse statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]], [httpResponse allHeaderFields]);}
         self.transferHttpStatusCode = (long)[httpResponse statusCode];
         if (self.transferHttpStatusCode != 200 && self.transferHttpStatusCode != 206 ) {
             // TODO: check if this is necessary and leads to duplicate error reporting
@@ -1443,7 +1445,7 @@ NSArray * TransferStateName = @[@"detached",
 #ifdef LET_DOWNLOAD_FAIL
             /// DEBUG: abort artificially
             NSInteger limit = [self.cipheredSize unsignedLongValue] - self.resumeSize/2 + 1000;
-            NSLog(@"TEST: didReceiveData: cancel limit=%d, cipherTransferSize=%@, self.resumeSize=%d",limit, self.cipherTransferSize, self.resumeSize);
+            // NSLog(@"TEST: didReceiveData: cancel limit=%d, cipherTransferSize=%@, self.resumeSize=%d",limit, self.cipherTransferSize, self.resumeSize);
             if ([self.cipherTransferSize longValue]< [self.cipheredSize longValue] && [self.cipherTransferSize unsignedLongValue] > limit) { // fail multiple times
                 // if (!didResume && [self.cipherTransferSize unsignedLongValue] > [self.cipheredSize unsignedLongValue]/2) { // fail once
                 [_transferConnection cancel];
@@ -1471,7 +1473,7 @@ NSArray * TransferStateName = @[@"detached",
         /// DEBUG: abort artificially
         //if (!didResume && [self.cipherTransferSize unsignedLongValue] > [self.cipheredSize unsignedLongValue]/3) { // fail once
         NSInteger limit = [self.cipheredSize unsignedLongValue] - totalBytesExpectedToWrite/2 + 1000;
-        NSLog(@"TEST: didSendBodyData: cancel limit=%d, cipherTransferSize=%@, totalBytesExpectedToWrite=%d",limit, self.cipherTransferSize, totalBytesExpectedToWrite);
+        // NSLog(@"TEST: didSendBodyData: cancel limit=%d, cipherTransferSize=%@, totalBytesExpectedToWrite=%d",limit, self.cipherTransferSize, totalBytesExpectedToWrite);
         if ([self.cipherTransferSize longValue] < [self.cipheredSize longValue] && [self.cipherTransferSize unsignedLongValue] > limit) { // fail multiple times
             NSLog(@"TEST: didSendBodyData: canceling transfer at size %@, limit=%d",self.cipherTransferSize, limit);
             // abort();
