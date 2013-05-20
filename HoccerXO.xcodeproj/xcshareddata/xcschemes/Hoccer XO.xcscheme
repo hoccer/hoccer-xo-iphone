@@ -71,6 +71,10 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-attachmentVerbosity moretrace"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-cryptoEngineVerbosity trace"
             isEnabled = "NO">
          </CommandLineArgument>

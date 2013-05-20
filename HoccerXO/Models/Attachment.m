@@ -31,7 +31,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AddressBookUI/AddressBookUI.h>
 
-#define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"])
+#define TRANSFER_TRACE ([[self verbosityLevel]isEqualToString:@"moretrace"])
+#define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"] || TRANSFER_TRACE)
 
 #define CONNECTION_DELEGATE_DEBUG NO
 
@@ -133,7 +134,7 @@ NSArray * TransferStateName = @[@"detached",
 
 - (AttachmentState) state {
     AttachmentState myState = [self _state];
-    if (CONNECTION_TRACE) {
+    if (TRANSFER_TRACE) {
         NSLog(@"Attachment state=%@",[Attachment getStateName:myState]);
     }
     return myState;
@@ -239,14 +240,15 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     NSURL * url = [NSURL URLWithString: theURL];
-    if ([url.scheme isEqualToString: @"file"]) {
-        self.localURL = theURL;
-    } else if ([url.scheme isEqualToString: @"assets-library"] || [url.scheme isEqualToString: @"ipod-library"]) {
-        self.assetURL = theURL;
-    } else {
-        NSLog(@"ERROR:unhandled URL scheme %@", url.scheme);
-    }
-    if (theOtherURL != nil) {
+    if (theURL != nil) {
+        if ([url.scheme isEqualToString: @"file"]) {
+            self.localURL = theURL;
+        } else if ([url.scheme isEqualToString: @"assets-library"] || [url.scheme isEqualToString: @"ipod-library"]) {
+            self.assetURL = theURL;
+        } else {
+            NSLog(@"ERROR:unhandled URL scheme %@", url.scheme);
+        }
+    } else if (theOtherURL != nil) {
         NSURL* anOtherUrl = [NSURL URLWithString: theOtherURL];
         if ([anOtherUrl.scheme isEqualToString: @"file"]) {
             self.localURL = theOtherURL;
@@ -255,12 +257,15 @@ NSArray * TransferStateName = @[@"detached",
         } else {
             NSLog(@"ERROR: unhandled URL otherURL scheme %@", anOtherUrl.scheme);
         }
+    } else {
+        NSLog(@"ERROR: both urls are nil");
     }
     if (self.mimeType == nil && self.localURL != nil) {
         self.mimeType = [Attachment mimeTypeFromURLExtension: self.localURL];
-    }
-    if (self.mimeType == nil && self.assetURL != nil) {
+    } else if (self.mimeType == nil && self.assetURL != nil) {
         self.mimeType = [Attachment mimeTypeFromURLExtension: self.assetURL];
+    } else {
+        NSLog(@"ERROR: both urls are nil, could not determine mimetype");
     }
     
     NSError *myError = nil;
@@ -627,7 +632,7 @@ NSArray * TransferStateName = @[@"detached",
         //
         ALAssetsLibraryAccessFailureBlock failureblock  = ^(NSError *myerror)
         {
-            NSLog(@"ERROR: Failed to get image %@ from asset library: %@", self.localURL, [myerror localizedDescription]);
+            NSLog(@"ERROR: Failed to get image %@ from asset library: %@", self.assetURL, [myerror localizedDescription]);
             block(nil, myerror);
         };
         
@@ -1224,7 +1229,7 @@ NSArray * TransferStateName = @[@"detached",
     NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"localURL"];
     NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
     if (CONNECTION_TRACE) {
-        if (![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
+        if (myPrimitiveLocalURL != nil && ![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
             NSLog(@"translated localURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
         } else {
             NSLog(@"translated localURLs match");
@@ -1238,7 +1243,7 @@ NSArray * TransferStateName = @[@"detached",
     NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"ownedURL"];
     NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
     if (CONNECTION_TRACE) {
-        if (![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
+        if (myPrimitiveLocalURL != nil && ![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
             NSLog(@"translated ownedURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
         } else {
             NSLog(@"translated ownedURL match");
@@ -1391,7 +1396,7 @@ NSArray * TransferStateName = @[@"detached",
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
 {
     if (connection == _transferConnection) {
-        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveData len=%u", [data length]);}
+        if (TRANSFER_TRACE) {NSLog(@"Attachment transferConnection didReceiveData len=%u", [data length]);}
         if ([self.message.isOutgoing isEqualToNumber: @NO]) {
             NSError *myError = nil;
             if (self.resumePos != 0) {
@@ -1466,7 +1471,7 @@ NSArray * TransferStateName = @[@"detached",
 -(void)connection:(NSURLConnection*)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
     if (connection == _transferConnection) {
-        if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didSendBodyData %d", bytesWritten);}
+        if (TRANSFER_TRACE) {NSLog(@"Attachment transferConnection didSendBodyData %d", bytesWritten);}
         //self.cipherTransferSize = @(totalBytesWritten);
         self.cipherTransferSize = @([self.cipherTransferSize integerValue]+bytesWritten);
 #ifdef LET_UPLOAD_FAIL
@@ -1498,7 +1503,7 @@ NSArray * TransferStateName = @[@"detached",
 -(void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
 {
     if (connection == _transferConnection) {
-        NSLog(@"ERROR: Attachment transferConnection didFailWithError %@", error);
+        NSLog(@"ERROR: Attachment transferConnection didFailWithError %@, url=%@", error, self.remoteURL);
         self.transferConnection = nil;
         self.transferError = error;
         if (progressIndicatorDelegate) {
