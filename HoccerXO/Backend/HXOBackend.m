@@ -369,6 +369,7 @@ typedef enum BackendStates {
     message.timeReceived = [self estimatedServerTime];
     // message.timeSection = [contact sectionTimeForMessageTime: message.timeAccepted];
     message.contact = contact;
+    contact.rememberedLastVisibleChatCell = nil; // make view to scroll to end when user enters chat
     [contact.messages addObject: message];
     [delivery updateWithDictionary: deliveryDictionary];
     [message updateWithDictionary: messageDictionary];

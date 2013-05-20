@@ -35,6 +35,7 @@
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"] || TRANSFER_TRACE)
 
 #define CONNECTION_DELEGATE_DEBUG NO
+#define URL_TRANSLATION_DEBUG NO
 
 //#define LET_UPLOAD_FAIL
 //#define LET_DOWNLOAD_FAIL
@@ -1228,7 +1229,7 @@ NSArray * TransferStateName = @[@"detached",
 - (NSString*) localURL {
     NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"localURL"];
     NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
-    if (CONNECTION_TRACE) {
+    if (URL_TRANSLATION_DEBUG) {
         if (myPrimitiveLocalURL != nil && ![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
             NSLog(@"translated localURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
         } else {
@@ -1242,7 +1243,7 @@ NSArray * TransferStateName = @[@"detached",
 - (NSString*) ownedURL {
     NSString * myPrimitiveLocalURL = [self primitiveValueForKey:@"ownedURL"];
     NSString * myTranslatedURL = [Attachment translateFileURLToDocumentDirectory:myPrimitiveLocalURL];
-    if (CONNECTION_TRACE) {
+    if (URL_TRANSLATION_DEBUG) {
         if (myPrimitiveLocalURL != nil && ![myPrimitiveLocalURL isEqualToString:myTranslatedURL]) {
             NSLog(@"translated ownedURL from %@ to %@", myPrimitiveLocalURL, myTranslatedURL);
         } else {

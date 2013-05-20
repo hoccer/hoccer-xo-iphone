@@ -671,6 +671,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void) startPickedAttachmentProcessingForObject:(id)info {
+    if (_currentAttachment != nil) {
+        [self trashCurrentAttachment];
+    }
     _currentPickInfo = info;
     // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
     [self showAttachmentSpinner];
@@ -726,6 +729,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
                                           destructiveButtonTitle: nil
                                                otherButtonTitles: NSLocalizedString(@"Remove Attachment", @"Actionsheet Button Title"),
+                                                                  NSLocalizedString(@"Choose Attachment", @"Actionsheet Button Title"),
                                                                   NSLocalizedString(@"View Attachment", @"Actionsheet Button Title"),
                                                                   nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -743,6 +747,10 @@ static const CGFloat    kSectionHeaderHeight = 40;
             [self trashCurrentAttachment];
             break;
         case 1:
+            [self.attachmentPicker showInView: self.view];
+            // NSLog(@"Pick new attachment");
+            break;
+        case 2:
             [self presentViewForAttachment: self.currentAttachment];
             // NSLog(@"Viewing current attachment");
             break;

@@ -109,6 +109,9 @@
 /* Actionsheet Button Title */
 "Remove Attachment" = "Remove Attachment";
 
+/* Actionsheet Button Title */
+"Choose Attachment" = "Choose New Attachment";
+
 /* Contact List Search Placeholder */
 "search" = "search";
 
