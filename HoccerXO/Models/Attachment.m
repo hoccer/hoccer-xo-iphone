@@ -249,7 +249,8 @@ NSArray * TransferStateName = @[@"detached",
         } else {
             NSLog(@"ERROR:unhandled URL scheme %@", url.scheme);
         }
-    } else if (theOtherURL != nil) {
+    }
+    if (theOtherURL != nil) {
         NSURL* anOtherUrl = [NSURL URLWithString: theOtherURL];
         if ([anOtherUrl.scheme isEqualToString: @"file"]) {
             self.localURL = theOtherURL;
@@ -258,25 +259,26 @@ NSArray * TransferStateName = @[@"detached",
         } else {
             NSLog(@"ERROR: unhandled URL otherURL scheme %@", anOtherUrl.scheme);
         }
-    } else {
+    } else if (theURL == nil) {
         NSLog(@"ERROR: both urls are nil");
     }
     if (self.mimeType == nil && self.localURL != nil) {
         self.mimeType = [Attachment mimeTypeFromURLExtension: self.localURL];
-    } else if (self.mimeType == nil && self.assetURL != nil) {
+    }
+    if (self.mimeType == nil && self.assetURL != nil) {
         self.mimeType = [Attachment mimeTypeFromURLExtension: self.assetURL];
-    } else {
-        NSLog(@"ERROR: both urls are nil, could not determine mimetype");
     }
     
     NSError *myError = nil;
     if (self.localURL != nil) {
         self.contentSize = [Attachment fileSize: self.localURL withError:&myError];
-    } else  if (self.assetURL != nil) {
+    } else if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
             self.contentSize = @(theSize);
             // NSLog(@"Asset Size = %@ (of file '%@')", self.contentSize, self.assetURL);
         } url:self.assetURL];
+    } else {
+        NSLog(@"ERROR: both urls are nil, could not determine content size");
     }
 }
 

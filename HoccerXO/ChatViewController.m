@@ -506,6 +506,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
         _currentExportSession.shouldOptimizeForNetworkUse = YES;
         // exporter.shouldOptimizeForNetworkUse = NO;
         
+        [AppDelegate setProcessingAudioSession];
+        
         [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
             int exportStatus = _currentExportSession.status;
             switch (exportStatus) {
@@ -514,11 +516,13 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                     _currentExportSession = nil;
+                    [AppDelegate setDefaultAudioSession];
                     [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
                     // NSLog (@"AVAssetExportSessionStatusCompleted");
+                    [AppDelegate setDefaultAudioSession];
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
                         self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
@@ -528,8 +532,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                      // set up artwork image
                      // MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
                      // NSLog(@"createThumb1: artwork=%@", artwork);
-                     // UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];
-                    
+                     // UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];                    
                     break;
                 }
                 case AVAssetExportSessionStatusUnknown: {
@@ -1374,10 +1377,12 @@ static const CGFloat    kSectionHeaderHeight = 40;
         // TODO: lazily allocate _moviePlayerController once
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
+        _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"audio"]) {
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
+        _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
         
         UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.previewImage];
         
@@ -1385,9 +1390,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
         myFrame.size = CGSizeMake(320,320);
         myView.frame = myFrame;
         
-        myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+        myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin |
+                                  UIViewAutoresizingFlexibleRightMargin |
+                                  UIViewAutoresizingFlexibleTopMargin |
+                                  UIViewAutoresizingFlexibleBottomMargin;
         
-        [_moviePlayerViewController.moviePlayer.view addSubview:myView];
+        //[_moviePlayerViewController.moviePlayer.view addSubview:myView];
+        [_moviePlayerViewController.moviePlayer.backgroundView addSubview:myView];
+        [AppDelegate setMusicAudioSession]; // TODO: set default audio session when playback has ended
 
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
