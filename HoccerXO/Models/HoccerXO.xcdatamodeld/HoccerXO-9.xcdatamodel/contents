@@ -106,6 +106,7 @@
     <fetchRequest name="MessagesByContactAfterTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted > $afterTime AND timeAccepted &lt;= $untilTime"/>
     <fetchRequest name="MessagesByContactSinceTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt; $beforeTime"/>
     <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
+    <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <elements>
         <element name="Attachment" positionX="-711" positionY="72" width="128" height="315"/>
         <element name="Contact" positionX="-81" positionY="-9" width="128" height="419"/>
