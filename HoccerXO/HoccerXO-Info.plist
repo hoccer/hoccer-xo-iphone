@@ -47,11 +47,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-<<<<<<< HEAD
-	<string>4734</string>
-=======
 	<string>4787</string>
->>>>>>> ded93fcf4b367f1d6a56081dbd553f626a2812fc
 	<key>HXOClientDevelopers</key>
 	<array>
 		<string>David Siegel</string>
