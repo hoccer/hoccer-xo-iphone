@@ -881,7 +881,7 @@ NSArray * TransferStateName = @[@"detached",
 #ifdef NO_DOWNLOAD_RESUME
     self.didResume = YES; // just for TESTING
 #endif
-    if ([fromPos longLongValue] + 1 >= [self.cipheredSize longLongValue]) { // TODO: change >= to == when server bug fixed
+    if ([fromPos longLongValue] + 1 == [self.cipheredSize longLongValue]) {
         NSLog(@"Attachment:resumeUploadStreamFromPosition: upload has already been completed, fromPos=%@+1 == %@ (cipheredSize)", fromPos,self.cipheredSize);
         self.cipherTransferSize = self.cipheredSize;
         self.transferSize = self.contentSize;
@@ -1133,7 +1133,7 @@ NSArray * TransferStateName = @[@"detached",
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
         NSData *data = [[NSFileManager defaultManager] contentsAtPath:myPath];
         // NSLog(@"Attachment return uploadData len=%d, path=%@", [data length], myPath);
-        execution(data, nil); // TODO: error handling
+        execution(data, nil); // TODO: better error handling
         return;
     }
     if (self.assetURL != nil) {
@@ -1150,7 +1150,7 @@ NSArray * TransferStateName = @[@"detached",
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
         NSInputStream * myStream = [NSInputStream inputStreamWithFileAtPath:myPath];
         // NSLog(@"Attachment returning input stream for file at path=%@", myPath);
-        execution(myStream, nil); // TODO: error handling
+        execution(myStream, nil); // TODO: better error handling
         return;
     }
     if (self.assetURL != nil) {

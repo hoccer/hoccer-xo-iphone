@@ -681,10 +681,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
     [self showAttachmentSpinner];
     _attachmentButton.hidden = YES;
+    _sendButton.enabled = NO; // wait for attachment ready
 }
 
 - (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
-    // NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
+    NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
     _currentPickInfo = nil;
     [self hideAttachmentSpinner];
     if (theError == nil && theImage != nil) {
@@ -692,6 +693,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     } else {
         [self trashCurrentAttachment];
     }
+    _sendButton.enabled = YES; // wait for attachment ready
 }
 
 - (void) showAttachmentSpinner {
