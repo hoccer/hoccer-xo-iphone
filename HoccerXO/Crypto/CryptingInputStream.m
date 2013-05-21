@@ -149,18 +149,19 @@
 
 - (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len {
     // shortcut for the normal case
-    if (skipBytes == 0) {
+    if (skipBytes == 0 || totalBytesSkipped >= skipBytes) {
         return [self do_read:buffer maxLength:len];
     }
     
     // skip blockwise first
-    const NSInteger blockSize = 4096;
+    const NSInteger blockSize = 65536;
     NSInteger blocksToSkip = skipBytes / blockSize;
     NSInteger blockSkipSize = blocksToSkip * blockSize;
     totalBytesSkipped = 0;
     NSMutableData * myBlockSkipData = [NSMutableData dataWithLength:blockSize];
     void * myBuffer = [myBlockSkipData mutableBytes];
     
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%d, blocksToSkip=%d, blockSkipSize=%d", skipBytes, blocksToSkip, blockSkipSize);}
     while (totalBytesSkipped < blockSkipSize) {
         NSInteger skipped = [self do_read:myBuffer maxLength:blockSize];
         if (skipped <= 0) {
@@ -170,16 +171,22 @@
     }
     // skip rest now
     NSInteger restToSkip = skipBytes - totalBytesSkipped;
-    if (restToSkip < blockSize) {
-        NSInteger skipped = [self do_read:myBuffer maxLength:restToSkip];
-        if (skipped < restToSkip) {
-            return 0;
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%d, blocksToSkip=%d, blockSkipSize=%d, totalBytesSkipped=%d, restToSkip=%d", skipBytes, blocksToSkip, blockSkipSize,totalBytesSkipped,restToSkip);}
+    if (restToSkip <= blockSize) {
+        if (restToSkip > 0) {
+            NSInteger skipped = [self do_read:myBuffer maxLength:restToSkip];
+            if (skipped < restToSkip) {
+                return 0;
+            }
+            totalBytesSkipped += skipped;
         }
-        totalBytesSkipped += skipped;        
+    } else {
+        NSLog(@"#ERROR: restToSkip > blocksize, should not happen");
+        return 0;
     }
-    return [self do_read:buffer maxLength:len];    
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%d, totalBytesSkipped=%d", skipBytes, totalBytesSkipped);}
+    return [self do_read:buffer maxLength:len];
 }
-
 
 - (NSInteger)do_read:(uint8_t *)buffer maxLength:(NSUInteger)len {
     if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: read len = %d, restBuffer = %d, status = %d, parentStreamStatus = %d", len, restBuffer.length, self.streamStatus, parentStream.streamStatus);}
@@ -203,9 +210,11 @@
     if (restBuffer.length < len) {
         // read more bytes from input stream
         if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: restBuffer.length = %d < len=%d", restBuffer.length, len);}
-        NSMutableData * mySourceData =[NSMutableData dataWithLength:len];
-        NSInteger bytesRead = [parentStream read:[mySourceData mutableBytes] maxLength:len];
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: request %d bytes from parent, got %d, parentStatus = %d", len, bytesRead, parentStream.streamStatus);}
+        // NOTE: when read delivers less bytes than requested, the http stream assumes we are exhausted, so we must not let this happen and always read one block more
+        // The chosen value 16 however is only sufficient for up to 256 Bit cipher block sizes (AES 256 has 128)
+        NSMutableData * mySourceData =[NSMutableData dataWithLength:len+32];
+        NSInteger bytesRead = [parentStream read:[mySourceData mutableBytes] maxLength:len+32];
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: request %d bytes from parent, got %d, parentStatus = %d", len+16, bytesRead, parentStream.streamStatus);}
         if (bytesRead < 0) {
             thisStreamError = parentStream.streamError;
             [self setThisStreamStatus:NSStreamStatusError];

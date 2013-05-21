@@ -506,6 +506,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
         _currentExportSession.shouldOptimizeForNetworkUse = YES;
         // exporter.shouldOptimizeForNetworkUse = NO;
         
+        [AppDelegate setProcessingAudioSession];
+        
         [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
             int exportStatus = _currentExportSession.status;
             switch (exportStatus) {
@@ -514,11 +516,13 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                     _currentExportSession = nil;
+                    [AppDelegate setDefaultAudioSession];
                     [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
                     // NSLog (@"AVAssetExportSessionStatusCompleted");
+                    [AppDelegate setDefaultAudioSession];
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
                         self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
@@ -528,8 +532,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                      // set up artwork image
                      // MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
                      // NSLog(@"createThumb1: artwork=%@", artwork);
-                     // UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];
-                    
+                     // UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];                    
                     break;
                 }
                 case AVAssetExportSessionStatusUnknown: {
@@ -610,9 +613,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
                 {
                     UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, nil, nil, nil);
-                    NSString * myTempURL = [myURL2 absoluteString];
-                    // NSLog(@"video myTempURL = %@", myTempURL);
-                    self.currentAttachment.ownedURL = [myTempURL copy];
                 } else {
                     NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
@@ -620,7 +620,19 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     return;
                 }
             }
-            [self.currentAttachment makeVideoAttachment: [myURL2 absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
+            // move file from temp directory to document directory
+            NSString * newFileName = @"video.mov";
+            NSURL * myNewURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+            NSError * myError = nil;
+            [[NSFileManager defaultManager] moveItemAtURL:myURL2 toURL:myNewURL error:&myError];
+            if (myError != nil) {
+                [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                return;
+            }
+            NSString * myNewURLString = [myNewURL absoluteString];
+            self.currentAttachment.ownedURL = myNewURLString;
+            
+            [self.currentAttachment makeVideoAttachment: myNewURLString anOtherURL: nil withCompletion:^(NSError *theError) {
                 [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
             }];
             return;
@@ -662,14 +674,18 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void) startPickedAttachmentProcessingForObject:(id)info {
+    if (_currentAttachment != nil) {
+        [self trashCurrentAttachment];
+    }
     _currentPickInfo = info;
     // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
     [self showAttachmentSpinner];
     _attachmentButton.hidden = YES;
+    _sendButton.enabled = NO; // wait for attachment ready
 }
 
 - (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
-    // NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
+    NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
     _currentPickInfo = nil;
     [self hideAttachmentSpinner];
     if (theError == nil && theImage != nil) {
@@ -677,6 +693,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     } else {
         [self trashCurrentAttachment];
     }
+    _sendButton.enabled = YES; // wait for attachment ready
 }
 
 - (void) showAttachmentSpinner {
@@ -717,6 +734,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
                                           destructiveButtonTitle: nil
                                                otherButtonTitles: NSLocalizedString(@"Remove Attachment", @"Actionsheet Button Title"),
+                                                                  NSLocalizedString(@"Choose Attachment", @"Actionsheet Button Title"),
                                                                   NSLocalizedString(@"View Attachment", @"Actionsheet Button Title"),
                                                                   nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -734,6 +752,10 @@ static const CGFloat    kSectionHeaderHeight = 40;
             [self trashCurrentAttachment];
             break;
         case 1:
+            [self.attachmentPicker showInView: self.view];
+            // NSLog(@"Pick new attachment");
+            break;
+        case 2:
             [self presentViewForAttachment: self.currentAttachment];
             // NSLog(@"Viewing current attachment");
             break;
@@ -1357,10 +1379,12 @@ static const CGFloat    kSectionHeaderHeight = 40;
         // TODO: lazily allocate _moviePlayerController once
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
+        _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"audio"]) {
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
+        _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
         
         UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.previewImage];
         
@@ -1368,9 +1392,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
         myFrame.size = CGSizeMake(320,320);
         myView.frame = myFrame;
         
-        myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+        myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin |
+                                  UIViewAutoresizingFlexibleRightMargin |
+                                  UIViewAutoresizingFlexibleTopMargin |
+                                  UIViewAutoresizingFlexibleBottomMargin;
         
-        [_moviePlayerViewController.moviePlayer.view addSubview:myView];
+        //[_moviePlayerViewController.moviePlayer.view addSubview:myView];
+        [_moviePlayerViewController.moviePlayer.backgroundView addSubview:myView];
+        [AppDelegate setMusicAudioSession]; // TODO: set default audio session when playback has ended
 
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {

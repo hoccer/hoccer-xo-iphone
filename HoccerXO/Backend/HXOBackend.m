@@ -372,6 +372,7 @@ typedef enum BackendStates {
     message.timeReceived = [self estimatedServerTime];
     // message.timeSection = [contact sectionTimeForMessageTime: message.timeAccepted];
     message.contact = contact;
+    contact.rememberedLastVisibleChatCell = nil; // make view to scroll to end when user enters chat
     [contact.messages addObject: message];
     [delivery updateWithDictionary: deliveryDictionary];
     [message updateWithDictionary: messageDictionary];
@@ -958,6 +959,7 @@ typedef enum BackendStates {
 - (double) transferRetryTimeFor:(Attachment *)theAttachment {
     double randomFactor = (double)arc4random()/(double)0xffffffff;
     double retryTime = (2.0 + randomFactor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
+    //double retryTime = 2.0;
     return retryTime;
 }
 

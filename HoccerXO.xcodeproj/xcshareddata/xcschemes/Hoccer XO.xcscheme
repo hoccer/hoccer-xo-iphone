@@ -68,6 +68,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-attachmentVerbosity trace"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-attachmentVerbosity moretrace"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument

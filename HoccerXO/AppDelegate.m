@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-
 #import "AppDelegate.h"
 
 #import "HXOConfig.h"
@@ -24,6 +23,9 @@
 #import "Environment.h"
 #import "UserProfile.h"
 #import "MFSideMenu.h"
+
+#import <AVFoundation/AVFoundation.h>
+
 
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
@@ -98,12 +100,95 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
         NSLog(@"Launched by remote notification.");
     }
     
+    [AppDelegate setDefaultAudioSession];
+
     NSString * dumpRecordsForEntity = [[HXOUserDefaults standardUserDefaults] valueForKey: @"dumpRecordsForEntity"];
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
 
     return YES;
+}
+
++ (void) setDefaultAudioSession {
+    NSError * myError = nil;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    
+    [session setActive:NO error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
+    }
+
+    [session setCategory:AVAudioSessionCategorySoloAmbient error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+    }
+    
+    [session setActive:YES error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+    }
+}
+
++ (void) setRecordingAudioSession {
+    NSError * myError = nil;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    
+    [session setActive:NO error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
+    }
+    
+    [session setCategory:AVAudioSessionCategoryRecord error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryRecord, error=%@",myError);
+    }
+    
+    [session setActive:YES error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryRecord, error=%@",myError);
+    }
+}
+
++ (void) setProcessingAudioSession {
+    NSError * myError = nil;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    
+    [session setActive:NO error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
+    }
+    
+    [session setCategory:AVAudioSessionCategoryAudioProcessing error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryRecord, error=%@",myError);
+    }
+    
+    [session setActive:YES error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryRecord, error=%@",myError);
+    }
+}
+
+
+
++ (void) setMusicAudioSession {
+    NSError * myError = nil;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    
+    [session setActive:NO error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
+    }
+    
+    [session setCategory:AVAudioSessionCategoryPlayback error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+    }
+    [session setActive:YES error:&myError];
+    if (myError != nil) {
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+    }
 }
 
 - (void) seedRand {

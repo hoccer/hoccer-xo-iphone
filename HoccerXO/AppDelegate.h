@@ -40,4 +40,10 @@
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
 
++ (void) setDefaultAudioSession;
++ (void) setRecordingAudioSession;
++ (void) setMusicAudioSession;
++ (void) setProcessingAudioSession;
+
+
 @end
