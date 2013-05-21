@@ -1586,6 +1586,8 @@
 				633129D616F95220008F5B04 /* GrowingTextView.m */,
 				639094B917395DB200DF889B /* HXOActionSheet.h */,
 				639094BA17395DB200DF889B /* HXOActionSheet.m */,
+				63AF819317471EFB00D007E3 /* HXONavigationItem.h */,
+				63AF819417471EFB00D007E3 /* HXONavigationItem.m */,
 				63DC01831715205300609513 /* HXOSwitch.h */,
 				63DC01841715205300609513 /* HXOSwitch.m */,
 				63DC015917147B1600609513 /* HXOTableViewCell.h */,
@@ -1610,8 +1612,6 @@
 				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
-				63AF819317471EFB00D007E3 /* HXONavigationItem.h */,
-				63AF819417471EFB00D007E3 /* HXONavigationItem.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";

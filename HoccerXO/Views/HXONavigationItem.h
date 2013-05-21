@@ -8,8 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HXONavigationItem : UINavigationItem
+@interface HXONavigationTitleView : UIView
 
-//@property (nonatomic, readonly) UILabel *
+@property (nonatomic,readonly) UILabel                 * titleLabel;
+@property (nonatomic,readonly) UIImageView             * logo;
+@property (nonatomic,readonly) UIActivityIndicatorView * activityIndicator;
+@property (nonatomic,readonly) UIImageView             * errorIndicator;
 
 @end
+
+@interface HXONavigationItem : UINavigationItem
+{
+    HXONavigationTitleView * _customTitleView;
+}
+
+@property (nonatomic,assign) BOOL showHoccerLogo;
+
+@end
+
