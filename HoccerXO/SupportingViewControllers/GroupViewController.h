@@ -6,12 +6,13 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HXOGroupedTableViewController.h"
+#import "ProfileViewController.h"
 
 @class HXOBackend;
 @class Group;
+@class AvatarItem;
 
-@interface GroupViewController : HXOGroupedTableViewController
+@interface GroupViewController : ProfileViewController
 
 @property (nonatomic,strong) Group * group;
 @property (nonatomic,readonly) HXOBackend * backend;

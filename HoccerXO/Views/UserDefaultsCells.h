@@ -50,6 +50,7 @@
 @property (nonatomic,weak) id        target;
 @property (nonatomic, assign) SEL      action;
 @property (nonatomic,strong) NSIndexPath *   indexPath;
+@property (nonatomic,strong) NSString *   defaultImageName;
 
 @end
 

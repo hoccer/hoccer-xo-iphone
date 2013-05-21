@@ -43,7 +43,6 @@ typedef enum ActionSheetTags {
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, readonly) NSPredicate * hasValuePredicate;
 @property (strong, readonly) HXOBackend * chatBackend;
-@property (strong, readonly) AppDelegate * appDelegate;
 
 @end
 
@@ -64,31 +63,48 @@ typedef enum ActionSheetTags {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
+    
+    [self configureMode];
 
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
-        _mode = ProfileViewModeFirstRun;
-        self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
-    } else if (self.contact != nil) {
-        _mode = ProfileViewModeContactProfile;
-        self.navigationItem.title = NSLocalizedString(@"navigation_title_contact", nil);
-    } else if ([self.parentViewController isKindOfClass: [UINavigationController class]]) {
-        _mode = ProfileViewModeMyProfile;
-        self.navigationItem.title = NSLocalizedString(@"navigation_title_profile", nil);
-    } else {
-        NSLog(@"ProfileViewController viewWillAppear: Unknown mode");
-    }
-    [self setupNavigationButtons: _mode];
+    self.navigationItem.title = NSLocalizedString([self navigationItemTitleKey], nil);
+
+    [self setupNavigationButtons];
 
     if ( ! self.isEditing) {
         _items = [self populateItems];
     }
 
-    if (_mode == ProfileViewModeContactProfile) {
+    //if (_mode == ProfileViewModeContactProfile) {
         [self setupContactKVO];
-    }
+    //}
     [HXOBackend broadcastConnectionInfo];
 
     [self.tableView reloadData];
+}
+
+- (void) configureMode {
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
+        _mode = ProfileViewModeFirstRun;
+    } else if (self.contact != nil) {
+        _mode = ProfileViewModeContactProfile;
+    } else if ([self.parentViewController isKindOfClass: [UINavigationController class]]) { // XXX find a test that works ... this is always true
+        _mode = ProfileViewModeMyProfile;
+    } else {
+        NSLog(@"ProfileViewController viewWillAppear: Unknown mode");
+    }
+}
+
+- (NSString*) navigationItemTitleKey {
+    switch (_mode) {
+        case ProfileViewModeMyProfile:
+        case ProfileViewModeFirstRun:
+            return @"navigation_title_profile";
+        case ProfileViewModeContactProfile:
+            return @"navigation_title_contact";
+        default:
+            NSLog(@"ProfileViewController navigationItemTitleKey: unhandled mode");
+            return @"unhandled mode";
+    }
 }
 
 - (NSString*) titleForRelationshipState: (NSString*) state {
@@ -103,7 +119,7 @@ typedef enum ActionSheetTags {
 }
 
 - (NSArray*) populateValues {
-    id modelObject = _mode == ProfileViewModeContactProfile ? self.contact : [UserProfile sharedProfile];
+    id modelObject = [self getModelObject];
     _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
 
     if (_mode == ProfileViewModeContactProfile) {
@@ -119,6 +135,10 @@ typedef enum ActionSheetTags {
     _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
 
     return [self filterItems: self.isEditing];
+}
+
+- (id) getModelObject {
+    return _mode == ProfileViewModeContactProfile ? self.contact : [UserProfile sharedProfile];
 }
 
 - (void) updateKeyFingerprint {
@@ -285,8 +305,8 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (void) setupNavigationButtons: (ProfileViewMode) mode {
-    switch (mode) {
+- (void) setupNavigationButtons {
+    switch (_mode) {
         case ProfileViewModeFirstRun:
             self.navigationItem.rightBarButtonItem = self.editButtonItem;
             self.navigationItem.leftBarButtonItem = nil;
@@ -295,7 +315,6 @@ typedef enum ActionSheetTags {
             self.navigationItem.rightBarButtonItem = self.editButtonItem;
             if (self.isEditing) {
                 self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
-
             } else {
                 self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
             }
@@ -304,6 +323,8 @@ typedef enum ActionSheetTags {
         case ProfileViewModeContactProfile:
             self.navigationItem.rightBarButtonItem = nil;
             break;
+        default:
+            NSLog(@"setupNavigationButtons: unhandled mode");
 
     }
 }
@@ -380,6 +401,51 @@ typedef enum ActionSheetTags {
         ++row;
     }
 
+    [self configureTrailingEditOnlySections: editing];
+
+    _items = [self filterItems: editing];
+    [self.tableView endUpdates];
+    
+    for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
+        NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
+        [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
+    }
+    if (editing) {
+        [self validateItems];
+        //if (_mode == ProfileViewModeMyProfile) {
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
+            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
+        //}
+        _canceled = NO;
+        for (ProfileItem* item in _allProfileItems) {
+            [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
+        }
+
+    } else {
+        if ( ! _canceled) {
+            [self save];
+        }
+        ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
+        self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
+        for (ProfileItem* item in _allProfileItems) {
+            [item removeObserver: self forKeyPath: @"valid"];
+        }
+        [self onEditingDone];
+    }
+}
+
+- (UIBarButtonItem*) leftNonEditButton {
+    if (_mode == ProfileViewModeMyProfile) {
+        return self.hxoMenuButton;
+    } else {
+        return nil;
+    }
+}
+
+- (void) onEditingDone {
+}
+
+- (void) configureTrailingEditOnlySections: (BOOL) editing {
     NSUInteger section = [self numberOfSectionsInTableView:self.tableView];
     if (editing) {
         [self.tableView insertSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
@@ -391,39 +457,15 @@ typedef enum ActionSheetTags {
         [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
         [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
     }
-
-    _items = [self filterItems: editing];
-    [self.tableView endUpdates];
-    for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
-        NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
-        [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
-    }
-    if (editing) {
-        [self validateItems];
-        if (_mode == ProfileViewModeMyProfile) {
-            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
-            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
-        }
-        _canceled = NO;
-        for (ProfileItem* item in _allProfileItems) {
-            [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
-        }
-
-    } else {
-        if ( ! _canceled) {
-            [self saveProfile];
-        }
-        ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
-        self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
-        for (ProfileItem* item in _allProfileItems) {
-            [item removeObserver: self forKeyPath: @"valid"];
-        }
-    }
 }
 
 - (IBAction)onCancel:(id)sender {
     _canceled = YES;
     [self setEditing: NO animated: YES];
+}
+
+- (NSString*) avatarDefaultImageName {
+    return @"avatar_default_contact_large";
 }
 
 - (NSArray*) populateItems {
@@ -432,6 +474,7 @@ typedef enum ActionSheetTags {
     _avatarItem = [[AvatarItem alloc] init];
     _avatarItem.valueKey = @"avatarImage";
     _avatarItem.cellClass = [UserDefaultsCellAvatarPicker class];
+    _avatarItem.defaultImageName = [self avatarDefaultImageName];
     _avatarItem.target = self;
     _avatarItem.action = @selector(avatarTapped:);
     [_itemsByKeyPath setObject: _avatarItem forKey: _avatarItem.valueKey];
@@ -575,6 +618,11 @@ typedef enum ActionSheetTags {
     } else {
         items = [_allProfileItems filteredArrayUsingPredicate: self.hasValuePredicate];
     }
+
+    return [self composeItems: items withEditFlag: editing];
+}
+
+- (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
     // just don't ask ... needs refactoring
     if (_mode == ProfileViewModeContactProfile) {
         return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_deleteContactItem]];
@@ -596,7 +644,7 @@ typedef enum ActionSheetTags {
 }
 
 
-- (void) saveProfile {
+- (void) save {
     // TODO: proper size handling
     CGFloat scale;
     if (_avatarItem.currentValue.size.height > _avatarItem.currentValue.size.width) {
@@ -609,7 +657,7 @@ typedef enum ActionSheetTags {
     [UserProfile sharedProfile].avatarImage = scaledAvatar;
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
-            [[UserProfile sharedProfile] setValue: item.currentValue forKey: item.valueKey];
+            [[self getModelObject] setValue: item.currentValue forKey: item.valueKey];
         }
     }
 

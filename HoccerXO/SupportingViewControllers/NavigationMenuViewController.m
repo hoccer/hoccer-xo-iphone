@@ -39,7 +39,7 @@
                        },
                     @{ @"title": NSLocalizedString(@"groups_menu_item", nil),
                        @"icon": @"navigation_button_groups",
-                       @"storyboardId": @"groupsViewController"
+                       @"storyboardId": @"groupListViewController"
                      },
                     @{ @"title": NSLocalizedString(@"Profile", nil),
                        @"icon": @"navigation_button_profile",

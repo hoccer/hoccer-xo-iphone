@@ -292,3 +292,6 @@
 "invalid_cert_title" = "Invalid Server Certificate";
 
 "invalid_cert_message" = "Help! Vicious internet nazis are attacking Hoccer. Please call the avengers.";
+
+"navigation_title_new_group" = "New Group";
+"navigation_title_group" = "Group";

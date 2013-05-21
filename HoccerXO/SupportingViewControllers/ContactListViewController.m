@@ -60,12 +60,16 @@
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
-    UIImage * icon = [UIImage imageNamed: @"navbar-icon-contacts"];
+    UIImage * icon = [UIImage imageNamed: [self navigationItemBackButtonImageName]];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
     [HXOBackend registerConnectionInfoObserverFor:self];
 
+}
+
+- (NSString*) navigationItemBackButtonImageName {
+    return @"navbar-icon-contacts";
 }
 
 - (void) viewWillAppear:(BOOL)animated {

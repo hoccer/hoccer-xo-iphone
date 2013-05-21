@@ -51,6 +51,10 @@
     return @"avatar_default_group";
 }
 
+- (NSString*) navigationItemBackButtonImageName {
+    return @"navigation_button_groups";
+}
+
 - (void) addButtonPressed: (id) sender {
     UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupViewController"];
     [self presentViewController: modalGroupView animated: YES completion:nil];

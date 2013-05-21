@@ -116,7 +116,7 @@ static const CGFloat kEditAnimationDuration = 0.5;
     // does not call super class
     self.avatar.image = item.currentValue;
     if (self.avatar.defaultImage == nil) {
-        self.avatar.defaultImage = [UIImage imageNamed: @"avatar_default_contact_large"];
+        self.avatar.defaultImage = [UIImage imageNamed: item.defaultImageName];
     }
     [self.avatar addTarget: [item target] action: [item action] forControlEvents: UIControlEventTouchUpInside];
 }

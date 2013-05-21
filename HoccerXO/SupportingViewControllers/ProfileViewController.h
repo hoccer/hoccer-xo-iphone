@@ -17,11 +17,16 @@
 @class AvatarItem;
 @class Contact;
 @class ProfileItem;
+@class AppDelegate;
 
 typedef enum ProfileViewModes {
     ProfileViewModeFirstRun,
     ProfileViewModeMyProfile,
-    ProfileViewModeContactProfile
+    ProfileViewModeContactProfile,
+
+    ProfileViewModeNewGroup,
+    ProfileViewModeEditGroup,
+    ProfileViewModeShowGroup
 } ProfileViewMode;
 
 @interface ProfileViewController : HXOGroupedTableViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
@@ -43,5 +48,10 @@ typedef enum ProfileViewModes {
 
 
 @property (nonatomic,strong) Contact* contact;
+@property (strong, readonly) AppDelegate * appDelegate;
+
+
+- (void) setupNavigationButtons;
+- (void) setupContactKVO;
 
 @end
