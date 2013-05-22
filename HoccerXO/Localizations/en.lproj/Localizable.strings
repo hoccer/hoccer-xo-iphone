@@ -295,3 +295,6 @@
 
 "navigation_title_new_group" = "New Group";
 "navigation_title_group" = "Group";
+
+"group_name_placeholder" = "Group Name";
+

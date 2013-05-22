@@ -12,7 +12,7 @@
 @class Group;
 @class AvatarItem;
 
-@interface GroupViewController : ProfileViewController
+@interface GroupViewController : ProfileViewController <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic,strong) Group * group;
 @property (nonatomic,readonly) HXOBackend * backend;

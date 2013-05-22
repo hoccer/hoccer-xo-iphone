@@ -107,6 +107,8 @@
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
 		636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */; };
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
+		6374B819174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */; };
+		6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6374B822174D0F6900506EE9 /* GroupMemberCell.m */; };
 		637847A516F24E5700DE03C2 /* conversation_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */; };
 		637847AA16F2864E00DE03C2 /* AttachmentViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 637847A916F2864E00DE03C2 /* AttachmentViewFactory.m */; };
 		637847F116F348E400DE03C2 /* bubble-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847C016F348E300DE03C2 /* bubble-left.png */; };
@@ -536,6 +538,9 @@
 		636D4006171072CD00304EDF /* HXOUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUserDefaults.m; sourceTree = "<group>"; };
 		636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HXOUserDefaultsDefaults.plist; sourceTree = "<group>"; };
 		636D400A171081AB00304EDF /* Environment.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Environment.plist; sourceTree = "<group>"; };
+		6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupMemberCell_iPhone.xib; sourceTree = "<group>"; };
+		6374B821174D0F6900506EE9 /* GroupMemberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberCell.h; sourceTree = "<group>"; };
+		6374B822174D0F6900506EE9 /* GroupMemberCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberCell.m; sourceTree = "<group>"; };
 		637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation_cell_bg@2x.png"; sourceTree = "<group>"; };
 		637847A816F2864E00DE03C2 /* AttachmentViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentViewFactory.h; sourceTree = "<group>"; };
 		637847A916F2864E00DE03C2 /* AttachmentViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentViewFactory.m; sourceTree = "<group>"; };
@@ -1615,6 +1620,8 @@
 				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
+				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
+				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1641,6 +1648,7 @@
 				6327EABE1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib */,
 				6327EAC0171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib */,
 				6327EACB17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib */,
+				6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */,
 			);
 			path = UserDefaultsCells;
 			sourceTree = "<group>";
@@ -2080,6 +2088,7 @@
 				6381FEC3174556F2001D16E0 /* conversation-icon-me@2x.png in Resources */,
 				5048263E174796F10048538A /* navigation_button_groups@2x.png in Resources */,
 				5048263F174796F10048538A /* navigation_button_groups.png in Resources */,
+				6374B819174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2219,6 +2228,7 @@
 				63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */,
 				63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */,
 				E99872A21747F25B001355BB /* HoccerXO.xcdatamodeld in Sources */,
+				6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
