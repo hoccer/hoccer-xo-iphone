@@ -13,7 +13,9 @@
 #import "GroupMembership.h"
 
 @interface InviteGroupMemberViewController ()
-
+{
+    Contact * _selectedContact;
+}
 @end
 
 @implementation InviteGroupMemberViewController
@@ -52,10 +54,21 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"======== didSelectRowAtIndexPath");
-    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    NSLog(@"GroupMemberInviteViewController: TODO: invite %@ to group %@", contact.nickName, self.group.nickName);
-    [self.navigationController popViewControllerAnimated: YES];
+    _selectedContact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
+    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"group_invite_title", nil), _selectedContact.nickName, self.group.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                     message: nil
+                                                    delegate: self
+                                           cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                           otherButtonTitles:NSLocalizedString(@"Ok", nil), nil];
+    [alert show];
+}
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        NSLog(@"GroupMemberInviteViewController: TODO: invite %@ to group %@", _selectedContact.nickName, self.group.nickName);
+        //[self.navigationController popViewControllerAnimated: YES];
+    }
 }
 
 @end

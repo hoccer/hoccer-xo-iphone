@@ -299,4 +299,4 @@
 "group_name_placeholder" = "Group Name";
 "group_invite_button" = "Invite a Friend";
 
-
+"group_invite_title" = "Invite %@ to group %@?";
