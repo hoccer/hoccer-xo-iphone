@@ -911,20 +911,19 @@ typedef enum BackendStates {
 
 #pragma mark - Group related rpc interfaces: outgoing rpc calls
 
-- (Group*) createGroup {
+// TODO: better failure behavior using handler
+- (void) createGroupWithHandler:(CreateGroupHandler)handler {
     Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
     group.type = [Group entityName];
     group.groupTag = [NSString stringWithUUID];
     group.myRole = @"admin";
     group.myState = @"accepted";
     group.groupKey = [AESCryptor random256BitKey];
-    // group.clientId = [NSString stringWithUUID]; // XXX use server UUID instead
-    [self createGroup: group];
-    return group;
+    [self createGroup: group withHandler:handler];
 }
 
 // String createGroup(TalkGroup group);
-- (void) createGroup:(Group *) group {
+- (void) createGroup:(Group *) group withHandler:(CreateGroupHandler)handler {
     NSMutableDictionary * groupDict = [group rpcDictionary];
     
     // [self validateObject: groupDict forEntity:@"RPC_Group_out"]; // TODO: Handle Validation Error
@@ -935,9 +934,11 @@ typedef enum BackendStates {
          if (success) {
              NSString * groupId = (NSString*)responseOrError;
              group.clientId = groupId;
+             handler(group);
              NSLog(@"createGroup() returned groupId: %@", responseOrError);
          } else {
-             NSLog(@"deliveryAcknowledge() failed: %@", responseOrError);
+             NSLog(@"createGroup() failed: %@", responseOrError);
+             handler(nil);
          }
      }];
 }
@@ -1088,13 +1089,9 @@ typedef enum BackendStates {
     GroupMembership * myMember = nil;
     if ([theMemberSet count] == 0) {
         // create new member
-        NSSet * members = group.members;
-        if (members == nil) {
-            // add membership here
-            myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-            myMember.contact = memberContact; // memberContact will be nil for own membership
-            [group addMembersObject:myMember];
-        }
+        myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+        myMember.contact = memberContact; // memberContact will be nil for own membership
+        [group addMembersObject:myMember];
     } else {
         myMember = [theMemberSet anyObject];
     }
@@ -1132,6 +1129,20 @@ typedef enum BackendStates {
     return [HXOModel createDictionaryFromObject:member withKeys:[self groupMemberKeys]];
 }
 
+// void inviteGroupMember(String groupId, String clientId);
+- (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler{
+    
+    [_serverConnection invoke: @"inviteGroupMember" withParams: @[group.clientId,contact.clientId]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"inviteGroupMember succeeded groupId: %@, clientId:%@",group.clientId,contact.clientId);
+         } else {
+             NSLog(@"inviteGroupMember() failed: %@", responseOrError);
+         }
+         doneHandler(success);
+     }];
+}
 
 // void addGroupMember(TalkGroupMember member);
 - (void) addGroupMember:(Contact *)contact toGroup:(Group*) group withRole:(NSString*)role {

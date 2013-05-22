@@ -61,8 +61,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _isNewGroup = self.group == nil;
     if (self.group == nil) {
         NSLog(@"creating new Group");
-        self.group = [self.backend createGroup];
-        [self setupContactKVO];
+        [self.backend createGroupWithHandler:^(Group * group) {
+            if (group) {
+                self.group = group;
+                [self setupContactKVO];
+            }
+        }];
     }
 }
 

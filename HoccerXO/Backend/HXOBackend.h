@@ -33,6 +33,7 @@ typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DoneBlock)();
 typedef void (^GroupMemberDeleted)(GroupMembership* member);
 typedef void (^GroupDeleted)(Group* group);
+typedef void (^CreateGroupHandler)(Group* group);
 
 @protocol HXODelegate <NSObject>
 
@@ -74,6 +75,11 @@ typedef void (^GroupDeleted)(Group* group);
 - (void) pairByToken: (NSString*) token;
 - (void) acceptInvitation: (NSString*) token;
 
+- (void) createGroupWithHandler:(CreateGroupHandler)handler;
+- (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
+
+
+
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
 - (void) blockClient: (NSString*) clientId handler: (GenericResultHandler) handler;
@@ -99,8 +105,6 @@ typedef void (^GroupDeleted)(Group* group);
 - (void) updateRelationships;
 - (void) updatePresence;
 - (void) updateKey;
-
-- (Group*) createGroup;
 
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;

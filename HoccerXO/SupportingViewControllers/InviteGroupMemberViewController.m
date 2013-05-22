@@ -11,14 +11,20 @@
 #import "ContactCell.h"
 #import "Contact.h"
 #import "GroupMembership.h"
+#import "HXOBackend.h"
+#import "AppDelegate.h"
 
 @interface InviteGroupMemberViewController ()
 {
     Contact * _selectedContact;
 }
+@property (nonatomic, readonly) HXOBackend * chatBackend;
+
 @end
 
 @implementation InviteGroupMemberViewController
+
+@synthesize chatBackend = _chatBackend;
 
 - (void) setupNavigationBar {
 }
@@ -26,6 +32,13 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
+}
+
+- (HXOBackend*) chatBackend {
+    if (_chatBackend == nil) {
+        _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
+    }
+    return _chatBackend;
 }
 
 - (void) setGroup:(Group *)group {
@@ -67,6 +80,9 @@
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != alertView.cancelButtonIndex) {
         NSLog(@"GroupMemberInviteViewController: TODO: invite %@ to group %@", _selectedContact.nickName, self.group.nickName);
+        [self.chatBackend inviteGroupMember:_selectedContact toGroup:self.group onDone:^(BOOL success) {
+            // yeah
+        }];
         //[self.navigationController popViewControllerAnimated: YES];
     }
 }
