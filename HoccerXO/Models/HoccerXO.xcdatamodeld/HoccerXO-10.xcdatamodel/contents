@@ -64,11 +64,13 @@
     <entity name="Group" representedClassName="Group" parentEntity="Contact" syncable="YES">
         <attribute name="groupKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="groupTag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="myRole" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="myState" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="members" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="group" inverseEntity="GroupMembership" syncable="YES"/>
     </entity>
     <entity name="GroupMembership" representedClassName="GroupMembership" syncable="YES">
+        <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="role" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="groupMemberships" inverseEntity="Contact" syncable="YES"/>
@@ -112,8 +114,8 @@
         <element name="Attachment" positionX="-711" positionY="72" width="128" height="315"/>
         <element name="Contact" positionX="-81" positionY="-9" width="128" height="419"/>
         <element name="Delivery" positionX="-279" positionY="180" width="128" height="120"/>
-        <element name="Group" positionX="304" positionY="132" width="128" height="120"/>
-        <element name="GroupMembership" positionX="117" positionY="252" width="128" height="105"/>
+        <element name="Group" positionX="304" positionY="132" width="128" height="135"/>
+        <element name="GroupMembership" positionX="117" positionY="252" width="128" height="120"/>
         <element name="HXOMessage" positionX="-468" positionY="144" width="128" height="254"/>
         <element name="Invite" positionX="-504" positionY="-135" width="128" height="60"/>
     </elements>

@@ -13,6 +13,7 @@
 #import "Delivery.h"
 #import "Contact.h"
 #import "Attachment.h"
+#import "GroupMembership.h"
 #import "Invite.h"
 #import "AppDelegate.h"
 #import "NSString+UUID.h"
@@ -29,6 +30,7 @@
 #import "SocketRocket/SRWebSocket.h"
 #import "Group.h"
 #import "Crypto.h"
+#import "UserProfile.h"
 
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
@@ -80,6 +82,8 @@ typedef enum BackendStates {
         [_serverConnection registerIncomingCall: @"pushNotRegistered"   withSelector:@selector(pushNotRegistered:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"presenceUpdated"     withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"relationshipUpdated" withSelector:@selector(relationshipUpdated:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"groupUpdated"        withSelector:@selector(groupUpdated:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"groupMemberUpdated"  withSelector:@selector(groupMemberUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"ping"                withSelector:@selector(ping) isNotification: NO];
         _delegate = theAppDelegate;
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -451,6 +455,7 @@ typedef enum BackendStates {
         [self flushPendingInvites];
         [self updatePresence];
         [self updateKey];
+        [self getGroups];
     } else {
         [self stopAndRetry];
     }
@@ -473,6 +478,25 @@ typedef enum BackendStates {
     }
     return contact;
 }
+
+-(Group *) getGroupById:(NSString *) theGroupId {
+    NSDictionary * vars = @{ @"clientId" : theGroupId};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupByClientId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *groups = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (groups == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    Group * group = nil;
+    if (groups.count > 0) {
+        group = groups[0];
+    } else {
+        // NSLog(@"ClientId %@ not in contacts", theClientId);
+    }
+    return group;
+}
+
 
 - (void) acceptInvitation: (NSString*) token {
     if (_state == kBackendReady) {
@@ -647,6 +671,10 @@ typedef enum BackendStates {
     return [self getLatestDateFromEntity:[Contact entityName] forKeyPath:@"presenceLastUpdated"];
 }
 
+- (NSDate*) getLatestChangeDateForGroups {
+    return [self getLatestDateFromEntity:[Group entityName] forKeyPath:@"lastChanged"];
+}
+
 
 - (NSDate*) getLatestDateFromEntity:(NSString*) entityName forKeyPath:(NSString *) keyPath {
     // NSLog(@"getLatestDateFromEntity: %@ forKeyPath: %@", entityName, keyPath);
@@ -787,17 +815,6 @@ typedef enum BackendStates {
     [contact updateWithDictionary: relationshipDict];
 }
 
-- (Group*) createGroup {
-    Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-    group.type = [Group entityName];
-    group.groupTag = [NSString stringWithUUID];
-    group.myRole = @"admin";
-    group.myState = @"accepted";
-    group.groupKey = [AESCryptor random256BitKey];
-    group.clientId = [NSString stringWithUUID]; // XXX use server UUID instead
-    return group;
-}
-
 - (void) updatePresences {
     NSDate * latestChange = [self getLatestChangeDateForContactPresence];
     // NSLog(@"latest date %@", latestChange);
@@ -869,6 +886,303 @@ typedef enum BackendStates {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }
 }
+
+#pragma mark - Group related rpc interfaces: notifications
+
+//  void groupUpdated(TalkGroup group);
+- (void) groupUpdated:(NSArray*) group_param {
+    [self updateGroupHere: group_param[0]];
+}
+
+// void groupMemberUpdated(TalkGroupMember groupMember);
+- (void) groupMemberUpdated:(NSArray*) groupMember_param {
+    [self updateGroupMemberHere: groupMember_param[0]];
+}
+
+//public class TalkGroup {    
+//    public String groupTag;
+//    public String groupId;
+//    public String groupName;
+//    public String groupAvatarUrl;
+//    public Date lastChanged;
+//}
+
+
+
+#pragma mark - Group related rpc interfaces: outgoing rpc calls
+
+- (Group*) createGroup {
+    Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+    group.type = [Group entityName];
+    group.groupTag = [NSString stringWithUUID];
+    group.myRole = @"admin";
+    group.myState = @"accepted";
+    group.groupKey = [AESCryptor random256BitKey];
+    // group.clientId = [NSString stringWithUUID]; // XXX use server UUID instead
+    [self createGroup: group];
+    return group;
+}
+
+// String createGroup(TalkGroup group);
+- (void) createGroup:(Group *) group {
+    NSMutableDictionary * groupDict = [group rpcDictionary];
+    
+    // [self validateObject: groupDict forEntity:@"RPC_Group_out"]; // TODO: Handle Validation Error
+    
+    [_serverConnection invoke: @"createGroup" withParams: @[groupDict]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSString * groupId = (NSString*)responseOrError;
+             group.clientId = groupId;
+             NSLog(@"createGroup() returned groupId: %@", responseOrError);
+         } else {
+             NSLog(@"deliveryAcknowledge() failed: %@", responseOrError);
+         }
+     }];
+}
+
+// get the list of all groups on the server I am a member of
+//TalkGroup[] getGroups(Date lastKnown);
+- (void) getGroups:(NSDate *)lastKnown groupsHandler:(GroupsHandler) handler {
+    NSNumber * lastKnownMillis = [HXOBackend millisFromDate:lastKnown];
+    [_serverConnection invoke: @"getGroups" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"getGroups(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"getGroups(): failed: %@", responseOrError);
+            handler(NO);
+        }
+    }];
+}
+
+- (void) getGroups {
+    NSDate * latestChange = [self getLatestChangeDateForGroups];
+    // NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
+    // NSLog(@"latest date %@", latestChange);
+    [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
+        for (NSDictionary * groupDict in changedGroups) {
+            [self updateGroupHere: groupDict];
+        }
+    }];
+}
+
+- (void) updateGroupHere: (NSDictionary*) groupDict {
+    //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
+        
+    NSString * groupId = groupDict[@"groupId"];
+    Group * group = [self getGroupById: groupId];
+
+    if (group == nil) {
+        group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+        group.clientId = groupId;
+        group.type = @"group";
+    }
+    // NSLog(@"relationship Dict: %@", relationshipDict);
+    [group updateWithDictionary: groupDict];
+}
+
+// update a group on the server (as admin)
+// void updateGroup(TalkGroup group);
+- (void) updateGroup:(Group *) group {
+    NSMutableDictionary * groupDict = [group rpcDictionary];
+    
+    // [self validateObject: groupDict forEntity:@"RPC_Group_out"]; // TODO: Handle Validation Error
+    
+    [_serverConnection invoke: @"updateGroup" withParams: @[groupDict]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"updateGroup() ok: %@", responseOrError);
+         } else {
+             NSLog(@"updateGroup() failed: %@", responseOrError);
+         }
+     }];    
+}
+
+// void deleteGroup(String groupId);
+- (void) deleteGroup:(Group *) group onDeletion:(GroupDeleted)deletionHandler {
+    [_serverConnection invoke: @"deleteGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"deleteGroup() ok: got result: %@", responseOrError);
+            deletionHandler(group);
+        } else {
+            NSLog(@"deleteGroup(): failed: %@", responseOrError);
+            deletionHandler(nil);
+        }
+    }];
+}
+
+//TalkGroupMember[] getGroupMembers(String groupId, Date lastKnown);
+- (void) getGroupMembers:(NSString *) groupId lastKnown:(NSDate*) lastKnown membershipsHandler:(MembershipsHandler)handler {
+    NSNumber * lastKnownMillis = [HXOBackend millisFromDate:lastKnown];
+    [_serverConnection invoke: @"getGroupMembers" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"getGroups(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"getGroups(): failed: %@", responseOrError);
+            handler(NO);
+        }
+    }];
+}
+
+- (void) getGroupMembers: (Group *) group {
+    NSDate * lastKnown = group.lastChanged;
+    // NSDate * lastKnown = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
+    // NSLog(@"latest date %@", lastKnown);
+    [self getGroupMembers: group.clientId lastKnown:lastKnown membershipsHandler:^(NSArray * changedMembers) {
+        for (NSDictionary * memberDict in changedMembers) {
+            [self updateGroupMemberHere: memberDict];
+        }
+    }];
+}
+
+//public class TalkGroupMember {
+//    public static final String ROLE_NONE = "none";
+//    public static final String ROLE_ADMIN = "admin";
+//    public static final String ROLE_MEMBER = "member";
+//
+//    private String groupId;
+//    private String clientId;
+//    private String role;
+//    private String state;
+//    private String invitationSecret;
+//    private String encryptedGroupKey;
+//    private Date lastChanged;
+//}
+
+- (void) updateGroupMemberHere: (NSDictionary*) groupMemberDict {
+    //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
+    
+    NSString * groupId = groupMemberDict[@"groupId"];
+    Group * group = [self getGroupById: groupId];
+    if (group == nil) {
+        NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@",groupId);
+        return;
+    }
+        
+    NSString * memberClientId = groupMemberDict[@"clientId"];
+
+    Contact * memberContact = [self getContactByClientId:memberClientId];
+    if (memberContact == nil  && ![memberClientId isEqualToString:[UserProfile sharedProfile].clientId]) {
+        // create new Contact if it does not exist and is not own contact
+        NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating",memberClientId);
+        memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+        memberContact.clientId = memberClientId;
+    }
+    NSSet * theMemberSet = [group.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        if (memberContact != nil) {
+            return [obj.contact.clientId isEqualToString: memberClientId];
+        } else {
+            // own contact
+            return obj.contact == nil;
+        }
+    }];
+    if ([theMemberSet count] > 1) {
+        NSLog(@"ERROR: duplicate members in group %@ with id %@",groupId,memberClientId);
+        return;
+    }
+
+    GroupMembership * myMember = nil;
+    if ([theMemberSet count] == 0) {
+        // create new member
+        NSSet * members = group.members;
+        if (members == nil) {
+            // add membership here
+            myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+            myMember.contact = memberContact; // memberContact will be nil for own membership
+            [group addMembersObject:myMember];
+        }
+    } else {
+        myMember = [theMemberSet anyObject];
+    }
+    
+    // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
+    [myMember updateWithDictionary: groupMemberDict];
+}
+
+
+//public class TalkGroupMember {
+//    public static final String ROLE_NONE = "none";
+//    public static final String ROLE_ADMIN = "admin";
+//    public static final String ROLE_MEMBER = "member";
+//
+//    private String groupId;
+//    private String clientId;
+//    private String role;
+//    private String state;
+//    private String invitationSecret;
+//    private String encryptedGroupKey;
+//    private Date lastChanged;
+//}
+
+- (NSDictionary*) groupMemberKeys {
+    return @{
+             @"groupId": @"group.clientId",
+             @"clientId": @"contact.clientId",
+             @"role": @"role",
+             @"state": @"state",
+             @"lastChanged": @"lastChangedMillis"
+             };
+}
+
+- (NSDictionary*) dictOfGroupMember:(GroupMembership*) member {
+    return [HXOModel createDictionaryFromObject:member withKeys:[self groupMemberKeys]];
+}
+
+
+// void addGroupMember(TalkGroupMember member);
+- (void) addGroupMember:(Contact *)contact toGroup:(Group*) group withRole:(NSString*)role {
+    NSDictionary * myGroupMemberDict = @{
+                                        @"groupId": group.clientId,
+                                        @"clientId":contact.clientId,
+                                        @"role": role,
+                                        @"state": @"new",
+                                        @"lastChanged": @(0)
+                                        };
+    [_serverConnection invoke: @"addGroupMember" withParams: @[myGroupMemberDict]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"addGroupMember succeeded groupId: %@, clientId:%@",group.clientId,contact.clientId);
+         } else {
+             NSLog(@"deliveryAcknowledge() failed: %@", responseOrError);
+         }
+     }];
+}
+
+// void removeGroupMember(TalkGroupMember member);
+- (void) removeGroupMember:(GroupMembership *) member onDeletion:(GroupMemberDeleted)deletionHandler{
+
+    [_serverConnection invoke: @"removeGroupMember" withParams: @[member.group.clientId,member.contact.clientId]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"removeGroupMember succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+             deletionHandler(member);
+         } else {
+             NSLog(@"removeGroupMember() failed: %@", responseOrError);
+             deletionHandler(nil);
+         }
+     }];
+}
+
+// void updateGroupMember(TalkGroupMember member);
+- (void) updateGroupMember:(GroupMembership *) member  {
+    NSDictionary * myGroupMemberDict = [self dictOfGroupMember:member];
+    [_serverConnection invoke: @"updateGroupMember" withParams: @[myGroupMemberDict]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"updateGroupMember succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+         } else {
+             NSLog(@"updateGroupMember() failed: %@", responseOrError);
+         }
+     }];    
+}
+
 
 #pragma mark - Attachment upload and download
 

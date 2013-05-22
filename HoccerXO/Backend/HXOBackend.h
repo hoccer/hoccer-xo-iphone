@@ -17,17 +17,22 @@
 @class Attachment;
 @class AppDelegate;
 @class Group;
+@class GroupMembership;
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^GenerateIdHandler)(NSString*);
 typedef void (^SrpHanlder)(NSString*);
 typedef void (^RelationshipHandler)(NSArray*);
+typedef void (^GroupsHandler)(NSArray*);
+typedef void (^MembershipsHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DoneBlock)();
+typedef void (^GroupMemberDeleted)(GroupMembership* member);
+typedef void (^GroupDeleted)(Group* group);
 
 @protocol HXODelegate <NSObject>
 

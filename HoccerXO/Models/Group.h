@@ -17,7 +17,11 @@
 @property (nonatomic, retain) NSString * myRole;
 @property (nonatomic, retain) NSString * myState;
 @property (nonatomic, retain) NSString * groupTag;
+@property (nonatomic, retain) NSDate * lastChanged;
 @property (nonatomic, retain) NSSet    * members;
+
+@property (nonatomic, retain) NSDate    * lastChangedMillis;
+
 @end
 
 @interface Group (CoreDataGeneratedAccessors)
