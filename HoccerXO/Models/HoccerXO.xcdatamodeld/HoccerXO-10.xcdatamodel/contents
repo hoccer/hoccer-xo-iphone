@@ -100,7 +100,7 @@
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="DeliveryByMessageTagAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $receiverId == receiver.clientId"/>
-    <fetchRequest name="GroupByClientId" entity="Contact" predicateString="clientId == $clientId AND type == &quot;group&quot;"/>
+    <fetchRequest name="GroupByClientId" entity="Group" predicateString="clientId == $clientId AND type == &quot;group&quot;"/>
     <fetchRequest name="MessageByMessageId" entity="HXOMessage" predicateString="messageId == $messageId"/>
     <fetchRequest name="MessagesByContact" entity="HXOMessage" predicateString="contact == $contact"/>
     <fetchRequest name="MessagesByContactAfterTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted > $afterTime AND timeAccepted &lt; $beforeTime"/>
