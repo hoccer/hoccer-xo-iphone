@@ -51,5 +51,11 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"======== didSelectRowAtIndexPath");
+    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
+    NSLog(@"GroupMemberInviteViewController: TODO: invite %@ to group %@", contact.nickName, self.group.nickName);
+    [self.navigationController popViewControllerAnimated: YES];
+}
 
 @end
