@@ -15,6 +15,8 @@
 #import "GroupMemberCell.h"
 #import "GroupMembership.h"
 #import "InsetImageView.h"
+#import "UserProfile.h"
+#import "InviteGroupMemberViewController.h"
 
 
 static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
@@ -33,6 +35,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 @interface GroupViewController ()
 {
     BOOL _isNewGroup;
+    ProfileItem * _inviteMemberItem;
 }
 
 @property (nonatomic,readonly) NSFetchedResultsController * fetchedResultsController;
@@ -129,6 +132,13 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
 }
 
+- (void) inviteMemberPressed: (id) sender {
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: self.group.nickName style:UIBarButtonItemStylePlain target:nil action:nil];
+    InviteGroupMemberViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"inviteGroupMemberViewController"];
+    controller.group = self.group;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - (void) onEditingDone {
     if (_mode == ProfileViewModeNewGroup) {
         if (_canceled) {
@@ -143,27 +153,30 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return ((AppDelegate*)UIApplication.sharedApplication.delegate).chatBackend;
 }
 
-- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return _items.count;
-}
+- (NSArray*) populateItems {
+    _inviteMemberItem = [[ProfileItem alloc] init];
+    _inviteMemberItem.currentValue = NSLocalizedString(@"group_invite_button", nil);
+    _inviteMemberItem.cellClass = [UserDefaultsCellDisclosure class];
+    _inviteMemberItem.action = @selector(inviteMemberPressed:);
+    _inviteMemberItem.target = self;
+    _inviteMemberItem.alwaysShowDisclosure = YES;
 
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_items[section] count];
+    return [super populateItems];
 }
 
 - (void) configureEditOnlySections: (BOOL) editing {
     if (editing && ! self.isEditing) {
         [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
+        //[self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
     } else if (!editing && self.isEditing) {
-        [self.tableView insertSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
+        //[self.tableView insertSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
         [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
 
     }
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
-    NSArray * utils = editing ? @[ @[_avatarItem], items] : @[ @[_avatarItem], [self groupUtilities], items];
+    NSArray * utils = @[ @[_avatarItem], [self groupUtilities: editing], items];
     NSMutableArray * result = [[NSMutableArray alloc] initWithArray: utils];
 
     for (NSUInteger i = 0; i < self.fetchedResultsController.sections.count; ++i) {
@@ -173,15 +186,26 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return result;
 }
 
-- (NSArray*) groupUtilities {
-    return @[_chatWithContactItem];
+- (NSArray*) groupUtilities: (BOOL) editing {
+    if (editing) {
+        return @[_inviteMemberItem];
+    }
+    return @[_chatWithContactItem, _inviteMemberItem];
 }
 
 #pragma mark - Table View Delegate
 
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+    return _items.count;
+}
+
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [_items[section] count];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _items[indexPath.section][indexPath.row];
-    if ([item isKindOfClass: [Contact class]]) {
+    if ([item isKindOfClass: [GroupMembership class]]) {
         UITableViewCell * cell = [self prototypeCellOfClass: [GroupMemberCell class]];
         return cell.bounds.size.height;
     }
@@ -190,17 +214,32 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _items[indexPath.section][indexPath.row];
-    if ([item isKindOfClass: [Contact class]]) {
+    if ([item isKindOfClass: [GroupMembership class]]) {
+        GroupMembership * membership = item;
+        id contact = [self getContact: membership];
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
-        // TODO: make configure method...
-        cell.nickName.text = [[item contact] nickName];
-        UIImage * avatar = [[item contact] avatarImage] != nil ? [[item contact] avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
+        // TODO: move to a configure method...
+        cell.nickName.text = [contact nickName];
+        UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
         cell.avatar.image = avatar;
         return cell;
     }
     return [super tableView: tableView cellForRowAtIndexPath: indexPath];
 }
 
+- (id) getContact: (GroupMembership*) membership {
+    if (membership.contact != nil) {
+        return membership.contact;
+    }
+    return [UserProfile sharedProfile];
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([_items[indexPath.section][indexPath.row] isKindOfClass: [GroupMembership class]]) {
+        return UITableViewCellEditingStyleDelete;
+    }
+    return UITableViewCellEditingStyleNone;
+}
 
 #pragma mark - Fetched Results Controller
 

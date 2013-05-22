@@ -79,6 +79,7 @@
 		633129DC16F95D4B008F5B04 /* chatbar_bg_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129DB16F95D4B008F5B04 /* chatbar_bg_noise.png */; };
 		633129DE16F96337008F5B04 /* chatbar_bg_gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129DD16F96337008F5B04 /* chatbar_bg_gradient.png */; };
 		633129E216F96872008F5B04 /* chatbar_bg_gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633129E116F96872008F5B04 /* chatbar_bg_gradient@2x.png */; };
+		633F25E1174D59A000D735D8 /* InviteGroupMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* InviteGroupMemberViewController.m */; };
 		6343B4E516CD604700B3A29E /* ChatTableCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* ChatTableCells.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
@@ -500,6 +501,8 @@
 		633129DB16F95D4B008F5B04 /* chatbar_bg_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatbar_bg_noise.png; sourceTree = "<group>"; };
 		633129DD16F96337008F5B04 /* chatbar_bg_gradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatbar_bg_gradient.png; sourceTree = "<group>"; };
 		633129E116F96872008F5B04 /* chatbar_bg_gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_bg_gradient@2x.png"; sourceTree = "<group>"; };
+		633F25DF174D599F00D735D8 /* InviteGroupMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteGroupMemberViewController.h; sourceTree = "<group>"; };
+		633F25E0174D599F00D735D8 /* InviteGroupMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteGroupMemberViewController.m; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* ChatTableCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableCells.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* ChatTableCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableCells.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
@@ -1373,6 +1376,8 @@
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
 				636D3FF9170F370E00304EDF /* InviteCodeViewController.mm */,
+				633F25DF174D599F00D735D8 /* InviteGroupMemberViewController.h */,
+				633F25E0174D599F00D735D8 /* InviteGroupMemberViewController.m */,
 				633049251701A3A80045E64E /* NavigationMenuViewController.h */,
 				633049261701A3A80045E64E /* NavigationMenuViewController.m */,
 				633049281701B3390045E64E /* ProfileViewController.h */,
@@ -1616,12 +1621,6 @@
 				639094C7173A871500DF889B /* UIButton+GlossyRounded.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
-				6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */,
-				6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */,
-				6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */,
-				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
-				6327EAEA171883C200AF75E1 /* ContactCell.h */,
-				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2229,6 +2228,7 @@
 				63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */,
 				E99872A21747F25B001355BB /* HoccerXO.xcdatamodeld in Sources */,
 				6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */,
+				633F25E1174D59A000D735D8 /* InviteGroupMemberViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

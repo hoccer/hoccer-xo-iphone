@@ -42,6 +42,7 @@
 @dynamic githubName;
 
 @dynamic messages;
+@dynamic groupMemberships;
 @dynamic nickNameWithStatus;
 
 @synthesize rememberedLastVisibleChatCell;
