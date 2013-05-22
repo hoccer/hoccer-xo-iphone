@@ -13,6 +13,8 @@
 #import "AppDelegate.h"
 #import "UserDefaultsCells.h"
 #import "GroupMemberCell.h"
+#import "GroupMembership.h"
+#import "InsetImageView.h"
 
 
 static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
@@ -191,7 +193,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if ([item isKindOfClass: [Contact class]]) {
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
         // TODO: make configure method...
-        cell.nickName.text = [item nickName];
+        cell.nickName.text = [[item contact] nickName];
+        UIImage * avatar = [[item contact] avatarImage] != nil ? [[item contact] avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
+        cell.avatar.image = avatar;
         return cell;
     }
     return [super tableView: tableView cellForRowAtIndexPath: indexPath];
@@ -204,12 +208,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (NSFetchedResultsController*) fetchedResultsController {
     if (_fetchedResultsController == nil) {
 
-        // TODO: replace this dummy request with a real one based on group membership
-
-        
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         // Edit the entity name as appropriate.
-        NSEntityDescription *entity = [NSEntityDescription entityForName: [Contact entityName] inManagedObjectContext:self.appDelegate.managedObjectContext];
+        NSEntityDescription *entity = [NSEntityDescription entityForName: [GroupMembership entityName] inManagedObjectContext:self.appDelegate.managedObjectContext];
         [fetchRequest setEntity:entity];
 
         // Set the batch size to a suitable number.
@@ -219,17 +220,14 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         fetchRequest.includesSubentities = NO;
 
         // Edit the sort key as appropriate.
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"latestMessageTime" ascending: NO];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"contact.nickName" ascending: NO];
         NSArray *sortDescriptors = @[sortDescriptor];
 
         [fetchRequest setSortDescriptors:sortDescriptors];
 
-        NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend'"];
-        [fetchRequest setPredicate: filterPredicate];
-
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.appDelegate.managedObjectContext sectionNameKeyPath:nil cacheName:@"Contacts"];
+        NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.appDelegate.managedObjectContext sectionNameKeyPath:nil cacheName: nil];
         aFetchedResultsController.delegate = self;
         _fetchedResultsController = aFetchedResultsController;
 

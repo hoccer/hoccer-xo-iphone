@@ -798,7 +798,7 @@
 		E99872A01747F25B001355BB /* HoccerXO-8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-8.xcdatamodel"; sourceTree = "<group>"; };
 		E99872A11747F25B001355BB /* HoccerXO.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoccerXO.xcdatamodel; sourceTree = "<group>"; };
 		E99872AA174B9EA0001355BB /* HoccerXO-9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-9.xcdatamodel"; sourceTree = "<group>"; };
-		E99872AF174D2AFA001355BB /* HoccerXO-10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-10.xcdatamodel"; sourceTree = "<group>"; };
+		E99872AF174D2AFA001355BB /* HoccerXO-10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-10.xcdatamodel"; sourceTree = "<group>"; };
 		E99886B51725AFAA0089A510 /* audio_leer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = audio_leer.png; sourceTree = "<group>"; };
 		E99886B61725AFAA0089A510 /* audio_leer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio_leer@2x.png"; sourceTree = "<group>"; };
 		E99886BA1725CB3F0089A510 /* ABPersonCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPersonCreator.h; sourceTree = "<group>"; };
@@ -1590,6 +1590,8 @@
 				631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */,
 				6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */,
 				6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */,
+				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
+				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 				633129D516F95220008F5B04 /* GrowingTextView.h */,
 				633129D616F95220008F5B04 /* GrowingTextView.m */,
 				639094B917395DB200DF889B /* HXOActionSheet.h */,
@@ -1620,8 +1622,6 @@
 				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
-				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
-				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
