@@ -701,7 +701,6 @@
 		63AF81911746AA1E00D007E3 /* GroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupViewController.m; sourceTree = "<group>"; };
 		63AF819317471EFB00D007E3 /* HXONavigationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXONavigationItem.h; sourceTree = "<group>"; };
 		63AF819417471EFB00D007E3 /* HXONavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXONavigationItem.m; sourceTree = "<group>"; };
-		63BD7D84174411BD00118A7F /* HoccerXO-7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-7.xcdatamodel"; sourceTree = "<group>"; };
 		63BD7D8C174422D500118A7F /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		63BD7D931744232D00118A7F /* GroupMembership.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMembership.h; sourceTree = "<group>"; };
@@ -798,7 +797,8 @@
 		E998729F1747F25B001355BB /* HoccerXO-7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-7.xcdatamodel"; sourceTree = "<group>"; };
 		E99872A01747F25B001355BB /* HoccerXO-8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-8.xcdatamodel"; sourceTree = "<group>"; };
 		E99872A11747F25B001355BB /* HoccerXO.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoccerXO.xcdatamodel; sourceTree = "<group>"; };
-		E99872AA174B9EA0001355BB /* HoccerXO-9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-9.xcdatamodel"; sourceTree = "<group>"; };
+		E99872AA174B9EA0001355BB /* HoccerXO-9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-9.xcdatamodel"; sourceTree = "<group>"; };
+		E99872AF174D2AFA001355BB /* HoccerXO-10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-10.xcdatamodel"; sourceTree = "<group>"; };
 		E99886B51725AFAA0089A510 /* audio_leer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = audio_leer.png; sourceTree = "<group>"; };
 		E99886B61725AFAA0089A510 /* audio_leer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio_leer@2x.png"; sourceTree = "<group>"; };
 		E99886BA1725CB3F0089A510 /* ABPersonCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPersonCreator.h; sourceTree = "<group>"; };
@@ -2421,9 +2421,10 @@
 				E998729F1747F25B001355BB /* HoccerXO-7.xcdatamodel */,
 				E99872A01747F25B001355BB /* HoccerXO-8.xcdatamodel */,
 				E99872AA174B9EA0001355BB /* HoccerXO-9.xcdatamodel */,
+				E99872AF174D2AFA001355BB /* HoccerXO-10.xcdatamodel */,
 				E99872A11747F25B001355BB /* HoccerXO.xcdatamodel */,
 			);
-			currentVersion = E99872AA174B9EA0001355BB /* HoccerXO-9.xcdatamodel */;
+			currentVersion = E99872AF174D2AFA001355BB /* HoccerXO-10.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
