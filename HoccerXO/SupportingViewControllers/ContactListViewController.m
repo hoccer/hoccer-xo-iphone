@@ -46,6 +46,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self setupNavigationBar];
+    self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
+
+    self.searchBar.delegate = self;
+    self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
+    self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
+
+    [HXOBackend registerConnectionInfoObserverFor:self];
+}
+
+- (void) setupNavigationBar {
     self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
 
     UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addButtonPressed:)];
@@ -54,17 +65,9 @@
     UIImage * blueBackground = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
     [self.navigationItem.rightBarButtonItem setBackgroundImage: blueBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
-    self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
-
-    self.searchBar.delegate = self;
-    self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
-    self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
-
     UIImage * icon = [UIImage imageNamed: [self navigationItemBackButtonImageName]];
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
-
-    [HXOBackend registerConnectionInfoObserverFor:self];
 
 }
 
@@ -96,6 +99,11 @@
 
 - (NSFetchedResultsController *)currentFetchedResultsController {
     return self.searchBar.text.length ? self.searchFetchedResultsController : self.fetchedResultsController;
+}
+
+- (void) clearFetchedResultsControllers {
+    _fetchedResultsController = nil;
+    _searchFetchedResultsController = nil;
 }
 
 #pragma mark - Table view data source
@@ -197,7 +205,7 @@
     [fetchRequest setEntity:callEntity];
 
     NSMutableArray *predicateArray = [NSMutableArray array];
-    [predicateArray addObject: [self contactTypePredicate]];
+    [self addContactPredicates: predicateArray];
     if(searchString.length) {
         // your search predicate(s) are added to this array
         [predicateArray addObject:[NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
@@ -233,9 +241,10 @@
     return aFetchedResultsController;
 }
 
-- (NSPredicate*) contactTypePredicate {
-    return [NSPredicate predicateWithFormat:@"type == %@", [self entityName]];
+- (void) addContactPredicates: (NSMutableArray*) predicates {
+    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@", [self entityName]]];
 }
+
 
 - (id) entityName {
     return [Contact entityName];

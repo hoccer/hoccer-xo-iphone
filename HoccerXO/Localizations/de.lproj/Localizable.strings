@@ -278,3 +278,8 @@
 "navigation_title_new_group" = "Neue Gruppe";
 "navigation_title_group" = "Gruppe";
 
+"group_name_placeholder" = "Gruppenname";
+"group_invite_button"    = "Freund einladen";
+
+"group_invite_title" = "%@ in Gruppe %@? einladen?";
+

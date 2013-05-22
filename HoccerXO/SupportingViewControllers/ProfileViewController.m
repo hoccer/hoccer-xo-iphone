@@ -113,7 +113,7 @@ typedef enum ActionSheetTags {
     } else if ([state isEqualToString: @"blocked"]) {
         return [NSString stringWithFormat: NSLocalizedString(@"contact_unblock", nil), _contact.nickName];
     } else {
-        NSLog(@"ProfileViewController toggleBlockedPressed: unhandled status %@", _contact.status);
+        NSLog(@"ProfileViewController titleForRelationshipState: unhandled status %@", _contact.status);
     }
     return @"Kaputt";
 }
@@ -188,7 +188,7 @@ typedef enum ActionSheetTags {
         } else {
             [item setCurrentValue: [object valueForKey: keyPath]];
             if ([keyPath isEqualToString: @"nickName"]) {
-                _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [object nickName]];
+                _chatWithContactItem.currentValue = _chatWithContactItem.editLabel = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [object nickName]];
                 _blockContactItem.currentValue = [self titleForRelationshipState: [object relationshipState]];
             }
         }
@@ -337,13 +337,6 @@ typedef enum ActionSheetTags {
     } else {
         return cell.bounds.size.height;
     }
-/*
-    if (indexPath.section == 0) {
-        return [self prototypeCellOfClass: [UserDefaultsCellAvatarPicker class]].bounds.size.height;
-    } else {
-        return [self prototypeCellOfClass: [UserDefaultsCellTextInput class]].bounds.size.height;
-    }
- */
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -385,7 +378,6 @@ typedef enum ActionSheetTags {
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing: editing animated: animated];
 
     [self.view endEditing: editing];
 
@@ -394,14 +386,14 @@ typedef enum ActionSheetTags {
     for (ProfileItem * item in _allProfileItems) {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
         if (editing && ! hasValue) {
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 2]] withRowAnimation:UITableViewRowAnimationFade];
         } else if ( ! editing && ! hasValue) {
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 2]] withRowAnimation:UITableViewRowAnimationFade];
         }
         ++row;
     }
 
-    [self configureTrailingEditOnlySections: editing];
+    [self configureEditOnlySections: editing];
 
     _items = [self filterItems: editing];
     [self.tableView endUpdates];
@@ -432,6 +424,9 @@ typedef enum ActionSheetTags {
         }
         [self onEditingDone];
     }
+
+    [super setEditing: editing animated: animated];
+
 }
 
 - (UIBarButtonItem*) leftNonEditButton {
@@ -445,7 +440,7 @@ typedef enum ActionSheetTags {
 - (void) onEditingDone {
 }
 
-- (void) configureTrailingEditOnlySections: (BOOL) editing {
+- (void) configureEditOnlySections: (BOOL) editing {
     NSUInteger section = [self numberOfSectionsInTableView:self.tableView];
     if (editing) {
         [self.tableView insertSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
@@ -485,7 +480,7 @@ typedef enum ActionSheetTags {
     nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
     nickNameItem.valueKey = kHXONickName;
     nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
-    nickNameItem.placeholder = NSLocalizedString(@"profile_name_placeholder", @"Profile Placeholder Nick Name");
+    nickNameItem.placeholder = NSLocalizedString([self namePlaceholderKey], @"Profile Placeholder Nick Name");
     nickNameItem.cellClass = [UserDefaultsCellTextInput class];
     nickNameItem.keyboardType = UIKeyboardTypeDefault;
     nickNameItem.required = YES;
@@ -599,6 +594,9 @@ typedef enum ActionSheetTags {
     return [self populateValues];
 }
 
+- (NSString*) namePlaceholderKey {
+    return @"profile_name_placeholder";
+}
 
 - (void) validateItems {
     BOOL allValid = YES;

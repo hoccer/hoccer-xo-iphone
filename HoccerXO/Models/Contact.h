@@ -53,6 +53,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
 
 @property (nonatomic, strong) NSMutableSet* messages;
+@property (nonatomic, strong) NSMutableSet* groupMemberships;
 @property (readonly) NSString * nickNameWithStatus;
 
 @property (readonly) UIImage* avatarImage;

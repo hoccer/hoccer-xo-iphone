@@ -10,9 +10,15 @@
 
 #import "TableViewControllerWithPlaceholder.h"
 
+@class ContactCell;
+
 @interface ContactListViewController : TableViewControllerWithPlaceholder <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 
+- (void) clearFetchedResultsControllers;
+- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
+                   configureCell:(ContactCell *)cell
+                     atIndexPath:(NSIndexPath *)indexPath;
 @end
