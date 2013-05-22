@@ -220,7 +220,7 @@
     [fetchRequest setFetchBatchSize:20];
 
     // performance: do not include subentities
-    fetchRequest.includesSubentities = NO;
+    //fetchRequest.includesSubentities = NO;
     
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"latestMessageTime" ascending: NO];
@@ -228,7 +228,7 @@
 
     [fetchRequest setSortDescriptors:sortDescriptors];
 
-    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR type == 'group'"];
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR type == 'Group'"];
     [fetchRequest setPredicate: filterPredicate];
 
     // Edit the section name key path and cache name if appropriate.
@@ -313,7 +313,12 @@
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
-    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
+    UIImage * avatar = contact.avatarImage;
+    if (avatar == nil) {
+        NSString * avatarName = [contact.type isEqualToString: @"Group"] ?  @"avatar_default_group" : @"avatar_default_contact";
+        avatar = [UIImage imageNamed: avatarName];
+    }
+    cell.avatar.image = avatar;
     cell.latestMessageLabel.frame = self.conversationCell.latestMessageLabel.frame;
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){
