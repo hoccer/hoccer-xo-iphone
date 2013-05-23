@@ -1094,7 +1094,7 @@ typedef enum BackendStates {
         NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating",memberClientId);
         memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         memberContact.clientId = memberClientId;
-        memberContact.nickName = @"BUG_WORKAROUND";
+        //memberContact.nickName = @"BUG_WORKAROUND";
     }
     NSSet * theMemberSet = [group.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         if (memberContact != nil) {
