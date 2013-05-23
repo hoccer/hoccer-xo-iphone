@@ -68,7 +68,7 @@
 }
 
 - (BOOL) isContactMemberOfGroup: (Contact*) contact {
-    NSSet * matching = [contact.groupMemberships objectsPassingTest:^BOOL(id obj, BOOL *stop) {
+    NSSet * matching = [self.group.members objectsPassingTest:^BOOL(id obj, BOOL *stop) {
         if ([[obj contact] isEqual: contact]) {
             *stop = YES;
             return YES;

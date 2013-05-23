@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -106,6 +106,7 @@
     <fetchRequest name="DeliveryByMessageTagAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $receiverId == receiver.clientId"/>
     <fetchRequest name="GroupByClientId" entity="Group" predicateString="clientId == $clientId AND type == &quot;Group&quot;"/>
     <fetchRequest name="GroupByTag" entity="Group" predicateString="groupTag == $groupTag AND type == &quot;Group&quot;"/>
+    <fetchRequest name="GroupMembershipsByGroup" entity="GroupMembership" predicateString="group == $group"/>
     <fetchRequest name="MessageByMessageId" entity="HXOMessage" predicateString="messageId == $messageId"/>
     <fetchRequest name="MessagesByContact" entity="HXOMessage" predicateString="contact == $contact"/>
     <fetchRequest name="MessagesByContactAfterTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted > $afterTime AND timeAccepted &lt; $beforeTime"/>
