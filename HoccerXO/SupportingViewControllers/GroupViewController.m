@@ -116,6 +116,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
 }
 
+- (NSUInteger) profileValueSectonIndex {
+    return 2;
+}
+
 - (NSString*) namePlaceholderKey {
     return @"group_name_placeholder";
 }

@@ -386,9 +386,9 @@ typedef enum ActionSheetTags {
     for (ProfileItem * item in _allProfileItems) {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
         if (editing && ! hasValue) {
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 2]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
         } else if ( ! editing && ! hasValue) {
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 2]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
         }
         ++row;
     }
@@ -427,6 +427,10 @@ typedef enum ActionSheetTags {
 
     [super setEditing: editing animated: animated];
 
+}
+
+- (NSUInteger) profileValueSectonIndex {
+    return 1;
 }
 
 - (UIBarButtonItem*) leftNonEditButton {
