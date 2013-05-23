@@ -66,7 +66,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [self setupNavigationButtons];
     _isNewGroup = self.group == nil;
     if (self.group == nil) {
-        NSLog(@"creating new Group");
         [self.backend createGroupWithHandler:^(Group * group) {
             if (group) {
                 self.group = group;
@@ -178,7 +177,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _inviteMemberItem.alwaysShowDisclosure = YES;
 
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
-    NSLog(@"Member count: %d", [_memberListItem count]);
 
     return [super populateItems];
 }
@@ -195,8 +193,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
-    NSLog(@"Member count: %d", [_memberListItem count]);
-
     return @[ @[_avatarItem], [self groupUtilities: editing], items, _memberListItem];
 }
 
@@ -317,7 +313,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 {
     UITableView *tableView = self.tableView;
 
-    NSLog(@"==== indexPath: %d %d", indexPath.row, indexPath.section);
     indexPath = [NSIndexPath indexPathForItem: indexPath.row inSection:indexPath.section + 3];
     newIndexPath = [NSIndexPath indexPathForItem: newIndexPath.row inSection:newIndexPath.section + 3];
 
