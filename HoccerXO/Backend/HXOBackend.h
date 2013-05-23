@@ -17,17 +17,23 @@
 @class Attachment;
 @class AppDelegate;
 @class Group;
+@class GroupMembership;
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^GenerateIdHandler)(NSString*);
 typedef void (^SrpHanlder)(NSString*);
 typedef void (^RelationshipHandler)(NSArray*);
+typedef void (^GroupsHandler)(NSArray*);
+typedef void (^MembershipsHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DoneBlock)();
+typedef void (^GroupMemberDeleted)(GroupMembership* member);
+typedef void (^GroupDeleted)(Group* group);
+typedef void (^CreateGroupHandler)(Group* group);
 
 @protocol HXODelegate <NSObject>
 
@@ -69,6 +75,11 @@ typedef void (^DoneBlock)();
 - (void) pairByToken: (NSString*) token;
 - (void) acceptInvitation: (NSString*) token;
 
+- (void) createGroupWithHandler:(CreateGroupHandler)handler;
+- (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
+
+
+
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
 - (void) blockClient: (NSString*) clientId handler: (GenericResultHandler) handler;
@@ -94,8 +105,6 @@ typedef void (^DoneBlock)();
 - (void) updateRelationships;
 - (void) updatePresence;
 - (void) updateKey;
-
-- (Group*) createGroup;
 
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;

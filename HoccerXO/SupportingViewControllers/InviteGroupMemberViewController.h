@@ -9,7 +9,7 @@
 #import "ContactListViewController.h"
 #import "Group.h"
 
-@interface InviteGroupMemberViewController : ContactListViewController
+@interface InviteGroupMemberViewController : ContactListViewController <UIAlertViewDelegate>
 
 @property (nonatomic,strong) Group * group;
 

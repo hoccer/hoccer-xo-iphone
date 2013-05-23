@@ -281,4 +281,5 @@
 "group_name_placeholder" = "Gruppenname";
 "group_invite_button"    = "Freund einladen";
 
+"group_invite_title" = "%@ in Gruppe %@? einladen?";
 

@@ -11,12 +11,20 @@
 #import "ContactCell.h"
 #import "Contact.h"
 #import "GroupMembership.h"
+#import "HXOBackend.h"
+#import "AppDelegate.h"
 
 @interface InviteGroupMemberViewController ()
+{
+    Contact * _selectedContact;
+}
+@property (nonatomic, readonly) HXOBackend * chatBackend;
 
 @end
 
 @implementation InviteGroupMemberViewController
+
+@synthesize chatBackend = _chatBackend;
 
 - (void) setupNavigationBar {
 }
@@ -24,6 +32,13 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
+}
+
+- (HXOBackend*) chatBackend {
+    if (_chatBackend == nil) {
+        _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
+    }
+    return _chatBackend;
 }
 
 - (void) setGroup:(Group *)group {
@@ -51,5 +66,25 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    _selectedContact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
+    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"group_invite_title", nil), _selectedContact.nickName, self.group.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                     message: nil
+                                                    delegate: self
+                                           cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                           otherButtonTitles:NSLocalizedString(@"Ok", nil), nil];
+    [alert show];
+}
+
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        NSLog(@"GroupMemberInviteViewController: TODO: invite %@ to group %@", _selectedContact.nickName, self.group.nickName);
+        [self.chatBackend inviteGroupMember:_selectedContact toGroup:self.group onDone:^(BOOL success) {
+            // yeah
+        }];
+        //[self.navigationController popViewControllerAnimated: YES];
+    }
+}
 
 @end
