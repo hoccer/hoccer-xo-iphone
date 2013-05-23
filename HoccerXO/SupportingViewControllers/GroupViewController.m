@@ -160,6 +160,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         if (_canceled) {
             NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
             [moc deleteObject: self.group];
+        } else {
+            // update group on server
+            [self.appDelegate.chatBackend updateGroup: self.group];
         }
         [self dismissViewControllerAnimated: YES completion: nil];
     }

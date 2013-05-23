@@ -79,6 +79,7 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 - (void) createGroupWithHandler:(CreateGroupHandler)handler;
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
+- (void) updateGroup:(Group *) group;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
