@@ -83,7 +83,7 @@
 		633461E9174E8A21008D98FC /* chatbar_icon-send@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633461E7174E8A21008D98FC /* chatbar_icon-send@2x.png */; };
 		633461F3174E8A44008D98FC /* navbar_icon-edit.png in Resources */ = {isa = PBXBuildFile; fileRef = 633461F1174E8A44008D98FC /* navbar_icon-edit.png */; };
 		633461F4174E8A44008D98FC /* navbar_icon-edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633461F2174E8A44008D98FC /* navbar_icon-edit@2x.png */; };
-		633F25E1174D59A000D735D8 /* InviteGroupMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* InviteGroupMemberViewController.m */; };
+		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* ChatTableCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* ChatTableCells.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
@@ -509,8 +509,8 @@
 		633461E7174E8A21008D98FC /* chatbar_icon-send@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_icon-send@2x.png"; sourceTree = "<group>"; };
 		633461F1174E8A44008D98FC /* navbar_icon-edit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar_icon-edit.png"; sourceTree = "<group>"; };
 		633461F2174E8A44008D98FC /* navbar_icon-edit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar_icon-edit@2x.png"; sourceTree = "<group>"; };
-		633F25DF174D599F00D735D8 /* InviteGroupMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteGroupMemberViewController.h; sourceTree = "<group>"; };
-		633F25E0174D599F00D735D8 /* InviteGroupMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteGroupMemberViewController.m; sourceTree = "<group>"; };
+		633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberInviteViewController.h; sourceTree = "<group>"; };
+		633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberInviteViewController.m; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* ChatTableCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableCells.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* ChatTableCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableCells.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
@@ -1381,6 +1381,8 @@
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				63BD7D9617442C1B00118A7F /* GroupListViewController.h */,
 				63BD7D9717442C1B00118A7F /* GroupListViewController.m */,
+				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
+				633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */,
 				63AF81901746AA1E00D007E3 /* GroupViewController.h */,
 				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
 				63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */,
@@ -1389,8 +1391,6 @@
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
 				636D3FF9170F370E00304EDF /* InviteCodeViewController.mm */,
-				633F25DF174D599F00D735D8 /* InviteGroupMemberViewController.h */,
-				633F25E0174D599F00D735D8 /* InviteGroupMemberViewController.m */,
 				633049251701A3A80045E64E /* NavigationMenuViewController.h */,
 				633049261701A3A80045E64E /* NavigationMenuViewController.m */,
 				633049281701B3390045E64E /* ProfileViewController.h */,
@@ -2245,7 +2245,7 @@
 				63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */,
 				E99872A21747F25B001355BB /* HoccerXO.xcdatamodeld in Sources */,
 				6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */,
-				633F25E1174D59A000D735D8 /* InviteGroupMemberViewController.m in Sources */,
+				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

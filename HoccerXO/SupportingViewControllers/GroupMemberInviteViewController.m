@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "InviteGroupMemberViewController.h"
+#import "GroupMemberInviteViewController.h"
 #import "UIViewController+HXOSideMenuButtons.h"
 #import "ContactCell.h"
 #import "Contact.h"
@@ -14,7 +14,7 @@
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 
-@interface InviteGroupMemberViewController ()
+@interface GroupMemberInviteViewController ()
 {
     Contact * _selectedContact;
 }
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation InviteGroupMemberViewController
+@implementation GroupMemberInviteViewController
 
 @synthesize chatBackend = _chatBackend;
 
@@ -52,6 +52,22 @@
 {
     [super fetchedResultsController: fetchedResultsController configureCell:cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
+    if ([self isContactMemberOfGroup: contact]) {
+        cell.accessoryView = nil;
+    } else {
+        cell.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"/*@"group_member_add"*/]];
+    }
+}
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
+    if ([self isContactMemberOfGroup:contact]) {
+        return nil;
+    }
+    return indexPath;
+}
+
+- (BOOL) isContactMemberOfGroup: (Contact*) contact {
     NSSet * matching = [contact.groupMemberships objectsPassingTest:^BOOL(id obj, BOOL *stop) {
         if ([[obj contact] isEqual: contact]) {
             *stop = YES;
@@ -60,10 +76,9 @@
         return NO;
     }];
     if (matching.count == 0) {
-        cell.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"/*@"group_member_add"*/]];
-    } else {
-        cell.accessoryView = nil;
+        return NO;
     }
+    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -79,7 +94,6 @@
 
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != alertView.cancelButtonIndex) {
-        NSLog(@"GroupMemberInviteViewController: TODO: invite %@ to group %@", _selectedContact.nickName, self.group.nickName);
         [self.chatBackend inviteGroupMember:_selectedContact toGroup:self.group onDone:^(BOOL success) {
             // yeah
         }];

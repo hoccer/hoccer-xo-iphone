@@ -16,7 +16,7 @@
 #import "GroupMembership.h"
 #import "InsetImageView.h"
 #import "UserProfile.h"
-#import "InviteGroupMemberViewController.h"
+#import "GroupMemberInviteViewController.h"
 
 
 static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
@@ -91,9 +91,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void) setGroup:(Group *)group {
     self.contact = group;
-    [_memberListItem removeTableRows];
+    NSLog(@"group view group: %@", self.group);
+    //[_memberListItem removeTableRows];
     _fetchedResultsController = nil;
-    [_memberListItem addTableRows];
+    [self.tableView reloadData];
 }
 
 - (Group*) group {
@@ -149,7 +150,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void) inviteMemberPressed: (id) sender {
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: self.group.nickName style:UIBarButtonItemStylePlain target:nil action:nil];
-    InviteGroupMemberViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"inviteGroupMemberViewController"];
+    GroupMemberInviteViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"inviteGroupMemberViewController"];
     controller.group = self.group;
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -225,6 +226,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _items[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
+        NSLog(@"member of group %@ %@", [[item group] nickName], [item group]);
         GroupMembership * membership = item;
         id contact = [self getContact: membership];
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
@@ -248,22 +250,23 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return UITableViewCellEditingStyleNone;
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    id item = _items[indexPath.section][indexPath.row];
+    if ([item isKindOfClass: [GroupMembership class]]) {
+        return nil;
+    }
+    return [super tableView: tableView willSelectRowAtIndexPath: indexPath];
+}
+
+
 #pragma mark - Fetched Results Controller
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 - (NSFetchedResultsController*) fetchedResultsController {
-    if (_fetchedResultsController == nil) {
+    if (_fetchedResultsController == nil && self.group != nil) {
 
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        // Edit the entity name as appropriate.
-        NSEntityDescription *entity = [NSEntityDescription entityForName: [GroupMembership entityName] inManagedObjectContext:self.appDelegate.managedObjectContext];
-        [fetchRequest setEntity:entity];
-
-        // Set the batch size to a suitable number.
-        [fetchRequest setFetchBatchSize:20];
-
-        // performance: do not include subentities
-        fetchRequest.includesSubentities = NO;
+        NSDictionary * vars = @{ @"group" : self.group };
+        NSFetchRequest *fetchRequest = [self.appDelegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupMembershipsByGroup" substitutionVariables: vars];
 
         // Edit the sort key as appropriate.
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"contact.nickName" ascending: NO];

@@ -1169,10 +1169,10 @@ in the general "Settings" app.</string>
             </objects>
             <point key="canvasLocation" x="932" y="-1378"/>
         </scene>
-        <!--Invite Group Member View Controller-->
+        <!--Group Member Invite View Controller-->
         <scene sceneID="oUE-fo-iM0">
             <objects>
-                <tableViewController storyboardIdentifier="inviteGroupMemberViewController" id="8SA-D2-cVj" customClass="InviteGroupMemberViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="inviteGroupMemberViewController" id="8SA-D2-cVj" customClass="GroupMemberInviteViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" id="JDt-Df-JXb">
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1372,9 +1372,6 @@ in the general "Settings" app.</string>
                 <relationship kind="outlet" name="qrCodeView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="qrLabel" candidateClass="UILabel"/>
             </relationships>
-        </class>
-        <class className="InviteGroupMemberViewController" superclassName="ContactListViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InviteGroupMemberViewController.h"/>
         </class>
         <class className="LeftMessageCell" superclassName="MessageCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
