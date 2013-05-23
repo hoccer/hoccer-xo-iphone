@@ -387,9 +387,9 @@ typedef enum ActionSheetTags {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
         NSLog(@"item=%@", item.valueKey);
         if (editing && ! hasValue) {
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectonIndex]]] withRowAnimation:UITableViewRowAnimationFade];
         } else if ( ! editing && ! hasValue) {
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectonIndex]]] withRowAnimation:UITableViewRowAnimationFade];
         }
         ++row;
     }
