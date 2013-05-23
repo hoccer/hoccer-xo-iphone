@@ -15,6 +15,7 @@ FOUNDATION_EXPORT NSString * const kHXOAPNDeviceToken;
 FOUNDATION_EXPORT NSString * const kHXOAvatar;
 FOUNDATION_EXPORT NSString * const kHXONickName;
 FOUNDATION_EXPORT NSString * const kHXOAvatarURL;
+FOUNDATION_EXPORT NSString * const kHXOAvatarUploadURL;
 FOUNDATION_EXPORT NSString * const kHXOUserStatus;
 FOUNDATION_EXPORT NSString * const kHXOPhoneNumber;
 FOUNDATION_EXPORT NSString * const kHXOMailAddress;

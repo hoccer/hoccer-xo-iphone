@@ -14,6 +14,7 @@ NSString * const kHXOAPNDeviceToken        = @"apnDeviceToken";
 
 NSString * const kHXOAvatar                = @"avatar";
 NSString * const kHXOAvatarURL             = @"avatarURL";
+NSString * const kHXOAvatarUploadURL       = @"avatarUploadURL";
 NSString * const kHXONickName              = @"nickName";
 NSString * const kHXOUserStatus            = @"userStatus";
 NSString * const kHXOPhoneNumber           = @"phoneNumber";

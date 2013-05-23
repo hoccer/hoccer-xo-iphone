@@ -55,6 +55,7 @@ typedef enum BackendStates {
     NSString *         _apnsDeviceToken;
     NSURLConnection *  _avatarUploadConnection;
     NSString *         _avatarUploadURL;
+    NSString *         _avatarURL;
     NSInteger          _avatarBytesUploaded;
     NSInteger          _avatarBytesTotal;
     BOOL               _performRegistration;
@@ -493,6 +494,24 @@ typedef enum BackendStates {
         group = groups[0];
     } else {
         // NSLog(@"ClientId %@ not in contacts", theClientId);
+    }
+    return group;
+}
+
+-(Group *) getGroupByTag:(NSString *) theGroupTag {
+    NSDictionary * vars = @{ @"groupTag" : theGroupTag};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupByTag" substitutionVariables: vars];
+    NSError *error;
+    NSArray *groups = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (groups == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    Group * group = nil;
+    if (groups.count > 0) {
+        group = groups[0];
+    } else {
+        // NSLog(@"theGroupTag %@ not in groups", theGroupTag);
     }
     return group;
 }
@@ -1060,7 +1079,10 @@ typedef enum BackendStates {
     NSString * groupId = groupMemberDict[@"groupId"];
     Group * group = [self getGroupById: groupId];
     if (group == nil) {
-        NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@",groupId);
+        group = [self getGroupByTag:groupMemberDict[@"groupTag"]];
+        if (group == nil) {
+            NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@ or tag %@",groupId,groupMemberDict[@"groupTag"]);
+        }
         return;
     }
         
@@ -1072,6 +1094,7 @@ typedef enum BackendStates {
         NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating",memberClientId);
         memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         memberContact.clientId = memberClientId;
+        memberContact.nickName = @"BUG_WORKAROUND";
     }
     NSSet * theMemberSet = [group.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         if (memberContact != nil) {
@@ -1672,7 +1695,10 @@ typedef enum BackendStates {
 }
 
 - (void) updatePresence {
-    NSString * myAvatarURL = [self calcAvatarURL];
+    NSString * myAvatarURL = [UserProfile sharedProfile].avatarURL;
+    if (myAvatarURL == nil) {
+        myAvatarURL = @"";
+    }
     NSString * myNickName = [UserProfile sharedProfile].nickName;
    // NSString * myStatus = [UserProfile sharedProfile].status;
     NSString * myStatus = @"I am.";
@@ -1828,6 +1854,37 @@ typedef enum BackendStates {
         }
     }];
 }
+
+//FileHandles createFileForStorage(int contentLength);
+- (void) createFileForStorageWithSize:(NSNumber*) size completionHandler:(FileURLRequestHandler) handler {
+    // NSLog(@"createFileForStorageWithSize:");
+    
+    [_serverConnection invoke: @"createFileForStorage" withParams: @[size] onResponse: ^(id responseOrError, BOOL success) {
+        if (success && [responseOrError isKindOfClass: [NSDictionary class]]) {
+            NSLog(@"createFileForStorageWithSize(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"createFileForStorageWithSize(): failed - response: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+//FileHandles createFileForTransfer(int contentLength);
+- (void) createFileForTransferWithSize:(NSNumber*) size completionHandler:(FileURLRequestHandler) handler {
+    // NSLog(@"createFileForStorageWithSize:");
+    
+    [_serverConnection invoke: @"createFileForStorage" withParams: @[size] onResponse: ^(id responseOrError, BOOL success) {
+        if (success && [responseOrError isKindOfClass: [NSDictionary class]]) {
+            NSLog(@"createFileForTransferWithSize(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"createFileForTransferWithSize(): failed - response: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler {
     //NSLog(@"hintApnsUnreadMessage");
@@ -2035,18 +2092,20 @@ typedef enum BackendStates {
 #pragma mark - Avatar uploading
 
 - (void) uploadAvatarIfNeeded {
-    NSString * myDesiredURL = [self calcAvatarURL];
-    NSString * myCurrentAvatarURL = [UserProfile sharedProfile].avatarURL;
-    if (![myCurrentAvatarURL isEqualToString: myDesiredURL]) {
-        if ([myDesiredURL length] != 0) {
-            [self uploadAvatar: myDesiredURL];
-        } else {
-            [UserProfile sharedProfile].avatarURL = @"";
+    NSData * myAvatarData = [UserProfile sharedProfile].avatar;
+    if (myAvatarData != nil && myAvatarData.length>0) {
+        NSString * myCurrentAvatarURL = [UserProfile sharedProfile].avatarURL;
+        if (myCurrentAvatarURL == nil || myCurrentAvatarURL.length == 0) {
+            [self getAvatarURLWithCompletion:^(NSDictionary *urls) {
+                if (urls) {
+                    [self uploadAvatarTo:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"]];
+                }
+            }];
         }
     }
 }
 
-- (void) uploadAvatar: (NSString*)toURL {
+- (void) uploadAvatarTo: (NSString*)toURL withDownloadURL:(NSString*)downloadURL{
     if (self.avatarUploadConnection != nil) {
         NSLog(@"avatar is still being uploaded");
         return;
@@ -2055,6 +2114,7 @@ typedef enum BackendStates {
     // NSLog(@"uploadAvatar starting");
     _avatarBytesTotal = [myAvatarData length];
     _avatarUploadURL = toURL;
+    _avatarURL = downloadURL;
     NSURLRequest *myRequest  = [self httpRequest:@"PUT"
                                      absoluteURI:toURL
                                          payloadData:myAvatarData
@@ -2075,13 +2135,18 @@ typedef enum BackendStates {
     
 }
 
-- (NSString *) calcAvatarURL {
+- (void) getAvatarURLWithCompletion:(FileURLRequestHandler)handler {
     NSData * myAvatarImmutableData = [UserProfile sharedProfile].avatar;
     if (myAvatarImmutableData == nil || [myAvatarImmutableData length] == 0) {
-        return @"";
+        handler(nil);
+        return;
     }
     NSMutableData * myAvatarData = [NSMutableData dataWithData:myAvatarImmutableData];
     
+    [self createFileForStorageWithSize:@(myAvatarData.length) completionHandler:^(NSDictionary *urls) {
+        handler(urls);
+    }];
+/*
     NSString * myClientID = [UserProfile sharedProfile].clientId;
     [myAvatarData appendData:[myClientID dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -2089,6 +2154,7 @@ typedef enum BackendStates {
     NSString * myAvatarFileName = [myHash hexadecimalString];
     NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:myAvatarFileName];
     return myURL;
+ */
 }
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
@@ -2138,7 +2204,8 @@ typedef enum BackendStates {
         _avatarUploadConnection = nil;
         if (_avatarBytesUploaded == _avatarBytesTotal) {
             // set avatar url to new successfully uploaded version
-            [UserProfile sharedProfile].avatarURL = _avatarUploadURL;
+            [UserProfile sharedProfile].avatarURL = _avatarURL;
+            [UserProfile sharedProfile].avatarUploadURL = _avatarUploadURL;
             // NSLog(@"_avatarUploadConnection successfully uploaded avatar of size %d", _avatarBytesTotal);
             [self updatePresence];
         } else {
