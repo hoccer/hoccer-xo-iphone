@@ -32,6 +32,7 @@ typedef void (^GenericResultHandler)(BOOL);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DoneBlock)();
 typedef void (^GroupMemberDeleted)(GroupMembership* member);
+typedef void (^GroupMemberChanged)(GroupMembership* member);
 typedef void (^GroupDeleted)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);

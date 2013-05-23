@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "Contact.h"
 
+@class GroupMembership;
 
 @interface Group : Contact
 
@@ -21,6 +22,8 @@
 @property (nonatomic, retain) NSSet    * members;
 
 @property (nonatomic, retain) NSDate    * lastChangedMillis;
+
+@property (nonatomic, readonly) GroupMembership * ownMemberShip;
 
 @end
 

@@ -18,7 +18,13 @@
 @property (nonatomic, retain) Group *group;
 @property (nonatomic, retain) Contact *contact;
 @property (nonatomic, retain) NSDate * lastChanged;
+@property (nonatomic, retain) NSData * cipheredGroupKey;
+@property (nonatomic, retain) NSData * distributedCipheredGroupKey;
 
-@property (nonatomic, retain) NSDate    * lastChangedMillis;
+@property (nonatomic, retain) NSDate * lastChangedMillis;
+@property (nonatomic, retain) NSString * cipheredGroupKeyString;
+@property (nonatomic, retain) NSString * distributedCipheredGroupKeyString;
+
+- (NSData *) calcCipheredGroupKey;
 
 @end

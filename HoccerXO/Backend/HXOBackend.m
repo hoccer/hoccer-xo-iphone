@@ -505,6 +505,18 @@ typedef enum BackendStates {
     return group;
 }
 
+-(Group *) getGroupById:(NSString *)theGroupId orByTag:(NSString *)theGroupTag {
+    Group * group = [self getGroupById: theGroupId];
+    if (group == nil) {
+        group = [self getGroupByTag:theGroupTag];
+        if (group == nil) {
+            NSLog(@"ERROR: getGroupById:orByTag: unknown group with id=%@ or tag %@",theGroupId,theGroupTag);
+        }
+    }
+    return group;
+}
+
+
 -(Group *) getGroupByTag:(NSString *) theGroupTag {
     NSDictionary * vars = @{ @"groupTag" : theGroupTag};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupByTag" substitutionVariables: vars];
@@ -999,12 +1011,12 @@ typedef enum BackendStates {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
         
     NSString * groupId = groupDict[@"groupId"];
-    Group * group = [self getGroupById: groupId];
+    Group * group = [self getGroupById: groupId orByTag:groupDict[@"groupTag"]];
 
     if (group == nil) {
         group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         group.clientId = groupId;
-        group.type = @"group";
+        group.type = @"Group";
     }
     // NSLog(@"relationship Dict: %@", relationshipDict);
     [group updateWithDictionary: groupDict];
@@ -1086,10 +1098,7 @@ typedef enum BackendStates {
     NSString * groupId = groupMemberDict[@"groupId"];
     Group * group = [self getGroupById: groupId];
     if (group == nil) {
-        group = [self getGroupByTag:groupMemberDict[@"groupTag"]];
-        if (group == nil) {
-            NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@ or tag %@",groupId,groupMemberDict[@"groupTag"]);
-        }
+        NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@",groupId);
         return;
     }
         
@@ -1122,12 +1131,28 @@ typedef enum BackendStates {
         myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         myMember.contact = memberContact; // memberContact will be nil for own membership
         [group addMembersObject:myMember];
+        myMember.group = group;
     } else {
         myMember = [theMemberSet anyObject];
     }
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMember updateWithDictionary: groupMemberDict];
+    
+    // now check if we have to update the encrypted group key
+    if (memberContact != nil) { // not us
+        if ([group.ownMemberShip.role isEqualToString:@"admin"]) {
+            // we are admin
+            if (myMember.cipheredGroupKey.length == 0 || ![myMember.cipheredGroupKey isEqualToData:myMember.distributedCipheredGroupKey]) {
+                myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
+                [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
+                    if (member) {
+                        member.distributedCipheredGroupKey = member.cipheredGroupKey;
+                    }
+                }];
+            }
+        }
+    }
 }
 
 
@@ -1151,7 +1176,8 @@ typedef enum BackendStates {
              @"clientId": @"contact.clientId",
              @"role": @"role",
              @"state": @"state",
-             @"lastChanged": @"lastChangedMillis"
+             @"lastChanged": @"lastChangedMillis",
+             @"encryptedGroupKey": @"cipheredGroupKeyString"
              };
 }
 
@@ -1206,6 +1232,22 @@ typedef enum BackendStates {
          } else {
              NSLog(@"removeGroupMember() failed: %@", responseOrError);
              deletionHandler(nil);
+         }
+     }];
+}
+
+// void updateGroupKey(String groupId, String clientId, String key);
+- (void) updateGroupKey:(GroupMembership *)member onSuccess:(GroupMemberChanged)changedHandler{
+    
+    [_serverConnection invoke: @"updateGroupKey" withParams: @[member.group.clientId,member.contact.clientId,member.cipheredGroupKeyString]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+             changedHandler(member);
+         } else {
+             NSLog(@"updateGroupKey() failed: %@", responseOrError);
+             changedHandler(nil);
          }
      }];
 }
