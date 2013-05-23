@@ -29,6 +29,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection;
+- (void) addTableRows;
+- (void) removeTableRows;
+- (NSUInteger) count;
+- (id) objectAtIndexedSubscript: (NSInteger) index;
 
 @end
 
@@ -37,6 +41,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 {
     BOOL _isNewGroup;
     ProfileItem * _inviteMemberItem;
+    FetchedResultsSectionAdapter * _memberListItem;
 }
 
 @property (nonatomic,readonly) NSFetchedResultsController * fetchedResultsController;
@@ -61,7 +66,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [self setupNavigationButtons];
     _isNewGroup = self.group == nil;
     if (self.group == nil) {
-        NSLog(@"creating new Group");
         [self.backend createGroupWithHandler:^(Group * group) {
             if (group) {
                 self.group = group;
@@ -87,7 +91,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void) setGroup:(Group *)group {
     self.contact = group;
+    [_memberListItem removeTableRows];
     _fetchedResultsController = nil;
+    [_memberListItem addTableRows];
 }
 
 - (Group*) group {
@@ -170,14 +176,16 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _inviteMemberItem.target = self;
     _inviteMemberItem.alwaysShowDisclosure = YES;
 
+    _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
+
     return [super populateItems];
 }
 
 - (void) configureEditOnlySections: (BOOL) editing {
-    if (editing && ! self.isEditing) {
+    if (editing) {
         [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
         //[self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
-    } else if (!editing && self.isEditing) {
+    } else {
         //[self.tableView insertSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
         [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
 
@@ -185,17 +193,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
-    NSArray * utils = @[ @[_avatarItem], [self groupUtilities: editing], items];
-    NSMutableArray * result = [[NSMutableArray alloc] initWithArray: utils];
-
-    /*
-    NSUInteger targetSectionIndex = [self profileValueSectonIndex] + 1;
-    for (NSUInteger i = 0; i < self.fetchedResultsController.sections.count; ++i) {
-        [result addObject: [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: i targetSection: targetSectionIndex + i]];
-    }
-     */
-
-    return result;
+    return @[ @[_avatarItem], [self groupUtilities: editing], items, _memberListItem];
 }
 
 - (NSArray*) groupUtilities: (BOOL) editing {
@@ -315,6 +313,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 {
     UITableView *tableView = self.tableView;
 
+    indexPath = [NSIndexPath indexPathForItem: indexPath.row inSection:indexPath.section + 3];
+    newIndexPath = [NSIndexPath indexPathForItem: newIndexPath.row inSection:newIndexPath.section + 3];
+
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -351,7 +352,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         _delegate = delegate;
         _section = section;
         _targetSection = targetSection;
-        [self addTableRows];
+        //[self addTableRows];
     }
     return self;
 }
@@ -381,7 +382,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 // XXX Do we need this?
 
 - (void) dealloc {
-    [self removeTableRows];
+    //[self removeTableRows];
 }
 
 @end

@@ -119,10 +119,12 @@ static const CGFloat    kSectionHeaderHeight = 40;
     UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
     [self.sendButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
     [self.sendButton setBackgroundColor: [UIColor clearColor]];
-    self.sendButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
+    //self.sendButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
     [self.sendButton setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
 
+    
     // Ok, we don't want to do this to often but let's relayout the chatbar for the localized send button title
+    /*
     frame = self.sendButton.frame;
     CGFloat initialTitleWidth = _sendButton.titleLabel.frame.size.width;
     [_sendButton setTitle: NSLocalizedString(@"Send", @"Chat Send Button Title") forState: UIControlStateNormal];
@@ -137,6 +139,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     frame = textViewBackgroundView.frame;
     frame.size.width -= dx;
     textViewBackgroundView.frame = frame;
+     */
 
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     [_chatbar sendSubviewToBack: backgroundGradient];

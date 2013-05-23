@@ -381,6 +381,8 @@ typedef enum ActionSheetTags {
 
     [self.view endEditing: editing];
 
+    [super setEditing: editing animated: animated];
+
     [self.tableView beginUpdates];
     NSUInteger row = 0;
     for (ProfileItem * item in _allProfileItems) {
@@ -426,7 +428,6 @@ typedef enum ActionSheetTags {
         [self onEditingDone];
     }
 
-    [super setEditing: editing animated: animated];
 
 }
 
