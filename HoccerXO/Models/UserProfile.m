@@ -77,10 +77,12 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 
 - (void) loadProfile {
     self.nickName       = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName];
+    /*
     if (!self.nickName.length > 0) { // TODO: fix crash on editing start when nickname empty
         [[HXOUserDefaults standardUserDefaults] setValue: @"???"       forKey: kHXONickName];
         self.nickName       = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName];
     }
+     */
     NSData * avatar     = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAvatar];
     self.status         = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOUserStatus];
     self.phoneNumber    = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOPhoneNumber];

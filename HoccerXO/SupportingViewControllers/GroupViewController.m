@@ -25,9 +25,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 {
     GroupViewController * _delegate; // TODO: make a proper delegate protocol
     NSUInteger _section;
+    NSUInteger _targetSection;
 }
 
-- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section;
+- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection;
 
 @end
 
@@ -187,9 +188,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     NSArray * utils = @[ @[_avatarItem], [self groupUtilities: editing], items];
     NSMutableArray * result = [[NSMutableArray alloc] initWithArray: utils];
 
+    /*
+    NSUInteger targetSectionIndex = [self profileValueSectonIndex] + 1;
     for (NSUInteger i = 0; i < self.fetchedResultsController.sections.count; ++i) {
-        [result addObject: [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: i]];
+        [result addObject: [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: i targetSection: targetSectionIndex + i]];
     }
+     */
 
     return result;
 }
@@ -243,9 +247,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([_items[indexPath.section][indexPath.row] isKindOfClass: [GroupMembership class]]) {
-        return UITableViewCellEditingStyleDelete;
-    }
     return UITableViewCellEditingStyleNone;
 }
 
@@ -344,11 +345,13 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 @implementation FetchedResultsSectionAdapter
 
-- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section {
+- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection {
     self = [super init];
     if (self != nil) {
         _delegate = delegate;
         _section = section;
+        _targetSection = targetSection;
+        [self addTableRows];
     }
     return self;
 }
@@ -359,6 +362,26 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (id) objectAtIndexedSubscript: (NSInteger) index {
     return [_delegate.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: index inSection: _section]];
+}
+
+- (void) addTableRows {
+    for (NSUInteger i = 0; i < [self count]; ++i) {
+        NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: _targetSection];
+        [_delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
+    }
+}
+
+- (void) removeTableRows {
+    for (NSUInteger i = 0; i < [self count]; ++i) {
+        NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: _targetSection];
+        [_delegate.tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
+    }
+}
+
+// XXX Do we need this?
+
+- (void) dealloc {
+    [self removeTableRows];
 }
 
 @end
