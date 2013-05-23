@@ -10,6 +10,8 @@
 #import "Contact.h"
 #import "Group.h"
 #import "HXOBackend.h"
+#import "RSA.h" 
+#import "NSData+Base64.h"
 
 
 @implementation GroupMembership
@@ -19,7 +21,11 @@
 @dynamic group;
 @dynamic contact;
 @dynamic lastChanged;
+@dynamic cipheredGroupKey;
+@dynamic distributedCipheredGroupKey;
 
+@dynamic cipheredGroupKeyString;
+@dynamic distributedCipheredGroupKeyString;
 @dynamic lastChangedMillis;
 
 - (NSNumber*) lastChangedMillis {
@@ -30,10 +36,35 @@
     self.lastChanged = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
+- (NSData *) calcCipheredGroupKey {
+    // get public key of receiver first
+    SecKeyRef myReceiverKey = [self.contact getPublicKeyRef];
+    RSA * rsa = [RSA sharedInstance];
+    NSLog(@"self.group.groupKey=%@",[self.group.groupKey asBase64EncodedString]);
+    return [rsa encryptWithKey:myReceiverKey plainData:self.group.groupKey];
+}
+
+-(NSString*) cipheredGroupKeyString {
+    return [self.cipheredGroupKey asBase64EncodedString];
+}
+
+-(void) setCipheredGroupKeyString:(NSString*) theB64String {
+    self.cipheredGroupKey = [NSData dataWithBase64EncodedString:theB64String];
+}
+
+-(NSString*) distributedCipheredGroupKeyString {
+    return [self.distributedCipheredGroupKey asBase64EncodedString];
+}
+
+-(void) setDistributedCipheredGroupKeyString:(NSString*) theB64String {
+    self.distributedCipheredGroupKey = [NSData dataWithBase64EncodedString:theB64String];
+}
+
 - (NSDictionary*) rpcKeys {
     return @{ @"role"         : @"role",
               @"state"        : @"state",
-              @"lastChanged"  : @"lastChangedMillis"
+              @"lastChanged"  : @"lastChangedMillis",
+              @"encryptedGroupKey": @"cipheredGroupKeyString"
               };
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "Group.h"
+#import "GroupMembership.h"
 #import "HXOBackend.h"
 
 
@@ -20,6 +21,7 @@
 @dynamic members;
 
 @dynamic lastChangedMillis;
+@dynamic ownMemberShip;
 
 - (NSNumber*) lastChangedMillis {
     return [HXOBackend millisFromDate:self.lastChanged];
@@ -27,6 +29,16 @@
 
 - (void) setLastChangedMillis:(NSNumber*) milliSecondsSince1970 {
     self.lastChanged = [HXOBackend dateFromMillis:milliSecondsSince1970];
+}
+
+- (GroupMembership*) ownMemberShip {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact == nil;
+    }];
+    if ([theMemberSet count] == 1) {
+        return theMemberSet.anyObject;
+    }
+    return nil;
 }
 
 //public class TalkGroup {
