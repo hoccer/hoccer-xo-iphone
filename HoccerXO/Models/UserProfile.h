@@ -15,6 +15,7 @@
 @property (nonatomic,strong) UIImage    * avatarImage;
 @property (nonatomic,readonly) NSData   * avatar;
 @property (nonatomic,strong) NSString   * avatarURL;
+@property (nonatomic,strong) NSString   * avatarUploadURL;
 
 @property (nonatomic,strong) NSString   * nickName;
 @property (nonatomic,strong) NSString   * status;

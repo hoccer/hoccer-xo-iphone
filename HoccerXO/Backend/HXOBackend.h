@@ -34,6 +34,7 @@ typedef void (^DoneBlock)();
 typedef void (^GroupMemberDeleted)(GroupMembership* member);
 typedef void (^GroupDeleted)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
+typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 @protocol HXODelegate <NSObject>
 

@@ -385,6 +385,7 @@ typedef enum ActionSheetTags {
     NSUInteger row = 0;
     for (ProfileItem * item in _allProfileItems) {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
+        NSLog(@"item=%@", item.valueKey);
         if (editing && ! hasValue) {
             [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: 1]] withRowAnimation:UITableViewRowAnimationFade];
         } else if ( ! editing && ! hasValue) {
@@ -657,6 +658,9 @@ typedef enum ActionSheetTags {
     CGSize size = CGSizeMake(_avatarItem.currentValue.size.width * scale, _avatarItem.currentValue.size.height * scale);
     UIImage * scaledAvatar = [_avatarItem.currentValue imageScaledToSize: size];
     [UserProfile sharedProfile].avatarImage = scaledAvatar;
+    [UserProfile sharedProfile].avatarURL = nil;
+    [UserProfile sharedProfile].avatarUploadURL = nil;
+
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
             [[self getModelObject] setValue: item.currentValue forKey: item.valueKey];
