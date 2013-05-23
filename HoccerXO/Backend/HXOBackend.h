@@ -66,7 +66,7 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
-- (HXOMessage*) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
+- (void) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 - (void) forwardMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (const Attachment*) attachment;
 - (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
@@ -78,8 +78,6 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 - (void) createGroupWithHandler:(CreateGroupHandler)handler;
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
-
-
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 

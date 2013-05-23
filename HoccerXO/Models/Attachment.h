@@ -131,6 +131,7 @@ typedef enum AttachmentStates {
 - (NSURL *) otherContentURL; // returns assetURL if localURL is available, otherwise nil
 
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
+- (NSNumber*) calcCipheredSize;
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;

@@ -938,6 +938,21 @@ NSArray * TransferStateName = @[@"detached",
     [self uploadStream];
 }
 
+- (NSNumber*) calcCipheredSize {
+    NSError * myError = nil;
+    NSData * messageKey = self.message.cryptoKey;
+    CryptoEngine * myEncryptionEngine = [[CryptoEngine alloc]
+                         initWithOperation:kCCEncrypt
+                         algorithm:kCCAlgorithmAES128
+                         options:kCCOptionPKCS7Padding
+                         key:messageKey
+                         IV:nil
+                         error:&myError];
+
+    return [NSNumber numberWithLongLong:[myEncryptionEngine calcOutputLengthForInputLength:[self contentSize].longLongValue]];
+}
+
+
 - (void) resumeDownload {
     if (CONNECTION_TRACE) {NSLog(@"Attachment resumeDownload remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );}
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
@@ -987,21 +1002,9 @@ NSArray * TransferStateName = @[@"detached",
     self.resumePos = lastFullBlockPos + 16;
     if (CONNECTION_TRACE) {NSLog(@"truncating file size %llu to size %u, lastFullBlockPos=%u", fileSize, self.resumePos, lastFullBlockPos);}
     [Attachment truncateFileAtPath:myPath toSize:resumePos];
-    
-    NSData * messageKey = self.message.cryptoKey;
-    NSError * myError = nil;
-     
-    // encryptionEngine just needed to determine the cipherTransferSize
-    self.encryptionEngine = [[CryptoEngine alloc]
-                             initWithOperation:kCCEncrypt
-                             algorithm:kCCAlgorithmAES128
-                             options:kCCOptionPKCS7Padding
-                             key:messageKey
-                             IV:nil
-                             error:&myError];
-    
+             
     self.cipherTransferSize = [NSNumber numberWithLongLong:resumePos]; // set transfered size to resume position
-    self.cipheredSize = [NSNumber numberWithLongLong:[self.encryptionEngine calcOutputLengthForInputLength:[self contentSize].longLongValue]];
+    self.cipheredSize = [self calcCipheredSize];
     NSNumber * lastBytePos = [NSNumber numberWithLongLong:[self.cipheredSize longLongValue]-1];
     
     self.decryptionEngine = nil;

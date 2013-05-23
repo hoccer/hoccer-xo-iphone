@@ -253,9 +253,24 @@ typedef enum BackendStates {
     }
 }
 
+- (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
+    [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
+    
+    if (_state == kBackendReady) {
+        [self deliveryRequest: message withDeliveries: @[delivery]];
+    }
+    
+    if (attachment != nil && attachment.state == kAttachmentWantsTransfer) {
+        [attachment upload];
+    }
+    
+    [self.delegate saveDatabase];
+    [SoundEffectPlayer messageSent];
+    
+}
 
 // TODO: contact should be an array of contacts
-- (HXOMessage*) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
+- (void) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
     HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeSent = [self estimatedServerTime]; // [NSDate date];
@@ -266,40 +281,32 @@ typedef enum BackendStates {
     message.messageId = @"";
     message.messageTag = [NSString stringWithUUID];
 
-    if (attachment != nil) {
-        NSDictionary * myUrls = [self getNewTransferUrlsFor:@[contact.clientId]];
-        NSLog(@"transferUrls=%@", myUrls);
-        attachment.uploadURL = myUrls[@"upload"];
-        attachment.remoteURL = myUrls[@"download"];
-        //attachment.remoteURL =  [[self newUploadURL] absoluteString];
-        attachment.transferSize = @(0);
-        attachment.cipherTransferSize = @(0);
-        
-        message.attachment = attachment;
-        // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
-    }
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
     delivery.receiver = contact;
-
-    // contact.latestMessageTime = message.timeSent; // we do not set it here
+    
     [message setupOutgoingEncryption];
-
-    [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
-
-    if (_state == kBackendReady) {
-        
-        [self deliveryRequest: message withDeliveries: @[delivery]];
-    }
     
-    if (attachment.state == kAttachmentWantsTransfer) {
-         [attachment upload];
+    if (attachment != nil) {
+        message.attachment = attachment;
+        attachment.cipheredSize = [attachment calcCipheredSize];
+        [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
+            if (urls) {
+                NSLog(@"attachment urls=%@", urls);
+                attachment.uploadURL = urls[@"uploadUrl"];
+                attachment.remoteURL = urls[@"downloadUrl"];
+                attachment.transferSize = @(0);
+                attachment.cipherTransferSize = @(0);                
+                // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
+                [self finishSendMessage:message toContact:contact withDelivery:delivery withAttachment:attachment];
+            } else {
+                NSLog(@"ERROR: Could not get attachment urls");
+            }
+        }];
+        return;
     }
-    
-    [self.delegate saveDatabase];
-    [SoundEffectPlayer messageSent];
-    return message;
+    [self finishSendMessage:message toContact:contact withDelivery:delivery withAttachment:attachment];
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
@@ -1355,14 +1362,14 @@ typedef enum BackendStates {
                     withErrorKey:@"attachment_upload_failed"];
 }
 
-- (NSDictionary *)getNewTransferUrlsFor:(NSArray*)receiverIds {
-    NSString * myUUID = [NSString stringWithUUID];
-    NSString * myBaseURL = [[Environment sharedEnvironment] fileCacheURI];
-    NSString * myUploadUrl = [[myBaseURL stringByAppendingString:@"upload/"] stringByAppendingString:myUUID];
-    NSString * myDownloadUrl = [[myBaseURL stringByAppendingString:@"download/"] stringByAppendingString:myUUID];
-    NSDictionary * myUrls = @{@"upload":myUploadUrl, @"download": myDownloadUrl};
-    return myUrls;
-};
+//- (NSDictionary *)getNewTransferUrlsFor:(NSArray*)receiverIds {
+//    NSString * myUUID = [NSString stringWithUUID];
+//    NSString * myBaseURL = [[Environment sharedEnvironment] fileCacheURI];
+//    NSString * myUploadUrl = [[myBaseURL stringByAppendingString:@"upload/"] stringByAppendingString:myUUID];
+//    NSString * myDownloadUrl = [[myBaseURL stringByAppendingString:@"download/"] stringByAppendingString:myUUID];
+//    NSDictionary * myUrls = @{@"upload":myUploadUrl, @"download": myDownloadUrl};
+//    return myUrls;
+//};
 
 //- (NSURL *) newUploadURL {
 //    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
