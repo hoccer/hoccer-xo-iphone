@@ -27,6 +27,8 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic state;
 @dynamic message;
 @dynamic receiver;
+@dynamic sender;
+@dynamic group;
 @dynamic keyCiphertext;
 @dynamic keyCiphertextString;
 @dynamic keyCleartext;
@@ -121,7 +123,9 @@ NSString * const kDeliveryStateFailed     = @"failed";
 
 - (NSDictionary*) rpcKeys {
     return @{ @"state"         : @"state",
-              @"receiverId"    : @"receiver.clientId",
+//              @"receiverId"    : @"receiver.clientId",
+//              @"groupId"       : @"group.clientId",
+//              @"senderId"      : @"sender.clientId",
               @"messageTag"    : @"message.messageTag",
               @"messageId"     : @"message.messageId",
               @"timeAccepted"  : @"message.timeAcceptedMillis",

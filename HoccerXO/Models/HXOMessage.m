@@ -46,8 +46,10 @@
         } else {
             // get the key from the incoming delivery object
             Delivery * myDelivery = (Delivery*)[self.deliveries anyObject];
-            // NSLog(@"myDelivery  =%@", myDelivery);
+            NSLog(@"myDelivery  =%@", myDelivery);
             NSData * key = [myDelivery keyCleartext];
+            NSLog(@"key=%@", key);
+            NSLog(@"salt=%@", self.salt);
             if (self.salt.length == key.length) {
                 _cryptoKey = [HXOMessage XOR:key with:self.salt];
             } else {
@@ -156,6 +158,7 @@
 }
 
 -(void) setSaltString:(NSString*) theB64String {
+    NSLog(@"setSaltString: %@", theB64String);
     self.salt = [NSData dataWithBase64EncodedString:theB64String];
 }
 
@@ -172,12 +175,12 @@
 
 - (NSDictionary*) rpcKeys {
     return @{
+             @"salt": @"saltString",
              @"body": @"bodyCiphertext",
              @"messageId": @"messageId",
              @"messageTag": @"messageTag",
              @"senderId": @"contact.clientId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
-             @"salt": @"saltString",
              @"timeSent": @"timeSentMillis" // our own time stamp
              };
 }
