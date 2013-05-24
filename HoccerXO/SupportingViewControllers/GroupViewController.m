@@ -125,7 +125,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSUInteger) profileValueSectonIndex {
-    return 2;
+    return self.isEditing ? 1 : 2;
 }
 
 - (NSString*) namePlaceholderKey {
@@ -188,15 +188,19 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (void) configureEditOnlySections: (BOOL) editing {
     if (editing) {
         [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
-        //[self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
     } else {
-        //[self.tableView insertSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView insertSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
         [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
-
+        [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
     }
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
+    if (editing) {
+        return @[ @[_avatarItem], items, _memberListItem];
+    }
     return @[ @[_avatarItem], [self groupUtilities: editing], items, _memberListItem];
 }
 
