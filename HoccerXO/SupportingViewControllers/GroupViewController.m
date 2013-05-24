@@ -233,7 +233,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _items[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
-        NSLog(@"member of group %@ %@", [[item group] nickName], [item group]);
         GroupMembership * membership = item;
         id contact = [self getContact: membership];
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];

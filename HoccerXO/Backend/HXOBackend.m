@@ -1248,7 +1248,7 @@ typedef enum BackendStates {
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
-             NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+             //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
              changedHandler(member);
          } else {
              NSLog(@"updateGroupKey() failed: %@", responseOrError);
