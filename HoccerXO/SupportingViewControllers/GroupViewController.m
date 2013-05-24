@@ -288,6 +288,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
         // TODO: move to a configure method...
         cell.nickName.text = [contact nickName];
+        if ([membership.state isEqualToString: @"invited"]) {
+            cell.nickName.alpha = 0.5;
+        } else {
+            cell.nickName.alpha = 1.0;
+        }
         UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
         cell.avatar.image = avatar;
         return cell;
