@@ -221,7 +221,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             [admins addObject: member.contact.nickName];
         }
     }];
-    return [(admins.count > 1 ? @"Admins: " : @"Admin: ") stringByAppendingString: [admins componentsJoinedByString:@", "]];
+    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_plural" : @"group_admin_label_singular", nil);
+    return [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
 }
 
 - (void) configureUtilitySections: (BOOL) editing {
@@ -241,6 +242,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         return @[ @[_avatarItem], items, @[_adminsItem], _memberListItem];
     }
     return @[ @[_avatarItem], [self groupUtilities], items, @[_adminsItem], _memberListItem];
+}
+
+- (NSUInteger) groupMemberSectionIndex {
+    return self.isEditing ? 3 : 4;
 }
 
 - (NSArray*) groupUtilities {
@@ -272,6 +277,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         UITableViewCell * cell = [self prototypeCellOfClass: [GroupMemberCell class]];
         return cell.bounds.size.height;
     }
+    // TODO: Admin cell requires dynamic height ...
     return [super tableView: tableView heightForRowAtIndexPath: indexPath];
 }
 
@@ -283,6 +289,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
         // TODO: move to a configure method...
         cell.nickName.text = [contact nickName];
+        if ([membership.state isEqualToString: @"invited"]) {
+            cell.nickName.alpha = 0.5;
+        } else {
+            cell.nickName.alpha = 1.0;
+        }
         UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
         cell.avatar.image = avatar;
         return cell;
@@ -307,6 +318,19 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         return nil;
     }
     return [super tableView: tableView willSelectRowAtIndexPath: indexPath];
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return section == [self groupMemberSectionIndex] ? 5 : 0;
+}
+
+- (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section != [self groupMemberSectionIndex]) {
+        return nil;
+    }
+    UIView * header = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.frame.size.width, 5)];
+    header.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"group_member_divider"]];
+    return header;
 }
 
 
@@ -367,8 +391,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 {
     UITableView *tableView = self.tableView;
 
-    indexPath = [NSIndexPath indexPathForItem: indexPath.row inSection:indexPath.section + 3];
-    newIndexPath = [NSIndexPath indexPathForItem: newIndexPath.row inSection:newIndexPath.section + 3];
+    indexPath = [NSIndexPath indexPathForItem: indexPath.row inSection:indexPath.section + [self groupMemberSectionIndex]];
+    newIndexPath = [NSIndexPath indexPathForItem: newIndexPath.row inSection:newIndexPath.section + [self groupMemberSectionIndex]];
 
     switch(type) {
         case NSFetchedResultsChangeInsert:
