@@ -513,10 +513,14 @@ typedef enum BackendStates {
         abort();
     }
     Group * group = nil;
-    if (groups.count > 0) {
+    if (groups.count == 1) {
         group = groups[0];
     } else {
-        // NSLog(@"ClientId %@ not in contacts", theClientId);
+        if (groups.count > 1) {
+            NSLog(@"### ERROR: more than 1 group with id %@ in database", theGroupId);
+            abort();
+        }
+        NSLog(@"Group ClientId %@ not in contacts:", theGroupId);
     }
     return group;
 }
@@ -1035,7 +1039,7 @@ typedef enum BackendStates {
     if (group == nil) {
         group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         group.clientId = groupId;
-        group.type = @"Group";
+        group.type = [Group entityName];
     }
     NSDate * lastKnown = group.lastChanged;
     
