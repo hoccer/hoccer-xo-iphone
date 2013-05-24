@@ -50,7 +50,8 @@
         return nil;
     }
     if (self.cipheredGroupKey == nil || self.cipheredGroupKey.length == 0) {
-        NSLog(@"ERROR:No Group key for me yet");        
+        NSLog(@"ERROR:No Group key for me yet");
+        return nil;
     }
     // get public key of receiver first
     RSA * rsa = [RSA sharedInstance];
