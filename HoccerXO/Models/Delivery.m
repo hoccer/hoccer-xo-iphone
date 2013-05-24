@@ -14,6 +14,7 @@
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
 #import "HXOBackend.h" // for class crypto methods
+#import "Group.h"
 
 NSString * const kDeliveryStateNew        = @"new";
 NSString * const kDeliveryStateDelivering = @"delivering";
@@ -49,7 +50,11 @@ NSString * const kDeliveryStateFailed     = @"failed";
 
 // for outgoing deliveries
 -(NSString*) receiverKeyId {
-    return self.receiver.publicKeyId;
+    if ([self.message.contact.type isEqualToString:@"Group"]) {
+        return @"0000000000000000"; // sent arbitrary string, will be substited by server
+    } else {
+        return self.receiver.publicKeyId;
+    }
 }
 
 // for incoming deliveries

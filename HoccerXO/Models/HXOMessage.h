@@ -34,6 +34,7 @@
 @property (nonatomic, strong) NSData * cryptoKey;
 
 @property (nonatomic) NSString* bodyCipherText;
+@property (nonatomic, strong) NSString* saltString;
 
 @property (nonatomic) NSNumber *   timeSentMillis;
 @property (nonatomic) NSNumber *   timeAcceptedMillis;
@@ -44,5 +45,7 @@
 - (NSString *)decryptString: (NSString *)string;
 - (NSData *)encrypt:(NSData *)data;
 - (NSData *)decrypt:(NSData *)data;
+
++ (NSData *) XOR:(NSData*)a with:(NSData*)b;
 
 @end

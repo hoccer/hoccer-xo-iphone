@@ -31,6 +31,8 @@
 @dynamic contact;
 @dynamic attachment;
 @dynamic deliveries;
+@dynamic saltString;
+
 
 @synthesize cryptoKey = _cryptoKey;
 
@@ -59,11 +61,19 @@
 
 -(void) setCryptoKey:(NSData*) theKey {
     _cryptoKey = theKey;
-    for (Delivery * d in self.deliveries) {
-        d.keyCleartext = theKey;
+    if ([self.contact.type isEqualToString:@"Group"]) {
+        //do not put keys into the delivery, the server will do that
+        for (Delivery * d in self.deliveries) {
+            d.keyCiphertext = [@"none" dataUsingEncoding:NSUTF8StringEncoding];
+        }
+    } else {
+        // set an encrypted key into every delivery
+        for (Delivery * d in self.deliveries) {
+            d.keyCleartext = theKey;
+        }
     }
 }
- 
+
 - (NSString*) bodyCiphertext {
     if (self.body == nil) {
         return nil;
@@ -141,6 +151,13 @@
     self.timeAccepted = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
+-(NSString*) saltString {
+    return [self.salt asBase64EncodedString];
+}
+
+-(void) setSaltString:(NSString*) theB64String {
+    self.salt = [NSData dataWithBase64EncodedString:theB64String];
+}
 
 - (void) setTimeAccepted:(NSDate *)newTimeAccepted {
     NSDate * oldTimeAccepted = self.timeAccepted;
@@ -160,7 +177,7 @@
              @"messageTag": @"messageTag",
              @"senderId": @"contact.clientId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
-             @"salt": @"salt",
+             @"salt": @"saltString",
              @"timeSent": @"timeSentMillis" // our own time stamp
              };
 }

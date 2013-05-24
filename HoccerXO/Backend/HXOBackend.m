@@ -1264,7 +1264,7 @@ typedef enum BackendStates {
 // void updateGroupKey(String groupId, String clientId, String key);
 - (void) updateGroupKey:(GroupMembership *)member onSuccess:(GroupMemberChanged)changedHandler{
     
-    [_serverConnection invoke: @"updateGroupKey" withParams: @[member.group.clientId,member.contact.clientId,member.cipheredGroupKeyString]
+    [_serverConnection invoke: @"updateGroupKey" withParams: @[member.group.clientId,member.contact.clientId,member.contact.publicKeyId,member.cipheredGroupKeyString]
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
