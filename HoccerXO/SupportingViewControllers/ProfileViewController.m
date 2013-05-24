@@ -662,13 +662,17 @@ typedef enum ActionSheetTags {
     }
     CGSize size = CGSizeMake(_avatarItem.currentValue.size.width * scale, _avatarItem.currentValue.size.height * scale);
     UIImage * scaledAvatar = [_avatarItem.currentValue imageScaledToSize: size];
-    [UserProfile sharedProfile].avatarImage = scaledAvatar;
-    [UserProfile sharedProfile].avatarURL = nil;
-    [UserProfile sharedProfile].avatarUploadURL = nil;
+
+    id model = [self getModelObject];
+    [model setAvatarImage: scaledAvatar];
+    [model setAvatarURL: nil];
+    if ([model respondsToSelector: @selector(setAvatarUploadURL:)]) {
+        [model setAvatarUploadURL: nil];
+    }
 
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
-            [[self getModelObject] setValue: item.currentValue forKey: item.valueKey];
+            [model setValue: item.currentValue forKey: item.valueKey];
         }
     }
 
@@ -677,9 +681,11 @@ typedef enum ActionSheetTags {
         [self dismissViewControllerAnimated: YES completion: nil];
     }
 
-    [[UserProfile sharedProfile] saveProfile];
-    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    if ([model isKindOfClass: [UserProfile class]]) {
+        [[UserProfile sharedProfile] saveProfile];
+        NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }
 }
 
 - (void) makeLeftButtonFixedWidth {
