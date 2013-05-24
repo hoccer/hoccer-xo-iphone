@@ -18,6 +18,7 @@
 - (void) awakeFromNib {
     [super awakeFromNib];
     self.editingAccessoryView = self.accessoryView;
+    // TODO: customize selectedBAckgroundView and re-enable highlighting in XIB
 }
 
 - (void) layoutSubviews {

@@ -316,7 +316,7 @@ typedef enum ActionSheetTags {
             if (self.isEditing) {
                 self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             } else {
-                self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
+                self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
             }
             ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
             break;
@@ -437,7 +437,7 @@ typedef enum ActionSheetTags {
 
 - (UIBarButtonItem*) leftNonEditButton {
     if (_mode == ProfileViewModeMyProfile) {
-        return self.hxoMenuButton;
+        return self.navigationController.viewControllers.count == 1 ? self.hxoMenuButton : nil;
     } else {
         return nil;
     }

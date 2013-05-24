@@ -379,13 +379,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return UITableViewCellEditingStyleNone;
 }
 
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    id item = _items[indexPath.section][indexPath.row];
-    if ([item isKindOfClass: [GroupMembership class]]) {
-        return nil;
-    }
-    return [super tableView: tableView willSelectRowAtIndexPath: indexPath];
-}
+
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return section == [self groupMemberSectionIndex] ? 5 : 0;
@@ -400,6 +394,24 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return header;
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    id item = _items[indexPath.section][indexPath.row];
+    if ([item isKindOfClass: [GroupMembership class]]) {
+        return indexPath;
+    }
+    return [super tableView: tableView willSelectRowAtIndexPath: indexPath];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == [self groupMemberSectionIndex]) {
+        GroupMembership * member = (GroupMembership*)_items[indexPath.section][indexPath.row];
+        ProfileViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"profileViewController"];
+        controller.contact = member.contact;
+        [self.navigationController pushViewController: controller animated: YES];
+    } else {
+        [super tableView: tableView didSelectRowAtIndexPath: indexPath];
+    }
+}
 
 #pragma mark - Fetched Results Controller
 
