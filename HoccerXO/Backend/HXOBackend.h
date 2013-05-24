@@ -34,6 +34,7 @@ typedef void (^DoneBlock)();
 typedef void (^GroupMemberDeleted)(GroupMembership* member);
 typedef void (^GroupMemberChanged)(GroupMembership* member);
 typedef void (^GroupDeleted)(Group* group);
+typedef void (^GroupJoined)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
@@ -67,9 +68,9 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
-- (void) sendMessage: (NSString*) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment;
+- (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
-- (void) forwardMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (const Attachment*) attachment;
+- (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
 - (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;

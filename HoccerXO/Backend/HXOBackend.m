@@ -236,20 +236,20 @@ typedef enum BackendStates {
 
 
 // calls sendmessage after cloning the attachment
-- (void) forwardMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (const Attachment*) attachment {
+- (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment {
     
     Attachment * newAttachment = nil;
     
     AttachmentCompletionBlock completion  = ^(Attachment * myAttachment, NSError *myerror) {
         if (myerror == nil) {
-            [self sendMessage:text toContact:contact withAttachment:myAttachment];
+            [self sendMessage:text toContactOrGroup:contact toGroupMemberOnly:privateGroupMessageContact withAttachment:myAttachment];
         }
     };
     
     newAttachment = [self cloneAttachment:attachment whenReady:completion];
     if (newAttachment == nil) {
         // send message without attachment right now, we will not get a completion call here
-        [self sendMessage: text toContact:contact withAttachment:nil];
+        [self sendMessage: text toContactOrGroup:contact toGroupMemberOnly:privateGroupMessageContact withAttachment:nil];
     }
 }
 
@@ -270,7 +270,7 @@ typedef enum BackendStates {
 }
 
 // TODO: contact should be an array of contacts
-- (void) sendMessage:(NSString *) text toContact: (Contact*) contact withAttachment: (Attachment*) attachment {
+- (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment {
     HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     message.body = text;
     message.timeSent = [self estimatedServerTime]; // [NSDate date];
@@ -1058,16 +1058,35 @@ typedef enum BackendStates {
     }];
 }
 
-//TalkGroupMember[] getGroupMembers(String groupId, Date lastKnown);
-- (void) getGroupMembers:(NSString *)groupId lastKnown:(NSDate*) lastKnown membershipsHandler:(MembershipsHandler)handler {
-    NSNumber * lastKnownMillis = [HXOBackend millisFromDate:lastKnown];
-    [_serverConnection invoke: @"getGroupMembers" withParams: @[groupId,lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+// void joinGroup(String groupId);
+- (void) joinGroup:(Group *) group onJoined:(GroupJoined)joinHandler {
+    [_serverConnection invoke: @"joinGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            // NSLog(@"getGroups(): got result: %@", responseOrError);
+            // NSLog(@"joinGroup() ok: got result: %@", responseOrError);
+            joinHandler(group);
+        } else {
+            NSLog(@"deleteGroup(): failed: %@", responseOrError);
+            joinHandler(nil);
+        }
+    }];
+}
+
+//TalkGroupMember[] getGroupMembers(String groupId, Date lastKnown);
+- (void) getGroupMembers:(Group *)group lastKnown:(NSDate*) lastKnown membershipsHandler:(MembershipsHandler)handler {
+    NSNumber * lastKnownMillis = [HXOBackend millisFromDate:lastKnown];
+    [_serverConnection invoke: @"getGroupMembers" withParams: @[group.clientId,lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"getGroupMembers(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
-            NSLog(@"getGroups(): failed: %@", responseOrError);
+            NSLog(@"getGroupMembers(): failed: %@", responseOrError);
             handler(NO);
+            
+            // DEBUG, AutoJoin, remove later
+            [self joinGroup:group onJoined:^(Group *group) {
+                NSLog(@"Joined group %@", group);
+                [self getGroupMembers:group lastKnown:lastKnown];
+            }];
         }
     }];
 }
@@ -1076,7 +1095,7 @@ typedef enum BackendStates {
     // NSDate * lastKnown = group.lastChanged;
     // NSDate * lastKnown = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
     // NSLog(@"latest date %@", lastKnown);
-    [self getGroupMembers: group.clientId lastKnown:lastKnown membershipsHandler:^(NSArray * changedMembers) {
+    [self getGroupMembers: group lastKnown:lastKnown membershipsHandler:^(NSArray * changedMembers) {
         for (NSDictionary * memberDict in changedMembers) {
             [self updateGroupMemberHere: memberDict];
         }
