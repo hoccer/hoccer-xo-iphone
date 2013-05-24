@@ -314,6 +314,19 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return [super tableView: tableView willSelectRowAtIndexPath: indexPath];
 }
 
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return section == [self groupMemberSectionIndex] ? 5 : 0;
+}
+
+- (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section != [self groupMemberSectionIndex]) {
+        return nil;
+    }
+    UIView * header = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.frame.size.width, 5)];
+    header.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"group_member_divider"]];
+    return header;
+}
+
 
 #pragma mark - Fetched Results Controller
 
