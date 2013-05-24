@@ -115,7 +115,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSString*) avatarDefaultImageName {
-    return @"avatar_default_group"; // @"avatar_default_group_large";
+    return @"avatar_default_group_large";
 }
 
 - (NSString*) navigationItemTitleKey {
@@ -255,6 +255,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
 
     return [super populateItems];
+}
+
+- (NSString*) nickNameIconName {
+    return @"icon_profile-group";
 }
 
 - (NSString*) declineOrLeaveLabel {

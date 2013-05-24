@@ -483,7 +483,7 @@ typedef enum ActionSheetTags {
     _allProfileItems = [[NSMutableArray alloc] init];
     
     ProfileItem * nickNameItem = [[ProfileItem alloc] init];
-    nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
+    nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
     nickNameItem.valueKey = kHXONickName;
     nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
     nickNameItem.placeholder = NSLocalizedString([self namePlaceholderKey], @"Profile Placeholder Nick Name");
@@ -602,6 +602,10 @@ typedef enum ActionSheetTags {
 
 - (NSString*) namePlaceholderKey {
     return @"profile_name_placeholder";
+}
+
+- (NSString*) nickNameIconName {
+    return @"icon_profile-name";
 }
 
 - (void) validateItems {
