@@ -1081,12 +1081,13 @@ typedef enum BackendStates {
         } else {
             NSLog(@"getGroupMembers(): failed: %@", responseOrError);
             handler(NO);
-            
+/*
             // DEBUG, AutoJoin, remove later
             [self joinGroup:group onJoined:^(Group *group) {
                 NSLog(@"Joined group %@", group);
                 [self getGroupMembers:group lastKnown:lastKnown];
             }];
+*/
         }
     }];
 }

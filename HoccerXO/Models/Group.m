@@ -41,6 +41,15 @@
     return nil;
 }
 
+- (NSData*) groupKey {
+    NSData * myValue = [self primitiveValueForKey:@"groupKey"];
+    if (myValue == nil) {
+        myValue = [self.ownMemberShip decryptedGroupKey];
+        self.groupKey = myValue;
+    }
+    return myValue;
+}
+
 - (BOOL) iAmAdmin {
     return [self.ownMemberShip.role isEqualToString:@"admin"];
 }

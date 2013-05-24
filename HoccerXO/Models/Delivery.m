@@ -85,7 +85,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
     if (self.receiver == nil) {
         return;
     }
-    if (self.message.cryptoKey == nil) {
+    if (theMessageKey == nil) {
         return;
     }
     

@@ -162,8 +162,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-- (void) joinGroupPresses: (id) sender {
+- (void) joinGroupPressed: (id) sender {
     NSLog(@"Join Group pressed");
+    [self.appDelegate.chatBackend joinGroup:self.group onJoined:^(Group *group) {
+        NSLog(@"Joined group %@", group);
+        // [self getGroupMembers:group lastKnown:lastKnown];
+    }];
 }
 
 - (void) onEditingDone {
