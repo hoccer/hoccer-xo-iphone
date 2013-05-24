@@ -239,6 +239,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return @[ @[_avatarItem], [self groupUtilities], items, @[_adminsItem], _memberListItem];
 }
 
+- (NSUInteger) groupMemberSectionIndex {
+    return self.isEditing ? 3 : 4;
+}
+
 - (NSArray*) groupUtilities {
     NSMutableArray * utilities = [[NSMutableArray alloc] init];
     if ([self.group.ownMemberShip.state isEqualToString:@"joined"]) {
@@ -268,6 +272,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         UITableViewCell * cell = [self prototypeCellOfClass: [GroupMemberCell class]];
         return cell.bounds.size.height;
     }
+    // TODO: Admin cell requires dynamic height ...
     return [super tableView: tableView heightForRowAtIndexPath: indexPath];
 }
 
@@ -363,8 +368,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 {
     UITableView *tableView = self.tableView;
 
-    indexPath = [NSIndexPath indexPathForItem: indexPath.row inSection:indexPath.section + 3];
-    newIndexPath = [NSIndexPath indexPathForItem: newIndexPath.row inSection:newIndexPath.section + 3];
+    indexPath = [NSIndexPath indexPathForItem: indexPath.row inSection:indexPath.section + [self groupMemberSectionIndex]];
+    newIndexPath = [NSIndexPath indexPathForItem: newIndexPath.row inSection:newIndexPath.section + [self groupMemberSectionIndex]];
 
     switch(type) {
         case NSFetchedResultsChangeInsert:
