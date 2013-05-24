@@ -58,7 +58,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // TODO: another group related icon ... maybe a group in a circle to indicate the group profile
+    UIImage * icon = [UIImage imageNamed: @"navigation_button_groups"];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backButton;
 }
 
 - (void)didReceiveMemoryWarning {
