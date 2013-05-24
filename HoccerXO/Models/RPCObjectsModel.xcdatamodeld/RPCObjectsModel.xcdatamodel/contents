@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="RPC_TalkDelivery" syncable="YES">
-        <attribute name="keyCiphertext" transient="YES" attributeType="String" minValueString="32" maxValueString="200" syncable="YES"/>
+        <attribute name="keyCiphertext" transient="YES" attributeType="String" minValueString="4" maxValueString="200" syncable="YES"/>
         <attribute name="keyId" transient="YES" attributeType="String" minValueString="16" maxValueString="16" regularExpressionString="[0-9a-fA-F]{16}" syncable="YES"/>
         <attribute name="messageTag" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
         <attribute name="receiverId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
@@ -37,6 +37,7 @@
     <entity name="RPC_TalkMessage" representedClassName="" syncable="YES">
         <attribute name="attachment" optional="YES" transient="YES" attributeType="String" maxValueString="1000" syncable="YES"/>
         <attribute name="body" optional="YES" transient="YES" attributeType="String" maxValueString="12000" syncable="YES"/>
+        <attribute name="salt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="senderId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
         <attribute name="timeSent" transient="YES" attributeType="Integer 64" syncable="YES"/>
     </entity>
@@ -77,7 +78,7 @@
         <element name="RPC_TalkKey" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkKey_in" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkKey_out" positionX="160" positionY="192" width="128" height="75"/>
-        <element name="RPC_TalkMessage" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="RPC_TalkMessage" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RPC_TalkMessage_in" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkMessage_out" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkPresence" positionX="160" positionY="192" width="128" height="105"/>
