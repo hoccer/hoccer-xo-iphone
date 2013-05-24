@@ -44,6 +44,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     ProfileItem * _inviteMemberItem;
     ProfileItem * _joinGroupItem;
     ProfileItem * _adminsItem;
+    ProfileItem * _declineInviteOrLeaveGroupItem;
     FetchedResultsSectionAdapter * _memberListItem;
 }
 
@@ -167,7 +168,43 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [self.appDelegate.chatBackend joinGroup:self.group onJoined:^(Group *group) {
         NSLog(@"Joined group %@", group);
         // [self getGroupMembers:group lastKnown:lastKnown];
+        // TODO: trigger update of group utility section
     }];
+}
+
+- (void) declineOrLeavePressed: (id) sender {
+    NSString * title;
+    NSString * destructiveButtonTitle;
+    if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+        NSLog(@"decline invitation");
+        title = NSLocalizedString(@"group_decline_invitation_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"group_decline_button_title", nil);
+    } else {
+        if (self.group.iAmAdmin) {
+            title = NSLocalizedString(@"group_close_group_title", nil);
+            destructiveButtonTitle = NSLocalizedString(@"group_close_group_button_title", nil);
+        } else {
+            title = NSLocalizedString(@"group_leave_group_title", nil);
+            destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
+        }
+    }
+    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle: title
+                                                              delegate: self
+                                                     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                                destructiveButtonTitle: destructiveButtonTitle
+                                                     otherButtonTitles: nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    [actionSheet showInView: self.view];
+}
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        if (self.group.iAmAdmin) {
+            NSLog(@"TODO: close group forever");
+        } else {
+            NSLog(@"TODO: leave group and destroy everything (except our friends)");
+        }
+    }
 }
 
 - (void) onEditingDone {
@@ -205,9 +242,28 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _adminsItem.currentValue = [self adminsLabelText];
     _adminsItem.cellClass = [GroupAdminCell class];
 
+    _declineInviteOrLeaveGroupItem = [[ProfileItem alloc] init];
+    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
+    _declineInviteOrLeaveGroupItem.cellClass = [UserDefaultsCellDisclosure class];
+    _declineInviteOrLeaveGroupItem.action = @selector(declineOrLeavePressed:);
+    _declineInviteOrLeaveGroupItem.target = self;
+
+
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
 
     return [super populateItems];
+}
+
+- (NSString*) declineOrLeaveLabel {
+    if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+        return NSLocalizedString(@"group_decline_invitation", nil);
+    } else {
+        if (self.group.iAmAdmin) {
+            return NSLocalizedString(@"group_close", nil);
+        } else {
+            return NSLocalizedString(@"group_leave", nil);
+        }
+    }
 }
 
 - (NSString*) adminsLabelText {
@@ -255,8 +311,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
         [utilities addObject: _joinGroupItem];
     }
-    if ([self.group iAmAdmin]) {
+    if ( ! [self.group iAmAdmin]) {
+        [utilities addObject: _declineInviteOrLeaveGroupItem];
+    } else {
         [utilities addObject: _inviteMemberItem];
+        [utilities addObject: _declineInviteOrLeaveGroupItem];
+
     }
     return utilities;
 }

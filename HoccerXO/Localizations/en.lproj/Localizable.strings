@@ -304,3 +304,14 @@
 "group_admin_you" = "You";
 "group_admin_label_singular" = "Admin: ";
 "group_admin_label_plural" = "Admins: ";
+"group_decline_invitation" = "Decline Invitation";
+"group_leave" = "Leave Group";
+"group_decline_invitation_title" = "Decline Invitation?";
+"group_decline_button_title" = "Decline";
+"group_leave_group_title" = "Leave Group?";
+"group_leave_group_button_title" = "Leave";
+"group_close" = "Close Group";
+"group_close_group_title" = "Do you really want to close the group for everybody and ever?";
+"group_close_group_button_title" = "Close";
+
+
