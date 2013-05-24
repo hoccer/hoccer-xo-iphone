@@ -83,6 +83,8 @@
 		633461E9174E8A21008D98FC /* chatbar_icon-send@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633461E7174E8A21008D98FC /* chatbar_icon-send@2x.png */; };
 		633461F3174E8A44008D98FC /* navbar_icon-edit.png in Resources */ = {isa = PBXBuildFile; fileRef = 633461F1174E8A44008D98FC /* navbar_icon-edit.png */; };
 		633461F4174E8A44008D98FC /* navbar_icon-edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633461F2174E8A44008D98FC /* navbar_icon-edit@2x.png */; };
+		633462AC174FC9BF008D98FC /* GroupAdminCell_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633462AB174FC9BF008D98FC /* GroupAdminCell_iPhone.xib */; };
+		633462AF174FCA3C008D98FC /* GroupAdminCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633462AE174FCA3C008D98FC /* GroupAdminCell.m */; };
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* ChatTableCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* ChatTableCells.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
@@ -509,6 +511,9 @@
 		633461E7174E8A21008D98FC /* chatbar_icon-send@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_icon-send@2x.png"; sourceTree = "<group>"; };
 		633461F1174E8A44008D98FC /* navbar_icon-edit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar_icon-edit.png"; sourceTree = "<group>"; };
 		633461F2174E8A44008D98FC /* navbar_icon-edit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar_icon-edit@2x.png"; sourceTree = "<group>"; };
+		633462AB174FC9BF008D98FC /* GroupAdminCell_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupAdminCell_iPhone.xib; sourceTree = "<group>"; };
+		633462AD174FCA3C008D98FC /* GroupAdminCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupAdminCell.h; sourceTree = "<group>"; };
+		633462AE174FCA3C008D98FC /* GroupAdminCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupAdminCell.m; sourceTree = "<group>"; };
 		633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberInviteViewController.h; sourceTree = "<group>"; };
 		633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberInviteViewController.m; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* ChatTableCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableCells.h; sourceTree = "<group>"; };
@@ -1608,6 +1613,8 @@
 				631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */,
 				6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */,
 				6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */,
+				633462AD174FCA3C008D98FC /* GroupAdminCell.h */,
+				633462AE174FCA3C008D98FC /* GroupAdminCell.m */,
 				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
 				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 				633129D516F95220008F5B04 /* GrowingTextView.h */,
@@ -1654,13 +1661,14 @@
 		63DC01861715FE8B00609513 /* UserDefaultsCells */ = {
 			isa = PBXGroup;
 			children = (
-				63C1355F1716054C00969B0B /* README */,
-				63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */,
-				63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */,
-				6327EABE1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib */,
-				6327EAC0171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib */,
-				6327EACB17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib */,
+				633462AB174FC9BF008D98FC /* GroupAdminCell_iPhone.xib */,
 				6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */,
+				63C1355F1716054C00969B0B /* README */,
+				63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */,
+				6327EACB17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib */,
+				6327EAC0171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib */,
+				6327EABE1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib */,
+				63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */,
 			);
 			path = UserDefaultsCells;
 			sourceTree = "<group>";
@@ -2105,6 +2113,7 @@
 				633461E9174E8A21008D98FC /* chatbar_icon-send@2x.png in Resources */,
 				633461F3174E8A44008D98FC /* navbar_icon-edit.png in Resources */,
 				633461F4174E8A44008D98FC /* navbar_icon-edit@2x.png in Resources */,
+				633462AC174FC9BF008D98FC /* GroupAdminCell_iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2246,6 +2255,7 @@
 				E99872A21747F25B001355BB /* HoccerXO.xcdatamodeld in Sources */,
 				6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */,
 				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,
+				633462AF174FCA3C008D98FC /* GroupAdminCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,6 +17,7 @@
 #import "InsetImageView.h"
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
+#import "GroupAdminCell.h"
 
 
 static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
@@ -42,6 +43,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     BOOL _isNewGroup;
     ProfileItem * _inviteMemberItem;
     ProfileItem * _joinGroupItem;
+    ProfileItem * _adminsItem;
     FetchedResultsSectionAdapter * _memberListItem;
 }
 
@@ -195,9 +197,27 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _joinGroupItem.action = @selector(joinGroupPressed:);
     _joinGroupItem.target = self;
 
+    _adminsItem = [[ProfileItem alloc] init];
+    _adminsItem.currentValue = [self adminsLabelText];
+    _adminsItem.cellClass = [GroupAdminCell class];
+
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
 
     return [super populateItems];
+}
+
+- (NSString*) adminsLabelText {
+    NSMutableArray * admins = [[NSMutableArray alloc] init];
+    if (self.group.iAmAdmin) {
+        [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
+    }
+    [self.group.members enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+        GroupMembership * member = (GroupMembership*) obj;
+        if ([member.role isEqualToString: @"admin"] && member.contact != nil) {
+            [admins addObject: member.contact.nickName];
+        }
+    }];
+    return [(admins.count > 1 ? @"Admins: " : @"Admin: ") stringByAppendingString: [admins componentsJoinedByString:@", "]];
 }
 
 - (void) configureUtilitySections: (BOOL) editing {
@@ -214,9 +234,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
     if (editing) {
-        return @[ @[_avatarItem], items, _memberListItem];
+        return @[ @[_avatarItem], items, @[_adminsItem], _memberListItem];
     }
-    return @[ @[_avatarItem], [self groupUtilities], items, _memberListItem];
+    return @[ @[_avatarItem], [self groupUtilities], items, @[_adminsItem], _memberListItem];
 }
 
 - (NSArray*) groupUtilities {
