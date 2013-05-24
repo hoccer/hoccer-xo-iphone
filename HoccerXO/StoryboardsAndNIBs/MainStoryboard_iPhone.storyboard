@@ -1266,8 +1266,6 @@ in the general "Settings" app.</string>
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addAttachmentPressed:"/>
-                <relationship kind="action" name="attachmentPressed:"/>
-                <relationship kind="action" name="cancelAttachmentProcessingPressed:"/>
                 <relationship kind="action" name="sendPressed:"/>
                 <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="attachmentSpinner" candidateClass="UIActivityIndicatorView"/>
@@ -1335,6 +1333,9 @@ in the general "Settings" app.</string>
         </class>
         <class className="GroupListViewController" superclassName="ContactListViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupListViewController.h"/>
+        </class>
+        <class className="GroupMemberInviteViewController" superclassName="ContactListViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupMemberInviteViewController.h"/>
         </class>
         <class className="GroupViewController" superclassName="ProfileViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupViewController.h"/>

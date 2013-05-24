@@ -41,6 +41,10 @@
     return nil;
 }
 
+- (BOOL) iAmAdmin {
+    return [self.ownMemberShip.role isEqualToString:@"admin"];
+}
+
 //public class TalkGroup {
 //    public String groupTag;
 //    public String groupId;

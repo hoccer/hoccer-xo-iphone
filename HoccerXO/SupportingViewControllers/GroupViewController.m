@@ -41,6 +41,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 {
     BOOL _isNewGroup;
     ProfileItem * _inviteMemberItem;
+    ProfileItem * _joinGroupItem;
     FetchedResultsSectionAdapter * _memberListItem;
 }
 
@@ -84,14 +85,15 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (void) configureMode {
     if (self.group == nil) {
         _mode = ProfileViewModeNewGroup;
-    } else { // TODO: if I'm admin...
+    } else if ([self.group iAmAdmin]) {
         _mode = ProfileViewModeEditGroup;
+    } else {
+        _mode = ProfileViewModeShowGroup;
     }
 }
 
 - (void) setGroup:(Group *)group {
     self.contact = group;
-    NSLog(@"group view group: %@", self.group);
     //[_memberListItem removeTableRows];
     _fetchedResultsController = nil;
     [self.tableView reloadData];
@@ -125,7 +127,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSUInteger) profileValueSectonIndex {
-    return 2;
+    return self.isEditing ? 1 : 2;
 }
 
 - (NSString*) namePlaceholderKey {
@@ -143,6 +145,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         } else {
             self.navigationItem.leftBarButtonItem = nil;
         }
+    } else if (_mode == ProfileViewModeShowGroup) {
+        self.navigationItem.rightBarButtonItem = nil;
+        self.navigationItem.leftBarButtonItem = nil;
     } else {
         NSLog(@"setupNavigationButtons: unhandled mode %d", _mode);
     }
@@ -153,6 +158,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     GroupMemberInviteViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"inviteGroupMemberViewController"];
     controller.group = self.group;
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void) joinGroupPresses: (id) sender {
+    NSLog(@"Join Group pressed");
 }
 
 - (void) onEditingDone {
@@ -180,31 +189,47 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _inviteMemberItem.target = self;
     _inviteMemberItem.alwaysShowDisclosure = YES;
 
+    _joinGroupItem = [[ProfileItem alloc] init];
+    _joinGroupItem.currentValue = NSLocalizedString(@"group_join_button", nil);
+    _joinGroupItem.cellClass = [UserDefaultsCellDisclosure class];
+    _joinGroupItem.action = @selector(joinGroupPressed:);
+    _joinGroupItem.target = self;
+
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
 
     return [super populateItems];
 }
 
-- (void) configureEditOnlySections: (BOOL) editing {
+- (void) configureUtilitySections: (BOOL) editing {
     if (editing) {
-        [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
-        //[self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
     } else {
-        //[self.tableView insertSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
-
+        [self.tableView insertSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
+        NSArray * utilities = [self groupUtilities];
+        for (NSUInteger i = 0; i < utilities.count; ++i) {
+            [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: i inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
+        }
     }
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
-    return @[ @[_avatarItem], [self groupUtilities: editing], items, _memberListItem];
+    if (editing) {
+        return @[ @[_avatarItem], items, _memberListItem];
+    }
+    return @[ @[_avatarItem], [self groupUtilities], items, _memberListItem];
 }
 
-- (NSArray*) groupUtilities: (BOOL) editing {
-    if (editing) {
-        return @[_inviteMemberItem];
+- (NSArray*) groupUtilities {
+    NSMutableArray * utilities = [[NSMutableArray alloc] init];
+    if ([self.group.ownMemberShip.state isEqualToString:@"joined"]) {
+        [utilities addObject: _chatWithContactItem];
+    } else if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+        [utilities addObject: _joinGroupItem];
     }
-    return @[_chatWithContactItem, _inviteMemberItem];
+    if ([self.group iAmAdmin]) {
+        [utilities addObject: _inviteMemberItem];
+    }
+    return utilities;
 }
 
 #pragma mark - Table View Delegate
@@ -229,7 +254,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _items[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
-        NSLog(@"member of group %@ %@", [[item group] nickName], [item group]);
         GroupMembership * membership = item;
         id contact = [self getContact: membership];
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];

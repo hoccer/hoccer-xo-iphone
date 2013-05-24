@@ -40,7 +40,7 @@
     // get public key of receiver first
     SecKeyRef myReceiverKey = [self.contact getPublicKeyRef];
     RSA * rsa = [RSA sharedInstance];
-    NSLog(@"self.group.groupKey=%@",[self.group.groupKey asBase64EncodedString]);
+    //NSLog(@"self.group.groupKey=%@",[self.group.groupKey asBase64EncodedString]);
     return [rsa encryptWithKey:myReceiverKey plainData:self.group.groupKey];
 }
 

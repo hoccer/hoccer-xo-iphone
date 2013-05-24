@@ -1165,7 +1165,7 @@ typedef enum BackendStates {
     
     // now check if we have to update the encrypted group key
     if (memberContact != nil) { // not us
-        if ([group.ownMemberShip.role isEqualToString:@"admin"]) {
+        if ([group iAmAdmin]) {
             // we are admin
             if (myMember.cipheredGroupKey.length == 0 || ![myMember.cipheredGroupKey isEqualToData:myMember.distributedCipheredGroupKey]) {
                 myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
@@ -1267,7 +1267,7 @@ typedef enum BackendStates {
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
-             NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+             //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
              changedHandler(member);
          } else {
              NSLog(@"updateGroupKey() failed: %@", responseOrError);

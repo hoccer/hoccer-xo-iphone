@@ -25,6 +25,8 @@
 
 @property (nonatomic, readonly) GroupMembership * ownMemberShip;
 
+- (BOOL) iAmAdmin;
+
 @end
 
 @interface Group (CoreDataGeneratedAccessors)
