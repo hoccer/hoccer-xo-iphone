@@ -18,6 +18,7 @@
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
 #import "GroupAdminCell.h"
+#import "CustomNavigationBar.h"
 
 
 static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
@@ -154,6 +155,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         NSLog(@"setupNavigationButtons: unhandled mode %d", _mode);
     }
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = self.navigationItem.rightBarButtonItem != nil;
+
 }
 
 - (void) inviteMemberPressed: (id) sender {
