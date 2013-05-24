@@ -213,6 +213,13 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
 }
 
+// XXX: hack to prevent table inconsitencies when canceling group creation
+- (void) onCancel: (id) sender {
+    if (_nickNameItem.currentValue == nil || [_nickNameItem.currentValue isEqualToString: @""]) {
+        _nickNameItem.currentValue = @"UGLY WORKAROUND BABY";
+    }
+    [super onCancel: sender];
+}
 - (void) onEditingDone {
     if (_mode == ProfileViewModeNewGroup) {
         if (_canceled) {

@@ -407,10 +407,10 @@ typedef enum ActionSheetTags {
     }
     if (editing) {
         [self validateItems];
-        //if (_mode == ProfileViewModeMyProfile) {
+        if (_mode != ProfileViewModeFirstRun) {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
-        //}
+        }
         _canceled = NO;
         for (ProfileItem* item in _allProfileItems) {
             [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
@@ -482,16 +482,16 @@ typedef enum ActionSheetTags {
 
     _allProfileItems = [[NSMutableArray alloc] init];
     
-    ProfileItem * nickNameItem = [[ProfileItem alloc] init];
-    nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
-    nickNameItem.valueKey = kHXONickName;
-    nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
-    nickNameItem.placeholder = NSLocalizedString([self namePlaceholderKey], @"Profile Placeholder Nick Name");
-    nickNameItem.cellClass = [UserDefaultsCellTextInput class];
-    nickNameItem.keyboardType = UIKeyboardTypeDefault;
-    nickNameItem.required = YES;
-    [_allProfileItems addObject: nickNameItem];
-    [_itemsByKeyPath setObject: nickNameItem forKey: nickNameItem.valueKey];
+    _nickNameItem = [[ProfileItem alloc] init];
+    _nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
+    _nickNameItem.valueKey = kHXONickName;
+    _nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
+    _nickNameItem.placeholder = NSLocalizedString([self namePlaceholderKey], @"Profile Placeholder Nick Name");
+    _nickNameItem.cellClass = [UserDefaultsCellTextInput class];
+    _nickNameItem.keyboardType = UIKeyboardTypeDefault;
+    _nickNameItem.required = YES;
+    [_allProfileItems addObject: _nickNameItem];
+    [_itemsByKeyPath setObject: _nickNameItem forKey: _nickNameItem.valueKey];
 
 #ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
