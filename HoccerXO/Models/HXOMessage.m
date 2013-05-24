@@ -13,6 +13,7 @@
 #import "NSData+CommonCrypto.h"
 #import "NSString+StringWithData.h"
 #import "HXOBackend.h"
+#import "Group.h"
 
 @implementation HXOMessage
 
@@ -25,6 +26,7 @@
 @dynamic isRead;
 @dynamic messageId;
 @dynamic messageTag;
+@dynamic salt;
 
 @dynamic contact;
 @dynamic attachment;
@@ -43,7 +45,12 @@
             // get the key from the incoming delivery object
             Delivery * myDelivery = (Delivery*)[self.deliveries anyObject];
             // NSLog(@"myDelivery  =%@", myDelivery);
-            _cryptoKey = [myDelivery keyCleartext];
+            NSData * key = [myDelivery keyCleartext];
+            if (self.salt.length == key.length) {
+                _cryptoKey = [HXOMessage XOR:key with:self.salt];
+            } else {
+                _cryptoKey = key;
+            }
             // NSLog(@"message  cryptoKey=%@", _cryptoKey);
         }
     }
@@ -93,7 +100,28 @@
 }
 
 - (void) setupOutgoingEncryption {
-    [self setCryptoKey: [AESCryptor random256BitKey]];
+    if ([self.contact.type isEqualToString:@"Group"]) {
+        self.salt =  [AESCryptor random256BitKey];
+        Group * group = (Group*)self.contact;
+        [self setCryptoKey:[HXOMessage XOR:group.groupKey with:self.salt]];
+    } else {
+        [self setCryptoKey: [AESCryptor random256BitKey]];
+    }
+}
+
++ (NSData *) XOR:(NSData*)a with:(NSData*)b {
+    if (a.length != b.length) {
+        NSLog(@"ERROR: XOR: a.length != b.length");
+        return nil;
+    }
+    const uint8_t *a_bytes = (uint8_t *)[a bytes];
+    const uint8_t *b_bytes = (uint8_t *)[b bytes];
+    NSMutableData * result = [NSMutableData dataWithLength:a.length];
+    uint8_t *result_bytes = (uint8_t *)[result bytes];
+    for (int i = 0; i < a.length; ++i) {
+        result_bytes[i] = a_bytes[i] ^ b_bytes[i];
+    }
+    return result;
 }
 
 
@@ -132,6 +160,7 @@
              @"messageTag": @"messageTag",
              @"senderId": @"contact.clientId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
+             @"salt": @"salt",
              @"timeSent": @"timeSentMillis" // our own time stamp
              };
 }

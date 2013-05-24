@@ -25,6 +25,7 @@
 @property (nonatomic, strong) NSNumber* isRead;
 @property (nonatomic, strong) NSString* messageId;
 @property (nonatomic, strong) NSString* messageTag;
+@property (nonatomic, strong) NSData* salt;
 
 @property (nonatomic, strong) Contact*  contact;
 @property (nonatomic, strong) Attachment * attachment;

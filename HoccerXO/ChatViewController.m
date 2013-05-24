@@ -261,7 +261,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 [alert show];
                 return;
             }
-            [self.chatBackend sendMessage: self.textField.text toContact: self.partner withAttachment: self.currentAttachment];
+            [self.chatBackend sendMessage:self.textField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
             self.currentAttachment = nil;
             self.textField.text = @"";
         } else {
@@ -1239,7 +1239,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     for (int i = 0; i < 10;++i) {
-        [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
+        [self.chatBackend forwardMessage: message.body toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment];
     }
 }
 
