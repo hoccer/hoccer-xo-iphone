@@ -221,7 +221,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             [admins addObject: member.contact.nickName];
         }
     }];
-    return [(admins.count > 1 ? @"Admins: " : @"Admin: ") stringByAppendingString: [admins componentsJoinedByString:@", "]];
+    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_plural" : @"group_admin_label_singular", nil);
+    return [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
 }
 
 - (void) configureUtilitySections: (BOOL) editing {

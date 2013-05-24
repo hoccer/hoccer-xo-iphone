@@ -302,3 +302,5 @@
 "group_invite_title" = "Invite %@ to group %@?";
 "group_join_button" = "Join Group";
 "group_admin_you" = "You";
+"group_admin_label_singular" = "Admin: ";
+"group_admin_label_plural" = "Admins: ";
