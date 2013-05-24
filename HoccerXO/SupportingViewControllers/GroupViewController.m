@@ -133,7 +133,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
 }
 
-- (NSUInteger) profileValueSectonIndex {
+- (NSUInteger) profileValueSectionIndex {
     return self.isEditing ? 1 : 2;
 }
 

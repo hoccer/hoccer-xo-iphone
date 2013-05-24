@@ -387,11 +387,11 @@ typedef enum ActionSheetTags {
     NSUInteger row = 0;
     for (ProfileItem * item in _allProfileItems) {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
-        NSLog(@"item=%@", item.valueKey);
+        NSLog(@"item=%@ section=%d", item.valueKey, [self profileValueSectionIndex]);
         if (editing && ! hasValue) {
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectonIndex]]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectionIndex]]] withRowAnimation:UITableViewRowAnimationFade];
         } else if ( ! editing && ! hasValue) {
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectonIndex]]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectionIndex]]] withRowAnimation:UITableViewRowAnimationFade];
         }
         ++row;
     }
@@ -431,7 +431,7 @@ typedef enum ActionSheetTags {
 
 }
 
-- (NSUInteger) profileValueSectonIndex {
+- (NSUInteger) profileValueSectionIndex {
     return 1;
 }
 
