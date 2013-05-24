@@ -510,7 +510,7 @@ typedef enum BackendStates {
     if (group == nil) {
         group = [self getGroupByTag:theGroupTag];
         if (group == nil) {
-            NSLog(@"ERROR: getGroupById:orByTag: unknown group with id=%@ or tag %@",theGroupId,theGroupTag);
+            NSLog(@"INFO: getGroupById:orByTag: unknown group with id=%@ or tag %@",theGroupId,theGroupTag);
         }
     }
     return group;
@@ -1018,8 +1018,13 @@ typedef enum BackendStates {
         group.clientId = groupId;
         group.type = @"Group";
     }
+    NSDate * lastKnown = group.lastChanged;
+    
     // NSLog(@"relationship Dict: %@", relationshipDict);
     [group updateWithDictionary: groupDict];
+    
+    // update members
+    [self getGroupMembers:group lastKnown:lastKnown];
 }
 
 // update a group on the server (as admin)
@@ -1054,9 +1059,9 @@ typedef enum BackendStates {
 }
 
 //TalkGroupMember[] getGroupMembers(String groupId, Date lastKnown);
-- (void) getGroupMembers:(NSString *) groupId lastKnown:(NSDate*) lastKnown membershipsHandler:(MembershipsHandler)handler {
+- (void) getGroupMembers:(NSString *)groupId lastKnown:(NSDate*) lastKnown membershipsHandler:(MembershipsHandler)handler {
     NSNumber * lastKnownMillis = [HXOBackend millisFromDate:lastKnown];
-    [_serverConnection invoke: @"getGroupMembers" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"getGroupMembers" withParams: @[groupId,lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"getGroups(): got result: %@", responseOrError);
             handler(responseOrError);
@@ -1067,8 +1072,8 @@ typedef enum BackendStates {
     }];
 }
 
-- (void) getGroupMembers: (Group *) group {
-    NSDate * lastKnown = group.lastChanged;
+- (void) getGroupMembers:(Group *)group lastKnown:(NSDate *)lastKnown {
+    // NSDate * lastKnown = group.lastChanged;
     // NSDate * lastKnown = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
     // NSLog(@"latest date %@", lastKnown);
     [self getGroupMembers: group.clientId lastKnown:lastKnown membershipsHandler:^(NSArray * changedMembers) {
