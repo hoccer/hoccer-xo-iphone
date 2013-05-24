@@ -93,6 +93,15 @@ NSString * const kRelationStateBlocked = @"blocked";
     [self didChangeValueForKey: @"avatarImage"];
 }
 
+- (void) setAvatarImage:(UIImage *)avatarImage {
+    [self willChangeValueForKey: @"avatar"];
+    [self willChangeValueForKey: @"avatarImage"];
+    _avatarImage = avatarImage;
+    [self setPrimitiveValue: UIImageJPEGRepresentation( _avatarImage, 1.0) forKey: @"avatar"];
+    [self didChangeValueForKey: @"avatar"];
+    [self didChangeValueForKey: @"avatarImage"];
+}
+
 @dynamic publicKeyString;
 
 -(NSString*) publicKeyString {

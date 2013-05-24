@@ -316,7 +316,7 @@ typedef enum ActionSheetTags {
             if (self.isEditing) {
                 self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             } else {
-                self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
+                self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
             }
             ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
             break;
@@ -387,11 +387,11 @@ typedef enum ActionSheetTags {
     NSUInteger row = 0;
     for (ProfileItem * item in _allProfileItems) {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
-        NSLog(@"item=%@", item.valueKey);
+        NSLog(@"item=%@ section=%d", item.valueKey, [self profileValueSectionIndex]);
         if (editing && ! hasValue) {
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectonIndex]]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectionIndex]]] withRowAnimation:UITableViewRowAnimationFade];
         } else if ( ! editing && ! hasValue) {
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectonIndex]]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectionIndex]]] withRowAnimation:UITableViewRowAnimationFade];
         }
         ++row;
     }
@@ -407,10 +407,10 @@ typedef enum ActionSheetTags {
     }
     if (editing) {
         [self validateItems];
-        //if (_mode == ProfileViewModeMyProfile) {
+        if (_mode != ProfileViewModeFirstRun) {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
-        //}
+        }
         _canceled = NO;
         for (ProfileItem* item in _allProfileItems) {
             [item addObserver: self forKeyPath: @"valid" options: NSKeyValueObservingOptionNew context: nil];
@@ -431,13 +431,13 @@ typedef enum ActionSheetTags {
 
 }
 
-- (NSUInteger) profileValueSectonIndex {
+- (NSUInteger) profileValueSectionIndex {
     return 1;
 }
 
 - (UIBarButtonItem*) leftNonEditButton {
     if (_mode == ProfileViewModeMyProfile) {
-        return self.hxoMenuButton;
+        return self.navigationController.viewControllers.count == 1 ? self.hxoMenuButton : nil;
     } else {
         return nil;
     }
@@ -482,16 +482,16 @@ typedef enum ActionSheetTags {
 
     _allProfileItems = [[NSMutableArray alloc] init];
     
-    ProfileItem * nickNameItem = [[ProfileItem alloc] init];
-    nickNameItem.icon = [UIImage imageNamed: @"icon_profile-name"];
-    nickNameItem.valueKey = kHXONickName;
-    nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
-    nickNameItem.placeholder = NSLocalizedString([self namePlaceholderKey], @"Profile Placeholder Nick Name");
-    nickNameItem.cellClass = [UserDefaultsCellTextInput class];
-    nickNameItem.keyboardType = UIKeyboardTypeDefault;
-    nickNameItem.required = YES;
-    [_allProfileItems addObject: nickNameItem];
-    [_itemsByKeyPath setObject: nickNameItem forKey: nickNameItem.valueKey];
+    _nickNameItem = [[ProfileItem alloc] init];
+    _nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
+    _nickNameItem.valueKey = kHXONickName;
+    _nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
+    _nickNameItem.placeholder = NSLocalizedString([self namePlaceholderKey], @"Profile Placeholder Nick Name");
+    _nickNameItem.cellClass = [UserDefaultsCellTextInput class];
+    _nickNameItem.keyboardType = UIKeyboardTypeDefault;
+    _nickNameItem.required = YES;
+    [_allProfileItems addObject: _nickNameItem];
+    [_itemsByKeyPath setObject: _nickNameItem forKey: _nickNameItem.valueKey];
 
 #ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
     ProfileItem * phoneItem = [[ProfileItem alloc] init];
@@ -604,6 +604,10 @@ typedef enum ActionSheetTags {
     return @"profile_name_placeholder";
 }
 
+- (NSString*) nickNameIconName {
+    return @"icon_profile-name";
+}
+
 - (void) validateItems {
     BOOL allValid = YES;
     for (ProfileItem* item in _allProfileItems) {
@@ -658,13 +662,17 @@ typedef enum ActionSheetTags {
     }
     CGSize size = CGSizeMake(_avatarItem.currentValue.size.width * scale, _avatarItem.currentValue.size.height * scale);
     UIImage * scaledAvatar = [_avatarItem.currentValue imageScaledToSize: size];
-    [UserProfile sharedProfile].avatarImage = scaledAvatar;
-    [UserProfile sharedProfile].avatarURL = nil;
-    [UserProfile sharedProfile].avatarUploadURL = nil;
+
+    id model = [self getModelObject];
+    [model setAvatarImage: scaledAvatar];
+    [model setAvatarURL: nil];
+    if ([model respondsToSelector: @selector(setAvatarUploadURL:)]) {
+        [model setAvatarUploadURL: nil];
+    }
 
     for (ProfileItem* item in _allProfileItems) {
         if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
-            [[self getModelObject] setValue: item.currentValue forKey: item.valueKey];
+            [model setValue: item.currentValue forKey: item.valueKey];
         }
     }
 
@@ -673,9 +681,11 @@ typedef enum ActionSheetTags {
         [self dismissViewControllerAnimated: YES completion: nil];
     }
 
-    [[UserProfile sharedProfile] saveProfile];
-    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    if ([model isKindOfClass: [UserProfile class]]) {
+        [[UserProfile sharedProfile] saveProfile];
+        NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }
 }
 
 - (void) makeLeftButtonFixedWidth {

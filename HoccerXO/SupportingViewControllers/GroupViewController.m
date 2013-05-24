@@ -18,6 +18,7 @@
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
 #import "GroupAdminCell.h"
+#import "CustomNavigationBar.h"
 
 
 static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
@@ -44,6 +45,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     ProfileItem * _inviteMemberItem;
     ProfileItem * _joinGroupItem;
     ProfileItem * _adminsItem;
+    ProfileItem * _declineInviteOrLeaveGroupItem;
     FetchedResultsSectionAdapter * _memberListItem;
 }
 
@@ -56,7 +58,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // TODO: another group related icon ... maybe a group in a circle to indicate the group profile
+    UIImage * icon = [UIImage imageNamed: @"navigation_button_groups"];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backButton;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -113,7 +118,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSString*) avatarDefaultImageName {
-    return @"avatar_default_group"; // @"avatar_default_group_large";
+    return @"avatar_default_group_large";
 }
 
 - (NSString*) navigationItemTitleKey {
@@ -128,7 +133,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
 }
 
-- (NSUInteger) profileValueSectonIndex {
+- (NSUInteger) profileValueSectionIndex {
     return self.isEditing ? 1 : 2;
 }
 
@@ -153,6 +158,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         NSLog(@"setupNavigationButtons: unhandled mode %d", _mode);
     }
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = self.navigationItem.rightBarButtonItem != nil;
+
 }
 
 - (void) inviteMemberPressed: (id) sender {
@@ -167,9 +174,52 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [self.appDelegate.chatBackend joinGroup:self.group onJoined:^(Group *group) {
         NSLog(@"Joined group %@", group);
         // [self getGroupMembers:group lastKnown:lastKnown];
+        // TODO: trigger update of group utility section
     }];
 }
 
+- (void) declineOrLeavePressed: (id) sender {
+    NSString * title;
+    NSString * destructiveButtonTitle;
+    if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+        NSLog(@"decline invitation");
+        title = NSLocalizedString(@"group_decline_invitation_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"group_decline_button_title", nil);
+    } else {
+        if (self.group.iAmAdmin) {
+            title = NSLocalizedString(@"group_close_group_title", nil);
+            destructiveButtonTitle = NSLocalizedString(@"group_close_group_button_title", nil);
+        } else {
+            title = NSLocalizedString(@"group_leave_group_title", nil);
+            destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
+        }
+    }
+    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle: title
+                                                              delegate: self
+                                                     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                                destructiveButtonTitle: destructiveButtonTitle
+                                                     otherButtonTitles: nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    [actionSheet showInView: self.view];
+}
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        if (self.group.iAmAdmin) {
+            NSLog(@"TODO: close group forever");
+        } else {
+            NSLog(@"TODO: leave group and destroy everything (except our friends)");
+        }
+    }
+}
+
+// XXX: hack to prevent table inconsitencies when canceling group creation
+- (void) onCancel: (id) sender {
+    if (_nickNameItem.currentValue == nil || [_nickNameItem.currentValue isEqualToString: @""]) {
+        _nickNameItem.currentValue = @"UGLY WORKAROUND BABY";
+    }
+    [super onCancel: sender];
+}
 - (void) onEditingDone {
     if (_mode == ProfileViewModeNewGroup) {
         if (_canceled) {
@@ -205,9 +255,32 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _adminsItem.currentValue = [self adminsLabelText];
     _adminsItem.cellClass = [GroupAdminCell class];
 
+    _declineInviteOrLeaveGroupItem = [[ProfileItem alloc] init];
+    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
+    _declineInviteOrLeaveGroupItem.cellClass = [UserDefaultsCellDisclosure class];
+    _declineInviteOrLeaveGroupItem.action = @selector(declineOrLeavePressed:);
+    _declineInviteOrLeaveGroupItem.target = self;
+
+
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
 
     return [super populateItems];
+}
+
+- (NSString*) nickNameIconName {
+    return @"icon_profile-group";
+}
+
+- (NSString*) declineOrLeaveLabel {
+    if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+        return NSLocalizedString(@"group_decline_invitation", nil);
+    } else {
+        if (self.group.iAmAdmin) {
+            return NSLocalizedString(@"group_close", nil);
+        } else {
+            return NSLocalizedString(@"group_leave", nil);
+        }
+    }
 }
 
 - (NSString*) adminsLabelText {
@@ -255,8 +328,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
         [utilities addObject: _joinGroupItem];
     }
-    if ([self.group iAmAdmin]) {
+    if ( ! [self.group iAmAdmin]) {
+        [utilities addObject: _declineInviteOrLeaveGroupItem];
+    } else {
         [utilities addObject: _inviteMemberItem];
+        [utilities addObject: _declineInviteOrLeaveGroupItem];
+
     }
     return utilities;
 }
@@ -312,13 +389,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return UITableViewCellEditingStyleNone;
 }
 
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    id item = _items[indexPath.section][indexPath.row];
-    if ([item isKindOfClass: [GroupMembership class]]) {
-        return nil;
-    }
-    return [super tableView: tableView willSelectRowAtIndexPath: indexPath];
-}
+
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return section == [self groupMemberSectionIndex] ? 5 : 0;
@@ -333,6 +404,24 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return header;
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    id item = _items[indexPath.section][indexPath.row];
+    if ([item isKindOfClass: [GroupMembership class]]) {
+        return indexPath;
+    }
+    return [super tableView: tableView willSelectRowAtIndexPath: indexPath];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == [self groupMemberSectionIndex]) {
+        GroupMembership * member = (GroupMembership*)_items[indexPath.section][indexPath.row];
+        ProfileViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"profileViewController"];
+        controller.contact = member.contact;
+        [self.navigationController pushViewController: controller animated: YES];
+    } else {
+        [super tableView: tableView didSelectRowAtIndexPath: indexPath];
+    }
+}
 
 #pragma mark - Fetched Results Controller
 

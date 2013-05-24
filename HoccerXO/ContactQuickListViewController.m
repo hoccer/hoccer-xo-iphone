@@ -115,12 +115,10 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     ContactQuickListSectionHeaderView *view = [[ContactQuickListSectionHeaderView alloc] init];
     id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
-    if ([sectionInfo.name isEqualToString: kRelationStateNone]) {
-        view.title.text = NSLocalizedString(@"contact_group_none", nil);
-    } else if ([sectionInfo.name isEqualToString: kRelationStateFriend]) {
-        view.title.text = NSLocalizedString(@"contact_group_friend", nil);
-    } else if ([sectionInfo.name isEqualToString: kRelationStateBlocked]) {
-        view.title.text = NSLocalizedString(@"contact_group_blocked", nil);
+    if ([sectionInfo.name isEqualToString: @"Contact"]) {
+        view.title.text = NSLocalizedString(@"contact_group_friends", nil);
+    } else if ([sectionInfo.name isEqualToString: @"Group"]) {
+        view.title.text = NSLocalizedString(@"contact_group_groups", nil);
     }
     return view;
 }
@@ -188,7 +186,7 @@
     NSArray *sortDescriptors = @[/*groupSortDescriptor,*/ nameSortDescriptor];
 
     //NSArray *sortDescriptors = // your sort descriptors here
-    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend'"]; // your predicate here
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR type == 'Group'"]; // your predicate here
 
     /*
      Set up the fetched results controller.
@@ -221,7 +219,7 @@
     // nil for section name key path means "no sections".
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                                                 managedObjectContext:self.managedObjectContext
-                                                                                                  sectionNameKeyPath: @"relationshipState"
+                                                                                                  sectionNameKeyPath: @"type"
                                                                                                            cacheName:nil];
     aFetchedResultsController.delegate = self;
 
@@ -327,7 +325,10 @@
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
-    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: @"avatar_default_contact"];
+    cell.avatar.image = contact.avatarImage;
+    if (cell.avatar.image == nil) {
+        cell.avatar.image = [UIImage imageNamed: ([contact.type isEqualToString: @"Group"] ? @"avatar_default_group" : @"avatar_default_contact")];
+    }
 
     BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
     [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];

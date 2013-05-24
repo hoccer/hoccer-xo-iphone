@@ -179,11 +179,9 @@
 
 "profile_renew_keypair_info" = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
 
-"contact_group_none" = "None";
+"contact_group_friends" = "Friends";
 
-"contact_group_friend" = "Friends";
-
-"contact_group_blocked" = "Blocked";
+"contact_group_groups" = "Groups";
 
 "setting_save_incoming_media" = "Save incoming Media";
 
@@ -304,3 +302,14 @@
 "group_admin_you" = "You";
 "group_admin_label_singular" = "Admin: ";
 "group_admin_label_plural" = "Admins: ";
+"group_decline_invitation" = "Decline Invitation";
+"group_leave" = "Leave Group";
+"group_decline_invitation_title" = "Decline Invitation?";
+"group_decline_button_title" = "Decline";
+"group_leave_group_title" = "Leave Group?";
+"group_leave_group_button_title" = "Leave";
+"group_close" = "Close Group";
+"group_close_group_title" = "Do you really want to close the group for everybody and ever?";
+"group_close_group_button_title" = "Close";
+
+

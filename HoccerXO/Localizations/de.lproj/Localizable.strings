@@ -286,4 +286,13 @@
 "group_admin_you" = "Du";
 "group_admin_label_singular" = "Admin: ";
 "group_admin_label_plural" = "Admins: ";
+"group_decline_invitation" = "Einladung ablehnen";
+"group_leave" = "Gruppe verlassen";
+"group_decline_invitation_title" = "Einladung ablehnen?";
+"group_decline_button_title" = "Ablehnen";
+"group_leave_group_title" = "Gruppe verlassen?";
+"group_leave_group_button_title" = "Verlassen";
+"group_close" = "Gruppe schliessen";
+"group_close_group_title" = "Möchtest Du die Gruppe wirklich für alle und immer schliessen?";
+"group_close_group_button_title" = "Schliessen";
 
