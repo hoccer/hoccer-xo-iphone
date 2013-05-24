@@ -26,5 +26,7 @@
 @property (nonatomic, retain) NSString * distributedCipheredGroupKeyString;
 
 - (NSData *) calcCipheredGroupKey;
+- (NSData *) decryptedGroupKey;
+
 
 @end

@@ -44,6 +44,21 @@
     return [rsa encryptWithKey:myReceiverKey plainData:self.group.groupKey];
 }
 
+- (NSData *) decryptedGroupKey {
+    if (self.contact != nil) {
+        NSLog(@"ERROR:Group key won't be encrypted for me - must not call this function on other group members except me");
+        return nil;
+    }
+    if (self.cipheredGroupKey == nil || self.cipheredGroupKey.length == 0) {
+        NSLog(@"ERROR:No Group key for me yet");        
+    }
+    // get public key of receiver first
+    RSA * rsa = [RSA sharedInstance];
+    SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRef];
+    NSData * theClearTextKey = [rsa decryptWithKey:myPrivateKeyRef cipherData:self.cipheredGroupKey];
+    return theClearTextKey;
+}
+
 -(NSString*) cipheredGroupKeyString {
     return [self.cipheredGroupKey asBase64EncodedString];
 }
