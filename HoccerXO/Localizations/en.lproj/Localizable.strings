@@ -300,3 +300,4 @@
 "group_invite_button" = "Invite a Friend";
 
 "group_invite_title" = "Invite %@ to group %@?";
+"group_join_button" = "Join Group";

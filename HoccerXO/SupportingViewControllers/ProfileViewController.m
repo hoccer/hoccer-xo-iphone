@@ -396,7 +396,7 @@ typedef enum ActionSheetTags {
         ++row;
     }
 
-    [self configureEditOnlySections: editing];
+    [self configureUtilitySections: editing];
 
     _items = [self filterItems: editing];
     [self.tableView endUpdates];
@@ -446,7 +446,7 @@ typedef enum ActionSheetTags {
 - (void) onEditingDone {
 }
 
-- (void) configureEditOnlySections: (BOOL) editing {
+- (void) configureUtilitySections: (BOOL) editing {
     NSUInteger section = [self numberOfSectionsInTableView:self.tableView];
     if (editing) {
         [self.tableView insertSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
