@@ -26,6 +26,7 @@
 @property (nonatomic, readonly) GroupMembership * ownMemberShip;
 
 - (BOOL) iAmAdmin;
+- (BOOL) iJoined;
 
 @end
 

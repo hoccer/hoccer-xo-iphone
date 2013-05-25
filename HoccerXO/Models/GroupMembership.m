@@ -23,10 +23,14 @@
 @dynamic lastChanged;
 @dynamic cipheredGroupKey;
 @dynamic distributedCipheredGroupKey;
+@dynamic distributedGroupKey;
+@dynamic memberKeyId;
 
 @dynamic cipheredGroupKeyString;
 @dynamic distributedCipheredGroupKeyString;
 @dynamic lastChangedMillis;
+
+@synthesize keySettingInProgress;
 
 - (NSNumber*) lastChangedMillis {
     return [HXOBackend millisFromDate:self.lastChanged];
@@ -80,7 +84,8 @@
     return @{ @"role"         : @"role",
               @"state"        : @"state",
               @"lastChanged"  : @"lastChangedMillis",
-              @"encryptedGroupKey": @"cipheredGroupKeyString"
+              @"encryptedGroupKey": @"cipheredGroupKeyString",
+              @"memberKeyId"  : @"memberKeyId"
               };
 }
 
@@ -91,11 +96,11 @@
 //    public static final String ROLE_ADMIN = "admin";
 //    public static final String ROLE_MEMBER = "member";
 //
-//    private String groupId;
-//    private String clientId;
-//    private String role;
-//    private String state;
-//    private String invitationSecret;
-//    private String encryptedGroupKey;
-//    private Date lastChanged;
+//  String groupId;
+//  String clientId;
+//  String role;
+//  String state;
+//  String memberKeyId;
+//  String encryptedGroupKey;
+//  Date lastChanged;
 //}

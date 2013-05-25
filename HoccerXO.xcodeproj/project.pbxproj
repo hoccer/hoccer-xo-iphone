@@ -791,6 +791,7 @@
 		6AA19EB71750059900B4807A /* avatar_default_group_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_group_large.png; sourceTree = "<group>"; };
 		E9495573171C139F00FE2E1F /* AttachmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentView.h; sourceTree = "<group>"; };
 		E9495574171C139F00FE2E1F /* AttachmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentView.m; sourceTree = "<group>"; };
+		E956D9241750EAAC003C2AAD /* HoccerXO-12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-12.xcdatamodel"; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
 		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
 		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
@@ -2486,9 +2487,10 @@
 				E99872AA174B9EA0001355BB /* HoccerXO-9.xcdatamodel */,
 				E99872AF174D2AFA001355BB /* HoccerXO-10.xcdatamodel */,
 				E99872BB174E2C05001355BB /* HoccerXO-11.xcdatamodel */,
+				E956D9241750EAAC003C2AAD /* HoccerXO-12.xcdatamodel */,
 				E99872A11747F25B001355BB /* HoccerXO.xcdatamodel */,
 			);
-			currentVersion = E99872BB174E2C05001355BB /* HoccerXO-11.xcdatamodel */;
+			currentVersion = E956D9241750EAAC003C2AAD /* HoccerXO-12.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

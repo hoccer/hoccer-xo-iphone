@@ -42,7 +42,9 @@
 }
 
 - (NSData*) groupKey {
+    [self willAccessValueForKey:@"groupKey"];
     NSData * myValue = [self primitiveValueForKey:@"groupKey"];
+    [self didAccessValueForKey:@"groupKey"];
     if (myValue == nil) {
         myValue = [self.ownMemberShip decryptedGroupKey];
         self.groupKey = myValue;
@@ -52,6 +54,10 @@
 
 - (BOOL) iAmAdmin {
     return [self.ownMemberShip.role isEqualToString:@"admin"];
+}
+
+- (BOOL) iJoined {
+    return [self.ownMemberShip.state isEqualToString:@"joined"];
 }
 
 //public class TalkGroup {

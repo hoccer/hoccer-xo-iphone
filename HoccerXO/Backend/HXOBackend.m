@@ -978,6 +978,7 @@ typedef enum BackendStates {
     group.myRole = @"admin";
     group.myState = @"accepted";
     group.groupKey = [AESCryptor random256BitKey];
+    [self.delegate saveDatabase];
     [self createGroup: group withHandler:handler];
 }
 
@@ -1190,37 +1191,100 @@ typedef enum BackendStates {
     
     // now check if we have to update the encrypted group key
     if (memberContact != nil) { // not us
-        if ([group iAmAdmin]) {
-            // we are admin
-            if (myMember.cipheredGroupKey.length == 0 || ![myMember.cipheredGroupKey isEqualToData:myMember.distributedCipheredGroupKey]) {
-                myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
-                [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
-                    if (member) {
-                        member.distributedCipheredGroupKey = member.cipheredGroupKey;
-                    }
-                }];
+        [self ifNeededUpdateGroupKeyForOtherMember:myMember];
+     } else {
+        [self ifNeededUpdateGroupKeyForMyMembership:myMember];
+     }
+}
+
+- (void) ifNeededUpdateGroupKeyForOtherMember:(GroupMembership*) myMember {
+    Group * group = myMember.group;
+    Contact * memberContact = myMember.contact;
+    if (memberContact == nil) {
+        NSLog(@"ERROR: must not call ifNeededUpdateGroupKeyForOtherMember on own membership");
+        return;
+    }
+    NSLog(@"ifNeededUpdateGroupKeyForOtherMember: My Group %@, member %@: iAmAdmin=%d, keySettingInProgress=%d, myMember.cipheredGroupKey=%@, myMember.distributedCipheredGroupKey=%@\n",group.clientId, memberContact.clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.distributedCipheredGroupKey);
+    
+    if ([group iAmAdmin] && !myMember.keySettingInProgress) {
+        // we are admin
+        if ([self isInvalid:myMember.cipheredGroupKey] ||
+            ![memberContact.publicKeyId isEqualToString:myMember.memberKeyId] ||
+            ![myMember.distributedGroupKey isEqualToData:group.groupKey])
+        {
+            // we need to put up a new group key for this member
+            NSLog(@"Setting key as admin for group %@, groupKey=%@", myMember.group.groupKey,group.groupKey);
+            
+            if ([self isInvalid:group.groupKey]) {
+                // We have lost the group key, generate a new one
+                NSLog(@"NO GROUP KEY, generating");
+                group.groupKey = [AESCryptor random256BitKey];
             }
+            myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
+            myMember.keySettingInProgress = YES;
+            [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
+                member.keySettingInProgress = NO;
+                if (member) {
+                    // member.distributedCipheredGroupKey = member.cipheredGroupKey;
+                    member.distributedGroupKey = group.groupKey;
+                }
+            }];
         }
-    } else {
-        // our member record has changed (probably on creation), so lets update our key
-        // get public key of receiver first
-        if (myMember.cipheredGroupKey.length == 0 || ![myMember.cipheredGroupKey isEqualToData:myMember.distributedCipheredGroupKey]) {
+    }    
+}
+
+- (void) ifNeededUpdateGroupKeyForMyMembership:(GroupMembership*) myMember {
+    // it is us
+    Group * group = myMember.group;
+
+    NSLog(@"ifNeededUpdateGroupKeyForMyMembership: group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey=%@, memberKeyId=%@\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.memberKeyId);
+    if ([group iJoined] && !myMember.keySettingInProgress) {
+        // check if our own key on the server is ok
+        if ([self isInvalid:myMember.cipheredGroupKey] ||
+             ![[HXOBackend ownPublicKeyIdString] isEqualToString:myMember.memberKeyId] ||
+             ([group iAmAdmin] && ![myMember.distributedGroupKey isEqualToData:group.groupKey]))
+        {
+            NSLog(@"myMember.group.groupKey=%@, group.groupKey=%@", myMember.group.groupKey,group.groupKey);
+            if ([self isInvalid: group.groupKey]) {
+                if ([group iAmAdmin]) {
+                    group.groupKey = [AESCryptor random256BitKey];
+                    NSLog(@"NO GROUP KEY, generating");
+                } else {
+                    NSLog(@"NO GROUP KEY, cant generate (not admin)");
+                    return;
+                }
+            }
             SecKeyRef myReceiverKey = [[RSA sharedInstance] getPublicKeyRef];
             RSA * rsa = [RSA sharedInstance];
             myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
             NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
-            [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyId],myCryptedGroupKeyString]
+            myMember.keySettingInProgress = YES;
+            [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyIdString],myCryptedGroupKeyString]
                            onResponse: ^(id responseOrError, BOOL success)
              {
+                 myMember.keySettingInProgress = NO;
                  if (success) {
                      //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
-                     myMember.distributedCipheredGroupKey = myMember.cipheredGroupKey;
+                     // myMember.distributedCipheredGroupKey = myMember.cipheredGroupKey;
+                     myMember.distributedGroupKey = group.groupKey;
                  } else {
                      NSLog(@"updateGroupKey() failed: %@", responseOrError);
                  }
              }];
         }
     }
+}
+
+
+- (BOOL) isZeroData:(NSData*)theData {
+    const uint8_t * buffer = (uint8_t *)[theData bytes];
+    for (int i=0; i < theData.length;++i) {
+        if (buffer[i]!=0) return NO;
+    }
+    return YES;
+}
+- (BOOL) isInvalid:(NSData*)theData {
+    return theData == nil || [self isZeroData:theData];
 }
 
 /*
@@ -2132,7 +2196,30 @@ typedef enum BackendStates {
     }
     return delivery;
 }
-
+// utility function to avoid code duplication
+-(Delivery *) getDeliveryByMessageTagAndGroupIdAndReceiverId:(NSString *) theMessageTag withGroupId: (NSString *) theGroupId  withReceiverId:(NSString*) receiverId{
+    NSDictionary * vars = @{ @"messageTag" : theMessageTag,
+                             @"groupId" : theGroupId,
+                             @"receiverId" : receiverId};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndGroupIdAndReceiverId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (deliveries == nil)
+    {
+        NSLog(@"getDeliveryByMessageTagAndGroupId: Fetch request failed: %@", error);
+        abort();
+    }
+    Delivery * delivery = nil;
+    if (deliveries.count > 0) {
+        delivery = deliveries[0];
+        if (deliveries.count > 1) {
+            NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for group %@ found", theMessageTag, theGroupId);
+        }
+    } else {
+        NSLog(@"Delivery with MessageTag %@ for group %@ not in deliveries", theMessageTag, theGroupId);
+    }
+    return delivery;
+}
 
 
 // called by server to notify us about status changes of outgoing deliveries we made
@@ -2146,7 +2233,7 @@ typedef enum BackendStates {
         return;
     }
     NSDictionary * deliveryDict = params[0];
-    NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
+    //NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
 
     [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
     
@@ -2156,7 +2243,11 @@ typedef enum BackendStates {
     
     Delivery * myDelivery = nil;
     if (myGroupId) {
-        myDelivery = [self getDeliveryByMessageTagAndGroupId:myMessageTag withGroupId: myGroupId];
+        if (myReceiverId != nil && myReceiverId.length > 0) {
+            myDelivery = [self getDeliveryByMessageTagAndGroupIdAndReceiverId:myMessageTag withGroupId: myGroupId withReceiverId:myReceiverId];
+        } else {
+            myDelivery = [self getDeliveryByMessageTagAndGroupId:myMessageTag withGroupId: myGroupId];
+        }
     } else {
         myDelivery = [self getDeliveryByMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
     }
@@ -2193,8 +2284,12 @@ typedef enum BackendStates {
         }
 
     } else {
-        NSLog(@"Signalling deliveryAbort for unknown delivery with messageTag %@ messageId %@ receiver %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId);
-        [self deliveryAbort: deliveryDict[@"messageId"] forClient:myReceiverId];
+        if ([myReceiverId isEqualToString:[UserProfile sharedProfile].clientId]) {
+            NSLog(@"Signalling deliveryAbort for unknown delivery with messageTag %@ messageId %@ receiver %@ group %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId, myGroupId);
+            [self deliveryAbort: deliveryDict[@"messageId"] forClient:myReceiverId];
+        } else {
+            NSLog(@"Ignoring delivery notification with messageTag %@ messageId %@ receiver %@ group %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId, myGroupId);
+        }
     }
 }
 

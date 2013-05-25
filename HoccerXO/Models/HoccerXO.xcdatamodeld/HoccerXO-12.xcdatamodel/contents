@@ -74,7 +74,9 @@
     <entity name="GroupMembership" representedClassName="GroupMembership" syncable="YES">
         <attribute name="cipheredGroupKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="distributedCipheredGroupKey" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="distributedGroupKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="memberKeyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="role" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="groupMemberships" inverseEntity="Contact" syncable="YES"/>
@@ -107,6 +109,7 @@
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId"/>
+    <fetchRequest name="DeliveryByMessageTagAndGroupIdAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId AND $receiverId == receiver.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $receiverId == receiver.clientId"/>
     <fetchRequest name="GroupByClientId" entity="Group" predicateString="clientId == $clientId AND type == &quot;Group&quot;"/>
     <fetchRequest name="GroupByTag" entity="Group" predicateString="groupTag == $groupTag AND type == &quot;Group&quot;"/>
@@ -123,7 +126,7 @@
         <element name="Contact" positionX="-81" positionY="-9" width="128" height="419"/>
         <element name="Delivery" positionX="-279" positionY="180" width="128" height="150"/>
         <element name="Group" positionX="304" positionY="132" width="128" height="135"/>
-        <element name="GroupMembership" positionX="117" positionY="252" width="128" height="150"/>
+        <element name="GroupMembership" positionX="117" positionY="252" width="128" height="180"/>
         <element name="HXOMessage" positionX="-468" positionY="144" width="128" height="269"/>
         <element name="Invite" positionX="-504" positionY="-135" width="128" height="60"/>
     </elements>
