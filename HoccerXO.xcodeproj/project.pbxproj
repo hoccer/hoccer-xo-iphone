@@ -177,6 +177,7 @@
 		6381FEBF17455675001D16E0 /* contact-settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEBD17455675001D16E0 /* contact-settings@2x.png */; };
 		6381FEC2174556F2001D16E0 /* conversation-icon-me.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEC0174556F2001D16E0 /* conversation-icon-me.png */; };
 		6381FEC3174556F2001D16E0 /* conversation-icon-me@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEC1174556F2001D16E0 /* conversation-icon-me@2x.png */; };
+		6382545117503531000347CD /* server_production.der in Resources */ = {isa = PBXBuildFile; fileRef = 6382545017503531000347CD /* server_production.der */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
@@ -629,6 +630,7 @@
 		6381FEBD17455675001D16E0 /* contact-settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact-settings@2x.png"; sourceTree = "<group>"; };
 		6381FEC0174556F2001D16E0 /* conversation-icon-me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation-icon-me.png"; sourceTree = "<group>"; };
 		6381FEC1174556F2001D16E0 /* conversation-icon-me@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation-icon-me@2x.png"; sourceTree = "<group>"; };
+		6382545017503531000347CD /* server_production.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_production.der; sourceTree = "<group>"; };
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
@@ -1266,6 +1268,7 @@
 		6390949D1738751800DF889B /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				6382545017503531000347CD /* server_production.der */,
 				6390949F1738751800DF889B /* server_development.der */,
 			);
 			path = Certificates;
@@ -2146,6 +2149,7 @@
 				6AA19EB51750057C00B4807A /* icon_profile-group@2x.png in Resources */,
 				6AA19EB81750059900B4807A /* avatar_default_group_large@2x.png in Resources */,
 				6AA19EB91750059900B4807A /* avatar_default_group_large.png in Resources */,
+				6382545117503531000347CD /* server_production.der in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
