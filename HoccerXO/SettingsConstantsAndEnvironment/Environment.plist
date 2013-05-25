@@ -14,7 +14,9 @@
 			<string>server_development</string>
 		</array>
 		<key>production</key>
-		<array/>
+		<array>
+			<string>server_production</string>
+		</array>
 	</dict>
 	<key>talkServer</key>
 	<dict>
@@ -23,7 +25,7 @@
 		<key>development</key>
 		<string>ws://development.hoccer.com:7001</string>
 		<key>production</key>
-		<string>ws://development.hoccer.com:7000</string>
+		<string>wss://server.talk.hoccer.com</string>
 	</dict>
 	<key>fileCacheURI</key>
 	<dict>
