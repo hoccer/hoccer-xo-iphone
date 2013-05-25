@@ -341,6 +341,7 @@ typedef enum BackendStates {
         [self deliveryConfirm: oldMessage.messageId withDelivery: oldDelivery];
         return;
     }
+
     if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
         NSLog(@"ERROR: receiveMessage: aborting received message without keyCiphertext, id= %@", vars[@"messageId"]);
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
@@ -1200,9 +1201,41 @@ typedef enum BackendStates {
                 }];
             }
         }
+    } else {
+        // our member record has changed (probably on creation), so lets update our key
+        // get public key of receiver first
+        if (myMember.cipheredGroupKey.length == 0 || ![myMember.cipheredGroupKey isEqualToData:myMember.distributedCipheredGroupKey]) {
+            SecKeyRef myReceiverKey = [[RSA sharedInstance] getPublicKeyRef];
+            RSA * rsa = [RSA sharedInstance];
+            myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
+            NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
+            [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyId],myCryptedGroupKeyString]
+                           onResponse: ^(id responseOrError, BOOL success)
+             {
+                 if (success) {
+                     //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+                     myMember.distributedCipheredGroupKey = myMember.cipheredGroupKey;
+                 } else {
+                     NSLog(@"updateGroupKey() failed: %@", responseOrError);
+                 }
+             }];
+        }
     }
 }
 
+/*
+- (void) updateGroupKeyIfNeeded:(GroupMembership *) myMember keyGetter:(KeyGetter)getKey keyIdGetter(KeyIdGetter)getKeyId {
+    if (myMember.cipheredGroupKey.length == 0 || ![myMember.cipheredGroupKey isEqualToData:myMember.distributedCipheredGroupKey]) {
+        myMember.cipheredGroupKey = getKey(myMember);
+        
+        [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
+            if (member) {
+                member.distributedCipheredGroupKey = member.cipheredGroupKey;
+            }
+        }];
+    }    
+}
+*/
 
 //public class TalkGroupMember {
 //    public static final String ROLE_NONE = "none";
