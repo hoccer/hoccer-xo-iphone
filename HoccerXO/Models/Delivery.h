@@ -13,6 +13,7 @@
 
 @class HXOMessage;
 @class Contact;
+@class Group;
 
 FOUNDATION_EXPORT NSString * const kDeliveryStateNew;
 FOUNDATION_EXPORT NSString * const kDeliveryStateDelivering;
@@ -28,6 +29,8 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 @property (nonatomic, strong) NSDate * timeChanged;
 
 @property (nonatomic, strong) Contact* receiver;
+@property (nonatomic, strong) Contact* sender;
+@property (nonatomic, strong) Group * group;
 @property (nonatomic, strong) NSData* keyCiphertext; // encrypted message crypto key
 
 @property (nonatomic) NSString* keyCiphertextString; // encrypted message crypto key as b64-string

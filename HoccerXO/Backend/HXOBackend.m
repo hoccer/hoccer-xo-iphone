@@ -284,7 +284,14 @@ typedef enum BackendStates {
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
-    delivery.receiver = contact;
+    
+    if ([contact.type isEqualToString:@"Group"]) {
+        delivery.group = (Group*)contact;
+        delivery.receiver = privateGroupMessageContact;
+    } else {
+        delivery.receiver = contact;
+        delivery.group = nil;
+    }
     
     [message setupOutgoingEncryption];
     
@@ -357,26 +364,29 @@ typedef enum BackendStates {
         attachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         message.attachment = attachment;
     }
+    
+    NSString * groupId = deliveryDictionary[@"groupId"];
+    NSString * senderId = deliveryDictionary[@"senderId"];
+    NSString * receiverId = deliveryDictionary[@"receiverId"];
 
-    // TODO: Refactor: use function getContactByClientId below
-    vars = @{ @"clientId" : messageDictionary[@"senderId"]};
-    fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactByClientId" substitutionVariables: vars];
-    error = nil;
-    NSArray *contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (contacts == nil)
-    {
-        NSLog(@"Fetch request failed: %@", error);
-        abort();
-    }
-    Contact * contact = nil;
-    // TODO: getr rid of this ...
-    if (contacts.count > 0) {
-        contact = contacts[0];
-    } else {
-        NSLog(@"Ignoring message from unknown clientId %@", messageDictionary[@"senderId"]);
+    Contact * sender = [self getContactByClientId:senderId];
+    Contact * receiver = [self getContactByClientId:receiverId];
+    Group * group = nil;
+    if (groupId != nil) {
+        group = [self getGroupById:groupId];
+    };
+
+    if (sender == nil) {
+        NSLog(@"Ignoring message from unknown sender %@", messageDictionary[@"senderId"]);
         [self.delegate.managedObjectContext deleteObject: message];
         [self.delegate.managedObjectContext deleteObject: delivery];
         return;
+    }
+    Contact * contact = nil;
+    if (group != nil) {
+        contact = group;
+    } else {
+        contact = sender;
     }
     
     message.isOutgoing = @NO;
@@ -386,7 +396,13 @@ typedef enum BackendStates {
     message.contact = contact;
     contact.rememberedLastVisibleChatCell = nil; // make view to scroll to end when user enters chat
     [contact.messages addObject: message];
+    
+    delivery.receiver = receiver;
+    delivery.sender = sender;
+    delivery.group = group;
     [delivery updateWithDictionary: deliveryDictionary];
+    
+    message.saltString = messageDictionary[@"salt"]; // set up before decryption
     [message updateWithDictionary: messageDictionary];
 
     contact.latestMessageTime = message.timeAccepted;
@@ -497,10 +513,14 @@ typedef enum BackendStates {
         abort();
     }
     Group * group = nil;
-    if (groups.count > 0) {
+    if (groups.count == 1) {
         group = groups[0];
     } else {
-        // NSLog(@"ClientId %@ not in contacts", theClientId);
+        if (groups.count > 1) {
+            NSLog(@"### ERROR: more than 1 group with id %@ in database", theGroupId);
+            abort();
+        }
+        NSLog(@"Group ClientId %@ not in contacts:", theGroupId);
     }
     return group;
 }
@@ -973,6 +993,9 @@ typedef enum BackendStates {
              NSString * groupId = (NSString*)responseOrError;
              group.clientId = groupId;
              handler(group);
+             [self.delegate saveDatabase];
+             NSLog(@"createGroup() key = %@", group.groupKey);
+
              NSLog(@"createGroup() returned groupId: %@", responseOrError);
          } else {
              NSLog(@"createGroup() failed: %@", responseOrError);
@@ -1016,7 +1039,7 @@ typedef enum BackendStates {
     if (group == nil) {
         group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         group.clientId = groupId;
-        group.type = @"Group";
+        group.type = [Group entityName];
     }
     NSDate * lastKnown = group.lastChanged;
     
@@ -1659,7 +1682,14 @@ typedef enum BackendStates {
     NSMutableDictionary * messageDict = [message rpcDictionary];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
     for (Delivery * delivery in deliveries) {
-        [deliveryDicts addObject: [delivery rpcDictionary]];
+        NSMutableDictionary * myDict = [delivery rpcDictionary];
+        if (delivery.receiver != nil) {
+            myDict[@"receiverId"] = delivery.receiver.clientId;
+        }
+        if (delivery.group != nil) {
+            myDict[@"groupId"] = delivery.group.clientId;
+        }
+        [deliveryDicts addObject: myDict];
     }
     // validate
     for (NSDictionary * d in deliveryDicts) {
@@ -1678,6 +1708,7 @@ typedef enum BackendStates {
                 if (DELIVERY_TRACE) {NSLog(@"deliveryRequest result: Delivery state '%@'->'%@' for messageTag %@ id %@",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"],updatedDeliveryDicts[i][@"messageId"] );}
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
                 delivery.receiver.latestMessageTime = message.timeAccepted;
+                delivery.group.latestMessageTime = message.timeAccepted;
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);
@@ -1706,11 +1737,18 @@ typedef enum BackendStates {
 - (void) deliveryAcknowledge: (Delivery*) delivery {
     // NSLog(@"deliveryAcknowledge: %@", delivery);
     
+//    NSString * deliveryId = nil;
+//    if (delivery.group != nil) {
+//        deliveryId = delivery.group.clientId;
+//    } else {
+//        deliveryId = delivery.receiver.clientId;
+//    }
+    
     [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[delivery.message.messageId, delivery.receiver.clientId]
                    onResponse: ^(id responseOrError, BOOL success)
     {
         if (success) {
-            // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
+            NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
             [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             
             NSString * oldState = [delivery.state copy];
@@ -2038,6 +2076,31 @@ typedef enum BackendStates {
     return delivery;
 }
 
+// utility function to avoid code duplication
+-(Delivery *) getDeliveryByMessageTagAndGroupId:(NSString *) theMessageTag withGroupId: (NSString *) theGroupId  {
+    NSDictionary * vars = @{ @"messageTag" : theMessageTag,
+                             @"groupId" : theGroupId};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndGroupId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (deliveries == nil)
+    {
+        NSLog(@"getDeliveryByMessageTagAndGroupId: Fetch request failed: %@", error);
+        abort();
+    }
+    Delivery * delivery = nil;
+    if (deliveries.count > 0) {
+        delivery = deliveries[0];
+        if (deliveries.count > 1) {
+            NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for group %@ found", theMessageTag, theGroupId);
+        }
+    } else {
+        NSLog(@"Delivery with MessageTag %@ for group %@ not in deliveries", theMessageTag, theGroupId);
+    }
+    return delivery;
+}
+
+
 
 // called by server to notify us about status changes of outgoing deliveries we made
 - (void) outgoingDelivery: (NSArray*) params {
@@ -2050,20 +2113,27 @@ typedef enum BackendStates {
         return;
     }
     NSDictionary * deliveryDict = params[0];
-    // NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
+    NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
 
     [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
     
     NSString * myMessageTag = deliveryDict[@"messageTag"];
     NSString * myReceiverId = deliveryDict[@"receiverId"];
+    NSString * myGroupId = deliveryDict[@"groupId"];
     
-    Delivery * myDelivery = [self getDeliveryByMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
+    Delivery * myDelivery = nil;
+    if (myGroupId) {
+        myDelivery = [self getDeliveryByMessageTagAndGroupId:myMessageTag withGroupId: myGroupId];
+    } else {
+        myDelivery = [self getDeliveryByMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
+    }
+    
     if (myDelivery != nil) {
         // TODO: server should not send outgoingDelivery-changes for confirmed object, we just won't answer them for now to avoid ack-storms
         if ([myDelivery.state isEqualToString:@"confirmed"]) {
             // we have already acknowledged and received confirmation for ack, so server should have shut up and never sent us this in the first time
             NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery msg-id: %@", deliveryDict[@"messageId"]);
-            [self deliveryAcknowledge: myDelivery];
+            // [self deliveryAcknowledge: myDelivery];
             return;
         }
         
@@ -2077,6 +2147,7 @@ typedef enum BackendStates {
         
         // NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
         
+        // TODO: decide what sound to play when a group message goes directly into state "confirmed"
         if ([myDelivery.state isEqualToString:@"delivered"] ) {
             [SoundEffectPlayer messageDelivered];
         } else {
@@ -2084,7 +2155,9 @@ typedef enum BackendStates {
         }
         
         // TODO: check if acknowleding should be done when state set to delivered - right now we acknowledge every outgoingDelivery notification
-        [self deliveryAcknowledge: myDelivery];
+        if (![myDelivery.state isEqualToString:@"confirmed"] ) {
+            [self deliveryAcknowledge: myDelivery];
+        }
 
     } else {
         NSLog(@"Signalling deliveryAbort for unknown delivery with messageTag %@ messageId %@ receiver %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId);

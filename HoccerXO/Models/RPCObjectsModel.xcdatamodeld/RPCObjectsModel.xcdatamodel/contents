@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="RPC_TalkDelivery" syncable="YES">
+        <attribute name="groupId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="keyCiphertext" transient="YES" attributeType="String" minValueString="4" maxValueString="200" syncable="YES"/>
         <attribute name="keyId" transient="YES" attributeType="String" minValueString="16" maxValueString="16" regularExpressionString="[0-9a-fA-F]{16}" syncable="YES"/>
         <attribute name="messageTag" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
-        <attribute name="receiverId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
+        <attribute name="receiverId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="timeUpdatedIn" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
         <attribute name="timeUpdatedOut" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
     </entity>
@@ -38,7 +39,7 @@
         <attribute name="attachment" optional="YES" transient="YES" attributeType="String" maxValueString="1000" syncable="YES"/>
         <attribute name="body" optional="YES" transient="YES" attributeType="String" maxValueString="12000" syncable="YES"/>
         <attribute name="salt" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="senderId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
+        <attribute name="senderId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
         <attribute name="timeSent" transient="YES" attributeType="Integer 64" syncable="YES"/>
     </entity>
     <entity name="RPC_TalkMessage_in" parentEntity="RPC_TalkMessage" syncable="YES">
@@ -72,7 +73,7 @@
         <attribute name="state" transient="YES" attributeType="String" minValueString="4" maxValueString="7" regularExpressionString="none|friend|blocked" syncable="YES"/>
     </entity>
     <elements>
-        <element name="RPC_TalkDelivery" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="RPC_TalkDelivery" positionX="160" positionY="192" width="128" height="150"/>
         <element name="RPC_TalkDelivery_in" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RPC_TalkDelivery_out" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RPC_TalkKey" positionX="160" positionY="192" width="128" height="75"/>
