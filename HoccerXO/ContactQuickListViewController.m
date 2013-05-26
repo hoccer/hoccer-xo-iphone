@@ -181,9 +181,9 @@
 }
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
-    //NSSortDescriptor *groupSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"relationshipState" ascending: YES];
+    NSSortDescriptor *typeSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"type" ascending: YES];
     NSSortDescriptor *nameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
-    NSArray *sortDescriptors = @[/*groupSortDescriptor,*/ nameSortDescriptor];
+    NSArray *sortDescriptors = @[typeSortDescriptor, nameSortDescriptor];
 
     //NSArray *sortDescriptors = // your sort descriptors here
     NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR type == 'Group'"]; // your predicate here
