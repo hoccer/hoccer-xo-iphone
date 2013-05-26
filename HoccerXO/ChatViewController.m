@@ -688,7 +688,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
-    NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
+    // NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
     _currentPickInfo = nil;
     [self hideAttachmentSpinner];
     if (theError == nil && theImage != nil) {

@@ -1399,25 +1399,9 @@ NSArray * TransferStateName = @[@"detached",
     }
 }
 
-- (BOOL) allowUntrustedServerCertificate {
-    return YES;
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    [_chatBackend connection:connection willSendRequestForAuthenticationChallenge:challenge];
 }
-
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
-{
-    if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust] && [challenge previousFailureCount] == 0 && [challenge proposedCredential] == nil)
-    {
-        if ([self allowUntrustedServerCertificate])
-        {
-            [[challenge sender] useCredential:[NSURLCredential credentialForTrust:[[challenge protectionSpace] serverTrust]] forAuthenticationChallenge:challenge];
-        }
-        else
-        {
-            [[challenge sender] performDefaultHandlingForAuthenticationChallenge:challenge];
-        }
-    }
-}
-
 
 -(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
 {

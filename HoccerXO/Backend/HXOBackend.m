@@ -304,7 +304,7 @@ typedef enum BackendStates {
         attachment.cipheredSize = [attachment calcCipheredSize];
         [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
             if (urls) {
-                NSLog(@"attachment urls=%@", urls);
+                // NSLog(@"attachment urls=%@", urls);
                 attachment.uploadURL = urls[@"uploadUrl"];
                 attachment.remoteURL = urls[@"downloadUrl"];
                 attachment.transferSize = @(0);
@@ -1871,7 +1871,7 @@ typedef enum BackendStates {
                    onResponse: ^(id responseOrError, BOOL success)
     {
         if (success) {
-            NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
+            // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
             [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             
             NSString * oldState = [delivery.state copy];
@@ -2096,7 +2096,7 @@ typedef enum BackendStates {
     
     [_serverConnection invoke: @"createFileForStorage" withParams: @[size] onResponse: ^(id responseOrError, BOOL success) {
         if (success && [responseOrError isKindOfClass: [NSDictionary class]]) {
-            NSLog(@"createFileForStorageWithSize(): got result: %@", responseOrError);
+            // NSLog(@"createFileForStorageWithSize(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"createFileForStorageWithSize(): failed - response: %@", responseOrError);
@@ -2111,7 +2111,7 @@ typedef enum BackendStates {
     
     [_serverConnection invoke: @"createFileForStorage" withParams: @[size] onResponse: ^(id responseOrError, BOOL success) {
         if (success && [responseOrError isKindOfClass: [NSDictionary class]]) {
-            NSLog(@"createFileForTransferWithSize(): got result: %@", responseOrError);
+            // NSLog(@"createFileForTransferWithSize(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"createFileForTransferWithSize(): failed - response: %@", responseOrError);
@@ -2458,7 +2458,7 @@ typedef enum BackendStates {
                                handler(error);
 
                            }];
-    operation.allowUntrustedServerCertificate = YES;
+    operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
     [operation startRequest];
 }
 
@@ -2494,7 +2494,7 @@ typedef enum BackendStates {
                                handler(nil, error);
                                
                            }];
-    operation.allowUntrustedServerCertificate = YES;
+    operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
     [operation startRequest];
 }
 
@@ -2572,23 +2572,68 @@ typedef enum BackendStates {
     }];
 }
 
-- (BOOL) allowUntrustedServerCertificate {
-    return YES;
++ (BOOL) allowUntrustedServerCertificate {
+#ifdef DEBUG
+    return ![[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"];
+#else
+    return NO;
+#endif
 }
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
     if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust] && [challenge previousFailureCount] == 0 && [challenge proposedCredential] == nil)
     {
-        if ([self allowUntrustedServerCertificate])
+        if ([self connection:connection authenticationChallenge:challenge] || [HXOBackend allowUntrustedServerCertificate])
         {
             [[challenge sender] useCredential:[NSURLCredential credentialForTrust:[[challenge protectionSpace] serverTrust]] forAuthenticationChallenge:challenge];
         }
         else
         {
+            [[challenge sender] cancelAuthenticationChallenge: challenge];
             [[challenge sender] performDefaultHandlingForAuthenticationChallenge:challenge];
         }
     }
+}
+
+// check if a server cert is in the set of pinned down certs [self certificates]
+- (BOOL)connection:(NSURLConnection *)connection authenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    NSURLProtectionSpace *protectionSpace = [challenge protectionSpace];
+    
+    NSArray * sslCerts = [self certificates];
+    
+    BOOL _pinnedCertFound = NO;
+    
+    if ([protectionSpace authenticationMethod] == NSURLAuthenticationMethodServerTrust) {
+        SecTrustRef secTrust = [protectionSpace serverTrust];
+        
+        if (sslCerts != nil) {
+            //SecTrustRef secTrust = (__bridge SecTrustRef)[aStream propertyForKey:(__bridge id)kCFStreamPropertySSLPeerTrust];
+            if (secTrust) {
+                NSInteger numCerts = SecTrustGetCertificateCount(secTrust);
+                for (NSInteger i = 0; i < numCerts && !_pinnedCertFound; i++) {
+                    SecCertificateRef cert = SecTrustGetCertificateAtIndex(secTrust, i);
+                    NSData *certData = CFBridgingRelease(SecCertificateCopyData(cert));
+                    
+                    // NSLog(@"certData %d = %@", i, certData);
+                    for (id ref in sslCerts) {
+                        SecCertificateRef trustedCert = (__bridge SecCertificateRef)ref;
+                        NSData *trustedCertData = CFBridgingRelease(SecCertificateCopyData(trustedCert));
+                        
+                        // NSLog(@"comparing with trustedCertData len %d", trustedCertData.length);
+                        if ([trustedCertData isEqualToData:certData]) {
+                            // NSLog(@"!!!_pinnedCertFound");
+                            _pinnedCertFound = YES;
+                            break;
+                        }
+                    }
+                }
+            }
+            return _pinnedCertFound;
+        }
+    }
+    return NO;
 }
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response

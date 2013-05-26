@@ -123,6 +123,8 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 + (id) registerConnectionInfoObserverFor:(UIViewController*)controller;
 + (void)adjustTimeSectionsForMessage:(HXOMessage*) message;
 
++ (BOOL) allowUntrustedServerCertificate;
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
 
 - (NSMutableURLRequest *)httpRequest:(NSString *)method
                          absoluteURI:(NSString *)URLString
