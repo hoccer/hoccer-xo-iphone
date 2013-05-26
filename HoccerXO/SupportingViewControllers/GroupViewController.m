@@ -499,7 +499,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) updateMembershipRelatedUI {
-
+    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
+    NSArray * profileItems = _items[[self profileValueSectionIndex]];
+    _items = [self composeItems: profileItems withEditFlag: self.isEditing];
+    // TODO: get rid of reloadData...
+    [self.tableView reloadData];
 }
 
 - (void) configureMembershipCell: (GroupMemberCell*) cell atIndexPath: (NSIndexPath*) indexPath {
