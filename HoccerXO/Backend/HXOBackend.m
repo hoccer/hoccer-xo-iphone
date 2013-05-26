@@ -949,7 +949,7 @@ typedef enum BackendStates {
             }
         } else {
             // no avatar
-            if (CONNECTION_TRACE) NSLog(@"updateAvatarForContact, setting nil avatar");)
+            if (CONNECTION_TRACE) {NSLog(@"updateAvatarForContact, setting nil avatar");}
             myContact.avatar = nil;
             myContact.avatarURL = @"";
         }

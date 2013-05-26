@@ -163,11 +163,9 @@
 
 "profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen händen war kannst Du hier Deine Schlüssel erneuern.";
 
-"contact_group_none" = "Keine";
+"contact_group_friends" = "Freunde";
 
-"contact_group_friend" = "Freunde";
-
-"contact_group_blocked" = "Blockiert";
+"contact_group_groups" = "Gruppen";
 
 "setting_save_incoming_media" = "Eingehende Medien speichern";
 

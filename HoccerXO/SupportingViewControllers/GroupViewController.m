@@ -365,18 +365,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _items[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
-        GroupMembership * membership = item;
-        id contact = [self getContact: membership];
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
-        // TODO: move to a configure method...
-        cell.nickName.text = [contact nickName];
-        if ([membership.state isEqualToString: @"invited"]) {
-            cell.nickName.alpha = 0.5;
-        } else {
-            cell.nickName.alpha = 1.0;
-        }
-        UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
-        cell.avatar.image = avatar;
+        [self configureMembershipCell: cell atIndexPath: indexPath];
         return cell;
     }
     return [super tableView: tableView cellForRowAtIndexPath: indexPath];
@@ -497,8 +487,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             break;
 
         case NSFetchedResultsChangeUpdate:
-            // TODO:
-            //[self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureMembershipCell:(GroupMemberCell*)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
 
         case NSFetchedResultsChangeMove:
@@ -506,12 +495,34 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+    [self updateMembershipRelatedUI];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView endUpdates];
 }
 
+- (void) updateMembershipRelatedUI {
+    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
+    NSArray * profileItems = _items[[self profileValueSectionIndex]];
+    _items = [self composeItems: profileItems withEditFlag: self.isEditing];
+    // TODO: get rid of reloadData...
+    [self.tableView reloadData];
+}
+
+- (void) configureMembershipCell: (GroupMemberCell*) cell atIndexPath: (NSIndexPath*) indexPath {
+    GroupMembership * membership = _items[indexPath.section][indexPath.row];
+    id contact = [self getContact: membership];
+    // TODO: move to a configure method...
+    cell.nickName.text = [contact nickName];
+    if ([membership.state isEqualToString: @"invited"]) {
+        cell.nickName.alpha = 0.5;
+    } else {
+        cell.nickName.alpha = 1.0;
+    }
+    UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
+    cell.avatar.image = avatar;
+}
 @end
 
 
@@ -548,12 +559,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: _targetSection];
         [_delegate.tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
     }
-}
-
-// XXX Do we need this?
-
-- (void) dealloc {
-    //[self removeTableRows];
 }
 
 @end
