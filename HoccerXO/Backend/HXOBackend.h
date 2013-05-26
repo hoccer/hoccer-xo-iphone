@@ -30,6 +30,7 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
+typedef void (^DataLoadedBlock)(NSData *, NSError*);
 typedef void (^DoneBlock)();
 typedef void (^GroupMemberDeleted)(GroupMembership* member);
 typedef void (^GroupMemberChanged)(GroupMembership* member);
@@ -128,5 +129,8 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
                          payloadData:(NSData *)payload
                        payloadStream:(NSInputStream*)stream
                              headers:(NSDictionary *)headers;
+
++ (void) downloadDataFromURL:(NSString*)fromURL withCompletion:(DataLoadedBlock)handler;
+
 
 @end

@@ -937,16 +937,17 @@ typedef enum BackendStates {
     if (![myContact.avatarURL isEqualToString: theAvatarURL]) {
         if (theAvatarURL.length) {
             if (CONNECTION_TRACE) {NSLog(@"updateAvatarForContact, downloading avatar from URL %@", theAvatarURL);}
-            NSURL * myURL = [NSURL URLWithString: theAvatarURL];
             NSError * myError = nil;
-            NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
-            if (myNewAvatar != nil) {
-                // NSLog(@"presenceUpdated, avatar downloaded");
-                myContact.avatar = myNewAvatar;
-                myContact.avatarURL = theAvatarURL;
-            } else {
-                NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
-            }
+            [HXOBackend downloadDataFromURL:theAvatarURL withCompletion:^(NSData * data, NSError * error) {
+                NSData * myNewAvatar = data;
+                if (myNewAvatar != nil) {
+                    // NSLog(@"presenceUpdated, avatar downloaded");
+                    myContact.avatar = myNewAvatar;
+                    myContact.avatarURL = theAvatarURL;
+                } else {
+                    NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+                }
+            }];
         } else {
             // no avatar
             if (CONNECTION_TRACE) {NSLog(@"updateAvatarForContact, setting nil avatar");}
@@ -2457,8 +2458,46 @@ typedef enum BackendStates {
                                handler(error);
 
                            }];
+    operation.allowUntrustedServerCertificate = YES;
     [operation startRequest];
 }
+
++ (void) downloadDataFromURL:(NSString*)fromURL withCompletion:(DataLoadedBlock)handler {
+    if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL  %@", fromURL );}
+    
+    GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:fromURL HTTPMethod:@"GET" parameters:nil];
+    NSString * userAgent = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).userAgent;
+    [request addValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    
+    if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL: request header= %@",request.allHTTPHeaderFields);}
+    GCHTTPRequestOperation *operation =
+    [GCHTTPRequestOperation HTTPRequest:request
+                          callBackQueue:nil
+                      completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
+                          if (CONNECTION_TRACE) {
+                              NSLog(@"downloadDataFromURL got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
+                              NSLog(@"downloadDataFromURL response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
+                          }
+                          if (response.statusCode == 200) {
+                              if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL: ok");}
+                              handler(data,nil);
+                              
+                          } else {
+                              NSString * myDescription = [NSString stringWithFormat:@"downloadDataFromURL irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields];
+                              // NSLog(@"%@", myDescription);
+                              NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.download" code: 946 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                              handler(nil, myError);
+                          }
+                      }
+                           errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
+                               NSLog(@"downloadDataFromURL error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               handler(nil, error);
+                               
+                           }];
+    operation.allowUntrustedServerCertificate = YES;
+    [operation startRequest];
+}
+
 
 #pragma mark - Avatar uploading
 
@@ -2531,6 +2570,25 @@ typedef enum BackendStates {
     [self createFileForStorageWithSize:@(myAvatarData.length) completionHandler:^(NSDictionary *urls) {
         handler(urls);
     }];
+}
+
+- (BOOL) allowUntrustedServerCertificate {
+    return YES;
+}
+
+- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust] && [challenge previousFailureCount] == 0 && [challenge proposedCredential] == nil)
+    {
+        if ([self allowUntrustedServerCertificate])
+        {
+            [[challenge sender] useCredential:[NSURLCredential credentialForTrust:[[challenge protectionSpace] serverTrust]] forAuthenticationChallenge:challenge];
+        }
+        else
+        {
+            [[challenge sender] performDefaultHandlingForAuthenticationChallenge:challenge];
+        }
+    }
 }
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
