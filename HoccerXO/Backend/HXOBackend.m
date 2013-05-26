@@ -1074,7 +1074,11 @@ typedef enum BackendStates {
     [self uploadAvatarIfNeededForGroup:group withCompletion:^(NSError *theError) {
         if (theError == nil) {
             NSMutableDictionary * groupDict = [group rpcDictionary];
-            groupDict[@"groupAvatarUrl"]=group.avatarURL;
+            if (group.avatarURL != nil) {
+                groupDict[@"groupAvatarUrl"]=group.avatarURL;
+            } else {
+                groupDict[@"groupAvatarUrl"]=@"";
+            }
             
             // [self validateObject: groupDict forEntity:@"RPC_Group_out"]; // TODO: Handle Validation Error
             
