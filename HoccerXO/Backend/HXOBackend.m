@@ -22,6 +22,7 @@
 #import "HXOUserDefaults.h"
 #import "NSData+CommonCrypto.h"
 #import "NSData+Base64.h"
+#import "NSString+StringWithData.h"
 #import "RSA.h"
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
@@ -31,10 +32,13 @@
 #import "Group.h"
 #import "Crypto.h"
 #import "UserProfile.h"
+#import "GCHTTPRequestOperation.h"
+#import "GCNetworkRequest.h"
 
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
+#define CONNECTION_TRACE NO
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -919,30 +923,36 @@ typedef enum BackendStates {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
         }
-        if (![myContact.avatarURL isEqualToString: thePresence[@"avatarUrl"]]) {
-            if ([thePresence[@"avatarUrl"] length]) {
-                // NSLog(@"presenceUpdated, downloading avatar from URL %@", thePresence[@"avatarUrl"]);
-                NSURL * myURL = [NSURL URLWithString: thePresence[@"avatarUrl"]];
-                NSError * myError = nil;
-                NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
-                if (myNewAvatar != nil) {
-                    // NSLog(@"presenceUpdated, avatar downloaded");
-                    myContact.avatar = myNewAvatar;
-                    myContact.avatarURL = thePresence[@"avatarUrl"];
-                } else {
-                    NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
-                }
-            } else {
-                // no avatar
-                myContact.avatar = nil;
-                myContact.avatarURL = @"";
-            }
-        }
+        [self updateAvatarForContact:myContact forAvatarURL:thePresence[@"avatarUrl"]];
+        
         myContact.presenceLastUpdatedMillis = thePresence[@"timestamp"];
         // NSLog(@"presenceUpdated, contact = %@", myContact);
 
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
+    }
+}
+
+- (void) updateAvatarForContact:(Contact*)myContact forAvatarURL:(NSString*)theAvatarURL {
+    if (![myContact.avatarURL isEqualToString: theAvatarURL]) {
+        if (theAvatarURL.length) {
+            if (CONNECTION_TRACE) {NSLog(@"updateAvatarForContact, downloading avatar from URL %@", theAvatarURL);}
+            NSURL * myURL = [NSURL URLWithString: theAvatarURL];
+            NSError * myError = nil;
+            NSData * myNewAvatar = [NSData dataWithContentsOfURL:myURL options:NSDataReadingUncached error:&myError];
+            if (myNewAvatar != nil) {
+                // NSLog(@"presenceUpdated, avatar downloaded");
+                myContact.avatar = myNewAvatar;
+                myContact.avatarURL = theAvatarURL;
+            } else {
+                NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+            }
+        } else {
+            // no avatar
+            if (CONNECTION_TRACE) NSLog(@"updateAvatarForContact, setting nil avatar");)
+            myContact.avatar = nil;
+            myContact.avatarURL = @"";
+        }
     }
 }
 
@@ -1050,24 +1060,35 @@ typedef enum BackendStates {
     
     // update members
     [self getGroupMembers:group lastKnown:lastKnown];
+    
+    // TODO: make this work for multiple admins (need to check if my avatar upload is in progress)
+    if (!group.iAmAdmin && groupDict[@"groupAvatarUrl"] != group.avatarURL) {
+        [self updateAvatarForContact:group forAvatarURL:groupDict[@"groupAvatarUrl"]];
+    }
+    
 }
 
 // update a group on the server (as admin)
 // void updateGroup(TalkGroup group);
 - (void) updateGroup:(Group *) group {
-    NSMutableDictionary * groupDict = [group rpcDictionary];
-    
-    // [self validateObject: groupDict forEntity:@"RPC_Group_out"]; // TODO: Handle Validation Error
-    
-    [_serverConnection invoke: @"updateGroup" withParams: @[groupDict]
-                   onResponse: ^(id responseOrError, BOOL success)
-     {
-         if (success) {
-             NSLog(@"updateGroup() ok: %@", responseOrError);
-         } else {
-             NSLog(@"updateGroup() failed: %@", responseOrError);
-         }
-     }];    
+    [self uploadAvatarIfNeededForGroup:group withCompletion:^(NSError *theError) {
+        if (theError == nil) {
+            NSMutableDictionary * groupDict = [group rpcDictionary];
+            groupDict[@"groupAvatarUrl"]=group.avatarURL;
+            
+            // [self validateObject: groupDict forEntity:@"RPC_Group_out"]; // TODO: Handle Validation Error
+            
+            [_serverConnection invoke: @"updateGroup" withParams: @[groupDict]
+                           onResponse: ^(id responseOrError, BOOL success)
+             {
+                 if (success) {
+                     NSLog(@"updateGroup() ok: %@", responseOrError);
+                 } else {
+                     NSLog(@"updateGroup() failed: %@", responseOrError);
+                 }
+             }];
+        }
+    }];
 }
 
 // void deleteGroup(String groupId);
@@ -2364,6 +2385,77 @@ typedef enum BackendStates {
     NSLog(@"incoming JSON RPC method call failed: %@", error);
 }
 
+#pragma mark - Group Avatar uploading
+
+- (void) uploadAvatarIfNeededForGroup:(Group*)group withCompletion:(CompletionBlock)completion{
+    if ([group iAmAdmin]) {
+        NSData * myAvatarData = group.avatar;
+        if (myAvatarData != nil && myAvatarData.length>0) {
+            NSString * myCurrentAvatarURL = group.avatarURL;
+            if (myCurrentAvatarURL == nil || myCurrentAvatarURL.length == 0 || group.avatarUploadURL == nil) {
+                [self getAvatarURLForGroup:group withCompletion:^(NSDictionary *urls) {
+                    if (urls) {
+                        [self uploadAvatar:myAvatarData toURL:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"] withCompletion:^(NSError *theError) {
+                            if (theError != nil) {
+                                NSLog(@"#ERROR: Avatar upload for group %@ failed, error=%@", group, theError);
+                                completion(theError);
+                            } else {
+                                group.avatarURL = urls[@"downloadUrl"];
+                                group.avatarUploadURL = urls[@"uploadUrl"];
+                                completion(nil);
+                            }
+                        }];
+                        return;
+                    } else {
+                        completion(nil);
+                    }
+                }];
+                return;
+            }
+        }
+    }
+    completion(nil);
+}
+
+- (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL withCompletion:(CompletionBlock)handler {
+    if (CONNECTION_TRACE) {NSLog(@"uploadAvatar size %d uploadURL=%@, downloadURL=%@", avatar.length, toURL, downloadURL );}
+    
+    GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:toURL HTTPMethod:@"PUT" parameters:nil];
+    NSDictionary * headers = [self httpHeaderWithContentLength: avatar.length];
+    for (NSString *key in headers) {
+        [request addValue:[headers objectForKey:key] forHTTPHeaderField:key];
+    }
+    [request addValue:self.delegate.userAgent forHTTPHeaderField:@"User-Agent"];
+    [request setHTTPBody:avatar];
+    
+    if (CONNECTION_TRACE) {NSLog(@"uploadAvatar: request header= %@",request.allHTTPHeaderFields);}
+    GCHTTPRequestOperation *operation =
+    [GCHTTPRequestOperation HTTPRequest:request
+                          callBackQueue:nil
+                      completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
+                          if (CONNECTION_TRACE) {
+                              NSLog(@"uploadAvatar got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
+                              NSLog(@"uploadAvatar response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
+                          }
+                          if (response.statusCode == 301) {
+                              if (CONNECTION_TRACE) {NSLog(@"uploadAvatar: ok");}
+                              handler(nil);
+                              
+                          } else {
+                              NSString * myDescription = [NSString stringWithFormat:@"uploadAvatar irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields];
+                              // NSLog(@"%@", myDescription);
+                              NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.avatar.upload" code: 945 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                              handler(myError);
+                          }
+                      }
+                           errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
+                               NSLog(@"uploadAvatar error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               handler(error);
+
+                           }];
+    [operation startRequest];
+}
+
 #pragma mark - Avatar uploading
 
 - (void) uploadAvatarIfNeeded {
@@ -2410,6 +2502,20 @@ typedef enum BackendStates {
     
 }
 
+- (void) getAvatarURLForGroup:(Group*) group withCompletion:(FileURLRequestHandler)handler {
+    NSData * myAvatarImmutableData = group.avatar;
+    if (myAvatarImmutableData == nil || [myAvatarImmutableData length] == 0) {
+        handler(nil);
+        return;
+    }
+    NSMutableData * myAvatarData = [NSMutableData dataWithData:myAvatarImmutableData];
+    
+    [self createFileForStorageWithSize:@(myAvatarData.length) completionHandler:^(NSDictionary *urls) {
+        handler(urls);
+    }];
+}
+
+
 - (void) getAvatarURLWithCompletion:(FileURLRequestHandler)handler {
     NSData * myAvatarImmutableData = [UserProfile sharedProfile].avatar;
     if (myAvatarImmutableData == nil || [myAvatarImmutableData length] == 0) {
@@ -2421,22 +2527,15 @@ typedef enum BackendStates {
     [self createFileForStorageWithSize:@(myAvatarData.length) completionHandler:^(NSDictionary *urls) {
         handler(urls);
     }];
-/*
-    NSString * myClientID = [UserProfile sharedProfile].clientId;
-    [myAvatarData appendData:[myClientID dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSData * myHash = [myAvatarData SHA256Hash];
-    NSString * myAvatarFileName = [myHash hexadecimalString];
-    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:myAvatarFileName];
-    return myURL;
- */
 }
 
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
 {
-    // NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
     if (connection == _avatarUploadConnection) {
-        // NSLog(@"_avatarUploadConnection didReceiveResponse %@, status=%ld, %@", httpResponse, (long)[httpResponse statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+        if (CONNECTION_TRACE) {
+            NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
+            NSLog(@"_avatarUploadConnection didReceiveResponse %@, status=%ld, %@", httpResponse, (long)[httpResponse statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]]);
+        }
     } else {
         NSLog(@"ERROR: HXOBackend didReceiveResponse without valid connection");
     }

@@ -72,7 +72,7 @@
     return @{ @"groupId"         : @"clientId",
               @"groupTag"        : @"groupTag",
               @"groupName"       : @"nickName",
-              @"groupAvatarUrl"  : @"avatarURL",
+              //@"groupAvatarUrl"  : @"avatarURL", // only for outgoing
               @"lastChanged"     : @"lastChangedMillis"
               };
 }

@@ -21,6 +21,7 @@
 @dynamic type;
 @dynamic avatar;
 @dynamic avatarURL;
+@dynamic avatarUploadURL;
 @dynamic clientId;
 @dynamic latestMessageTime;
 @dynamic nickName;
@@ -89,6 +90,7 @@ NSString * const kRelationStateBlocked = @"blocked";
     [self willChangeValueForKey: @"avatarImage"];
     [self setPrimitiveValue: avatar forKey: @"avatar"];
     _avatarImage = nil;
+    self.avatarUploadURL = nil;
     [self didChangeValueForKey: @"avatar"];
     [self didChangeValueForKey: @"avatarImage"];
 }
@@ -97,6 +99,7 @@ NSString * const kRelationStateBlocked = @"blocked";
     [self willChangeValueForKey: @"avatar"];
     [self willChangeValueForKey: @"avatarImage"];
     _avatarImage = avatarImage;
+    self.avatarUploadURL = nil; // clear Upload URL so we know if we have to upload it in case of group avatars
     [self setPrimitiveValue: UIImageJPEGRepresentation( _avatarImage, 1.0) forKey: @"avatar"];
     [self didChangeValueForKey: @"avatar"];
     [self didChangeValueForKey: @"avatarImage"];

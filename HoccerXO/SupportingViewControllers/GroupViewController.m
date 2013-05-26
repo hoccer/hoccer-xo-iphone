@@ -230,6 +230,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             [self.appDelegate.chatBackend updateGroup: self.group];
         }
         [self dismissViewControllerAnimated: YES completion: nil];
+    } else if (_mode == ProfileViewModeEditGroup) {
+        if (!_canceled) {
+            [self.appDelegate.chatBackend updateGroup: self.group];
+        }
     }
 }
 

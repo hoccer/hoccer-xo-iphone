@@ -20,6 +20,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSString*      type;
 @property (nonatomic, strong) NSData*        avatar;
 @property (nonatomic, strong) NSString*      avatarURL;
+@property (nonatomic, strong) NSString*      avatarUploadURL;
 @property (nonatomic, strong) NSString*      clientId;
 @property (nonatomic, strong) NSDate*        latestMessageTime;
 @property (nonatomic, strong) NSDate*        presenceLastUpdated;
