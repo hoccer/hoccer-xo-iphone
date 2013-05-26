@@ -26,6 +26,7 @@
 #import "InviteCell.h"
 #import "InvitationController.h"
 #import "Attachment.h"
+#import "Environment.h"
 
 @interface ConversationViewController ()
 
@@ -94,7 +95,7 @@
     [super viewDidAppear: animated];
 
     // TODO: find a way to move this to the app delegate
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileViewController"];
         [self.navigationController presentViewController: profileView animated: YES completion: nil];
     }

@@ -88,7 +88,7 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
 
     [self setupSideMenusWithStoryboard: storyboard andConversationViewController: self.conversationViewController];
 
-    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         [self setupDone: NO];
     }
     
@@ -411,7 +411,7 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
 - (void) deleteDatabase {
     NSURL *storeURL = [self persistentStoreURL];
     [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
-    [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: kHXOFirstRunDone]; // enforce first run, otherwise you lose your credentials
+    [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]; // enforce first run, otherwise you lose your credentials
     // TODO: delete or recover stored files
 }
 

@@ -28,6 +28,7 @@
 #import "ChatViewController.h"
 #import "ConversationViewController.h"
 #import "UserProfile.h"
+#import "Environment.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
@@ -83,7 +84,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) configureMode {
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         _mode = ProfileViewModeFirstRun;
     } else if (self.contact != nil) {
         _mode = ProfileViewModeContactProfile;
@@ -676,8 +677,8 @@ typedef enum ActionSheetTags {
         }
     }
 
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOFirstRunDone]) {
-        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: kHXOFirstRunDone];
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
+        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
         [self dismissViewControllerAnimated: YES completion: nil];
     }
 
