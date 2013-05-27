@@ -35,6 +35,7 @@
 @property (strong, nonatomic) IBOutlet AutoheightLabel *message;
 @property (strong, nonatomic) IBOutlet InsetImageView *avatar;
 @property (strong, nonatomic) IBOutlet BubbleView *bubble;
+@property (strong, nonatomic) IBOutlet UILabel *nickNameLabel;
 
 
 // @property UIInterfaceOrientation cellOrientation;

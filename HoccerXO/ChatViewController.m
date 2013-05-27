@@ -49,7 +49,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (nonatomic, readonly) MessageCell* messageCell;
-@property (nonatomic, strong) UIImage* avatarImage;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 @property (readonly, strong, nonatomic) ABUnknownPersonViewController * vcardViewController;
@@ -804,7 +803,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
-    NSString * identifier = [message.isOutgoing isEqualToNumber: @YES] ? [RightMessageCell reuseIdentifier] : [LeftMessageCell reuseIdentifier];
+    NSString * identifier;
+    if ([message.isOutgoing isEqualToNumber: @YES]) {
+        identifier = [RightMessageCell reuseIdentifier];
+    } else if ([self.partner isKindOfClass: [Group class]]) {
+        identifier = @"LeftMessageCellWithNickName";
+    } else {
+        identifier = [LeftMessageCell reuseIdentifier];
+    }
     
     MessageCell *cell = [tableView dequeueReusableCellWithIdentifier: identifier forIndexPath:indexPath];
     // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
@@ -1145,19 +1151,15 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 }
 
-- (UIImage*) avatarImageForMessage: (HXOMessage*) message {
-    if (self.avatarImage == nil) {
-        UIImage * myImage = [UserProfile sharedProfile].avatarImage;
-        self.avatarImage = myImage != nil ? myImage : [UIImage imageNamed: @"avatar_default_contact"];
-    }
-    Contact * partner;
-    if ([self.partner isKindOfClass: [Group class]]) {
-        partner = [message.deliveries.anyObject sender];
+
+- (id) getAuthor: (HXOMessage*) message {
+    if ([message.isOutgoing isEqualToNumber: @YES]) {
+        return [UserProfile sharedProfile];
+    } else if ([self.partner isKindOfClass: [Group class]]) {
+        return [message.deliveries.anyObject sender];
     } else {
-        partner = self.partner;
+        return self.partner;
     }
-    UIImage * avatar = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : partner.avatarImage;
-    return avatar != nil ? avatar : [UIImage imageNamed: @"avatar_default_contact"];
 }
 
 - (void)configureCell:(MessageCell *)cell forMessage:(HXOMessage *) message {
@@ -1170,7 +1172,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     cell.message.text = message.body;
 
-    cell.avatar.image = [self avatarImageForMessage: message];
+    id author = [self getAuthor: message];
+
+    UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
+    cell.avatar.image = avatar;
+    cell.nickNameLabel.text = [author nickName];
 
     // cell.cellOrientation = [UIApplication sharedApplication].statusBarOrientation;
     
