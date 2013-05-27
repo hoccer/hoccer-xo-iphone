@@ -119,28 +119,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
     [self.sendButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
     [self.sendButton setBackgroundColor: [UIColor clearColor]];
-    //self.sendButton.titleLabel.shadowOffset  = CGSizeMake(0.0, -1.0);
-    [self.sendButton setTitleShadowColor:[UIColor colorWithWhite: 0 alpha: 0.4] forState:UIControlStateNormal];
-
     
-    // Ok, we don't want to do this to often but let's relayout the chatbar for the localized send button title
-    /*
-    frame = self.sendButton.frame;
-    CGFloat initialTitleWidth = _sendButton.titleLabel.frame.size.width;
-    [_sendButton setTitle: NSLocalizedString(@"Send", @"Chat Send Button Title") forState: UIControlStateNormal];
-    CGFloat newTitleWidth = [_sendButton.titleLabel.text sizeWithFont: self.sendButton.titleLabel.font].width;
-    CGFloat dx = newTitleWidth - initialTitleWidth;
-    frame.origin.x -= dx;
-    frame.size.width += dx;
-    _sendButton.frame = frame;
-    frame = _textField.frame;
-    frame.size.width -= dx;
-    _textField.frame = frame;
-    frame = textViewBackgroundView.frame;
-    frame.size.width -= dx;
-    textViewBackgroundView.frame = frame;
-     */
-
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     [_chatbar sendSubviewToBack: backgroundGradient];
     
@@ -203,8 +182,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 #pragma mark - Keyboard Handling
-
-// TODO: correctly handle orientation changes while keyboard is visible
 
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     //NSLog(@"keyboardWasShown");
@@ -982,6 +959,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             }
         }];
         // TODO: observe membership set and add/remove KVO on new/removed members
+        [group addObserver: self forKeyPath: @"members" options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context: nil];
     }
 
     if (resultsControllers == nil) {
@@ -1068,6 +1046,26 @@ static const CGFloat    kSectionHeaderHeight = 40;
         }
     } else if ([keyPath isEqualToString: @"avatarImage"]) {
         [self updateVisibleCells];
+    } else if ([keyPath isEqualToString: @"members"]) {
+        if ([change[NSKeyValueChangeKindKey] isEqualToNumber: @(NSKeyValueChangeInsertion)]) {
+            NSLog(@"==== got new group member");
+            NSSet * oldMembers = change[NSKeyValueChangeOldKey];
+            NSMutableSet * newMembers = [NSMutableSet setWithSet: change[NSKeyValueChangeNewKey]];
+            [newMembers minusSet: oldMembers];
+            [newMembers enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+                [self addContactKVO: [obj contact]];
+            }];
+        } else if ([change[NSKeyValueChangeKindKey] isEqualToNumber: @(NSKeyValueChangeRemoval)]) {
+            NSLog(@"==== group member removed");
+            NSMutableSet * removedMembers = [NSMutableSet setWithSet: change[NSKeyValueChangeOldKey]];
+            NSSet * newMembers = change[NSKeyValueChangeNewKey];
+            [removedMembers minusSet: newMembers];
+            [removedMembers enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+                [self removeContactKVO: [obj contact]];
+            }];
+        } else {
+            NSLog(@"ChatViewController observeValueForKeyPath: unhandled change");
+        }
     } else {
         NSLog(@"ChatViewController observeValueForKeyPath: unhandled key path '%@'", keyPath);
     }
@@ -1616,7 +1614,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 [self removeContactKVO: contact];
             }
         }];
-        // TODO: remove group membership set observer
+        [group removeObserver: self forKeyPath: @"members"];
     }
 }
 
