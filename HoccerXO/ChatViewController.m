@@ -35,6 +35,7 @@
 #import "NSString+StringWithData.h"
 #import "Vcard.h"
 #import "NSData+Base64.h"
+#import "Group.h"
 
 #define ACTION_MENU_DEBUG NO
 
@@ -48,7 +49,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (nonatomic, readonly) MessageCell* messageCell;
-@property (strong) UIImage* avatarImage;
+@property (nonatomic, strong) UIImage* avatarImage;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 @property (readonly, strong, nonatomic) ABUnknownPersonViewController * vcardViewController;
@@ -968,6 +969,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [_partner addObserver: self forKeyPath: @"nickName" options: NSKeyValueObservingOptionNew context: nil];
     [_partner addObserver: self forKeyPath: @"connectionStatus" options: NSKeyValueObservingOptionNew context: nil];
     [_partner addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
+    if ([_partner isKindOfClass: [Group class]]) {
+        // TODO: add group member avatar and nickName observers
+    }
 
     if (resultsControllers == nil) {
         resultsControllers = [[NSMutableDictionary alloc] init];
@@ -1141,12 +1145,23 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 }
 
-- (void)configureCell:(MessageCell *)cell forMessage:(HXOMessage *) message {
-
+- (UIImage*) avatarImageForMessage: (HXOMessage*) message {
     if (self.avatarImage == nil) {
         UIImage * myImage = [UserProfile sharedProfile].avatarImage;
         self.avatarImage = myImage != nil ? myImage : [UIImage imageNamed: @"avatar_default_contact"];
     }
+    Contact * partner;
+    if ([self.partner isKindOfClass: [Group class]]) {
+        partner = [message.deliveries.anyObject sender];
+    } else {
+        partner = self.partner;
+    }
+    UIImage * avatar = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : partner.avatarImage;
+    return avatar != nil ? avatar : [UIImage imageNamed: @"avatar_default_contact"];
+}
+
+- (void)configureCell:(MessageCell *)cell forMessage:(HXOMessage *) message {
+
 
     if ([message.isRead isEqualToNumber: @NO]) {
         message.isRead = @YES;
@@ -1154,10 +1169,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }
 
     cell.message.text = message.body;
-    UIImage * avatar = [message.isOutgoing isEqualToNumber: @YES] ? self.avatarImage : self.partner.avatarImage;
-    avatar = avatar != nil ? avatar : [UIImage imageNamed: @"avatar_default_contact"];
 
-    cell.avatar.image = avatar;
+    cell.avatar.image = [self avatarImageForMessage: message];
 
     // cell.cellOrientation = [UIApplication sharedApplication].statusBarOrientation;
     
@@ -1564,6 +1577,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [self.partner removeObserver: self forKeyPath: @"nickName"];
     [self.partner removeObserver: self forKeyPath: @"connectionStatus"];
     [self.partner removeObserver: self forKeyPath: @"avatarImage"];
+    if ([self.partner isKindOfClass: [Group class]]) {
+        // TODO: remove group member avatar and nickName observers
+    }
 }
 
 @end
