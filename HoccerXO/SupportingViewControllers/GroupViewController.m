@@ -73,6 +73,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [super viewWillAppear: animated];
     [self setupNavigationButtons];
     _isNewGroup = self.group == nil;
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    if (_mode == ProfileViewModeNewGroup && ! self.isEditing) {
+        [self setEditing: YES animated: YES];
+    }
     if (self.group == nil) {
         [self.backend createGroupWithHandler:^(Group * group) {
             if (group) {
@@ -80,12 +86,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
                 [self setupContactKVO];
             }
         }];
-    }
-}
-
-- (void) viewDidAppear:(BOOL)animated {
-    if (_mode == ProfileViewModeNewGroup && ! self.isEditing) {
-        [self setEditing: YES animated: YES];
     }
 }
 

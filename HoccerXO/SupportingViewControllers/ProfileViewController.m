@@ -388,7 +388,7 @@ typedef enum ActionSheetTags {
     NSUInteger row = 0;
     for (ProfileItem * item in _allProfileItems) {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
-        NSLog(@"item=%@ section=%d", item.valueKey, [self profileValueSectionIndex]);
+        //NSLog(@"item=%@ section=%d", item.valueKey, [self profileValueSectionIndex]);
         if (editing && ! hasValue) {
             [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectionIndex]]] withRowAnimation:UITableViewRowAnimationFade];
         } else if ( ! editing && ! hasValue) {

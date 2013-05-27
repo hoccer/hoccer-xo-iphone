@@ -39,6 +39,7 @@
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
 #define CONNECTION_TRACE NO
+#define GROUPKEY_DEBUG NO
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -1005,8 +1006,8 @@ typedef enum BackendStates {
          if (success) {
              NSString * groupId = (NSString*)responseOrError;
              group.clientId = groupId;
-             handler(group);
              [self.delegate saveDatabase];
+             handler(group);
              NSLog(@"createGroup() key = %@", group.groupKey);
 
              NSLog(@"createGroup() returned groupId: %@", responseOrError);
@@ -1175,6 +1176,8 @@ typedef enum BackendStates {
     Group * group = [self getGroupById: groupId];
     if (group == nil) {
         NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@",groupId);
+        NSLog(@"TEMPORARY WORKAROUND, remove when server fixed: issuing groups update");
+        [self getGroups];
         return;
     }
         
@@ -1186,7 +1189,6 @@ typedef enum BackendStates {
         NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating",memberClientId);
         memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         memberContact.clientId = memberClientId;
-        //memberContact.nickName = @"BUG_WORKAROUND";
     }
     NSSet * theMemberSet = [group.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         if (memberContact != nil) {
@@ -1230,7 +1232,7 @@ typedef enum BackendStates {
         NSLog(@"ERROR: must not call ifNeededUpdateGroupKeyForOtherMember on own membership");
         return;
     }
-    NSLog(@"ifNeededUpdateGroupKeyForOtherMember: My Group %@, member %@: iAmAdmin=%d, keySettingInProgress=%d, myMember.cipheredGroupKey=%@, myMember.distributedCipheredGroupKey=%@\n",group.clientId, memberContact.clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.distributedCipheredGroupKey);
+    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: My Group %@, member %@: iAmAdmin=%d, keySettingInProgress=%d, myMember.cipheredGroupKey=%@, myMember.distributedCipheredGroupKey=%@\n",group.clientId, memberContact.clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.distributedCipheredGroupKey);}
     
     if ([group iAmAdmin] && !myMember.keySettingInProgress) {
         // we are admin
@@ -1239,11 +1241,11 @@ typedef enum BackendStates {
             ![myMember.distributedGroupKey isEqualToData:group.groupKey])
         {
             // we need to put up a new group key for this member
-            NSLog(@"Setting key as admin for group %@, groupKey=%@", myMember.group.groupKey,group.groupKey);
+            if (GROUPKEY_DEBUG) {NSLog(@"Setting key as admin for group %@, groupKey=%@", myMember.group.groupKey,group.groupKey);}
             
             if ([self isInvalid:group.groupKey]) {
                 // We have lost the group key, generate a new one
-                NSLog(@"NO GROUP KEY, generating");
+                if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
                 group.groupKey = [AESCryptor random256BitKey];
             }
             myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
@@ -1263,18 +1265,18 @@ typedef enum BackendStates {
     // it is us
     Group * group = myMember.group;
 
-    NSLog(@"ifNeededUpdateGroupKeyForMyMembership: group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey=%@, memberKeyId=%@\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.memberKeyId);
+    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey=%@, memberKeyId=%@\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.memberKeyId);}
     if ([group iJoined] && !myMember.keySettingInProgress) {
         // check if our own key on the server is ok
         if ([self isInvalid:myMember.cipheredGroupKey] ||
              ![[HXOBackend ownPublicKeyIdString] isEqualToString:myMember.memberKeyId] ||
              ([group iAmAdmin] && ![myMember.distributedGroupKey isEqualToData:group.groupKey]))
         {
-            NSLog(@"myMember.group.groupKey=%@, group.groupKey=%@", myMember.group.groupKey,group.groupKey);
+            if (GROUPKEY_DEBUG) {NSLog(@"myMember.group.groupKey=%@, group.groupKey=%@", myMember.group.groupKey,group.groupKey);}
             if ([self isInvalid: group.groupKey]) {
                 if ([group iAmAdmin]) {
                     group.groupKey = [AESCryptor random256BitKey];
-                    NSLog(@"NO GROUP KEY, generating");
+                    if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
                 } else {
                     NSLog(@"NO GROUP KEY, cant generate (not admin)");
                     return;
@@ -2458,7 +2460,8 @@ typedef enum BackendStates {
                                handler(error);
 
                            }];
-    operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
+    //operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
+    operation.allowUntrustedServerCertificate = YES;
     [operation startRequest];
 }
 
@@ -2494,7 +2497,8 @@ typedef enum BackendStates {
                                handler(nil, error);
                                
                            }];
-    operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
+    // operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
+    operation.allowUntrustedServerCertificate = YES;
     [operation startRequest];
 }
 

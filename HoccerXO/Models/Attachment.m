@@ -346,7 +346,7 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock)finished {
     // NSLog(@"loadPreviewImageIntoCacheWithCompletion");
-    if (self.previewImageData != nil) {
+    if (self.previewImageData != nil && self.previewImageData.length > 0) {
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
         // NSDate * start = [NSDate date];
         self.previewImage = [UIImage imageWithData:self.previewImageData];
@@ -372,7 +372,7 @@ NSArray * TransferStateName = @[@"detached",
                     finished(nil);
                 }
             } else {
-                NSLog(@"ERROR: Failed to get image: %@", error);
+                NSLog(@"ERROR: Failed to get image %@", error);
                 if (finished != nil) {
                     finished(error);
                 }
@@ -615,7 +615,14 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block {
     if (self.localURL != nil) {
-        block([UIImage imageWithContentsOfFile: [[NSURL URLWithString: self.localURL] path]], nil);
+        UIImage * myImage = [UIImage imageWithContentsOfFile: [[NSURL URLWithString: self.localURL] path]];
+        NSError * myError = nil;
+        if (myImage == nil) {
+            NSString * myDescription = [NSString stringWithFormat:@"Attachment loadImageAttachmentImage could not load image from path %@", [[NSURL URLWithString: self.localURL] path]];
+            NSLog(@"%@", myDescription);
+            myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 633 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        }
+        block(myImage, myError);
     } else if (self.assetURL != nil) {
         // NSLog(@"loadImageAttachmentImage assetURL");
         //TODO: handle different resolutions. For now just load a representation that is suitable for a chat bubble
@@ -1330,22 +1337,86 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 
-+(void) appendToFile:(NSString*)fileURL thisData:(NSData *) data {
++(NSError*) appendToFile:(NSString*)fileURL thisData:(NSData *) data {
     NSURL * myURL = [NSURL URLWithString: fileURL];
     NSString * myPath = [myURL path];
     NSOutputStream * stream = [[NSOutputStream alloc] initToFileAtPath: myPath append:YES];
+    if (stream.streamError != nil) {
+        NSLog(@"#ERROR: appendToFile: init failed, error=%@", stream.streamError);
+        return stream.streamError;
+    }
     [stream open];
+    if (stream.streamError != nil) {
+        NSLog(@"#ERROR: appendToFile: open failed, error=%@", stream.streamError);
+        return stream.streamError;
+    }
     NSUInteger left = [data length];
     NSUInteger nwr = 0;
     do {
         nwr = [stream write:[data bytes] maxLength:left];
+        if (stream.streamError != nil) {
+            NSLog(@"#ERROR: appendToFile: write failed, error=%@", stream.streamError);
+            [stream close];
+            return stream.streamError;
+        }
         if (-1 == nwr) break;
         left -= nwr;
     } while (left > 0);
     if (left) {
-        NSLog(@"ERROR: Attachment appendToFile, stream error: %@", [stream streamError]);
+        [stream close];
+        NSLog(@"ERROR: Attachment could not write all bytes, stream error: %@", [stream streamError]);
     }
     [stream close];
+    if (stream.streamError != nil) {
+        NSLog(@"#ERROR: appendToFile: close failed, error=%@", stream.streamError);
+        return stream.streamError;
+    }
+    return nil;
+}
+
++(NSError*) appendToFilePosix:(NSString*)fileURL thisData:(NSData *) data {
+    NSError * myError = nil;
+    NSURL * myURL = [NSURL URLWithString: fileURL];
+    NSString * myPath = [myURL path];
+    int fd = open([myPath UTF8String], O_WRONLY|O_APPEND|O_EXLOCK|O_CREAT,0777);
+    if (fd == -1) {
+        unlink([myPath UTF8String]);
+        NSString * myDescription = [NSString stringWithFormat:@"Attachment appendToFile open failed, errno=%d, path=%s", errno,[myPath UTF8String]];
+        NSLog(@"%@", myDescription);
+        myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.io" code: 660 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return myError;
+    }
+    
+    NSUInteger left = [data length];
+    NSUInteger nwr = 0;
+    do {
+        nwr = write(fd,[data bytes],left);
+        if (-1 == nwr) break;
+        left -= nwr;
+    } while (left > 0);
+    if (left) {
+        NSString * myDescription = [NSString stringWithFormat:@"Attachment appendToFile write failed, errno=%d", errno];
+        NSLog(@"%@", myDescription);
+        myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.io" code: 661 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        close(fd);
+        return myError;
+    }
+    NSInteger result = fsync(fd);
+    if (result == -1) {
+        NSString * myDescription = [NSString stringWithFormat:@"Attachment appendToFile fsync failed, errno=%d", errno];
+        NSLog(@"%@", myDescription);
+        myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.io" code: 662 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        close(fd);
+        return myError;
+    }
+    NSInteger result2 = close(fd);
+    if (result2 == -1) {
+        NSString * myDescription = [NSString stringWithFormat:@"Attachment appendToFile close failed, errno=%d", errno];
+        NSLog(@"%@", myDescription);
+        myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.io" code: 662 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return myError;
+    }
+    return nil;
 }
 
 + (NSData*)readDataFromFileAtURL:(NSURL*)url atOffset:(NSUInteger)start withSize:(NSUInteger) length {
@@ -1448,7 +1519,12 @@ NSArray * TransferStateName = @[@"detached",
                 NSLog(@"ERROR: didReceiveData: decryption error: %@",myError);
                 return;
             }
-            [Attachment appendToFile:self.ownedURL thisData:plainTextData];
+            myError = [Attachment appendToFilePosix:self.ownedURL thisData:plainTextData];
+            if (myError != nil) {
+                NSLog(@"Attachment didReceiveData: appending to file failed, error=%@", myError);
+                [connection cancel];
+                return;
+            };
             
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
             self.cipherTransferSize = [NSNumber numberWithLong:[self.cipherTransferSize longLongValue]+ data.length];
@@ -1545,7 +1621,12 @@ NSArray * TransferStateName = @[@"detached",
                 NSLog(@"connectionDidFinishLoading: decryption error: %@",myError);
                 return;
             }
-            [Attachment appendToFile:self.ownedURL thisData:plainTextData];
+            myError = [Attachment appendToFilePosix:self.ownedURL thisData:plainTextData];
+            if (myError != nil) {
+                NSLog(@"Attachment connectionDidFinishLoading: appending to file failed, error=%@", myError);
+                [connection cancel];
+                return;
+            };
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
 
             if ([self.transferSize isEqualToNumber: self.contentSize]) {
