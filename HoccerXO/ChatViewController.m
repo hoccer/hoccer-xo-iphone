@@ -1013,7 +1013,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (void) insertForwardedMessage {
     if (self.messageToForward) {
-        NSLog(@"insertForwardedMessage");
+        // NSLog(@"insertForwardedMessage");
         self.textField.text = self.messageToForward.body;
         
         if (self.currentAttachment) {
@@ -1022,7 +1022,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         
         AttachmentCompletionBlock completion  = ^(Attachment * myAttachment, NSError *myerror) {
             self.currentAttachment = myAttachment;
-            NSLog(@"insertForwardedMessage: self.currentAttachment=%@",self.currentAttachment);
+            // NSLog(@"insertForwardedMessage: self.currentAttachment=%@",self.currentAttachment);
             [self finishPickedAttachmentProcessingWithImage: myAttachment.previewImage withError:myerror];
         };
         [self.chatBackend cloneAttachment:self.messageToForward.attachment whenReady:completion];
