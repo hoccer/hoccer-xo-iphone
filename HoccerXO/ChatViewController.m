@@ -972,11 +972,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if (partner == nil) {
         return;
     }
-    [_partner addObserver: self forKeyPath: @"nickName" options: NSKeyValueObservingOptionNew context: nil];
-    [_partner addObserver: self forKeyPath: @"connectionStatus" options: NSKeyValueObservingOptionNew context: nil];
-    [_partner addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
+    [self addContactKVO: _partner];
     if ([_partner isKindOfClass: [Group class]]) {
-        // TODO: add group member avatar and nickName observers
+        Group * group = (Group*) _partner;
+        [group.members enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+            Contact * contact = [obj contact];
+            if (contact != nil) {
+                [self addContactKVO: contact];
+            }
+        }];
+        // TODO: observe membership set and add/remove KVO on new/removed members
     }
 
     if (resultsControllers == nil) {
@@ -1021,6 +1026,18 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [self insertForwardedMessage];
 }
 
+- (void) addContactKVO: (Contact*) contact {
+    [contact addObserver: self forKeyPath: @"nickName" options: NSKeyValueObservingOptionNew context: nil];
+    [contact addObserver: self forKeyPath: @"connectionStatus" options: NSKeyValueObservingOptionNew context: nil];
+    [contact addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
+}
+
+- (void) removeContactKVO: (Contact*) contact {
+    [contact removeObserver: self forKeyPath: @"nickName"];
+    [contact removeObserver: self forKeyPath: @"connectionStatus"];
+    [contact removeObserver: self forKeyPath: @"avatarImage"];
+}
+
 - (void) insertForwardedMessage {
     if (self.messageToForward) {
         // NSLog(@"insertForwardedMessage");
@@ -1044,17 +1061,27 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if ([keyPath isEqualToString: @"nickName"] ||
         [keyPath isEqualToString: @"connectionStatus"]) {
         // self.title = [object nickName];
-        self.title = [object nickNameWithStatus];
-    } else if ([keyPath isEqualToString: @"avatarImage"]) {
-        NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
-        [self.tableView beginUpdates];
-        for (int i = 0; i < indexPaths.count; ++i) {
-            NSIndexPath * indexPath = indexPaths[i];
-            HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-            [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+        if (self.partner == object) { // single chat mode or group object change
+            self.title = [object nickNameWithStatus];
+        } else { // group member change
+            [self updateVisibleCells];
         }
-        [self.tableView endUpdates];
+    } else if ([keyPath isEqualToString: @"avatarImage"]) {
+        [self updateVisibleCells];
+    } else {
+        NSLog(@"ChatViewController observeValueForKeyPath: unhandled key path '%@'", keyPath);
     }
+}
+
+- (void) updateVisibleCells {
+    NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
+    [self.tableView beginUpdates];
+    for (int i = 0; i < indexPaths.count; ++i) {
+        NSIndexPath * indexPath = indexPaths[i];
+        HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+    }
+    [self.tableView endUpdates];
 }
 
 #pragma mark - NSFetchedResultsController delegate methods
@@ -1580,11 +1607,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) dealloc {
-    [self.partner removeObserver: self forKeyPath: @"nickName"];
-    [self.partner removeObserver: self forKeyPath: @"connectionStatus"];
-    [self.partner removeObserver: self forKeyPath: @"avatarImage"];
+    [self removeContactKVO: self.partner];
     if ([self.partner isKindOfClass: [Group class]]) {
-        // TODO: remove group member avatar and nickName observers
+        Group * group = (Group*) self.partner;
+        [group.members enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+            Contact * contact = [obj contact];
+            if (contact != nil) {
+                [self removeContactKVO: contact];
+            }
+        }];
+        // TODO: remove group membership set observer
     }
 }
 
