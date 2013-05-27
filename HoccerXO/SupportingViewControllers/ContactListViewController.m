@@ -242,7 +242,7 @@
 }
 
 - (void) addContactPredicates: (NSMutableArray*) predicates {
-    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@", [self entityName]]];
+    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked')", [self entityName]]];
 }
 
 

@@ -634,7 +634,13 @@ typedef enum ActionSheetTags {
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
     // just don't ask ... needs refactoring
     if (_mode == ProfileViewModeContactProfile) {
-        return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_deleteContactItem]];
+        if ([self.contact.relationshipState isEqualToString: @"friend"]) {
+            return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_deleteContactItem]];
+        } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
+            return @[ @[_avatarItem], @[_blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_deleteContactItem]];
+        } else {
+            return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
+        }
     } else {
         if (editing) {
             return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_renewKeyPairItem, _renewKeyPairInfoItem]];
