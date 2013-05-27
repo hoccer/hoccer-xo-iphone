@@ -1099,27 +1099,40 @@ typedef enum BackendStates {
 }
 
 // void deleteGroup(String groupId);
-- (void) deleteGroup:(Group *) group onDeletion:(GroupDeleted)deletionHandler {
+- (void) deleteGroup:(Group *) group onDeletion:(GroupHandler)handler {
     [_serverConnection invoke: @"deleteGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"deleteGroup() ok: got result: %@", responseOrError);
-            deletionHandler(group);
+            handler(group);
         } else {
             NSLog(@"deleteGroup(): failed: %@", responseOrError);
-            deletionHandler(nil);
+            handler(nil);
         }
     }];
 }
 
 // void joinGroup(String groupId);
-- (void) joinGroup:(Group *) group onJoined:(GroupJoined)joinHandler {
+- (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler {
     [_serverConnection invoke: @"joinGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"joinGroup() ok: got result: %@", responseOrError);
-            joinHandler(group);
+            handler(group);
         } else {
             NSLog(@"joinGroup(): failed: %@", responseOrError);
-            joinHandler(nil);
+            handler(nil);
+        }
+    }];
+}
+
+// void leaveGroup(String groupId);
+- (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler {
+    [_serverConnection invoke: @"leaveGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"leaveGroup() ok: got result: %@", responseOrError);
+            handler(group);
+        } else {
+            NSLog(@"leaveGroup(): failed: %@", responseOrError);
+            handler(nil);
         }
     }];
 }
@@ -1206,17 +1219,43 @@ typedef enum BackendStates {
 
     GroupMembership * myMember = nil;
     if ([theMemberSet count] == 0) {
-        // create new member
-        myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-        myMember.contact = memberContact; // memberContact will be nil for own membership
-        [group addMembersObject:myMember];
-        myMember.group = group;
+        if (![groupMemberDict[@"state"] isEqualToString:@"none"]) {
+            // create new member
+            myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+            myMember.contact = memberContact; // memberContact will be nil for own membership
+            [group addMembersObject:myMember];
+            myMember.group = group;
+        }
     } else {
         myMember = [theMemberSet anyObject];
     }
     
+    if (myMember == nil) {
+        return;
+    }
+    
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMember updateWithDictionary: groupMemberDict];
+    
+    if ([myMember.state isEqualToString:@"none"]) {
+        // delete member
+        if (memberContact != nil) { // not us
+            NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+            if (memberContact.relationshipState == nil ||
+                (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"]))
+            {
+                NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberClientId);
+                [moc deleteObject: memberContact];
+                [self.delegate saveDatabase];
+            } else {
+                // only delete group membership
+                [moc deleteObject: myMember];
+            }
+        } else {
+            // we have been thrown out
+        }
+        return;
+    }
     
     // now check if we have to update the encrypted group key
     if (memberContact != nil) { // not us
@@ -1528,6 +1567,9 @@ typedef enum BackendStates {
 }
 
 - (double) transferRetryTimeFor:(Attachment *)theAttachment {
+    if (theAttachment.transferFailures == 0) {
+        return 0.0;
+    }
     double randomFactor = (double)arc4random()/(double)0xffffffff;
     double retryTime = (2.0 + randomFactor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
     //double retryTime = 2.0;

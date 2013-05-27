@@ -47,6 +47,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     ProfileItem * _adminsItem;
     ProfileItem * _declineInviteOrLeaveGroupItem;
     FetchedResultsSectionAdapter * _memberListItem;
+    BOOL _deleteGroupFlag;
 }
 
 @property (nonatomic,readonly) NSFetchedResultsController * fetchedResultsController;
@@ -73,6 +74,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [super viewWillAppear: animated];
     [self setupNavigationButtons];
     _isNewGroup = self.group == nil;
+    _deleteGroupFlag = NO;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -86,6 +88,19 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
                 [self setupContactKVO];
             }
         }];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    if (_deleteGroupFlag) {
+        [self.appDelegate.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
+            if (group != nil) {
+                NSLog(@"TODO: Group left, now destroy everything (except our friends)");
+            } else {
+                NSLog(@"ERROR: leaveGroup %@ failed", self.group);
+            }
+        }];
+        _deleteGroupFlag = NO;
     }
 }
 
@@ -206,9 +221,18 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         if (self.group.iAmAdmin) {
-            NSLog(@"TODO: close group forever");
+            [self.appDelegate.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
+                if (group != nil) {
+                    NSLog(@"TODO: Group deleted, now destroy everything (except our friends)");
+                } else {
+                    NSLog(@"ERROR: deleteGroup %@ failed", self.group);
+                }
+            }];
         } else {
-            NSLog(@"TODO: leave group and destroy everything (except our friends)");
+            
+            NSLog(@"GroupViewController: set flag to destroy group");
+            _deleteGroupFlag = YES;
+            [self.navigationController popViewControllerAnimated:YES];
         }
     }
 }

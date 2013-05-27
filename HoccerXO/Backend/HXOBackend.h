@@ -34,8 +34,7 @@ typedef void (^DataLoadedBlock)(NSData *, NSError*);
 typedef void (^DoneBlock)();
 typedef void (^GroupMemberDeleted)(GroupMembership* member);
 typedef void (^GroupMemberChanged)(GroupMembership* member);
-typedef void (^GroupDeleted)(Group* group);
-typedef void (^GroupJoined)(Group* group);
+typedef void (^GroupHandler)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
@@ -82,7 +81,10 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (void) createGroupWithHandler:(CreateGroupHandler)handler;
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
 - (void) updateGroup:(Group *) group;
-- (void) joinGroup:(Group *) group onJoined:(GroupJoined)joinHandler;
+
+- (void) deleteGroup:(Group *) group onDeletion:(GroupHandler)handler;
+- (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
+- (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 

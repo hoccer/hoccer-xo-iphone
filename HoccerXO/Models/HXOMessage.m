@@ -39,6 +39,7 @@
 
 @dynamic bodyCipherText;
 
+#define KEY_DEBUG NO
 
 -(NSData*) cryptoKey {
     if (_cryptoKey == nil) {
@@ -47,16 +48,16 @@
         } else {
             // get the key from the incoming delivery object
             Delivery * myDelivery = (Delivery*)[self.deliveries anyObject];
-            NSLog(@"myDelivery  =%@", myDelivery);
+            if (KEY_DEBUG) {NSLog(@"myDelivery=%@", myDelivery);}
             NSData * key = [myDelivery keyCleartext];
-            NSLog(@"key=%@", key);
-            NSLog(@"salt=%@", self.salt);
+            if (KEY_DEBUG) {NSLog(@"key=%@", key);}
+            if (KEY_DEBUG) {NSLog(@"salt=%@", self.salt);}
             if (self.salt.length == key.length) {
                 _cryptoKey = [HXOMessage XOR:key with:self.salt];
             } else {
                 _cryptoKey = key;
             }
-            // NSLog(@"message  cryptoKey=%@", _cryptoKey);
+            if (KEY_DEBUG) {NSLog(@"message  cryptoKey=%@", _cryptoKey);}
         }
     }
     return _cryptoKey;
