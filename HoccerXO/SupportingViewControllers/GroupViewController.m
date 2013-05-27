@@ -383,8 +383,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return UITableViewCellEditingStyleNone;
 }
 
-
-
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return section == [self groupMemberSectionIndex] ? 5 : 0;
 }
