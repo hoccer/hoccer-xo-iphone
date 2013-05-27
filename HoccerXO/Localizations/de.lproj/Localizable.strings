@@ -98,6 +98,9 @@
 /* Invite Token View Controller */
 "or" = "oder";
 
+"invite_get_new_code_button" = "Code anfordern";
+"invite_code_field_placeholder" = "Code eingeben";
+
 /* Invite Code Copy/Paste Button */
 "Paste" = "Einfügen";
 
