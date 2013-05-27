@@ -37,7 +37,7 @@
     </entity>
     <entity name="RPC_TalkMessage" representedClassName="" syncable="YES">
         <attribute name="attachment" optional="YES" transient="YES" attributeType="String" maxValueString="1000" syncable="YES"/>
-        <attribute name="attachmentFileId" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
+        <attribute name="attachmentFileId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="body" optional="YES" transient="YES" attributeType="String" maxValueString="12000" syncable="YES"/>
         <attribute name="salt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="senderId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>

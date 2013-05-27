@@ -1861,15 +1861,8 @@ typedef enum BackendStates {
 }
 
 - (void) deliveryAcknowledge: (Delivery*) delivery {
-    // NSLog(@"deliveryAcknowledge: %@", delivery);
-    
-//    NSString * deliveryId = nil;
-//    if (delivery.group != nil) {
-//        deliveryId = delivery.group.clientId;
-//    } else {
-//        deliveryId = delivery.receiver.clientId;
-//    }
-    
+    if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge: %@", delivery);}
+        
     [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[delivery.message.messageId, delivery.receiver.clientId]
                    onResponse: ^(id responseOrError, BOOL success)
     {
@@ -2317,7 +2310,19 @@ typedef enum BackendStates {
             NSLog(@"Signalling deliveryAbort for unknown delivery with messageTag %@ messageId %@ receiver %@ group %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId, myGroupId);
             [self deliveryAbort: deliveryDict[@"messageId"] forClient:myReceiverId];
         } else {
-            NSLog(@"Ignoring delivery notification with messageTag %@ messageId %@ receiver %@ group %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId, myGroupId);
+            if (myGroupId != nil) {
+                if (DELIVERY_TRACE) {NSLog(@"Acknowleding group delivery notification with messageTag %@ messageId %@ receiver %@ group %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId, myGroupId);}
+                [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[deliveryDict[@"messageId"], deliveryDict[@"receiverId"]]
+                               onResponse: ^(id responseOrError, BOOL success)
+                 {
+                     if (success) {
+                         // ignore result because we do not keep track of individual group deliveries yet
+                         if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);}
+                     } else {
+                         NSLog(@"deliveryAcknowledge() for group delivery failed: %@", responseOrError);
+                     }
+                 }];
+            }
         }
     }
 }
