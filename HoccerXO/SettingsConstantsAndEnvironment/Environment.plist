@@ -25,14 +25,7 @@
 		<key>development</key>
 		<string>ws://development.hoccer.com:7001</string>
 		<key>production</key>
-		<string>wss://server.talk.hoccer.com</string>
-	</dict>
-	<key>fileCacheURI</key>
-	<dict>
-		<key>development</key>
-		<string>http://talk-test.hoccer.com:7011/</string>
-		<key>production</key>
-		<string>https://filecache-development.hoccer.com/v3/</string>
+		<string>wss://server.talk.hoccer.de</string>
 	</dict>
 </dict>
 </plist>

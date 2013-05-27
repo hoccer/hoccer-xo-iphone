@@ -1321,6 +1321,13 @@ NSArray * TransferStateName = @[@"detached",
         if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection didReceiveResponse %@, status=%ld, %@, headers=%@",httpResponse, (long)[httpResponse statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]], [httpResponse allHeaderFields]);}
         self.transferHttpStatusCode = (long)[httpResponse statusCode];
         if (self.transferHttpStatusCode != 200 && self.transferHttpStatusCode != 206 ) {
+            if (transferHttpStatusCode >= 400) {
+                self.transferConnection = nil; // make sure we do not get any more data
+                if (CONNECTION_TRACE) {NSLog(@"### did set transferConnection to nil to avoid receiving data");}
+                // NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
+                // [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
+            }
+            
             // TODO: check if this is necessary and leads to duplicate error reporting
             NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection didReceiveResponse http status code =%ld", self.transferHttpStatusCode];
             if (CONNECTION_TRACE) {NSLog(@"%@", myDescription);}
