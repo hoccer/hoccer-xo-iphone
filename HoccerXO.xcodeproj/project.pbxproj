@@ -789,7 +789,7 @@
 		6AA19EB31750057C00B4807A /* icon_profile-group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-group@2x.png"; sourceTree = "<group>"; };
 		6AA19EB61750059900B4807A /* avatar_default_group_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_group_large@2x.png"; sourceTree = "<group>"; };
 		6AA19EB71750059900B4807A /* avatar_default_group_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_group_large.png; sourceTree = "<group>"; };
-		E93F6AAB1753CAAD00F686B8 /* HoccerXO-14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-14.xcdatamodel"; sourceTree = "<group>"; };
+		E93F6AAB1753CAAD00F686B8 /* HoccerXO-14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-14.xcdatamodel"; sourceTree = "<group>"; };
 		E9495573171C139F00FE2E1F /* AttachmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentView.h; sourceTree = "<group>"; };
 		E9495574171C139F00FE2E1F /* AttachmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentView.m; sourceTree = "<group>"; };
 		E956D9241750EAAC003C2AAD /* HoccerXO-12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-12.xcdatamodel"; sourceTree = "<group>"; };
@@ -2426,8 +2426,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
