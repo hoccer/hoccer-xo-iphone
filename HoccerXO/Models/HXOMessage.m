@@ -27,6 +27,7 @@
 @dynamic messageId;
 @dynamic messageTag;
 @dynamic salt;
+@dynamic attachmentFileId;
 
 @dynamic contact;
 @dynamic attachment;
@@ -181,7 +182,8 @@
              @"messageTag": @"messageTag",
              // @"senderId": @"contact.clientId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
-             @"timeSent": @"timeSentMillis" // our own time stamp
+             @"timeSent": @"timeSentMillis", // our own time stamp
+             @"attachmentFileId":@"attachmentFileId"
              };
 }
 

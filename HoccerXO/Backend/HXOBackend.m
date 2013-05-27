@@ -308,6 +308,7 @@ typedef enum BackendStates {
                 // NSLog(@"attachment urls=%@", urls);
                 attachment.uploadURL = urls[@"uploadUrl"];
                 attachment.remoteURL = urls[@"downloadUrl"];
+                message.attachmentFileId = urls[@"fileId"];
                 attachment.transferSize = @(0);
                 attachment.cipherTransferSize = @(0);                
                 // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
@@ -1117,7 +1118,7 @@ typedef enum BackendStates {
             // NSLog(@"joinGroup() ok: got result: %@", responseOrError);
             joinHandler(group);
         } else {
-            NSLog(@"deleteGroup(): failed: %@", responseOrError);
+            NSLog(@"joinGroup(): failed: %@", responseOrError);
             joinHandler(nil);
         }
     }];
@@ -1175,9 +1176,9 @@ typedef enum BackendStates {
     NSString * groupId = groupMemberDict[@"groupId"];
     Group * group = [self getGroupById: groupId];
     if (group == nil) {
-        NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@",groupId);
-        NSLog(@"TEMPORARY WORKAROUND, remove when server fixed: issuing groups update");
-        [self getGroups];
+//        NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@",groupId);
+//        NSLog(@"TEMPORARY WORKAROUND, remove when server fixed: issuing groups update");
+//        [self getGroups];
         return;
     }
         
@@ -2094,11 +2095,11 @@ typedef enum BackendStates {
 
 //FileHandles createFileForStorage(int contentLength);
 - (void) createFileForStorageWithSize:(NSNumber*) size completionHandler:(FileURLRequestHandler) handler {
-    // NSLog(@"createFileForStorageWithSize:");
+    if (CONNECTION_TRACE) { NSLog(@"createFileForStorageWithSize:");}
     
     [_serverConnection invoke: @"createFileForStorage" withParams: @[size] onResponse: ^(id responseOrError, BOOL success) {
         if (success && [responseOrError isKindOfClass: [NSDictionary class]]) {
-            // NSLog(@"createFileForStorageWithSize(): got result: %@", responseOrError);
+            if (CONNECTION_TRACE) { NSLog(@"createFileForStorageWithSize(): got result: %@", responseOrError);}
             handler(responseOrError);
         } else {
             NSLog(@"createFileForStorageWithSize(): failed - response: %@", responseOrError);
@@ -2109,11 +2110,11 @@ typedef enum BackendStates {
 
 //FileHandles createFileForTransfer(int contentLength);
 - (void) createFileForTransferWithSize:(NSNumber*) size completionHandler:(FileURLRequestHandler) handler {
-    // NSLog(@"createFileForStorageWithSize:");
+    if (CONNECTION_TRACE) { NSLog(@"createFileForStorageWithSize:");}
     
-    [_serverConnection invoke: @"createFileForStorage" withParams: @[size] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"createFileForTransfer" withParams: @[size] onResponse: ^(id responseOrError, BOOL success) {
         if (success && [responseOrError isKindOfClass: [NSDictionary class]]) {
-            // NSLog(@"createFileForTransferWithSize(): got result: %@", responseOrError);
+            if (CONNECTION_TRACE) { NSLog(@"createFileForTransferWithSize(): got result: %@", responseOrError);}
             handler(responseOrError);
         } else {
             NSLog(@"createFileForTransferWithSize(): failed - response: %@", responseOrError);
