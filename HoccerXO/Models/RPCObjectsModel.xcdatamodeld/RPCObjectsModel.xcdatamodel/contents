@@ -37,6 +37,7 @@
     </entity>
     <entity name="RPC_TalkMessage" representedClassName="" syncable="YES">
         <attribute name="attachment" optional="YES" transient="YES" attributeType="String" maxValueString="1000" syncable="YES"/>
+        <attribute name="attachmentFileId" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="body" optional="YES" transient="YES" attributeType="String" maxValueString="12000" syncable="YES"/>
         <attribute name="salt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="senderId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
@@ -79,7 +80,7 @@
         <element name="RPC_TalkKey" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkKey_in" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkKey_out" positionX="160" positionY="192" width="128" height="75"/>
-        <element name="RPC_TalkMessage" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="RPC_TalkMessage" positionX="160" positionY="192" width="128" height="135"/>
         <element name="RPC_TalkMessage_in" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkMessage_out" positionX="160" positionY="192" width="128" height="75"/>
         <element name="RPC_TalkPresence" positionX="160" positionY="192" width="128" height="105"/>
