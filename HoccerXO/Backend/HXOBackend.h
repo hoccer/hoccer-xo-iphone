@@ -112,6 +112,8 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (void) updatePresence;
 - (void) updateKey;
 
+- (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
+
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;
 + (NSData *) ownPublicKey;

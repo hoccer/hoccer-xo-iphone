@@ -93,20 +93,26 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void)viewDidDisappear:(BOOL)animated {
     if (_deleteGroupFlag) {
-        
-        _fetchedResultsController.delegate = nil;
-        _fetchedResultsController = nil;
-        Group * group = self.group;
-        self.group = nil;
-        //[self.appDelegate pauseDatabaseSaving];
-        //[NSTimer scheduledTimerWithTimeInterval:3.0 target:self.appDelegate selector:@selector(resumeDatabaseSaving) userInfo:nil repeats:NO];
-        [self.appDelegate.chatBackend leaveGroup: group onGroupLeft:^(Group *group) {
-            if (group != nil) {
-                NSLog(@"TODO: Group left, now destroy everything (except our friends)");
-            } else {
-                NSLog(@"ERROR: leaveGroup %@ failed", self.group);
-            }
-        }];
+        if (self.group.iAmAdmin) {
+            [self.appDelegate.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
+                if (group != nil) {
+                    NSLog(@"TODO: Group deleted, now destroy everything (except our friends)");
+                    [self.backend deleteInDatabaseAllMembersAndContactsofGroup:group];
+                    NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
+                    [moc deleteObject: group];
+                } else {
+                    NSLog(@"ERROR: deleteGroup %@ failed", self.group);
+                }
+            }];
+        } else {
+            [self.appDelegate.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
+                if (group != nil) {
+                    NSLog(@"TODO: Group left, now destroy everything (except our friends)");
+                } else {
+                    NSLog(@"ERROR: leaveGroup %@ failed", self.group);
+                }
+            }];
+        }
         _deleteGroupFlag = NO;
     }
 }
@@ -227,20 +233,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        if (self.group.iAmAdmin) {
-            [self.appDelegate.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
-                if (group != nil) {
-                    NSLog(@"TODO: Group deleted, now destroy everything (except our friends)");
-                } else {
-                    NSLog(@"ERROR: deleteGroup %@ failed", self.group);
-                }
-            }];
-        } else {
-            
-            NSLog(@"GroupViewController: set flag to destroy group");
-            _deleteGroupFlag = YES;
-            [self.navigationController popViewControllerAnimated:YES];
-        }
+        NSLog(@"GroupViewController: set flag to destroy group");
+        _deleteGroupFlag = YES;
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
