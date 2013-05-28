@@ -98,7 +98,7 @@
         <attribute name="timeSent" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
-        <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
+        <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
         <fetchedProperty name="computedTimeSection" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage"/>
         </fetchedProperty>
