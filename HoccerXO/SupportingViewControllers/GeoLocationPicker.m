@@ -17,7 +17,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
 
 @interface GeoLocationPicker ()
 {
-    MKPlacemark * _placemark;
+    MKPointAnnotation * _placemark;
 }
 
 @end
@@ -68,7 +68,8 @@ static const CGFloat kGeoLocationCityZoom = 500;
         MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(newLocation.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
         [self.mapView setRegion: region animated: NO];
         _pinDraggedByUser = NO;
-        _placemark = [[MKPlacemark alloc] initWithCoordinate: newLocation.coordinate addressDictionary:nil];
+        _placemark = [[MKPointAnnotation alloc] init];
+        _placemark.coordinate = newLocation.coordinate;
         //_annotation.title = @"Drag the Pin";
         //_annotation.subtitle = [NSString stringWithFormat:@"%f %f", _annotation.coordinate.latitude, _annotation.coordinate.longitude];
 

@@ -93,11 +93,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void)viewDidDisappear:(BOOL)animated {
     if (_deleteGroupFlag) {
-        _fetchedResultsController.delegate = nil;
-        _fetchedResultsController = nil;
-        Group * group = self.group;
-        self.group = nil;
-        [self.appDelegate.chatBackend leaveGroup: group onGroupLeft:^(Group *group) {
+        [self.appDelegate.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
             if (group != nil) {
                 NSLog(@"TODO: Group left, now destroy everything (except our friends)");
             } else {

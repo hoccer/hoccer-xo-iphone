@@ -15,7 +15,7 @@
 
 @protocol GeoLocationPickerDelegate <NSObject>
 
-- (void) locationPicker: (GeoLocationPicker*) picker didPickLocation: (MKPlacemark*) placemark preview: (UIImage*) preview;
+- (void) locationPicker: (GeoLocationPicker*) picker didPickLocation: (MKPointAnnotation*) placemark preview: (UIImage*) preview;
 - (void) locationPickerDidCancel:(GeoLocationPicker*)picker;
 
 @end

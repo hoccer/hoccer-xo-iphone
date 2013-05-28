@@ -337,7 +337,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"] &&
         [attachmentInfo[@"com.hoccer.xo.previewImage"] isKindOfClass: [UIImage class]])
     {
-        MKPlacemark * placemark = attachmentInfo[@"com.hoccer.xo.geolocation"];
+        MKPointAnnotation * placemark = attachmentInfo[@"com.hoccer.xo.geolocation"];
         NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
 
         UIImage * preview = attachmentInfo[@"com.hoccer.xo.previewImage"];
