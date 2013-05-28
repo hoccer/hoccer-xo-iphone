@@ -867,6 +867,10 @@ typedef enum BackendStates {
     [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
     
     NSString * clientId = relationshipDict[@"otherClientId"];
+    if ([clientId isEqualToString: [UserProfile sharedProfile].clientId]) {
+        return;
+    }
+
     Contact * contact = [self getContactByClientId: clientId];
     // XXX The server sends relationship updates with state 'none' even after depairing. We ignore those... 
     if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
@@ -907,6 +911,9 @@ typedef enum BackendStates {
 
 - (void) presenceUpdated:(NSDictionary *) thePresence {
     NSString * myClient = thePresence[@"clientId"];
+    if ([myClient isEqualToString: [UserProfile sharedProfile].clientId]) {
+        return;
+    }
     Contact * myContact = [self getContactByClientId:myClient];
     if (myContact == nil) {
         // NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
