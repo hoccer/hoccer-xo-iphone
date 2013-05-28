@@ -37,6 +37,8 @@
     }];
     if ([theMemberSet count] == 1) {
         return theMemberSet.anyObject;
+    } else if (theMemberSet.count > 1) {
+        NSLog(@"ERROR: expected one own membership but found %d", theMemberSet.count);
     }
     return nil;
 }
