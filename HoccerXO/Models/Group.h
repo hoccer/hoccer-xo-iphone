@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString * myRole;
 @property (nonatomic, retain) NSString * myState;
 @property (nonatomic, retain) NSString * groupTag;
+@property (nonatomic, retain) NSString * groupState;
 @property (nonatomic, retain) NSDate * lastChanged;
 @property (nonatomic, retain) NSSet    * members;
 
