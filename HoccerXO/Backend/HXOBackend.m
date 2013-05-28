@@ -1057,6 +1057,19 @@ typedef enum BackendStates {
         
     NSString * groupId = groupDict[@"groupId"];
     Group * group = [self getGroupById: groupId orByTag:groupDict[@"groupTag"]];
+    
+    NSString * groupState = groupDict[@"state"];
+    if ([groupState isEqualToString:@"none"]) {
+        if (group != nil) {
+            // get rid of this group
+            [self deleteInDatabaseAllMembersAndContactsofGroup:group];
+            // delete the group
+            NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+            [moc deleteObject: group];
+            [self.delegate saveDatabase];
+        }
+        return;
+    }
 
     if (group == nil) {
         group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
@@ -1154,13 +1167,6 @@ typedef enum BackendStates {
         } else {
             NSLog(@"getGroupMembers(): failed: %@", responseOrError);
             handler(NO);
-/*
-            // DEBUG, AutoJoin, remove later
-            [self joinGroup:group onJoined:^(Group *group) {
-                NSLog(@"Joined group %@", group);
-                [self getGroupMembers:group lastKnown:lastKnown];
-            }];
-*/
         }
     }];
 }
@@ -1196,9 +1202,6 @@ typedef enum BackendStates {
     NSString * groupId = groupMemberDict[@"groupId"];
     Group * group = [self getGroupById: groupId];
     if (group == nil) {
-//        NSLog(@"ERROR: updateGroupMemberHere: unknown group with id=%@",groupId);
-//        NSLog(@"TEMPORARY WORKAROUND, remove when server fixed: issuing groups update");
-//        [self getGroups];
         return;
     }
         
@@ -1262,19 +1265,7 @@ typedef enum BackendStates {
             NSLog(@"updateGroupMemberHere: deleting own contact clientId %@",memberClientId);
             // we have been thrown out
             // delete all group member contacts that are not friends or contacts in other group
-            NSMutableSet * groupMembers = group.groupMemberships;
-            for (GroupMembership * member in groupMembers) {
-                if (member.contact != nil &&
-                    ![member.contact.relationshipState isEqualToString:@"friend"] &&
-                    ![member.contact.relationshipState isEqualToString:@"blocked"] &&
-                    member.contact.groupMemberships.count == 1)
-                {
-                    // we can throw out this member contact
-                    [moc deleteObject: member.contact];
-                }
-                // the membership can be deleted in any case, including our own membership
-                [moc deleteObject: member];
-            }
+            [self deleteInDatabaseAllMembersAndContactsofGroup:group];
             // delete the group
             [moc deleteObject: group];
         }
@@ -1288,6 +1279,24 @@ typedef enum BackendStates {
      } else {
         [self ifNeededUpdateGroupKeyForMyMembership:myMember];
      }
+}
+
+// delete all group member contacts that are not friends or contacts in other group
+- (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group {
+    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    NSMutableSet * groupMembers = group.groupMemberships;
+    for (GroupMembership * member in groupMembers) {
+        if (member.contact != nil &&
+            ![member.contact.relationshipState isEqualToString:@"friend"] &&
+            ![member.contact.relationshipState isEqualToString:@"blocked"] &&
+            member.contact.groupMemberships.count == 1)
+        {
+            // we can throw out this member contact
+            [moc deleteObject: member.contact];
+        }
+        // the membership can be deleted in any case, including our own membership
+        [moc deleteObject: member];
+    }
 }
 
 - (void) ifNeededUpdateGroupKeyForOtherMember:(GroupMembership*) myMember {

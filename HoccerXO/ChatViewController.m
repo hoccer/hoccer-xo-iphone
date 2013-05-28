@@ -1400,51 +1400,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) deleteMessage:(HXOMessage *) message {
-    if (message.attachment != nil) {
-        // delete attachment if message has one
-        
-        // cancel a potential open transferconnection
-        if (message.attachment.transferConnection != nil) {
-            [message.attachment.transferConnection cancel];
-            message.attachment.transferConnection = nil;
-        }
 
-        // invalidate a potential retry timer
-        if (message.attachment.transferRetryTimer != nil) {
-            [message.attachment.transferRetryTimer invalidate];
-            message.attachment.transferRetryTimer = nil;
-        }
-        
-        // remove associated media file if not referenced by other attachments
-        if (message.attachment.ownedURL.length > 0) {
-            NSError *error;
-            NSDictionary * vars = @{ @"ownedURL" : message.attachment.ownedURL};
-            NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByOwnedURL" substitutionVariables: vars];
-            NSArray *messages = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-            if (messages == nil) {
-                NSLog(@"Fetch request failed: %@", error);
-                abort();
-            }
-            if (messages.count > 0) {
-                if (messages.count == 1) {
-                    // delete ownedURL because it is only referenced by one message
-                    NSLog(@"Deleting ownedURL %@, not referenced by other messages", message.attachment.ownedURL);
-                    NSURL * myURL = [NSURL URLWithString:message.attachment.ownedURL];
-                    if ([myURL isFileURL]) {
-                        [[NSFileManager defaultManager] removeItemAtURL:myURL error:nil];
-                    }
-                } else {
-                    NSLog(@"Keeping ownedURL %@, is referenced by other messages", message.attachment.ownedURL);
-                }
-            }
-            
-            [self.managedObjectContext deleteObject: message.attachment];
-        }
-    }
-    
-    for (Delivery * d in message.deliveries) {
-        [self.managedObjectContext deleteObject: d];
-    }
+    // deletion of deliveries and attachment handled by cascade deletion policies in database model
     
     [self.managedObjectContext deleteObject: message];
     

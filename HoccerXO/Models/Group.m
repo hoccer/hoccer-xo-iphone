@@ -17,6 +17,7 @@
 @dynamic myRole;
 @dynamic myState;
 @dynamic groupTag;
+@dynamic groupState;
 @dynamic lastChanged;
 @dynamic members;
 
@@ -74,6 +75,7 @@
     return @{ @"groupId"         : @"clientId",
               @"groupTag"        : @"groupTag",
               @"groupName"       : @"nickName",
+              @"state"           : @"groupState",
               //@"groupAvatarUrl"  : @"avatarURL", // only for outgoing
               @"lastChanged"     : @"lastChangedMillis"
               };

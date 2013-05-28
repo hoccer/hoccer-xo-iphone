@@ -1759,9 +1759,41 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
 
 - (void) prepareForDeletion {
     [super prepareForDeletion];
-    if (self.ownedURL != nil) {
-        NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
-        [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
+    // cancel a potential open transferconnection
+    if (self.transferConnection != nil) {
+        [self.transferConnection cancel];
+        self.transferConnection = nil;
+    }
+    
+    // invalidate a potential retry timer
+    if (self.transferRetryTimer != nil) {
+        [self.transferRetryTimer invalidate];
+        self.transferRetryTimer = nil;
+    }
+    
+    // remove associated media file if not referenced by other attachments
+    if (self.ownedURL.length > 0) {
+        AppDelegate * delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        NSError *error;
+        NSDictionary * vars = @{ @"ownedURL" : self.ownedURL};
+        NSFetchRequest *fetchRequest = [delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByOwnedURL" substitutionVariables: vars];
+        NSArray *messages = [delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        if (messages == nil) {
+            NSLog(@"Fetch request failed: %@", error);
+            abort();
+        }
+        if (messages.count > 0) {
+            if (messages.count == 1) {
+                // delete ownedURL because it is only referenced by one message
+                NSLog(@"Deleting ownedURL %@, not referenced by other messages", self.ownedURL);
+                NSURL * myURL = [NSURL URLWithString:self.ownedURL];
+                if ([myURL isFileURL]) {
+                    [[NSFileManager defaultManager] removeItemAtURL:myURL error:nil];
+                }
+            } else {
+                NSLog(@"Keeping ownedURL %@, is referenced by other messages", self.ownedURL);
+            }
+        }        
     }
 }
 
