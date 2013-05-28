@@ -29,6 +29,8 @@
 
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
+static NSInteger _savingPaused = 0;
+static BOOL _shouldSave = NO;
 
 @implementation AppDelegate
 
@@ -294,13 +296,30 @@ static const NSInteger kDatabaseDeleteAlertTag = 200;
     // [self saveContext];
     // double elapsed = -[start timeIntervalSinceNow];
     // NSLog(@"Saving database took %f secs", elapsed);
+    _shouldSave = NO;
 }
 
 - (void)saveDatabase
 {
+    if (_savingPaused>0) {
+        _shouldSave = YES;
+        return;
+    }
     NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
     if ([savePolicy isEqualToString:kHXOSaveDatabasePolicyPerMessage]) {
         [self performSelectorOnMainThread:@selector(saveContext) withObject:self waitUntilDone:NO];
+
+    }
+}
+
+- (void)pauseDatabaseSaving {
+    ++_savingPaused;
+}
+- (void)resumeDatabaseSaving {
+    if (--_savingPaused == 0) {
+        if (_shouldSave) {
+            [self saveDatabase];
+        }
     }
 }
 

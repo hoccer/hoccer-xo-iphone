@@ -36,6 +36,9 @@
 
 - (void)saveContext;
 - (void)saveDatabase;
+- (void)pauseDatabaseSaving;
+- (void)resumeDatabaseSaving;
+
 - (NSURL *)applicationDocumentsDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
