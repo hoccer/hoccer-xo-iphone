@@ -1064,7 +1064,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 [self removeContactKVO: [obj contact]];
             }];
         } else {
-            NSLog(@"ChatViewController observeValueForKeyPath: unhandled change");
+            //NSLog(@"ChatViewController observeValueForKeyPath: unhandled change");
         }
     } else {
         NSLog(@"ChatViewController observeValueForKeyPath: unhandled key path '%@'", keyPath);

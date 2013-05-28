@@ -93,7 +93,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void)viewDidDisappear:(BOOL)animated {
     if (_deleteGroupFlag) {
-        [self.appDelegate.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
+        _fetchedResultsController.delegate = nil;
+        _fetchedResultsController = nil;
+        Group * group = self.group;
+        self.group = nil;
+        [self.appDelegate.chatBackend leaveGroup: group onGroupLeft:^(Group *group) {
             if (group != nil) {
                 NSLog(@"TODO: Group left, now destroy everything (except our friends)");
             } else {
@@ -355,7 +359,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         [utilities addObject: _chatWithContactItem];
     } else if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
         [utilities addObject: _joinGroupItem];
+    } else {
+        NSLog(@"unhandled state - membership: %@ state: %@", self.group.ownMemberShip, self.group.ownMemberShip.state);
     }
+    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
     if ( ! [self.group iAmAdmin]) {
         [utilities addObject: _declineInviteOrLeaveGroupItem];
     } else {
@@ -461,7 +468,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         _fetchedResultsController = aFetchedResultsController;
 
         NSError *error = nil;
-        if (![self.fetchedResultsController performFetch:&error]) {
+        if (![_fetchedResultsController performFetch:&error]) {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -525,7 +532,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) updateMembershipRelatedUI {
-    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
     NSArray * profileItems = _items[[self profileValueSectionIndex]];
     _items = [self composeItems: profileItems withEditFlag: self.isEditing];
     // TODO: get rid of reloadData...
