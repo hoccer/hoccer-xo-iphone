@@ -1246,21 +1246,39 @@ typedef enum BackendStates {
     
     if ([myMember.state isEqualToString:@"none"]) {
         // delete member
+        NSManagedObjectContext * moc = self.delegate.managedObjectContext;
         if (memberContact != nil) { // not us
-            NSManagedObjectContext * moc = self.delegate.managedObjectContext;
             if (memberContact.relationshipState == nil ||
-                (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"]))
+                (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"] &&
+                 memberContact.groupMemberships.count == 1))
             {
                 NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberClientId);
                 [moc deleteObject: memberContact];
-                [self.delegate saveDatabase];
             } else {
                 // only delete group membership
                 [moc deleteObject: myMember];
             }
         } else {
+            NSLog(@"updateGroupMemberHere: deleting own contact clientId %@",memberClientId);
             // we have been thrown out
+            // delete all group member contacts that are not friends or contacts in other group
+            NSMutableSet * groupMembers = group.groupMemberships;
+            for (GroupMembership * member in groupMembers) {
+                if (member.contact != nil &&
+                    ![member.contact.relationshipState isEqualToString:@"friend"] &&
+                    ![member.contact.relationshipState isEqualToString:@"blocked"] &&
+                    member.contact.groupMemberships.count == 1)
+                {
+                    // we can throw out this member contact
+                    [moc deleteObject: member.contact];
+                }
+                // the membership can be deleted in any case, including our own membership
+                [moc deleteObject: member];
+            }
+            // delete the group
+            [moc deleteObject: group];
         }
+        [self.delegate saveDatabase];
         return;
     }
     
