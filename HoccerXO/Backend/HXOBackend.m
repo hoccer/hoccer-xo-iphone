@@ -931,6 +931,7 @@ typedef enum BackendStates {
 }
 
 - (void) presenceUpdated:(NSDictionary *) thePresence {
+    [self validateObject: thePresence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
     NSString * myClient = thePresence[@"clientId"];
     if ([myClient isEqualToString: [UserProfile sharedProfile].clientId]) {
         return;
@@ -1289,7 +1290,16 @@ typedef enum BackendStates {
     {
         weHaveBeenInvited = YES;
     }
-    
+
+    BOOL someoneHasJoinedGroup = NO;
+    if ([groupMemberDict[@"state"] isEqualToString:@"joined"] &&
+        [myMember.state isEqualToString:@"invited"] &&
+        memberContact != nil &&
+        [group.ownMemberShip.state isEqualToString:@"joined"])
+    {
+        someoneHasJoinedGroup = YES;
+    }
+
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMember updateWithDictionary: groupMemberDict];
     
@@ -1297,6 +1307,9 @@ typedef enum BackendStates {
         // delete member
         NSManagedObjectContext * moc = self.delegate.managedObjectContext;
         if (memberContact != nil) { // not us
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
+            });
             if (memberContact.relationshipState == nil ||
                 (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"] &&
                  memberContact.groupMemberships.count == 1))
@@ -1332,7 +1345,34 @@ typedef enum BackendStates {
             [self invitationAlertForGroup:group withMemberShip:myMember];
         });
     }
+    if (someoneHasJoinedGroup) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self groupJoinedAlertForGroup:group withMemberShip:myMember];
+        });
+    }
 }
+
+- (void) groupJoinedAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' has joined group '%@'",nil), member.contact.nickName, group.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_joined_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                             delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+- (void) groupLeftAlertForGroupNamed:(NSString*)groupName withMemberNamed:(NSString*)memberName {
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' has left group '%@'",nil), memberName, groupName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_left_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+
 
 - (void) invitationAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
     NSMutableArray * admins = [[NSMutableArray alloc] init];
@@ -2031,8 +2071,23 @@ typedef enum BackendStates {
                 [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
                 if (DELIVERY_TRACE) {NSLog(@"deliveryRequest result: Delivery state '%@'->'%@' for messageTag %@ id %@",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"],updatedDeliveryDicts[i][@"messageId"] );}
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
-                delivery.receiver.latestMessageTime = message.timeAccepted;
-                delivery.group.latestMessageTime = message.timeAccepted;
+                if (delivery.receiver != nil) {
+                    delivery.receiver.latestMessageTime = message.timeAccepted;
+                }
+                if (delivery.group != nil) {
+                    delivery.group.latestMessageTime = message.timeAccepted;
+                }
+                if (DELIVERY_TRACE) {NSLog(@"Delivery message time update: message.timeAccepted=%@, delivery.receiver.latestMessageTime=%@, delivery.group.latestMessageTime=%@",message.timeAccepted, delivery.receiver.latestMessageTime, delivery.group.latestMessageTime);}
+            }
+            [self.delegate saveDatabase];
+            
+            for (Delivery * delivery in deliveries) {
+                if (delivery.receiver != nil) {
+                    [self.delegate.managedObjectContext refreshObject: delivery.receiver mergeChanges: YES];
+                }
+                if (delivery.group != nil) {
+                    [self.delegate.managedObjectContext refreshObject: delivery.group mergeChanges: YES];
+                }
             }
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);
@@ -2535,7 +2590,6 @@ typedef enum BackendStates {
 - (void) presenceUpdatedNotification: (NSArray*) params {
     //TODO: Error checking
     for (id presence in params) {
-        [self validateObject: presence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
         // NSLog(@"updatePresences presence=%@",presence);
         [self presenceUpdated:presence];
     }

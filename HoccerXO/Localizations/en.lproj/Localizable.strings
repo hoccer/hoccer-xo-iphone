@@ -315,6 +315,16 @@
 "group_close_group_title" = "Do you really want to close the group for everybody and ever?";
 "group_close_group_button_title" = "Close";
 
+"group_no_other_joined_partners_text"="You can not send a message to this group because not invited member has joined yet. You have to wait until at least one invitation is accepted.";
+"group_no_other_partner_text"="You can not send a message to this group because there are no members except you. Please invite friends to this group.";
+"group_no_other_partners_title"="No other group members";
+
+"'%@' has joined group '%@'"="'%@' has joined group '%@' as new member.";
+"group_joined_title"="Group Joined";
+
+"'%@' has left group '%@'"="'%@' is no longer member of group '%@'.";
+"group_left_title"="Group Left";
+
 "You have been invited to group '%@' administrated by '%@'"="You have been invited to group '%@' administrated by '%@'. What do you want to do?";
 "invitation_title"="Group Invitation";
 "invitation_decide_later_button_title"="Decide later";

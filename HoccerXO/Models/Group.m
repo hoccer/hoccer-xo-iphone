@@ -46,6 +46,20 @@
     return nil;
 }
 
+- (NSSet*) otherJoinedMembers {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact != nil && [obj.state isEqualToString:@"joined"];
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) otherInvitedMembers {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact != nil && [obj.state isEqualToString:@"invited"];
+    }];
+    return theMemberSet;
+}
+
 - (NSData*) groupKey {
     [self willAccessValueForKey:@"groupKey"];
     NSData * myValue = [self primitiveValueForKey:@"groupKey"];

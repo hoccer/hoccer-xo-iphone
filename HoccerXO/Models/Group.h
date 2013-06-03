@@ -26,6 +26,8 @@
 
 - (BOOL) iAmAdmin;
 - (BOOL) iJoined;
+- (NSSet*) otherJoinedMembers;
+- (NSSet*) otherInvitedMembers;
 
 @end
 

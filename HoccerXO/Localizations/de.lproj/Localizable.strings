@@ -297,6 +297,17 @@
 "group_close_group_title" = "Möchtest Du die Gruppe wirklich für alle und immer schliessen?";
 "group_close_group_button_title" = "Schliessen";
 
+"group_no_other_joined_partners_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
+"group_no_other_partner_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
+"group_no_other_partners_title"="Keine Gruppenmitglieder";
+
+"'%@' has joined group '%@'"="'%@' ist neues Mitlied der Gruppe '%@' geworden.";
+"group_joined_title"="Neues Gruppenmitglied";
+
+"'%@' has left group '%@'"="'%@' ist nicht mehr Mitglied der Gruppe '%@'";
+"group_left_title"="Mitglied hat Gruppe verlassen";
+
+
 "You have been invited to group '%@' administrated by '%@'"="Du wurdest in die Gruppe '%@' eingeladen, verwaltet von '%@'. Was möchtest du mit der Einladung machen?";
 "invitation_title"="Group Invitation";
 "invitation_decide_later_button_title"="Später entscheiden";

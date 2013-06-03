@@ -225,7 +225,29 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 #pragma mark - Actions
 
+
 - (IBAction)sendPressed:(id)sender {
+    if ([self.partner.type isEqualToString:[Group entityName]]) {
+        // check if there are other members in the group
+        Group * group = (Group*)self.partner;
+        if ([[group otherJoinedMembers] count] == 0) {
+            // cant send message, no other joined members
+            NSString * messageText;
+            if ([[group otherInvitedMembers] count] > 0) {
+                messageText = [NSString stringWithFormat: NSLocalizedString(@"group_no_other_joined_partners_text", nil)];
+            } else {
+                messageText = [NSString stringWithFormat: NSLocalizedString(@"group_no_other_partner_text", nil)];
+            }
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_no_other_partners_title", nil)
+                                                             message: messageText
+                                                            delegate: nil
+                                                   cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                                   otherButtonTitles: nil];
+            [alert show];
+            return;
+            
+        }
+    }
     if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
             if ([self.textField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
