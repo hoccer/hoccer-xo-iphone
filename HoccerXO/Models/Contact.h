@@ -11,6 +11,8 @@
 
 #import "HXOModel.h"
 
+@class GroupMembership;
+
 FOUNDATION_EXPORT NSString * const kRelationStateNone;
 FOUNDATION_EXPORT NSString * const kRelationStateFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
@@ -32,6 +34,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSString*      facebookName;
 @property (nonatomic, strong) NSString*      googlePlusName;
 @property (nonatomic, strong) NSString*      githubName;
+@property (nonatomic, retain) GroupMembership * myGroupMembership;
 
 // @property (nonatomic, strong) NSDate*        currentTimeSection;
 @property (nonatomic, strong) NSArray*       unreadMessages;
@@ -60,7 +63,6 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) UIImage* avatarImage;
 
 + (NSString*) sectionTitleForMessageTime: (NSDate*) date;
-// - (NSDate*) sectionTimeForMessageTime: (NSDate*) date;
 
 - (SecKeyRef) getPublicKeyRef;
 

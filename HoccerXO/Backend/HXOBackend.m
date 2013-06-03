@@ -39,8 +39,8 @@
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
-#define CONNECTION_TRACE NO
-#define GROUPKEY_DEBUG NO
+#define CONNECTION_TRACE YES
+#define GROUPKEY_DEBUG YES
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -1021,9 +1021,15 @@ typedef enum BackendStates {
     Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
     group.type = [Group entityName];
     group.groupTag = [NSString stringWithUUID];
-    group.myRole = @"admin";
-    group.myState = @"accepted";
     group.groupKey = [AESCryptor random256BitKey];
+    
+    GroupMembership * myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+    [group addMembersObject:myMember];
+    myMember.group = group;
+    group.myGroupMembership = myMember;
+    myMember.role = @"admin";
+    myMember.state = @"accepted";
+
     [self.delegate saveDatabase];
     [self createGroup: group withHandler:handler];
 }
@@ -1262,6 +1268,11 @@ typedef enum BackendStates {
             myMember.contact = memberContact; // memberContact will be nil for own membership
             [group addMembersObject:myMember];
             myMember.group = group;
+            // check to update the duplicate fields for our own role and state in the group contact
+            if (memberContact == nil) {
+                // set pointer in group contact to our own membership
+                group.myGroupMembership = myMember;
+            }
         }
     } else {
         myMember = [theMemberSet anyObject];
@@ -1278,7 +1289,6 @@ typedef enum BackendStates {
     {
         weHaveBeenInvited = YES;
     }
-    
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMember updateWithDictionary: groupMemberDict];
@@ -1307,7 +1317,8 @@ typedef enum BackendStates {
         }
         [self.delegate saveDatabase];
         return;
-    }
+    }    
+
     [self.delegate saveDatabase];
     
     // now check if we have to update the encrypted group key
@@ -2637,7 +2648,7 @@ typedef enum BackendStates {
                               NSLog(@"uploadAvatar got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
                               NSLog(@"uploadAvatar response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
                           }
-                          if (response.statusCode == 301) {
+                          if (response.statusCode == 301 || response.statusCode == 308) {
                               if (CONNECTION_TRACE) {NSLog(@"uploadAvatar: ok");}
                               handler(nil);
                               

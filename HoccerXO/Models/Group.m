@@ -14,8 +14,6 @@
 @implementation Group
 
 @dynamic groupKey;
-@dynamic myRole;
-@dynamic myState;
 @dynamic groupTag;
 @dynamic groupState;
 @dynamic lastChanged;
@@ -37,7 +35,11 @@
         return obj.contact == nil;
     }];
     if ([theMemberSet count] == 1) {
-        return theMemberSet.anyObject;
+        if ([theMemberSet.anyObject isEqual:self.myGroupMembership]) {
+            return theMemberSet.anyObject;
+        } else {
+            NSLog(@"ERROR: link to own membership does not match object in memberships, database inconsistency, group=%@", self);
+        }
     } else if (theMemberSet.count > 1) {
         NSLog(@"ERROR: expected one own membership but found %d", theMemberSet.count);
     }

@@ -45,6 +45,7 @@
 @dynamic messages;
 @dynamic groupMemberships;
 @dynamic nickNameWithStatus;
+@dynamic myGroupMembership;
 
 @synthesize rememberedLastVisibleChatCell;
 
