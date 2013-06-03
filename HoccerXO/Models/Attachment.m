@@ -55,6 +55,7 @@
 {
     NSString * _verbosityLevel;
     NSError * _transferError;
+    UIBackgroundTaskIdentifier _backgroundTaskId;
 }
 
 @dynamic localURL;
@@ -741,6 +742,7 @@ NSArray * TransferStateName = @[@"detached",
                                                  headers:[self uploadHttpHeaders]
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
+            [self registerBackgroundTask];
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate transferStarted];
             } else {
@@ -794,6 +796,7 @@ NSArray * TransferStateName = @[@"detached",
                                                              headers:[self uploadHttpHeadersWithCrypto]
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
+            [self registerBackgroundTask];
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate transferStarted];
             } else {
@@ -840,7 +843,10 @@ NSArray * TransferStateName = @[@"detached",
                           }
                           if (response.statusCode != 404) {
                               NSDictionary * myHeaders = response.allHeaderFields;
+                              
                               NSString * myRangeString = myHeaders[@"Range"];
+                              
+                              if (myRangeString != nil) {
                               
                               long long rangeStart;
                               long long rangeEnd;
@@ -855,6 +861,14 @@ NSArray * TransferStateName = @[@"detached",
                               } else {
                                   NSLog(@"checkResumeUploadStream could not parse Content-Range Header, headers=%@", response.allHeaderFields);
                               }
+                              } else {
+                                  NSString * ContentLength = myHeaders[@"Content-Length"];
+                                  if (ContentLength != nil && [ContentLength integerValue] == 0) {
+                                      [self resumeUploadStreamFromPosition:@(0)];
+                                  } else {
+                                      NSLog(@"checkResumeUploadStream irregular Content-Length %@, response status = %d, headers=%@",ContentLength, response.statusCode, response.allHeaderFields);
+                                  }
+                              }
                               
                           } else {
                               NSLog(@"checkResumeUploadStream irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields);
@@ -863,6 +877,7 @@ NSArray * TransferStateName = @[@"detached",
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
                                NSLog(@"checkResumeUploadStream error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
                            }];
+    operation.allowUntrustedServerCertificate = YES;
     [operation startRequest];
 }
 
@@ -929,6 +944,7 @@ NSArray * TransferStateName = @[@"detached",
                                         ];
             self.cipherTransferSize = fromPos;
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
+            [self registerBackgroundTask];
             if (progressIndicatorDelegate) {
                 [progressIndicatorDelegate transferStarted];
             } else {
@@ -1029,6 +1045,7 @@ NSArray * TransferStateName = @[@"detached",
     self.resumeSize = [self.cipheredSize longValue]- [self.cipherTransferSize longValue];
 #endif
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
+    [self registerBackgroundTask];
     if (progressIndicatorDelegate) {
         [progressIndicatorDelegate transferStarted];
     } else {
@@ -1102,6 +1119,7 @@ NSArray * TransferStateName = @[@"detached",
 #endif
 
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
+    [self registerBackgroundTask];
     if (progressIndicatorDelegate) {
         [progressIndicatorDelegate transferStarted];
     } else {
@@ -1609,6 +1627,7 @@ NSArray * TransferStateName = @[@"detached",
         } else {
             [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
         }
+        [self unregisterBackgroundTask];
     } else {
         NSLog(@"ERROR: Attachment transferConnection didFailWithError without valid connection");
     }
@@ -1659,6 +1678,7 @@ NSArray * TransferStateName = @[@"detached",
                 [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
             }
         }
+        [self unregisterBackgroundTask];
         if (progressIndicatorDelegate) {
             [progressIndicatorDelegate transferFinished];
         } else {
@@ -1669,6 +1689,28 @@ NSArray * TransferStateName = @[@"detached",
     }
 }
 
+- (void) registerBackgroundTask {
+    UIApplication *app = [UIApplication sharedApplication];
+    _backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler: ^{
+        if (self.transferRetryTimer != nil) {
+            [self.transferRetryTimer invalidate];
+            self.transferRetryTimer = nil;
+        }
+        if (self.transferConnection != nil) {
+            [self.transferConnection cancel];
+            self.transferConnection = nil;
+            [(AppDelegate*)app.delegate saveDatabase];
+        }
+        [app endBackgroundTask:_backgroundTaskId];
+        _backgroundTaskId = UIBackgroundTaskInvalid;
+    }];
+}
+
+- (void) unregisterBackgroundTask {
+    UIApplication *app = [UIApplication sharedApplication];
+    [app endBackgroundTask:_backgroundTaskId];
+    _backgroundTaskId = UIBackgroundTaskInvalid;
+}
 
 #pragma mark - Custom Getters and Setters
 

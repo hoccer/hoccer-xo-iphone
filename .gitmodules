@@ -16,3 +16,6 @@
 [submodule "3rdParty/TDSemiModal"]
 	path = 3rdParty/TDSemiModal
 	url = git@github.com:hoccer/TDSemiModal.git
+[submodule "3rdParty/UIAlertViewExtentsions"]
+	path = 3rdParty/UIAlertViewExtentsions
+	url = git@github.com:wannabegeek/UIAlertViewExtentsions.git

@@ -290,13 +290,88 @@ static BOOL _shouldSave = NO;
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
+            [self displayValidationError:error];
+            // abort();
         }
     }
     // [self saveContext];
     // double elapsed = -[start timeIntervalSinceNow];
     // NSLog(@"Saving database took %f secs", elapsed);
     _shouldSave = NO;
+}
+
+- (void)displayValidationError:(NSError *)anError {
+    if (anError && [[anError domain] isEqualToString:@"NSCocoaErrorDomain"]) {
+        NSArray *errors = nil;
+        
+        // multiple errors?
+        if ([anError code] == NSValidationMultipleErrorsError) {
+            errors = [[anError userInfo] objectForKey:NSDetailedErrorsKey];
+        } else {
+            errors = [NSArray arrayWithObject:anError];
+        }
+        
+        if (errors && [errors count] > 0) {
+            NSString *messages = @"Reason(s):\n";
+            
+            for (NSError * error in errors) {
+                NSString *entityName = [[[[error userInfo] objectForKey:@"NSValidationErrorObject"] entity] name];
+                NSString *attributeName = [[error userInfo] objectForKey:@"NSValidationErrorKey"];
+                NSString *msg;
+                switch ([error code]) {
+                    case NSManagedObjectValidationError:
+                        msg = @"Generic validation error.";
+                        break;
+                    case NSValidationMissingMandatoryPropertyError:
+                        msg = [NSString stringWithFormat:@"The attribute '%@' mustn't be empty.", attributeName];
+                        break;
+                    case NSValidationRelationshipLacksMinimumCountError:
+                        msg = [NSString stringWithFormat:@"The relationship '%@' doesn't have enough entries.", attributeName];
+                        break;
+                    case NSValidationRelationshipExceedsMaximumCountError:
+                        msg = [NSString stringWithFormat:@"The relationship '%@' has too many entries.", attributeName];
+                        break;
+                    case NSValidationRelationshipDeniedDeleteError:
+                        msg = [NSString stringWithFormat:@"To delete, the relationship '%@' must be empty.", attributeName];
+                        break;
+                    case NSValidationNumberTooLargeError:
+                        msg = [NSString stringWithFormat:@"The number of the attribute '%@' is too large.", attributeName];
+                        break;
+                    case NSValidationNumberTooSmallError:
+                        msg = [NSString stringWithFormat:@"The number of the attribute '%@' is too small.", attributeName];
+                        break;
+                    case NSValidationDateTooLateError:
+                        msg = [NSString stringWithFormat:@"The date of the attribute '%@' is too late.", attributeName];
+                        break;
+                    case NSValidationDateTooSoonError:
+                        msg = [NSString stringWithFormat:@"The date of the attribute '%@' is too soon.", attributeName];
+                        break;
+                    case NSValidationInvalidDateError:
+                        msg = [NSString stringWithFormat:@"The date of the attribute '%@' is invalid.", attributeName];
+                        break;
+                    case NSValidationStringTooLongError:
+                        msg = [NSString stringWithFormat:@"The text of the attribute '%@' is too long.", attributeName];
+                        break;
+                    case NSValidationStringTooShortError:
+                        msg = [NSString stringWithFormat:@"The text of the attribute '%@' is too short.", attributeName];
+                        break;
+                    case NSValidationStringPatternMatchingError:
+                        msg = [NSString stringWithFormat:@"The text of the attribute '%@' doesn't match the required pattern.", attributeName];
+                        break;
+                    default:
+                        msg = [NSString stringWithFormat:@"Unknown error (code %i).", [error code]];
+                        break;
+                }
+                
+                messages = [messages stringByAppendingFormat:@"%@%@%@\n", (entityName?:@""),(entityName?@": ":@""),msg];
+            }
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Validation Error"
+                                                            message:messages
+                                                           delegate:nil
+                                                  cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+        }
+    }
 }
 
 - (void)saveDatabase
@@ -307,8 +382,8 @@ static BOOL _shouldSave = NO;
     }
     NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
     if ([savePolicy isEqualToString:kHXOSaveDatabasePolicyPerMessage]) {
-        [self performSelectorOnMainThread:@selector(saveContext) withObject:self waitUntilDone:NO];
-
+        // [self performSelectorOnMainThread:@selector(saveContext) withObject:self waitUntilDone:NO];
+        [self saveContext];
     }
 }
 

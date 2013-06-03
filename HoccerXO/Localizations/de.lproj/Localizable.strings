@@ -297,3 +297,9 @@
 "group_close_group_title" = "Möchtest Du die Gruppe wirklich für alle und immer schliessen?";
 "group_close_group_button_title" = "Schliessen";
 
+"You have been invited to group '%@' administrated by '%@'"="Du wurdest in die Gruppe '%@' eingeladen, verwaltet von '%@'. Was möchtest du mit der Einladung machen?";
+"invitation_title"="Group Invitation";
+"invitation_decide_later_button_title"="Später entscheiden";
+"invitation_join_group_button_title"="Annehmen";
+"invitation_decline_button_title"="Ablehnen";
+

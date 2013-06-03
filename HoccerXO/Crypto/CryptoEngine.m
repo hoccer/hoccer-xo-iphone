@@ -52,6 +52,7 @@ NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
                                         key.length,
                                         IV.bytes,
                                         &__cryptor);
+        
         if (cryptorStatus != kCCSuccess || __cryptor == NULL) {
             if (error) {
                 *error = [NSError errorWithDomain:kCryptoErrorDomain code:cryptorStatus userInfo:nil];

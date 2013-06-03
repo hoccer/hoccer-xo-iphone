@@ -315,4 +315,12 @@
 "group_close_group_title" = "Do you really want to close the group for everybody and ever?";
 "group_close_group_button_title" = "Close";
 
+"You have been invited to group '%@' administrated by '%@'"="You have been invited to group '%@' administrated by '%@'. What do you want to do?";
+"invitation_title"="Group Invitation";
+"invitation_decide_later_button_title"="Decide later";
+"invitation_join_group_button_title"="Join Group";
+"invitation_decline_button_title"="Decline Invitation";
+
+
+
 

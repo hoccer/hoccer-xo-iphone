@@ -59,7 +59,7 @@
     </entity>
     <entity name="RPC_TalkPresence_in" parentEntity="RPC_TalkPresence" syncable="YES">
         <attribute name="clientId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
-        <attribute name="connectionStatus" transient="YES" attributeType="String" minValueString="6" maxValueString="7" regularExpressionString="online|offline" syncable="YES"/>
+        <attribute name="connectionStatus" optional="YES" transient="YES" attributeType="String" minValueString="6" maxValueString="7" regularExpressionString="online|offline" syncable="YES"/>
         <attribute name="timestamp" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
     </entity>
     <entity name="RPC_TalkPresence_out" parentEntity="RPC_TalkPresence" syncable="YES">

@@ -34,6 +34,7 @@
 #import "UserProfile.h"
 #import "GCHTTPRequestOperation.h"
 #import "GCNetworkRequest.h"
+#import "UIAlertView+BlockExtensions.h"
 
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
@@ -42,6 +43,8 @@
 #define GROUPKEY_DEBUG NO
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
+
+const int kGroupInvitationAlert = 1;
 
 typedef enum BackendStates {
     kBackendStopped,
@@ -303,24 +306,36 @@ typedef enum BackendStates {
     if (attachment != nil) {
         message.attachment = attachment;
         attachment.cipheredSize = [attachment calcCipheredSize];
-        [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
-            if (urls) {
-                // NSLog(@"attachment urls=%@", urls);
-                attachment.uploadURL = urls[@"uploadUrl"];
-                attachment.remoteURL = urls[@"downloadUrl"];
-                message.attachmentFileId = urls[@"fileId"];
-                attachment.transferSize = @(0);
-                attachment.cipherTransferSize = @(0);                
-                // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
-                [self finishSendMessage:message toContact:contact withDelivery:delivery withAttachment:attachment];
-            } else {
-                NSLog(@"ERROR: Could not get attachment urls");
-            }
-        }];
+        [self createUrlsForTransferOfAttachmentOfMessage:message];
         return;
     }
     [self finishSendMessage:message toContact:contact withDelivery:delivery withAttachment:attachment];
 }
+
+- (void) createUrlsForTransferOfAttachmentOfMessage:(HXOMessage*)message {
+    Attachment * attachment = message.attachment;
+    [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
+        if (urls && [urls[@"uploadUrl"] length]>0 && [urls[@"downloadUrl"] length]>0 && [urls[@"fileId"] length]>0) {
+            NSLog(@"got attachment urls=%@", urls);
+            attachment.uploadURL = urls[@"uploadUrl"];
+            attachment.remoteURL = urls[@"downloadUrl"];
+            message.attachmentFileId = urls[@"fileId"];
+            attachment.transferSize = @(0);
+            attachment.cipherTransferSize = @(0);
+            // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
+            [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment];
+        } else {
+            NSLog(@"ERROR: Could not get attachment urls, retrying");
+            [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
+        }
+    }];
+}
+
+- (void) retryCreateUrlsForTransferOfAttachment:(NSTimer*)theTimer {
+    HXOMessage * message = [theTimer userInfo];
+    [self createUrlsForTransferOfAttachmentOfMessage:message];
+}
+
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
     // Ignore duplicate messages. This happens if a message is offered to us by the server multiple times
@@ -882,6 +897,7 @@ typedef enum BackendStates {
     }
     // NSLog(@"relationship Dict: %@", relationshipDict);
     [contact updateWithDictionary: relationshipDict];
+    [self.delegate saveDatabase];
 }
 
 - (void) updatePresences {
@@ -895,16 +911,21 @@ typedef enum BackendStates {
     }];
 }
 
-- (void) fetchKeyForContact:(Contact *) theContact withKeyId:(NSString*) theId {
-    [self getKey:theContact.clientId withId:theId keyHandler:^(NSDictionary * keyRecord) {
+- (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionBlock)handler {
+    [self getKeyForClientId: theContact.clientId withKeyId:theId keyHandler:^(NSDictionary * keyRecord) {
         [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
         if (keyRecord != nil && [theId isEqualToString: keyRecord[@"keyId"]]) {
             theContact.publicKeyString = keyRecord[@"key"];
             theContact.publicKeyId = keyRecord[@"keyId"];
             // NSLog(@"Key for contact updated: %@", theContact);
             // NSLog(@"Received new public key for contact: %@", theContact.nickName);
+            [self.delegate saveDatabase];
+            if (handler != nil) handler(nil);
         } else {
-            NSLog(@"ERROR: keynot updated response keyid mismatch for contact: %@", theContact);
+            NSLog(@"ERROR: key not updated response keyid mismatch for contact: %@", theContact);
+            NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not updated response keyid mismatch for contact: %@", theContact];
+            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9912 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            if (handler != nil) handler(myError);
         }
     }];
 }
@@ -928,9 +949,13 @@ typedef enum BackendStates {
         myContact.nickName = thePresence[@"clientName"];
         myContact.status = thePresence[@"clientStatus"];
         myContact.connectionStatus = thePresence[@"connectionStatus"];
+        if (myContact.connectionStatus == nil) {
+            // is a group
+            myContact.connectionStatus = @"group";
+        }
         if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]]) {
             // fetch key
-            [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"]];
+            [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"] withCompletion:nil];
         }
         [self updateAvatarForContact:myContact forAvatarURL:thePresence[@"avatarUrl"]];
         
@@ -940,6 +965,7 @@ typedef enum BackendStates {
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }
+    [self.delegate saveDatabase];
 }
 
 - (void) updateAvatarForContact:(Contact*)myContact forAvatarURL:(NSString*)theAvatarURL {
@@ -1213,6 +1239,7 @@ typedef enum BackendStates {
         NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating",memberClientId);
         memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         memberContact.clientId = memberClientId;
+        [self.delegate saveDatabase];
     }
     NSSet * theMemberSet = [group.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         if (memberContact != nil) {
@@ -1243,6 +1270,15 @@ typedef enum BackendStates {
     if (myMember == nil) {
         return;
     }
+    // check for invitation
+    BOOL weHaveBeenInvited = NO;
+    if ([groupMemberDict[@"state"] isEqualToString:@"invited"] &&
+        ![myMember.state isEqualToString:@"invited"] &&
+        memberContact == nil)
+    {
+        weHaveBeenInvited = YES;
+    }
+    
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMember updateWithDictionary: groupMemberDict];
@@ -1272,13 +1308,67 @@ typedef enum BackendStates {
         [self.delegate saveDatabase];
         return;
     }
+    [self.delegate saveDatabase];
     
     // now check if we have to update the encrypted group key
     if (memberContact != nil) { // not us
         [self ifNeededUpdateGroupKeyForOtherMember:myMember];
-     } else {
+    } else {
         [self ifNeededUpdateGroupKeyForMyMembership:myMember];
-     }
+    }
+    if (weHaveBeenInvited) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self invitationAlertForGroup:group withMemberShip:myMember];
+        });
+    }
+}
+
+- (void) invitationAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
+    NSMutableArray * admins = [[NSMutableArray alloc] init];
+    if (group.iAmAdmin) {
+        [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
+    }
+    [group.members enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+        GroupMembership * member = (GroupMembership*) obj;
+        if ([member.role isEqualToString: @"admin"] && member.contact != nil) {
+            [admins addObject: member.contact.nickName];
+        }
+    }];
+    NSString * adminNames = [admins componentsJoinedByString:@", "];    
+    
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"You have been invited to group '%@' administrated by '%@'",nil), group.nickName, adminNames];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invitation_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                        switch (buttonIndex) {
+                                                            case 0:
+                                                                // do nothing
+                                                                break;
+                                                            case 1:
+                                                                // join group
+                                                                [self joinGroup:group onJoined:^(Group *group) {
+                                                                        if (group != nil) {
+                                                                            NSLog(@"Joined group %@", group);
+                                                                        } else {
+                                                                            NSLog(@"ERROR: joinGroup %@ failed", group);
+                                                                        }
+                                                                }];
+                                                                break;
+                                                            case 2:
+                                                                // leave group
+                                                                [self leaveGroup: group onGroupLeft:^(Group *group) {
+                                                                    if (group != nil) {
+                                                                        NSLog(@"TODO: Group left, now destroy everything (except our friends)");
+                                                                    } else {
+                                                                        NSLog(@"ERROR: leaveGroup %@ failed", group);
+                                                                    }
+                                                                }];
+                                                                break;
+                                                        }
+                                                    }
+                                           cancelButtonTitle: NSLocalizedString(@"invitation_decide_later_button_title", nil)
+                                           otherButtonTitles: NSLocalizedString(@"invitation_join_group_button_title", nil),NSLocalizedString(@"invitation_decline_button_title", nil),nil];
+    [alert show];
 }
 
 // delete all group member contacts that are not friends or contacts in other group
@@ -1322,18 +1412,38 @@ typedef enum BackendStates {
                 if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
                 group.groupKey = [AESCryptor random256BitKey];
             }
-            myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
-            myMember.keySettingInProgress = YES;
-            [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
-                member.keySettingInProgress = NO;
-                if (member) {
-                    // member.distributedCipheredGroupKey = member.cipheredGroupKey;
-                    member.distributedGroupKey = group.groupKey;
+            if ([memberContact getPublicKeyRef] == nil) {
+                if (memberContact.publicKeyId != nil) {
+                    [self fetchKeyForContact:memberContact withKeyId:memberContact.publicKeyId withCompletion:^(NSError *theError) {
+                        if (theError == nil) {
+                            [self setGroupMemberKey:myMember];
+                        }
+                    }];
+                } else {
+                    NSLog(@"ifNeededUpdateGroupKeyForOtherMember: Cant update group member %@ yet, don't have a contact public keyId yet", memberContact.clientId);
                 }
-            }];
+            } else {
+                NSLog(@"ifNeededUpdateGroupKeyForOtherMember: setting group member key for contact client id %@", memberContact.clientId);
+                [self setGroupMemberKey:myMember];
+            }
         }
     }    
 }
+    
+- (void) setGroupMemberKey:(GroupMembership *)myMember {
+    myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
+    myMember.keySettingInProgress = YES;
+    [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
+        member.keySettingInProgress = NO;
+        if (member) {
+            // member.distributedCipheredGroupKey = member.cipheredGroupKey;
+            member.distributedGroupKey = myMember.group.groupKey;
+        }
+        [self.delegate saveDatabase];
+    }];
+    
+}
+
 
 - (void) ifNeededUpdateGroupKeyForMyMembership:(GroupMembership*) myMember {
     // it is us
@@ -1372,6 +1482,7 @@ typedef enum BackendStates {
                  } else {
                      NSLog(@"updateGroupKey() failed: %@", responseOrError);
                  }
+                 [self.delegate saveDatabase];
              }];
         }
     }
@@ -2148,7 +2259,7 @@ typedef enum BackendStates {
     }];
 }
 
-- (void) getKey: (NSString*)forClientId withId:(NSString*) keyId keyHandler:(PublicKeyHandler) handler {
+- (void) getKeyForClientId: (NSString*)forClientId withKeyId:(NSString*) keyId keyHandler:(PublicKeyHandler) handler {
     // NSLog(@"getKey:");
 
      [_serverConnection invoke: @"getKey" withParams: @[forClientId,keyId] onResponse: ^(id responseOrError, BOOL success) {
