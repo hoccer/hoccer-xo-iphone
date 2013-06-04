@@ -639,10 +639,6 @@ static BOOL _shouldSave = NO;
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
     alert.tag = tag;
-    
-    // Work around for an issue with the side menu. When opening an alert while the side menu is open or in
-    // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
-    // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
     [alert show];
 }
 
@@ -659,10 +655,6 @@ static BOOL _shouldSave = NO;
                                           cancelButtonTitle:@"No"
                                           otherButtonTitles:@"Delete Database",nil];
     alert.tag = tag;
-    
-    // Work around for an issue with the side menu. When opening an alert while the side menu is open or in
-    // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
-    // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
     [alert show];
 }
 
