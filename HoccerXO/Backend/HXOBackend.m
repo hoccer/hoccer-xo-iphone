@@ -1321,7 +1321,7 @@ typedef enum BackendStates {
                 [moc deleteObject: myMember];
             }
         } else {
-            NSLog(@"updateGroupMemberHere: deleting own contact clientId %@",memberClientId);
+            NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberClientId);
             // we have been thrown out
             // delete all group member contacts that are not friends or contacts in other group
             [self deleteInDatabaseAllMembersAndContactsofGroup:group];

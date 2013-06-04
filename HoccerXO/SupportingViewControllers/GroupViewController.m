@@ -20,6 +20,7 @@
 #import "GroupAdminCell.h"
 #import "CustomNavigationBar.h"
 
+#define GROUPVIEW_DEBUG NO
 
 static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
@@ -92,11 +93,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: viewDidDisappear)");
     if (_deleteGroupFlag) {
         if (self.group.iAmAdmin) {
             [self.appDelegate.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
                 if (group != nil) {
-                    NSLog(@"TODO: Group deleted, now destroy everything (except our friends)");
+                    if (GROUPVIEW_DEBUG) NSLog(@"TODO: Group deleted, now destroy everything (except our friends)");
                     [self.backend deleteInDatabaseAllMembersAndContactsofGroup:group];
                     NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
                     [moc deleteObject: group];
@@ -107,7 +109,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         } else {
             [self.appDelegate.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
                 if (group != nil) {
-                    NSLog(@"TODO: Group left, now destroy everything (except our friends)");
+                    if (GROUPVIEW_DEBUG) NSLog(@"TODO: Group left, now destroy everything (except our friends)");
                 } else {
                     NSLog(@"ERROR: leaveGroup %@ failed", self.group);
                 }
@@ -128,6 +130,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) setGroup:(Group *)group {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: setGroup)");
     self.contact = group;
     //[_memberListItem removeTableRows];
     _fetchedResultsController = nil;
@@ -162,6 +165,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSUInteger) profileValueSectionIndex {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: profileValueSectionIndex)");
     return self.isEditing ? 1 : 2;
 }
 
@@ -198,9 +202,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) joinGroupPressed: (id) sender {
-    NSLog(@"Join Group pressed");
+    if (GROUPVIEW_DEBUG) NSLog(@"Join Group pressed");
     [self.appDelegate.chatBackend joinGroup:self.group onJoined:^(Group *group) {
-        NSLog(@"Joined group %@", group);
+        if (GROUPVIEW_DEBUG) NSLog(@"Joined group %@", group);
         // [self getGroupMembers:group lastKnown:lastKnown];
         // TODO: trigger update of group utility section
     }];
@@ -210,7 +214,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     NSString * title;
     NSString * destructiveButtonTitle;
     if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
-        NSLog(@"decline invitation");
+        if (GROUPVIEW_DEBUG) NSLog(@"decline invitation");
         title = NSLocalizedString(@"group_decline_invitation_title", nil);
         destructiveButtonTitle = NSLocalizedString(@"group_decline_button_title", nil);
     } else {
@@ -233,7 +237,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        NSLog(@"GroupViewController: set flag to destroy group");
+        if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: set flag to destroy group");
         _deleteGroupFlag = YES;
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -247,6 +251,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [super onCancel: sender];
 }
 - (void) onEditingDone {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: onEditingDone");
     if (_mode == ProfileViewModeNewGroup) {
         if (_canceled) {
             NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
@@ -329,6 +334,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) configureUtilitySections: (BOOL) editing {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: configureUtilitySections");
     if (editing) {
         [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
     } else {
@@ -341,6 +347,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: composeItems");
     if (editing) {
         return @[ @[_avatarItem], items, @[_adminsItem], _memberListItem];
     }
@@ -348,6 +355,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSUInteger) groupMemberSectionIndex {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: groupMemberSectionIndex");
     return self.isEditing ? 3 : 4;
 }
 
@@ -374,14 +382,17 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 #pragma mark - Table View Delegate
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+    if (GROUPVIEW_DEBUG) NSLog(@"numberOfSectionsInTableView: %d",_items.count);
     return _items.count;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (GROUPVIEW_DEBUG) NSLog(@"numberOfRowsInSection %d = %d",section, [_items[section] count]);
     return [_items[section] count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: heightForRowAtIndexPath");
     id item = _items[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
         UITableViewCell * cell = [self prototypeCellOfClass: [GroupMemberCell class]];
@@ -392,6 +403,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: cellForRowAtIndexPath %@",indexPath);
     id item = _items[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
@@ -413,10 +425,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: heightForHeaderInSection %d",section);
     return section == [self groupMemberSectionIndex] ? 5 : 0;
 }
 
 - (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: viewForHeaderInSection %d",section);
     if (section != [self groupMemberSectionIndex]) {
         return nil;
     }
@@ -426,6 +440,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: willSelectRowAtIndexPath %@",indexPath);
     id item = _items[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
         return indexPath;
@@ -434,6 +449,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: didSelectRowAtIndexPath %@",indexPath);
     if (indexPath.section == [self groupMemberSectionIndex]) {
         GroupMembership * member = (GroupMembership*)_items[indexPath.section][indexPath.row];
         ProfileViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"profileViewController"];
@@ -448,7 +464,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 - (NSFetchedResultsController*) fetchedResultsController {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: fetchedResultsController");
     if (_fetchedResultsController == nil && self.group != nil) {
+        if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: new fetchedResultsController");
 
         NSDictionary * vars = @{ @"group" : self.group };
         NSFetchRequest *fetchRequest = [self.appDelegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupMembershipsByGroup" substitutionVariables: vars];
@@ -478,18 +496,23 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    if (GROUPVIEW_DEBUG) NSLog(@"controllerWillChangeContent");
+    if (GROUPVIEW_DEBUG) NSLog(@"%@",[NSThread callStackSymbols]);
     [self.tableView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    if (GROUPVIEW_DEBUG) NSLog(@"didChangeSection %@ atIndex %d forType %d", sectionInfo,sectionIndex,type);
     switch(type) {
         case NSFetchedResultsChangeInsert:
+            if (GROUPVIEW_DEBUG) NSLog(@"NSFetchedResultsChangeInsert sectionIndex %d", sectionIndex);
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
         case NSFetchedResultsChangeDelete:
+            if (GROUPVIEW_DEBUG) NSLog(@"NSFetchedResultsChangeDelete sectionIndex %d", sectionIndex);
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
@@ -499,44 +522,129 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    // NSLog(@"didChangeObject %@ atIndexPath %@ forType %d newIndexPath %@", anObject,indexPath,type,newIndexPath);
+    if (GROUPVIEW_DEBUG) NSLog(@"didChangeObject atIndexPath %@ forType %d newIndexPath %@",indexPath,type,newIndexPath);
     UITableView *tableView = self.tableView;
 
     indexPath = [NSIndexPath indexPathForItem: indexPath.row inSection:indexPath.section + [self groupMemberSectionIndex]];
     newIndexPath = [NSIndexPath indexPathForItem: newIndexPath.row inSection:newIndexPath.section + [self groupMemberSectionIndex]];
+    // NSLog(@"didChangeObject(2) %@ atIndexPath %@ forType %d newIndexPath %@", anObject,indexPath,type,newIndexPath);
+    if (GROUPVIEW_DEBUG) NSLog(@"didChangeObject(2) atIndexPath %@ forType %d newIndexPath %@",indexPath,type,newIndexPath);
 
     switch(type) {
         case NSFetchedResultsChangeInsert:
+            if (GROUPVIEW_DEBUG) NSLog(@"NSFetchedResultsChangeInsert newIndexPath %@", newIndexPath);
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
         case NSFetchedResultsChangeDelete:
+            if (GROUPVIEW_DEBUG) NSLog(@"NSFetchedResultsChangeDelete indexPath %@", indexPath);
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self configureMembershipCell:(GroupMemberCell*)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            if (GROUPVIEW_DEBUG) NSLog(@"NSFetchedResultsChangeUpdate indexPath %@", indexPath);
+            //[self configureMembershipCell:(GroupMemberCell*)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
         case NSFetchedResultsChangeMove:
+            if (GROUPVIEW_DEBUG) NSLog(@"NSFetchedResultsChangeMove indexPath %@ newIndexPath %@", indexPath,newIndexPath);
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
-    [self updateMembershipRelatedUI];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    if (GROUPVIEW_DEBUG)  NSLog(@"controllerDidChangeContent");
+    if (GROUPVIEW_DEBUG) NSLog(@"%@",[NSThread callStackSymbols]);
+    [self updateMembershipRelatedUI];
     [self.tableView endUpdates];
+    if (GROUPVIEW_DEBUG) NSLog(@"controllerDidChangeContent ready");
 }
 
 - (void) updateMembershipRelatedUI {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: updateMembershipRelatedUI");
     NSArray * profileItems = _items[[self profileValueSectionIndex]];
-    _items = [self composeItems: profileItems withEditFlag: self.isEditing];
+    NSArray * newItems = [self composeItems: profileItems withEditFlag: self.isEditing];
+    NSArray * oldItems = _items;
+    
+    NSMutableArray * oldPaths = [[NSMutableArray alloc] init];
+    for (int section = 0; section < [oldItems count];++section) {
+        NSArray * itemsInSection = oldItems[section];
+        for (int i = 0; i < [itemsInSection count];++i) {
+            if ([itemsInSection[i] isKindOfClass:[ProfileItem class]]) {
+                ProfileItem * item = (ProfileItem*)itemsInSection[i];
+                if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI oldPath %@", item.indexPath);
+                [oldPaths addObject:item.indexPath];
+            }
+        }
+    }
+    NSMutableArray * newPaths = [[NSMutableArray alloc] init];
+    for (int section = 0; section < [newItems count];++section) {
+        NSArray * itemsInSection = newItems[section];
+        for (int i = 0; i < [itemsInSection count];++i) {
+            if ([itemsInSection[i] isKindOfClass:[ProfileItem class]]) {
+                //ProfileItem * item = (ProfileItem*)itemsInSection[i];
+                NSIndexPath * newPath = [NSIndexPath indexPathForItem:i inSection:section];
+                if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI newPath %@", newPath);
+                [newPaths addObject:newPath];
+            }
+        }
+    }
+    if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI oldPaths %@ newPaths %@", oldPaths,newPaths);
+    _items = newItems;
+    UITableView *tableView = self.tableView;
+    
+#define NEW_STUFF
+#ifdef NEW_STUFF
+    for (int i = 0; i < [oldPaths count];++i) {
+        for (int j = 0; j < [newPaths count];++j) {
+            if ([oldPaths[i] isEqual:newPaths[j]]) {
+                if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI reload oldPaths[%d] %@", i, oldPaths[i]);
+                [tableView reloadRowsAtIndexPaths:@[oldPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+                [oldPaths removeObjectAtIndex:i];
+                [newPaths removeObjectAtIndex:j];
+            }
+        }
+    }
+    for (int i = 0; i < [oldPaths count];++i) {
+        if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI delete oldPaths[%d] %@", i, oldPaths[i]);
+        [tableView deleteRowsAtIndexPaths:@[oldPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+    }
+    for (int i = 0; i < [newPaths count];++i) {
+        if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI insert newPaths[%d] %@", i, newPaths[i]);
+        [tableView insertRowsAtIndexPaths:@[newPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+    }
+#else
+    for (int i = 0; i < [oldPaths count];++i) {
+        if (i < [newPaths count]) {
+            if ([oldPaths[i] isEqual:newPaths[i]]) {
+                if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI reload oldPaths[%d] %@", i, oldPaths[i]);
+                [tableView reloadRowsAtIndexPaths:@[oldPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+            } else {
+                if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI delete oldPaths[%d] %@", i, oldPaths[i]);
+                [tableView deleteRowsAtIndexPaths:@[oldPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+                if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI insert newPaths[%d] %@", i, newPaths[i]);
+                [tableView insertRowsAtIndexPaths:@[newPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+            }
+        } else {
+            if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI delete2 oldPaths[%d] %@", i, oldPaths[i]);
+            [tableView deleteRowsAtIndexPaths:@[oldPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
+    for (int i = [oldPaths count]; i < [newPaths count];++i) {
+        if (GROUPVIEW_DEBUG) NSLog(@"updateMembershipRelatedUI insert2 newPaths[%d] %@", i, newPaths[i]);
+        [tableView insertRowsAtIndexPaths:@[newPaths[i]] withRowAnimation:UITableViewRowAnimationFade];
+    }
+#endif
     // TODO: get rid of reloadData...
-    [self.tableView reloadData];
+    // [self.tableView reloadData];
 }
 
 - (void) configureMembershipCell: (GroupMemberCell*) cell atIndexPath: (NSIndexPath*) indexPath {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: configureMembershipCell atIndexPath %@",indexPath);
     GroupMembership * membership = _items[indexPath.section][indexPath.row];
     id contact = [self getContact: membership];
     // TODO: move to a configure method...
@@ -566,14 +674,17 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (NSUInteger) count {
+    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: FetchedResultsSectionAdapter count, _section %d",_section);
     return [_delegate.fetchedResultsController.sections[_section] numberOfObjects];
 }
 
 - (id) objectAtIndexedSubscript: (NSInteger) index {
+    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: objectAtIndexedSubscript %d, _section %d",index,_section);
     return [_delegate.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: index inSection: _section]];
 }
 
 - (void) addTableRows {
+    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: addTableRows count=%d , _targetSection %d",[self count],_targetSection);
     for (NSUInteger i = 0; i < [self count]; ++i) {
         NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: _targetSection];
         [_delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
@@ -581,6 +692,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) removeTableRows {
+    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: removeTableRows count=%d , _targetSection %d",[self count],_targetSection);
     for (NSUInteger i = 0; i < [self count]; ++i) {
         NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: _targetSection];
         [_delegate.tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
