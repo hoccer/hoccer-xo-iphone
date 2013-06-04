@@ -296,6 +296,7 @@
 "group_close" = "Gruppe schliessen";
 "group_close_group_title" = "Möchtest Du die Gruppe wirklich für alle und immer schliessen?";
 "group_close_group_button_title" = "Schliessen";
+"group_delete_data"="Gruppendaten löschen";
 
 "group_no_other_joined_partners_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
 "group_no_other_partner_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
@@ -307,6 +308,13 @@
 "'%@' has left group '%@'"="'%@' ist nicht mehr Mitglied der Gruppe '%@'";
 "group_left_title"="Mitglied hat Gruppe verlassen";
 
+"Group '%@' no longer exists. Delete associated chats and data?"="Ihre Mitgliedschaft in der Gruppe '%@' besteht nicht mehr. Gruppenchat und damit zusammenhängende Daten löschen?";
+"group_deleted_title"="Gruppenmitgliedschaft erloschen.";
+"group_keep_data_button"="Behalten";
+"group_delete_data_button"="Löschen";
+
+"group_delete_title"="Die Gruppe und dazugehörige Chats und Daten löschen?";
+"group_delete_button_title"="Gruppe löschen";
 
 "You have been invited to group '%@' administrated by '%@'"="Du wurdest in die Gruppe '%@' eingeladen, verwaltet von '%@'. Was möchtest du mit der Einladung machen?";
 "invitation_title"="Group Invitation";

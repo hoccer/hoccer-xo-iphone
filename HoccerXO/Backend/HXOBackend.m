@@ -1093,13 +1093,8 @@ typedef enum BackendStates {
     
     NSString * groupState = groupDict[@"state"];
     if ([groupState isEqualToString:@"none"]) {
-        if (group != nil) {
-            // get rid of this group
-            [self deleteInDatabaseAllMembersAndContactsofGroup:group];
-            // delete the group
-            NSManagedObjectContext * moc = self.delegate.managedObjectContext;
-            [moc deleteObject: group];
-            [self.delegate saveDatabase];
+        if (group != nil && ![group.groupState isEqualToString:@"kept"]) {
+            [self handleDeletionOfGroup:group];
         }
         return;
     }
@@ -1305,29 +1300,7 @@ typedef enum BackendStates {
     
     if ([myMember.state isEqualToString:@"none"]) {
         // delete member
-        NSManagedObjectContext * moc = self.delegate.managedObjectContext;
-        if (memberContact != nil) { // not us
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
-            });
-            if (memberContact.relationshipState == nil ||
-                (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"] &&
-                 memberContact.groupMemberships.count == 1))
-            {
-                NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberClientId);
-                [moc deleteObject: memberContact];
-            } else {
-                // only delete group membership
-                [moc deleteObject: myMember];
-            }
-        } else {
-            NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberClientId);
-            // we have been thrown out
-            // delete all group member contacts that are not friends or contacts in other group
-            [self deleteInDatabaseAllMembersAndContactsofGroup:group];
-            // delete the group
-            [moc deleteObject: group];
-        }
+        [self handleDeletionOfGroupMember:myMember inGroup:group withContact:memberContact];
         [self.delegate saveDatabase];
         return;
     }    
@@ -1351,6 +1324,58 @@ typedef enum BackendStates {
         });
     }
 }
+
+- (void)handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact {
+    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    if (memberContact != nil) { // not us
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
+        });
+        if (memberContact.relationshipState == nil ||
+            (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"] &&
+             memberContact.groupMemberships.count == 1))
+        {
+            NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
+            [moc deleteObject: memberContact];
+        } else {
+            // only delete group membership
+            [moc deleteObject: myMember];
+        }
+    } else {
+        NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
+         // we have been thrown out
+        if (![group.groupState isEqualToString:@"kept"]) {
+            [self handleDeletionOfGroup:group];
+        }
+    }
+    
+}
+
+- (void) handleDeletionOfGroup:(Group*)group {
+    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Group '%@' no longer exists. Delete associated chats and data?",nil), group.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_deleted_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 switch (buttonIndex) {
+                                                     case 1:
+                                                         // delete all group member contacts that are not friends or contacts in other group
+                                                         [self deleteInDatabaseAllMembersAndContactsofGroup:group];
+                                                         // delete the group
+                                                         [moc deleteObject: group];
+                                                         break;
+                                                     case 0:
+                                                         group.groupState = @"kept";
+                                                         // keep group and chats
+                                                         break;
+                                                 }
+                                             }
+                                           cancelButtonTitle: NSLocalizedString(@"group_keep_data_button", nil)
+                                           otherButtonTitles: NSLocalizedString(@"group_delete_data_button",nil),nil];
+    [alert show];
+
+}
+
 
 - (void) groupJoinedAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' has joined group '%@'",nil), member.contact.nickName, group.nickName];
@@ -1494,7 +1519,6 @@ typedef enum BackendStates {
     }];
     
 }
-
 
 - (void) ifNeededUpdateGroupKeyForMyMembership:(GroupMembership*) myMember {
     // it is us

@@ -314,6 +314,7 @@
 "group_close" = "Close Group";
 "group_close_group_title" = "Do you really want to close the group for everybody and ever?";
 "group_close_group_button_title" = "Close";
+"group_delete_data"="Delete Group Data";
 
 "group_no_other_joined_partners_text"="You can not send a message to this group because not invited member has joined yet. You have to wait until at least one invitation is accepted.";
 "group_no_other_partner_text"="You can not send a message to this group because there are no members except you. Please invite friends to this group.";
@@ -324,6 +325,14 @@
 
 "'%@' has left group '%@'"="'%@' is no longer member of group '%@'.";
 "group_left_title"="Group Left";
+
+"Group '%@' no longer exists. Delete associated chats and data?"="Your membership in group '%@' no longer exists. Delete associated chats and data?";
+"group_deleted_title"="Group Membership Removed";
+"group_keep_data_button"="Keep Data";
+"group_delete_data_button"="Delete Data";
+
+"group_delete_title"="Delete group and all associated chats and data?";
+"group_delete_button_title"="Delete Group";
 
 "You have been invited to group '%@' administrated by '%@'"="You have been invited to group '%@' administrated by '%@'. What do you want to do?";
 "invitation_title"="Group Invitation";

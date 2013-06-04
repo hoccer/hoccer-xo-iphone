@@ -46,7 +46,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     ProfileItem * _inviteMemberItem;
     ProfileItem * _joinGroupItem;
     ProfileItem * _adminsItem;
-    ProfileItem * _declineInviteOrLeaveGroupItem;
+    ProfileItem * _declineInviteOrLeaveOrDeleteGroupItem;
     FetchedResultsSectionAdapter * _memberListItem;
     BOOL _deleteGroupFlag;
 }
@@ -95,25 +95,29 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (void)viewDidDisappear:(BOOL)animated {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: viewDidDisappear)");
     if (_deleteGroupFlag) {
-        if (self.group.iAmAdmin) {
-            [self.appDelegate.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
-                if (group != nil) {
-                    if (GROUPVIEW_DEBUG) NSLog(@"TODO: Group deleted, now destroy everything (except our friends)");
-                    [self.backend deleteInDatabaseAllMembersAndContactsofGroup:group];
-                    NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
-                    [moc deleteObject: group];
-                } else {
-                    NSLog(@"ERROR: deleteGroup %@ failed", self.group);
-                }
-            }];
+        if ([self.group.groupState isEqualToString:@"kept"]) {
+            [self.backend deleteInDatabaseAllMembersAndContactsofGroup:self.group];
+            NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
+            [moc deleteObject: self.group];
+            [self.appDelegate saveDatabase];
         } else {
-            [self.appDelegate.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
-                if (group != nil) {
-                    if (GROUPVIEW_DEBUG) NSLog(@"TODO: Group left, now destroy everything (except our friends)");
-                } else {
-                    NSLog(@"ERROR: leaveGroup %@ failed", self.group);
-                }
-            }];
+            if (self.group.iAmAdmin) {
+                [self.backend deleteGroup: self.group onDeletion:^(Group *group) {
+                    if (group != nil) {
+                        if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
+                    } else {
+                        NSLog(@"ERROR: deleteGroup %@ failed", self.group);
+                    }
+                }];
+            } else {
+                [self.backend leaveGroup: self.group onGroupLeft:^(Group *group) {
+                    if (group != nil) {
+                        if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
+                    } else {
+                        NSLog(@"ERROR: leaveGroup %@ failed", self.group);
+                    }
+                }];
+            }
         }
         _deleteGroupFlag = NO;
     }
@@ -210,20 +214,26 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }];
 }
 
-- (void) declineOrLeavePressed: (id) sender {
-    NSString * title;
-    NSString * destructiveButtonTitle;
-    if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
-        if (GROUPVIEW_DEBUG) NSLog(@"decline invitation");
-        title = NSLocalizedString(@"group_decline_invitation_title", nil);
-        destructiveButtonTitle = NSLocalizedString(@"group_decline_button_title", nil);
+- (void) declineOrLeaveOrDeletePressed: (id) sender {
+    NSString * title = nil;
+    NSString * destructiveButtonTitle = nil;
+    if ([self.group.groupState isEqualToString:@"kept"]) {
+        title = NSLocalizedString(@"group_delete_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"group_delete_button_title", nil);
     } else {
-        if (self.group.iAmAdmin) {
-            title = NSLocalizedString(@"group_close_group_title", nil);
-            destructiveButtonTitle = NSLocalizedString(@"group_close_group_button_title", nil);
+        if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+            if (GROUPVIEW_DEBUG) NSLog(@"decline invitation");
+            title = NSLocalizedString(@"group_decline_invitation_title", nil);
+            destructiveButtonTitle = NSLocalizedString(@"group_decline_button_title", nil);
         } else {
-            title = NSLocalizedString(@"group_leave_group_title", nil);
-            destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
+            if (self.group.iAmAdmin) {
+                title = NSLocalizedString(@"group_close_group_title", nil);
+                destructiveButtonTitle = NSLocalizedString(@"group_close_group_button_title", nil);
+                // otherButtonTitle = NSLocalizedString(@"group_close_and_keep_group_button_title", nil);
+            } else {
+                title = NSLocalizedString(@"group_leave_group_title", nil);
+                destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
+            }
         }
     }
     UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle: title
@@ -236,6 +246,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"actionSheet: clickedButtonAtIndex %d",buttonIndex);
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: set flag to destroy group");
         _deleteGroupFlag = YES;
@@ -290,12 +301,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _adminsItem.currentValue = [self adminsLabelText];
     _adminsItem.cellClass = [GroupAdminCell class];
 
-    _declineInviteOrLeaveGroupItem = [[ProfileItem alloc] init];
-    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
-    _declineInviteOrLeaveGroupItem.cellClass = [UserDefaultsCellDisclosure class];
-    _declineInviteOrLeaveGroupItem.action = @selector(declineOrLeavePressed:);
-    _declineInviteOrLeaveGroupItem.target = self;
-
+    _declineInviteOrLeaveOrDeleteGroupItem = [[ProfileItem alloc] init];
+    _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
+    _declineInviteOrLeaveOrDeleteGroupItem.cellClass = [UserDefaultsCellDisclosure class];
+    _declineInviteOrLeaveOrDeleteGroupItem.action = @selector(declineOrLeaveOrDeletePressed:);
+    _declineInviteOrLeaveOrDeleteGroupItem.target = self;
 
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
 
@@ -306,7 +316,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return @"icon_profile-group";
 }
 
-- (NSString*) declineOrLeaveLabel {
+- (NSString*) declineOrLeaveOrDeleteLabel {
+    if ([self.group.groupState isEqualToString:@"kept"]) {
+        return NSLocalizedString(@"group_delete_data", nil);
+    }
     if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
         return NSLocalizedString(@"group_decline_invitation", nil);
     } else {
@@ -368,13 +381,18 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         NSLog(@"unhandled state - membership: %@ state: %@", self.group.ownMemberShip, self.group.ownMemberShip.state);
     }
-    _declineInviteOrLeaveGroupItem.currentValue = [self declineOrLeaveLabel];
-    if ( ! [self.group iAmAdmin]) {
-        [utilities addObject: _declineInviteOrLeaveGroupItem];
+    
+    if (![self.group.groupState isEqualToString:@"kept"]) {
+        _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
+        if ( ! [self.group iAmAdmin]) {
+            [utilities addObject: _declineInviteOrLeaveOrDeleteGroupItem];
+        } else {
+            [utilities addObject: _inviteMemberItem];
+            [utilities addObject: _declineInviteOrLeaveOrDeleteGroupItem];
+            
+        }
     } else {
-        [utilities addObject: _inviteMemberItem];
-        [utilities addObject: _declineInviteOrLeaveGroupItem];
-
+        [utilities addObject: _declineInviteOrLeaveOrDeleteGroupItem];
     }
     return utilities;
 }
