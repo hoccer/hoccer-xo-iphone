@@ -343,6 +343,8 @@
     cell.nickName.text = contact.nickNameWithStatus;
 
     cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+    
+    cell.statusLabel.text = contact.relationshipState;
 }
 
 - (NSString*) defaultAvatarName {

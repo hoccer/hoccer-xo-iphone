@@ -22,7 +22,7 @@
 
 @property (nonatomic, retain) NSDate    * lastChangedMillis;
 
-@property (nonatomic, readonly) GroupMembership * ownMemberShip;
+// @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
 
 - (BOOL) iAmAdmin;
 - (BOOL) iJoined;

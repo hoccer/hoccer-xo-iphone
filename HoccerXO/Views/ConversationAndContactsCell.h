@@ -16,6 +16,7 @@
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
 @property (nonatomic,strong) IBOutlet InsetImageView * avatar;
+@property (nonatomic,strong) IBOutlet UILabel * statusLabel;
 
 - (void) engraveLabel: (UILabel*) label;
 - (NSString*) backgroundName;

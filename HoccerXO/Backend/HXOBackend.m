@@ -39,8 +39,9 @@
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
-#define CONNECTION_TRACE YES
-#define GROUPKEY_DEBUG YES
+#define CONNECTION_TRACE NO
+#define GROUPKEY_DEBUG NO
+#define GROUP_DEBUG NO
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -172,7 +173,7 @@ typedef enum BackendStates {
 }
 
 - (void) setState: (BackendState) state {
-    NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
+    if (CONNECTION_TRACE) NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
     _state = state;
     if (_state == kBackendReady) {
         _backoffTime = 0.0;
@@ -378,7 +379,7 @@ typedef enum BackendStates {
 
     HXOMessage * message = [NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     Delivery * delivery = [NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
-    [message.deliveries addObject: delivery];
+    //AUTOREL [message.deliveries addObject: delivery];
     delivery.message = message;
     
     Attachment * attachment = nil;
@@ -1020,14 +1021,20 @@ typedef enum BackendStates {
 // TODO: better failure behavior using handler
 - (void) createGroupWithHandler:(CreateGroupHandler)handler {
     Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+    if (group == nil) {
+        NSLog(@"failed to insert group into context");
+        abort();
+    }
     group.type = [Group entityName];
     group.groupTag = [NSString stringWithUUID];
     group.groupKey = [AESCryptor random256BitKey];
     
     GroupMembership * myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-    [group addMembersObject:myMember];
+    //AUTOREL [group addMembersObject:myMember];
     myMember.group = group;
-    group.myGroupMembership = myMember;
+    //AUTOREL group.myGroupMembership = myMember;
+    myMember.ownGroupContact = group;
+    myMember.contact = group;
     myMember.role = @"admin";
     myMember.state = @"accepted";
 
@@ -1092,7 +1099,7 @@ typedef enum BackendStates {
     Group * group = [self getGroupById: groupId orByTag:groupDict[@"groupTag"]];
     
     NSString * groupState = groupDict[@"state"];
-    if ([groupState isEqualToString:@"none"]) {
+    if ([groupState isEqualToString:@"groupRemoved"]) {
         if (group != nil && ![group.groupState isEqualToString:@"kept"]) {
             [self handleDeletionOfGroup:group];
         }
@@ -1232,75 +1239,118 @@ typedef enum BackendStates {
     if (group == nil) {
         return;
     }
-        
+    if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere with %@",groupMemberDict);
+    if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere found group nick %@ id %@",group.nickName, group.clientId);
+    
     NSString * memberClientId = groupMemberDict[@"clientId"];
-
     Contact * memberContact = [self getContactByClientId:memberClientId];
-    if (memberContact == nil  && ![memberClientId isEqualToString:[UserProfile sharedProfile].clientId]) {
-        // create new Contact if it does not exist and is not own contact
-        NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating",memberClientId);
+    
+    if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere getContactByClientId %@ returned group contact nick %@ id %@",memberClientId,memberContact.nickName,memberContact.clientId);
+    if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere own clientId is %@",[UserProfile sharedProfile].clientId);
+    
+    if (memberContact == nil && ![[UserProfile sharedProfile].clientId isEqualToString:memberClientId]) {
+        // There is no contact for this clientId, and it is not us
+        if ([groupMemberDict[@"state"] isEqualToString:@"none"]) {
+            // do not process unknown contacts with membership state ‘none'
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere not processing group member with state %@ id %@",groupMemberDict[@"state"], memberClientId);
+            return;
+        }
+        // create new Contact because it does not exist and is not own contact
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating contact with id",memberClientId);
         memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         memberContact.clientId = memberClientId;
         [self.delegate saveDatabase];
     }
+    
+    // look for member matching memberClientId in group members
     NSSet * theMemberSet = [group.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         if (memberContact != nil) {
-            return [obj.contact.clientId isEqualToString: memberClientId];
+            if (obj.contact == nil) {
+                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: member without contact: %@:",obj);
+            } else if (obj.contact.clientId == nil) {
+                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: contact without clientId: %@:",obj.contact);
+            }
+            BOOL result = [obj.contact.clientId isEqualToString: memberClientId];
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: filtering: result=%d, obj.contact.clientId1=%@, memberClientId=%@",result,obj.contact.clientId,memberClientId);
+            return result;
         } else {
             // own contact
-            return obj.contact == nil;
+            BOOL result = [group isEqual:obj.contact];
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: filtering(nil contact): result=%d, group(.clientId)=%@, obj.contact(.clientId)=%@",result,group.clientId,obj.contact.clientId);
+            return result;
         }
     }];
     if ([theMemberSet count] > 1) {
         NSLog(@"ERROR: duplicate members in group %@ with id %@",groupId,memberClientId);
         return;
     }
+    if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: %d members, %d in filtered set",[group.members count], [theMemberSet count]);
 
-    GroupMembership * myMember = nil;
+    GroupMembership * myMembership = nil;
     if ([theMemberSet count] == 0) {
         if (![groupMemberDict[@"state"] isEqualToString:@"none"]) {
             // create new member
-            myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-            myMember.contact = memberContact; // memberContact will be nil for own membership
-            [group addMembersObject:myMember];
-            myMember.group = group;
-            // check to update the duplicate fields for our own role and state in the group contact
+            myMembership = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+             // memberContact will be nil for own membership
             if (memberContact == nil) {
                 // set pointer in group contact to our own membership
-                group.myGroupMembership = myMember;
+                //group.myGroupMembership = myMembership;
+                myMembership.contact = group;
+                myMembership.ownGroupContact = group;
+                if (myMembership.contact == nil) {
+                    NSLog(@"myMembership.contact is nil");
+                    abort();
+                }
+                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: created new member for me with group as contact id %@",group.clientId);
+            } else {
+                // set contact to other member contact
+                myMembership.contact = memberContact;
+                if (myMembership.contact == nil) {
+                    NSLog(@"myMembership.contact is nil(2)");
+                    abort();
+                }
+                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: created new member for contact id %@",memberContact.clientId);
             }
+            //AUTOREL [group addMembersObject:myMembership];
+            myMembership.group = group;
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: group has now %d members",[group.members count]);
         }
     } else {
-        myMember = [theMemberSet anyObject];
+        myMembership = [theMemberSet anyObject];
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: got member from memberset with nick %@ id %@",myMembership.contact.nickName, myMembership.contact.clientId);
     }
     
-    if (myMember == nil) {
+    if (myMembership == nil) {
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no member found and not created, incoming member state must be 'none'");
         return;
     }
     // check for invitation
     BOOL weHaveBeenInvited = NO;
     if ([groupMemberDict[@"state"] isEqualToString:@"invited"] &&
-        ![myMember.state isEqualToString:@"invited"] &&
-        memberContact == nil)
+        ![myMembership.state isEqualToString:@"invited"] &&
+        [group isEqual:myMembership.contact])
     {
         weHaveBeenInvited = YES;
+        NSLog(@"updateGroupMemberHere: weHaveBeenInvited");
     }
 
     BOOL someoneHasJoinedGroup = NO;
     if ([groupMemberDict[@"state"] isEqualToString:@"joined"] &&
-        [myMember.state isEqualToString:@"invited"] &&
-        memberContact != nil &&
-        [group.ownMemberShip.state isEqualToString:@"joined"])
+        [myMembership.state isEqualToString:@"invited"] &&
+        ![group isEqual:myMembership.contact] &&                   // only if s.o. membership else has been updated
+        [group.myGroupMembership.state isEqualToString:@"joined"]) // only show when we habe already joined
     {
         someoneHasJoinedGroup = YES;
+        NSLog(@"updateGroupMemberHere: someoneHasJoinedGroup");
     }
 
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
-    [myMember updateWithDictionary: groupMemberDict];
+    [myMembership updateWithDictionary: groupMemberDict];
     
-    if ([myMember.state isEqualToString:@"none"]) {
+    if ([myMembership.state isEqualToString:@"none"]) {
         // delete member
-        [self handleDeletionOfGroupMember:myMember inGroup:group withContact:memberContact];
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting member with state 'none', nick=%@", memberContact.nickName);
+        [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact];
         [self.delegate saveDatabase];
         return;
     }    
@@ -1308,26 +1358,26 @@ typedef enum BackendStates {
     [self.delegate saveDatabase];
     
     // now check if we have to update the encrypted group key
-    if (memberContact != nil) { // not us
-        [self ifNeededUpdateGroupKeyForOtherMember:myMember];
+    if (![group isEqual:myMembership.contact]) { // not us
+        [self ifNeededUpdateGroupKeyForOtherMember:myMembership];
     } else {
-        [self ifNeededUpdateGroupKeyForMyMembership:myMember];
+        [self ifNeededUpdateGroupKeyForMyMembership:myMembership];
     }
     if (weHaveBeenInvited) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self invitationAlertForGroup:group withMemberShip:myMember];
+            [self invitationAlertForGroup:group withMemberShip:myMembership];
         });
     }
     if (someoneHasJoinedGroup) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self groupJoinedAlertForGroup:group withMemberShip:myMember];
+            [self groupJoinedAlertForGroup:group withMemberShip:myMembership];
         });
     }
 }
 
 - (void)handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
-    if (memberContact != nil) { // not us
+    if (![group isEqual:myMember.contact]) { // not us
         dispatch_async(dispatch_get_main_queue(), ^{
             [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
         });
@@ -1335,14 +1385,14 @@ typedef enum BackendStates {
             (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"] &&
              memberContact.groupMemberships.count == 1))
         {
-            NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
             [moc deleteObject: memberContact];
         } else {
             // only delete group membership
             [moc deleteObject: myMember];
         }
     } else {
-        NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
          // we have been thrown out
         if (![group.groupState isEqualToString:@"kept"]) {
             [self handleDeletionOfGroup:group];
@@ -1406,7 +1456,7 @@ typedef enum BackendStates {
     }
     [group.members enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         GroupMembership * member = (GroupMembership*) obj;
-        if ([member.role isEqualToString: @"admin"] && member.contact != nil) {
+        if ([member.role isEqualToString: @"admin"] && member.contact != nil && ! [group isEqual:member.contact]) {
             [admins addObject: member.contact.nickName];
         }
     }];
@@ -1452,7 +1502,7 @@ typedef enum BackendStates {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     NSMutableSet * groupMembers = group.groupMemberships;
     for (GroupMembership * member in groupMembers) {
-        if (member.contact != nil &&
+        if (member.contact != nil && ![group isEqual:member.contact] &&
             ![member.contact.relationshipState isEqualToString:@"friend"] &&
             ![member.contact.relationshipState isEqualToString:@"blocked"] &&
             member.contact.groupMemberships.count == 1)
@@ -1468,8 +1518,8 @@ typedef enum BackendStates {
 - (void) ifNeededUpdateGroupKeyForOtherMember:(GroupMembership*) myMember {
     Group * group = myMember.group;
     Contact * memberContact = myMember.contact;
-    if (memberContact == nil) {
-        NSLog(@"ERROR: must not call ifNeededUpdateGroupKeyForOtherMember on own membership");
+    if ([group isEqual:memberContact]) {
+        NSLog(@"ERROR: must not call ifNeededUpdateGroupKeyForOtherMember on own membership, group=%@, memberContact=%@", group, memberContact);
         return;
     }
     if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: My Group %@, member %@: iAmAdmin=%d, keySettingInProgress=%d, myMember.cipheredGroupKey=%@, myMember.distributedCipheredGroupKey=%@\n",group.clientId, memberContact.clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.distributedCipheredGroupKey);}
@@ -1481,7 +1531,7 @@ typedef enum BackendStates {
             ![myMember.distributedGroupKey isEqualToData:group.groupKey])
         {
             // we need to put up a new group key for this member
-            if (GROUPKEY_DEBUG) {NSLog(@"Setting key as admin for group %@, groupKey=%@", myMember.group.groupKey,group.groupKey);}
+            if (GROUPKEY_DEBUG) {NSLog(@"Setting key as admin for member (nick %@) group (nick %@ groupId %@), groupKey=%@", myMember.contact.nickName, group.nickName, group.clientId, group.groupKey);}
             
             if ([self isInvalid:group.groupKey]) {
                 // We have lost the group key, generate a new one
@@ -1496,16 +1546,20 @@ typedef enum BackendStates {
                         }
                     }];
                 } else {
-                    NSLog(@"ifNeededUpdateGroupKeyForOtherMember: Cant update group member %@ yet, don't have a contact public keyId yet", memberContact.clientId);
+                    NSLog(@"ifNeededUpdateGroupKeyForOtherMember: Cant update group member nick %@ id %@ yet, don't have a contact public keyId yet",memberContact.nickName, memberContact.clientId);
                 }
             } else {
-                NSLog(@"ifNeededUpdateGroupKeyForOtherMember: setting group member key for contact client id %@", memberContact.clientId);
+                NSLog(@"ifNeededUpdateGroupKeyForOtherMember: setting group member key for contact nick %@ client id %@", memberContact.nickName, memberContact.clientId);
                 [self setGroupMemberKey:myMember];
             }
+        } else {
+            if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: not updating(2)");}
         }
-    }    
+    } else {
+        if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: not updating(1)");}
+    }
 }
-    
+
 - (void) setGroupMemberKey:(GroupMembership *)myMember {
     myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
     myMember.keySettingInProgress = YES;
@@ -1559,7 +1613,11 @@ typedef enum BackendStates {
                  }
                  [self.delegate saveDatabase];
              }];
+        } else {
+            if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(2)");}
         }
+    } else {
+        if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(1)");}
     }
 }
 
@@ -1721,7 +1779,7 @@ typedef enum BackendStates {
         NSLog(@"Fetch request 'AttachmentsNotUploaded' failed: %@", error);
         abort();
     }
-    NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
+    if (CONNECTION_TRACE) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
@@ -1746,7 +1804,7 @@ typedef enum BackendStates {
         NSLog(@"Fetch request 'AttachmentsNotDownloaded' failed: %@", error);
         abort();
     }
-    NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
+    if (CONNECTION_TRACE) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
@@ -2648,7 +2706,7 @@ typedef enum BackendStates {
 }
 
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket {
-    NSLog(@"webSocketDidOpen performRegistration: %d", _performRegistration);
+    if (CONNECTION_TRACE) NSLog(@"webSocketDidOpen performRegistration: %d", _performRegistration);
     if (_performRegistration) {
         [self setState: kBackendRegistering];
         [self performRegistration];

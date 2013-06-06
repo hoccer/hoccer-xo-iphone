@@ -221,7 +221,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         title = NSLocalizedString(@"group_delete_title", nil);
         destructiveButtonTitle = NSLocalizedString(@"group_delete_button_title", nil);
     } else {
-        if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+        if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
             if (GROUPVIEW_DEBUG) NSLog(@"decline invitation");
             title = NSLocalizedString(@"group_decline_invitation_title", nil);
             destructiveButtonTitle = NSLocalizedString(@"group_decline_button_title", nil);
@@ -320,7 +320,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if ([self.group.groupState isEqualToString:@"kept"]) {
         return NSLocalizedString(@"group_delete_data", nil);
     }
-    if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+    if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
         return NSLocalizedString(@"group_decline_invitation", nil);
     } else {
         if (self.group.iAmAdmin) {
@@ -338,7 +338,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
     [self.group.members enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         GroupMembership * member = (GroupMembership*) obj;
-        if ([member.role isEqualToString: @"admin"] && member.contact != nil) {
+        if ([member.role isEqualToString: @"admin"] && ![member.group isEqual:self.contact]) {
             [admins addObject: member.contact.nickName];
         }
     }];
@@ -374,12 +374,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (NSArray*) groupUtilities {
     NSMutableArray * utilities = [[NSMutableArray alloc] init];
-    if ([self.group.ownMemberShip.state isEqualToString:@"joined"]) {
+    if ([self.group.myGroupMembership.state isEqualToString:@"joined"]) {
         [utilities addObject: _chatWithContactItem];
-    } else if ([self.group.ownMemberShip.state isEqualToString: @"invited"]) {
+    } else if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
         [utilities addObject: _joinGroupItem];
     } else {
-        NSLog(@"unhandled state - membership: %@ state: %@", self.group.ownMemberShip, self.group.ownMemberShip.state);
+        NSLog(@"unhandled state - membership: %@ state: %@", self.group.myGroupMembership, self.group.myGroupMembership.state);
     }
     
     if (![self.group.groupState isEqualToString:@"kept"]) {
@@ -432,7 +432,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (id) getContact: (GroupMembership*) membership {
-    if (membership.contact != nil) {
+    if (![self.group isEqual:membership.contact]) {
         return membership.contact;
     }
     return [UserProfile sharedProfile];
@@ -672,6 +672,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         cell.nickName.alpha = 1.0;
     }
+    cell.statusLabel.text = [NSString stringWithFormat:@"%@ - %@",membership.state, membership.role];
     UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
     cell.avatar.image = avatar;
 }

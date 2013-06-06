@@ -47,6 +47,7 @@
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="sender" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="groupMemberships" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="contact" inverseEntity="GroupMembership" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="HXOMessage" inverseName="contact" inverseEntity="HXOMessage" syncable="YES"/>
+        <relationship name="myGroupMembership" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="ownGroupContact" inverseEntity="GroupMembership" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND timeAccepted == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
@@ -69,8 +70,6 @@
         <attribute name="groupState" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="groupTag" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="myRole" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="myState" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="members" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="group" inverseEntity="GroupMembership" syncable="YES"/>
     </entity>
     <entity name="GroupMembership" representedClassName="GroupMembership" syncable="YES">
@@ -83,6 +82,7 @@
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="groupMemberships" inverseEntity="Contact" syncable="YES"/>
         <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="members" inverseEntity="Group" syncable="YES"/>
+        <relationship name="ownGroupContact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="myGroupMembership" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="HXOMessage" representedClassName="HXOMessage" syncable="YES">
         <attribute name="attachmentFileId" optional="YES" attributeType="String" syncable="YES"/>
@@ -125,12 +125,12 @@
     <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="128" height="330"/>
-        <element name="Contact" positionX="0" positionY="0" width="128" height="434"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="Group" positionX="324" positionY="93" width="128" height="150"/>
-        <element name="GroupMembership" positionX="-225" positionY="-0" width="128" height="180"/>
-        <element name="HXOMessage" positionX="-576" positionY="171" width="128" height="284"/>
-        <element name="Invite" positionX="-470" positionY="3" width="128" height="60"/>
+        <element name="Attachment" positionX="-711" positionY="72" width="128" height="315"/>
+        <element name="Contact" positionX="-81" positionY="-9" width="128" height="449"/>
+        <element name="Delivery" positionX="-279" positionY="180" width="128" height="150"/>
+        <element name="Group" positionX="304" positionY="132" width="128" height="120"/>
+        <element name="GroupMembership" positionX="117" positionY="252" width="128" height="195"/>
+        <element name="HXOMessage" positionX="-468" positionY="144" width="128" height="284"/>
+        <element name="Invite" positionX="-504" positionY="-135" width="128" height="60"/>
     </elements>
 </model>

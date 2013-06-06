@@ -242,7 +242,7 @@ static BOOL _shouldSave = NO;
 }
 
 - (void) setupDone: (BOOL) performRegistration {
-    NSLog(@"setupDone");
+    // NSLog(@"setupDone");
     [self.chatBackend start: performRegistration];
 }
 
