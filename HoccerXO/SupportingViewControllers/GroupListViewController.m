@@ -126,7 +126,9 @@
         }
     }
     
-    cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,joinedStatus];;
+    // cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,joinedStatus];
+    // cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,group.clientId];
+    cell.statusLabel.text = joinedStatus;
     
 }
 

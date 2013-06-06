@@ -42,6 +42,7 @@
 #define CONNECTION_TRACE NO
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
+#define USE_VALIDATOR YES
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -880,7 +881,7 @@ typedef enum BackendStates {
 }
 
 - (void) updateRelationship: (NSDictionary*) relationshipDict {
-    [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
     
     NSString * clientId = relationshipDict[@"otherClientId"];
     if ([clientId isEqualToString: [UserProfile sharedProfile].clientId]) {
@@ -914,7 +915,7 @@ typedef enum BackendStates {
 
 - (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionBlock)handler {
     [self getKeyForClientId: theContact.clientId withKeyId:theId keyHandler:^(NSDictionary * keyRecord) {
-        [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
+        if (USE_VALIDATOR) [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
         if (keyRecord != nil && [theId isEqualToString: keyRecord[@"keyId"]]) {
             theContact.publicKeyString = keyRecord[@"key"];
             theContact.publicKeyId = keyRecord[@"keyId"];
@@ -932,7 +933,7 @@ typedef enum BackendStates {
 }
 
 - (void) presenceUpdated:(NSDictionary *) thePresence {
-    [self validateObject: thePresence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: thePresence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
     NSString * myClient = thePresence[@"clientId"];
     if ([myClient isEqualToString: [UserProfile sharedProfile].clientId]) {
         return;
@@ -998,6 +999,7 @@ typedef enum BackendStates {
 
 //  void groupUpdated(TalkGroup group);
 - (void) groupUpdated:(NSArray*) group_param {
+    if (GROUP_DEBUG) NSLog(@"groupUpdated with %@",group_param);
     [self updateGroupHere: group_param[0]];
 }
 
@@ -1056,9 +1058,8 @@ typedef enum BackendStates {
              group.clientId = groupId;
              [self.delegate saveDatabase];
              handler(group);
-             NSLog(@"createGroup() key = %@", group.groupKey);
-
-             NSLog(@"createGroup() returned groupId: %@", responseOrError);
+             if (GROUP_DEBUG) NSLog(@"createGroup() key = %@", group.groupKey);
+             if (GROUP_DEBUG) NSLog(@"createGroup() returned groupId: %@", responseOrError);
          } else {
              NSLog(@"createGroup() failed: %@", responseOrError);
              handler(nil);
@@ -1072,7 +1073,7 @@ typedef enum BackendStates {
     NSNumber * lastKnownMillis = [HXOBackend millisFromDate:lastKnown];
     [_serverConnection invoke: @"getGroups" withParams: @[lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            // NSLog(@"getGroups(): got result: %@", responseOrError);
+            if (GROUP_DEBUG) NSLog(@"getGroups(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"getGroups(): failed: %@", responseOrError);
@@ -1086,6 +1087,7 @@ typedef enum BackendStates {
     // NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
     // NSLog(@"latest date %@", latestChange);
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
+        if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
         for (NSDictionary * groupDict in changedGroups) {
             [self updateGroupHere: groupDict];
         }
@@ -1095,14 +1097,22 @@ typedef enum BackendStates {
 - (void) updateGroupHere: (NSDictionary*) groupDict {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
         
+    if (GROUP_DEBUG) NSLog(@"updateGroupHere with %@",groupDict);
+
     NSString * groupId = groupDict[@"groupId"];
     Group * group = [self getGroupById: groupId orByTag:groupDict[@"groupTag"]];
     
     NSString * groupState = groupDict[@"state"];
+    if (groupState == nil) {
+        NSLog(@"Error: group without group state, dict=%@", groupDict);
+        return;
+    }
     if ([groupState isEqualToString:@"groupRemoved"]) {
         if (group != nil && ![group.groupState isEqualToString:@"kept"]) {
+            if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
             [self handleDeletionOfGroup:group];
         }
+        if (GROUP_DEBUG) NSLog(@"updateGroupHere: not updating a removed group");
         return;
     }
 
@@ -1110,6 +1120,7 @@ typedef enum BackendStates {
         group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         group.clientId = groupId;
         group.type = [Group entityName];
+        if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
     }
     NSDate * lastKnown = group.lastChanged;
     
@@ -1546,10 +1557,10 @@ typedef enum BackendStates {
                         }
                     }];
                 } else {
-                    NSLog(@"ifNeededUpdateGroupKeyForOtherMember: Cant update group member nick %@ id %@ yet, don't have a contact public keyId yet",memberContact.nickName, memberContact.clientId);
+                    if (GROUPKEY_DEBUG) NSLog(@"ifNeededUpdateGroupKeyForOtherMember: Cant update group member nick %@ id %@ yet, don't have a contact public keyId yet",memberContact.nickName, memberContact.clientId);
                 }
             } else {
-                NSLog(@"ifNeededUpdateGroupKeyForOtherMember: setting group member key for contact nick %@ client id %@", memberContact.nickName, memberContact.clientId);
+                if (GROUPKEY_DEBUG) NSLog(@"ifNeededUpdateGroupKeyForOtherMember: setting group member key for contact nick %@ client id %@", memberContact.nickName, memberContact.clientId);
                 [self setGroupMemberKey:myMember];
             }
         } else {
@@ -2138,11 +2149,13 @@ typedef enum BackendStates {
         [deliveryDicts addObject: myDict];
     }
     // validate
-    for (NSDictionary * d in deliveryDicts) {
-        [self validateObject: d forEntity:@"RPC_TalkDelivery_out"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) {
+        for (NSDictionary * d in deliveryDicts) {
+            [self validateObject: d forEntity:@"RPC_TalkDelivery_out"];  // TODO: Handle Validation Error
+        }
     }
     
-    [self validateObject: messageDict forEntity:@"RPC_TalkMessage_out"]; // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: messageDict forEntity:@"RPC_TalkMessage_out"]; // TODO: Handle Validation Error
     
     [_serverConnection invoke: @"deliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
@@ -2150,7 +2163,7 @@ typedef enum BackendStates {
             NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
             int i = 0;
             for (Delivery * delivery in deliveries) {
-                [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+                if (USE_VALIDATOR) [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
                 if (DELIVERY_TRACE) {NSLog(@"deliveryRequest result: Delivery state '%@'->'%@' for messageTag %@ id %@",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"],updatedDeliveryDicts[i][@"messageId"] );}
                 [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
                 if (delivery.receiver != nil) {
@@ -2182,7 +2195,7 @@ typedef enum BackendStates {
     [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
-            [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+            if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             if (DELIVERY_TRACE) {NSLog(@"deliveryConfirm result: state %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
             if ([delivery.state isEqualToString: responseOrError[@"state"]]) {
                 if (GLITCH_TRACE) {NSLog(@"#GLITCH: deliveryConfirm result: state unchanged %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
@@ -2203,7 +2216,7 @@ typedef enum BackendStates {
     {
         if (success) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
-            [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+            if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             
             NSString * oldState = [delivery.state copy];
             [delivery updateWithDictionary: responseOrError];
@@ -2249,7 +2262,7 @@ typedef enum BackendStates {
                              @"avatarUrl" : avatarURL,
                              @"keyId" : [keyId hexadecimalString]
                              };
-    [self validateObject: params forEntity:@"RPC_TalkPresence_out"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: params forEntity:@"RPC_TalkPresence_out"];  // TODO: Handle Validation Error
 
     [_serverConnection invoke: @"updatePresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
@@ -2312,7 +2325,7 @@ typedef enum BackendStates {
                              @"key" :   [publicKey asBase64EncodedString], 
                              @"keyId" : [myKeyId hexadecimalString]
                              };
-    [self validateObject: params forEntity:@"RPC_TalkKey_out"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: params forEntity:@"RPC_TalkKey_out"];  // TODO: Handle Validation Error
 
     [_serverConnection invoke: @"updateKey" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
@@ -2500,8 +2513,8 @@ typedef enum BackendStates {
     }
     NSDictionary * messageDict = params[1];
 
-    [self validateObject: messageDict forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
-    [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: messageDict forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
 
     [self receiveMessage: messageDict withDelivery: deliveryDict];
 }
@@ -2592,7 +2605,7 @@ typedef enum BackendStates {
     NSDictionary * deliveryDict = params[0];
     //NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
 
-    [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+    if (USE_VALIDATOR) [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
     
     NSString * myMessageTag = deliveryDict[@"messageTag"];
     NSString * myReceiverId = deliveryDict[@"receiverId"];
