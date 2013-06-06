@@ -1107,7 +1107,7 @@ typedef enum BackendStates {
         NSLog(@"Error: group without group state, dict=%@", groupDict);
         return;
     }
-    if ([groupState isEqualToString:@"groupRemoved"]) {
+    if (/*[groupState isEqualToString:@"groupRemoved"] || */[groupState isEqualToString:@"none"]) {
         if (group != nil && ![group.groupState isEqualToString:@"kept"]) {
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
             [self handleDeletionOfGroup:group];
@@ -1261,7 +1261,7 @@ typedef enum BackendStates {
     
     if (memberContact == nil && ![[UserProfile sharedProfile].clientId isEqualToString:memberClientId]) {
         // There is no contact for this clientId, and it is not us
-        if ([groupMemberDict[@"state"] isEqualToString:@"none"]) {
+        if ([groupMemberDict[@"state"] isEqualToString:@"none"] || [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
             // do not process unknown contacts with membership state ‘none'
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere not processing group member with state %@ id %@",groupMemberDict[@"state"], memberClientId);
             return;
@@ -1299,7 +1299,7 @@ typedef enum BackendStates {
 
     GroupMembership * myMembership = nil;
     if ([theMemberSet count] == 0) {
-        if (![groupMemberDict[@"state"] isEqualToString:@"none"]) {
+        if (![groupMemberDict[@"state"] isEqualToString:@"none"] && ![groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
             // create new member
             myMembership = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
              // memberContact will be nil for own membership
@@ -1355,14 +1355,23 @@ typedef enum BackendStates {
         NSLog(@"updateGroupMemberHere: someoneHasJoinedGroup");
     }
 
+    BOOL memberShipDeleted = NO;
+    if (([groupMemberDict[@"state"] isEqualToString:@"groupRemoved"] || [groupMemberDict[@"state"] isEqualToString:@"none"]) &&
+        !([myMembership.state isEqualToString:@"groupRemoved"] || [myMembership.state isEqualToString:@"none"]))
+    {
+        memberShipDeleted = YES;
+        NSLog(@"updateGroupMemberHere: memberShipDeleted");
+    }
+
+    
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
     
-    if ([myMembership.state isEqualToString:@"none"]) {
+    if (memberShipDeleted) {
         // delete member
-        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting member with state 'none', nick=%@", memberContact.nickName);
-        [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact];
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting member with state '%@', nick=%@", groupMemberDict[@"state"], memberContact.nickName);
         [self.delegate saveDatabase];
+        [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact];
         return;
     }    
 

@@ -322,3 +322,12 @@
 "invitation_join_group_button_title"="Annehmen";
 "invitation_decline_button_title"="Ablehnen";
 
+"Group Deactivated"="Gruppe deaktiviert";
+"invited"="eingeladen";
+"Invitation not yet accepted"="Einladung bisher nicht angenommen";
+"Admin"="Admin";
+"%@%d joined"="%@%d Mitglieder";
+"%@one joined"="%@ein Mitglied";
+"%@you are alone"="%@du bist allein";
+"%@%d invited"="%@%d eingeladen";
+

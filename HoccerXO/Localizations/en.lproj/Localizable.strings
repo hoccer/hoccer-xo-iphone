@@ -340,6 +340,15 @@
 "invitation_join_group_button_title"="Join Group";
 "invitation_decline_button_title"="Decline Invitation";
 
+"Group Deactivated"="Group Deactivated";
+"invited"="invited";
+"Invitation not yet accepted"="Invitation not yet accepted";
+"Admin"="Admin";
+"%@%d joined"="%@%d joined";
+"%@one joined"="%@one joined";
+"%@you are alone"="%@you are alone";     
+"%@%d invited"="%@%d invited";
+
 
 
 
