@@ -20,7 +20,7 @@
 @dynamic members;
 
 @dynamic lastChangedMillis;
-@dynamic ownMemberShip;
+// @dynamic myGroupMembership;
 
 - (NSNumber*) lastChangedMillis {
     return [HXOBackend millisFromDate:self.lastChanged];
@@ -30,9 +30,12 @@
     self.lastChanged = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
+/*
 - (GroupMembership*) ownMemberShip {
+    return self.myGroupMembership;
+
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return obj.contact == nil;
+        return obj.contact == nil || [obj.contact isEqual:self];
     }];
     if ([theMemberSet count] == 1) {
         if ([theMemberSet.anyObject isEqual:self.myGroupMembership]) {
@@ -45,17 +48,18 @@
     }
     return nil;
 }
+ */
 
 - (NSSet*) otherJoinedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return obj.contact != nil && [obj.state isEqualToString:@"joined"];
+        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"joined"];
     }];
     return theMemberSet;
 }
 
 - (NSSet*) otherInvitedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return obj.contact != nil && [obj.state isEqualToString:@"invited"];
+        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"invited"];
     }];
     return theMemberSet;
 }
@@ -64,19 +68,19 @@
     [self willAccessValueForKey:@"groupKey"];
     NSData * myValue = [self primitiveValueForKey:@"groupKey"];
     [self didAccessValueForKey:@"groupKey"];
-    if (myValue == nil) {
-        myValue = [self.ownMemberShip decryptedGroupKey];
+    if (myValue == nil && !self.iAmAdmin) { // when I am admin and have lost the group key, don't try to get it from server
+        myValue = [self.myGroupMembership decryptedGroupKey];
         self.groupKey = myValue;
     }
     return myValue;
 }
 
 - (BOOL) iAmAdmin {
-    return [self.ownMemberShip.role isEqualToString:@"admin"];
+    return [self.myGroupMembership.role isEqualToString:@"admin"];
 }
 
 - (BOOL) iJoined {
-    return [self.ownMemberShip.state isEqualToString:@"joined"];
+    return [self.myGroupMembership.state isEqualToString:@"joined"];
 }
 
 //public class TalkGroup {

@@ -47,7 +47,7 @@
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="sender" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="groupMemberships" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="contact" inverseEntity="GroupMembership" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="HXOMessage" inverseName="contact" inverseEntity="HXOMessage" syncable="YES"/>
-        <relationship name="myGroupMembership" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GroupMembership" syncable="YES"/>
+        <relationship name="myGroupMembership" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="contact" inverseEntity="GroupMembership" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND timeAccepted == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
@@ -80,7 +80,7 @@
         <attribute name="memberKeyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="role" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="groupMemberships" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="myGroupMembership" inverseEntity="Contact" syncable="YES"/>
         <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="members" inverseEntity="Group" syncable="YES"/>
     </entity>
     <entity name="HXOMessage" representedClassName="HXOMessage" syncable="YES">

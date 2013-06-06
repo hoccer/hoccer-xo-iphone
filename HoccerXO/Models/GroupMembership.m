@@ -20,6 +20,7 @@
 @dynamic state;
 @dynamic group;
 @dynamic contact;
+@dynamic ownGroupContact;
 @dynamic lastChanged;
 @dynamic cipheredGroupKey;
 @dynamic distributedCipheredGroupKey;
@@ -31,6 +32,19 @@
 @dynamic lastChangedMillis;
 
 @synthesize keySettingInProgress;
+
+#if 0
+- (void)didChangeValueForKey:(NSString *)key {
+    [super didChangeValueForKey:key];
+    NSLog(@"Groupmembership changed for key '%@'",key);
+
+    if ([key isEqualToString:@"contact"]) {
+        if (self.contact == nil) {
+            NSLog(@"Groupmembership contact changed to nil: %@",[NSThread callStackSymbols]);
+        }
+    }
+}
+#endif
 
 - (NSNumber*) lastChangedMillis {
     return [HXOBackend millisFromDate:self.lastChanged];
@@ -49,8 +63,8 @@
 }
 
 - (NSData *) decryptedGroupKey {
-    if (self.contact != nil) {
-        NSLog(@"ERROR:Group key won't be encrypted for me - must not call this function on other group members except me");
+    if (![self.group isEqual:self.contact]) {
+        NSLog(@"ERROR:Group key won't be encrypted for me - must not call this function on other group members except me, contact nick=%@ contact.clientId = %@, group nick=%@, group.clientId = %@", self.contact.nickName, self.contact.clientId ,self.group.nickName, self.group.clientId);
         return nil;
     }
     if (self.cipheredGroupKey == nil || self.cipheredGroupKey.length == 0) {

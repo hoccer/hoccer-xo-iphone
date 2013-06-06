@@ -10,6 +10,9 @@
 #import "Group.h"
 #import "AppDelegate.h"
 #import "GroupViewController.h"
+#import "ContactCell.h"
+#import "InsetImageView.h"
+#import "GroupMembership.h"
 
 @interface GroupListViewController ()
 
@@ -73,6 +76,60 @@
         group = [[self currentFetchedResultsController] objectAtIndexPath:indexPath];
     }
     groupViewController.group = group;
+}
+
+- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
+                   configureCell:(ContactCell *)cell
+                     atIndexPath:(NSIndexPath *)indexPath
+{
+    // your cell guts here
+    Group * group = (Group*)[fetchedResultsController objectAtIndexPath:indexPath];
+    // cell.nickName.text = contact.nickName;
+    cell.nickName.text = group.nickName;
+    
+    cell.avatar.image = group.avatarImage != nil ? group.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+    
+    NSInteger joinedMemberCount = [group.otherJoinedMembers count];
+    NSInteger invitedMemberCount = [group.otherInvitedMembers count];
+    
+    NSString * joinedStatus = @"";
+    
+    if ([group.groupState isEqualToString:@"kept"]) {
+        joinedStatus = NSLocalizedString(@"Group Deactivated", nil);
+    } else if ([group.myGroupMembership.state isEqualToString:@"invited"]){
+        joinedStatus = NSLocalizedString(@"Invitation not yet accepted", nil);
+    } else {
+        if (group.iAmAdmin) {
+            joinedStatus = NSLocalizedString(@"Admin", nil);
+        }
+        if (joinedMemberCount > 0) {
+            if (joinedStatus.length>0) {
+                joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
+            }
+            if (joinedMemberCount > 1) {
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d joined",nil), joinedStatus,joinedMemberCount];
+            } else {
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@one joined",nil), joinedStatus];
+            }
+        } else {
+            if (joinedStatus.length>0) {
+                joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
+            }
+            joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@you are alone",nil), joinedStatus,joinedMemberCount];
+            
+        }
+        if (invitedMemberCount > 0) {
+            if (joinedStatus.length>0) {
+                joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
+            }
+            joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d invited",nil), joinedStatus,invitedMemberCount];
+        }
+    }
+    
+    // cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,joinedStatus];
+    // cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,group.clientId];
+    cell.statusLabel.text = joinedStatus;
+    
 }
 
 @end

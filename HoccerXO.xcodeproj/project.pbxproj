@@ -855,7 +855,8 @@
 		E9B7BAB5172D5E4E00212420 /* RPCObjectsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RPCObjectsModel.xcdatamodel; sourceTree = "<group>"; };
 		E9B7BAB7172EA15E00212420 /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
-		E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-16.xcdatamodel"; sourceTree = "<group>"; };
+		E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-16.xcdatamodel"; sourceTree = "<group>"; };
+		E9BBA0C6175E4A6100A463A7 /* HoccerXO-17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-17.xcdatamodel"; sourceTree = "<group>"; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		E9D1145517316DCC00737EF7 /* StartupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupViewController.h; sourceTree = "<group>"; };
 		E9D1145617316DCC00737EF7 /* StartupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupViewController.m; sourceTree = "<group>"; };
@@ -2498,9 +2499,10 @@
 			isa = XCVersionGroup;
 			children = (
 				E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */,
+				E9BBA0C6175E4A6100A463A7 /* HoccerXO-17.xcdatamodel */,
 				E93F6AC31754469D00F686B8 /* HoccerXO-15.xcdatamodel */,
 			);
-			currentVersion = E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */;
+			currentVersion = E9BBA0C6175E4A6100A463A7 /* HoccerXO-17.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

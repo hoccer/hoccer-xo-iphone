@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSString * state;
 @property (nonatomic, retain) Group *group;
 @property (nonatomic, retain) Contact *contact;
+@property (nonatomic, retain) Contact *ownGroupContact;
 @property (nonatomic, retain) NSDate * lastChanged;
 @property (nonatomic, retain) NSData * cipheredGroupKey;
 @property (nonatomic, retain) NSData * distributedCipheredGroupKey;
