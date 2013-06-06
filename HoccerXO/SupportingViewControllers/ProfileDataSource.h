@@ -46,6 +46,7 @@
 
 @property (nonatomic,readonly) NSUInteger count;
 @property (nonatomic,strong)   NSString* name;
+@property (nonatomic,readonly) BOOL managesOwnContent;
 
 - (id) objectAtIndexedSubscript: (NSInteger) index;
 

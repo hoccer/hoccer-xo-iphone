@@ -855,8 +855,8 @@
 		E9B7BAB5172D5E4E00212420 /* RPCObjectsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RPCObjectsModel.xcdatamodel; sourceTree = "<group>"; };
 		E9B7BAB7172EA15E00212420 /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
-		E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-16.xcdatamodel"; sourceTree = "<group>"; };
-		E9BBA0C6175E4A6100A463A7 /* HoccerXO-17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-17.xcdatamodel"; sourceTree = "<group>"; };
+		E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-16.xcdatamodel"; sourceTree = "<group>"; };
+		E9BBA0C6175E4A6100A463A7 /* HoccerXO-17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-17.xcdatamodel"; sourceTree = "<group>"; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		E9D1145517316DCC00737EF7 /* StartupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupViewController.h; sourceTree = "<group>"; };
 		E9D1145617316DCC00737EF7 /* StartupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupViewController.m; sourceTree = "<group>"; };
@@ -1428,6 +1428,8 @@
 				636D3FF9170F370E00304EDF /* InviteCodeViewController.mm */,
 				633049251701A3A80045E64E /* NavigationMenuViewController.h */,
 				633049261701A3A80045E64E /* NavigationMenuViewController.m */,
+				63825499175F746B000347CD /* ProfileDataSource.h */,
+				6382549A175F746B000347CD /* ProfileDataSource.m */,
 				633049281701B3390045E64E /* ProfileViewController.h */,
 				633049291701B3390045E64E /* ProfileViewController.m */,
 				E9B7BAB7172EA15E00212420 /* RecordViewController.h */,
@@ -1438,8 +1440,6 @@
 				E9D1145617316DCC00737EF7 /* StartupViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				63825499175F746B000347CD /* ProfileDataSource.h */,
-				6382549A175F746B000347CD /* ProfileDataSource.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;

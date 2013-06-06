@@ -33,4 +33,5 @@
     frame.size.width += 2 * padding;
     self.contentView.frame = frame;
 }
+
 @end

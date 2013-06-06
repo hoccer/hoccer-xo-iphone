@@ -7,8 +7,19 @@
 //
 
 #import "ProfileDataSource.h"
+#import "GroupMembership.h"
+#import "Contact.h"
 
 #define PROFILE_DATA_SOURCE_DEBUG YES
+
+
+@implementation GroupMembership (ProfileViewUtils)
+
+- (NSString*) name {
+    return [NSString stringWithFormat: @"GroupMembership-%@", self.contact == nil ? @"Me" : self.contact.clientId];
+}
+
+@end
 
 @implementation ProfileDataSource
 
@@ -73,24 +84,39 @@
 
     [insertedSections enumerateIndexesUsingBlock:^(NSUInteger sectionIndex, BOOL *stop) {
         ProfileSection * section = newModel[sectionIndex];
-        for (NSUInteger i = 0; i < section.count; ++i) {
-            NSLog(@"ProfileDataSource updateModel: inserting row %d (%@) in new section %d (%@)", i, [section[i] name], sectionIndex, section.name);
-            NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: sectionIndex];
-            [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
+        if ( ! section.managesOwnContent) {
+            for (NSUInteger i = 0; i < section.count; ++i) {
+                NSLog(@"ProfileDataSource updateModel: inserting row %d (%@) in new section %d (%@)", i, [section[i] name], sectionIndex, section.name);
+                NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: sectionIndex];
+                [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
+            }
         }
     }];
 
+
+    NSMutableArray * updatees = [[NSMutableArray alloc] init];
     [newToOldSectionIndexMap enumerateKeysAndObjectsUsingBlock:^(NSNumber * newIndex, NSNumber * oldIndex, BOOL *stop) {
-        [self updateOldSection: oldIndex.intValue inOldModel: oldModel toMatchNewSection: newIndex.intValue inNewModel: newModel];
+        [self updateOldSection: oldIndex.intValue inOldModel: oldModel toMatchNewSection: newIndex.intValue inNewModel: newModel updatees:updatees];
     }];
 
     _currentModel = newModel;
     [self.delegate.tableView endUpdates];
+    if (updatees.count > 0) {
+        [self.delegate.tableView beginUpdates];
+        [updatees enumerateObjectsUsingBlock:^(NSIndexPath * indexPath, NSUInteger idx, BOOL *stop) {
+            [self.delegate configureCellAtIndexPath: indexPath];
+        }];
+        [self.delegate.tableView endUpdates];
+    }
 }
 
-- (void) updateOldSection: (int) oldSectionIndex inOldModel: (NSArray*) oldModel toMatchNewSection: (int) newSectionIndex inNewModel: (NSArray*) newModel {
+- (void) updateOldSection: (int) oldSectionIndex inOldModel: (NSArray*) oldModel toMatchNewSection: (int) newSectionIndex inNewModel: (NSArray*) newModel updatees: (NSMutableArray*) updatees {
+    if ([newModel[newSectionIndex] managesOwnContent]) {
+        return;
+    }
     ProfileSection * oldSection = oldModel[oldSectionIndex];
     ProfileSection * newSection = newModel[newSectionIndex];
+    NSLog(@"=== updateOldSection name: %@", newSection.name);
     NSIndexSet * removedItems = [self findItemsPresentIn: oldSection butNotIn: newSection];
     NSIndexSet * insertedItems = [self findItemsPresentIn: newSection butNotIn: oldSection];
 
@@ -106,7 +132,8 @@
             NSLog(@"ProfileDataSource updateOldSection: inserting row %d (%@) in section %d (%@)", i, [newSection[i] name], newSectionIndex, newSection.name);
             [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
         } else {
-            [self.delegate configureCellAtIndexPath: indexPath];
+            [updatees addObject: indexPath];
+            //[self.delegate configureCellAtIndexPath: indexPath];
         }
     }
 
@@ -152,6 +179,10 @@
         _items = [[NSMutableArray alloc] initWithArray: items];
     }
     return self;
+}
+
+- (BOOL) managesOwnContent {
+    return NO;
 }
 
 - (NSUInteger) count {

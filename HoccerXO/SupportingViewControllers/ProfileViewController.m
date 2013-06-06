@@ -216,8 +216,9 @@ typedef enum ActionSheetTags {
                 _blockContactItem.currentValue = [self titleForRelationshipState: [object relationshipState]];
             }
         }
-        if ([item indexPath] != nil) {
-            UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: [item indexPath]];
+        NSIndexPath * indexPath = [_profileDataSource indexPathForObject: item];
+        if (indexPath != nil) {
+            UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
             if (cell != nil) {
                 [self.tableView beginUpdates];
                 [cell configure: item];
@@ -663,8 +664,7 @@ typedef enum ActionSheetTags {
     }
 }
 
-
-- (NSArray*) composeModel: (BOOL) editing {
+- (void) composeProfileItems: (BOOL) editing {
     if (editing) {
         _profileItemsSection = [ProfileSection sectionWithName: @"ProfileItemsSection" array: _allProfileItems];
         //items = _allProfileItems;
@@ -672,7 +672,12 @@ typedef enum ActionSheetTags {
         NSArray * itemsWithValue = [_allProfileItems filteredArrayUsingPredicate: self.hasValuePredicate];
         _profileItemsSection = [ProfileSection sectionWithName: @"ProfileItemsSection" array: itemsWithValue];
     }
+}
+
+
+- (NSArray*) composeModel: (BOOL) editing {
     // just don't ask ... needs refactoring
+    [self composeProfileItems: editing];
     if (_mode == ProfileViewModeContactProfile) {
         if ([self.contact.relationshipState isEqualToString: @"friend"]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];

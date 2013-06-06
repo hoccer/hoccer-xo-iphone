@@ -31,9 +31,10 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     NSUInteger _targetSection;
 }
 
-- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection;
-- (void) addTableRows;
-- (void) removeTableRows;
+@property (nonatomic,readonly) NSString* name;
+@property (nonatomic,readonly) BOOL managesOwnContent;
+
+- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection name: (NSString*) name;
 - (NSUInteger) count;
 - (id) objectAtIndexedSubscript: (NSInteger) index;
 
@@ -46,6 +47,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     ProfileItem * _inviteMemberItem;
     ProfileItem * _joinGroupItem;
     ProfileItem * _declineInviteOrLeaveOrDeleteGroupItem;
+    ProfileSection * _groupUtilitiesSection;
 
     ProfileItem * _adminsItem;
     ProfileSection * _adminInfoSection;
@@ -287,32 +289,34 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) populateItems {
-    _inviteMemberItem = [[ProfileItem alloc] init];
+    _inviteMemberItem = [[ProfileItem alloc] initWithName:@"InviteGroupMemberItem"];
     _inviteMemberItem.currentValue = NSLocalizedString(@"group_invite_button", nil);
     _inviteMemberItem.cellClass = [UserDefaultsCellDisclosure class];
     _inviteMemberItem.action = @selector(inviteMemberPressed:);
     _inviteMemberItem.target = self;
     _inviteMemberItem.alwaysShowDisclosure = YES;
 
-    _joinGroupItem = [[ProfileItem alloc] init];
+    _joinGroupItem = [[ProfileItem alloc] initWithName:@"JoinGroupItem"];
     _joinGroupItem.currentValue = NSLocalizedString(@"group_join_button", nil);
     _joinGroupItem.cellClass = [UserDefaultsCellDisclosure class];
     _joinGroupItem.action = @selector(joinGroupPressed:);
     _joinGroupItem.target = self;
 
-    _declineInviteOrLeaveOrDeleteGroupItem = [[ProfileItem alloc] init];
+    _declineInviteOrLeaveOrDeleteGroupItem = [[ProfileItem alloc] initWithName:@"DeclineInviteOrLeaveGroupItem"];
     _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
     _declineInviteOrLeaveOrDeleteGroupItem.cellClass = [UserDefaultsCellDisclosure class];
     _declineInviteOrLeaveOrDeleteGroupItem.action = @selector(declineOrLeaveOrDeletePressed:);
     _declineInviteOrLeaveOrDeleteGroupItem.target = self;
 
-    _adminsItem = [[ProfileItem alloc] init];
+    _groupUtilitiesSection = [ProfileSection sectionWithName:@"GroupUtilitiesSection" items: nil];
+
+    _adminsItem = [[ProfileItem alloc] initWithName:@"GroupAdminsItem"];
     _adminsItem.currentValue = [self adminsLabelText];
     _adminsItem.cellClass = [GroupAdminCell class];
 
     _adminInfoSection = [ProfileSection sectionWithName:@"AdminInfoSection" items: _adminsItem, nil];
 
-    _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
+    _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3 name: @"GroupMemberSection"];
 
     [super populateItems];
 }
@@ -334,6 +338,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             return NSLocalizedString(@"group_leave", nil);
         }
     }
+}
+
+- (void) populateValues {
+    _adminsItem.currentValue = [self adminsLabelText];
+    [super populateValues];
 }
 
 - (NSString*) adminsLabelText {
@@ -366,8 +375,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
      */
 }
 
-- (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
+- (NSArray*) composeModel: (BOOL) editing {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: composeItems");
+    [self composeProfileItems: editing];
     if (editing) {
         return @[ _avatarSection, _profileItemsSection, _adminInfoSection, _memberListItem];
     }
@@ -401,7 +411,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         [utilities addObject: _declineInviteOrLeaveOrDeleteGroupItem];
     }
-    return [ProfileSection sectionWithName: @"GroupUtilitySection" array: utilities];
+    _groupUtilitiesSection = [ProfileSection sectionWithName: @"GroupUtilitySection" array: utilities];
+    return _groupUtilitiesSection;
 }
 
 #pragma mark - Table View Delegate
@@ -681,12 +692,15 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 @implementation FetchedResultsSectionAdapter
 
-- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection {
+@synthesize name = _name;
+
+- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection name: (NSString*) theName {
     self = [super init];
     if (self != nil) {
         _delegate = delegate;
         _section = section;
         _targetSection = targetSection;
+        _name = theName;
         //[self addTableRows];
     }
     return self;
@@ -702,20 +716,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return [_delegate.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: index inSection: _section]];
 }
 
-- (void) addTableRows {
-    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: addTableRows count=%d , _targetSection %d",[self count],_targetSection);
-    for (NSUInteger i = 0; i < [self count]; ++i) {
-        NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: _targetSection];
-        [_delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
-    }
-}
-
-- (void) removeTableRows {
-    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: removeTableRows count=%d , _targetSection %d",[self count],_targetSection);
-    for (NSUInteger i = 0; i < [self count]; ++i) {
-        NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: _targetSection];
-        [_delegate.tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
-    }
+- (BOOL) managesOwnContent {
+    return YES;
 }
 
 @end

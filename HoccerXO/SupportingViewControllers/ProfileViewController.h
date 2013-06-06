@@ -70,5 +70,7 @@ typedef enum ProfileViewModes {
 - (void) setupContactKVO;
 - (IBAction)onCancel:(id)sender;
 - (void) populateItems;
+- (void) composeProfileItems: (BOOL) editing;
+- (void) populateValues;
 
 @end
