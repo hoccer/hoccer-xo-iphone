@@ -63,7 +63,7 @@
 }
 
 - (NSData *) decryptedGroupKey {
-    if ([self.group isEqual:self.contact]) {
+    if (![self.group isEqual:self.contact]) {
         NSLog(@"ERROR:Group key won't be encrypted for me - must not call this function on other group members except me, contact nick=%@ contact.clientId = %@, group nick=%@, group.clientId = %@", self.contact.nickName, self.contact.clientId ,self.group.nickName, self.group.clientId);
         return nil;
     }
