@@ -29,6 +29,7 @@
 #import "ConversationViewController.h"
 #import "UserProfile.h"
 #import "Environment.h"
+#import "ProfileDataSource.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
@@ -56,6 +57,9 @@ typedef enum ActionSheetTags {
     if (self != nil) {
         _mode = ProfileViewModeMyProfile;
         [HXOBackend registerConnectionInfoObserverFor:self];
+        _profileDataSource = [[ProfileDataSource alloc] init];
+        _profileDataSource.delegate = self;
+        [self populateItems];
     }
     return self;
 }
@@ -72,7 +76,7 @@ typedef enum ActionSheetTags {
     [self setupNavigationButtons];
 
     if ( ! self.isEditing) {
-        _items = [self populateItems];
+        [_profileDataSource updateModel: [self populateValues]];
     }
 
     //if (_mode == ProfileViewModeContactProfile) {
@@ -80,7 +84,22 @@ typedef enum ActionSheetTags {
     //}
     [HXOBackend broadcastConnectionInfo];
 
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear: animated];
+    if (_mode == ProfileViewModeFirstRun) {
+        if ( ! self.isEditing) {
+            [self setEditing: YES animated: YES];
+            if ([UserProfile sharedProfile].isRegistered) {
+                NSLog(@"INFO: First run, old credentials found.");
+                [self showOldCredentialsAlert];
+            } else {
+                [self.appDelegate setupDone: YES];
+            }
+        }
+    }
 }
 
 - (void) configureMode {
@@ -125,11 +144,14 @@ typedef enum ActionSheetTags {
 
     if (_mode == ProfileViewModeContactProfile) {
         _blockContactItem.currentValue = [self titleForRelationshipState: _contact.relationshipState];
+        _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [modelObject nickName]];
     }
 
     for (ProfileItem* item in _allProfileItems) {
         item.currentValue = [modelObject valueForKey: item.valueKey];
     }
+
+    [self validateItems];
 
     [self updateKeyFingerprint];
     // XXX hack to display fingerprint while editing...
@@ -183,7 +205,8 @@ typedef enum ActionSheetTags {
         } else if ([keyPath isEqualToString: @"publicKeyId"]) {
             [self updateKeyFingerprint];
             [self.tableView beginUpdates];
-            UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: _fingerprintItem.indexPath];
+            NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _fingerprintInfoItem];
+            UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
             [cell configure: _fingerprintItem];
             [self.tableView endUpdates];
         } else {
@@ -209,14 +232,16 @@ typedef enum ActionSheetTags {
 }
 
 - (void) updateChatWithContactCell {
-    UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: [_chatWithContactItem indexPath]];
+    NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _chatWithContactItem];
+    UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
     if (cell != nil) {
         [cell configure: _chatWithContactItem];
     }
 }
 
 - (void) updateBlockContactCell {
-    UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: [_blockContactItem indexPath]];
+    NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _blockContactItem];
+    UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
     if (cell != nil) {
         [cell configure: _blockContactItem];
     }
@@ -233,20 +258,6 @@ typedef enum ActionSheetTags {
     return fingerprint;
 }
 
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear: animated];
-    if (_mode == ProfileViewModeFirstRun) {
-        if ( ! self.isEditing) {
-            [self setEditing: YES animated: YES];
-            if ([UserProfile sharedProfile].isRegistered) {
-                NSLog(@"INFO: First run, old credentials found.");
-                [self showOldCredentialsAlert];
-            } else {
-                [self.appDelegate setupDone: YES];
-            }
-        }
-    }
-}
 
 - (void) showOldCredentialsAlert {
     NSString * title = NSLocalizedString(@"delete_credentials_alert_title", nil);
@@ -331,7 +342,7 @@ typedef enum ActionSheetTags {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    id item = _items[indexPath.section][indexPath.row];
+    id item = _profileDataSource[indexPath.section][indexPath.row];
     UITableViewCell * cell = [self prototypeCellOfClass: [item cellClass]];
     if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
         return [(UserDefaultsCellInfoText*)cell heightForText: [item currentValue]];
@@ -341,8 +352,8 @@ typedef enum ActionSheetTags {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    id item = _items[indexPath.section][indexPath.row];
-    [item setIndexPath: indexPath];
+    id item = _profileDataSource[indexPath.section][indexPath.row];
+    //[item setIndexPath: indexPath];
     UserDefaultsCell * cell = (UserDefaultsCell*)[self dequeueReusableCellOfClass: [item cellClass] forIndexPath: indexPath];
     [cell configure: item];
     return cell;
@@ -361,7 +372,7 @@ typedef enum ActionSheetTags {
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    id item = _items[indexPath.section][indexPath.row];
+    id item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [AvatarItem class]]) {
         return nil;
     } else {
@@ -371,7 +382,7 @@ typedef enum ActionSheetTags {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // NSLog(@"selected cell %@", indexPath);
-    id item = _items[indexPath.section][indexPath.row];
+    id item = _profileDataSource[indexPath.section][indexPath.row];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [[item target] performSelector: [item action] withObject: indexPath];
@@ -384,7 +395,8 @@ typedef enum ActionSheetTags {
 
     [super setEditing: editing animated: animated];
 
-    [self.tableView beginUpdates];
+    //[self.tableView beginUpdates];
+    /*
     NSUInteger row = 0;
     for (ProfileItem * item in _allProfileItems) {
         BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
@@ -396,11 +408,11 @@ typedef enum ActionSheetTags {
         }
         ++row;
     }
-
+     */
     [self configureUtilitySections: editing];
 
-    _items = [self filterItems: editing];
-    [self.tableView endUpdates];
+    [_profileDataSource updateModel: [self filterItems: editing]];
+    //[self.tableView endUpdates];
     
     for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
         NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
@@ -447,7 +459,17 @@ typedef enum ActionSheetTags {
 - (void) onEditingDone {
 }
 
+
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+    return _profileDataSource.count;
+}
+
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [_profileDataSource[section] count];
+}
+
 - (void) configureUtilitySections: (BOOL) editing {
+    /*
     NSUInteger section = [self numberOfSectionsInTableView:self.tableView];
     if (editing) {
         [self.tableView insertSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
@@ -459,6 +481,7 @@ typedef enum ActionSheetTags {
         [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
         [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
     }
+     */
 }
 
 - (IBAction)onCancel:(id)sender {
@@ -470,20 +493,21 @@ typedef enum ActionSheetTags {
     return @"avatar_default_contact_large";
 }
 
-- (NSArray*) populateItems {
+- (void) populateItems {
     _itemsByKeyPath = [[NSMutableDictionary alloc] init];
 
-    _avatarItem = [[AvatarItem alloc] init];
+    _avatarItem = [[AvatarItem alloc] initWithName:@"AvatarItem"];
     _avatarItem.valueKey = @"avatarImage";
     _avatarItem.cellClass = [UserDefaultsCellAvatarPicker class];
     _avatarItem.defaultImageName = [self avatarDefaultImageName];
     _avatarItem.target = self;
     _avatarItem.action = @selector(avatarTapped:);
     [_itemsByKeyPath setObject: _avatarItem forKey: _avatarItem.valueKey];
+    _avatarSection = [ProfileSection sectionWithName: @"AvatarSection" items: _avatarItem, nil];
 
     _allProfileItems = [[NSMutableArray alloc] init];
     
-    _nickNameItem = [[ProfileItem alloc] init];
+    _nickNameItem = [[ProfileItem alloc] initWithName:@"NickNameItem"];
     _nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
     _nickNameItem.valueKey = kHXONickName;
     _nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
@@ -495,7 +519,7 @@ typedef enum ActionSheetTags {
     [_itemsByKeyPath setObject: _nickNameItem forKey: _nickNameItem.valueKey];
 
 #ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
-    ProfileItem * phoneItem = [[ProfileItem alloc] init];
+    ProfileItem * phoneItem = [[ProfileItem alloc] initWithName:@"PhoneNumberItem"];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
     phoneItem.valueKey = @"phoneNumber";
     phoneItem.editLabel = NSLocalizedString(@"profile_phone_label", nil);
@@ -506,7 +530,7 @@ typedef enum ActionSheetTags {
     [_itemsByKeyPath setObject: phoneItem forKey: phoneItem.valueKey];
 
 
-    ProfileItem * mailItem = [[ProfileItem alloc] init];
+    ProfileItem * mailItem = [[ProfileItem alloc] initWithName:@"MailItem"];
     mailItem.icon = [UIImage imageNamed: @"icon_profile-mail"];
     mailItem.valueKey = @"mailAddress";
     mailItem.editLabel = NSLocalizedString(@"profile_mail_label",nil);
@@ -517,7 +541,7 @@ typedef enum ActionSheetTags {
     [_itemsByKeyPath setObject: mailItem forKey: mailItem.valueKey];
 
 
-    ProfileItem * twitterItem = [[ProfileItem alloc] init];
+    ProfileItem * twitterItem = [[ProfileItem alloc] initWithName:@"TwitterItem"];
     twitterItem.icon = [UIImage imageNamed: @"icon_profile-twitter"];
     twitterItem.valueKey = @"twitterName";
     twitterItem.editLabel = NSLocalizedString(@"profile_twitter_label", nil);
@@ -527,7 +551,7 @@ typedef enum ActionSheetTags {
     [_itemsByKeyPath setObject: twitterItem forKey: twitterItem.valueKey];
 
 
-    ProfileItem * facebookItem = [[ProfileItem alloc] init];
+    ProfileItem * facebookItem = [[ProfileItem alloc] initWithName:@"FacebookItem"];
     facebookItem.icon = [UIImage imageNamed: @"icon_profile-facebook"];
     facebookItem.valueKey = @"facebookName";
     facebookItem.editLabel = NSLocalizedString(@"profile_facebook_label", nil);
@@ -537,7 +561,7 @@ typedef enum ActionSheetTags {
     [_itemsByKeyPath setObject: facebookItem forKey: facebookItem.valueKey];
 
 
-    ProfileItem * googlePlusItem = [[ProfileItem alloc] init];
+    ProfileItem * googlePlusItem = [[ProfileItem alloc] initWithName:@"GooglePlusItem"];
     googlePlusItem.icon = [UIImage imageNamed: @"icon_profile-googleplus"];
     googlePlusItem.valueKey = @"googlePlusName";
     googlePlusItem.editLabel = NSLocalizedString(@"profile_google_plus_label", nil);
@@ -547,7 +571,7 @@ typedef enum ActionSheetTags {
     [_itemsByKeyPath setObject: googlePlusItem forKey: googlePlusItem.valueKey];
 
 
-    ProfileItem * githubItem = [[ProfileItem alloc] init];
+    ProfileItem * githubItem = [[ProfileItem alloc] initWithName:@"GithubItem"];
     githubItem.icon = [UIImage imageNamed: @"icon_profile-octocat"];
     githubItem.valueKey = @"githubName";
     githubItem.editLabel = NSLocalizedString(@"profile_github_label", nil);
@@ -560,45 +584,54 @@ typedef enum ActionSheetTags {
 #endif // HXO_SHOW_UNIMPLEMENTED_FEATURES
 
 
-    _chatWithContactItem = [[ProfileItem alloc] init];
+    _chatWithContactItem = [[ProfileItem alloc] initWithName: @"ChatWithContactItem"];
     _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
     _chatWithContactItem.cellClass = [UserDefaultsCellDisclosure class];
     _chatWithContactItem.action = @selector(chatWithContactPressed:);
     _chatWithContactItem.target = self;
     _chatWithContactItem.alwaysShowDisclosure = YES;
 
-    _blockContactItem = [[ProfileItem alloc] init];
+    _blockContactItem = [[ProfileItem alloc] initWithName: @"BlockContactItem"];
     _blockContactItem.currentValue = nil;
     _blockContactItem.cellClass = [UserDefaultsCell class];
     _blockContactItem.action = @selector(toggleBlockedPressed:);
     _blockContactItem.target = self;
     //[_itemsByKeyPath setObject: _blockContactItem forKey: _blockContactItem.valueKey];
 
-    _deleteContactItem = [[ProfileItem alloc] init];
-    _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
-    _deleteContactItem.cellClass = [UserDefaultsCell class];
-    _deleteContactItem.action = @selector(deleteContactPressed:);
-    _deleteContactItem.target = self;
+    _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
 
-    _fingerprintItem = [[ProfileItem alloc] init];
+    _fingerprintItem = [[ProfileItem alloc] initWithName: @"FingerprintItem"];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
     _fingerprintItem.textAlignment = NSTextAlignmentCenter;
     // [_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
 
-    _fingerprintInfoItem = [[ProfileItem alloc] init];
+    _fingerprintInfoItem = [[ProfileItem alloc] initWithName:@"FingerprintInfoItem"];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
 
-    _renewKeyPairItem = [[ProfileItem alloc] init];
+    _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem, _fingerprintInfoItem, nil];
+
+    _renewKeyPairItem = [[ProfileItem alloc] initWithName:@"RenewKeypairItem"];
     _renewKeyPairItem.cellClass = [UserDefaultsCell class];
     _renewKeyPairItem.editLabel = NSLocalizedString(@"profile_renew_keypair", nil);
     _renewKeyPairItem.target = self;
     _renewKeyPairItem.action = @selector(renewKeypairPressed:);
 
-    _renewKeyPairInfoItem = [[ProfileItem alloc] init];
+    _renewKeyPairInfoItem = [[ProfileItem alloc] initWithName:@"RenewKeypairInfoItem"];
     _renewKeyPairInfoItem.cellClass = [UserDefaultsCellInfoText class];
     _renewKeyPairInfoItem.currentValue = _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
 
-    return [self populateValues];
+    _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, nil];
+
+
+    _deleteContactItem = [[ProfileItem alloc] initWithName:@"DeleteContactItem"];
+    _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
+    _deleteContactItem.cellClass = [UserDefaultsCell class];
+    _deleteContactItem.action = @selector(deleteContactPressed:);
+    _deleteContactItem.target = self;
+
+    _destructiveSection = [ProfileSection sectionWithName:@"DestructiveSection" items: _deleteContactItem];
+
+    //return [self populateValues];
 }
 
 - (NSString*) namePlaceholderKey {
@@ -613,39 +646,46 @@ typedef enum ActionSheetTags {
     BOOL allValid = YES;
     for (ProfileItem* item in _allProfileItems) {
         if ( ! item.valid) {
+            NSLog(@"profile item %@ is invalid", item.name);
             allValid = NO;
             break;
         }
     }
-    self.editButtonItem.enabled = allValid;
+    if (self.isEditing) {
+        self.editButtonItem.enabled = allValid;
+    }
 }
 
 - (NSArray*) filterItems: (BOOL) editing {
-    NSArray * items;
+    //NSArray * items;
     if (editing) {
-        items = _allProfileItems;
+        _profileItemsSection = [ProfileSection sectionWithName: @"ProfileItemsSection" array: _allProfileItems];
+        //items = _allProfileItems;
     } else {
-        items = [_allProfileItems filteredArrayUsingPredicate: self.hasValuePredicate];
+        NSArray * itemsWithValue = [_allProfileItems filteredArrayUsingPredicate: self.hasValuePredicate];
+        _profileItemsSection = [ProfileSection sectionWithName: @"ProfileItemsSection" array: itemsWithValue];
     }
 
-    return [self composeItems: items withEditFlag: editing];
+    return [self composeItems: nil withEditFlag: editing];
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
     // just don't ask ... needs refactoring
     if (_mode == ProfileViewModeContactProfile) {
         if ([self.contact.relationshipState isEqualToString: @"friend"]) {
-            return @[ @[_avatarItem], @[_chatWithContactItem, _blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_deleteContactItem]];
+            _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
+            return @[ _avatarSection, _utilitySection, _profileItemsSection, _fingerprintSection, _destructiveSection];
         } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
-            return @[ @[_avatarItem], @[_blockContactItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_deleteContactItem]];
+            _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
+            return @[ _avatarSection, _utilitySection, _profileItemsSection, _fingerprintSection, _destructiveSection];
         } else {
-            return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
+            return @[_avatarSection, _profileItemsSection, _fingerprintSection];
         }
     } else {
         if (editing) {
-            return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem], @[_renewKeyPairItem, _renewKeyPairInfoItem]];
+            return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection];
         } else {
-            return @[ @[_avatarItem], items, @[_fingerprintItem, _fingerprintInfoItem]];
+            return @[ _avatarSection, _profileItemsSection, _fingerprintSection];
         }
     }
 }
@@ -725,7 +765,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) toggleBlockedPressed: (id) sender {
-    id item = _items[[sender section]][[sender row]];
+    id item = _profileDataSource[[sender section]][[sender row]];
     id cell = [self.tableView cellForRowAtIndexPath: sender];
     if ([_contact.relationshipState isEqualToString: @"friend"]) {
         // NSLog(@"friend -> blocked");
@@ -816,7 +856,7 @@ typedef enum ActionSheetTags {
     [[RSA sharedInstance] cleanKeyChain];
     [self updateKeyFingerprint];
     [self.tableView beginUpdates];
-    [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: _fingerprintItem.indexPath] configure: _fingerprintItem];
+    [(UserDefaultsCell*)[self.tableView indexPathForCell: sender] configure: _fingerprintItem];
     [self.tableView endUpdates];
     [self.chatBackend updateKey];
     [self.chatBackend updatePresence];

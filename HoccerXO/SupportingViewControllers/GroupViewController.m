@@ -45,8 +45,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     BOOL _isNewGroup;
     ProfileItem * _inviteMemberItem;
     ProfileItem * _joinGroupItem;
-    ProfileItem * _adminsItem;
     ProfileItem * _declineInviteOrLeaveOrDeleteGroupItem;
+
+    ProfileItem * _adminsItem;
+    ProfileSection * _adminInfoSection;
+    
     FetchedResultsSectionAdapter * _memberListItem;
     BOOL _deleteGroupFlag;
 }
@@ -283,7 +286,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return ((AppDelegate*)UIApplication.sharedApplication.delegate).chatBackend;
 }
 
-- (NSArray*) populateItems {
+- (void) populateItems {
     _inviteMemberItem = [[ProfileItem alloc] init];
     _inviteMemberItem.currentValue = NSLocalizedString(@"group_invite_button", nil);
     _inviteMemberItem.cellClass = [UserDefaultsCellDisclosure class];
@@ -297,19 +300,21 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _joinGroupItem.action = @selector(joinGroupPressed:);
     _joinGroupItem.target = self;
 
-    _adminsItem = [[ProfileItem alloc] init];
-    _adminsItem.currentValue = [self adminsLabelText];
-    _adminsItem.cellClass = [GroupAdminCell class];
-
     _declineInviteOrLeaveOrDeleteGroupItem = [[ProfileItem alloc] init];
     _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
     _declineInviteOrLeaveOrDeleteGroupItem.cellClass = [UserDefaultsCellDisclosure class];
     _declineInviteOrLeaveOrDeleteGroupItem.action = @selector(declineOrLeaveOrDeletePressed:);
     _declineInviteOrLeaveOrDeleteGroupItem.target = self;
 
+    _adminsItem = [[ProfileItem alloc] init];
+    _adminsItem.currentValue = [self adminsLabelText];
+    _adminsItem.cellClass = [GroupAdminCell class];
+
+    _adminInfoSection = [ProfileSection sectionWithName:@"AdminInfoSection" items: _adminsItem, nil];
+
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3];
 
-    return [super populateItems];
+    [super populateItems];
 }
 
 - (NSString*) nickNameIconName {
@@ -347,6 +352,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) configureUtilitySections: (BOOL) editing {
+    /*
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: configureUtilitySections");
     if (editing) {
         [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: kHXOGroupUtilitySectionIndex] withRowAnimation: UITableViewRowAnimationFade];
@@ -357,14 +363,15 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: i inSection: kHXOGroupUtilitySectionIndex]] withRowAnimation: UITableViewRowAnimationFade];
         }
     }
+     */
 }
 
 - (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: composeItems");
     if (editing) {
-        return @[ @[_avatarItem], items, @[_adminsItem], _memberListItem];
+        return @[ _avatarSection, _profileItemsSection, _adminInfoSection, _memberListItem];
     }
-    return @[ @[_avatarItem], [self groupUtilities], items, @[_adminsItem], _memberListItem];
+    return @[ _avatarSection, [self groupUtilities], _profileItemsSection, _adminInfoSection, _memberListItem];
 }
 
 - (NSUInteger) groupMemberSectionIndex {
@@ -372,7 +379,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return self.isEditing ? 3 : 4;
 }
 
-- (NSArray*) groupUtilities {
+- (ProfileSection*) groupUtilities {
     NSMutableArray * utilities = [[NSMutableArray alloc] init];
     if ([self.group.ownMemberShip.state isEqualToString:@"joined"]) {
         [utilities addObject: _chatWithContactItem];
@@ -394,24 +401,15 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         [utilities addObject: _declineInviteOrLeaveOrDeleteGroupItem];
     }
-    return utilities;
+    return [ProfileSection sectionWithName: @"GroupUtilitySection" array: utilities];
 }
 
 #pragma mark - Table View Delegate
 
-- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    if (GROUPVIEW_DEBUG) NSLog(@"numberOfSectionsInTableView: %d",_items.count);
-    return _items.count;
-}
-
-- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (GROUPVIEW_DEBUG) NSLog(@"numberOfRowsInSection %d = %d",section, [_items[section] count]);
-    return [_items[section] count];
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: heightForRowAtIndexPath");
-    id item = _items[indexPath.section][indexPath.row];
+    id item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
         UITableViewCell * cell = [self prototypeCellOfClass: [GroupMemberCell class]];
         return cell.bounds.size.height;
@@ -422,7 +420,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: cellForRowAtIndexPath %@",indexPath);
-    id item = _items[indexPath.section][indexPath.row];
+    id item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
         GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
         [self configureMembershipCell: cell atIndexPath: indexPath];
@@ -459,7 +457,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: willSelectRowAtIndexPath %@",indexPath);
-    id item = _items[indexPath.section][indexPath.row];
+    id item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
         return indexPath;
     }
@@ -469,7 +467,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: didSelectRowAtIndexPath %@",indexPath);
     if (indexPath.section == [self groupMemberSectionIndex]) {
-        GroupMembership * member = (GroupMembership*)_items[indexPath.section][indexPath.row];
+        GroupMembership * member = (GroupMembership*)_profileDataSource[indexPath.section][indexPath.row];
         ProfileViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"profileViewController"];
         controller.contact = member.contact;
         [self.navigationController pushViewController: controller animated: YES];
@@ -583,6 +581,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) updateMembershipRelatedUI {
+    /*
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: updateMembershipRelatedUI");
     NSArray * profileItems = _items[[self profileValueSectionIndex]];
     NSArray * newItems = [self composeItems: profileItems withEditFlag: self.isEditing];
@@ -659,11 +658,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 #endif
     // TODO: get rid of reloadData...
     // [self.tableView reloadData];
+     */
 }
 
 - (void) configureMembershipCell: (GroupMemberCell*) cell atIndexPath: (NSIndexPath*) indexPath {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: configureMembershipCell atIndexPath %@",indexPath);
-    GroupMembership * membership = _items[indexPath.section][indexPath.row];
+    GroupMembership * membership = _profileDataSource[indexPath.section][indexPath.row];
     id contact = [self getContact: membership];
     // TODO: move to a configure method...
     cell.nickName.text = [contact nickName];

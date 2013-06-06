@@ -66,10 +66,13 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    /*
     SettingsItem * item = _items[indexPath.section][indexPath.row];
     UITableViewCell * cell = [self dequeueReusableCellOfClass: NSClassFromString(item.cellIdentifier) forIndexPath:indexPath];
     cell.textLabel.text = item.label;
     return cell;
+     */
+    return nil;
 }
 
 //- (IBAction)launchXOSystemSettings:(id)sender {

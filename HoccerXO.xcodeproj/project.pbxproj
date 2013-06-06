@@ -178,6 +178,7 @@
 		6381FEC2174556F2001D16E0 /* conversation-icon-me.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEC0174556F2001D16E0 /* conversation-icon-me.png */; };
 		6381FEC3174556F2001D16E0 /* conversation-icon-me@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEC1174556F2001D16E0 /* conversation-icon-me@2x.png */; };
 		6382545117503531000347CD /* server_production.der in Resources */ = {isa = PBXBuildFile; fileRef = 6382545017503531000347CD /* server_production.der */; };
+		6382549B175F746C000347CD /* ProfileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6382549A175F746B000347CD /* ProfileDataSource.m */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
@@ -633,6 +634,8 @@
 		6381FEC0174556F2001D16E0 /* conversation-icon-me.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation-icon-me.png"; sourceTree = "<group>"; };
 		6381FEC1174556F2001D16E0 /* conversation-icon-me@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation-icon-me@2x.png"; sourceTree = "<group>"; };
 		6382545017503531000347CD /* server_production.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_production.der; sourceTree = "<group>"; };
+		63825499175F746B000347CD /* ProfileDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileDataSource.h; sourceTree = "<group>"; };
+		6382549A175F746B000347CD /* ProfileDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileDataSource.m; sourceTree = "<group>"; };
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
@@ -852,7 +855,7 @@
 		E9B7BAB5172D5E4E00212420 /* RPCObjectsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RPCObjectsModel.xcdatamodel; sourceTree = "<group>"; };
 		E9B7BAB7172EA15E00212420 /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
-		E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-16.xcdatamodel"; sourceTree = "<group>"; };
+		E9BBA0BE175CDDF600A463A7 /* HoccerXO-16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-16.xcdatamodel"; sourceTree = "<group>"; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		E9D1145517316DCC00737EF7 /* StartupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupViewController.h; sourceTree = "<group>"; };
 		E9D1145617316DCC00737EF7 /* StartupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupViewController.m; sourceTree = "<group>"; };
@@ -1434,6 +1437,8 @@
 				E9D1145617316DCC00737EF7 /* StartupViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
+				63825499175F746B000347CD /* ProfileDataSource.h */,
+				6382549A175F746B000347CD /* ProfileDataSource.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -2304,6 +2309,7 @@
 				E93F6AC41754469D00F686B8 /* HoccerXO.xcdatamodeld in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
+				6382549B175F746C000347CD /* ProfileDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

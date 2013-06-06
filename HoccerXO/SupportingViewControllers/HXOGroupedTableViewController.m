@@ -63,10 +63,13 @@
     }
 }
 
+/*
 - (NSArray*) populateItems {
     return nil;
 }
+ */
 
+/*
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return _items.count;
 }
@@ -74,5 +77,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_items[section] count];
 }
+*/
 
 @end

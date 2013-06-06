@@ -15,11 +15,12 @@ static const CGFloat kEditAnimationDuration = 0.5;
 
 @implementation ProfileItem
 
-- (id) init {
+- (id) initWithName:(NSString *)name {
     self = [super init];
     if (self != nil) {
         self.valid = YES;
         self.textAlignment = NSTextAlignmentLeft;
+        self.name = name;
     }
     return self;
 }
@@ -50,6 +51,13 @@ static const CGFloat kEditAnimationDuration = 0.5;
 @end
 
 @implementation AvatarItem
+- (id) initWithName:(NSString *)name {
+    self = [super init];
+    if (self != nil) {
+        self.name = name;
+    }
+    return self;
+}
 @end
 
 

@@ -10,6 +10,7 @@
 
 #import "HXOTableViewCell.h"
 #import "AutoheightLabel.h"
+#import "ProfileDataSource.h"
 
 @protocol UserDefaultsCellTextInputDelegate <NSObject>
 
@@ -21,7 +22,7 @@
 @end
 
 
-@interface ProfileItem : NSObject <UserDefaultsCellTextInputDelegate>
+@interface ProfileItem : NSObject <UserDefaultsCellTextInputDelegate,ProfileItemInfo>
 
 @property (nonatomic,strong) UIImage  *      icon;
 @property (nonatomic,strong) NSString *      valueKey; // used to access the model
@@ -36,12 +37,15 @@
 @property (nonatomic, assign) BOOL           secure;
 @property (nonatomic, weak)  id              target;
 @property (nonatomic,assign) SEL             action;
-@property (nonatomic,strong) NSIndexPath *   indexPath;
+//@property (nonatomic,strong) NSIndexPath *   indexPath;
 @property (nonatomic,assign) BOOL            alwaysShowDisclosure;
+@property (nonatomic,strong) NSString *      name;
+
+- (id) initWithName: (NSString*) name;
 
 @end
 
-@interface AvatarItem : NSObject
+@interface AvatarItem : NSObject <ProfileItemInfo>
 
 @property (nonatomic,strong) UIImage*  currentValue;
 @property (nonatomic,strong) NSString* valueKey;
@@ -49,8 +53,11 @@
 @property (nonatomic,strong) id        cellClass;
 @property (nonatomic,weak) id        target;
 @property (nonatomic, assign) SEL      action;
-@property (nonatomic,strong) NSIndexPath *   indexPath;
+//@property (nonatomic,strong) NSIndexPath *   indexPath;
 @property (nonatomic,strong) NSString *   defaultImageName;
+@property (nonatomic,strong) NSString *      name;
+
+- (id) initWithName: (NSString*) name;
 
 @end
 

@@ -11,11 +11,11 @@
 @interface HXOGroupedTableViewController : UITableViewController
 {
     NSMutableDictionary * _prototypes;
-    NSArray *             _items;
+    //NSArray *             _items;
 }
 
 - (UITableViewCell*) prototypeCellOfClass: (id) cellClass;
 - (UITableViewCell*) dequeueReusableCellOfClass: (id) cellClass forIndexPath: (NSIndexPath*) indexPath;
-- (NSArray*) populateItems;
+//- (NSArray*) populateItems;
 
 @end
