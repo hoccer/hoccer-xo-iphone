@@ -13,6 +13,8 @@
 
 @property (nonatomic,strong) UITableView* tableView;
 
+- (void) configureCellAtIndexPath: (NSIndexPath*) indexPath;
+
 @end
 
 @protocol ProfileItemInfo <NSObject>

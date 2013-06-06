@@ -75,8 +75,10 @@ typedef enum ActionSheetTags {
 
     [self setupNavigationButtons];
 
+    [self populateValues];
+
     if ( ! self.isEditing) {
-        [_profileDataSource updateModel: [self populateValues]];
+        [_profileDataSource updateModel: [self composeModel: self.isEditing]];
     }
 
     //if (_mode == ProfileViewModeContactProfile) {
@@ -138,7 +140,7 @@ typedef enum ActionSheetTags {
     return @"Kaputt";
 }
 
-- (NSArray*) populateValues {
+- (void) populateValues {
     id modelObject = [self getModelObject];
     _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
 
@@ -156,8 +158,6 @@ typedef enum ActionSheetTags {
     [self updateKeyFingerprint];
     // XXX hack to display fingerprint while editing...
     _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
-
-    return [self filterItems: self.isEditing];
 }
 
 - (id) getModelObject {
@@ -353,10 +353,15 @@ typedef enum ActionSheetTags {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _profileDataSource[indexPath.section][indexPath.row];
-    //[item setIndexPath: indexPath];
     UserDefaultsCell * cell = (UserDefaultsCell*)[self dequeueReusableCellOfClass: [item cellClass] forIndexPath: indexPath];
     [cell configure: item];
     return cell;
+}
+
+- (void) configureCellAtIndexPath: (NSIndexPath*) indexPath {
+    id item = [_profileDataSource objectAtIndexPath: indexPath];
+    UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
+    [cell configure: item];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -411,15 +416,15 @@ typedef enum ActionSheetTags {
      */
     [self configureUtilitySections: editing];
 
-    [_profileDataSource updateModel: [self filterItems: editing]];
+    [_profileDataSource updateModel: [self composeModel: editing]];
     //[self.tableView endUpdates];
     
     for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
         NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
         [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
     }
+    [self validateItems];
     if (editing) {
-        [self validateItems];
         if (_mode != ProfileViewModeFirstRun) {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
@@ -486,6 +491,8 @@ typedef enum ActionSheetTags {
 
 - (IBAction)onCancel:(id)sender {
     _canceled = YES;
+    [self populateValues];
+    //[_profileDataSource updateModel: [self composeModel: NO]];
     [self setEditing: NO animated: YES];
 }
 
@@ -656,8 +663,8 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (NSArray*) filterItems: (BOOL) editing {
-    //NSArray * items;
+
+- (NSArray*) composeModel: (BOOL) editing {
     if (editing) {
         _profileItemsSection = [ProfileSection sectionWithName: @"ProfileItemsSection" array: _allProfileItems];
         //items = _allProfileItems;
@@ -665,11 +672,6 @@ typedef enum ActionSheetTags {
         NSArray * itemsWithValue = [_allProfileItems filteredArrayUsingPredicate: self.hasValuePredicate];
         _profileItemsSection = [ProfileSection sectionWithName: @"ProfileItemsSection" array: itemsWithValue];
     }
-
-    return [self composeItems: nil withEditFlag: editing];
-}
-
-- (NSArray*) composeItems: (NSArray*) items withEditFlag: (BOOL) editing {
     // just don't ask ... needs refactoring
     if (_mode == ProfileViewModeContactProfile) {
         if ([self.contact.relationshipState isEqualToString: @"friend"]) {

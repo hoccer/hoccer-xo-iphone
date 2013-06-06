@@ -100,14 +100,17 @@
         [self.delegate.tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
     }];
 
-    [insertedItems enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        NSLog(@"ProfileDataSource updateOldSection: inserting row %d (%@) in section %d (%@)", idx, [newSection[idx] name], newSectionIndex, newSection.name);
-        NSIndexPath * indexPath = [NSIndexPath indexPathForItem: idx inSection: newSectionIndex];
-        [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
-    }];
+    for (NSUInteger i = 0; i < newSection.count; ++i) {
+        NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: newSectionIndex];
+        if ([insertedItems containsIndex: i]) {
+            NSLog(@"ProfileDataSource updateOldSection: inserting row %d (%@) in section %d (%@)", i, [newSection[i] name], newSectionIndex, newSection.name);
+            [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
+        } else {
+            [self.delegate configureCellAtIndexPath: indexPath];
+        }
+    }
 
     // TODO: handle moves?
-    // TODO: handle updates - call reload on common rows
 }
 
 - (NSIndexSet*) findItemsPresentIn: (id) a butNotIn: (id) b {

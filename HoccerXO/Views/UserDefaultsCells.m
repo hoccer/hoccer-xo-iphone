@@ -27,16 +27,12 @@ static const CGFloat kEditAnimationDuration = 0.5;
 
 - (void) setRequired:(BOOL)required {
     _required = required;
-    if (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""])) {
-        self.valid = NO;
-    }
+    self.valid = ! (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""]));
 }
 
 - (void) setCurrentValue:(NSString *)currentValue {
     _currentValue = currentValue;
-    if (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""])) {
-        self.valid = NO;
-    }
+    self.valid = ! (_required && (self.currentValue == nil || [self.currentValue isEqualToString: @""]));
 }
 
 - (BOOL) validateTextField:(UITextField *)textField {
