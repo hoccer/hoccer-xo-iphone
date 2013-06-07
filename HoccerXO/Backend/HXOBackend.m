@@ -1107,12 +1107,13 @@ typedef enum BackendStates {
         NSLog(@"Error: group without group state, dict=%@", groupDict);
         return;
     }
-    if (/*[groupState isEqualToString:@"groupRemoved"] || */[groupState isEqualToString:@"none"]) {
-        if (group != nil && ![group.groupState isEqualToString:@"kept"]) {
+    if ([groupState isEqualToString:@"none"]) {
+        if (group != nil && ![group.groupState isEqualToString:@"kept"] && ![group.groupState isEqualToString:@"none"]) {
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
+            [group updateWithDictionary: groupDict];
             [self handleDeletionOfGroup:group];
         }
-        if (GROUP_DEBUG) NSLog(@"updateGroupHere: not updating a removed group");
+        if (GROUP_DEBUG) NSLog(@"updateGroupHere: end processing of a removed group");
         return;
     }
 
@@ -1356,13 +1357,13 @@ typedef enum BackendStates {
     }
 
     BOOL memberShipDeleted = NO;
-    if (([groupMemberDict[@"state"] isEqualToString:@"groupRemoved"] || [groupMemberDict[@"state"] isEqualToString:@"none"]) &&
-        !([myMembership.state isEqualToString:@"groupRemoved"] || [myMembership.state isEqualToString:@"none"]))
-    {
-        memberShipDeleted = YES;
-        NSLog(@"updateGroupMemberHere: memberShipDeleted");
+    if ([group.groupState isEqualToString:@"exists"]) {
+        if ([groupMemberDict[@"state"] isEqualToString:@"none"] && ![myMembership.state isEqualToString:@"none"]) {
+            // someone has left the group or we have been kicked out of an existing group
+            memberShipDeleted = YES;
+            NSLog(@"updateGroupMemberHere: memberShipDeleted");
+        }
     }
-
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
