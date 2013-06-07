@@ -16,7 +16,6 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate>
 {
     UIBackgroundTaskIdentifier _backgroundTask;
-    DoneBlock                  _alertDoneBlock;
 }
 @property (strong, nonatomic) UIWindow *window;
 

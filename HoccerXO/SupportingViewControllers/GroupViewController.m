@@ -421,7 +421,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: heightForHeaderInSection %d",section);
-    return section == [self groupMemberSectionIndex] ? 5 : 0;
+    return section == [self groupMemberSectionIndex] ? 5 : [super tableView: tableView heightForHeaderInSection: section];
 }
 
 - (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

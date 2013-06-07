@@ -332,3 +332,10 @@
 "%@you are alone"="%@du bist allein";
 "%@%d invited"="%@%d eingeladen";
 
+"corrupt_database_not_deleted_title"   = "Datenbank nicht gelöscht";
+"corrupt_database_not_deleted_message" = "Veraltete oder korrupte Datenbank wurde nicht gelöscht. Hoccer XO wird nicht funktionieren.";
+"corrupt_database_deleted_title"       = "Datenbank gelöscht";
+"corrupt_database_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer XO neu.";
+
+"fatal_error_default_title"   = "Fataler Fehler";
+"fatal_error_default_message" = "Ein unbehebarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Wenn der Fehler fortbesteht lösche bitte Hoccer XO und installiere die App erneut.";
