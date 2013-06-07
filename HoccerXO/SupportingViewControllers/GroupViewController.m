@@ -367,8 +367,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         NSLog(@"unhandled state - membership: %@ state: %@", self.group.myGroupMembership, self.group.myGroupMembership.state);
     }
     
+    _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
     if (![self.group.groupState isEqualToString:@"kept"]) {
-        _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
         if ( ! [self.group iAmAdmin]) {
             [utilities addObject: _declineInviteOrLeaveOrDeleteGroupItem];
         } else {
