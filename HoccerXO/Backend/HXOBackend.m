@@ -1357,10 +1357,12 @@ typedef enum BackendStates {
     }
 
     BOOL memberShipDeleted = NO;
+    BOOL disinvited = NO;
     if ([group.groupState isEqualToString:@"exists"]) {
-        if ([groupMemberDict[@"state"] isEqualToString:@"none"] && ![myMembership.state isEqualToString:@"none"]) {
+        if ([groupMemberDict[@"state"] isEqualToString:@"none"]/* && ![myMembership.state isEqualToString:@"none"]*/) {
             // someone has left the group or we have been kicked out of an existing group
             memberShipDeleted = YES;
+            disinvited = [myMembership.state isEqualToString:@"invited"];
             NSLog(@"updateGroupMemberHere: memberShipDeleted");
         }
     }
@@ -1373,7 +1375,7 @@ typedef enum BackendStates {
     if (memberShipDeleted) {
         // delete member
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting member with state '%@', nick=%@", groupMemberDict[@"state"], memberContact.nickName);
-        [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact];
+        [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact disinvited:disinvited];
     } else {
         // now check if we have to update the encrypted group key
         if (![group isEqual:myMembership.contact]) { // not us
@@ -1395,11 +1397,19 @@ typedef enum BackendStates {
     [self.delegate.managedObjectContext refreshObject: group mergeChanges: YES];
 }
 
-- (void)handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact {
+- (void)handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact disinvited:(BOOL)disinvited{
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     if (![group isEqual:myMember.contact]) { // not us
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
+            if (!disinvited) {
+                // show group left alerts to all members
+                [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
+            } else {
+                // show disinvitation only to admins or affected contacts
+                if (group.iAmAdmin || [group isEqual:myMember.contact]) {
+                    [self groupDisinvitedAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
+                }
+            }
         });
         if (memberContact.relationshipState == nil ||
             (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"] &&
@@ -1413,16 +1423,31 @@ typedef enum BackendStates {
         }
     } else {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
-         // we have been thrown out
+        // we have been thrown out or left group
         if (![group.groupState isEqualToString:@"kept"]) {
+            if (group.messages.count == 0) {
+                // show kicked message
+                if (!disinvited) {
+                    [self groupKickedAlertForGroup:group];
+                } else {
+                    [self groupDisinvitedAlertForGroup:group];
+                }
+            }
             [self handleDeletionOfGroup:group];
         }
     }
-    
 }
 
 - (void) handleDeletionOfGroup:(Group*)group {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    if (group.messages.count == 0) {
+        // if theres nothing to save, delete right away and dont ask
+        if (GROUP_DEBUG) NSLog(@"handleDeletionOfGroup: nothing to save, delete group with id %@",group.clientId);
+        [self deleteInDatabaseAllMembersAndContactsofGroup:group];
+        [moc deleteObject: group];
+        return;
+    }
+    
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Group '%@' no longer exists. Delete associated chats and data?",nil), group.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_deleted_title", nil)
                                                      message: NSLocalizedString(message, nil)
@@ -1445,7 +1470,25 @@ typedef enum BackendStates {
     [alert show];
 
 }
+- (void) groupKickedAlertForGroup:(Group*)group {
+    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"You have been kicked from group '%@'",nil), group.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                     message: nil
+                                                    delegate: nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
 
+- (void) groupDisinvitedAlertForGroup:(Group*)group {
+    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"The invitation for group '%@' has been revoked.",nil), group.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                     message: nil
+                                                    delegate: nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
 
 - (void) groupJoinedAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' has joined group '%@'",nil), member.contact.nickName, group.nickName];
@@ -1467,6 +1510,15 @@ typedef enum BackendStates {
     [alert show];
 }
 
+- (void) groupDisinvitedAlertForGroupNamed:(NSString*)groupName withMemberNamed:(NSString*)memberName {
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' no longer invited to group '%@'",nil), memberName, groupName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_disinvited_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
 
 
 - (void) invitationAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {

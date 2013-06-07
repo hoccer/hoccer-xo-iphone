@@ -280,7 +280,7 @@
 "navigation_title_group" = "Gruppe";
 
 "group_name_placeholder" = "Gruppenname";
-"group_invite_button"    = "Freund einladen";
+"group_invite_button"    = "Ein- und ausladen";
 
 "group_invite_title" = "'%@' in Gruppe '%@' einladen?";
 "group_kick_title" = "‘%@‘ aus Gruppe '%@' werfen?";
@@ -309,6 +309,9 @@
 "'%@' has left group '%@'"="'%@' ist nicht mehr Mitglied der Gruppe '%@'";
 "group_left_title"="Mitglied hat Gruppe verlassen";
 
+"'%@' no longer invited to group '%@'"="'%@' ist nicht mehr zu Gruppe '%@' eingeladen.";
+"group_disinvited_title"="Einladung abgelehnt oder zurückgezogen";
+
 "Group '%@' no longer exists. Delete associated chats and data?"="Ihre Mitgliedschaft in der Gruppe '%@' besteht nicht mehr. Gruppenchat und damit zusammenhängende Daten löschen?";
 "group_deleted_title"="Gruppenmitgliedschaft erloschen.";
 "group_keep_data_button"="Behalten";
@@ -322,6 +325,9 @@
 "invitation_decide_later_button_title"="Später entscheiden";
 "invitation_join_group_button_title"="Annehmen";
 "invitation_decline_button_title"="Ablehnen";
+
+"You have been kicked from group '%@'"="Du wurdest aus der Gruppe '%@' geworfen.";
+"The invitation for group '%@' has been revoked."="Die Einladung für gruppe '%@' wurde zurückgezogen.";
 
 "Group Deactivated"="Gruppe deaktiviert";
 "invited"="eingeladen";
