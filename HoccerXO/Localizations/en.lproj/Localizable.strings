@@ -346,7 +346,7 @@
 "invitation_decline_button_title"="Decline Invitation";
 
 "You have been kicked from group '%@'"="You have been kicked from group '%@'";
-"The invitation for group '%@' has been revoked."="The invitation for group '%@' has been revoked.";
+"The invitation for group '%@' has been removed."="The invitation for group '%@' has been removed.";
 
 "Group Deactivated"="Group Deactivated";
 "invited"="invited";
