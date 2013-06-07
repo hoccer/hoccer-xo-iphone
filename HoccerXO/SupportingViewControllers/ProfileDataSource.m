@@ -104,7 +104,10 @@
     }];
 
     _currentModel = newModel;
+    // let the table view digest the inserts and deletions before applying the updates.
+    // After 'endUpdates' the indexPaths are in sync again and it's easy to process the updates
     [self.delegate.tableView endUpdates];
+
     if (updatees.count > 0) {
         [self.delegate.tableView beginUpdates];
         [updatees enumerateObjectsUsingBlock:^(NSIndexPath * indexPath, NSUInteger idx, BOOL *stop) {
