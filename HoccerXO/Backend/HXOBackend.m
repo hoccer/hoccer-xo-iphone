@@ -1470,7 +1470,7 @@ typedef enum BackendStates {
 }
 
 - (void) groupDisinvitedAlertForGroup:(Group*)group {
-    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"The invitation for group '%@' has been revoked.",nil), group.nickName];
+    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"The invitation for group '%@' has been removed.",nil), group.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
                                                      message: nil
                                                     delegate: nil
@@ -1529,7 +1529,14 @@ typedef enum BackendStates {
                                                     completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                         switch (buttonIndex) {
                                                             case 0:
-                                                                // do nothing
+                                                                // leave group
+                                                                [self leaveGroup: group onGroupLeft:^(Group *group) {
+                                                                    if (group != nil) {
+                                                                        NSLog(@"TODO: Group left, now destroy everything (except our friends)");
+                                                                    } else {
+                                                                        NSLog(@"ERROR: leaveGroup %@ failed", group);
+                                                                    }
+                                                                }];
                                                                 break;
                                                             case 1:
                                                                 // join group
@@ -1542,19 +1549,12 @@ typedef enum BackendStates {
                                                                 }];
                                                                 break;
                                                             case 2:
-                                                                // leave group
-                                                                [self leaveGroup: group onGroupLeft:^(Group *group) {
-                                                                    if (group != nil) {
-                                                                        NSLog(@"TODO: Group left, now destroy everything (except our friends)");
-                                                                    } else {
-                                                                        NSLog(@"ERROR: leaveGroup %@ failed", group);
-                                                                    }
-                                                                }];
+                                                                // do nothing
                                                                 break;
                                                         }
                                                     }
-                                           cancelButtonTitle: NSLocalizedString(@"invitation_decide_later_button_title", nil)
-                                           otherButtonTitles: NSLocalizedString(@"invitation_join_group_button_title", nil),NSLocalizedString(@"invitation_decline_button_title", nil),nil];
+                                           cancelButtonTitle: NSLocalizedString(@"invitation_decline_button_title", nil)
+                                           otherButtonTitles: NSLocalizedString(@"invitation_join_group_button_title", nil),NSLocalizedString(@"invitation_decide_later_button_title", nil),nil];
     [alert show];
 }
 
