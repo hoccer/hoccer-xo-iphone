@@ -139,7 +139,6 @@
             [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
         } else {
             [updatees addObject: indexPath];
-            //[self.delegate configureCellAtIndexPath: indexPath];
         }
     }
 

@@ -1367,32 +1367,31 @@ typedef enum BackendStates {
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
     
+    [self.delegate saveDatabase];
+
     if (memberShipDeleted) {
         // delete member
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting member with state '%@', nick=%@", groupMemberDict[@"state"], memberContact.nickName);
-        [self.delegate saveDatabase];
         [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact];
-        return;
-    }    
-
-    [self.delegate saveDatabase];
-    
-    // now check if we have to update the encrypted group key
-    if (![group isEqual:myMembership.contact]) { // not us
-        [self ifNeededUpdateGroupKeyForOtherMember:myMembership];
     } else {
-        [self ifNeededUpdateGroupKeyForMyMembership:myMembership];
+        // now check if we have to update the encrypted group key
+        if (![group isEqual:myMembership.contact]) { // not us
+            [self ifNeededUpdateGroupKeyForOtherMember:myMembership];
+        } else {
+            [self ifNeededUpdateGroupKeyForMyMembership:myMembership];
+        }
+        if (weHaveBeenInvited) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self invitationAlertForGroup:group withMemberShip:myMembership];
+            });
+        }
+        if (someoneHasJoinedGroup) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self groupJoinedAlertForGroup:group withMemberShip:myMembership];
+            });
+        }
     }
-    if (weHaveBeenInvited) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self invitationAlertForGroup:group withMemberShip:myMembership];
-        });
-    }
-    if (someoneHasJoinedGroup) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self groupJoinedAlertForGroup:group withMemberShip:myMembership];
-        });
-    }
+    [self.delegate.managedObjectContext refreshObject: group mergeChanges: YES];
 }
 
 - (void)handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact {
