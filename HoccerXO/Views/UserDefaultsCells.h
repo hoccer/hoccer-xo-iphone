@@ -37,7 +37,6 @@
 @property (nonatomic, assign) BOOL           secure;
 @property (nonatomic, weak)  id              target;
 @property (nonatomic,assign) SEL             action;
-//@property (nonatomic,strong) NSIndexPath *   indexPath;
 @property (nonatomic,assign) BOOL            alwaysShowDisclosure;
 @property (nonatomic,strong) NSString *      name;
 

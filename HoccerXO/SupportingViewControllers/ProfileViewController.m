@@ -81,12 +81,8 @@ typedef enum ActionSheetTags {
         [_profileDataSource updateModel: [self composeModel: self.isEditing]];
     }
 
-    //if (_mode == ProfileViewModeContactProfile) {
-        [self setupContactKVO];
-    //}
+    [self setupContactKVO];
     [HXOBackend broadcastConnectionInfo];
-
-    //[self.tableView reloadData];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -144,10 +140,8 @@ typedef enum ActionSheetTags {
     id modelObject = [self getModelObject];
     _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
 
-    if (_mode == ProfileViewModeContactProfile) {
-        _blockContactItem.currentValue = [self titleForRelationshipState: _contact.relationshipState];
-        _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [modelObject nickName]];
-    }
+    _blockContactItem.currentValue = [self titleForRelationshipState: _contact.relationshipState];
+    _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [modelObject nickName]];
 
     for (ProfileItem* item in _allProfileItems) {
         item.currentValue = [modelObject valueForKey: item.valueKey];
@@ -401,24 +395,7 @@ typedef enum ActionSheetTags {
 
     [super setEditing: editing animated: animated];
 
-    //[self.tableView beginUpdates];
-    /*
-    NSUInteger row = 0;
-    for (ProfileItem * item in _allProfileItems) {
-        BOOL hasValue = [self.hasValuePredicate evaluateWithObject: item];
-        //NSLog(@"item=%@ section=%d", item.valueKey, [self profileValueSectionIndex]);
-        if (editing && ! hasValue) {
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectionIndex]]] withRowAnimation:UITableViewRowAnimationFade];
-        } else if ( ! editing && ! hasValue) {
-            [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForItem: row inSection: [self profileValueSectionIndex]]] withRowAnimation:UITableViewRowAnimationFade];
-        }
-        ++row;
-    }
-     */
-    [self configureUtilitySections: editing];
-
     [_profileDataSource updateModel: [self composeModel: editing]];
-    //[self.tableView endUpdates];
     
     for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
         NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
@@ -450,10 +427,6 @@ typedef enum ActionSheetTags {
 
 }
 
-- (NSUInteger) profileValueSectionIndex {
-    return 1;
-}
-
 - (UIBarButtonItem*) leftNonEditButton {
     if (_mode == ProfileViewModeMyProfile) {
         return self.navigationController.viewControllers.count == 1 ? self.hxoMenuButton : nil;
@@ -474,26 +447,9 @@ typedef enum ActionSheetTags {
     return [_profileDataSource[section] count];
 }
 
-- (void) configureUtilitySections: (BOOL) editing {
-    /*
-    NSUInteger section = [self numberOfSectionsInTableView:self.tableView];
-    if (editing) {
-        [self.tableView insertSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView insertRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
-    } else {
-        section -= 1;
-        [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 0 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView deleteRowsAtIndexPaths: @[[NSIndexPath indexPathForRow: 1 inSection: section]] withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView deleteSections: [NSIndexSet indexSetWithIndex: section] withRowAnimation: UITableViewRowAnimationFade];
-    }
-     */
-}
-
 - (IBAction)onCancel:(id)sender {
     _canceled = YES;
     [self populateValues];
-    //[_profileDataSource updateModel: [self composeModel: NO]];
     [self setEditing: NO animated: YES];
 }
 

@@ -57,6 +57,10 @@
     return nil;
 }
 
+- (NSUInteger) indexOfSection: (id) section {
+    return [_currentModel indexOfObject: section];
+}
+
 - (void) updateModel:(NSArray *)newModel {
     if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"ProfileDataSource: updateModel:");
     NSArray * oldModel = _currentModel;

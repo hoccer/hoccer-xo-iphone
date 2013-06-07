@@ -36,6 +36,7 @@
 
 - (id) objectAtIndexPath: (NSIndexPath*) indexPath;
 - (NSIndexPath*) indexPathForObject: (id) object;
+- (NSUInteger) indexOfSection: (id) section;
 
 @end
 
