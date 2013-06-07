@@ -27,14 +27,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 @interface FetchedResultsSectionAdapter : NSObject
 {
     GroupViewController * _delegate; // TODO: make a proper delegate protocol
-    NSUInteger _section;
-    NSUInteger _targetSection;
 }
 
 @property (nonatomic,readonly) NSString* name;
 @property (nonatomic,readonly) BOOL managesOwnContent;
 
-- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection name: (NSString*) name;
+- (id) initWithDelegate: (GroupViewController*) delegate name: (NSString*) name;
 - (NSUInteger) count;
 - (id) objectAtIndexedSubscript: (NSInteger) index;
 
@@ -54,7 +52,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     
     FetchedResultsSectionAdapter * _memberListItem;
     BOOL _deleteGroupFlag;
-    BOOL _didAffectOwnMembership;
 }
 
 @property (nonatomic,readonly) NSFetchedResultsController * fetchedResultsController;
@@ -303,7 +300,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
     _adminInfoSection = [ProfileSection sectionWithName:@"AdminInfoSection" items: _adminsItem, nil];
 
-    _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self sectionIndex: 0 targetSection: 3 name: @"GroupMemberSection"];
+    _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self name: @"GroupMemberSection"];
 
     [super populateItems];
 }
@@ -337,9 +334,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if (self.group.iAmAdmin) {
         [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
     }
-    [self.group.members enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        GroupMembership * member = (GroupMembership*) obj;
-        if ([member.role isEqualToString: @"admin"] && ![member.group isEqual:self.contact]) {
+    [self.group.members enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
+        if ([member.role isEqualToString: @"admin"] && member.ownGroupContact == nil) {
             [admins addObject: member.contact.nickName];
         }
     }];
@@ -553,22 +549,15 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
-    id affectedItem = [_profileDataSource objectAtIndexPath: (newIndexPath == nil ? indexPath : newIndexPath)];
-    if ([affectedItem isKindOfClass: [GroupMembership class]] && [affectedItem ownGroupContact] != nil) {
-        _didAffectOwnMembership = YES;
-    }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     if (GROUPVIEW_DEBUG)  NSLog(@"controllerDidChangeContent");
     if (GROUPVIEW_DEBUG) NSLog(@"%@",[NSThread callStackSymbols]);
-    //[self updateMembershipRelatedUI];
     [self.tableView endUpdates];
-    if (_didAffectOwnMembership) {
-        _didAffectOwnMembership = NO;
-        [self populateValues];
-        [_profileDataSource updateModel: [self composeModel: self.isEditing]];
-    }
+    // TODO: don't update everything everytime - be a little more selective
+    [self populateValues];
+    [_profileDataSource updateModel: [self composeModel: self.isEditing]];
     if (GROUPVIEW_DEBUG) NSLog(@"controllerDidChangeContent ready");
 }
 
@@ -594,26 +583,23 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 @synthesize name = _name;
 
-- (id) initWithDelegate: (GroupViewController*) delegate sectionIndex: (NSUInteger) section targetSection: (NSUInteger) targetSection name: (NSString*) theName {
+- (id) initWithDelegate: (GroupViewController*) delegate name: (NSString*) theName {
     self = [super init];
     if (self != nil) {
         _delegate = delegate;
-        _section = section;
-        _targetSection = targetSection;
         _name = theName;
-        //[self addTableRows];
     }
     return self;
 }
 
 - (NSUInteger) count {
-    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: FetchedResultsSectionAdapter count, _section %d",_section);
-    return [_delegate.fetchedResultsController.sections[_section] numberOfObjects];
+    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: FetchedResultsSectionAdapter count");
+    return [_delegate.fetchedResultsController.sections[0] numberOfObjects];
 }
 
 - (id) objectAtIndexedSubscript: (NSInteger) index {
-    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: objectAtIndexedSubscript %d, _section %d",index,_section);
-    return [_delegate.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: index inSection: _section]];
+    if (GROUPVIEW_DEBUG) NSLog(@"FetchedResultsSectionAdapter: objectAtIndexedSubscript %d",index);
+    return [_delegate.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: index inSection: 0]];
 }
 
 - (BOOL) managesOwnContent {
