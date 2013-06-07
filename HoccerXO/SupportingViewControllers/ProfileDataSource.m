@@ -10,7 +10,7 @@
 #import "GroupMembership.h"
 #import "Contact.h"
 
-#define PROFILE_DATA_SOURCE_DEBUG YES
+#define PROFILE_DATA_SOURCE_DEBUG NO
 
 
 @implementation GroupMembership (ProfileViewUtils)
@@ -81,16 +81,16 @@
     
     [self.delegate.tableView beginUpdates];
 
-    NSLog(@"ProfileDataSource updateModel: removing sections %@", removedSections);
+    if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"ProfileDataSource updateModel: removing sections %@", removedSections);
     [self.delegate.tableView deleteSections: removedSections withRowAnimation: UITableViewRowAnimationFade];
-    NSLog(@"ProfileDataSource updateModel: inserting sections %@", insertedSections);
+    if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"ProfileDataSource updateModel: inserting sections %@", insertedSections);
     [self.delegate.tableView insertSections: insertedSections withRowAnimation: UITableViewRowAnimationFade];
 
     [insertedSections enumerateIndexesUsingBlock:^(NSUInteger sectionIndex, BOOL *stop) {
         ProfileSection * section = newModel[sectionIndex];
         if ( ! section.managesOwnContent) {
             for (NSUInteger i = 0; i < section.count; ++i) {
-                NSLog(@"ProfileDataSource updateModel: inserting row %d (%@) in new section %d (%@)", i, [section[i] name], sectionIndex, section.name);
+                if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"ProfileDataSource updateModel: inserting row %d (%@) in new section %d (%@)", i, [section[i] name], sectionIndex, section.name);
                 NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: sectionIndex];
                 [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
             }
@@ -120,12 +120,11 @@
     }
     ProfileSection * oldSection = oldModel[oldSectionIndex];
     ProfileSection * newSection = newModel[newSectionIndex];
-    NSLog(@"=== updateOldSection name: %@", newSection.name);
     NSIndexSet * removedItems = [self findItemsPresentIn: oldSection butNotIn: newSection];
     NSIndexSet * insertedItems = [self findItemsPresentIn: newSection butNotIn: oldSection];
 
     [removedItems enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        NSLog(@"ProfileDataSource updateOldSection: deleting row %d (%@) in section %d (%@)", idx, [newSection[idx] name], newSectionIndex, newSection.name);
+        if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"ProfileDataSource updateOldSection: deleting row %d (%@) in section %d (%@)", idx, [newSection[idx] name], newSectionIndex, newSection.name);
         NSIndexPath * indexPath = [NSIndexPath indexPathForItem: idx inSection: newSectionIndex];
         [self.delegate.tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
     }];
@@ -133,7 +132,7 @@
     for (NSUInteger i = 0; i < newSection.count; ++i) {
         NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: newSectionIndex];
         if ([insertedItems containsIndex: i]) {
-            NSLog(@"ProfileDataSource updateOldSection: inserting row %d (%@) in section %d (%@)", i, [newSection[i] name], newSectionIndex, newSection.name);
+            if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"ProfileDataSource updateOldSection: inserting row %d (%@) in section %d (%@)", i, [newSection[i] name], newSectionIndex, newSection.name);
             [self.delegate.tableView insertRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
         } else {
             [updatees addObject: indexPath];
@@ -161,7 +160,7 @@
     NSIndexSet * indices = [model indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         return [obj count] > 0;
     }];
-    if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"====== dropped %d empty sections", model.count - indices.count);
+    if (PROFILE_DATA_SOURCE_DEBUG) NSLog(@"ProfileDataSource dropEmptySections: dropped %d sections", model.count - indices.count);
     return [model objectsAtIndexes: indices];
 }
 
