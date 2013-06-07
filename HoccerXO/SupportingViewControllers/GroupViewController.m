@@ -54,6 +54,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     
     FetchedResultsSectionAdapter * _memberListItem;
     BOOL _deleteGroupFlag;
+    BOOL _didAffectOwnMembership;
 }
 
 @property (nonatomic,readonly) NSFetchedResultsController * fetchedResultsController;
@@ -581,13 +582,22 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+    id affectedItem = [_profileDataSource objectAtIndexPath: (newIndexPath == nil ? indexPath : newIndexPath)];
+    if ([affectedItem isKindOfClass: [GroupMembership class]] && [affectedItem ownGroupContact] != nil) {
+        _didAffectOwnMembership = YES;
+    }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     if (GROUPVIEW_DEBUG)  NSLog(@"controllerDidChangeContent");
     if (GROUPVIEW_DEBUG) NSLog(@"%@",[NSThread callStackSymbols]);
-    [self updateMembershipRelatedUI];
+    //[self updateMembershipRelatedUI];
     [self.tableView endUpdates];
+    if (_didAffectOwnMembership) {
+        _didAffectOwnMembership = NO;
+        [self populateValues];
+        [_profileDataSource updateModel: [self composeModel: self.isEditing]];
+    }
     if (GROUPVIEW_DEBUG) NSLog(@"controllerDidChangeContent ready");
 }
 
