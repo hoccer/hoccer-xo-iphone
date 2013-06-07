@@ -1598,13 +1598,13 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
-				E9D67C49175C22DC007FE4AA /* UIAlertViewExtentsions */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
 				633048F616FC69170045E64E /* MFSideMenu */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
 				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */,
 				639094AD1739380E00DF889B /* TDSemiModal */,
+				E9D67C49175C22DC007FE4AA /* UIAlertViewExtentsions */,
 				63A7F68A172C418A00C0EC26 /* ZBarSDK */,
 			);
 			name = 3rdParty;

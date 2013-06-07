@@ -23,9 +23,11 @@
 #import "Environment.h"
 #import "UserProfile.h"
 #import "MFSideMenu.h"
+#import "UIAlertView+BlockExtensions.h"
 
 #import <AVFoundation/AVFoundation.h>
 
+typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
@@ -496,7 +498,7 @@ static BOOL _shouldSave = NO;
     _persistentStoreCoordinator = [self newPersistentStoreCoordinatorWithURL:storeURL];
     
     if (_persistentStoreCoordinator == nil) {
-        [self showDeleteDatabaseAlertWithMessage:@"The database format has been changed by the developers. Your database must be deleted to continue. Do you want to delete your database?" withTitle:@"Database too old" withTag:kDatabaseDeleteAlertTag];
+        [self showDeleteDatabaseAlertWithMessage:@"The database format has been changed by the developers. Your database must be deleted to continue. Do you want to delete your database?" withTitle:@"Database too old"];
     }
     
     return _persistentStoreCoordinator;
@@ -626,60 +628,52 @@ static BOOL _shouldSave = NO;
 }
 
 
-- (void) showFatalErrorAlertWithMessage:  (NSString *) message withTitle:(NSString *) title withTag:(NSInteger)tag {
+- (void) showFatalErrorAlertWithMessage:  (NSString *) message withTitle:(NSString *) title {
     if (title == nil) {
-        title = NSLocalizedString(@"Fatal Error", @"Error Alert Title");
+        title = NSLocalizedString(@"fatal_error_default_title", nil);
     }
     if (message == nil) {
-        message = NSLocalizedString(@"An unrecoverable Error occured and Hoccer XO will quit. If the error persists, please delete and reistall Hoccer XO", @"Error Alert Message");
+        message = NSLocalizedString(@"fatal_error_default_message", @"Error Alert Message");
     }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
-                                                   delegate:self
+                                                   completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) { exit(1); }
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
-    alert.tag = tag;
     [alert show];
 }
 
 - (void) showCorruptedDatabaseAlert {
-    [self showDeleteDatabaseAlertWithMessage:@"The database is corrupted. Your database must be deleted to continue. All chats will be deleted. Do you want to delete your database?" withTitle:@"Database corrupted" withTag:kDatabaseDeleteAlertTag];
+    [self showDeleteDatabaseAlertWithMessage:@"The database is corrupted. Your database must be deleted to continue. All chats will be deleted. Do you want to delete your database?" withTitle:@"Database corrupted"];
     
 }
 
-- (void) showDeleteDatabaseAlertWithMessage:  (NSString *) message withTitle:(NSString *) title withTag:(NSInteger)tag{
+- (void) showDeleteDatabaseAlertWithMessage:  (NSString *) message withTitle:(NSString *) title {
+
+    HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        NSString * title_tag;
+        NSString * message_tag;
+        switch (buttonIndex) {
+            case 0:
+                title_tag = @"corrupt_database_not_deleted_title";
+                message_tag = @"corrupt_database_not_deleted_message";
+                break;
+            case 1:
+                [self deleteDatabase];
+                title_tag = @"corrupt_database_deleted_title";
+                message_tag = @"corrupt_database_deleted_message";
+                break;
+        }
+        [self showFatalErrorAlertWithMessage: NSLocalizedString(message_tag, nil) withTitle: NSLocalizedString(title_tag, nil)];
+
+    };
 
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
-                                                   delegate:self
+                                                   completionBlock: completionBlock
                                           cancelButtonTitle:@"No"
                                           otherButtonTitles:@"Delete Database",nil];
-    alert.tag = tag;
     [alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    switch (alertView.tag) {
-        case kFatalDatabaseErrorAlertTag:
-            switch (buttonIndex) {
-                case 0:
-                    abort();
-                    break;
-                default:break;
-             }
-            break;
-        case kDatabaseDeleteAlertTag: // alert
-            switch (buttonIndex) {
-                case 0:
-                    [self showFatalErrorAlertWithMessage:@"Outdated or corrupted database was not deleted. Hoccer XO will not work." withTitle:@"Database not deleted" withTag:kFatalDatabaseErrorAlertTag];
-                    break;
-                case 1:
-                    [self deleteDatabase];
-                    [self showFatalErrorAlertWithMessage:@"The database was deleted. Please restart Hoccer XO." withTitle:@"Database deleted" withTag:kFatalDatabaseErrorAlertTag];
-                    break;
-            }
-            break;
-    }
 }
 
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName {
@@ -717,18 +711,10 @@ static BOOL _shouldSave = NO;
 -(void) didFailWithInvalidCertificate:(DoneBlock)done {
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invalid_cert_title", nil)
                                                      message: NSLocalizedString(@"invalid_cert_message", nil)
-                                                    delegate: self
+                                             completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { done(); }
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];
-    _alertDoneBlock = done;
     [alert show];
-}
-
-- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (_alertDoneBlock != nil) {
-        _alertDoneBlock();
-    }
-    _alertDoneBlock = nil;
 }
 
 - (void) connectionStatusDidChange {

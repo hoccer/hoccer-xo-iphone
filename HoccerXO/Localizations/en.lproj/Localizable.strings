@@ -349,6 +349,10 @@
 "%@you are alone"="%@you are alone";     
 "%@%d invited"="%@%d invited";
 
+"corrupt_database_not_deleted_title"   = "Database not deleted";
+"corrupt_database_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
+"corrupt_database_deleted_title"       = "Database deleted";
+"corrupt_database_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
 
-
-
+"fatal_error_default_title"   = "Fatal Error";
+"fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. If the error persists, please delete and reistall Hoccer XO";
