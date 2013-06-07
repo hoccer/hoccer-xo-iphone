@@ -44,6 +44,8 @@ typedef enum AttachmentPickerTypes {
 - (void) prependAdditionalActionButtons: (UIActionSheet*) actionSheet;
 - (void) appendAdditionalActionButtons: (UIActionSheet*) actionSheet;
 - (void) additionalButtonPressed: (NSUInteger) buttonIndex;
+- (BOOL) shouldSaveImagesToAlbum;
+- (BOOL) shouldSaveVideosToAlbum;
 
 @end
 

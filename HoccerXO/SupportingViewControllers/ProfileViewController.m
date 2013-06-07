@@ -800,6 +800,10 @@ typedef enum ActionSheetTags {
     }
 }
 
+- (BOOL) shouldSaveImagesToAlbum {
+    return YES;
+}
+
 - (NSString*) attachmentPickerActionSheetTitle {
     return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
 }

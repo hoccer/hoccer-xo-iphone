@@ -14,6 +14,7 @@
 #import "GeoLocationPicker.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
+#import <MobileCoreServices/UTType.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 
 @interface AttachmentPickerController ()
@@ -459,6 +460,18 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [_viewController dismissViewControllerAnimated: YES completion: nil];
+    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        NSString * mediaType = info[UIImagePickerControllerMediaType];
+        BOOL shouldSaveImages = [self.delegate respondsToSelector: @selector(shouldSaveImagesToAlbum)] && [self.delegate shouldSaveImagesToAlbum];
+        BOOL shouldSaveVideos = [self.delegate respondsToSelector: @selector(shouldSaveVideosToAlbum)] && [self.delegate shouldSaveVideosToAlbum];
+
+        if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeImage) && shouldSaveImages) {
+            UIImageWriteToSavedPhotosAlbum(info[UIImagePickerControllerOriginalImage], nil, nil, nil);
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) && shouldSaveVideos) {
+            // TODO: UISaveVideoAtPathToSavedPhotosAlbum
+            NSLog(@"Saving videos not yet implemnted");
+        }
+    }
     [self.delegate didPickAttachment: info];
 }
 
