@@ -1732,7 +1732,7 @@ typedef enum BackendStates {
 }
 
 // void removeGroupMember(TalkGroupMember member);
-- (void) removeGroupMember:(GroupMembership *) member onDeletion:(GroupMemberDeleted)deletionHandler{
+- (void) removeGroupMember:(GroupMembership *)member onDeletion:(GroupMemberDeleted)deletionHandler{
 
     [_serverConnection invoke: @"removeGroupMember" withParams: @[member.group.clientId,member.contact.clientId]
                    onResponse: ^(id responseOrError, BOOL success)

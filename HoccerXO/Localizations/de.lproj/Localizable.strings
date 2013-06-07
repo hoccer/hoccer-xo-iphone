@@ -282,7 +282,8 @@
 "group_name_placeholder" = "Gruppenname";
 "group_invite_button"    = "Freund einladen";
 
-"group_invite_title" = "%@ in Gruppe %@? einladen?";
+"group_invite_title" = "'%@' in Gruppe '%@' einladen?";
+"group_kick_title" = "‘%@‘ aus Gruppe '%@' werfen?";
 "group_join_button" = "Gruppe beitreten";
 "group_admin_you" = "Du";
 "group_admin_label_singular" = "Admin: ";

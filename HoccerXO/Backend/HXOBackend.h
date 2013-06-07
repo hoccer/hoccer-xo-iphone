@@ -80,6 +80,7 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 - (void) createGroupWithHandler:(CreateGroupHandler)handler;
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
+- (void) removeGroupMember:(GroupMembership *) member onDeletion:(GroupMemberDeleted)deletionHandler;
 - (void) updateGroup:(Group *) group;
 
 - (void) deleteGroup:(Group *) group onDeletion:(GroupHandler)handler;

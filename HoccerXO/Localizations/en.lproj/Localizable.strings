@@ -300,7 +300,8 @@
 "group_name_placeholder" = "Group Name";
 "group_invite_button" = "Invite a Friend";
 
-"group_invite_title" = "Invite %@ to group %@?";
+"group_invite_title" = "Invite '%@' to group '%@'?";
+"group_kick_title" = "Kick '%@' from group '%@'?";
 "group_join_button" = "Join Group";
 "group_admin_you" = "You";
 "group_admin_label_singular" = "Admin: ";

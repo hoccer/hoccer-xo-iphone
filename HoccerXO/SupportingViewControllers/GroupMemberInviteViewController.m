@@ -53,21 +53,25 @@
     [super fetchedResultsController: fetchedResultsController configureCell:cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
     if ([self isContactMemberOfGroup: contact]) {
-        cell.accessoryView = nil;
+        cell.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"group_member_remove"]];
     } else {
-        cell.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"/*@"group_member_add"*/]];
+        cell.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"group_member_add"]];
     }
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    if ([self isContactMemberOfGroup:contact]) {
-        return nil;
-    }
+//    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
+//    if ([self isContactMemberOfGroup:contact]) {
+//        return nil;
+//    }
     return indexPath;
 }
 
 - (BOOL) isContactMemberOfGroup: (Contact*) contact {
+    return [self membershipOfContact:contact] != nil;
+}
+
+- (GroupMembership*) membershipOfContact: (Contact*) contact {
     NSSet * matching = [self.group.members objectsPassingTest:^BOOL(id obj, BOOL *stop) {
         if ([[obj contact] isEqual: contact]) {
             *stop = YES;
@@ -76,14 +80,23 @@
         return NO;
     }];
     if (matching.count == 0) {
-        return NO;
+        return nil;
     }
-    return YES;
+    if (matching.count != 1) {
+        NSLog(@"ERROR: multiple membership for contact %@", contact);
+        return nil;
+    }
+    return matching.anyObject;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     _selectedContact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"group_invite_title", nil), _selectedContact.nickName, self.group.nickName];
+    NSString * title;
+    if ([self isContactMemberOfGroup:_selectedContact]) {
+        title = [NSString stringWithFormat: NSLocalizedString(@"group_kick_title", nil), _selectedContact.nickName, self.group.nickName];
+    } else {
+        title = [NSString stringWithFormat: NSLocalizedString(@"group_invite_title", nil), _selectedContact.nickName, self.group.nickName];
+    }
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
                                                      message: nil
                                                     delegate: self
@@ -94,9 +107,16 @@
 
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != alertView.cancelButtonIndex) {
-        [self.chatBackend inviteGroupMember:_selectedContact toGroup:self.group onDone:^(BOOL success) {
-            // yeah
-        }];
+        if ([self isContactMemberOfGroup:_selectedContact]) {
+            [self.chatBackend removeGroupMember:[self membershipOfContact:_selectedContact] onDeletion:^(GroupMembership *member) {
+                // yeah
+            }];
+        } else {
+            [self.chatBackend inviteGroupMember:_selectedContact toGroup:self.group onDone:^(BOOL success) {
+                // yeah
+            }];
+            
+        }
         //[self.navigationController popViewControllerAnimated: YES];
     }
 }
