@@ -610,7 +610,7 @@ typedef enum ActionSheetTags {
     BOOL allValid = YES;
     for (ProfileItem* item in _allProfileItems) {
         if ( ! item.valid) {
-            NSLog(@"profile item %@ is invalid", item.name);
+            //NSLog(@"profile item %@ is invalid", item.name);
             allValid = NO;
             break;
         }
