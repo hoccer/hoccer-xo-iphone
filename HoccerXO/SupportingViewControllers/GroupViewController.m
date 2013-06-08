@@ -139,9 +139,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (void) setGroup:(Group *)group {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: setGroup)");
     self.contact = group;
-    //[_memberListItem removeTableRows];
     _fetchedResultsController = nil;
-    [self.tableView reloadData];
+    [_profileDataSource updateModel: [self composeModel: self.isEditing]];
 }
 
 - (Group*) group {
@@ -335,7 +334,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
     }
     [self.group.members enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
-        if ([member.role isEqualToString: @"admin"] && member.ownGroupContact == nil) {
+        if ([member.role isEqualToString: @"admin"] && ! [member.contact isEqual: self.group]) {
             [admins addObject: member.contact.nickName];
         }
     }];
@@ -448,7 +447,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if (indexPath.section == [self groupMemberSectionIndex]) {
         GroupMembership * member = (GroupMembership*)_profileDataSource[indexPath.section][indexPath.row];
         ProfileViewController * controller = [self.storyboard instantiateViewControllerWithIdentifier:@"profileViewController"];
-        controller.contact = member.contact;
+        controller.contact = [member.contact isEqual: self.group] ? nil : member.contact;
         [self.navigationController pushViewController: controller animated: YES];
     } else {
         [super tableView: tableView didSelectRowAtIndexPath: indexPath];

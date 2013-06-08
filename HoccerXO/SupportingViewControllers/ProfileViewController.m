@@ -130,6 +130,8 @@ typedef enum ActionSheetTags {
         return [NSString stringWithFormat: NSLocalizedString(@"contact_block", nil), _contact.nickName];
     } else if ([state isEqualToString: @"blocked"]) {
         return [NSString stringWithFormat: NSLocalizedString(@"contact_unblock", nil), _contact.nickName];
+    } else if (state == nil) {
+        //happens with groups
     } else {
         NSLog(@"ProfileViewController titleForRelationshipState: unhandled status %@", _contact.status);
     }
