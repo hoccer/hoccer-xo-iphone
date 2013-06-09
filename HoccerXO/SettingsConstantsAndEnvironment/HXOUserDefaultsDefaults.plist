@@ -17,9 +17,9 @@
 	<key>environment</key>
 	<string>production</string>
 	<key>autoUploadLimit</key>
-	<integer>10485760</integer>
+	<integer>0</integer>
 	<key>autoDownloadLimit</key>
-	<integer>10485760</integer>
+	<integer>0</integer>
 	<key>videoQuality</key>
 	<integer>1</integer>
 	<key>photoQuality</key>

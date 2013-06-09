@@ -18,7 +18,7 @@
 			<key>Key</key>
 			<string>autoUploadLimit</string>
 			<key>DefaultValue</key>
-			<integer>10485760</integer>
+			<integer>0</integer>
 			<key>Titles</key>
 			<array>
 				<string>No Limit</string>
@@ -50,7 +50,7 @@
 			<key>Key</key>
 			<string>autoDownloadLimit</string>
 			<key>DefaultValue</key>
-			<integer>10485760</integer>
+			<integer>0</integer>
 			<key>Titles</key>
 			<array>
 				<string>No Limit</string>
