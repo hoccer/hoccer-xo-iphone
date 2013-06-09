@@ -876,8 +876,11 @@ NSArray * TransferStateName = @[@"detached",
                       }
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
                                NSLog(@"checkResumeUploadStream error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
-                           }];
-    operation.allowUntrustedServerCertificate = YES;
+                           }
+                       challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
+                           [[HXOBackend instance] connection:connection willSendRequestForAuthenticationChallenge:challenge];
+                       }
+     ];
     [operation startRequest];
 }
 

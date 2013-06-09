@@ -70,9 +70,10 @@ static const NSTimeInterval kResponseTimeout = 15;
     [_websocket close];
 }
 
-- (void) openWithURLRequest:(NSURLRequest *)request protocols: (NSArray*) protocols {
+- (void) openWithURLRequest:(NSURLRequest *)request protocols: (NSArray*) protocols allowUntrustedConnections:(BOOL)allowUntrustedConnections {
     _websocket = [[SRWebSocket alloc] initWithURLRequest: request protocols: protocols];
     _websocket.delegate = self;
+    _websocket.allowUntrustedConnections = allowUntrustedConnections;
     [_websocket open];
 }
 

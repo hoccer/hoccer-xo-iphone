@@ -152,7 +152,11 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 + (void)broadcastConnectionInfo {
-    [((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend updateConnectionStatusInfo];
+    [[HXOBackend instance] updateConnectionStatusInfo];
+}
+
++ (HXOBackend*)instance {
+    return ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
 }
 
 - (NSString*) stateString: (BackendState) state {
@@ -345,7 +349,7 @@ static NSTimer * _stateNotificationDelayTimer;
     Attachment * attachment = message.attachment;
     [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
         if (urls && [urls[@"uploadUrl"] length]>0 && [urls[@"downloadUrl"] length]>0 && [urls[@"fileId"] length]>0) {
-            NSLog(@"got attachment urls=%@", urls);
+            if (CONNECTION_TRACE) NSLog(@"got attachment urls=%@", urls);
             attachment.uploadURL = urls[@"uploadUrl"];
             attachment.remoteURL = urls[@"downloadUrl"];
             message.attachmentFileId = urls[@"fileId"];
@@ -644,7 +648,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) start: (BOOL) performRegistration {
     _performRegistration = performRegistration;
     [self setState: kBackendConnecting];
-    [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol]];
+    [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol] allowUntrustedConnections:[HXOBackend allowUntrustedServerCertificate]];
 }
 
 - (void) stop {
@@ -1951,14 +1955,14 @@ static NSTimer * _stateNotificationDelayTimer;
 
 -(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withSelector:(SEL)theTransferSelector withErrorKey: (NSString*) errorKey {
     if (theAttachment.transferRetryTimer != nil) {
-        // NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
+        if (CONNECTION_TRACE) NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
         [theAttachment.transferRetryTimer invalidate];
         theAttachment.transferRetryTimer = nil;
     }
     if (theAttachment.state == kAttachmentUploadIncomplete ||
         theAttachment.state == kAttachmentDownloadIncomplete ||
         theAttachment.state == kAttachmentWantsTransfer) {
-        NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        if (CONNECTION_TRACE) NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
@@ -1973,7 +1977,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                                otherButtonTitles: nil];
         [alert show];
-        NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
+        if (CONNECTION_TRACE) NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
               [theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures);
     }
 }
@@ -1992,20 +1996,6 @@ static NSTimer * _stateNotificationDelayTimer;
                     withSelector:@selector(uploadOnTimer:)
                     withErrorKey:@"attachment_upload_failed"];
 }
-
-//- (NSDictionary *)getNewTransferUrlsFor:(NSArray*)receiverIds {
-//    NSString * myUUID = [NSString stringWithUUID];
-//    NSString * myBaseURL = [[Environment sharedEnvironment] fileCacheURI];
-//    NSString * myUploadUrl = [[myBaseURL stringByAppendingString:@"upload/"] stringByAppendingString:myUUID];
-//    NSString * myDownloadUrl = [[myBaseURL stringByAppendingString:@"download/"] stringByAppendingString:myUUID];
-//    NSDictionary * myUrls = @{@"upload":myUploadUrl, @"download": myDownloadUrl};
-//    return myUrls;
-//};
-
-//- (NSURL *) newUploadURL {
-//    NSString * myURL = [[[Environment sharedEnvironment] fileCacheURI] stringByAppendingString:[NSString stringWithUUID]];
-//    return [NSURL URLWithString: myURL];
-//}
 
 - (NSString *) appendExpirationParams:(NSString*) theURL {
     NSDictionary *params = [NSDictionary dictionaryWithObject:[@(60*24*365*3) stringValue] forKey:@"expires_in"];
@@ -2902,10 +2892,12 @@ static NSTimer * _stateNotificationDelayTimer;
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
                                NSLog(@"uploadAvatar error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
                                handler(error);
-
-                           }];
-    //operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
-    operation.allowUntrustedServerCertificate = YES;
+                               
+                           }
+                       challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
+                           [self connection:connection willSendRequestForAuthenticationChallenge:challenge];
+                       }
+     ];
     [operation startRequest];
 }
 
@@ -2940,9 +2932,11 @@ static NSTimer * _stateNotificationDelayTimer;
                                NSLog(@"downloadDataFromURL error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
                                handler(nil, error);
                                
-                           }];
-    // operation.allowUntrustedServerCertificate = [HXOBackend allowUntrustedServerCertificate];
-    operation.allowUntrustedServerCertificate = YES;
+                           }
+                       challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
+                           [[HXOBackend instance] connection:connection willSendRequestForAuthenticationChallenge:challenge];
+                       }
+     ];
     [operation startRequest];
 }
 

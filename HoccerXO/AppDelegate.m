@@ -571,7 +571,7 @@ static BOOL _shouldSave = NO;
     // Start the long-running task and return immediately.
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.chatBackend hintApnsUnreadMessage: unreadMessages handler: ^(BOOL success){
-            NSLog(@"updated unread message count: %@", success ? @"success" : @"failed");
+            if (CONNECTION_TRACE) NSLog(@"updated unread message count: %@", success ? @"success" : @"failed");
             [self.chatBackend stop];
         }];
     });

@@ -40,7 +40,7 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 
 - (id) init;
 - (void) close;
-- (void) openWithURLRequest: (NSURLRequest*) request protocols: (NSArray*) protocols;
+- (void) openWithURLRequest: (NSURLRequest*) request protocols: (NSArray*) protocols allowUntrustedConnections:(BOOL)allowUntrustedConnections;
 - (void) notify: (NSString*) method withParams: (id) params;
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler;
 - (void) registerIncomingCall: (NSString*) methodName withSelector: (SEL) selector isNotification: (BOOL) notificationFlag;

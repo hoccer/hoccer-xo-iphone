@@ -160,7 +160,7 @@
 }
 
 -(void) setSaltString:(NSString*) theB64String {
-    NSLog(@"setSaltString: %@", theB64String);
+    if (KEY_DEBUG) NSLog(@"setSaltString: %@", theB64String);
     self.salt = [NSData dataWithBase64EncodedString:theB64String];
 }
 

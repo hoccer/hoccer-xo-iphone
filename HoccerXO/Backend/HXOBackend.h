@@ -138,6 +138,6 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
                              headers:(NSDictionary *)headers;
 
 + (void) downloadDataFromURL:(NSString*)fromURL withCompletion:(DataLoadedBlock)handler;
-
++ (HXOBackend*)instance;
 
 @end
