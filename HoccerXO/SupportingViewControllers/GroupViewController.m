@@ -41,7 +41,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 @interface GroupViewController ()
 {
-    BOOL _isNewGroup;
     ProfileItem * _inviteMemberItem;
     ProfileItem * _joinGroupItem;
     ProfileItem * _declineInviteOrLeaveOrDeleteGroupItem;
@@ -52,6 +51,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     
     FetchedResultsSectionAdapter * _memberListItem;
     BOOL _deleteGroupFlag;
+    BOOL _newGroupCreated;
 }
 
 @property (nonatomic,readonly) NSFetchedResultsController * fetchedResultsController;
@@ -77,11 +77,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setupNavigationButtons];
-    _isNewGroup = self.group == nil;
     _deleteGroupFlag = NO;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
+    _newGroupCreated = NO;
     if (_mode == ProfileViewModeNewGroup && ! self.isEditing) {
         [self setEditing: YES animated: YES];
     }
@@ -90,6 +90,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             if (group) {
                 self.group = group;
                 [self setupContactKVO];
+                _newGroupCreated = YES;
+                [self cleanupGroup]; // in case the view was cancelled before group creation result was returned from server 
             }
         }];
     }
@@ -97,7 +99,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void)viewDidDisappear:(BOOL)animated {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: viewDidDisappear)");
-    if (_deleteGroupFlag) {
+    [self cleanupGroup];
+}
+
+- (void) cleanupGroup {
+    if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: cleanupGroup)");
+    if (_deleteGroupFlag || (_newGroupCreated && _canceled)) {
         if ([self.group.groupState isEqualToString:@"kept"]) {
             [self.backend deleteInDatabaseAllMembersAndContactsofGroup:self.group];
             NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
@@ -108,6 +115,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
                 [self.backend deleteGroup: self.group onDeletion:^(Group *group) {
                     if (group != nil) {
                         if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
+                        _newGroupCreated = NO;
                     } else {
                         NSLog(@"ERROR: deleteGroup %@ failed", self.group);
                     }
@@ -123,7 +131,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             }
         }
         _deleteGroupFlag = NO;
-    }
+    }    
 }
 
 - (void) configureMode {
