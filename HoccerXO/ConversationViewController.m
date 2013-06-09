@@ -225,7 +225,8 @@
     
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"latestMessageTime" ascending: NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptor2 = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
+    NSArray *sortDescriptors = @[sortDescriptor, sortDescriptor2];
 
     [fetchRequest setSortDescriptors:sortDescriptors];
 
