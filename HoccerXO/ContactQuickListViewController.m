@@ -158,6 +158,10 @@
     NSArray * viewControllers = @[_conversationViewController, _conversationViewController.chatViewController];
     [self.sideMenu.navigationController setViewControllers: viewControllers animated: NO];
     [self.sideMenu setMenuState:MFSideMenuStateClosed];
+#ifdef NEW_MFSIDEMENU
+    MFSideMenuContainerViewController *container = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).menuContainerViewController;
+    [container setMenuState:MFSideMenuStateClosed completion:^{}];
+#endif
 }
 
 #pragma mark - Search Bar

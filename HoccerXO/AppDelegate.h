@@ -12,6 +12,9 @@
 #import "GCNetworkReachability.h"
 
 @class ConversationViewController;
+#ifdef NEW_MFSIDEMENU
+@class MFSideMenuContainerViewController;
+#endif
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate>
 {
@@ -28,6 +31,10 @@
 @property (nonatomic, strong) HXOBackend * chatBackend;
 @property (nonatomic, strong) UINavigationController * navigationController;
 @property (nonatomic, strong) ConversationViewController * conversationViewController;
+
+#ifdef NEW_MFSIDEMENU
+@property (nonatomic, strong) MFSideMenuContainerViewController * menuContainerViewController;
+#endif
 
 @property (nonatomic, strong) NSString * userAgent;
 

@@ -215,6 +215,15 @@ static BOOL _shouldSave = NO;
 - (void) setupSideMenusWithStoryboard: (UIStoryboard*) storyboard andConversationViewController: (ConversationViewController*) controller {
     ContactQuickListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
     NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
+    
+#ifdef NEW_MFSIDEMENU
+
+    self.menuContainerViewController = [MFSideMenuContainerViewController containerWithCenterViewController:self.navigationController
+                                                           leftMenuViewController:navigationMenuViewController
+                                                          rightMenuViewController:contactListViewController];
+    self.window.rootViewController = self.menuContainerViewController;
+    [self.window makeKeyAndVisible];
+#else
     self.navigationController.sideMenu = [MFSideMenu menuWithNavigationController:self.navigationController
                                                            leftSideMenuController:navigationMenuViewController
                                                           rightSideMenuController:contactListViewController];
@@ -241,6 +250,7 @@ static BOOL _shouldSave = NO;
     contactListViewController.conversationViewController = controller;
 
     self.navigationController.delegate = navigationMenuViewController;
+#endif
 }
 
 - (void) setupDone: (BOOL) performRegistration {
