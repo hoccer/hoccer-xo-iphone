@@ -1,6 +1,3 @@
-[submodule "3rdParty/SocketRocket"]
-	path = 3rdParty/SocketRocket
-	url = https://github.com/square/SocketRocket.git
 [submodule "3rdParty/MFSideMenu"]
 	path = 3rdParty/MFSideMenu
 	url = https://github.com/mikefrederick/MFSideMenu.git
@@ -10,12 +7,18 @@
 [submodule "3rdParty/QREncoder"]
 	path = 3rdParty/QREncoder
 	url = git@github.com:hoccer/QR-Code-Encoder-for-Objective-C.git
-[submodule "3rdParty/GCNetworkRequest"]
-	path = 3rdParty/GCNetworkRequest
-	url = git@github.com:GlennChiu/GCNetworkRequest.git
 [submodule "3rdParty/TDSemiModal"]
 	path = 3rdParty/TDSemiModal
 	url = git@github.com:hoccer/TDSemiModal.git
 [submodule "3rdParty/UIAlertViewExtentsions"]
 	path = 3rdParty/UIAlertViewExtentsions
 	url = git@github.com:wannabegeek/UIAlertViewExtentsions.git
+[submodule "3rdParty/SocketRocket"]
+	path = 3rdParty/SocketRocket
+	url = git@github.com:hoccer/SocketRocket.git
+[submodule "3rdParty/GCNetworkRequest"]
+	path = 3rdParty/GCNetworkRequest
+	url = git@github.com:hoccer/GCNetworkRequest.git
+[submodule "3rdParty/InAppSettingsKit"]
+	path = 3rdParty/InAppSettingsKit
+	url = git@github.com:hoccer/InAppSettingsKit.git

@@ -426,6 +426,20 @@
 			remoteGlobalIDString = F6B2082C1450F597009315AF;
 			remoteInfo = SocketRocket;
 		};
+		E9A41DDE1764F45E006E76B2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E42ADA8F168202D700295D85;
+			remoteInfo = InAppSettingsKit;
+		};
+		E9A41DE01764F45E006E76B2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E42ADAA2168202D700295D85;
+			remoteInfo = InAppSettingsKitTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -860,6 +874,7 @@
 		E9A41DC717625BA5006E76B2 /* group_member_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_add@2x.png"; sourceTree = "<group>"; };
 		E9A41DC817625BA5006E76B2 /* group_member_remove@.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_remove@.png"; sourceTree = "<group>"; };
 		E9A41DC917625BA5006E76B2 /* group_member_remove@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_remove@2x.png"; sourceTree = "<group>"; };
+		E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InAppSettingsKit.xcodeproj; path = 3rdParty/InAppSettingsKit/InAppSettingsKit.xcodeproj; sourceTree = "<group>"; };
 		E9B7BAB5172D5E4E00212420 /* RPCObjectsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RPCObjectsModel.xcdatamodel; sourceTree = "<group>"; };
 		E9B7BAB7172EA15E00212420 /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
@@ -1610,6 +1625,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
 				633048F616FC69170045E64E /* MFSideMenu */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
@@ -1794,6 +1810,15 @@
 			path = Media;
 			sourceTree = "<group>";
 		};
+		E9A41DDA1764F45D006E76B2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */,
+				E9A41DE11764F45E006E76B2 /* InAppSettingsKitTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		E9D1147A1736702E00737EF7 /* GCNetworkRequest */ = {
 			isa = PBXGroup;
 			children = (
@@ -1885,6 +1910,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = E9A41DDA1764F45D006E76B2 /* Products */;
+					ProjectRef = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
+				},
+				{
 					ProductGroup = 6316D687171EEC0A007441D9 /* Products */;
 					ProjectRef = 6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */;
 				},
@@ -1966,6 +1995,20 @@
 			fileType = wrapper.application;
 			path = TestChat.app;
 			remoteRef = 63C413AF16E8FA0C004E1F6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libInAppSettingsKit.a;
+			remoteRef = E9A41DDE1764F45E006E76B2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E9A41DE11764F45E006E76B2 /* InAppSettingsKitTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = InAppSettingsKitTests.octest;
+			remoteRef = E9A41DE01764F45E006E76B2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
