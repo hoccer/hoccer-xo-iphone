@@ -58,6 +58,8 @@ typedef enum BackendStates {
     kBackendStopping
 } BackendState;
 
+static NSTimer * _stateNotificationDelayTimer;
+
 @interface HXOBackend ()
 {
     JsonRpcWebSocket * _serverConnection;
@@ -73,6 +75,7 @@ typedef enum BackendStates {
     id                 _internetConnectionObserver;
     NSUInteger         _certificateVerificationErrors;
     NSTimer *          _reconnectTimer;
+    NSTimer *          _backgroundDisconnectTimer;
 }
 
 - (void) identify;
@@ -194,14 +197,36 @@ typedef enum BackendStates {
     } else {
         newInfo = @"no internet";
     }
-    //if (![self.connectionInfo isEqualToString:newInfo]) {
+    [self cancelStateNotificationDelayTimer];
+    id userInfo = @{ @"statusinfo":NSLocalizedString(newInfo, @"connection states"),
+                     @"normal":@(normal) };
+    if (normal) {
+        if (CONNECTION_TRACE) NSLog(@"immediate %@",userInfo);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"connectionInfoChanged"
                                                             object:self
-                                                          userInfo:@{ @"statusinfo":NSLocalizedString(newInfo, @"connection states"),
-                                                                      @"normal":@(normal) }
+                                                          userInfo:userInfo
          ];
-    //}
+    } else {
+        if (CONNECTION_TRACE) NSLog(@"launched %@",userInfo);
+        _stateNotificationDelayTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(updateConnectionStatusInfoNow:) userInfo:userInfo repeats:NO];
+    }
 }
+
+- (void)cancelStateNotificationDelayTimer {
+    if (_stateNotificationDelayTimer.isValid) {
+        [_stateNotificationDelayTimer invalidate];
+        _stateNotificationDelayTimer = nil;
+    }    
+}
+
+- (void) updateConnectionStatusInfoNow:(NSTimer *)theTimer {
+    if (CONNECTION_TRACE) NSLog(@"fired %@",theTimer.userInfo);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"connectionInfoChanged"
+                                                        object:self
+                                                      userInfo:theTimer.userInfo];
+    _stateNotificationDelayTimer = nil;
+}
+
 
 - (void) saveServerTime:(NSDate *) theTime {
     self.latestKnownServerTime = theTime;
@@ -644,7 +669,16 @@ typedef enum BackendStates {
 }
 
 - (void) reconnect {
-    _reconnectTimer = nil;
+    if (_reconnectTimer != nil) {
+        [_reconnectTimer invalidate];
+        _reconnectTimer = nil;
+    }
+    UIApplicationState state = [[UIApplication sharedApplication] applicationState];
+    if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
+    {
+        // do not reconnect when in background
+        return;
+    }
     if ([self.delegate.internetReachabilty isReachable]) {
         [self start: _performRegistration];
     }
@@ -2766,6 +2800,7 @@ typedef enum BackendStates {
     BackendState oldState = _state;
     [self setState: kBackendStopped];
     if (oldState == kBackendStopping) {
+        [self cancelStateNotificationDelayTimer];
         if ([self.delegate respondsToSelector:@selector(backendDidStop)]) {
             [self.delegate backendDidStop];
         }
