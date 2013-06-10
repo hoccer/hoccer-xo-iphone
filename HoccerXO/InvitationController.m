@@ -53,9 +53,15 @@ static InvitationController * _sharedInvitationController;
             [self.invitationChannels addObject: channel];
         }
         InvitationChannel * channel = [[InvitationChannel alloc] init];
-        channel.localizedButtonTitle = NSLocalizedString(@"Invite Code", @"Invite Actionsheet Button Title");
+        channel.localizedButtonTitle = NSLocalizedString(@"Show Invite Code", @"Invite Actionsheet Button Title");
         channel.handler = @selector(inviteByCode);
         [self.invitationChannels addObject: channel];
+
+        channel = [[InvitationChannel alloc] init];
+        channel.localizedButtonTitle = NSLocalizedString(@"Scan or Enter Code", @"Invite Actionsheet Button Title");
+        channel.handler = @selector(acceptInviteCode);
+        [self.invitationChannels addObject: channel];
+
     }
     return self;
 }
@@ -124,17 +130,25 @@ static InvitationController * _sharedInvitationController;
 }
 
 - (void) inviteByCode {
+    [self presentInviteByCodeWithPresentMode:YES];
+}
+- (void) acceptInviteCode {
+    [self presentInviteByCodeWithPresentMode:NO];
+}
+
+
+- (void) presentInviteByCodeWithPresentMode:(BOOL)presentCodeMode {
     UIStoryboard * storyboard;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
-
+    
     InviteCodeViewController * controller = [storyboard instantiateViewControllerWithIdentifier:@"inviteCodeView"];
-
+    controller.presentCodeMode = presentCodeMode;
     [self.viewController presentViewController: controller animated: YES completion: nil];
-
+    
 }
 
 - (NSString*) inviteURL: (NSString*) token {

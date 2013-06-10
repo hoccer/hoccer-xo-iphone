@@ -27,6 +27,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+#define CONNECTION_TRACE NO
+
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;

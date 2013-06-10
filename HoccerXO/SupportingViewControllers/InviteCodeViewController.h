@@ -23,11 +23,13 @@ static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one 
 #endif
 }
 
+@property (nonatomic) BOOL presentCodeMode;
+
 @property (nonatomic, readonly) HXOBackend * chatBackend;
-@property (strong, nonatomic) IBOutlet UITextField * codeTextField;
 @property (strong, nonatomic) IBOutlet UILabel *label;
+@property (strong, nonatomic) IBOutlet UITextField * codeTextField;
 @property (strong, nonatomic) IBOutlet UINavigationItem *navigationItem;
-@property (strong, nonatomic) IBOutlet UIButton *getNewCodeButton;
+// @property (strong, nonatomic) IBOutlet UIButton *getNewCodeButton;
 
 @property (strong, nonatomic) IBOutlet UIImageView *qrCodeView;
 @property (nonatomic, retain) IBOutlet ZBarReaderView *qrCodeReaderView;

@@ -33,11 +33,12 @@
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.codeTextField.placeholder = NSLocalizedString(@"invite_code_field_placeholder", nil);
 
+    /*
     UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
     self.getNewCodeButton.backgroundColor = [UIColor clearColor];
     [self.getNewCodeButton setBackgroundImage: background forState: UIControlStateNormal];
     [self.getNewCodeButton setTitle: NSLocalizedString(@"invite_get_new_code_button", nil) forState:UIControlStateNormal];
-
+*/
     self.qrCodeView.hidden = YES;
     self.qrCodeReaderView.readerDelegate = self;
     self.qrCodeReaderView.layer.borderColor = [UIColor blackColor].CGColor;
@@ -51,12 +52,20 @@
 #endif
 
     [HXOBackend registerConnectionInfoObserverFor:self];
+
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
-    self.label.text = NSLocalizedString(@"or", nil);
-    self.qrLabel.text = NSLocalizedString(@"or_scan_an_invite_code", nil);
+    
+    if (!self.presentCodeMode) {
+        self.label.text = NSLocalizedString(@"Enter_an_invite_token_here:", nil);
+        self.qrLabel.text = NSLocalizedString(@"or_scan_an_invite_code", nil);
+    } else {
+        self.label.text = NSLocalizedString(@"Give_this_token_to_a_friend:", nil);
+        self.qrLabel.text = NSLocalizedString(@"let_a_friend_scan_this_code", nil);
+        self.codeTextField.enabled = NO;
+    }
 
     _newTokenButtonPressed = NO;
 
@@ -67,14 +76,21 @@
     [self.qrCodeReaderView willRotateToInterfaceOrientation: app.statusBarOrientation
                                         duration: 0];
     [HXOBackend broadcastConnectionInfo];
+    if (self.presentCodeMode) {
+        [self getNewCode];
+    }
 }
 
 - (void) viewDidAppear: (BOOL) animated {
-    [self.qrCodeReaderView start];
+    if (!self.presentCodeMode) {
+        [self.qrCodeReaderView start];
+    }
 }
 
 - (void) viewWillDisappear: (BOOL) animated {
-    [self.qrCodeReaderView stop];
+    if (!self.presentCodeMode) {
+        [self.qrCodeReaderView stop];
+    }
 }
 
 
@@ -85,6 +101,10 @@
 }
 
 - (IBAction) newCodePressed:(id)sender {
+    [self getNewCode];
+}
+
+- (void) getNewCode {
     _newTokenButtonPressed = YES;
     self.navigationItem.leftBarButtonItem = nil;
     [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
@@ -95,11 +115,11 @@
             self.codeTextField.text = @"<ERROR>";
             return;
         }
-        self.label.text = NSLocalizedString(@"Send this token to a friend:", nil);
+        self.label.text = NSLocalizedString(@"Give_this_token_to_a_friend:", nil);
         self.qrLabel.text = NSLocalizedString(@"let_a_friend_scan_this_code", nil);
         
         self.codeTextField.text = token;
-
+        
         [self.qrCodeReaderView stop];
         self.qrCodeReaderView.hidden = YES;
         self.qrCodeView.hidden = NO;

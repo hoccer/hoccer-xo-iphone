@@ -86,6 +86,9 @@
 /* Invite Actionsheet Button Title */
 "Invite Code" = "Invite Code";
 
+"Show Invite Code"="Show Invite Code";
+"Scan or Enter Code"="Scan or Enter Code";
+
 /* Invite Alert Title */
 "Invite failed" = "Invite failed";
 
@@ -120,9 +123,6 @@
 
 /* Chat Send Button Title */
 "Send" = "Send";
-
-/* Invite Token View Controller */
-"Send this token to a friend:" = "Send this token to a friend:";
 
 /* Navigation Menu Item */
 "Settings" = "Settings";
@@ -228,7 +228,7 @@
 
 "about_prosa" = "Hoccer XO is your friendly chat service. It has a strong focus on protecting your privacy. It doesn't gather information about you, your friends, parents or pets. It protects your messages using state of the art end to end encryption. Even we at Hoccer can not read your messages.";
 
-"invite_friends_button_title" = "Invite Friends";
+"invite_friends_button_title" = "      Invite Friends\nAccept Invite Codes";
 
 "message_too_long_title" = "Message too long";
 
@@ -248,9 +248,13 @@
 
 "invite_not_a_hoccer_xo_qr_code_message" = "This QR Code is not a Hoccer XO invite code";
 
-"or_scan_an_invite_code" = "or scan an invite QR code:";
 
+"Enter_an_invite_token_here:" = "Enter an invite token here:";
+"or_scan_an_invite_code"="or scan an invite QR code:";
+
+"Give_this_token_to_a_friend"="Give this token to a friend:";
 "let_a_friend_scan_this_code" = "or let'em scan this code";
+
 
 "delete_contact_safety_question" = "Delete contact, chat and attachments?";
 
