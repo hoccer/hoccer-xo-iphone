@@ -76,6 +76,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSUInteger         _certificateVerificationErrors;
     NSTimer *          _reconnectTimer;
     NSTimer *          _backgroundDisconnectTimer;
+    NSTimer *          _helloTimer;
 }
 
 - (void) identify;
@@ -182,11 +183,21 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
+const double kHXHelloInterval = 4 * 60; // say hello every four minutes
+
 - (void) setState: (BackendState) state {
     if (CONNECTION_TRACE) NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
     _state = state;
     if (_state == kBackendReady) {
         _backoffTime = 0.0;
+        if (!_helloTimer.isValid) {
+            _helloTimer = [NSTimer scheduledTimerWithTimeInterval:kHXHelloInterval target:self selector:@selector(hello) userInfo:nil repeats:YES];
+        }
+    } else {
+        if (_helloTimer.isValid) {
+            [_helloTimer invalidate];
+            _helloTimer = nil;
+        }
     }
     [self updateConnectionStatusInfo];
 }

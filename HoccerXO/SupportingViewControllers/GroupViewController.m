@@ -343,9 +343,16 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
     [self.group.members enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
         if ([member.role isEqualToString: @"admin"] && ! [member.contact isEqual: self.group]) {
-            [admins addObject: member.contact.nickName];
+            if (member.contact.nickName != nil) {
+                [admins addObject: member.contact.nickName];
+            } else {
+                [admins addObject: @"?"];
+            }
         }
     }];
+    if (admins.count == 0) {
+        return @"No Admin";
+    }
     NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_plural" : @"group_admin_label_singular", nil);
     return [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
 }
