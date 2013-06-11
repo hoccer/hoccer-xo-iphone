@@ -232,7 +232,7 @@
 "invite_not_a_hoccer_xo_qr_code_message" = "Dieser QR Code ist kein Hoccer XO Einladungskode";
 
 
-"Enter_an_invite_token_here:" = "Gib einen Einladungskode ein:";
+"Enter_an_invite_token_here" = "Gib einen Einladungskode ein:";
 "or_scan_an_invite_code" = "oder scanne einen QR-Code:";
 
 "Give_this_token_to_a_friend"="Gib diesen Code einem Freund:";

@@ -249,7 +249,7 @@
 "invite_not_a_hoccer_xo_qr_code_message" = "This QR Code is not a Hoccer XO invite code";
 
 
-"Enter_an_invite_token_here:" = "Enter an invite token here:";
+"Enter_an_invite_token_here" = "Enter an invite token here:";
 "or_scan_an_invite_code"="or scan an invite QR code:";
 
 "Give_this_token_to_a_friend"="Give this token to a friend:";

@@ -59,10 +59,10 @@
     [super viewWillAppear: animated];
     
     if (!self.presentCodeMode) {
-        self.label.text = NSLocalizedString(@"Enter_an_invite_token_here:", nil);
+        self.label.text = NSLocalizedString(@"Enter_an_invite_token_here", nil);
         self.qrLabel.text = NSLocalizedString(@"or_scan_an_invite_code", nil);
     } else {
-        self.label.text = NSLocalizedString(@"Give_this_token_to_a_friend:", nil);
+        self.label.text = NSLocalizedString(@"Give_this_token_to_a_friend", nil);
         self.qrLabel.text = NSLocalizedString(@"let_a_friend_scan_this_code", nil);
         self.codeTextField.enabled = NO;
     }
@@ -115,7 +115,7 @@
             self.codeTextField.text = @"<ERROR>";
             return;
         }
-        self.label.text = NSLocalizedString(@"Give_this_token_to_a_friend:", nil);
+        self.label.text = NSLocalizedString(@"Give_this_token_to_a_friend", nil);
         self.qrLabel.text = NSLocalizedString(@"let_a_friend_scan_this_code", nil);
         
         self.codeTextField.text = token;
