@@ -16,6 +16,7 @@
     UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
     [self.button setBackgroundImage: background forState: UIControlStateNormal];
     self.button.backgroundColor = [UIColor clearColor];
+    self.button.titleLabel.textAlignment = NSTextAlignmentCenter;
 }
 
 @end
