@@ -68,16 +68,15 @@ typedef enum ActionSheetTags {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
     ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
-    
+
     [self configureMode];
 
     self.navigationItem.title = NSLocalizedString([self navigationItemTitleKey], nil);
 
     [self setupNavigationButtons];
 
-    [self populateValues];
-
     if ( ! self.isEditing) {
+        [self populateValues];
         [_profileDataSource updateModel: [self composeModel: self.isEditing]];
     }
 
@@ -97,6 +96,19 @@ typedef enum ActionSheetTags {
                 [self.appDelegate setupDone: YES];
             }
         }
+    }
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear: animated];
+    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
+    if (_contact != nil) {
+        [_contact removeObserver: self forKeyPath: @"avatarImage"];
+        for (ProfileItem* item in _allProfileItems) {
+            [_contact removeObserver: self forKeyPath: item.valueKey];
+        }
+        [_contact removeObserver: self forKeyPath: @"relationshipState"];
+        [_contact removeObserver: self forKeyPath: @"publicKeyId"];
     }
 }
 
@@ -301,19 +313,6 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (void) viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear: animated];
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
-    if (_contact != nil) {
-        [_contact removeObserver: self forKeyPath: @"avatarImage"];
-        for (ProfileItem* item in _allProfileItems) {
-            [_contact removeObserver: self forKeyPath: item.valueKey];
-        }
-        [_contact removeObserver: self forKeyPath: @"relationshipState"];
-        [_contact removeObserver: self forKeyPath: @"publicKeyId"];
-    }
-}
-
 - (void) setupNavigationButtons {
     switch (_mode) {
         case ProfileViewModeFirstRun:
@@ -451,7 +450,7 @@ typedef enum ActionSheetTags {
 
 - (IBAction)onCancel:(id)sender {
     _canceled = YES;
-    [self populateValues];
+    //[self populateValues];
     [self setEditing: NO animated: YES];
 }
 
