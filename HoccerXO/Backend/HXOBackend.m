@@ -1502,6 +1502,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                                                          // keep group and chats
                                                          break;
                                                  }
+                                                 [self.delegate saveDatabase];
                                              }
                                            cancelButtonTitle: NSLocalizedString(@"group_keep_data_button", nil)
                                            otherButtonTitles: NSLocalizedString(@"group_delete_data_button",nil),nil];
