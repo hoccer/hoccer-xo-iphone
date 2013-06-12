@@ -30,7 +30,7 @@
 }
 
 - (void) setNavigationBarBackgroundPlain {
-    [self.navigationController.navigationBar setBackgroundImage: [UIImage imageNamed: @"navbar_bg_plain"] forBarMetrics: UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar_bg_plain" withLeftCapWidth: 5 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
 }
 
 - (IBAction) menuButtonPressed:(id)sender {
