@@ -206,7 +206,7 @@ static BOOL _shouldSave = NO;
 - (void) customizeNavigationBar {
     // TODO: handle other bar metrics?
     // this is visible in the message/mail compose view controllers
-    [[UINavigationBar appearance] setBackgroundImage: [UIImage imageNamed: @"navbar_bg_plain"] forBarMetrics: UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar_bg_plain"withLeftCapWidth: 5 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
 
     UIImage * navigationButtonBackground = [[UIImage imageNamed: @"navbar-btn-default"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
     [[UIBarButtonItem appearance] setBackgroundImage: navigationButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
