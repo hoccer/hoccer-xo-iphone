@@ -11,9 +11,6 @@
 
 @class HXOBackend;
 
-static const NSTimeInterval kInvitationTokenValidity = 60 * 60 * 24 * 7; // one week
-
-
 @interface InviteCodeViewController : UIViewController <UITextFieldDelegate, ZBarReaderViewDelegate>
 {
     BOOL _newTokenButtonPressed;

@@ -74,7 +74,9 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
-- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
+//- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
+- (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler;
+
 - (void) pairByToken: (NSString*) token;
 - (void) acceptInvitation: (NSString*) token;
 

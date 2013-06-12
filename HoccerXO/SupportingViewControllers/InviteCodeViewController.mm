@@ -107,7 +107,7 @@
 - (void) getNewCode {
     _newTokenButtonPressed = YES;
     self.navigationItem.leftBarButtonItem = nil;
-    [self.chatBackend generateToken: @"pairing" validFor: kInvitationTokenValidity tokenHandler: ^(NSString* token) {
+    [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
         if (token == nil) {
             return;
         }

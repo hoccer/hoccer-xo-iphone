@@ -49,6 +49,9 @@ const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 const int kGroupInvitationAlert = 1;
 static const NSUInteger kHXOMaxCertificateVerificationErrors = 3;
 
+static const NSUInteger     kHXOPairingTokenMaxUseCount = 10;
+static const NSTimeInterval kHXOPairingTokenValidTime   = 60 * 60 * 24 * 7; // one week
+
 typedef enum BackendStates {
     kBackendStopped,
     kBackendConnecting,
@@ -549,6 +552,10 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     } else {
         [self stopAndRetry];
     }
+}
+
+- (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler {
+    [self generatePairingToken: kHXOPairingTokenMaxUseCount validFor: kHXOPairingTokenValidTime tokenHandler: handler];
 }
 
 -(Contact *) getContactByClientId:(NSString *) theClientId {
@@ -2459,6 +2466,19 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             handler(responseOrError);
         } else {
             NSLog(@"generateToken(): failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+- (void) generatePairingToken: (NSUInteger) maxUseCount validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
+    // NSLog(@"generatePairingToken:");
+    [_serverConnection invoke: @"generatePairingToken" withParams: @[@(maxUseCount), @(seconds)] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"generatePairingToken(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"generatePairingToken(): failed: %@", responseOrError);
             handler(nil);
         }
     }];
