@@ -582,7 +582,7 @@ NSArray * TransferStateName = @[@"detached",
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        block([UIImage imageNamed:@"audio_leer.png"], nil);
+        block([UIImage imageNamed:@"audio-default.png"], nil);
     }
 }
 

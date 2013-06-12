@@ -189,7 +189,12 @@
         if ( [attachment.mediaType isEqualToString:@"video"]) {
             [self.openButton setImage: [UIImage imageNamed:@"button-video"] forState:UIControlStateNormal];
         } else if ([attachment.mediaType isEqualToString:@"audio"]) {
-            [self.openButton setImage: [UIImage imageNamed:@"button-audio"] forState:UIControlStateNormal];
+            NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
+            if (findResult.length == @"recording".length && findResult.location == 0) {
+                [self.openButton setImage: [UIImage imageNamed:@"button-recorded"] forState:UIControlStateNormal];
+            } else {
+                [self.openButton setImage: [UIImage imageNamed:@"button-music"] forState:UIControlStateNormal];
+            }
         } else {
             [self.openButton setImage:nil forState:UIControlStateNormal];
         }
