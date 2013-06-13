@@ -95,10 +95,38 @@ static const CGFloat kEditAnimationDuration = 0.5;
 }
 
 - (void) configure: (id) item {
+    self.valueFormat = [item valueFormat];
+    self.currentValue = [item currentValue];
     self.imageView.image = [item icon];
     self.textLabel.textAlignment = [item textAlignment];
-    self.textLabel.text = self.isEditing ? [item editLabel] : [item currentValue];
+    if (self.isEditing) {
+        self.textLabel.text = [item editLabel];
+    } else {
+        self.textLabel.text = self.valueFormat == nil ? [item currentValue] : [self formattedValue];
+    }
     self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+// ugly, iterative value formating to ellipsise at the right place
+- (NSString*) formattedValue {
+    CGFloat maxWidth = self.contentView.bounds.size.width - 20;
+    NSString * value = self.currentValue;
+    NSString * text = [NSString stringWithFormat: self.valueFormat, value];
+    CGFloat width = [text sizeWithFont: self.textLabel.font].width;
+    unichar ellipse = 0x2026;
+    while (width > maxWidth && [value length] > 0) {
+        value = [value substringToIndex: [value length] - 1];
+        text = [NSString stringWithFormat: self.valueFormat, [NSString stringWithFormat: @"%@%C", value, ellipse]];
+        width = [text sizeWithFont: self.textLabel.font].width;
+    }
+    return text;
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    if (self.valueFormat != nil && ! self.isEditing) {
+        self.textLabel.text = [self formattedValue];
+    }
 }
 
 
@@ -182,6 +210,14 @@ static const CGFloat kEditAnimationDuration = 0.5;
     return NO;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (self.maxLength == 0) {
+        return YES;
+    }
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    return (newLength > self.maxLength) ? NO : YES;
+}
+
 - (void) textFieldDidChange: (NSNotification*) notification {
     if ([self.delegate respondsToSelector: @selector(validateTextField:)]) {
         BOOL isValid = [self.delegate validateTextField: notification.object];
@@ -209,6 +245,8 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self.textField.keyboardType = [item keyboardType];
 
     self.textField.secureTextEntry = [item secure];
+
+    self.maxLength = [item maxLength];
 }
 
 - (void) dealloc {

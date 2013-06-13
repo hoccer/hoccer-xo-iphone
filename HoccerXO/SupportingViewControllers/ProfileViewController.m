@@ -34,6 +34,7 @@
 #import <Foundation/NSKeyValueCoding.h>
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
+static const NSUInteger kHXOMaxNickNameLength = 25;
 
 typedef enum ActionSheetTags {
     kActionSheetDeleteCredentials = 1,
@@ -137,15 +138,15 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (NSString*) titleForRelationshipState: (NSString*) state {
+- (NSString*) blockFormatForRelationshipState: (NSString*) state {
     if ([state isEqualToString: @"friend"]) {
-        return [NSString stringWithFormat: NSLocalizedString(@"contact_block", nil), _contact.nickName];
+        return NSLocalizedString(@"contact_block", nil);
     } else if ([state isEqualToString: @"blocked"]) {
-        return [NSString stringWithFormat: NSLocalizedString(@"contact_unblock", nil), _contact.nickName];
+        return NSLocalizedString(@"contact_unblock", nil);
     } else if (state == nil) {
         //happens with groups
     } else {
-        NSLog(@"ProfileViewController titleForRelationshipState: unhandled status %@", _contact.status);
+        NSLog(@"ProfileViewController blockFormatForRelationshipState: unhandled status %@", _contact.status);
     }
     return @"Kaputt";
 }
@@ -154,8 +155,10 @@ typedef enum ActionSheetTags {
     id modelObject = [self getModelObject];
     _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
 
-    _blockContactItem.currentValue = [self titleForRelationshipState: _contact.relationshipState];
-    _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [modelObject nickName]];
+    _blockContactItem.valueFormat = [self blockFormatForRelationshipState: _contact.relationshipState];
+    _blockContactItem.currentValue = [modelObject nickName];
+    //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [modelObject nickName]];
+    _chatWithContactItem.currentValue = [modelObject nickName];
 
     for (ProfileItem* item in _allProfileItems) {
         item.currentValue = [modelObject valueForKey: item.valueKey];
@@ -201,7 +204,8 @@ typedef enum ActionSheetTags {
     if ([object isKindOfClass: [ProfileItem class]] && [keyPath isEqualToString: @"valid"]) {
             [self validateItems];
     } else if ([keyPath isEqualToString: @"relationshipState"]) {
-        _blockContactItem.currentValue = [self titleForRelationshipState: [object relationshipState]];
+        _blockContactItem.currentValue = self.contact.nickName;
+        _blockContactItem.valueFormat = [self blockFormatForRelationshipState: [object relationshipState]];
         [self.tableView beginUpdates];
         [self updateBlockContactCell];
         [self.tableView endUpdates];
@@ -220,8 +224,10 @@ typedef enum ActionSheetTags {
         } else {
             [item setCurrentValue: [object valueForKey: keyPath]];
             if ([keyPath isEqualToString: @"nickName"]) {
-                _chatWithContactItem.currentValue = _chatWithContactItem.editLabel = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [object nickName]];
-                _blockContactItem.currentValue = [self titleForRelationshipState: [object relationshipState]];
+                //_chatWithContactItem.currentValue = _chatWithContactItem.editLabel = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [object nickName]];
+                _chatWithContactItem.currentValue = _chatWithContactItem.editLabel = [object nickName];
+                _blockContactItem.currentValue = [object nickName];
+                _blockContactItem.valueFormat = [self blockFormatForRelationshipState: [object relationshipState]];
             }
         }
         NSIndexPath * indexPath = [_profileDataSource indexPathForObject: item];
@@ -480,6 +486,7 @@ typedef enum ActionSheetTags {
     _nickNameItem.cellClass = [UserDefaultsCellTextInput class];
     _nickNameItem.keyboardType = UIKeyboardTypeDefault;
     _nickNameItem.required = YES;
+    _nickNameItem.maxLength = kHXOMaxNickNameLength;
     [_allProfileItems addObject: _nickNameItem];
     [_itemsByKeyPath setObject: _nickNameItem forKey: _nickNameItem.valueKey];
 
@@ -550,7 +557,9 @@ typedef enum ActionSheetTags {
 
 
     _chatWithContactItem = [[ProfileItem alloc] initWithName: @"ChatWithContactItem"];
-    _chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
+    //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
+    _chatWithContactItem.currentValue = _contact.nickName;
+    _chatWithContactItem.valueFormat = NSLocalizedString(@"chat_with_contact", nil);
     _chatWithContactItem.cellClass = [UserDefaultsCellDisclosure class];
     _chatWithContactItem.action = @selector(chatWithContactPressed:);
     _chatWithContactItem.target = self;

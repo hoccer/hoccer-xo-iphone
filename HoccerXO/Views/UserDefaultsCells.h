@@ -39,6 +39,8 @@
 @property (nonatomic,assign) SEL             action;
 @property (nonatomic,assign) BOOL            alwaysShowDisclosure;
 @property (nonatomic,strong) NSString *      name;
+@property (nonatomic,assign) NSUInteger      maxLength;
+@property (nonatomic,strong) NSString *      valueFormat;
 
 - (id) initWithName: (NSString*) name;
 
@@ -66,6 +68,9 @@
 
 @interface UserDefaultsCell : HXOTableViewCell
 
+@property (nonatomic,strong) NSString* valueFormat;
+@property (nonatomic,strong) NSString* currentValue;
+
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) count;
 
 - (void) configure: (id) item;
@@ -86,6 +91,7 @@
 @property (nonatomic,strong) IBOutlet UIImageView * textInputBackground;
 @property (nonatomic,strong) NSString* editLabel;
 @property (nonatomic,strong) id<UserDefaultsCellTextInputDelegate> delegate;
+@property (nonatomic,assign) NSUInteger maxLength;
 
 @end
 
