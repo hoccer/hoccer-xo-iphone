@@ -223,12 +223,12 @@
 
 "delete_contact" = "Kontakt löschen";
 
-"invite_qr_code_already_scanned_title" = "Code bereits gescannt";
+"invite_code_view_controller_title" = "Einladungscode";
 
+"invite_qr_code_already_scanned_title" = "Code bereits gescannt";
 "invite_qr_code_already_scanned_message" = "Du hast diesen Code bereits gescannt";
 
 "invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Code";
-
 "invite_not_a_hoccer_xo_qr_code_message" = "Dieser QR Code ist kein Hoccer XO Einladungskode";
 
 

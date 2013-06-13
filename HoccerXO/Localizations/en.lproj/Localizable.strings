@@ -240,6 +240,8 @@
 
 "delete_contact" = "Delete contact";
 
+"invite_code_view_controller_title" = "Invite by Code";
+
 "invite_qr_code_already_scanned_title" = "Code already scanned";
 
 "invite_qr_code_already_scanned_message" = "You have already scanned this code";

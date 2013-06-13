@@ -21,6 +21,9 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+
+    self.title = NSLocalizedString(@"invite_code_view_controller_title", nil);
+
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                   target:self
                                                                                   action:@selector(canceld:)];
