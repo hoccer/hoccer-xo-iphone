@@ -109,6 +109,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [_serverConnection registerIncomingCall: @"groupUpdated"        withSelector:@selector(groupUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"groupMemberUpdated"  withSelector:@selector(groupMemberUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"ping"                withSelector:@selector(ping) isNotification: NO];
+        [_serverConnection registerIncomingCall: @"alertUser"           withSelector:@selector(alertUser) isNotification: YES];
         _delegate = theAppDelegate;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(profileUpdatedByUser:)
@@ -1043,6 +1044,18 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             myContact.avatarURL = @"";
         }
     }
+}
+
+//  void alertUser(String text);
+- (void) alertUser:(NSArray*) param {
+    NSString * title = param[0];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                     message: nil
+                                                    delegate: nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+    
 }
 
 #pragma mark - Group related rpc interfaces: notifications
@@ -2122,7 +2135,13 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 - (void) hello:(NSNumber*) clientTime  handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
     NSDictionary *params = @{
-                             @"clientTime" : clientTime
+                             @"clientTime" : clientTime,
+                             @"locale" : [[NSLocale preferredLanguages] objectAtIndex:0],
+                             @"deviceModel" : [UIDevice currentDevice].model,
+                             @"systemName" : [UIDevice currentDevice].systemName,
+                             @"systemVersion" : [UIDevice currentDevice].systemVersion,
+                             @"clientName" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                             @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]
                              };
     [_serverConnection invoke: @"hello" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {

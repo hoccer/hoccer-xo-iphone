@@ -98,6 +98,9 @@ static BOOL _shouldSave = NO;
         [self setupDone: NO];
     }
     
+    NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
+    [[HXOUserDefaults standardUserDefaults] setValue:buildNumber forKey: [[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
+    
     self.internetReachabilty = [GCNetworkReachability reachabilityForInternetConnection];
     [self.internetReachabilty startMonitoringNetworkReachabilityWithNotification];
 

@@ -10,6 +10,8 @@
 
 FOUNDATION_EXPORT NSString * const kHXOEnvironment;
 FOUNDATION_EXPORT NSString * const kHXOFirstRunDone;
+FOUNDATION_EXPORT NSString * const kHXOlatestBuildRun;
+
 FOUNDATION_EXPORT NSString * const kHXOAPNDeviceToken;
 
 FOUNDATION_EXPORT NSString * const kHXOAvatar;
