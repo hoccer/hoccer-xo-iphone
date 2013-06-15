@@ -2136,12 +2136,13 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     // NSLog(@"hello: %@", clientTime);
     NSDictionary *params = @{
                              @"clientTime" : clientTime,
-                             @"locale" : [[NSLocale preferredLanguages] objectAtIndex:0],
+                             @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
                              @"deviceModel" : [UIDevice currentDevice].model,
                              @"systemName" : [UIDevice currentDevice].systemName,
                              @"systemVersion" : [UIDevice currentDevice].systemVersion,
                              @"clientName" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-                             @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]
+                             @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
+                             @"clientLanguage" : NSLocalizedString(@"language_code", nil)
                              };
     [_serverConnection invoke: @"hello" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
