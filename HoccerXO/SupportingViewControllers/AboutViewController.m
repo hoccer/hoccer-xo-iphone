@@ -30,10 +30,10 @@
 
     self.appIcon.image = [UIImage imageNamed: @"hoccer-xo-app-icon"];
     self.appIcon.layer.masksToBounds = YES;
-    self.appIcon.layer.cornerRadius = 10.0;
+    self.appIcon.layer.cornerRadius = 12.0;
     self.appIconShadow.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.appIconShadow.layer.shadowOpacity = 0.8;
-    self.appIconShadow.layer.shadowOffset = CGSizeMake(0, 3);
+    self.appIconShadow.layer.shadowOpacity = 0.1;
+    self.appIconShadow.layer.shadowOffset = CGSizeMake(0, 1);
     self.appIconShadow.layer.shouldRasterize = YES;
     self.appIconShadow.layer.rasterizationScale = [[UIScreen mainScreen] scale];
 
