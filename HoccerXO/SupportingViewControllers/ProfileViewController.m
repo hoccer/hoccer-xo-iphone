@@ -774,9 +774,9 @@ typedef enum ActionSheetTags {
     [self.navigationController popViewControllerAnimated: YES];
     [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
         NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
-        NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
-        [moc deleteObject: contact];
-        [self.appDelegate saveDatabase];
+        //NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
+        //[moc deleteObject: contact];
+        //[self.appDelegate saveDatabase];
     }];
 }
 

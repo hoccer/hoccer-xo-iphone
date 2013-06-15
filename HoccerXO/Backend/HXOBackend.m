@@ -42,6 +42,7 @@
 #define CONNECTION_TRACE NO
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
+#define RELATIONSHIP_DEBUG YES
 
 #ifdef DEBUG
 #define USE_VALIDATOR YES
@@ -485,10 +486,10 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
 
     
+    [self.delegate saveDatabase];
     if (attachment.state == kAttachmentWantsTransfer) {
         [self scheduleNewDownloadFor:attachment];
     }
-    [self.delegate saveDatabase];
     if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
     [self deliveryConfirm: message.messageId withDelivery: delivery];
     if (message.attachment == nil) {
@@ -944,15 +945,132 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     Contact * contact = [self getContactByClientId: clientId];
     // XXX The server sends relationship updates with state 'none' even after depairing. We ignore those... 
     if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
+        if (contact != nil && ![contact.relationshipState isEqualToString:@"none"] && ![contact.relationshipState isEqualToString:@"kept"]) {
+            [self handleDeletionOfContact:contact];
+        }
         return;
     }
     if (contact == nil) {
         contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         contact.clientId = clientId;
     }
+    if (contact.nickName.length > 0 && ![contact.relationshipState isEqualToString:@"friend"] && [relationshipDict[@"state"] isEqualToString:@"friend"]) {
+        [self newFriendAlertForContact:contact];
+    } else if (![contact.relationshipState isEqualToString:@"blocked"] && [relationshipDict[@"state"] isEqualToString:@"blocked"]) {
+        [self blockedAlertForContact:contact];
+    }
     // NSLog(@"relationship Dict: %@", relationshipDict);
     [contact updateWithDictionary: relationshipDict];
     [self.delegate saveDatabase];
+}
+
+- (void) newFriendAlertForContact:(Contact*)contact {
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Contact '%@' is now a friend.",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"new_friend_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+- (void) blockedAlertForContact:(Contact*)contact {
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Exchange of messages with contact '%@' has been temporarily blocked.",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"friend_blocked_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+- (void) removedAlertForContact:(Contact*)contact {
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Relationship with contact '%@' has been removed.",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"relationship_removed_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+- (NSString*) groupMembershipListofContact:(Contact*)contact {
+    NSMutableArray * groups = [[NSMutableArray alloc] init];
+
+    [contact.groupMemberships enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
+        if (![member.contact isEqual: member.group]) {
+            if (member.group.nickName != nil) {
+                [groups addObject: member.group.nickName];
+            } else {
+                [groups addObject: @"?"];
+            }
+        }
+    }];
+    if (groups.count == 0) {
+        return @"-";
+    }
+    return [groups componentsJoinedByString:@", "];
+}
+
+
+- (void) removedButKeptInGroupAlertForContact:(Contact*)contact {
+    
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Relationship with contact '%@' has been removed, but contact is kept because of memberships in groups >%@<.",nil), contact.nickName, [self groupMembershipListofContact:contact]];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"relationship_removed_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+
+// delete all group member contacts that are not friends or contacts in other group
+- (void)deleteContactIfNotInAGroup:(Contact*) contact {
+    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    
+    // find out if contact is member of any group
+    if (contact.groupMemberships.count == 0) {
+        if (RELATIONSHIP_DEBUG) NSLog(@"deleteContactIfNotInAGroup: not in a group, delete contact with id %@",contact.clientId);
+        [self removedAlertForContact:contact];
+        [moc deleteObject: contact];
+    }
+}
+
+- (void) handleDeletionOfContact:(Contact*)contact {
+    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    if (contact.messages.count == 0 && contact.groupMemberships.count == 0) {
+        // if theres nothing to save, delete right away and dont ask
+        if (RELATIONSHIP_DEBUG) NSLog(@"handleDeletionOfContact: nothing to save, delete contact id %@",contact.clientId);
+        [self removedAlertForContact:contact];
+        [moc deleteObject: contact];
+        return;
+    }
+    
+    if (contact.groupMemberships.count == 0) {
+        NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Contact '%@' no longer exists. Delete associated profile, chats and data?",nil), contact.nickName];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_deleted_title", nil)
+                                                         message: NSLocalizedString(message, nil)
+                                                 completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                     switch (buttonIndex) {
+                                                         case 1:
+                                                             // delete all group member contacts that are not friends or contacts in other group
+                                                             [moc deleteObject: contact];
+                                                             break;
+                                                         case 0:
+                                                             contact.relationshipState = @"kept";
+                                                             // keep contact and chats
+                                                             break;
+                                                     }
+                                                     [self.delegate saveDatabase];
+                                                 }
+                                               cancelButtonTitle: NSLocalizedString(@"contact_keep_data_button", nil)
+                                               otherButtonTitles: NSLocalizedString(@"contact_delete_data_button",nil),nil];
+        [alert show];
+    } else {
+        [self removedButKeptInGroupAlertForContact:contact];
+    }
+    
 }
 
 - (void) updatePresences {
@@ -1001,8 +1119,14 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         myContact.avatarURL = @"";
     }
     
+    BOOL newFriend = NO;
+    
     if (myContact) {
-        myContact.nickName = thePresence[@"clientName"];
+        NSString * newNickName = thePresence[@"clientName"];
+        if (myContact.nickName == nil && newNickName.length > 0 && [myContact.relationshipState isEqualToString:@"friend"]) {
+            newFriend = YES;
+        }
+        myContact.nickName = newNickName;
         myContact.status = thePresence[@"clientStatus"];
         myContact.connectionStatus = thePresence[@"connectionStatus"];
         if (myContact.connectionStatus == nil) {
@@ -1022,6 +1146,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }
     [self.delegate saveDatabase];
+    if (newFriend) {
+        [self newFriendAlertForContact:myContact];
+    }
 }
 
 - (void) updateAvatarForContact:(Contact*)myContact forAvatarURL:(NSString*)theAvatarURL {
@@ -2137,6 +2264,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (void) hello:(NSNumber*) clientTime  handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
+#ifdef FULL_HELLO
     NSDictionary *params = @{
                              @"clientTime" : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
@@ -2147,6 +2275,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                              @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
                              @"clientLanguage" : NSLocalizedString(@"language_code", nil)
                              };
+#else
+    NSDictionary *params = @{ @"clientTime" : clientTime};
+#endif
     [_serverConnection invoke: @"hello" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             handler(responseOrError);

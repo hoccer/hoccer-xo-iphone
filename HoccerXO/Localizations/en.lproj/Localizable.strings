@@ -372,3 +372,24 @@
 
 "fatal_error_default_title"   = "Fatal Error";
 "fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. If the error persists, please delete and reistall Hoccer XO";
+
+"Contact '%@' is now a friend."="Contact '%@' is now a friend.";
+"new_friend_title"="New Friend";
+
+"Exchange of messages with contact '%@' has been temporarily blocked."="Exchange of messages with contact '%@' has been temporarily blocked.";
+"friend_blocked_title"="Contact Blocked";
+
+"Relationship with contact '%@' has been removed."="Relationship with contact '%@' has been removed.";
+"relationship_removed_title"="Relationship removed";
+
+"Relationship with contact '%@' has been removed, but contact is kept because of memberships in groups >%@<."="Relationship with contact '%@' has been removed, but contact is kept because of memberships in groups >%@<.";
+
+
+"Contact '%@' no longer exists. Delete associated profile, chats and data?"="Relationship with contact '%@' no longer exists. Delete associated profile, chats and data?";
+"contact_deleted_title"="Contact Releationship removed";
+"contact_keep_data_button"="Keep Data";
+"contact_delete_data_button"="Delete Data";
+
+
+
+
