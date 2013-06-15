@@ -491,7 +491,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     [self.delegate saveDatabase];
     if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
     [self deliveryConfirm: message.messageId withDelivery: delivery];
-    [SoundEffectPlayer messageArrived];
+    if (message.attachment == nil) {
+        [SoundEffectPlayer messageArrived];
+    }
 }
 
 - (void) performRegistration {
@@ -1956,6 +1958,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     // NSLog(@"downloadFinished of %@", theAttachment);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    [SoundEffectPlayer messageArrived];
 }
 
 - (void) uploadFinished:(Attachment *)theAttachment {
