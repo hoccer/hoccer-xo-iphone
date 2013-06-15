@@ -288,6 +288,7 @@
 		E924C9551768D5A4008185E0 /* audio-default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E924C9511768D5A4008185E0 /* audio-default@2x.png */; };
 		E924C9561768D5A4008185E0 /* button-recorded.png in Resources */ = {isa = PBXBuildFile; fileRef = E924C9521768D5A4008185E0 /* button-recorded.png */; };
 		E924C9571768D5A4008185E0 /* button-recorded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E924C9531768D5A4008185E0 /* button-recorded@2x.png */; };
+		E924C958176C8CD6008185E0 /* libInAppSettingsKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */; };
 		E93F6AC41754469D00F686B8 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E93F6AC21754469D00F686B8 /* HoccerXO.xcdatamodeld */; };
 		E9495575171C13A000FE2E1F /* AttachmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9495574171C139F00FE2E1F /* AttachmentView.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
@@ -427,6 +428,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F6B2082C1450F597009315AF;
 			remoteInfo = SocketRocket;
+		};
+		E96DC1D8176C90AE00BDDF4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = E42ADA8E168202D700295D85;
+			remoteInfo = InAppSettingsKit;
 		};
 		E9A41DDE1764F45E006E76B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -924,6 +932,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E924C958176C8CD6008185E0 /* libInAppSettingsKit.a in Frameworks */,
 				639094C21739970200DF889B /* CoreLocation.framework in Frameworks */,
 				639094C01739842A00DF889B /* MapKit.framework in Frameworks */,
 				E9D1149A173679CC00737EF7 /* SystemConfiguration.framework in Frameworks */,
@@ -1886,6 +1895,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				E96DC1D9176C90AE00BDDF4E /* PBXTargetDependency */,
 				63A7F65F172C2E3F00C0EC26 /* PBXTargetDependency */,
 				63C413B316E8FBB0004E1F6D /* PBXTargetDependency */,
 			);
@@ -2394,6 +2404,11 @@
 			name = SocketRocket;
 			targetProxy = 63C413B216E8FBB0004E1F6D /* PBXContainerItemProxy */;
 		};
+		E96DC1D9176C90AE00BDDF4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = InAppSettingsKit;
+			targetProxy = E96DC1D8176C90AE00BDDF4E /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -2487,6 +2502,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+				);
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -2502,7 +2521,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2516,6 +2535,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+				);
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -2532,7 +2555,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

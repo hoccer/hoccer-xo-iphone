@@ -45,10 +45,17 @@
                        @"icon": @"navigation_button_profile",
                        @"storyboardId": @"profileViewController"
                     },
+#if 0
                     @{ @"title": NSLocalizedString(@"Settings", nil),
                        @"icon": @"navigation_button_settings",
                        @"storyboardId": @"settingsViewController"
                     },
+#else
+                    @{ @"title": NSLocalizedString(@"Settings", nil),
+                       @"icon": @"navigation_button_settings",
+                       @"storyboardId": @"inAppSettingsViewController"
+                       },
+#endif
                     @{ @"title": NSLocalizedString(@"Tutorial", nil),
                        @"icon": @"navigation_button_tutorial",
                        @"storyboardId": @"tutorialViewController"

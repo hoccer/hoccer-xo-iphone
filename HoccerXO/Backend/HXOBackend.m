@@ -42,7 +42,12 @@
 #define CONNECTION_TRACE NO
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
+
+#ifdef DEBUG
 #define USE_VALIDATOR YES
+#else
+#define USE_VALIDATOR NO
+#endif
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -2644,7 +2649,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for receiver %@ found", theMessageTag, theReceiverId);
         }
     } else {
-        NSLog(@"Delivery with MessageTag %@ for receiver %@ not in deliveries", theMessageTag, theReceiverId);
+        if (DELIVERY_TRACE) NSLog(@"Delivery with MessageTag %@ for receiver %@ not in deliveries", theMessageTag, theReceiverId);
     }
     return delivery;
 }
@@ -2668,7 +2673,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for group %@ found", theMessageTag, theGroupId);
         }
     } else {
-        NSLog(@"Delivery with MessageTag %@ for group %@ not in deliveries", theMessageTag, theGroupId);
+        if (DELIVERY_TRACE) NSLog(@"Delivery with MessageTag %@ for group %@ not in deliveries", theMessageTag, theGroupId);
     }
     return delivery;
 }
@@ -2692,7 +2697,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for group %@ found", theMessageTag, theGroupId);
         }
     } else {
-        NSLog(@"Delivery with MessageTag %@ for group %@ not in deliveries", theMessageTag, theGroupId);
+        if (DELIVERY_TRACE) NSLog(@"Delivery with MessageTag %@ for group %@ not in deliveries", theMessageTag, theGroupId);
     }
     return delivery;
 }

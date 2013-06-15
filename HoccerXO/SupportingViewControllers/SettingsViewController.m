@@ -12,6 +12,7 @@
 #import "RadialGradientView.h"
 #import "UserDefaultsCells.h"
 
+#if 0
 @interface SettingsItem : NSObject
 
 @property (nonatomic,strong) NSString * cellIdentifier;
@@ -21,6 +22,8 @@
 
 @end
 
+#endif
+
 @implementation SettingsViewController
 
 - (void) viewDidLoad {
@@ -29,14 +32,15 @@
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-
-    [self populateSettingsItem];
+    // [self populateSettingsItem];
 }
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
 }
+
+#if 0
 
 - (void) populateSettingsItem {
     /*
@@ -80,10 +84,12 @@
 //    NSURL *myURL = [NSURL URLWithString:@"prefs://"];
 //    [[UIApplication sharedApplication] openURL:myURL];
 //}
+#endif
 
 
 @end
 
+#if 0
 @implementation SettingsItem
 
 + (SettingsItem*) item {
@@ -91,3 +97,5 @@
 }
 
 @end
+
+#endif
