@@ -13,10 +13,12 @@
 
 - (void) awakeFromNib {
     [self.button setTitle: NSLocalizedString(@"invite_friends_button_title", nil) forState: UIControlStateNormal];
-    UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
-    [self.button setBackgroundImage: background forState: UIControlStateNormal];
+    UIImage * buttonBackground = [[UIImage imageNamed: @"button-large"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
+    [self.button setBackgroundImage: buttonBackground forState: UIControlStateNormal];
     self.button.backgroundColor = [UIColor clearColor];
     self.button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    // self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"button-large-background"]];
+    self.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed: @"button-large-background"]];
 }
 
 @end

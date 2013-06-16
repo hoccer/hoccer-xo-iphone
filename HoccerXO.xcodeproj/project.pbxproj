@@ -319,6 +319,10 @@
 		E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EB17282C950089A510 /* sweep_in_sound.wav */; };
 		E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EC17282C950089A510 /* sweep_out_sound.wav */; };
 		E99886F517282C950089A510 /* throw_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EE17282C950089A510 /* throw_sound.wav */; };
+		E9A1DDCC176D4BB90063DE37 /* button-large-background.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A1DDC8176D4BB90063DE37 /* button-large-background.png */; };
+		E9A1DDCD176D4BB90063DE37 /* button-large-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A1DDC9176D4BB90063DE37 /* button-large-background@2x.png */; };
+		E9A1DDCE176D4BB90063DE37 /* button-large.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A1DDCA176D4BB90063DE37 /* button-large.png */; };
+		E9A1DDCF176D4BB90063DE37 /* button-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A1DDCB176D4BB90063DE37 /* button-large@2x.png */; };
 		E9A2B85217189A1200E35E7E /* button-video.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84E17189A1200E35E7E /* button-video.png */; };
 		E9A2B85317189A1200E35E7E /* button-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84F17189A1200E35E7E /* button-video@2x.png */; };
 		E9A41DCA17625BA5006E76B2 /* group_member_add@.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A41DC617625BA5006E76B2 /* group_member_add@.png */; };
@@ -876,6 +880,10 @@
 		E99886EB17282C950089A510 /* sweep_in_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_in_sound.wav; sourceTree = "<group>"; };
 		E99886EC17282C950089A510 /* sweep_out_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_out_sound.wav; sourceTree = "<group>"; };
 		E99886EE17282C950089A510 /* throw_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = throw_sound.wav; sourceTree = "<group>"; };
+		E9A1DDC8176D4BB90063DE37 /* button-large-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-large-background.png"; sourceTree = "<group>"; };
+		E9A1DDC9176D4BB90063DE37 /* button-large-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-large-background@2x.png"; sourceTree = "<group>"; };
+		E9A1DDCA176D4BB90063DE37 /* button-large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-large.png"; sourceTree = "<group>"; };
+		E9A1DDCB176D4BB90063DE37 /* button-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-large@2x.png"; sourceTree = "<group>"; };
 		E9A2B84E17189A1200E35E7E /* button-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video.png"; sourceTree = "<group>"; };
 		E9A2B84F17189A1200E35E7E /* button-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video@2x.png"; sourceTree = "<group>"; };
 		E9A41DC617625BA5006E76B2 /* group_member_add@.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_add@.png"; sourceTree = "<group>"; };
@@ -1266,6 +1274,10 @@
 		6381FEBA1745542B001D16E0 /* ConversationView */ = {
 			isa = PBXGroup;
 			children = (
+				E9A1DDC8176D4BB90063DE37 /* button-large-background.png */,
+				E9A1DDC9176D4BB90063DE37 /* button-large-background@2x.png */,
+				E9A1DDCA176D4BB90063DE37 /* button-large.png */,
+				E9A1DDCB176D4BB90063DE37 /* button-large@2x.png */,
 				6381FEC0174556F2001D16E0 /* conversation-icon-me.png */,
 				6381FEC1174556F2001D16E0 /* conversation-icon-me@2x.png */,
 				633048FD16FC95A10045E64E /* conversation_cell_bg.png */,
@@ -2243,6 +2255,10 @@
 				E924C9551768D5A4008185E0 /* audio-default@2x.png in Resources */,
 				E924C9561768D5A4008185E0 /* button-recorded.png in Resources */,
 				E924C9571768D5A4008185E0 /* button-recorded@2x.png in Resources */,
+				E9A1DDCC176D4BB90063DE37 /* button-large-background.png in Resources */,
+				E9A1DDCD176D4BB90063DE37 /* button-large-background@2x.png in Resources */,
+				E9A1DDCE176D4BB90063DE37 /* button-large.png in Resources */,
+				E9A1DDCF176D4BB90063DE37 /* button-large@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
