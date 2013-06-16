@@ -2126,6 +2126,11 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         [theAttachment.transferRetryTimer invalidate];
         theAttachment.transferRetryTimer = nil;
     }
+    if (![self.delegate.internetReachabilty isReachable]) {
+        // do not schedule retrys without internet connection
+        if (CONNECTION_TRACE) NSLog(@"No Internet, not scheduling: scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        return;
+    }
     if (theAttachment.state == kAttachmentUploadIncomplete ||
         theAttachment.state == kAttachmentDownloadIncomplete ||
         theAttachment.state == kAttachmentWantsTransfer) {

@@ -41,7 +41,7 @@
     if (progressView != nil) {
         // NSLog(@"showTransferProgress, really %f", theProgress);
         progressView.hidden = NO;
-        [progressView setProgress: theProgress animated:YES];
+        [progressView setProgress: theProgress animated:NO];
         self.nameLabel.text = [self getTransferedTitle];
         self.nameLabel.hidden = NO;
     }
@@ -51,6 +51,7 @@
     if (ATTACHMENT_STATE_DEBUG) {NSLog(@"transferStarted, cell = %@, attachment = %@", self.attachment, self.cell);}
     if (self.attachment != nil && self.cell != nil) {
         progressView.hidden = NO;
+        self.loadButton.hidden = YES;
         [self.cell setNeedsLayout];
     }
 }
@@ -119,16 +120,23 @@
         
     UIColor * buttonColor;
     if (attachmentState == kAttachmentTransfersExhausted) {
-        buttonColor = [UIColor colorWithRed:0.8 green:0 blue:0 alpha:1];
+        buttonColor = [UIColor colorWithRed:0.8 green:0 blue:0 alpha:0.7];
     } else {
-        buttonColor = [UIColor colorWithRed:0 green:0 blue:0.8 alpha:1];
+        buttonColor = [UIColor colorWithRed:0 green:0 blue:0.8 alpha:0.7];
     }
+    
+    
+    CGRect buttonFrame = self.frame;
+    buttonFrame.origin.y = self.frame.size.height / 2 - 40;
+    buttonFrame.size.height = 80;
+    buttonFrame.origin.x = self.frame.size.width / 2 - 100;
+    buttonFrame.size.width = 200;
     
     // create loadbutton
     if (self.loadButton == nil) {
-        //self.loadButton = [[UIButton alloc] initWithFrame: self.bounds];
-        self.loadButton = [[UIButton alloc] initWithFrame:self.frame];
-        self.loadButton.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        self.loadButton = [[UIButton alloc] initWithFrame:buttonFrame];
+        self.loadButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin;
+        self.loadButton.contentMode = UIViewContentModeCenter;
         [self.loadButton setBackgroundColor: buttonColor];
         [self.loadButton makeRoundAndGlossy];
         self.loadButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -139,7 +147,7 @@
         // renew gloss for possibly changed dimensions
         [self.loadButton undoRoundAndGlossy];
         [self.loadButton setBackgroundColor: buttonColor];
-        self.loadButton.frame = self.frame;
+        self.loadButton.frame = buttonFrame;
         [self.loadButton makeRoundAndGlossy];
         if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: may reuse loadbutton");}
     }
@@ -173,9 +181,7 @@
     self.nameLabel.hidden = YES;
     
     if (attachmentState == kAttachmentTransferOnHold ||
-        attachmentState == kAttachmentTransfersExhausted ||
-        attachmentState == kAttachmentUploadIncomplete ||
-        attachmentState == kAttachmentDownloadIncomplete)
+        attachmentState == kAttachmentTransfersExhausted)
     {
         self.loadButton.hidden = NO;
         self.openButton.hidden = YES;
@@ -203,17 +209,14 @@
         
         if (attachmentState == kAttachmentTransfered || isOutgoing) {
             [self.openButton addTarget:cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
-            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: disabled openbutton, hide loadbutton");}
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: enabled openbutton, hide loadbutton");}
         } else {
-            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: enabled openbutton, hide loadbutton");}            
+            if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: did not enable openbutton, hide loadbutton");}            
         }
     }
     
     // now set imageView Image if we can
-    if (attachmentState == kAttachmentTransfered ||
-        (isOutgoing &&
-         (attachmentState == kAttachmentTransferPaused ||
-          attachmentState == kAttachmentTransfering)))
+    if (attachmentState == kAttachmentTransfered || isOutgoing)
     {
         if ([attachment.mediaType isEqualToString:@"audio"]) {
             self.nameLabel.text = theAttachment.humanReadableFileName;
@@ -236,7 +239,7 @@
     }
     
     // we can play with alpha here
-    if (attachmentState == kAttachmentTransfering) {
+    if (attachmentState != kAttachmentTransfered) {
         self.imageView.alpha = 0.5;
     } else {
         self.imageView.alpha = 1.0;
@@ -259,7 +262,9 @@
 
     if (attachmentState == kAttachmentTransfering ||
         attachmentState == kAttachmentTransferPaused ||
-        attachmentState == kAttachmentTransferScheduled)
+        attachmentState == kAttachmentTransferScheduled ||
+        attachmentState == kAttachmentUploadIncomplete ||
+        attachmentState == kAttachmentDownloadIncomplete)
     {
         [self.progressView setProgress: [attachment.transferSize doubleValue] / [attachment.contentSize doubleValue]];
         self.progressView.hidden = NO;

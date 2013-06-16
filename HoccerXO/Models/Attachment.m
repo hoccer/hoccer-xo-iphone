@@ -94,7 +94,7 @@
 @synthesize progressIndicatorDelegate;
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
-@synthesize transferRetryTimer;
+@synthesize transferRetryTimer = _transferRetryTimer;
 @synthesize resumePos;
 
 #ifdef LET_DOWNLOAD_FAIL
@@ -102,7 +102,16 @@
 @synthesize resumeSize; // DEBUG
 #endif
 
-
+- (void) setTransferRetryTimer:(NSTimer*) theTimer {
+    if (theTimer.isValid) {
+        if (progressIndicatorDelegate) {
+            [progressIndicatorDelegate transferScheduled];
+        } else {
+            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:uploadData - no delegate for transferStarted");}
+        }
+    }
+    _transferRetryTimer = theTimer;
+}
 
 
 +(NSString*) getStateName:(AttachmentState)state {
@@ -136,8 +145,14 @@ NSArray * TransferStateName = @[@"detached",
 
 - (AttachmentState) state {
     AttachmentState myState = [self _state];
-    if (TRANSFER_TRACE) {
-        NSLog(@"Attachment state=%@",[Attachment getStateName:myState]);
+    if (CONNECTION_TRACE) {
+        NSString * name;
+        if (self.contentURL == nil) {
+            name = self.ownedURL.lastPathComponent;
+        } else {
+            name = self.contentURL.lastPathComponent;
+        }
+        NSLog(@"Attachment '%@' state='%@'",name, [Attachment getStateName:myState]);
     }
     return myState;
 }
@@ -147,10 +162,10 @@ NSArray * TransferStateName = @[@"detached",
     if (self.message == nil) {
         return kAttachmentDetached;
     }
-    if (self.contentSize == 0) {
+    if (self.contentSize == nil || [self.contentSize isEqualToNumber:@(0)]) {
         return kAttachmentEmpty;
     }
-    if ([self.transferSize isEqualToNumber: self.contentSize]) {
+    if ([self.contentSize isEqualToNumber: self.transferSize]) {
         return kAttachmentTransfered;
     }
     long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries] longLongValue];
@@ -166,7 +181,7 @@ NSArray * TransferStateName = @[@"detached",
     if (self.transferConnection != nil) {
         return kAttachmentTransfering;
     }
-    if (self.transferRetryTimer != nil) {
+    if (self.transferRetryTimer.isValid) {
         return kAttachmentTransferScheduled;
     }
     if ([self.transferSize longLongValue]> 0) {
@@ -1131,19 +1146,19 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) downloadOnTimer: (NSTimer*) theTimer {
-    if (theTimer != transferRetryTimer) {
+    if (theTimer != _transferRetryTimer) {
         NSLog(@"WARNING: downloadOnTimer: called by strange timer");
     } else {
-        transferRetryTimer = nil;
+        _transferRetryTimer = nil;
     }
     [self download];
 }
 
 - (void) uploadOnTimer: (NSTimer*) theTimer {
-    if (theTimer != transferRetryTimer) {
+    if (theTimer != _transferRetryTimer) {
         NSLog(@"WARNING: downloadOnTimer: called by strange timer");
     } else {
-        transferRetryTimer = nil;
+        _transferRetryTimer = nil;
     }
     [self upload];
 }

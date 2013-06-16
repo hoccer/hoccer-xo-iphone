@@ -43,6 +43,7 @@ typedef enum AttachmentStates {
 - (void) showTransferProgress:(float) theProgress;
 - (void) transferStarted;
 - (void) transferFinished;
+- (void) transferScheduled;
 
 @end
 
