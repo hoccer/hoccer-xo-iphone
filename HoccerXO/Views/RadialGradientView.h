@@ -10,5 +10,6 @@
 
 @interface RadialGradientView : UIView
 
+@property BOOL dark;
 
 @end

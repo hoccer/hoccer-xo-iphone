@@ -19,8 +19,19 @@
     CGContextSaveGState(cx);
     CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
 
-    CGFloat comps[] = {1.0,1.0,1.0,1.0,
+    CGFloat bright_comps[] = {1.0,1.0,1.0,1.0,
         0.95,0.95,0.95,1.0};
+
+    CGFloat darks_comps[] = {0.2,0.2,0.2,1.0,
+        0.1,0.1,0.1,1.0};
+    
+    CGFloat * comps;
+    if (self.dark) {
+        comps = darks_comps;
+    } else {
+        comps = bright_comps;
+    }
+    
     CGFloat locs[] = {0,1};
     CGGradientRef g = CGGradientCreateWithColorComponents(space, comps, locs, 2);
 

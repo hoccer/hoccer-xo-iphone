@@ -73,7 +73,9 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
     // TODO: ask @zutrinken
-    self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
+    RadialGradientView * tableBackground = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
+    tableBackground.dark = YES;
+    self.tableView.backgroundView = tableBackground;
     
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 }

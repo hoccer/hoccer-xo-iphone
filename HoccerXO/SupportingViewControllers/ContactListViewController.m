@@ -47,7 +47,9 @@
     [super viewDidLoad];
 
     [self setupNavigationBar];
-    self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
+    RadialGradientView * tableBackground = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
+    tableBackground.dark = YES;
+    self.tableView.backgroundView = tableBackground;
 
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
