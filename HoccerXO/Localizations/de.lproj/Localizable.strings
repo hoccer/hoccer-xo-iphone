@@ -372,4 +372,9 @@
 
 "geolocation_picker_title"="Nadel verschieben";
 
+"membership_state_invited" = "eingeladen";
+"membership_state_joined"  = "beigetreten";
+
+"membership_role_admin"  = "Admin";
+"membership_role_member" = "Mitglied";
 

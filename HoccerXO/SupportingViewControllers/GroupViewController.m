@@ -586,7 +586,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         cell.nickName.alpha = 1.0;
     }
-    cell.statusLabel.text = [NSString stringWithFormat:@"%@ - %@",membership.state, membership.role];
+    NSString * membershipStateKey = [NSString stringWithFormat: @"membership_state_%@", membership.state];
+    NSString * membershipRoleKey = [NSString stringWithFormat: @"membership_role_%@", membership.role];
+    cell.statusLabel.text = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(membershipRoleKey, nil), NSLocalizedString(membershipStateKey, nil)];
     UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
     cell.avatar.image = avatar;
 }
