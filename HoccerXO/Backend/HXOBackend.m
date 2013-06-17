@@ -965,9 +965,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) newFriendAlertForContact:(Contact*)contact {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Contact '%@' is now a friend.",nil), contact.nickName];
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"new_friend_message",nil), contact.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"new_friend_title", nil)
-                                                     message: NSLocalizedString(message, nil)
+                                                     message: message
                                                     delegate:nil
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];
@@ -975,9 +975,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) blockedAlertForContact:(Contact*)contact {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Exchange of messages with contact '%@' has been temporarily blocked.",nil), contact.nickName];
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"friend_blocked_message",nil), contact.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"friend_blocked_title", nil)
-                                                     message: NSLocalizedString(message, nil)
+                                                     message: message
                                                     delegate:nil
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];
@@ -985,9 +985,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) removedAlertForContact:(Contact*)contact {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Relationship with contact '%@' has been removed.",nil), contact.nickName];
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"relationship_removed_message",nil), contact.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"relationship_removed_title", nil)
-                                                     message: NSLocalizedString(message, nil)
+                                                     message: message
                                                     delegate:nil
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];
@@ -1015,9 +1015,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (void) removedButKeptInGroupAlertForContact:(Contact*)contact {
     
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Relationship with contact '%@' has been removed, but contact is kept because of memberships in groups >%@<.",nil), contact.nickName, [self groupMembershipListofContact:contact]];
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"relationship_removed_but_contact_kept_message",nil), contact.nickName, [self groupMembershipListofContact:contact]];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"relationship_removed_title", nil)
-                                                     message: NSLocalizedString(message, nil)
+                                                     message: message
                                                     delegate:nil
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];
@@ -1048,9 +1048,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     }
     
     if (contact.groupMemberships.count == 0) {
-        NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Contact '%@' no longer exists. Delete associated profile, chats and data?",nil), contact.nickName];
+        NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_delete_associated_data_question",nil), contact.nickName];
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_deleted_title", nil)
-                                                         message: NSLocalizedString(message, nil)
+                                                         message: message
                                                  completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                      switch (buttonIndex) {
                                                          case 1:

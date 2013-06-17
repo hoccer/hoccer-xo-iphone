@@ -27,8 +27,7 @@
 }
 
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *useButton;
+@property (strong, nonatomic) IBOutlet UINavigationItem* customNavigationItem;
 @property (readonly, nonatomic) CLLocationManager * locationManager;
 
 @property (nonatomic, assign) id<GeoLocationPickerDelegate> delegate;

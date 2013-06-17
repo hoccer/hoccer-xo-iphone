@@ -28,7 +28,11 @@ static const CGFloat kGeoLocationCityZoom = 500;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.locationManager.delegate = self;
-    self.mapView.delegate = self;
+
+    self.customNavigationItem.title = NSLocalizedString(@"geolocation_picker_title", nil);
+    self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(cancelPressed:)];
+    self.customNavigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action:@selector(donePressed:)];
+
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -37,7 +41,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
 
     [self.locationManager startUpdatingLocation];
 
-    self.useButton.enabled = NO;
+    self.customNavigationItem.rightBarButtonItem.enabled = NO;
     _renderPreview = NO;
 }
 
@@ -70,12 +74,10 @@ static const CGFloat kGeoLocationCityZoom = 500;
         _pinDraggedByUser = NO;
         _placemark = [[MKPointAnnotation alloc] init];
         _placemark.coordinate = newLocation.coordinate;
-        //_annotation.title = @"Drag the Pin";
-        //_annotation.subtitle = [NSString stringWithFormat:@"%f %f", _annotation.coordinate.latitude, _annotation.coordinate.longitude];
 
         [self.mapView addAnnotation: _placemark];
         [self.mapView selectAnnotation: _placemark animated: YES];
-        self.useButton.enabled = YES;
+        self.customNavigationItem.rightBarButtonItem.enabled = YES;
     } else if ( ! _pinDraggedByUser){
         _placemark.coordinate = newLocation.coordinate;
     }
@@ -85,12 +87,6 @@ static const CGFloat kGeoLocationCityZoom = 500;
 #pragma mark - MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
-/*
-	if (oldState == MKAnnotationViewDragStateDragging) {
-		DnDAnnotation *annotation = (DnDAnnotation *)annotationView.annotation;
-		annotation.subtitle = [NSString	stringWithFormat:@"%f %f", annotation.coordinate.latitude, annotation.coordinate.longitude];
-	}
- */
     _pinDraggedByUser = YES;
 }
 
@@ -108,7 +104,6 @@ static const CGFloat kGeoLocationCityZoom = 500;
 	} else {
 		draggablePinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier: kPinAnnotationIdentifier];
 		draggablePinView.draggable = YES;
-		//draggablePinView.canShowCallout = YES;
 	}
 
 	return draggablePinView;
@@ -141,7 +136,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
     [self.delegate locationPickerDidCancel: self];
 }
 
-- (IBAction) usePressed:(id)sender {
+- (IBAction) donePressed:(id)sender {
     [self renderPreview];
 }
 

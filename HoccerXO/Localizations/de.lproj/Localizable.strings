@@ -319,7 +319,7 @@
 "'%@' no longer invited to group '%@'"="'%@' ist nicht mehr zu Gruppe '%@' eingeladen.";
 "group_disinvited_title"="Einladung abgelehnt oder zurückgezogen";
 
-"Group '%@' no longer exists. Delete associated chats and data?"="Ihre Mitgliedschaft in der Gruppe '%@' besteht nicht mehr. Gruppenchat und damit zusammenhängende Daten löschen?";
+"Group '%@' no longer exists. Delete associated chats and data?"="Deine Mitgliedschaft in der Gruppe '%@' besteht nicht mehr. Gruppenchat und damit zusammenhängende Daten löschen?";
 "group_deleted_title"="Gruppenmitgliedschaft erloschen.";
 "group_keep_data_button"="Behalten";
 "group_delete_data_button"="Löschen";
@@ -353,22 +353,23 @@
 "fatal_error_default_title"   = "Fataler Fehler";
 "fatal_error_default_message" = "Ein unbehebarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Wenn der Fehler fortbesteht lösche bitte Hoccer XO und installiere die App erneut.";
 
-"Contact '%@' is now a friend."="Kontakt '%@' is jetzt Freund.";
-"new_friend_title"="New Friend";
+"new_friend_message"="Kontakt '%@' is jetzt mit dir befreundet.";
+"new_friend_title"="Neuer Freund";
 
-"Exchange of messages with contact '%@' has been temporarily blocked."="Der Nachrichtenaustausch mit Kontakt '%@' ist vorübergehend geblockt.";
+"friend_blocked_message"="Der Nachrichtenaustausch mit Kontakt '%@' ist vorübergehend geblockt.";
 "friend_blocked_title"="Kontakt geblockt";
 
-"Relationship with contact '%@' has been removed."="Die Beziehung zu Kontakt '%@' wurde entfernt.";
+"relationship_removed_message"="Die Beziehung zu Kontakt '%@' wurde entfernt.";
 "relationship_removed_title"="Beziehung entfernt";
 
-"Relationship with contact '%@' has been removed, but contact is kept because of memberships in groups >%@<."="Die direkte Beziehung zu Kontakt '%@' wurde entfernt, aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppen >%@<.";
+"relationship_removed_but_contact_kept_message"="Die direkte Beziehung zu Kontakt '%@' wurde entfernt, aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppen >%@<.";
 
 
-"Contact '%@' no longer exists. Delete associated profile, chats and data?"="Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
+"contact_delete_associated_data_question"="Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
 "contact_deleted_title"="Beziehung besteht nicht mehr";
 "contact_keep_data_button"="Behalten";
 "contact_delete_data_button"="Löschen";
 
+"geolocation_picker_title"="Nadel verschieben";
 
 
