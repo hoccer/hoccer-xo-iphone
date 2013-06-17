@@ -47,7 +47,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6033</string>
+	<string>6034</string>
 	<key>HXOClientDevelopers</key>
 	<array>
 		<string>David Siegel</string>
@@ -58,7 +58,7 @@
 		<string>Peter Amende</string>
 	</array>
 	<key>HXOReleaseName</key>
-	<string>FlipFlops</string>
+	<string>Sneakers</string>
 	<key>HXOServerDevelopers</key>
 	<array>
 		<string>Ingo Albrecht</string>
