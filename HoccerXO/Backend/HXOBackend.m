@@ -1696,7 +1696,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 - (void) groupLeftAlertForGroupNamed:(NSString*)groupName withMemberNamed:(NSString*)memberName {
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' has left group '%@'",nil), memberName, groupName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_left_title", nil)
-                                                     message: NSLocalizedString(message, nil)
+                                                     message: message
                                                     delegate:nil
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];
@@ -1706,7 +1706,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 - (void) groupDisinvitedAlertForGroupNamed:(NSString*)groupName withMemberNamed:(NSString*)memberName {
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' no longer invited to group '%@'",nil), memberName, groupName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_disinvited_title", nil)
-                                                     message: NSLocalizedString(message, nil)
+                                                     message: message
                                                     delegate:nil
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];
@@ -1733,6 +1733,16 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                                                     completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                         switch (buttonIndex) {
                                                             case 0:
+                                                                // join group
+                                                                [self joinGroup:group onJoined:^(Group *group) {
+                                                                    if (group != nil) {
+                                                                        NSLog(@"Joined group %@", group);
+                                                                    } else {
+                                                                        NSLog(@"ERROR: joinGroup %@ failed", group);
+                                                                    }
+                                                                }];
+                                                                break;
+                                                            case 1:
                                                                 // leave group
                                                                 [self leaveGroup: group onGroupLeft:^(Group *group) {
                                                                     if (group != nil) {
@@ -1742,23 +1752,13 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                                                                     }
                                                                 }];
                                                                 break;
-                                                            case 1:
-                                                                // join group
-                                                                [self joinGroup:group onJoined:^(Group *group) {
-                                                                        if (group != nil) {
-                                                                            NSLog(@"Joined group %@", group);
-                                                                        } else {
-                                                                            NSLog(@"ERROR: joinGroup %@ failed", group);
-                                                                        }
-                                                                }];
-                                                                break;
                                                             case 2:
                                                                 // do nothing
                                                                 break;
                                                         }
                                                     }
-                                           cancelButtonTitle: NSLocalizedString(@"invitation_decline_button_title", nil)
-                                           otherButtonTitles: NSLocalizedString(@"invitation_join_group_button_title", nil),NSLocalizedString(@"invitation_decide_later_button_title", nil),nil];
+                                           cancelButtonTitle: nil
+                                           otherButtonTitles: NSLocalizedString(@"invitation_join_group_button_title", nil), NSLocalizedString(@"invitation_decline_button_title", nil), NSLocalizedString(@"invitation_decide_later_button_title", nil),nil];
     [alert show];
 }
 
