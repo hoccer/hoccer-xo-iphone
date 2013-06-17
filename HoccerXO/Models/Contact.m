@@ -13,6 +13,8 @@
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h" // for date conversion
 
+#import "Group.h"
+#import "GroupMembership.h"
 
 // const float kTimeSectionInterval = 2 * 60;
 
@@ -165,6 +167,15 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 - (NSString*) nickNameWithStatus {
+    if ([self.relationshipState isEqualToString: @"kept"]) {
+        return [NSString stringWithFormat:@"%@ ❌", self.nickName];
+    }
+    if ([self.relationshipState isEqualToString: @"blocked"]) {
+        return [NSString stringWithFormat:@"%@ 🚫", self.nickName];
+    }
+    if ([self.type isEqualToString:@"Group"] && [self.myGroupMembership.group.groupState isEqualToString: @"kept"]) {
+        return [NSString stringWithFormat:@"%@ ❌", self.nickName];
+    }
     if (self.connectionStatus == nil) {
         return self.nickName;
     } else if ([self.connectionStatus isEqualToString:@"online"]) {

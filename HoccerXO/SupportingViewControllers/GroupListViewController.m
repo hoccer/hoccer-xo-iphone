@@ -68,7 +68,7 @@
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSLog(@"prepareForSegue: %@", segue.identifier);
+    // NSLog(@"prepareForSegue: %@", segue.identifier);
     Group * group = nil;
     GroupViewController * groupViewController = (GroupViewController*)segue.destinationViewController;
     if ([[segue identifier] isEqualToString:@"showGroup"]) {

@@ -33,6 +33,8 @@
 
 #import <Foundation/NSKeyValueCoding.h>
 
+#define RELATIONSHIP_DEBUG NO
+
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 static const NSUInteger kHXOMaxNickNameLength = 25;
 
@@ -742,12 +744,12 @@ typedef enum ActionSheetTags {
     if ([_contact.relationshipState isEqualToString: @"friend"]) {
         // NSLog(@"friend -> blocked");
         [self.chatBackend blockClient: _contact.clientId handler:^(BOOL success) {
-            NSLog(@"blockClient: %@", success ? @"success" : @"failed");
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"blockClient: %@", success ? @"success" : @"failed");
         }];
     } else if ([_contact.relationshipState isEqualToString: @"blocked"]) {
         // NSLog(@"blocked -> friend");
         [self.chatBackend unblockClient: _contact.clientId handler:^(BOOL success) {
-            NSLog(@"unblockClient: %@", success ? @"success" : @"failed");
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"unblockClient: %@", success ? @"success" : @"failed");
         }];
     } else {
         NSLog(@"ProfileViewController toggleBlockedPressed: unhandled status %@", _contact.status);
@@ -772,7 +774,7 @@ typedef enum ActionSheetTags {
 - (void) deleteContact: (Contact*) contact {
     [self.navigationController popViewControllerAnimated: YES];
     [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
-        NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
+        if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
         //NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
         //[moc deleteObject: contact];
         //[self.appDelegate saveDatabase];

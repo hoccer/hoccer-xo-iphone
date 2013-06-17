@@ -232,7 +232,7 @@
 
     [fetchRequest setSortDescriptors:sortDescriptors];
 
-    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"];
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"];
     [fetchRequest setPredicate: filterPredicate];
 
     // Edit the section name key path and cache name if appropriate.

@@ -353,7 +353,7 @@
 "fatal_error_default_title"   = "Fataler Fehler";
 "fatal_error_default_message" = "Ein unbehebarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Wenn der Fehler fortbesteht lösche bitte Hoccer XO und installiere die App erneut.";
 
-"new_friend_message"="Kontakt '%@' is jetzt mit dir befreundet.";
+"new_friend_message"="Kontakt '%@' ist jetzt mit dir befreundet.";
 "new_friend_title"="Neuer Freund";
 
 "friend_blocked_message"="Der Nachrichtenaustausch mit Kontakt '%@' ist vorübergehend geblockt.";
@@ -377,4 +377,12 @@
 
 "membership_role_admin"  = "Admin";
 "membership_role_member" = "Mitglied";
+
+"friend"="Freund";
+"kept"="Keine Beziehung";
+"blocked"="Geblockt";
+
+"cant_send_contact_blocked"="Der Kontakt is geblockt.";
+"cant_send_relationship_removed"="Es existiert keine Beziehung zu diesem Kontakt mehr.";
+"cant_send_title"="Nachricht kann nicht gesendet werden";
 

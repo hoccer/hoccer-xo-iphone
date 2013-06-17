@@ -604,7 +604,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             NSLog(@"### ERROR: more than 1 group with id %@ in database", theGroupId);
             abort();
         }
-        NSLog(@"Group ClientId %@ not in contacts:", theGroupId);
+        if (GROUP_DEBUG) NSLog(@"Group ClientId %@ not in contacts:", theGroupId);
     }
     return group;
 }
@@ -614,7 +614,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     if (group == nil) {
         group = [self getGroupByTag:theGroupTag];
         if (group == nil) {
-            NSLog(@"INFO: getGroupById:orByTag: unknown group with id=%@ or tag %@",theGroupId,theGroupTag);
+            if (GROUP_DEBUG) NSLog(@"INFO: getGroupById:orByTag: unknown group with id=%@ or tag %@",theGroupId,theGroupTag);
         }
     }
     return group;
@@ -948,6 +948,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     // XXX The server sends relationship updates with state 'none' even after depairing. We ignore those... 
     if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
         if (contact != nil && ![contact.relationshipState isEqualToString:@"none"] && ![contact.relationshipState isEqualToString:@"kept"]) {
+            contact.relationshipState = @"none";
             [self handleDeletionOfContact:contact];
         }
         return;
@@ -1537,7 +1538,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         [group isEqual:myMembership.contact])
     {
         weHaveBeenInvited = YES;
-        NSLog(@"updateGroupMemberHere: weHaveBeenInvited");
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: weHaveBeenInvited");
     }
 
     BOOL someoneHasJoinedGroup = NO;
@@ -1547,7 +1548,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         [group.myGroupMembership.state isEqualToString:@"joined"]) // only show when we habe already joined
     {
         someoneHasJoinedGroup = YES;
-        NSLog(@"updateGroupMemberHere: someoneHasJoinedGroup");
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: someoneHasJoinedGroup");
     }
 
     BOOL memberShipDeleted = NO;
@@ -1557,7 +1558,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             // someone has left the group or we have been kicked out of an existing group
             memberShipDeleted = YES;
             disinvited = [myMembership.state isEqualToString:@"invited"];
-            NSLog(@"updateGroupMemberHere: memberShipDeleted");
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: memberShipDeleted");
         }
     }
     
@@ -1738,7 +1739,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                                                                 // join group
                                                                 [self joinGroup:group onJoined:^(Group *group) {
                                                                     if (group != nil) {
-                                                                        NSLog(@"Joined group %@", group);
+                                                                        if (GROUP_DEBUG) NSLog(@"Joined group %@", group);
                                                                     } else {
                                                                         NSLog(@"ERROR: joinGroup %@ failed", group);
                                                                     }
@@ -1748,7 +1749,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                                                                 // leave group
                                                                 [self leaveGroup: group onGroupLeft:^(Group *group) {
                                                                     if (group != nil) {
-                                                                        NSLog(@"TODO: Group left, now destroy everything (except our friends)");
+                                                                        if (GROUP_DEBUG) NSLog(@"TODO: Group left, now destroy everything (except our friends)");
                                                                     } else {
                                                                         NSLog(@"ERROR: leaveGroup %@ failed", group);
                                                                     }
@@ -1950,7 +1951,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
-             NSLog(@"inviteGroupMember succeeded groupId: %@, clientId:%@",group.clientId,contact.clientId);
+             if (GROUP_DEBUG) NSLog(@"inviteGroupMember succeeded groupId: %@, clientId:%@",group.clientId,contact.clientId);
          } else {
              NSLog(@"inviteGroupMember() failed: %@", responseOrError);
          }

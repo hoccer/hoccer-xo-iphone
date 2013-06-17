@@ -245,9 +245,24 @@ static const CGFloat    kSectionHeaderHeight = 40;
                                                    otherButtonTitles: nil];
             [alert show];
             return;
-            
         }
+    } else if (![self.partner.relationshipState isEqualToString:@"friend"]) {
+        NSString * messageText;
+        if ([self.partner.relationshipState isEqualToString:@"blocked"]) {
+            messageText = [NSString stringWithFormat: NSLocalizedString(@"cant_send_contact_blocked", nil)];
+        } else {
+            messageText = [NSString stringWithFormat: NSLocalizedString(@"cant_send_relationship_removed", nil)];
+        }
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"cant_send_title", nil)
+                                                         message: messageText
+                                                        delegate: nil
+                                               cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+        return;
+        
     }
+
     if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
             if ([self.textField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {

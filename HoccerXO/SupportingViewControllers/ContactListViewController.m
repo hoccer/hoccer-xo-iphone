@@ -244,7 +244,7 @@
 }
 
 - (void) addContactPredicates: (NSMutableArray*) predicates {
-    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked')", [self entityName]]];
+    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept')", [self entityName]]];
 }
 
 
@@ -346,7 +346,7 @@
 
     cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
     
-    cell.statusLabel.text = contact.relationshipState;
+    cell.statusLabel.text = NSLocalizedString(contact.relationshipState, nil);
 }
 
 - (NSString*) defaultAvatarName {
