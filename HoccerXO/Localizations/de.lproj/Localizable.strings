@@ -370,7 +370,7 @@
 "contact_keep_data_button"="Behalten";
 "contact_delete_data_button"="Löschen";
 
-"geolocation_picker_title"="Nadel verschieben";
+"geolocation_picker_title"="Pin verschieben";
 
 "membership_state_invited" = "eingeladen";
 "membership_state_joined"  = "beigetreten";
