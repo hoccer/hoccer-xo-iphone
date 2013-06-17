@@ -159,7 +159,7 @@ NSString * const kRelationStateBlocked = @"blocked";
     }
     myResult = [rsa getPeerKeyRef:self.clientId];
     if (myResult == nil) {
-        NSLog(@"ERROR: Contact:getPublicKeyRef: failed.");
+        NSLog(@"ERROR: Contact:getPublicKeyRef: failed for client id %@, nick %@", self.clientId, self.nickName);
     }
     return myResult;
 }

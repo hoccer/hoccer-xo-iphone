@@ -1163,7 +1163,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                     myContact.avatar = myNewAvatar;
                     myContact.avatarURL = theAvatarURL;
                 } else {
-                    NSLog(@"presenceUpdated, avatar download failed, error=%@", myError);
+                    NSLog(@"presenceUpdated, avatar download of URL %@ failed, error=%@", theAvatarURL, myError);
                 }
             }];
         } else {
