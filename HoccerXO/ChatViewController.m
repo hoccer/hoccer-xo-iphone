@@ -1178,9 +1178,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [super viewWillAppear: animated];
 
     [self setNavigationBarBackgroundWithLines];
+    /*
     if (self.fetchedResultsController != nil) {
         self.fetchedResultsController.delegate = self;
     }
+     */
     [HXOBackend broadcastConnectionInfo];
 
     [self scrollToRememberedCellOrToBottomIfNone];
@@ -1192,9 +1194,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     [self rememberLastVisibleCell];
 
+    /*
     if (self.fetchedResultsController != nil) {
         self.fetchedResultsController.delegate = nil;
     }
+     */
 
 }
 
