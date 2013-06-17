@@ -488,7 +488,7 @@ in the general "Settings" app.</string>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="center" id="hYj-vr-IlI">
-                                            <rect key="frame" x="273" y="15" width="8" height="8"/>
+                                            <rect key="frame" x="273" y="13" width="8" height="8"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>

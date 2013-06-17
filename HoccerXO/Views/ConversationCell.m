@@ -12,6 +12,8 @@
 
 #import "AssetStore.h"
 
+static const CGFloat kHXOTimeDirectionPading = 2.0;
+
 @interface ConversationCell () {
     BOOL _hasNewMessages;
 }
@@ -40,6 +42,24 @@
 
 - (NSString*) backgroundName {
     return @"conversation_cell_bg";
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+
+    [self.latestMessageTimeLabel sizeToFit];
+
+    CGRect frame = self.latestMessageTimeLabel.frame;
+    if (self.latestMessageDirection.image == nil) {
+        frame.origin.x = (self.latestMessageDirection.frame.origin.x + self.latestMessageDirection.frame.size.width) - frame.size.width;
+    } else {
+        frame.origin.x = self.latestMessageDirection.frame.origin.x - (kHXOTimeDirectionPading + frame.size.width);
+    }
+    self.latestMessageTimeLabel.frame = frame;
+
+    frame = self.nickName.frame;
+    frame.size.width = self.latestMessageTimeLabel.frame.origin.x - (kHXOTimeDirectionPading + frame.origin.x);
+    self.nickName.frame = frame;
 }
 
 @end

@@ -379,27 +379,8 @@
     }
     cell.hasNewMessages = contact.unreadMessages.count > 0;
 
-    [self layoutFirstRowLabels: cell];
+    [cell setNeedsLayout];
 }
 
-- (void) layoutFirstRowLabels: (ConversationCell*) cell {
-    ConversationCell * prototype = self.conversationCell;
-    CGFloat dateLabelRightEdge;
-    if (cell.latestMessageDirection.image == nil) {
-        dateLabelRightEdge = prototype.latestMessageDirection.frame.origin.x + prototype.latestMessageDirection.frame.size.width;
-    } else {
-        dateLabelRightEdge = prototype.latestMessageTimeLabel.frame.origin.x + prototype.latestMessageTimeLabel.frame.size.width;
-    }
-    [cell.latestMessageTimeLabel sizeToFit];
-    CGRect frame = prototype.latestMessageTimeLabel.frame;
-    frame.origin.x = dateLabelRightEdge - cell.latestMessageTimeLabel.frame.size.width;
-    frame.size.width = cell.latestMessageTimeLabel.frame.size.width;
-    cell.latestMessageTimeLabel.frame = frame;
-
-    CGFloat nickToDatePadding = prototype.latestMessageTimeLabel.frame.origin.x - CGRectGetMaxX(prototype.nickName.frame);
-    frame = prototype.nickName.frame;
-    frame.size.width = cell.latestMessageTimeLabel.frame.origin.x - nickToDatePadding - prototype.nickName.frame.origin.x;
-    cell.nickName.frame = frame;
-}
 
 @end
