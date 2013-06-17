@@ -21,7 +21,7 @@
 	<key>autoDownloadLimit</key>
 	<integer>0</integer>
 	<key>videoQuality</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>photoQuality</key>
 	<integer>250</integer>
 </dict>
