@@ -50,6 +50,8 @@
 #define USE_VALIDATOR NO
 #endif
 
+#define FULL_HELLO
+
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
 const int kGroupInvitationAlert = 1;
