@@ -20,7 +20,7 @@
 #import "AppDelegate.h"
 #import "UIViewController+HXOSideMenuButtons.h"
 #import "HXOUserDefaults.h"
-#import "RadialGradientView.h"
+#import "PerforatedPlateView.h"
 #import "CustomNavigationBar.h"
 #import "ProfileViewController.h"
 #import "InviteCell.h"
@@ -73,8 +73,8 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
     // TODO: ask @zutrinken
-    RadialGradientView * tableBackground = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
-    tableBackground.dark = YES;
+    PerforatedPlateView * tableBackground = [[PerforatedPlateView alloc] initWithFrame: self.tableView.frame];
+    //tableBackground.dark = YES;
     self.tableView.backgroundView = tableBackground;
     
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
@@ -145,8 +145,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.emptyTablePlaceholder) {
-        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"conversation_empty_placeholder", nil);
-        self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
+        //self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"conversation_empty_placeholder", nil);
+        //self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
         return self.emptyTablePlaceholder;
     } else if ([self isLastCell: indexPath]) {
         InviteCell * cell = [tableView dequeueReusableCellWithIdentifier: [InviteCell reuseIdentifier] forIndexPath: indexPath];

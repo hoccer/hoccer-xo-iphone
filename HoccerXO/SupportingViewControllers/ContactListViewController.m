@@ -13,7 +13,7 @@
 #import "Contact.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
-#import "RadialGradientView.h"
+#import "PerforatedPlateView.h"
 #import "InviteCodeViewController.h"
 #import "HXOBackend.h"
 #import "ProfileViewController.h"
@@ -47,8 +47,8 @@
     [super viewDidLoad];
 
     [self setupNavigationBar];
-    RadialGradientView * tableBackground = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
-    tableBackground.dark = YES;
+    PerforatedPlateView * tableBackground = [[PerforatedPlateView alloc] initWithFrame: self.tableView.frame];
+    //tableBackground.dark = YES;
     self.tableView.backgroundView = tableBackground;
 
     self.searchBar.delegate = self;
@@ -140,8 +140,8 @@
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.emptyTablePlaceholder) {
-        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString([self emptyTablePlaceholderKey], nil);
-        self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
+        //self.emptyTablePlaceholder.placeholder.text = NSLocalizedString([self emptyTablePlaceholderKey], nil);
+        //self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
         return self.emptyTablePlaceholder;
     }
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
