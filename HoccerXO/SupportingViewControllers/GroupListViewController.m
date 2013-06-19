@@ -49,11 +49,6 @@
     return [Group entityName];
 }
 
-- (NSString*) emptyTablePlaceholderKey {
-    return @"groups_empty_placeholder";
-}
-
-
 - (NSString*) defaultAvatarName {
     return @"avatar_default_group";
 }

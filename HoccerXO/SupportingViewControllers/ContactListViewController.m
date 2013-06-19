@@ -120,30 +120,19 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (self.emptyTablePlaceholder != nil) {
-        return 1;
-    }
     return [self.currentFetchedResultsController.sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.emptyTablePlaceholder != nil) {
-        return 1;
-    }
     id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return [sectionInfo numberOfObjects];
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return self.emptyTablePlaceholder != nil ? self.emptyTablePlaceholder.bounds.size.height : self.contactCellPrototype.bounds.size.height;
+    return self.contactCellPrototype.bounds.size.height;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.emptyTablePlaceholder) {
-        //self.emptyTablePlaceholder.placeholder.text = NSLocalizedString([self emptyTablePlaceholderKey], nil);
-        //self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
-        return self.emptyTablePlaceholder;
-    }
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
 
     // TODO: do this right ...
@@ -164,10 +153,6 @@
         ProfileViewController* profileView = (ProfileViewController*)[segue destinationViewController];
         profileView.contact = contact;
     }
-}
-
-- (NSString*) emptyTablePlaceholderKey {
-    return @"contacts_empty_placeholder";
 }
 
 #pragma mark - Search Bar
@@ -315,8 +300,6 @@
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
-
-    [self updateEmptyTablePlaceholderAnimated: YES];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller

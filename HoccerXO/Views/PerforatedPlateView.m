@@ -43,21 +43,6 @@
 - (void) drawRect:(CGRect)rect {
     [super drawRect: rect];
 
-#if 0
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(context);
-    CGSize patternPhase = CGSizeMake(0, 6);
-    CGContextSetPatternPhase(context, patternPhase);
-    CGColorRef pattern = [UIColor colorWithPatternImage: _patternImage].CGColor;
-    CGContextSetFillColorWithColor(context, pattern);
-    CGContextFillRect(context, self.bounds);
-    CGContextRestoreGState(context);
-
-    CGContextSaveGState(context);
-    CGRect logoRect = CGRectMake( 0.5 * (self.bounds.size.width - _logo.size.width), 107 + 6, _logo.size.width, _logo.size.height);
-    [_logo drawInRect: logoRect];
-    CGContextRestoreGState(context);
-#endif
     [self drawLogo];
 }
 
@@ -69,7 +54,6 @@
     UIColor* logoEmbossColor = [UIColor colorWithRed: 0.16 green: 0.168 blue: 0.184 alpha: 1];
     UIColor* logoInnerShadowColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.505];
     UIColor* logoOuterShadowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.119];
-    UIColor* backgroundColor = [UIColor colorWithRed: 0.216 green: 0.22 blue: 0.239 alpha: 1];
 
     UIColor* holeEmbossColor = [UIColor colorWithRed: 0.192 green: 0.2 blue: 0.215 alpha: 1];
 
@@ -251,10 +235,8 @@
     [perforationMaskPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 24.37, CGRectGetMinY(frame) + 24.08) controlPoint1: CGPointMake(CGRectGetMinX(frame) - 6.54, CGRectGetMaxY(frame) - 72.23) controlPoint2: CGPointMake(CGRectGetMinX(frame) - 2.06, CGRectGetMinY(frame) + 50.19)];
     [perforationMaskPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 24.37, CGRectGetMinY(frame) + 24.08) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 56.2, CGRectGetMinY(frame) - 7.36) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 56.2, CGRectGetMinY(frame) - 7.36)];
     [perforationMaskPath closePath];
-//    [backgroundColor setStroke];
-//    perforationMaskPath.lineWidth = 1;
-    //[perforationMaskPath stroke];
 
+    
     //=================================================================================================================
 
     CGFloat radius = 2.5;

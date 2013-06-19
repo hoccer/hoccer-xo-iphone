@@ -123,32 +123,16 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger count;
-    if (self.emptyTablePlaceholder != nil) {
-        count = 1;
-    } else {
-        count = [[self.fetchedResultsController sections] count];
-    }
-    return count;
+    return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger count;
-    if (self.emptyTablePlaceholder != nil) {
-        count = 1;
-    } else {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-        count = [sectionInfo numberOfObjects];
-    }
-    return count + 1;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.emptyTablePlaceholder) {
-        //self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"conversation_empty_placeholder", nil);
-        //self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
-        return self.emptyTablePlaceholder;
-    } else if ([self isLastCell: indexPath]) {
+    if ([self isLastCell: indexPath]) {
         InviteCell * cell = [tableView dequeueReusableCellWithIdentifier: [InviteCell reuseIdentifier] forIndexPath: indexPath];
         [cell.button addTarget: self action: @selector(inviteFriendsPressed:) forControlEvents: UIControlEventTouchUpInside];
         return cell;
@@ -168,9 +152,7 @@
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.emptyTablePlaceholder && indexPath.row == 0) {
-        return self.emptyTablePlaceholder.bounds.size.height;
-    } else if ([self isLastCell: indexPath]) {
+    if ([self isLastCell: indexPath]) {
         return self.inviteCell.bounds.size.height;
     } else {
         return self.conversationCell.bounds.size.height;
@@ -299,8 +281,6 @@
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
-
-    [self updateEmptyTablePlaceholderAnimated: YES];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {

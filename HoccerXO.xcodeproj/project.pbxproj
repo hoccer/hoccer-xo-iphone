@@ -40,8 +40,6 @@
 		6327EAD31717689A00AF75E1 /* icon_profile-octocat.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAD11717689A00AF75E1 /* icon_profile-octocat.png */; };
 		6327EAD41717689A00AF75E1 /* icon_profile-octocat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAD21717689A00AF75E1 /* icon_profile-octocat@2x.png */; };
 		6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAD6171841F200AF75E1 /* ContactListViewController.m */; };
-		6327EAD91718591600AF75E1 /* EmptyTablePlaceholderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAD81718591600AF75E1 /* EmptyTablePlaceholderCell.xib */; };
-		6327EADC17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */; };
 		6327EADF17186D2F00AF75E1 /* ConversationAndContactsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */; };
 		6327EAE8171875B200AF75E1 /* navbar-btn-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAE6171875B200AF75E1 /* navbar-btn-blue.png */; };
 		6327EAE9171875B200AF75E1 /* navbar-btn-blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAE7171875B200AF75E1 /* navbar-btn-blue@2x.png */; };
@@ -54,7 +52,6 @@
 		6327EB411719C2AF00AF75E1 /* navbar-icon-add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */; };
 		6327EB4B171A17B900AF75E1 /* profile_text_input_bg_invalid.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB49171A17B900AF75E1 /* profile_text_input_bg_invalid.png */; };
 		6327EB4C171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB4A171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png */; };
-		6327EB51171B5B1B00AF75E1 /* TableViewControllerWithPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EB50171B5B1800AF75E1 /* TableViewControllerWithPlaceholder.m */; };
 		6327EB56171C82B400AF75E1 /* date_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB54171C82B400AF75E1 /* date_cell_bg.png */; };
 		6327EB57171C82B400AF75E1 /* date_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */; };
 		6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB6E171D55DA00AF75E1 /* libcrypto.a */; };
@@ -274,6 +271,7 @@
 		63DC01851715205300609513 /* HXOSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01841715205300609513 /* HXOSwitch.m */; };
 		63DC01881715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */; };
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
+		63E2D70C1771FA9400E037EA /* ShadowedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E2D70B1771FA9400E037EA /* ShadowedTableView.m */; };
 		63F4CF03172846D600699394 /* conversation_cell_bg_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F4CF01172846D600699394 /* conversation_cell_bg_new.png */; };
 		63F4CF04172846D600699394 /* conversation_cell_bg_new@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */; };
 		63F4CF10172892EB00699394 /* InvitationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF0F172892EB00699394 /* InvitationController.m */; };
@@ -501,9 +499,6 @@
 		6327EAD21717689A00AF75E1 /* icon_profile-octocat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-octocat@2x.png"; sourceTree = "<group>"; };
 		6327EAD5171841F200AF75E1 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
 		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		6327EAD81718591600AF75E1 /* EmptyTablePlaceholderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyTablePlaceholderCell.xib; sourceTree = "<group>"; };
-		6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyTablePlaceholderCell.h; sourceTree = "<group>"; };
-		6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptyTablePlaceholderCell.m; sourceTree = "<group>"; };
 		6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationAndContactsCell.h; sourceTree = "<group>"; };
 		6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationAndContactsCell.m; sourceTree = "<group>"; };
 		6327EAE6171875B200AF75E1 /* navbar-btn-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-btn-blue.png"; sourceTree = "<group>"; };
@@ -518,8 +513,6 @@
 		6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-icon-add@2x.png"; sourceTree = "<group>"; };
 		6327EB49171A17B900AF75E1 /* profile_text_input_bg_invalid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_text_input_bg_invalid.png; sourceTree = "<group>"; };
 		6327EB4A171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profile_text_input_bg_invalid@2x.png"; sourceTree = "<group>"; };
-		6327EB4F171B5B1400AF75E1 /* TableViewControllerWithPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewControllerWithPlaceholder.h; sourceTree = "<group>"; };
-		6327EB50171B5B1800AF75E1 /* TableViewControllerWithPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewControllerWithPlaceholder.m; sourceTree = "<group>"; };
 		6327EB54171C82B400AF75E1 /* date_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_cell_bg.png; sourceTree = "<group>"; };
 		6327EB55171C82B400AF75E1 /* date_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date_cell_bg@2x.png"; sourceTree = "<group>"; };
 		6327EB6E171D55DA00AF75E1 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../ObjCSRP/3rdParty/openssl-xcode/build/Release-iphoneos/libcrypto.a"; sourceTree = "<group>"; };
@@ -815,6 +808,8 @@
 		63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellTextInput_iPhone.xib; sourceTree = "<group>"; };
 		63E0B2151721FF75006058C6 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		63E2D70A1771FA9400E037EA /* ShadowedTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShadowedTableView.h; sourceTree = "<group>"; };
+		63E2D70B1771FA9400E037EA /* ShadowedTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowedTableView.m; sourceTree = "<group>"; };
 		63F4CF01172846D600699394 /* conversation_cell_bg_new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = conversation_cell_bg_new.png; sourceTree = "<group>"; };
 		63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation_cell_bg_new@2x.png"; sourceTree = "<group>"; };
 		63F4CF0E172892EB00699394 /* InvitationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitationController.h; sourceTree = "<group>"; };
@@ -1498,7 +1493,6 @@
 				63DC01861715FE8B00609513 /* UserDefaultsCells */,
 				63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */,
 				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
-				6327EAD81718591600AF75E1 /* EmptyTablePlaceholderCell.xib */,
 				6315F00217302D1D0027BCA7 /* InviteCell.xib */,
 			);
 			path = StoryboardsAndNIBs;
@@ -1592,8 +1586,6 @@
 				63AE45521705E18D0099F0CB /* StoryboardsAndNIBs */,
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
 				63AE4541170490B50099F0CB /* Supporting View Controllers */,
-				6327EB4F171B5B1400AF75E1 /* TableViewControllerWithPlaceholder.h */,
-				6327EB50171B5B1800AF75E1 /* TableViewControllerWithPlaceholder.m */,
 				63AE453E170488FB0099F0CB /* UIViewController+HXOSideMenuButtons.h */,
 				63AE453F170488FB0099F0CB /* UIViewController+HXOSideMenuButtons.m */,
 				631F6CDA170654A600FB28D5 /* UtilityCategories */,
@@ -1691,8 +1683,6 @@
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
 				631F6CE7170AF67200FB28D5 /* CustomNavigationBar.h */,
 				631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */,
-				6327EADA17185A0F00AF75E1 /* EmptyTablePlaceholderCell.h */,
-				6327EADB17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m */,
 				633462AD174FCA3C008D98FC /* GroupAdminCell.h */,
 				633462AE174FCA3C008D98FC /* GroupAdminCell.m */,
 				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
@@ -1719,6 +1709,8 @@
 				636492D61711E97900E35514 /* ProfileAvatarView.m */,
 				636492DB1711FEB900E35514 /* RadialGradientView.h */,
 				636492DC1711FEB900E35514 /* RadialGradientView.m */,
+				63E2D70A1771FA9400E037EA /* ShadowedTableView.h */,
+				63E2D70B1771FA9400E037EA /* ShadowedTableView.m */,
 				639094C6173A871500DF889B /* UIButton+GlossyRounded.h */,
 				639094C7173A871500DF889B /* UIButton+GlossyRounded.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
@@ -2192,7 +2184,6 @@
 				6327EAD017175E0200AF75E1 /* user_defaults_disclosure_arrow@2x.png in Resources */,
 				6327EAD31717689A00AF75E1 /* icon_profile-octocat.png in Resources */,
 				6327EAD41717689A00AF75E1 /* icon_profile-octocat@2x.png in Resources */,
-				6327EAD91718591600AF75E1 /* EmptyTablePlaceholderCell.xib in Resources */,
 				E9A2B85217189A1200E35E7E /* button-video.png in Resources */,
 				E9A2B85317189A1200E35E7E /* button-video@2x.png in Resources */,
 				6327EAE8171875B200AF75E1 /* navbar-btn-blue.png in Resources */,
@@ -2363,11 +2354,9 @@
 				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
 				6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */,
-				6327EADC17185A0F00AF75E1 /* EmptyTablePlaceholderCell.m in Sources */,
 				6327EADF17186D2F00AF75E1 /* ConversationAndContactsCell.m in Sources */,
 				6327EAEC171883C400AF75E1 /* ContactCell.m in Sources */,
 				E9495575171C13A000FE2E1F /* AttachmentView.m in Sources */,
-				6327EB51171B5B1B00AF75E1 /* TableViewControllerWithPlaceholder.m in Sources */,
 				E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */,
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
@@ -2414,6 +2403,7 @@
 				E9A41DF317651E86006E76B2 /* MFSideMenu.m in Sources */,
 				E9A41DF417651E86006E76B2 /* UINavigationController+MFSideMenu.m in Sources */,
 				6317259A177089230070823C /* PerforatedPlateView.m in Sources */,
+				63E2D70C1771FA9400E037EA /* ShadowedTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

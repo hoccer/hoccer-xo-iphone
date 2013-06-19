@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "TableViewControllerWithPlaceholder.h"
 
 @class ContactCell;
 
-@interface ContactListViewController : TableViewControllerWithPlaceholder <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
+@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
