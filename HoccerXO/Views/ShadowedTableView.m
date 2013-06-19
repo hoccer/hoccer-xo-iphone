@@ -38,6 +38,7 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
         return;
     }
 
+    // TODO: the next two blocks are rather similar. Might be worth to move them to a method.
     NSIndexPath * firstRow = visibleRows[0];
     if (firstRow.section == 0 && firstRow.row == 0) {
         UITableViewCell * cell = [self cellForRowAtIndexPath: firstRow];
@@ -49,7 +50,10 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
         }
         CGRect shadowFrame = self.topShadow.frame;
 		shadowFrame.size.width = cell.frame.size.width;
-		shadowFrame.origin.y = - kHXOTableTopShadowHeight;
+		shadowFrame.origin.y =  - kHXOTableTopShadowHeight;
+        if (self.tableHeaderView != nil) {
+            shadowFrame.origin.y -= self.tableHeaderView.frame.size.height;
+        }
 		self.topShadow.frame = shadowFrame;
     } else {
         [self.topShadow removeFromSuperlayer];
@@ -78,7 +82,7 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
 - (CALayer*) pseudoShadowWithHeight: (CGFloat) height isFlipped: (BOOL) flipped {
     CAGradientLayer *shadow = [CAGradientLayer layer];    
     shadow.frame = CGRectMake(0, 0, self.frame.size.width, height);
-    CGColorRef darkColor = [UIColor colorWithWhite: 0 alpha: flipped ? 0.2 : 0.5].CGColor;
+    CGColorRef darkColor = [UIColor colorWithWhite: 0 alpha: flipped ? 0.3 : 0.5].CGColor;
     CGColorRef lightColor = [UIColor clearColor].CGColor;
     
     shadow.colors = @[(__bridge id)(flipped ? lightColor : darkColor), (__bridge id)(flipped ? darkColor : lightColor)];
