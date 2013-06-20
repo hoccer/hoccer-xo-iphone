@@ -36,6 +36,9 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
 
         [self.bottomShadow removeFromSuperlayer];
         self.bottomShadow = nil;
+
+        [self.bottomTerminator removeFromSuperlayer];
+        self.bottomTerminator = nil;
         return;
     }
 
