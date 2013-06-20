@@ -19,6 +19,7 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
 
 @property (nonatomic,strong) CALayer * topShadow;
 @property (nonatomic,strong) CALayer * bottomShadow;
+@property (nonatomic,strong) CALayer * bottomTerminator;
 
 @end
 
@@ -38,7 +39,6 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
         return;
     }
 
-    // TODO: the next two blocks are rather similar. Might be worth to move them to a method.
     NSIndexPath * firstRow = visibleRows[0];
     if (firstRow.section == 0 && firstRow.row == 0) {
         UITableViewCell * cell = [self cellForRowAtIndexPath: firstRow];
@@ -72,10 +72,30 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
         CGRect shadowFrame = self.bottomShadow.frame;
 		shadowFrame.size.width = cell.frame.size.width;
 		shadowFrame.origin.y = cell.frame.size.height;
+        
+        if (self.showBottomTerminator) {
+            UIImage * terminatorImage = [UIImage imageNamed:@"table_view_bottom_terminator"];
+            if (self.bottomTerminator == nil) {
+                self.bottomTerminator = [CALayer layer];
+                self.bottomTerminator.contents = (id)terminatorImage.CGImage;
+            }
+            if ( ! [cell.layer.sublayers containsObject: self.bottomTerminator]) {
+                [cell.layer addSublayer: self.bottomTerminator];
+            }
+            CGRect terminatorFrame = CGRectMake(0, cell.frame.size.height, cell.frame.size.width, terminatorImage.size.height);
+            self.bottomTerminator.frame = terminatorFrame;
+
+            shadowFrame.origin.y += terminatorFrame.size.height;
+        }
+
 		self.bottomShadow.frame = shadowFrame;
     } else {
         [self.bottomShadow removeFromSuperlayer];
         self.bottomShadow = nil;
+        if (self.showBottomTerminator) {
+            [self.bottomTerminator removeFromSuperlayer];
+            self.bottomTerminator = nil;
+        }
     }
 }
 

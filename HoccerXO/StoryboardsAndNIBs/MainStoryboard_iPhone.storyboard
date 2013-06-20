@@ -148,6 +148,9 @@
                                 </connections>
                             </tableViewCell>
                         </prototypes>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="showBottomTerminator" value="YES"/>
+                        </userDefinedRuntimeAttributes>
                         <connections>
                             <outlet property="dataSource" destination="Aez-fu-qAl" id="sHe-Dd-ekW"/>
                             <outlet property="delegate" destination="Aez-fu-qAl" id="pOc-oD-Lqi"/>
@@ -1176,6 +1179,9 @@ in the general "Settings" app.</string>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="showBottomTerminator" value="YES"/>
+                        </userDefinedRuntimeAttributes>
                         <connections>
                             <outlet property="dataSource" destination="LuP-42-HB8" id="TbC-yr-27E"/>
                             <outlet property="delegate" destination="LuP-42-HB8" id="HFP-wA-UoU"/>

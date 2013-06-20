@@ -10,4 +10,6 @@
 
 @interface ShadowedTableView : UITableView
 
+@property (nonatomic,assign) BOOL showBottomTerminator;
+
 @end
