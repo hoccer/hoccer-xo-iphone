@@ -13,7 +13,7 @@
 static const CGFloat kHXOTableTopShadowHeight = 10;
 static const CGFloat kHXOTableBottomShadowHeight = 20;
 
-
+static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
 
 @interface ShadowedTableView ()
 
@@ -21,14 +21,47 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
 @property (nonatomic,strong) CALayer * bottomShadow;
 @property (nonatomic,strong) CALayer * bottomTerminator;
 
+@property (nonatomic,strong) CALayer * cellCanvas;
+
 @end
 
 @implementation ShadowedTableView
 
 - (void) layoutSubviews {
-    [super layoutSubviews];
+    BOOL isGrouped = self.style == UITableViewStyleGrouped;
+    if (self.cellCanvas == nil) {
+        self.cellCanvas = [CALayer layer];
+        self.cellCanvas.backgroundColor = (isGrouped ? [UIColor orangeColor] : [UIColor blackColor]).CGColor;
+        self.cellCanvas.shadowColor = [UIColor blackColor].CGColor;
+        self.cellCanvas.shadowRadius = 20;
+        self.cellCanvas.shadowOpacity = 1.0;
+        self.cellCanvas.shadowOffset = CGSizeMake(0, 10);
+        self.cellCanvas.shouldRasterize = YES;
+    }
 
-    NSArray * visibleRows = [self indexPathsForVisibleRows];
+    if ([self.layer.sublayers containsObject: self.cellCanvas]) {
+        [self.cellCanvas removeFromSuperlayer];
+    }
+    [self.layer insertSublayer: self.cellCanvas atIndex: 0];
+
+    NSUInteger lastSection = [self numberOfSections] - 1;
+    NSIndexPath * lastRow = [NSIndexPath indexPathForItem: [self numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
+    CGRect lastCellRect = [self rectForRowAtIndexPath: lastRow];
+
+    CGRect frame;
+    frame.origin = CGPointMake(0, 0);
+    frame.size = CGSizeMake(self.contentSize.width, lastCellRect.origin.y + lastCellRect.size.height);
+    if (isGrouped) {
+        frame.size.height += kHXOGroupedTableCanvasBottomPadding;
+    }
+    NSLog(@"==== canvas rect: %@", NSStringFromCGRect( frame));
+
+    self.cellCanvas.frame = frame;
+
+    [super layoutSubviews];
+    
+
+    /*
 
     if (visibleRows.count == 0) {
         [self.topShadow removeFromSuperlayer];
@@ -100,6 +133,12 @@ static const CGFloat kHXOTableBottomShadowHeight = 20;
             self.bottomTerminator = nil;
         }
     }
+
+    if (self.style == UITableViewStyleGrouped) {
+        NSLog(@"========= grouped table header height: %f", [self.delegate tableView: self heightForHeaderInSection: 0]);
+    }
+    NSLog(@"scrollable area: %@ content offset %@", NSStringFromCGSize(self.contentSize), NSStringFromCGPoint(self.contentOffset));
+     */
 }
 
 - (CALayer*) pseudoShadowWithHeight: (CGFloat) height isFlipped: (BOOL) flipped {
