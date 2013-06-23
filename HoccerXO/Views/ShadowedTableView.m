@@ -52,6 +52,7 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
         }
     }
 
+    // Move canvas layer to bottom. 
     if ([self.layer.sublayers containsObject: self.cellCanvas]) {
         [self.cellCanvas removeFromSuperlayer];
     }
@@ -61,8 +62,13 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
     // beacuse if the table has a header (e.g. a searchbar) the size is always
     // at least the sreen size.
     NSUInteger lastSection = [self numberOfSections] - 1;
-    NSIndexPath * lastRow = [NSIndexPath indexPathForItem: [self numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
-    CGRect lastCellRect = [self rectForRowAtIndexPath: lastRow];
+    CGRect lastCellRect;
+    if (lastSection == -1 || [self numberOfRowsInSection: lastSection] == 0) {
+        lastCellRect = CGRectMake(0, 0, 0, 0);
+    } else {
+        NSIndexPath * lastRow = [NSIndexPath indexPathForItem: [self numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
+        lastCellRect = [self rectForRowAtIndexPath: lastRow];
+    }
 
     CGRect frame;
     frame.origin = CGPointMake(0, 0);
@@ -84,7 +90,7 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
     self.cellCanvas.frame = frame;
 
     // Call super class late. Otherwise new cells are hidden behind the canvas layer.
-    // I'm not sure why this happens...
+    // I'm not sure why this is...
     [super layoutSubviews];
 }
 
