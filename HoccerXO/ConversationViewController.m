@@ -112,21 +112,17 @@
 
 #pragma mark - Table View
 
-- (BOOL) isEmpty {
-    if (self.fetchedResultsController.sections.count == 0) {
-        return YES;
-    } else if (self.fetchedResultsController.sections.count == 1) {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][0];
-        return [sectionInfo numberOfObjects] == 0;
-    }
-    return NO;
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return 0;
+    }
     return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return 0;
+    }
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo numberOfObjects] + 1;
 }
@@ -242,11 +238,14 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
-   switch(type) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return;
+    }
+    switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
+
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
@@ -257,6 +256,9 @@
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return;
+    }
     UITableView *tableView = self.tableView;
     switch(type) {
         case NSFetchedResultsChangeInsert:
