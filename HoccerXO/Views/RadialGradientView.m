@@ -14,32 +14,26 @@
     CGSize size = self.bounds.size;
     CGPoint center = CGPointMake(0.5 * size.width, 0.33 * size.height) ;
 
-    CGContextRef cx = UIGraphicsGetCurrentContext();
+    CGContextRef context = UIGraphicsGetCurrentContext();
 
-    CGContextSaveGState(cx);
-    CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
-
-    CGFloat bright_comps[] = {1.0,1.0,1.0,1.0,
-        0.95,0.95,0.95,1.0};
-
-    CGFloat darks_comps[] = {0.2,0.2,0.2,1.0,
-        0.1,0.1,0.1,1.0};
-    
-    CGFloat * comps;
-    if (self.dark) {
-        comps = darks_comps;
-    } else {
-        comps = bright_comps;
-    }
-    
-    CGFloat locs[] = {0,1};
-    CGGradientRef g = CGGradientCreateWithColorComponents(space, comps, locs, 2);
-
-    CGContextDrawRadialGradient(cx, g, center, 0.0f, center, size.width > size.height ? 0.5 * size.width : 0.5 * size.height, kCGGradientDrawsAfterEndLocation);
-    CGGradientRelease(g);
-    CGColorSpaceRelease(space);
-
-    CGContextRestoreGState(cx);
+    [RadialGradientView drawInContext: context withSize: size andCenter: center];
 }
 
++ (void) drawInContext: (CGContextRef) context withSize: (CGSize) size andCenter: (CGPoint) center {
+    CGContextSaveGState(context);
+    CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
+
+    CGFloat components[] = {1.0,1.0,1.0,1.0,
+        0.95,0.95,0.95,1.0};
+
+
+    CGFloat locs[] = {0,1};
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(space, components, locs, 2);
+
+    CGContextDrawRadialGradient(context, gradient, center, 0.0f, center, size.width > size.height ? 0.5 * size.width : 0.5 * size.height, kCGGradientDrawsAfterEndLocation);
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(space);
+
+    CGContextRestoreGState(context);
+}
 @end
