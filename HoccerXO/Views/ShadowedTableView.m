@@ -10,6 +10,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "PerforatedPlateView.h"
 #import "RadialGradientView.h"
 
 static const CGFloat kHXOTableTopShadowHeight = 10;
@@ -35,6 +36,34 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
 
 @implementation ShadowedTableView
 
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    self  = [super initWithCoder: aDecoder];
+    if (self != nil) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (id) initWithFrame:(CGRect)frame {
+    self  = [super initWithFrame: frame];
+    if (self != nil) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (id) initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
+    self  = [super initWithFrame: frame style: style];
+    if (self != nil) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void) commonInit {
+    self.backgroundView = [[PerforatedPlateView alloc] initWithFrame: self.frame];
+}
+
 - (void) layoutSubviews {
     BOOL isGrouped = self.style == UITableViewStyleGrouped;
     if (self.cellCanvas == nil) {
@@ -58,13 +87,14 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
     }
     [self.layer insertSublayer: self.cellCanvas atIndex: 0];
 
-    // Creative way to get the content height. Using self.contentSize does not work
-    // beacuse if the table has a header (e.g. a searchbar) the size is always
+    // Creative way to get the content height. Using self.contentSize does not work.
+    // That's beacuse if the table has a header (e.g. a searchbar) the size is always
     // at least the sreen size.
     NSUInteger lastSection = [self numberOfSections] - 1;
     CGRect lastCellRect;
-    if (lastSection == -1 || [self numberOfRowsInSection: lastSection] == 0) {
-        lastCellRect = CGRectMake(0, 0, 0, 0);
+    BOOL isEmpty = lastSection == -1 || [self numberOfRowsInSection: lastSection] == 0;
+    if (isEmpty) {
+        lastCellRect = self.tableHeaderView != nil ? self.tableHeaderView.bounds : CGRectZero;
     } else {
         NSIndexPath * lastRow = [NSIndexPath indexPathForItem: [self numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
         lastCellRect = [self rectForRowAtIndexPath: lastRow];
@@ -73,7 +103,7 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
     CGRect frame;
     frame.origin = CGPointMake(0, 0);
     frame.size = CGSizeMake(self.contentSize.width, lastCellRect.origin.y + lastCellRect.size.height);
-    if (self.showBottomTerminator) {
+    if (self.showBottomTerminator && ! isEmpty) {
         UIImage * bottomTerminatorImage = [UIImage imageNamed:@"table_view_bottom_terminator"];
         if (self.bottomTerminator == nil) {
             self.bottomTerminator = [CALayer layer];
@@ -90,7 +120,7 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
     self.cellCanvas.frame = frame;
 
     // Call super class late. Otherwise new cells are hidden behind the canvas layer.
-    // I'm not sure why this is...
+    // I'm not sure why...
     [super layoutSubviews];
 }
 

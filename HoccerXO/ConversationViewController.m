@@ -20,7 +20,6 @@
 #import "AppDelegate.h"
 #import "UIViewController+HXOSideMenuButtons.h"
 #import "HXOUserDefaults.h"
-#import "PerforatedPlateView.h"
 #import "CustomNavigationBar.h"
 #import "ProfileViewController.h"
 #import "InviteCell.h"
@@ -72,11 +71,6 @@
 
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
-    // TODO: ask @zutrinken
-    PerforatedPlateView * tableBackground = [[PerforatedPlateView alloc] initWithFrame: self.tableView.frame];
-    //tableBackground.dark = YES;
-    self.tableView.backgroundView = tableBackground;
-    
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 }
 

@@ -13,7 +13,6 @@
 #import "Contact.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
-#import "PerforatedPlateView.h"
 #import "InviteCodeViewController.h"
 #import "HXOBackend.h"
 #import "ProfileViewController.h"
@@ -47,9 +46,6 @@
     [super viewDidLoad];
 
     [self setupNavigationBar];
-    PerforatedPlateView * tableBackground = [[PerforatedPlateView alloc] initWithFrame: self.tableView.frame];
-    //tableBackground.dark = YES;
-    self.tableView.backgroundView = tableBackground;
 
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
