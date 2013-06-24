@@ -39,7 +39,7 @@
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
-#define CONNECTION_TRACE NO
+#define CONNECTION_TRACE YES
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
 #define RELATIONSHIP_DEBUG YES
@@ -66,7 +66,8 @@ typedef enum BackendStates {
     kBackendRegistering,
     kBackendAuthenticating,
     kBackendReady,
-    kBackendStopping
+    kBackendStopping,
+    kBackendStateUnknown
 } BackendState;
 
 static NSTimer * _stateNotificationDelayTimer;
@@ -165,7 +166,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 + (void)broadcastConnectionInfo {
-    [[HXOBackend instance] updateConnectionStatusInfo];
+    [[HXOBackend instance] updateConnectionStatusInfoFromState:kBackendStateUnknown];
 }
 
 + (HXOBackend*)instance {
@@ -192,6 +193,9 @@ static NSTimer * _stateNotificationDelayTimer;
         case kBackendStopping:
             return @"stopping";
             break;
+        case kBackendStateUnknown:
+            return @"unknown";
+            break;
     }
 }
 
@@ -199,6 +203,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (void) setState: (BackendState) state {
     if (CONNECTION_TRACE) NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
+    BackendState oldState= _state;
     _state = state;
     if (_state == kBackendReady) {
         _backoffTime = 0.0;
@@ -211,30 +216,37 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             _helloTimer = nil;
         }
     }
-    [self updateConnectionStatusInfo];
+    [self updateConnectionStatusInfoFromState:oldState];
 }
 
 // notify everyone who is interested in displaying the status
-- (void) updateConnectionStatusInfo {
+- (void) updateConnectionStatusInfoFromState:(BackendState)oldState {
     NSString * newInfo;
     BOOL normal = NO;
-    if ([self.delegate.internetReachabilty isReachable]) {
+    BOOL progress = NO;
+    BOOL reachable = [self.delegate.internetReachabilty isReachable];
+    if (reachable) {
         newInfo = [self stateString: _state];
         normal = (_state == kBackendReady) ;
+        progress = _state > oldState &&
+            _state > kBackendConnecting &&
+            _state < kBackendStopping &&
+            oldState != kBackendStateUnknown &&
+            !_stateNotificationDelayTimer.isValid;
     } else {
         newInfo = @"no internet";
     }
     [self cancelStateNotificationDelayTimer];
     id userInfo = @{ @"statusinfo":NSLocalizedString(newInfo, @"connection states"),
                      @"normal":@(normal) };
-    if (normal) {
-        if (CONNECTION_TRACE) NSLog(@"immediate %@",userInfo);
+    if (normal || progress || !reachable) {
+        if (CONNECTION_TRACE) NSLog(@"immediate notification for %@",userInfo);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"connectionInfoChanged"
                                                             object:self
                                                           userInfo:userInfo
          ];
     } else {
-        if (CONNECTION_TRACE) NSLog(@"launched %@",userInfo);
+        if (CONNECTION_TRACE) NSLog(@"launched Timer for %@",userInfo);
         _stateNotificationDelayTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(updateConnectionStatusInfoNow:) userInfo:userInfo repeats:NO];
     }
 }
@@ -955,6 +967,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     }
     if (contact == nil) {
         contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+        contact.type = [Contact entityName];
         contact.clientId = clientId;
     }
     if (contact.nickName.length > 0 && ![contact.relationshipState isEqualToString:@"friend"] && [relationshipDict[@"state"] isEqualToString:@"friend"]) {
@@ -1116,7 +1129,8 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     if (myContact == nil) {
         // NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
-        myContact.clientId = myClient;        
+        myContact.type = [Contact entityName];
+        myContact.clientId = myClient;
         myContact.relationshipState = kRelationStateNone;
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
         myContact.avatarURL = @"";
@@ -1314,8 +1328,8 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
     if (group == nil) {
         group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-        group.clientId = groupId;
         group.type = [Group entityName];
+        group.clientId = groupId;
         if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
     }
     NSDate * lastKnown = group.lastChanged;
@@ -1465,6 +1479,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         // create new Contact because it does not exist and is not own contact
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: contact with clientId %@ unknown, creating contact with id",memberClientId);
         memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+        memberContact.type = [Contact entityName];
         memberContact.clientId = memberClientId;
         [self.delegate saveDatabase];
     }
