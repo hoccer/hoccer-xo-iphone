@@ -80,7 +80,7 @@ static const CGFloat kEditAnimationDuration = 0.5;
     self.textLabel.backgroundColor = [UIColor clearColor];
 }
 
-- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
++ (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount{
     UIImage * image;
     if (cellCount == 1) {
         image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg_single" withLeftCapWidth: 4 topCapHeight: 4];
@@ -91,7 +91,12 @@ static const CGFloat kEditAnimationDuration = 0.5;
     } else {
         image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg" withLeftCapWidth: 4 topCapHeight: 4];
     }
-    self.backgroundView = [[UIImageView alloc] initWithImage: image];
+    cell.backgroundView = [[UIImageView alloc] initWithImage: image];
+
+}
+
+- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
+    [UserDefaultsCell configureGroupedCell: self forPosition: position inSectionWithCellCount: cellCount];
 }
 
 - (void) configure: (id) item {

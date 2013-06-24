@@ -72,8 +72,9 @@
 @property (nonatomic,strong) NSString* currentValue;
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) count;
-
 - (void) configure: (id) item;
+
++ (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount;
 
 @end
 

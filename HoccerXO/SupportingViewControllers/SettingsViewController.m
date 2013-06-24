@@ -12,18 +12,6 @@
 #import "RadialGradientView.h"
 #import "UserDefaultsCells.h"
 
-#if 0
-@interface SettingsItem : NSObject
-
-@property (nonatomic,strong) NSString * cellIdentifier;
-@property (nonatomic,strong) NSString * label;
-
-+ (SettingsItem*) item;
-
-@end
-
-#endif
-
 @implementation SettingsViewController
 
 - (void) viewDidLoad {
@@ -32,7 +20,7 @@
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-    // [self populateSettingsItem];
+    NSLog(@"====  table %@", self.tableView);
 }
 
 - (void) viewWillAppear:(BOOL)animated  {
@@ -40,62 +28,14 @@
     [self setNavigationBarBackgroundWithLines];
 }
 
-#if 0
-
-- (void) populateSettingsItem {
-    /*
-    SettingsItem * saveContent = [SettingsItem item];
-    saveContent.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
-    saveContent.label = NSLocalizedString(@"setting_save_incoming_media", nil);
-
-    SettingsItem * saveContentInfo = [SettingsItem item];
-    saveContentInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
-    saveContentInfo.label = NSLocalizedString(@"setting_save_incoming_media_info", nil);
-    */
-/*
-    SettingsItem * playSoundOnMessageArrival = [SettingsItem item];
-    playSoundOnMessageArrival.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
-    playSoundOnMessageArrival.label = NSLocalizedString(@"play_sound_on_message_arrival", nil);
-    
-    SettingsItem * playSoundOnMessageArrivalInfo = [SettingsItem item];
-    playSoundOnMessageArrivalInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
-    playSoundOnMessageArrivalInfo.label = NSLocalizedString(@"play_sound_on_message_arrival", nil);
-
-    _items = @[ @[playSoundOnMessageArrival, playSoundOnMessageArrivalInfo ]
-              ];
- */
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44.0; //XXX
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    /*
-    SettingsItem * item = _items[indexPath.section][indexPath.row];
-    UITableViewCell * cell = [self dequeueReusableCellOfClass: NSClassFromString(item.cellIdentifier) forIndexPath:indexPath];
-    cell.textLabel.text = item.label;
+    UITableViewCell * cell = [super tableView: tableView cellForRowAtIndexPath: indexPath];
+    [UserDefaultsCell configureGroupedCell: cell forPosition: indexPath.row inSectionWithCellCount: [self tableView: tableView numberOfRowsInSection: indexPath.section]];
+    cell.textLabel.backgroundColor = [UIColor clearColor];
+    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     return cell;
-     */
-    return nil;
 }
-
-//- (IBAction)launchXOSystemSettings:(id)sender {
-//    NSLog(@"launchXOSystemSettings");
-//    NSURL *myURL = [NSURL URLWithString:@"prefs://"];
-//    [[UIApplication sharedApplication] openURL:myURL];
-//}
-#endif
 
 
 @end
 
-#if 0
-@implementation SettingsItem
-
-+ (SettingsItem*) item {
-    return [[SettingsItem alloc] init];
-}
-
-@end
-
-#endif
