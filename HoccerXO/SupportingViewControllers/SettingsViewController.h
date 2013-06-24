@@ -10,6 +10,6 @@
 
 #import "IASKAppSettingsViewController.h"
 
-@interface SettingsViewController : IASKAppSettingsViewController
+@interface SettingsViewController : IASKAppSettingsViewController <IASKSettingsDelegate>
 
 @end
