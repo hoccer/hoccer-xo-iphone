@@ -164,44 +164,6 @@
             </objects>
             <point key="canvasLocation" x="484" y="-675"/>
         </scene>
-        <!--Settings View Controller-->
-        <scene sceneID="Yn7-as-2xt">
-            <objects>
-                <tableViewController storyboardIdentifier="settingsViewController" id="Upe-p9-odg" userLabel="Settings View Controller" customClass="SettingsViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="atf-k1-006">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <view key="tableFooterView" contentMode="scaleToFill" id="jz1-Jj-IA6">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="300"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KMr-cG-OPs">
-                                    <rect key="frame" x="0.0" y="106" width="320" height="137"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <string key="text">The Hoccer XO settings are located
-in the general "Settings" app.</string>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="system-settings-icon.jpg" id="QW2-BD-MIy">
-                                    <rect key="frame" x="110" y="33" width="90" height="92"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                </imageView>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        </view>
-                        <connections>
-                            <outlet property="dataSource" destination="Upe-p9-odg" id="l7e-0S-fJK"/>
-                            <outlet property="delegate" destination="Upe-p9-odg" id="qIG-zm-69l"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8ZJ-fD-VeF" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1470" y="-663"/>
-        </scene>
         <!--Tutorial View Controller-->
         <scene sceneID="wlt-xN-hk4">
             <objects>
@@ -1285,7 +1247,7 @@ in the general "Settings" app.</string>
         <scene sceneID="dgD-Nx-SfZ">
             <objects>
                 <tableViewController storyboardIdentifier="inAppSettingsViewController" title="inAppSettingsViewController" id="LTe-T7-WyK" customClass="SettingsViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="jIt-Gu-YC6">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="jIt-Gu-YC6" customClass="ShadowedTableView">
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -1298,14 +1260,13 @@ in the general "Settings" app.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xnq-vz-dI8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1735" y="-1403"/>
+            <point key="canvasLocation" x="1471" y="-663"/>
         </scene>
     </scenes>
     <resources>
         <image name="chatbar_btn-send.png" width="50" height="30"/>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
         <image name="chatbar_icon-send.png" width="26" height="19"/>
-        <image name="system-settings-icon.jpg" width="180" height="183"/>
     </resources>
     <classes>
         <class className="AboutViewController" superclassName="UIViewController">
