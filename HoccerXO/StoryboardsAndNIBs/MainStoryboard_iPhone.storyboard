@@ -21,13 +21,13 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-501" y="70"/>
+            <point key="canvasLocation" x="-281" y="82"/>
         </scene>
         <!--Side Menu Container View Controller-->
         <scene sceneID="LWj-jm-QEt">
             <objects>
                 <viewController id="MEK-d2-s1c" customClass="MFSideMenuContainerViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="YBz-3f-CAl">
+                    <view key="view" contentMode="scaleToFill" id="YBz-3f-CAl" customClass="PerforatedPlateView">
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -35,7 +35,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ufc-a1-TyC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-518" y="-632"/>
+            <point key="canvasLocation" x="-674" y="82"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="2af-tI-BvA">
@@ -77,7 +77,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PCK-hB-bs3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="101" y="-367"/>
+            <point key="canvasLocation" x="-281" y="-603"/>
         </scene>
         <!--Modal View with Navigation Bar Helper-->
         <scene sceneID="FUT-t7-A6G">
@@ -111,7 +111,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jnn-H5-Wg0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1075" y="-663"/>
+            <point key="canvasLocation" x="775" y="-595"/>
         </scene>
         <!--Contact List View Controller-->
         <scene sceneID="y7h-Kn-V4S">
@@ -179,7 +179,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="484" y="-675"/>
+            <point key="canvasLocation" x="232" y="-595"/>
         </scene>
         <!--Tutorial View Controller-->
         <scene sceneID="wlt-xN-hk4">
@@ -229,7 +229,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QCl-uo-evY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1868" y="-663"/>
+            <point key="canvasLocation" x="1584" y="-579"/>
         </scene>
         <!--About View Controller-->
         <scene sceneID="ejt-cC-MZQ">
@@ -365,7 +365,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ev7-f7-ZXP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2719" y="-655"/>
+            <point key="canvasLocation" x="2395" y="-579"/>
         </scene>
         <!--Invite Code View Controller-->
         <scene sceneID="ksw-ZB-GKb">
@@ -426,7 +426,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="14N-wc-Mhv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="845" y="1218"/>
+            <point key="canvasLocation" x="165" y="1438"/>
         </scene>
         <!--Conversation View Controller - Contacts-->
         <scene sceneID="18">
@@ -496,31 +496,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="459" y="64"/>
-        </scene>
-        <!--Startup View Controller-->
-        <scene sceneID="A5M-el-QGL">
-            <objects>
-                <viewController storyboardIdentifier="StartupViewController" id="jp2-16-QuR" customClass="StartupViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ESy-wc-Ptq">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Starting..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QP5-Y1-Qc9">
-                                <rect key="frame" x="78" y="205" width="164" height="56"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="urG-cQ-fqr"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="kSo-h6-1lZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-35" y="420"/>
+            <point key="canvasLocation" x="223" y="82"/>
         </scene>
         <!--Contact List View Controller-->
         <scene sceneID="80e-nZ-s7m">
@@ -597,7 +573,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fa7-Ls-rrD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="845" y="516"/>
+            <point key="canvasLocation" x="-281" y="748"/>
         </scene>
         <!--Chat View Controller - Chat-->
         <scene sceneID="24">
@@ -831,7 +807,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1240" y="64"/>
+            <point key="canvasLocation" x="644" y="92"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="Cde-1N-k7V">
@@ -880,7 +856,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1601" y="508"/>
+            <point key="canvasLocation" x="577" y="1444"/>
         </scene>
         <!--Record View Controller-->
         <scene sceneID="FjZ-uO-Mut">
@@ -1000,7 +976,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T3Q-pl-QhR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1997" y="511"/>
+            <point key="canvasLocation" x="973" y="1444"/>
         </scene>
         <!--Geo Location View Controller-->
         <scene sceneID="Kqv-Ob-IEj">
@@ -1037,7 +1013,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kom-cA-fQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2428" y="497"/>
+            <point key="canvasLocation" x="1380" y="1433"/>
         </scene>
         <!--FAQ View Controller-->
         <scene sceneID="77G-og-1tU">
@@ -1086,7 +1062,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wql-mF-ck7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2259" y="-663"/>
+            <point key="canvasLocation" x="1987" y="-579"/>
         </scene>
         <!--Modal Group Helper-->
         <scene sceneID="85O-7J-0bj">
@@ -1274,7 +1250,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xnq-vz-dI8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1471" y="-663"/>
+            <point key="canvasLocation" x="1179" y="-587"/>
         </scene>
     </scenes>
     <resources>
@@ -1344,7 +1320,7 @@
                 <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
             </relationships>
         </class>
-        <class className="ContactQuickListViewController" superclassName="UIViewController">
+        <class className="ContactQuickListViewController" superclassName="HXOSideMenuViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
@@ -1396,6 +1372,9 @@
         <class className="HXOGroupedTableViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOGroupedTableViewController.h"/>
         </class>
+        <class className="HXOSideMenuViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOSideMenuViewController.h"/>
+        </class>
         <class className="HXOTableViewCell" superclassName="UITableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOTableViewCell.h"/>
         </class>
@@ -1444,7 +1423,7 @@
                 <relationship kind="outlet" name="nickNameLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
-        <class className="NavigationMenuViewController" superclassName="UIViewController">
+        <class className="NavigationMenuViewController" superclassName="HXOSideMenuViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NavigationMenuViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
@@ -1452,6 +1431,9 @@
         </class>
         <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
+        </class>
+        <class className="PerforatedPlateView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PerforatedPlateView.h"/>
         </class>
         <class className="ProfileViewController" superclassName="HXOGroupedTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileViewController.h"/>
@@ -1488,9 +1470,6 @@
         </class>
         <class className="ShadowedTableView" superclassName="UITableView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ShadowedTableView.h"/>
-        </class>
-        <class className="StartupViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/StartupViewController.h"/>
         </class>
         <class className="TDSemiModalViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TDSemiModalViewController.h"/>
