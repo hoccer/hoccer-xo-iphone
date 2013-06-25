@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "UIViewController+HXOSideMenuButtons.h"
+#import "UIViewController+HXOSideMenu.h"
 #import "MFSideMenu.h"
 #import "AssetStore.h"
 
-@implementation UIViewController (HXOSideMenuButtons)
+@implementation UIViewController (HXOSideMenu)
 
 - (UIBarButtonItem*) hxoMenuButton {
     UIImage * icon = [UIImage imageNamed: @"navbar-icon-menu"];
@@ -34,11 +34,15 @@
 }
 
 - (IBAction) menuButtonPressed:(id)sender {
-    [self.navigationController.sideMenu toggleLeftSideMenu];
+    [self.menuContainerViewController toggleLeftSideMenuCompletion:^{}];
 }
 
 - (IBAction) contactsButtonPressed:(id)sender {
-    [self.navigationController.sideMenu toggleRightSideMenu];
+    [self.menuContainerViewController toggleRightSideMenuCompletion:^{}];
+}
+
+- (MFSideMenuContainerViewController*) menuContainerViewController {
+    return (MFSideMenuContainerViewController*)self.navigationController.parentViewController;
 }
 
 @end

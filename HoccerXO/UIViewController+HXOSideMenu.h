@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIViewController (HXOSideMenuButtons)
+@class MFSideMenuContainerViewController;
+
+@interface UIViewController (HXOSideMenu)
 
 - (UIBarButtonItem*) hxoMenuButton;
 - (UIBarButtonItem*) hxoContactsButton;
 
 - (void) setNavigationBarBackgroundWithLines;
 - (void) setNavigationBarBackgroundPlain;
+
+- (MFSideMenuContainerViewController*) menuContainerViewController;
 
 @end

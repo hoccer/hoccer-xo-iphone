@@ -23,7 +23,7 @@
 #import "AttachmentPickerController.h"
 #import "InsetImageView.h"
 #import "MFSideMenu.h"
-#import "UIViewController+HXOSideMenuButtons.h"
+#import "UIViewController+HXOSideMenu.h"
 #import "ChatTableCells.h"
 #import "AutoheightLabel.h"
 #import "Attachment.h"
@@ -1331,7 +1331,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (void) messageView:(MessageCell *)theCell forwardMessage:(id)sender {
     NSLog(@"forwardMessage");
     self.messageToForward = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    [self.navigationController.sideMenu toggleRightSideMenu];
+    [self.menuContainerViewController toggleRightSideMenuCompletion:^{}];
     // [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
 }
 

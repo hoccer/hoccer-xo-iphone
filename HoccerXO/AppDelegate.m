@@ -72,27 +72,29 @@ static BOOL _shouldSave = NO;
 
     UIStoryboard *storyboard = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        /*
         UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
         self.navigationController = [splitViewController.viewControllers lastObject];
         splitViewController.delegate = (id)self.navigationController.topViewController;
         UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
         self.conversationViewController = (ConversationViewController *)masterNavigationController.topViewController;
+         */
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
+        /*
         self.navigationController = (UINavigationController *)self.window.rootViewController;
         UIViewController * myStartupVC = self.navigationController.topViewController;
         [myStartupVC performSegueWithIdentifier:@"startupReady" sender:myStartupVC];
         
         self.navigationController.viewControllers = @[self.navigationController.topViewController]; // make new root controller
         self.conversationViewController = (ConversationViewController *)self.navigationController.topViewController;
+         */
     }
-    // TODO: be lazy
-    self.conversationViewController.managedObjectContext = self.managedObjectContext;
 
     [self customizeNavigationBar];
 
-    [self setupSideMenusWithStoryboard: storyboard andConversationViewController: self.conversationViewController];
+    [self setupSideMenusWithStoryboard: storyboard];
 
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         [self setupDone: NO];
@@ -217,45 +219,19 @@ static BOOL _shouldSave = NO;
     [[UIBarButtonItem appearance] setBackButtonBackgroundImage: navigationBackButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 }
 
-- (void) setupSideMenusWithStoryboard: (UIStoryboard*) storyboard andConversationViewController: (ConversationViewController*) controller {
+- (void) setupSideMenusWithStoryboard: (UIStoryboard*) storyboard {
+    UINavigationController * navigationController = [storyboard instantiateViewControllerWithIdentifier:@"navigationController"];
     ContactQuickListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
     NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
-    
-#ifdef NEW_MFSIDEMENU
+    MFSideMenuContainerViewController * container = (MFSideMenuContainerViewController*)self.window.rootViewController;
+    [container setCenterViewController: navigationController];
+    [container setLeftMenuViewController: navigationMenuViewController];
+    [container setRightMenuViewController: contactListViewController];
 
-    self.menuContainerViewController = [MFSideMenuContainerViewController containerWithCenterViewController:self.navigationController
-                                                           leftMenuViewController:navigationMenuViewController
-                                                          rightMenuViewController:contactListViewController];
-    self.window.rootViewController = self.menuContainerViewController;
-    [self.window makeKeyAndVisible];
-#else
-    self.navigationController.sideMenu = [MFSideMenu menuWithNavigationController:self.navigationController
-                                                           leftSideMenuController:navigationMenuViewController
-                                                          rightSideMenuController:contactListViewController];
-    self.navigationController.sideMenu.menuWidth = 256;
-    self.navigationController.sideMenu.shadowOpacity = 1.0;
-    self.navigationController.sideMenu.menuStateEventBlock = ^(MFSideMenuStateEvent event) {
-        switch (event) {
-            case MFSideMenuStateEventMenuWillOpen:
-                break;
-            case MFSideMenuStateEventMenuDidOpen:
-                break;
-            case MFSideMenuStateEventMenuWillClose:
-                [contactListViewController.view endEditing: YES];
-                break;
-            case MFSideMenuStateEventMenuDidClose:
-                break;
-        }
-    };
-
-    [navigationMenuViewController cacheViewController: controller withStoryboardId: @"conversationViewController"];
-    navigationMenuViewController.sideMenu = self.navigationController.sideMenu;
-
-    contactListViewController.sideMenu = self.navigationController.sideMenu;
-    contactListViewController.conversationViewController = controller;
-
-    self.navigationController.delegate = navigationMenuViewController;
-#endif
+    self.conversationViewController = (ConversationViewController *)navigationController.topViewController;
+    contactListViewController.conversationViewController = self.conversationViewController;
+    navigationController.delegate = navigationMenuViewController;
+    [navigationMenuViewController cacheViewController: self.conversationViewController withStoryboardId: @"conversationViewController"];
 }
 
 - (void) setupDone: (BOOL) performRegistration {

@@ -18,7 +18,7 @@
 #import "HXOMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
-#import "UIViewController+HXOSideMenuButtons.h"
+#import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
 #import "CustomNavigationBar.h"
 #import "ProfileViewController.h"
@@ -180,6 +180,16 @@
 
 #pragma mark - Fetched results controller
 
+@synthesize managedObjectContext = _managedObjectContext;
+
+- (NSManagedObjectContext*) managedObjectContext {
+    if (_managedObjectContext == nil) {
+        _managedObjectContext = ((AppDelegate*)[UIApplication sharedApplication].delegate).managedObjectContext;
+    }
+    return _managedObjectContext;
+}
+
+@synthesize fetchedResultsController = _fetchedResultsController;
 - (NSFetchedResultsController *)fetchedResultsController
 {
     if (_fetchedResultsController != nil) {
@@ -212,7 +222,7 @@
     //NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Contacts"];
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil]; // fetchrequest will not reflect changes in the filter during development when cached
     aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
+    _fetchedResultsController = aFetchedResultsController;
     
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
