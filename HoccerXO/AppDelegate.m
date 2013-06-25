@@ -228,6 +228,10 @@ static BOOL _shouldSave = NO;
     [container setLeftMenuViewController: navigationMenuViewController];
     [container setRightMenuViewController: contactListViewController];
 
+    [container setMenuWidth: 256];
+    [container setMenuSlideAnimationEnabled: YES];
+    [container setMenuSlideAnimationFactor: 320.0/64];
+
     self.conversationViewController = (ConversationViewController *)navigationController.topViewController;
     contactListViewController.conversationViewController = self.conversationViewController;
     navigationController.delegate = navigationMenuViewController;
