@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import "HXOSideMenuViewController.h"
+
 @class ConversationViewController;
 @class MFSideMenu;
 @class HXOBackend;
 
-@interface ContactQuickListViewController : UIViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate>
+@interface ContactQuickListViewController : HXOSideMenuViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UITableView* tableView;
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;

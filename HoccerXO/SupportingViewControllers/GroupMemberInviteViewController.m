@@ -7,7 +7,7 @@
 //
 
 #import "GroupMemberInviteViewController.h"
-#import "UIViewController+HXOSideMenuButtons.h"
+#import "UIViewController+HXOSideMenu.h"
 #import "ContactCell.h"
 #import "Contact.h"
 #import "GroupMembership.h"

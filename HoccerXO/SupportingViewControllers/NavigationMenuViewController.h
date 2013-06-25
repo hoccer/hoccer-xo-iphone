@@ -8,19 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#ifdef NEW_MFSIDEMENU
-#import "MFSideMenu.h"
-#else
-@class MFSideMenu;
-#endif
+#import "HXOSideMenuViewController.h"
 
-@interface NavigationMenuViewController : UITableViewController <UINavigationControllerDelegate>
+@interface NavigationMenuViewController : HXOSideMenuViewController <UINavigationControllerDelegate>
 
-#ifdef NEW_MFSIDEMENU
-@property (nonatomic, assign) MFSideMenuContainerViewController *sideMenu;
-#else
-@property (nonatomic, assign) MFSideMenu *sideMenu;
-#endif
+@property (nonatomic,assign) IBOutlet UITableView* tableView;
 
 - (void) cacheViewController: (UIViewController*) viewController withStoryboardId: (NSString*) storyboardId;
 

@@ -16,6 +16,7 @@
 #import "ChatViewController.h"
 #import "MFSideMenu.h"
 #import "HXOBackend.h"
+#import "UIViewController+HXOSideMenu.h"
 
 
 @interface ContactQuickListViewController ()
@@ -156,12 +157,8 @@
     Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
     [_conversationViewController.chatViewController setPartner: contact];
     NSArray * viewControllers = @[_conversationViewController, _conversationViewController.chatViewController];
-    [self.sideMenu.navigationController setViewControllers: viewControllers animated: NO];
-    [self.sideMenu setMenuState:MFSideMenuStateClosed];
-#ifdef NEW_MFSIDEMENU
-    MFSideMenuContainerViewController *container = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).menuContainerViewController;
-    [container setMenuState:MFSideMenuStateClosed completion:^{}];
-#endif
+    [self.navigationController setViewControllers: viewControllers animated: NO];
+    [self.menuContainerViewController setMenuState:MFSideMenuStateClosed completion:^{}];
 }
 
 #pragma mark - Search Bar

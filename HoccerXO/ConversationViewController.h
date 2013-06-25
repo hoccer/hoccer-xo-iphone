@@ -18,7 +18,7 @@
 
 @property (strong, nonatomic) ChatViewController *chatViewController;
 
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end

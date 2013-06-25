@@ -9,7 +9,7 @@
 #import "HXOConfig.h"
 #import "ProfileViewController.h"
 #import "MFSideMenu.h"
-#import "UIViewController+HXOSideMenuButtons.h"
+#import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
 #import "AssetStore.h"
 #import "UserDefaultsCells.h"

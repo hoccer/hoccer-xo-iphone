@@ -8,7 +8,7 @@
 
 #import "ContactListViewController.h"
 
-#import "UIViewController+HXOSideMenuButtons.h"
+#import "UIViewController+HXOSideMenu.h"
 #import "InsetImageView.h"
 #import "Contact.h"
 #import "ContactCell.h"

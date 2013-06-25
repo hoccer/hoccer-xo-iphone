@@ -7,6 +7,7 @@
 //
 
 #import "NavigationMenuViewController.h"
+#import "UIViewController+HXOSideMenu.h"
 #import "MFSideMenu.h"
 
 @interface NavigationMenuViewController ()
@@ -102,8 +103,8 @@
     if ( ! [_menuItems[indexPath.row][@"title"] isEqualToString: @"Chats"]) {
         viewController.title = _menuItems[indexPath.row][@"title"];
     }
-    [self.sideMenu.navigationController setViewControllers: @[viewController] animated: NO];
-    [self.sideMenu setMenuState:MFSideMenuStateClosed];
+    [self.navigationController setViewControllers: @[viewController] animated: NO];
+    [self.menuContainerViewController setMenuState:MFSideMenuStateClosed completion:^{}];
 }
 
 - (void) cacheViewController: (UIViewController*) viewController withStoryboardId: (NSString*) storyboardId{
@@ -126,7 +127,7 @@
 
 - (void) updateSelectedItem {
     for (int i = 0; i < _viewControllers.count; ++i) {
-        if ([self.sideMenu.navigationController.viewControllers[0] isEqual: _viewControllers[_menuItems[i][@"storyboardId"]]]) {
+        if ([self.navigationController.viewControllers[0] isEqual: _viewControllers[_menuItems[i][@"storyboardId"]]]) {
             NSIndexPath * indexPath = [NSIndexPath indexPathForItem: i inSection: 0];
             [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionBottom];
             return;
