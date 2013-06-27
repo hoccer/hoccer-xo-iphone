@@ -30,6 +30,9 @@ static InvitationController * _sharedInvitationController;
 
 + (void) initialize {
     _sharedInvitationController = [[InvitationController alloc] init];
+#ifdef USE_HXO_ACTION_SHEET
+    [[HXOActionSheet appearance] setOtherButtonBackgroundImage: [UIImage imageNamed: @"actionsheet_btn_light"]];
+#endif
 }
 
 + (id) sharedInvitationController {
@@ -68,12 +71,14 @@ static InvitationController * _sharedInvitationController;
 
 - (void) presentWithViewController: (UIViewController*) viewController {
     self.viewController = viewController;
-    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
+    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: @"Lorem Ipsum dolor sit amet and some more text" //NSLocalizedString(@"Invite by", @"Actionsheet Title")
                                                         delegate: self
                                                cancelButtonTitle: nil
                                           destructiveButtonTitle: nil
                                                otherButtonTitles: nil];
+#ifndef USE_HXO_ACTION_SHEET
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+#endif
     for (InvitationChannel * channel in self.invitationChannels) {
         [sheet addButtonWithTitle: channel.localizedButtonTitle];
     }

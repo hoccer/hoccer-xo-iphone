@@ -15,13 +15,6 @@
 
 @end
 
-typedef enum HXOActionSheetStyles {
-    HXOActionSheetStyleAutomatic        = -1,
-    HXOActionSheetStyleDefault          = UIBarStyleDefault,
-    HXOActionSheetStyleBlackOpaque      = UIBarStyleBlackOpaque,
-    HXOActionSheetStyleBlackTranslucent = UIBarStyleBlackTranslucent
-} HXOActionSheetStyle;
-
 @interface HXOActionSheet : HXOSheetView
 {
     NSMutableArray * _buttonTitles;
@@ -34,7 +27,6 @@ typedef enum HXOActionSheetStyles {
 @property (nonatomic,readonly) NSInteger firstOtherButtonIndex;
 @property (nonatomic,readonly) NSInteger numberOfButtons;
 
-@property (nonatomic,assign) HXOActionSheetStyle actionSheetStyle       UI_APPEARANCE_SELECTOR;
 @property (nonatomic,strong) UIImage * destructiveButtonBackgroundImage UI_APPEARANCE_SELECTOR;
 @property (nonatomic,strong) UIImage * cancelButtonBackgroundImage      UI_APPEARANCE_SELECTOR;
 @property (nonatomic,strong) UIImage * otherButtonBackgroundImage       UI_APPEARANCE_SELECTOR;

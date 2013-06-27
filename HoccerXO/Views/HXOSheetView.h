@@ -9,13 +9,23 @@
 #import <UIKit/UIKit.h>
 
 
+typedef enum HXOSheetStyles {
+    HXOSheetStyleAutomatic        = -1,
+    HXOSheetStyleDefault          = UIBarStyleDefault,
+    HXOSheetStyleBlackOpaque      = UIBarStyleBlackOpaque,
+    HXOSheetStyleBlackTranslucent = UIBarStyleBlackTranslucent
+} HXOSheetStyle;
+
+
 @interface HXOSheetView : UIView
 {
-    UIView *         _coverView;
-    UIView *         _actionView;
+    UIView * _coverView;
+    UIView * _actionView;
+    UILabel* _titleLabel;
 }
 
-@property (nonatomic,copy) NSString * title;
+@property (nonatomic,strong) NSString *    title;
+@property (nonatomic,assign) HXOSheetStyle sheetStyle UI_APPEARANCE_SELECTOR;
 
 - (id) initWithTitle: (NSString*) title;
 
