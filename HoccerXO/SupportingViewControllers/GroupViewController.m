@@ -135,7 +135,9 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 }
 
 - (void) configureMode {
-    if (self.group == nil) {
+    // XXX hack to detect modal presentation -> new groups
+    UINavigationBar * navBar = self.navigationController.navigationBar;
+    if (navBar.tag == 2342) {
         _mode = ProfileViewModeNewGroup;
     } else if ([self.group iAmAdmin]) {
         _mode = ProfileViewModeEditGroup;
