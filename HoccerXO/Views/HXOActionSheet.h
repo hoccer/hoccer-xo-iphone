@@ -1,41 +1,48 @@
 //
 //  HXOActionSheet.h
-//  HoccerXO
+//  HoccerToolKit
 //
-//  Created by David Siegel on 07.05.13.
+//  Created by David Siegel on 26.06.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "HXOSheetView.h"
 
 @class HXOActionSheet;
 
 @protocol HXOActionSheetDelegate <NSObject>
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)actionSheet:(HXOActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @end
 
-@interface HXOActionSheet : UIView
+typedef enum HXOActionSheetStyles {
+    HXOActionSheetStyleAutomatic        = -1,
+    HXOActionSheetStyleDefault          = UIBarStyleDefault,
+    HXOActionSheetStyleBlackOpaque      = UIBarStyleBlackOpaque,
+    HXOActionSheetStyleBlackTranslucent = UIBarStyleBlackTranslucent
+} HXOActionSheetStyle;
+
+@interface HXOActionSheet : HXOSheetView
 {
     NSMutableArray * _buttonTitles;
-    UIView *         _coverView;
-    UIView *         _actionView;
-    NSUInteger       _initialOrientation;
 }
 
 @property (nonatomic,assign) id<HXOActionSheetDelegate> delegate;
-@property (nonatomic,copy) NSString * title;
 
 @property (nonatomic) NSInteger cancelButtonIndex;
 @property (nonatomic) NSInteger destructiveButtonIndex;
 @property (nonatomic,readonly) NSInteger firstOtherButtonIndex;
 @property (nonatomic,readonly) NSInteger numberOfButtons;
 
+@property (nonatomic,assign) HXOActionSheetStyle actionSheetStyle       UI_APPEARANCE_SELECTOR;
+@property (nonatomic,strong) UIImage * destructiveButtonBackgroundImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic,strong) UIImage * cancelButtonBackgroundImage      UI_APPEARANCE_SELECTOR;
+@property (nonatomic,strong) UIImage * otherButtonBackgroundImage       UI_APPEARANCE_SELECTOR;
+
+
 - (id)initWithTitle:(NSString *)title delegate:(id <HXOActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ...;
 
 - (NSInteger) addButtonWithTitle: (NSString*) title;
 - (NSString *)buttonTitleAtIndex:(NSInteger)buttonIndex;
-- (void)showInView:(UIView *)view;
 
 @end

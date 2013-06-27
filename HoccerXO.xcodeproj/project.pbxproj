@@ -83,6 +83,8 @@
 		633462B3174FE3E3008D98FC /* group_member_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B1174FE3E3008D98FC /* group_member_divider.png */; };
 		633462B4174FE3E3008D98FC /* group_member_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B2174FE3E3008D98FC /* group_member_divider@2x.png */; };
 		633A999B1779D23900E066EF /* HXOSideMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A999A1779D23900E066EF /* HXOSideMenuViewController.m */; };
+		633A9B28177B3BA900E066EF /* HXOActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A9B25177B3BA900E066EF /* HXOActionSheet.m */; };
+		633A9B29177B3BA900E066EF /* HXOSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A9B27177B3BA900E066EF /* HXOSheetView.m */; };
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* ChatTableCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* ChatTableCells.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
@@ -179,7 +181,6 @@
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
-		639094BB17395DB200DF889B /* HXOActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BA17395DB200DF889B /* HXOActionSheet.m */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
 		639094C21739970200DF889B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094C11739970200DF889B /* CoreLocation.framework */; };
@@ -554,6 +555,10 @@
 		633462B2174FE3E3008D98FC /* group_member_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_divider@2x.png"; sourceTree = "<group>"; };
 		633A99991779D23900E066EF /* HXOSideMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOSideMenuViewController.h; sourceTree = "<group>"; };
 		633A999A1779D23900E066EF /* HXOSideMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOSideMenuViewController.m; sourceTree = "<group>"; };
+		633A9B24177B3BA900E066EF /* HXOActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOActionSheet.h; sourceTree = "<group>"; };
+		633A9B25177B3BA900E066EF /* HXOActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOActionSheet.m; sourceTree = "<group>"; };
+		633A9B26177B3BA900E066EF /* HXOSheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOSheetView.h; sourceTree = "<group>"; };
+		633A9B27177B3BA900E066EF /* HXOSheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOSheetView.m; sourceTree = "<group>"; };
 		633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberInviteViewController.h; sourceTree = "<group>"; };
 		633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberInviteViewController.m; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* ChatTableCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTableCells.h; sourceTree = "<group>"; };
@@ -668,8 +673,6 @@
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
-		639094B917395DB200DF889B /* HXOActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOActionSheet.h; sourceTree = "<group>"; };
-		639094BA17395DB200DF889B /* HXOActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOActionSheet.m; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
 		639094BF1739842A00DF889B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -1087,6 +1090,17 @@
 				633462B2174FE3E3008D98FC /* group_member_divider@2x.png */,
 			);
 			path = GroupView;
+			sourceTree = "<group>";
+		};
+		633A9B18177B21A700E066EF /* Controlls */ = {
+			isa = PBXGroup;
+			children = (
+				633A9B24177B3BA900E066EF /* HXOActionSheet.h */,
+				633A9B25177B3BA900E066EF /* HXOActionSheet.m */,
+				633A9B26177B3BA900E066EF /* HXOSheetView.h */,
+				633A9B27177B3BA900E066EF /* HXOSheetView.m */,
+			);
+			name = Controlls;
 			sourceTree = "<group>";
 		};
 		63540A9316E61B420087D24E /* Assets */ = {
@@ -1672,6 +1686,7 @@
 		63D4916716CAA17D00FD395F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				633A9B18177B21A700E066EF /* Controlls */,
 				E9495573171C139F00FE2E1F /* AttachmentView.h */,
 				E9495574171C139F00FE2E1F /* AttachmentView.m */,
 				637847A816F2864E00DE03C2 /* AttachmentViewFactory.h */,
@@ -1698,8 +1713,6 @@
 				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 				633129D516F95220008F5B04 /* GrowingTextView.h */,
 				633129D616F95220008F5B04 /* GrowingTextView.m */,
-				639094B917395DB200DF889B /* HXOActionSheet.h */,
-				639094BA17395DB200DF889B /* HXOActionSheet.m */,
 				63AF819317471EFB00D007E3 /* HXONavigationItem.h */,
 				63AF819417471EFB00D007E3 /* HXONavigationItem.m */,
 				63DC01831715205300609513 /* HXOSwitch.h */,
@@ -2395,7 +2408,6 @@
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
-				639094BB17395DB200DF889B /* HXOActionSheet.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
 				639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
@@ -2414,6 +2426,8 @@
 				63E2D70C1771FA9400E037EA /* ShadowedTableView.m in Sources */,
 				63F62E0817799D6B00435F21 /* MFSideMenuContainerViewController.m in Sources */,
 				633A999B1779D23900E066EF /* HXOSideMenuViewController.m in Sources */,
+				633A9B28177B3BA900E066EF /* HXOActionSheet.m in Sources */,
+				633A9B29177B3BA900E066EF /* HXOSheetView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
