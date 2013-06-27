@@ -102,6 +102,7 @@
         [self.navigationController presentViewController: profileView animated: YES completion: nil];
     }
     // [AppDelegate setDefaultAudioSession]; // should be removed when a better AudioPlayer is in Place; right now we set the default mode here in case an Audio has been played and the MusicSession has been enabled
+    self.view.userInteractionEnabled = YES;
 }
 
 - (void)didReceiveMemoryWarning
