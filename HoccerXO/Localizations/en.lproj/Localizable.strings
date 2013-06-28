@@ -371,7 +371,7 @@
 "corrupt_database_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
 
 "fatal_error_default_title"   = "Fatal Error";
-"fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. If the error persists, please delete and reistall Hoccer XO";
+"fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
 
 "new_friend_message"="Contact '%@' is now a friend.";
 "new_friend_title"="New Friend";

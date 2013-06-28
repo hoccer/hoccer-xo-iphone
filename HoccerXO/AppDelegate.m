@@ -25,6 +25,8 @@
 #import "MFSideMenu.h"
 #import "UIAlertView+BlockExtensions.h"
 
+#import <CoreData/NSMappingModel.h>
+
 #import <AVFoundation/AVFoundation.h>
 
 #define CONNECTION_TRACE NO
@@ -35,6 +37,7 @@ static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
 static NSInteger _savingPaused = 0;
 static BOOL _shouldSave = NO;
+static NSInteger validationErrorCount = 0;
 
 @implementation AppDelegate
 
@@ -287,7 +290,12 @@ static BOOL _shouldSave = NO;
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            [self displayValidationError:error];
+            ++validationErrorCount;
+            if (validationErrorCount < 3) {
+                [self displayValidationError:error];
+            } else {
+                [self showFatalErrorAlertWithMessage:nil withTitle:nil];
+            }
             // abort();
         }
     }
@@ -424,6 +432,19 @@ static BOOL _shouldSave = NO;
     return _managedObjectModel;
 }
 
+- (NSManagedObjectModel *)managedObjectModelWithName:(NSString*)modelName
+{
+    //NSURL *modelURL = [[NSBundle mainBundle] URLForResource:modelName withExtension:@"mom"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:modelName withExtension:@"mom" subdirectory:@"HoccerXO.momd"];
+    NSLog(@"modelURL=%@", modelURL);
+    NSManagedObjectModel * myManagedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return myManagedObjectModel;
+}
+
+- (NSArray*) urlsForAllModelVersions {
+    return [[NSBundle mainBundle] URLsForResourcesWithExtension:@"mom" subdirectory:@"HoccerXO.momd"];
+}
+
 - (NSManagedObjectModel *)rpcObjectModel
 {
     if (_rpcObjectModel != nil) {
@@ -434,22 +455,197 @@ static BOOL _shouldSave = NO;
     return _rpcObjectModel;
 }
 
-
 - (NSURL *)persistentStoreURL {
     NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
     NSURL *storeURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: databaseName];
     return storeURL;
 }
 
+- (NSURL *)tempPersistentStoreURL {
+    NSString * databaseName = [NSString stringWithFormat: @"_%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSURL *storeURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: databaseName];
+    return storeURL;
+}
+
+- (NSURL *)oldPersistentStoreURL {
+    NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: databaseName];
+    return storeURL;
+}
+
+- (BOOL) canAutoMigrateFrom:(NSString*)modelName {
+    return [self canAutoMigrateFromModel:[self managedObjectModelWithName:modelName]];
+}
+
+- (BOOL) canAutoMigrateFromModel:(NSManagedObjectModel*)fromModel {
+    NSError * outError;
+    NSManagedObjectModel * toModel = [self managedObjectModel];
+    NSMappingModel *mappingModel = [NSMappingModel inferredMappingModelForSourceModel:fromModel destinationModel:toModel error:&outError];
+    
+    // If Core Data cannot create an inferred mapping model, return NO.
+    
+    if (!mappingModel) {
+        NSLog(@"canAutoMigrateFrom: Error=%@", outError);
+        return NO;
+    }
+    NSLog(@"Mapping model = %@", mappingModel);
+    return YES;
+}
+
+- (BOOL) compatibilityOfStore:(NSURL *)sourceStoreURL withModel:(NSManagedObjectModel*)destinationModel {
+    NSError *myError = nil;
+    
+    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:sourceStoreURL error:&myError];
+    
+    if (sourceMetadata == nil) {
+        NSLog(@"Error obtaining store metadata for url %@, error %@, %@", sourceStoreURL, myError, [myError userInfo]);
+    }
+    NSString *configuration = nil;
+    BOOL pscCompatibile = [destinationModel isConfiguration:configuration compatibleWithStoreMetadata:sourceMetadata];
+    
+    if (pscCompatibile) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSManagedObjectModel *) findModelForStore:(NSURL*)storeURL {
+    NSArray * myModelUrls = [self urlsForAllModelVersions];
+    NSManagedObjectModel * result = nil;
+    for (NSURL * url in myModelUrls) {
+        NSLog(@"Checking model %@", url);
+        NSManagedObjectModel * myModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
+        if ([self compatibilityOfStore:storeURL withModel:myModel]) {
+            result = myModel;
+            NSLog(@"is compatible");
+        } else {
+            NSLog(@"not compatible");
+        }
+    }
+    return result;
+}
+
+- (BOOL)migrateStoreFromURL:(NSURL*)sourceStoreURL
+                      toURL:(NSURL*)destinationStoreURL
+                withMapping:(NSMappingModel*)mappingModel
+                withManager:(NSMigrationManager*)migrationManager
+{
+    NSDictionary *sourceStoreOptions = nil;
+    NSDictionary *destinationStoreOptions = nil;
+    NSError *myError = nil;
+    
+    NSLog(@"mappingModel = %@", mappingModel);
+    
+    BOOL ok = [migrationManager migrateStoreFromURL:sourceStoreURL
+                                               type:NSSQLiteStoreType
+                                            options:sourceStoreOptions
+                                   withMappingModel:mappingModel
+                                   toDestinationURL:destinationStoreURL
+                                    destinationType:NSSQLiteStoreType
+                                 destinationOptions:destinationStoreOptions
+                                              error:&myError];
+    if (myError != nil) {
+        NSLog(@"Migration Error: %@", myError);
+    }
+    return ok;
+}
+
 - (NSPersistentStoreCoordinator *)newPersistentStoreCoordinatorWithURL:(NSURL *)storeURL {
+
+    NSError *myError = nil;
+    NSURL * oldURL = [self oldPersistentStoreURL];
+    NSString * myPath = [storeURL path];
+    NSString * oldPath = [oldURL path];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:oldPath]) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:myPath]) {
+            [[NSFileManager defaultManager] moveItemAtURL:oldURL toURL:storeURL error:&myError];
+            if (myError != nil) {
+                NSLog(@"Error moving old database from %@ to %@, error=%@", oldURL, storeURL, myError);
+            }
+        } else {
+            [[NSFileManager defaultManager] removeItemAtURL:oldURL error:&myError];
+            if (myError != nil) {
+                NSLog(@"Error removing database at old URL %@, error=%@", oldURL, myError);
+            } else {
+                NSLog(@"Removed old database at URL %@", oldURL);
+            }
+        }
+    }
+    NSURL * tmpURL = [self tempPersistentStoreURL];
+    NSString * tmpPath = [tmpURL path];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:tmpPath]) {
+        [[NSFileManager defaultManager] removeItemAtURL:tmpURL error:&myError];
+        if (myError != nil) {
+            NSLog(@"Error removing database at tmp URL %@, error=%@", tmpURL, myError);
+        } else {
+            NSLog(@"Removed tmp database at URL %@", tmpURL);
+        }
+    }
+    
+    NSLog(@"attributes=%@",[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError]);
+    if (myError != nil) {
+        NSLog(@"Error getting attributes from %@, error=%@", myPath, myError);
+    }
+    
+    NSDictionary *migrationOptions = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:myPath]) {
+        
+        NSManagedObjectModel * storeModel = [self findModelForStore:storeURL];
+        if (!storeModel) {
+            NSLog(@"#Fatal Error, no model compatible with existing store found, migration will not work");
+            return nil;
+        }
+        
+        NSManagedObjectModel * latestModel = [self managedObjectModel];
+        if (![self compatibilityOfStore:storeURL withModel:latestModel]) {
+            // migration needed
+            
+            NSError * outError;
+            //NSMappingModel *mappingModel = [NSMappingModel inferredMappingModelForSourceModel:storeModel destinationModel:latestModel error:&outError];
+            
+            NSString * mappingModelName = @"MappingModel-17-18";
+            NSURL *fileURL = [[NSBundle mainBundle] URLForResource:mappingModelName withExtension:@"cdm"];
+            NSMappingModel *mappingModel = [[NSMappingModel alloc] initWithContentsOfURL:fileURL];
+            
+            if (mappingModel == nil) {
+                NSLog(@"Can not automigrate, need special migration");
+                return nil;
+            }
+            NSLog(@"Automigration possible");
+            migrationOptions = @{NSMigratePersistentStoresAutomaticallyOption : @(YES),
+                                 NSInferMappingModelAutomaticallyOption : @(YES)};
+            
+            
+            NSURL * newStoreURL = [self tempPersistentStoreURL];
+            NSMigrationManager * migrationManager = [[NSMigrationManager alloc] initWithSourceModel:storeModel destinationModel:latestModel];
+            if ([self migrateStoreFromURL:storeURL toURL:newStoreURL withMapping:mappingModel withManager:migrationManager]) {
+                /*
+                 [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&myError];
+                 if (myError != nil) {
+                 NSLog(@"Error removing database at %@ after migration, error=%@", storeURL, myError);
+                 return nil;
+                 }
+                 [[NSFileManager defaultManager] moveItemAtURL:newStoreURL toURL:storeURL error:&myError];
+                 if (myError != nil) {
+                 NSLog(@"Error moving database from %@ to %@ after migration, error=%@", newStoreURL, storeURL, myError);
+                 return nil;
+                 }
+                 */
+                migrationOptions = nil; // do not attempt to automigrate, we did that already
+            } else {
+                NSLog(@"Migration failed.");
+            }
+        }
+    }
+    
+    // if (![self canAutoMigrateFrom:@"HoccerXO.momd/HoccerXO-17"]) {
+    //if (![self canAutoMigrateFrom:@"HoccerXO-17"]) {
+    //    NSLog(@"Can not automigrate from HoccerXO-17");
+    // }
+    
     NSPersistentStoreCoordinator * theNewStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    
-    NSDictionary *migrationOptions = @{NSMigratePersistentStoresAutomaticallyOption : @(YES),
-                                       NSInferMappingModelAutomaticallyOption : @(YES)};
-    
-    
-    NSError *error = nil;
-    if (![theNewStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&error]) {
+        
+    if (![theNewStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&myError]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          
@@ -473,7 +669,7 @@ static BOOL _shouldSave = NO;
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        NSLog(@"Unresolved error %@, %@", myError, [myError userInfo]);
         return nil;
     }
     return theNewStoreCoordinator;
