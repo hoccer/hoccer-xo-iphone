@@ -293,7 +293,6 @@
 		E924C9561768D5A4008185E0 /* button-recorded.png in Resources */ = {isa = PBXBuildFile; fileRef = E924C9521768D5A4008185E0 /* button-recorded.png */; };
 		E924C9571768D5A4008185E0 /* button-recorded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E924C9531768D5A4008185E0 /* button-recorded@2x.png */; };
 		E924C958176C8CD6008185E0 /* libInAppSettingsKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */; };
-		E92DBB9C177DC36C00503926 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E92DBB97177DC36C00503926 /* HoccerXO.xcdatamodeld */; };
 		E9495575171C13A000FE2E1F /* AttachmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9495574171C139F00FE2E1F /* AttachmentView.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
@@ -309,6 +308,8 @@
 		E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */; };
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
+		E9756194177E23AF000B6381 /* HoccerXOT.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756192177E23AF000B6381 /* HoccerXOT.xcdatamodeld */; };
+		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BB1725CB3F0089A510 /* ABPersonCreator.m */; };
@@ -838,10 +839,6 @@
 		E924C9511768D5A4008185E0 /* audio-default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio-default@2x.png"; sourceTree = "<group>"; };
 		E924C9521768D5A4008185E0 /* button-recorded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-recorded.png"; sourceTree = "<group>"; };
 		E924C9531768D5A4008185E0 /* button-recorded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-recorded@2x.png"; sourceTree = "<group>"; };
-		E92DBB98177DC36C00503926 /* HoccerXO-15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-15.xcdatamodel"; sourceTree = "<group>"; };
-		E92DBB99177DC36C00503926 /* HoccerXO-16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-16.xcdatamodel"; sourceTree = "<group>"; };
-		E92DBB9A177DC36C00503926 /* HoccerXO-17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-17.xcdatamodel"; sourceTree = "<group>"; };
-		E92DBB9B177DC36C00503926 /* HoccerXO-18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-18.xcdatamodel"; sourceTree = "<group>"; };
 		E9495573171C139F00FE2E1F /* AttachmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentView.h; sourceTree = "<group>"; };
 		E9495574171C139F00FE2E1F /* AttachmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentView.m; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
@@ -870,6 +867,9 @@
 		E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLHelper.h"; sourceTree = "<group>"; };
 		E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLHelper.m"; sourceTree = "<group>"; };
 		E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; name = "MappingModel-17-18.xcmappingmodel"; path = "HoccerXO/Models/MappingModel-17-18.xcmappingmodel"; sourceTree = "<group>"; };
+		E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoccerXOT.xcdatamodel; sourceTree = "<group>"; };
+		E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-18.xcdatamodel"; sourceTree = "<group>"; };
+		E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-19.xcdatamodel"; sourceTree = "<group>"; };
 		E980D445171EF8950060C1B5 /* CryptingInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptingInputStream.h; sourceTree = "<group>"; };
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -1624,7 +1624,7 @@
 		63AEE30516CA562F00522F92 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				E92DBB97177DC36C00503926 /* HoccerXO.xcdatamodeld */,
+				E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */,
 				631457A816EF96B400AA8EB9 /* Attachment.h */,
 				631457A916EF96B500AA8EB9 /* Attachment.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
@@ -1644,6 +1644,7 @@
 				E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */,
 				63D8EE111722EB89000F9E53 /* UserProfile.h */,
 				63D8EE121722EB89000F9E53 /* UserProfile.m */,
+				E9756192177E23AF000B6381 /* HoccerXOT.xcdatamodeld */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2417,8 +2418,9 @@
 				6382549B175F746C000347CD /* ProfileDataSource.m in Sources */,
 				63F62E0817799D6B00435F21 /* MFSideMenuContainerViewController.m in Sources */,
 				633A999B1779D23900E066EF /* HXOSideMenuViewController.m in Sources */,
-				E92DBB9C177DC36C00503926 /* HoccerXO.xcdatamodeld in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
+				E9756194177E23AF000B6381 /* HoccerXOT.xcdatamodeld in Sources */,
+				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2616,15 +2618,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		E92DBB97177DC36C00503926 /* HoccerXO.xcdatamodeld */ = {
+		E9756192177E23AF000B6381 /* HoccerXOT.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				E92DBB98177DC36C00503926 /* HoccerXO-15.xcdatamodel */,
-				E92DBB99177DC36C00503926 /* HoccerXO-16.xcdatamodel */,
-				E92DBB9A177DC36C00503926 /* HoccerXO-17.xcdatamodel */,
-				E92DBB9B177DC36C00503926 /* HoccerXO-18.xcdatamodel */,
+				E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */,
 			);
-			currentVersion = E92DBB9B177DC36C00503926 /* HoccerXO-18.xcdatamodel */;
+			currentVersion = E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */;
+			path = HoccerXOT.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */,
+				E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */,
+			);
+			currentVersion = E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

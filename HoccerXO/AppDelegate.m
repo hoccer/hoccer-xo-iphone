@@ -601,12 +601,12 @@ static NSInteger validationErrorCount = 0;
             // migration needed
             
             NSError * outError;
-            //NSMappingModel *mappingModel = [NSMappingModel inferredMappingModelForSourceModel:storeModel destinationModel:latestModel error:&outError];
-            
+            NSMappingModel *mappingModel = [NSMappingModel inferredMappingModelForSourceModel:storeModel destinationModel:latestModel error:&outError];
+/*
             NSString * mappingModelName = @"MappingModel-17-18";
             NSURL *fileURL = [[NSBundle mainBundle] URLForResource:mappingModelName withExtension:@"cdm"];
             NSMappingModel *mappingModel = [[NSMappingModel alloc] initWithContentsOfURL:fileURL];
-            
+*/            
             if (mappingModel == nil) {
                 NSLog(@"Can not automigrate, need special migration");
                 return nil;
@@ -619,18 +619,18 @@ static NSInteger validationErrorCount = 0;
             NSURL * newStoreURL = [self tempPersistentStoreURL];
             NSMigrationManager * migrationManager = [[NSMigrationManager alloc] initWithSourceModel:storeModel destinationModel:latestModel];
             if ([self migrateStoreFromURL:storeURL toURL:newStoreURL withMapping:mappingModel withManager:migrationManager]) {
-                /*
-                 [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&myError];
-                 if (myError != nil) {
-                 NSLog(@"Error removing database at %@ after migration, error=%@", storeURL, myError);
-                 return nil;
-                 }
-                 [[NSFileManager defaultManager] moveItemAtURL:newStoreURL toURL:storeURL error:&myError];
-                 if (myError != nil) {
-                 NSLog(@"Error moving database from %@ to %@ after migration, error=%@", newStoreURL, storeURL, myError);
-                 return nil;
-                 }
-                 */
+                
+                [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&myError];
+                if (myError != nil) {
+                    NSLog(@"Error removing database at %@ after migration, error=%@", storeURL, myError);
+                    return nil;
+                }
+                [[NSFileManager defaultManager] moveItemAtURL:newStoreURL toURL:storeURL error:&myError];
+                if (myError != nil) {
+                    NSLog(@"Error moving database from %@ to %@ after migration, error=%@", newStoreURL, storeURL, myError);
+                    return nil;
+                }
+                
                 migrationOptions = nil; // do not attempt to automigrate, we did that already
             } else {
                 NSLog(@"Migration failed.");
@@ -638,37 +638,11 @@ static NSInteger validationErrorCount = 0;
         }
     }
     
-    // if (![self canAutoMigrateFrom:@"HoccerXO.momd/HoccerXO-17"]) {
-    //if (![self canAutoMigrateFrom:@"HoccerXO-17"]) {
-    //    NSLog(@"Can not automigrate from HoccerXO-17");
-    // }
     
     NSPersistentStoreCoordinator * theNewStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
         
     if (![theNewStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&myError]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-         
-         Typical reasons for an error here include:
-         * The persistent store is not accessible;
-         * The schema for the persistent store is incompatible with current managed object model.
-         Check the error message to determine what the actual problem was.
-         
-         
-         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
-         
-         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
-         * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter:
-         @{NSMigratePersistentStoresAutomaticallyOption:@YES, NSInferMappingModelAutomaticallyOption:@YES}
-         
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
-         
-         */
+
         NSLog(@"Unresolved error %@, %@", myError, [myError userInfo]);
         return nil;
     }

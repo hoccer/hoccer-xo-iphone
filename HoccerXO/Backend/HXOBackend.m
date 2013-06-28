@@ -1102,19 +1102,27 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionBlock)handler {
     [self getKeyForClientId: theContact.clientId withKeyId:theId keyHandler:^(NSDictionary * keyRecord) {
+        
         if (USE_VALIDATOR) [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
-        if (keyRecord != nil && [theId isEqualToString: keyRecord[@"keyId"]]) {
-            theContact.publicKeyString = keyRecord[@"key"];
-            theContact.publicKeyId = keyRecord[@"keyId"];
-            // NSLog(@"Key for contact updated: %@", theContact);
-            // NSLog(@"Received new public key for contact: %@", theContact.nickName);
-            [self.delegate saveDatabase];
-            if (handler != nil) handler(nil);
+        
+        if (keyRecord != nil) {
+            if ([theId isEqualToString: keyRecord[@"keyId"]]) {
+                theContact.publicKeyString = keyRecord[@"key"];
+                theContact.publicKeyId = keyRecord[@"keyId"];
+                // NSLog(@"Key for contact updated: %@", theContact);
+                // NSLog(@"Received new public key for contact: %@", theContact.nickName);
+                [self.delegate saveDatabase];
+                if (handler != nil) handler(nil);
+            } else {
+                NSLog(@"ERROR: key not updated response keyid mismatch for contact: %@", theContact);
+                NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not updated response keyid mismatch for contact: %@", theContact];
+                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9912 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                if (handler != nil) handler(myError);
+            }
         } else {
-            NSLog(@"ERROR: key not updated response keyid mismatch for contact: %@", theContact);
-            NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not updated response keyid mismatch for contact: %@", theContact];
-            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9912 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-            if (handler != nil) handler(myError);
+            // retry
+            [self fetchKeyForContact:theContact withKeyId:theId withCompletion:handler];
+            
         }
     }];
 }
