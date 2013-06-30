@@ -22,7 +22,7 @@ static const NSInteger kJsonRpcInternal       = -32603;
 
 // TODO: clean-up error handling
 
-static const NSTimeInterval kResponseTimeout = 60;
+static const NSTimeInterval kResponseTimeout = 30;
 
 @interface JsonRpcWebSocket () <SRWebSocketDelegate>
 {
