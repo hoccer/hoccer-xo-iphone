@@ -281,7 +281,9 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     self.latestKnownServerTimeAtClientTime = [NSDate date];
     self.latestKnownServerTimeOffset = [self.latestKnownServerTime timeIntervalSinceDate:self.latestKnownServerTimeAtClientTime];
     // offest is positive if server time is ahead of client time
+#ifdef DEBUG
     NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
+#endif
 }
 
 #define DEBUG_TIME_DAY (86400 * 1000)
