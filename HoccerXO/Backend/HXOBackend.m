@@ -35,14 +35,15 @@
 #import "GCHTTPRequestOperation.h"
 #import "GCNetworkRequest.h"
 #import "UIAlertView+BlockExtensions.h"
+#import "GCNetworkQueue.h"
 
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
-#define CONNECTION_TRACE YES
+#define CONNECTION_TRACE NO
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
-#define RELATIONSHIP_DEBUG YES
+#define RELATIONSHIP_DEBUG NO
 
 #ifdef DEBUG
 #define USE_VALIDATOR YES
@@ -89,6 +90,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSTimer *          _reconnectTimer;
     NSTimer *          _backgroundDisconnectTimer;
     NSTimer *          _helloTimer;
+    GCNetworkQueue *   _avatarDownloadQueue;
 }
 
 - (void) identify;
@@ -105,6 +107,13 @@ static NSTimer * _stateNotificationDelayTimer;
         _serverConnection = [[JsonRpcWebSocket alloc] init];
         _serverConnection.delegate = self;
         _apnsDeviceToken = nil;
+        
+        _firstConnectionAfterCrash = theAppDelegate.launchedAfterCrash;
+        
+        _avatarDownloadQueue = [[GCNetworkQueue alloc] init];
+        [_avatarDownloadQueue setMaximumConcurrentOperationsCount:1];
+        //[_avatarDownloadQueue enableNetworkActivityIndicator:YES];
+        
         [_serverConnection registerIncomingCall: @"incomingDelivery"    withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery"    withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered"   withSelector:@selector(pushNotRegistered:) isNotification: YES];
@@ -466,8 +475,8 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         group = [self getGroupById:groupId];
     };
 
-    if (sender == nil) {
-        NSLog(@"Ignoring message from unknown sender %@", messageDictionary[@"senderId"]);
+    if (sender == nil || (groupId != nil && group == nil)) {
+        NSLog(@"Ignoring message from unknown sender %@ or group %@", senderId, groupId);
         [self.delegate.managedObjectContext deleteObject: message];
         [self.delegate.managedObjectContext deleteObject: delivery];
         return;
@@ -563,18 +572,28 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         [self setState: kBackendReady];
 
         [self hello];
-        
-        [self flushPendingMessages];
-        [self flushPendingFiletransfers];
         [self updateRelationships];
         [self updatePresences];
         [self flushPendingInvites];
         [self updatePresence];
         [self updateKey];
         [self getGroups];
+        [self flushPendingMessages];
+        [self flushPendingFiletransfers];
     } else {
         [self stopAndRetry];
     }
+}
+
+- (void) finishFirstConnectionAfterCrash {
+    if (self.firstConnectionAfterCrash) {
+        NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
+        [self hello:clientTime crashFlag:NO handler:^(NSDictionary * result) {
+            if (result != nil) {
+                self.firstConnectionAfterCrash = NO;
+            }
+        }];
+    }    
 }
 
 - (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler {
@@ -861,8 +880,12 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) updateRelationships {
-    NSDate * latestChange = [self getLatestChangeDateForContactRelationships];
-    // NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
+    NSDate * latestChange;
+    if (self.firstConnectionAfterCrash) {
+        latestChange = [NSDate dateWithTimeIntervalSince1970:0]; 
+    } else {
+        latestChange = [self getLatestChangeDateForContactRelationships];
+    }
     // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
         for (NSDictionary * relationshipDict in changedRelationships) {
@@ -1090,7 +1113,12 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) updatePresences {
-    NSDate * latestChange = [self getLatestChangeDateForContactPresence];
+    NSDate * latestChange;
+    if (self.firstConnectionAfterCrash) {
+        latestChange = [NSDate dateWithTimeIntervalSince1970:0];
+    } else {
+        latestChange = [self getLatestChangeDateForContactPresence];
+    }
     // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
@@ -1114,15 +1142,18 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                 [self.delegate saveDatabase];
                 if (handler != nil) handler(nil);
             } else {
-                NSLog(@"ERROR: key not updated response keyid mismatch for contact: %@", theContact);
-                NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not updated response keyid mismatch for contact: %@", theContact];
+                NSLog(@"ERROR: key not updated, response keyid mismatch for contact id %@ nick %@", theContact.clientId, theContact.nickName);
+                NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not updated, response keyid mismatch for contact: %@ nick %@", theContact.clientId, theContact.nickName];
                 NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9912 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 if (handler != nil) handler(myError);
             }
         } else {
             // retry
-            [self fetchKeyForContact:theContact withKeyId:theId withCompletion:handler];
-            
+            // [self fetchKeyForContact:theContact withKeyId:theId withCompletion:handler];
+            NSLog(@"ERROR: could not fetch key with keyid %@ for contact id %@ nick %@", theId, theContact.clientId, theContact.nickName);
+            NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not fetch key with keyid %@ for contact: %@ nick %@", theId, theContact.clientId, theContact.nickName];
+            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9913 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            if (handler != nil) handler(myError);
         }
     }];
 }
@@ -1158,7 +1189,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             // is a group
             myContact.connectionStatus = @"group";
         }
-        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]]) {
+        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || self.firstConnectionAfterCrash) {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"] withCompletion:nil];
         }
@@ -1180,15 +1211,15 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     if (![myContact.avatarURL isEqualToString: theAvatarURL]) {
         if (theAvatarURL.length) {
             if (CONNECTION_TRACE) {NSLog(@"updateAvatarForContact, downloading avatar from URL %@", theAvatarURL);}
-            NSError * myError = nil;
-            [HXOBackend downloadDataFromURL:theAvatarURL withCompletion:^(NSData * data, NSError * error) {
+
+            [HXOBackend downloadDataFromURL:theAvatarURL inQueue:nil withCompletion:^(NSData * data, NSError * error) {
                 NSData * myNewAvatar = data;
-                if (myNewAvatar != nil) {
+                if (myNewAvatar != nil && error == nil) {
                     // NSLog(@"presenceUpdated, avatar downloaded");
                     myContact.avatar = myNewAvatar;
                     myContact.avatarURL = theAvatarURL;
                 } else {
-                    NSLog(@"presenceUpdated, avatar download of URL %@ failed, error=%@", theAvatarURL, myError);
+                    NSLog(@"presenceUpdated, avatar download of URL %@ failed, error=%@", theAvatarURL, error);
                 }
             }];
         } else {
@@ -1300,14 +1331,19 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) getGroups {
-    NSDate * latestChange = [self getLatestChangeDateForGroups];
-    // NSDate * latestChange = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
+    NSDate * latestChange;
+    if (self.firstConnectionAfterCrash) {
+        latestChange = [NSDate dateWithTimeIntervalSince1970:0];
+    } else {
+        latestChange = [self getLatestChangeDateForGroups];
+    }
     // NSLog(@"latest date %@", latestChange);
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
         if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
         for (NSDictionary * groupDict in changedGroups) {
             [self updateGroupHere: groupDict];
         }
+        [self finishFirstConnectionAfterCrash];
     }];
 }
 
@@ -2293,7 +2329,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     }];
 }
 
-- (void) hello:(NSNumber*) clientTime  handler:(HelloHandler) handler {
+- (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
 #ifdef FULL_HELLO
     NSDictionary *params = @{
@@ -2304,7 +2340,8 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                              @"systemVersion" : [UIDevice currentDevice].systemVersion,
                              @"clientName" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
                              @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
-                             @"clientLanguage" : NSLocalizedString(@"language_code", nil)
+                             @"clientLanguage" : NSLocalizedString(@"language_code", nil),
+                             @"clientCrashed" : @(hasCrashed)
                              };
 #else
     NSDictionary *params = @{ @"clientTime" : clientTime};
@@ -2321,7 +2358,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (void) hello {
     NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
-    [self hello:clientTime handler:^(NSDictionary * result) {
+    [self hello:clientTime crashFlag:self.firstConnectionAfterCrash handler:^(NSDictionary * result) {
         if (result != nil) {
             [self saveServerTime:[HXOBackend dateFromMillis:result[@"serverTime"]]];
         }
@@ -3123,7 +3160,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     [operation startRequest];
 }
 
-+ (void) downloadDataFromURL:(NSString*)fromURL withCompletion:(DataLoadedBlock)handler {
++ (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler {
     if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL  %@", fromURL );}
     
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:fromURL HTTPMethod:@"GET" parameters:nil];
@@ -3140,8 +3177,19 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                               NSLog(@"downloadDataFromURL response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
                           }
                           if (response.statusCode == 200) {
-                              if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL: ok");}
-                              handler(data,nil);
+                              if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL: response 200 ok");}
+                              if (data == nil || data.length == 0) {
+                                  NSLog(@"#WARNING: downloadDataFromURL: status ok, but response data ist empty, URL=%@", request.URL);
+                              }
+                              NSString * contentLength = response.allHeaderFields[@"Content-Length"];
+                              if (contentLength != nil && [contentLength integerValue] != data.length) {
+                                  NSString * myDescription = [NSString stringWithFormat:@"downloadDataFromURL content length mismatch, header Content-Lenght = %@, data length = %d, headers=%@", contentLength, data.length, response.allHeaderFields];
+                                  // NSLog(@"%@", myDescription);
+                                  NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.download" code: 931 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                                  handler(data, myError);
+                              } else {
+                                  handler(data,nil);
+                              }
                               
                           } else {
                               NSString * myDescription = [NSString stringWithFormat:@"downloadDataFromURL irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields];
@@ -3159,7 +3207,11 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                            [[HXOBackend instance] connection:connection willSendRequestForAuthenticationChallenge:challenge];
                        }
      ];
-    [operation startRequest];
+    if (queue == nil) {
+        [operation startRequest];
+    } else {
+        [queue enqueueOperation:operation];
+    }
 }
 
 

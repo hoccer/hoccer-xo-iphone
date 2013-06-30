@@ -18,6 +18,7 @@
 @class AppDelegate;
 @class Group;
 @class GroupMembership;
+@class GCNetworkQueue;
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^GenerateIdHandler)(NSString*);
@@ -65,6 +66,8 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 @property (atomic, strong) NSString *connectionInfo;
 
 @property (readonly, nonatomic) NSArray * certificates;
+
+@property BOOL firstConnectionAfterCrash;
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
@@ -139,7 +142,7 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
                        payloadStream:(NSInputStream*)stream
                              headers:(NSDictionary *)headers;
 
-+ (void) downloadDataFromURL:(NSString*)fromURL withCompletion:(DataLoadedBlock)handler;
++ (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler;
 + (HXOBackend*)instance;
 
 @end

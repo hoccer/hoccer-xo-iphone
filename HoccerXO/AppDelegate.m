@@ -30,6 +30,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #define CONNECTION_TRACE NO
+#define MIGRATION_DEBUG NO
 
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
@@ -71,6 +72,7 @@ static NSInteger validationErrorCount = 0;
     
     [self registerForRemoteNotifications];
     
+    [self checkForCrash];
     self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
 
     UIStoryboard *storyboard = nil;
@@ -108,6 +110,7 @@ static NSInteger validationErrorCount = 0;
     
     self.internetReachabilty = [GCNetworkReachability reachabilityForInternetConnection];
     [self.internetReachabilty startMonitoringNetworkReachabilityWithNotification];
+    
 
     if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         // TODO: jump to conversation
@@ -116,6 +119,9 @@ static NSInteger validationErrorCount = 0;
     
     [AppDelegate setDefaultAudioSession];
 
+    [self setLastActiveDate];
+
+    
     NSString * dumpRecordsForEntity = [[HXOUserDefaults standardUserDefaults] valueForKey: @"dumpRecordsForEntity"];
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
@@ -123,6 +129,29 @@ static NSInteger validationErrorCount = 0;
 
     return YES;
 }
+
+- (void) checkForCrash {
+    self.launchedAfterCrash = NO;
+    NSDate * lastActiveDate = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlastActiveDate]];
+    NSDate * lastDeactivationDate = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlastDeactivationDate]];
+    if (lastActiveDate != nil) {
+        if ([lastActiveDate timeIntervalSinceDate:lastDeactivationDate] > 0 || lastDeactivationDate == nil) {
+            NSLog(@"INFO: App has crashed since last launch, lastActiveDate %@, lastDeactivationDate %@", lastActiveDate, lastDeactivationDate);
+            self.launchedAfterCrash =YES;
+        }
+    }
+}
+
+- (void) setLastActiveDate {
+    NSDate * now = [NSDate date];
+    [[HXOUserDefaults standardUserDefaults] setValue:now forKey: [[Environment sharedEnvironment] suffixedString:kHXOlastActiveDate]];
+}
+
+- (void) setLastDeactivationDate {
+    NSDate * now = [NSDate date];
+    [[HXOUserDefaults standardUserDefaults] setValue:now forKey: [[Environment sharedEnvironment] suffixedString:kHXOlastDeactivationDate]];
+}
+
 
 + (void) setDefaultAudioSession {
     NSError * myError = nil;
@@ -257,6 +286,7 @@ static NSInteger validationErrorCount = 0;
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [self saveContext];
+    [self setLastActiveDate];
     [self updateUnreadMessageCountAndStop];
 }
 
@@ -264,6 +294,7 @@ static NSInteger validationErrorCount = 0;
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     [self.chatBackend start: NO];
+    [self setLastActiveDate];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -275,6 +306,7 @@ static NSInteger validationErrorCount = 0;
 {
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+    [self setLastDeactivationDate];
 }
 
 #pragma mark - Core Data stack
@@ -436,7 +468,7 @@ static NSInteger validationErrorCount = 0;
 {
     //NSURL *modelURL = [[NSBundle mainBundle] URLForResource:modelName withExtension:@"mom"];
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:modelName withExtension:@"mom" subdirectory:@"HoccerXO.momd"];
-    NSLog(@"modelURL=%@", modelURL);
+    if (MIGRATION_DEBUG) NSLog(@"modelURL=%@", modelURL);
     NSManagedObjectModel * myManagedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return myManagedObjectModel;
 }
@@ -485,10 +517,10 @@ static NSInteger validationErrorCount = 0;
     // If Core Data cannot create an inferred mapping model, return NO.
     
     if (!mappingModel) {
-        NSLog(@"canAutoMigrateFrom: Error=%@", outError);
+        if (MIGRATION_DEBUG) NSLog(@"canAutoMigrateFrom: Error=%@", outError);
         return NO;
     }
-    NSLog(@"Mapping model = %@", mappingModel);
+    if (MIGRATION_DEBUG) NSLog(@"Mapping model = %@", mappingModel);
     return YES;
 }
 
@@ -513,13 +545,13 @@ static NSInteger validationErrorCount = 0;
     NSArray * myModelUrls = [self urlsForAllModelVersions];
     NSManagedObjectModel * result = nil;
     for (NSURL * url in myModelUrls) {
-        NSLog(@"Checking model %@", url);
+        if (MIGRATION_DEBUG) NSLog(@"Checking model %@", url);
         NSManagedObjectModel * myModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
         if ([self compatibilityOfStore:storeURL withModel:myModel]) {
             result = myModel;
-            NSLog(@"is compatible");
+            if (MIGRATION_DEBUG) NSLog(@"is compatible");
         } else {
-            NSLog(@"not compatible");
+            if (MIGRATION_DEBUG) NSLog(@"not compatible");
         }
     }
     return result;
@@ -534,7 +566,7 @@ static NSInteger validationErrorCount = 0;
     NSDictionary *destinationStoreOptions = nil;
     NSError *myError = nil;
     
-    NSLog(@"mappingModel = %@", mappingModel);
+    if (MIGRATION_DEBUG) NSLog(@"mappingModel = %@", mappingModel);
     
     BOOL ok = [migrationManager migrateStoreFromURL:sourceStoreURL
                                                type:NSSQLiteStoreType
@@ -582,7 +614,7 @@ static NSInteger validationErrorCount = 0;
         }
     }
     
-    NSLog(@"attributes=%@",[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError]);
+    if (MIGRATION_DEBUG) NSLog(@"attributes=%@",[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError]);
     if (myError != nil) {
         NSLog(@"Error getting attributes from %@, error=%@", myPath, myError);
     }
@@ -611,7 +643,7 @@ static NSInteger validationErrorCount = 0;
                 NSLog(@"Can not automigrate, need special migration");
                 return nil;
             }
-            NSLog(@"Automigration possible");
+            if (MIGRATION_DEBUG) NSLog(@"Automigration possible");
             migrationOptions = @{NSMigratePersistentStoresAutomaticallyOption : @(YES),
                                  NSInferMappingModelAutomaticallyOption : @(YES)};
             
