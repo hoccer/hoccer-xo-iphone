@@ -15,9 +15,11 @@
 
 @end
 
-@interface HXOActionSheet : HXOSheetView
+@interface HXOActionSheet : HXOSheetView <UITableViewDataSource, UITableViewDelegate>
 {
     NSMutableArray * _buttonTitles;
+    NSMutableArray * _buttonViews;
+    UITableView    * _buttonTable;
 }
 
 @property (nonatomic,assign) id<HXOActionSheetDelegate> delegate;
@@ -36,5 +38,6 @@
 
 - (NSInteger) addButtonWithTitle: (NSString*) title;
 - (NSString *)buttonTitleAtIndex:(NSInteger)buttonIndex;
+- (void)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated;
 
 @end

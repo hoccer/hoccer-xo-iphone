@@ -10,6 +10,7 @@
 
 static const CGFloat kHXOASHPadding = 20;
 static const CGFloat kHXOASVPadding = 10;
+static const CGFloat kHXOASAnimationDuration = 0.3;
 
 @interface GradientSheetView : UIView
 {
@@ -47,18 +48,22 @@ static const CGFloat kHXOASVPadding = 10;
     [self addSubview: _coverView];
 
 
-    CGRect frame = rootView.bounds;
-    frame.size.height = 150;
-    frame.origin.y += rootView.bounds.size.height;
-    _actionView = [[GradientSheetView alloc] initWithFrame: frame style: self.sheetStyle];
-    //_actionView.backgroundColor = [UIColor clearColor];
+    _actionView = [[GradientSheetView alloc] initWithFrame: rootView.bounds style: self.sheetStyle];
     _actionView.opaque = NO;
     [self addSubview: _actionView];
 
-    _titleLabel = [self createTitleLabel/*OfWidth: rootView.bounds.size.width*/];
+    _titleLabel = [self createTitleLabel];
     [_actionView addSubview: _titleLabel];
+    [self layoutTitleLabel];
 
-    [UIView animateWithDuration: 0.3 animations:^{
+    // TODO: duplicate with layoutActionSheet
+    CGRect frame = rootView.bounds;
+    CGFloat height = [self controlSize: [self maxControlSize]].height;
+    frame.size.height = height + _titleLabel.frame.origin.y + _titleLabel.frame.size.height + 3 * kHXOASVPadding;
+    frame.origin.y = rootView.bounds.size.height;
+    _actionView.frame = frame;
+    
+    [UIView animateWithDuration: kHXOASAnimationDuration animations:^{
         _coverView.alpha = 0.5;
         CGRect frame = _actionView.frame;
         frame.origin.y -= frame.size.height;
@@ -67,12 +72,6 @@ static const CGFloat kHXOASVPadding = 10;
 }
 
 - (UILabel*) createTitleLabel/*OfWidth: (CGFloat) width*/ {
-/*
-    CGRect frame;
-    frame.origin.x = kHXOASHPadding;
-    frame.origin.y = kHXOASVPadding;
-    CGFloat maxWidth = frame.size.width = width - 2 * kHXOASHPadding;
- */
     UILabel * label = [[UILabel alloc] initWithFrame: CGRectZero/*frame*/];
     label.textColor = [UIColor whiteColor];
     label.text = self.title;
@@ -80,14 +79,9 @@ static const CGFloat kHXOASVPadding = 10;
     label.numberOfLines = 0;
     label.backgroundColor = [UIColor /*orangeColor*/ clearColor];
     label.textAlignment = NSTextAlignmentCenter;
-/*
-    [label sizeToFit];
-    if (label.frame.size.width < maxWidth) {
-        frame.size = label.frame.size;
-        frame.origin.x = 0.5 * (width - label.frame.size.width);
-        label.frame = frame;
-    }
- */
+    label.font = [UIFont systemFontOfSize: 14];
+    label.shadowColor = [UIColor blackColor];
+    label.shadowOffset = CGSizeMake(0, -1);
     return label;
 }
 
@@ -98,10 +92,33 @@ static const CGFloat kHXOASVPadding = 10;
 
 - (void) layoutSubviews {
     [super layoutSubviews];
+    [self layoutTitleLabel];
+    [self layoutActionView];
+    CGRect controlFrame;
+    controlFrame.origin.x = kHXOASHPadding;
+    controlFrame.origin.y = _titleLabel.frame.origin.y + _titleLabel.frame.size.height + kHXOASVPadding;
+    controlFrame.size = [self maxControlSize];
+    [self layoutControls: _actionView maxFrame: controlFrame];
+}
+
+- (void) layoutActionView {
+    UIView * rootView = self.window.rootViewController.view;
+    CGRect frame = rootView.bounds;
+    CGFloat height = [self controlSize: [self maxControlSize]].height;
+    height = height + _titleLabel.frame.origin.y + _titleLabel.frame.size.height + 3 * kHXOASVPadding;
+    if (height != frame.size.height) {
+        frame.size.height = height;
+        frame.origin.y = rootView.bounds.size.height - frame.size.height;
+    }
+    _actionView.frame = frame;
+}
+
+- (void) layoutTitleLabel {
     CGRect frame;
     frame.origin.x = kHXOASHPadding;
     frame.origin.y = kHXOASVPadding;
     CGFloat maxWidth = frame.size.width = self.bounds.size.width - 2 * kHXOASHPadding;
+    frame.size.height = 0;
     _titleLabel.text = _title;
     _titleLabel.frame = frame;
     [_titleLabel sizeToFit];
@@ -110,8 +127,38 @@ static const CGFloat kHXOASVPadding = 10;
         frame.origin.x = 0.5 * (self.bounds.size.width - _titleLabel.frame.size.width);
         _titleLabel.frame = frame;
     }
+}
 
-    //_coverView.frame = self.window.rootViewController.view.bounds;
+- (CGSize) maxControlSize {
+    return CGSizeMake(self.bounds.size.width - 2 * kHXOASHPadding,
+                      self.bounds.size.height - (_titleLabel.frame.origin.y + _titleLabel.frame.size.height + 3 * kHXOASVPadding));
+}
+
+- (CGFloat) layoutControls: (UIView*) container maxFrame:(CGRect) maxFrame {
+    return 0;
+}
+
+- (CGSize)  controlSize: (CGSize) size {
+    return CGSizeZero;
+}
+
+- (void) dismissAnimated: (BOOL) animated completion: (void(^)()) completion {
+    void(^done)(void) = ^() {
+        [self removeFromSuperview];
+        completion();
+    };
+    if (animated) {
+        [UIView animateWithDuration: kHXOASAnimationDuration animations:^{
+            _coverView.alpha = 0.0;
+            CGRect frame = _actionView.frame;
+            frame.origin.y = self.bounds.size.height;
+            _actionView.frame = frame;
+        } completion:^(BOOL finished) {
+            done();
+        }];
+    } else {
+        done();
+    }
 }
 
 @end
@@ -138,9 +185,21 @@ static const CGFloat kHXOASVPadding = 10;
     CGContextSaveGState(context);
     CGContextDrawLinearGradient(context, blackTranslucent, CGPointMake(93, 0), CGPointMake(93, 50), kCGGradientDrawsAfterEndLocation);
     CGContextRestoreGState(context);    
-    
+
+    [self drawSeparatorAtY: 0.5 withColor: [UIColor blackColor]];
+    [self drawSeparatorAtY: 1.5 withColor: [UIColor colorWithWhite: 0.6 alpha: 1.0]];
+
     //// Cleanup
     CGGradientRelease(blackTranslucent);
+}
+
+- (void) drawSeparatorAtY: (CGFloat) y withColor: (UIColor*) color {
+    UIBezierPath* bezierPath = [UIBezierPath bezierPath];
+    [bezierPath moveToPoint: CGPointMake(0, y)];
+    [bezierPath addLineToPoint: CGPointMake(self.bounds.size.width, y)];
+    [color setStroke];
+    bezierPath.lineWidth = 1;
+    [bezierPath stroke];
 }
 
 - (CGGradientRef) gradient {
@@ -148,21 +207,38 @@ static const CGFloat kHXOASVPadding = 10;
 
     
     //// Color Declarations
-    UIColor* gradientColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.6];
-    UIColor* gradientColor2 = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.6];
+    UIColor* gradientColor0;
+    UIColor* gradientColor1;
+    UIColor* gradientColor2;
+
+    CGFloat alpha = _style == HXOSheetStyleBlackTranslucent ? 0.75 : 1.0;
+    switch (_style) {
+        case HXOSheetStyleBlackTranslucent:
+        case HXOSheetStyleBlackOpaque:
+            gradientColor0 = [UIColor colorWithRed: 0.5 green: 0.5 blue: 0.5 alpha: alpha];
+            gradientColor1 = [UIColor colorWithRed: 0.3 green: 0.3 blue: 0.3 alpha: alpha];
+            gradientColor2 = [UIColor colorWithRed: 0.0 green: 0.0 blue: 0.0 alpha: alpha];
+            break;
+        case HXOSheetStyleDefault:
+        default:
+            gradientColor0 = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: alpha];
+            gradientColor1 = [UIColor colorWithRed: 0.789 green: 0.794 blue: 0.864 alpha: alpha];
+            gradientColor2 = [UIColor colorWithRed: 0.577 green: 0.588 blue: 0.729 alpha: alpha];
+            break;
+    }
+
 
     //// Gradient Declarations
-    NSArray* blackTranslucentColors = [NSArray arrayWithObjects:
-                                       (id)gradientColor2.CGColor,
-                                       (id)[UIColor colorWithRed: 0.5 green: 0.5 blue: 0.5 alpha: 0.6].CGColor,
-                                       (id)gradientColor.CGColor, nil];
-    CGFloat blackTranslucentLocations[] = {0, 0.12, 1};
+    NSArray* colors = @[(id)gradientColor0.CGColor,
+                        (id)gradientColor1.CGColor,
+                        (id)gradientColor2.CGColor];
+    CGFloat locations[] = {0, 0.3, 1};
 
-    CGGradientRef blackTranslucent = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)blackTranslucentColors, blackTranslucentLocations);
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)colors, locations);
 
     CGColorSpaceRelease(colorSpace);
 
-    return blackTranslucent;
+    return gradient;
 }
 
 @end

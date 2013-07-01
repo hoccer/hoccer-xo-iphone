@@ -31,4 +31,8 @@ typedef enum HXOSheetStyles {
 
 - (void)showInView:(UIView *)view;
 
+- (CGFloat) layoutControls: (UIView*) container maxFrame: (CGRect) maxFrame;
+- (CGSize)  controlSize: (CGSize) size;
+
+- (void) dismissAnimated: (BOOL) animated completion: (void(^)()) completion;
 @end
