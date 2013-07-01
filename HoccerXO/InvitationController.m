@@ -70,6 +70,11 @@ static InvitationController * _sharedInvitationController;
         channel.handler = @selector(acceptInviteCode);
         [self.invitationChannels addObject: channel];
 
+        channel = [[InvitationChannel alloc] init];
+        channel.localizedButtonTitle = @"Fnurbel";
+        channel.handler = @selector(acceptInviteCode);
+        [self.invitationChannels addObject: channel];
+
     }
     return self;
 }

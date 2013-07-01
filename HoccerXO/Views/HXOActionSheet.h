@@ -20,6 +20,8 @@
     NSMutableArray * _buttonTitles;
     NSMutableArray * _buttonViews;
     UITableView    * _buttonTable;
+    UIButton       * _tableModeCancelButton;
+    UIButton       * _tableModelDestructiveButton;
 }
 
 @property (nonatomic,assign) id<HXOActionSheetDelegate> delegate;
