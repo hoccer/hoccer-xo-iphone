@@ -64,7 +64,7 @@ static InvitationController * _sharedInvitationController;
         channel.localizedButtonTitle = NSLocalizedString(@"Scan or Enter Code", @"Invite Actionsheet Button Title");
         channel.handler = @selector(acceptInviteCode);
         [self.invitationChannels addObject: channel];
-
+/*
         channel = [[InvitationChannel alloc] init];
         channel.localizedButtonTitle = @"Gnurbel";
         channel.handler = @selector(acceptInviteCode);
@@ -74,6 +74,7 @@ static InvitationController * _sharedInvitationController;
         channel.localizedButtonTitle = @"Fnurbel";
         channel.handler = @selector(acceptInviteCode);
         [self.invitationChannels addObject: channel];
+ */
 
     }
     return self;
