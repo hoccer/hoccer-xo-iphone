@@ -10,7 +10,7 @@
 
 static const CGFloat kHXOASHPadding = 20;
 static const CGFloat kHXOASVPadding = 10;
-static const CGFloat kHXOASAnimationDuration = 0.3;
+static const CGFloat kHXOASAnimationDuration = 0.2;
 
 @interface GradientSheetView : UIView
 {

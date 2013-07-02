@@ -13,6 +13,10 @@
 static const CGFloat kHXOASButtonSpacing = 10;
 static const CGFloat kHXOASCancelButtonSpacing = 20;
 
+@interface HXOASOtherButtonCell : UITableViewCell
+
+@end
+
 @implementation HXOActionSheet
 
 - (id) initWithTitle:(NSString *)title delegate:(id <HXOActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ...
@@ -47,6 +51,8 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
         _destructiveButtonBackgroundImage = [[UIImage imageNamed:@"actionsheet_btn_red"] stretchableImageWithLeftCapWidth: capWidth topCapHeight: 0];
         _cancelButtonBackgroundImage      = [[UIImage imageNamed: @"actionsheet_btn_dark"] stretchableImageWithLeftCapWidth: capWidth topCapHeight: 0];
         _otherButtonBackgroundImage       = [[UIImage imageNamed: @"actionsheet_btn_light"] stretchableImageWithLeftCapWidth: capWidth topCapHeight: 0];
+
+        _otherButtonCellClass = [HXOASOtherButtonCell class];
     }
     return self;
 }
@@ -73,6 +79,14 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
 - (void) setDestructiveButtonIndex:(NSInteger)destructiveButtonIndex {
     _destructiveButtonIndex = destructiveButtonIndex;
     [self updateFirstOtherButtonIndex];
+}
+
+- (void) setActionSheetStyle:(HXOSheetStyle)actionSheetStyle {
+    self.sheetStyle = actionSheetStyle;
+}
+
+- (HXOSheetStyle) actionSheetStyle {
+    return self.sheetStyle;
 }
 
 - (void) updateFirstOtherButtonIndex {
@@ -133,7 +147,10 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
         _buttonTable = [[UITableView alloc] initWithFrame:tableFrame style: UITableViewStylePlain];
         _buttonTable.layer.cornerRadius = 8.0;
         _buttonTable.layer.borderWidth = 5;
-        [_buttonTable registerClass: [UITableViewCell class] forCellReuseIdentifier: @"cell"];
+        _buttonTable.backgroundColor = [UIColor colorWithWhite: 0.8 alpha: 1.0];
+        _buttonTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _buttonTable.layer.masksToBounds = YES;
+        [_buttonTable registerClass: self.otherButtonCellClass forCellReuseIdentifier: @"otherButtonCell"];
         _buttonTable.delegate = self;
         _buttonTable.dataSource = self;
         [container addSubview: _buttonTable];
@@ -221,7 +238,7 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell * cell = [_buttonTable dequeueReusableCellWithIdentifier:@"cell" forIndexPath: indexPath];
+    UITableViewCell * cell = [_buttonTable dequeueReusableCellWithIdentifier:@"otherButtonCell" forIndexPath: indexPath];
     NSInteger buttonIndex = [self buttonIndexFromIndexPath: indexPath];
     cell.textLabel.text = _buttonTitles[buttonIndex];
     return cell;
@@ -241,6 +258,49 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
         buttonIndex += 1;
     }
     return buttonIndex;
+}
+
+@end
+
+@implementation HXOASOtherButtonCell
+
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self != nil) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void) commonInit {
+    self.textLabel.textAlignment = NSTextAlignmentCenter;
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    CGRect labelFrame = self.bounds;
+    labelFrame.origin.y += 2;
+    labelFrame.size.height -= 4;
+    self.textLabel.frame = labelFrame;
+}
+
+- (void) drawRect:(CGRect)rect {
+    [super drawRect: rect];
+
+    CGFloat y = 0.5;
+    UIBezierPath * line = [UIBezierPath bezierPath];
+    [line moveToPoint: CGPointMake(0, y)];
+    [line addLineToPoint: CGPointMake(self.frame.size.width, y)];
+    [[UIColor colorWithWhite: 0.9 alpha: 1.0] setStroke];
+    [line stroke];
+
+    y = self.frame.size.height - 0.5;
+    line = [UIBezierPath bezierPath];
+    [line moveToPoint: CGPointMake(0, y)];
+    [line addLineToPoint: CGPointMake(self.frame.size.width, y)];
+    [[UIColor colorWithWhite: 0.5 alpha: 1.0] setStroke];
+    [line stroke];
+
 }
 
 @end

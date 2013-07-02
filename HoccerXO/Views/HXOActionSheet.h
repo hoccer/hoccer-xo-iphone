@@ -10,6 +10,17 @@
 
 @class HXOActionSheet;
 
+#define USE_HXO_ACTION_SHEET
+
+#ifdef USE_HXO_ACTION_SHEET
+typedef HXOActionSheet ActionSheet;
+#   define ActionSheetDelegate HXOActionSheetDelegate
+#else
+typedef UIActionSheet ActionSheet;
+#   define ActionSheetDelegate UIActionSheetDelegate
+#endif
+
+
 @protocol HXOActionSheetDelegate <NSObject>
 - (void)actionSheet:(HXOActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 
@@ -34,6 +45,9 @@
 @property (nonatomic,strong) UIImage * destructiveButtonBackgroundImage UI_APPEARANCE_SELECTOR;
 @property (nonatomic,strong) UIImage * cancelButtonBackgroundImage      UI_APPEARANCE_SELECTOR;
 @property (nonatomic,strong) UIImage * otherButtonBackgroundImage       UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic,strong) Class otherButtonCellClass;
+@property (nonatomic,assign) HXOSheetStyle actionSheetStyle; // compatibility property.
 
 
 - (id)initWithTitle:(NSString *)title delegate:(id <HXOActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ...;
