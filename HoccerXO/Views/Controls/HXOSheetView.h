@@ -35,4 +35,7 @@ typedef enum HXOSheetStyles {
 - (CGSize)  controlSize: (CGSize) size;
 
 - (void) dismissAnimated: (BOOL) animated completion: (void(^)()) completion;
+
+- (void) didFinishInAnimation;
+
 @end

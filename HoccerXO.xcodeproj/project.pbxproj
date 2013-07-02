@@ -253,6 +253,7 @@
 		63C413C316EA3549004E1F6D /* bg_message-count-red.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C413BF16EA3549004E1F6D /* bg_message-count-red.png */; };
 		63C413C416EA3549004E1F6D /* bg_message-count-red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C413C016EA3549004E1F6D /* bg_message-count-red@2x.png */; };
 		63C413C716EA397F004E1F6D /* AssetStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C413C616EA397E004E1F6D /* AssetStore.m */; };
+		63CD585E1782E02E00BE7627 /* HXOIconSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CD585D1782E02E00BE7627 /* HXOIconSheet.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 		63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE121722EB89000F9E53 /* UserProfile.m */; };
 		63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
@@ -789,6 +790,8 @@
 		63C413C016EA3549004E1F6D /* bg_message-count-red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_message-count-red@2x.png"; sourceTree = "<group>"; };
 		63C413C516EA397E004E1F6D /* AssetStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetStore.h; sourceTree = "<group>"; };
 		63C413C616EA397E004E1F6D /* AssetStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetStore.m; sourceTree = "<group>"; };
+		63CD585C1782E02E00BE7627 /* HXOIconSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOIconSheet.h; sourceTree = "<group>"; };
+		63CD585D1782E02E00BE7627 /* HXOIconSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOIconSheet.m; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		63D8EE111722EB89000F9E53 /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
 		63D8EE121722EB89000F9E53 /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
@@ -1092,15 +1095,17 @@
 			path = GroupView;
 			sourceTree = "<group>";
 		};
-		633A9B18177B21A700E066EF /* Controlls */ = {
+		633A9B18177B21A700E066EF /* Controls */ = {
 			isa = PBXGroup;
 			children = (
 				633A9B24177B3BA900E066EF /* HXOActionSheet.h */,
 				633A9B25177B3BA900E066EF /* HXOActionSheet.m */,
 				633A9B26177B3BA900E066EF /* HXOSheetView.h */,
 				633A9B27177B3BA900E066EF /* HXOSheetView.m */,
+				63CD585C1782E02E00BE7627 /* HXOIconSheet.h */,
+				63CD585D1782E02E00BE7627 /* HXOIconSheet.m */,
 			);
-			name = Controlls;
+			path = Controls;
 			sourceTree = "<group>";
 		};
 		63540A9316E61B420087D24E /* Assets */ = {
@@ -1686,7 +1691,7 @@
 		63D4916716CAA17D00FD395F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				633A9B18177B21A700E066EF /* Controlls */,
+				633A9B18177B21A700E066EF /* Controls */,
 				E9495573171C139F00FE2E1F /* AttachmentView.h */,
 				E9495574171C139F00FE2E1F /* AttachmentView.m */,
 				637847A816F2864E00DE03C2 /* AttachmentViewFactory.h */,
@@ -2428,6 +2433,7 @@
 				633A999B1779D23900E066EF /* HXOSideMenuViewController.m in Sources */,
 				633A9B28177B3BA900E066EF /* HXOActionSheet.m in Sources */,
 				633A9B29177B3BA900E066EF /* HXOSheetView.m in Sources */,
+				63CD585E1782E02E00BE7627 /* HXOIconSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

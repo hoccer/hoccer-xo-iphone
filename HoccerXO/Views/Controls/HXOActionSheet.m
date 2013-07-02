@@ -57,6 +57,12 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
     return self;
 }
 
+- (void)showInView:(UIView *)view {
+    [super showInView: view];
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
 - (NSInteger) addButtonWithTitle: (NSString*) title {
     NSInteger index = _buttonTitles.count;
     [_buttonTitles addObject: title];
@@ -151,6 +157,7 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
         _buttonTable.separatorStyle = UITableViewCellSeparatorStyleNone;
         _buttonTable.layer.masksToBounds = YES;
         [_buttonTable registerClass: self.otherButtonCellClass forCellReuseIdentifier: @"otherButtonCell"];
+        _buttonTable.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 5);
         _buttonTable.delegate = self;
         _buttonTable.dataSource = self;
         [container addSubview: _buttonTable];
@@ -221,7 +228,21 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
     if ([self.delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
         [self.delegate actionSheet: self clickedButtonAtIndex: buttonIndex];
     }
-    [self dismissAnimated: animated completion:^{}];
+    [self dismissAnimated: animated completion:^{
+        [[NSNotificationCenter defaultCenter] removeObserver: self];
+    }];
+}
+
+- (void) didFinishInAnimation {
+    if (_buttonTable != nil) {
+        [_buttonTable flashScrollIndicators];
+    }
+}
+
+- (void) didRotate: (NSNotification*) notification {
+    if (_buttonTable != nil) {
+        [_buttonTable flashScrollIndicators];
+    }
 }
 
 #pragma mark - Table View Delegate and Datasource

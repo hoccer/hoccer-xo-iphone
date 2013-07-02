@@ -68,6 +68,8 @@ static const CGFloat kHXOASAnimationDuration = 0.2;
         CGRect frame = _actionView.frame;
         frame.origin.y -= frame.size.height;
         _actionView.frame = frame;
+    } completion: ^(BOOL completed) {
+        [self didFinishInAnimation];
     }];
 }
 
@@ -159,6 +161,9 @@ static const CGFloat kHXOASAnimationDuration = 0.2;
     } else {
         done();
     }
+}
+
+- (void) didFinishInAnimation {
 }
 
 @end
