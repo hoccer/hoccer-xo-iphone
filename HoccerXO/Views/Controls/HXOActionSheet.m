@@ -34,12 +34,14 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
         }
         va_list otherButtons;
         va_start(otherButtons, otherButtonTitles);
-        NSString * buttonTitle;
-        while (otherButtonTitles && (buttonTitle = va_arg(otherButtons, NSString * ))) {
-            if (_firstOtherButtonIndex == -1) {
-                _firstOtherButtonIndex = _buttonTitles.count;
-            }
-            [_buttonTitles addObject: buttonTitle];
+        if (otherButtonTitles != nil) {
+            NSString * buttonTitle = otherButtonTitles;
+            do {
+                if (_firstOtherButtonIndex == -1) {
+                    _firstOtherButtonIndex = _buttonTitles.count;
+                }
+                [_buttonTitles addObject: buttonTitle];
+            } while ((buttonTitle = va_arg(otherButtons, NSString * )));
         }
         va_end(otherButtons);
         if (cancelButtonTitle != nil) {
