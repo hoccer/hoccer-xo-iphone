@@ -15,7 +15,7 @@
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
-#import "CustomNavigationBar.h"
+#import "HXONavigationBar.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "HXOGroupedTableViewController.h"
 #import "NSString+UUID.h"
@@ -70,7 +70,7 @@ typedef enum ActionSheetTags {
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
+    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
 
     [self configureMode];
 
@@ -104,7 +104,7 @@ typedef enum ActionSheetTags {
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear: animated];
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
+    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
     if (_contact != nil) {
         [_contact removeObserver: self forKeyPath: @"avatarImage"];
         for (ProfileItem* item in _allProfileItems) {
@@ -334,7 +334,7 @@ typedef enum ActionSheetTags {
             } else {
                 self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
             }
-            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
+            ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
             break;
         case ProfileViewModeContactProfile:
             self.navigationItem.rightBarButtonItem = nil;
@@ -414,7 +414,7 @@ typedef enum ActionSheetTags {
     if (editing) {
         if (_mode != ProfileViewModeFirstRun) {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
-            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
+            ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
         }
         _canceled = NO;
         for (ProfileItem* item in _allProfileItems) {
@@ -425,7 +425,7 @@ typedef enum ActionSheetTags {
         if ( ! _canceled) {
             [self save];
         }
-        ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
+        ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
         self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
         for (ProfileItem* item in _allProfileItems) {
             [item removeObserver: self forKeyPath: @"valid"];
@@ -710,7 +710,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) makeLeftButtonFixedWidth {
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
+    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
 }
 
 #pragma mark - Avatar Handling

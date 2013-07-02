@@ -18,7 +18,7 @@
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
 #import "GroupAdminCell.h"
-#import "CustomNavigationBar.h"
+#import "HXONavigationBar.h"
 
 #define GROUPVIEW_DEBUG NO
 
@@ -199,7 +199,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         NSLog(@"setupNavigationButtons: unhandled mode %d", _mode);
     }
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = self.navigationItem.rightBarButtonItem != nil;
+    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleRightButton = self.navigationItem.rightBarButtonItem != nil;
 
 }
 

@@ -20,7 +20,7 @@
 		6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6316D68E171EEC0A007441D9 /* libObjCSRP.a */; };
 		6317259A177089230070823C /* PerforatedPlateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63172599177089230070823C /* PerforatedPlateView.m */; };
 		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
-		631F6CE9170AF67300FB28D5 /* CustomNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */; };
+		631F6CE9170AF67300FB28D5 /* HXONavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CE8170AF67300FB28D5 /* HXONavigationBar.m */; };
 		6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* InsetImageView.m */; };
 		6327EAB31716F06600AF75E1 /* user_defaults_cell_bg_first.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAAB1716F06600AF75E1 /* user_defaults_cell_bg_first.png */; };
 		6327EAB41716F06600AF75E1 /* user_defaults_cell_bg_first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAAC1716F06600AF75E1 /* user_defaults_cell_bg_first@2x.png */; };
@@ -480,8 +480,8 @@
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ScaleAndCrop.h"; sourceTree = "<group>"; };
 		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
-		631F6CE7170AF67200FB28D5 /* CustomNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationBar.h; sourceTree = "<group>"; };
-		631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationBar.m; sourceTree = "<group>"; };
+		631F6CE7170AF67200FB28D5 /* HXONavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXONavigationBar.h; sourceTree = "<group>"; };
+		631F6CE8170AF67300FB28D5 /* HXONavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXONavigationBar.m; sourceTree = "<group>"; };
 		6320D7CB16E0C79A00E58478 /* InsetImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetImageView.h; sourceTree = "<group>"; };
 		6320D7CC16E0C79A00E58478 /* InsetImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsetImageView.m; sourceTree = "<group>"; };
 		6327EAAB1716F06600AF75E1 /* user_defaults_cell_bg_first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_defaults_cell_bg_first.png; sourceTree = "<group>"; };
@@ -1691,7 +1691,6 @@
 		63D4916716CAA17D00FD395F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				633A9B18177B21A700E066EF /* Controls */,
 				E9495573171C139F00FE2E1F /* AttachmentView.h */,
 				E9495574171C139F00FE2E1F /* AttachmentView.m */,
 				637847A816F2864E00DE03C2 /* AttachmentViewFactory.h */,
@@ -1706,18 +1705,19 @@
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 				6330490216FC99820045E64E /* ContactQuickListViewCells.h */,
 				6330490316FC99820045E64E /* ContactQuickListViewCells.m */,
+				633A9B18177B21A700E066EF /* Controls */,
 				6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */,
 				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
-				631F6CE7170AF67200FB28D5 /* CustomNavigationBar.h */,
-				631F6CE8170AF67300FB28D5 /* CustomNavigationBar.m */,
 				633462AD174FCA3C008D98FC /* GroupAdminCell.h */,
 				633462AE174FCA3C008D98FC /* GroupAdminCell.m */,
 				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
 				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 				633129D516F95220008F5B04 /* GrowingTextView.h */,
 				633129D616F95220008F5B04 /* GrowingTextView.m */,
+				631F6CE7170AF67200FB28D5 /* HXONavigationBar.h */,
+				631F6CE8170AF67300FB28D5 /* HXONavigationBar.m */,
 				63AF819317471EFB00D007E3 /* HXONavigationItem.h */,
 				63AF819417471EFB00D007E3 /* HXONavigationItem.m */,
 				63DC01831715205300609513 /* HXOSwitch.h */,
@@ -2360,7 +2360,7 @@
 				63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */,
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
-				631F6CE9170AF67300FB28D5 /* CustomNavigationBar.m in Sources */,
+				631F6CE9170AF67300FB28D5 /* HXONavigationBar.m in Sources */,
 				636D3FFA170F370E00304EDF /* InviteCodeViewController.mm in Sources */,
 				636D400317106EC000304EDF /* Environment.m in Sources */,
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,

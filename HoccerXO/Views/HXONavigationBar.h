@@ -10,7 +10,7 @@
 
 @class CAShapeLayer;
 
-@interface CustomNavigationBar : UINavigationBar
+@interface HXONavigationBar : UINavigationBar
 {
     CAShapeLayer * _mask;
 }

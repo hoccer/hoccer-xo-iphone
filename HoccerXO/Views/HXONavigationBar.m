@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "CustomNavigationBar.h"
+#import "HXONavigationBar.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -15,7 +15,7 @@ static const CGFloat kButtonColumnWidth = 63;
 static const CGFloat kButtonXOffset = 0.5 * (kButtonColumnWidth - kButtonWidth);
 
 
-@implementation CustomNavigationBar
+@implementation HXONavigationBar
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder: aDecoder];
