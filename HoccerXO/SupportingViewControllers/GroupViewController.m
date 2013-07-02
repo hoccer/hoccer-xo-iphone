@@ -239,7 +239,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             }
         }
     }
-    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle: title
+    ActionSheet * actionSheet = [[ActionSheet alloc] initWithTitle: title
                                                               delegate: self
                                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                                 destructiveButtonTitle: destructiveButtonTitle
@@ -248,7 +248,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [actionSheet showInView: self.view];
 }
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void) actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"actionSheet: clickedButtonAtIndex %d",buttonIndex);
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: set flag to destroy group");

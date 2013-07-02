@@ -30,9 +30,6 @@ static InvitationController * _sharedInvitationController;
 
 + (void) initialize {
     _sharedInvitationController = [[InvitationController alloc] init];
-#ifdef USE_HXO_ACTION_SHEET
-    //[[HXOActionSheet appearance] setOtherButtonBackgroundImage: [UIImage imageNamed: @"actionsheet_btn_light"]];
-#endif
 }
 
 + (id) sharedInvitationController {
@@ -64,7 +61,8 @@ static InvitationController * _sharedInvitationController;
         channel.localizedButtonTitle = NSLocalizedString(@"Scan or Enter Code", @"Invite Actionsheet Button Title");
         channel.handler = @selector(acceptInviteCode);
         [self.invitationChannels addObject: channel];
-/*
+
+        /* action sheet test dummy buttons
         channel = [[InvitationChannel alloc] init];
         channel.localizedButtonTitle = @"Gnurbel";
         channel.handler = @selector(acceptInviteCode);
@@ -74,7 +72,7 @@ static InvitationController * _sharedInvitationController;
         channel.localizedButtonTitle = @"Fnurbel";
         channel.handler = @selector(acceptInviteCode);
         [self.invitationChannels addObject: channel];
- */
+         */
 
     }
     return self;
@@ -87,11 +85,8 @@ static InvitationController * _sharedInvitationController;
                                                cancelButtonTitle: nil
                                           destructiveButtonTitle: nil
                                                otherButtonTitles: nil];
-#ifdef USE_HXO_ACTION_SHEET
-    sheet.sheetStyle = HXOSheetStyleBlackTranslucent;
-#else
+
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-#endif
     for (InvitationChannel * channel in self.invitationChannels) {
         [sheet addButtonWithTitle: channel.localizedButtonTitle];
     }
@@ -100,7 +95,7 @@ static InvitationController * _sharedInvitationController;
     [sheet showInView: viewController.view];
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
     }

@@ -12,16 +12,6 @@
 #import <MessageUI/MessageUI.h>
 #import "HXOActionSheet.h"
 
-#define USE_HXO_ACTION_SHEET
-
-#ifdef USE_HXO_ACTION_SHEET
-#   define ActionSheet HXOActionSheet
-#   define ActionSheetDelegate HXOActionSheetDelegate
-#else
-#   define ActionSheet UIActionSheet
-#   define ActionSheetDelegate UIActionSheetDelegate
-#endif
-
 @interface InvitationController : NSObject <ActionSheetDelegate,MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 + (id) sharedInvitationController;

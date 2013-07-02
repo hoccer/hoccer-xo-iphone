@@ -746,7 +746,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) showAttachmentOptions {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", @"Actionsheet Title")
+    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", @"Actionsheet Title")
                                                         delegate: self
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
                                           destructiveButtonTitle: nil
@@ -758,7 +758,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [sheet showInView: self.view];
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // NSLog(@"Clicked button at index %d", buttonIndex);
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
