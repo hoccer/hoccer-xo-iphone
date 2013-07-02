@@ -236,12 +236,14 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
 }
 
 - (void) didFinishInAnimation {
-    if (_buttonTable != nil) {
-        [_buttonTable flashScrollIndicators];
-    }
+    [self flashScrollIndicators];
 }
 
 - (void) didRotate: (NSNotification*) notification {
+    [NSTimer scheduledTimerWithTimeInterval: 1.5 target: self selector: @selector(flashScrollIndicators) userInfo:nil repeats:NO];
+}
+
+- (void) flashScrollIndicators {
     if (_buttonTable != nil) {
         [_buttonTable flashScrollIndicators];
     }
