@@ -199,8 +199,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         NSLog(@"setupNavigationButtons: unhandled mode %d", _mode);
     }
-    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleRightButton = self.navigationItem.rightBarButtonItem != nil;
-
 }
 
 - (void) inviteMemberPressed: (id) sender {

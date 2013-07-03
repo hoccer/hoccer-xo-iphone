@@ -13,7 +13,7 @@
 @property (nonatomic,readonly) UILabel                 * titleLabel;
 @property (nonatomic,readonly) UIImageView             * logo;
 @property (nonatomic,readonly) UIActivityIndicatorView * activityIndicator;
-@property (nonatomic,readonly) UIImageView             * errorIndicator;
+@property (nonatomic,readonly) UIButton                * promptButton;
 
 @end
 
@@ -22,7 +22,10 @@
     HXONavigationTitleView * _customTitleView;
 }
 
-@property (nonatomic,assign) BOOL showHoccerLogo;
+@property (nonatomic,assign) BOOL showLogo;
+@property (nonatomic,assign) BOOL flexibleLeftButton;
+@property (nonatomic,assign) BOOL flexibleRightButton;
+
 
 @end
 

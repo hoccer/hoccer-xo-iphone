@@ -10,6 +10,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "HXONavigationItem.h"
+
 static const CGFloat kButtonWidth = 49;
 static const CGFloat kButtonColumnWidth = 63;
 static const CGFloat kButtonXOffset = 0.5 * (kButtonColumnWidth - kButtonWidth);
@@ -32,8 +34,6 @@ static const CGFloat kButtonXOffset = 0.5 * (kButtonColumnWidth - kButtonWidth);
     self.layer.shadowRadius = 3;
     _mask = [CAShapeLayer layer];
     self.layer.mask = _mask;
-    self.flexibleLeftButton = NO;
-    self.flexibleRightButton = NO;
 }
 
 - (void) layoutSubviews {
@@ -51,16 +51,19 @@ static const CGFloat kButtonXOffset = 0.5 * (kButtonColumnWidth - kButtonWidth);
 
     CGFloat screenWidth = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [UIScreen mainScreen].applicationFrame.size.width : [UIScreen mainScreen].applicationFrame.size.height;
 
+    BOOL flexibleLeftButton = [self.topItem isKindOfClass: [HXONavigationItem class]] ? ((HXONavigationItem*)self.topItem).flexibleLeftButton : NO;
+    BOOL flexibleRightButton = [self.topItem isKindOfClass: [HXONavigationItem class]] ? ((HXONavigationItem*)self.topItem).flexibleRightButton : NO;
+
     for (UIView * subview in self.subviews) {
         if ([NSStringFromClass([subview class]) isEqualToString: @"UINavigationButton"]) {
             CGRect frame = subview.frame;
             if (frame.origin.x > 0.5 * screenWidth ) {
-                if ( ! self.flexibleRightButton) {
+                if ( ! flexibleRightButton) {
                     frame.size.width = kButtonWidth;
                 }
                 frame.origin.x = screenWidth - kButtonXOffset - frame.size.width;
             } else {
-                if ( ! self.flexibleLeftButton) {
+                if ( ! flexibleLeftButton) {
                     frame.size.width = kButtonWidth;
                 }
                 frame.origin.x = kButtonXOffset;

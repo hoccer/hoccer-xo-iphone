@@ -15,7 +15,7 @@
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
-#import "HXONavigationBar.h"
+#import "HXONavigationItem.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "HXOGroupedTableViewController.h"
 #import "NSString+UUID.h"
@@ -70,7 +70,6 @@ typedef enum ActionSheetTags {
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
-    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
 
     [self configureMode];
 
@@ -104,7 +103,6 @@ typedef enum ActionSheetTags {
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear: animated];
-    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
     if (_contact != nil) {
         [_contact removeObserver: self forKeyPath: @"avatarImage"];
         for (ProfileItem* item in _allProfileItems) {
@@ -334,7 +332,6 @@ typedef enum ActionSheetTags {
             } else {
                 self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
             }
-            ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
             break;
         case ProfileViewModeContactProfile:
             self.navigationItem.rightBarButtonItem = nil;
@@ -411,10 +408,12 @@ typedef enum ActionSheetTags {
         [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
     }
     [self validateItems];
+
+    ((HXONavigationItem*)self.navigationItem).flexibleLeftButton = editing;
+
     if (editing) {
         if (_mode != ProfileViewModeFirstRun) {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
-            ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
         }
         _canceled = NO;
         for (ProfileItem* item in _allProfileItems) {
@@ -425,7 +424,6 @@ typedef enum ActionSheetTags {
         if ( ! _canceled) {
             [self save];
         }
-        ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
         self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
         for (ProfileItem* item in _allProfileItems) {
             [item removeObserver: self forKeyPath: @"valid"];
@@ -707,10 +705,6 @@ typedef enum ActionSheetTags {
         [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
         [self dismissViewControllerAnimated: YES completion: nil];
     }
-}
-
-- (void) makeLeftButtonFixedWidth {
-    ((HXONavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
 }
 
 #pragma mark - Avatar Handling

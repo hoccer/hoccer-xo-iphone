@@ -14,8 +14,4 @@
 {
     CAShapeLayer * _mask;
 }
-
-@property (nonatomic,assign) BOOL flexibleLeftButton;
-@property (nonatomic,assign) BOOL flexibleRightButton;
-
 @end
