@@ -112,7 +112,7 @@ static NSTimer * _stateNotificationDelayTimer;
         
         _avatarDownloadQueue = [[GCNetworkQueue alloc] init];
         [_avatarDownloadQueue setMaximumConcurrentOperationsCount:1];
-        //[_avatarDownloadQueue enableNetworkActivityIndicator:YES];
+        [_avatarDownloadQueue enableNetworkActivityIndicator:YES];
         
         [_serverConnection registerIncomingCall: @"incomingDelivery"    withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery"    withSelector:@selector(outgoingDelivery:) isNotification: YES];
@@ -1214,7 +1214,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         if (theAvatarURL.length) {
             if (CONNECTION_TRACE) {NSLog(@"updateAvatarForContact, downloading avatar from URL %@", theAvatarURL);}
 
-            [HXOBackend downloadDataFromURL:theAvatarURL inQueue:nil withCompletion:^(NSData * data, NSError * error) {
+            [HXOBackend downloadDataFromURL:theAvatarURL inQueue:_avatarDownloadQueue withCompletion:^(NSData * data, NSError * error) {
                 NSData * myNewAvatar = data;
                 if (myNewAvatar != nil && error == nil) {
                     // NSLog(@"presenceUpdated, avatar downloaded");
