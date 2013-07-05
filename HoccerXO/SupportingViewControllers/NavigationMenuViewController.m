@@ -68,6 +68,10 @@
                     @{ @"title": NSLocalizedString(@"About", nil),
                        @"icon": @"navigation_button_about",
                        @"storyboardId": @"aboutViewController"
+                    },
+                    @{ @"title": NSLocalizedString(@"Testing Ground", nil),
+                       @"icon": @"navigation_button_about",
+                       @"storyboardId": @"testingGround"
                     }
                    ];
 

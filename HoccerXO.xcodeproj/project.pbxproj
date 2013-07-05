@@ -180,8 +180,10 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
-		638EBE3117843E2E00F1B9AD /* HXOLinkableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE3017843E2E00F1B9AD /* HXOLinkableLabel.m */; };
 		638EBE34178596D000F1B9AD /* NSString+Emojis.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE33178596D000F1B9AD /* NSString+Emojis.m */; };
+		638EBE371787004300F1B9AD /* HXOChattyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE361787004200F1B9AD /* HXOChattyLabel.m */; };
+		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
+		638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
@@ -675,10 +677,13 @@
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
-		638EBE2F17843E2E00F1B9AD /* HXOLinkableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLinkableLabel.h; sourceTree = "<group>"; };
-		638EBE3017843E2E00F1B9AD /* HXOLinkableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLinkableLabel.m; sourceTree = "<group>"; };
 		638EBE32178596D000F1B9AD /* NSString+Emojis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Emojis.h"; sourceTree = "<group>"; };
 		638EBE33178596D000F1B9AD /* NSString+Emojis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Emojis.m"; sourceTree = "<group>"; };
+		638EBE351787004200F1B9AD /* HXOChattyLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOChattyLabel.h; sourceTree = "<group>"; };
+		638EBE361787004200F1B9AD /* HXOChattyLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOChattyLabel.m; sourceTree = "<group>"; };
+		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingGroundViewController.h; sourceTree = "<group>"; };
+		638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingGroundViewController.m; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
@@ -957,6 +962,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */,
 				E924C958176C8CD6008185E0 /* libInAppSettingsKit.a in Frameworks */,
 				639094C21739970200DF889B /* CoreLocation.framework in Frameworks */,
 				639094C01739842A00DF889B /* MapKit.framework in Frameworks */,
@@ -1112,8 +1118,8 @@
 				633A9B27177B3BA900E066EF /* HXOSheetView.m */,
 				63CD585C1782E02E00BE7627 /* HXOIconSheet.h */,
 				63CD585D1782E02E00BE7627 /* HXOIconSheet.m */,
-				638EBE2F17843E2E00F1B9AD /* HXOLinkableLabel.h */,
-				638EBE3017843E2E00F1B9AD /* HXOLinkableLabel.m */,
+				638EBE351787004200F1B9AD /* HXOChattyLabel.h */,
+				638EBE361787004200F1B9AD /* HXOChattyLabel.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -1499,6 +1505,8 @@
 				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
 				63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */,
 				63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */,
+				633A99991779D23900E066EF /* HXOSideMenuViewController.h */,
+				633A999A1779D23900E066EF /* HXOSideMenuViewController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -1515,10 +1523,10 @@
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
 				E9D1145517316DCC00737EF7 /* StartupViewController.h */,
 				E9D1145617316DCC00737EF7 /* StartupViewController.m */,
+				638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */,
+				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				633A99991779D23900E066EF /* HXOSideMenuViewController.h */,
-				633A999A1779D23900E066EF /* HXOSideMenuViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -1548,6 +1556,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				638EBE3817870E8600F1B9AD /* CoreText.framework */,
 				6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */,
 				6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */,
 				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
@@ -2444,8 +2453,9 @@
 				633A9B28177B3BA900E066EF /* HXOActionSheet.m in Sources */,
 				633A9B29177B3BA900E066EF /* HXOSheetView.m in Sources */,
 				63CD585E1782E02E00BE7627 /* HXOIconSheet.m in Sources */,
-				638EBE3117843E2E00F1B9AD /* HXOLinkableLabel.m in Sources */,
 				638EBE34178596D000F1B9AD /* NSString+Emojis.m in Sources */,
+				638EBE371787004300F1B9AD /* HXOChattyLabel.m in Sources */,
+				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
