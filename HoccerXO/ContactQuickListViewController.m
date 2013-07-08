@@ -118,8 +118,10 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     if ([sectionInfo.name isEqualToString: @"Contact"]) {
         view.title.text = NSLocalizedString(@"contact_group_friends", nil);
+        view.icon.image = [UIImage imageNamed: @"contact_list_section_icon_contacts"];
     } else if ([sectionInfo.name isEqualToString: @"Group"]) {
         view.title.text = NSLocalizedString(@"contact_group_groups", nil);
+        view.icon.image = [UIImage imageNamed: @"contact_list_section_icon_groups"];
     }
     return view;
 }
