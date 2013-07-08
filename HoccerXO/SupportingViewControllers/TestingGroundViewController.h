@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HXOChattyLabel.h"
+#import "HXOLinkyLabel.h"
 
-@interface TestingGroundViewController : UIViewController <HXOChattyLabelDelegate>
+@interface TestingGroundViewController : UIViewController <HXOLinkyLabelDelegate>
 
-@property (nonatomic,weak) IBOutlet HXOChattyLabel * label;
+@property (nonatomic,weak) IBOutlet HXOLinkyLabel * label;
 
 @end

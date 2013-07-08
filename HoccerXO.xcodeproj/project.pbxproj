@@ -181,7 +181,7 @@
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
 		638EBE34178596D000F1B9AD /* NSString+Emojis.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE33178596D000F1B9AD /* NSString+Emojis.m */; };
-		638EBE371787004300F1B9AD /* HXOChattyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE361787004200F1B9AD /* HXOChattyLabel.m */; };
+		638EBE371787004300F1B9AD /* HXOLinkyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE361787004200F1B9AD /* HXOLinkyLabel.m */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
 		638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
@@ -679,8 +679,8 @@
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
 		638EBE32178596D000F1B9AD /* NSString+Emojis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Emojis.h"; sourceTree = "<group>"; };
 		638EBE33178596D000F1B9AD /* NSString+Emojis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Emojis.m"; sourceTree = "<group>"; };
-		638EBE351787004200F1B9AD /* HXOChattyLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOChattyLabel.h; sourceTree = "<group>"; };
-		638EBE361787004200F1B9AD /* HXOChattyLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOChattyLabel.m; sourceTree = "<group>"; };
+		638EBE351787004200F1B9AD /* HXOLinkyLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLinkyLabel.h; sourceTree = "<group>"; };
+		638EBE361787004200F1B9AD /* HXOLinkyLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLinkyLabel.m; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingGroundViewController.h; sourceTree = "<group>"; };
 		638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingGroundViewController.m; sourceTree = "<group>"; };
@@ -1118,8 +1118,8 @@
 				633A9B27177B3BA900E066EF /* HXOSheetView.m */,
 				63CD585C1782E02E00BE7627 /* HXOIconSheet.h */,
 				63CD585D1782E02E00BE7627 /* HXOIconSheet.m */,
-				638EBE351787004200F1B9AD /* HXOChattyLabel.h */,
-				638EBE361787004200F1B9AD /* HXOChattyLabel.m */,
+				638EBE351787004200F1B9AD /* HXOLinkyLabel.h */,
+				638EBE361787004200F1B9AD /* HXOLinkyLabel.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -2454,7 +2454,7 @@
 				633A9B29177B3BA900E066EF /* HXOSheetView.m in Sources */,
 				63CD585E1782E02E00BE7627 /* HXOIconSheet.m in Sources */,
 				638EBE34178596D000F1B9AD /* NSString+Emojis.m in Sources */,
-				638EBE371787004300F1B9AD /* HXOChattyLabel.m in Sources */,
+				638EBE371787004300F1B9AD /* HXOLinkyLabel.m in Sources */,
 				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

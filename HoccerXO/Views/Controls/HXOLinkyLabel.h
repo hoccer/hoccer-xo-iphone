@@ -8,17 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@class HXOChattyLabel;
+@class HXOLinkyLabel;
 
-@protocol HXOChattyLabelDelegate <NSObject>
+@protocol HXOLinkyLabelDelegate <NSObject>
 
-- (void) chattyLabel: (HXOChattyLabel*) label didTapToken: (NSTextCheckingResult*) match ofClass: (id) tokenClass;
+- (void) chattyLabel: (HXOLinkyLabel*) label didTapToken: (NSTextCheckingResult*) match ofClass: (id) tokenClass;
 
 @end
 
-@interface HXOChattyLabel : UILabel
+@interface HXOLinkyLabel : UILabel
 
-@property (nonatomic,weak) IBOutlet id<HXOChattyLabelDelegate> delegate;
+@property (nonatomic,weak) IBOutlet id<HXOLinkyLabelDelegate> delegate;
 @property (nonatomic,strong) NSDictionary*                     defaultTokenStyle;
 
 - (void) registerTokenClass: (id) tokenClass withExpression: (NSRegularExpression*) regex style: (NSDictionary*) style;

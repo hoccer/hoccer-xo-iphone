@@ -8,7 +8,7 @@
 
 #import "TestingGroundViewController.h"
 
-#import "HXOChattyLabel.h"
+#import "HXOLinkyLabel.h"
 
 @interface TestingGroundViewController ()
 
@@ -49,22 +49,26 @@
         NSLog(@"failed to create regex: %@", error);
     }
 
-    self.label.text = @"http://gnurbel.com 😃👍👠 Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. https://example.com/with/very/longish/url/path Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden. 030 45025958";
+    self.label.text = @"http://google.com 😃👍👠 Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. https://server.talk.hoccer.de/status Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. https://github.com/hoccer/hoccer-xo-iphone/blob/master/HoccerXO/Assets/ChatView/ChatBar/chatbar_bg_noise%402x.png Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden. 030 87654321";
 
 }
 
-- (void) chattyLabel:(HXOChattyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass {
+- (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass {
+    NSURL * url;
     switch (match.resultType) {
         case NSTextCheckingTypeLink:
             NSLog(@"tapped link %@", match.URL);
-            [[UIApplication sharedApplication] openURL: match.URL];
+            url = match.URL;
             break;
         case NSTextCheckingTypePhoneNumber:
             NSLog(@"tapped phone number %@", match.phoneNumber);
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", match.phoneNumber]]];
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", [match.phoneNumber stringByReplacingOccurrencesOfString:@" " withString:@"-"]]];
             break;
         default:
             NSLog(@"tapped unhandled token '%@' of type %@", [label.text substringWithRange: match.range], tokenClass);
+    }
+    if (url != nil) {
+        [[UIApplication sharedApplication] openURL: url];
     }
 }
 

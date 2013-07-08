@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HXOChattyLabel.h"
+#import "HXOLinkyLabel.h"
 
 #import <CoreText/CoreText.h>
 
@@ -32,20 +32,24 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 
 @end
 
-@interface HXOChattyLabel ()
+@interface HXOLinkyLabel ()
 {
     NSAttributedString * _attributedText;
     NSMutableArray *     _tokenClasses;
     NSMutableArray *     _tokens;
-    NSMutableArray *     _tokenButtons;
+    NSDictionary *       _tokenRects;
 
     CTFramesetterRef     _framesetter;
     CTFrameRef           _textFrame;
     CGAffineTransform    _textToViewTransform;
+
+    HXOCLToken *         _tappedToken;
 }
 @end
 
-@implementation HXOChattyLabel
+@implementation HXOLinkyLabel
+
+#pragma mark - Con- and Destruction
 
 + (void) initialize {
     ourDefaultStyle = @{(id)kCTForegroundColorAttributeName: (id)[UIColor blueColor].CGColor};
@@ -74,14 +78,23 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     self.userInteractionEnabled = YES;
 }
 
-- (void) tokenTapped: (UIButton*) sender {
-    HXOCLToken * token = _tokens[sender.tag];
-    [self.delegate chattyLabel: self didTapToken: token.match ofClass: token.tokenClass.classIdentifier];
+- (void) dealloc {
+    if (_framesetter != NULL) {
+        CFRelease(_framesetter);
+        _framesetter = NULL;
+    }
+    if (_framesetter != NULL) {
+        CFRelease(_framesetter);
+        _framesetter = NULL;
+    }
 }
+
+#pragma mark - Public API
 
 - (void) setText:(NSString *)text {
     [super setText: text];
     [self createAttributedText: text];
+    [self setNeedsLayout];
 }
 
 - (void) registerTokenClass: (id) tokenClass withExpression: (NSRegularExpression*) regex style: (NSDictionary*) style {
@@ -93,9 +106,13 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     [self createAttributedText: self.text];
 }
 
+#pragma mark - Layout and Drawing
+
 - (void) createAttributedText: (NSString*) text {
-    NSDictionary * fontAttributes = [self fontAttributes];
-    NSMutableAttributedString * attributedText = [[NSMutableAttributedString alloc] initWithString: text attributes: fontAttributes];
+    NSMutableDictionary * paragraphAttributes = [NSMutableDictionary dictionaryWithDictionary: [self fontAttributes]];
+    [paragraphAttributes setObject: (__bridge id)[self paragraphStyle] forKey: (__bridge id)kCTParagraphStyleAttributeName];
+    
+    NSMutableAttributedString * attributedText = [[NSMutableAttributedString alloc] initWithString: text attributes: paragraphAttributes];
     [self tokenize: attributedText];
     _attributedText = attributedText;
     _framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedText);
@@ -108,6 +125,7 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
         NSArray * matches = [tokenClass.regex matchesInString: self.text options: 0 range: NSMakeRange(0, self.text.length)];
         for (NSTextCheckingResult * match in matches) {
             NSMutableDictionary * attributes = [NSMutableDictionary dictionaryWithDictionary: style];
+            [attributes addEntriesFromDictionary: [self fontAttributes]];
             [attributes setObject: @(_tokens.count) forKey: kHXOChattyLabelTokenIndexAttributeName];
             [attributedText setAttributes: attributes range: match.range];
             HXOCLToken * token = [[HXOCLToken alloc] init];
@@ -123,6 +141,41 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     return @{(id)kCTFontAttributeName: (__bridge id)font};
 }
 
+- (CTParagraphStyleRef) paragraphStyle {
+    static const NSUInteger count = 2;
+    CTParagraphStyleSetting * settings = malloc(sizeof(CTParagraphStyleSetting) * count);
+    CTTextAlignment alignment;
+    switch (self.textAlignment) {
+        case NSTextAlignmentLeft:      alignment = kCTTextAlignmentLeft;      break;
+        case NSTextAlignmentRight:     alignment = kCTTextAlignmentRight;     break;
+        case NSTextAlignmentCenter:    alignment = kCTTextAlignmentCenter;    break;
+        case NSTextAlignmentJustified: alignment = kCTTextAlignmentJustified; break;
+        case NSTextAlignmentNatural:   alignment = kCTTextAlignmentNatural;   break;
+    }
+    settings[0].spec = kCTParagraphStyleSpecifierAlignment;
+    settings[0].value = & alignment;
+    settings[0].valueSize = sizeof(alignment);
+
+    CTLineBreakMode lineBreakMode;
+    switch (self.lineBreakMode) {
+        case NSLineBreakByCharWrapping:     lineBreakMode = kCTLineBreakByCharWrapping;     break;
+        case NSLineBreakByClipping:         lineBreakMode = kCTLineBreakByClipping;         break;
+        case NSLineBreakByTruncatingHead:   lineBreakMode = kCTLineBreakByTruncatingHead;   break;
+        case NSLineBreakByTruncatingMiddle: lineBreakMode = kCTLineBreakByTruncatingMiddle; break;
+        case NSLineBreakByTruncatingTail:   lineBreakMode = kCTLineBreakByTruncatingTail;   break;
+        case NSLineBreakByWordWrapping:     lineBreakMode = kCTLineBreakByWordWrapping;     break;
+    }
+    settings[1].spec = kCTParagraphStyleSpecifierLineBreakMode;
+    settings[1].value = & lineBreakMode;
+    settings[1].valueSize = sizeof(lineBreakMode);
+
+    // TODO: apply more attributes like line spacing, &c.
+    
+    CTParagraphStyleRef style = CTParagraphStyleCreate(settings, count);
+    free(settings);
+    return style;
+}
+
 - (void) layoutSubviews {
     if (_textFrame != NULL) {
         CFRelease(_textFrame);
@@ -133,41 +186,39 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     CGAffineTransform mirrorY = CGAffineTransformMakeScale(1, -1);
     _textToViewTransform = CGAffineTransformConcat(mirrorY, translateY);
 
-    [self setupTokenButtons];
+    _tokenRects = nil;
+
+    [self setNeedsDisplay];
 }
 
-- (void) setupTokenButtons {
-    for (UIButton * button in _tokenButtons) {
-        [button removeFromSuperview];
-    }
-    _tokenButtons = [NSMutableArray array];
-
-    UIGraphicsBeginImageContext(CGSizeMake(1, 1));
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
+- (NSDictionary*) createTokenRectsInContext: (CGContextRef) context {
+    NSMutableDictionary * rects = [NSMutableDictionary dictionaryWithCapacity: [_tokens count]];
     [self enumerateTokenRectsInContext: context usingBlock:^(NSUInteger tokenInex, CGRect rect) {
-
         rect = CGRectApplyAffineTransform(rect, _textToViewTransform);
-
-        UIButton * button = [UIButton buttonWithType: UIButtonTypeCustom];
-        [self addSubview: button];
-        [button addTarget: self action:@selector(tokenTapped:) forControlEvents:UIControlEventTouchUpInside];
-        button.frame = rect;
-#ifdef HXO_CHATTY_LABEL_SHOW_BUTTONS
-        button.backgroundColor = [UIColor colorWithWhite: 0.5 alpha: 0.5];
-#endif
-        button.tag = tokenInex;
-        [_tokenButtons addObject: button];
+        NSValue * rectValue = [NSValue valueWithCGRect: rect];
+        HXOCLToken * token = _tokens[tokenInex];
+        [rects setObject: token forKey: rectValue];
     }];
-    UIGraphicsEndImageContext();
+    return rects;
 }
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
+
+    if (_tokenRects == nil) {
+        _tokenRects = [self createTokenRectsInContext: context];
+    }
+
+    UIColor * backgroundColor;
 #ifdef HXO_CHATTY_LABEL_DRAW_BOUNDING_BOX
-    [[UIColor colorWithWhite: 0.9 alpha: 1.0] setFill];
-    CGContextFillRect(context, self.bounds);
+     backgroundColor = [[UIColor colorWithWhite: 0.9 alpha: 1.0] setFill];
+#else
+    backgroundColor = self.backgroundColor;
 #endif
+    if (backgroundColor != nil) {
+        [backgroundColor setFill];
+        CGContextFillRect(context, self.bounds);
+    }
 
 	CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextConcatCTM(context, _textToViewTransform);
@@ -187,34 +238,33 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     CGPoint *origins = malloc(sizeof(CGPoint)*[(__bridge NSArray *)lines count]);
     CTFrameGetLineOrigins(_textFrame, CFRangeMake(0, 0), origins);
     NSInteger lineIndex = 0;
-    for (id oneLine in (__bridge NSArray *)lines) {
-        CFArrayRef runs = CTLineGetGlyphRuns((__bridge CTLineRef)oneLine);
-        CGRect lineBounds = CTLineGetImageBounds((__bridge CTLineRef)oneLine, context);
+    for (id line in (__bridge NSArray *)lines) {
+        CFArrayRef runs = CTLineGetGlyphRuns((__bridge CTLineRef)line);
+        CGRect lineBounds = CTLineGetImageBounds((__bridge CTLineRef)line, context);
 
         lineBounds.origin.x += origins[lineIndex].x;
         lineBounds.origin.y += origins[lineIndex].y;
-        lineIndex++;
         CGFloat offset = 0;
 
-        for (id oneRun in (__bridge NSArray *)runs) {
+        for (id run in (__bridge NSArray *)runs) {
             CGFloat ascent = 0;
             CGFloat descent = 0;
 
-            CGFloat width = CTRunGetTypographicBounds((__bridge CTRunRef) oneRun,
+            CGFloat width = CTRunGetTypographicBounds((__bridge CTRunRef) run,
                                                       CFRangeMake(0, 0),
                                                       &ascent,
                                                       &descent, NULL);
 
-            NSDictionary *attributes = (__bridge NSDictionary *)CTRunGetAttributes((__bridge CTRunRef) oneRun);
+            NSDictionary *attributes = (__bridge NSDictionary *)CTRunGetAttributes((__bridge CTRunRef) run);
 
             NSNumber * tokenIndex = [attributes objectForKey: kHXOChattyLabelTokenIndexAttributeName];
 
             if (tokenIndex != nil) {
+                // TODO: improve link rect placement
+                CGFloat lineHeight = lineIndex > 0 ? (origins[lineIndex - 1].y - origins[lineIndex].y) : self.bounds.size.height - origins[lineIndex].y;
                 CGRect bounds = CGRectMake(lineBounds.origin.x + offset,
                                            lineBounds.origin.y,
-                                           width, ascent + descent);
-
-                // don't draw too far to the right
+                                           width, /*ascent + descent*/ lineHeight);
                 if (bounds.origin.x + bounds.size.width > CGRectGetMaxX(lineBounds)) {
                     bounds.size.width = CGRectGetMaxX(lineBounds) - bounds.origin.x;
                 }
@@ -225,21 +275,33 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
             
             offset += width;
         }
+        lineIndex++;
     }
-    
     // cleanup
     free(origins);
 }
 
-- (void) dealloc {
-    if (_framesetter != NULL) {
-        CFRelease(_framesetter);
-        _framesetter = NULL;
+#pragma mark - Touch Event Handling
+
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    for (NSValue * rectValue in _tokenRects) {
+        CGRect rect = [rectValue CGRectValue];
+        UITouch * touch = [[event touchesForView: self] anyObject];
+        if (CGRectContainsPoint(rect, [touch locationInView: self])) {
+            HXOCLToken * token = _tokenRects[rectValue];
+            [self.delegate chattyLabel: self didTapToken: token.match ofClass: token.tokenClass.classIdentifier];
+            break;
+        }
     }
-    if (_framesetter != NULL) {
-        CFRelease(_framesetter);
-        _framesetter = NULL;
-    }
+}
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+}
+
+- (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+}
+
+- (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
 }
 
 @end
