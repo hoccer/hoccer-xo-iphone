@@ -79,8 +79,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
     [self.view bringSubviewToFront: _chatbar];
 
@@ -183,7 +183,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 #pragma mark - Keyboard Handling
 
-- (void)keyboardWasShown:(NSNotification*)aNotification {
+- (void)keyboardWillShow:(NSNotification*)aNotification {
     //NSLog(@"keyboardWasShown");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -198,7 +198,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         frame.size.height -= keyboardHeight;
         self.chatViewResizer.frame = frame;
         self.tableView.contentOffset = contentOffset;
-        // NSLog(@"keyboardWasShown did set table contentOffset y to %f", contentOffset.y);
+        // NSLog(@"keyboardWillShow did set table contentOffset y to %f", contentOffset.y);
 
     }];
 
@@ -206,7 +206,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height;
 }
 
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+- (void)keyboardWillHide:(NSNotification*)aNotification {
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;

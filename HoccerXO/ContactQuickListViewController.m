@@ -40,12 +40,28 @@
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
 
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
+
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(sideMenuDidChangeState:) name: MFSideMenuStateNotificationEvent object: nil];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver: self name: MFSideMenuStateNotificationEvent object: nil];
+
+}
+
+- (void) sideMenuDidChangeState: (NSNotification*) notification {
+    switch ([notification.userInfo[@"eventType"] integerValue]) {
+        case MFSideMenuStateEventMenuWillClose:
+            [self.view endEditing: NO];
+            break;
+        default:
+            break;
+    }
 }
 
 - (NSFetchedResultsController *)currentFetchedResultsController {
