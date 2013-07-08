@@ -17,6 +17,7 @@
 #import "MFSideMenu.h"
 #import "HXOBackend.h"
 #import "UIViewController+HXOSideMenu.h"
+#import "ContactQuickListSearchBar.h"
 
 
 @interface ContactQuickListViewController ()
@@ -35,24 +36,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.searchBar.backgroundImage = [[UIImage imageNamed: @"searchbar_bg"]  resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    UIImage *searchFieldImage = [[UIImage imageNamed:@"searchbar_input-text"]
-                                 resizableImageWithCapInsets:UIEdgeInsetsMake(14, 14, 15, 14)];
-    [self.searchBar setSearchFieldBackgroundImage:searchFieldImage forState:UIControlStateNormal];
-    for (UIView *subview in self.searchBar.subviews){
-        if([subview isKindOfClass: UITextField.class]){
-            [(UITextField*)subview setTextColor: [UIColor whiteColor]];
-        }
-    }
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
 
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
-    
-    UIImage *inviteButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
-    [self.inviteButton setBackgroundImage: inviteButtonBackground forState: UIControlStateNormal];
-    [self.inviteButton setBackgroundColor: [UIColor clearColor]];
-
 }
 
 - (void)didReceiveMemoryWarning
@@ -335,11 +322,6 @@
 
     BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
     [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];
-}
-
-- (void)viewDidUnload {
-    [self setInviteButton:nil];
-    [super viewDidUnload];
 }
 
 @end

@@ -592,7 +592,7 @@
                                     <outlet property="delegate" destination="ZcT-dr-dsA" id="Oqx-Up-zmu"/>
                                 </connections>
                             </tableView>
-                            <searchBar contentMode="redraw" placeholder="search" id="bB8-3T-FcJ">
+                            <searchBar contentMode="redraw" placeholder="search" id="bB8-3T-FcJ" customClass="ContactQuickListSearchBar">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1362,10 +1362,12 @@
                 <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
             </relationships>
         </class>
+        <class className="ContactQuickListSearchBar" superclassName="UISearchBar">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListSearchBar.h"/>
+        </class>
         <class className="ContactQuickListViewController" superclassName="HXOSideMenuViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactQuickListViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="inviteButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
                 <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
             </relationships>
@@ -1408,14 +1410,14 @@
         <class className="GrowingTextView" superclassName="UITextView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowingTextView.h"/>
         </class>
-        <class className="HXOChattyLabel" superclassName="UILabel">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOChattyLabel.h"/>
+        <class className="HXOGroupedTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOGroupedTableViewController.h"/>
+        </class>
+        <class className="HXOLinkyLabel" superclassName="UILabel">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOLinkyLabel.h"/>
             <relationships>
                 <relationship kind="outlet" name="delegate"/>
             </relationships>
-        </class>
-        <class className="HXOGroupedTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOGroupedTableViewController.h"/>
         </class>
         <class className="HXONavigationBar" superclassName="UINavigationBar">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/HXONavigationBar.h"/>
@@ -1528,7 +1530,7 @@
         <class className="TestingGroundViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TestingGroundViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="label" candidateClass="HXOChattyLabel"/>
+                <relationship kind="outlet" name="label" candidateClass="HXOLinkyLabel"/>
             </relationships>
         </class>
         <class className="WebViewController" superclassName="UIViewController">

@@ -192,6 +192,7 @@
 		638EBE4B178AD7BD00F1B9AD /* contact_list_section_icon_nearby@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 638EBE43178AD7BD00F1B9AD /* contact_list_section_icon_nearby@2x.png */; };
 		638EBE4C178AD7BD00F1B9AD /* contact_list_section_icon_contacts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 638EBE44178AD7BD00F1B9AD /* contact_list_section_icon_contacts@2x.png */; };
 		638EBE4D178AD7BD00F1B9AD /* contact_list_section_icon_contacts.png in Resources */ = {isa = PBXBuildFile; fileRef = 638EBE45178AD7BD00F1B9AD /* contact_list_section_icon_contacts.png */; };
+		638EBE50178ADFD700F1B9AD /* ContactQuickListSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE4F178ADFD600F1B9AD /* ContactQuickListSearchBar.m */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
@@ -700,6 +701,8 @@
 		638EBE43178AD7BD00F1B9AD /* contact_list_section_icon_nearby@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_list_section_icon_nearby@2x.png"; sourceTree = "<group>"; };
 		638EBE44178AD7BD00F1B9AD /* contact_list_section_icon_contacts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_list_section_icon_contacts@2x.png"; sourceTree = "<group>"; };
 		638EBE45178AD7BD00F1B9AD /* contact_list_section_icon_contacts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact_list_section_icon_contacts.png; sourceTree = "<group>"; };
+		638EBE4E178ADFD600F1B9AD /* ContactQuickListSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQuickListSearchBar.h; sourceTree = "<group>"; };
+		638EBE4F178ADFD600F1B9AD /* ContactQuickListSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQuickListSearchBar.m; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
@@ -1754,6 +1757,8 @@
 				6343B4E416CD604700B3A29E /* ChatTableCells.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
+				638EBE4E178ADFD600F1B9AD /* ContactQuickListSearchBar.h */,
+				638EBE4F178ADFD600F1B9AD /* ContactQuickListSearchBar.m */,
 				6330490216FC99820045E64E /* ContactQuickListViewCells.h */,
 				6330490316FC99820045E64E /* ContactQuickListViewCells.m */,
 				633A9B18177B21A700E066EF /* Controls */,
@@ -2496,6 +2501,7 @@
 				638EBE34178596D000F1B9AD /* NSString+Emojis.m in Sources */,
 				638EBE371787004300F1B9AD /* HXOLinkyLabel.m in Sources */,
 				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
+				638EBE50178ADFD700F1B9AD /* ContactQuickListSearchBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
