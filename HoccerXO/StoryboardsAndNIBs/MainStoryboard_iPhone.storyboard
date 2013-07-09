@@ -38,7 +38,6 @@
             </objects>
             <point key="canvasLocation" x="-674" y="82"/>
         </scene>
-        <!--Menu View Controller-->
         <scene sceneID="2af-tI-BvA">
             <objects>
                 <tableViewController storyboardIdentifier="navigationMenuViewController" id="Cyt-Ud-C1S" userLabel="Menu View Controller" customClass="NavigationMenuViewController" sceneMemberID="viewController">

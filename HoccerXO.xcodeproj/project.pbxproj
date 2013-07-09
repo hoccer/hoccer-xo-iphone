@@ -1562,6 +1562,8 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
+				633A99991779D23900E066EF /* HXOSideMenuViewController.h */,
+				633A999A1779D23900E066EF /* HXOSideMenuViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;

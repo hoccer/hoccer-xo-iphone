@@ -41,6 +41,7 @@
 - (void)resumeDatabaseSaving;
 
 - (NSURL *)applicationDocumentsDirectory;
+- (NSURL *)applicationLibraryDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
 
