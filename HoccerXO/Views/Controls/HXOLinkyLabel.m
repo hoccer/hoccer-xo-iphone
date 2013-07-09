@@ -106,12 +106,28 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     [self createAttributedText: self.text];
 }
 
+- (CGSize) sizeThatFits:(CGSize)size {
+    if (self.numberOfLines == 0) {
+        size.height = 0;
+    }
+    size = CTFramesetterSuggestFrameSizeWithConstraints(_framesetter, CFRangeMake(0, 0), NULL, size, NULL);
+    return size;
+}
+
 #pragma mark - Layout and Drawing
 
 - (void) createAttributedText: (NSString*) text {
+    if (_framesetter != NULL) {
+        CFRelease(_framesetter);
+        _framesetter = NULL;
+    }
+
     NSMutableDictionary * paragraphAttributes = [NSMutableDictionary dictionaryWithDictionary: [self fontAttributes]];
     [paragraphAttributes setObject: (__bridge id)[self paragraphStyle] forKey: (__bridge id)kCTParagraphStyleAttributeName];
-    
+    if (self.textColor != nil) {
+        [paragraphAttributes setObject: (id)self.textColor.CGColor forKey: (id)kCTForegroundColorAttributeName];
+    }
+
     NSMutableAttributedString * attributedText = [[NSMutableAttributedString alloc] initWithString: text attributes: paragraphAttributes];
     [self tokenize: attributedText];
     _attributedText = attributedText;
@@ -205,18 +221,14 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
 
+    CGContextSaveGState(context);
+
     if (_tokenRects == nil) {
         _tokenRects = [self createTokenRectsInContext: context];
     }
 
-    UIColor * backgroundColor;
-#ifdef HXO_CHATTY_LABEL_DRAW_BOUNDING_BOX
-     backgroundColor = [[UIColor colorWithWhite: 0.9 alpha: 1.0] setFill];
-#else
-    backgroundColor = self.backgroundColor;
-#endif
-    if (backgroundColor != nil) {
-        [backgroundColor setFill];
+    if (self.backgroundColor != nil) {
+        [self.backgroundColor setFill];
         CGContextFillRect(context, self.bounds);
     }
 
@@ -231,6 +243,8 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 #endif
 
 	CTFrameDraw(_textFrame, context);
+
+    CGContextRestoreGState(context);
 }
 
 - (void) enumerateTokenRectsInContext: (CGContextRef) context usingBlock: (void(^)(NSUInteger tokenInex, CGRect rect)) block {
