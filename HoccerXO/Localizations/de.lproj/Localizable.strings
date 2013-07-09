@@ -350,8 +350,8 @@
 "corrupt_database_deleted_title"       = "Datenbank gelöscht";
 "corrupt_database_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer XO neu.";
 
-"fatal_error_default_title"   = "Fataler Fehler";
-"fatal_error_default_message" = "Ein unbehebarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Wenn der Fehler fortbesteht lösche bitte Hoccer XO und installiere die App erneut.";
+"fatal_error_default_title"   = "Unbehebbarer Fehlerzustand";
+"fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Bitte starte Hoccer XO neu.";
 
 "new_friend_message"="Kontakt '%@' ist jetzt mit dir befreundet.";
 "new_friend_title"="Neuer Freund";

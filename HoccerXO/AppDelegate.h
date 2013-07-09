@@ -35,6 +35,8 @@
 
 @property (nonatomic, strong)  GCNetworkReachability * internetReachabilty;
 
+@property BOOL launchedAfterCrash;
+
 - (void)saveContext;
 - (void)saveDatabase;
 - (void)pauseDatabaseSaving;

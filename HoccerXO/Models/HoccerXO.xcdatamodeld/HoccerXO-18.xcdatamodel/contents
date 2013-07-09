@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="18" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -44,9 +44,11 @@
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="twitterName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" attributeType="String" defaultValueString="Contact" syncable="YES"/>
-        <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="sender" inverseEntity="Delivery" syncable="YES"/>
+        <relationship name="deliveriesReceived" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
+        <relationship name="deliveriesSent" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="sender" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="groupMemberships" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="contact" inverseEntity="GroupMembership" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="HXOMessage" inverseName="contact" inverseEntity="HXOMessage" syncable="YES"/>
+        <relationship name="myGroupMembership" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="ownGroupContact" inverseEntity="GroupMembership" syncable="YES"/>
         <fetchedProperty name="latestMessage" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND timeAccepted == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
@@ -57,20 +59,19 @@
     </entity>
     <entity name="Delivery" representedClassName="Delivery" syncable="YES">
         <attribute name="keyCiphertext" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="state" attributeType="String" defaultValueString="new" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="String" defaultValueString="new" syncable="YES"/>
         <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
-        <relationship name="message" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
-        <relationship name="receiver" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
-        <relationship name="sender" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveries" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupDeliveries" inverseEntity="Group" syncable="YES"/>
+        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
+        <relationship name="receiver" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveriesReceived" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveriesSent" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="Group" representedClassName="Group" parentEntity="Contact" syncable="YES">
         <attribute name="groupKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="groupState" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="groupTag" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="myRole" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="myState" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="groupDeliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="group" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="members" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="group" inverseEntity="GroupMembership" syncable="YES"/>
     </entity>
     <entity name="GroupMembership" representedClassName="GroupMembership" syncable="YES">
@@ -81,23 +82,24 @@
         <attribute name="memberKeyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="role" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="groupMemberships" inverseEntity="Contact" syncable="YES"/>
-        <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="members" inverseEntity="Group" syncable="YES"/>
+        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="groupMemberships" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="members" inverseEntity="Group" syncable="YES"/>
+        <relationship name="ownGroupContact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="myGroupMembership" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="HXOMessage" representedClassName="HXOMessage" syncable="YES">
         <attribute name="attachmentFileId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="body" attributeType="String" syncable="YES"/>
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isOutgoing" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="messageId" attributeType="String" syncable="YES"/>
-        <attribute name="messageTag" attributeType="String" syncable="YES"/>
+        <attribute name="messageId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="messageTag" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="salt" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="timeAccepted" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="timeReceived" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="timeSection" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="timeSent" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="attachment" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
-        <relationship name="contact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="attachment" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
+        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
         <fetchedProperty name="computedTimeSection" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage"/>
@@ -125,12 +127,12 @@
     <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="128" height="330"/>
-        <element name="Contact" positionX="0" positionY="0" width="128" height="434"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="Group" positionX="324" positionY="93" width="128" height="150"/>
-        <element name="GroupMembership" positionX="-225" positionY="-0" width="128" height="180"/>
-        <element name="HXOMessage" positionX="-576" positionY="171" width="128" height="284"/>
-        <element name="Invite" positionX="-470" positionY="3" width="128" height="60"/>
+        <element name="Attachment" positionX="160" positionY="192" width="128" height="330"/>
+        <element name="Contact" positionX="162" positionY="594" width="128" height="464"/>
+        <element name="Delivery" positionX="-63" positionY="162" width="128" height="150"/>
+        <element name="Group" positionX="351" positionY="351" width="128" height="135"/>
+        <element name="GroupMembership" positionX="511" positionY="441" width="128" height="195"/>
+        <element name="HXOMessage" positionX="-243" positionY="189" width="128" height="284"/>
+        <element name="Invite" positionX="385" positionY="144" width="128" height="60"/>
     </elements>
 </model>

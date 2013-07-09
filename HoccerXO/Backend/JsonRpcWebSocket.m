@@ -22,7 +22,7 @@ static const NSInteger kJsonRpcInternal       = -32603;
 
 // TODO: clean-up error handling
 
-static const NSTimeInterval kResponseTimeout = 15;
+static const NSTimeInterval kResponseTimeout = 30;
 
 @interface JsonRpcWebSocket () <SRWebSocketDelegate>
 {
@@ -246,7 +246,7 @@ static const NSTimeInterval kResponseTimeout = 15;
 }
 
 - (void) serverDidNotRespond: (NSNumber*) jsonRpcId {
-    NSLog(@"Server did not respond within %f seconds.", kResponseTimeout);
+    NSLog(@"Server did not respond within %f seconds, request %@ was dropped", kResponseTimeout, jsonRpcId);
     [_responseHandlers removeObjectForKey: jsonRpcId];
 }
 
