@@ -9,8 +9,8 @@
 #import "HXOLinkyLabel.h"
 
 #import <CoreText/CoreText.h>
+#import <QuartzCore/QuartzCore.h>
 
-//#define HXO_CHATTY_LABEL_DRAW_BOUNDING_BOX
 //#define HXO_CHATTY_LABEL_DRAW_TOKEN_RECTS
 //#define HXO_CHATTY_LABEL_SHOW_BUTTONS
 
@@ -76,6 +76,9 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     _defaultTokenStyle = ourDefaultStyle;
     [self createAttributedText: self.text];
     self.userInteractionEnabled = YES;
+
+    self.layer.shadowOpacity = 1.0;
+    self.layer.shadowRadius = 0.0;
 }
 
 - (void) dealloc {
@@ -112,6 +115,22 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     }
     size = CTFramesetterSuggestFrameSizeWithConstraints(_framesetter, CFRangeMake(0, 0), NULL, size, NULL);
     return size;
+}
+
+- (void) setShadowColor:(UIColor *)shadowColor {
+    self.layer.shadowColor = shadowColor.CGColor;
+}
+
+- (UIColor*) shadowColor {
+    return [UIColor colorWithCGColor: self.layer.shadowColor];
+}
+
+- (void) setShadowOffset:(CGSize)shadowOffset {
+    self.layer.shadowOffset = shadowOffset;
+}
+
+- (CGSize) shadowOffset {
+    return self.layer.shadowOffset;
 }
 
 #pragma mark - Layout and Drawing
