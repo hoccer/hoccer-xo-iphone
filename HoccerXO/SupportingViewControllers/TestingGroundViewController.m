@@ -10,6 +10,8 @@
 
 #import "HXOLinkyLabel.h"
 
+#import "BubbleViewToo.h"
+
 @interface TestingGroundViewController ()
 
 @end
@@ -57,10 +59,16 @@
     
     self.label.text = @"Lorem Ipsum 😃👍👠. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis http://google.com";
 
-    //self.label.backgroundColor = [UIColor orangeColor];
     [self.label sizeToFit];
-    NSLog(@"bounds: %@ frame: %@", NSStringFromCGRect(self.label.bounds), NSStringFromCGRect(self.label.frame));
 
+    self.bubble1.colorScheme = HXOBubbleColorSchemeWhite;
+    self.bubble1.pointDirection = HXOBubblePointingLeft;
+    self.bubble2.colorScheme = HXOBubbleColorSchemeBlue;
+    self.bubble3.colorScheme = HXOBubbleColorSchemeRed;
+    self.bubble4.colorScheme = HXOBubbleColorSchemeEtched;
+    self.bubble5.colorScheme = HXOBubbleColorSchemeBlack;
+    self.bubble6.colorScheme = HXOBubbleColorSchemeBlack;
+    self.bubble6.pointDirection = HXOBubblePointingLeft;
 }
 
 - (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass {
