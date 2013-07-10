@@ -38,6 +38,7 @@
             </objects>
             <point key="canvasLocation" x="-674" y="82"/>
         </scene>
+        <!--Menu View Controller-->
         <scene sceneID="2af-tI-BvA">
             <objects>
                 <tableViewController storyboardIdentifier="navigationMenuViewController" id="Cyt-Ud-C1S" userLabel="Menu View Controller" customClass="NavigationMenuViewController" sceneMemberID="viewController">
@@ -385,6 +386,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
+                                <connections>
+                                    <outlet property="delegate" destination="auO-Jz-Dlt" id="Nd8-8Z-DD4"/>
+                                </connections>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
