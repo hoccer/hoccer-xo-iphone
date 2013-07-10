@@ -55,9 +55,9 @@
     self.label.shadowColor = [UIColor colorWithWhite: 0.8 alpha: 1.0];
     self.label.shadowOffset = CGSizeMake(0, 1);
     
-    //self.label.text = @"Lorem Ipsum Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis";
+    self.label.text = @"Lorem Ipsum 😃👍👠. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis http://google.com";
 
-    self.label.backgroundColor = [UIColor orangeColor];
+    //self.label.backgroundColor = [UIColor orangeColor];
     [self.label sizeToFit];
     NSLog(@"bounds: %@ frame: %@", NSStringFromCGRect(self.label.bounds), NSStringFromCGRect(self.label.frame));
 

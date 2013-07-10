@@ -390,6 +390,11 @@
                                     <outlet property="delegate" destination="auO-Jz-Dlt" id="Nd8-8Z-DD4"/>
                                 </connections>
                             </label>
+                            <view contentMode="redraw" id="FEG-Gg-Lwn" customClass="BubbleViewToo">
+                                <rect key="frame" x="20" y="177" width="280" height="48"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -1329,6 +1334,9 @@
             <relationships>
                 <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
             </relationships>
+        </class>
+        <class className="BubbleViewToo" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleViewToo.h"/>
         </class>
         <class className="ChatViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>

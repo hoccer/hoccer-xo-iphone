@@ -88,6 +88,7 @@
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* ChatTableCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* ChatTableCells.m */; };
 		63477F4216CBAFF300FBAF62 /* AutoheightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */; };
+		634B46D0178D8015001C1C0D /* BubbleViewToo.m in Sources */ = {isa = PBXBuildFile; fileRef = 634B46CF178D8015001C1C0D /* BubbleViewToo.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		636492CF1711CDAB00E35514 /* icon_profile-name.png in Resources */ = {isa = PBXBuildFile; fileRef = 636492CD1711CDAB00E35514 /* icon_profile-name.png */; };
@@ -581,6 +582,8 @@
 		6343B4E416CD604700B3A29E /* ChatTableCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTableCells.m; sourceTree = "<group>"; };
 		63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoheightLabel.h; sourceTree = "<group>"; };
 		63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoheightLabel.m; sourceTree = "<group>"; };
+		634B46CE178D8015001C1C0D /* BubbleViewToo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleViewToo.h; sourceTree = "<group>"; };
+		634B46CF178D8015001C1C0D /* BubbleViewToo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleViewToo.m; sourceTree = "<group>"; };
 		63540A9016E500D20087D24E /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleView.h; sourceTree = "<group>"; };
 		63540A9116E500D20087D24E /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleView.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
@@ -906,7 +909,7 @@
 		E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoccerXOT.xcdatamodel; sourceTree = "<group>"; };
 		E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-18.xcdatamodel"; sourceTree = "<group>"; };
 		E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-19.xcdatamodel"; sourceTree = "<group>"; };
-		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
+		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
 		E980D445171EF8950060C1B5 /* CryptingInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptingInputStream.h; sourceTree = "<group>"; };
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -1806,6 +1809,8 @@
 				639094C7173A871500DF889B /* UIButton+GlossyRounded.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
+				634B46CE178D8015001C1C0D /* BubbleViewToo.h */,
+				634B46CF178D8015001C1C0D /* BubbleViewToo.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2512,6 +2517,7 @@
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
 				E9756194177E23AF000B6381 /* HoccerXOT.xcdatamodeld in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
+				634B46D0178D8015001C1C0D /* BubbleViewToo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
