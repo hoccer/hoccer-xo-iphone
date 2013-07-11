@@ -74,23 +74,28 @@
 "Copy" = "Kopieren";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hallo,\nIch möchte mit dir Nachrichten austauschen.\n\nInstalliere ‘Hoccer XO':\nApp Store: %@\nAndroid: %@\n\nDanach bestätige meinen Kontakt: %@\n";
+"invitation_mail_body" = "Hallo,\nIch nutze jetzt die kostenlose App ‘Hoccer XO‘ zum sicheren chatten. Informationen findest du unter http://hoccer.com\n\n ‘Hoccer XO' findest du hier zum Download:\nApp Store: %@\nAndroid: %@\n\nNach der Installation kannst du mich mit Klick auf %@ als Kontakt hinzufügen oder in der App den Code '%@' eingeben.\n\nLiebe Grüsse, %@";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Einladung zu Hoccer XO";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Ich möchte mit dir Nachrichten austauschen. Installiere ‘Hoccer XO‘ und klicke dann diesen Link: %@";
+"invitation_sms_text" = "Ich nutze jetzt die kostenlose App ‘Hoccer XO‘ von http://hoccer.com zum sicheren chatten. Du kannst mich mit Klick auf %@ als Kontakt hinzufügen oder in der App den Code '%@' eingeben. \nLiebe Grüsse, %@";
 
 /* Actionsheet Title */
 "Invite by" = "Einladung";
 
 /* Invite Actionsheet Button Title */
-"Invite Code" = "per Einladungscode";
+"SMS" = "Einladen per SMS";
 
-"Show Invite Code"="Einladungscode zeigen";
-"Scan or Enter Code"="Einladungscode scannen/eingeben";
+/* Invite Actionsheet Button Title */
+"Mail" = "Einladen per Mail";
 
+/* Invite Actionsheet Button Title */
+"Show Invite Code"="Code anzeigen";
+
+/* Invite Actionsheet Button Title */
+"Scan or Enter Code"="Code scannen/eingeben";
 
 /* Invite Alert Title */
 "Invite failed" = "Einladung fehlgeschlagen";
@@ -98,8 +103,6 @@
 /* Invite Alert Title */
 "Invite successful" = "Einladung erfolgreich";
 
-/* Invite Actionsheet Button Title */
-"Mail" = "per Mail";
 
 /* Invite Token View Controller */
 "or" = "oder";
@@ -129,9 +132,6 @@
 
 /* Navigation Menu Item */
 "Settings" = "Einstellungen";
-
-/* Invite Actionsheet Button Title */
-"SMS" = "per SMS";
 
 /* Invite Alert Message */
 "The server accepted your code" = "Der Code wurde akzeptiert";
