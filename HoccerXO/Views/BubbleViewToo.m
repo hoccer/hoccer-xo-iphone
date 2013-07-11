@@ -42,6 +42,7 @@
     self.colorScheme = HXOBubbleColorSchemeWhite;
     self.pointDirection = HXOBubblePointingRight;
 
+    self.layer.shouldRasterize = YES;
     self.layer.shadowOffset = CGSizeMake(0.1, 2.1);
     [self configureDropShadow];
 }

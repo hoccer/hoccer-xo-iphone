@@ -20,6 +20,7 @@
 
 @property (nonatomic,assign) HXOBubbleColorScheme colorScheme;
 @property (nonatomic,assign) HXOBubbleDirection   pointDirection;
+@property (nonatomic,assign) CGFloat              height;
 
 @end
 
@@ -64,13 +65,13 @@
         NSLog(@"failed to create regex: %@", error);
     }
 
-    self.label.text = @"http://google.com 😃👍👠 Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. https://server.talk.hoccer.de/status Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. https://github.com/hoccer/hoccer-xo-iphone/blob/master/HoccerXO/Assets/ChatView/ChatBar/chatbar_bg_noise%402x.png Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden. 030 87654321";
+    //self.label.text = @"http://google.com 😃👍👠 Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. https://server.talk.hoccer.de/status Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. https://github.com/hoccer/hoccer-xo-iphone/blob/master/HoccerXO/Assets/ChatView/ChatBar/chatbar_bg_noise%402x.png Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden. 030 87654321";
 
 
     self.label.shadowColor = [UIColor colorWithWhite: 0.8 alpha: 1.0];
     self.label.shadowOffset = CGSizeMake(0, 1);
     
-    self.label.text = @"Lorem Ipsum 😃👍👠. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis http://google.com";
+    //self.label.text = @"Lorem Ipsum 😃👍👠. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis http://google.com";
 
     [self.label sizeToFit];
 
@@ -79,19 +80,24 @@
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.colorScheme = HXOBubbleColorSchemeWhite;
     i0.pointDirection = HXOBubblePointingLeft;
+    i0.height = 48 + 2 * 8;
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
     i1.colorScheme = HXOBubbleColorSchemeEtched;
+    i1.height = 96;
 
     BubbleItem * i2 = [[BubbleItem alloc] init];
     i2.colorScheme = HXOBubbleColorSchemeBlue;
+    i2.height = 48 + 2 * 8;
 
     BubbleItem * i3 = [[BubbleItem alloc] init];
     i3.colorScheme = HXOBubbleColorSchemeRed;
+    i3.height = 48 + 2 * 16;
 
     BubbleItem * i4 = [[BubbleItem alloc] init];
     i4.colorScheme = HXOBubbleColorSchemeBlack;
     i4.pointDirection = HXOBubblePointingLeft;
+    i4.height = 200;
 
     _items = @[i0, i1, i2, i3, i4];
 }
@@ -127,7 +133,7 @@
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 48 + 2 * 8;
+    return ((BubbleItem*)_items[indexPath.row]).height;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -159,6 +165,7 @@
     if (self != nil) {
         self.bubble = [[BubbleViewToo alloc] init];
         [self addSubview: self.bubble];
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
