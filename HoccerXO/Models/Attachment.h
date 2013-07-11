@@ -27,6 +27,7 @@ typedef enum AttachmentStates {
     kAttachmentDetached,
     kAttachmentEmpty,
     kAttachmentTransfered,
+    kAttachmentNoTransferURL,
     kAttachmentTransfersExhausted,
     kAttachmentTransfering,
     kAttachmentTransferScheduled,

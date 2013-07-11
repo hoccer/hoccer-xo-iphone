@@ -119,6 +119,7 @@
 NSArray * TransferStateName = @[@"detached",
                                 @"empty",
                                 @"transfered",
+                                @"no transfer url",
                                 @"transfers exhausted",
                                 @"transfering",
                                 @"transfer scheduled",
@@ -167,6 +168,9 @@ NSArray * TransferStateName = @[@"detached",
     }
     if ([self.contentSize isEqualToNumber: self.transferSize]) {
         return kAttachmentTransfered;
+    }
+    if (self.remoteURL == nil || self.remoteURL.length == 0) {
+        return kAttachmentNoTransferURL;
     }
     long long maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries] longLongValue];
     if (self.transferFailures > maxRetries) {

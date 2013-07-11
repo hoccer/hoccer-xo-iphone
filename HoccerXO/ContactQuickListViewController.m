@@ -159,7 +159,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.searchBar resignFirstResponder];
-    Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
+    Contact * contact = (Contact*)[[self currentFetchedResultsController] objectAtIndexPath:indexPath];
     [_conversationViewController.chatViewController setPartner: contact];
     NSArray * viewControllers = @[_conversationViewController, _conversationViewController.chatViewController];
     [self.navigationController setViewControllers: viewControllers animated: NO];
