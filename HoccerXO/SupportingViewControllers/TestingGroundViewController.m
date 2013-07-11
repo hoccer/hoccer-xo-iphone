@@ -16,6 +16,19 @@
 
 @end
 
+@interface BubbleItem : NSObject
+
+@property (nonatomic,assign) HXOBubbleColorScheme colorScheme;
+@property (nonatomic,assign) HXOBubbleDirection   pointDirection;
+
+@end
+
+@interface MessageCellToo : UITableViewCell
+
+@property (nonatomic,strong) BubbleViewToo * bubble;
+
+@end
+
 @implementation TestingGroundViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -61,14 +74,26 @@
 
     [self.label sizeToFit];
 
-    self.bubble1.colorScheme = HXOBubbleColorSchemeWhite;
-    self.bubble1.pointDirection = HXOBubblePointingLeft;
-    self.bubble2.colorScheme = HXOBubbleColorSchemeBlue;
-    self.bubble3.colorScheme = HXOBubbleColorSchemeRed;
-    self.bubble4.colorScheme = HXOBubbleColorSchemeEtched;
-    self.bubble5.colorScheme = HXOBubbleColorSchemeBlack;
-    self.bubble6.colorScheme = HXOBubbleColorSchemeBlack;
-    self.bubble6.pointDirection = HXOBubblePointingLeft;
+    [self.tableView registerClass: [MessageCellToo class] forCellReuseIdentifier: @"MessageCell"];
+
+    BubbleItem * i0 = [[BubbleItem alloc] init];
+    i0.colorScheme = HXOBubbleColorSchemeWhite;
+    i0.pointDirection = HXOBubblePointingLeft;
+
+    BubbleItem * i1 = [[BubbleItem alloc] init];
+    i1.colorScheme = HXOBubbleColorSchemeEtched;
+
+    BubbleItem * i2 = [[BubbleItem alloc] init];
+    i2.colorScheme = HXOBubbleColorSchemeBlue;
+
+    BubbleItem * i3 = [[BubbleItem alloc] init];
+    i3.colorScheme = HXOBubbleColorSchemeRed;
+
+    BubbleItem * i4 = [[BubbleItem alloc] init];
+    i4.colorScheme = HXOBubbleColorSchemeBlack;
+    i4.pointDirection = HXOBubblePointingLeft;
+
+    _items = @[i0, i1, i2, i3, i4];
 }
 
 - (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass {
@@ -93,6 +118,55 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table View Delegate and Datasource
+
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _items.count;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 48 + 2 * 8;
+}
+
+- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    MessageCellToo * cell = (MessageCellToo*)[self.tableView dequeueReusableCellWithIdentifier: @"MessageCell" forIndexPath: indexPath];
+    BubbleItem * item = _items[indexPath.row];
+    cell.bubble.colorScheme = item.colorScheme;
+    cell.bubble.pointDirection = item.pointDirection;
+    return cell;
+}
+
+@end
+
+@implementation BubbleItem
+
+- (id) init {
+    self = [super init];
+    if (self != nil) {
+        self.pointDirection = HXOBubblePointingRight;
+        self.colorScheme = HXOBubbleColorSchemeBlue;
+    }
+    return self;
+}
+@end
+
+@implementation MessageCellToo
+
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self != nil) {
+        self.bubble = [[BubbleViewToo alloc] init];
+        [self addSubview: self.bubble];
+    }
+    return self;
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    CGRect bubbleFrame = CGRectInset(self.bounds, 8, 8);
+    self.bubble.frame = bubbleFrame;
 }
 
 @end

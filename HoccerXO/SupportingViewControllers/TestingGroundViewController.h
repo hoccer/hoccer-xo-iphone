@@ -12,15 +12,13 @@
 
 @class BubbleViewToo;
 
-@interface TestingGroundViewController : UIViewController <HXOLinkyLabelDelegate>
+@interface TestingGroundViewController : UIViewController <HXOLinkyLabelDelegate,UITableViewDataSource,UITableViewDelegate>
+{
+    NSArray * _items;
+}
 
 @property (nonatomic,weak) IBOutlet HXOLinkyLabel * label;
 
-@property (nonatomic,weak) IBOutlet BubbleViewToo * bubble1;
-@property (nonatomic,weak) IBOutlet BubbleViewToo * bubble2;
-@property (nonatomic,weak) IBOutlet BubbleViewToo * bubble3;
-@property (nonatomic,weak) IBOutlet BubbleViewToo * bubble4;
-@property (nonatomic,weak) IBOutlet BubbleViewToo * bubble5;
-@property (nonatomic,weak) IBOutlet BubbleViewToo * bubble6;
+@property (nonatomic,weak) IBOutlet UITableView * tableView;
 
 @end
