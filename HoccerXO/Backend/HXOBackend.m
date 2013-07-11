@@ -341,6 +341,8 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
+    if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toCOntact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
+
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     
     if (_state == kBackendReady) {
@@ -392,10 +394,11 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) createUrlsForTransferOfAttachmentOfMessage:(HXOMessage*)message {
+    if (CONNECTION_TRACE) {NSLog(@"createUrlsForTransferOfAttachmentOfMessage: %@", message);}
     Attachment * attachment = message.attachment;
     [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
         if (urls && [urls[@"uploadUrl"] length]>0 && [urls[@"downloadUrl"] length]>0 && [urls[@"fileId"] length]>0) {
-            if (CONNECTION_TRACE) NSLog(@"got attachment urls=%@", urls);
+            if (CONNECTION_TRACE) NSLog(@"createUrlsForTransferOfAttachmentOfMessage: got attachment urls=%@", urls);
             attachment.uploadURL = urls[@"uploadUrl"];
             attachment.remoteURL = urls[@"downloadUrl"];
             message.attachmentFileId = urls[@"fileId"];
@@ -806,15 +809,15 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
             [pendingMessages addObject: delivery.message];
         }
     }
-    // paranoid but safe: for each message collect those deliveries that have state 'new' and send them out
+    // for each message collect those deliveries that have state 'new' and send them out
     for (HXOMessage * message in pendingMessages) {
-        NSMutableArray * newDeliveries = [[NSMutableArray alloc] init];
-        for (Delivery * delivery in message.deliveries) {
-            if ([delivery.state isEqualToString: kDeliveryStateNew]) {
-                [newDeliveries addObject: delivery];
-            }
+        if (message.attachment != nil && (message.attachment.uploadURL == nil || message.attachment.uploadURL.length == 0)) {
+            // get attachment transfer url in case there are none yet
+            [self createUrlsForTransferOfAttachmentOfMessage:message];
+        } else {
+            [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:message.attachment];
         }
-        [self deliveryRequest: message withDeliveries: newDeliveries];
+        
     }
 }
 
@@ -2452,8 +2455,6 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     }
     return myResult;
 }
-
-
 
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
