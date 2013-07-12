@@ -281,7 +281,7 @@
 
 "invalid_cert_title" = "Ungültiges Server Zertifikat";
 
-"invalid_cert_message" = "Hilfe! Fiese internet nazis greifen Hoccer an. Bitte rufe die avengers.";
+"invalid_cert_message" = "Hoccer XO konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
 
 "navigation_title_new_group" = "Neue Gruppe";
 "navigation_title_group" = "Gruppe";

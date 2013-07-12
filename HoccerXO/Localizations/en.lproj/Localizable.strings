@@ -301,7 +301,7 @@
 
 "invalid_cert_title" = "Invalid Server Certificate";
 
-"invalid_cert_message" = "Help! Vicious internet nazis are attacking Hoccer. Please call the avengers.";
+"invalid_cert_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
 "navigation_title_new_group" = "New Group";
 "navigation_title_group" = "Group";
