@@ -16,7 +16,6 @@
 
 static const CGFloat kHXOBubblePadding = 8;
 static const CGFloat kHXOBubbleMinimumHeight = 48;
-static const CGFloat kHXOBubblePointOffset = 8;
 
 @implementation BubbleViewToo
 
@@ -297,6 +296,18 @@ static const CGFloat kHXOBubblePointOffset = 8;
     _label.defaultTokenStyle = [self linkStyleForColorScheme: colorScheme];
 }
 
+- (CGFloat) calculateHeightForWidth: (CGFloat) width {
+    CGRect frame = CGRectMake(0, 0, [self textWidthForWidth: width], 10000
+    );
+    _label.frame = frame;
+    if (_label.currentNumberOfLines <= 2) {
+        return kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding;
+    } else {
+        CGSize textSize = [_label sizeThatFits: CGSizeMake([self textWidthForWidth: width], 0)];
+        return textSize.height + 4 * kHXOBubblePadding;
+    }
+}
+
 - (void) layoutSubviews {
     [super layoutSubviews];
     _label.frame = [self textFrame];
@@ -306,20 +317,25 @@ static const CGFloat kHXOBubblePointOffset = 8;
     NSUInteger numberOfLines = _label.currentNumberOfLines;
     if (numberOfLines == 1) {
         textFrame.origin.y -= 2;
-    } else if (numberOfLines == 2) {
+    } else {
         textFrame.origin.y -= 1;
     }
     _label.frame = textFrame;
 }
 
 - (CGRect) textFrame {
-    CGRect frame = CGRectInset(self.bounds, 2 * kHXOBubblePadding, 2 * kHXOBubblePadding);
-    CGFloat dx = kHXOBubblePadding + kHXOBubbleMinimumHeight + kHXOBubblePointOffset;
-    frame.size.width -= dx;
+    CGRect frame = CGRectInset(self.bounds, 0, 2 * kHXOBubblePadding);
+    frame.size.width = [self textWidthForWidth: self.bounds.size.width];
     if (self.messageDirection == HXOMessageDirectionIncoming) {
-        frame.origin.x += dx;
+        frame.origin.x += kHXOBubbleMinimumHeight +  4 * kHXOBubblePadding;
+    } else {
+        frame.origin.x += 2 * kHXOBubblePadding;
     }
     return frame;
+}
+
+- (CGFloat) textWidthForWidth: (CGFloat) width {
+    return width - (kHXOBubbleMinimumHeight + 6 * kHXOBubblePadding);
 }
 
 - (UIColor*) textColorForColorScheme: (HXOBubbleColorScheme) colorScheme {

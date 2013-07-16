@@ -15,6 +15,7 @@
 @interface TestingGroundViewController : UIViewController <HXOLinkyLabelDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     NSArray * _items;
+    NSMutableDictionary * _cellPrototypes;
 }
 
 @property (nonatomic,weak) IBOutlet HXOLinkyLabel * label;

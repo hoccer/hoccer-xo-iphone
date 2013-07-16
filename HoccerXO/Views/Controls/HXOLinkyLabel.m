@@ -135,9 +135,7 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     if (_framesetter == NULL) {
         return 0;
     }
-    if (_textFrame == NULL) {
-        [self updateTextFrame];
-    }
+    [self updateTextFrame];
     CFArrayRef lines = CTFrameGetLines(_textFrame);
     return ((__bridge NSArray*)lines).count;
 }
@@ -243,15 +241,16 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 }
 
 - (void) layoutSubviews {
-    if (_textFrame != NULL) {
-        CFRelease(_textFrame);
-    }
     [self updateTextFrame];
 
     [self setNeedsDisplay];
 }
 
 - (void) updateTextFrame {
+    if (_textFrame != NULL) {
+        CFRelease(_textFrame);
+        _textFrame = NULL;
+    }
     if (_framesetter != NULL) {
         UIBezierPath * framePath = [UIBezierPath bezierPathWithRect: self.bounds];
         _textFrame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0,0), framePath.CGPath, 0);

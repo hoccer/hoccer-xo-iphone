@@ -315,7 +315,6 @@ static const CGFloat kEditAnimationDuration = 0.5;
     }
 }
 
-
 - (void) configure: (id) item {
     [super configure: item];
     self.editLabel = [item editLabel];

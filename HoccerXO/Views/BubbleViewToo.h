@@ -48,6 +48,8 @@ typedef enum HXOMessageDirections {
 
 @property (nonatomic,strong) NSString * text;
 
+- (CGFloat) calculateHeightForWidth: (CGFloat) width;
+
 @end
 
 

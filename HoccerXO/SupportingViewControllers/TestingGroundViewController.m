@@ -20,7 +20,6 @@
 
 @property (nonatomic,assign) HXOBubbleColorScheme colorScheme;
 @property (nonatomic,assign) HXOMessageDirection  pointDirection;
-@property (nonatomic,assign) CGFloat              height;
 @property (nonatomic,strong) NSString *           cellIdentifier;
 @property (nonatomic,strong) NSString *           text;
 
@@ -74,40 +73,58 @@
 
     //[self.label sizeToFit];
 
-    [self.tableView registerClass: [TextMessageCell class] forCellReuseIdentifier: [TextMessageCell reuseIdentifier]];
+    [self registerCellClass: [TextMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
     i0.colorScheme = HXOBubbleColorSchemeWhite;
     i0.pointDirection = HXOMessageDirectionIncoming;
-    i0.height = 48 + 2 * 8;
     i0.text = @"Icing tiramisu apple pie carrot cake.";
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
     i1.cellIdentifier = [TextMessageCell reuseIdentifier];
     i1.colorScheme = HXOBubbleColorSchemeEtched;
-    i1.height = 48 + 2 * 8;
     i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer.";
 
     BubbleItem * i2 = [[BubbleItem alloc] init];
     i2.cellIdentifier = [TextMessageCell reuseIdentifier];
     i2.colorScheme = HXOBubbleColorSchemeBlue;
-    i2.height = 48 + 2 * 8;
     i2.text = @"Oat cake dragée tiramisu.";
 
     BubbleItem * i3 = [[BubbleItem alloc] init];
     i3.cellIdentifier = [TextMessageCell reuseIdentifier];
     i3.colorScheme = HXOBubbleColorSchemeRed;
-    i3.height = 48 + 2 * 8;
     i3.text = @"Oat cake dragée tiramisu. Icing tiramisu apple pie carrot cake.";
 
-/*
     BubbleItem * i4 = [[BubbleItem alloc] init];
-    i4.colorScheme = HXOBubbleColorSchemeBlack;
-    i4.pointDirection = HXOMessageDirectionIncoming;
-    i4.height = 200;
-*/
-    _items = @[i0, i1, i2, i3/*, i4*/];
+    i4.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i4.colorScheme = HXOBubbleColorSchemeBlue;
+    i4.pointDirection = HXOMessageDirectionOutgoing;
+    i4.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
+
+    BubbleItem * i5 = [[BubbleItem alloc] init];
+    i5.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i5.colorScheme = HXOBubbleColorSchemeWhite;
+    i5.pointDirection = HXOMessageDirectionIncoming;
+    i5.text = @"Icing tiramisu 🍎 pie carrot 🍰.";
+
+    BubbleItem * i6 = [[BubbleItem alloc] init];
+    i6.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i6.colorScheme = HXOBubbleColorSchemeBlue;
+    i6.pointDirection = HXOMessageDirectionOutgoing;
+    i6.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy.";
+
+
+    _items = @[i0, i1, i2, i3, i4, i5, i6];
+}
+
+- (void) registerCellClass: (Class) cellClass {
+    [self.tableView registerClass: cellClass forCellReuseIdentifier: [cellClass reuseIdentifier]];
+    HXOTableViewCell * prototype = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
+    if (_cellPrototypes == nil) {
+        _cellPrototypes = [NSMutableDictionary dictionary];
+    }
+    [_cellPrototypes setObject: prototype forKey: [cellClass reuseIdentifier]];
 }
 
 - (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass {
@@ -141,7 +158,10 @@
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return ((BubbleItem*)_items[indexPath.row]).height;
+    BubbleItem * item = _items[indexPath.row];
+    TextMessageCell * cell = [_cellPrototypes objectForKey: item.cellIdentifier];
+    cell.text = item.text;
+    return [cell calculateHeightForWidth: self.tableView.bounds.size.width];
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
