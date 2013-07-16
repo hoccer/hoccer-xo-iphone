@@ -86,6 +86,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     _avatar.frame = frame;
 }
 
+- (CGFloat) calculateHeightForWidth: (CGFloat) width {
+    return kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding;
+}
+
 - (void) layoutSubviews {
     [super layoutSubviews];
     self.layer.shadowPath = [self createBubblePath].CGPath;
@@ -101,6 +105,11 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
 - (void)drawRect:(CGRect)rect {
     //// General Declarations
     CGContextRef context = UIGraphicsGetCurrentContext();
+
+    [self drawPlainBubble: context];
+}
+
+- (void)drawPlainBubble:(CGContextRef) context {
 
     BOOL isEtched = self.colorScheme == HXOBubbleColorSchemeEtched;
 
@@ -241,9 +250,6 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
             return [UIColor colorWithWhite: 0.95 alpha: 1.0];
         case HXOBubbleColorSchemeRed:
             return [UIColor colorWithRed: 0.996 green: 0.796 blue: 0.804 alpha: 1];
-        case HXOBubbleColorSchemeBlack:
-            //return [UIColor colorWithRed: 0.19 green: 0.195 blue: 0.2 alpha: 1];
-            return [UIColor colorWithPatternImage: [UIImage imageNamed:@"attachment_pattern"]];
     }
 }
 
@@ -257,8 +263,6 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
             return [UIColor whiteColor];
         case HXOBubbleColorSchemeRed:
             return [UIColor colorWithRed: 0.792 green: 0.314 blue: 0.329 alpha: 1];
-        case HXOBubbleColorSchemeBlack:
-            return [UIColor colorWithRed: 0.19 green: 0.195 blue: 0.2 alpha: 1];
     }
 }
 
@@ -279,15 +283,6 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     _label.shadowColor = [UIColor colorWithWhite: 1.0 alpha: 0.8];
     _label.shadowOffset = CGSizeMake(0, 1);
     [self addSubview: _label];
-}
-
-- (void) setText:(NSString *)text {
-    _label.text = text;
-    [self setNeedsLayout];
-}
-
-- (NSString*) text {
-    return _label.text;
 }
 
 - (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
@@ -348,8 +343,6 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
             return [UIColor colorWithRed: 153.0/255 green: 153.0/255 blue: 153.0/255 alpha: 1.0];
         case HXOBubbleColorSchemeRed:
             return [UIColor colorWithRed: 153.0/255 green: 31.0/255 blue: 31.0/255 alpha: 1.0];
-        case HXOBubbleColorSchemeBlack:
-            return [UIColor whiteColor];
     }
 }
 
@@ -358,16 +351,41 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     switch (colorScheme) {
         case HXOBubbleColorSchemeWhite:
             color = [UIColor colorWithRed: 0.0/255 green: 85.0/255 blue: 255.0/255 alpha: 1.0];
+            break;
         case HXOBubbleColorSchemeBlue:
             color = [UIColor colorWithRed: 0.0/255 green: 0.0/255 blue: 229.0/255 alpha: 1.0];
+            break;
         case HXOBubbleColorSchemeEtched:
             color = [UIColor colorWithRed: 61.0/255 green: 77.0/255 blue: 153.0/255 alpha: 1.0];
+            break;
         case HXOBubbleColorSchemeRed:
             color = [UIColor colorWithRed: 18.0/255 green: 18.0/255 blue: 179.0/255 alpha: 1.0];
-        case HXOBubbleColorSchemeBlack:
-            color = [UIColor blueColor];
+            break;
     }
     return @{(id)kCTForegroundColorAttributeName: (id)color.CGColor};
 }
+
+@end
+
+@implementation AttachmentMessageCell
+
+- (UIColor*) fillColor {
+    switch (self.colorScheme) {
+        case HXOBubbleColorSchemeRed:
+            return [UIColor colorWithPatternImage: [UIImage imageNamed:@"attachment_pattern_red"]];
+        default:
+            return [UIColor colorWithPatternImage: [UIImage imageNamed:@"attachment_pattern"]];
+    }
+}
+
+- (UIColor*) strokeColor {
+    switch (self.colorScheme) {
+        case HXOBubbleColorSchemeRed:
+            return [UIColor colorWithRed: 0.792 green: 0.314 blue: 0.329 alpha: 1];
+        default:
+            return [UIColor colorWithRed: 0.19 green: 0.195 blue: 0.2 alpha: 1];
+    }
+}
+
 
 @end

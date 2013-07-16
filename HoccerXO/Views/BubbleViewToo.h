@@ -23,8 +23,7 @@ typedef enum HXOBubbleColorSchemes {
     HXOBubbleColorSchemeWhite,
     HXOBubbleColorSchemeRed,
     HXOBubbleColorSchemeBlue,
-    HXOBubbleColorSchemeEtched,
-    HXOBubbleColorSchemeBlack
+    HXOBubbleColorSchemeEtched
 } HXOBubbleColorScheme;
 
 typedef enum HXOMessageDirections {
@@ -39,17 +38,21 @@ typedef enum HXOMessageDirections {
 //@property (nonatomic,assign) HXOBubbleAttachmentType attachmentType;
 @property (nonatomic,readonly) InsetImageView *      avatar;
 
-@end
-
-@interface TextMessageCell : BubbleViewToo
-{
-    HXOLinkyLabel * _label;
-}
-
-@property (nonatomic,strong) NSString * text;
-
 - (CGFloat) calculateHeightForWidth: (CGFloat) width;
 
 @end
+
+@interface TextMessageCell : BubbleViewToo
+
+@property (nonatomic,readonly) HXOLinkyLabel * label;
+
+@end
+
+@interface AttachmentMessageCell : BubbleViewToo
+
+@property (nonatomic,readonly) UIProgressView * progressBar;
+
+@end
+
 
 

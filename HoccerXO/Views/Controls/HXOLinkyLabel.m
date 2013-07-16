@@ -35,7 +35,7 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 @interface HXOLinkyLabel ()
 {
     NSAttributedString * _attributedText;
-    NSMutableArray *     _tokenClasses;
+    //NSMutableArray *     _tokenClasses;
     NSMutableArray *     _tokens;
     NSDictionary *       _tokenRects;
 

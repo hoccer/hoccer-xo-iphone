@@ -386,3 +386,5 @@
 "cant_send_relationship_removed"="Es existiert keine Beziehung zu diesem Kontakt mehr.";
 "cant_send_title"="Nachricht kann nicht gesendet werden";
 
+"button_title_call" = "Anrufen";
+

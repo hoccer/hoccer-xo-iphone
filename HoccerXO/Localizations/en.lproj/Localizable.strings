@@ -406,7 +406,6 @@
 "cant_send_relationship_removed"="Relationship with this contact does no longer exist.";
 "cant_send_title"="Can Not Send Message";
 
-
-
+"button_title_call" = "Call";
 
 

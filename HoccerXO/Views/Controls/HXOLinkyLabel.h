@@ -21,6 +21,7 @@
 @property (nonatomic,weak)     IBOutlet id<HXOLinkyLabelDelegate> delegate;
 @property (nonatomic,strong)   NSDictionary*                      defaultTokenStyle;
 @property (nonatomic,readonly) NSUInteger                         currentNumberOfLines;
+@property (nonatomic,readonly) NSMutableArray *                   tokenClasses;
 
 - (void) registerTokenClass: (id) tokenClass withExpression: (NSRegularExpression*) regex style: (NSDictionary*) style;
 

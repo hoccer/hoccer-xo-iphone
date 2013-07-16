@@ -8,8 +8,9 @@
 
 #import "TestingGroundViewController.h"
 
-#import "HXOLinkyLabel.h"
+#import "UIAlertView+BlockExtensions.h"
 
+#import "HXOLinkyLabel.h"
 #import "BubbleViewToo.h"
 
 @interface TestingGroundViewController ()
@@ -38,53 +39,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    NSError * error = nil;
-
-    /*
-    // found at http://regexlib.com/REDetails.aspx?regexp_id=96
-    NSString * httpRegEx = @"(http|https)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?";
-    NSRegularExpression * httpRegex = [NSRegularExpression regularExpressionWithPattern: httpRegEx
-                                                                                options: NSRegularExpressionCaseInsensitive error: & error];
-     */
-
-    NSTextCheckingTypes types = (NSTextCheckingTypes)NSTextCheckingTypeLink;
-    if ([[UIDevice currentDevice].model isEqualToString: @"iPhone"]) {
-        types |= NSTextCheckingTypePhoneNumber;
-    }
-
-    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes: types
-                                                               error:&error];
-    if (error == nil) {
-        [self.label registerTokenClass: @"dataDetector" withExpression: detector style: nil];
-    } else {
-        NSLog(@"failed to create regex: %@", error);
-    }
-
-    //self.label.text = @"http://google.com 😃👍👠 Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. https://server.talk.hoccer.de/status Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. https://github.com/hoccer/hoccer-xo-iphone/blob/master/HoccerXO/Assets/ChatView/ChatBar/chatbar_bg_noise%402x.png Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden. 030 87654321";
-
-
-    self.label.shadowColor = [UIColor colorWithWhite: 0.8 alpha: 1.0];
-    self.label.shadowOffset = CGSizeMake(0, 1);
-    
-    //self.label.text = @"Lorem Ipsum 😃👍👠. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. 👠 Deine Nachrichten sind vom Sender bis http://google.com";
-    //self.label.text = @"Lorem Ipsum. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis http://google.com";
-
-    self.label.backgroundColor = [UIColor orangeColor];
-
-    //[self.label sizeToFit];
-
     [self registerCellClass: [TextMessageCell class]];
+    [self registerCellClass: [AttachmentMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
     i0.colorScheme = HXOBubbleColorSchemeWhite;
     i0.pointDirection = HXOMessageDirectionIncoming;
-    i0.text = @"Icing tiramisu apple pie carrot cake.";
+    i0.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
     i1.cellIdentifier = [TextMessageCell reuseIdentifier];
     i1.colorScheme = HXOBubbleColorSchemeEtched;
-    i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer.";
+    i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com";
 
     BubbleItem * i2 = [[BubbleItem alloc] init];
     i2.cellIdentifier = [TextMessageCell reuseIdentifier];
@@ -112,38 +79,73 @@
     i6.cellIdentifier = [TextMessageCell reuseIdentifier];
     i6.colorScheme = HXOBubbleColorSchemeBlue;
     i6.pointDirection = HXOMessageDirectionOutgoing;
-    i6.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy.";
+    i6.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
+
+    BubbleItem * i7 = [[BubbleItem alloc] init];
+    i7.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i7.colorScheme = HXOBubbleColorSchemeWhite;
+    i7.pointDirection = HXOMessageDirectionIncoming;
+    i7.text = @"Chocolate cake danish tart ice cream. Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
+
+    BubbleItem * i8 = [[BubbleItem alloc] init];
+    i8.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i8.colorScheme = HXOBubbleColorSchemeBlue;
+    i8.pointDirection = HXOMessageDirectionOutgoing;
+
+    BubbleItem * i9 = [[BubbleItem alloc] init];
+    i9.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i9.colorScheme = HXOBubbleColorSchemeRed;
+    i9.pointDirection = HXOMessageDirectionOutgoing;
 
 
-    _items = @[i0, i1, i2, i3, i4, i5, i6];
+    _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
+               i8, i9];
 }
 
-- (void) registerCellClass: (Class) cellClass {
-    [self.tableView registerClass: cellClass forCellReuseIdentifier: [cellClass reuseIdentifier]];
-    HXOTableViewCell * prototype = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
-    if (_cellPrototypes == nil) {
-        _cellPrototypes = [NSMutableDictionary dictionary];
+- (void) registerTokenClasses: (HXOLinkyLabel*) label {
+
+    NSError * error = nil;
+    NSTextCheckingTypes types = (NSTextCheckingTypes)NSTextCheckingTypeLink;
+    if ([[UIDevice currentDevice].model isEqualToString: @"iPhone"]) {
+        types |= NSTextCheckingTypePhoneNumber;
     }
-    [_cellPrototypes setObject: prototype forKey: [cellClass reuseIdentifier]];
+
+    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes: types
+                                                               error:&error];
+    if (error == nil) {
+        [label registerTokenClass: @"dataDetector" withExpression: detector style: nil];
+    } else {
+        NSLog(@"failed to create regex: %@", error);
+    }
 }
 
 - (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass {
-    NSURL * url;
     switch (match.resultType) {
         case NSTextCheckingTypeLink:
             NSLog(@"tapped link %@", match.URL);
-            url = match.URL;
+            [[UIApplication sharedApplication] openURL: match.URL];
             break;
         case NSTextCheckingTypePhoneNumber:
             NSLog(@"tapped phone number %@", match.phoneNumber);
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", [match.phoneNumber stringByReplacingOccurrencesOfString:@" " withString:@"-"]]];
+            [self makePhoneCall: match.phoneNumber];
             break;
         default:
             NSLog(@"tapped unhandled token '%@' of type %@", [label.text substringWithRange: match.range], tokenClass);
     }
-    if (url != nil) {
-        [[UIApplication sharedApplication] openURL: url];
-    }
+}
+
+- (void) makePhoneCall: (NSString*) phoneNumber {
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: phoneNumber
+                                                     message: nil
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 if (buttonIndex != alertView.cancelButtonIndex) {
+                                                     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", [phoneNumber stringByReplacingOccurrencesOfString:@" " withString:@"-"]]];
+                                                     [[UIApplication sharedApplication] openURL: url];
+                                                 }
+                                             }
+                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                           otherButtonTitles: NSLocalizedString(@"button_title_call", nil)];
+    [alert show];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -153,25 +155,56 @@
 
 #pragma mark - Table View Delegate and Datasource
 
+- (void) registerCellClass: (Class) cellClass {
+    [self.tableView registerClass: cellClass forCellReuseIdentifier: [cellClass reuseIdentifier]];
+    BubbleViewToo * prototype = [[cellClass alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: [cellClass reuseIdentifier]];
+    //    HXOTableViewCell * prototype = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
+    if (_cellPrototypes == nil) {
+        _cellPrototypes = [NSMutableDictionary dictionary];
+    }
+    [_cellPrototypes setObject: prototype forKey: [cellClass reuseIdentifier]];
+}
+
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _items.count;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     BubbleItem * item = _items[indexPath.row];
-    TextMessageCell * cell = [_cellPrototypes objectForKey: item.cellIdentifier];
-    cell.text = item.text;
+    BubbleViewToo * cell = [_cellPrototypes objectForKey: item.cellIdentifier];
+    [self configureCell: cell item: item];
     return [cell calculateHeightForWidth: self.tableView.bounds.size.width];
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     BubbleItem * item = _items[indexPath.row];
-    TextMessageCell * cell = (TextMessageCell*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
+    BubbleViewToo * cell = (BubbleViewToo*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
     cell.colorScheme = item.colorScheme;
     cell.messageDirection = item.pointDirection;
-    cell.text = item.text;
+    [self configureCell: cell item: item];
     return cell;
 }
+
+- (void) configureCell: (BubbleViewToo*) cell item: (BubbleItem*) item {
+    if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
+        [self configureTextCell: (TextMessageCell*)cell item: item];
+    } else if ([item.cellIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
+        [self configureAttachmentCell: (AttachmentMessageCell*)cell item: item];
+    }
+}
+
+- (void) configureTextCell: (TextMessageCell*) cell item: (BubbleItem*) item {
+    if (cell.label.tokenClasses.count == 0) {
+        [self registerTokenClasses: cell.label];
+        cell.label.delegate = self;
+    }
+    cell.label.text = item.text;
+}
+
+- (void) configureAttachmentCell: (AttachmentMessageCell*) cell item: (BubbleItem*) item {
+
+}
+
 
 @end
 
