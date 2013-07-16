@@ -33,7 +33,6 @@
                                  resizableImageWithCapInsets:UIEdgeInsetsMake(14, 14, 15, 14)];
     [self setSearchFieldBackgroundImage:searchFieldImage forState:UIControlStateNormal];
     for (UIView *subview in self.subviews) {
-        NSLog(@"=== subview: %@", subview);
         if([subview isKindOfClass: UITextField.class]){
             [(UITextField*)subview setTextColor: [UIColor whiteColor]];
         }
@@ -43,7 +42,6 @@
 - (void) layoutSubviews {
     [super layoutSubviews];
     for (UIView *subview in self.subviews) {
-        NSLog(@"=== subview: %@", subview);
         if([subview isKindOfClass: UITextField.class]){
             CGRect frame = subview.frame;
             frame.origin.x += 16;

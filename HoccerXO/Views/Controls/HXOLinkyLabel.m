@@ -77,14 +77,16 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     [self createAttributedText: self.text];
     self.userInteractionEnabled = YES;
 
-    self.layer.shadowOpacity = 1.0;
+    self.layer.shadowOpacity = 0.0;
     self.layer.shadowRadius = 0.0;
+
+    self.clearsContextBeforeDrawing = YES;
 }
 
 - (void) dealloc {
-    if (_framesetter != NULL) {
-        CFRelease(_framesetter);
-        _framesetter = NULL;
+    if (_textFrame != NULL) {
+        CFRelease(_textFrame);
+        _textFrame = NULL;
     }
     if (_framesetter != NULL) {
         CFRelease(_framesetter);
@@ -97,6 +99,12 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 - (void) setText:(NSString *)text {
     [super setText: text];
     [self createAttributedText: text];
+    [self setNeedsLayout];
+}
+
+- (void) setTextColor:(UIColor *)textColor {
+    [super setTextColor: textColor];
+    [self createAttributedText: self.text];
     [self setNeedsLayout];
 }
 
@@ -113,11 +121,31 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     if (self.numberOfLines == 0) {
         size.height = 0;
     }
-    size = CTFramesetterSuggestFrameSizeWithConstraints(_framesetter, CFRangeMake(0, 0), NULL, size, NULL);
-    return size;
+    CGSize fittingSize = CTFramesetterSuggestFrameSizeWithConstraints(_framesetter, CFRangeMake(0, 0), NULL, size, NULL);
+    /*
+    if (fittingSize.width < size.width) {
+        fittingSize.width = size.width;
+    }*/
+    fittingSize.width = ceilf(fittingSize.width);
+    //fittingSize.height = ceilf(fittingSize.height);
+    return fittingSize;
+}
+
+- (NSUInteger) currentNumberOfLines {
+    if (_framesetter == NULL) {
+        return 0;
+    }
+    if (_textFrame == NULL) {
+        [self updateTextFrame];
+    }
+    CFArrayRef lines = CTFrameGetLines(_textFrame);
+    return ((__bridge NSArray*)lines).count;
 }
 
 - (void) setShadowColor:(UIColor *)shadowColor {
+    if (shadowColor != nil) {
+        self.layer.shadowOpacity = 1.0;
+    }
     self.layer.shadowColor = shadowColor.CGColor;
 }
 
@@ -141,6 +169,9 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
         _framesetter = NULL;
     }
 
+    if (text == nil) {
+        return;
+    }
     NSMutableDictionary * paragraphAttributes = [NSMutableDictionary dictionaryWithDictionary: [self fontAttributes]];
     [paragraphAttributes setObject: (__bridge id)[self paragraphStyle] forKey: (__bridge id)kCTParagraphStyleAttributeName];
     if (self.textColor != nil) {
@@ -215,15 +246,21 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     if (_textFrame != NULL) {
         CFRelease(_textFrame);
     }
-    UIBezierPath * framePath = [UIBezierPath bezierPathWithRect: self.bounds];
-    _textFrame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0,0), framePath.CGPath, 0);
+    [self updateTextFrame];
+
+    [self setNeedsDisplay];
+}
+
+- (void) updateTextFrame {
+    if (_framesetter != NULL) {
+        UIBezierPath * framePath = [UIBezierPath bezierPathWithRect: self.bounds];
+        _textFrame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0,0), framePath.CGPath, 0);
+    }
     CGAffineTransform translateY = CGAffineTransformMakeTranslation(0, self.bounds.size.height);
     CGAffineTransform mirrorY = CGAffineTransformMakeScale(1, -1);
     _textToViewTransform = CGAffineTransformConcat(mirrorY, translateY);
 
     _tokenRects = nil;
-
-    [self setNeedsDisplay];
 }
 
 - (NSDictionary*) createTokenRectsInContext: (CGContextRef) context {
@@ -261,12 +298,17 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     }];
 #endif
 
-	CTFrameDraw(_textFrame, context);
+    if (_textFrame != NULL) {
+        CTFrameDraw(_textFrame, context);
+    }
 
     CGContextRestoreGState(context);
 }
 
 - (void) enumerateTokenRectsInContext: (CGContextRef) context usingBlock: (void(^)(NSUInteger tokenInex, CGRect rect)) block {
+    if (_textFrame == NULL) {
+        return;
+    }
     CFArrayRef lines = CTFrameGetLines(_textFrame);
     CGPoint *origins = malloc(sizeof(CGPoint)*[(__bridge NSArray *)lines count]);
     CTFrameGetLineOrigins(_textFrame, CFRangeMake(0, 0), origins);

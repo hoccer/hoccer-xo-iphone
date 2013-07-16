@@ -8,7 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum HXOBubbleColorScheme {
+#import "HXOTableViewCell.h"
+
+@class InsetImageView;
+@class HXOLinkyLabel;
+
+typedef enum HXOBubbleAttachmentTypes {
+    HXOBubbleAttachmentTypeNone,
+    HXOBubbleAttachmentTypeIconic,
+    HXOBubbleAttachmentTypeImage
+} HXOBubbleAttachmentType;
+
+typedef enum HXOBubbleColorSchemes {
     HXOBubbleColorSchemeWhite,
     HXOBubbleColorSchemeRed,
     HXOBubbleColorSchemeBlue,
@@ -16,14 +27,27 @@ typedef enum HXOBubbleColorScheme {
     HXOBubbleColorSchemeBlack
 } HXOBubbleColorScheme;
 
-typedef enum HXOBubbleDirections {
-    HXOBubblePointingLeft,
-    HXOBubblePointingRight
-} HXOBubbleDirection;
+typedef enum HXOMessageDirections {
+    HXOMessageDirectionIncoming,
+    HXOMessageDirectionOutgoing
+} HXOMessageDirection;
 
-@interface BubbleViewToo : UIView
+@interface BubbleViewToo : HXOTableViewCell
 
-@property (nonatomic,assign) HXOBubbleColorScheme colorScheme;
-@property (nonatomic,assign) HXOBubbleColorScheme pointDirection;
+@property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
+@property (nonatomic,assign) HXOMessageDirection     messageDirection;
+//@property (nonatomic,assign) HXOBubbleAttachmentType attachmentType;
+@property (nonatomic,readonly) InsetImageView *      avatar;
 
 @end
+
+@interface TextMessageCell : BubbleViewToo
+{
+    HXOLinkyLabel * _label;
+}
+
+@property (nonatomic,strong) NSString * text;
+
+@end
+
+

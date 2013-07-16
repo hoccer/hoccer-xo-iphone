@@ -19,14 +19,10 @@
 @interface BubbleItem : NSObject
 
 @property (nonatomic,assign) HXOBubbleColorScheme colorScheme;
-@property (nonatomic,assign) HXOBubbleDirection   pointDirection;
+@property (nonatomic,assign) HXOMessageDirection  pointDirection;
 @property (nonatomic,assign) CGFloat              height;
-
-@end
-
-@interface MessageCellToo : UITableViewCell
-
-@property (nonatomic,strong) BubbleViewToo * bubble;
+@property (nonatomic,strong) NSString *           cellIdentifier;
+@property (nonatomic,strong) NSString *           text;
 
 @end
 
@@ -71,35 +67,47 @@
     self.label.shadowColor = [UIColor colorWithWhite: 0.8 alpha: 1.0];
     self.label.shadowOffset = CGSizeMake(0, 1);
     
-    //self.label.text = @"Lorem Ipsum 😃👍👠. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis http://google.com";
+    //self.label.text = @"Lorem Ipsum 😃👍👠. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. 👠 Deine Nachrichten sind vom Sender bis http://google.com";
+    //self.label.text = @"Lorem Ipsum. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis http://google.com";
 
-    [self.label sizeToFit];
+    self.label.backgroundColor = [UIColor orangeColor];
 
-    [self.tableView registerClass: [MessageCellToo class] forCellReuseIdentifier: @"MessageCell"];
+    //[self.label sizeToFit];
+
+    [self.tableView registerClass: [TextMessageCell class] forCellReuseIdentifier: [TextMessageCell reuseIdentifier]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
+    i0.cellIdentifier = [TextMessageCell reuseIdentifier];
     i0.colorScheme = HXOBubbleColorSchemeWhite;
-    i0.pointDirection = HXOBubblePointingLeft;
+    i0.pointDirection = HXOMessageDirectionIncoming;
     i0.height = 48 + 2 * 8;
+    i0.text = @"Icing tiramisu apple pie carrot cake.";
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
+    i1.cellIdentifier = [TextMessageCell reuseIdentifier];
     i1.colorScheme = HXOBubbleColorSchemeEtched;
-    i1.height = 96;
+    i1.height = 48 + 2 * 8;
+    i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer.";
 
     BubbleItem * i2 = [[BubbleItem alloc] init];
+    i2.cellIdentifier = [TextMessageCell reuseIdentifier];
     i2.colorScheme = HXOBubbleColorSchemeBlue;
     i2.height = 48 + 2 * 8;
+    i2.text = @"Oat cake dragée tiramisu.";
 
     BubbleItem * i3 = [[BubbleItem alloc] init];
+    i3.cellIdentifier = [TextMessageCell reuseIdentifier];
     i3.colorScheme = HXOBubbleColorSchemeRed;
-    i3.height = 48 + 2 * 16;
+    i3.height = 48 + 2 * 8;
+    i3.text = @"Oat cake dragée tiramisu. Icing tiramisu apple pie carrot cake.";
 
+/*
     BubbleItem * i4 = [[BubbleItem alloc] init];
     i4.colorScheme = HXOBubbleColorSchemeBlack;
-    i4.pointDirection = HXOBubblePointingLeft;
+    i4.pointDirection = HXOMessageDirectionIncoming;
     i4.height = 200;
-
-    _items = @[i0, i1, i2, i3, i4];
+*/
+    _items = @[i0, i1, i2, i3/*, i4*/];
 }
 
 - (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass {
@@ -137,10 +145,11 @@
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MessageCellToo * cell = (MessageCellToo*)[self.tableView dequeueReusableCellWithIdentifier: @"MessageCell" forIndexPath: indexPath];
     BubbleItem * item = _items[indexPath.row];
-    cell.bubble.colorScheme = item.colorScheme;
-    cell.bubble.pointDirection = item.pointDirection;
+    TextMessageCell * cell = (TextMessageCell*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
+    cell.colorScheme = item.colorScheme;
+    cell.messageDirection = item.pointDirection;
+    cell.text = item.text;
     return cell;
 }
 
@@ -151,29 +160,10 @@
 - (id) init {
     self = [super init];
     if (self != nil) {
-        self.pointDirection = HXOBubblePointingRight;
+        self.pointDirection = HXOMessageDirectionOutgoing;
         self.colorScheme = HXOBubbleColorSchemeBlue;
     }
     return self;
 }
 @end
 
-@implementation MessageCellToo
-
-- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
-    if (self != nil) {
-        self.bubble = [[BubbleViewToo alloc] init];
-        [self addSubview: self.bubble];
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    return self;
-}
-
-- (void) layoutSubviews {
-    [super layoutSubviews];
-    CGRect bubbleFrame = CGRectInset(self.bounds, 8, 8);
-    self.bubble.frame = bubbleFrame;
-}
-
-@end
