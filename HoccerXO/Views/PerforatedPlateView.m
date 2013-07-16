@@ -246,6 +246,7 @@
     CGFloat centerOffset = 0.5 * (self.bounds.size.width - columnCount * offset.width);
     CGPoint position = CGPointMake(0, 0.5 * offset.height);
     UIBezierPath* perforationPath = [UIBezierPath bezierPath];
+    CGRect boundingBox = perforationMaskPath.bounds;
     for (NSUInteger row = 0; row < rowCount; ++row) {
         if (row % 2 == 0) {
             position.x = centerOffset;
@@ -254,8 +255,9 @@
             position.x = centerOffset + 0.5 * offset.width;
             columnCount = (self.bounds.size.width / offset.width);
         }
+        BOOL rowIsOutside = position.y < CGRectGetMinY(boundingBox) || position.y > CGRectGetMaxY(boundingBox);
         for (NSUInteger column = 0; column < columnCount; ++column) {
-            if ( ! [perforationMaskPath containsPoint: position]) {
+            if ( rowIsOutside || ! CGRectContainsPoint(boundingBox, position) || ! [perforationMaskPath containsPoint: position]) {
                 [perforationPath moveToPoint: position];
                 [perforationPath addArcWithCenter: position radius: radius startAngle:0 endAngle:2 * M_PI clockwise: NO];
                 [perforationPath closePath];
