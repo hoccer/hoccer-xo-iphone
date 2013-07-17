@@ -23,7 +23,8 @@
 @property (nonatomic,assign) HXOMessageDirection  pointDirection;
 @property (nonatomic,strong) NSString *           cellIdentifier;
 @property (nonatomic,strong) NSString *           text;
-
+@property (nonatomic,strong) UIImage  *           previewImage;
+@property (nonatomic,assign) HXOAttachmentStyle   attachmentStyle;
 @end
 
 @implementation TestingGroundViewController
@@ -85,21 +86,32 @@
     i7.cellIdentifier = [TextMessageCell reuseIdentifier];
     i7.colorScheme = HXOBubbleColorSchemeWhite;
     i7.pointDirection = HXOMessageDirectionIncoming;
-    i7.text = @"Chocolate cake danish tart ice cream. Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
+    i7.text = @"Chocolate cake danish tart ice cream. 030 87654321"; // Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
 
     BubbleItem * i8 = [[BubbleItem alloc] init];
     i8.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
     i8.colorScheme = HXOBubbleColorSchemeBlue;
     i8.pointDirection = HXOMessageDirectionOutgoing;
+    i8.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
+    i8.attachmentStyle = HXOAttachmentStyleOriginalAspect;
 
     BubbleItem * i9 = [[BubbleItem alloc] init];
     i9.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i9.colorScheme = HXOBubbleColorSchemeRed;
+    i9.colorScheme = HXOBubbleColorSchemeBlue;
     i9.pointDirection = HXOMessageDirectionOutgoing;
+    i9.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i9.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
 
+
+    BubbleItem * i10 = [[BubbleItem alloc] init];
+    i10.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i10.colorScheme = HXOBubbleColorSchemeRed;
+    i10.pointDirection = HXOMessageDirectionOutgoing;
+    i10.attachmentStyle = HXOAttachmentStyleThumbnail;
+    //i10.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
 
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
-               i8, i9];
+               i8, i9, i10];
 }
 
 - (void) registerTokenClasses: (HXOLinkyLabel*) label {
@@ -144,7 +156,7 @@
                                                  }
                                              }
                                            cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                           otherButtonTitles: NSLocalizedString(@"button_title_call", nil)];
+                                           otherButtonTitles: NSLocalizedString(@"button_title_call", nil), nil];
     [alert show];
 }
 
@@ -202,7 +214,8 @@
 }
 
 - (void) configureAttachmentCell: (AttachmentMessageCell*) cell item: (BubbleItem*) item {
-
+    cell.previewImage = item.previewImage;
+    cell.attachmentStyle = item.attachmentStyle;
 }
 
 

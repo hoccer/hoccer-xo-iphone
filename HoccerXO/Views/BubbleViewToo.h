@@ -13,11 +13,11 @@
 @class InsetImageView;
 @class HXOLinkyLabel;
 
-typedef enum HXOBubbleAttachmentTypes {
-    HXOBubbleAttachmentTypeNone,
-    HXOBubbleAttachmentTypeIconic,
-    HXOBubbleAttachmentTypeImage
-} HXOBubbleAttachmentType;
+typedef enum HXOAttachmentStyles {
+    HXOAttachmentStyleThumbnail,
+    HXOAttachmentStyleOriginalAspect,
+    HXOAttachmentStyleCropped16To9
+} HXOAttachmentStyle;
 
 typedef enum HXOBubbleColorSchemes {
     HXOBubbleColorSchemeWhite,
@@ -35,7 +35,6 @@ typedef enum HXOMessageDirections {
 
 @property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
 @property (nonatomic,assign) HXOMessageDirection     messageDirection;
-//@property (nonatomic,assign) HXOBubbleAttachmentType attachmentType;
 @property (nonatomic,readonly) InsetImageView *      avatar;
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width;
@@ -51,6 +50,8 @@ typedef enum HXOMessageDirections {
 @interface AttachmentMessageCell : BubbleViewToo
 
 @property (nonatomic,readonly) UIProgressView * progressBar;
+@property (nonatomic,strong) UIImage *          previewImage;
+@property (nonatomic,assign) HXOAttachmentStyle attachmentStyle;
 
 @end
 
