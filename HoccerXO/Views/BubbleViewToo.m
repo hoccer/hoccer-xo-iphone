@@ -110,10 +110,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     //// General Declarations
     CGContextRef context = UIGraphicsGetCurrentContext();
 
-    [self drawPlainBubble: context withFillImage: nil];
+    [self drawPlainBubble: context withFillImage: nil innerGlowAlpha: 0.3];
 }
 
-- (void)drawPlainBubble:(CGContextRef) context withFillImage: (UIImage*) fillImage {
+- (void)drawPlainBubble:(CGContextRef) context withFillImage: (UIImage*) fillImage innerGlowAlpha: (CGFloat) glowAlpha {
 
     BOOL isEtched = self.colorScheme == HXOBubbleColorSchemeEtched;
 
@@ -174,7 +174,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     CGContextRestoreGState(context);
 
     if (self.colorScheme != HXOBubbleColorSchemeEtched && self.colorScheme != HXOBubbleColorSchemeWhite) {
-        [self drawInnerGlow: context path: bubblePath];
+        [self drawInnerGlow: context path: bubblePath alpha: glowAlpha];
     }
 
     [bubbleStrokeColor setStroke];
@@ -182,8 +182,8 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     [bubblePath stroke];
 }
 
-- (void) drawInnerGlow: (CGContextRef) context path: (UIBezierPath*) path {
-    UIColor * innerGlowColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
+- (void) drawInnerGlow: (CGContextRef) context path: (UIBezierPath*) path alpha: (CGFloat) alpha {
+    UIColor * innerGlowColor = [UIColor colorWithWhite: 1.0 alpha: alpha];
 
     CGContextSaveGState(context);
 
@@ -421,10 +421,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
-        [self drawPlainBubble: context withFillImage: nil];
+        [self drawPlainBubble: context withFillImage: nil innerGlowAlpha: 0.2];
         [self drawThumbnailInContext: context];
     } else {
-        [self drawPlainBubble: context withFillImage: self.previewImage];
+        [self drawPlainBubble: context withFillImage: self.previewImage innerGlowAlpha: 0.3];
     }
 }
 
