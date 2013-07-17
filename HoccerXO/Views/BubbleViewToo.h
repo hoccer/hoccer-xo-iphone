@@ -52,6 +52,8 @@ typedef enum HXOMessageDirections {
 @property (nonatomic,readonly) UIProgressView * progressBar;
 @property (nonatomic,strong) UIImage *          previewImage;
 @property (nonatomic,assign) HXOAttachmentStyle attachmentStyle;
+@property (nonatomic,strong) UIImage *          smallAttachmentTypeIcon;
+@property (nonatomic,strong) UIImage *          largeAttachmentTypeIcon;
 
 @end
 

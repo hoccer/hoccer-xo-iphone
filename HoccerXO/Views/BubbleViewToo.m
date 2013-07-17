@@ -71,6 +71,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
 - (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
     _colorScheme = colorScheme;
     [self configureDropShadow];
+    [self setNeedsLayout];
 }
 
 - (void) setMessageDirection:(HXOMessageDirection)messageDirection {
@@ -84,6 +85,8 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
         _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
     }
     _avatar.frame = frame;
+    [self configureDropShadow];
+    [self setNeedsLayout];
 }
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width {
@@ -93,6 +96,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
 - (void) layoutSubviews {
     [super layoutSubviews];
     self.layer.shadowPath = [self createShadowPath].CGPath;
+    [self setNeedsDisplay];
 }
 
 - (UIBezierPath*) createShadowPath {
@@ -173,7 +177,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
 
     CGContextRestoreGState(context);
 
-    if (self.colorScheme != HXOBubbleColorSchemeEtched && self.colorScheme != HXOBubbleColorSchemeWhite) {
+    if (self.colorScheme != HXOBubbleColorSchemeEtched) {
         [self drawInnerGlow: context path: bubblePath alpha: glowAlpha];
     }
 
@@ -433,17 +437,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     UIColor* thumbnailFrameColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
     CGRect frame = [self bubbleFrame];
 
-    UIBezierPath* thumbnailFramePath = [UIBezierPath bezierPath];
-    [thumbnailFramePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 1.5)];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMaxY(frame))];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMaxY(frame))];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 0.4)];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 2)];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMinY(frame))];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMinY(frame))];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 0.9)];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 1.5)];
-    [thumbnailFramePath closePath];
+    UIBezierPath* thumbnailFramePath = self.messageDirection == HXOMessageDirectionIncoming ? [self rightAlignedThumbnailFrameInRect: frame] : [self leftAlignedThumbnailFrameInRect: frame];
 
     
     CGContextSaveGState(context);
@@ -470,6 +464,11 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
         CGGradientRelease(thumbnailFrameGradient);
         CGColorSpaceRelease(colorSpace);
 
+        UIImage * icon = self.largeAttachmentTypeIcon;
+        CGPoint iconOrigin = CGPointMake(thumbnailFrameBounds.origin.x + 0.5 * thumbnailFrameBounds.size.width - 0.5 * icon.size.width,
+                                         thumbnailFrameBounds.origin.y + 0.5 * thumbnailFrameBounds.size.height - 0.5 * icon.size.height);
+        [icon drawAtPoint: iconOrigin];
+
     } else {
         [self.previewImage drawInRect: [self thumbnailFrame: thumbnailFrameBounds]];
     }
@@ -477,8 +476,38 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     [thumbnailFrameColor setStroke];
     thumbnailFramePath.lineWidth = 1;
     [thumbnailFramePath stroke];
+}
 
+- (UIBezierPath*) leftAlignedThumbnailFrameInRect: (CGRect) frame {
+    UIBezierPath* thumbnailFramePath = [UIBezierPath bezierPath];
+    [thumbnailFramePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 1.5)];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMaxY(frame))];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMaxY(frame))];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 0.4)];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 2)];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMinY(frame))];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMinY(frame))];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 0.9)];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 1.5)];
+    [thumbnailFramePath closePath];
 
+    return thumbnailFramePath;
+}
+
+- (UIBezierPath*) rightAlignedThumbnailFrameInRect: (CGRect) frame {
+    UIBezierPath* thumbnailFramePath = [UIBezierPath bezierPath];
+    [thumbnailFramePath moveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 1.5)];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 2, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 0.9, CGRectGetMaxY(frame))];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMaxY(frame))];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 0.4)];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 2)];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMinY(frame))];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 2, CGRectGetMinY(frame))];
+    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 0.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 0.9)];
+    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 1.5)];
+    [thumbnailFramePath closePath];
+
+    return thumbnailFramePath;
 }
 
 - (CGRect) thumbnailFrame: (CGRect) frame {
@@ -537,6 +566,30 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMinY(frame))];
     [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 9, CGRectGetMinY(frame))];
     [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 0.9)];
+    [thumbnailedBubblePathPath closePath];
+
+    return thumbnailedBubblePathPath;
+}
+
+- (UIBezierPath*) leftPointingBubblePathInRect: (CGRect) frame {
+    if (self.attachmentStyle != HXOAttachmentStyleThumbnail) {
+        return [super leftPointingBubblePathInRect: frame];
+    }
+
+    UIBezierPath* thumbnailedBubblePathPath = [UIBezierPath bezierPath];
+    [thumbnailedBubblePathPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 2)];
+    [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 18.43)];
+    [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 3.5, CGRectGetMinY(frame) + 20.01) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 19.53) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 5.04, CGRectGetMinY(frame) + 20)];
+    [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 18.43) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 2.04, CGRectGetMinY(frame) + 20.01) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 19.53)];
+    [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 27.07) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 22.71) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 2.99, CGRectGetMinY(frame) + 26.16)];
+    [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 1.5)];
+    [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 7.9, CGRectGetMaxY(frame))];
+    [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMaxY(frame))];
+    [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 0.4)];
+    [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 2)];
+    [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMinY(frame))];
+    [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMinY(frame))];
+    [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 0.9)];
     [thumbnailedBubblePathPath closePath];
 
     return thumbnailedBubblePathPath;
