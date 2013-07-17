@@ -427,6 +427,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
         [self drawPlainBubble: context withFillImage: nil innerGlowAlpha: 0.2];
         [self drawThumbnailInContext: context];
+        [self drawAttachmentTextInContext: context];
     } else {
         [self drawPlainBubble: context withFillImage: self.previewImage innerGlowAlpha: 0.3];
     }
@@ -476,6 +477,26 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     [thumbnailFrameColor setStroke];
     thumbnailFramePath.lineWidth = 1;
     [thumbnailFramePath stroke];
+}
+
+- (void) drawAttachmentTextInContext: (CGContextRef) context {
+
+    CGRect frame = [self bubbleFrame];
+    
+    //// Text Drawing
+    CGRect textRect;
+    if (self.messageDirection == HXOMessageDirectionIncoming) {
+        textRect = CGRectMake(CGRectGetMinX(frame) + 16, CGRectGetMinY(frame) + 15, CGRectGetWidth(frame) - 82, 16);
+    } else {
+        textRect = CGRectMake(CGRectGetMinX(frame) + 56, CGRectGetMinY(frame) + 15, CGRectGetWidth(frame) - 16, 16);
+
+    }
+    CGContextSaveGState(context);
+    CGContextSetShadowWithColor(context, CGSizeMake(0, 1), 0, [UIColor blackColor].CGColor);
+    [[UIColor whiteColor] setFill];
+    [self.attachmentText drawInRect: textRect withFont: [UIFont italicSystemFontOfSize: 13.0] lineBreakMode: NSLineBreakByTruncatingTail alignment: NSTextAlignmentLeft];
+    CGContextRestoreGState(context);
+
 }
 
 - (UIBezierPath*) leftAlignedThumbnailFrameInRect: (CGRect) frame {

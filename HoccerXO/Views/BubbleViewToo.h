@@ -54,6 +54,7 @@ typedef enum HXOMessageDirections {
 @property (nonatomic,assign) HXOAttachmentStyle attachmentStyle;
 @property (nonatomic,strong) UIImage *          smallAttachmentTypeIcon;
 @property (nonatomic,strong) UIImage *          largeAttachmentTypeIcon;
+@property (nonatomic,strong) NSString *         attachmentText;
 
 @end
 
