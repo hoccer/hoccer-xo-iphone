@@ -22,7 +22,7 @@
 
 - (void) engraveLabel: (UILabel*) label {
     label.textColor = [UIColor darkGrayColor];
-    label.shadowColor = [UIColor whiteColor];
+    label.shadowColor = [UIColor colorWithWhite: 1.0 alpha: 0.5];
     label.shadowOffset = CGSizeMake(0.0, 1.0);
 
 }
