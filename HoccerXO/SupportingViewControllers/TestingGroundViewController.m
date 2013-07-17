@@ -25,6 +25,9 @@
 @property (nonatomic,strong) NSString *           text;
 @property (nonatomic,strong) UIImage  *           previewImage;
 @property (nonatomic,assign) HXOAttachmentStyle   attachmentStyle;
+@property (nonatomic,strong) UIImage *            smallAttachmentTypeIcon;
+@property (nonatomic,strong) UIImage *            largeAttachmentTypeIcon;
+
 @end
 
 @implementation TestingGroundViewController
@@ -97,21 +100,43 @@
 
     BubbleItem * i9 = [[BubbleItem alloc] init];
     i9.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i9.colorScheme = HXOBubbleColorSchemeBlue;
-    i9.pointDirection = HXOMessageDirectionOutgoing;
-    i9.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i9.colorScheme = HXOBubbleColorSchemeWhite;
+    i9.pointDirection = HXOMessageDirectionIncoming;
     i9.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
-
+    i9.attachmentStyle = HXOAttachmentStyleOriginalAspect;
 
     BubbleItem * i10 = [[BubbleItem alloc] init];
     i10.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i10.colorScheme = HXOBubbleColorSchemeRed;
+    i10.colorScheme = HXOBubbleColorSchemeBlue;
     i10.pointDirection = HXOMessageDirectionOutgoing;
     i10.attachmentStyle = HXOAttachmentStyleThumbnail;
-    //i10.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
+    i10.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
+
+    BubbleItem * i11 = [[BubbleItem alloc] init];
+    i11.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i11.colorScheme = HXOBubbleColorSchemeWhite;
+    i11.pointDirection = HXOMessageDirectionIncoming;
+    i11.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i11.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
+
+    BubbleItem * i12 = [[BubbleItem alloc] init];
+    i12.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i12.colorScheme = HXOBubbleColorSchemeRed;
+    i12.pointDirection = HXOMessageDirectionOutgoing;
+    i12.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i12.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_music"];
+    i12.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_music"];
+
+    BubbleItem * i13 = [[BubbleItem alloc] init];
+    i13.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i13.colorScheme = HXOBubbleColorSchemeWhite;
+    i13.pointDirection = HXOMessageDirectionIncoming;
+    i13.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i13.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_location"];
+    i13.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_location"];
 
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
-               i8, i9, i10];
+               i8, i9, i10, i11, i12, i13];
 }
 
 - (void) registerTokenClasses: (HXOLinkyLabel*) label {
@@ -216,6 +241,8 @@
 - (void) configureAttachmentCell: (AttachmentMessageCell*) cell item: (BubbleItem*) item {
     cell.previewImage = item.previewImage;
     cell.attachmentStyle = item.attachmentStyle;
+    cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
+    cell.largeAttachmentTypeIcon = item.largeAttachmentTypeIcon;
 }
 
 
