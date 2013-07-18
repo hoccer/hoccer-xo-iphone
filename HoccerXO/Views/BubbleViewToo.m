@@ -486,7 +486,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     //// Text Drawing
     CGRect textRect;
     if (self.messageDirection == HXOMessageDirectionIncoming) {
-        textRect = CGRectMake(CGRectGetMinX(frame) + 16, CGRectGetMinY(frame) + 15, CGRectGetWidth(frame) - 82, 16);
+        textRect = CGRectMake(CGRectGetMinX(frame) + 16, CGRectGetMinY(frame) + 15, CGRectGetWidth(frame) - 56, 16);
     } else {
         textRect = CGRectMake(CGRectGetMinX(frame) + 56, CGRectGetMinY(frame) + 15, CGRectGetWidth(frame) - 16, 16);
 
