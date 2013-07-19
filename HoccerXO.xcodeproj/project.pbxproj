@@ -116,6 +116,7 @@
 		634B47351796EA91001C1C0D /* attachment_icon_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 634B471D1796EA91001C1C0D /* attachment_icon_video@2x.png */; };
 		634B47361796EA91001C1C0D /* attachment_icon_voice.png in Resources */ = {isa = PBXBuildFile; fileRef = 634B471E1796EA91001C1C0D /* attachment_icon_voice.png */; };
 		634B47371796EA91001C1C0D /* attachment_icon_voice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 634B471F1796EA91001C1C0D /* attachment_icon_voice@2x.png */; };
+		634B474C1798B07F001C1C0D /* HXOProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 634B474B1798B07F001C1C0D /* HXOProgressView.m */; };
 		63540A9216E500D20087D24E /* BubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540A9116E500D20087D24E /* BubbleView.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		636492CF1711CDAB00E35514 /* icon_profile-name.png in Resources */ = {isa = PBXBuildFile; fileRef = 636492CD1711CDAB00E35514 /* icon_profile-name.png */; };
@@ -624,6 +625,8 @@
 		634B471D1796EA91001C1C0D /* attachment_icon_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachment_icon_video@2x.png"; sourceTree = "<group>"; };
 		634B471E1796EA91001C1C0D /* attachment_icon_voice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = attachment_icon_voice.png; sourceTree = "<group>"; };
 		634B471F1796EA91001C1C0D /* attachment_icon_voice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachment_icon_voice@2x.png"; sourceTree = "<group>"; };
+		634B474A1798B07F001C1C0D /* HXOProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOProgressView.h; sourceTree = "<group>"; };
+		634B474B1798B07F001C1C0D /* HXOProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOProgressView.m; sourceTree = "<group>"; };
 		63540A9016E500D20087D24E /* BubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BubbleView.h; sourceTree = "<group>"; };
 		63540A9116E500D20087D24E /* BubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleView.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
@@ -1167,12 +1170,14 @@
 			children = (
 				633A9B24177B3BA900E066EF /* HXOActionSheet.h */,
 				633A9B25177B3BA900E066EF /* HXOActionSheet.m */,
-				633A9B26177B3BA900E066EF /* HXOSheetView.h */,
-				633A9B27177B3BA900E066EF /* HXOSheetView.m */,
 				63CD585C1782E02E00BE7627 /* HXOIconSheet.h */,
 				63CD585D1782E02E00BE7627 /* HXOIconSheet.m */,
 				638EBE351787004200F1B9AD /* HXOLinkyLabel.h */,
 				638EBE361787004200F1B9AD /* HXOLinkyLabel.m */,
+				634B474A1798B07F001C1C0D /* HXOProgressView.h */,
+				634B474B1798B07F001C1C0D /* HXOProgressView.m */,
+				633A9B26177B3BA900E066EF /* HXOSheetView.h */,
+				633A9B27177B3BA900E066EF /* HXOSheetView.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -1639,7 +1644,6 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
-				638EBE3817870E8600F1B9AD /* CoreText.framework */,
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
 				6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */,
 				6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */,
@@ -1672,6 +1676,7 @@
 				63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */,
 				639094C11739970200DF889B /* CoreLocation.framework */,
 				E96CB01717137D37005F8FFA /* CoreMedia.framework */,
+				638EBE3817870E8600F1B9AD /* CoreText.framework */,
 				63A7F684172C2F3100C0EC26 /* CoreVideo.framework */,
 				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
 				6327EB6E171D55DA00AF75E1 /* libcrypto.a */,
@@ -2570,6 +2575,7 @@
 				E9756194177E23AF000B6381 /* HoccerXOT.xcdatamodeld in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
 				634B46D0178D8015001C1C0D /* BubbleViewToo.m in Sources */,
+				634B474C1798B07F001C1C0D /* HXOProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
