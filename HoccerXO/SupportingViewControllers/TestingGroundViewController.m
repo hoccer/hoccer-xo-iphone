@@ -31,6 +31,7 @@
 @property (nonatomic,strong) NSString *                 attachmentText;
 @property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
 @property (nonatomic,assign) float                      progress;
+@property (nonatomic,assign) HXOBubbleRunButtonStyle    runButtonStyle;
 
 @end
 
@@ -112,6 +113,10 @@
     i9.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i9.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i9.attachmentText = @"cupcakes.jpg";
+    i9.runButtonStyle = HXOBubbleRunButtonPlay;
+    i9.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i9.progress = 1.0;
+
 
     BubbleItem * i10 = [[BubbleItem alloc] init];
     i10.cellIdentifier = [AttachmentMessageCell reuseIdentifier];

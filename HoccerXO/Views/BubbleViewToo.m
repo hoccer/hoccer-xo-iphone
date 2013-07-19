@@ -18,9 +18,10 @@
 static const CGFloat kHXOBubblePadding = 8;
 static const CGFloat kHXOBubbleMinimumHeight = 48;
 static const CGFloat kHXOBubbleTypeIconSize = 16;
-static const CGFloat kHXOBubbleTypeIconPadding = 5;
-static const CGFloat kHXOBubbleProgressSizeSmall = 50;
-static const CGFloat kHXOBubbleProgressSizeLarge = 100;
+static const CGFloat kHXOBubbleTypeIconPadding = 3;
+static const CGFloat kHXOBubbleProgressSizeSmall = 70;
+static const CGFloat kHXOBubbleProgressSizeLarge = 150;
+static const CGFloat kHXOBubblePlayButtonSize = 49;
 
 @implementation BubbleViewToo
 
@@ -464,8 +465,12 @@ static const CGFloat kHXOBubbleProgressSizeLarge = 100;
 
         self.attachmentTitle.frame = labelFrame;
     } else {
-        progressFrame.origin.x = contentFrame.origin.x + 0.5 * (contentFrame.size.width - progressFrame.size.width);
         progressFrame.size.width = kHXOBubbleProgressSizeLarge;
+        progressFrame.origin.x = contentFrame.origin.x + 0.5 * (contentFrame.size.width - progressFrame.size.width);
+        if (self.runButtonStyle != HXOBubbleRunButtonNone) {
+            CGRect runButtonFrame = [self runButtonFrame];
+            progressFrame.origin.y = runButtonFrame.origin.y + runButtonFrame.size.height + kHXOBubblePadding;
+        }
     }
     self.progressBar.frame = progressFrame;
 }
@@ -511,6 +516,14 @@ static const CGFloat kHXOBubbleProgressSizeLarge = 100;
         }
     } else {
         [self drawPlainBubble: context withFillImage: self.previewImage innerGlowAlpha: 0.3];
+
+        switch (self.runButtonStyle) {
+            case HXOBubbleRunButtonNone:
+                break;
+            case HXOBubbleRunButtonPlay:
+                [self drawPlayButtonInContext: context];
+                break;
+        }
     }
 }
 
@@ -568,6 +581,44 @@ static const CGFloat kHXOBubbleProgressSizeLarge = 100;
     [self.smallAttachmentTypeIcon drawAtPoint: position];
 }
 
+- (CGRect) runButtonFrame {
+    CGRect frame = [self bubbleFrame];
+    frame.origin.x += 0.5 * (frame.size.width - kHXOBubblePlayButtonSize);
+    frame.origin.y += 0.5 * (frame.size.height - kHXOBubblePlayButtonSize);
+    frame.size.width = kHXOBubblePlayButtonSize;
+    frame.size.height = kHXOBubblePlayButtonSize;
+    return frame;
+}
+
+- (void) drawPlayButtonInContext: (CGContextRef) context {
+    //// Frames
+    CGRect frame = [self runButtonFrame];
+
+    //// Color Declarations
+    UIColor* fillColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.778];
+    UIColor* strokeColor = [UIColor colorWithRed: 0.404 green: 0.451 blue: 0.482 alpha: 1];
+
+    //// Bezier 2 Drawing
+    UIBezierPath* bezier2Path = [UIBezierPath bezierPath];
+    [bezier2Path moveToPoint: CGPointMake(CGRectGetMinX(frame) + 19.75, CGRectGetMinY(frame) + 14.25)];
+    [bezier2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 19.75, CGRectGetMinY(frame) + 35.25)];
+    [bezier2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 34.75, CGRectGetMinY(frame) + 24.75)];
+    [bezier2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 19.75, CGRectGetMinY(frame) + 14.25)];
+    [bezier2Path closePath];
+    [bezier2Path moveToPoint: CGPointMake(CGRectGetMinX(frame) + 41.82, CGRectGetMinY(frame) + 7.18)];
+    [bezier2Path addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 41.82, CGRectGetMinY(frame) + 41.82) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 51.39, CGRectGetMinY(frame) + 16.74) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 51.39, CGRectGetMinY(frame) + 32.26)];
+    [bezier2Path addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7.18, CGRectGetMinY(frame) + 41.82) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 32.26, CGRectGetMinY(frame) + 51.39) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 16.74, CGRectGetMinY(frame) + 51.39)];
+    [bezier2Path addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7.18, CGRectGetMinY(frame) + 7.18) controlPoint1: CGPointMake(CGRectGetMinX(frame) - 2.39, CGRectGetMinY(frame) + 32.26) controlPoint2: CGPointMake(CGRectGetMinX(frame) - 2.39, CGRectGetMinY(frame) + 16.74)];
+    [bezier2Path addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 41.82, CGRectGetMinY(frame) + 7.18) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 16.74, CGRectGetMinY(frame) - 2.39) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 32.26, CGRectGetMinY(frame) - 2.39)];
+    [bezier2Path closePath];
+    bezier2Path.lineJoinStyle = kCGLineJoinRound;
+
+    [fillColor setFill];
+    [bezier2Path fill];
+    [strokeColor setStroke];
+    bezier2Path.lineWidth = 1;
+    [bezier2Path stroke];
+}
 
 - (UIBezierPath*) leftAlignedThumbnailFrameInRect: (CGRect) frame {
     UIBezierPath* thumbnailFramePath = [UIBezierPath bezierPath];

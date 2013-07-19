@@ -72,8 +72,6 @@ static UIImage * HXOProgressViewProgressImage = NULL;
         CGSize shadowOffset = CGSizeMake(0.1, 2.1);
         CGFloat shadowBlurRadius = 2;
 
-        //// Frames
-
         //// Outline Drawing
         UIBezierPath* outlinePath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, CGRectGetWidth(frame) - 1, CGRectGetHeight(frame) - 1)];
         [outlineColor setStroke];
@@ -181,8 +179,6 @@ static UIImage * HXOProgressViewProgressImage = NULL;
                                    (id)lightGradientColor.CGColor, nil];
         CGFloat gradientLocations[] = {0, 1};
         CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
-
-        //// Frames
 
         //// Progress Drawing
         CGRect progressRect = CGRectMake(CGRectGetMinX(frame) + 2.5, CGRectGetMinY(frame) + 2.5, CGRectGetWidth(frame) - 5, CGRectGetHeight(frame) - 5);

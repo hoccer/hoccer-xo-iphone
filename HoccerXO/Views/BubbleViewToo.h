@@ -52,6 +52,11 @@ typedef enum HXOAttachmentTransferStates {
     HXOAttachmentTranserStateInProgress
 } HXOAttachmentTranserState;
 
+typedef enum HXOBubbleRunButtonStyles {
+    HXOBubbleRunButtonNone,
+    HXOBubbleRunButtonPlay
+} HXOBubbleRunButtonStyle;
+
 @interface AttachmentMessageCell : BubbleViewToo
 
 @property (nonatomic,readonly) UIProgressView *         progressBar;
@@ -62,6 +67,7 @@ typedef enum HXOAttachmentTransferStates {
 @property (nonatomic,strong) UIImage *                  smallAttachmentTypeIcon;
 @property (nonatomic,strong) UIImage *                  largeAttachmentTypeIcon;
 @property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
+@property (nonatomic,assign) HXOBubbleRunButtonStyle    runButtonStyle;
 
 @end
 
