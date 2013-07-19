@@ -274,11 +274,29 @@
     cell.attachmentStyle = item.attachmentStyle;
     cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
     cell.largeAttachmentTypeIcon = item.largeAttachmentTypeIcon;
-    cell.attachmentTitle.text = item.attachmentText;
     cell.attachmentTransferState = item.attachmentTransferState;
     cell.progressBar.progress = item.progress;
-}
+    cell.runButtonStyle = item.runButtonStyle;
 
+    NSString * title = item.attachmentText;
+    NSMutableAttributedString * attributedTitle;
+    NSString * fileExtension = [title pathExtension];
+    if (title != nil) {
+        if (item.attachmentTransferState == HXOAttachmentTranserStateInProgress) {
+            NSDictionary * attributes = @{NSForegroundColorAttributeName: [UIColor colorWithWhite: 0.5 alpha:1.0]};
+            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
+        } else if ( ! [fileExtension isEqualToString: @""]) {
+            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+            NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
+            [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor colorWithWhite: 0.5 alpha: 1.0] range: range];
+        } else {
+            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+        }
+    }
+
+    cell.attachmentTitle.attributedText = attributedTitle;
+
+}
 
 @end
 
