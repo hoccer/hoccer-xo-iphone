@@ -13,9 +13,14 @@
 
 #import "InsetImageView.h"
 #import "HXOLinkyLabel.h"
+#import "HXOProgressView.h"
 
 static const CGFloat kHXOBubblePadding = 8;
 static const CGFloat kHXOBubbleMinimumHeight = 48;
+static const CGFloat kHXOBubbleTypeIconSize = 16;
+static const CGFloat kHXOBubbleTypeIconPadding = 5;
+static const CGFloat kHXOBubbleProgressSizeSmall = 50;
+static const CGFloat kHXOBubbleProgressSizeLarge = 100;
 
 @implementation BubbleViewToo
 
@@ -141,7 +146,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     if (fillImage != nil) {
         CGContextSaveGState(context);
         [bubblePath addClip];
-        [fillImage drawInRect: bubbleRect];
+        [fillImage drawInRect: [self fillImageRectForImage: fillImage]];
         CGContextRestoreGState(context);
     } else {
         [bubbleFillColor setFill];
@@ -184,6 +189,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     [bubbleStrokeColor setStroke];
     bubblePath.lineWidth = 1;
     [bubblePath stroke];
+}
+
+- (CGRect) fillImageRectForImage: (UIImage*) image {
+    return [self bubbleFrame];
 }
 
 - (void) drawInnerGlow: (CGContextRef) context path: (UIBezierPath*) path alpha: (CGFloat) alpha {
@@ -391,6 +400,76 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
 
 @implementation AttachmentMessageCell
 
+- (void) commonInit {
+    [super commonInit];
+
+    _progressBar = [[HXOProgressView alloc] initWithFrame: CGRectMake(0, 0, kHXOBubbleProgressSizeLarge, 15)];
+    _progressBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self addSubview: _progressBar];
+    _progressBar.hidden = YES;
+
+    _attachmentTitle = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 100, 16)];
+    _attachmentTitle.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    _attachmentTitle.font = [UIFont italicSystemFontOfSize: 13.0];
+    _attachmentTitle.backgroundColor = [UIColor clearColor/* orangeColor*/];
+    _attachmentTitle.textColor = [UIColor whiteColor];
+    _attachmentTitle.shadowColor = [UIColor blackColor];
+    _attachmentTitle.shadowOffset = CGSizeMake(0, -1);
+    [self addSubview: _attachmentTitle];
+}
+
+- (void) setAttachmentTransferState:(HXOAttachmentTranserState)attachmentTransferState {
+    _attachmentTransferState = attachmentTransferState;
+    _progressBar.hidden = attachmentTransferState == HXOAttachmentTransferStateDone;
+}
+
+- (void) setAttachmentStyle:(HXOAttachmentStyle)attachmentStyle {
+    _attachmentStyle = attachmentStyle;
+    _attachmentTitle.hidden = attachmentStyle != HXOAttachmentStyleThumbnail;
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+
+    CGRect contentFrame = [self bubbleFrame];
+    contentFrame.size.width -= kHXOBubblePadding;
+    if (self.messageDirection == HXOMessageDirectionIncoming) {
+        contentFrame.origin.x += kHXOBubblePadding;
+    }
+
+    CGRect progressFrame = self.progressBar.frame;
+    progressFrame.origin.y = contentFrame.origin.y + 0.5 * (contentFrame.size.height - progressFrame.size.height);
+
+    if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
+        CGRect labelFrame = self.attachmentTitle.frame;
+        labelFrame.origin.y = contentFrame.origin.y + 0.5 * (contentFrame.size.height - labelFrame.size.height);
+        labelFrame.origin.x = contentFrame.origin.x;
+        labelFrame.size.width = contentFrame.size.width - (2 * kHXOBubblePadding + kHXOBubbleMinimumHeight);
+        if (self.messageDirection == HXOMessageDirectionIncoming) {
+            labelFrame.origin.x += kHXOBubblePadding;
+        } else {
+            labelFrame.origin.x += kHXOBubblePadding + kHXOBubbleMinimumHeight;
+        }
+
+        if (self.previewImage != nil) {
+            labelFrame.origin.x += kHXOBubbleTypeIconSize + kHXOBubbleTypeIconPadding;
+            labelFrame.size.width -= kHXOBubbleTypeIconSize + kHXOBubbleTypeIconPadding;
+        }
+
+        if (self.attachmentTransferState == HXOAttachmentTranserStateInProgress) {
+            labelFrame.size.width -= kHXOBubbleProgressSizeSmall + kHXOBubblePadding;
+            progressFrame.size.width = kHXOBubbleProgressSizeSmall;
+            progressFrame.origin.x = labelFrame.origin.x + labelFrame.size.width + kHXOBubblePadding;
+        }
+
+        self.attachmentTitle.frame = labelFrame;
+    } else {
+        progressFrame.origin.x = contentFrame.origin.x + 0.5 * (contentFrame.size.width - progressFrame.size.width);
+        progressFrame.size.width = kHXOBubbleProgressSizeLarge;
+    }
+    self.progressBar.frame = progressFrame;
+}
+
 - (UIColor*) fillColor {
     switch (self.colorScheme) {
         case HXOBubbleColorSchemeRed:
@@ -427,7 +506,9 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
         [self drawPlainBubble: context withFillImage: nil innerGlowAlpha: 0.2];
         [self drawThumbnailInContext: context];
-        [self drawAttachmentTextInContext: context];
+        if (self.previewImage != nil) {
+            [self drawTypeIconInContext: context];
+        }
     } else {
         [self drawPlainBubble: context withFillImage: self.previewImage innerGlowAlpha: 0.3];
     }
@@ -479,25 +560,14 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     [thumbnailFramePath stroke];
 }
 
-- (void) drawAttachmentTextInContext: (CGContextRef) context {
-
-    CGRect frame = [self bubbleFrame];
-    
-    //// Text Drawing
-    CGRect textRect;
-    if (self.messageDirection == HXOMessageDirectionIncoming) {
-        textRect = CGRectMake(CGRectGetMinX(frame) + 16, CGRectGetMinY(frame) + 15, CGRectGetWidth(frame) - 56, 16);
-    } else {
-        textRect = CGRectMake(CGRectGetMinX(frame) + 56, CGRectGetMinY(frame) + 15, CGRectGetWidth(frame) - 16, 16);
-
-    }
-    CGContextSaveGState(context);
-    CGContextSetShadowWithColor(context, CGSizeMake(0, 1), 0, [UIColor blackColor].CGColor);
-    [[UIColor whiteColor] setFill];
-    [self.attachmentText drawInRect: textRect withFont: [UIFont italicSystemFontOfSize: 13.0] lineBreakMode: NSLineBreakByTruncatingTail alignment: NSTextAlignmentLeft];
-    CGContextRestoreGState(context);
-
+- (void) drawTypeIconInContext: (CGContextRef) context {
+    CGRect bubbleFrame = [self bubbleFrame];
+    CGFloat x = bubbleFrame.origin.x + kHXOBubblePadding + 0.5 * (kHXOBubbleTypeIconSize - self.smallAttachmentTypeIcon.size.width) + (self.messageDirection == HXOMessageDirectionOutgoing ? kHXOBubbleMinimumHeight : kHXOBubblePadding);
+    CGFloat y = bubbleFrame.origin.y + 0.5 * (bubbleFrame.size.height - self.smallAttachmentTypeIcon.size.height);
+    CGPoint position = CGPointMake(x, y);
+    [self.smallAttachmentTypeIcon drawAtPoint: position];
 }
+
 
 - (UIBezierPath*) leftAlignedThumbnailFrameInRect: (CGRect) frame {
     UIBezierPath* thumbnailFramePath = [UIBezierPath bezierPath];
@@ -552,8 +622,8 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
             break;
         case HXOAttachmentStyleOriginalAspect:
         {
-            CGFloat aspect = self.previewImage.size.height / self.previewImage.size.width;
-            bubbleHeight = imageWidth * aspect;
+            CGFloat aspect = self.previewImage != nil ? self.previewImage.size.width / self.previewImage.size.height : self.imageAspect;
+            bubbleHeight = imageWidth / aspect;
             break;
         }
         case HXOAttachmentStyleCropped16To9:
@@ -614,6 +684,25 @@ static const CGFloat kHXOBubbleMinimumHeight = 48;
     [thumbnailedBubblePathPath closePath];
 
     return thumbnailedBubblePathPath;
+}
+
+- (CGRect) fillImageRectForImage: (UIImage*) image {
+    if (self.attachmentStyle == HXOAttachmentStyleCropped16To9) {
+        CGRect bubbleFrame = [self bubbleFrame];
+        CGFloat dx = image.size.width - bubbleFrame.size.width;
+        CGFloat dy = image.size.height - bubbleFrame.size.height;
+        CGFloat scale;
+        if (dx < dy) {
+            scale = bubbleFrame.size.width / image.size.width;
+        } else {
+            scale = bubbleFrame.size.height / image.size.height;
+        }
+        CGRect imageFrame = CGRectMake(bubbleFrame.origin.x, bubbleFrame.origin.y, image.size.width * scale, image.size.height * scale);
+        imageFrame.origin.x -= 0.5 * (imageFrame.size.width - bubbleFrame.size.width);
+        imageFrame.origin.y -= 0.5 * (imageFrame.size.height - bubbleFrame.size.height);
+        return imageFrame;
+    }
+    return [self bubbleFrame];
 }
 
 @end

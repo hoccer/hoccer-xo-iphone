@@ -19,15 +19,18 @@
 
 @interface BubbleItem : NSObject
 
-@property (nonatomic,assign) HXOBubbleColorScheme colorScheme;
-@property (nonatomic,assign) HXOMessageDirection  pointDirection;
-@property (nonatomic,strong) NSString *           cellIdentifier;
-@property (nonatomic,strong) NSString *           text;
-@property (nonatomic,strong) UIImage  *           previewImage;
-@property (nonatomic,assign) HXOAttachmentStyle   attachmentStyle;
-@property (nonatomic,strong) UIImage *            smallAttachmentTypeIcon;
-@property (nonatomic,strong) UIImage *            largeAttachmentTypeIcon;
-@property (nonatomic,strong) NSString *           attachmentText;
+@property (nonatomic,assign) HXOBubbleColorScheme       colorScheme;
+@property (nonatomic,assign) HXOMessageDirection        pointDirection;
+@property (nonatomic,strong) NSString *                 cellIdentifier;
+@property (nonatomic,strong) NSString *                 text;
+@property (nonatomic,strong) UIImage  *                 previewImage;
+@property (nonatomic,assign) CGFloat                    imageAspect;
+@property (nonatomic,assign) HXOAttachmentStyle         attachmentStyle;
+@property (nonatomic,strong) UIImage *                  smallAttachmentTypeIcon;
+@property (nonatomic,strong) UIImage *                  largeAttachmentTypeIcon;
+@property (nonatomic,strong) NSString *                 attachmentText;
+@property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
+@property (nonatomic,assign) float                      progress;
 
 @end
 
@@ -99,6 +102,8 @@
     i8.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i8.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i8.attachmentText = @"cupcakes.jpg";
+    i8.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i8.progress = 0.90;
 
     BubbleItem * i9 = [[BubbleItem alloc] init];
     i9.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
@@ -113,14 +118,20 @@
     i10.colorScheme = HXOBubbleColorSchemeBlue;
     i10.pointDirection = HXOMessageDirectionOutgoing;
     i10.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i10.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
+    i10.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_image"];
     i10.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i10.attachmentText = @"cupcakes.jpg";
+    i10.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i10.progress = 0.33;
 
     BubbleItem * i11 = [[BubbleItem alloc] init];
     i11.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
     i11.colorScheme = HXOBubbleColorSchemeWhite;
     i11.pointDirection = HXOMessageDirectionIncoming;
     i11.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i11.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
+    i11.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_image"];
     i11.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i11.attachmentText = @"cupcakes.jpg";
 
@@ -141,9 +152,21 @@
     i13.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_location"];
     i13.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_location"];
     i13.attachmentText = @"Nice Place";
+    i13.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+
+    BubbleItem * i14 = [[BubbleItem alloc] init];
+    i14.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i14.colorScheme = HXOBubbleColorSchemeWhite;
+    i14.pointDirection = HXOMessageDirectionIncoming;
+    i14.attachmentStyle = HXOAttachmentStyleOriginalAspect;
+    CGSize imageSize = [UIImage imageNamed:@"cupcakes.jpg"].size;
+    i14.imageAspect = imageSize.width / imageSize.height;
+    i14.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i14.progress = 0.5;
+
 
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
-               i8, i9, i10, i11, i12, i13];
+               i8, i9, i10, i11, i12, i13, i14];
 }
 
 - (void) registerTokenClasses: (HXOLinkyLabel*) label {
@@ -247,10 +270,13 @@
 
 - (void) configureAttachmentCell: (AttachmentMessageCell*) cell item: (BubbleItem*) item {
     cell.previewImage = item.previewImage;
+    cell.imageAspect = item.imageAspect;
     cell.attachmentStyle = item.attachmentStyle;
     cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
     cell.largeAttachmentTypeIcon = item.largeAttachmentTypeIcon;
-    cell.attachmentText = item.attachmentText;
+    cell.attachmentTitle.text = item.attachmentText;
+    cell.attachmentTransferState = item.attachmentTransferState;
+    cell.progressBar.progress = item.progress;
 }
 
 

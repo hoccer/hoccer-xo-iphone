@@ -47,14 +47,21 @@ typedef enum HXOMessageDirections {
 
 @end
 
+typedef enum HXOAttachmentTransferStates {
+    HXOAttachmentTransferStateDone,
+    HXOAttachmentTranserStateInProgress
+} HXOAttachmentTranserState;
+
 @interface AttachmentMessageCell : BubbleViewToo
 
-@property (nonatomic,readonly) UIProgressView * progressBar;
-@property (nonatomic,strong) UIImage *          previewImage;
-@property (nonatomic,assign) HXOAttachmentStyle attachmentStyle;
-@property (nonatomic,strong) UIImage *          smallAttachmentTypeIcon;
-@property (nonatomic,strong) UIImage *          largeAttachmentTypeIcon;
-@property (nonatomic,strong) NSString *         attachmentText;
+@property (nonatomic,readonly) UIProgressView *         progressBar;
+@property (nonatomic,readonly) UILabel *                attachmentTitle;
+@property (nonatomic,strong) UIImage *                  previewImage;
+@property (nonatomic,assign) CGFloat                    imageAspect;
+@property (nonatomic,assign) HXOAttachmentStyle         attachmentStyle;
+@property (nonatomic,strong) UIImage *                  smallAttachmentTypeIcon;
+@property (nonatomic,strong) UIImage *                  largeAttachmentTypeIcon;
+@property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
 
 @end
 

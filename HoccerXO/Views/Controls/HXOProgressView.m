@@ -8,7 +8,7 @@
 
 #import "HXOProgressView.h"
 
-static const CGFloat kHXOProgressViewSize = 15.0;
+static const CGFloat kHXOProgressViewSize = 14.0;
 
 
 static UIImage * HXOProgressViewTrackImage = NULL;
@@ -54,11 +54,11 @@ static UIImage * HXOProgressViewProgressImage = NULL;
         CGContextRef context = UIGraphicsGetCurrentContext();
 
         //// Color Declarations
-        UIColor* outlineColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.49];
+        UIColor* outlineColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.15];
         UIColor* borderColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
         UIColor* darkGradientColor = [UIColor colorWithRed: 0.11 green: 0.11 blue: 0.11 alpha: 1];
         UIColor* lightGradientColor = [UIColor colorWithRed: 0.141 green: 0.141 blue: 0.141 alpha: 1];
-        UIColor* innerGlowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.15];
+        UIColor* innerGlowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.1];
 
         //// Gradient Declarations
         NSArray* gradientColors = [NSArray arrayWithObjects:
@@ -170,10 +170,10 @@ static UIImage * HXOProgressViewProgressImage = NULL;
 
         //// Color Declarations
         UIColor* borderColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
-        UIColor* topGradientColor = [UIColor colorWithRed: 0.431 green: 0.863 blue: 0.796 alpha: 1];
+        UIColor* topGradientColor = [UIColor colorWithRed: 0.427 green: 0.871 blue: 0.796 alpha: 1];
         UIColor* lightGradientColor = [UIColor colorWithRed: 0.149 green: 0.588 blue: 0.541 alpha: 1];
-        UIColor* lowerInnerGlowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.147];
-        UIColor* upperInnerGlowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.436];
+        UIColor* lowerInnerGlowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
+        UIColor* upperInnerGlowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.75];
 
         //// Gradient Declarations
         NSArray* gradientColors = [NSArray arrayWithObjects:
