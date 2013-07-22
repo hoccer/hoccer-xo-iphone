@@ -37,19 +37,12 @@
 
 @implementation TestingGroundViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [AttachmentMessageCell class]];
+    [self registerCellClass: [AttachmentWithTextMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
@@ -169,9 +162,37 @@
     i14.attachmentTransferState = HXOAttachmentTranserStateInProgress;
     i14.progress = 0.5;
 
+    BubbleItem * i15 = [[BubbleItem alloc] init];
+    i15.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i15.colorScheme = HXOBubbleColorSchemeWhite;
+    i15.pointDirection = HXOMessageDirectionIncoming;
+    i15.attachmentStyle = HXOAttachmentStyleOriginalAspect;
+    i15.imageAspect = imageSize.width / imageSize.height;
+    i15.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i15.progress = 0.5;
+
+    BubbleItem * i16 = [[BubbleItem alloc] init];
+    i16.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i16.colorScheme = HXOBubbleColorSchemeRed;
+    i16.pointDirection = HXOMessageDirectionOutgoing;
+    i16.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
+    i16.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_contact"];
+    i16.attachmentText = @"Some Dude";
+
+    BubbleItem * i17 = [[BubbleItem alloc] init];
+    i17.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i17.colorScheme = HXOBubbleColorSchemeBlue;
+    i17.pointDirection = HXOMessageDirectionOutgoing;
+    i17.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i17.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_voice"];
+    i17.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_voice"];
+    i17.attachmentText = @"Recording 1";
+
 
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
-               i8, i9, i10, i11, i12, i13, i14];
+               i8, i9, i10, i11, i12, i13, i14,
+               i15, i16, i17];
 }
 
 - (void) registerTokenClasses: (HXOLinkyLabel*) label {
@@ -262,6 +283,9 @@
         [self configureTextCell: (TextMessageCell*)cell item: item];
     } else if ([item.cellIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
         [self configureAttachmentCell: (AttachmentMessageCell*)cell item: item];
+    } else if ([item.cellIdentifier isEqualToString: [AttachmentWithTextMessageCell reuseIdentifier]]) {
+        [self configureAttachmentCell: (AttachmentMessageCell*)cell item: item];
+        //[self configureTextCell: (TextMessageCell*)cell item: item];
     }
 }
 

@@ -71,5 +71,14 @@ typedef enum HXOBubbleRunButtonStyles {
 
 @end
 
+@interface AttachmentWithTextMessageCell : AttachmentMessageCell
+{
+    CGFloat _textPartHeight;
+}
+
+- (CGFloat) calculateHeightForWidth: (CGFloat) width;
+
+@end
+
 
 
