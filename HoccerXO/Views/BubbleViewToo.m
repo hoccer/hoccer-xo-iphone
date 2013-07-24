@@ -295,70 +295,22 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 }
 
 
-@end
-
-@implementation TextMessageCell
-
-- (void) commonInit {
-    [super commonInit];
-
-    _label = [[HXOLinkyLabel alloc] init];
-    _label.numberOfLines = 0;
-    _label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    _label.backgroundColor = [UIColor clearColor /* colorWithWhite: 0.9 alpha: 1.0*/];
-    _label.font = [UIFont systemFontOfSize: 13.0];
-    _label.lineBreakMode = NSLineBreakByWordWrapping;
-    _label.shadowColor = [UIColor colorWithWhite: 1.0 alpha: 0.8];
-    _label.shadowOffset = CGSizeMake(0, 1);
-    [self addSubview: _label];
+- (HXOLinkyLabel*) createMessageLabel {
+    HXOLinkyLabel * label = [[HXOLinkyLabel alloc] init];
+    label.numberOfLines = 0;
+    label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    label.backgroundColor = [UIColor clearColor /* colorWithWhite: 0.9 alpha: 1.0*/];
+    label.font = [UIFont systemFontOfSize: 13.0];
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.shadowColor = [UIColor colorWithWhite: 1.0 alpha: 0.8];
+    label.shadowOffset = CGSizeMake(0, 1);
+    [self addSubview: label];
+    return label;
 }
 
-- (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
-    [super setColorScheme: colorScheme];
-    _label.textColor = [self textColorForColorScheme: colorScheme];
-    _label.defaultTokenStyle = [self linkStyleForColorScheme: colorScheme];
-}
-
-- (CGFloat) calculateHeightForWidth: (CGFloat) width {
-    CGRect frame = CGRectMake(0, 0, [self textWidthForWidth: width], 10000
-    );
-    _label.frame = frame;
-    if (_label.currentNumberOfLines <= 2) {
-        return kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding;
-    } else {
-        CGSize textSize = [_label sizeThatFits: CGSizeMake([self textWidthForWidth: width], 0)];
-        return textSize.height + 4 * kHXOBubblePadding;
-    }
-}
-
-- (void) layoutSubviews {
-    [super layoutSubviews];
-    _label.frame = [self textFrame];
-    [_label sizeToFit];
-    CGRect textFrame = _label.frame;
-    textFrame.origin.y = 0.5 * (self.bounds.size.height - textFrame.size.height);
-    NSUInteger numberOfLines = _label.currentNumberOfLines;
-    if (numberOfLines == 1) {
-        textFrame.origin.y -= 2;
-    } else {
-        textFrame.origin.y -= 1;
-    }
-    _label.frame = textFrame;
-}
-
-- (CGRect) textFrame {
-    CGRect frame = CGRectInset(self.bounds, 0, 2 * kHXOBubblePadding);
-    frame.size.width = [self textWidthForWidth: self.bounds.size.width];
-    if (self.messageDirection == HXOMessageDirectionIncoming) {
-        frame.origin.x += kHXOBubbleMinimumHeight +  4 * kHXOBubblePadding;
-    } else {
-        frame.origin.x += 2 * kHXOBubblePadding;
-    }
-    return frame;
-}
-
-- (CGFloat) textWidthForWidth: (CGFloat) width {
-    return width - (kHXOBubbleMinimumHeight + 6 * kHXOBubblePadding);
+- (void) configureTextColors: (HXOLinkyLabel*) label {
+    label.textColor = [self textColorForColorScheme: self.colorScheme];
+    label.defaultTokenStyle = [self linkStyleForColorScheme: self.colorScheme];
 }
 
 - (UIColor*) textColorForColorScheme: (HXOBubbleColorScheme) colorScheme {
@@ -392,6 +344,71 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     }
     return @{(id)kCTForegroundColorAttributeName: (id)color.CGColor};
 }
+
+- (void) layoutLabel: (HXOLinkyLabel*) label {
+    label.frame = [self textFrame];
+    CGFloat maxTextHeight = label.frame.size.height;
+    [label sizeToFit];
+    CGRect textFrame = label.frame;
+    textFrame.origin.y += 0.5 * (maxTextHeight - textFrame.size.height);
+    NSUInteger numberOfLines = label.currentNumberOfLines;
+    if (numberOfLines == 1) {
+        textFrame.origin.y -= 2;
+    } else {
+        textFrame.origin.y -= 1;
+    }
+    label.frame = textFrame;
+
+}
+
+- (CGRect) textFrame {
+    CGRect frame = CGRectInset(self.bounds, 0, 2 * kHXOBubblePadding);
+    frame.size.width = [self textWidthForWidth: self.bounds.size.width];
+    if (self.messageDirection == HXOMessageDirectionIncoming) {
+        frame.origin.x += kHXOBubbleMinimumHeight +  4 * kHXOBubblePadding;
+    } else {
+        frame.origin.x += 2 * kHXOBubblePadding;
+    }
+    return frame;
+}
+
+- (CGFloat) textWidthForWidth: (CGFloat) width {
+    return width - (kHXOBubbleMinimumHeight + 6 * kHXOBubblePadding);
+}
+
+
+@end
+
+@implementation TextMessageCell
+
+- (void) commonInit {
+    [super commonInit];
+
+    _label = [self createMessageLabel];
+}
+
+- (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
+    [super setColorScheme: colorScheme];
+    [self configureTextColors: _label];
+}
+
+- (CGFloat) calculateHeightForWidth: (CGFloat) width {
+    CGRect frame = CGRectMake(0, 0, [self textWidthForWidth: width], 10000);
+    _label.frame = frame;
+    if (_label.currentNumberOfLines <= 2) {
+        return kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding;
+    } else {
+        CGSize textSize = [_label sizeThatFits: CGSizeMake([self textWidthForWidth: width], 0)];
+        return textSize.height + 4 * kHXOBubblePadding;
+    }
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    [self layoutLabel: _label];
+}
+
+
 
 @end
 
@@ -752,7 +769,14 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 - (void) commonInit {
     [super commonInit];
 
-    _textPartHeight = 48;
+    _textPartHeight = 40;
+
+    _label = [self createMessageLabel];
+}
+
+- (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
+    [super setColorScheme: colorScheme];
+    [self configureTextColors: _label];
 }
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width {
@@ -767,16 +791,32 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 }
 
 - (CGRect) textFrame {
+    CGRect frame = [self lowerBubbleFrame];
+    frame.size.width -= 3 * kHXOBubblePadding;
+    if (self.messageDirection == HXOMessageDirectionIncoming) {
+        frame.origin.x += 2 * kHXOBubblePadding;
+    } else {
+        frame.origin.x += kHXOBubblePadding;
+    }
+    return frame;
+}
+
+- (CGRect) lowerBubbleFrame {
     CGRect frame = [self bubbleFrame];
     frame.origin.y = frame.origin.y + (frame.size.height - _textPartHeight);
     frame.size.height = _textPartHeight;
     return frame;
 }
 
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    [self layoutLabel: _label];
+}
+
 - (void) drawRect:(CGRect)rect {
     //CGContextRef context = UIGraphicsGetCurrentContext();
 
-    CGRect textBoxFrame = [self textFrame];
+    CGRect textBoxFrame = [self lowerBubbleFrame];
     textBoxFrame.origin.y -= kHXOBubbleBottomTextBoxOversize;
     textBoxFrame.size.height += kHXOBubbleBottomTextBoxOversize;
     UIBezierPath * p = [self bottomTextBoxPathInRect: textBoxFrame];

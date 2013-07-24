@@ -170,6 +170,8 @@
     i15.imageAspect = imageSize.width / imageSize.height;
     i15.attachmentTransferState = HXOAttachmentTranserStateInProgress;
     i15.progress = 0.5;
+    i15.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
+
 
     BubbleItem * i16 = [[BubbleItem alloc] init];
     i16.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
@@ -189,10 +191,19 @@
     i17.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_voice"];
     i17.attachmentText = @"Recording 1";
 
+    BubbleItem * i18 = [[BubbleItem alloc] init];
+    i18.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i18.colorScheme = HXOBubbleColorSchemeEtched;
+    i18.pointDirection = HXOMessageDirectionOutgoing;
+    i18.attachmentStyle = HXOAttachmentStyleThumbnail;
+    i18.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_video"];
+    i18.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_video"];
+    i18.attachmentText = @"Classic Movie";
+    i18.attachmentTransferState = HXOAttachmentTranserStateInProgress;
 
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
                i8, i9, i10, i11, i12, i13, i14,
-               i15, i16, i17];
+               i15, i16, i17, i18];
 }
 
 - (void) registerTokenClasses: (HXOLinkyLabel*) label {
@@ -285,16 +296,16 @@
         [self configureAttachmentCell: (AttachmentMessageCell*)cell item: item];
     } else if ([item.cellIdentifier isEqualToString: [AttachmentWithTextMessageCell reuseIdentifier]]) {
         [self configureAttachmentCell: (AttachmentMessageCell*)cell item: item];
-        //[self configureTextCell: (TextMessageCell*)cell item: item];
+        [self configureTextCell: cell item: item];
     }
 }
 
-- (void) configureTextCell: (TextMessageCell*) cell item: (BubbleItem*) item {
-    if (cell.label.tokenClasses.count == 0) {
-        [self registerTokenClasses: cell.label];
-        cell.label.delegate = self;
+- (void) configureTextCell: (id) cell item: (BubbleItem*) item {
+    if ([cell label].tokenClasses.count == 0) {
+        [self registerTokenClasses: [cell label]];
+        [cell label].delegate = self;
     }
-    cell.label.text = item.text;
+    [cell label].text = item.text;
 }
 
 - (void) configureAttachmentCell: (AttachmentMessageCell*) cell item: (BubbleItem*) item {
@@ -324,7 +335,6 @@
     }
 
     cell.attachmentTitle.attributedText = attributedTitle;
-
 }
 
 @end

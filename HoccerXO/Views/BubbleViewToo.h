@@ -76,6 +76,8 @@ typedef enum HXOBubbleRunButtonStyles {
     CGFloat _textPartHeight;
 }
 
+@property (nonatomic,readonly) HXOLinkyLabel * label;
+
 - (CGFloat) calculateHeightForWidth: (CGFloat) width;
 
 @end
