@@ -1445,6 +1445,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // deletion of deliveries and attachment handled by cascade deletion policies in database model
     
     [self.managedObjectContext deleteObject: message];
+    [self.chatBackend.delegate saveDatabase];
     
 }
 

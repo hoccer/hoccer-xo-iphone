@@ -27,6 +27,7 @@
 @property (nonatomic, strong) NSString* messageTag;
 @property (nonatomic, strong) NSString* attachmentFileId;
 @property (nonatomic, strong) NSData* salt;
+@property (nonatomic, strong) NSData* outgoingCryptoKey;
 
 @property (nonatomic, strong) Contact*  contact;
 @property (nonatomic, strong) Attachment * attachment;

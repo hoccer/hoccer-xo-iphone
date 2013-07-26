@@ -870,7 +870,7 @@
 		E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoccerXOT.xcdatamodel; sourceTree = "<group>"; };
 		E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-18.xcdatamodel"; sourceTree = "<group>"; };
 		E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-19.xcdatamodel"; sourceTree = "<group>"; };
-		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
+		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
 		E980D445171EF8950060C1B5 /* CryptingInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptingInputStream.h; sourceTree = "<group>"; };
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -2491,7 +2491,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2511,14 +2511,14 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -2565,8 +2565,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2636,7 +2636,7 @@
 				E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */,
 				E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */,
 			);
-			currentVersion = E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */;
+			currentVersion = E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

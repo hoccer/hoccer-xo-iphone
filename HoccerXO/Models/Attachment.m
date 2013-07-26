@@ -40,11 +40,14 @@
 //#define LET_UPLOAD_FAIL
 //#define LET_DOWNLOAD_FAIL
 
+//#define NO_DOWNLOAD_RESUME
+//#define NO_UPLOAD_RESUME
+
 
 @interface Attachment() {
     
 }
-#ifdef LET_DOWNLOAD_FAIL
+#if defined(LET_DOWNLOAD_FAIL) || defined(NO_DOWNLOAD_RESUME) || defined(NO_UPLOAD_RESUME)
 @property BOOL didResume;
 @property NSInteger resumeSize;
 #endif
@@ -97,7 +100,7 @@
 @synthesize transferRetryTimer = _transferRetryTimer;
 @synthesize resumePos;
 
-#ifdef LET_DOWNLOAD_FAIL
+#if defined(LET_DOWNLOAD_FAIL) || defined(NO_DOWNLOAD_RESUME) || defined(NO_UPLOAD_RESUME)
 @synthesize didResume; // DEBUG
 @synthesize resumeSize; // DEBUG
 #endif
@@ -792,7 +795,7 @@ NSArray * TransferStateName = @[@"detached",
         [self tryResumeUploadStream];
         return;
     }
-#ifdef NO_DOWNLOAD_RESUME
+#ifdef NO_UPLOAD_RESUME
     self.didResume = NO; // just for TESTING
 #endif
     [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
@@ -922,7 +925,7 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) resumeUploadStreamFromPosition:(NSNumber *)fromPos {
-#ifdef NO_DOWNLOAD_RESUME
+#ifdef NO_UPLOAD_RESUME
     self.didResume = YES; // just for TESTING
 #endif
     if ([fromPos longLongValue] + 1 == [self.cipheredSize longLongValue]) {

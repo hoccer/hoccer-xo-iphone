@@ -208,7 +208,8 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
-const double kHXHelloInterval = 4 * 60; // say hello every four minutes
+//const double kHXHelloInterval = 4 * 60; // say hello every four minutes
+const double kHXHelloInterval = 30; // say hello thirty seconds
 
 - (void) setState: (BackendState) state {
     if (CONNECTION_TRACE) NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
@@ -2449,6 +2450,10 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (BOOL) validateObject:(id)objectToValidate forEntity:(NSString*)entityName {
     NSError * myError = nil;
+    if ([objectToValidate isKindOfClass:[NSNull class]]) {
+        NSLog(@"ERROR: validateObject: object for entity %@ is null", entityName);
+        return NO;
+    }
     BOOL myResult = [self validateObject:objectToValidate forEntity:entityName error:&myError];
     if (!myResult) {
         NSLog(@"ERROR: %@", myError);
@@ -2540,6 +2545,11 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         if (success) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
             if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+            
+            if (![responseOrError isKindOfClass:[NSDictionary class]]) {
+                NSLog(@"ERROR: deliveryAcknowledge response is null");
+                return;
+            }
             
             NSString * oldState = [delivery.state copy];
             [delivery updateWithDictionary: responseOrError];

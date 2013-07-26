@@ -25,7 +25,7 @@
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="avatarUploadURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avatarURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="clientId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="clientId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="connectionStatus" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="githubName" optional="YES" attributeType="String" syncable="YES"/>
@@ -43,7 +43,7 @@
         <attribute name="relationshipState" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="twitterName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="type" attributeType="String" defaultValueString="Contact" syncable="YES"/>
+        <attribute name="type" attributeType="String" defaultValueString="Contact" indexed="YES" syncable="YES"/>
         <relationship name="deliveriesReceived" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="receiver" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="deliveriesSent" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="sender" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="groupMemberships" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="contact" inverseEntity="GroupMembership" syncable="YES"/>
@@ -69,7 +69,7 @@
     <entity name="Group" representedClassName="Group" parentEntity="Contact" syncable="YES">
         <attribute name="groupKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="groupState" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="groupTag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="groupTag" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="groupDeliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="group" inverseEntity="Delivery" syncable="YES"/>
         <relationship name="members" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupMembership" inverseName="group" inverseEntity="GroupMembership" syncable="YES"/>
@@ -91,10 +91,11 @@
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isOutgoing" attributeType="Boolean" syncable="YES"/>
         <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="messageId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="messageTag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="messageId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="messageTag" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="outgoingCryptoKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="salt" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="timeAccepted" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="timeAccepted" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
         <attribute name="timeReceived" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="timeSection" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="timeSent" optional="YES" attributeType="Date" syncable="YES"/>
@@ -132,7 +133,7 @@
         <element name="Delivery" positionX="-261" positionY="579" width="128" height="150"/>
         <element name="Group" positionX="511" positionY="486" width="128" height="135"/>
         <element name="GroupMembership" positionX="448" positionY="192" width="128" height="195"/>
-        <element name="HXOMessage" positionX="-27" positionY="189" width="128" height="284"/>
+        <element name="HXOMessage" positionX="-27" positionY="189" width="128" height="299"/>
         <element name="Invite" positionX="-180" positionY="192" width="128" height="60"/>
     </elements>
 </model>
