@@ -206,6 +206,21 @@ static const NSTimeInterval kResponseTimeout = 20;
     } else {
         // kaputt
     }
+    [self increaseTimeoutForRequestsAfterId:theId];
+}
+
+- (void) increaseTimeoutForRequestsAfterId:(NSNumber*)requestId {
+    NSDate * newFireDate = [NSDate dateWithTimeIntervalSinceNow: kResponseTimeout];
+    NSLog(@"increaseTimeoutForRequestsAfterId %@ to firedate %@", requestId, newFireDate);
+    int numIncreased = 0;
+    for (id key in _responseHandlers) {
+        if ([key longLongValue] > [requestId longLongValue]) {
+            NSTimer * timer = _responseHandlers[key][@"timer"];
+            [timer setFireDate:newFireDate];
+            ++numIncreased;
+        }
+    }
+    NSLog(@"increaseTimeoutForRequestsAfterId %@ - increased %d timeouts to firedate %@", requestId, numIncreased, newFireDate);
 }
 
 - (void) notify: (NSString*) method withParams: (id) params {
@@ -247,7 +262,7 @@ static const NSTimeInterval kResponseTimeout = 20;
 }
 
 - (void) flushOpenRequests {
-    NSLog(@"JsonRpc: connection was closed,  flushing open requests");
+    NSLog(@"JsonRpc: connection was closed,  flushing %d open requests", _responseHandlers.count);
     for (id key in _responseHandlers) {
         NSNumber * theKey = key;
         NSDictionary * request = _responseHandlers[theKey];

@@ -113,12 +113,19 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 - (void) downloadFinished:(Attachment *)theAttachment;
 - (void) uploadFinished:(Attachment *)theAttachment;
+- (void) downloadFailed:(Attachment *)theAttachment;
+- (void) uploadFailed:(Attachment *)theAttachment;
 
 - (void) updateRelationships;
 - (void) updatePresence;
 - (void) updateKey;
 
 - (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
+
+- (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment;
+- (void) enqueueUploadOfAttachment:(Attachment*) theAttachment;
+- (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment;
+- (void) dequeueUploadOfAttachment:(Attachment*) theAttachment;
 
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;

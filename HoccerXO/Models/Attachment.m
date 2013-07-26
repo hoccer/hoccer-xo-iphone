@@ -869,24 +869,25 @@ NSArray * TransferStateName = @[@"detached",
                               NSString * myRangeString = myHeaders[@"Range"];
                               
                               if (myRangeString != nil) {
-                              
-                              long long rangeStart;
-                              long long rangeEnd;
-                              long long contentLength;
-                              
-                              if ([Attachment scanRange:myRangeString
-                                                    rangeStart:&rangeStart
-                                                      rangeEnd:&rangeEnd
-                                                 contentLength:&contentLength])
-                              {
-                                  [self resumeUploadStreamFromPosition:[NSNumber numberWithLongLong:rangeEnd]];
-                              } else {
-                                  NSLog(@"checkResumeUploadStream could not parse Content-Range Header, headers=%@", response.allHeaderFields);
-                              }
+                                  
+                                  long long rangeStart;
+                                  long long rangeEnd;
+                                  long long contentLength;
+                                  
+                                  if ([Attachment scanRange:myRangeString
+                                                 rangeStart:&rangeStart
+                                                   rangeEnd:&rangeEnd
+                                              contentLength:&contentLength])
+                                  {
+                                      [self resumeUploadStreamFromPosition:[NSNumber numberWithLongLong:rangeEnd]];
+                                  } else {
+                                      NSLog(@"checkResumeUploadStream could not parse Content-Range Header, headers=%@", response.allHeaderFields);
+                                  }
                               } else {
                                   NSString * ContentLength = myHeaders[@"Content-Length"];
                                   if (ContentLength != nil && [ContentLength integerValue] == 0) {
                                       [self resumeUploadStreamFromPosition:@(0)];
+                                      return;
                                   } else {
                                       NSLog(@"checkResumeUploadStream irregular Content-Length %@, response status = %d, headers=%@",ContentLength, response.statusCode, response.allHeaderFields);
                                   }
@@ -895,9 +896,11 @@ NSArray * TransferStateName = @[@"detached",
                           } else {
                               NSLog(@"checkResumeUploadStream irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields);
                           }
+                          [_chatBackend uploadFailed:self];
                       }
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
                                NSLog(@"checkResumeUploadStream error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               [_chatBackend uploadFailed:self];
                            }
                        challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
                            [[HXOBackend instance] connection:connection willSendRequestForAuthenticationChallenge:challenge];
@@ -1174,9 +1177,11 @@ NSArray * TransferStateName = @[@"detached",
     // NSLog(@"Attachment pressedButton %@", sender);
     self.transferFailures = 0;
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
-        [self upload];
+        [_chatBackend enqueueUploadOfAttachment:self];
+        // [self upload];
     } else {
-        [self download];
+        [_chatBackend enqueueDownloadOfAttachment:self];
+        //[self download];
     }
 }
 
