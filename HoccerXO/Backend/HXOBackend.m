@@ -2280,6 +2280,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
     if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    [self updateNetworkActivityIndicator];
 }
 
 - (void) enqueueUploadOfAttachment:(Attachment*) theAttachment {
@@ -2300,6 +2301,11 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
     if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    [self updateNetworkActivityIndicator];
+}
+
+- (void) updateNetworkActivityIndicator {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:(_attachmentUploadsActive.count > 0 || _attachmentDownloadsActive.count > 0)];
 }
 
 - (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment {
@@ -2313,11 +2319,12 @@ static NSTimer * _stateNotificationDelayTimer;
             [self enqueueDownloadOfAttachment:[_attachmentDownloadsWaiting dequeue]];
         }
         if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (a) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
-        return;
+    } else {
+        // in case it is in the waiting queue remove it from there
+        [_attachmentDownloadsWaiting removeObject:theAttachment];
+        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
     }
-    // in case it is in the waiting queue remove it from there
-    [_attachmentDownloadsWaiting removeObject:theAttachment];
-    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    [self updateNetworkActivityIndicator];
 }
 
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment {
@@ -2331,11 +2338,12 @@ static NSTimer * _stateNotificationDelayTimer;
             [self enqueueUploadOfAttachment:[_attachmentUploadsWaiting dequeue]];
         }
         if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (a) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
-        return;
+    } else {
+        // in case it is in the waiting queue remove it from there
+        [_attachmentUploadsWaiting removeObject:theAttachment];
     }
-    // in case it is in the waiting queue remove it from there
-    [_attachmentUploadsWaiting removeObject:theAttachment];
     if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (b) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    [self updateNetworkActivityIndicator];
 }
 
 - (void) downloadFinished:(Attachment *)theAttachment {

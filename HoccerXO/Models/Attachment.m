@@ -296,7 +296,7 @@ NSArray * TransferStateName = @[@"detached",
     NSError *myError = nil;
     if (self.localURL != nil) {
         self.contentSize = [Attachment fileSize: self.localURL withError:&myError];
-        NSLog(@"File Size = %@ (of file '%@')", self.contentSize, self.localURL);
+        // NSLog(@"File Size = %@ (of file '%@')", self.contentSize, self.localURL);
     } else if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
             self.contentSize = @(theSize);
