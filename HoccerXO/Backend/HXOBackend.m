@@ -730,6 +730,11 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) start: (BOOL) performRegistration {
+    if (_state != kBackendStopped) {
+        // TODO: this is a quick fix to handle the case when the app is left and immediately entered again
+        // We should handle this case more gracefully
+        [_serverConnection close];
+    }
     _performRegistration = performRegistration;
     [self setState: kBackendConnecting];
     [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol] allowUntrustedConnections:[HXOBackend allowUntrustedServerCertificate]];

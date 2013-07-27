@@ -148,7 +148,7 @@ typedef enum ActionSheetTags {
     } else if (state == nil) {
         //happens with groups
     } else {
-        NSLog(@"ProfileViewController blockFormatForRelationshipState: unhandled status %@", _contact.status);
+        NSLog(@"ProfileViewController blockFormatForRelationshipState: unhandled state %@", state);
     }
     return @"Kaputt";
 }
