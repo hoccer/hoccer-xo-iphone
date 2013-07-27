@@ -22,7 +22,7 @@ static const NSInteger kJsonRpcInternal       = -32603;
 
 // TODO: clean-up error handling
 
-static const NSTimeInterval kResponseTimeout = 20;
+static const NSTimeInterval kResponseTimeout = 30;
 
 @interface JsonRpcWebSocket () <SRWebSocketDelegate>
 {
@@ -211,7 +211,7 @@ static const NSTimeInterval kResponseTimeout = 20;
 
 - (void) increaseTimeoutForRequestsAfterId:(NSNumber*)requestId {
     NSDate * newFireDate = [NSDate dateWithTimeIntervalSinceNow: kResponseTimeout];
-    NSLog(@"increaseTimeoutForRequestsAfterId %@ to firedate %@", requestId, newFireDate);
+    // NSLog(@"increaseTimeoutForRequestsAfterId %@ to firedate %@", requestId, newFireDate);
     int numIncreased = 0;
     for (id key in _responseHandlers) {
         if ([key longLongValue] > [requestId longLongValue]) {
@@ -220,7 +220,7 @@ static const NSTimeInterval kResponseTimeout = 20;
             ++numIncreased;
         }
     }
-    NSLog(@"increaseTimeoutForRequestsAfterId %@ - increased %d timeouts to firedate %@", requestId, numIncreased, newFireDate);
+    // NSLog(@"increaseTimeoutForRequestsAfterId %@ - increased %d timeouts to firedate %@", requestId, numIncreased, newFireDate);
 }
 
 - (void) notify: (NSString*) method withParams: (id) params {

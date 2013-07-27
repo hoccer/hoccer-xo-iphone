@@ -45,7 +45,7 @@
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
 #define RELATIONSHIP_DEBUG NO
-#define TRANSFER_DEBUG YES
+#define TRANSFER_DEBUG NO
 
 #ifdef DEBUG
 #define USE_VALIDATOR YES
@@ -2131,7 +2131,7 @@ static NSTimer * _stateNotificationDelayTimer;
         NSLog(@"Fetch request 'AttachmentsNotUploaded' failed: %@", error);
         abort();
     }
-    if (CONNECTION_TRACE) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
+    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
@@ -2157,7 +2157,7 @@ static NSTimer * _stateNotificationDelayTimer;
         NSLog(@"Fetch request 'AttachmentsNotDownloaded' failed: %@", error);
         abort();
     }
-    if (CONNECTION_TRACE) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
+    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
@@ -2172,6 +2172,41 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) clearWaitingAttachmentTransfers {
     [_attachmentDownloadsWaiting removeAllObjects];
     [_attachmentUploadsWaiting removeAllObjects];
+}
+
+- (void)sortByTransferDate:(NSMutableArray*)attachmentArray {
+    [attachmentArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        Attachment * a1 = (Attachment*)obj1;
+        Attachment * a2 = (Attachment*)obj2;
+        NSDate * d1 = [self transferDateFor:a1];
+        NSDate * d2 = [self transferDateFor:a2];
+        return [d1 compare:d2];
+    }];
+    if (TRANSFER_DEBUG) [self printTransferDatesFor:attachmentArray];
+}
+
+- (void)sortBySizeTodo:(NSMutableArray*)attachmentArray {
+    [attachmentArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        Attachment * a1 = (Attachment*)obj1;
+        Attachment * a2 = (Attachment*)obj2;
+        NSNumber * sizeTodo1 = [NSNumber numberWithLongLong:[a1.cipheredSize longLongValue] - [a1.cipherTransferSize longLongValue]];
+        NSNumber * sizeTodo2 = [NSNumber numberWithLongLong:[a2.cipheredSize longLongValue] - [a2.cipherTransferSize longLongValue]];
+        return [sizeTodo1 compare:sizeTodo2];
+    }];
+    if (TRANSFER_DEBUG) [self printTransferSizesFor:attachmentArray];
+}
+
+- (void) printTransferDatesFor:(NSArray*)attachmentArray {
+    for (Attachment * a in attachmentArray) {
+        NSLog(@"transferDate %@ interval %f failed %@", [self transferDateFor:a],[self transferRetryIntervalFor:a],a.transferFailed);
+    }
+}
+
+- (void) printTransferSizesFor:(NSArray*)attachmentArray {
+    for (Attachment * a in attachmentArray) {
+         NSNumber * todo = [NSNumber numberWithLongLong:[a.cipheredSize longLongValue]-[a.cipherTransferSize longLongValue]];
+        NSLog(@"transferSize todo %@ size %@ transfered %@", todo, a.cipheredSize, a.cipherTransferSize);
+    }
 }
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment {
@@ -2196,7 +2231,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) enqueueUploadOfAttachment:(Attachment*) theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment %@", theAttachment.uploadURL);
-    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
     if (_attachmentUploadsActive.count >= kMaxConcurrentUploads) {
         if ([_attachmentUploadsWaiting indexOfObject:theAttachment] == NSNotFound) {
             [_attachmentUploadsWaiting enqueue:theAttachment];
@@ -2211,7 +2246,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment: already in active queue: %@", theAttachment.uploadURL);
         }
     }
-    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
 }
 
 - (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment {
@@ -2221,13 +2256,15 @@ static NSTimer * _stateNotificationDelayTimer;
     if (index != NSNotFound) {
         [_attachmentDownloadsActive removeObjectAtIndex:index];
         if (_attachmentDownloadsWaiting.count > 0) {
+            [self sortByTransferDate:_attachmentDownloadsWaiting];
             [self enqueueDownloadOfAttachment:[_attachmentDownloadsWaiting dequeue]];
         }
+        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (a) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
         return;
     }
     // in case it is in the waiting queue remove it from there
     [_attachmentDownloadsWaiting removeObject:theAttachment];
-    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
 }
 
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment {
@@ -2237,13 +2274,15 @@ static NSTimer * _stateNotificationDelayTimer;
     if (index != NSNotFound) {
         [_attachmentUploadsActive removeObjectAtIndex:index];
         if (_attachmentUploadsWaiting.count > 0) {
+            [self sortBySizeTodo:_attachmentUploadsWaiting];
             [self enqueueUploadOfAttachment:[_attachmentUploadsWaiting dequeue]];
         }
+        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (a) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
         return;
     }
     // in case it is in the waiting queue remove it from there
     [_attachmentUploadsWaiting removeObject:theAttachment];
-    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
 }
 
 - (void) downloadFinished:(Attachment *)theAttachment {
@@ -2264,6 +2303,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) downloadFailed:(Attachment *)theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"downloadFailed of %@", theAttachment.remoteURL);
     theAttachment.transferFailures = theAttachment.transferFailures + 1;
+    theAttachment.transferFailed = [[NSDate alloc] init];
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
     [self dequeueDownloadOfAttachment:theAttachment];
@@ -2274,6 +2314,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) uploadFailed:(Attachment *)theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"uploadFailed of %@", theAttachment.uploadURL);
     theAttachment.transferFailures = theAttachment.transferFailures + 1;
+    theAttachment.transferFailed = [[NSDate alloc] init];
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
     [self dequeueUploadOfAttachment:theAttachment];
@@ -2281,14 +2322,23 @@ static NSTimer * _stateNotificationDelayTimer;
     // [self scheduleNewUploadFor:theAttachment];
 }
 
-- (double) transferRetryTimeFor:(Attachment *)theAttachment {
+- (double) transferRetryIntervalFor:(Attachment *)theAttachment {
     if (theAttachment.transferFailures == 0) {
         return 0.0;
     }
-    double randomFactor = (double)arc4random()/(double)0xffffffff;
-    double retryTime = (2.0 + randomFactor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
+    // double factor = (double)arc4random()/(double)0xffffffff;
+    double factor = 1;
+    double retryTime = (2.0 + factor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
     //double retryTime = 2.0;
     return retryTime;
+}
+
+- (NSDate*) transferDateFor:(Attachment *)theAttachment {
+    if (theAttachment.transferFailed != nil) {
+        return [NSDate dateWithTimeInterval:[self transferRetryIntervalFor:theAttachment] sinceDate:theAttachment.transferFailed];
+    } else {
+        return [NSDate dateWithTimeIntervalSinceNow:0];
+    }
 }
 
 -(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withSelector:(SEL)theTransferSelector withErrorKey: (NSString*) errorKey {
@@ -2328,14 +2378,14 @@ static NSTimer * _stateNotificationDelayTimer;
 
 -(void) scheduleNewDownloadFor:(Attachment *)theAttachment {
     [self scheduleNewTransferFor:theAttachment
-                          inSecs:[self transferRetryTimeFor:theAttachment]
+                          inSecs:[[self transferDateFor:theAttachment] timeIntervalSinceNow]
                     withSelector:@selector(downloadOnTimer:)
                     withErrorKey:@"attachment_download_failed"];
 }
 
 -(void) scheduleNewUploadFor:(Attachment *)theAttachment {
     [self scheduleNewTransferFor:theAttachment
-                          inSecs:[self transferRetryTimeFor:theAttachment]
+                          inSecs:[[self transferDateFor:theAttachment] timeIntervalSinceNow]
                     withSelector:@selector(uploadOnTimer:)
                     withErrorKey:@"attachment_upload_failed"];
 }
