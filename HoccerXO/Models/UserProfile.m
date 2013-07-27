@@ -95,7 +95,8 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 }
 
 - (void) saveProfile {
-    NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, 1.0);
+    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+    NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, photoQualityCompressionSetting/10.0);
     [[HXOUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHXONickName];
     [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
     [[HXOUserDefaults standardUserDefaults] setValue: self.status         forKey: kHXOUserStatus];

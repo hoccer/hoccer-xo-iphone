@@ -347,6 +347,25 @@ static const CGFloat    kSectionHeaderHeight = 40;
 	return newFilename;
 }
 
+// unused yet, but may need it in the future
++ (NSString *)contentTypeForImageData:(NSData *)data {
+    uint8_t c;
+    [data getBytes:&c length:1];
+    
+    switch (c) {
+        case 0xFF:
+            return @"image/jpeg";
+        case 0x89:
+            return @"image/png";
+        case 0x47:
+            return @"image/gif";
+        case 0x49:
+        case 0x4D:
+            return @"image/tiff";
+    }
+    return nil;
+}
+
 + (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint {
     
     NSString *newFileName = [ChatViewController sanitizeFileNameString: fileNameHint];
@@ -378,7 +397,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
         NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
 
         UIImage * preview = attachmentInfo[@"com.hoccer.xo.previewImage"];
-        NSData * previewData = UIImageJPEGRepresentation( preview, 1.0);
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
 
         NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike: @"location.json"];
         NSDictionary * json = @{ @"location": @{ @"type": @"point",
@@ -465,7 +485,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
                                 
                 // write the image
                 myImage = [Attachment qualityAdjustedImage:myImage];
-                [UIImageJPEGRepresentation(myImage,1.0) writeToURL:myLocalURL atomically:NO];
+                float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+                [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myLocalURL atomically:NO];
                                 
                 [self.currentAttachment makeImageAttachment: [myLocalURL absoluteString] anOtherURL:nil
                                                       image: myImage
@@ -578,13 +599,32 @@ static const CGFloat    kSectionHeaderHeight = 40;
             __block NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
             if (attachmentInfo[UIImagePickerControllerMediaMetadata] != nil) {
                 // Image was just taken and is not yet in album
-                UIImage * myImage = [Attachment qualityAdjustedImage:attachmentInfo[UIImagePickerControllerOriginalImage]];
+                
+                
+                UIImage * myOriginalImage = attachmentInfo[UIImagePickerControllerOriginalImage];
+                UIImage * myImage = myOriginalImage;
+                NSURL * myFileURL = nil;
+                
+                // create a lower quality image to attach dependend on quality settings
+                if ([Attachment tooLargeImage:myImage]) {
+                    myImage = [Attachment qualityAdjustedImage:myOriginalImage];
+                    NSString * newFileName = @"reducedSnapshotImage.jpg";
+                    myFileURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+                    
+                    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+                    [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
+                }
                 
                 // funky method using ALAssetsLibrary
                 ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
                     if (!error) {
-                        myURL = assetURL;
+                        if (myFileURL == nil) {
+                            myURL = assetURL;
+                        } else {
+                            myURL = myFileURL;
+                        }
 
+                        // create attachment with lower quality image dependend on settings
                         [self.currentAttachment makeImageAttachment: [myURL absoluteString]
                                                          anOtherURL:nil
                                                               image: myImage
@@ -597,10 +637,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     }
                 };
                 
+                // write full size full quality image to library
                 if(myImage) {
                     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                    [library writeImageToSavedPhotosAlbum:[myImage CGImage]
-                                              orientation:(ALAssetOrientation)[myImage imageOrientation]
+                    [library writeImageToSavedPhotosAlbum:[myOriginalImage CGImage]
+                                              orientation:(ALAssetOrientation)[myOriginalImage imageOrientation]
                                           completionBlock:completeBlock];
                 }
             } else {
@@ -609,9 +650,10 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 if ([Attachment tooLargeImage:myImage]) {
                     myImage = [Attachment qualityAdjustedImage:myImage];
                     NSString * newFileName = @"reducedSnapshotImage.jpg";
-                    NSURL * myURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+                    myURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
                     
-                    [UIImageJPEGRepresentation(myImage,0.9) writeToURL:myURL atomically:NO];
+                    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+                    [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
                 }
                 [self.currentAttachment makeImageAttachment: [myURL absoluteString]
                                                  anOtherURL:nil

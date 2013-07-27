@@ -66,8 +66,7 @@ static const NSTimeInterval kHXOPairingTokenValidTime   = 60 * 60 * 24 * 7; // o
 static const int kMaxConcurrentDownloads = 2;
 static const int kMaxConcurrentUploads = 2;
 
-// const double kHXHelloInterval = 4 * 60; // say hello every four minutes
-const double kHXHelloInterval = 60; // say hello 60 seconds
+const double kHXHelloInterval = 2 * 60; // say hello every n minutes
 
 
 typedef enum BackendStates {
@@ -373,6 +372,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     [self.delegate saveDatabase];
     [SoundEffectPlayer messageSent];
+    [self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
     
 }
 
@@ -535,13 +535,13 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate saveDatabase];
     if (attachment.state == kAttachmentWantsTransfer) {
         [self enqueueDownloadOfAttachment:attachment];
-        // [self scheduleNewDownloadFor:attachment];
     }
     if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
     [self deliveryConfirm: message.messageId withDelivery: delivery];
     if (message.attachment == nil) {
         [SoundEffectPlayer messageArrived];
     }
+    [self checkTransferQueues];
 }
 
 - (void) performRegistration {
@@ -2121,14 +2121,14 @@ static NSTimer * _stateNotificationDelayTimer;
     [self uploadAvatarIfNeeded];
     [self flushPendingAttachmentUploads];
     [self flushPendingAttachmentDownloads];
+    [self checkTransferQueues];
 }
 
-- (void) flushPendingAttachmentUploads {
+- (NSArray *) pendingAttachmentUploads {
     // NSLog(@"flushPendingAttachmentUploads");
     // fetch all not yet transferred uploads
     NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentUploadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
-    // NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)
@@ -2137,24 +2137,31 @@ static NSTimer * _stateNotificationDelayTimer;
         abort();
     }
     if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
+    NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
             attachmentState == kAttachmentUploadIncomplete)
         {
-            [self enqueueUploadOfAttachment:attachment];
-            // [attachment upload];
+            [pendingAttachments enqueue:attachment];
         }
+    }
+    return pendingAttachments;
+}
+
+- (void) flushPendingAttachmentUploads {
+    NSArray * pendingAttachments = [self pendingAttachmentUploads];
+    for (Attachment * attachment in pendingAttachments) {
+        [self enqueueUploadOfAttachment:attachment];
     }
 }
 
-- (void) flushPendingAttachmentDownloads {
+- (NSArray *) pendingAttachmentDownloads {
     // NSLog(@"flushPendingAttachmentDownloads");
     // fetch all not yet transferred uploads
     NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];
     
-    //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)
@@ -2163,14 +2170,23 @@ static NSTimer * _stateNotificationDelayTimer;
         abort();
     }
     if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
+    NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
             attachmentState == kAttachmentDownloadIncomplete)
         {
+            [pendingAttachments enqueue:attachment];
             [self enqueueDownloadOfAttachment:attachment];
-            // [attachment download];
         }
+    }
+    return pendingAttachments;
+}
+
+- (void) flushPendingAttachmentDownloads {
+    NSArray * pendingAttachments = [self pendingAttachmentDownloads];
+    for (Attachment * attachment in pendingAttachments) {
+        [self enqueueDownloadOfAttachment:attachment];
     }
 }
 
@@ -2212,6 +2228,38 @@ static NSTimer * _stateNotificationDelayTimer;
          NSNumber * todo = [NSNumber numberWithLongLong:[a.cipheredSize longLongValue]-[a.cipherTransferSize longLongValue]];
         NSLog(@"transferSize todo %@ size %@ transfered %@", todo, a.cipheredSize, a.cipherTransferSize);
     }
+}
+
+- (void)checkTransferQueues {
+    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues");
+    for (Attachment * a in _attachmentDownloadsActive) {
+        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentDownloadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            [self dequeueDownloadOfAttachment:a];
+        }
+    }
+    for (Attachment * a in _attachmentUploadsActive) {
+        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentUploadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            [self dequeueUploadOfAttachment:a];
+        }
+    }
+    NSArray * pendingDownloads = [self pendingAttachmentDownloads];
+    for (Attachment * a in pendingDownloads) {
+        if ([_attachmentDownloadsWaiting indexOfObject:a] == NSNotFound && [_attachmentDownloadsActive indexOfObject:a] == NSNotFound) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing download, url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            [self enqueueDownloadOfAttachment:a];
+        }
+    }
+    
+    NSArray * pendingUploads = [self pendingAttachmentUploads];
+    for (Attachment * a in pendingUploads) {
+        if ([_attachmentUploadsWaiting indexOfObject:a] == NSNotFound && [_attachmentUploadsActive indexOfObject:a] == NSNotFound) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing upload, url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            [self enqueueUploadOfAttachment:a];
+        }
+    }
+    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues ready");
 }
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment {
@@ -2274,7 +2322,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment %@", theAttachment.uploadURL);
-    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
     NSUInteger index = [_attachmentUploadsActive indexOfObject:theAttachment];
     if (index != NSNotFound) {
         [_attachmentUploadsActive removeObjectAtIndex:index];
@@ -2282,12 +2330,12 @@ static NSTimer * _stateNotificationDelayTimer;
             [self sortBySizeTodo:_attachmentUploadsWaiting];
             [self enqueueUploadOfAttachment:[_attachmentUploadsWaiting dequeue]];
         }
-        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (a) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+        if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (a) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
         return;
     }
     // in case it is in the waiting queue remove it from there
     [_attachmentUploadsWaiting removeObject:theAttachment];
-    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (b) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
 }
 
 - (void) downloadFinished:(Attachment *)theAttachment {

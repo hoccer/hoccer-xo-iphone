@@ -296,6 +296,7 @@ NSArray * TransferStateName = @[@"detached",
     NSError *myError = nil;
     if (self.localURL != nil) {
         self.contentSize = [Attachment fileSize: self.localURL withError:&myError];
+        NSLog(@"File Size = %@ (of file '%@')", self.contentSize, self.localURL);
     } else if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
             self.contentSize = @(theSize);
@@ -360,7 +361,8 @@ NSArray * TransferStateName = @[@"detached",
     NSLog(@"JPG scale = %f, PNG scale = %f", myJPEGImage.scale, myPNGImage.scale);
     self.previewImageData = myJPEG;
 #else
-    self.previewImageData = UIImageJPEGRepresentation(self.previewImage, 0.9);
+    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+    self.previewImageData = UIImageJPEGRepresentation(self.previewImage, photoQualityCompressionSetting/10.0);
 #endif
 }
 
@@ -407,9 +409,10 @@ NSArray * TransferStateName = @[@"detached",
 
 
 + (BOOL) tooLargeImage:(UIImage *)theFullImage {
-    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoQuality"] integerValue];
+    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoSize"] integerValue];
+    NSInteger photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] integerValue];
     double fullKiloPixelCount = theFullImage.size.height * theFullImage.size.width / 1000.0;
-    if (photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) {
+    if ((photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) && photoQualityCompressionSetting == 10) {
         return NO;
     }
     return YES;
@@ -417,7 +420,7 @@ NSArray * TransferStateName = @[@"detached",
 
 
 + (UIImage *) qualityAdjustedImage:(UIImage *)theFullImage {
-    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoQuality"] integerValue];
+    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoSize"] integerValue];
     double fullKiloPixelCount = theFullImage.size.height * theFullImage.size.width / 1000.0;
     if (photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) {
         return theFullImage;
@@ -1684,12 +1687,16 @@ NSArray * TransferStateName = @[@"detached",
             NSData * plainTextData = [self.decryptionEngine finishWithError:&myError];
             if (myError != nil) {
                 NSLog(@"connectionDidFinishLoading: decryption error: %@",myError);
-                return;
+                [_chatBackend downloadFailed:self];
+                [self unregisterBackgroundTask];
+               return;
             }
             myError = [Attachment appendToFilePosix:self.ownedURL thisData:plainTextData];
             if (myError != nil) {
                 NSLog(@"Attachment connectionDidFinishLoading: appending to file failed, error=%@", myError);
                 [connection cancel];
+                [_chatBackend downloadFailed:self];
+                [self unregisterBackgroundTask];
                 return;
             };
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
