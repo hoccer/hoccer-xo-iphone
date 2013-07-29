@@ -10,7 +10,7 @@
 
 #import "HXOTableViewCell.h"
 
-@class InsetImageView;
+@class InsetImageView2;
 @class HXOLinkyLabel;
 
 typedef enum HXOAttachmentStyles {
@@ -35,7 +35,7 @@ typedef enum HXOMessageDirections {
 
 @property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
 @property (nonatomic,assign) HXOMessageDirection     messageDirection;
-@property (nonatomic,readonly) InsetImageView *      avatar;
+@property (nonatomic,readonly) InsetImageView2 *     avatar;
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width;
 

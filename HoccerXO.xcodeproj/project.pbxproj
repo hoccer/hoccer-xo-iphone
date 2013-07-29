@@ -195,6 +195,7 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
+		6385EC9417A68E770024028A /* InsetImageView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 6385EC9317A68E770024028A /* InsetImageView2.m */; };
 		638EBE34178596D000F1B9AD /* NSString+Emojis.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE33178596D000F1B9AD /* NSString+Emojis.m */; };
 		638EBE371787004300F1B9AD /* HXOLinkyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE361787004200F1B9AD /* HXOLinkyLabel.m */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
@@ -721,6 +722,8 @@
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
+		6385EC9217A68E770024028A /* InsetImageView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetImageView2.h; sourceTree = "<group>"; };
+		6385EC9317A68E770024028A /* InsetImageView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsetImageView2.m; sourceTree = "<group>"; };
 		638EBE32178596D000F1B9AD /* NSString+Emojis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Emojis.h"; sourceTree = "<group>"; };
 		638EBE33178596D000F1B9AD /* NSString+Emojis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Emojis.m"; sourceTree = "<group>"; };
 		638EBE351787004200F1B9AD /* HXOLinkyLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLinkyLabel.h; sourceTree = "<group>"; };
@@ -910,7 +913,7 @@
 		E924C9531768D5A4008185E0 /* button-recorded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-recorded@2x.png"; sourceTree = "<group>"; };
 		E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
 		E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
-		E93ED64F17A33CE10072FD2C /* HoccerXO-21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-21.xcdatamodel"; sourceTree = "<group>"; };
+		E93ED64F17A33CE10072FD2C /* HoccerXO-21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-21.xcdatamodel"; sourceTree = "<group>"; };
 		E9495573171C139F00FE2E1F /* AttachmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentView.h; sourceTree = "<group>"; };
 		E9495574171C139F00FE2E1F /* AttachmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentView.m; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
@@ -1861,6 +1864,8 @@
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
 				634B46CE178D8015001C1C0D /* BubbleViewToo.h */,
 				634B46CF178D8015001C1C0D /* BubbleViewToo.m */,
+				6385EC9217A68E770024028A /* InsetImageView2.h */,
+				6385EC9317A68E770024028A /* InsetImageView2.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2583,6 +2588,7 @@
 				634B46D0178D8015001C1C0D /* BubbleViewToo.m in Sources */,
 				634B474C1798B07F001C1C0D /* HXOProgressView.m in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
+				6385EC9417A68E770024028A /* InsetImageView2.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

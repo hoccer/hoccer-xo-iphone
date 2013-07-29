@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreText/CoreText.h>
 
-#import "InsetImageView.h"
+#import "InsetImageView2.h"
 #import "HXOLinkyLabel.h"
 #import "HXOProgressView.h"
 
@@ -63,7 +63,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     self.contentMode = UIViewContentModeRedraw;
     self.backgroundColor = [UIColor clearColor];
 
-    _avatar = [[InsetImageView alloc] initWithFrame: CGRectMake(kHXOBubblePadding, kHXOBubblePadding, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
+    _avatar = [[InsetImageView2 alloc] initWithFrame: CGRectMake(kHXOBubblePadding, kHXOBubblePadding, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
     [self addSubview: _avatar];
 
     self.colorScheme = HXOBubbleColorSchemeWhite;

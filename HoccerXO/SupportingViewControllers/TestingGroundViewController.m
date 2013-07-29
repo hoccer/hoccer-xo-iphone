@@ -12,6 +12,7 @@
 
 #import "HXOLinkyLabel.h"
 #import "BubbleViewToo.h"
+#import "InsetImageView2.h"
 
 @interface TestingGroundViewController ()
 
@@ -294,6 +295,7 @@
 }
 
 - (void) configureCell: (BubbleViewToo*) cell item: (BubbleItem*) item {
+    cell.avatar.image = [UIImage imageNamed: @"cupcakes.jpg"];
     if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
         [self configureTextCell: (TextMessageCell*)cell item: item];
     } else if ([item.cellIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
