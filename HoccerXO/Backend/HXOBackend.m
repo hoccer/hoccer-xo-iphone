@@ -36,6 +36,7 @@
 #import "GCNetworkRequest.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "GCNetworkQueue.h"
+#import "NSMutableArray+QueueAdditions.h"
 
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
@@ -44,6 +45,7 @@
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
 #define RELATIONSHIP_DEBUG NO
+#define TRANSFER_DEBUG NO
 
 #ifdef DEBUG
 #define USE_VALIDATOR YES
@@ -60,6 +62,12 @@ static const NSUInteger kHXOMaxCertificateVerificationErrors = 3;
 
 static const NSUInteger     kHXOPairingTokenMaxUseCount = 10;
 static const NSTimeInterval kHXOPairingTokenValidTime   = 60 * 60 * 24 * 7; // one week
+
+static const int kMaxConcurrentDownloads = 2;
+static const int kMaxConcurrentUploads = 2;
+
+const double kHXHelloInterval = 2 * 60; // say hello every n minutes
+
 
 typedef enum BackendStates {
     kBackendStopped,
@@ -91,6 +99,11 @@ static NSTimer * _stateNotificationDelayTimer;
     NSTimer *          _backgroundDisconnectTimer;
     NSTimer *          _helloTimer;
     GCNetworkQueue *   _avatarDownloadQueue;
+    
+    NSMutableArray * _attachmentDownloadsWaiting;
+    NSMutableArray * _attachmentUploadsWaiting;
+    NSMutableArray * _attachmentDownloadsActive;
+    NSMutableArray * _attachmentUploadsActive;
 }
 
 - (void) identify;
@@ -155,6 +168,11 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                       usingBlock:reachablityBlock];
 
     }
+    _attachmentDownloadsWaiting = [[NSMutableArray alloc] init];
+    _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
+    _attachmentDownloadsActive = [[NSMutableArray alloc] init];
+    _attachmentUploadsActive = [[NSMutableArray alloc] init];
+
     return self;
 }
 
@@ -207,8 +225,6 @@ static NSTimer * _stateNotificationDelayTimer;
             break;
     }
 }
-
-const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (void) setState: (BackendState) state {
     if (CONNECTION_TRACE) NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
@@ -350,11 +366,13 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     }
     
     if (attachment != nil && attachment.state == kAttachmentWantsTransfer) {
-        [attachment upload];
+        [self enqueueUploadOfAttachment:attachment];
+        // [attachment upload];
     }
     
     [self.delegate saveDatabase];
     [SoundEffectPlayer messageSent];
+    [self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
     
 }
 
@@ -516,13 +534,14 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     
     [self.delegate saveDatabase];
     if (attachment.state == kAttachmentWantsTransfer) {
-        [self scheduleNewDownloadFor:attachment];
+        [self enqueueDownloadOfAttachment:attachment];
     }
     if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
     [self deliveryConfirm: message.messageId withDelivery: delivery];
     if (message.attachment == nil) {
         [SoundEffectPlayer messageArrived];
     }
+    [self checkTransferQueues];
 }
 
 - (void) performRegistration {
@@ -711,6 +730,11 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 }
 
 - (void) start: (BOOL) performRegistration {
+    if (_state != kBackendStopped) {
+        // TODO: this is a quick fix to handle the case when the app is left and immediately entered again
+        // We should handle this case more gracefully
+        [_serverConnection close];
+    }
     _performRegistration = performRegistration;
     [self setState: kBackendConnecting];
     [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol] allowUntrustedConnections:[HXOBackend allowUntrustedServerCertificate]];
@@ -719,6 +743,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 - (void) stop {
     [self setState: kBackendStopping];
     [_serverConnection close];
+    [self clearWaitingAttachmentTransfers];
 }
 
 - (void) stopAndRetry {
@@ -2096,14 +2121,14 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
     [self uploadAvatarIfNeeded];
     [self flushPendingAttachmentUploads];
     [self flushPendingAttachmentDownloads];
+    [self checkTransferQueues];
 }
 
-- (void) flushPendingAttachmentUploads {
+- (NSArray *) pendingAttachmentUploads {
     // NSLog(@"flushPendingAttachmentUploads");
     // fetch all not yet transferred uploads
     NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentUploadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotUploaded" substitutionVariables: vars];
-    // NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)
@@ -2111,24 +2136,32 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         NSLog(@"Fetch request 'AttachmentsNotUploaded' failed: %@", error);
         abort();
     }
-    if (CONNECTION_TRACE) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
+    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
+    NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
             attachmentState == kAttachmentUploadIncomplete)
         {
-            [attachment upload];
+            [pendingAttachments enqueue:attachment];
         }
+    }
+    return pendingAttachments;
+}
+
+- (void) flushPendingAttachmentUploads {
+    NSArray * pendingAttachments = [self pendingAttachmentUploads];
+    for (Attachment * attachment in pendingAttachments) {
+        [self enqueueUploadOfAttachment:attachment];
     }
 }
 
-- (void) flushPendingAttachmentDownloads {
+- (NSArray *) pendingAttachmentDownloads {
     // NSLog(@"flushPendingAttachmentDownloads");
     // fetch all not yet transferred uploads
     NSDictionary * vars = @{ @"max_retries" : [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries]};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsNotDownloaded" substitutionVariables: vars];
     
-    //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"AllOutgoingAttachments"];
     NSError *error;
     NSArray *unfinishedAttachments = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (unfinishedAttachments == nil)
@@ -2136,72 +2169,254 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         NSLog(@"Fetch request 'AttachmentsNotDownloaded' failed: %@", error);
         abort();
     }
-    if (CONNECTION_TRACE) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
+    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
+    NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in unfinishedAttachments) {
         AttachmentState attachmentState = attachment.state;
         if (attachmentState == kAttachmentWantsTransfer ||
             attachmentState == kAttachmentDownloadIncomplete)
         {
-            [attachment download];
+            [pendingAttachments enqueue:attachment];
+            [self enqueueDownloadOfAttachment:attachment];
         }
+    }
+    return pendingAttachments;
+}
+
+- (void) flushPendingAttachmentDownloads {
+    NSArray * pendingAttachments = [self pendingAttachmentDownloads];
+    for (Attachment * attachment in pendingAttachments) {
+        [self enqueueDownloadOfAttachment:attachment];
     }
 }
 
+- (void) clearWaitingAttachmentTransfers {
+    [_attachmentDownloadsWaiting removeAllObjects];
+    [_attachmentUploadsWaiting removeAllObjects];
+}
+
+- (void)sortByTransferDate:(NSMutableArray*)attachmentArray {
+    [attachmentArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        Attachment * a1 = (Attachment*)obj1;
+        Attachment * a2 = (Attachment*)obj2;
+        NSDate * d1 = [self transferDateFor:a1];
+        NSDate * d2 = [self transferDateFor:a2];
+        return [d1 compare:d2];
+    }];
+    if (TRANSFER_DEBUG) [self printTransferDatesFor:attachmentArray];
+}
+
+- (void)sortBySizeTodo:(NSMutableArray*)attachmentArray {
+    [attachmentArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        Attachment * a1 = (Attachment*)obj1;
+        Attachment * a2 = (Attachment*)obj2;
+        NSNumber * sizeTodo1 = [NSNumber numberWithLongLong:[a1.cipheredSize longLongValue] - [a1.cipherTransferSize longLongValue]];
+        NSNumber * sizeTodo2 = [NSNumber numberWithLongLong:[a2.cipheredSize longLongValue] - [a2.cipherTransferSize longLongValue]];
+        return [sizeTodo1 compare:sizeTodo2];
+    }];
+    if (TRANSFER_DEBUG) [self printTransferSizesFor:attachmentArray];
+}
+
+- (void) printTransferDatesFor:(NSArray*)attachmentArray {
+    for (Attachment * a in attachmentArray) {
+        NSLog(@"transferDate %@ interval %f failed %@", [self transferDateFor:a],[self transferRetryIntervalFor:a],a.transferFailed);
+    }
+}
+
+- (void) printTransferSizesFor:(NSArray*)attachmentArray {
+    for (Attachment * a in attachmentArray) {
+         NSNumber * todo = [NSNumber numberWithLongLong:[a.cipheredSize longLongValue]-[a.cipherTransferSize longLongValue]];
+        NSLog(@"transferSize todo %@ size %@ transfered %@", todo, a.cipheredSize, a.cipherTransferSize);
+    }
+}
+
+- (void)checkTransferQueues {
+    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues");
+    for (Attachment * a in _attachmentDownloadsActive) {
+        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentDownloadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            [self dequeueDownloadOfAttachment:a];
+        }
+    }
+    for (Attachment * a in _attachmentUploadsActive) {
+        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentUploadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            [self dequeueUploadOfAttachment:a];
+        }
+    }
+    NSArray * pendingDownloads = [self pendingAttachmentDownloads];
+    for (Attachment * a in pendingDownloads) {
+        if ([_attachmentDownloadsWaiting indexOfObject:a] == NSNotFound && [_attachmentDownloadsActive indexOfObject:a] == NSNotFound) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing download, url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            [self enqueueDownloadOfAttachment:a];
+        }
+    }
+    
+    NSArray * pendingUploads = [self pendingAttachmentUploads];
+    for (Attachment * a in pendingUploads) {
+        if ([_attachmentUploadsWaiting indexOfObject:a] == NSNotFound && [_attachmentUploadsActive indexOfObject:a] == NSNotFound) {
+            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing upload, url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            [self enqueueUploadOfAttachment:a];
+        }
+    }
+    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues ready");
+}
+
+- (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment {
+    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment %@", theAttachment.remoteURL);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment before active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    if (_attachmentDownloadsActive.count >= kMaxConcurrentDownloads) {
+        if ([_attachmentDownloadsWaiting indexOfObject:theAttachment] == NSNotFound) {
+            [_attachmentDownloadsWaiting enqueue:theAttachment];
+        } else {
+            if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment: already in waiting queue: %@", theAttachment.remoteURL);
+        }
+    } else {
+        if ([_attachmentDownloadsActive indexOfObject:theAttachment] == NSNotFound) {
+            [self scheduleNewDownloadFor:theAttachment];
+            [_attachmentDownloadsActive enqueue:theAttachment];
+        } else {
+            if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment: already in active queue: %@", theAttachment.remoteURL);
+        }
+    }
+    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    [self updateNetworkActivityIndicator];
+}
+
+- (void) enqueueUploadOfAttachment:(Attachment*) theAttachment {
+    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment %@", theAttachment.uploadURL);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (_attachmentUploadsActive.count >= kMaxConcurrentUploads) {
+        if ([_attachmentUploadsWaiting indexOfObject:theAttachment] == NSNotFound) {
+            [_attachmentUploadsWaiting enqueue:theAttachment];
+        } else {
+            if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment: already in waiting queue: %@", theAttachment.uploadURL);            
+        }
+    } else {
+        if ([_attachmentUploadsActive indexOfObject:theAttachment] == NSNotFound) {
+            [self scheduleNewUploadFor:theAttachment];
+            [_attachmentUploadsActive enqueue:theAttachment];
+        } else {
+            if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment: already in active queue: %@", theAttachment.uploadURL);
+        }
+    }
+    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    [self updateNetworkActivityIndicator];
+}
+
+- (void) updateNetworkActivityIndicator {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:(_attachmentUploadsActive.count > 0 || _attachmentDownloadsActive.count > 0)];
+}
+
+- (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment {
+    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment %@", theAttachment.remoteURL);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment before active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    NSUInteger index = [_attachmentDownloadsActive indexOfObject:theAttachment];
+    if (index != NSNotFound) {
+        [_attachmentDownloadsActive removeObjectAtIndex:index];
+        if (_attachmentDownloadsWaiting.count > 0) {
+            [self sortByTransferDate:_attachmentDownloadsWaiting];
+            [self enqueueDownloadOfAttachment:[_attachmentDownloadsWaiting dequeue]];
+        }
+        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (a) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    } else {
+        // in case it is in the waiting queue remove it from there
+        [_attachmentDownloadsWaiting removeObject:theAttachment];
+        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    }
+    [self updateNetworkActivityIndicator];
+}
+
+- (void) dequeueUploadOfAttachment:(Attachment*) theAttachment {
+    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment %@", theAttachment.uploadURL);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    NSUInteger index = [_attachmentUploadsActive indexOfObject:theAttachment];
+    if (index != NSNotFound) {
+        [_attachmentUploadsActive removeObjectAtIndex:index];
+        if (_attachmentUploadsWaiting.count > 0) {
+            [self sortBySizeTodo:_attachmentUploadsWaiting];
+            [self enqueueUploadOfAttachment:[_attachmentUploadsWaiting dequeue]];
+        }
+        if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (a) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    } else {
+        // in case it is in the waiting queue remove it from there
+        [_attachmentUploadsWaiting removeObject:theAttachment];
+    }
+    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (b) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    [self updateNetworkActivityIndicator];
+}
 
 - (void) downloadFinished:(Attachment *)theAttachment {
-    // NSLog(@"downloadFinished of %@", theAttachment);
+    if (TRANSFER_DEBUG) NSLog(@"downloadFinished of %@", theAttachment.remoteURL);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    [self dequeueDownloadOfAttachment:theAttachment];
     [SoundEffectPlayer messageArrived];
 }
 
 - (void) uploadFinished:(Attachment *)theAttachment {
-    // NSLog(@"uploadFinished of %@", theAttachment);
+    if (TRANSFER_DEBUG) NSLog(@"uploadFinished of %@", theAttachment.uploadURL);
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    [self dequeueUploadOfAttachment:theAttachment];
 }
 
 - (void) downloadFailed:(Attachment *)theAttachment {
-    // NSLog(@"downloadFailed of %@", theAttachment);
+    if (TRANSFER_DEBUG) NSLog(@"downloadFailed of %@", theAttachment.remoteURL);
     theAttachment.transferFailures = theAttachment.transferFailures + 1;
+    theAttachment.transferFailed = [[NSDate alloc] init];
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
-    [self scheduleNewDownloadFor:theAttachment];
+    [self dequeueDownloadOfAttachment:theAttachment];
+    [self enqueueDownloadOfAttachment:theAttachment];
+    //[self scheduleNewDownloadFor:theAttachment];
 }
 
 - (void) uploadFailed:(Attachment *)theAttachment {
-    // NSLog(@"uploadFinished of %@", theAttachment);
+    if (TRANSFER_DEBUG) NSLog(@"uploadFailed of %@", theAttachment.uploadURL);
     theAttachment.transferFailures = theAttachment.transferFailures + 1;
+    theAttachment.transferFailed = [[NSDate alloc] init];
     [self.delegate.managedObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
-    [self scheduleNewUploadFor:theAttachment];
+    [self dequeueUploadOfAttachment:theAttachment];
+    [self enqueueUploadOfAttachment:theAttachment];
+    // [self scheduleNewUploadFor:theAttachment];
 }
 
-- (double) transferRetryTimeFor:(Attachment *)theAttachment {
+- (double) transferRetryIntervalFor:(Attachment *)theAttachment {
     if (theAttachment.transferFailures == 0) {
         return 0.0;
     }
-    double randomFactor = (double)arc4random()/(double)0xffffffff;
-    double retryTime = (2.0 + randomFactor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
+    // double factor = (double)arc4random()/(double)0xffffffff;
+    double factor = 1;
+    double retryTime = (2.0 + factor) * (theAttachment.transferFailures * theAttachment.transferFailures + 1);
     //double retryTime = 2.0;
     return retryTime;
 }
 
+- (NSDate*) transferDateFor:(Attachment *)theAttachment {
+    if (theAttachment.transferFailed != nil) {
+        return [NSDate dateWithTimeInterval:[self transferRetryIntervalFor:theAttachment] sinceDate:theAttachment.transferFailed];
+    } else {
+        return [NSDate dateWithTimeIntervalSinceNow:0];
+    }
+}
+
 -(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withSelector:(SEL)theTransferSelector withErrorKey: (NSString*) errorKey {
     if (theAttachment.transferRetryTimer != nil) {
-        if (CONNECTION_TRACE) NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
+        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
         [theAttachment.transferRetryTimer invalidate];
         theAttachment.transferRetryTimer = nil;
     }
     if (![self.delegate.internetReachabilty isReachable]) {
         // do not schedule retrys without internet connection
-        if (CONNECTION_TRACE) NSLog(@"No Internet, not scheduling: scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        if (TRANSFER_DEBUG) NSLog(@"No Internet, not scheduling: scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         return;
     }
     if (theAttachment.state == kAttachmentUploadIncomplete ||
         theAttachment.state == kAttachmentDownloadIncomplete ||
         theAttachment.state == kAttachmentWantsTransfer) {
-        if (CONNECTION_TRACE) NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
@@ -2216,7 +2431,7 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
                                                cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                                otherButtonTitles: nil];
         [alert show];
-        if (CONNECTION_TRACE) NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
+        if (TRANSFER_DEBUG) NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
               [theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures);
     }
 }
@@ -2224,14 +2439,14 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 -(void) scheduleNewDownloadFor:(Attachment *)theAttachment {
     [self scheduleNewTransferFor:theAttachment
-                          inSecs:[self transferRetryTimeFor:theAttachment]
+                          inSecs:[[self transferDateFor:theAttachment] timeIntervalSinceNow]
                     withSelector:@selector(downloadOnTimer:)
                     withErrorKey:@"attachment_download_failed"];
 }
 
 -(void) scheduleNewUploadFor:(Attachment *)theAttachment {
     [self scheduleNewTransferFor:theAttachment
-                          inSecs:[self transferRetryTimeFor:theAttachment]
+                          inSecs:[[self transferDateFor:theAttachment] timeIntervalSinceNow]
                     withSelector:@selector(uploadOnTimer:)
                     withErrorKey:@"attachment_upload_failed"];
 }
@@ -2449,6 +2664,10 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
 
 - (BOOL) validateObject:(id)objectToValidate forEntity:(NSString*)entityName {
     NSError * myError = nil;
+    if ([objectToValidate isKindOfClass:[NSNull class]]) {
+        NSLog(@"ERROR: validateObject: object for entity %@ is null", entityName);
+        return NO;
+    }
     BOOL myResult = [self validateObject:objectToValidate forEntity:entityName error:&myError];
     if (!myResult) {
         NSLog(@"ERROR: %@", myError);
@@ -2540,6 +2759,11 @@ const double kHXHelloInterval = 4 * 60; // say hello every four minutes
         if (success) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
             if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+            
+            if (![responseOrError isKindOfClass:[NSDictionary class]]) {
+                NSLog(@"ERROR: deliveryAcknowledge response is null");
+                return;
+            }
             
             NSString * oldState = [delivery.state copy];
             [delivery updateWithDictionary: responseOrError];

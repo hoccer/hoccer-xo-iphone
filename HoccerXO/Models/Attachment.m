@@ -40,11 +40,14 @@
 //#define LET_UPLOAD_FAIL
 //#define LET_DOWNLOAD_FAIL
 
+//#define NO_DOWNLOAD_RESUME
+//#define NO_UPLOAD_RESUME
+
 
 @interface Attachment() {
     
 }
-#ifdef LET_DOWNLOAD_FAIL
+#if defined(LET_DOWNLOAD_FAIL) || defined(NO_DOWNLOAD_RESUME) || defined(NO_UPLOAD_RESUME)
 @property BOOL didResume;
 @property NSInteger resumeSize;
 #endif
@@ -78,6 +81,7 @@
 
 @dynamic message;
 
+@dynamic transferFailed;
 @dynamic transferPaused;
 @dynamic transferAborted;
 
@@ -97,7 +101,7 @@
 @synthesize transferRetryTimer = _transferRetryTimer;
 @synthesize resumePos;
 
-#ifdef LET_DOWNLOAD_FAIL
+#if defined(LET_DOWNLOAD_FAIL) || defined(NO_DOWNLOAD_RESUME) || defined(NO_UPLOAD_RESUME)
 @synthesize didResume; // DEBUG
 @synthesize resumeSize; // DEBUG
 #endif
@@ -292,6 +296,7 @@ NSArray * TransferStateName = @[@"detached",
     NSError *myError = nil;
     if (self.localURL != nil) {
         self.contentSize = [Attachment fileSize: self.localURL withError:&myError];
+        // NSLog(@"File Size = %@ (of file '%@')", self.contentSize, self.localURL);
     } else if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
             self.contentSize = @(theSize);
@@ -356,7 +361,8 @@ NSArray * TransferStateName = @[@"detached",
     NSLog(@"JPG scale = %f, PNG scale = %f", myJPEGImage.scale, myPNGImage.scale);
     self.previewImageData = myJPEG;
 #else
-    self.previewImageData = UIImageJPEGRepresentation(self.previewImage, 0.9);
+    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+    self.previewImageData = UIImageJPEGRepresentation(self.previewImage, photoQualityCompressionSetting/10.0);
 #endif
 }
 
@@ -403,9 +409,10 @@ NSArray * TransferStateName = @[@"detached",
 
 
 + (BOOL) tooLargeImage:(UIImage *)theFullImage {
-    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoQuality"] integerValue];
+    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoSize"] integerValue];
+    NSInteger photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] integerValue];
     double fullKiloPixelCount = theFullImage.size.height * theFullImage.size.width / 1000.0;
-    if (photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) {
+    if ((photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) && photoQualityCompressionSetting == 10) {
         return NO;
     }
     return YES;
@@ -413,7 +420,7 @@ NSArray * TransferStateName = @[@"detached",
 
 
 + (UIImage *) qualityAdjustedImage:(UIImage *)theFullImage {
-    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoQuality"] integerValue];
+    NSInteger photoQualityKiloPixelSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoSize"] integerValue];
     double fullKiloPixelCount = theFullImage.size.height * theFullImage.size.width / 1000.0;
     if (photoQualityKiloPixelSetting == 0 || fullKiloPixelCount <= photoQualityKiloPixelSetting) {
         return theFullImage;
@@ -792,7 +799,7 @@ NSArray * TransferStateName = @[@"detached",
         [self tryResumeUploadStream];
         return;
     }
-#ifdef NO_DOWNLOAD_RESUME
+#ifdef NO_UPLOAD_RESUME
     self.didResume = NO; // just for TESTING
 #endif
     [self withUploadStream:^(NSInputStream * myStream, NSError * myError) {
@@ -866,24 +873,25 @@ NSArray * TransferStateName = @[@"detached",
                               NSString * myRangeString = myHeaders[@"Range"];
                               
                               if (myRangeString != nil) {
-                              
-                              long long rangeStart;
-                              long long rangeEnd;
-                              long long contentLength;
-                              
-                              if ([Attachment scanRange:myRangeString
-                                                    rangeStart:&rangeStart
-                                                      rangeEnd:&rangeEnd
-                                                 contentLength:&contentLength])
-                              {
-                                  [self resumeUploadStreamFromPosition:[NSNumber numberWithLongLong:rangeEnd]];
-                              } else {
-                                  NSLog(@"checkResumeUploadStream could not parse Content-Range Header, headers=%@", response.allHeaderFields);
-                              }
+                                  
+                                  long long rangeStart;
+                                  long long rangeEnd;
+                                  long long contentLength;
+                                  
+                                  if ([Attachment scanRange:myRangeString
+                                                 rangeStart:&rangeStart
+                                                   rangeEnd:&rangeEnd
+                                              contentLength:&contentLength])
+                                  {
+                                      [self resumeUploadStreamFromPosition:[NSNumber numberWithLongLong:rangeEnd]];
+                                  } else {
+                                      NSLog(@"checkResumeUploadStream could not parse Content-Range Header, headers=%@", response.allHeaderFields);
+                                  }
                               } else {
                                   NSString * ContentLength = myHeaders[@"Content-Length"];
                                   if (ContentLength != nil && [ContentLength integerValue] == 0) {
                                       [self resumeUploadStreamFromPosition:@(0)];
+                                      return;
                                   } else {
                                       NSLog(@"checkResumeUploadStream irregular Content-Length %@, response status = %d, headers=%@",ContentLength, response.statusCode, response.allHeaderFields);
                                   }
@@ -892,9 +900,11 @@ NSArray * TransferStateName = @[@"detached",
                           } else {
                               NSLog(@"checkResumeUploadStream irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields);
                           }
+                          [_chatBackend uploadFailed:self];
                       }
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
                                NSLog(@"checkResumeUploadStream error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               [_chatBackend uploadFailed:self];
                            }
                        challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
                            [[HXOBackend instance] connection:connection willSendRequestForAuthenticationChallenge:challenge];
@@ -922,7 +932,7 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) resumeUploadStreamFromPosition:(NSNumber *)fromPos {
-#ifdef NO_DOWNLOAD_RESUME
+#ifdef NO_UPLOAD_RESUME
     self.didResume = YES; // just for TESTING
 #endif
     if ([fromPos longLongValue] + 1 == [self.cipheredSize longLongValue]) {
@@ -934,12 +944,14 @@ NSArray * TransferStateName = @[@"detached",
         } else {
             NSLog(@"Attachment:withUploadStream - no delegate to signal transferStarted");
         }
-        [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
+        //[_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
+        [_chatBackend uploadFinished:self];
         return;
     }
     if ([fromPos longLongValue] + 1 > [self.cipheredSize longLongValue]) {
         NSLog(@"ERROR: Attachment:withUploadStream - fromPos %@ > cipheredSize %@, not resuming", fromPos, self.cipheredSize);
-        [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+        //[_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+        [_chatBackend uploadFailed:self];
         return;
     }
     
@@ -1171,9 +1183,11 @@ NSArray * TransferStateName = @[@"detached",
     // NSLog(@"Attachment pressedButton %@", sender);
     self.transferFailures = 0;
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
-        [self upload];
+        [_chatBackend enqueueUploadOfAttachment:self];
+        // [self upload];
     } else {
-        [self download];
+        [_chatBackend enqueueDownloadOfAttachment:self];
+        //[self download];
     }
 }
 
@@ -1373,9 +1387,11 @@ NSArray * TransferStateName = @[@"detached",
             if (CONNECTION_TRACE) {NSLog(@"%@", myDescription);}
             self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
             if ([self.message.isOutgoing isEqualToNumber: @YES]) {
-                [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+                //[_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+                [_chatBackend uploadFailed:self];
             } else {
-                [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+                //[_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+                [_chatBackend downloadFailed:self];
             }
         }
     } else {
@@ -1589,7 +1605,8 @@ NSArray * TransferStateName = @[@"detached",
                 [_transferConnection cancel];
                 _transferConnection = nil;
                 NSLog(@"TEST: didReceiveData: canceling transfer, cipherTransferSize=%@, cipheredSize=%@",self.cipherTransferSize,self.cipheredSize);
-                [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+                //[_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+                [_chatBackend downloadFailed:self];
                 return;
             }
 #endif
@@ -1617,7 +1634,8 @@ NSArray * TransferStateName = @[@"detached",
             // abort();
             [_transferConnection cancel];
             _transferConnection = nil;
-            [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+            //[_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+            [_chatBackend uploadFailed:self];
             self.transferFailures = 1;
             return;
         }
@@ -1645,9 +1663,11 @@ NSArray * TransferStateName = @[@"detached",
             if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"didFailWithError - no delegate for transferFinished");}
         }
         if ([self.message.isOutgoing isEqualToNumber: @YES]) {
-            [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+            //[_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+            [_chatBackend uploadFailed:self];
         } else {
-            [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+            //[_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+            [_chatBackend downloadFailed:self];
         }
         [self unregisterBackgroundTask];
     } else {
@@ -1667,12 +1687,16 @@ NSArray * TransferStateName = @[@"detached",
             NSData * plainTextData = [self.decryptionEngine finishWithError:&myError];
             if (myError != nil) {
                 NSLog(@"connectionDidFinishLoading: decryption error: %@",myError);
-                return;
+                [_chatBackend downloadFailed:self];
+                [self unregisterBackgroundTask];
+               return;
             }
             myError = [Attachment appendToFilePosix:self.ownedURL thisData:plainTextData];
             if (myError != nil) {
                 NSLog(@"Attachment connectionDidFinishLoading: appending to file failed, error=%@", myError);
                 [connection cancel];
+                [_chatBackend downloadFailed:self];
+                [self unregisterBackgroundTask];
                 return;
             };
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
@@ -1680,24 +1704,28 @@ NSArray * TransferStateName = @[@"detached",
             if ([self.transferSize isEqualToNumber: self.contentSize]) {
                 if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);}
                 self.localURL = self.ownedURL;
-                [_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
+                //[_chatBackend performSelectorOnMainThread:@selector(downloadFinished:) withObject:self waitUntilDone:NO];
+                [_chatBackend downloadFinished:self];
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize];
                 NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+                // [_chatBackend performSelectorOnMainThread:@selector(downloadFailed:) withObject:self waitUntilDone:NO];
+                [_chatBackend downloadFailed:self];
             }
         } else {
             // upload finished
             if ([self.cipheredSize isEqualToNumber:self.cipherTransferSize]) {
                 self.transferSize = self.contentSize;
                 if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully uploaded attachment, size=%@", self.contentSize);}
-                [_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
+                //[_chatBackend performSelectorOnMainThread:@selector(uploadFinished:) withObject:self waitUntilDone:NO];
+                [_chatBackend uploadFinished:self];
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading size mismatch, cipheredSize=%@, cipherTransferSize=%@", self.cipheredSize, self.cipherTransferSize];
                 NSLog(@"%@", myDescription);
                 self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 666 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+                // [_chatBackend performSelectorOnMainThread:@selector(uploadFailed:) withObject:self waitUntilDone:NO];
+                [_chatBackend uploadFailed:self];
             }
         }
         [self unregisterBackgroundTask];

@@ -27,6 +27,7 @@
 @dynamic messageId;
 @dynamic messageTag;
 @dynamic salt;
+@dynamic outgoingCryptoKey;
 @dynamic attachmentFileId;
 
 @dynamic contact;
@@ -114,13 +115,16 @@
 }
 
 - (void) setupOutgoingEncryption {
-    if ([self.contact.type isEqualToString:@"Group"]) {
-        self.salt =  [AESCryptor random256BitKey];
-        Group * group = (Group*)self.contact;
-        [self setCryptoKey:[HXOMessage XOR:group.groupKey with:self.salt]];
-    } else {
-        [self setCryptoKey: [AESCryptor random256BitKey]];
+    if (self.outgoingCryptoKey == nil) {
+        if ([self.contact.type isEqualToString:@"Group"]) {
+            self.salt =  [AESCryptor random256BitKey];
+            Group * group = (Group*)self.contact;
+            self.outgoingCryptoKey = [HXOMessage XOR:group.groupKey with:self.salt];
+        } else {
+            self.outgoingCryptoKey = [AESCryptor random256BitKey];
+        }
     }
+    [self setCryptoKey:self.outgoingCryptoKey];
 }
 
 + (NSData *) XOR:(NSData*)a with:(NSData*)b {

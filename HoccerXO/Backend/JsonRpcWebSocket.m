@@ -102,6 +102,7 @@ static const NSTimeInterval kResponseTimeout = 30;
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
+    [self flushOpenRequests];
     if ([self.delegate respondsToSelector:@selector(webSocket:didCloseWithCode:reason:wasClean:)]) {
         [self.delegate webSocket: webSocket didCloseWithCode: code reason: reason wasClean: wasClean];
     }
@@ -187,9 +188,14 @@ static const NSTimeInterval kResponseTimeout = 30;
         [self emitJsonRpcError: @"Got response without id" code: 0 data: nil];
         return;
     }
+    NSDictionary  * responseHandler = _responseHandlers[theId];
+    if (responseHandler == nil) {
+        NSLog(@"Late response for request id %@, response dropped", theId);
+        return;
+    }
 
-    ResponseBlock handler = _responseHandlers[theId][@"handler"];
-    NSTimer * timer = _responseHandlers[theId][@"timer"];
+    ResponseBlock handler = responseHandler[@"handler"];
+    NSTimer * timer = responseHandler[@"timer"];
     [timer invalidate];
     [_responseHandlers removeObjectForKey: theId];
 
@@ -200,6 +206,22 @@ static const NSTimeInterval kResponseTimeout = 30;
     } else {
         // kaputt
     }
+    [self increaseTimeoutForRequestsAfterId:theId];
+}
+
+- (void) increaseTimeoutForRequestsAfterId:(NSNumber*)requestId {
+    NSDate * newFireDate = [NSDate dateWithTimeIntervalSinceNow: kResponseTimeout];
+    // NSLog(@"increaseTimeoutForRequestsAfterId %@ to firedate %@", requestId, newFireDate);
+    int numIncreased = 0;
+    NSArray * allResponses = [_responseHandlers allKeys];
+    for (id key in allResponses) {
+        if ([key longLongValue] > [requestId longLongValue]) {
+            NSTimer * timer = _responseHandlers[key][@"timer"];
+            [timer setFireDate:newFireDate];
+            ++numIncreased;
+        }
+    }
+    // NSLog(@"increaseTimeoutForRequestsAfterId %@ - increased %d timeouts to firedate %@", requestId, numIncreased, newFireDate);
 }
 
 - (void) notify: (NSString*) method withParams: (id) params {
@@ -240,14 +262,45 @@ static const NSTimeInterval kResponseTimeout = 30;
     return @(_id++);
 }
 
-- (void) droppedRequest: (NSNumber*) jsonRpcId {
-    NSLog(@"JsonRpc: request %@ was dropped (no connection)", jsonRpcId);
-    [_responseHandlers removeObjectForKey: jsonRpcId];
+- (void) flushOpenRequests {
+    NSLog(@"JsonRpc: connection was closed,  flushing %d open requests", _responseHandlers.count);
+    NSArray * allResponses = [_responseHandlers allKeys];
+    for (id key in allResponses) {
+        NSNumber * theKey = key;
+        NSDictionary * request = _responseHandlers[theKey];
+        [_responseHandlers removeObjectForKey: theKey];
+        ResponseBlock handler = request[@"handler"];
+        NSTimer * timer = request[@"timer"];
+        [timer invalidate];
+        NSLog(@"JsonRpc: request %@ was flushed (connection was closed)", theKey);
+        handler(@"connection closed", NO);
+    }
+    
 }
 
-- (void) serverDidNotRespond: (NSNumber*) jsonRpcId {
+- (void) droppedRequest: (NSNumber*) jsonRpcId {
+    NSLog(@"JsonRpc: request %@ was dropped (no connection)", jsonRpcId);
+    NSDictionary * responseHandler = _responseHandlers[jsonRpcId];
+    if (responseHandler != nil) {
+        [_responseHandlers removeObjectForKey: jsonRpcId];
+        ResponseBlock handler = responseHandler[@"handler"];
+        NSTimer * timer = responseHandler[@"timer"];
+        [timer invalidate];
+        handler(@"request dropped", NO);
+    }
+}
+
+- (void) serverDidNotRespond: (NSTimer*) jsonRequestTimer {
+    NSNumber * jsonRpcId = jsonRequestTimer.userInfo;
     NSLog(@"Server did not respond within %f seconds, request %@ was dropped", kResponseTimeout, jsonRpcId);
-    [_responseHandlers removeObjectForKey: jsonRpcId];
+    NSDictionary * responseHandler = _responseHandlers[jsonRpcId];
+    if (responseHandler != nil) {
+        ResponseBlock handler = responseHandler[@"handler"];
+        [_responseHandlers removeObjectForKey: jsonRpcId];
+        handler(@"request timeout", NO);
+    } else {
+        NSLog(@"No response handler for request %@, timeout ignored",jsonRpcId);
+    }
 }
 
 - (void) respondWithResult: (id) result id: (NSNumber*) theId {

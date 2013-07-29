@@ -103,7 +103,8 @@ NSString * const kRelationStateBlocked = @"blocked";
     [self willChangeValueForKey: @"avatarImage"];
     _avatarImage = avatarImage;
     self.avatarUploadURL = nil; // clear Upload URL so we know if we have to upload it in case of group avatars
-    [self setPrimitiveValue: UIImageJPEGRepresentation( _avatarImage, 1.0) forKey: @"avatar"];
+    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+    [self setPrimitiveValue: UIImageJPEGRepresentation( _avatarImage, photoQualityCompressionSetting/10.0) forKey: @"avatar"];
     [self didChangeValueForKey: @"avatar"];
     [self didChangeValueForKey: @"avatarImage"];
 }

@@ -9,6 +9,7 @@
 #import "InvitationController.h"
 #import "InviteCodeViewController.h"
 #import "AppDelegate.h"
+#import "HXOUserDefaults.h"
 
 @interface InvitationChannel : NSObject
 @property (nonatomic,strong) NSString* localizedButtonTitle;
@@ -119,7 +120,7 @@ static InvitationController * _sharedInvitationController;
         NSString * inviteLink = [self inviteURL: token];
         NSString * appStoreLink = [self appStoreURL];
         NSString * androidLink = [self androidURL];
-        body = [NSString stringWithFormat: body, appStoreLink, androidLink, inviteLink];
+        body = [NSString stringWithFormat: body, appStoreLink, androidLink, inviteLink, token, [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
         [picker setMessageBody:body isHTML:NO];
 
         [self.viewController presentViewController: picker animated: YES completion: nil];
@@ -135,7 +136,7 @@ static InvitationController * _sharedInvitationController;
         picker.messageComposeDelegate = self;
 
         NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
-        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token]];
+        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token], token, [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
 
         [self.viewController presentViewController: picker animated: YES completion: nil];
 

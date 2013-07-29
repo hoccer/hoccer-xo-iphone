@@ -888,7 +888,11 @@ static NSInteger validationErrorCount = 0;
         NSLog(@"================== Showing object %d of entity '%@' =================", i, theEntityName);
         for (NSAttributeDescription * property in entity) {
             // NSLog(@"property '%@'", property.name);
-            NSLog(@"property '%@' = %@", property.name, [object valueForKey:property.name]);
+            NSString * description = [[object valueForKey:property.name] description];
+            if (description.length > 256) {
+                description = [NSString stringWithFormat:@"%@...(%d chars not shown)", [description substringToIndex:255],description.length-256];
+            }
+            NSLog(@"property '%@' = %@", property.name, description);
         }
         ++i;
     }

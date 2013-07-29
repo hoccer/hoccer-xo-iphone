@@ -15,6 +15,7 @@
         <attribute name="previewImageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="remoteURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="transferAborted" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="transferFailed" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="transferFailures" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="transferPaused" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="transferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -128,7 +129,7 @@
     <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <elements>
-        <element name="Attachment" positionX="-333" positionY="189" width="128" height="330"/>
+        <element name="Attachment" positionX="-333" positionY="189" width="128" height="345"/>
         <element name="Contact" positionX="243" positionY="634" width="128" height="464"/>
         <element name="Delivery" positionX="-261" positionY="579" width="128" height="150"/>
         <element name="Group" positionX="511" positionY="486" width="128" height="135"/>

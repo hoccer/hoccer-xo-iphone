@@ -71,6 +71,7 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSData   * previewImageData;      // remote URL where the file should/was uploaded
 @property (nonatomic, strong) NSDate   * transferPaused;        // if not nil it containes the date the transfer was paused by the user
 @property (nonatomic, strong) NSDate   * transferAborted;       // if not nil it containes the date the transfer was aborted by the user
+@property (nonatomic, strong) NSDate   * transferFailed;        // if not nil it containes the date the transfer has failed the last time
 @property (nonatomic, strong) HXOMessage *message;
 
 // virtual properties

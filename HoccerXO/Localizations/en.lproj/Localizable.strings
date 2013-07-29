@@ -74,21 +74,27 @@
 "Copy" = "Copy";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hi\nI want to exchange direct messages with you. \n\nGet Hoccer XO:\nApp Store: %@\nAndroid: %@\n\nThen confirm my contact by clicking this link:\n%@\n";
+"invitation_mail_body" = "Hallo,\nI am now using the free app ‘Hoccer XO‘ from http://hoccer.com for secure chats. Download ‘Hoccer XO' here:\nApp Store: %@\nAndroid: %@\n\nTo add me as contact click %@ or enter my invite code '%@' in Hoccer XO.\n\nlove, %@";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Hoccer XO Invitation";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "I want to exchange direct messages with you. Please install 'Hoccer XO' first, then click this link: %@\n";
+"invitation_sms_text" = "Hey, I am now using the free app ‘Hoccer XO‘ for secure chats. Information and download link at http://hoccer.com/ Once you installed the app, to add me as contact click %@ or enter my invite code '%@' in Hoccer XO.\n love, %@";
 
 /* Actionsheet Title */
-"Invite by" = "Invite by";
+"Invite by" = "Invite Friends";
 
 /* Invite Actionsheet Button Title */
-"Invite Code" = "Invite Code";
+"SMS" = "Invite via SMS";
 
+/* Invite Actionsheet Button Title */
+"Mail" = "Invite via E-Mail";
+
+/* Invite Actionsheet Button Title */
 "Show Invite Code"="Show Invite Code";
+
+/* Invite Actionsheet Button Title */
 "Scan or Enter Code"="Scan or Enter Code";
 
 /* Invite Alert Title */
@@ -97,8 +103,6 @@
 /* Invite Alert Title */
 "Invite successful" = "Invite successful";
 
-/* Invite Actionsheet Button Title */
-"Mail" = "Mail";
 
 /* Invite Token View Controller */
 "or" = "or";
@@ -128,9 +132,6 @@
 
 /* Navigation Menu Item */
 "Settings" = "Settings";
-
-/* Invite Actionsheet Button Title */
-"SMS" = "SMS";
 
 /* Invite Alert Message */
 "The server accepted your code" = "The code has been accepted";
@@ -300,7 +301,7 @@
 
 "invalid_cert_title" = "Invalid Server Certificate";
 
-"invalid_cert_message" = "Help! Vicious internet nazis are attacking Hoccer. Please call the avengers.";
+"invalid_cert_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
 "navigation_title_new_group" = "New Group";
 "navigation_title_group" = "Group";
