@@ -781,8 +781,18 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width {
     CGFloat attachmentHeight = [super calculateHeightForWidth: width];
-    return attachmentHeight + _textPartHeight;
+
+    CGRect frame = CGRectMake(0, 0, [self textWidthForWidth: width], 10000);
+    _label.frame = frame;
+    if (frame.size.height <= 40) {
+        attachmentHeight += 40;
+    } else {
+        CGSize textSize = [_label sizeThatFits: CGSizeMake([self textWidthForWidth: width], 0)];
+        attachmentHeight += textSize.height + 2 * kHXOBubblePadding;
+    }
+    return attachmentHeight;
 }
+
 
 - (CGRect) attachmentFrame {
     CGRect frame = [self bubbleFrame];
@@ -809,8 +819,18 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 }
 
 - (void) layoutSubviews {
-    [super layoutSubviews];
     [self layoutLabel: _label];
+
+    if (_label.frame.size.height <= 40) {
+        _textPartHeight = 40;
+    } else {
+        _textPartHeight = _label.frame.size.height + 2 * kHXOBubblePadding;
+    }
+    [super layoutSubviews];
+
+    // TODO: improve this: currently layouts label twice :( 
+    [self layoutLabel: _label];
+
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -823,6 +843,15 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     [self drawBubblePath: p inRect: textBoxFrame fillColor: [self fillColor] strokeColor: [self strokeColor] withFillImage: nil innerGlowAlpha: 0.3 isEtched: self.colorScheme == HXOBubbleColorSchemeEtched];
 
     [super drawRect: rect];
+
+    /*
+    [[UIColor orangeColor] setStroke];
+    UIBezierPath * path = [UIBezierPath bezierPathWithRect: [self textFrame]];
+    [path stroke];
+
+    path = [UIBezierPath bezierPathWithRect: [self attachmentFrame]];
+    [path stroke];
+     */
 }
 
 - (UIBezierPath*) bottomTextBoxPathInRect: (CGRect) frame {

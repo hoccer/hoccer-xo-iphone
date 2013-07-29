@@ -181,6 +181,8 @@
     i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
     i16.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_contact"];
     i16.attachmentText = @"Some Dude";
+    i16.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
+
 
     BubbleItem * i17 = [[BubbleItem alloc] init];
     i17.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
@@ -190,6 +192,7 @@
     i17.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_voice"];
     i17.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_voice"];
     i17.attachmentText = @"Recording 1";
+    i17.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i18 = [[BubbleItem alloc] init];
     i18.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
@@ -200,6 +203,7 @@
     i18.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_video"];
     i18.attachmentText = @"Classic Movie";
     i18.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
                i8, i9, i10, i11, i12, i13, i14,
