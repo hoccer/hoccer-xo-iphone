@@ -296,6 +296,7 @@
 
 - (void) configureCell: (BubbleViewToo*) cell item: (BubbleItem*) item {
     cell.avatar.image = [UIImage imageNamed: @"cupcakes.jpg"];
+    cell.authorLabel.text = @"Someone";
     if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
         [self configureTextCell: (TextMessageCell*)cell item: item];
     } else if ([item.cellIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
