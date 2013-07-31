@@ -182,7 +182,7 @@
     i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
     i16.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_contact"];
     i16.attachmentText = @"Some Dude";
-    i16.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
+    i16.text = @"Oat cake dragée tiramisu. .";
 
 
     BubbleItem * i17 = [[BubbleItem alloc] init];

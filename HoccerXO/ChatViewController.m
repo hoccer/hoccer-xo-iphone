@@ -52,15 +52,12 @@ static const CGFloat    kSectionHeaderHeight = 40;
 @property (strong, readonly) AttachmentPickerController* attachmentPicker;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
-//@property (nonatomic, readonly) MessageCell* messageCell;
 @property (nonatomic,strong) NSMutableDictionary * cellPrototypes;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 @property (readonly, strong, nonatomic) ABUnknownPersonViewController * vcardViewController;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
-
-// @property (strong, nonatomic) NSIndexPath * rememberedVisibleCell;
 
 @end
 
@@ -69,15 +66,13 @@ static const CGFloat    kSectionHeaderHeight = 40;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize chatBackend = _chatBackend;
 @synthesize attachmentPicker = _attachmentPicker;
-//@synthesize messageCell = _messageCell;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
 @synthesize vcardViewController = _vcardViewController;
 @synthesize currentExportSession = _currentExportSession;
 @synthesize currentPickInfo = _currentPickInfo;
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
@@ -155,11 +150,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [super viewWillAppear: animated];
 
     [self setNavigationBarBackgroundWithLines];
-    /*
-     if (self.fetchedResultsController != nil) {
-     self.fetchedResultsController.delegate = self;
-     }
-     */
     [HXOBackend broadcastConnectionInfo];
 
     [self scrollToRememberedCellOrToBottomIfNone];
@@ -167,16 +157,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void) viewWillDisappear:(BOOL)animated {
-    // [self trashCurrentAttachment];
-
     [self rememberLastVisibleCell];
-
-    /*
-     if (self.fetchedResultsController != nil) {
-     self.fetchedResultsController.delegate = nil;
-     }
-     */
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -345,10 +326,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 #pragma mark - Attachments
 
 - (AttachmentPickerController*) attachmentPicker {
-//    if (_attachmentPicker == nil) {
-        _attachmentPicker = [[AttachmentPickerController alloc] initWithViewController: self delegate: self];
-        
-//    }
+    _attachmentPicker = [[AttachmentPickerController alloc] initWithViewController: self delegate: self];
     return _attachmentPicker;
 }
 
@@ -470,7 +448,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
             
             [vcardData writeToURL:myLocalURL atomically:NO];
             CompletionBlock completion  = ^(NSError *myerror) {
-                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:myerror];
+                UIImage * preview = self.currentAttachment.previewImage != nil ? self.currentAttachment.previewImage : [UIImage imageNamed: @"avatar_default_contact"];
+                [self finishPickedAttachmentProcessingWithImage: preview withError:myerror];
             };
             self.currentAttachment.humanReadableFileName = [myLocalURL lastPathComponent];
             [self.currentAttachment makeVcardAttachment:[myLocalURL absoluteString] anOtherURL:nil withCompletion:completion];
@@ -893,7 +872,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // ... for now just use the private API
     // cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
 
-//    cell.delegate = self;
     [self prepareCell: cell toViewMessage: message atIndexPath: indexPath];
 
     return cell;
