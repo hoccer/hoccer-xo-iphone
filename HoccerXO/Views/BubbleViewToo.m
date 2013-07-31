@@ -829,10 +829,10 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
     CGRect frame = CGRectMake(0, 0, [self textWidthForWidth: width], 10000);
     _label.frame = frame;
-    if (frame.size.height <= 40) {
+    CGSize textSize = [_label sizeThatFits: CGSizeMake([self textWidthForWidth: width], 0)];
+    if (textSize.height <= 40) {
         attachmentHeight += 40;
     } else {
-        CGSize textSize = [_label sizeThatFits: CGSizeMake([self textWidthForWidth: width], 0)];
         attachmentHeight += textSize.height + 2 * kHXOBubblePadding;
     }
     return attachmentHeight;
