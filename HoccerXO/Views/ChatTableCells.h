@@ -14,7 +14,7 @@
 
 @protocol MessageViewControllerDelegate <NSObject>
 
-- (void) presentAttachmentViewForCell: (MessageCell *) theCell;
+//- (void) presentAttachmentViewForCell: (MessageCell *) theCell;
 - (BOOL) messageCell:(MessageCell *)cell canPerformAction:(SEL)action withSender:(id)sender;
 - (void) messageCell:(MessageCell *)cell saveMessage:(id)sender;
 - (void) messageCell:(MessageCell *)cell copy:(id)sender;

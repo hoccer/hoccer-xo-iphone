@@ -14,6 +14,7 @@
 
 @implementation MessageCell
 
+/*
 - (void)pressedButton: (id)sender {
     // NSLog(@"MessageCell pressedButton %@", sender);
     
@@ -21,6 +22,7 @@
         [self.delegate presentAttachmentViewForCell: self];
     }
 }
+*/
 
 -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
     if (self.delegate != nil) {

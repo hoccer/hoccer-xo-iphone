@@ -941,13 +941,10 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
+    if (message.attachment != nil) {
+        [self presentViewForAttachment: message.attachment];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -972,22 +969,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     return @"";
 }
 
-
-//- (void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    NSLog(@"scrollViewDidEndDecelerating:");
-//    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
-//}
-//
-//- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-//    NSLog(@"scrollViewDidEndScrollingAnimation:");
-//    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
-//}
-//
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    NSLog(@"scrollViewDidScroll:");
-//    NSLog(@"contentOffset: %f %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
-//}
-
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self hideKeyboard];
 }
@@ -996,15 +977,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@",indexPath);}
-    // TODO: refactor
-    /*
-    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if ([[myCell class] isKindOfClass:[ChatTableSectionHeaderCell class]]) {
-        if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - NO",indexPath);}
-        return NO;
-    }
-     */
     if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - YES",indexPath);}
     return YES;
 }
@@ -1660,14 +1632,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     profileViewController.contact = [message.isOutgoing isEqualToNumber: @YES] ? nil : message.contact;
 
     [self.navigationController pushViewController: profileViewController animated: YES];
-}
-
-
-- (void) presentAttachmentViewForCell: (MessageCell *) theCell {
-    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    // NSLog(@"@presentAttachmentViewForCell attachment = %@", message.attachment);
-    
-    [self presentViewForAttachment:message.attachment];
 }
 
 - (void) presentViewForAttachment:(Attachment *) myAttachment {
