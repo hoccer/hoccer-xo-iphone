@@ -1383,6 +1383,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
     cell.smallAttachmentTypeIcon = [UIImage imageNamed: smallIconName];
     cell.largeAttachmentTypeIcon = [UIImage imageNamed: largeIconName];
 
+    cell.attachmentTitle.attributedText = [self attributedAttachmentTitle: message.attachment];
+
 /*
     cell.attachmentTransferState = item.attachmentTransferState;
     cell.progressBar.progress = item.progress;
@@ -1433,6 +1435,22 @@ static const CGFloat    kSectionHeaderHeight = 40;
         }
     }
     return HXOBubbleColorSchemeBlue;
+}
+
+- (NSAttributedString*) attributedAttachmentTitle: (Attachment*) attachment {
+    NSMutableAttributedString * attributedTitle;
+    NSString * title = attachment.humanReadableFileName;
+    if (title != nil) {
+        NSString * fileExtension = [title pathExtension];
+        if ( ! [fileExtension isEqualToString: @""]) {
+            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+            NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
+            [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor colorWithWhite: 0.5 alpha: 1.0] range: range];
+        } else {
+            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+        }
+    }
+    return attributedTitle;
 }
 
 
