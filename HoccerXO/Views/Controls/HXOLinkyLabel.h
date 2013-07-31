@@ -12,7 +12,7 @@
 
 @protocol HXOLinkyLabelDelegate <NSObject>
 
-- (void) chattyLabel: (HXOLinkyLabel*) label didTapToken: (NSTextCheckingResult*) match ofClass: (id) tokenClass;
+- (void) chattyLabel: (HXOLinkyLabel*) label didTapToken: (NSTextCheckingResult*) match ofClass: (id) tokenClass isLongPress: (BOOL) isLongPress;
 
 @end
 

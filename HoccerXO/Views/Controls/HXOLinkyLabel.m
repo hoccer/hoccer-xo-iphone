@@ -81,17 +81,9 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
     self.layer.shadowRadius = 0.0;
 
     self.clearsContextBeforeDrawing = YES;
-}
 
-- (void) dealloc {
-    if (_textFrame != NULL) {
-        CFRelease(_textFrame);
-        _textFrame = NULL;
-    }
-    if (_framesetter != NULL) {
-        CFRelease(_framesetter);
-        _framesetter = NULL;
-    }
+    [self addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
+    [self addGestureRecognizer: [[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
 }
 
 #pragma mark - Public API
@@ -357,25 +349,30 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 
 #pragma mark - Touch Event Handling
 
-- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    for (NSValue * rectValue in _tokenRects) {
-        CGRect rect = [rectValue CGRectValue];
-        UITouch * touch = [[event touchesForView: self] anyObject];
-        if (CGRectContainsPoint(rect, [touch locationInView: self])) {
-            HXOCLToken * token = _tokenRects[rectValue];
-            [self.delegate chattyLabel: self didTapToken: token.match ofClass: token.tokenClass.classIdentifier];
-            break;
+- (void) tapped: (UITapGestureRecognizer*) sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        for (NSValue * rectValue in _tokenRects) {
+            CGRect rect = [rectValue CGRectValue];
+            if (CGRectContainsPoint(rect, [sender locationInView: self])) {
+                HXOCLToken * token = _tokenRects[rectValue];
+                BOOL isLongPress = [sender isKindOfClass: [UILongPressGestureRecognizer class]];
+                [self.delegate chattyLabel: self didTapToken: token.match ofClass: token.tokenClass.classIdentifier isLongPress: isLongPress];
+                break;
+            }
         }
+
     }
 }
 
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-}
+-(id)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    for (NSValue * rectValue in _tokenRects) {
+        CGRect rect = [rectValue CGRectValue];
+        if (CGRectContainsPoint(rect, point)) {
+            return self;
+        }
+    }
 
-- (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-}
-
-- (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    return nil;
 }
 
 @end
