@@ -448,7 +448,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             
             [vcardData writeToURL:myLocalURL atomically:NO];
             CompletionBlock completion  = ^(NSError *myerror) {
-                UIImage * preview = self.currentAttachment.previewImage != nil ? self.currentAttachment.previewImage : [UIImage imageNamed: @"avatar_default_contact"];
+                UIImage * preview = self.currentAttachment.previewImage != nil ? self.currentAttachment.previewImage : [UIImage imageNamed: @"attachment_icon_contact"];
                 [self finishPickedAttachmentProcessingWithImage: preview withError:myerror];
             };
             self.currentAttachment.humanReadableFileName = [myLocalURL lastPathComponent];
@@ -1374,12 +1374,15 @@ static const CGFloat    kSectionHeaderHeight = 40;
         smallIconName = @"attachment_icon_s_location";
         largeIconName = @"attachment_icon_location";
     }  else if ([message.attachment.mediaType isEqualToString: @"audio"]) {
-        smallIconName = @"attachment_icon_s_music";
-        largeIconName = @"attachment_icon_music";
-    }/*  else if ([message.attachment.mediaType isEqualToString: @"video"]) {
-        smallIconName = @"attachment_icon_s_voice";
-        largeIconName = @"attachment_icon_voice";
-    }*/
+        NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
+        if (findResult.length == @"recording".length && findResult.location == 0) {
+            smallIconName = @"attachment_icon_s_voice";
+            largeIconName = @"attachment_icon_voice";
+        } else {
+            smallIconName = @"attachment_icon_s_music";
+            largeIconName = @"attachment_icon_music";
+        }
+    }
     cell.smallAttachmentTypeIcon = [UIImage imageNamed: smallIconName];
     cell.largeAttachmentTypeIcon = [UIImage imageNamed: largeIconName];
 
