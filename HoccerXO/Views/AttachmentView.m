@@ -74,7 +74,7 @@
 }
 
 - (void) configureViewForAttachment: (Attachment*) theAttachment inCell:(MessageCell*) theCell {
-
+/*
     // remove potentially leftover targets
     [self.openButton removeTarget:self.cell action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.loadButton removeTarget:self.attachment action:@selector(pressedButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -278,6 +278,7 @@
         self.progressView.hidden = YES;
         if (ATTACHMENT_STATE_DEBUG) {NSLog(@"configureViewForAttachment: no progress");}
     }
+ */
 }
 
 - (NSString *) getTransferedTitle {

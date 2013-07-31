@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 #import "HXOTableViewCell.h"
+#import "Attachment.h"
+#import "ChatTableCells.h"
 
 @class InsetImageView2;
 @class HXOLinkyLabel;
@@ -31,7 +33,7 @@ typedef enum HXOMessageDirections {
     HXOMessageDirectionOutgoing
 } HXOMessageDirection;
 
-@interface BubbleViewToo : HXOTableViewCell
+@interface BubbleViewToo : MessageCell
 
 @property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
 @property (nonatomic,assign) HXOMessageDirection     messageDirection;
@@ -50,7 +52,7 @@ typedef enum HXOMessageDirections {
 
 typedef enum HXOAttachmentTransferStates {
     HXOAttachmentTransferStateDone,
-    HXOAttachmentTranserStateInProgress
+    HXOAttachmentTransferStateInProgress
 } HXOAttachmentTranserState;
 
 typedef enum HXOBubbleRunButtonStyles {
@@ -58,7 +60,7 @@ typedef enum HXOBubbleRunButtonStyles {
     HXOBubbleRunButtonPlay
 } HXOBubbleRunButtonStyle;
 
-@interface AttachmentMessageCell : BubbleViewToo
+@interface AttachmentMessageCell : BubbleViewToo <TransferProgressIndication>
 
 @property (nonatomic,readonly) UIProgressView *         progressBar;
 @property (nonatomic,readonly) UILabel *                attachmentTitle;

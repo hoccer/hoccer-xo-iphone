@@ -21,6 +21,7 @@
 @implementation AttachmentViewFactory
 
 + (AttachmentView*) viewForAttachment: (Attachment*) attachment inCell:(MessageCell*) cell {
+    /*
     if (attachment == nil) {
         return nil;
     } else if ([attachment.mediaType isEqualToString:@"image"]       ||
@@ -64,6 +65,7 @@
     } else {
         NSLog(@"ERROR: AttachmentViewFactory:viewForAttachment: Unhandled attachment type: '%@'",attachment.mediaType);
     }
+     */
     return nil;
 }
 

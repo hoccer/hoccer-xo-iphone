@@ -36,7 +36,7 @@
 
     //// Color Declarations
     UIColor* innerStrokeColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.2];
-    UIColor* outerStrokeColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.8];
+    UIColor* outerStrokeColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1.0];
     UIColor* innerShadowColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.3];
 
     //// Shadow Declarations

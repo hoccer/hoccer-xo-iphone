@@ -608,7 +608,7 @@ NSArray * TransferStateName = @[@"detached",
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        block([UIImage imageNamed:@"audio-default.png"], nil);
+        block(nil /*[UIImage imageNamed:@"audio-default.png"]*/, nil);
     }
 }
 
@@ -619,13 +619,13 @@ NSArray * TransferStateName = @[@"detached",
     }
     Vcard * myVcard = [[Vcard alloc] initWithVcardURL:self.contentURL];
     if (myVcard != nil) {
-        UIImage * myPreviewImage = [myVcard previewImageWithScale:0];
+        UIImage * myPreviewImage = [myVcard personImage];
         if (myPreviewImage) {
             block(myPreviewImage, nil);
             return;
         }
     }
-    block([UIImage imageNamed:@"vcard_error_preview.png"], nil);
+    block(nil /*[UIImage imageNamed:@"vcard_error_preview.png"]*/, nil);
 }
 
 - (void) loadGeoLocationAttachmentImage: (ImageLoaderBlock) block {

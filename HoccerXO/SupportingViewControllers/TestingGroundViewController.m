@@ -97,7 +97,7 @@
     i8.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i8.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i8.attachmentText = @"cupcakes.jpg";
-    i8.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i8.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i8.progress = 0.90;
 
     BubbleItem * i9 = [[BubbleItem alloc] init];
@@ -108,7 +108,7 @@
     i9.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i9.attachmentText = @"cupcakes.jpg";
     i9.runButtonStyle = HXOBubbleRunButtonPlay;
-    i9.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i9.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i9.progress = 1.0;
 
 
@@ -121,7 +121,7 @@
     i10.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_image"];
     i10.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i10.attachmentText = @"cupcakes.jpg";
-    i10.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i10.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i10.progress = 0.33;
 
     BubbleItem * i11 = [[BubbleItem alloc] init];
@@ -151,7 +151,7 @@
     i13.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_location"];
     i13.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_location"];
     i13.attachmentText = @"Nice Place";
-    i13.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i13.attachmentTransferState = HXOAttachmentTransferStateInProgress;
 
     BubbleItem * i14 = [[BubbleItem alloc] init];
     i14.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
@@ -160,7 +160,7 @@
     i14.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     CGSize imageSize = [UIImage imageNamed:@"cupcakes.jpg"].size;
     i14.imageAspect = imageSize.width / imageSize.height;
-    i14.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i14.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i14.progress = 0.5;
 
     BubbleItem * i15 = [[BubbleItem alloc] init];
@@ -169,7 +169,7 @@
     i15.pointDirection = HXOMessageDirectionIncoming;
     i15.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i15.imageAspect = imageSize.width / imageSize.height;
-    i15.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i15.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i15.progress = 0.5;
     i15.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
 
@@ -203,7 +203,7 @@
     i18.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_video"];
     i18.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_video"];
     i18.attachmentText = @"Classic Movie";
-    i18.attachmentTransferState = HXOAttachmentTranserStateInProgress;
+    i18.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
@@ -290,13 +290,13 @@
     BubbleViewToo * cell = (BubbleViewToo*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
     cell.colorScheme = item.colorScheme;
     cell.messageDirection = item.pointDirection;
+    cell.avatar.image = [UIImage imageNamed: @"cupcakes.jpg"];
+    cell.authorLabel.text = @"Someone";
     [self configureCell: cell item: item];
     return cell;
 }
 
 - (void) configureCell: (BubbleViewToo*) cell item: (BubbleItem*) item {
-    cell.avatar.image = [UIImage imageNamed: @"cupcakes.jpg"];
-    cell.authorLabel.text = @"Someone";
     if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
         [self configureTextCell: (TextMessageCell*)cell item: item];
     } else if ([item.cellIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
@@ -329,7 +329,7 @@
     NSMutableAttributedString * attributedTitle;
     NSString * fileExtension = [title pathExtension];
     if (title != nil) {
-        if (item.attachmentTransferState == HXOAttachmentTranserStateInProgress) {
+        if (item.attachmentTransferState == HXOAttachmentTransferStateInProgress) {
             NSDictionary * attributes = @{NSForegroundColorAttributeName: [UIColor colorWithWhite: 0.5 alpha:1.0]};
             attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
         } else if ( ! [fileExtension isEqualToString: @""]) {

@@ -91,6 +91,17 @@
 	return propertyString;
 }
 
+- (UIImage *) personImage {
+    UIImage * image;
+    if (self.person != nil) {
+        CFTypeRef imageData = ABPersonCopyImageData(self.person);
+        if (imageData != NULL) {
+            image = [UIImage imageWithData:(NSData *)CFBridgingRelease(imageData)];
+        }
+    }
+    return image;
+}
+
 - (UIImage *) previewImage {
     return [self previewImageWithScale:0];
 }

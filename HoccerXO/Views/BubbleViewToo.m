@@ -65,6 +65,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
     _avatar = [[InsetImageView2 alloc] initWithFrame: CGRectMake(kHXOBubblePadding, kHXOBubblePadding, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
     [self addSubview: _avatar];
+    [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
     self.colorScheme = HXOBubbleColorSchemeWhite;
     self.messageDirection = HXOMessageDirectionOutgoing;
@@ -79,7 +80,13 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     _authorLabel.backgroundColor = [UIColor clearColor];
     _authorLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview: _authorLabel];
+}
 
+
+- (void) avatarPressed: (id) sender {
+    if (self.delegate != nil) {
+        [self.delegate messageCellDidPressAvatar: self];
+    }
 }
 
 - (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
@@ -458,6 +465,35 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     return [self bubbleFrame];
 }
 
+
+
+
+#pragma mark - Transfer Progress Indication Protocol
+
+- (void) showTransferProgress:(float) theProgress {
+    // NSLog(@"showTransferProgress %f", theProgress);
+
+    self.attachmentTransferState = HXOAttachmentTransferStateInProgress;
+    self.progressBar.progress = theProgress;
+}
+
+- (void) transferStarted {
+    self.attachmentTransferState = HXOAttachmentTransferStateInProgress;
+    self.progressBar.progress = 0;
+}
+
+- (void) transferFinished {
+    self.attachmentTransferState = HXOAttachmentTransferStateDone;
+}
+
+// TODO: call when transfer is scheduled
+- (void) transferScheduled {
+    self.attachmentTransferState = HXOAttachmentTransferStateInProgress;
+    self.progressBar.progress = 0;
+}
+
+#pragma mark - Layout and Rendering
+
 - (void) layoutSubviews {
     [super layoutSubviews];
 
@@ -486,7 +522,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
             labelFrame.size.width -= kHXOBubbleTypeIconSize + kHXOBubbleTypeIconPadding;
         }
 
-        if (self.attachmentTransferState == HXOAttachmentTranserStateInProgress) {
+        if (self.attachmentTransferState == HXOAttachmentTransferStateInProgress) {
             labelFrame.size.width -= kHXOBubbleProgressSizeSmall + kHXOBubblePadding;
             progressFrame.size.width = kHXOBubbleProgressSizeSmall;
             progressFrame.origin.x = labelFrame.origin.x + labelFrame.size.width + kHXOBubblePadding;

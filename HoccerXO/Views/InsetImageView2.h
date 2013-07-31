@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface InsetImageView2 : UIView
+@interface InsetImageView2 : UIControl
 
 @property (nonatomic,strong) UIImage * image;
 
