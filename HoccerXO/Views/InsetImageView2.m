@@ -25,6 +25,11 @@
 
 }
 
+- (void) setImage:(UIImage *)image {
+    _image = image;
+    [self setNeedsDisplay];
+}
+
 - (void)drawRect:(CGRect)rect {
 
     CGRect frame = CGRectInset(self.bounds, 1, 1);
@@ -113,9 +118,6 @@
     [roundedRectanglePath stroke];
 
     CGContextRestoreGState(context);
-
-    
-
     
 }
 
