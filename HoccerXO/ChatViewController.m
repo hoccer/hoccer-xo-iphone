@@ -878,7 +878,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // ... for now just use the private API
     // cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
 
-    [self prepareCell: cell toViewMessage: message atIndexPath: indexPath];
+    [self configureCell: cell forMessage: message];
 
     return cell;
 }
@@ -934,7 +934,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     BubbleViewToo * cell = [self.cellPrototypes objectForKey: [self cellIdentifierForMessage: message]];
-    [self configureCell: cell forMessage: message];
+    [self prepareLayoutOfCell: cell withMessage: message];
     return [cell calculateHeightForWidth: self.tableView.bounds.size.width];
 }
 
@@ -1141,7 +1141,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     for (int i = 0; i < indexPaths.count; ++i) {
         NSIndexPath * indexPath = indexPaths[i];
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        [self prepareCell: (BubbleViewToo*)[self.tableView cellForRowAtIndexPath:indexPath] toViewMessage: message atIndexPath: indexPath];
+        [self configureCell: (BubbleViewToo*)[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
     }
     [self.tableView endUpdates];
 }
@@ -1189,7 +1189,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         case NSFetchedResultsChangeUpdate:
         {
             HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-            [self prepareCell: (BubbleViewToo*)[tableView cellForRowAtIndexPath:indexPath] toViewMessage: message atIndexPath: indexPath];
+            [self configureCell: (BubbleViewToo*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
             break;
         }
 
@@ -1235,36 +1235,32 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }
 }
 
-- (void) prepareCell: (BubbleViewToo*) cell toViewMessage: (HXOMessage*) message atIndexPath: (NSIndexPath*) indexPath {
+- (void) prepareLayoutOfCell: (BubbleViewToo*) cell withMessage: (HXOMessage*) message {
+    if ([cell.reuseIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
+        TextMessageCell * textCell = (TextMessageCell*) cell;
+        textCell.label.text = message.body;
+    } else if ([cell.reuseIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
+        AttachmentMessageCell * attachmentCell = (AttachmentMessageCell*) cell;
+        attachmentCell.imageAspect = message.attachment.aspectRatio;
+        attachmentCell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
+
+    } else if ([cell.reuseIdentifier isEqualToString: [AttachmentWithTextMessageCell reuseIdentifier]]) {
+        AttachmentWithTextMessageCell * doubleCell = (AttachmentWithTextMessageCell*) cell;
+        doubleCell.label.text = message.body;
+        doubleCell.imageAspect = message.attachment.aspectRatio;
+        doubleCell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
+
+    }
+}
+
+- (void)configureCell:(BubbleViewToo*)cell forMessage:(HXOMessage *) message {
+
+    [self prepareLayoutOfCell: cell withMessage: message];
 
     if ([message.isRead isEqualToNumber: @NO]) {
         message.isRead = @YES;
         [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
     }
-    [self configureCell: cell forMessage: message];
-    if (message.attachment != nil) {
-        message.attachment.progressIndicatorDelegate = (AttachmentMessageCell*) cell;
-
-        if (message.attachment.previewImage == nil) {
-            [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
-                if (theError == nil) {
-                    // TODO: find a better way to get the right cell...
-                    AttachmentMessageCell * currentCell = (AttachmentMessageCell*)cell;//[self.tableView cellForRowAtIndexPath: indexPath];
-                    if (currentCell != nil) {
-                        currentCell.previewImage = message.attachment.previewImage;
-                    }
-                } else {
-                    NSLog(@"ERROR: Failed to load attachment preview image: %@", theError);
-                }
-            }];
-        }
-    }
-
-    cell.delegate = self;
-}
-
-- (void)configureCell:(BubbleViewToo*)cell forMessage:(HXOMessage *) message {
-
 
     cell.colorScheme = [self colorSchemeForMessage: message];
     cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
@@ -1283,67 +1279,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
         [self configureAttachmentCell: (AttachmentMessageCell*)cell forMessage: message];
         [self configureTextCell: cell forMessage: message];
     }
-
-
-
-
-
-
-
-
-    
-
-    //cell.message.text = message.body;
-
-
-    // cell.cellOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    
-    // cell.bubble.frame = [cell.bubble bubbleFrameForCellFrame:cell.frame];
-    //cell.bubble.frame = [cell.bubble bubbleFrameForMessage:message inCellWithWidth:cell.frame.size.width];
-    //[cell.bubble setNeedsLayout];
-    //[cell.bubble layoutIfNeeded];
-    
-    // NSLog(@"configureCell BubbleView %x attachment %x time=%@",(int)(__bridge void*)cell.bubble, (int)(__bridge void*)message.attachment, message.timeAccepted);
-
-    /*
-    if (message.attachment &&
-        ([message.attachment.mediaType isEqualToString:@"image"] ||
-         [message.attachment.mediaType isEqualToString:@"video"] ||
-         [message.attachment.mediaType isEqualToString:@"vcard"] ||
-         [message.attachment.mediaType isEqualToString:@"geolocation"] ||
-         [message.attachment.mediaType isEqualToString:@"audio"]))
-    {
-        //[cell setNeedsLayout];
-        //[cell layoutIfNeeded];
-
-        AttachmentView * attachmentView = [AttachmentViewFactory viewForAttachment: message.attachment inCell: cell];
-        cell.bubble.attachmentView = attachmentView;
-    } else {
-        cell.bubble.attachmentView = nil;
-    }
-     */
-/*
-    if ([message.isOutgoing isEqualToNumber: @YES]) {
-        if ([message.deliveries count] > 1) {
-            NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
-        }
-        for (Delivery * myDelivery in message.deliveries) {
-            if ([myDelivery.state isEqualToString:kDeliveryStateNew] ||
-                [myDelivery.state isEqualToString:kDeliveryStateDelivering])
-            {
-                cell.bubble.state = BubbleStateInTransit;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered] ||
-                       [myDelivery.state isEqualToString:kDeliveryStateConfirmed])
-            {
-                cell.bubble.state = BubbleStateDelivered;
-            } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-                cell.bubble.state = BubbleStateFailed;
-            } else {
-                NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
-            }
-        }
-    }
- */
 }
 
 - (void) configureTextCell: (id) cell forMessage: (HXOMessage*) message {
@@ -1352,14 +1287,31 @@ static const CGFloat    kSectionHeaderHeight = 40;
         [self registerTokenClasses: label];
         label.delegate = self;
     }
-    label.text = message.body;
+//    label.text = message.body;
 }
 
 - (void) configureAttachmentCell: (AttachmentMessageCell*) cell forMessage: (HXOMessage*) message {
-    cell.imageAspect = message.attachment.aspectRatio;
-    cell.previewImage = message.attachment.previewImage; // XXX
+    //cell.imageAspect = message.attachment.aspectRatio;
 
-    cell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
+    message.attachment.progressIndicatorDelegate = (AttachmentMessageCell*) cell;
+
+    if (message.attachment.previewImage == nil) {
+        [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
+            if (theError == nil) {
+                // TODO: find a better way to get the right cell...
+                AttachmentMessageCell * currentCell = (AttachmentMessageCell*)cell;//[self.tableView cellForRowAtIndexPath: indexPath];
+                if (currentCell != nil) {
+                    currentCell.previewImage = message.attachment.previewImage;
+                }
+            } else {
+                NSLog(@"ERROR: Failed to load attachment preview image: %@", theError);
+            }
+        }];
+    } else {
+        cell.previewImage = message.attachment.previewImage;
+    }
+
+//    cell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
 
 
     cell.runButtonStyle = [message.attachment.mediaType isEqualToString: @"video"] ? HXOBubbleRunButtonPlay : HXOBubbleRunButtonNone;
@@ -1401,30 +1353,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     } else {
         cell.thumbnailScaleMode = HXOThumbnailScaleModeAspectFill;
     }
-
-/*
-    cell.attachmentTransferState = item.attachmentTransferState;
-    cell.progressBar.progress = item.progress;
-    cell.runButtonStyle = item.runButtonStyle;
-
-    NSString * title = item.attachmentText;
-    NSMutableAttributedString * attributedTitle;
-    NSString * fileExtension = [title pathExtension];
-    if (title != nil) {
-        if (item.attachmentTransferState == HXOAttachmentTranserStateInProgress) {
-            NSDictionary * attributes = @{NSForegroundColorAttributeName: [UIColor colorWithWhite: 0.5 alpha:1.0]};
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
-        } else if ( ! [fileExtension isEqualToString: @""]) {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-            NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
-            [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor colorWithWhite: 0.5 alpha: 1.0] range: range];
-        } else {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-        }
-    }
-
-    cell.attachmentTitle.attributedText = attributedTitle;
- */
 }
 
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
