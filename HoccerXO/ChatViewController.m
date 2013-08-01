@@ -1385,6 +1385,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
     BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
 
+    // TODO: some of this stuff is quite expensive: reading vcards, loading audio metadata, &c.
+    // It is probably a good idea to cache the attachment titles in the database.
     NSMutableAttributedString * attributedTitle;
     if (isComplete || isOutgoing) {
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
@@ -1398,6 +1400,24 @@ static const CGFloat    kSectionHeaderHeight = 40;
             }
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
             attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"location_default_title", nil)];
+        } else if ([attachment.mediaType isEqualToString: @"audio"]) {
+            NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
+            if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
+                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:attachment.contentURL options:nil];
+                NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
+                NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
+                NSString * title;
+                if (titles.count > 0 && artists.count > 0) {
+                    title = [NSString stringWithFormat: @"%@ – %@", artists[0], titles[0]];
+                } else if (titles.count > 0) {
+                    title = titles[0];
+                } else if (artists.count > 0) {
+                    title = artists[0];
+                }
+                if (title != nil) {
+                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+                }
+            }
         }
     }
 
