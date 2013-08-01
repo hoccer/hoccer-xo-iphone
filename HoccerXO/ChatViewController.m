@@ -581,13 +581,18 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
                         self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
+                        if (self.currentAttachment.previewImage == nil) {
+                            // In case we fail getting the artwork from file try get artwork from Media Item
+                            // However, this only displays the artwork on the upload side. The artwork is *not*
+                            // included in the exported file.
+                            // It should be possible to add the image using _currentExportSession.metadata. But
+                            // merging with existing metadata is non trivial and we should tackle it later.
+                            MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
+                            self.currentAttachment.previewImage = [artwork imageWithSize:CGSizeMake(400,400)];
+
+                        }
                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
                     }];
-                     // TODO: in case we fail getting the artwork from file try get artwork from Media Item
-                     // set up artwork image
-                     // MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
-                     // NSLog(@"createThumb1: artwork=%@", artwork);
-                     // UIImage * artworkImage = [artwork imageWithSize:CGSizeMake(400,400)];                    
                     break;
                 }
                 case AVAssetExportSessionStatusUnknown: {
