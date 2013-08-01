@@ -388,3 +388,5 @@
 
 "button_title_call" = "Anrufen";
 
+"vcard_default_title" = "Kontakt";
+"location_default_title" = "Ort";

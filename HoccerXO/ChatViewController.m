@@ -1451,15 +1451,30 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (NSAttributedString*) attributedAttachmentTitle: (Attachment*) attachment {
     NSMutableAttributedString * attributedTitle;
-    NSString * title = attachment.humanReadableFileName;
-    if (title != nil) {
-        NSString * fileExtension = [title pathExtension];
-        if ( ! [fileExtension isEqualToString: @""]) {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-            NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
-            [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor colorWithWhite: 0.5 alpha: 1.0] range: range];
+    if ([attachment.mediaType isEqualToString: @"vcard"]) {
+        if (attachment.localURL != nil) {
+            Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
+            if (myVcard != nil) {
+                attributedTitle = [[NSMutableAttributedString alloc] initWithString: [myVcard nameString]];
+            }
         } else {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+            attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"vcard_default_title", nil)];
+        }
+    } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
+        attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"location_default_title", nil)];
+    }
+
+    if (attributedTitle == nil) {
+        NSString * title = attachment.humanReadableFileName;
+        if (title != nil) {
+            NSString * fileExtension = [title pathExtension];
+            if ( ! [fileExtension isEqualToString: @""]) {
+                attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+                NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
+                [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor colorWithWhite: 0.5 alpha: 1.0] range: range];
+            } else {
+                attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+            }
         }
     }
     return attributedTitle;

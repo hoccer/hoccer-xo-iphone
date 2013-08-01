@@ -409,4 +409,5 @@
 
 "button_title_call" = "Call";
 
-
+"vcard_default_title" = "Contact";
+"location_default_title" = "Location";
