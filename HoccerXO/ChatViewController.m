@@ -1253,6 +1253,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (void)configureCell:(BubbleViewToo*)cell forMessage:(HXOMessage *) message {
 
+    cell.delegate = self;
+
     [self prepareLayoutOfCell: cell withMessage: message];
 
     if ([message.isRead isEqualToNumber: @NO]) {
