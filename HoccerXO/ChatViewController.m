@@ -412,8 +412,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
         NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
 
         UIImage * preview = attachmentInfo[@"com.hoccer.xo.previewImage"];
-        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-        NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
+        //float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        //NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
+        NSData * previewData = UIImagePNGRepresentation( preview );
 
         NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike: @"location.json"];
         NSDictionary * json = @{ @"location": @{ @"type": @"point",

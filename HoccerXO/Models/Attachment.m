@@ -334,7 +334,11 @@ NSArray * TransferStateName = @[@"detached",
     if (!(self.aspectRatio > 0)) {
         [self setAspectRatioForImage:theFullImage];
     }
-    self.previewImage = [theFullImage imageScaledToSize:CGSizeMake(previewWidth, previewWidth/self.aspectRatio)];
+    if ([self.mediaType isEqualToString: @"geolocation"]) {
+        self.previewImage = theFullImage;
+    } else {
+        self.previewImage = [theFullImage imageScaledToSize:CGSizeMake(previewWidth, previewWidth/self.aspectRatio)];
+    }
 
 #if 0
     // as a result of this benchwork we use JPEG previews;
@@ -361,8 +365,13 @@ NSArray * TransferStateName = @[@"detached",
     NSLog(@"JPG scale = %f, PNG scale = %f", myJPEGImage.scale, myPNGImage.scale);
     self.previewImageData = myJPEG;
 #else
-    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-    self.previewImageData = UIImageJPEGRepresentation(self.previewImage, photoQualityCompressionSetting/10.0);
+    if ([self.mediaType isEqualToString: @"geolocation"]) {
+        // but not with geolocation previews ... they look like crap when compressed with jpeg
+        self.previewImageData = UIImagePNGRepresentation(self.previewImage);
+    } else {
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        self.previewImageData = UIImageJPEGRepresentation(self.previewImage, photoQualityCompressionSetting/10.0);
+    }
 #endif
 }
 
