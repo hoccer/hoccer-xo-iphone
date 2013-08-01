@@ -562,7 +562,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
         strokeColor = [UIColor colorWithRed: 107.0/255 green: 21.0/255 blue: 24.0/255 alpha: 1.0];
     } else {
         fillColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"attachment_pattern"]];
-        strokeColor = [UIColor colorWithRed: 0.19 green: 0.195 blue: 0.2 alpha: 1];
+        strokeColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
     }
     if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
         UIBezierPath * path = [self thumbnailedBubblePathInRect: [self attachmentFrame]];
