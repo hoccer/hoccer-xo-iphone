@@ -1389,6 +1389,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     cell.attachmentTitle.attributedText = [self attributedAttachmentTitle: message.attachment];
 
+    if ([message.attachment.mediaType isEqualToString: @"vcard"]) {
+        cell.thumbnailScaleMode = HXOThumbnailScaleModeStretchToFit;
+    } else if ([message.attachment.mediaType isEqualToString: @"geolocation"]) {
+        cell.thumbnailScaleMode = HXOThumbnailScaleModeActualSize;
+    } else {
+        cell.thumbnailScaleMode = HXOThumbnailScaleModeAspectFill;
+    }
+
 /*
     cell.attachmentTransferState = item.attachmentTransferState;
     cell.progressBar.progress = item.progress;

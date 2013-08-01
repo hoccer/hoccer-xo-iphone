@@ -60,6 +60,12 @@ typedef enum HXOBubbleRunButtonStyles {
     HXOBubbleRunButtonPlay
 } HXOBubbleRunButtonStyle;
 
+typedef enum HXOThumbnailScaleModes {
+    HXOThumbnailScaleModeStretchToFit,
+    HXOThumbnailScaleModeAspectFill,
+    HXOThumbnailScaleModeActualSize
+} HXOThumbnailScaleMode;
+
 @interface AttachmentMessageCell : BubbleViewToo <TransferProgressIndication>
 
 @property (nonatomic,readonly) UIProgressView *         progressBar;
@@ -71,6 +77,7 @@ typedef enum HXOBubbleRunButtonStyles {
 @property (nonatomic,strong) UIImage *                  largeAttachmentTypeIcon;
 @property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
 @property (nonatomic,assign) HXOBubbleRunButtonStyle    runButtonStyle;
+@property (nonatomic,assign) HXOThumbnailScaleMode      thumbnailScaleMode;
 
 @end
 

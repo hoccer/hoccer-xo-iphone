@@ -623,13 +623,15 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
         [icon drawAtPoint: iconOrigin];
 
     } else {
-        [self.previewImage drawInRect: [self thumbnailFrame: thumbnailFrameBounds]];
+        CGRect imageFrame = [self thumbnailFrame: thumbnailFrameBounds];
+        [self.previewImage drawInRect: imageFrame];
     }
     CGContextRestoreGState(context);
     [thumbnailFrameColor setStroke];
     thumbnailFramePath.lineWidth = 1;
     [thumbnailFramePath stroke];
 }
+
 
 - (void) drawTypeIconInContext: (CGContextRef) context {
     CGRect bubbleFrame = [self attachmentFrame];
@@ -710,16 +712,31 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     return thumbnailFramePath;
 }
 
-- (CGRect) thumbnailFrame: (CGRect) frame {
-    CGFloat scale;
-    if (self.previewImage.size.width > self.previewImage.size.height) {
-        scale = kHXOBubbleMinimumHeight / self.previewImage.size.height;
-    } else {
-        scale = kHXOBubbleMinimumHeight / self.previewImage.size.width;
+- (CGRect) thumbnailFrame: (CGRect) thumbnailFrame {
+    switch (self.thumbnailScaleMode) {
+        case HXOThumbnailScaleModeStretchToFit:
+            return thumbnailFrame;
+        case HXOThumbnailScaleModeAspectFill: {
+            CGSize imageSize = self.previewImage.size;
+            CGFloat dx = imageSize.width - thumbnailFrame.size.width;
+            CGFloat dy = imageSize.height - thumbnailFrame.size.height;
+            CGFloat scale;
+            if (dx < dy) {
+                scale = thumbnailFrame.size.width / imageSize.width;
+            } else {
+                scale = thumbnailFrame.size.height / imageSize.height;
+            }
+            CGRect imageFrame = CGRectMake(thumbnailFrame.origin.x, thumbnailFrame.origin.y, imageSize.width * scale, imageSize.height * scale);
+            imageFrame.origin.x -= 0.5 * (imageFrame.size.width - thumbnailFrame.size.width);
+            imageFrame.origin.y -= 0.5 * (imageFrame.size.height - thumbnailFrame.size.height);
+            return imageFrame;
+        }
+        case HXOThumbnailScaleModeActualSize: {
+            CGSize imageSize = self.previewImage.size;
+            return CGRectMake( thumbnailFrame.origin.x - 0.5 * (imageSize.width - thumbnailFrame.size.width) + 0.5, thumbnailFrame.origin.y - 0.5 * (imageSize.height - thumbnailFrame.size.height) + 0.5, imageSize.width, imageSize.height);
+        }
     }
-    CGFloat dx = 0.5 * (scale * self.previewImage.size.width - frame.size.width);
-    CGFloat dy = 0.5 * (scale * self.previewImage.size.height - frame.size.height);
-    return CGRectInset(frame, -dx, -dy);
+    
 }
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width {
