@@ -399,6 +399,7 @@ NSArray * TransferStateName = @[@"detached",
         }
     } else {
         // create preview by loading full size image
+        // TODO: guard against calling this over and over again if the attachment does not have an image
         [self loadImage:^(UIImage* theImage, NSError* error) {
             // NSLog(@"loadImage for preview done");
             if (theImage) {
@@ -407,7 +408,8 @@ NSArray * TransferStateName = @[@"detached",
                     finished(nil);
                 }
             } else {
-                NSLog(@"ERROR: Failed to get image %@", error);
+                // Not an actual error. Vcards and audio files do not neccesariliy have an image.
+                //NSLog(@"NOTE: Failed to get image %@", error);
                 if (finished != nil) {
                     finished(error);
                 }
