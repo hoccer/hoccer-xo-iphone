@@ -27,8 +27,6 @@
 #import "ChatTableCells.h"
 #import "AutoheightLabel.h"
 #import "Attachment.h"
-#import "AttachmentViewFactory.h"
-#import "BubbleView.h"
 #import "HXOUserDefaults.h"
 #import "ImageViewController.h"
 #import "UserProfile.h"
@@ -1344,7 +1342,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     cell.smallAttachmentTypeIcon = [UIImage imageNamed: smallIconName];
     cell.largeAttachmentTypeIcon = [UIImage imageNamed: largeIconName];
 
-    cell.attachmentTitle.attributedText = [self attributedAttachmentTitle: message.attachment];
+    cell.attachmentTitle.attributedText = [self attributedAttachmentTitle: message];
 
     if ([message.attachment.mediaType isEqualToString: @"vcard"]) {
         cell.thumbnailScaleMode = HXOThumbnailScaleModeStretchToFit;
@@ -1382,31 +1380,43 @@ static const CGFloat    kSectionHeaderHeight = 40;
     return HXOBubbleColorSchemeBlue;
 }
 
-- (NSAttributedString*) attributedAttachmentTitle: (Attachment*) attachment {
+- (NSAttributedString*) attributedAttachmentTitle: (HXOMessage*) message {
+    Attachment * attachment = message.attachment;
+    BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
+    BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
+
     NSMutableAttributedString * attributedTitle;
-    if ([attachment.mediaType isEqualToString: @"vcard"]) {
-        if (attachment.localURL != nil) {
-            Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
-            if (myVcard != nil) {
-                attributedTitle = [[NSMutableAttributedString alloc] initWithString: [myVcard nameString]];
+    if (isComplete || isOutgoing) {
+        if ([attachment.mediaType isEqualToString: @"vcard"]) {
+            if (attachment.localURL != nil) {
+                Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
+                if (myVcard != nil) {
+                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: [myVcard nameString]];
+                }
+            } else {
+                attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"vcard_default_title", nil)];
             }
-        } else {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"vcard_default_title", nil)];
+        } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
+            attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"location_default_title", nil)];
         }
-    } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
-        attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"location_default_title", nil)];
     }
 
     if (attributedTitle == nil) {
         NSString * title = attachment.humanReadableFileName;
         if (title != nil) {
-            NSString * fileExtension = [title pathExtension];
-            if ( ! [fileExtension isEqualToString: @""]) {
-                attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-                NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
-                [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor colorWithWhite: 0.5 alpha: 1.0] range: range];
+            UIColor * grey = [UIColor colorWithWhite: 0.5 alpha: 1.0];
+            if ( ! isOutgoing && ! isComplete) {
+                NSDictionary * attributes = @{NSForegroundColorAttributeName: grey};
+                attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
             } else {
-                attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+                NSString * fileExtension = [title pathExtension];
+                if ( ! [fileExtension isEqualToString: @""]) {
+                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+                    NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
+                    [attributedTitle addAttribute: NSForegroundColorAttributeName value: grey range: range];
+                } else {
+                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+                }
             }
         }
     }

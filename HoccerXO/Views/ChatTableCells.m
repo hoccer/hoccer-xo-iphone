@@ -8,7 +8,6 @@
 
 #import "ChatTableCells.h"
 #import "AutoheightLabel.h"
-#import "BubbleView.h"
 #import "HXOMessage.h"
 #import "InsetImageView.h"
 
