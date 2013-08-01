@@ -22,7 +22,10 @@
 - (void) commonInit {
     self.backgroundColor = [UIColor clearColor];
     self.opaque = NO;
+}
 
+- (void) awakeFromNib {
+    self.backgroundColor = [UIColor clearColor];
 }
 
 - (void) setImage:(UIImage *)image {

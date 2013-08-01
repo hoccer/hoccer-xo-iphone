@@ -15,8 +15,8 @@
 
 - (void) awakeFromNib {
     self.backgroundView = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: [self backgroundName] withLeftCapWidth: 1.0 topCapHeight: 0]];
-    self.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
-    self.avatar.borderColor = [UIColor colorWithWhite: 0 alpha: 0.6];
+    //self.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
+    //self.avatar.borderColor = [UIColor colorWithWhite: 0 alpha: 0.6];
 
 }
 

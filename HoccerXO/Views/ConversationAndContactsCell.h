@@ -10,12 +10,12 @@
 
 #import "HXOTableViewCell.h"
 
-@class InsetImageView;
+@class InsetImageView2;
 
 @interface ConversationAndContactsCell : HXOTableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
-@property (nonatomic,strong) IBOutlet InsetImageView * avatar;
+@property (nonatomic,strong) IBOutlet InsetImageView2 * avatar;
 @property (nonatomic,strong) IBOutlet UILabel * statusLabel;
 
 - (void) engraveLabel: (UILabel*) label;

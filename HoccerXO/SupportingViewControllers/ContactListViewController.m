@@ -9,7 +9,7 @@
 #import "ContactListViewController.h"
 
 #import "UIViewController+HXOSideMenu.h"
-#import "InsetImageView.h"
+#import "InsetImageView2.h"
 #import "Contact.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
