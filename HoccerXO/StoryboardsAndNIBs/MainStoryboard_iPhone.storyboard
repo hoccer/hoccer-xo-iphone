@@ -84,7 +84,7 @@
         <scene sceneID="FUT-t7-A6G">
             <objects>
                 <navigationController storyboardIdentifier="modalProfileViewController" definesPresentationContext="YES" id="thk-mF-NB4" userLabel="Modal View with Navigation Bar Helper" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackOpaque" id="ytv-nR-rCv" customClass="HXONavigationBar">
+                    <navigationBar key="navigationBar" tag="2342" contentMode="scaleToFill" barStyle="blackOpaque" id="ytv-nR-rCv" customClass="HXONavigationBar">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -978,7 +978,7 @@
         <scene sceneID="85O-7J-0bj">
             <objects>
                 <navigationController storyboardIdentifier="modalGroupViewController" definesPresentationContext="YES" id="Vze-gt-vZc" userLabel="Modal Group Helper" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackOpaque" id="8XP-wG-fW7" customClass="HXONavigationBar">
+                    <navigationBar key="navigationBar" tag="2342" contentMode="scaleToFill" barStyle="blackOpaque" id="8XP-wG-fW7" customClass="HXONavigationBar">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
