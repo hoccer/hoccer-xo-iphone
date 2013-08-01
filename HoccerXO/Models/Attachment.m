@@ -384,7 +384,7 @@ NSArray * TransferStateName = @[@"detached",
     if (self.previewImageData != nil && self.previewImageData.length > 0) {
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
         // NSDate * start = [NSDate date];
-        self.previewImage = [UIImage imageWithData:self.previewImageData];
+        self.previewImage = [UIImage imageWithData:self.previewImageData scale: [UIScreen mainScreen].scale];
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database took %f ms.", -[start timeIntervalSinceNow]*1000);
         if (!(self.aspectRatio > 0)) {
             [self setAspectRatioForImage:self.previewImage];
@@ -586,21 +586,22 @@ NSArray * TransferStateName = @[@"detached",
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:URL options:nil];
     NSArray *artworks = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata  withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
     
-    for (AVMetadataItem *i in artworks)
-    {
+    for (AVMetadataItem *i in artworks) {
         NSString *keySpace = i.keySpace;
         UIImage *im = nil;
         
-        if ([keySpace isEqualToString:AVMetadataKeySpaceID3])
-        {
+        if ([keySpace isEqualToString:AVMetadataKeySpaceID3]) {
             NSDictionary *d = [i.value copyWithZone:nil];
             im = [UIImage imageWithData:[d objectForKey:@"data"]];
-        }
-        else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes])
+        } else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes]) {
             im = [UIImage imageWithData:[i.value copyWithZone:nil]];
+        } else {
+            NSLog(@"=== unhandled media item %@", i);
+        }
         
-        if (im)
+        if (im) {
             [artworkImages addObject:im];
+        }
     }
     // NSLog(@"array description is %@", [artworkImages description]);
     return artworkImages;
@@ -642,7 +643,7 @@ NSArray * TransferStateName = @[@"detached",
     [self loadAttachmentDict:^(NSDictionary * geoLocation, NSError * error) {
         if (geoLocation != nil) {
             NSData * imageData = [NSData dataWithBase64EncodedString: geoLocation[@"previewImage"]];
-            block([UIImage imageWithData: imageData], nil);
+            block([UIImage imageWithData: imageData scale: [UIScreen mainScreen].scale], nil);
         } else {
             block(nil, error);
         }
