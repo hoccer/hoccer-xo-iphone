@@ -92,7 +92,7 @@
 "Mail" = "Einladen per Mail";
 
 /* Invite Actionsheet Button Title */
-"Show Invite Code"="Code anzeigen";
+"Show Invite Code"="Einladen per Code";
 
 /* Invite Actionsheet Button Title */
 "Scan or Enter Code"="Code scannen/eingeben";
