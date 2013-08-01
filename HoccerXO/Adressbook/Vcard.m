@@ -30,9 +30,9 @@
 	self = [super init];
 	if (self != nil) {
         personCreator =[[ABPersonCreator alloc ]initWithVcardString:theVcardString];
-        NSLog(@"initWithVcardString: personCreator = %@", personCreator);
+        //NSLog(@"initWithVcardString: personCreator = %@", personCreator);
         _person = personCreator.person;
-        NSLog(@"initWithVcardString: person = %@", _person);
+        //NSLog(@"initWithVcardString: person = %@", _person);
 	}
 	return self;
 }
@@ -42,7 +42,7 @@
 	self = [super init];
 	if (self != nil) {
         NSData * myVcardData = [NSData dataWithContentsOfURL:theVcardURL];
-        NSLog(@"initWithVcardURL: %@, contentSize = %d", theVcardURL, myVcardData.length);
+        //NSLog(@"initWithVcardURL: %@, contentSize = %d", theVcardURL, myVcardData.length);
         NSString *myVcardString = [NSString stringWithData:myVcardData usingEncoding:NSUTF8StringEncoding];
         return [self initWithVcardString:myVcardString];
  	}
