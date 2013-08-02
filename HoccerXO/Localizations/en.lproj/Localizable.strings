@@ -74,13 +74,20 @@
 "Copy" = "Copy";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hallo,\nI am now using the free app ‘Hoccer XO‘ from http://hoccer.com for secure chats. Download ‘Hoccer XO' here:\nApp Store: %@\nAndroid: %@\n\nTo add me as contact click %@ or enter my invite code '%@' in Hoccer XO.\n\nlove, %@";
+"invitation_mail_body" = "Hey,\n\
+I'm using the free messenger app Hoccer XO to chat securely with my friends.\n\
+Download Hoccer XO now: http://hoccer.com/ \n\
+Once the app is downloaded or you already have it, click this link to accept my friend request: %@\n\
+Or enter my invite code: %@\
+Let's go!\
+XO\
+%@";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Hoccer XO Invitation";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Hey, I am now using the free app ‘Hoccer XO‘ for secure chats. Information and download link at http://hoccer.com/ Once you installed the app, to add me as contact click %@ or enter my invite code '%@' in Hoccer XO.\n love, %@";
+"invitation_sms_text" = "Hey!\nI'm now using the free app Hoccer XO for secure chatting.\nDownload it now http://hoccer.com/ \nAdd me as contact %@ \nXO\n%@";
 
 /* Actionsheet Title */
 "Invite by" = "Invite Friends";

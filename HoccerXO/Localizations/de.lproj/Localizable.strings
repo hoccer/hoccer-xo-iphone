@@ -74,13 +74,26 @@
 "Copy" = "Kopieren";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hey,\nich nutze jetzt die kostenlose App ‘Hoccer XO‘ zum sicheren chatten. Informationen findest du unter http://hoccer.com\n\n ‘Hoccer XO' findest du hier zum Download:\nApp Store: %@\nAndroid: %@\n\nNach der Installation kannst du mich mit Klick auf %@ als Kontakt hinzufügen oder in der App den Code '%@' eingeben.\n\nLiebe Grüsse, %@";
+"invitation_mail_body" = "Hey,\n\
+ich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren chatten mit meinen Freunden.\
+\
+Lade dir jetzt „Hoccer XO“ aus deinem Store runter: http://hoccer.com \
+\
+Wenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@ oder gib dazu meinen Einladungscode ‘%@' ein.\
+\
+Und los geht´s!\
+\
+XO, %@";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Einladung zu Hoccer XO";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Hey, ich nutze jetzt die kostenlose App ‘Hoccer XO‘ zum sicheren chatten. Informationen und Download auf http://hoccer.com/ Nach der Installation  kannst mich mit Klick auf %@ als Kontakt hinzufügen oder in der App den Code '%@' eingeben. \nLiebe Grüsse, %@";
+"invitation_sms_text" = "Hey,\
+ich nutze die Gratis-App Hoccer XO zum sicheren Chatten!\
+Jetzt Hoccer XO runterladen: http://hoccer.com/ \
+und mich als Kontakt hinzufügen: %@ \
+XO, %@";
 
 /* Actionsheet Title */
 "Invite by" = "Einladung";
