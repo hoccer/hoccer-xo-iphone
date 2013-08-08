@@ -407,6 +407,12 @@
 "cant_send_relationship_removed"="Relationship with this contact does no longer exist.";
 "cant_send_title"="Can Not Send Message";
 
+"overlimit_attachment_upload_question"="Attachment size is %@. Do you really want to send this message?";
+"overlimit_attachment_title"="Really send Message?";
+"message_do_not_send_button_title"="No";
+"message_send_button_title"="Send";
+
+
 "button_title_call" = "Call";
 
 "vcard_default_title" = "Contact";

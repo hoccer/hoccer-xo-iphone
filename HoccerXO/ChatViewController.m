@@ -291,16 +291,43 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 [alert show];
                 return;
             }
-            [self.chatBackend sendMessage:self.textField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
-            self.currentAttachment = nil;
-            self.textField.text = @"";
+            if (self.currentAttachment != nil && [self.currentAttachment overTransferLimit:YES]) {
+                NSString * attachmentSize = [NSString stringWithFormat:@"%1.03f MB",[self.currentAttachment.contentSize doubleValue]/1024/1024];
+                NSString * message = [NSString stringWithFormat: NSLocalizedString(@"overlimit_attachment_upload_question",nil), attachmentSize];
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"overlimit_attachment_title", nil)
+                                                                 message: message
+                                                         completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                             switch (buttonIndex) {
+                                                                  case 0:
+                                                                     // do not send pressed, do nothing
+                                                                     break;
+                                                                 case 1:
+                                                                     [self reallySendMessage];
+                                                                     break;
+                                                             }
+                                                         }
+                                                       cancelButtonTitle: NSLocalizedString(@"message_do_not_send_button_title", nil)
+                                                       otherButtonTitles: NSLocalizedString(@"message_send_button_title",nil),nil];
+                [alert show];
+
+            } else {
+                [self reallySendMessage];
+            }
+            return;
         } else {
             // attachment content processing in progess, probably audio export
             NSLog(@"ERROR: sendPressed called while attachment not ready, should not happen");
             return;
         }
     }
-    [self trashCurrentAttachment]; // will be trashed only in case it is still set
+    [self trashCurrentAttachment]; // will be trashed only in case it is still set, otherwise only view will be cleared
+}
+
+- (void)reallySendMessage {
+    [self.chatBackend sendMessage:self.textField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
+    self.currentAttachment = nil;
+    self.textField.text = @"";
+    [self trashCurrentAttachment];
 }
 
 - (IBAction)addAttachmentPressed:(id)sender {

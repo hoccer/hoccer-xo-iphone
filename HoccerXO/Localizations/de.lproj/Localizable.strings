@@ -386,6 +386,11 @@
 "cant_send_relationship_removed"="Es existiert keine Beziehung zu diesem Kontakt mehr.";
 "cant_send_title"="Nachricht kann nicht gesendet werden";
 
+"overlimit_attachment_upload_question"="Der Anhang ist %@ groß. Willst du die Nachricht wirklich versenden?";
+"overlimit_attachment_title"="Nachricht versenden?";
+"message_do_not_send_button_title"="Nein";
+"message_send_button_title"="Senden";
+
 "button_title_call" = "Anrufen";
 
 "vcard_default_title" = "Kontakt";

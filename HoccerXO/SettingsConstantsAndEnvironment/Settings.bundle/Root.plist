@@ -8,7 +8,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Attachment Transfer</string>
+			<string>Cellular Attachment Transfer</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -16,7 +16,77 @@
 			<key>Title</key>
 			<string>Auto Upload Limit</string>
 			<key>Key</key>
-			<string>autoUploadLimit</string>
+			<string>autoUploadLimitCellular</string>
+			<key>DefaultValue</key>
+			<integer>5242880</integer>
+			<key>Titles</key>
+			<array>
+				<string>No Limit</string>
+				<string>100 MB</string>
+				<string>50 MB</string>
+				<string>10 MB</string>
+				<string>5 MB</string>
+				<string>1 MB</string>
+				<string>500 kb</string>
+				<string>Always ask</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>104857600</integer>
+				<integer>52428800</integer>
+				<integer>10485760</integer>
+				<integer>5242880</integer>
+				<integer>1048576</integer>
+				<integer>512000</integer>
+				<integer>1</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Auto Download Limit</string>
+			<key>Key</key>
+			<string>autoDownloadLimitCellular</string>
+			<key>DefaultValue</key>
+			<integer>5242880</integer>
+			<key>Titles</key>
+			<array>
+				<string>No Limit</string>
+				<string>100 MB</string>
+				<string>50 MB</string>
+				<string>10 MB</string>
+				<string>5 MB</string>
+				<string>1 MB</string>
+				<string>500 kb</string>
+				<string>Always ask</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>104857600</integer>
+				<integer>52428800</integer>
+				<integer>10485760</integer>
+				<integer>5242880</integer>
+				<integer>1048576</integer>
+				<integer>512000</integer>
+				<integer>1</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>WLAN Attachment Transfer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Auto Upload Limit</string>
+			<key>Key</key>
+			<string>autoUploadLimitWLAN</string>
 			<key>DefaultValue</key>
 			<integer>0</integer>
 			<key>Titles</key>
@@ -48,7 +118,7 @@
 			<key>Title</key>
 			<string>Auto Download Limit</string>
 			<key>Key</key>
-			<string>autoDownloadLimit</string>
+			<string>autoDownloadLimitWLAN</string>
 			<key>DefaultValue</key>
 			<integer>0</integer>
 			<key>Titles</key>

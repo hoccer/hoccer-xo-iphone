@@ -198,20 +198,38 @@ NSArray * TransferStateName = @[@"detached",
         }
         return kAttachmentDownloadIncomplete;
     }
-    // now check limits
-    if ([self.message.isOutgoing boolValue]) {
-        long long uploadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue];
+    if (![self.message.isOutgoing boolValue] && [self overTransferLimit:NO]) {
+        return kAttachmentTransferOnHold;
+    }
+
+    return kAttachmentWantsTransfer;
+}
+
+- (BOOL) overTransferLimit:(BOOL)isOutgoing {
+    BOOL reachableViaWLAN = [self.chatBackend.delegate.internetReachabilty isReachableViaWiFi];
+    if (isOutgoing) {
+        long long uploadLimit;
+        if (reachableViaWLAN) {
+            uploadLimit= [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimitWLAN] longLongValue];
+        } else {
+            uploadLimit= [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimitCellular] longLongValue];
+        }
         if (uploadLimit && [self.contentSize longLongValue] > uploadLimit) {
-            return kAttachmentTransferOnHold;
+            return YES;
         }
     } else {
         // incoming
-        long long downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue];
+        long long downloadLimit;
+        if (reachableViaWLAN) {
+            downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimitWLAN] longLongValue];
+        } else {
+            downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimitCellular] longLongValue];
+        }
         if (downloadLimit && [self.contentSize longLongValue] > downloadLimit) {
-            return kAttachmentTransferOnHold;
+            return YES;
         }
     }
-    return kAttachmentWantsTransfer;
+    return NO;
 }
 
 - (NSString *) verbosityLevel {

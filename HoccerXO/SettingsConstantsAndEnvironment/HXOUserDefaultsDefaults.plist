@@ -16,9 +16,13 @@
 	<string>perMessage</string>
 	<key>environment</key>
 	<string>production</string>
-	<key>autoUploadLimit</key>
+	<key>autoUploadLimitCellular</key>
+	<integer>5242880</integer>
+	<key>autoDownloadLimitCellular</key>
+	<integer>5242880</integer>
+	<key>autoUploadLimitWLAN</key>
 	<integer>0</integer>
-	<key>autoDownloadLimit</key>
+	<key>autoDownloadLimitWLAN</key>
 	<integer>0</integer>
 	<key>videoQuality</key>
 	<integer>2</integer>

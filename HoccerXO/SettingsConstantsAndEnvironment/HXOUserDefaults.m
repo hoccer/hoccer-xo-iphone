@@ -28,8 +28,10 @@ NSString * const kHXOGooglePlusName        = @"googlePlusName";
 NSString * const kHXOGithubName            = @"githubName";
 
 NSString * const kHXODefaultScreenShooting = @"defaultScreenShooting";
-NSString * const kHXOAutoDownloadLimit     = @"autoDownloadLimit";
-NSString * const kHXOAutoUploadLimit       = @"autoUploadLimit";
+NSString * const kHXOAutoDownloadLimitWLAN     = @"autoDownloadLimitWLAN";
+NSString * const kHXOAutoUploadLimitWLAN       = @"autoUploadLimitWLAN";
+NSString * const kHXOAutoDownloadLimitCellular     = @"autoDownloadLimitCellular";
+NSString * const kHXOAutoUploadLimitCellular       = @"autoUploadLimitCellular";
 
 NSString * const kHXOMaxAttachmentUploadRetries   = @"maxAttachmentUploadRetries";
 NSString * const kHXOMaxAttachmentDownloadRetries = @"maxAttachmentDownloadRetries";

@@ -136,6 +136,8 @@ typedef enum AttachmentStates {
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
 - (NSNumber*) calcCipheredSize;
 
+- (BOOL) overTransferLimit:(BOOL)isOutgoing;
+
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;

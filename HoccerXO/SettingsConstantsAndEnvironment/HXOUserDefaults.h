@@ -28,8 +28,10 @@ FOUNDATION_EXPORT NSString * const kHXOFacebookName;
 FOUNDATION_EXPORT NSString * const kHXOGooglePlusName;
 FOUNDATION_EXPORT NSString * const kHXOGithubName;
 
-FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimit;
-FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimit;
+FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimitWLAN;
+FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimitWLAN;
+FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimitCellular;
+FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimitCellular;
 FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentUploadRetries;
 FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentDownloadRetries;
 
