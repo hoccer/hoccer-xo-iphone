@@ -577,6 +577,8 @@ typedef enum ActionSheetTags {
     _fingerprintItem = [[ProfileItem alloc] initWithName: @"FingerprintItem"];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
     _fingerprintItem.textAlignment = NSTextAlignmentCenter;
+    _fingerprintItem.icon = [UIImage imageNamed: [self fingerprintIconName]];
+
     // [_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
 
     _fingerprintInfoItem = [[ProfileItem alloc] initWithName:@"FingerprintInfoItem"];
@@ -596,7 +598,6 @@ typedef enum ActionSheetTags {
 
     _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, nil];
 
-
     _deleteContactItem = [[ProfileItem alloc] initWithName:@"DeleteContactItem"];
     _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
     _deleteContactItem.cellClass = [UserDefaultsCell class];
@@ -614,6 +615,10 @@ typedef enum ActionSheetTags {
 
 - (NSString*) nickNameIconName {
     return @"icon_profile-name";
+}
+
+- (NSString*) fingerprintIconName {
+    return @"icon_profile-fingerprint";
 }
 
 - (void) validateItems {
