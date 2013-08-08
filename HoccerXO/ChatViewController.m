@@ -1464,16 +1464,22 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
                 NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
                 NSString * title;
+                
                 if (titles.count > 0 && artists.count > 0) {
-                    title = [NSString stringWithFormat: @"%@ – %@", artists[0], titles[0]];
+                    AVMetadataItem * titleItem = titles[0];
+                    AVMetadataItem * artistItem = artists[0];
+                    title = [NSString stringWithFormat: @"%@ – %@", artistItem.stringValue, titleItem.stringValue];
                 } else if (titles.count > 0) {
-                    title = titles[0];
+                    AVMetadataItem * titleItem = titles[0];
+                    title = titleItem.stringValue;
                 } else if (artists.count > 0) {
-                    title = artists[0];
+                    AVMetadataItem * artistItem = artists[0];
+                    title = artistItem.stringValue;
                 }
                 if (title != nil) {
                     attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
                 }
+                // NSLog(@"Title=%@", title);
             }
         }
     }
