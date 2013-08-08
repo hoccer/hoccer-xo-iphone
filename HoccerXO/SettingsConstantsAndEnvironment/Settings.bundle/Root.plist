@@ -8,33 +8,127 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Appearance</string>
+			<string>Media</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Message Font SIze</string>
+			<string>Photo Size</string>
 			<key>Key</key>
-			<string>messageFontSize</string>
+			<string>photoSize</string>
 			<key>DefaultValue</key>
-			<integer>13</integer>
+			<integer>250</integer>
 			<key>Titles</key>
 			<array>
-				<string>tiny</string>
-				<string>small</string>
-				<string>normal</string>
-				<string>large</string>
-				<string>huge</string>
+				<string>p_thumb</string>
+				<string>p_low</string>
+				<string>p_medium</string>
+				<string>p_high</string>
+				<string>p_veryhigh</string>
+				<string>p_full</string>
 			</array>
 			<key>Values</key>
 			<array>
-				<integer>9</integer>
-				<integer>11</integer>
-				<integer>13</integer>
-				<integer>18</integer>
-				<integer>24</integer>
+				<integer>10</integer>
+				<integer>64</integer>
+				<integer>250</integer>
+				<integer>1000</integer>
+				<integer>4000</integer>
+				<integer>0</integer>
 			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Photo Compression Quality</string>
+			<key>Key</key>
+			<string>photoCompressionQuality</string>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+			<key>Titles</key>
+			<array>
+				<string>p_comp_0</string>
+				<string>p_comp_1</string>
+				<string>p_comp_2</string>
+				<string>p_comp_3</string>
+				<string>p_comp_4</string>
+				<string>p_comp_5</string>
+				<string>p_comp_6</string>
+				<string>p_comp_7</string>
+				<string>p_comp_8</string>
+				<string>p_comp_9</string>
+				<string>p_comp_10</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+				<integer>4</integer>
+				<integer>5</integer>
+				<integer>6</integer>
+				<integer>7</integer>
+				<integer>8</integer>
+				<integer>9</integer>
+				<integer>10</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Video Quality</string>
+			<key>Key</key>
+			<string>videoQuality</string>
+			<key>DefaultValue</key>
+			<integer>2</integer>
+			<key>Titles</key>
+			<array>
+				<string>v_low</string>
+				<string>v_medium</string>
+				<string>v_high</string>
+				<string>640 x 480</string>
+				<string>960 x 540</string>
+				<string>1280 x 720</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>2</integer>
+				<integer>1</integer>
+				<integer>0</integer>
+				<integer>3</integer>
+				<integer>5</integer>
+				<integer>4</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Sound</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>playAlertSounds</string>
+			<key>Title</key>
+			<string>Message Sound</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Effect Sounds</string>
+			<key>Key</key>
+			<string>playEffectSounds</string>
+			<key>DefaultValue</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -180,127 +274,33 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Media</string>
+			<string>Appearance</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Photo Size</string>
+			<string>Message Font SIze</string>
 			<key>Key</key>
-			<string>photoSize</string>
+			<string>messageFontSize</string>
 			<key>DefaultValue</key>
-			<integer>250</integer>
+			<integer>13</integer>
 			<key>Titles</key>
 			<array>
-				<string>p_thumb</string>
-				<string>p_low</string>
-				<string>p_medium</string>
-				<string>p_high</string>
-				<string>p_veryhigh</string>
-				<string>p_full</string>
+				<string>tiny</string>
+				<string>small</string>
+				<string>normal</string>
+				<string>large</string>
+				<string>huge</string>
 			</array>
 			<key>Values</key>
 			<array>
-				<integer>10</integer>
-				<integer>64</integer>
-				<integer>250</integer>
-				<integer>1000</integer>
-				<integer>4000</integer>
-				<integer>0</integer>
-			</array>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Photo Compression Quality</string>
-			<key>Key</key>
-			<string>photoCompressionQuality</string>
-			<key>DefaultValue</key>
-			<integer>0</integer>
-			<key>Titles</key>
-			<array>
-				<string>p_comp_0</string>
-				<string>p_comp_1</string>
-				<string>p_comp_2</string>
-				<string>p_comp_3</string>
-				<string>p_comp_4</string>
-				<string>p_comp_5</string>
-				<string>p_comp_6</string>
-				<string>p_comp_7</string>
-				<string>p_comp_8</string>
-				<string>p_comp_9</string>
-				<string>p_comp_10</string>
-			</array>
-			<key>Values</key>
-			<array>
-				<integer>0</integer>
-				<integer>1</integer>
-				<integer>2</integer>
-				<integer>3</integer>
-				<integer>4</integer>
-				<integer>5</integer>
-				<integer>6</integer>
-				<integer>7</integer>
-				<integer>8</integer>
 				<integer>9</integer>
-				<integer>10</integer>
+				<integer>11</integer>
+				<integer>13</integer>
+				<integer>18</integer>
+				<integer>24</integer>
 			</array>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Video Quality</string>
-			<key>Key</key>
-			<string>videoQuality</string>
-			<key>DefaultValue</key>
-			<integer>2</integer>
-			<key>Titles</key>
-			<array>
-				<string>v_low</string>
-				<string>v_medium</string>
-				<string>v_high</string>
-				<string>640 x 480</string>
-				<string>960 x 540</string>
-				<string>1280 x 720</string>
-			</array>
-			<key>Values</key>
-			<array>
-				<integer>2</integer>
-				<integer>1</integer>
-				<integer>0</integer>
-				<integer>3</integer>
-				<integer>5</integer>
-				<integer>4</integer>
-			</array>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>Sound</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>DefaultValue</key>
-			<true/>
-			<key>Key</key>
-			<string>playAlertSounds</string>
-			<key>Title</key>
-			<string>Message Sound</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Effect Sounds</string>
-			<key>Key</key>
-			<string>playEffectSounds</string>
-			<key>DefaultValue</key>
-			<true/>
 		</dict>
 	</array>
 	<key>StringsTable</key>

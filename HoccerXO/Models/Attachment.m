@@ -352,6 +352,12 @@ NSArray * TransferStateName = @[@"detached",
     if (!(self.aspectRatio > 0)) {
         [self setAspectRatioForImage:theFullImage];
     }
+    if (previewWidth == 0) {
+        // handle no preview image case
+        self.previewImage = theFullImage;
+        self.previewImageData = UIImagePNGRepresentation(self.previewImage);
+        return;
+    }
     if ([self.mediaType isEqualToString: @"geolocation"]) {
         self.previewImage = theFullImage;
     } else {
@@ -394,7 +400,11 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (void) setAspectRatioForImage:(UIImage*) theImage {
-    self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+    if (theImage.size.height == 0) {
+        self.aspectRatio = 1;
+    } else {
+        self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+    }
 }
 
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock)finished {
@@ -638,7 +648,8 @@ NSArray * TransferStateName = @[@"detached",
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        block(nil /*[UIImage imageNamed:@"audio-default.png"]*/, nil);
+        // block([UIImage imageNamed:@"audio-default.png"], nil);
+        block([[UIImage alloc]init], nil);
     }
 }
 
@@ -655,7 +666,8 @@ NSArray * TransferStateName = @[@"detached",
             return;
         }
     }
-    block(nil /*[UIImage imageNamed:@"vcard_error_preview.png"]*/, nil);
+    // block([UIImage imageNamed:@"vcard_error_preview.png"], nil);
+    block([[UIImage alloc]init], nil);
 }
 
 - (void) loadGeoLocationAttachmentImage: (ImageLoaderBlock) block {

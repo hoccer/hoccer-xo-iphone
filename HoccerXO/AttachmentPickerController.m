@@ -313,11 +313,11 @@
 }
 
 - (void) pickAudioFromRecorder {
-    NSLog(@"creating view");
+    // NSLog(@"creating view");
     self.recordViewController.delegate = self;
     //[_viewController presentViewController: self.recordViewController animated: YES completion: nil];
 
-    NSLog(@"adding view");
+    // NSLog(@"adding view");
     
     //[UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:self.recordViewController.view];
     [_viewController presentSemiModalViewController:self.recordViewController];

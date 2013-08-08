@@ -1348,14 +1348,22 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 // TODO: find a better way to get the right cell...
                 AttachmentMessageCell * currentCell = (AttachmentMessageCell*)cell;//[self.tableView cellForRowAtIndexPath: indexPath];
                 if (currentCell != nil) {
-                    currentCell.previewImage = message.attachment.previewImage;
+                    if (message.attachment.previewImage.size.height != 0) {
+                        currentCell.previewImage = message.attachment.previewImage;
+                    } else {
+                        currentCell.previewImage = nil;
+                    }
                 }
             } else {
                 NSLog(@"ERROR: Failed to load attachment preview image: %@", theError);
             }
         }];
     } else {
-        cell.previewImage = message.attachment.previewImage;
+        if (message.attachment.previewImage.size.height != 0) {
+            cell.previewImage = message.attachment.previewImage;
+        } else {
+            cell.previewImage = nil;
+        }
     }
 
 //    cell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;

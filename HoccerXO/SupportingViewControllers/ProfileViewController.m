@@ -576,7 +576,7 @@ typedef enum ActionSheetTags {
 
     _fingerprintItem = [[ProfileItem alloc] initWithName: @"FingerprintItem"];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
-    _fingerprintItem.textAlignment = NSTextAlignmentCenter;
+    _fingerprintItem.textAlignment = NSTextAlignmentLeft;
     _fingerprintItem.icon = [UIImage imageNamed: [self fingerprintIconName]];
 
     // [_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
