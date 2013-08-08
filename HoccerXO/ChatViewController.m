@@ -57,6 +57,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
+@property (nonatomic) double messageFontSize;
+
+
 @end
 
 @implementation ChatViewController
@@ -72,12 +75,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.messageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
+    
     [self.view bringSubviewToFront: _chatbar];
 
     UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg_noise"]];
@@ -179,6 +186,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
         _chatBackend = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
     }
     return _chatBackend;
+}
+
+- (void)defaultsChanged:(NSNotification*)aNotification {
+    NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
+    double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+    if (fontSize != self.messageFontSize) {
+        self.messageFontSize = fontSize;
+        [self updateVisibleCells];
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark - Split view
@@ -1314,6 +1331,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
         [self registerTokenClasses: label];
         label.delegate = self;
     }
+    // maybe we find a better way to properly respond to font size changes
+    label.font = [UIFont systemFontOfSize: self.messageFontSize];
+    
 //    label.text = message.body;
 }
 

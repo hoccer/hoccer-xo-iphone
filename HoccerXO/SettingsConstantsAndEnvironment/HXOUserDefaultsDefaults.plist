@@ -20,6 +20,8 @@
 	<integer>5242880</integer>
 	<key>autoDownloadLimitCellular</key>
 	<integer>5242880</integer>
+	<key>messageFontSize</key>
+	<integer>13</integer>
 	<key>autoUploadLimitWLAN</key>
 	<integer>0</integer>
 	<key>autoDownloadLimitWLAN</key>

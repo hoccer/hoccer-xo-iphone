@@ -41,6 +41,9 @@ NSString * const kHXOSaveDatabasePolicyPerMessage  = @"perMessage";
 
 NSString * const kHXOPreviewImageWidth      = @"previewImageWidth";
 
+NSString * const kHXOMessageFontSize       = @"messageFontSize";
+
+
 NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 
 @implementation HXOUserDefaults

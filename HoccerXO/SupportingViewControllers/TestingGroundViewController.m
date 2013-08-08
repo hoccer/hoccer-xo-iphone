@@ -13,6 +13,7 @@
 #import "HXOLinkyLabel.h"
 #import "BubbleViewToo.h"
 #import "InsetImageView2.h"
+#import "HXOUserDefaults.h"
 
 @interface TestingGroundViewController ()
 
@@ -209,6 +210,18 @@
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
                i8, i9, i10, i11, i12, i13, i14,
                i15, i16, i17, i18];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
+
+}
+
+- (void)defaultsChanged:(NSNotification*)aNotification {
+    NSLog(@"defaultsChanged testingGround: %@", aNotification);
+    //[self updateVisibleCells];
+    [self.tableView reloadData];
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
+    [self.tableView reloadData];
 }
 
 - (void) registerTokenClasses: (HXOLinkyLabel*) label {
@@ -312,6 +325,8 @@
         [self registerTokenClasses: [cell label]];
         [cell label].delegate = self;
     }
+    double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+    [cell label].font = [UIFont systemFontOfSize: fontSize];
     [cell label].text = item.text;
 }
 

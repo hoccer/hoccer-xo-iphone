@@ -14,6 +14,7 @@
 #import "InsetImageView2.h"
 #import "HXOLinkyLabel.h"
 #import "HXOProgressView.h"
+#import "HXOUserDefaults.h"
 
 static const CGFloat kHXOBubblePadding = 8;
 static const CGFloat kHXOBubbleMinimumHeight = 48;
@@ -316,7 +317,9 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     label.numberOfLines = 0;
     label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     label.backgroundColor = [UIColor clearColor /* colorWithWhite: 0.9 alpha: 1.0*/];
-    label.font = [UIFont systemFontOfSize: 13.0];
+    double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+//    label.font = [UIFont systemFontOfSize: 13.0];
+    label.font = [UIFont systemFontOfSize: fontSize];
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.shadowColor = [UIColor colorWithWhite: 1.0 alpha: 0.8];
     label.shadowOffset = CGSizeMake(0, 1);

@@ -39,6 +39,7 @@ FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicy;
 FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicyPerMessage;
 
 FOUNDATION_EXPORT NSString * const kHXOPreviewImageWidth;
+FOUNDATION_EXPORT NSString * const kHXOMessageFontSize;
 
 FOUNDATION_EXPORT NSString * const kHXODefaultScreenShooting;
 
