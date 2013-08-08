@@ -100,6 +100,7 @@
 @synthesize encryptionEngine;
 @synthesize transferRetryTimer = _transferRetryTimer;
 @synthesize resumePos;
+@synthesize previewIcon = _previewIcon;
 
 #if defined(LET_DOWNLOAD_FAIL) || defined(NO_DOWNLOAD_RESUME) || defined(NO_UPLOAD_RESUME)
 @synthesize didResume; // DEBUG
@@ -407,6 +408,28 @@ NSArray * TransferStateName = @[@"detached",
     }
 }
 
+- (UIImage *)previewIcon {
+    if (_previewIcon == nil) {
+        NSString * largeIconName = nil;
+        if ([self.mediaType isEqualToString: @"vcard"]) {
+            largeIconName = @"attachment_icon_contact";
+        }  else if ([self.mediaType isEqualToString: @"geolocation"]) {
+            largeIconName = @"attachment_icon_location";
+        }  else if ([self.mediaType isEqualToString: @"audio"]) {
+            NSRange findResult = [self.humanReadableFileName rangeOfString:@"recording"];
+            if (findResult.length == @"recording".length && findResult.location == 0) {
+                largeIconName = @"attachment_icon_voice";
+            } else {
+                largeIconName = @"attachment_icon_music";
+            }
+        }
+        if (largeIconName != nil) {
+            _previewIcon = [UIImage imageNamed:largeIconName];
+        }
+    }
+    return _previewIcon;
+}
+
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock)finished {
     // NSLog(@"loadPreviewImageIntoCacheWithCompletion");
     if (self.previewImageData != nil && self.previewImageData.length > 0) {
@@ -417,6 +440,7 @@ NSArray * TransferStateName = @[@"detached",
         if (!(self.aspectRatio > 0)) {
             [self setAspectRatioForImage:self.previewImage];
         }
+
         if (finished != nil) {
             if (self.previewImage != nil) {
                 finished(nil);

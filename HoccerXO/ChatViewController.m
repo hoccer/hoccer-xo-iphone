@@ -812,7 +812,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
     _currentPickInfo = nil;
     [self hideAttachmentSpinner];
     if (theError == nil && theImage != nil) {
-        [self decorateAttachmentButton:theImage];
+        if (theImage.size.height == 0) {
+            [self decorateAttachmentButton:self.currentAttachment.previewIcon];
+        } else {
+            [self decorateAttachmentButton:theImage];
+        }
     } else {
         [self trashCurrentAttachment];
     }

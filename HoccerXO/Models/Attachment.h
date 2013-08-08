@@ -96,6 +96,7 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) CryptoEngine * encryptionEngine;
 
 @property (nonatomic, strong) UIImage * previewImage;
+@property (nonatomic, strong) UIImage * previewIcon;
 
 @property (readonly) AttachmentState state;
 
