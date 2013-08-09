@@ -47,8 +47,6 @@ static UIImage * HXOProgressViewProgressImage = NULL;
         CGRect frame = CGRectMake(0, 0, kHXOProgressViewSize, kHXOProgressViewSize);
 
 
-
-
         //// General Declarations
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = UIGraphicsGetCurrentContext();
@@ -102,8 +100,6 @@ static UIImage * HXOProgressViewProgressImage = NULL;
         CGContextRestoreGState(context);
 
 
-
-
         ////// Track Inner Shadow
         CGRect trackBorderRect = CGRectInset([trackPath bounds], -shadowBlurRadius, -shadowBlurRadius);
         trackBorderRect = CGRectOffset(trackBorderRect, -shadowOffset.width, -shadowOffset.height);
@@ -139,15 +135,6 @@ static UIImage * HXOProgressViewProgressImage = NULL;
         CGGradientRelease(gradient);
         CGColorSpaceRelease(colorSpace);
         
-
-
-
-
-
-
-
-
-
 
         HXOProgressViewTrackImage = [UIGraphicsGetImageFromCurrentImageContext() stretchableImageWithLeftCapWidth:floorf(0.5 * kHXOProgressViewSize) topCapHeight:0];
         
@@ -220,13 +207,6 @@ static UIImage * HXOProgressViewProgressImage = NULL;
         CGGradientRelease(gradient);
         CGColorSpaceRelease(colorSpace);
         
-
-
-
-
-
-
-
 
         HXOProgressViewProgressImage = [UIGraphicsGetImageFromCurrentImageContext() stretchableImageWithLeftCapWidth:floorf(0.5 * kHXOProgressViewSize) topCapHeight:0];
 

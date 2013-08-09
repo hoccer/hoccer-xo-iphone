@@ -973,6 +973,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
     NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
     if (message.attachment != nil) {
+        if (![message.isOutgoing boolValue]) {
+            if (message.attachment.state == kAttachmentTransferOnHold) {
+                [message.attachment download];
+                return;
+            } else if (message.attachment.state != kAttachmentTransfered) {
+                return;
+            }
+        }
         [self presentViewForAttachment: message.attachment];
     }
 }
