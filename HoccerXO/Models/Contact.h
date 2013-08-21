@@ -65,5 +65,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 + (NSString*) sectionTitleForMessageTime: (NSDate*) date;
 
 - (SecKeyRef) getPublicKeyRef;
+- (SecKeyRef) getPublicKeyRefRSA;
+- (SecKeyRef) getPublicKeyRefEC;
 
 @end

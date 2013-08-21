@@ -1383,6 +1383,16 @@ NSArray * TransferStateName = @[@"detached",
     return myTranslatedURL;
 }
 
+- (double) aspectRatio {
+    [self willAccessValueForKey:@"aspectRatio"];
+    double myValue = [[self primitiveValueForKey:@"aspectRatio"] doubleValue];
+    [self didAccessValueForKey:@"aspectRatio"];
+    if (myValue == 0) {
+        return 1;
+    }
+    return myValue;
+}
+
 + (NSString*) translateFileURLToDocumentDirectory:(NSString*)someFileURL {
     if (someFileURL == nil) {
         return nil;
@@ -1399,7 +1409,12 @@ NSArray * TransferStateName = @[@"detached",
     CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(theMimeType), NULL);
     CFStringRef extension = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension);
     CFRelease(uti);
-    return CFBridgingRelease(extension);
+    NSString * result = CFBridgingRelease(extension);
+    if (result == nil) {
+        result = [theMimeType lastPathComponent];
+    }
+    NSLog(@"fileExtensionFromMimeType result=%@", result);
+    return result;
 }
 
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString {

@@ -24,6 +24,7 @@
 #import "NSData+Base64.h"
 #import "NSString+StringWithData.h"
 #import "RSA.h"
+#import "EC.h"
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
 #import "UserProfile.h"
@@ -1952,9 +1953,17 @@ static NSTimer * _stateNotificationDelayTimer;
                     return;
                 }
             }
-            SecKeyRef myReceiverKey = [[RSA sharedInstance] getPublicKeyRef];
-            RSA * rsa = [RSA sharedInstance];
-            myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
+
+            if ([HXOBackend use_elliptic_curves]) {
+                SecKeyRef myReceiverKey = [[EC sharedInstance] getPublicKeyRef];
+                EC * ec = [EC sharedInstance];
+                myMember.cipheredGroupKey = [ec encryptWithKey:myReceiverKey plainData:group.groupKey];
+            } else {
+                SecKeyRef myReceiverKey = [[RSA sharedInstance] getPublicKeyRef];
+                RSA * rsa = [RSA sharedInstance];
+                myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
+            }
+            
             NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
             myMember.keySettingInProgress = YES;
             [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyIdString],myCryptedGroupKeyString]
@@ -1976,6 +1985,15 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(1)");}
     }
+}
+
++ (BOOL) use_elliptic_curves {
+    if ([[[HXOUserDefaults standardUserDefaults] valueForKey: @"use_elliptic_curves"] boolValue]) {
+        return YES;
+    } else {
+        return NO;
+    }
+
 }
 
 
@@ -2232,13 +2250,15 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void)checkTransferQueues {
     if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues");
-    for (Attachment * a in _attachmentDownloadsActive) {
+    NSArray * da = [_attachmentDownloadsActive copy];
+    for (Attachment * a in da) {
         if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
             NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentDownloadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.remoteURL);
             [self dequeueDownloadOfAttachment:a];
         }
     }
-    for (Attachment * a in _attachmentUploadsActive) {
+    da = [_attachmentUploadsActive copy];
+    for (Attachment * a in da) {
         if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
             NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentUploadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.uploadURL);
             [self dequeueUploadOfAttachment:a];
@@ -2852,8 +2872,20 @@ static NSTimer * _stateNotificationDelayTimer;
     return [HXOBackend calcKeyId:myKeyBits];
 }
 
-+ (NSData *) ownPublicKey {
++ (NSData *) ownPublicKeyRSA {
     return[[RSA sharedInstance] getPublicKeyBits];
+}
+
++ (NSData *) ownPublicKeyEC {
+    return[[EC sharedInstance] getPublicKeyBits];
+}
+
++ (NSData *) ownPublicKey {
+    if ([HXOBackend use_elliptic_curves]) {
+        return [HXOBackend ownPublicKeyEC];
+    } else {
+        return [HXOBackend ownPublicKeyRSA];
+    }
 }
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits {

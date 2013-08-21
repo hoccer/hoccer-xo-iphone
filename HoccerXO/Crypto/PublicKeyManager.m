@@ -8,6 +8,7 @@
 
 #import "PublicKeyManager.h"
 #import "RSA.h"
+#import "EC.h"
 #import "NSData+Base64.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"

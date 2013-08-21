@@ -1,14 +1,14 @@
 
 //
-//  RSA.m
+//  EC.m
 //  Hoccer
 //
-//  Created by Robert Palmer on 23.06.11.
+//  Created by Pavel Mayer on 12.08.13.
 //  Copyright 2011 Hoccer GmbH. All rights reserved.
 //
 //
 
-#import "RSA.h"
+#import "EC.h"
 #import "NSData+Base64.h"
 #import "NSData+HexString.h"
 #import "NSString+RandomString.h"
@@ -18,26 +18,26 @@
 
 
 
-@implementation RSA
+@implementation EC
 
 static const size_t BUFFER_SIZE = 64;
 static const size_t CIPHER_BUFFER_SIZE = 1024;
 static const uint32_t PADDING = kSecPaddingPKCS1;
 
-static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.publickey";
-static const uint8_t privateKeyIdentifier[] = "com.hoccertalk.client.privatekey";
+static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.ec.publickey";
+static const uint8_t privateKeyIdentifier[] = "com.hoccertalk.client.ec.privatekey";
 
 SecKeyRef publicKey;
 SecKeyRef privateKey; 
 
-static RSA *instance;
+static EC *instance;
 
-+ (RSA*)sharedInstance {
++ (EC*)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[RSA alloc] init];
+        instance = [[EC alloc] init];
         if ([instance getPrivateKeyRef] == nil || [instance getPublicKeyRef] == nil) {
-            NSLog(@"There are no RSA keys, generate them...");
+            NSLog(@"There are no EC keys, generate them...");
             [instance generateKeyPairKeys];
         }
     }); 
@@ -63,7 +63,7 @@ static RSA *instance;
 
 - (void)generateKeyPairKeys
 {
-    // NSLog(@"Generating RSA Keys");
+    NSLog(@"Generating EC Keys");
     OSStatus status = noErr;	
     NSMutableDictionary *privateKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *publicKeyAttr = [[NSMutableDictionary alloc] init];
@@ -78,8 +78,8 @@ static RSA *instance;
     [publicKeyAttr setObject: @YES forKey:(__bridge id)kSecAttrIsPermanent];
 	[publicKeyAttr setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     
-    [keyPairAttr setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    [keyPairAttr setObject:@1024 forKey:(__bridge id)kSecAttrKeySizeInBits];
+    [keyPairAttr setObject:(__bridge id)kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
+    [keyPairAttr setObject:@256 forKey:(__bridge id)kSecAttrKeySizeInBits];
     
     [keyPairAttr setObject:privateKeyAttr forKey:(__bridge id)kSecPrivateKeyAttrs];
 	[keyPairAttr setObject:publicKeyAttr forKey:(__bridge id)kSecPublicKeyAttrs];
@@ -89,13 +89,13 @@ static RSA *instance;
     if (status != noErr) {
         NSLog(@"generateKeyPairKeys: something went wrong %d", (int)status);
     }else {
-        NSLog(@"generateKeyPairKeys: successfully generated RSA key pairs");
+        NSLog(@"generateKeyPairKeys: successfully generated EC key pairs");
     }
     
-    // NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
-    // NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
+    NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
+    NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
 
-    // NSLog(@"pubkeyid : %@", [HXOBackend ownPublicKeyIdString]);
+    [self testEncryption];
 
 }
 
@@ -108,7 +108,7 @@ static RSA *instance;
     NSData *decryptedData = [self decryptWithKey:[self getPrivateKeyRef] cipherData:cipher];
     NSString *decryptedString = [[NSString alloc] initWithData:decryptedData encoding:NSUTF8StringEncoding];
     
-    NSLog(@"decrypted %@", decryptedString);
+    NSLog(@"decrypted: %@", decryptedString);
     
 }
 
@@ -136,7 +136,7 @@ static RSA *instance;
                            &cipherBufferSize);
     
     if (status != noErr) {
-        //NSLog(@"Error encrypring, OSStatus: %d", (NSInteger)status);
+        NSLog(@"Error encrypring, OSStatus: %d", (NSInteger)status);
     }
         
     cipher = [NSData dataWithBytes:(const void *)cipherBuffer length:(NSUInteger)cipherBufferSize];
@@ -167,7 +167,7 @@ static RSA *instance;
                            &plainBufferSize);
     
     if (status != noErr) {
-        //NSLog(@"Error decrypting, OSStatus = %d", (NSInteger)status);
+        NSLog(@"Error decrypting, OSStatus = %d", (NSInteger)status);
         NSNotification *notification = [NSNotification notificationWithName:@"encryptionError" object:self];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
     }
@@ -242,7 +242,7 @@ static RSA *instance;
         // Set the public key query dictionary.
         [queryPublicKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
         [queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
-        [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+        [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
         [queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 		
 		// Get the key.
@@ -268,7 +268,7 @@ static RSA *instance;
     // Set the public key query dictionary.
     [queryPublicKey setObject:(__bridge id)kSecClassCertificate forKey:(__bridge id)kSecClass];
     [queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
-    [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     [queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 	
 	// Get the key.
@@ -292,7 +292,7 @@ static RSA *instance;
         // Set the private key query dictionary.
         [queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
         [queryPrivateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
-        [queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+        [queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
         [queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 		
         // Get the key.
@@ -316,7 +316,7 @@ static RSA *instance;
 
 	[queryPublicKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
 	[queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
-	[queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+	[queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
 	[queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     
     CFDataRef publicKeyBitsCF;
@@ -340,7 +340,7 @@ static RSA *instance;
     
 	[queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
 	[queryPrivateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
-	[queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+	[queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
 	[queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     
     CFDataRef privateKeyBitsCF;
@@ -356,6 +356,7 @@ static RSA *instance;
 	return privateKeyBits;
 }
 
+/*
 - (NSData *)stripPublicKeyHeader:(NSData *)d_key
 {
     // Skip ASN.1 public key header
@@ -390,6 +391,7 @@ static RSA *instance;
     // Now make a new NSData from this buffer
     return([NSData dataWithBytes:&c_key[idx] length:len - idx]);
 }
+ */
 
 - (BOOL)addPublicKey:(NSString *)key withTag:(NSString *)tag
 {
@@ -404,7 +406,7 @@ static RSA *instance;
     // Delete any old lingering key with the same tag
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
     SecItemDelete((__bridge CFDictionaryRef)publicKey);
     
@@ -428,7 +430,7 @@ static RSA *instance;
     [publicKey removeObjectForKey:(__bridge id)kSecValueData];
     [publicKey removeObjectForKey:(__bridge id)kSecReturnPersistentRef];
     [publicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&keyRef);
         
     if (keyRef == nil) return(FALSE);
@@ -441,28 +443,28 @@ static RSA *instance;
 	NSData * peerTag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:peerTag forKey:(__bridge id)kSecAttrApplicationTag];
     SecItemDelete((__bridge CFDictionaryRef)publicKey);
 }
 
 - (void)cleanKeyChain {
-    // NSLog(@"Cleaning keychain");
+    NSLog(@"Cleaning keychain");
 
     NSMutableDictionary * privateKey = [[NSMutableDictionary alloc] init];
 	[privateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
 	[privateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
-	[privateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+	[privateKey setObject:(__bridge id)kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)privateKey);
-    NSLog(@"SecItemDelete returned %ld on privateKey dict %@", myStatus, privateKey);
+    NSLog(@"EC SecItemDelete returned %ld on privateKey dict %@", myStatus, privateKey);
 
     
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
 	[publicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     myStatus = SecItemDelete((__bridge CFDictionaryRef)publicKey);
-    NSLog(@"SecItemDelete returned %ld on publicKey dict %@", myStatus, publicKey);
+    NSLog(@"EC SecItemDelete returned %ld on publicKey dict %@", myStatus, publicKey);
     
     [self generateKeyPairKeys];
 }
@@ -503,10 +505,10 @@ static RSA *instance;
     NSData *d_tag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
     [publicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];    
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
     SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&persistentRef);
         
@@ -522,7 +524,7 @@ static RSA *instance;
 
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [publicKey setObject:(__bridge id) kSecAttrKeyTypeEC forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
     [publicKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     

@@ -23,6 +23,7 @@
 #import "ContactListViewController.h"
 #import "Contact.h"
 #import "RSA.h"
+#import "EC.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
 #import "ChatViewController.h"
@@ -30,6 +31,7 @@
 #import "UserProfile.h"
 #import "Environment.h"
 #import "ProfileDataSource.h"
+#import "HXOBackend.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
@@ -830,7 +832,11 @@ typedef enum ActionSheetTags {
 }
 
 - (void) renewKeypairPressed: (id) sender {
-    [[RSA sharedInstance] cleanKeyChain];
+    if ([HXOBackend use_elliptic_curves]) {
+        [[EC sharedInstance] cleanKeyChain];
+    } else {
+        [[RSA sharedInstance] cleanKeyChain];
+    }
     [self updateKeyFingerprint];
     [self.tableView beginUpdates];
     [(UserDefaultsCell*)[self.tableView indexPathForCell: sender] configure: _fingerprintItem];

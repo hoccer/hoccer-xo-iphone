@@ -151,5 +151,6 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 + (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler;
 + (HXOBackend*)instance;
++ (BOOL) use_elliptic_curves;
 
 @end
