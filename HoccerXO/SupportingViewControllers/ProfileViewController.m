@@ -717,6 +717,11 @@ typedef enum ActionSheetTags {
 #pragma mark - Avatar Handling
 
 - (IBAction)avatarTapped:(id)sender {
+    // TODO: when we will have other text input field, make them resign first responder, too
+    NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _nickNameItem];
+    UserDefaultsCellTextInput * cell = (UserDefaultsCellTextInput*)[self.tableView cellForRowAtIndexPath: indexPath];
+    [cell.textField resignFirstResponder];
+    
     [self.attachmentPicker showInView: self.view];
 }
 
