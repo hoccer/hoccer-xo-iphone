@@ -333,7 +333,7 @@
 "invitation_join_group_button_title"="Annehmen";
 "invitation_decline_button_title"="Ablehnen";
 
-"You have been kicked from group '%@'"="Du wurdest aus der Gruppe '%@' geworfen.";
+"You have been kicked from group '%@'"="Deine Mitgliedschaft in der Gruppe '%@' wurde vom Admin beendet.";
 "The invitation for group '%@' has been removed."="Die Einladung für die Gruppe '%@' wurde entfernt.";
 
 "Group Deactivated"="Gruppe deaktiviert";
@@ -382,7 +382,7 @@
 "kept"="Keine Beziehung";
 "blocked"="Geblockt";
 
-"cant_send_contact_blocked"="Der Kontakt is geblockt.";
+"cant_send_contact_blocked"="Der Kontakt ist geblockt.";
 "cant_send_relationship_removed"="Es existiert keine Beziehung zu diesem Kontakt mehr.";
 "cant_send_title"="Nachricht kann nicht gesendet werden";
 

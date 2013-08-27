@@ -144,7 +144,7 @@
 			<key>Key</key>
 			<string>autoUploadLimitCellular</string>
 			<key>DefaultValue</key>
-			<integer>5242880</integer>
+			<integer>0</integer>
 			<key>Titles</key>
 			<array>
 				<string>No Limit</string>
@@ -176,7 +176,7 @@
 			<key>Key</key>
 			<string>autoDownloadLimitCellular</string>
 			<key>DefaultValue</key>
-			<integer>5242880</integer>
+			<integer>0</integer>
 			<key>Titles</key>
 			<array>
 				<string>No Limit</string>

@@ -28,6 +28,7 @@
 @interface MessageCell : HXOTableViewCell
 
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
+@property (weak, nonatomic) NSFetchedResultsController * fetchedResultsController;
 
 @end
 

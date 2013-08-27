@@ -72,6 +72,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
 @synthesize vcardViewController = _vcardViewController;
 @synthesize currentExportSession = _currentExportSession;
 @synthesize currentPickInfo = _currentPickInfo;
+@synthesize fetchedResultsController = _fetchedResultsController;
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -1310,6 +1312,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (void)configureCell:(BubbleViewToo*)cell forMessage:(HXOMessage *) message {
 
     cell.delegate = self;
+    cell.fetchedResultsController = self.fetchedResultsController;
 
     [self prepareLayoutOfCell: cell withMessage: message];
 
@@ -1520,9 +1523,15 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void) tableView: (UITableView*) table didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
-    if (message.attachment != nil) {
-        message.attachment.progressIndicatorDelegate = nil;
+    // NSLog(@"didEndDisplayingCell %@ %@",cell, indexPath);
+    if ([cell isKindOfClass:[MessageCell class]]) {
+        MessageCell * mCell = (MessageCell *)cell;
+        if (mCell.fetchedResultsController != nil) {
+            HXOMessage * message = (HXOMessage*)[mCell.fetchedResultsController objectAtIndexPath: indexPath];
+            if (message.attachment != nil) {
+                message.attachment.progressIndicatorDelegate = nil;
+            }
+        }
     }
 }
 
@@ -1641,7 +1650,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 #endif
         [message.attachment loadImage:^(UIImage* theImage, NSError* error) {
             // NSLog(@"attachment copy loadimage done");
-            if (theImage != nil) {
+            if (theImage != nil && theImage.size.height > 0) {
                 board.image = theImage;
             } else {
                 NSLog(@"attachment copy: Failed to get image: %@", error);
