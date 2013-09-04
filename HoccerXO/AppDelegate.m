@@ -108,6 +108,15 @@ static NSInteger validationErrorCount = 0;
     }
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
+    NSString * lastRunBuildNumber = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
+    if ([buildNumber isEqualToString: lastRunBuildNumber]) {
+        [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: kHXOrunningNewBuild];
+        self.runningNewBuild = NO;
+    } else {
+        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: kHXOrunningNewBuild];
+        self.runningNewBuild = YES;
+        NSLog(@"Running new build %@ for the first time",buildNumber);
+    }
     [[HXOUserDefaults standardUserDefaults] setValue:buildNumber forKey: [[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
     
     self.internetReachabilty = [GCNetworkReachability reachabilityForInternetConnection];

@@ -115,6 +115,7 @@
     <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0 AND transferFailures &lt; $max_retries"/>
     <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
+    <fetchRequest name="ContactsLastUpdatedBefore" entity="Contact" predicateString="type == &quot;Contacts&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND relationshipState != &quot;kept&quot;"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupIdAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId AND $receiverId == receiver.clientId"/>

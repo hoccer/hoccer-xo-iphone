@@ -67,7 +67,7 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 @property (readonly, nonatomic) NSArray * certificates;
 
-@property BOOL firstConnectionAfterCrash;
+@property BOOL firstConnectionAfterCrashOrUpdate;
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
