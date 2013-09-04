@@ -1368,15 +1368,39 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         latestChange = [self getLatestChangeDateForGroups];
     }
+    NSDate * preUpdateTime = [NSDate date];
     // NSLog(@"latest date %@", latestChange);
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
         if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
         for (NSDictionary * groupDict in changedGroups) {
             [self updateGroupHere: groupDict];
         }
+        if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]]) {
+            [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
+        }
         [self finishFirstConnectionAfterCrash];
     }];
 }
+
+-(void) cleanupGroupsLastUpdatedBefore:(NSDate*)lastUpdateTime {
+    NSDictionary * vars = @{ @"lastUpdatedBefore" : lastUpdateTime};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupsLastUpdatedBefore" substitutionVariables: vars];
+    NSError *error;
+    NSArray * groups = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (error != nil) {
+        NSLog(@"Error=%@",error);
+    }
+    // NSLog(@"found %d groups last updated before time %@", groups.count, lastUpdateTime);
+    if (groups == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    for (Group * group in groups) {
+        NSLog(@"cleanupGroupsLastUpdatedBefore: deleting group with id %@ name %@ state %@ lastUpdateTime %@", group.clientId, group.nickName, group.groupState, group.lastUpdateReceived);
+        [self handleDeletionOfGroup:group];
+    }
+}
+
 
 - (void) updateGroupHere: (NSDictionary*) groupDict {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
@@ -1390,6 +1414,9 @@ static NSTimer * _stateNotificationDelayTimer;
     if (groupState == nil) {
         NSLog(@"Error: group without group state, dict=%@", groupDict);
         return;
+    }
+    if (group != nil) {
+        group.lastUpdateReceived = [NSDate date];
     }
     if ([groupState isEqualToString:@"none"]) {
         if (group != nil && ![group.groupState isEqualToString:@"kept"] && ![group.groupState isEqualToString:@"none"]) {
@@ -1405,7 +1432,8 @@ static NSTimer * _stateNotificationDelayTimer;
         group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
         group.type = [Group entityName];
         group.clientId = groupId;
-        if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
+        group.lastUpdateReceived = [NSDate date];
+       if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
     }
     NSDate * lastKnown = group.lastChanged;
     
@@ -1730,6 +1758,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (GROUP_DEBUG) NSLog(@"handleDeletionOfGroup: nothing to save, delete group with id %@",group.clientId);
         [self deleteInDatabaseAllMembersAndContactsofGroup:group];
         [moc deleteObject: group];
+        [self.delegate saveDatabase];
         return;
     }
     
