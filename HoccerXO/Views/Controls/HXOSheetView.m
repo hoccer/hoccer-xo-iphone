@@ -36,19 +36,42 @@ static const CGFloat kHXOASAnimationDuration = 0.2;
     if (_sheetStyle == HXOSheetStyleAutomatic) {
         _sheetStyle = HXOSheetStyleDefault;
     }
-    UIView * rootView = view.window.rootViewController.view;
+
+
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+
+    UIView * rootView = view.window;//.rootViewController.view;
+
     [rootView addSubview: self];
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.frame = rootView.bounds;
 
-    _coverView = [[UIView alloc] initWithFrame: rootView.bounds];
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (orientation == UIInterfaceOrientationLandscapeLeft) {
+        CGRect frame = self.frame;
+        CGFloat width = frame.size.width;
+        frame.size.width = frame.size.height;
+        frame.size.height = width;
+        self.bounds = frame;
+        self.transform = CGAffineTransformMakeRotation( - M_PI / 2.0);
+    } else if (orientation == UIInterfaceOrientationLandscapeRight) {
+        CGRect frame = self.frame;
+        CGFloat width = frame.size.width;
+        frame.size.width = frame.size.height;
+        frame.size.height = width;
+        self.bounds = frame;
+        self.transform = CGAffineTransformMakeRotation(M_PI / 2.0);
+
+    }
+
+    _coverView = [[UIView alloc] initWithFrame: self.bounds];
     _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _coverView.backgroundColor = [UIColor blackColor];
     _coverView.alpha = 0;
     [self addSubview: _coverView];
 
 
-    _actionView = [[GradientSheetView alloc] initWithFrame: rootView.bounds style: self.sheetStyle];
+    _actionView = [[GradientSheetView alloc] initWithFrame: self.bounds style: self.sheetStyle];
     _actionView.opaque = NO;
     [self addSubview: _actionView];
 
@@ -57,10 +80,10 @@ static const CGFloat kHXOASAnimationDuration = 0.2;
     [self layoutTitleLabel];
 
     // TODO: duplicate with layoutActionSheet
-    CGRect frame = rootView.bounds;
+    CGRect frame = self.bounds;
     CGFloat height = [self controlSize: [self maxControlSize]].height;
     frame.size.height = height + _titleLabel.frame.origin.y + _titleLabel.frame.size.height + 3 * kHXOASVPadding;
-    frame.origin.y = rootView.bounds.size.height;
+    frame.origin.y = self.bounds.size.height;
     _actionView.frame = frame;
     
     [UIView animateWithDuration: kHXOASAnimationDuration animations:^{
@@ -104,13 +127,13 @@ static const CGFloat kHXOASAnimationDuration = 0.2;
 }
 
 - (void) layoutActionView {
-    UIView * rootView = self.window.rootViewController.view;
-    CGRect frame = rootView.bounds;
+    //UIView * rootView = self.window.rootViewController.view;
+    CGRect frame = self.bounds;//rootView.bounds;
     CGFloat height = [self controlSize: [self maxControlSize]].height;
     height = height + _titleLabel.frame.origin.y + _titleLabel.frame.size.height + 3 * kHXOASVPadding;
     if (height != frame.size.height) {
         frame.size.height = height;
-        frame.origin.y = rootView.bounds.size.height - frame.size.height;
+        frame.origin.y = self.bounds.size.height - frame.size.height;
     }
     _actionView.frame = frame;
 }
@@ -146,6 +169,7 @@ static const CGFloat kHXOASAnimationDuration = 0.2;
 
 - (void) dismissAnimated: (BOOL) animated completion: (void(^)()) completion {
     void(^done)(void) = ^() {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
         [self removeFromSuperview];
         completion();
     };
