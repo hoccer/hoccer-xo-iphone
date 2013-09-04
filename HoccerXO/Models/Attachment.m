@@ -350,9 +350,9 @@ NSArray * TransferStateName = @[@"detached",
     if (previewWidth > theFullImage.size.width) {
         previewWidth = theFullImage.size.width; // avoid scaling up preview
     }
-    if (!(self.aspectRatio > 0)) {
+    //if (!(self.aspectRatio > 0)) {
         [self setAspectRatioForImage:theFullImage];
-    }
+    //}
     if (previewWidth == 0) {
         // handle no preview image case
         self.previewImage = theFullImage;
@@ -437,9 +437,9 @@ NSArray * TransferStateName = @[@"detached",
         // NSDate * start = [NSDate date];
         self.previewImage = [UIImage imageWithData:self.previewImageData scale: [UIScreen mainScreen].scale];
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database took %f ms.", -[start timeIntervalSinceNow]*1000);
-        if (!(self.aspectRatio > 0)) {
+        //if (!(self.aspectRatio > 0)) {
             [self setAspectRatioForImage:self.previewImage];
-        }
+        //}
 
         if (finished != nil) {
             if (self.previewImage != nil) {
