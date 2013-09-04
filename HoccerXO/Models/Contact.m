@@ -50,6 +50,8 @@
 @dynamic nickNameWithStatus;
 @dynamic myGroupMembership;
 
+@dynamic lastUpdateReceived;
+
 @synthesize rememberedLastVisibleChatCell;
 
 NSString * const kRelationStateNone    = @"none";

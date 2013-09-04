@@ -47,6 +47,9 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, retain) NSString * relationshipState;
 @property (nonatomic, retain) NSDate * relationshipLastChanged;
 
+@property (nonatomic, retain) NSDate * lastUpdateReceived;
+
+
 @property (nonatomic,strong) NSNumber * relationshipLastChangedMillis;
 @property (nonatomic,strong) NSNumber * presenceLastUpdatedMillis;
 

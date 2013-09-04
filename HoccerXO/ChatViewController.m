@@ -1005,6 +1005,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         return [TextMessageCell reuseIdentifier];
     } else {
         NSLog(@"Error: message has neither text nor attachment");
+        return [TextMessageCell reuseIdentifier]; // avoid crash in case of unreadable or empty text
     }
     return @"";
 }

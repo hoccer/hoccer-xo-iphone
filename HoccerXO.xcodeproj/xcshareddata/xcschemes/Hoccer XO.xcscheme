@@ -63,6 +63,14 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-com.apple.CoreData.SQLDebug 3"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-use_elliptic_curves 1"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-com.apple.CoreData.SyntaxColoredLogging 1"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -95,6 +103,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-dumpRecordsForEntity Group"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-attachmentVerbosity trace"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -116,7 +128,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-jsonrpcverbosity dump"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-jsonrpcverbosity trace"
