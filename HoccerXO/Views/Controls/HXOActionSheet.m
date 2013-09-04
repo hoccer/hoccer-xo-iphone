@@ -59,11 +59,13 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
     return self;
 }
 
+/*
 - (void)showInView:(UIView *)view {
     [super showInView: view];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
+ */
 
 - (NSInteger) addButtonWithTitle: (NSString*) title {
     NSInteger index = _buttonTitles.count;
@@ -231,7 +233,7 @@ static const CGFloat kHXOASCancelButtonSpacing = 20;
         [self.delegate actionSheet: self clickedButtonAtIndex: buttonIndex];
     }
     [self dismissAnimated: animated completion:^{
-        [[NSNotificationCenter defaultCenter] removeObserver: self];
+        //[[NSNotificationCenter defaultCenter] removeObserver: self];
     }];
 }
 
