@@ -122,7 +122,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _serverConnection.delegate = self;
         _apnsDeviceToken = nil;
         
-        _firstConnectionAfterCrash = theAppDelegate.launchedAfterCrash;
+        _firstConnectionAfterCrashOrUpdate = theAppDelegate.launchedAfterCrash || theAppDelegate.runningNewBuild;
         
         _avatarDownloadQueue = [[GCNetworkQueue alloc] init];
         [_avatarDownloadQueue setMaximumConcurrentOperationsCount:1];
@@ -610,12 +610,12 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
-- (void) finishFirstConnectionAfterCrash {
-    if (self.firstConnectionAfterCrash) {
+- (void) finishFirstConnectionAfterCrashOrUpdate {
+    if (self.firstConnectionAfterCrashOrUpdate) {
         NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
-        [self hello:clientTime crashFlag:NO handler:^(NSDictionary * result) {
+        [self hello:clientTime crashFlag:NO updateFlag:NO handler:^(NSDictionary * result) {
             if (result != nil) {
-                self.firstConnectionAfterCrash = NO;
+                self.firstConnectionAfterCrashOrUpdate = NO;
             }
         }];
     }    
@@ -912,7 +912,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updateRelationships {
     NSDate * latestChange;
-    if (self.firstConnectionAfterCrash) {
+    if (self.firstConnectionAfterCrashOrUpdate) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0]; 
     } else {
         latestChange = [self getLatestChangeDateForContactRelationships];
@@ -1145,18 +1145,41 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updatePresences {
     NSDate * latestChange;
-    if (self.firstConnectionAfterCrash) {
+    if (self.firstConnectionAfterCrashOrUpdate) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForContactPresence];
     }
+    NSDate * preUpdateTime = [NSDate date];
     // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
             // NSLog(@"updatePresences presence=%@",presence);
             [self presenceUpdated:presence];
         }
+        if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]]) {
+            [self cleanupContactsLastUpdatedBefore:preUpdateTime];
+        }
     }];
+}
+
+-(void) cleanupContactsLastUpdatedBefore:(NSDate*)lastUpdateTime {
+    NSDictionary * vars = @{ @"lastUpdatedBefore" : lastUpdateTime};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactsLastUpdatedBefore" substitutionVariables: vars];
+    NSError *error;
+    NSArray * contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (error != nil) {
+        NSLog(@"Error=%@",error);
+    }
+    NSLog(@"found %d contacts last updated before time %@", contacts.count, lastUpdateTime);
+    if (contacts == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    for (Contact * contact in contacts) {
+        NSLog(@"cleanupContactsLastUpdatedBefore: deleting contact with id %@ name %@ state %@ lastUpdateTime %@", contact.clientId, contact.nickName, contact.relationshipState, contact.lastUpdateReceived);
+        //[self handleDeletionOfContact:contact];
+    }
 }
 
 - (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionBlock)handler {
@@ -1205,6 +1228,7 @@ static NSTimer * _stateNotificationDelayTimer;
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
         myContact.avatarURL = @"";
     }
+    myContact.lastUpdateReceived = [NSDate date];
     
     BOOL newFriend = NO;
     
@@ -1220,7 +1244,7 @@ static NSTimer * _stateNotificationDelayTimer;
             // is a group
             myContact.connectionStatus = @"group";
         }
-        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || self.firstConnectionAfterCrash) {
+        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || self.firstConnectionAfterCrashOrUpdate) {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"] withCompletion:nil];
         }
@@ -1363,7 +1387,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) getGroups {
     NSDate * latestChange;
-    if (self.firstConnectionAfterCrash) {
+    if (self.firstConnectionAfterCrashOrUpdate) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForGroups];
@@ -1378,7 +1402,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]]) {
             [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
         }
-        [self finishFirstConnectionAfterCrash];
+        [self finishFirstConnectionAfterCrashOrUpdate];
     }];
 }
 
@@ -2598,10 +2622,10 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
-- (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed handler:(HelloHandler) handler {
+- (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed updateFlag:(BOOL)hasUpdated handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
 #ifdef FULL_HELLO
-    NSDictionary *params = @{
+    NSDictionary * initParams = @{
                              @"clientTime" : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
                              @"deviceModel" : [UIDevice currentDevice].model,
@@ -2609,9 +2633,15 @@ static NSTimer * _stateNotificationDelayTimer;
                              @"systemVersion" : [UIDevice currentDevice].systemVersion,
                              @"clientName" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
                              @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
-                             @"clientLanguage" : NSLocalizedString(@"language_code", nil),
-                             @"clientCrashed" : @(hasCrashed)
+                             @"clientLanguage" : NSLocalizedString(@"language_code", nil)
                              };
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:initParams];
+    if (hasCrashed) {
+        params[@"clientCrashed"] = @(hasCrashed);
+    }
+    if (hasUpdated) {
+        params[@"clientUpdated"] = @(hasUpdated);
+    }
 #else
     NSDictionary *params = @{ @"clientTime" : clientTime};
 #endif
@@ -2627,7 +2657,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) hello {
     NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
-    [self hello:clientTime crashFlag:self.firstConnectionAfterCrash handler:^(NSDictionary * result) {
+    [self hello:clientTime
+      crashFlag:self.firstConnectionAfterCrashOrUpdate && _delegate.launchedAfterCrash
+     updateFlag:self.firstConnectionAfterCrashOrUpdate && _delegate.runningNewBuild
+        handler:^(NSDictionary * result)
+    {
         if (result != nil) {
             [self saveServerTime:[HXOBackend dateFromMillis:result[@"serverTime"]]];
         }

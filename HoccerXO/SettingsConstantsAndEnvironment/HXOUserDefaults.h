@@ -11,6 +11,8 @@
 FOUNDATION_EXPORT NSString * const kHXOEnvironment;
 FOUNDATION_EXPORT NSString * const kHXOFirstRunDone;
 FOUNDATION_EXPORT NSString * const kHXOlatestBuildRun;
+FOUNDATION_EXPORT NSString * const kHXOrunningNewBuild;
+
 FOUNDATION_EXPORT NSString * const kHXOlastActiveDate;
 FOUNDATION_EXPORT NSString * const kHXOlastDeactivationDate;
 
