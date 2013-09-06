@@ -897,6 +897,7 @@ static NSInteger validationErrorCount = 0;
     int i = 0;
     for (NSManagedObject * object in fetchResults) {
         NSLog(@"================== Showing object %d of entity '%@' =================", i, theEntityName);
+        NSLog(@"================== id = %@",object.objectID);
         for (NSAttributeDescription * property in entity) {
             // NSLog(@"property '%@'", property.name);
             NSString * description = [[object valueForKey:property.name] description];

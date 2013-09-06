@@ -333,7 +333,7 @@
 "invitation_join_group_button_title"="Annehmen";
 "invitation_decline_button_title"="Ablehnen";
 
-"You have been kicked from group '%@'"="Deine Mitgliedschaft in der Gruppe '%@' wurde vom Admin beendet.";
+"You have been kicked from group '%@'"="Deine Mitgliedschaft in der Gruppe '%@' wurde beendet.";
 "The invitation for group '%@' has been removed."="Die Einladung für die Gruppe '%@' wurde entfernt.";
 
 "Group Deactivated"="Gruppe deaktiviert";

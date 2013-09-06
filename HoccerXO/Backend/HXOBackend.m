@@ -138,7 +138,11 @@ static NSTimer * _stateNotificationDelayTimer;
         [_serverConnection registerIncomingCall: @"groupMemberUpdated"  withSelector:@selector(groupMemberUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"ping"                withSelector:@selector(ping) isNotification: NO];
         [_serverConnection registerIncomingCall: @"alertUser"           withSelector:@selector(alertUser) isNotification: YES];
+        
         _delegate = theAppDelegate;
+        [self cleanupTables];
+
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(profileUpdatedByUser:)
                                                      name:@"profileUpdatedByUser"
@@ -176,6 +180,20 @@ static NSTimer * _stateNotificationDelayTimer;
     _attachmentUploadsActive = [[NSMutableArray alloc] init];
 
     return self;
+}
+
+-(void) cleanupTables {
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+    NSFetchRequest *request = [NSFetchRequest new];
+    [request setEntity:entity];
+    NSError *error;
+    NSMutableArray *fetchResults = [[self.delegate.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    for (GroupMembership * membership in fetchResults) {
+        if (membership.group == nil) {
+            NSLog(@"WARNING: cleanupTables: removing group membership %@ without group",membership.objectID);
+            [self.delegate.managedObjectContext deleteObject:membership];
+        }
+    }
 }
 
 + (id) registerConnectionInfoObserverFor:(UIViewController*)controller {
@@ -1756,10 +1774,9 @@ static NSTimer * _stateNotificationDelayTimer;
         {
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
             [moc deleteObject: memberContact];
-        } else {
-            // only delete group membership
-            [moc deleteObject: myMember];
         }
+        // delete group membership
+        [moc deleteObject: myMember];
     } else {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
         // we have been thrown out or left group
@@ -1912,8 +1929,10 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // delete all group member contacts that are not friends or contacts in other group
 - (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group {
+    if (GROUP_DEBUG) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup id %@ nick %@", group.clientId, group.nickName);
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
-    NSMutableSet * groupMembers = group.groupMemberships;
+    NSSet * groupMembers = group.members;
+    if (GROUP_DEBUG) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup found %d members", groupMembers.count);
     for (GroupMembership * member in groupMembers) {
         if (member.contact != nil && ![group isEqual:member.contact] &&
             ![member.contact.relationshipState isEqualToString:@"friend"] &&
@@ -1921,9 +1940,11 @@ static NSTimer * _stateNotificationDelayTimer;
             member.contact.groupMemberships.count == 1)
         {
             // we can throw out this member contact
+            if (GROUP_DEBUG) NSLog(@"deleting group member contact id %@", member.contact.clientId);
             [moc deleteObject: member.contact];
         }
         // the membership can be deleted in any case, including our own membership
+        if (GROUP_DEBUG) NSLog(@"deleting group membership %@", member.objectID);
         [moc deleteObject: member];
     }
 }

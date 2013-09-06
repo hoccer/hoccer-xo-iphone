@@ -1527,7 +1527,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // NSLog(@"didEndDisplayingCell %@ %@",cell, indexPath);
     if ([cell isKindOfClass:[MessageCell class]]) {
         MessageCell * mCell = (MessageCell *)cell;
-        if (mCell.fetchedResultsController != nil) {
+        if (mCell.fetchedResultsController != nil && mCell.fetchedResultsController.fetchedObjects.count > 0) {
             HXOMessage * message = (HXOMessage*)[mCell.fetchedResultsController objectAtIndexPath: indexPath];
             if (message.attachment != nil) {
                 message.attachment.progressIndicatorDelegate = nil;

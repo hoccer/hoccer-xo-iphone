@@ -103,6 +103,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-dumpRecordsForEntity GroupMembership"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-dumpRecordsForEntity Group"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -136,6 +140,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-environment development"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-dumpRecordsForEntity Group"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>

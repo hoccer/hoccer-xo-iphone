@@ -48,6 +48,9 @@
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
 
+-(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
+
+
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;
 + (void) setMusicAudioSession;
