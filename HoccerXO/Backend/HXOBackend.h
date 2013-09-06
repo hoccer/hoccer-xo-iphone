@@ -92,6 +92,8 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
+- (void) getGroupsForceAll:(BOOL)forceAll;
+
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
 - (void) blockClient: (NSString*) clientId handler: (GenericResultHandler) handler;

@@ -100,6 +100,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSTimer *          _backgroundDisconnectTimer;
     NSTimer *          _helloTimer;
     GCNetworkQueue *   _avatarDownloadQueue;
+    BOOL               _uncleanConnectionShutdown;
     
     NSMutableArray * _attachmentDownloadsWaiting;
     NSMutableArray * _attachmentUploadsWaiting;
@@ -602,7 +603,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self flushPendingInvites];
         [self updatePresence];
         [self updateKey];
-        [self getGroups];
+        [self getGroupsForceAll:NO];
         [self flushPendingMessages];
         [self flushPendingFiletransfers];
     } else {
@@ -611,14 +612,15 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) finishFirstConnectionAfterCrashOrUpdate {
+    _uncleanConnectionShutdown = NO;
     if (self.firstConnectionAfterCrashOrUpdate) {
         NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
-        [self hello:clientTime crashFlag:NO updateFlag:NO handler:^(NSDictionary * result) {
+        [self hello:clientTime crashFlag:NO updateFlag:NO unclean:NO handler:^(NSDictionary * result) {
             if (result != nil) {
                 self.firstConnectionAfterCrashOrUpdate = NO;
             }
         }];
-    }    
+    }
 }
 
 - (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler {
@@ -912,7 +914,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updateRelationships {
     NSDate * latestChange;
-    if (self.firstConnectionAfterCrashOrUpdate) {
+    if (self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0]; 
     } else {
         latestChange = [self getLatestChangeDateForContactRelationships];
@@ -1145,7 +1147,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updatePresences {
     NSDate * latestChange;
-    if (self.firstConnectionAfterCrashOrUpdate) {
+    if (self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForContactPresence];
@@ -1244,7 +1246,7 @@ static NSTimer * _stateNotificationDelayTimer;
             // is a group
             myContact.connectionStatus = @"group";
         }
-        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || self.firstConnectionAfterCrashOrUpdate) {
+        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"] withCompletion:nil];
         }
@@ -1385,9 +1387,9 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
-- (void) getGroups {
+- (void) getGroupsForceAll:(BOOL)forceAll {
     NSDate * latestChange;
-    if (self.firstConnectionAfterCrashOrUpdate) {
+    if (self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown || forceAll) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForGroups];
@@ -2622,7 +2624,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
-- (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed updateFlag:(BOOL)hasUpdated handler:(HelloHandler) handler {
+- (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed updateFlag:(BOOL)hasUpdated unclean:(BOOL)uncleanShutdown handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
 #ifdef FULL_HELLO
     NSDictionary * initParams = @{
@@ -2642,6 +2644,9 @@ static NSTimer * _stateNotificationDelayTimer;
     if (hasUpdated) {
         params[@"clientUpdated"] = @(hasUpdated);
     }
+    if (uncleanShutdown) {
+        params[@"connectionUncleanShutdown"] = @(uncleanShutdown);
+    }
 #else
     NSDictionary *params = @{ @"clientTime" : clientTime};
 #endif
@@ -2660,10 +2665,12 @@ static NSTimer * _stateNotificationDelayTimer;
     [self hello:clientTime
       crashFlag:self.firstConnectionAfterCrashOrUpdate && _delegate.launchedAfterCrash
      updateFlag:self.firstConnectionAfterCrashOrUpdate && _delegate.runningNewBuild
+        unclean: _uncleanConnectionShutdown
         handler:^(NSDictionary * result)
     {
         if (result != nil) {
             [self saveServerTime:[HXOBackend dateFromMillis:result[@"serverTime"]]];
+            _uncleanConnectionShutdown = NO;
         }
     }];
 }
@@ -3370,6 +3377,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
     BackendState oldState = _state;
     [self setState: kBackendStopped];
+    _uncleanConnectionShutdown = code != 0 || !wasClean;
     if (oldState == kBackendStopping) {
         [self cancelStateNotificationDelayTimer];
         if ([self.delegate respondsToSelector:@selector(backendDidStop)]) {

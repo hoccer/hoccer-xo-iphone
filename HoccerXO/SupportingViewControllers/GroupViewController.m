@@ -117,7 +117,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
                         if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
                         _newGroupCreated = NO;
                     } else {
-                        NSLog(@"ERROR: deleteGroup %@ failed", self.group);
+                        NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
+                        [self.backend getGroupsForceAll:YES];
                     }
                 }];
             } else {
@@ -125,7 +126,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
                     if (group != nil) {
                         if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
                     } else {
-                        NSLog(@"ERROR: leaveGroup %@ failed", self.group);
+                        NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
+                        [self.backend getGroupsForceAll:YES];
                     }
                 }];
             }
