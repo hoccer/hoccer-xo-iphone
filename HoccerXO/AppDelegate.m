@@ -173,14 +173,14 @@ static NSInteger validationErrorCount = 0;
         NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
     }
 
-    [session setCategory:AVAudioSessionCategorySoloAmbient error:&myError];
+    [session setCategory:AVAudioSessionCategoryAmbient error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryAmbient, error=%@",myError);
     }
     
     [session setActive:YES error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryAmbient, error=%@",myError);
     }
 }
 
