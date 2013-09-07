@@ -123,6 +123,8 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (void) updateKey;
 
 - (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
+- (void) handleDeletionOfContact:(Contact*)contact;
+
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment;
 - (void) enqueueUploadOfAttachment:(Attachment*) theAttachment;

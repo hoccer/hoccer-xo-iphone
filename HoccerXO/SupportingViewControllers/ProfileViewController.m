@@ -145,12 +145,14 @@ typedef enum ActionSheetTags {
         return NSLocalizedString(@"contact_block", nil);
     } else if ([state isEqualToString: @"blocked"]) {
         return NSLocalizedString(@"contact_unblock", nil);
+    } else if ([state isEqualToString: @"kept"]) {
+    } else if ([state isEqualToString: @"groupfriend"]) {
     } else if (state == nil) {
         //happens with groups
     } else {
         NSLog(@"ProfileViewController blockFormatForRelationshipState: unhandled state %@", state);
     }
-    return @"Kaputt";
+    return @"";
 }
 
 - (void) populateValues {
@@ -658,6 +660,8 @@ typedef enum ActionSheetTags {
         } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
             return @[ _avatarSection, _utilitySection, _profileItemsSection, _fingerprintSection, _destructiveSection];
+        } else if ([self.contact.relationshipState isEqualToString: @"groupfriend"]) {
+            return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _destructiveSection];
         } else {
             return @[_avatarSection, _profileItemsSection, _fingerprintSection];
         }
@@ -779,6 +783,10 @@ typedef enum ActionSheetTags {
 
 - (void) deleteContact: (Contact*) contact {
     [self.navigationController popViewControllerAnimated: YES];
+    if ([contact.relationshipState isEqualToString:@"groupfriend"]) {
+        [self.chatBackend handleDeletionOfContact:contact];
+        return;
+    }
     [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
         if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
         //NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;

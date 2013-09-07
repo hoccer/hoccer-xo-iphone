@@ -211,14 +211,21 @@ NSString * const kRelationStateBlocked = @"blocked";
     if ([self.type isEqualToString:@"Group"] && [self.myGroupMembership.group.groupState isEqualToString: @"kept"]) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
     }
+    if ([self.relationshipState isEqualToString: @"none"]) {
+        return [NSString stringWithFormat:@"%@ ❓", self.nickName];
+    }
+    NSString * name = self.nickName;
+    if ([self.relationshipState isEqualToString: @"groupfriend"]) {
+        name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
+    }    
     if (self.connectionStatus == nil) {
-        return self.nickName;
+        return name;
     } else if ([self.connectionStatus isEqualToString:@"online"]) {
-        return [NSString stringWithFormat:@"%@ ⇄", self.nickName];
+        return [NSString stringWithFormat:@"%@ ⇄", name];
     } else if ([self.connectionStatus isEqualToString:@"offline"]) {
-        return self.nickName;
+        return name;
     } else {
-        return [NSString stringWithFormat:@"%@ [%@]", self.nickName, self.connectionStatus];
+        return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
     }
 }
 

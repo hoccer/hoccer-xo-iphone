@@ -183,6 +183,11 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 -(void) cleanupTables {
+    [self cleanupGroupMembershipTable];
+    [self cleanupContactTable];
+}
+
+-(void) cleanupGroupMembershipTable {
     NSEntityDescription *entity = [NSEntityDescription entityForName:[GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
     NSFetchRequest *request = [NSFetchRequest new];
     [request setEntity:entity];
@@ -190,8 +195,22 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableArray *fetchResults = [[self.delegate.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
     for (GroupMembership * membership in fetchResults) {
         if (membership.group == nil) {
-            NSLog(@"WARNING: cleanupTables: removing group membership %@ without group",membership.objectID);
+            NSLog(@"WARNING: cleanupGroupMembershipTable: removing group membership %@ without group",membership.objectID);
             [self.delegate.managedObjectContext deleteObject:membership];
+        }
+    }
+}
+
+-(void) cleanupContactTable {
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+    NSFetchRequest *request = [NSFetchRequest new];
+    [request setEntity:entity];
+    NSError *error;
+    NSMutableArray *fetchResults = [[self.delegate.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    for (Contact * contact in fetchResults) {
+        if ([contact.relationshipState isEqualToString:@"none"]/* && contact.groupMemberships.count > 0*/) {
+            NSLog(@"WARNING: cleanupContactTable: changing relationshipState of %@ to groupfriend",contact.nickName);
+            contact.relationshipState = @"groupfriend";
         }
     }
 }
@@ -1033,7 +1052,7 @@ static NSTimer * _stateNotificationDelayTimer;
     Contact * contact = [self getContactByClientId: clientId];
     // XXX The server sends relationship updates with state 'none' even after depairing. We ignore those... 
     if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
-        if (contact != nil && ![contact.relationshipState isEqualToString:@"none"] && ![contact.relationshipState isEqualToString:@"kept"]) {
+        if (contact != nil && ![contact.relationshipState isEqualToString:@"none"] && ![contact.relationshipState isEqualToString:@"kept"] && ![contact.relationshipState isEqualToString:@"groupfriend"]) {
             contact.relationshipState = @"none";
             [self handleDeletionOfContact:contact];
         }
@@ -1158,6 +1177,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                otherButtonTitles: NSLocalizedString(@"contact_delete_data_button",nil),nil];
         [alert show];
     } else {
+        contact.relationshipState = @"groupfriend";
         [self removedButKeptInGroupAlertForContact:contact];
     }
     
@@ -1244,7 +1264,8 @@ static NSTimer * _stateNotificationDelayTimer;
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         myContact.type = [Contact entityName];
         myContact.clientId = myClient;
-        myContact.relationshipState = kRelationStateNone;
+        // myContact.relationshipState = kRelationStateNone;
+        myContact.relationshipState = @"groupfriend"; // TODO: server should provide some information about if presence is actually a group friend presence
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
         myContact.avatarURL = @"";
     }
@@ -1260,9 +1281,10 @@ static NSTimer * _stateNotificationDelayTimer;
         myContact.nickName = newNickName;
         myContact.status = thePresence[@"clientStatus"];
         myContact.connectionStatus = thePresence[@"connectionStatus"];
-        if (myContact.connectionStatus == nil) {
+        if (myContact.connectionStatus == nil) { // TODO: this no longer happens, we need another server-side notfication in order to determine if presence comes via a group relationship
             // is a group
             myContact.connectionStatus = @"group";
+            myContact.relationshipState = @"groupfriend";
         }
         if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) {
             // fetch key

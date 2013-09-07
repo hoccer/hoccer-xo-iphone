@@ -191,6 +191,9 @@
 
 "contact_block" = "%@ blockieren";
 
+"contact_remove" = "%@ entfernen";
+
+
 "chat_with_contact" = "Mit %@ chatten";
 
 "delete_credentials_alert_title" = "Hoccer XO war schon einmal installiert";
@@ -360,9 +363,9 @@
 "friend_blocked_title"="Kontakt geblockt";
 
 "relationship_removed_message"="Die Beziehung zu Kontakt '%@' wurde entfernt.";
-"relationship_removed_title"="Beziehung entfernt";
+"relationship_removed_title"="Beziehung entfernen";
 
-"relationship_removed_but_contact_kept_message"="Die direkte Beziehung zu Kontakt '%@' wurde entfernt, aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppen >%@<.";
+"relationship_removed_but_contact_kept_message"="Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
 
 
 "contact_delete_associated_data_question"="Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
@@ -379,6 +382,7 @@
 "membership_role_member" = "Mitglied";
 
 "friend"="Freund";
+"groupfriend"="Gruppenbekanntschaft";
 "kept"="Keine Beziehung";
 "blocked"="Geblockt";
 
