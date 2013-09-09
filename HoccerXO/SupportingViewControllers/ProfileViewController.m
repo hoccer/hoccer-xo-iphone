@@ -483,6 +483,7 @@ typedef enum ActionSheetTags {
     _allProfileItems = [[NSMutableArray alloc] init];
     
     _nickNameItem = [[ProfileItem alloc] initWithName:@"NickNameItem"];
+    _nickNameItem.textAlignment = NSTextAlignmentLeft;
     _nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
     _nickNameItem.valueKey = kHXONickName;
     _nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
@@ -564,12 +565,16 @@ typedef enum ActionSheetTags {
     //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
     _chatWithContactItem.currentValue = _contact.nickName;
     _chatWithContactItem.valueFormat = NSLocalizedString(@"chat_with_contact", nil);
+    _chatWithContactItem.textAlignment = NSTextAlignmentLeft;
+    _chatWithContactItem.icon = [UIImage imageNamed: [self chatWithIconName]];
     _chatWithContactItem.cellClass = [UserDefaultsCellDisclosure class];
     _chatWithContactItem.action = @selector(chatWithContactPressed:);
     _chatWithContactItem.target = self;
     _chatWithContactItem.alwaysShowDisclosure = YES;
 
     _blockContactItem = [[ProfileItem alloc] initWithName: @"BlockContactItem"];
+    _blockContactItem.textAlignment = NSTextAlignmentLeft;
+    _blockContactItem.icon = [UIImage imageNamed: [self blockContactIconName]];
     _blockContactItem.currentValue = nil;
     _blockContactItem.cellClass = [UserDefaultsCell class];
     _blockContactItem.action = @selector(toggleBlockedPressed:);
@@ -607,6 +612,8 @@ typedef enum ActionSheetTags {
     _deleteContactItem.cellClass = [UserDefaultsCell class];
     _deleteContactItem.action = @selector(deleteContactPressed:);
     _deleteContactItem.target = self;
+    _deleteContactItem.textAlignment = NSTextAlignmentLeft;
+    _deleteContactItem.icon = [UIImage imageNamed: [self deleteIconName]];
 
     _destructiveSection = [ProfileSection sectionWithName:@"DestructiveSection" items: _deleteContactItem];
 
@@ -624,6 +631,19 @@ typedef enum ActionSheetTags {
 - (NSString*) fingerprintIconName {
     return @"icon_profile-fingerprint";
 }
+
+- (NSString*) blockContactIconName {
+    return @"icon_profile-block.png";
+}
+
+- (NSString*) chatWithIconName {
+    return @"icon_profile-chat.png";
+}
+
+- (NSString*) deleteIconName {
+    return @"icon_profile-delete.png";
+}
+
 
 - (void) validateItems {
     BOOL allValid = YES;
