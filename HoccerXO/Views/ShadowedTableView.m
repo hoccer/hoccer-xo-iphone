@@ -103,7 +103,7 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
     CGRect frame;
     frame.origin = CGPointMake(0, 0);
     frame.size = CGSizeMake(self.contentSize.width, lastCellRect.origin.y + lastCellRect.size.height);
-    if (self.showBottomTerminator && ! isEmpty) {
+    if (self.showBottomTerminator) {
         UIImage * bottomTerminatorImage = [UIImage imageNamed:@"table_view_bottom_terminator"];
         if (self.bottomTerminator == nil) {
             self.bottomTerminator = [CALayer layer];
