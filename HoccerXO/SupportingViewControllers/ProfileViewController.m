@@ -509,7 +509,7 @@ typedef enum ActionSheetTags {
         _groupMembershipsItem.textAlignment = NSTextAlignmentLeft;
         _groupMembershipsItem.valueKey = @"groupMembershipList";
         [_allProfileItems addObject: _groupMembershipsItem];
-        [_itemsByKeyPath setObject: _groupMembershipsItem forKey: _groupMembershipsItem.valueKey];        
+        [_itemsByKeyPath setObject: _groupMembershipsItem forKey: _groupMembershipsItem.valueKey];
     }
     
 #ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES

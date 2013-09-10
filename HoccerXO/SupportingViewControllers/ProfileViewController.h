@@ -38,11 +38,11 @@ typedef enum ProfileViewModes {
     ProfileSection *      _avatarSection;
     
     ProfileItem *         _nickNameItem;
-#ifdef DEBUG
+//#ifdef DEBUG
     ProfileSection *      _debugItemsSection;
     ProfileItem *         _clientIdItem;
     ProfileItem *         _groupMembershipsItem;
-#endif
+//#endif
     ProfileSection *      _profileItemsSection;
 
     ProfileItem *         _chatWithContactItem;
