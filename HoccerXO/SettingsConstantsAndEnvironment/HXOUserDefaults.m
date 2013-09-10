@@ -38,7 +38,7 @@ NSString * const kHXOMaxAttachmentUploadRetries   = @"maxAttachmentUploadRetries
 NSString * const kHXOMaxAttachmentDownloadRetries = @"maxAttachmentDownloadRetries";
 
 NSString * const kHXOSaveDatabasePolicy    = @"saveDatabasePolicy";
-NSString * const kHXOSaveDatabasePolicyPerMessage  = @"perMessage";
+NSString * const kHXOSaveDatabasePolicyDelayed  = @"delayed";
 
 NSString * const kHXOPreviewImageWidth      = @"previewImageWidth";
 

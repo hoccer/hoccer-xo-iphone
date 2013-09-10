@@ -38,7 +38,7 @@ FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentUploadRetries;
 FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentDownloadRetries;
 
 FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicy;
-FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicyPerMessage;
+FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicyDelayed;
 
 FOUNDATION_EXPORT NSString * const kHXOPreviewImageWidth;
 FOUNDATION_EXPORT NSString * const kHXOMessageFontSize;

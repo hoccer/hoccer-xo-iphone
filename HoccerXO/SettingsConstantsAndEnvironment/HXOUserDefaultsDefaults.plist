@@ -13,7 +13,7 @@
 	<key>maxAttachmentDownloadRetries</key>
 	<integer>16</integer>
 	<key>saveDatabasePolicy</key>
-	<string>perMessage</string>
+	<string>delayed</string>
 	<key>environment</key>
 	<string>production</string>
 	<key>autoUploadLimitCellular</key>
