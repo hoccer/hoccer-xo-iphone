@@ -36,6 +36,7 @@
 #import <Foundation/NSKeyValueCoding.h>
 
 #define RELATIONSHIP_DEBUG NO
+#define ADD_DEBUG_ITEMS NO
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 static const NSUInteger kHXOMaxNickNameLength = 25;
@@ -494,7 +495,23 @@ typedef enum ActionSheetTags {
     _nickNameItem.maxLength = kHXOMaxNickNameLength;
     [_allProfileItems addObject: _nickNameItem];
     [_itemsByKeyPath setObject: _nickNameItem forKey: _nickNameItem.valueKey];
-
+    
+    if (ADD_DEBUG_ITEMS) {
+        _clientIdItem = [[ProfileItem alloc] initWithName: @"ClientIdItem"];
+        _clientIdItem.cellClass = [UserDefaultsCell class];
+        _clientIdItem.textAlignment = NSTextAlignmentLeft;
+        _clientIdItem.valueKey = @"clientId";
+        [_allProfileItems addObject: _clientIdItem];
+        [_itemsByKeyPath setObject: _clientIdItem forKey: _clientIdItem.valueKey];
+        
+        _groupMembershipsItem = [[ProfileItem alloc] initWithName: @"GroupMembershipsItem"];
+        _groupMembershipsItem.cellClass = [UserDefaultsCell class];
+        _groupMembershipsItem.textAlignment = NSTextAlignmentLeft;
+        _groupMembershipsItem.valueKey = @"groupMembershipList";
+        [_allProfileItems addObject: _groupMembershipsItem];
+        [_itemsByKeyPath setObject: _groupMembershipsItem forKey: _groupMembershipsItem.valueKey];        
+    }
+    
 #ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
     ProfileItem * phoneItem = [[ProfileItem alloc] initWithName:@"PhoneNumberItem"];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
@@ -587,9 +604,7 @@ typedef enum ActionSheetTags {
     _fingerprintItem.cellClass = [UserDefaultsCell class];
     _fingerprintItem.textAlignment = NSTextAlignmentLeft;
     _fingerprintItem.icon = [UIImage imageNamed: [self fingerprintIconName]];
-
     // [_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
-
     _fingerprintInfoItem = [[ProfileItem alloc] initWithName:@"FingerprintInfoItem"];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
 

@@ -35,6 +35,8 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 
 @implementation UserProfile
 
+@dynamic groupMembershipList;
+
 - (id) init {
     self = [super init];
     if (self != nil) {
@@ -119,6 +121,10 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 
 - (NSString*) salt {
     return [_saltItem objectForKey: (__bridge id)(kSecValueData)];
+}
+
+- (NSString*)groupMembershipList {
+    return @"n/a"; //TODO: return something more interesting
 }
 
 - (NSString*) registerClientAndComputeVerifier: (NSString*) clientId {

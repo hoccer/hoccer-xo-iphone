@@ -26,6 +26,9 @@
 @property (nonatomic,strong) NSString   * googlePlusName;
 @property (nonatomic,strong) NSString   * githubName;
 
+@property (nonatomic,readonly) NSString * groupMembershipList;
+
+
 // credentials - stored in keychain
 @property (nonatomic,readonly) NSString * clientId;
 @property (nonatomic,readonly) NSString * password;

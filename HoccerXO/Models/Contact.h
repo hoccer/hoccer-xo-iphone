@@ -63,6 +63,9 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSMutableSet* groupMemberships;
 @property (readonly) NSString * nickNameWithStatus;
 
+@property (readonly )NSString * groupMembershipList;
+
+
 @property (nonatomic, strong) UIImage* avatarImage;
 
 + (NSString*) sectionTitleForMessageTime: (NSDate*) date;

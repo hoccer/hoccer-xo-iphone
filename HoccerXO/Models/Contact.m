@@ -52,6 +52,8 @@
 
 @dynamic lastUpdateReceived;
 
+@dynamic groupMembershipList;
+
 @synthesize rememberedLastVisibleChatCell;
 
 NSString * const kRelationStateNone    = @"none";
@@ -229,7 +231,27 @@ NSString * const kRelationStateBlocked = @"blocked";
     }
 }
 
+- (NSString*) groupMembershipList {
+    NSMutableArray * groups = [[NSMutableArray alloc] init];
+    
+    [groups addObject: [NSString stringWithFormat:@"(%d)", groups.count]];
 
+    [self.groupMemberships enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
+        if (![member.contact isEqual: member.group]) {
+            if (member.group.nickName != nil) {
+                [groups addObject: member.group.nickName];
+            } else {
+                [groups addObject: @"?"];
+            }
+        } else {
+            [groups addObject: @"="];
+        }
+    }];
+    if (groups.count == 0) {
+        return @"-";
+    }
+    return [groups componentsJoinedByString:@", "];
+}
 
 - (NSDictionary*) rpcKeys {
     return @{ @"state"     : @"relationshipState",

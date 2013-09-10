@@ -208,9 +208,18 @@ static NSTimer * _stateNotificationDelayTimer;
     NSError *error;
     NSMutableArray *fetchResults = [[self.delegate.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
     for (Contact * contact in fetchResults) {
-        if ([contact.relationshipState isEqualToString:@"none"]/* && contact.groupMemberships.count > 0*/) {
-            NSLog(@"WARNING: cleanupContactTable: changing relationshipState of %@ to groupfriend",contact.nickName);
+        [self checkRelationsipStateForGroupMembershipOfContact:contact];
+    }
+}
+
+-(void) checkRelationsipStateForGroupMembershipOfContact:(Contact*) contact {
+    if (contact.groupMemberships.count > 0) {
+        if ([contact.relationshipState isEqualToString:@"none"]) {
             contact.relationshipState = @"groupfriend";
+        }
+    } else {
+        if ([contact.relationshipState isEqualToString:@"groupfriend"]) {
+            contact.relationshipState = @"none";
         }
     }
 }
@@ -1050,8 +1059,9 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 
     Contact * contact = [self getContactByClientId: clientId];
-    // XXX The server sends relationship updates with state 'none' even after depairing. We ignore those... 
+    // XXX The server sends relationship updates with state 'none' even after depairing.
     if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
+        [self checkRelationsipStateForGroupMembershipOfContact:contact];
         if (contact != nil && ![contact.relationshipState isEqualToString:@"none"] && ![contact.relationshipState isEqualToString:@"kept"] && ![contact.relationshipState isEqualToString:@"groupfriend"]) {
             contact.relationshipState = @"none";
             [self handleDeletionOfContact:contact];
@@ -1070,6 +1080,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     // NSLog(@"relationship Dict: %@", relationshipDict);
     [contact updateWithDictionary: relationshipDict];
+    [self checkRelationsipStateForGroupMembershipOfContact:contact];
     [self.delegate saveDatabase];
 }
 
@@ -1264,10 +1275,10 @@ static NSTimer * _stateNotificationDelayTimer;
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         myContact.type = [Contact entityName];
         myContact.clientId = myClient;
-        // myContact.relationshipState = kRelationStateNone;
-        myContact.relationshipState = @"groupfriend"; // TODO: server should provide some information about if presence is actually a group friend presence
+        myContact.relationshipState = kRelationStateNone;
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
         myContact.avatarURL = @"";
+        [self checkRelationsipStateForGroupMembershipOfContact:myContact];
     }
     myContact.lastUpdateReceived = [NSDate date];
     
@@ -1710,6 +1721,8 @@ static NSTimer * _stateNotificationDelayTimer;
         myMembership = [theMemberSet anyObject];
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: got member from memberset with nick %@ id %@",myMembership.contact.nickName, myMembership.contact.clientId);
     }
+    
+    [self checkRelationsipStateForGroupMembershipOfContact:memberContact];
     
     if (myMembership == nil) {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no member found and not created, incoming member state must be 'none'");
