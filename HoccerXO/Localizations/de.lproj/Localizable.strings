@@ -101,7 +101,7 @@
 "Invite failed" = "Einladung fehlgeschlagen";
 
 /* Invite Alert Title */
-"Invite successful" = "Einladung erfolgreich";
+/*"Invite successful" = "Einladung erfolgreich";*/
 
 
 /* Invite Token View Controller */
@@ -134,7 +134,7 @@
 "Settings" = "Einstellungen";
 
 /* Invite Alert Message */
-"The server accepted your code" = "Der Code wurde akzeptiert";
+/*"The server accepted your code" = "Der Code wurde akzeptiert";*/
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "Der Code wurde abgelehnt";

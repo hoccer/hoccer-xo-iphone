@@ -68,6 +68,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
 @property (nonatomic, strong) UIImage* avatarImage;
 
+@property BOOL friendMessageShown;
+
 + (NSString*) sectionTitleForMessageTime: (NSDate*) date;
 
 - (SecKeyRef) getPublicKeyRef;

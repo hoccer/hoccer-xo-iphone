@@ -1086,6 +1086,10 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) newFriendAlertForContact:(Contact*)contact {
+    if (contact.friendMessageShown) {
+        return;
+    }
+    contact.friendMessageShown = YES;
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"new_friend_message",nil), contact.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"new_friend_title", nil)
                                                      message: message
