@@ -80,6 +80,10 @@
 		633462AF174FCA3C008D98FC /* GroupAdminCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633462AE174FCA3C008D98FC /* GroupAdminCell.m */; };
 		633462B3174FE3E3008D98FC /* group_member_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B1174FE3E3008D98FC /* group_member_divider.png */; };
 		633462B4174FE3E3008D98FC /* group_member_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B2174FE3E3008D98FC /* group_member_divider@2x.png */; };
+		6336343517E0D51F00B5216C /* download-btn-ext.png in Resources */ = {isa = PBXBuildFile; fileRef = 6336343117E0D51F00B5216C /* download-btn-ext.png */; };
+		6336343617E0D51F00B5216C /* download-btn-ext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6336343217E0D51F00B5216C /* download-btn-ext@2x.png */; };
+		6336343717E0D51F00B5216C /* download-btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6336343317E0D51F00B5216C /* download-btn.png */; };
+		6336343817E0D51F00B5216C /* download-btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6336343417E0D51F00B5216C /* download-btn@2x.png */; };
 		633A999B1779D23900E066EF /* HXOSideMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A999A1779D23900E066EF /* HXOSideMenuViewController.m */; };
 		633A9B28177B3BA900E066EF /* HXOActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A9B25177B3BA900E066EF /* HXOActionSheet.m */; };
 		633A9B29177B3BA900E066EF /* HXOSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A9B27177B3BA900E066EF /* HXOSheetView.m */; };
@@ -583,6 +587,10 @@
 		633462AE174FCA3C008D98FC /* GroupAdminCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupAdminCell.m; sourceTree = "<group>"; };
 		633462B1174FE3E3008D98FC /* group_member_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_member_divider.png; sourceTree = "<group>"; };
 		633462B2174FE3E3008D98FC /* group_member_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_divider@2x.png"; sourceTree = "<group>"; };
+		6336343117E0D51F00B5216C /* download-btn-ext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-btn-ext.png"; sourceTree = "<group>"; };
+		6336343217E0D51F00B5216C /* download-btn-ext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-btn-ext@2x.png"; sourceTree = "<group>"; };
+		6336343317E0D51F00B5216C /* download-btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-btn.png"; sourceTree = "<group>"; };
+		6336343417E0D51F00B5216C /* download-btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download-btn@2x.png"; sourceTree = "<group>"; };
 		633A99991779D23900E066EF /* HXOSideMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOSideMenuViewController.h; sourceTree = "<group>"; };
 		633A999A1779D23900E066EF /* HXOSideMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOSideMenuViewController.m; sourceTree = "<group>"; };
 		633A9B24177B3BA900E066EF /* HXOActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOActionSheet.h; sourceTree = "<group>"; };
@@ -1376,6 +1384,10 @@
 		6381FEB91745536B001D16E0 /* ChatView */ = {
 			isa = PBXGroup;
 			children = (
+				6336343117E0D51F00B5216C /* download-btn-ext.png */,
+				6336343217E0D51F00B5216C /* download-btn-ext@2x.png */,
+				6336343317E0D51F00B5216C /* download-btn.png */,
+				6336343417E0D51F00B5216C /* download-btn@2x.png */,
 				634B47071796EA51001C1C0D /* AttachmentTypeIcons */,
 				634B46F717959923001C1C0D /* attachment_pattern_red@2x.png */,
 				634B46E3178F6998001C1C0D /* attachment_pattern@2x.png */,
@@ -2420,6 +2432,10 @@
 				6AE9768C17BB880400D60E7C /* icon_profile-block@2x.png in Resources */,
 				6AE9768D17BB880400D60E7C /* icon_profile-chat@2x.png in Resources */,
 				6AE9768E17BB880400D60E7C /* icon_profile-chat.png in Resources */,
+				6336343517E0D51F00B5216C /* download-btn-ext.png in Resources */,
+				6336343617E0D51F00B5216C /* download-btn-ext@2x.png in Resources */,
+				6336343717E0D51F00B5216C /* download-btn.png in Resources */,
+				6336343817E0D51F00B5216C /* download-btn@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

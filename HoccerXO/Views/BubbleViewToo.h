@@ -52,7 +52,8 @@ typedef enum HXOMessageDirections {
 
 typedef enum HXOAttachmentTransferStates {
     HXOAttachmentTransferStateDone,
-    HXOAttachmentTransferStateInProgress
+    HXOAttachmentTransferStateInProgress,
+    HXOAttachmentTranserStateDownloadPending
 } HXOAttachmentTranserState;
 
 typedef enum HXOBubbleRunButtonStyles {

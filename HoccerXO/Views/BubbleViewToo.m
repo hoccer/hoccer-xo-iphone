@@ -453,23 +453,20 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (void) setAttachmentTransferState:(HXOAttachmentTranserState)attachmentTransferState {
     _attachmentTransferState = attachmentTransferState;
-    _progressBar.hidden = attachmentTransferState == HXOAttachmentTransferStateDone;
+    _progressBar.hidden = attachmentTransferState != HXOAttachmentTransferStateInProgress;
+    _attachmentTitle.hidden = self.attachmentStyle != HXOAttachmentStyleThumbnail && self.attachmentTransferState != HXOAttachmentTranserStateDownloadPending;
     [self setNeedsLayout];
 }
 
 - (void) setAttachmentStyle:(HXOAttachmentStyle)attachmentStyle {
     _attachmentStyle = attachmentStyle;
-    _attachmentTitle.hidden = attachmentStyle != HXOAttachmentStyleThumbnail;
+    _attachmentTitle.hidden = self.attachmentStyle != HXOAttachmentStyleThumbnail && self.attachmentTransferState != HXOAttachmentTranserStateDownloadPending;
     [self setNeedsLayout];
 }
-
 
 - (CGRect) attachmentFrame {
     return [self bubbleFrame];
 }
-
-
-
 
 #pragma mark - Transfer Progress Indication Protocol
 
@@ -620,7 +617,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
         CGGradientRelease(thumbnailFrameGradient);
         CGColorSpaceRelease(colorSpace);
 
-        UIImage * icon = self.largeAttachmentTypeIcon;
+        UIImage * icon = self.attachmentTransferState == HXOAttachmentTranserStateDownloadPending ? [UIImage imageNamed: @"download-btn"] : self.largeAttachmentTypeIcon;
         CGPoint iconOrigin = CGPointMake(thumbnailFrameBounds.origin.x + 0.5 * thumbnailFrameBounds.size.width - 0.5 * icon.size.width,
                                          thumbnailFrameBounds.origin.y + 0.5 * thumbnailFrameBounds.size.height - 0.5 * icon.size.height);
         [icon drawAtPoint: iconOrigin];

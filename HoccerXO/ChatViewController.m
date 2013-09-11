@@ -1424,6 +1424,13 @@ static const CGFloat    kSectionHeaderHeight = 40;
     } else {
         cell.thumbnailScaleMode = HXOThumbnailScaleModeAspectFill;
     }
+
+    if (message.attachment.state == kAttachmentTransferOnHold && ! [message.isOutgoing boolValue]) {
+        cell.attachmentTransferState = HXOAttachmentTranserStateDownloadPending;
+    } else {
+        NSLog(@"========== TODO set attachmentTransferState");
+    }
+
 }
 
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
@@ -1457,6 +1464,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
     Attachment * attachment = message.attachment;
     BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
+    UIColor * grey = [UIColor colorWithWhite: 0.5 alpha: 1.0];
+
 
     // TODO: some of this stuff is quite expensive: reading vcards, loading audio metadata, &c.
     // It is probably a good idea to cache the attachment titles in the database.
@@ -1498,12 +1507,15 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 // NSLog(@"Title=%@", title);
             }
         }
+    } else if (message.attachment.state == kAttachmentTransferOnHold) {
+        NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [message.attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
+        NSString * title = [NSString stringWithFormat: @"%@ [%@]", message.attachment.humanReadableFileName, fileSize];
+        attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
     }
 
     if (attributedTitle == nil) {
         NSString * title = attachment.humanReadableFileName;
         if (title != nil) {
-            UIColor * grey = [UIColor colorWithWhite: 0.5 alpha: 1.0];
             if ( ! isOutgoing && ! isComplete) {
                 NSDictionary * attributes = @{NSForegroundColorAttributeName: grey};
                 attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
