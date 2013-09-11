@@ -101,7 +101,7 @@
 "Invite failed" = "Invite failed";
 
 /* Invite Alert Title */
-"Invite successful" = "Invite successful";
+/* "Invite successful" = "Invite successful";*/
 
 
 /* Invite Token View Controller */
@@ -134,7 +134,7 @@
 "Settings" = "Settings";
 
 /* Invite Alert Message */
-"The server accepted your code" = "The code has been accepted";
+/* "The server accepted your code" = "The code has been accepted";*/
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "The code has been rejected";
@@ -377,7 +377,7 @@
 "fatal_error_default_title"   = "Fatal Error";
 "fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
 
-"new_friend_message"="Contact '%@' is now a friend.";
+"new_friend_message"="Contact '%@' is now your friend.";
 "new_friend_title"="New Friend";
 
 "friend_blocked_message"="Exchange of messages with contact '%@' has been temporarily blocked.";

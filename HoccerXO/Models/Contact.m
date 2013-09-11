@@ -55,6 +55,7 @@
 @dynamic groupMembershipList;
 
 @synthesize rememberedLastVisibleChatCell;
+@synthesize friendMessageShown;
 
 NSString * const kRelationStateNone    = @"none";
 NSString * const kRelationStateFriend  = @"friend";

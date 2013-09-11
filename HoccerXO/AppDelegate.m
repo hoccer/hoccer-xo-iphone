@@ -850,8 +850,9 @@ static NSInteger validationErrorCount = 0;
     NSString * title;
     NSString * message;
     if (success) {
-        title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
-        message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
+        return;
+        // title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
+        // message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
     } else {
         title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
         message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
