@@ -1358,7 +1358,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     message.attachment.progressIndicatorDelegate = (AttachmentMessageCell*) cell;
 
-    if (message.attachment.previewImage == nil) {
+    if (message.attachment.previewImage == nil && message.attachment.available) {
         [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
             if (theError == nil) {
                 // TODO: find a better way to get the right cell...
@@ -1375,7 +1375,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             }
         }];
     } else {
-        if (message.attachment.previewImage.size.height != 0) {
+        if (message.attachment.available && message.attachment.previewImage.size.height != 0) {
             cell.previewImage = message.attachment.previewImage;
         } else {
             cell.previewImage = nil;
