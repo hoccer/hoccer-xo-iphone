@@ -240,6 +240,7 @@ static NSTimer * _stateNotificationDelayTimer;
     return observer;
 }
 
+
 + (void)broadcastConnectionInfo {
     [[HXOBackend instance] updateConnectionStatusInfoFromState:kBackendStateUnknown];
 }

@@ -747,7 +747,7 @@ NSArray * TransferStateName = @[@"detached",
                           failureBlock: failureblock];
         }
     } else {
-        NSLog(@"ERROR: no image url");
+        NSLog(@"WARNING: no image url");
         block(nil, nil);
     }
 }

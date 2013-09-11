@@ -25,6 +25,7 @@
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (nonatomic, readonly) ContactQuickListCell * contactCellPrototype;
 @property (nonatomic, readonly) ContactQuickListSectionHeaderView * sectionHeaderPrototype;
+@property id keyboardHidingObserver;
 @end
 
 @implementation ContactQuickListViewController
@@ -42,6 +43,7 @@
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(sideMenuDidChangeState:) name: MFSideMenuStateNotificationEvent object: nil];
+    self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -51,7 +53,11 @@
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self name: MFSideMenuStateNotificationEvent object: nil];
+    [[NSNotificationCenter defaultCenter] removeObserver: self.keyboardHidingObserver];
+}
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:NO]; // hide keyboard on scrolling
 }
 
 - (void) sideMenuDidChangeState: (NSNotification*) notification {

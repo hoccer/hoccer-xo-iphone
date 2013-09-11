@@ -62,6 +62,16 @@ static NSInteger validationErrorCount = 0;
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 }
 
++ (id) registerKeyboardHidingOnSheetPresentationFor:(UIViewController*)controller {
+    id observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"hxoSheetViewShown"
+                                                                    object:nil
+                                                                     queue:[NSOperationQueue mainQueue]
+                                                                usingBlock:^(NSNotification *note) {
+                                                                        NSLog(@"hxoSheetViewShown - hiding keyboard via endEditing");
+                                                                        [controller.view endEditing:NO];
+                                                                }];
+    return observer;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);

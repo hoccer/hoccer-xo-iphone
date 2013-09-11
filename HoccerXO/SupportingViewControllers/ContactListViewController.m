@@ -26,6 +26,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (nonatomic, readonly) ContactCell * contactCellPrototype;
+@property id keyboardHidingObserver;
 
 @end
 
@@ -52,6 +53,7 @@
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
     [HXOBackend registerConnectionInfoObserverFor:self];
+    self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
 }
 
 - (void) setupNavigationBar {
@@ -69,6 +71,10 @@
 
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver: self.keyboardHidingObserver];
+}
+
 - (NSString*) navigationItemBackButtonImageName {
     return @"navbar-icon-contacts";
 }
@@ -82,6 +88,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:NO]; // hide keyboard on scrolling
 }
 
 - (void) addButtonPressed: (id) sender {
