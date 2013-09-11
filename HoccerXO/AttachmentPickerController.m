@@ -22,6 +22,7 @@
     NSMutableArray * _supportedItems;
     UIViewController * _viewController;
     NSUInteger _firstPickerButton;
+    UIBackgroundTaskIdentifier _backgroundTask;
 }
 @end
 
@@ -426,6 +427,10 @@
             picker.mediaTypes = @[(id)kUTTypeImage];
         }
     }
+    
+    [self registerBackgroundTask];
+    
+    
     [_viewController presentViewController: picker animated: YES completion: nil];
 
 }
@@ -469,10 +474,29 @@
             UIImageWriteToSavedPhotosAlbum(info[UIImagePickerControllerOriginalImage], nil, nil, nil);
         } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) && shouldSaveVideos) {
             // TODO: UISaveVideoAtPathToSavedPhotosAlbum
-            NSLog(@"Saving videos not yet implemnted");
+            NSLog(@"Saving videos not yet implemented");
         }
-    }
+    }    
     [self.delegate didPickAttachment: info];
+    [self unregisterBackgroundTask];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self unregisterBackgroundTask];    
+}
+
+// we do this to avoid problems when the app is sent to background while a video export session is in progress
+- (void) registerBackgroundTask {
+    _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+    }];
+}
+
+- (void) unregisterBackgroundTask {
+    UIApplication *app = [UIApplication sharedApplication];
+    [app endBackgroundTask:_backgroundTask];
+    _backgroundTask = UIBackgroundTaskInvalid;
 }
 
 @end
