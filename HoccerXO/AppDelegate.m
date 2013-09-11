@@ -424,15 +424,34 @@ static NSInteger validationErrorCount = 0;
 
 - (void)saveDatabase
 {
-    if (_savingPaused>0) {
-        _shouldSave = YES;
+    NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
+    if (![savePolicy isEqualToString:kHXOSaveDatabasePolicyDelayed]) {
+        [self saveContext];
         return;
     }
-    NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
-    if ([savePolicy isEqualToString:kHXOSaveDatabasePolicyPerMessage]) {
-        // [self performSelectorOnMainThread:@selector(saveContext) withObject:self waitUntilDone:NO];
-        [self saveContext];
+
+    [self.nextDatabaseSaveTimer invalidate];
+
+    const double minDatabaseSaveInterval = 5.0;
+    const double nextDatabaseSaveInterval = 6.0;
+    // NSLog(@"lastDatebaseSaveDate interval %f",[self.lastDatebaseSaveDate timeIntervalSinceNow]);
+    if (self.lastDatebaseSaveDate != nil) {
+        if (-[self.lastDatebaseSaveDate timeIntervalSinceNow] < minDatabaseSaveInterval) {
+            self.nextDatabaseSaveTimer = [NSTimer scheduledTimerWithTimeInterval:nextDatabaseSaveInterval target:self selector:@selector(saveDatabase) userInfo:nil repeats:NO];
+            return;
+        }
     }
+    [self saveContext];
+    self.lastDatebaseSaveDate = [NSDate date];
+    // NSLog(@"Saved database at %@",self.lastDatebaseSaveDate);
+}
+
+- (void)saveDatabaseNow
+{
+    [self.nextDatabaseSaveTimer invalidate];
+    self.nextDatabaseSaveTimer = nil;
+    [self saveContext];
+    self.lastDatebaseSaveDate = [NSDate date];
 }
 
 - (void)pauseDatabaseSaving {

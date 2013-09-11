@@ -35,6 +35,10 @@
 
 @property (nonatomic, strong)  GCNetworkReachability * internetReachabilty;
 
+@property (strong, nonatomic)  NSDate * lastDatebaseSaveDate;
+@property (strong, nonatomic)  NSTimer * nextDatabaseSaveTimer;
+
+
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;
 
