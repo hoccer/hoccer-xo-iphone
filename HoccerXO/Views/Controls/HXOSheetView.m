@@ -94,6 +94,9 @@ static const CGFloat kHXOASAnimationDuration = 0.2;
     } completion: ^(BOOL completed) {
         [self didFinishInAnimation];
     }];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"hxoSheetViewShown"
+                                                        object:self
+                                                      userInfo:nil];
 }
 
 - (UILabel*) createTitleLabel/*OfWidth: (CGFloat) width*/ {
