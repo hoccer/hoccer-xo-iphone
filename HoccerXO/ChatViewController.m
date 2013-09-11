@@ -1509,7 +1509,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
         NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [message.attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
-        NSString * title = [NSString stringWithFormat: @"%@ [%@]", message.attachment.humanReadableFileName, fileSize];
+        NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(message.attachment.mediaType, nil);
+        NSString * title = [NSString stringWithFormat: @"%@ [%@]", name, fileSize];
         attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
     }
 

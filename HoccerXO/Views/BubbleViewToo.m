@@ -448,6 +448,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     _attachmentTitle.textColor = [UIColor whiteColor];
     _attachmentTitle.shadowColor = [UIColor blackColor];
     _attachmentTitle.shadowOffset = CGSizeMake(0, -1);
+    //_attachmentTitle.backgroundColor = [UIColor orangeColor];
     [self addSubview: _attachmentTitle];
 }
 
@@ -461,6 +462,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 - (void) setAttachmentStyle:(HXOAttachmentStyle)attachmentStyle {
     _attachmentStyle = attachmentStyle;
     _attachmentTitle.hidden = self.attachmentStyle != HXOAttachmentStyleThumbnail && self.attachmentTransferState != HXOAttachmentTranserStateDownloadPending;
+    _attachmentTitle.textAlignment = attachmentStyle == HXOAttachmentStyleThumbnail ? NSTextAlignmentLeft : NSTextAlignmentCenter;
     [self setNeedsLayout];
 }
 
@@ -498,6 +500,8 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     [super layoutSubviews];
 
     CGRect contentFrame = [self attachmentFrame];
+    CGRect runButtonFrame = [self runButtonFrame];
+
     contentFrame.size.width -= kHXOBubblePadding;
     if (self.messageDirection == HXOMessageDirectionIncoming) {
         contentFrame.origin.x += kHXOBubblePadding;
@@ -506,17 +510,16 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     CGRect progressFrame = self.progressBar.frame;
     progressFrame.origin.y = contentFrame.origin.y + 0.5 * (contentFrame.size.height - progressFrame.size.height);
 
+    CGRect labelFrame = self.attachmentTitle.frame;
+    labelFrame.origin.y = contentFrame.origin.y + 0.5 * (contentFrame.size.height - labelFrame.size.height);
+    labelFrame.origin.x = contentFrame.origin.x;
     if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
-        CGRect labelFrame = self.attachmentTitle.frame;
-        labelFrame.origin.y = contentFrame.origin.y + 0.5 * (contentFrame.size.height - labelFrame.size.height);
-        labelFrame.origin.x = contentFrame.origin.x;
         labelFrame.size.width = contentFrame.size.width - (2 * kHXOBubblePadding + kHXOBubbleMinimumHeight);
         if (self.messageDirection == HXOMessageDirectionIncoming) {
             labelFrame.origin.x += kHXOBubblePadding;
         } else {
             labelFrame.origin.x += kHXOBubblePadding + kHXOBubbleMinimumHeight;
         }
-
         if (self.previewImage != nil) {
             labelFrame.origin.x += kHXOBubbleTypeIconSize + kHXOBubbleTypeIconPadding;
             labelFrame.size.width -= kHXOBubbleTypeIconSize + kHXOBubbleTypeIconPadding;
@@ -527,13 +530,19 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
             progressFrame.size.width = kHXOBubbleProgressSizeSmall;
             progressFrame.origin.x = labelFrame.origin.x + labelFrame.size.width + kHXOBubblePadding;
         }
-
-        self.attachmentTitle.frame = labelFrame;
     } else {
+        labelFrame.size.width = contentFrame.size.width;
+        labelFrame.origin.y = runButtonFrame.origin.y + runButtonFrame.size.height + kHXOBubblePadding;
+    }
+    
+
+    self.attachmentTitle.frame = labelFrame;
+
+
+    if (self.attachmentStyle != HXOAttachmentStyleThumbnail) {
         progressFrame.size.width = kHXOBubbleProgressSizeLarge;
         progressFrame.origin.x = contentFrame.origin.x + 0.5 * (contentFrame.size.width - progressFrame.size.width);
         if (self.runButtonStyle != HXOBubbleRunButtonNone) {
-            CGRect runButtonFrame = [self runButtonFrame];
             progressFrame.origin.y = runButtonFrame.origin.y + runButtonFrame.size.height + kHXOBubblePadding;
         }
     }
@@ -581,6 +590,11 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
             case HXOBubbleRunButtonPlay:
                 [self drawPlayButtonInContext: context];
                 break;
+        }
+
+        if (self.attachmentTransferState == HXOAttachmentTranserStateDownloadPending) {
+            CGRect buttonFrame = [self runButtonFrame];
+            [[UIImage imageNamed: @"download-btn"] drawInRect: buttonFrame];
         }
     }
 }
@@ -643,6 +657,10 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (CGRect) runButtonFrame {
     CGRect frame = [self attachmentFrame];
+    frame.size.width -= kHXOBubblePadding;
+    if (self.messageDirection == HXOMessageDirectionIncoming) {
+        frame.origin.x += kHXOBubblePadding;
+    }
     frame.origin.x += 0.5 * (frame.size.width - kHXOBubblePlayButtonSize);
     frame.origin.y += 0.5 * (frame.size.height - kHXOBubblePlayButtonSize);
     frame.size.width = kHXOBubblePlayButtonSize;
