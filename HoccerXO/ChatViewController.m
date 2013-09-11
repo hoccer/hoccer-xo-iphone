@@ -1428,7 +1428,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if (message.attachment.state == kAttachmentTransferOnHold && ! [message.isOutgoing boolValue]) {
         cell.attachmentTransferState = HXOAttachmentTranserStateDownloadPending;
     } else {
-        NSLog(@"========== TODO set attachmentTransferState");
+        // NSLog(@"========== TODO set attachmentTransferState");
     }
 
 }
