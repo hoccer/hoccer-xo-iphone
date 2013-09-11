@@ -8,10 +8,13 @@
 
 #import "PerforatedPlateView.h"
 
+#import <QuartzCore/QuartzCore.h>
+
+static UIImage * landscapeCache = nil;
+static UIImage * portraitCache  = nil;
+
 @interface PerforatedPlateView ()
 {
-    UIImage * _logo;
-    UIImage * _patternImage;
 }
 @end
 
@@ -34,16 +37,53 @@
 }
 
 - (void) commonInit {
-    _patternImage = [UIImage imageNamed:@"background-tiles.png"];
-    
-    self.backgroundColor = [UIColor colorWithRed: 0.23 green: 0.24 blue: 0.26 alpha: 1];
-    _logo = [UIImage imageNamed: @"xo"];
 }
 
 - (void) drawRect:(CGRect)rect {
-    [super drawRect: rect];
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    UIImage * image;
+    if(orientation == UIInterfaceOrientationPortrait) {
+        if (portraitCache == nil) {
+            portraitCache = [self cachedImage: @"Portrait"];
+        }
+        image = portraitCache;
+    } else {
+        if (landscapeCache == nil) {
+            landscapeCache = [self cachedImage: @"Landscape"];
+        }
+        image = landscapeCache;
+    }
+    if (image) {
+        [image drawInRect: self.bounds];
+    } else {
+        NSLog(@"WARNING: Caching background view failed. Using live drawing.");
+        //[super drawRect: rect];
+        [self drawLogo];
+    }
+}
 
-    [self drawLogo];
+- (UIImage*) cachedImage: (NSString*) orientation {
+    NSString * imageName = [NSString stringWithFormat: @"PerforatedPlate%@.png", orientation];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cachePath = [paths objectAtIndex:0];
+    NSString * imagePath = [cachePath stringByAppendingPathComponent: imageName];
+    UIImage * image = [UIImage imageWithContentsOfFile: imagePath];
+    if (image == nil) {
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0.0);
+        [self drawLogo];
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        BOOL isDir = NO;
+        NSError *error;
+        if (! [[NSFileManager defaultManager] fileExistsAtPath: cachePath isDirectory:&isDir] && isDir == NO) {
+            [[NSFileManager defaultManager] createDirectoryAtPath: cachePath withIntermediateDirectories:NO attributes:nil error:&error];
+        }
+        NSData * pngImage = UIImagePNGRepresentation(image);
+        [pngImage writeToFile: imagePath atomically: NO];
+        // TODO: save PNG
+    }
+    return image;
 }
 
 - (void) drawLogo {
@@ -51,6 +91,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     //// Color Declarations
+    UIColor* backgroundColor = [UIColor colorWithRed: 0.23 green: 0.24 blue: 0.26 alpha: 1];
     UIColor* logoEmbossColor = [UIColor colorWithRed: 0.16 green: 0.168 blue: 0.184 alpha: 1];
     UIColor* logoInnerShadowColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.505];
     UIColor* logoOuterShadowColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.119];
@@ -70,6 +111,12 @@
     CGFloat width = 164;
     CGFloat y = self.bounds.size.width > self.bounds.size.height ? 30 : 105;
     CGRect frame = CGRectMake(0.5 * (self.bounds.size.width - width), y, width, 162);
+
+
+
+    CGContextSetFillColorWithColor(context, backgroundColor.CGColor);
+    CGContextAddRect(context, self.bounds);
+    CGContextFillPath(context);
 
 
     //// XLetter Drawing
