@@ -482,7 +482,8 @@
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self unregisterBackgroundTask];    
+    [_viewController dismissViewControllerAnimated: YES completion: nil];
+    [self unregisterBackgroundTask];
 }
 
 // we do this to avoid problems when the app is sent to background while a video export session is in progress
