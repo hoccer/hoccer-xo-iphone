@@ -10,7 +10,7 @@
 
 @class HXOActionSheet;
 
-#define USE_HXO_ACTION_SHEET
+//#define USE_HXO_ACTION_SHEET
 
 #ifdef USE_HXO_ACTION_SHEET
 typedef HXOActionSheet ActionSheet;
