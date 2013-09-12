@@ -1541,9 +1541,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if ([cell isKindOfClass:[MessageCell class]]) {
         MessageCell * mCell = (MessageCell *)cell;
         if (mCell.fetchedResultsController != nil && mCell.fetchedResultsController.fetchedObjects.count > 0) {
-            HXOMessage * message = (HXOMessage*)[mCell.fetchedResultsController objectAtIndexPath: indexPath];
-            if (message.attachment != nil) {
-                message.attachment.progressIndicatorDelegate = nil;
+            @try {
+                // TODO: when deleting messages, the following call will raise an exception; this should be avoided
+                HXOMessage * message = (HXOMessage*)[mCell.fetchedResultsController objectAtIndexPath: indexPath];
+                if (message.attachment != nil) {
+                    message.attachment.progressIndicatorDelegate = nil;
+                }            }
+            @catch (NSException *exception) {
+                NSLog(@"didEndDisplayingCell: indexPath %@ out of range",indexPath);
             }
         }
     }
