@@ -141,13 +141,13 @@ static NSTimer * _stateNotificationDelayTimer;
         
         _delegate = theAppDelegate;
         [self cleanupTables];
-
+        
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(profileUpdatedByUser:)
                                                      name:@"profileUpdatedByUser"
                                                    object:nil];
-
+        
         void(^reachablityBlock)(NSNotification*) = ^(NSNotification* note) {
             GCNetworkReachabilityStatus status = [[note userInfo][kGCNetworkReachabilityStatusKey] integerValue];
             switch (status) {
@@ -163,22 +163,22 @@ static NSTimer * _stateNotificationDelayTimer;
                     NSLog(@"Reachable via WiFi");
                     [self reconnect];
                     break;
-
+                    
             }
-
+            
         };
-
+        
         _internetConnectionObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kGCNetworkReachabilityDidChangeNotification
-                                                                          object:nil
-                                                                           queue:[NSOperationQueue mainQueue]
-                                                                      usingBlock:reachablityBlock];
-
+                                                                                        object:nil
+                                                                                         queue:[NSOperationQueue mainQueue]
+                                                                                    usingBlock:reachablityBlock];
+        
+        _attachmentDownloadsWaiting = [[NSMutableArray alloc] init];
+        _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
+        _attachmentDownloadsActive = [[NSMutableArray alloc] init];
+        _attachmentUploadsActive = [[NSMutableArray alloc] init];
     }
-    _attachmentDownloadsWaiting = [[NSMutableArray alloc] init];
-    _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
-    _attachmentDownloadsActive = [[NSMutableArray alloc] init];
-    _attachmentUploadsActive = [[NSMutableArray alloc] init];
-
+    
     return self;
 }
 
