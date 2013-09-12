@@ -1384,9 +1384,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 //    cell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
 
-
     cell.runButtonStyle = [message.attachment.mediaType isEqualToString: @"video"] ? HXOBubbleRunButtonPlay : HXOBubbleRunButtonNone;
-
 
     NSString * smallIconName;
     NSString * largeIconName;
@@ -1424,13 +1422,17 @@ static const CGFloat    kSectionHeaderHeight = 40;
     } else {
         cell.thumbnailScaleMode = HXOThumbnailScaleModeAspectFill;
     }
-
-    if (message.attachment.state == kAttachmentTransferOnHold && ! [message.isOutgoing boolValue]) {
+    
+    AttachmentState state = message.attachment.state;
+    if (state == kAttachmentTransferOnHold && ! [message.isOutgoing boolValue]) {
         cell.attachmentTransferState = HXOAttachmentTranserStateDownloadPending;
     } else {
-        // NSLog(@"========== TODO set attachmentTransferState");
+        if (state >= kAttachmentTransfering && state <= kAttachmentTransferPaused) {
+            cell.attachmentTransferState = HXOAttachmentTransferStateInProgress;
+        } else {
+            cell.attachmentTransferState = HXOAttachmentTransferStateDone;
+        }
     }
-
 }
 
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
