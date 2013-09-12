@@ -1717,8 +1717,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
     ProfileViewController * profileViewController = [self.storyboard instantiateViewControllerWithIdentifier: @"profileViewController"];
 
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell: cell]];
-
-    profileViewController.contact = [message.isOutgoing isEqualToNumber: @YES] ? nil : message.contact;
+    
+    if ([message.isOutgoing isEqualToNumber: @NO]) {
+        if ([message.contact.type isEqualToString:[Group entityName]]) {
+            profileViewController.contact = [message.deliveries.anyObject sender];
+        } else {
+            profileViewController.contact = message.contact;
+        }
+    } else {
+        profileViewController.contact = nil;
+    }
 
     [self.navigationController pushViewController: profileViewController animated: YES];
 }
