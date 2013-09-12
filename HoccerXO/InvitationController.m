@@ -136,7 +136,7 @@ static InvitationController * _sharedInvitationController;
         picker.messageComposeDelegate = self;
 
         NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
-        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token]];
+        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
 
         [self.viewController presentViewController: picker animated: YES completion: nil];
 

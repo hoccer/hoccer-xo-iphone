@@ -280,7 +280,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Message Font SIze</string>
+			<string>Message Font Size</string>
 			<key>Key</key>
 			<string>messageFontSize</string>
 			<key>DefaultValue</key>
