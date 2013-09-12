@@ -119,7 +119,7 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 
 // ugly, iterative value formating to ellipsise at the right place
 - (NSString*) formattedValue {
-    CGFloat maxWidth = self.contentView.bounds.size.width - 20;
+    CGFloat maxWidth = self.contentView.bounds.size.width - kHXOCellIconSize - 20;
     NSString * value = self.currentValue;
     NSString * text = [NSString stringWithFormat: self.valueFormat, value];
     CGFloat width = [text sizeWithFont: self.textLabel.font].width;
