@@ -1358,7 +1358,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     message.attachment.progressIndicatorDelegate = (AttachmentMessageCell*) cell;
 
-    if (message.attachment.previewImage == nil) {
+    if (message.attachment.previewImage == nil && message.attachment.available) {
         [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
             if (theError == nil) {
                 // TODO: find a better way to get the right cell...
@@ -1375,7 +1375,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             }
         }];
     } else {
-        if (message.attachment.previewImage.size.height != 0) {
+        if (message.attachment.available && message.attachment.previewImage.size.height != 0) {
             cell.previewImage = message.attachment.previewImage;
         } else {
             cell.previewImage = nil;
@@ -1428,7 +1428,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if (message.attachment.state == kAttachmentTransferOnHold && ! [message.isOutgoing boolValue]) {
         cell.attachmentTransferState = HXOAttachmentTranserStateDownloadPending;
     } else {
-        NSLog(@"========== TODO set attachmentTransferState");
+        // NSLog(@"========== TODO set attachmentTransferState");
     }
 
 }
@@ -1541,9 +1541,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if ([cell isKindOfClass:[MessageCell class]]) {
         MessageCell * mCell = (MessageCell *)cell;
         if (mCell.fetchedResultsController != nil && mCell.fetchedResultsController.fetchedObjects.count > 0) {
-            HXOMessage * message = (HXOMessage*)[mCell.fetchedResultsController objectAtIndexPath: indexPath];
-            if (message.attachment != nil) {
-                message.attachment.progressIndicatorDelegate = nil;
+            @try {
+                // TODO: when deleting messages, the following call will raise an exception; this should be avoided
+                HXOMessage * message = (HXOMessage*)[mCell.fetchedResultsController objectAtIndexPath: indexPath];
+                if (message.attachment != nil) {
+                    message.attachment.progressIndicatorDelegate = nil;
+                }            }
+            @catch (NSException *exception) {
+                NSLog(@"didEndDisplayingCell: indexPath %@ out of range",indexPath);
             }
         }
     }
@@ -1712,8 +1717,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
     ProfileViewController * profileViewController = [self.storyboard instantiateViewControllerWithIdentifier: @"profileViewController"];
 
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell: cell]];
-
-    profileViewController.contact = [message.isOutgoing isEqualToNumber: @YES] ? nil : message.contact;
+    
+    if ([message.isOutgoing isEqualToNumber: @NO]) {
+        if ([message.contact.type isEqualToString:[Group entityName]]) {
+            profileViewController.contact = [message.deliveries.anyObject sender];
+        } else {
+            profileViewController.contact = message.contact;
+        }
+    } else {
+        profileViewController.contact = nil;
+    }
 
     [self.navigationController pushViewController: profileViewController animated: YES];
 }

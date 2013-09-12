@@ -102,6 +102,7 @@ typedef enum AttachmentStates {
 
 @property (nonatomic) NSUInteger resumePos;
 
+@property (readonly) BOOL available; // return true if attachment is outgoing or transfered
 
 // encryption/decryption properties
 

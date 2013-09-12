@@ -89,6 +89,7 @@
 @dynamic attachmentJsonStringCipherText;
 
 @dynamic state;
+@dynamic available;
 
 @synthesize transferConnection = _transferConnection;
 @synthesize transferError = _transferError;
@@ -204,6 +205,11 @@ NSArray * TransferStateName = @[@"detached",
     }
 
     return kAttachmentWantsTransfer;
+}
+
+- (BOOL) available {
+    AttachmentState myState = self.state;
+    return myState == kAttachmentTransfered || ([self.message.isOutgoing boolValue] == YES && !(myState <= kAttachmentEmpty));
 }
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing {

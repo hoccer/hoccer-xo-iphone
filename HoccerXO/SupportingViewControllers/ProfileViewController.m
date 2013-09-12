@@ -332,6 +332,7 @@ typedef enum ActionSheetTags {
             break;
         case ProfileViewModeMyProfile:
             self.navigationItem.rightBarButtonItem = self.editButtonItem;
+            self.editButtonItem.enabled = YES;
             if (self.isEditing) {
                 self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             } else {
@@ -401,6 +402,10 @@ typedef enum ActionSheetTags {
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+    
+    if (_canceled) {
+        [self revertItemsToSaved];
+    }
 
     [self.view endEditing: editing];
 
@@ -435,8 +440,6 @@ typedef enum ActionSheetTags {
         }
         [self onEditingDone];
     }
-
-
 }
 
 - (UIBarButtonItem*) leftNonEditButton {
@@ -672,6 +675,10 @@ typedef enum ActionSheetTags {
     if (self.isEditing) {
         self.editButtonItem.enabled = allValid;
     }
+}
+
+- (void)revertItemsToSaved {
+    [self populateValues];
 }
 
 - (void) composeProfileItems: (BOOL) editing {
