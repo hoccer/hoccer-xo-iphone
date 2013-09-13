@@ -1904,18 +1904,22 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
 
 -  (void) setAttachmentJsonString:(NSString*) theJsonString {
     NSError * error;
-    id json = [NSJSONSerialization JSONObjectWithData: [theJsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
-    if (json == nil) {
-        NSLog(@"ERROR: setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
-        return;
-    }
-    if ([json isKindOfClass: [NSDictionary class]]) {
-        [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];        
-    } else {
-        NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
+    @try {
+        id json = [NSJSONSerialization JSONObjectWithData: [theJsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
+        if (json == nil) {
+            NSLog(@"ERROR: setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
+            return;
+        }
+        if ([json isKindOfClass: [NSDictionary class]]) {
+            [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];
+        } else {
+            NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
+        }
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR: setAttachmentJsonString: parsing json, jsonData = %@, ex=%@", theJsonString, ex);
     }
 }
-    
+
 - (NSString*) attachmentJsonStringCipherText {
     return [self.message encryptString: self.attachmentJsonString];
 }

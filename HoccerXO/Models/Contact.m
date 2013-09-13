@@ -254,6 +254,11 @@ NSString * const kRelationStateBlocked = @"blocked";
     return [groups componentsJoinedByString:@", "];
 }
 
+- (void) setGroupMembershipList:(NSString*)theList {
+    NSLog(@"WARNING: setter called on groupMembershipList, value = %@",theList);
+}
+
+
 - (NSDictionary*) rpcKeys {
     return @{ @"state"     : @"relationshipState",
               @"lastChanged": @"relationshipLastChangedMillis",

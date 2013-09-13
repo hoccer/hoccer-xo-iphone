@@ -52,6 +52,7 @@ static const NSTimeInterval kResponseTimeout = 30;
     if (_verbosityLevel == nil) {
         _verbosityLevel = [[HXOUserDefaults standardUserDefaults] valueForKey: @"jsonrpcverbosity"];
     }
+    // return @"dump";
     return _verbosityLevel;
 }
 
@@ -116,19 +117,23 @@ static const NSTimeInterval kResponseTimeout = 30;
 
 - (void) unmarshall: (NSString*) jsonString{
     NSError * error;
-    id json = [NSJSONSerialization JSONObjectWithData: [jsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
-    if (json == nil) {
-        [self emitJsonRpcError: [NSString stringWithFormat: @"JSON parse error: %@", error.userInfo[@"NSDebugDescription"]]
-                          code: kJsonRpcParseError data: nil];
-        return;
-    }
-
-    if ([json isKindOfClass: [NSArray class]]) {
-        [self processBatch: json];
-    } else if ([json isKindOfClass: [NSDictionary class]]) {
-        [self processMessage: json];
-    } else {
-        [self emitJsonRpcError: @"message is not an array (aka batch) or object (aka dictionary)" code: kJsonRpcInvalidRequest data: nil];
+    @try {
+        id json = [NSJSONSerialization JSONObjectWithData: [jsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
+        if (json == nil) {
+            [self emitJsonRpcError: [NSString stringWithFormat: @"JSON parse error: %@", error.userInfo[@"NSDebugDescription"]]
+                              code: kJsonRpcParseError data: nil];
+            return;
+        }
+        
+        if ([json isKindOfClass: [NSArray class]]) {
+            [self processBatch: json];
+        } else if ([json isKindOfClass: [NSDictionary class]]) {
+            [self processMessage: json];
+        } else {
+            [self emitJsonRpcError: @"message is not an array (aka batch) or object (aka dictionary)" code: kJsonRpcInvalidRequest data: nil];
+        }
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR: unmarshall: parsing json, jsonData = %@, ex=%@", jsonString, ex);
     }
 }
 

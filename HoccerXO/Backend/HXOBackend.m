@@ -1550,7 +1550,7 @@ static NSTimer * _stateNotificationDelayTimer;
                            onResponse: ^(id responseOrError, BOOL success)
              {
                  if (success) {
-                     NSLog(@"updateGroup() ok: %@", responseOrError);
+                     if (GROUP_DEBUG) NSLog(@"updateGroup() ok: %@", responseOrError);
                  } else {
                      NSLog(@"updateGroup() failed: %@", responseOrError);
                  }
@@ -1563,7 +1563,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) deleteGroup:(Group *) group onDeletion:(GroupHandler)handler {
     [_serverConnection invoke: @"deleteGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            // NSLog(@"deleteGroup() ok: got result: %@", responseOrError);
+            if (GROUP_DEBUG) NSLog(@"deleteGroup() ok: got result: %@", responseOrError);
             handler(group);
         } else {
             NSLog(@"deleteGroup(): failed: %@", responseOrError);
@@ -1576,7 +1576,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler {
     [_serverConnection invoke: @"joinGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            // NSLog(@"joinGroup() ok: got result: %@", responseOrError);
+            if (GROUP_DEBUG) NSLog(@"joinGroup() ok: got result: %@", responseOrError);
             handler(group);
         } else {
             NSLog(@"joinGroup(): failed: %@", responseOrError);
@@ -1589,7 +1589,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler {
     [_serverConnection invoke: @"leaveGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            // NSLog(@"leaveGroup() ok: got result: %@", responseOrError);
+            if (GROUP_DEBUG) NSLog(@"leaveGroup() ok: got result: %@", responseOrError);
             handler(group);
         } else {
             NSLog(@"leaveGroup(): failed: %@", responseOrError);
@@ -1603,7 +1603,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSNumber * lastKnownMillis = [HXOBackend millisFromDate:lastKnown];
     [_serverConnection invoke: @"getGroupMembers" withParams: @[group.clientId,lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            // NSLog(@"getGroupMembers(): got result: %@", responseOrError);
+            if (GROUP_DEBUG) NSLog(@"getGroupMembers(): got result: %@", responseOrError);
             handler(responseOrError);
         } else {
             NSLog(@"getGroupMembers(): failed: %@", responseOrError);
@@ -2065,7 +2065,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     group.groupKey = [AESCryptor random256BitKey];
                     if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
                 } else {
-                    NSLog(@"NO GROUP KEY, cant generate (not admin)");
+                    NSLog(@"NO GROUP KEY, cant generate (not admin), group nick %@, id %@", group.nickName, group.clientId);
                     return;
                 }
             }
@@ -3528,7 +3528,7 @@ static NSTimer * _stateNotificationDelayTimer;
                               NSLog(@"uploadAvatar got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
                               NSLog(@"uploadAvatar response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
                           }
-                          if (response.statusCode == 301 || response.statusCode == 308) {
+                          if (response.statusCode == 301 || response.statusCode == 308 || response.statusCode == 200) {
                               if (CONNECTION_TRACE) {NSLog(@"uploadAvatar: ok");}
                               handler(nil);
                               
