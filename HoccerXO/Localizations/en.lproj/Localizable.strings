@@ -417,6 +417,8 @@
 "message_do_not_send_button_title"="No";
 "message_send_button_title"="Send";
 
+"cant_send_no_groupkey_title"="No Group Key";
+"cant_send_no_groupkey"="Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
 
 "button_title_call" = "Call";
 

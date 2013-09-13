@@ -64,13 +64,31 @@
     return theMemberSet;
 }
 
+- (NSDate *) latestMemberChangeDate {
+    NSSet * myMembers = self.members;
+    NSDate * latestDate = [NSDate dateWithTimeIntervalSince1970:0];
+    for (GroupMembership * m in myMembers) {
+        latestDate = [m.lastChanged laterDate:latestDate];
+    }
+    return latestDate;
+}
+
 - (NSData*) groupKey {
     [self willAccessValueForKey:@"groupKey"];
     NSData * myValue = [self primitiveValueForKey:@"groupKey"];
     [self didAccessValueForKey:@"groupKey"];
-    if (myValue == nil && !self.iAmAdmin) { // when I am admin and have lost the group key, don't try to get it from server
-        myValue = [self.myGroupMembership decryptedGroupKey];
-        self.groupKey = myValue;
+    
+    NSData * myMembershipValue = [self.myGroupMembership decryptedGroupKey];
+    if (![HXOBackend isInvalid:myMembershipValue]) {
+        // we have a good value in membership, prefer it
+        if (!self.iAmAdmin) { // when I am admin, don't try to use the one from server
+            if (![myMembershipValue isEqualToData:myValue]) {
+                NSLog(@"Group key for group name %@ id %@ has changed", self.nickName, self.clientId);
+            }
+            // otherwise always use the server provided one
+            myValue = myMembershipValue;
+            self.groupKey = myValue;
+        }
     }
     return myValue;
 }

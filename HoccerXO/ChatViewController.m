@@ -281,6 +281,17 @@ static const CGFloat    kSectionHeaderHeight = 40;
             [alert show];
             return;
         }
+
+        if ([HXOBackend isInvalid:group.groupKey]) {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"cant_send_no_groupkey_title", nil)
+                                                             message: NSLocalizedString(@"cant_send_no_groupkey", nil)
+                                                            delegate: nil
+                                                   cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                                   otherButtonTitles: nil];
+            [alert show];
+            return;
+            
+        }
     } else if (![self.partner.relationshipState isEqualToString:@"friend"]) {
         NSString * messageText;
         if ([self.partner.relationshipState isEqualToString:@"blocked"]) {

@@ -71,6 +71,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    _renewKeypairRequested = NO;
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
 
@@ -432,6 +433,10 @@ typedef enum ActionSheetTags {
 
     } else {
         if ( ! _canceled) {
+            if (_renewKeypairRequested) {
+                [self performKeypairRenewal];
+                _renewKeypairRequested = NO;
+            }
             [self save];
         }
         self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
@@ -464,6 +469,9 @@ typedef enum ActionSheetTags {
 
 - (IBAction)onCancel:(id)sender {
     _canceled = YES;
+    _renewKeypairRequested = NO;
+    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
+
     //[self populateValues];
     [self setEditing: NO animated: YES];
 }
@@ -580,7 +588,6 @@ typedef enum ActionSheetTags {
 
 #endif // HXO_SHOW_UNIMPLEMENTED_FEATURES
 
-
     _chatWithContactItem = [[ProfileItem alloc] initWithName: @"ChatWithContactItem"];
     //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
     _chatWithContactItem.currentValue = _contact.nickName;
@@ -615,7 +622,7 @@ typedef enum ActionSheetTags {
 
     _renewKeyPairItem = [[ProfileItem alloc] initWithName:@"RenewKeypairItem"];
     _renewKeyPairItem.cellClass = [UserDefaultsCell class];
-    _renewKeyPairItem.editLabel = NSLocalizedString(@"profile_renew_keypair", nil);
+    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
     _renewKeyPairItem.target = self;
     _renewKeyPairItem.action = @selector(renewKeypairPressed:);
 
@@ -636,6 +643,14 @@ typedef enum ActionSheetTags {
     _destructiveSection = [ProfileSection sectionWithName:@"DestructiveSection" items: _deleteContactItem];
 
     //return [self populateValues];
+}
+
+- (NSString*) renewKeypairButtonTitle {
+    if (!_renewKeypairRequested) {
+        return NSLocalizedString(@"profile_renew_keypair", nil);
+    } else {
+        return [NSString stringWithFormat:@"%@ ✔",NSLocalizedString(@"profile_renew_keypair", nil)];
+    }    
 }
 
 - (NSString*) namePlaceholderKey {
@@ -886,18 +901,33 @@ typedef enum ActionSheetTags {
     [self updateAvatar: nil];
 }
 
-- (void) renewKeypairPressed: (id) sender {
+- (void)performKeypairRenewal {
     if ([HXOBackend use_elliptic_curves]) {
         [[EC sharedInstance] cleanKeyChain];
     } else {
         [[RSA sharedInstance] cleanKeyChain];
     }
+    /*
+    [self.chatBackend updateKeyWithHandler:^(BOOL ok) {
+        [self updateKeyFingerprint];
+        if (ok) {
+            [self.chatBackend updatePresenceWithHandler:^(BOOL ok) {
+                [self.chatBackend updateGroupKeysForMyGroupMemberships];
+            }];
+        }
+    }];  
+     */
+}
+
+- (void) renewKeypairPressed: (id) sender {
+    //NSLog(@"renewKeypairPressed, sender=%@",sender);
+    _renewKeypairRequested = !_renewKeypairRequested;
+    
     [self updateKeyFingerprint];
+    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
     [self.tableView beginUpdates];
-    [(UserDefaultsCell*)[self.tableView indexPathForCell: sender] configure: _fingerprintItem];
+    [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath:sender] configure: _renewKeyPairItem];
     [self.tableView endUpdates];
-    [self.chatBackend updateKey];
-    [self.chatBackend updatePresence];
 }
 
 @synthesize chatBackend = _chatBackend;

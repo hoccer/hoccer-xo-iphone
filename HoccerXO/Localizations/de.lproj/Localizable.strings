@@ -167,7 +167,7 @@
 
 "profile_renew_keypair" = "Renew RSA Keypair";
 
-"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen händen war kannst Du hier Deine Schlüssel erneuern.";
+"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen Händen war kannst Du hier Deine Schlüssel erneuern.";
 
 "contact_group_friends" = "Freunde";
 
@@ -394,6 +394,9 @@
 "overlimit_attachment_title"="Nachricht versenden?";
 "message_do_not_send_button_title"="Nein";
 "message_send_button_title"="Senden";
+
+"cant_send_no_groupkey_title"="Gruppenschlüssel fehlt";
+"cant_send_no_groupkey"="Leider kann die Nachricht nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
 
 "button_title_call" = "Anrufen";
 

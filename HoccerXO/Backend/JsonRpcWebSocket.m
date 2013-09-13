@@ -31,6 +31,7 @@ static const NSTimeInterval kResponseTimeout = 30;
     NSMutableDictionary * _responseHandlers;
     NSMutableDictionary * _rpcMethods;
     NSString * _verbosityLevel;
+    int _flushedRequests;
 }
 
 - (void) serverDidNotRespond: (NSNumber*) jsonRpcId;
@@ -107,6 +108,14 @@ static const NSTimeInterval kResponseTimeout = 30;
     if ([self.delegate respondsToSelector:@selector(webSocket:didCloseWithCode:reason:wasClean:)]) {
         [self.delegate webSocket: webSocket didCloseWithCode: code reason: reason wasClean: wasClean];
     }
+}
+
+- (int) numberOfOpenRequests {
+    return _responseHandlers.count;
+}
+
+- (int) numberOfFlushedRequests {
+    return _flushedRequests;
 }
 
 #pragma mark - JSON RPC
@@ -269,6 +278,7 @@ static const NSTimeInterval kResponseTimeout = 30;
 
 - (void) flushOpenRequests {
     NSLog(@"JsonRpc: connection was closed,  flushing %d open requests", _responseHandlers.count);
+    _flushedRequests = _responseHandlers.count;
     NSArray * allResponses = [_responseHandlers allKeys];
     for (id key in allResponses) {
         NSNumber * theKey = key;

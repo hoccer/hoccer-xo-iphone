@@ -29,6 +29,8 @@
 - (NSSet*) otherJoinedMembers;
 - (NSSet*) otherInvitedMembers;
 
+- (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
+
 @end
 
 @interface Group (CoreDataGeneratedAccessors)

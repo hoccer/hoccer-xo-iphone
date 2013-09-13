@@ -233,10 +233,11 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 - (NSString*) groupMembershipList {
+    NSLog(@"groupMembershipList called on contact %@",self);
     NSMutableArray * groups = [[NSMutableArray alloc] init];
-    
-    [groups addObject: [NSString stringWithFormat:@"(%d)", groups.count]];
 
+    [groups addObject: @""];
+    
     [self.groupMemberships enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
         if (![member.contact isEqual: member.group]) {
             if (member.group.nickName != nil) {
@@ -245,14 +246,17 @@ NSString * const kRelationStateBlocked = @"blocked";
                 [groups addObject: @"?"];
             }
         } else {
-            [groups addObject: @"="];
+            [groups addObject: @"<is group itself>"];
         }
     }];
+    groups[0]=[NSString stringWithFormat:@"(%d)", groups.count-1];
     if (groups.count == 0) {
         return @"-";
     }
+    NSLog(@"groupMembershipList returns %@",[groups componentsJoinedByString:@", "]);
     return [groups componentsJoinedByString:@", "];
 }
+
 
 - (void) setGroupMembershipList:(NSString*)theList {
     NSLog(@"WARNING: setter called on groupMembershipList, value = %@",theList);
