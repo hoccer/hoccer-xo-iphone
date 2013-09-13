@@ -37,7 +37,6 @@ typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
 static NSInteger _savingPaused = 0;
-static BOOL _shouldSave = NO;
 static NSInteger validationErrorCount = 0;
 
 @implementation AppDelegate
@@ -306,7 +305,7 @@ static NSInteger validationErrorCount = 0;
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    [self saveContext];
+    [self saveDatabaseNow];
     [self setLastActiveDate];
     [self updateUnreadMessageCountAndStop];
 }
@@ -334,8 +333,10 @@ static NSInteger validationErrorCount = 0;
 
 - (void)saveContext
 {
-    // NSLog(@"Saving database");
-    // NSDate * start = [[NSDate alloc] init];
+#ifdef DEBUG
+    NSLog(@"Saving database");
+    NSDate * start = [[NSDate alloc] init];
+#endif
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
@@ -352,10 +353,10 @@ static NSInteger validationErrorCount = 0;
             // abort();
         }
     }
-    // [self saveContext];
-    // double elapsed = -[start timeIntervalSinceNow];
-    // NSLog(@"Saving database took %f secs", elapsed);
-    _shouldSave = NO;
+#ifdef DEBUG
+    double elapsed = -[start timeIntervalSinceNow];
+    NSLog(@"Saving database took %f secs", elapsed);
+#endif
 }
 
 - (void)displayValidationError:(NSError *)anError {
@@ -462,17 +463,6 @@ static NSInteger validationErrorCount = 0;
     self.nextDatabaseSaveTimer = nil;
     [self saveContext];
     self.lastDatebaseSaveDate = [NSDate date];
-}
-
-- (void)pauseDatabaseSaving {
-    ++_savingPaused;
-}
-- (void)resumeDatabaseSaving {
-    if (--_savingPaused == 0) {
-        if (_shouldSave) {
-            [self saveDatabase];
-        }
-    }
 }
 
 // Returns the managed object context for the application.

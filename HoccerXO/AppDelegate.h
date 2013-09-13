@@ -44,8 +44,6 @@
 
 - (void)saveContext;
 - (void)saveDatabase;
-- (void)pauseDatabaseSaving;
-- (void)resumeDatabaseSaving;
 
 - (NSURL *)applicationDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;

@@ -1502,10 +1502,10 @@ static NSTimer * _stateNotificationDelayTimer;
     if (group != nil) {
         group.lastUpdateReceived = [NSDate date];
 
-        if ([group.lastChangedMillis isEqual:groupDict[@"lastChanged" ]] && !self.firstConnectionAfterCrashOrUpdate && !_uncleanConnectionShutdown) {
-            if (GROUP_DEBUG,1) NSLog(@"updateGroupHere: we already have the latest version '%@' of group id %@, not processing", group.lastChangedMillis, group.clientId);
-            return;
-        }
+//        if ([group.lastChangedMillis isEqual:groupDict[@"lastChanged" ]] && !self.firstConnectionAfterCrashOrUpdate && !_uncleanConnectionShutdown) {
+//            if (GROUP_DEBUG,1) NSLog(@"updateGroupHere: we already have the latest version '%@' of group id %@, not processing", group.lastChangedMillis, group.clientId);
+//            return;
+//        }
     }
     
     if ([groupState isEqualToString:@"none"]) {

@@ -1478,6 +1478,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
     UIColor * grey = [UIColor colorWithWhite: 0.5 alpha: 1.0];
+    BOOL attributed = NO;
 
 
     // TODO: some of this stuff is quite expensive: reading vcards, loading audio metadata, &c.
@@ -1533,17 +1534,24 @@ static const CGFloat    kSectionHeaderHeight = 40;
             if ( ! isOutgoing && ! isComplete) {
                 NSDictionary * attributes = @{NSForegroundColorAttributeName: grey};
                 attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
+                attributed = YES;
             } else {
                 NSString * fileExtension = [title pathExtension];
                 if ( ! [fileExtension isEqualToString: @""]) {
                     attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+                    NSRange preRange = NSMakeRange(0,title.length - fileExtension.length);
                     NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
+                    [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor whiteColor] range: preRange];
                     [attributedTitle addAttribute: NSForegroundColorAttributeName value: grey range: range];
+                    attributed = YES;
                 } else {
                     attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
                 }
             }
         }
+    }
+    if (!attributed) {
+        [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor whiteColor] range: NSMakeRange(0,attributedTitle.length)];
     }
     return attributedTitle;
 }
