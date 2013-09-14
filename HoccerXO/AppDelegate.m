@@ -36,7 +36,6 @@ typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
-static NSInteger _savingPaused = 0;
 static NSInteger validationErrorCount = 0;
 
 @implementation AppDelegate

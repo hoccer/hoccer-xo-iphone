@@ -363,6 +363,8 @@
 		E9A1DDCD176D4BB90063DE37 /* button-large-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A1DDC9176D4BB90063DE37 /* button-large-background@2x.png */; };
 		E9A1DDCE176D4BB90063DE37 /* button-large.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A1DDCA176D4BB90063DE37 /* button-large.png */; };
 		E9A1DDCF176D4BB90063DE37 /* button-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A1DDCB176D4BB90063DE37 /* button-large@2x.png */; };
+		E9A2A30C17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2A30A17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png */; };
+		E9A2A30D17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2A30B17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png */; };
 		E9A2B85217189A1200E35E7E /* button-video.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84E17189A1200E35E7E /* button-video.png */; };
 		E9A2B85317189A1200E35E7E /* button-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2B84F17189A1200E35E7E /* button-video@2x.png */; };
 		E9A41DCA17625BA5006E76B2 /* group_member_add@.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A41DC617625BA5006E76B2 /* group_member_add@.png */; };
@@ -978,6 +980,8 @@
 		E9A1DDC9176D4BB90063DE37 /* button-large-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-large-background@2x.png"; sourceTree = "<group>"; };
 		E9A1DDCA176D4BB90063DE37 /* button-large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-large.png"; sourceTree = "<group>"; };
 		E9A1DDCB176D4BB90063DE37 /* button-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-large@2x.png"; sourceTree = "<group>"; };
+		E9A2A30A17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon-60.png"; sourceTree = "<group>"; };
+		E9A2A30B17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon-120.png"; sourceTree = "<group>"; };
 		E9A2B84E17189A1200E35E7E /* button-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video.png"; sourceTree = "<group>"; };
 		E9A2B84F17189A1200E35E7E /* button-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-video@2x.png"; sourceTree = "<group>"; };
 		E9A41DC617625BA5006E76B2 /* group_member_add@.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_add@.png"; sourceTree = "<group>"; };
@@ -1657,6 +1661,8 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				E9A2A30A17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png */,
+				E9A2A30B17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png */,
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
 				6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */,
 				6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */,
@@ -2436,6 +2442,8 @@
 				6336343617E0D51F00B5216C /* download-btn-ext@2x.png in Resources */,
 				6336343717E0D51F00B5216C /* download-btn.png in Resources */,
 				6336343817E0D51F00B5216C /* download-btn@2x.png in Resources */,
+				E9A2A30C17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png in Resources */,
+				E9A2A30D17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
