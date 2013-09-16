@@ -1452,16 +1452,16 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         latestChange = [self getLatestChangeDateForGroups];
     }
-    NSDate * preUpdateTime = [NSDate date];
+//    NSDate * preUpdateTime = [NSDate date];
     // NSLog(@"latest date %@", latestChange);
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
         if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
         for (NSDictionary * groupDict in changedGroups) {
             [self updateGroupHere: groupDict];
         }
-        if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]]) {
-            [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
-        }
+//        if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]]) {
+//            [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
+//        }
         [self finishFirstConnectionAfterCrashOrUpdate];
     }];
 }
@@ -1528,9 +1528,10 @@ static NSTimer * _stateNotificationDelayTimer;
     
     NSDate * lastKnown = group.lastChanged; // remember the previously local lastChanged date before overwriting
     [group updateWithDictionary: groupDict];
-    
+#ifdef FASTER_BETTER
     NSDate * latestMemberChangeDate = [group latestMemberChangeDate];
-    
+#endif
+
     /*
     NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     NSLog(@"lastKnown = %@",lastKnown);
@@ -1539,12 +1540,17 @@ static NSTimer * _stateNotificationDelayTimer;
     */
     if (self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown) {
         [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0]];
-    } else if (!([group.lastChanged isEqualToDate:lastKnown] && [group.lastChanged isEqualToDate:latestMemberChangeDate])) {
-        // TODO: right now, latestMemberChangeDate is always differs from the group changed date, it is implemented this
+    } else {
+#ifdef FASTER_BETTER
+        if (!([group.lastChanged isEqualToDate:lastKnown] && [group.lastChanged isEqualToDate:latestMemberChangeDate])) {
+        // TODO: right now, latestMemberChangeDate always differs from the group changed date, it is implemented this
         // way on the server; we should discuss if we keep it that way or not.
         // update members
         [self getGroupMembers:group lastKnown:latestMemberChangeDate];
-    } else 
+    } else {
+#endif
+        [self getGroupMembers:group lastKnown:lastKnown];
+    }
     //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     
     // TODO: make this work for multiple admins (need to check if my avatar upload is in progress)
