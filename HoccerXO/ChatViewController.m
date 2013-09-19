@@ -1489,7 +1489,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
             if (attachment.localURL != nil) {
                 Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
                 if (myVcard != nil) {
-                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: [myVcard nameString]];
+                    NSString * name = [myVcard previewName];
+                    if (name == nil) {
+                        name = @"?";
+                    }
+                    attributedTitle = [[NSMutableAttributedString alloc] initWithString:name ];
                 }
             } else {
                 attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"vcard_default_title", nil)];

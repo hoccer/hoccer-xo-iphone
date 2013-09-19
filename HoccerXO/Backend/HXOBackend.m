@@ -1334,7 +1334,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     myContact.avatar = myNewAvatar;
                     myContact.avatarURL = theAvatarURL;
                 } else {
-                    NSLog(@"presenceUpdated, avatar download of URL %@ failed, error=%@", theAvatarURL, error);
+                    NSLog(@"presenceUpdated, avatar download for contact '%@' id ‘%@' of URL %@ failed, error=%@", myContact.nickName, myContact.clientId, theAvatarURL, error);
                 }
             }];
         } else {
