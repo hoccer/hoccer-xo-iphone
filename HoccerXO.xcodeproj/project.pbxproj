@@ -342,7 +342,6 @@
 		E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */; };
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
-		E9756194177E23AF000B6381 /* HoccerXOT.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756192177E23AF000B6381 /* HoccerXOT.xcdatamodeld */; };
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
@@ -948,7 +947,6 @@
 		E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLHelper.h"; sourceTree = "<group>"; };
 		E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLHelper.m"; sourceTree = "<group>"; };
 		E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; name = "MappingModel-17-18.xcmappingmodel"; path = "HoccerXO/Models/MappingModel-17-18.xcmappingmodel"; sourceTree = "<group>"; };
-		E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoccerXOT.xcdatamodel; sourceTree = "<group>"; };
 		E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-18.xcdatamodel"; sourceTree = "<group>"; };
 		E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-19.xcdatamodel"; sourceTree = "<group>"; };
 		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
@@ -1784,7 +1782,6 @@
 				E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */,
 				63D8EE111722EB89000F9E53 /* UserProfile.h */,
 				63D8EE121722EB89000F9E53 /* UserProfile.m */,
-				E9756192177E23AF000B6381 /* HoccerXOT.xcdatamodeld */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2592,7 +2589,6 @@
 				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
 				638EBE50178ADFD700F1B9AD /* ContactQuickListSearchBar.m in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
-				E9756194177E23AF000B6381 /* HoccerXOT.xcdatamodeld in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
 				634B46D0178D8015001C1C0D /* BubbleViewToo.m in Sources */,
 				634B474C1798B07F001C1C0D /* HXOProgressView.m in Sources */,
@@ -2797,16 +2793,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		E9756192177E23AF000B6381 /* HoccerXOT.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */,
-			);
-			currentVersion = E9756193177E23AF000B6381 /* HoccerXOT.xcdatamodel */;
-			path = HoccerXOT.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
 		E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

@@ -516,20 +516,39 @@ static NSInteger validationErrorCount = 0;
     return _rpcObjectModel;
 }
 
+// #define BINSTORE
+#ifndef BINSTORE
+- (NSString *)storeFileSuffix {
+    return @"sqlite";
+}
+- (NSString *)storeType {
+    return NSSQLiteStoreType;
+}
+#else
+- (NSString *)storeFileSuffix {
+    return @"binstore";
+}
+
+- (NSString *)storeType {
+    return NSBinaryStoreType;
+}
+#endif
+
+
 - (NSURL *)persistentStoreURL {
-    NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSString * databaseName = [NSString stringWithFormat: @"%@.%@", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"],[self storeFileSuffix]];
     NSURL *storeURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: databaseName];
     return storeURL;
 }
 
 - (NSURL *)tempPersistentStoreURL {
-    NSString * databaseName = [NSString stringWithFormat: @"_%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSString * databaseName = [NSString stringWithFormat: @"_%@.%@", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"],[self storeFileSuffix]];
     NSURL *storeURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: databaseName];
     return storeURL;
 }
 
 - (NSURL *)oldPersistentStoreURL {
-    NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSString * databaseName = [NSString stringWithFormat: @"%@.%@", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"],[self storeFileSuffix]];
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: databaseName];
     return storeURL;
 }
@@ -556,7 +575,7 @@ static NSInteger validationErrorCount = 0;
 - (BOOL) compatibilityOfStore:(NSURL *)sourceStoreURL withModel:(NSManagedObjectModel*)destinationModel {
     NSError *myError = nil;
     
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:sourceStoreURL error:&myError];
+    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:[self storeType] URL:sourceStoreURL error:&myError];
     
     if (sourceMetadata == nil) {
         NSLog(@"Error obtaining store metadata for url %@, error %@, %@", sourceStoreURL, myError, [myError userInfo]);
@@ -598,11 +617,11 @@ static NSInteger validationErrorCount = 0;
     if (MIGRATION_DEBUG) NSLog(@"mappingModel = %@", mappingModel);
     
     BOOL ok = [migrationManager migrateStoreFromURL:sourceStoreURL
-                                               type:NSSQLiteStoreType
+                                               type:[self storeType]
                                             options:sourceStoreOptions
                                    withMappingModel:mappingModel
                                    toDestinationURL:destinationStoreURL
-                                    destinationType:NSSQLiteStoreType
+                                    destinationType:[self storeType]
                                  destinationOptions:destinationStoreOptions
                                               error:&myError];
     if (myError != nil) {
@@ -701,8 +720,10 @@ static NSInteger validationErrorCount = 0;
     
     
     NSPersistentStoreCoordinator * theNewStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-        
-    if (![theNewStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&myError]) {
+
+    
+    
+    if (![theNewStoreCoordinator addPersistentStoreWithType:[self storeType] configuration:nil URL:storeURL options:migrationOptions error:&myError]) {
 
         NSLog(@"Unresolved error %@, %@", myError, [myError userInfo]);
         return nil;

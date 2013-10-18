@@ -395,7 +395,7 @@ typedef enum ActionSheetTags {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // NSLog(@"selected cell %@", indexPath);
-    id item = _profileDataSource[indexPath.section][indexPath.row];
+    ProfileItem * item = _profileDataSource[indexPath.section][indexPath.row];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [[item target] performSelector: [item action] withObject: indexPath];
