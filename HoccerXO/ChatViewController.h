@@ -11,11 +11,13 @@
 #import "AttachmentPickerController.h"
 #import "GrowingTextView.h"
 #import "ChatTableCells.h"
+#import "HXOActionSheet.h"
+#import "HXOLinkyLabel.h"
 
 @class HXOBackend;
 @class AVAssetExportSession;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,ActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate>
 {
     NSMutableDictionary        *resultsControllers;
 }
@@ -49,11 +51,6 @@
 - (IBAction) addAttachmentPressed:(id)sender;
 - (void) decorateAttachmentButton:(UIImage *) theImage;
 - (void) trashCurrentAttachment;
-
-// MessageViewControllerDelegate methods
-
-- (void) presentAttachmentViewForCell: (MessageCell *) theCell;
-- (BOOL) messageView:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender;
 
 // TODO: move to some utility functions file:
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;

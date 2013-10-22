@@ -22,6 +22,7 @@
     NSMutableArray * _supportedItems;
     UIViewController * _viewController;
     NSUInteger _firstPickerButton;
+    UIBackgroundTaskIdentifier _backgroundTask;
 }
 @end
 
@@ -195,7 +196,7 @@
     } else {
         title = NSLocalizedString(@"Add Attachement", @"Attachment Actionsheet Title");
     }
-    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: title
+    ActionSheet *attachmentSheet = [[ActionSheet alloc] initWithTitle: title
                                                                  delegate: self
                                                         cancelButtonTitle: nil
                                                    destructiveButtonTitle: nil
@@ -217,7 +218,7 @@
     [attachmentSheet showInView: view];
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         [self.delegate didPickAttachment: nil];
         return;
@@ -313,11 +314,11 @@
 }
 
 - (void) pickAudioFromRecorder {
-    NSLog(@"creating view");
+    // NSLog(@"creating view");
     self.recordViewController.delegate = self;
     //[_viewController presentViewController: self.recordViewController animated: YES completion: nil];
 
-    NSLog(@"adding view");
+    // NSLog(@"adding view");
     
     //[UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:self.recordViewController.view];
     [_viewController presentSemiModalViewController:self.recordViewController];
@@ -426,6 +427,10 @@
             picker.mediaTypes = @[(id)kUTTypeImage];
         }
     }
+    
+    [self registerBackgroundTask];
+    
+    
     [_viewController presentViewController: picker animated: YES completion: nil];
 
 }
@@ -469,10 +474,30 @@
             UIImageWriteToSavedPhotosAlbum(info[UIImagePickerControllerOriginalImage], nil, nil, nil);
         } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) && shouldSaveVideos) {
             // TODO: UISaveVideoAtPathToSavedPhotosAlbum
-            NSLog(@"Saving videos not yet implemnted");
+            NSLog(@"Saving videos not yet implemented");
         }
-    }
+    }    
     [self.delegate didPickAttachment: info];
+    [self unregisterBackgroundTask];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [_viewController dismissViewControllerAnimated: YES completion: nil];
+    [self unregisterBackgroundTask];
+}
+
+// we do this to avoid problems when the app is sent to background while a video export session is in progress
+- (void) registerBackgroundTask {
+    _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+    }];
+}
+
+- (void) unregisterBackgroundTask {
+    UIApplication *app = [UIApplication sharedApplication];
+    [app endBackgroundTask:_backgroundTask];
+    _backgroundTask = UIBackgroundTaskInvalid;
 }
 
 @end

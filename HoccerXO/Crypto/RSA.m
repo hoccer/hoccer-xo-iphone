@@ -20,9 +20,9 @@
 
 @implementation RSA
 
-const size_t BUFFER_SIZE = 64;
-const size_t CIPHER_BUFFER_SIZE = 1024;
-const uint32_t PADDING = kSecPaddingPKCS1;
+static const size_t BUFFER_SIZE = 64;
+static const size_t CIPHER_BUFFER_SIZE = 1024;
+static const uint32_t PADDING = kSecPaddingPKCS1;
 
 static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.publickey";
 static const uint8_t privateKeyIdentifier[] = "com.hoccertalk.client.privatekey";

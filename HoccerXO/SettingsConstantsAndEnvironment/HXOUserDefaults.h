@@ -11,6 +11,8 @@
 FOUNDATION_EXPORT NSString * const kHXOEnvironment;
 FOUNDATION_EXPORT NSString * const kHXOFirstRunDone;
 FOUNDATION_EXPORT NSString * const kHXOlatestBuildRun;
+FOUNDATION_EXPORT NSString * const kHXOrunningNewBuild;
+
 FOUNDATION_EXPORT NSString * const kHXOlastActiveDate;
 FOUNDATION_EXPORT NSString * const kHXOlastDeactivationDate;
 
@@ -28,15 +30,18 @@ FOUNDATION_EXPORT NSString * const kHXOFacebookName;
 FOUNDATION_EXPORT NSString * const kHXOGooglePlusName;
 FOUNDATION_EXPORT NSString * const kHXOGithubName;
 
-FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimit;
-FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimit;
+FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimitWLAN;
+FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimitWLAN;
+FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimitCellular;
+FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimitCellular;
 FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentUploadRetries;
 FOUNDATION_EXPORT NSString * const kHXOMaxAttachmentDownloadRetries;
 
 FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicy;
-FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicyPerMessage;
+FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicyDelayed;
 
 FOUNDATION_EXPORT NSString * const kHXOPreviewImageWidth;
+FOUNDATION_EXPORT NSString * const kHXOMessageFontSize;
 
 FOUNDATION_EXPORT NSString * const kHXODefaultScreenShooting;
 

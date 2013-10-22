@@ -44,5 +44,7 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 - (void) notify: (NSString*) method withParams: (id) params;
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler;
 - (void) registerIncomingCall: (NSString*) methodName withSelector: (SEL) selector isNotification: (BOOL) notificationFlag;
+- (int) numberOfOpenRequests;
+- (int) numberOfFlushedRequests;
 
 @end

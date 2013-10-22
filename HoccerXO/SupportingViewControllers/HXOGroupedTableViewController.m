@@ -7,7 +7,6 @@
 //
 
 #import "HXOGroupedTableViewController.h"
-#import "RadialGradientView.h"
 #import "AssetStore.h"
 #import "UserDefaultsCells.h"
 
@@ -31,7 +30,6 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    self.tableView.backgroundView = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
     [self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
     _prototypes[(id)[UserDefaultsCell class]] = [[UserDefaultsCell alloc] init];
 }

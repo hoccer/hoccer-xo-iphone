@@ -36,8 +36,6 @@ typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
-static NSInteger _savingPaused = 0;
-static BOOL _shouldSave = NO;
 static NSInteger validationErrorCount = 0;
 
 @implementation AppDelegate
@@ -62,10 +60,22 @@ static NSInteger validationErrorCount = 0;
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 }
 
++ (id) registerKeyboardHidingOnSheetPresentationFor:(UIViewController*)controller {
+    id observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"hxoSheetViewShown"
+                                                                    object:nil
+                                                                     queue:[NSOperationQueue mainQueue]
+                                                                usingBlock:^(NSNotification *note) {
+                                                                        NSLog(@"hxoSheetViewShown - hiding keyboard via endEditing");
+                                                                        [controller.view endEditing:NO];
+                                                                }];
+    return observer;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
  
+    // [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+
     if ([self persistentStoreCoordinator] == nil) {
         return NO;
     }
@@ -106,6 +116,15 @@ static NSInteger validationErrorCount = 0;
     }
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
+    NSString * lastRunBuildNumber = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
+    if ([buildNumber isEqualToString: lastRunBuildNumber]) {
+        [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: kHXOrunningNewBuild];
+        self.runningNewBuild = NO;
+    } else {
+        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: kHXOrunningNewBuild];
+        self.runningNewBuild = YES;
+        NSLog(@"Running new build %@ for the first time",buildNumber);
+    }
     [[HXOUserDefaults standardUserDefaults] setValue:buildNumber forKey: [[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
     
     self.internetReachabilty = [GCNetworkReachability reachabilityForInternetConnection];
@@ -162,14 +181,14 @@ static NSInteger validationErrorCount = 0;
         NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
     }
 
-    [session setCategory:AVAudioSessionCategorySoloAmbient error:&myError];
+    [session setCategory:AVAudioSessionCategoryAmbient error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryAmbient, error=%@",myError);
     }
     
     [session setActive:YES error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryAmbient, error=%@",myError);
     }
 }
 
@@ -285,7 +304,7 @@ static NSInteger validationErrorCount = 0;
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    [self saveContext];
+    [self saveDatabaseNow];
     [self setLastActiveDate];
     [self updateUnreadMessageCountAndStop];
 }
@@ -313,8 +332,10 @@ static NSInteger validationErrorCount = 0;
 
 - (void)saveContext
 {
-    // NSLog(@"Saving database");
-    // NSDate * start = [[NSDate alloc] init];
+#ifdef DEBUG
+    NSLog(@"Saving database");
+    NSDate * start = [[NSDate alloc] init];
+#endif
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
@@ -331,10 +352,10 @@ static NSInteger validationErrorCount = 0;
             // abort();
         }
     }
-    // [self saveContext];
-    // double elapsed = -[start timeIntervalSinceNow];
-    // NSLog(@"Saving database took %f secs", elapsed);
-    _shouldSave = NO;
+#ifdef DEBUG
+    double elapsed = -[start timeIntervalSinceNow];
+    NSLog(@"Saving database took %f secs", elapsed);
+#endif
 }
 
 - (void)displayValidationError:(NSError *)anError {
@@ -413,26 +434,34 @@ static NSInteger validationErrorCount = 0;
 
 - (void)saveDatabase
 {
-    if (_savingPaused>0) {
-        _shouldSave = YES;
+    NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
+    if (![savePolicy isEqualToString:kHXOSaveDatabasePolicyDelayed]) {
+        [self saveContext];
         return;
     }
-    NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];
-    if ([savePolicy isEqualToString:kHXOSaveDatabasePolicyPerMessage]) {
-        // [self performSelectorOnMainThread:@selector(saveContext) withObject:self waitUntilDone:NO];
-        [self saveContext];
-    }
-}
 
-- (void)pauseDatabaseSaving {
-    ++_savingPaused;
-}
-- (void)resumeDatabaseSaving {
-    if (--_savingPaused == 0) {
-        if (_shouldSave) {
-            [self saveDatabase];
+    [self.nextDatabaseSaveTimer invalidate];
+
+    const double minDatabaseSaveInterval = 5.0;
+    const double nextDatabaseSaveInterval = 6.0;
+    // NSLog(@"lastDatebaseSaveDate interval %f",[self.lastDatebaseSaveDate timeIntervalSinceNow]);
+    if (self.lastDatebaseSaveDate != nil) {
+        if (-[self.lastDatebaseSaveDate timeIntervalSinceNow] < minDatabaseSaveInterval) {
+            self.nextDatabaseSaveTimer = [NSTimer scheduledTimerWithTimeInterval:nextDatabaseSaveInterval target:self selector:@selector(saveDatabase) userInfo:nil repeats:NO];
+            return;
         }
     }
+    [self saveContext];
+    self.lastDatebaseSaveDate = [NSDate date];
+    // NSLog(@"Saved database at %@",self.lastDatebaseSaveDate);
+}
+
+- (void)saveDatabaseNow
+{
+    [self.nextDatabaseSaveTimer invalidate];
+    self.nextDatabaseSaveTimer = nil;
+    [self saveContext];
+    self.lastDatebaseSaveDate = [NSDate date];
 }
 
 // Returns the managed object context for the application.
@@ -487,20 +516,39 @@ static NSInteger validationErrorCount = 0;
     return _rpcObjectModel;
 }
 
+// #define BINSTORE
+#ifndef BINSTORE
+- (NSString *)storeFileSuffix {
+    return @"sqlite";
+}
+- (NSString *)storeType {
+    return NSSQLiteStoreType;
+}
+#else
+- (NSString *)storeFileSuffix {
+    return @"binstore";
+}
+
+- (NSString *)storeType {
+    return NSBinaryStoreType;
+}
+#endif
+
+
 - (NSURL *)persistentStoreURL {
-    NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSString * databaseName = [NSString stringWithFormat: @"%@.%@", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"],[self storeFileSuffix]];
     NSURL *storeURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: databaseName];
     return storeURL;
 }
 
 - (NSURL *)tempPersistentStoreURL {
-    NSString * databaseName = [NSString stringWithFormat: @"_%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSString * databaseName = [NSString stringWithFormat: @"_%@.%@", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"],[self storeFileSuffix]];
     NSURL *storeURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: databaseName];
     return storeURL;
 }
 
 - (NSURL *)oldPersistentStoreURL {
-    NSString * databaseName = [NSString stringWithFormat: @"%@.sqlite", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"]];
+    NSString * databaseName = [NSString stringWithFormat: @"%@.%@", [[Environment sharedEnvironment] suffixedString: @"HoccerXO"],[self storeFileSuffix]];
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: databaseName];
     return storeURL;
 }
@@ -527,7 +575,7 @@ static NSInteger validationErrorCount = 0;
 - (BOOL) compatibilityOfStore:(NSURL *)sourceStoreURL withModel:(NSManagedObjectModel*)destinationModel {
     NSError *myError = nil;
     
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:sourceStoreURL error:&myError];
+    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:[self storeType] URL:sourceStoreURL error:&myError];
     
     if (sourceMetadata == nil) {
         NSLog(@"Error obtaining store metadata for url %@, error %@, %@", sourceStoreURL, myError, [myError userInfo]);
@@ -569,11 +617,11 @@ static NSInteger validationErrorCount = 0;
     if (MIGRATION_DEBUG) NSLog(@"mappingModel = %@", mappingModel);
     
     BOOL ok = [migrationManager migrateStoreFromURL:sourceStoreURL
-                                               type:NSSQLiteStoreType
+                                               type:[self storeType]
                                             options:sourceStoreOptions
                                    withMappingModel:mappingModel
                                    toDestinationURL:destinationStoreURL
-                                    destinationType:NSSQLiteStoreType
+                                    destinationType:[self storeType]
                                  destinationOptions:destinationStoreOptions
                                               error:&myError];
     if (myError != nil) {
@@ -672,8 +720,10 @@ static NSInteger validationErrorCount = 0;
     
     
     NSPersistentStoreCoordinator * theNewStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-        
-    if (![theNewStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrationOptions error:&myError]) {
+
+    
+    
+    if (![theNewStoreCoordinator addPersistentStoreWithType:[self storeType] configuration:nil URL:storeURL options:migrationOptions error:&myError]) {
 
         NSLog(@"Unresolved error %@, %@", myError, [myError userInfo]);
         return nil;
@@ -810,8 +860,9 @@ static NSInteger validationErrorCount = 0;
     NSString * title;
     NSString * message;
     if (success) {
-        title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
-        message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
+        return;
+        // title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
+        // message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
     } else {
         title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
         message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
@@ -886,6 +937,7 @@ static NSInteger validationErrorCount = 0;
     int i = 0;
     for (NSManagedObject * object in fetchResults) {
         NSLog(@"================== Showing object %d of entity '%@' =================", i, theEntityName);
+        NSLog(@"================== id = %@",object.objectID);
         for (NSAttributeDescription * property in entity) {
             // NSLog(@"property '%@'", property.name);
             NSString * description = [[object valueForKey:property.name] description];

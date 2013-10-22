@@ -63,6 +63,18 @@ static InvitationController * _sharedInvitationController;
         channel.handler = @selector(acceptInviteCode);
         [self.invitationChannels addObject: channel];
 
+        /* action sheet test dummy buttons
+        channel = [[InvitationChannel alloc] init];
+        channel.localizedButtonTitle = @"Gnurbel";
+        channel.handler = @selector(acceptInviteCode);
+        [self.invitationChannels addObject: channel];
+
+        channel = [[InvitationChannel alloc] init];
+        channel.localizedButtonTitle = @"Fnurbel";
+        channel.handler = @selector(acceptInviteCode);
+        [self.invitationChannels addObject: channel];
+         */
+
     }
     return self;
 }
@@ -74,6 +86,7 @@ static InvitationController * _sharedInvitationController;
                                                cancelButtonTitle: nil
                                           destructiveButtonTitle: nil
                                                otherButtonTitles: nil];
+
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     for (InvitationChannel * channel in self.invitationChannels) {
         [sheet addButtonWithTitle: channel.localizedButtonTitle];
@@ -83,7 +96,7 @@ static InvitationController * _sharedInvitationController;
     [sheet showInView: viewController.view];
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
     }
@@ -106,9 +119,8 @@ static InvitationController * _sharedInvitationController;
         NSString * body = NSLocalizedString(@"invitation_mail_body", @"Mail Invitation Body");
         NSString * inviteLink = [self inviteURL: token];
         NSString * appStoreLink = [self appStoreURL];
-        NSString * androidLink = [self androidURL];
-        //body = [NSString stringWithFormat: body, appStoreLink, androidLink, inviteLink, token, [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
-        body = [NSString stringWithFormat: body, inviteLink, token, [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
+        //NSString * androidLink = [self androidURL];
+        body = [NSString stringWithFormat: body, appStoreLink, /*androidLink,*/ inviteLink/*, token*/];
         [picker setMessageBody:body isHTML:NO];
 
         [self.viewController presentViewController: picker animated: YES completion: nil];
@@ -124,7 +136,6 @@ static InvitationController * _sharedInvitationController;
         picker.messageComposeDelegate = self;
 
         NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
-        //picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token], token, [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
         picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
 
         [self.viewController presentViewController: picker animated: YES completion: nil];

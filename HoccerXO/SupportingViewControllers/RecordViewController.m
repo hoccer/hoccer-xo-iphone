@@ -58,6 +58,8 @@
     // NSLog(@"Audiorecorder prepared, URL: %@", self.audioFileURL);
     [self updateStatusDisplay];
     [self updateTimeDisplay:nil];
+    
+    self.useButton.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -192,6 +194,7 @@
     if (_audioRecorder.recording) {
         [self stopTimer];
         [_audioRecorder stop];
+        self.useButton.enabled = YES;
     } else if (_audioPlayer.playing) {
         [self stopTimer];
         [_audioPlayer stop];
@@ -243,8 +246,9 @@
 
 -(void)audioRecorderDidFinishRecording: (AVAudioRecorder *)recorder successfully:(BOOL)flag
 {
-    // NSLog(@"audioRecorderDidFinishRecording, successfully=%d", flag);
+    NSLog(@"audioRecorderDidFinishRecording, successfully=%d", flag);
     [self updateStatusDisplay];
+    self.useButton.enabled = flag;
 }
 
 -(void)audioRecorderEncodeErrorDidOccur: (AVAudioRecorder *)recorder error:(NSError *)error

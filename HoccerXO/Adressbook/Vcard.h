@@ -38,6 +38,7 @@
 - (NSString *)organization;
 - (NSString *)previewName;
 - (NSString *)stringPropertyWithId: (ABPropertyID) propertyId;
+- (UIImage *) personImage;
 
 // preview
 - (UIImage *) previewImage;

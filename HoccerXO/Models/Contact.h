@@ -47,6 +47,9 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, retain) NSString * relationshipState;
 @property (nonatomic, retain) NSDate * relationshipLastChanged;
 
+@property (nonatomic, retain) NSDate * lastUpdateReceived;
+
+
 @property (nonatomic,strong) NSNumber * relationshipLastChangedMillis;
 @property (nonatomic,strong) NSNumber * presenceLastUpdatedMillis;
 
@@ -60,10 +63,17 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSMutableSet* groupMemberships;
 @property (readonly) NSString * nickNameWithStatus;
 
+@property (nonatomic) NSString * groupMembershipList;
+
+
 @property (nonatomic, strong) UIImage* avatarImage;
+
+@property BOOL friendMessageShown;
 
 + (NSString*) sectionTitleForMessageTime: (NSDate*) date;
 
 - (SecKeyRef) getPublicKeyRef;
+- (SecKeyRef) getPublicKeyRefRSA;
+- (SecKeyRef) getPublicKeyRefEC;
 
 @end

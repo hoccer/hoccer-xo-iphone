@@ -10,6 +10,6 @@
 
 @interface RadialGradientView : UIView
 
-@property BOOL dark;
++ (void) drawInContext: (CGContextRef) context withSize: (CGSize) size andCenter: (CGPoint) center;
 
 @end

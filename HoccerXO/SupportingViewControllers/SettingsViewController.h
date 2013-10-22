@@ -8,13 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-//#import "HXOGroupedTableViewController.h"
 #import "IASKAppSettingsViewController.h"
 
-//@interface SettingsViewController : HXOGroupedTableViewController
-@interface SettingsViewController : IASKAppSettingsViewController
-
-// @property IBOutlet UIButton * openSystemSettings;
-
+@interface SettingsViewController : IASKAppSettingsViewController <IASKSettingsDelegate>
 
 @end

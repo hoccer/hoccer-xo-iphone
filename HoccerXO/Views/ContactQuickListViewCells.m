@@ -72,7 +72,8 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 - (id) init {
     self = [super initWithFrame: CGRectMake(0, 0, 320, 24)];
     if (self != nil) {
-        self.icon = [[UIImageView alloc] initWithFrame: CGRectMake(25, 0, 24, 24)];
+        self.icon = [[UIImageView alloc] initWithFrame: CGRectMake(20, 0, 34, 24)];
+        self.icon.contentMode = UIViewContentModeCenter;
         [self addSubview: self.icon];
         self.title = [[UILabel alloc] initWithFrame: CGRectMake(63, 0, 237, 24)];
         [self addSubview: self.title];

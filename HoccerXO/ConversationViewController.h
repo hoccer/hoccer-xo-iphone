@@ -9,12 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-#import "TableViewControllerWithPlaceholder.h"
-
 @class ChatViewController;
 
 
-@interface ConversationViewController : TableViewControllerWithPlaceholder <NSFetchedResultsControllerDelegate>
+@interface ConversationViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
 @property (strong, nonatomic) ChatViewController *chatViewController;
 

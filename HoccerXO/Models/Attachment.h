@@ -96,11 +96,13 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) CryptoEngine * encryptionEngine;
 
 @property (nonatomic, strong) UIImage * previewImage;
+@property (nonatomic, strong) UIImage * previewIcon;
 
 @property (readonly) AttachmentState state;
 
 @property (nonatomic) NSUInteger resumePos;
 
+@property (readonly) BOOL available; // return true if attachment is outgoing or transfered
 
 // encryption/decryption properties
 
@@ -135,6 +137,8 @@ typedef enum AttachmentStates {
 
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
 - (NSNumber*) calcCipheredSize;
+
+- (BOOL) overTransferLimit:(BOOL)isOutgoing;
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;

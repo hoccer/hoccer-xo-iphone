@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 #import "GroupViewController.h"
 #import "ContactCell.h"
-#import "InsetImageView.h"
+#import "InsetImageView2.h"
 #import "GroupMembership.h"
 
 @interface GroupListViewController ()
@@ -48,11 +48,6 @@
 - (NSString*) entityName {
     return [Group entityName];
 }
-
-- (NSString*) emptyTablePlaceholderKey {
-    return @"groups_empty_placeholder";
-}
-
 
 - (NSString*) defaultAvatarName {
     return @"avatar_default_group";

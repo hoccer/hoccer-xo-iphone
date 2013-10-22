@@ -67,7 +67,7 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 @property (readonly, nonatomic) NSArray * certificates;
 
-@property BOOL firstConnectionAfterCrash;
+@property BOOL firstConnectionAfterCrashOrUpdate;
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
@@ -91,6 +91,10 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (void) deleteGroup:(Group *) group onDeletion:(GroupHandler)handler;
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
+
+- (void) updateGroupKeysForMyGroupMemberships;
+
+- (void) getGroupsForceAll:(BOOL)forceAll;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
@@ -117,10 +121,13 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (void) uploadFailed:(Attachment *)theAttachment;
 
 - (void) updateRelationships;
-- (void) updatePresence;
-- (void) updateKey;
+- (void) updatePresenceWithHandler:(GenericResultHandler)handler;
+
+- (void) updateKeyWithHandler:(GenericResultHandler) handler;
 
 - (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
+- (void) handleDeletionOfContact:(Contact*)contact;
+
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment;
 - (void) enqueueUploadOfAttachment:(Attachment*) theAttachment;
@@ -151,5 +158,9 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 
 + (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler;
 + (HXOBackend*)instance;
++ (BOOL) use_elliptic_curves;
+
++ (BOOL) isZeroData:(NSData*)theData;
++ (BOOL) isInvalid:(NSData*)theData;
 
 @end

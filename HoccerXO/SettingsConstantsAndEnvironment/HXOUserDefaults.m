@@ -11,6 +11,7 @@
 NSString * const kHXOEnvironment           = @"environment";
 NSString * const kHXOFirstRunDone          = @"firstRunDone";
 NSString * const kHXOlatestBuildRun        = @"latestBuildRun";
+NSString * const kHXOrunningNewBuild       = @"runningNewBuild";
 NSString * const kHXOlastActiveDate        = @"lastActiveDate";
 NSString * const kHXOlastDeactivationDate  = @"lastDeactivationDate";
 NSString * const kHXOAPNDeviceToken        = @"apnDeviceToken";
@@ -28,16 +29,21 @@ NSString * const kHXOGooglePlusName        = @"googlePlusName";
 NSString * const kHXOGithubName            = @"githubName";
 
 NSString * const kHXODefaultScreenShooting = @"defaultScreenShooting";
-NSString * const kHXOAutoDownloadLimit     = @"autoDownloadLimit";
-NSString * const kHXOAutoUploadLimit       = @"autoUploadLimit";
+NSString * const kHXOAutoDownloadLimitWLAN     = @"autoDownloadLimitWLAN";
+NSString * const kHXOAutoUploadLimitWLAN       = @"autoUploadLimitWLAN";
+NSString * const kHXOAutoDownloadLimitCellular     = @"autoDownloadLimitCellular";
+NSString * const kHXOAutoUploadLimitCellular       = @"autoUploadLimitCellular";
 
 NSString * const kHXOMaxAttachmentUploadRetries   = @"maxAttachmentUploadRetries";
 NSString * const kHXOMaxAttachmentDownloadRetries = @"maxAttachmentDownloadRetries";
 
 NSString * const kHXOSaveDatabasePolicy    = @"saveDatabasePolicy";
-NSString * const kHXOSaveDatabasePolicyPerMessage  = @"perMessage";
+NSString * const kHXOSaveDatabasePolicyDelayed  = @"delayed";
 
 NSString * const kHXOPreviewImageWidth      = @"previewImageWidth";
+
+NSString * const kHXOMessageFontSize       = @"messageFontSize";
+
 
 NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 

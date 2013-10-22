@@ -13,12 +13,18 @@
 	<key>maxAttachmentDownloadRetries</key>
 	<integer>16</integer>
 	<key>saveDatabasePolicy</key>
-	<string>perMessage</string>
+	<string>delayed</string>
 	<key>environment</key>
 	<string>production</string>
-	<key>autoUploadLimit</key>
+	<key>autoUploadLimitCellular</key>
 	<integer>0</integer>
-	<key>autoDownloadLimit</key>
+	<key>autoDownloadLimitCellular</key>
+	<integer>0</integer>
+	<key>messageFontSize</key>
+	<integer>13</integer>
+	<key>autoUploadLimitWLAN</key>
+	<integer>0</integer>
+	<key>autoDownloadLimitWLAN</key>
 	<integer>0</integer>
 	<key>videoQuality</key>
 	<integer>2</integer>

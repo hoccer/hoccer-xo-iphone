@@ -8,19 +8,12 @@
 
 #import "ChatTableCells.h"
 #import "AutoheightLabel.h"
-#import "BubbleView.h"
 #import "HXOMessage.h"
 #import "InsetImageView.h"
 
 @implementation MessageCell
 
-static const double kCellPadding = 10.0;
-
-- (CGFloat) heightForMessage: (HXOMessage*) message {
-    return MAX(kCellPadding + [self.bubble heightForMessage: message] + kCellPadding,
-               self.frame.size.height);
-}
-
+/*
 - (void)pressedButton: (id)sender {
     // NSLog(@"MessageCell pressedButton %@", sender);
     
@@ -28,10 +21,11 @@ static const double kCellPadding = 10.0;
         [self.delegate presentAttachmentViewForCell: self];
     }
 }
+*/
 
 -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
     if (self.delegate != nil) {
-        return [self.delegate messageView:self canPerformAction:action withSender:sender];
+        return [self.delegate messageCell:self canPerformAction:action withSender:sender];
     }
     return NO;
 }
@@ -42,63 +36,37 @@ static const double kCellPadding = 10.0;
 
 -(void) saveMessage:(id)sender {
     if (self.delegate != nil) {
-        return [self.delegate messageView:self saveMessage:sender];
+        return [self.delegate messageCell:self saveMessage:sender];
     }
 }
 
 -(void) resendMessage:(id)sender {
     if (self.delegate != nil) {
-        return [self.delegate messageView:self resendMessage:sender];
+        return [self.delegate messageCell:self resendMessage:sender];
     }
 }
 
 -(void) forwardMessage:(id)sender {
     if (self.delegate != nil) {
-        return [self.delegate messageView:self forwardMessage:sender];
+        return [self.delegate messageCell:self forwardMessage:sender];
     }
 }
 
 -(void) copy:(id)sender {
     if (self.delegate != nil) {
-        return [self.delegate messageView:self copy:sender];
+        return [self.delegate messageCell:self copy:sender];
     }
 }
 
 -(void) deleteMessage:(id)sender {
     if (self.delegate != nil) {
-        return [self.delegate messageView:self deleteMessage:sender];
+        return [self.delegate messageCell:self deleteMessage:sender];
     }
 }
-
-- (void) awakeFromNib {
-    //NSLog(@"%@ %x awakefromNib self.frame=%@ self.superview=%x bubble=%x message=%x avatar=%x", [self class],(int)self,NSStringFromCGRect(self.frame),(int)self.superview,(int)self.bubble,(int)self.message,(int)self.avatar);
-
-    self.avatar.borderColor = [UIColor colorWithWhite: 0 alpha: 0.5];
-    self.avatar.shadowColor = [UIColor colorWithWhite: 0 alpha: 0.5];
-}
 @end
 
 
-@implementation LeftMessageCell
-
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    self.bubble.pointingRight = NO;
-}
-
-@end
-
-
-@implementation RightMessageCell
-
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    self.bubble.pointingRight = YES;
-}
-
-@end
-
-
+/*
 @implementation ChatTableSectionHeaderCell
 
 #if 0
@@ -137,4 +105,5 @@ static const double kCellPadding = 10.0;
 
 
 @end
+ */
 

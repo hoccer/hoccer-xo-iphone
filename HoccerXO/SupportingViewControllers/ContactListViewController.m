@@ -9,11 +9,10 @@
 #import "ContactListViewController.h"
 
 #import "UIViewController+HXOSideMenu.h"
-#import "InsetImageView.h"
+#import "InsetImageView2.h"
 #import "Contact.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
-#import "RadialGradientView.h"
 #import "InviteCodeViewController.h"
 #import "HXOBackend.h"
 #import "ProfileViewController.h"
@@ -27,6 +26,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (nonatomic, readonly) ContactCell * contactCellPrototype;
+@property id keyboardHidingObserver;
 
 @end
 
@@ -47,15 +47,13 @@
     [super viewDidLoad];
 
     [self setupNavigationBar];
-    RadialGradientView * tableBackground = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
-    tableBackground.dark = YES;
-    self.tableView.backgroundView = tableBackground;
 
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
     [HXOBackend registerConnectionInfoObserverFor:self];
+    self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
 }
 
 - (void) setupNavigationBar {
@@ -73,6 +71,10 @@
 
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver: self.keyboardHidingObserver];
+}
+
 - (NSString*) navigationItemBackButtonImageName {
     return @"navbar-icon-contacts";
 }
@@ -86,6 +88,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:NO]; // hide keyboard on scrolling
 }
 
 - (void) addButtonPressed: (id) sender {
@@ -120,30 +126,19 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (self.emptyTablePlaceholder != nil) {
-        return 1;
-    }
     return [self.currentFetchedResultsController.sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.emptyTablePlaceholder != nil) {
-        return 1;
-    }
     id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return [sectionInfo numberOfObjects];
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return self.emptyTablePlaceholder != nil ? self.emptyTablePlaceholder.bounds.size.height : self.contactCellPrototype.bounds.size.height;
+    return self.contactCellPrototype.bounds.size.height;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.emptyTablePlaceholder) {
-        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString([self emptyTablePlaceholderKey], nil);
-        self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
-        return self.emptyTablePlaceholder;
-    }
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
 
     // TODO: do this right ...
@@ -164,10 +159,6 @@
         ProfileViewController* profileView = (ProfileViewController*)[segue destinationViewController];
         profileView.contact = contact;
     }
-}
-
-- (NSString*) emptyTablePlaceholderKey {
-    return @"contacts_empty_placeholder";
 }
 
 #pragma mark - Search Bar
@@ -244,7 +235,7 @@
 }
 
 - (void) addContactPredicates: (NSMutableArray*) predicates {
-    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept')", [self entityName]]];
+    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend')", [self entityName]]];
 }
 
 
@@ -315,8 +306,6 @@
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
-
-    [self updateEmptyTablePlaceholderAnimated: YES];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller

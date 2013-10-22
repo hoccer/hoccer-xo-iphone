@@ -17,6 +17,7 @@
 #import "MFSideMenu.h"
 #import "HXOBackend.h"
 #import "UIViewController+HXOSideMenu.h"
+#import "ContactQuickListSearchBar.h"
 
 
 @interface ContactQuickListViewController ()
@@ -24,6 +25,7 @@
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (nonatomic, readonly) ContactQuickListCell * contactCellPrototype;
 @property (nonatomic, readonly) ContactQuickListSectionHeaderView * sectionHeaderPrototype;
+@property id keyboardHidingObserver;
 @end
 
 @implementation ContactQuickListViewController
@@ -35,30 +37,37 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.searchBar.backgroundImage = [[UIImage imageNamed: @"searchbar_bg"]  resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    UIImage *searchFieldImage = [[UIImage imageNamed:@"searchbar_input-text"]
-                                 resizableImageWithCapInsets:UIEdgeInsetsMake(14, 14, 15, 14)];
-    [self.searchBar setSearchFieldBackgroundImage:searchFieldImage forState:UIControlStateNormal];
-    for (UIView *subview in self.searchBar.subviews){
-        if([subview isKindOfClass: UITextField.class]){
-            [(UITextField*)subview setTextColor: [UIColor whiteColor]];
-        }
-    }
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
 
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
-    
-    UIImage *inviteButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
-    [self.inviteButton setBackgroundImage: inviteButtonBackground forState: UIControlStateNormal];
-    [self.inviteButton setBackgroundColor: [UIColor clearColor]];
 
+    [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(sideMenuDidChangeState:) name: MFSideMenuStateNotificationEvent object: nil];
+    self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver: self name: MFSideMenuStateNotificationEvent object: nil];
+    [[NSNotificationCenter defaultCenter] removeObserver: self.keyboardHidingObserver];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:NO]; // hide keyboard on scrolling
+}
+
+- (void) sideMenuDidChangeState: (NSNotification*) notification {
+    switch ([notification.userInfo[@"eventType"] integerValue]) {
+        case MFSideMenuStateEventMenuWillClose:
+            [self.view endEditing: NO];
+            break;
+        default:
+            break;
+    }
 }
 
 - (NSFetchedResultsController *)currentFetchedResultsController {
@@ -118,8 +127,10 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     if ([sectionInfo.name isEqualToString: @"Contact"]) {
         view.title.text = NSLocalizedString(@"contact_group_friends", nil);
+        view.icon.image = [UIImage imageNamed: @"contact_list_section_icon_contacts"];
     } else if ([sectionInfo.name isEqualToString: @"Group"]) {
         view.title.text = NSLocalizedString(@"contact_group_groups", nil);
+        view.icon.image = [UIImage imageNamed: @"contact_list_section_icon_groups"];
     }
     return view;
 }
@@ -322,22 +333,22 @@
                    configureCell:(ContactQuickListCell *)cell
                      atIndexPath:(NSIndexPath *)indexPath
 {
-    // your cell guts here
-    Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
-    // cell.nickName.text = contact.nickName;
-    cell.nickName.text = contact.nickNameWithStatus;
-    cell.avatar.image = contact.avatarImage;
-    if (cell.avatar.image == nil) {
-        cell.avatar.image = [UIImage imageNamed: ([contact.type isEqualToString: @"Group"] ? @"avatar_default_group" : @"avatar_default_contact")];
+    @try {
+        // your cell guts here
+        Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
+        // cell.nickName.text = contact.nickName;
+        cell.nickName.text = contact.nickNameWithStatus;
+        cell.avatar.image = contact.avatarImage;
+        if (cell.avatar.image == nil) {
+            cell.avatar.image = [UIImage imageNamed: ([contact.type isEqualToString: @"Group"] ? @"avatar_default_group" : @"avatar_default_contact")];
+        }
+        
+        BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
+        [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];
     }
-
-    BOOL hasUnreadMessages = contact.unreadMessages.count > 0;
-    [cell setMessageCount: hasUnreadMessages ? contact.unreadMessages.count : contact.messages.count isUnread: hasUnreadMessages];
-}
-
-- (void)viewDidUnload {
-    [self setInviteButton:nil];
-    [super viewDidUnload];
+    @catch (NSException *exception) {
+        NSLog(@"ContactQuicklistController: fetchedResultsController: Exception: %@", exception);
+    }
 }
 
 @end

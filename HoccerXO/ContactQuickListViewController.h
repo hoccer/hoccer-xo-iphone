@@ -13,12 +13,12 @@
 @class ConversationViewController;
 @class MFSideMenu;
 @class HXOBackend;
+@class ContactQuickListSearchBar;
 
 @interface ContactQuickListViewController : HXOSideMenuViewController <NSFetchedResultsControllerDelegate,UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UITableView* tableView;
-@property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
-@property (strong, nonatomic) IBOutlet UIButton *inviteButton;
+@property (nonatomic,strong) IBOutlet ContactQuickListSearchBar* searchBar;
 
 @property (nonatomic, assign) ConversationViewController * conversationViewController;
 @property (nonatomic, assign) MFSideMenu *sideMenu;

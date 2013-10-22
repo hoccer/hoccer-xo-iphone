@@ -7,6 +7,9 @@
 //
 
 #import "WebViewController.h"
+
+#import <QuartzCore/QuartzCore.h>
+
 #import "UIViewController+HXOSideMenu.h"
 #import "RNCachingURLProtocol.h"
 #import "HXOBackend.h"
@@ -38,6 +41,8 @@
 
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 
+    self.loadingOverlay.layer.cornerRadius = 8;
+    self.loadingOverlay.layer.masksToBounds = YES;
 }
 
 - (void)viewDidUnload

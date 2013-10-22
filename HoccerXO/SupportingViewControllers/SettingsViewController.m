@@ -8,21 +8,16 @@
 
 #import "SettingsViewController.h"
 
+#import "IASKSpecifierValuesViewController.h"
+
 #import "UIViewController+HXOSideMenu.h"
 #import "RadialGradientView.h"
 #import "UserDefaultsCells.h"
 
-#if 0
-@interface SettingsItem : NSObject
 
-@property (nonatomic,strong) NSString * cellIdentifier;
-@property (nonatomic,strong) NSString * label;
-
-+ (SettingsItem*) item;
+@interface HXOSpecifierValuesViewController : IASKSpecifierValuesViewController
 
 @end
-
-#endif
 
 @implementation SettingsViewController
 
@@ -32,7 +27,7 @@
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-    // [self populateSettingsItem];
+    self.delegate = self;
 }
 
 - (void) viewWillAppear:(BOOL)animated  {
@@ -40,62 +35,32 @@
     [self setNavigationBarBackgroundWithLines];
 }
 
-#if 0
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell * cell = [super tableView: tableView cellForRowAtIndexPath: indexPath];
+    [UserDefaultsCell configureGroupedCell: cell forPosition: indexPath.row inSectionWithCellCount: [self tableView: tableView numberOfRowsInSection: indexPath.section]];
+    cell.textLabel.backgroundColor = [UIColor clearColor];
+    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+    return cell;
+}
 
-- (void) populateSettingsItem {
-    /*
-    SettingsItem * saveContent = [SettingsItem item];
-    saveContent.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
-    saveContent.label = NSLocalizedString(@"setting_save_incoming_media", nil);
+- (IASKSpecifierValuesViewController*) specifierValuesViewControllerForSettingsViewController:(IASKAppSettingsViewController *)sender {
+    return [[HXOSpecifierValuesViewController alloc] initWithTableClass: sender.tableView.class];
+}
 
-    SettingsItem * saveContentInfo = [SettingsItem item];
-    saveContentInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
-    saveContentInfo.label = NSLocalizedString(@"setting_save_incoming_media_info", nil);
-    */
-/*
-    SettingsItem * playSoundOnMessageArrival = [SettingsItem item];
-    playSoundOnMessageArrival.cellIdentifier = [UserDefaultsCellSwitch reuseIdentifier];
-    playSoundOnMessageArrival.label = NSLocalizedString(@"play_sound_on_message_arrival", nil);
+- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
     
-    SettingsItem * playSoundOnMessageArrivalInfo = [SettingsItem item];
-    playSoundOnMessageArrivalInfo.cellIdentifier = [UserDefaultsCellInfoText reuseIdentifier];
-    playSoundOnMessageArrivalInfo.label = NSLocalizedString(@"play_sound_on_message_arrival", nil);
+}
 
-    _items = @[ @[playSoundOnMessageArrival, playSoundOnMessageArrivalInfo ]
-              ];
- */
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44.0; //XXX
-}
+@end
+
+@implementation HXOSpecifierValuesViewController
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    /*
-    SettingsItem * item = _items[indexPath.section][indexPath.row];
-    UITableViewCell * cell = [self dequeueReusableCellOfClass: NSClassFromString(item.cellIdentifier) forIndexPath:indexPath];
-    cell.textLabel.text = item.label;
+    UITableViewCell * cell = [super tableView: tableView cellForRowAtIndexPath: indexPath];
+    [UserDefaultsCell configureGroupedCell: cell forPosition: indexPath.row inSectionWithCellCount: [self tableView: tableView numberOfRowsInSection: indexPath.section]];
+    cell.textLabel.backgroundColor = [UIColor clearColor];
+    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     return cell;
-     */
-    return nil;
-}
-
-//- (IBAction)launchXOSystemSettings:(id)sender {
-//    NSLog(@"launchXOSystemSettings");
-//    NSURL *myURL = [NSURL URLWithString:@"prefs://"];
-//    [[UIApplication sharedApplication] openURL:myURL];
-//}
-#endif
-
-
-@end
-
-#if 0
-@implementation SettingsItem
-
-+ (SettingsItem*) item {
-    return [[SettingsItem alloc] init];
 }
 
 @end
-
-#endif

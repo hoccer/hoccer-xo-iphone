@@ -14,11 +14,11 @@
 #import "UserDefaultsCells.h"
 #import "GroupMemberCell.h"
 #import "GroupMembership.h"
-#import "InsetImageView.h"
+#import "InsetImageView2.h"
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
 #import "GroupAdminCell.h"
-#import "CustomNavigationBar.h"
+#import "HXONavigationBar.h"
 
 #define GROUPVIEW_DEBUG NO
 
@@ -117,7 +117,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
                         if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
                         _newGroupCreated = NO;
                     } else {
-                        NSLog(@"ERROR: deleteGroup %@ failed", self.group);
+                        NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
+                        [self.backend getGroupsForceAll:YES];
                     }
                 }];
             } else {
@@ -125,7 +126,8 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
                     if (group != nil) {
                         if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
                     } else {
-                        NSLog(@"ERROR: leaveGroup %@ failed", self.group);
+                        NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
+                        [self.backend getGroupsForceAll:YES];
                     }
                 }];
             }
@@ -201,8 +203,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     } else {
         NSLog(@"setupNavigationButtons: unhandled mode %d", _mode);
     }
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = self.navigationItem.rightBarButtonItem != nil;
-
 }
 
 - (void) inviteMemberPressed: (id) sender {
@@ -241,7 +241,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
             }
         }
     }
-    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle: title
+    ActionSheet * actionSheet = [[ActionSheet alloc] initWithTitle: title
                                                               delegate: self
                                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                                 destructiveButtonTitle: destructiveButtonTitle
@@ -250,7 +250,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     [actionSheet showInView: self.view];
 }
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void) actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"actionSheet: clickedButtonAtIndex %d",buttonIndex);
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: set flag to destroy group");

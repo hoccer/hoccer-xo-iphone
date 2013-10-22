@@ -10,6 +10,7 @@
 #import "Crypto.h"
 #import "NSData+Base64.h"
 #import "RSA.h"
+#import "EC.h"
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h" // for date conversion
 
@@ -49,7 +50,12 @@
 @dynamic nickNameWithStatus;
 @dynamic myGroupMembership;
 
+@dynamic lastUpdateReceived;
+
+@dynamic groupMembershipList;
+
 @synthesize rememberedLastVisibleChatCell;
+@synthesize friendMessageShown;
 
 NSString * const kRelationStateNone    = @"none";
 NSString * const kRelationStateFriend  = @"friend";
@@ -146,6 +152,15 @@ NSString * const kRelationStateBlocked = @"blocked";
 */
 
 - (SecKeyRef) getPublicKeyRef {
+    if ([HXOBackend use_elliptic_curves]) {
+        return [self getPublicKeyRefEC];
+    } else {
+        return [self getPublicKeyRefRSA];
+    }
+}
+
+
+- (SecKeyRef) getPublicKeyRefRSA {
     RSA * rsa = [RSA sharedInstance];
     SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
     if (myResult == nil) {
@@ -167,6 +182,28 @@ NSString * const kRelationStateBlocked = @"blocked";
     return myResult;
 }
 
+- (SecKeyRef) getPublicKeyRefEC {
+    EC * ec = [EC sharedInstance];
+    SecKeyRef myResult = [ec getPeerKeyRef:self.clientId];
+    if (myResult == nil) {
+        // store public key from contact in key store
+        [ec addPublicKey: self.publicKeyString withTag: self.clientId];
+    } else {
+        // check if correct key id in key store
+        NSData * myKeyBits = [ec getKeyBitsForPeerRef:self.clientId];
+        if (![myKeyBits isEqualToData:self.publicKey]) {
+            [ec removePeerPublicKey:self.clientId];
+            [ec addPublicKey: self.publicKeyString withTag: self.clientId];
+            // NSLog(@"Contact:getPublicKeyRef: changed public key of %@", self.nickName);
+        }
+    }
+    myResult = [ec getPeerKeyRef:self.clientId];
+    if (myResult == nil) {
+        NSLog(@"ERROR: Contact:getPublicKeyRef: failed for client id %@, nick %@", self.clientId, self.nickName);
+    }
+    return myResult;
+}
+
 - (NSString*) nickNameWithStatus {
     if ([self.relationshipState isEqualToString: @"kept"]) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
@@ -177,17 +214,53 @@ NSString * const kRelationStateBlocked = @"blocked";
     if ([self.type isEqualToString:@"Group"] && [self.myGroupMembership.group.groupState isEqualToString: @"kept"]) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
     }
+    if ([self.relationshipState isEqualToString: @"none"]) {
+        return [NSString stringWithFormat:@"%@ ❓", self.nickName];
+    }
+    NSString * name = self.nickName;
+    if ([self.relationshipState isEqualToString: @"groupfriend"]) {
+        name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
+    }    
     if (self.connectionStatus == nil) {
-        return self.nickName;
+        return name;
     } else if ([self.connectionStatus isEqualToString:@"online"]) {
-        return [NSString stringWithFormat:@"%@ ⇄", self.nickName];
+        return [NSString stringWithFormat:@"%@ ⇄", name];
     } else if ([self.connectionStatus isEqualToString:@"offline"]) {
-        return self.nickName;
+        return name;
     } else {
-        return [NSString stringWithFormat:@"%@ [%@]", self.nickName, self.connectionStatus];
+        return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
     }
 }
 
+- (NSString*) groupMembershipList {
+    NSLog(@"groupMembershipList called on contact %@",self);
+    NSMutableArray * groups = [[NSMutableArray alloc] init];
+
+    [groups addObject: @""];
+    
+    [self.groupMemberships enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
+        if (![member.contact isEqual: member.group]) {
+            if (member.group.nickName != nil) {
+                [groups addObject: member.group.nickName];
+            } else {
+                [groups addObject: @"?"];
+            }
+        } else {
+            [groups addObject: @"<is group itself>"];
+        }
+    }];
+    groups[0]=[NSString stringWithFormat:@"(%d)", groups.count-1];
+    if (groups.count == 0) {
+        return @"-";
+    }
+    NSLog(@"groupMembershipList returns %@",[groups componentsJoinedByString:@", "]);
+    return [groups componentsJoinedByString:@", "];
+}
+
+
+- (void) setGroupMembershipList:(NSString*)theList {
+    NSLog(@"WARNING: setter called on groupMembershipList, value = %@",theList);
+}
 
 
 - (NSDictionary*) rpcKeys {

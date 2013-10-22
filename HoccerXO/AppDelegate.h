@@ -35,22 +35,30 @@
 
 @property (nonatomic, strong)  GCNetworkReachability * internetReachabilty;
 
+@property (strong, nonatomic)  NSDate * lastDatebaseSaveDate;
+@property (strong, nonatomic)  NSTimer * nextDatabaseSaveTimer;
+
+
 @property BOOL launchedAfterCrash;
+@property BOOL runningNewBuild;
 
 - (void)saveContext;
 - (void)saveDatabase;
-- (void)pauseDatabaseSaving;
-- (void)resumeDatabaseSaving;
 
 - (NSURL *)applicationDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
 
+-(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
+
+
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;
 + (void) setMusicAudioSession;
 + (void) setProcessingAudioSession;
+
++ (id) registerKeyboardHidingOnSheetPresentationFor:(UIViewController*)controller;
 
 
 @end

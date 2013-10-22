@@ -12,6 +12,9 @@
 
 static const CGFloat kEditAnimationDuration = 0.5;
 
+static const CGFloat kHXOCellIconSize = 32.0;
+static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
+
 
 @implementation ProfileItem
 
@@ -63,24 +66,26 @@ static const CGFloat kEditAnimationDuration = 0.5;
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
     if (self != nil) {
-        [self setupLabel];
+        [self setupLabelAndIcon];
     }
     return self;
 }
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    [self setupLabel];
+    [self setupLabelAndIcon];
 }
 
-- (void) setupLabel {
+- (void) setupLabelAndIcon {
     self.textLabel.shadowColor = [UIColor whiteColor];
     self.textLabel.shadowOffset = CGSizeMake(0, 1);
     self.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];
     self.textLabel.backgroundColor = [UIColor clearColor];
+
+    self.imageView.contentMode = UIViewContentModeCenter;
 }
 
-- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
++ (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount{
     UIImage * image;
     if (cellCount == 1) {
         image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg_single" withLeftCapWidth: 4 topCapHeight: 4];
@@ -91,7 +96,12 @@ static const CGFloat kEditAnimationDuration = 0.5;
     } else {
         image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg" withLeftCapWidth: 4 topCapHeight: 4];
     }
-    self.backgroundView = [[UIImageView alloc] initWithImage: image];
+    cell.backgroundView = [[UIImageView alloc] initWithImage: image];
+
+}
+
+- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
+    [UserDefaultsCell configureGroupedCell: self forPosition: position inSectionWithCellCount: cellCount];
 }
 
 - (void) configure: (id) item {
@@ -109,7 +119,7 @@ static const CGFloat kEditAnimationDuration = 0.5;
 
 // ugly, iterative value formating to ellipsise at the right place
 - (NSString*) formattedValue {
-    CGFloat maxWidth = self.contentView.bounds.size.width - 20;
+    CGFloat maxWidth = self.contentView.bounds.size.width - kHXOCellIconSize - 20;
     NSString * value = self.currentValue;
     NSString * text = [NSString stringWithFormat: self.valueFormat, value];
     CGFloat width = [text sizeWithFont: self.textLabel.font].width;
@@ -127,6 +137,15 @@ static const CGFloat kEditAnimationDuration = 0.5;
     if (self.valueFormat != nil && ! self.isEditing) {
         self.textLabel.text = [self formattedValue];
     }
+
+    CGRect frame = self.imageView.frame;
+    frame.size.width = kHXOCellIconSize;
+    self.imageView.frame = frame;
+
+    frame = self.textLabel.frame;
+    frame.origin.x = kHXOCellLabelPosition;
+    frame.size.width = self.frame.size.width - kHXOCellLabelPosition - 12.0;
+    self.textLabel.frame = frame;
 }
 
 
@@ -275,12 +294,27 @@ static const CGFloat kEditAnimationDuration = 0.5;
 @implementation UserDefaultsCellInfoText
 
 - (CGFloat) heightForText: (NSString*) text {
+    [self updateLabelFrame];
     return [self.textLabel calculateSize: text].height + 22;
 }
 
 - (void) configure:(id)item {
     [super configure: item];
+    [self updateLabelFrame];
     [self.textLabel sizeToFit];
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    [self updateLabelFrame];
+}
+
+- (void) updateLabelFrame {
+    CGFloat width = self.frame.size.width - 2 * 12.0;
+    CGRect frame = self.textLabel.frame;
+    frame.size.width = width;
+    frame.origin.x = 12.0;
+    self.textLabel.frame = frame;
 }
 
 @end
@@ -309,7 +343,6 @@ static const CGFloat kEditAnimationDuration = 0.5;
         }
     }
 }
-
 
 - (void) configure: (id) item {
     [super configure: item];

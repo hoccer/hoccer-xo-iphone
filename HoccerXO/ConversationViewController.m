@@ -13,15 +13,14 @@
 #import "ChatViewController.h"
 #import "Contact.h"
 #import "ConversationCell.h"
-#import "InsetImageView.h"
+#import "InsetImageView2.h"
 #import "AssetStore.h"
 #import "HXOMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
-#import "RadialGradientView.h"
-#import "CustomNavigationBar.h"
+#import "HXONavigationBar.h"
 #import "ProfileViewController.h"
 #import "InviteCell.h"
 #import "InvitationController.h"
@@ -72,11 +71,6 @@
 
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
 
-    // TODO: ask @zutrinken
-    RadialGradientView * tableBackground = [[RadialGradientView alloc] initWithFrame: self.tableView.frame];
-    tableBackground.dark = YES;
-    self.tableView.backgroundView = tableBackground;
-    
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 }
 
@@ -113,43 +107,23 @@
 
 #pragma mark - Table View
 
-- (BOOL) isEmpty {
-    if (self.fetchedResultsController.sections.count == 0) {
-        return YES;
-    } else if (self.fetchedResultsController.sections.count == 1) {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][0];
-        return [sectionInfo numberOfObjects] == 0;
-    }
-    return NO;
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger count;
-    if (self.emptyTablePlaceholder != nil) {
-        count = 1;
-    } else {
-        count = [[self.fetchedResultsController sections] count];
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return 0;
     }
-    return count;
+    return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger count;
-    if (self.emptyTablePlaceholder != nil) {
-        count = 1;
-    } else {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-        count = [sectionInfo numberOfObjects];
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return 0;
     }
-    return count + 1;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.emptyTablePlaceholder) {
-        self.emptyTablePlaceholder.placeholder.text = NSLocalizedString(@"conversation_empty_placeholder", nil);
-        self.emptyTablePlaceholder.icon.image = [UIImage imageNamed: @"xo.png"];
-        return self.emptyTablePlaceholder;
-    } else if ([self isLastCell: indexPath]) {
+    if ([self isLastCell: indexPath]) {
         InviteCell * cell = [tableView dequeueReusableCellWithIdentifier: [InviteCell reuseIdentifier] forIndexPath: indexPath];
         [cell.button addTarget: self action: @selector(inviteFriendsPressed:) forControlEvents: UIControlEventTouchUpInside];
         return cell;
@@ -169,9 +143,7 @@
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.emptyTablePlaceholder && indexPath.row == 0) {
-        return self.emptyTablePlaceholder.bounds.size.height;
-    } else if ([self isLastCell: indexPath]) {
+    if ([self isLastCell: indexPath]) {
         return self.inviteCell.bounds.size.height;
     } else {
         return self.conversationCell.bounds.size.height;
@@ -271,11 +243,14 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
-   switch(type) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return;
+    }
+    switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
+
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
@@ -286,6 +261,9 @@
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
+        return;
+    }
     UITableView *tableView = self.tableView;
     switch(type) {
         case NSFetchedResultsChangeInsert:
@@ -310,8 +288,6 @@
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
-
-    [self updateEmptyTablePlaceholderAnimated: YES];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {

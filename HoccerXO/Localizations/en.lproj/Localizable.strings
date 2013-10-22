@@ -74,20 +74,13 @@
 "Copy" = "Copy";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hey,\n\
-I'm using the free messenger app Hoccer XO to chat securely with my friends.\n\
-Download Hoccer XO now: http://hoccer.com/ \n\
-Once the app is downloaded or you already have it, click this link to accept my friend request: %@\n\
-Or enter my invite code: %@\
-Let's go!\
-XO\
-%@";
+"invitation_mail_body" = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Hoccer XO Invitation";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Hey!\nI'm now using the free app Hoccer XO for secure chatting.\nDownload it now http://hoccer.com/ \nAdd me as contact %@ \nXO\n%@";
+"invitation_sms_text" = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/ Then add me as a contact: %@ \nxo %@ ";
 
 /* Actionsheet Title */
 "Invite by" = "Invite Friends";
@@ -108,7 +101,7 @@ XO\
 "Invite failed" = "Invite failed";
 
 /* Invite Alert Title */
-"Invite successful" = "Invite successful";
+/* "Invite successful" = "Invite successful";*/
 
 
 /* Invite Token View Controller */
@@ -141,7 +134,7 @@ XO\
 "Settings" = "Settings";
 
 /* Invite Alert Message */
-"The server accepted your code" = "The code has been accepted";
+/* "The server accepted your code" = "The code has been accepted";*/
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "The code has been rejected";
@@ -215,6 +208,9 @@ XO\
 "contact_unblock" = "Unblock %@";
 
 "contact_block" = "Block %@";
+
+"contact_remove" = "Remove %@";
+
 
 "chat_with_contact" = "Chat with %@";
 
@@ -333,7 +329,7 @@ XO\
 "group_close_group_button_title" = "Close";
 "group_delete_data"="Delete Group Data";
 
-"group_no_other_joined_partners_text"="You can not send a message to this group because not invited member has joined yet. You have to wait until at least one invitation is accepted.";
+"group_no_other_joined_partners_text"="You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
 "group_no_other_partner_text"="You can not send a message to this group because there are no members except you. Please invite friends to this group.";
 "group_no_other_partners_title"="No other group members";
 
@@ -361,7 +357,7 @@ XO\
 "invitation_join_group_button_title"="Join Group";
 "invitation_decline_button_title"="Decline Invitation";
 
-"You have been kicked from group '%@'"="You have been kicked from group '%@'";
+"You have been kicked from group '%@'"="Your membership in group '%@' has been removed.";
 "The invitation for group '%@' has been removed."="The invitation for group '%@' has been removed.";
 
 "Group Deactivated"="Group Deactivated";
@@ -381,16 +377,16 @@ XO\
 "fatal_error_default_title"   = "Fatal Error";
 "fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
 
-"new_friend_message"="Contact '%@' is now a friend.";
+"new_friend_message"="Contact '%@' is now your friend.";
 "new_friend_title"="New Friend";
 
 "friend_blocked_message"="Exchange of messages with contact '%@' has been temporarily blocked.";
 "friend_blocked_title"="Contact Blocked";
 
 "relationship_removed_message"="Relationship with contact '%@' has been removed.";
-"relationship_removed_title"="Relationship removed";
-
-"relationship_removed_but_contact_kept_message"="Relationship with contact '%@' has been removed, but contact is kept because of memberships in groups >%@<.";
+"relationship_removed_title"="Relationship removal";
+ 
+"relationship_removed_but_contact_kept_message"="No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
 
 
 "contact_delete_associated_data_question"="Relationship with contact '%@' no longer exists. Delete associated profile, chats and data?";
@@ -407,6 +403,8 @@ XO\
 "membership_role_member" = "member";
 
 "friend"="Friend";
+"groupfriend"="Acquaintance by group";
+
 "kept"="No Relationship";
 "blocked"="Blocked";
 
@@ -414,7 +412,15 @@ XO\
 "cant_send_relationship_removed"="Relationship with this contact does no longer exist.";
 "cant_send_title"="Can Not Send Message";
 
+"overlimit_attachment_upload_question"="Attachment size is %@. Do you really want to send this message?";
+"overlimit_attachment_title"="Really send Message?";
+"message_do_not_send_button_title"="No";
+"message_send_button_title"="Send";
 
+"cant_send_no_groupkey_title"="No Group Key";
+"cant_send_no_groupkey"="Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
 
+"button_title_call" = "Call";
 
-
+"vcard_default_title" = "Contact";
+"location_default_title" = "Location";

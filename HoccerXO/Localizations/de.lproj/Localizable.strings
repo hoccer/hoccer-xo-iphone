@@ -74,26 +74,13 @@
 "Copy" = "Kopieren";
 
 /* Mail Invitation Body */
-"invitation_mail_body" = "Hey,\n\
-ich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren chatten mit meinen Freunden.\
-\
-Lade dir jetzt „Hoccer XO“ aus deinem Store runter: http://hoccer.com \
-\
-Wenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@ oder gib dazu meinen Einladungscode ‘%@' ein.\
-\
-Und los geht´s!\
-\
-XO, %@";
+"invitation_mail_body" = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
 
 /* Mail Invitation Subject */
 "invitation_mail_subject" = "Einladung zu Hoccer XO";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Hey,\
-ich nutze die Gratis-App Hoccer XO zum sicheren Chatten!\
-Jetzt Hoccer XO runterladen: http://hoccer.com/ \
-und mich als Kontakt hinzufügen: %@ \
-XO, %@";
+"invitation_sms_text" = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/ und mich als Kontakt hinzufügen: %@\nxo, %@";
 
 /* Actionsheet Title */
 "Invite by" = "Einladung";
@@ -114,7 +101,7 @@ XO, %@";
 "Invite failed" = "Einladung fehlgeschlagen";
 
 /* Invite Alert Title */
-"Invite successful" = "Einladung erfolgreich";
+/*"Invite successful" = "Einladung erfolgreich";*/
 
 
 /* Invite Token View Controller */
@@ -147,7 +134,7 @@ XO, %@";
 "Settings" = "Einstellungen";
 
 /* Invite Alert Message */
-"The server accepted your code" = "Der Code wurde akzeptiert";
+/*"The server accepted your code" = "Der Code wurde akzeptiert";*/
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "Der Code wurde abgelehnt";
@@ -180,7 +167,7 @@ XO, %@";
 
 "profile_renew_keypair" = "Renew RSA Keypair";
 
-"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen händen war kannst Du hier Deine Schlüssel erneuern.";
+"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen Händen war kannst Du hier Deine Schlüssel erneuern.";
 
 "contact_group_friends" = "Freunde";
 
@@ -203,6 +190,9 @@ XO, %@";
 "contact_unblock" = "%@ entblockieren";
 
 "contact_block" = "%@ blockieren";
+
+"contact_remove" = "%@ entfernen";
+
 
 "chat_with_contact" = "Mit %@ chatten";
 
@@ -346,7 +336,7 @@ XO, %@";
 "invitation_join_group_button_title"="Annehmen";
 "invitation_decline_button_title"="Ablehnen";
 
-"You have been kicked from group '%@'"="Du wurdest aus der Gruppe '%@' geworfen.";
+"You have been kicked from group '%@'"="Deine Mitgliedschaft in der Gruppe '%@' wurde beendet.";
 "The invitation for group '%@' has been removed."="Die Einladung für die Gruppe '%@' wurde entfernt.";
 
 "Group Deactivated"="Gruppe deaktiviert";
@@ -373,9 +363,9 @@ XO, %@";
 "friend_blocked_title"="Kontakt geblockt";
 
 "relationship_removed_message"="Die Beziehung zu Kontakt '%@' wurde entfernt.";
-"relationship_removed_title"="Beziehung entfernt";
+"relationship_removed_title"="Beziehung entfernen";
 
-"relationship_removed_but_contact_kept_message"="Die direkte Beziehung zu Kontakt '%@' wurde entfernt, aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppen >%@<.";
+"relationship_removed_but_contact_kept_message"="Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
 
 
 "contact_delete_associated_data_question"="Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
@@ -392,10 +382,23 @@ XO, %@";
 "membership_role_member" = "Mitglied";
 
 "friend"="Freund";
+"groupfriend"="Gruppenbekanntschaft";
 "kept"="Keine Beziehung";
 "blocked"="Geblockt";
 
-"cant_send_contact_blocked"="Der Kontakt is geblockt.";
+"cant_send_contact_blocked"="Der Kontakt ist geblockt.";
 "cant_send_relationship_removed"="Es existiert keine Beziehung zu diesem Kontakt mehr.";
 "cant_send_title"="Nachricht kann nicht gesendet werden";
 
+"overlimit_attachment_upload_question"="Der Anhang ist %@ groß. Willst du die Nachricht wirklich versenden?";
+"overlimit_attachment_title"="Nachricht versenden?";
+"message_do_not_send_button_title"="Nein";
+"message_send_button_title"="Senden";
+
+"cant_send_no_groupkey_title"="Gruppenschlüssel fehlt";
+"cant_send_no_groupkey"="Leider kann die Nachricht nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
+
+"button_title_call" = "Anrufen";
+
+"vcard_default_title" = "Kontakt";
+"location_default_title" = "Ort";

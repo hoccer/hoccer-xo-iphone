@@ -89,6 +89,7 @@
 @dynamic attachmentJsonStringCipherText;
 
 @dynamic state;
+@dynamic available;
 
 @synthesize transferConnection = _transferConnection;
 @synthesize transferError = _transferError;
@@ -100,6 +101,7 @@
 @synthesize encryptionEngine;
 @synthesize transferRetryTimer = _transferRetryTimer;
 @synthesize resumePos;
+@synthesize previewIcon = _previewIcon;
 
 #if defined(LET_DOWNLOAD_FAIL) || defined(NO_DOWNLOAD_RESUME) || defined(NO_UPLOAD_RESUME)
 @synthesize didResume; // DEBUG
@@ -198,20 +200,43 @@ NSArray * TransferStateName = @[@"detached",
         }
         return kAttachmentDownloadIncomplete;
     }
-    // now check limits
-    if ([self.message.isOutgoing boolValue]) {
-        long long uploadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimit] longLongValue];
+    if (![self.message.isOutgoing boolValue] && [self overTransferLimit:NO]) {
+        return kAttachmentTransferOnHold;
+    }
+
+    return kAttachmentWantsTransfer;
+}
+
+- (BOOL) available {
+    AttachmentState myState = self.state;
+    return myState == kAttachmentTransfered || ([self.message.isOutgoing boolValue] == YES && !(myState <= kAttachmentEmpty));
+}
+
+- (BOOL) overTransferLimit:(BOOL)isOutgoing {
+    BOOL reachableViaWLAN = [self.chatBackend.delegate.internetReachabilty isReachableViaWiFi];
+    if (isOutgoing) {
+        long long uploadLimit;
+        if (reachableViaWLAN) {
+            uploadLimit= [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimitWLAN] longLongValue];
+        } else {
+            uploadLimit= [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoUploadLimitCellular] longLongValue];
+        }
         if (uploadLimit && [self.contentSize longLongValue] > uploadLimit) {
-            return kAttachmentTransferOnHold;
+            return YES;
         }
     } else {
         // incoming
-        long long downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimit] longLongValue];
+        long long downloadLimit;
+        if (reachableViaWLAN) {
+            downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimitWLAN] longLongValue];
+        } else {
+            downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimitCellular] longLongValue];
+        }
         if (downloadLimit && [self.contentSize longLongValue] > downloadLimit) {
-            return kAttachmentTransferOnHold;
+            return YES;
         }
     }
-    return kAttachmentWantsTransfer;
+    return NO;
 }
 
 - (NSString *) verbosityLevel {
@@ -331,10 +356,20 @@ NSArray * TransferStateName = @[@"detached",
     if (previewWidth > theFullImage.size.width) {
         previewWidth = theFullImage.size.width; // avoid scaling up preview
     }
-    if (!(self.aspectRatio > 0)) {
+    //if (!(self.aspectRatio > 0)) {
         [self setAspectRatioForImage:theFullImage];
+    //}
+    if (previewWidth == 0) {
+        // handle no preview image case
+        self.previewImage = theFullImage;
+        self.previewImageData = UIImagePNGRepresentation(self.previewImage);
+        return;
     }
-    self.previewImage = [theFullImage imageScaledToSize:CGSizeMake(previewWidth, previewWidth/self.aspectRatio)];
+    if ([self.mediaType isEqualToString: @"geolocation"]) {
+        self.previewImage = theFullImage;
+    } else {
+        self.previewImage = [theFullImage imageScaledToSize:CGSizeMake(previewWidth, previewWidth/self.aspectRatio)];
+    }
 
 #if 0
     // as a result of this benchwork we use JPEG previews;
@@ -361,13 +396,44 @@ NSArray * TransferStateName = @[@"detached",
     NSLog(@"JPG scale = %f, PNG scale = %f", myJPEGImage.scale, myPNGImage.scale);
     self.previewImageData = myJPEG;
 #else
-    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-    self.previewImageData = UIImageJPEGRepresentation(self.previewImage, photoQualityCompressionSetting/10.0);
+    if ([self.mediaType isEqualToString: @"geolocation"]) {
+        // but not with geolocation previews ... they look like crap when compressed with jpeg
+        self.previewImageData = UIImagePNGRepresentation(self.previewImage);
+    } else {
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        self.previewImageData = UIImageJPEGRepresentation(self.previewImage, photoQualityCompressionSetting/10.0);
+    }
 #endif
 }
 
 - (void) setAspectRatioForImage:(UIImage*) theImage {
-    self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+    if (theImage.size.height == 0) {
+        self.aspectRatio = 1;
+    } else {
+        self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
+    }
+}
+
+- (UIImage *)previewIcon {
+    if (_previewIcon == nil) {
+        NSString * largeIconName = nil;
+        if ([self.mediaType isEqualToString: @"vcard"]) {
+            largeIconName = @"attachment_icon_contact";
+        }  else if ([self.mediaType isEqualToString: @"geolocation"]) {
+            largeIconName = @"attachment_icon_location";
+        }  else if ([self.mediaType isEqualToString: @"audio"]) {
+            NSRange findResult = [self.humanReadableFileName rangeOfString:@"recording"];
+            if (findResult.length == @"recording".length && findResult.location == 0) {
+                largeIconName = @"attachment_icon_voice";
+            } else {
+                largeIconName = @"attachment_icon_music";
+            }
+        }
+        if (largeIconName != nil) {
+            _previewIcon = [UIImage imageNamed:largeIconName];
+        }
+    }
+    return _previewIcon;
 }
 
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock)finished {
@@ -375,11 +441,12 @@ NSArray * TransferStateName = @[@"detached",
     if (self.previewImageData != nil && self.previewImageData.length > 0) {
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database");
         // NSDate * start = [NSDate date];
-        self.previewImage = [UIImage imageWithData:self.previewImageData];
+        self.previewImage = [UIImage imageWithData:self.previewImageData scale: [UIScreen mainScreen].scale];
         // NSLog(@"loadPreviewImageIntoCacheWithCompletion:loading from database took %f ms.", -[start timeIntervalSinceNow]*1000);
-        if (!(self.aspectRatio > 0)) {
+        //if (!(self.aspectRatio > 0)) {
             [self setAspectRatioForImage:self.previewImage];
-        }
+        //}
+
         if (finished != nil) {
             if (self.previewImage != nil) {
                 finished(nil);
@@ -390,6 +457,7 @@ NSArray * TransferStateName = @[@"detached",
         }
     } else {
         // create preview by loading full size image
+        // TODO: guard against calling this over and over again if the attachment does not have an image
         [self loadImage:^(UIImage* theImage, NSError* error) {
             // NSLog(@"loadImage for preview done");
             if (theImage) {
@@ -398,7 +466,8 @@ NSArray * TransferStateName = @[@"detached",
                     finished(nil);
                 }
             } else {
-                NSLog(@"ERROR: Failed to get image %@", error);
+                // Not an actual error. Vcards and audio files do not neccesariliy have an image.
+                //NSLog(@"NOTE: Failed to get image %@", error);
                 if (finished != nil) {
                     finished(error);
                 }
@@ -577,21 +646,22 @@ NSArray * TransferStateName = @[@"detached",
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:URL options:nil];
     NSArray *artworks = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata  withKey:AVMetadataCommonKeyArtwork keySpace:AVMetadataKeySpaceCommon];
     
-    for (AVMetadataItem *i in artworks)
-    {
+    for (AVMetadataItem *i in artworks) {
         NSString *keySpace = i.keySpace;
         UIImage *im = nil;
         
-        if ([keySpace isEqualToString:AVMetadataKeySpaceID3])
-        {
+        if ([keySpace isEqualToString:AVMetadataKeySpaceID3]) {
             NSDictionary *d = [i.value copyWithZone:nil];
             im = [UIImage imageWithData:[d objectForKey:@"data"]];
-        }
-        else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes])
+        } else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes]) {
             im = [UIImage imageWithData:[i.value copyWithZone:nil]];
+        } else {
+            NSLog(@"=== unhandled media item %@", i);
+        }
         
-        if (im)
+        if (im) {
             [artworkImages addObject:im];
+        }
     }
     // NSLog(@"array description is %@", [artworkImages description]);
     return artworkImages;
@@ -602,13 +672,14 @@ NSArray * TransferStateName = @[@"detached",
         block(nil, nil);
         return;
     }
-    // TODO - find a way how to retrieve artwork from an a file
+    // TODO - find a way how to retrieve artwork from a file
     NSArray * myArtworkImages = [[self class]artworksForFileAtFileURL: self.localURL];
     if ([myArtworkImages count]) {
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        block([UIImage imageNamed:@"audio-default.png"], nil);
+        // block([UIImage imageNamed:@"audio-default.png"], nil);
+        block([[UIImage alloc]init], nil);
     }
 }
 
@@ -619,13 +690,14 @@ NSArray * TransferStateName = @[@"detached",
     }
     Vcard * myVcard = [[Vcard alloc] initWithVcardURL:self.contentURL];
     if (myVcard != nil) {
-        UIImage * myPreviewImage = [myVcard previewImageWithScale:0];
+        UIImage * myPreviewImage = [myVcard personImage];
         if (myPreviewImage) {
             block(myPreviewImage, nil);
             return;
         }
     }
-    block([UIImage imageNamed:@"vcard_error_preview.png"], nil);
+    // block([UIImage imageNamed:@"vcard_error_preview.png"], nil);
+    block([[UIImage alloc]init], nil);
 }
 
 - (void) loadGeoLocationAttachmentImage: (ImageLoaderBlock) block {
@@ -633,7 +705,7 @@ NSArray * TransferStateName = @[@"detached",
     [self loadAttachmentDict:^(NSDictionary * geoLocation, NSError * error) {
         if (geoLocation != nil) {
             NSData * imageData = [NSData dataWithBase64EncodedString: geoLocation[@"previewImage"]];
-            block([UIImage imageWithData: imageData], nil);
+            block([UIImage imageWithData: imageData scale: [UIScreen mainScreen].scale], nil);
         } else {
             block(nil, error);
         }
@@ -681,7 +753,7 @@ NSArray * TransferStateName = @[@"detached",
                           failureBlock: failureblock];
         }
     } else {
-        NSLog(@"ERROR: no image url");
+        NSLog(@"WARNING: no image url");
         block(nil, nil);
     }
 }
@@ -1317,6 +1389,16 @@ NSArray * TransferStateName = @[@"detached",
     return myTranslatedURL;
 }
 
+- (double) aspectRatio {
+    [self willAccessValueForKey:@"aspectRatio"];
+    double myValue = [[self primitiveValueForKey:@"aspectRatio"] doubleValue];
+    [self didAccessValueForKey:@"aspectRatio"];
+    if (myValue == 0) {
+        return 1;
+    }
+    return myValue;
+}
+
 + (NSString*) translateFileURLToDocumentDirectory:(NSString*)someFileURL {
     if (someFileURL == nil) {
         return nil;
@@ -1333,7 +1415,12 @@ NSArray * TransferStateName = @[@"detached",
     CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(theMimeType), NULL);
     CFStringRef extension = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension);
     CFRelease(uti);
-    return CFBridgingRelease(extension);
+    NSString * result = CFBridgingRelease(extension);
+    if (result == nil) {
+        result = [theMimeType lastPathComponent];
+    }
+    NSLog(@"fileExtensionFromMimeType result=%@", result);
+    return result;
 }
 
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString {
@@ -1817,18 +1904,22 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
 
 -  (void) setAttachmentJsonString:(NSString*) theJsonString {
     NSError * error;
-    id json = [NSJSONSerialization JSONObjectWithData: [theJsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
-    if (json == nil) {
-        NSLog(@"ERROR: setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
-        return;
-    }
-    if ([json isKindOfClass: [NSDictionary class]]) {
-        [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];        
-    } else {
-        NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
+    @try {
+        id json = [NSJSONSerialization JSONObjectWithData: [theJsonString dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
+        if (json == nil) {
+            NSLog(@"ERROR: setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
+            return;
+        }
+        if ([json isKindOfClass: [NSDictionary class]]) {
+            [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];
+        } else {
+            NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
+        }
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR: setAttachmentJsonString: parsing json, jsonData = %@, ex=%@", theJsonString, ex);
     }
 }
-    
+
 - (NSString*) attachmentJsonStringCipherText {
     return [self.message encryptString: self.attachmentJsonString];
 }

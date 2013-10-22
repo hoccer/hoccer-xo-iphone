@@ -15,7 +15,7 @@
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 #import "RadialGradientView.h"
-#import "CustomNavigationBar.h"
+#import "HXONavigationItem.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "HXOGroupedTableViewController.h"
 #import "NSString+UUID.h"
@@ -23,6 +23,7 @@
 #import "ContactListViewController.h"
 #import "Contact.h"
 #import "RSA.h"
+#import "EC.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
 #import "ChatViewController.h"
@@ -30,10 +31,12 @@
 #import "UserProfile.h"
 #import "Environment.h"
 #import "ProfileDataSource.h"
+#import "HXOBackend.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
 #define RELATIONSHIP_DEBUG NO
+#define ADD_DEBUG_ITEMS NO
 
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 static const NSUInteger kHXOMaxNickNameLength = 25;
@@ -68,9 +71,9 @@ typedef enum ActionSheetTags {
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    _renewKeypairRequested = NO;
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundPlain];
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = YES;
 
     [self configureMode];
 
@@ -104,7 +107,6 @@ typedef enum ActionSheetTags {
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear: animated];
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleRightButton = NO;
     if (_contact != nil) {
         [_contact removeObserver: self forKeyPath: @"avatarImage"];
         for (ProfileItem* item in _allProfileItems) {
@@ -145,12 +147,14 @@ typedef enum ActionSheetTags {
         return NSLocalizedString(@"contact_block", nil);
     } else if ([state isEqualToString: @"blocked"]) {
         return NSLocalizedString(@"contact_unblock", nil);
+    } else if ([state isEqualToString: @"kept"]) {
+    } else if ([state isEqualToString: @"groupfriend"]) {
     } else if (state == nil) {
         //happens with groups
     } else {
         NSLog(@"ProfileViewController blockFormatForRelationshipState: unhandled state %@", state);
     }
-    return @"Kaputt";
+    return @"";
 }
 
 - (void) populateValues {
@@ -288,7 +292,7 @@ typedef enum ActionSheetTags {
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == alertView.cancelButtonIndex) {
-        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_saftey_question", nil)
+        ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_saftey_question", nil)
                                                             delegate: self
                                                    cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                               destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
@@ -302,7 +306,7 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // NSLog(@"button index %d", buttonIndex);
     if (actionSheet.tag == kActionSheetDeleteCredentials) {
         if (buttonIndex == actionSheet.cancelButtonIndex) {
@@ -329,12 +333,12 @@ typedef enum ActionSheetTags {
             break;
         case ProfileViewModeMyProfile:
             self.navigationItem.rightBarButtonItem = self.editButtonItem;
+            self.editButtonItem.enabled = YES;
             if (self.isEditing) {
                 self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             } else {
                 self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
             }
-            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = self.isEditing;
             break;
         case ProfileViewModeContactProfile:
             self.navigationItem.rightBarButtonItem = nil;
@@ -391,7 +395,7 @@ typedef enum ActionSheetTags {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // NSLog(@"selected cell %@", indexPath);
-    id item = _profileDataSource[indexPath.section][indexPath.row];
+    ProfileItem * item = _profileDataSource[indexPath.section][indexPath.row];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [[item target] performSelector: [item action] withObject: indexPath];
@@ -399,6 +403,10 @@ typedef enum ActionSheetTags {
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+    
+    if (_canceled) {
+        [self revertItemsToSaved];
+    }
 
     [self.view endEditing: editing];
 
@@ -411,10 +419,12 @@ typedef enum ActionSheetTags {
         [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
     }
     [self validateItems];
+
+    ((HXONavigationItem*)self.navigationItem).flexibleLeftButton = editing;
+
     if (editing) {
         if (_mode != ProfileViewModeFirstRun) {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
-            ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = YES;
         }
         _canceled = NO;
         for (ProfileItem* item in _allProfileItems) {
@@ -423,17 +433,18 @@ typedef enum ActionSheetTags {
 
     } else {
         if ( ! _canceled) {
+            if (_renewKeypairRequested) {
+                [self performKeypairRenewal];
+                _renewKeypairRequested = NO;
+            }
             [self save];
         }
-        ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
         self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
         for (ProfileItem* item in _allProfileItems) {
             [item removeObserver: self forKeyPath: @"valid"];
         }
         [self onEditingDone];
     }
-
-
 }
 
 - (UIBarButtonItem*) leftNonEditButton {
@@ -458,6 +469,9 @@ typedef enum ActionSheetTags {
 
 - (IBAction)onCancel:(id)sender {
     _canceled = YES;
+    _renewKeypairRequested = NO;
+    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
+
     //[self populateValues];
     [self setEditing: NO animated: YES];
 }
@@ -481,6 +495,7 @@ typedef enum ActionSheetTags {
     _allProfileItems = [[NSMutableArray alloc] init];
     
     _nickNameItem = [[ProfileItem alloc] initWithName:@"NickNameItem"];
+    _nickNameItem.textAlignment = NSTextAlignmentLeft;
     _nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
     _nickNameItem.valueKey = kHXONickName;
     _nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
@@ -491,7 +506,23 @@ typedef enum ActionSheetTags {
     _nickNameItem.maxLength = kHXOMaxNickNameLength;
     [_allProfileItems addObject: _nickNameItem];
     [_itemsByKeyPath setObject: _nickNameItem forKey: _nickNameItem.valueKey];
-
+    
+    if (ADD_DEBUG_ITEMS) {
+        _clientIdItem = [[ProfileItem alloc] initWithName: @"ClientIdItem"];
+        _clientIdItem.cellClass = [UserDefaultsCell class];
+        _clientIdItem.textAlignment = NSTextAlignmentLeft;
+        _clientIdItem.valueKey = @"clientId";
+        [_allProfileItems addObject: _clientIdItem];
+        [_itemsByKeyPath setObject: _clientIdItem forKey: _clientIdItem.valueKey];
+        
+        _groupMembershipsItem = [[ProfileItem alloc] initWithName: @"GroupMembershipsItem"];
+        _groupMembershipsItem.cellClass = [UserDefaultsCell class];
+        _groupMembershipsItem.textAlignment = NSTextAlignmentLeft;
+        _groupMembershipsItem.valueKey = @"groupMembershipList";
+        [_allProfileItems addObject: _groupMembershipsItem];
+        [_itemsByKeyPath setObject: _groupMembershipsItem forKey: _groupMembershipsItem.valueKey];
+    }
+    
 #ifdef HXO_SHOW_UNIMPLEMENTED_FEATURES
     ProfileItem * phoneItem = [[ProfileItem alloc] initWithName:@"PhoneNumberItem"];
     phoneItem.icon = [UIImage imageNamed: @"icon_profile-phone"];
@@ -557,17 +588,20 @@ typedef enum ActionSheetTags {
 
 #endif // HXO_SHOW_UNIMPLEMENTED_FEATURES
 
-
     _chatWithContactItem = [[ProfileItem alloc] initWithName: @"ChatWithContactItem"];
     //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
     _chatWithContactItem.currentValue = _contact.nickName;
     _chatWithContactItem.valueFormat = NSLocalizedString(@"chat_with_contact", nil);
+    _chatWithContactItem.textAlignment = NSTextAlignmentLeft;
+    _chatWithContactItem.icon = [UIImage imageNamed: [self chatWithIconName]];
     _chatWithContactItem.cellClass = [UserDefaultsCellDisclosure class];
     _chatWithContactItem.action = @selector(chatWithContactPressed:);
     _chatWithContactItem.target = self;
     _chatWithContactItem.alwaysShowDisclosure = YES;
 
     _blockContactItem = [[ProfileItem alloc] initWithName: @"BlockContactItem"];
+    _blockContactItem.textAlignment = NSTextAlignmentLeft;
+    _blockContactItem.icon = [UIImage imageNamed: [self blockContactIconName]];
     _blockContactItem.currentValue = nil;
     _blockContactItem.cellClass = [UserDefaultsCell class];
     _blockContactItem.action = @selector(toggleBlockedPressed:);
@@ -578,9 +612,9 @@ typedef enum ActionSheetTags {
 
     _fingerprintItem = [[ProfileItem alloc] initWithName: @"FingerprintItem"];
     _fingerprintItem.cellClass = [UserDefaultsCell class];
-    _fingerprintItem.textAlignment = NSTextAlignmentCenter;
+    _fingerprintItem.textAlignment = NSTextAlignmentLeft;
+    _fingerprintItem.icon = [UIImage imageNamed: [self fingerprintIconName]];
     // [_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
-
     _fingerprintInfoItem = [[ProfileItem alloc] initWithName:@"FingerprintInfoItem"];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
 
@@ -588,7 +622,7 @@ typedef enum ActionSheetTags {
 
     _renewKeyPairItem = [[ProfileItem alloc] initWithName:@"RenewKeypairItem"];
     _renewKeyPairItem.cellClass = [UserDefaultsCell class];
-    _renewKeyPairItem.editLabel = NSLocalizedString(@"profile_renew_keypair", nil);
+    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
     _renewKeyPairItem.target = self;
     _renewKeyPairItem.action = @selector(renewKeypairPressed:);
 
@@ -598,16 +632,25 @@ typedef enum ActionSheetTags {
 
     _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, nil];
 
-
     _deleteContactItem = [[ProfileItem alloc] initWithName:@"DeleteContactItem"];
     _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
     _deleteContactItem.cellClass = [UserDefaultsCell class];
     _deleteContactItem.action = @selector(deleteContactPressed:);
     _deleteContactItem.target = self;
+    _deleteContactItem.textAlignment = NSTextAlignmentLeft;
+    _deleteContactItem.icon = [UIImage imageNamed: [self deleteIconName]];
 
     _destructiveSection = [ProfileSection sectionWithName:@"DestructiveSection" items: _deleteContactItem];
 
     //return [self populateValues];
+}
+
+- (NSString*) renewKeypairButtonTitle {
+    if (!_renewKeypairRequested) {
+        return NSLocalizedString(@"profile_renew_keypair", nil);
+    } else {
+        return [NSString stringWithFormat:@"%@ ✔",NSLocalizedString(@"profile_renew_keypair", nil)];
+    }    
 }
 
 - (NSString*) namePlaceholderKey {
@@ -617,6 +660,23 @@ typedef enum ActionSheetTags {
 - (NSString*) nickNameIconName {
     return @"icon_profile-name";
 }
+
+- (NSString*) fingerprintIconName {
+    return @"icon_profile-fingerprint";
+}
+
+- (NSString*) blockContactIconName {
+    return @"icon_profile-block.png";
+}
+
+- (NSString*) chatWithIconName {
+    return @"icon_profile-chat.png";
+}
+
+- (NSString*) deleteIconName {
+    return @"icon_profile-delete.png";
+}
+
 
 - (void) validateItems {
     BOOL allValid = YES;
@@ -630,6 +690,10 @@ typedef enum ActionSheetTags {
     if (self.isEditing) {
         self.editButtonItem.enabled = allValid;
     }
+}
+
+- (void)revertItemsToSaved {
+    [self populateValues];
 }
 
 - (void) composeProfileItems: (BOOL) editing {
@@ -653,6 +717,8 @@ typedef enum ActionSheetTags {
         } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
             return @[ _avatarSection, _utilitySection, _profileItemsSection, _fingerprintSection, _destructiveSection];
+        } else if ([self.contact.relationshipState isEqualToString: @"groupfriend"]) {
+            return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _destructiveSection];
         } else {
             return @[_avatarSection, _profileItemsSection, _fingerprintSection];
         }
@@ -709,13 +775,14 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (void) makeLeftButtonFixedWidth {
-    ((CustomNavigationBar*)self.navigationController.navigationBar).flexibleLeftButton = NO;
-}
-
 #pragma mark - Avatar Handling
 
 - (IBAction)avatarTapped:(id)sender {
+    // TODO: when we will have other text input field, make them resign first responder, too
+    NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _nickNameItem];
+    UserDefaultsCellTextInput * cell = (UserDefaultsCellTextInput*)[self.tableView cellForRowAtIndexPath: indexPath];
+    [cell.textField resignFirstResponder];
+    
     [self.attachmentPicker showInView: self.view];
 }
 
@@ -761,7 +828,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) deleteContactPressed: (id) sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
+    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
                                                         delegate: self
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                           destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
@@ -773,6 +840,10 @@ typedef enum ActionSheetTags {
 
 - (void) deleteContact: (Contact*) contact {
     [self.navigationController popViewControllerAnimated: YES];
+    if ([contact.relationshipState isEqualToString:@"groupfriend"]) {
+        [self.chatBackend handleDeletionOfContact:contact];
+        return;
+    }
     [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
         if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
         //NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
@@ -819,7 +890,7 @@ typedef enum ActionSheetTags {
     return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
 }
 
-- (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
+- (void) prependAdditionalActionButtons:(ActionSheet *)actionSheet {
     if (_avatarItem.currentValue != nil) {
         actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_delete_avatar_button_title", nil)];
     }
@@ -830,14 +901,33 @@ typedef enum ActionSheetTags {
     [self updateAvatar: nil];
 }
 
+- (void)performKeypairRenewal {
+    if ([HXOBackend use_elliptic_curves]) {
+        [[EC sharedInstance] cleanKeyChain];
+    } else {
+        [[RSA sharedInstance] cleanKeyChain];
+    }
+    /*
+    [self.chatBackend updateKeyWithHandler:^(BOOL ok) {
+        [self updateKeyFingerprint];
+        if (ok) {
+            [self.chatBackend updatePresenceWithHandler:^(BOOL ok) {
+                [self.chatBackend updateGroupKeysForMyGroupMemberships];
+            }];
+        }
+    }];  
+     */
+}
+
 - (void) renewKeypairPressed: (id) sender {
-    [[RSA sharedInstance] cleanKeyChain];
+    //NSLog(@"renewKeypairPressed, sender=%@",sender);
+    _renewKeypairRequested = !_renewKeypairRequested;
+    
     [self updateKeyFingerprint];
+    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
     [self.tableView beginUpdates];
-    [(UserDefaultsCell*)[self.tableView indexPathForCell: sender] configure: _fingerprintItem];
+    [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath:sender] configure: _renewKeyPairItem];
     [self.tableView endUpdates];
-    [self.chatBackend updateKey];
-    [self.chatBackend updatePresence];
 }
 
 @synthesize chatBackend = _chatBackend;
