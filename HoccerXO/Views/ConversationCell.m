@@ -23,25 +23,13 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    [self engraveLabel: self.latestMessageLabel];
+    //[self engraveLabel: self.latestMessageLabel];
     //[self engraveLabel: self.latestMessageTimeLabel];
-    self.latestMessageTimeLabel.textColor = [UIColor colorWithWhite: 0.4 alpha: 1];
 }
 
 - (void) setHasNewMessages:(BOOL)hasNewMessages {
-    UIImage * backgroundImage = nil;
     _hasNewMessages = hasNewMessages;
-    if (hasNewMessages) {
-        backgroundImage = [AssetStore stretchableImageNamed: @"conversation_cell_bg_new" withLeftCapWidth: 1.0 topCapHeight: 0];
-    } else {
-        backgroundImage = [AssetStore stretchableImageNamed: @"conversation_cell_bg" withLeftCapWidth: 1.0 topCapHeight: 0];
-    }
-    ((UIImageView*)self.backgroundView).image = backgroundImage;
-    [self setNeedsDisplay];
-}
-
-- (NSString*) backgroundName {
-    return @"conversation_cell_bg";
+    self.unreadMessageBackground.hidden = ! _hasNewMessages;
 }
 
 - (void) layoutSubviews {
@@ -60,6 +48,15 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
     frame = self.nickName.frame;
     frame.size.width = self.latestMessageTimeLabel.frame.origin.x - (kHXOTimeDirectionPading + frame.origin.x);
     self.nickName.frame = frame;
+}
+
+- (UIView*) unreadMessageBackground {
+    if (_unreadMessageBackground == nil) {
+        _unreadMessageBackground = [[UIView alloc] initWithFrame: CGRectMake(15, 0, self.bounds.size.width, self.bounds.size.height)];
+        _unreadMessageBackground.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+        [self.contentView insertSubview: _unreadMessageBackground atIndex: 0];
+    }
+    return _unreadMessageBackground;
 }
 
 @end

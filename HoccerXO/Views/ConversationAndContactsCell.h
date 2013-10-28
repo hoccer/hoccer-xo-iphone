@@ -15,10 +15,7 @@
 @interface ConversationAndContactsCell : HXOTableViewCell
 
 @property (nonatomic,strong) IBOutlet UILabel * nickName;
-@property (nonatomic,strong) IBOutlet InsetImageView2 * avatar;
+@property (nonatomic,strong) IBOutlet UIImageView * avatar;
 @property (nonatomic,strong) IBOutlet UILabel * statusLabel;
-
-- (void) engraveLabel: (UILabel*) label;
-- (NSString*) backgroundName;
 
 @end

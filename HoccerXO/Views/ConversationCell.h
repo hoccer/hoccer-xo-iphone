@@ -20,6 +20,8 @@
 
 @property (nonatomic,strong) IBOutlet UIImageView* latestMessageDirection;
 
+@property (nonatomic,strong) UIView * unreadMessageBackground;
+
 @property (nonatomic,assign) BOOL hasNewMessages;
 
 @end
