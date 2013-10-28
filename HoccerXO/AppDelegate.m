@@ -107,8 +107,6 @@ static NSInteger validationErrorCount = 0;
          */
     }
 
-    [self customizeNavigationBar];
-
     [self setupSideMenusWithStoryboard: storyboard];
 
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
@@ -257,17 +255,6 @@ static NSInteger validationErrorCount = 0;
     unsigned seed;
     SecRandomCopyBytes(kSecRandomDefault, sizeof seed, (uint8_t*)&seed);
     srand(seed);
-}
-
-- (void) customizeNavigationBar {
-    // TODO: handle other bar metrics?
-    // this is visible in the message/mail compose view controllers
-    [[UINavigationBar appearance] setBackgroundImage: [AssetStore stretchableImageNamed: @"navbar_bg_plain"withLeftCapWidth: 5 topCapHeight: 0] forBarMetrics: UIBarMetricsDefault];
-
-    UIImage * navigationButtonBackground = [[UIImage imageNamed: @"navbar-btn-default"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
-    [[UIBarButtonItem appearance] setBackgroundImage: navigationButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
-    UIImage * navigationBackButtonBackground = [[UIImage imageNamed: @"navbar-btn-back"] stretchableImageWithLeftCapWidth: 16 topCapHeight: 0];
-    [[UIBarButtonItem appearance] setBackButtonBackgroundImage: navigationBackButtonBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 }
 
 - (void) setupSideMenusWithStoryboard: (UIStoryboard*) storyboard {

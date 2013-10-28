@@ -69,7 +69,8 @@
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
-    self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
+//    self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
+    self.navigationItem.title = @"Conversations";
 
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 }

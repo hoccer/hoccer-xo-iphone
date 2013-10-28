@@ -61,7 +61,7 @@ static const CGFloat kHXOGroupedTableCanvasBottomPadding = 30;
 }
 
 - (void) commonInit {
-    self.backgroundView = [[PerforatedPlateView alloc] initWithFrame: self.frame];
+    //self.backgroundView = [[PerforatedPlateView alloc] initWithFrame: self.frame];
 }
 
 - (void) layoutSubviews {

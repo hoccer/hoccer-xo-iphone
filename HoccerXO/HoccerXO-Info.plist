@@ -49,7 +49,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>7562</string>
+	<string>7580</string>
 	<key>HXOClientDevelopers</key>
 	<array>
 		<string>David Siegel</string>
@@ -92,9 +92,9 @@
 		<key>UINavigationBar</key>
 		<dict>
 			<key>Style</key>
-			<string>UIBarStyleBlack</string>
+			<string>UIBarStyleDefault</string>
 			<key>Translucent</key>
-			<false/>
+			<true/>
 		</dict>
 	</dict>
 	<key>UISupportedInterfaceOrientations</key>
@@ -110,5 +110,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>
