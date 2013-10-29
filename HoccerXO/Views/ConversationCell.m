@@ -21,15 +21,9 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
 
 @implementation ConversationCell
 
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    //[self engraveLabel: self.latestMessageLabel];
-    //[self engraveLabel: self.latestMessageTimeLabel];
-}
-
 - (void) setHasNewMessages:(BOOL)hasNewMessages {
     _hasNewMessages = hasNewMessages;
-    self.unreadMessageBackground.hidden = ! _hasNewMessages;
+    self.unreadMessageBackground.hidden = self.unreadMessageCountLabel.hidden = ! _hasNewMessages;
 }
 
 - (void) layoutSubviews {

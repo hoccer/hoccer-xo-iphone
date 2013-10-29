@@ -17,6 +17,7 @@
 
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageLabel;
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageTimeLabel;
+@property (nonatomic,strong) IBOutlet UILabel* unreadMessageCountLabel;
 
 @property (nonatomic,strong) IBOutlet UIImageView* latestMessageDirection;
 

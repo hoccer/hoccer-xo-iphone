@@ -15,7 +15,7 @@
 @implementation ConversationAndContactsCell
 
 - (void) awakeFromNib {
-    _avatar.layer.cornerRadius = 8;
+    _avatar.layer.cornerRadius = 10;
     _avatar.clipsToBounds = YES;
 }
 

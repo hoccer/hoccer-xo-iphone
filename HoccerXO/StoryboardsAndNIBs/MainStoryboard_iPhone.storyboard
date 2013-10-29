@@ -504,6 +504,14 @@
                                             <rect key="frame" x="262" y="16" width="10" height="10"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hku-Rf-SVT" userLabel="Unread Message Count" customClass="BezeledLabel">
+                                            <rect key="frame" x="62" y="10" width="14" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.85882359743118286" green="0.098039224743843079" blue="0.16470588743686676" alpha="1" colorSpace="deviceRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                            <color key="textColor" red="0.99215692281723022" green="0.97254908084869385" blue="0.97254908084869385" alpha="1" colorSpace="deviceRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
@@ -512,6 +520,7 @@
                                     <outlet property="latestMessageLabel" destination="BYf-td-Ce8" id="Fny-Sk-V6c"/>
                                     <outlet property="latestMessageTimeLabel" destination="TRS-dL-kmg" id="ihv-cF-LV1"/>
                                     <outlet property="nickName" destination="mH8-ys-z78" id="3A2-m8-Q55"/>
+                                    <outlet property="unreadMessageCountLabel" destination="hku-Rf-SVT" id="Pct-aF-mTv"/>
                                     <segue destination="21" kind="push" identifier="showChat" id="IGP-WO-2UC"/>
                                 </connections>
                             </tableViewCell>
@@ -989,7 +998,7 @@
         <scene sceneID="yKt-X8-1q7">
             <objects>
                 <tableViewController storyboardIdentifier="groupListViewController" id="LuP-42-HB8" userLabel="Group List View Controller" customClass="GroupListViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" id="CMZ-uC-6tS">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" id="CMZ-uC-6tS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1000,39 +1009,38 @@
                             <textInputTraits key="textInputTraits"/>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" rowHeight="64" id="plE-mv-1MJ" userLabel="Group Cell" customClass="ContactCell">
-                                <rect key="frame" x="0.0" y="66" width="320" height="64"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" rowHeight="72" id="1Ir-U2-AQO" customClass="ContactCell">
+                                <rect key="frame" x="0.0" y="66" width="320" height="72"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="plE-mv-1MJ" id="lAy-tb-XGo">
-                                    <rect key="frame" x="0.0" y="0.0" width="287" height="64"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1Ir-U2-AQO" id="Ff2-oO-toi">
+                                    <rect key="frame" x="0.0" y="0.0" width="287" height="71"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" id="S22-V8-2sd" userLabel="Avatar" customClass="InsetImageView2">
-                                            <rect key="frame" x="8" y="8" width="48" height="48"/>
+                                        <view contentMode="scaleToFill" id="uA5-jk-lqy" userLabel="Avatar" customClass="UIImageView">
+                                            <rect key="frame" x="30" y="15" width="42" height="42"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         </view>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oBp-ON-8k0">
-                                            <rect key="frame" x="72" y="8" width="195" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="er2-sx-kCY">
+                                            <rect key="frame" x="84" y="16" width="203" height="29"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Statuslabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dim-Vh-E2F">
-                                            <rect key="frame" x="72" y="35" width="195" height="21"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Statuslabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HKB-84-9NQ">
+                                            <rect key="frame" x="84" y="41" width="195" height="16"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <fontDescription key="fontDescription" type="italicSystem" pointSize="10"/>
+                                            <color key="textColor" red="0.66666668650000005" green="0.66666668650000005" blue="0.68235296010000002" alpha="1" colorSpace="deviceRGB"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="avatar" destination="S22-V8-2sd" id="T9z-cY-NcJ"/>
-                                    <outlet property="nickName" destination="oBp-ON-8k0" id="Q3N-di-6Er"/>
-                                    <outlet property="statusLabel" destination="dim-Vh-E2F" id="386-Qx-PvR"/>
-                                    <segue destination="e7o-9L-I8f" kind="push" identifier="showGroup" id="JRG-ZF-Buv"/>
+                                    <outlet property="avatar" destination="uA5-jk-lqy" id="qse-A9-FKG"/>
+                                    <outlet property="nickName" destination="er2-sx-kCY" id="MKx-84-dNo"/>
+                                    <outlet property="statusLabel" destination="HKB-84-9NQ" id="qfu-Kz-SBO"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1166,7 +1174,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="JRG-ZF-Buv"/>
         <segue reference="lna-0K-80T"/>
     </inferredMetricsTieBreakers>
 </document>

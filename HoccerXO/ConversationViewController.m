@@ -365,7 +365,18 @@
     } else {
         cell.latestMessageTimeLabel.text = @"";
     }
-    cell.hasNewMessages = contact.unreadMessages.count > 0;
+
+    NSUInteger unreadCount = contact.unreadMessages.count;
+    cell.hasNewMessages = unreadCount > 0;
+    cell.unreadMessageCountLabel.hidden = unreadCount == 0;
+    cell.unreadMessageCountLabel.text = unreadCount > 99 ? @">99" : [@(unreadCount) stringValue];
+    CGRect frame = cell.unreadMessageCountLabel.bounds;
+    CGFloat oldWidth = frame.size.width;
+    [cell.unreadMessageCountLabel sizeToFit];
+    CGFloat dx = oldWidth - cell.unreadMessageCountLabel.frame.size.width;
+    frame = cell.unreadMessageCountLabel.frame;
+    frame.origin.x += dx;
+    cell.unreadMessageCountLabel.frame = frame;
 
     [cell setNeedsLayout];
 }
