@@ -345,7 +345,7 @@
             cell.latestMessageDirection.image = nil;
         }
     }
-    [cell.latestMessageLabel sizeToFit];
+    //[cell.latestMessageLabel sizeToFit];
     
     
 

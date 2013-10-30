@@ -119,7 +119,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     bgframe.size.height = 30;
     UIView * textViewBackgroundView = [[UIImageView alloc] initWithFrame: bgframe];
     textViewBackgroundView.backgroundColor = [UIColor whiteColor];
-    textViewBackgroundView.layer.cornerRadius = 10;
+    textViewBackgroundView.layer.cornerRadius = 6;
     textViewBackgroundView.layer.borderColor = [UIColor colorWithRed: 0.784 green: 0.784 blue: 0.804 alpha: 1].CGColor;
     textViewBackgroundView.layer.borderWidth = 1.0;
     textViewBackgroundView.clipsToBounds = YES;
@@ -127,9 +127,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
     textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     // TODO: make the send button image smaller
-    UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
-    [self.sendButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
-    [self.sendButton setBackgroundColor: [UIColor clearColor]];
+    //UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
+    //[self.sendButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
+    //[self.sendButton setBackgroundColor: [UIColor clearColor]];
     
     [_chatbar sendSubviewToBack: textViewBackgroundView];
     //[_chatbar sendSubviewToBack: backgroundGradient];
