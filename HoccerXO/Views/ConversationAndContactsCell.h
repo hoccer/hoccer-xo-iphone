@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 
 #import "HXOTableViewCell.h"
+#import "NickNameLabelWithStatus.h"
 
 @class InsetImageView2;
 
 @interface ConversationAndContactsCell : HXOTableViewCell
 
-@property (nonatomic,strong) IBOutlet UILabel * nickName;
+@property (nonatomic,strong) IBOutlet NickNameLabelWithStatus * nickName;
 @property (nonatomic,strong) IBOutlet UIImageView * avatar;
 @property (nonatomic,strong) IBOutlet UILabel * statusLabel;
 

@@ -262,6 +262,7 @@
 		63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AF81911746AA1E00D007E3 /* GroupViewController.m */; };
 		63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AF819417471EFB00D007E3 /* HXONavigationItem.m */; };
 		63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B21789181EDA4C00C057D9 /* BezeledLabel.m */; };
+		63B2178D181FDFAB00C057D9 /* NickNameLabelWithStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */; };
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
 		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
@@ -835,6 +836,8 @@
 		63AF819417471EFB00D007E3 /* HXONavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXONavigationItem.m; sourceTree = "<group>"; };
 		63B21788181EDA4C00C057D9 /* BezeledLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BezeledLabel.h; sourceTree = "<group>"; };
 		63B21789181EDA4C00C057D9 /* BezeledLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezeledLabel.m; sourceTree = "<group>"; };
+		63B2178B181FDFAA00C057D9 /* NickNameLabelWithStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NickNameLabelWithStatus.h; sourceTree = "<group>"; };
+		63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NickNameLabelWithStatus.m; sourceTree = "<group>"; };
 		63BD7D8C174422D500118A7F /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		63BD7D931744232D00118A7F /* GroupMembership.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMembership.h; sourceTree = "<group>"; };
@@ -1858,6 +1861,8 @@
 				6385EC9317A68E770024028A /* InsetImageView2.m */,
 				63F4CF1917289DB600699394 /* InviteCell.h */,
 				63F4CF1A17289DB600699394 /* InviteCell.m */,
+				63B2178B181FDFAA00C057D9 /* NickNameLabelWithStatus.h */,
+				63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */,
 				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
 				63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */,
 				63172598177089230070823C /* PerforatedPlateView.h */,
@@ -2505,6 +2510,7 @@
 				6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */,
 				6378484616F4000500DE03C2 /* Delivery.m in Sources */,
 				6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */,
+				63B2178D181FDFAB00C057D9 /* NickNameLabelWithStatus.m in Sources */,
 				63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				633129D716F95220008F5B04 /* GrowingTextView.m in Sources */,

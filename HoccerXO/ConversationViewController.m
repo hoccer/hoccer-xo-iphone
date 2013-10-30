@@ -308,8 +308,11 @@
 - (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath {
     ConversationCell * cell = (ConversationCell*)aCell;
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
+
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
+    cell.nickName.isOnline = [contact.connectionStatus isEqualToString: @"online"];
+
     UIImage * avatar = contact.avatarImage;
     if (avatar == nil) {
         NSString * avatarName = [contact.type isEqualToString: @"Group"] ?  @"avatar_default_group" : @"avatar_default_contact";
