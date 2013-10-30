@@ -263,6 +263,7 @@
 		63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AF819417471EFB00D007E3 /* HXONavigationItem.m */; };
 		63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B21789181EDA4C00C057D9 /* BezeledLabel.m */; };
 		63B2178D181FDFAB00C057D9 /* NickNameLabelWithStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */; };
+		63B217901821272B00C057D9 /* ChatBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178F1821272B00C057D9 /* ChatBar.m */; };
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
 		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
@@ -838,6 +839,8 @@
 		63B21789181EDA4C00C057D9 /* BezeledLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezeledLabel.m; sourceTree = "<group>"; };
 		63B2178B181FDFAA00C057D9 /* NickNameLabelWithStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NickNameLabelWithStatus.h; sourceTree = "<group>"; };
 		63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NickNameLabelWithStatus.m; sourceTree = "<group>"; };
+		63B2178E1821272B00C057D9 /* ChatBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBar.h; sourceTree = "<group>"; };
+		63B2178F1821272B00C057D9 /* ChatBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBar.m; sourceTree = "<group>"; };
 		63BD7D8C174422D500118A7F /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		63BD7D931744232D00118A7F /* GroupMembership.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMembership.h; sourceTree = "<group>"; };
@@ -1828,6 +1831,8 @@
 				63B21789181EDA4C00C057D9 /* BezeledLabel.m */,
 				634B46CE178D8015001C1C0D /* BubbleViewToo.h */,
 				634B46CF178D8015001C1C0D /* BubbleViewToo.m */,
+				63B2178E1821272B00C057D9 /* ChatBar.h */,
+				63B2178F1821272B00C057D9 /* ChatBar.m */,
 				6343B4E316CD604700B3A29E /* ChatTableCells.h */,
 				6343B4E416CD604700B3A29E /* ChatTableCells.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
@@ -2553,6 +2558,7 @@
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
+				63B217901821272B00C057D9 /* ChatBar.m in Sources */,
 				E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */,
 				E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */,
 				E99886C71725CB3F0089A510 /* ACAddressBookPerson.m in Sources */,

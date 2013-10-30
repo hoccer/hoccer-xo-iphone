@@ -89,6 +89,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     
     [self.view bringSubviewToFront: _chatbar];
 
+    /*
     UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg_noise"]];
     _chatbar.backgroundColor = barBackground;
 
@@ -103,7 +104,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     backgroundGradient.frame = _chatbar.bounds;
     [_chatbar addSubview: backgroundGradient];
     backgroundGradient.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-
+*/
     _textField.delegate = self;
     _textField.backgroundColor = [UIColor clearColor];
     CGRect frame = _textField.frame;
@@ -112,12 +113,17 @@ static const CGFloat    kSectionHeaderHeight = 40;
     frame.origin.x += 3;
     _textField.frame = frame;
 
-    UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:14 topCapHeight:14];
-    UIImageView * textViewBackgroundView = [[UIImageView alloc] initWithImage: textfieldBackground];
-    [_chatbar addSubview: textViewBackgroundView];
+    //UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:14 topCapHeight:14];
+    //UIImageView * textViewBackgroundView = [[UIImageView alloc] initWithImage: textfieldBackground];
     bgframe.origin.y -= 3;
     bgframe.size.height = 30;
-    textViewBackgroundView.frame = bgframe;
+    UIView * textViewBackgroundView = [[UIImageView alloc] initWithFrame: bgframe];
+    textViewBackgroundView.backgroundColor = [UIColor whiteColor];
+    textViewBackgroundView.layer.cornerRadius = 10;
+    textViewBackgroundView.layer.borderColor = [UIColor colorWithRed: 0.784 green: 0.784 blue: 0.804 alpha: 1].CGColor;
+    textViewBackgroundView.layer.borderWidth = 1.0;
+    textViewBackgroundView.clipsToBounds = YES;
+    [_chatbar addSubview: textViewBackgroundView];
     textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     // TODO: make the send button image smaller
@@ -126,7 +132,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [self.sendButton setBackgroundColor: [UIColor clearColor]];
     
     [_chatbar sendSubviewToBack: textViewBackgroundView];
-    [_chatbar sendSubviewToBack: backgroundGradient];
+    //[_chatbar sendSubviewToBack: backgroundGradient];
     
     // setup longpress menus
     UIMenuController *menuController = [UIMenuController sharedMenuController];
