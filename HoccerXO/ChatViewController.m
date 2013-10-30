@@ -951,12 +951,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView * header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kSectionHeaderHeight)];
 
+    /*
     UIImage * backgroundImage = [UIImage imageNamed: @"date_cell_bg"];
     CGFloat y = 0.5 * (kSectionHeaderHeight - backgroundImage.size.height);
     UIImageView * background = [[UIImageView alloc] initWithFrame: CGRectMake(0, y, 320, backgroundImage.size.height)];
     background.image = backgroundImage;
     background.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [header addSubview: background];
+     */
 
     UILabel * label = [[UILabel alloc] initWithFrame: header.frame];
     label.backgroundColor = [UIColor clearColor];

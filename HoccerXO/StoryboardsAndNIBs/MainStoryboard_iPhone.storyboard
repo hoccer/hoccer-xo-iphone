@@ -1041,6 +1041,7 @@
                                     <outlet property="avatar" destination="uA5-jk-lqy" id="qse-A9-FKG"/>
                                     <outlet property="nickName" destination="er2-sx-kCY" id="MKx-84-dNo"/>
                                     <outlet property="statusLabel" destination="HKB-84-9NQ" id="qfu-Kz-SBO"/>
+                                    <segue destination="e7o-9L-I8f" kind="push" identifier="showGroup" id="zhf-Yf-w9m"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1174,6 +1175,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="zhf-Yf-w9m"/>
         <segue reference="lna-0K-80T"/>
     </inferredMetricsTieBreakers>
 </document>
