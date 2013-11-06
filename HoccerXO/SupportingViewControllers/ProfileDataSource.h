@@ -20,6 +20,8 @@
 @protocol ProfileItemInfo <NSObject>
 
 @property (nonatomic,readonly) NSString * name;
+@property (nonatomic,unsafe_unretained) SEL action;
+@property (nonatomic,weak) id target;
 
 @end
 

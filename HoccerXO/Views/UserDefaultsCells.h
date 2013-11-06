@@ -36,7 +36,7 @@
 @property (nonatomic,assign) UITextAlignment textAlignment;
 @property (nonatomic, assign) BOOL           secure;
 @property (nonatomic, weak)  id              target;
-@property (nonatomic,assign) SEL             action;
+@property (nonatomic,unsafe_unretained) SEL  action;
 @property (nonatomic,assign) BOOL            alwaysShowDisclosure;
 @property (nonatomic,strong) NSString *      name;
 @property (nonatomic,assign) NSUInteger      maxLength;
@@ -53,7 +53,7 @@
 @property (nonatomic,strong) NSString* contactKey;
 @property (nonatomic,strong) id        cellClass;
 @property (nonatomic,weak) id        target;
-@property (nonatomic, assign) SEL      action;
+@property (nonatomic, unsafe_unretained) SEL      action;
 //@property (nonatomic,strong) NSIndexPath *   indexPath;
 @property (nonatomic,strong) NSString *   defaultImageName;
 @property (nonatomic,strong) NSString *      name;

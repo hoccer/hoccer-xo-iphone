@@ -385,17 +385,20 @@ typedef enum ActionSheetTags {
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    id item = _profileDataSource[indexPath.section][indexPath.row];
+    id<ProfileItemInfo> item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [AvatarItem class]]) {
         return nil;
-    } else {
+    } else if ([item isKindOfClass: [ProfileItem class]]) {
         return item != nil && [item target] != nil && [item action] != nil ? indexPath : nil;
+    } else {
+        NSLog(@"Unhandled item type");
+        return nil;
     }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // NSLog(@"selected cell %@", indexPath);
-    ProfileItem * item = _profileDataSource[indexPath.section][indexPath.row];
+    id<ProfileItemInfo> item = _profileDataSource[indexPath.section][indexPath.row];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     [[item target] performSelector: [item action] withObject: indexPath];
