@@ -32,6 +32,8 @@
     [super viewDidLoad];
     [self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
     _prototypes[(id)[UserDefaultsCell class]] = [[UserDefaultsCell alloc] init];
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
 
