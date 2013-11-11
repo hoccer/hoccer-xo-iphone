@@ -12,6 +12,7 @@
 #import "HXOUserDefaults.h"
 #import "TDSemiModal.h"
 #import "GeoLocationPicker.h"
+#import "AppDelegate.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTType.h>
@@ -400,6 +401,18 @@
 - (void) locationPickerDidCancel:(GeoLocationPicker *)picker {
 }
 
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [AppDelegate setBlackFontStatusbarForViewController:viewController];
+}
+
+//- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+//{
+//    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault; // black font
+//    [viewController setNeedsStatusBarAppearanceUpdate];
+//}
+
 #pragma mark - image/video picking
 
 
@@ -429,7 +442,6 @@
     }
     
     [self registerBackgroundTask];
-    
     
     [_viewController presentViewController: picker animated: YES completion: nil];
 

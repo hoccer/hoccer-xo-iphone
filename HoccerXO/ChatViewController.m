@@ -166,6 +166,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [HXOBackend broadcastConnectionInfo];
 
     [self scrollToRememberedCellOrToBottomIfNone];
+    [AppDelegate setWhiteFontStatusbarForViewController:self];
 }
 
 
