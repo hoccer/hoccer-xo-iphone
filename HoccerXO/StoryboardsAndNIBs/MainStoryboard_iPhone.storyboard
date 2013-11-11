@@ -741,9 +741,10 @@
                                     <outlet property="delegate" destination="jBj-li-dGc" id="llG-4K-9YB"/>
                                 </connections>
                             </scrollView>
-                            <navigationBar contentMode="scaleToFill" barStyle="blackTranslucent" id="T1N-2Y-4db">
+                            <navigationBar contentMode="scaleToFill" id="T1N-2Y-4db">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="barTintColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem id="mUy-St-hDX">
                                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="7hX-Mb-wEB">
@@ -900,6 +901,7 @@
                             <navigationBar contentMode="scaleToFill" barStyle="black" id="xbS-Xo-mLG">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="barTintColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Drag the Pin" id="dZo-z5-Fid">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG"/>
@@ -917,6 +919,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="customNavigationItem" destination="dZo-z5-Fid" id="BPv-Au-YJm"/>
                         <outlet property="mapView" destination="oDn-ba-OW5" id="g5t-ee-PnJ"/>
