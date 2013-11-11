@@ -124,8 +124,19 @@
 }
 
 - (void) textViewDidChange:(UITextView *)textView {
-	CGFloat textHeight = self.contentSize.height;
-    textHeight = textHeight == _singleLineContentHeight ? _minHeight : textHeight - 8;
+
+    CGRect frame = self.bounds;
+    CGSize offsets = CGSizeMake(10.0, 16.0);
+
+    frame.size.height -= offsets.height;
+    frame.size.width -= offsets.width;
+
+
+	CGFloat textHeight = [self.attributedText boundingRectWithSize:CGSizeMake(CGRectGetWidth(frame), MAXFLOAT)
+                                                     options:NSStringDrawingUsesLineFragmentOrigin
+                                                     context:nil].size.height;
+
+    textHeight = textHeight == _singleLineContentHeight ? _minHeight : textHeight + offsets.height;
     
     CGFloat targetViewHeight = MIN(_maxHeight, MAX(_minHeight, textHeight)); // clamp the text height
 
