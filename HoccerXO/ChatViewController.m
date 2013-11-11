@@ -1030,7 +1030,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self hideKeyboard];
+    if (scrollView == self.tableView) {
+        [self hideKeyboard];
+    }
 }
 
 #pragma mark - Table view menu delegate
