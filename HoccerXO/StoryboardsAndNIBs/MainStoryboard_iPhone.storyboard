@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="MEK-d2-s1c">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="MEK-d2-s1c">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -637,7 +637,7 @@
                                             <outlet property="delegate" destination="21" id="HD4-bh-xOp"/>
                                         </connections>
                                     </tableView>
-                                    <view contentMode="scaleToFill" id="129-Xd-O4Y" userLabel="Chat Bar" customClass="ChatBar">
+                                    <view contentMode="redraw" id="129-Xd-O4Y" userLabel="Chat Bar" customClass="ChatBar">
                                         <rect key="frame" x="0.0" y="528" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <subviews>
@@ -654,7 +654,7 @@
                                             </button>
                                             <button opaque="NO" alpha="0.10000000000000001" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xPf-xg-Yss" userLabel="Button - Cancel">
                                                 <rect key="frame" x="5" y="8" width="50" height="23"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <state key="normal" title="Button">
                                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -740,9 +740,10 @@
                                     <outlet property="delegate" destination="jBj-li-dGc" id="llG-4K-9YB"/>
                                 </connections>
                             </scrollView>
-                            <navigationBar contentMode="scaleToFill" barStyle="blackTranslucent" id="T1N-2Y-4db">
+                            <navigationBar contentMode="scaleToFill" id="T1N-2Y-4db">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="barTintColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem id="mUy-St-hDX">
                                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="7hX-Mb-wEB">
@@ -899,6 +900,7 @@
                             <navigationBar contentMode="scaleToFill" barStyle="black" id="xbS-Xo-mLG">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="barTintColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Drag the Pin" id="dZo-z5-Fid">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG"/>
@@ -916,6 +918,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="customNavigationItem" destination="dZo-z5-Fid" id="BPv-Au-YJm"/>
                         <outlet property="mapView" destination="oDn-ba-OW5" id="g5t-ee-PnJ"/>
