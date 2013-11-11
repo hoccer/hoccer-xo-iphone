@@ -9,7 +9,7 @@
 #import "NickNameLabelWithStatus.h"
 
 static const CGFloat kLEDPadding = 3.0;
-static const CGFloat kLEDSize = 4.0;
+static const CGFloat kLEDSize = 6.0;
 
 
 @implementation NickNameLabelWithStatus
