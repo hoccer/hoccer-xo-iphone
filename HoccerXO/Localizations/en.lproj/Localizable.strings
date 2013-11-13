@@ -424,3 +424,6 @@
 
 "vcard_default_title" = "Contact";
 "location_default_title" = "Location";
+
+"chat_view_message_placeholder" = "Message";
+

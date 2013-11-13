@@ -22,3 +22,6 @@
 [submodule "3rdParty/InAppSettingsKit"]
 	path = 3rdParty/InAppSettingsKit
 	url = git@github.com:hoccer/InAppSettingsKit.git
+[submodule "3rdParty/GrowingTextView"]
+	path = 3rdParty/GrowingTextView
+	url = https://github.com/HansPinckaers/GrowingTextView.git

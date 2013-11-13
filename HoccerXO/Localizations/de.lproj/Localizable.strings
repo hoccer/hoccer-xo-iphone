@@ -402,3 +402,6 @@
 
 "vcard_default_title" = "Kontakt";
 "location_default_title" = "Ort";
+
+"chat_view_message_placeholder" = "Nachricht";
+

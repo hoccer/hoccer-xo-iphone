@@ -683,18 +683,15 @@
                                                     <action selector="addAttachmentPressed:" destination="21" eventType="touchUpInside" id="Xoj-u6-0ru"/>
                                                 </connections>
                                             </button>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ucn-hM-11L" customClass="GrowingTextView">
-                                                <rect key="frame" x="61" y="8" width="198" height="30"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <inset key="scrollIndicatorInsets" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                            </textView>
                                             <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" style="white" id="Fyy-CK-c8b" userLabel="Activity Indicator - Attachment">
                                                 <rect key="frame" x="20" y="10" width="20" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             </activityIndicatorView>
+                                            <view contentMode="scaleToFill" id="Zuu-F2-dP2" customClass="HPGrowingTextView">
+                                                <rect key="frame" x="63" y="5" width="194" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" red="0.96078437566757202" green="0.9647059440612793" blue="0.96862751245498657" alpha="1" colorSpace="deviceRGB"/>
                                     </view>
@@ -713,7 +710,7 @@
                         <outlet property="chatbar" destination="129-Xd-O4Y" id="4Iz-Jw-fS7"/>
                         <outlet property="sendButton" destination="5x6-4c-VVf" id="WvI-ca-kGo"/>
                         <outlet property="tableView" destination="V1G-wu-Gd1" id="BG6-xp-NlW"/>
-                        <outlet property="textField" destination="ucn-hM-11L" id="fEi-VK-Qrb"/>
+                        <outlet property="textField" destination="Zuu-F2-dP2" id="M6y-Xp-2e9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>

@@ -13,18 +13,19 @@
 #import "ChatTableCells.h"
 #import "HXOActionSheet.h"
 #import "HXOLinkyLabel.h"
+#import "HPGrowingTextView.h"
 
 @class HXOBackend;
 @class AVAssetExportSession;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,ActionSheetDelegate,GrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,ActionSheetDelegate,HPGrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate>
 {
     NSMutableDictionary        *resultsControllers;
 }
 
 @property (strong, nonatomic) Contact *                      partner;
 @property (readonly, strong, nonatomic) HXOBackend *  chatBackend;
-@property (strong, nonatomic) IBOutlet GrowingTextView *     textField;
+@property (strong, nonatomic) IBOutlet HPGrowingTextView *   textField;
 @property (strong, nonatomic) IBOutlet UIButton *            sendButton;
 @property (strong, nonatomic) IBOutlet UIView *              chatbar;
 @property (strong, nonatomic) IBOutlet UIButton *            attachmentButton;

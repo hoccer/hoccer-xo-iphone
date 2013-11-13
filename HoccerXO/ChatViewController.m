@@ -89,35 +89,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
     
     [self.view bringSubviewToFront: _chatbar];
 
-    /*
-    UIColor * barBackground = [UIColor colorWithPatternImage: [UIImage imageNamed: @"chatbar_bg_noise"]];
-    _chatbar.backgroundColor = barBackground;
-
-    UIImage * backgroundGradientImage = [UIImage imageNamed: @"chatbar_bg_gradient"];
-    if ([backgroundGradientImage respondsToSelector: @selector(resizableImageWithCapInsets:resizingMode:)]) {
-        backgroundGradientImage = [backgroundGradientImage resizableImageWithCapInsets:UIEdgeInsetsMake(2, 0, 0, 0) resizingMode: UIImageResizingModeStretch];
-    } else {
-        backgroundGradientImage = [backgroundGradientImage stretchableImageWithLeftCapWidth:0 topCapHeight:12];
-    }
-    UIImageView * backgroundGradient = [[UIImageView alloc] initWithImage: backgroundGradientImage];
-
-    backgroundGradient.frame = _chatbar.bounds;
-    [_chatbar addSubview: backgroundGradient];
-    backgroundGradient.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-*/
     _textField.delegate = self;
     _textField.backgroundColor = [UIColor clearColor];
-    CGRect frame = _textField.frame;
-    CGRect bgframe = _textField.frame;
-    frame.size.width -= 6;
-    frame.origin.x += 3;
-    _textField.frame = frame;
+    _textField.placeholder = NSLocalizedString(@"chat_view_message_placeholder", nil);
 
-    //UIImage *textfieldBackground = [[UIImage imageNamed:@"chatbar_input-text"] stretchableImageWithLeftCapWidth:14 topCapHeight:14];
-    //UIImageView * textViewBackgroundView = [[UIImageView alloc] initWithImage: textfieldBackground];
-    bgframe.origin.y -= 3;
-    bgframe.size.height = 30;
-    UIView * textViewBackgroundView = [[UIImageView alloc] initWithFrame: bgframe];
+    UIView * textViewBackgroundView = [[UIImageView alloc] initWithFrame: CGRectInset(_textField.frame, 0, 2)];
     textViewBackgroundView.backgroundColor = [UIColor whiteColor];
     textViewBackgroundView.layer.cornerRadius = 6;
     textViewBackgroundView.layer.borderColor = [UIColor colorWithRed: 0.784 green: 0.784 blue: 0.804 alpha: 1].CGColor;
@@ -126,14 +102,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [_chatbar addSubview: textViewBackgroundView];
     textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
-    // TODO: make the send button image smaller
-    //UIImage *sendButtonBackground = [[UIImage imageNamed:@"chatbar_btn-send"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
-    //[self.sendButton setBackgroundImage: sendButtonBackground forState: UIControlStateNormal];
-    //[self.sendButton setBackgroundColor: [UIColor clearColor]];
-    
     [_chatbar sendSubviewToBack: textViewBackgroundView];
-    //[_chatbar sendSubviewToBack: backgroundGradient];
-    
+
     // setup longpress menus
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
@@ -146,9 +116,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [self hideAttachmentSpinner];
     [HXOBackend registerConnectionInfoObserverFor:self];
 
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-    gestureRecognizer.cancelsTouchesInView = NO;
-    [self.tableView addGestureRecognizer:gestureRecognizer];
+//    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+//    gestureRecognizer.cancelsTouchesInView = NO;
+//    [self.tableView addGestureRecognizer:gestureRecognizer];
 
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [AttachmentMessageCell class]];
@@ -244,7 +214,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }];
 
     // this catches orientation changes, too
-    _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height;
+    _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height - (self.navigationController.navigationBar.frame.origin.y  + self.navigationController.navigationBar.frame.size.height);
 }
 
 - (void)keyboardWillHide:(NSNotification*)aNotification {
@@ -913,7 +883,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 #pragma mark - Growing Text View Delegate
 
-- (void)growingTextView:(GrowingTextView *)growingTextView willChangeHeight:(float)height {
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height {
     float diff = (growingTextView.frame.size.height - height);
 
 	CGRect r = _chatbar.frame;
