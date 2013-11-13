@@ -72,18 +72,14 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 - (id) init {
     self = [super initWithFrame: CGRectMake(0, 0, 320, 24)];
     if (self != nil) {
-        self.icon = [[UIImageView alloc] initWithFrame: CGRectMake(20, 0, 34, 24)];
-        self.icon.contentMode = UIViewContentModeCenter;
-        [self addSubview: self.icon];
-        self.title = [[UILabel alloc] initWithFrame: CGRectMake(63, 0, 237, 24)];
+        self.title = [[UILabel alloc] initWithFrame: self.frame];
         [self addSubview: self.title];
         self.title.backgroundColor = [UIColor clearColor];
-        self.title.font = [UIFont boldSystemFontOfSize: 17];
-        self.title.textColor = [UIColor colorWithWhite: 0.1 alpha: 1];
-        self.title.shadowColor = [UIColor colorWithWhite: 0.60 alpha:1];
-        self.title.shadowOffset = CGSizeMake(0, 1);
+        self.title.font = [UIFont systemFontOfSize: 12];
+        self.title.textColor = [UIColor colorWithWhite: 0.2 alpha: 1];
         self.title.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        self.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"contact_section_header_bg"]];
+        self.title.textAlignment = NSTextAlignmentCenter;
+        self.backgroundColor = [UIColor colorWithWhite: 0.7 alpha: 1.0];
 
     }
     return self;
