@@ -25,6 +25,9 @@
     NSUInteger _firstPickerButton;
     UIBackgroundTaskIdentifier _backgroundTask;
 }
+
+@property (nonatomic,readonly) UINavigationController * modalLocationPickerHelper;
+
 @end
 
 @interface AttachmentPickerItem : NSObject
@@ -378,17 +381,24 @@
 #pragma mark - Geo Location Picking
 
 @synthesize geoLocationViewController = _geoLocationViewController;
+@synthesize modalLocationPickerHelper = _modalLocationPickerHelper;
 
 - (GeoLocationPicker*) geoLocationViewController {
     if (_geoLocationViewController == nil) {
         _geoLocationViewController = [_viewController.storyboard instantiateViewControllerWithIdentifier:@"GeoLocationViewController"];
-        _geoLocationViewController.delegate = self;
     }
     return _geoLocationViewController;
 }
 
+- (UINavigationController*) modalLocationPickerHelper {
+    if (_modalLocationPickerHelper == nil) {
+        self.geoLocationViewController.delegate = self;
+        _modalLocationPickerHelper = [_viewController.storyboard instantiateViewControllerWithIdentifier: @"ModalGeoLocationViewController"];
+    }
+    return _modalLocationPickerHelper;
+}
 - (void) pickGeoLocation {
-    [_viewController presentViewController: self.geoLocationViewController animated: YES completion: nil];
+    [_viewController presentViewController: self.modalLocationPickerHelper animated: YES completion: nil];
 }
 
 - (void) locationPicker:(GeoLocationPicker *)picker didPickLocation:(MKPointAnnotation*)placemark preview:(UIImage *)preview {

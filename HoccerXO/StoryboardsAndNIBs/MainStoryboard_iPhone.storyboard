@@ -870,31 +870,24 @@
             <objects>
                 <viewController storyboardIdentifier="GeoLocationViewController" id="7cB-uF-Ia0" userLabel="Geo Location View Controller" customClass="GeoLocationPicker" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SMK-u8-fXi">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" barStyle="black" id="xbS-Xo-mLG">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="barTintColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <items>
-                                    <navigationItem title="Drag the Pin" id="dZo-z5-Fid">
-                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG"/>
-                                        <barButtonItem key="rightBarButtonItem" title="Done" id="d5J-zS-hRq"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="oDn-ba-OW5">
-                                <rect key="frame" x="0.0" y="44" width="320" height="524"/>
+                                <rect key="frame" x="0.0" y="-8" width="320" height="512"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
                                     <outlet property="delegate" destination="7cB-uF-Ia0" id="Fcx-Jc-zcL"/>
                                 </connections>
                             </mapView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" title="Drag the Pin" id="dZo-z5-Fid">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG"/>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="d5J-zS-hRq"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="customNavigationItem" destination="dZo-z5-Fid" id="BPv-Au-YJm"/>
                         <outlet property="mapView" destination="oDn-ba-OW5" id="g5t-ee-PnJ"/>
@@ -902,7 +895,23 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kom-cA-fQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1380" y="1433"/>
+            <point key="canvasLocation" x="1931" y="1425"/>
+        </scene>
+        <!--Navigation Controller - Modal Map View Helper-->
+        <scene sceneID="qHY-n4-1jX">
+            <objects>
+                <navigationController storyboardIdentifier="ModalGeoLocationViewController" title="Modal Map View Helper" definesPresentationContext="YES" id="ISl-ar-14M" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YuO-st-Z2w">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="7cB-uF-Ia0" kind="relationship" relationship="rootViewController" id="evu-cH-CKo"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="thc-tU-MYG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1426" y="1425"/>
         </scene>
         <!--FAQ View Controller-->
         <scene sceneID="77G-og-1tU">
