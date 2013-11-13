@@ -73,7 +73,17 @@
     self.navigationItem.title = @"Conversations";
 
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
+    
 }
+
+
+//-(UIStatusBarStyle) preferredStatusBarStyle
+//{
+//    NSLog(@"preferredStatusBarStyle called");
+//    return UIStatusBarStyleLightContent;
+//    //return UIStatusBarStyleBlackTranslucent;
+//}
+
 
 - (ChatViewController*) chatViewController {
     if (_chatViewController == nil) {
@@ -86,6 +96,9 @@
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
+
+    [AppDelegate setWhiteFontStatusbarForViewController:self];
+
 }
 
 - (void) viewDidAppear:(BOOL)animated {

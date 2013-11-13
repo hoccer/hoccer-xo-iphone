@@ -10,7 +10,7 @@
 #import "ChatViewController.h"
 
 #import "TDSemiModal.h"
-#import "UIButton+GlossyRounded.h"
+// #import "UIButton+GlossyRounded.h"
 #import "AppDelegate.h"
 
 @interface RecordViewController ()
@@ -26,9 +26,9 @@
     
     disabledAlpha = 0.1;
 
-    [self.playButton makeRoundAndGlossy];
-    [self.stopButton makeRoundAndGlossy];
-    [self.recordButton makeRoundAndGlossy];
+    //[self.playButton makeRoundAndGlossy];
+    //[self.stopButton makeRoundAndGlossy];
+    //[self.recordButton makeRoundAndGlossy];
     
     self.useButton.style = UIBarButtonItemStyleDone;
 

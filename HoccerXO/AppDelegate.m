@@ -965,4 +965,41 @@ static NSInteger validationErrorCount = 0;
     self.navigationController.topViewController.navigationItem.prompt = @"blub";
 }
 
++ (void) updateStatusbarForViewController:(UIViewController*)viewcontroller style:(UIStatusBarStyle)theStyle {
+    NSLog(@"updateStatusbar");
+    // self.preferredStatusBarStyle = UIStatusBarStyleBlackTranslucent;
+    //[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent
+    
+    [UIView animateWithDuration:0.5
+     
+                          delay: 0.0
+     
+                        options: UIViewAnimationOptionTransitionNone
+     
+                     animations:^{
+                         //UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault; // black font
+                         //UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent; // white font
+                         UIApplication.sharedApplication.statusBarStyle = theStyle;
+                     }
+     
+                     completion:^(BOOL finished){
+                         NSLog(@"statusBarStyle animation done");
+                         
+                     }];
+    
+    [viewcontroller setNeedsStatusBarAppearanceUpdate];
+    NSLog(@"setNeedsStatusBarAppearanceUpdate");
+}
+
++ (void) setBlackFontStatusbarForViewController:(UIViewController*)viewcontroller {
+    [AppDelegate updateStatusbarForViewController:viewcontroller style:UIStatusBarStyleDefault];
+}
+
++ (void) setWhiteFontStatusbarForViewController:(UIViewController*)viewcontroller {
+    [AppDelegate updateStatusbarForViewController:viewcontroller style:UIStatusBarStyleLightContent];
+}
+
+
+
+
 @end

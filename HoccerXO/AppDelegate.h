@@ -60,5 +60,8 @@
 
 + (id) registerKeyboardHidingOnSheetPresentationFor:(UIViewController*)controller;
 
++ (void) updateStatusbarForViewController:(UIViewController*)viewcontroller style:(UIStatusBarStyle)theStyle;
++ (void) setBlackFontStatusbarForViewController:(UIViewController*)viewcontroller;
++ (void) setWhiteFontStatusbarForViewController:(UIViewController*)viewcontroller;
 
 @end
