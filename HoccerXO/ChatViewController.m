@@ -891,6 +891,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     r.size.height -= diff;
     r.origin.y += diff;
 	_chatbar.frame = r;
+
 }
 
 #pragma mark - Table view data source
@@ -1770,7 +1771,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
             // NSLog(@"attachment view loadimage done");
             if (theImage != nil) {
                 self.imageViewController.image = theImage;
-                [self presentViewController: self.imageViewController animated: YES completion: nil];
+                //[self presentViewController: self.imageViewController animated: YES completion: nil];
+                [self.navigationController pushViewController: self.imageViewController animated: YES];
             } else {
                 NSLog(@"image attachment view: Failed to get image: %@", error);
             }

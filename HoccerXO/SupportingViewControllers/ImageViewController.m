@@ -10,7 +10,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-static const CGFloat kImageViewerOversize = 1.03;
+static const CGFloat kImageViewerOversize = 1.0;
 
 @interface ImageViewController ()
 
@@ -38,16 +38,17 @@ static const CGFloat kImageViewerOversize = 1.03;
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
     
+
+    UITapGestureRecognizer *singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped:)];
+    singleTapRecognizer.numberOfTapsRequired = 1;
+    singleTapRecognizer.numberOfTouchesRequired = 1;
+    [singleTapRecognizer requireGestureRecognizerToFail: doubleTapRecognizer];
+    [self.scrollView addGestureRecognizer:singleTapRecognizer];
+
+
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical   = YES;
     self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"bg-noise"]];
-
-    /*
-    self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.imageView.layer.shadowOpacity = 0.8;
-    self.imageView.layer.shadowRadius  = 10;
-    self.imageView.layer.shadowOffset = CGSizeMake(0, 0);
-     */
 
     [self.doneButton setBackgroundImage: [UIImage imageNamed: @"navbar-btn-blue"] forState: UIControlStateNormal barMetrics:UIBarMetricsDefault];
 }
@@ -60,6 +61,10 @@ static const CGFloat kImageViewerOversize = 1.03;
 
     [self updateZoomScale];
 
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden: YES animated: YES];
 }
 
 - (void)updateZoomScale {
@@ -126,6 +131,11 @@ static const CGFloat kImageViewerOversize = 1.03;
     newZoomScale = MAX(newZoomScale, self.scrollView.minimumZoomScale);
     [self.scrollView setZoomScale:newZoomScale animated:YES];
 }
+
+- (void)scrollViewTapped:(UITapGestureRecognizer*)recognizer {
+    [self.navigationController setNavigationBarHidden: ! self.navigationController.isNavigationBarHidden animated: YES];
+}
+
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;

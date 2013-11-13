@@ -29,7 +29,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *            sendButton;
 @property (strong, nonatomic) IBOutlet UIView *              chatbar;
 @property (strong, nonatomic) IBOutlet UIButton *            attachmentButton;
-@property (strong, nonatomic) IBOutlet UIButton *            cancelButton;
+//@property (strong, nonatomic) IBOutlet UIButton *            cancelButton;
 @property (strong, nonatomic) IBOutlet UITableView *         tableView;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView * attachmentSpinner;
 @property (strong, nonatomic) IBOutlet UIView *chatViewResizer;
