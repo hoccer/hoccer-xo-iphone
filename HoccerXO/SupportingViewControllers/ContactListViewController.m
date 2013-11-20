@@ -65,8 +65,7 @@
 //    UIImage * blueBackground = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
 //    [self.navigationItem.rightBarButtonItem setBackgroundImage: blueBackground forState: UIControlStateNormal barMetrics: UIBarMetricsDefault];
 
-    UIImage * icon = [UIImage imageNamed: [self navigationItemBackButtonImageName]];
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage: icon style:UIBarButtonItemStylePlain target:nil action:nil];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
 }
