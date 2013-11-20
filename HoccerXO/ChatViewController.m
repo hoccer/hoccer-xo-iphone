@@ -38,6 +38,7 @@
 #import "BubbleViewToo.h"
 #import "InsetImageView2.h"
 #import "ProfileViewController.h"
+#import "NickNameLabelWithStatus.h"
 
 #define ACTION_MENU_DEBUG NO
 
@@ -54,6 +55,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 @property (readonly, strong, nonatomic) ABUnknownPersonViewController * vcardViewController;
+@property (nonatomic,strong) NickNameLabelWithStatus * titleLabel;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
@@ -124,6 +126,12 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [self registerCellClass: [AttachmentMessageCell class]];
     [self registerCellClass: [AttachmentWithTextMessageCell class]];
 
+
+    self.titleLabel = [[NickNameLabelWithStatus alloc] init];
+    self.navigationItem.titleView = self.titleLabel;
+    self.titleLabel.textColor = [UIColor whiteColor];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+
     [self configureView];
 }
 
@@ -155,9 +163,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // Update the user interface for the detail item.
 
     if (self.partner) {
-        // self.title = self.partner.nickName;
-        self.title = self.partner.nickNameWithStatus;
+        [self configureTitle];
     }
+}
+
+- (void) configureTitle {
+    self.titleLabel.text = self.partner.nickNameWithStatus;
+    self.titleLabel.isOnline = [self.partner.connectionStatus isEqualToString: @"online"];
+    [self.titleLabel sizeToFit];
 }
 
 - (HXOBackend*) chatBackend {
@@ -1154,7 +1167,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
         [keyPath isEqualToString: @"connectionStatus"]) {
         // self.title = [object nickName];
         if (self.partner == object) { // single chat mode or group object change
-            self.title = [object nickNameWithStatus];
+            //self.title = [object nickNameWithStatus];
+            [self configureTitle];
         } else { // group member change
             [self updateVisibleCells];
         }

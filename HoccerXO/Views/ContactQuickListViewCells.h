@@ -11,10 +11,11 @@
 #import "HXOTableViewCell.h"
 
 @class InsetImageView;
+@class NickNameLabelWithStatus;
 
 @interface ContactQuickListCell : HXOTableViewCell
 
-@property (nonatomic,strong) IBOutlet UILabel * nickName;
+@property (nonatomic,strong) IBOutlet NickNameLabelWithStatus * nickName;
 @property (nonatomic,strong) IBOutlet InsetImageView * avatar;
 
 - (void) setMessageCount: (NSInteger) count isUnread: (BOOL) unreadFlag;

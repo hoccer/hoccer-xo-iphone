@@ -18,6 +18,7 @@
 #import "HXOBackend.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "ContactQuickListSearchBar.h"
+#import "NickNameLabelWithStatus.h"
 
 
 @interface ContactQuickListViewController ()
@@ -338,6 +339,7 @@
         Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
         // cell.nickName.text = contact.nickName;
         cell.nickName.text = contact.nickNameWithStatus;
+        cell.nickName.isOnline = [contact.connectionStatus isEqualToString:@"online"];
         cell.avatar.image = contact.avatarImage;
         if (cell.avatar.image == nil) {
             cell.avatar.image = [UIImage imageNamed: ([contact.type isEqualToString: @"Group"] ? @"avatar_default_group" : @"avatar_default_contact")];

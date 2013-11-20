@@ -224,7 +224,8 @@ NSString * const kRelationStateBlocked = @"blocked";
     if (self.connectionStatus == nil) {
         return name;
     } else if ([self.connectionStatus isEqualToString:@"online"]) {
-        return [NSString stringWithFormat:@"%@ ⇄", name];
+        //return [NSString stringWithFormat:@"%@ ⇄", name];
+        return name;
     } else if ([self.connectionStatus isEqualToString:@"offline"]) {
         return name;
     } else {
