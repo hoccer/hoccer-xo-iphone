@@ -48,52 +48,52 @@
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i0.colorScheme = HXOBubbleColorSchemeWhite;
+    i0.colorScheme = HXOBubbleColorSchemeIncoming;
     i0.pointDirection = HXOMessageDirectionIncoming;
     i0.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
     i1.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i1.colorScheme = HXOBubbleColorSchemeEtched;
+    i1.colorScheme = HXOBubbleColorSchemeInProgress;
     i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com";
 
     BubbleItem * i2 = [[BubbleItem alloc] init];
     i2.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i2.colorScheme = HXOBubbleColorSchemeBlue;
+    i2.colorScheme = HXOBubbleColorSchemeSuccess;
     i2.text = @"Oat cake dragée tiramisu.";
 
     BubbleItem * i3 = [[BubbleItem alloc] init];
     i3.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i3.colorScheme = HXOBubbleColorSchemeRed;
+    i3.colorScheme = HXOBubbleColorSchemeFailed;
     i3.text = @"Oat cake dragée tiramisu. Icing tiramisu apple pie carrot cake.";
 
     BubbleItem * i4 = [[BubbleItem alloc] init];
     i4.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i4.colorScheme = HXOBubbleColorSchemeBlue;
+    i4.colorScheme = HXOBubbleColorSchemeSuccess;
     i4.pointDirection = HXOMessageDirectionOutgoing;
     i4.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i5 = [[BubbleItem alloc] init];
     i5.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i5.colorScheme = HXOBubbleColorSchemeWhite;
+    i5.colorScheme = HXOBubbleColorSchemeIncoming;
     i5.pointDirection = HXOMessageDirectionIncoming;
     i5.text = @"Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i6 = [[BubbleItem alloc] init];
     i6.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i6.colorScheme = HXOBubbleColorSchemeBlue;
+    i6.colorScheme = HXOBubbleColorSchemeSuccess;
     i6.pointDirection = HXOMessageDirectionOutgoing;
     i6.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 
     BubbleItem * i7 = [[BubbleItem alloc] init];
     i7.cellIdentifier = [TextMessageCell reuseIdentifier];
-    i7.colorScheme = HXOBubbleColorSchemeWhite;
+    i7.colorScheme = HXOBubbleColorSchemeIncoming;
     i7.pointDirection = HXOMessageDirectionIncoming;
     i7.text = @"Chocolate cake danish tart ice cream. 030 87654321"; // Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
 
     BubbleItem * i8 = [[BubbleItem alloc] init];
     i8.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i8.colorScheme = HXOBubbleColorSchemeBlue;
+    i8.colorScheme = HXOBubbleColorSchemeSuccess;
     i8.pointDirection = HXOMessageDirectionOutgoing;
     i8.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i8.attachmentStyle = HXOAttachmentStyleOriginalAspect;
@@ -103,7 +103,7 @@
 
     BubbleItem * i9 = [[BubbleItem alloc] init];
     i9.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i9.colorScheme = HXOBubbleColorSchemeWhite;
+    i9.colorScheme = HXOBubbleColorSchemeIncoming;
     i9.pointDirection = HXOMessageDirectionIncoming;
     i9.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i9.attachmentStyle = HXOAttachmentStyleOriginalAspect;
@@ -115,7 +115,7 @@
 
     BubbleItem * i10 = [[BubbleItem alloc] init];
     i10.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i10.colorScheme = HXOBubbleColorSchemeBlue;
+    i10.colorScheme = HXOBubbleColorSchemeSuccess;
     i10.pointDirection = HXOMessageDirectionOutgoing;
     i10.attachmentStyle = HXOAttachmentStyleThumbnail;
     i10.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
@@ -127,7 +127,7 @@
 
     BubbleItem * i11 = [[BubbleItem alloc] init];
     i11.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i11.colorScheme = HXOBubbleColorSchemeWhite;
+    i11.colorScheme = HXOBubbleColorSchemeIncoming;
     i11.pointDirection = HXOMessageDirectionIncoming;
     i11.attachmentStyle = HXOAttachmentStyleThumbnail;
     i11.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
@@ -137,7 +137,7 @@
 
     BubbleItem * i12 = [[BubbleItem alloc] init];
     i12.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i12.colorScheme = HXOBubbleColorSchemeRed;
+    i12.colorScheme = HXOBubbleColorSchemeFailed;
     i12.pointDirection = HXOMessageDirectionOutgoing;
     i12.attachmentStyle = HXOAttachmentStyleThumbnail;
     i12.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_music"];
@@ -146,7 +146,7 @@
 
     BubbleItem * i13 = [[BubbleItem alloc] init];
     i13.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i13.colorScheme = HXOBubbleColorSchemeWhite;
+    i13.colorScheme = HXOBubbleColorSchemeIncoming;
     i13.pointDirection = HXOMessageDirectionIncoming;
     i13.attachmentStyle = HXOAttachmentStyleThumbnail;
     i13.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_location"];
@@ -156,7 +156,7 @@
 
     BubbleItem * i14 = [[BubbleItem alloc] init];
     i14.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
-    i14.colorScheme = HXOBubbleColorSchemeWhite;
+    i14.colorScheme = HXOBubbleColorSchemeIncoming;
     i14.pointDirection = HXOMessageDirectionIncoming;
     i14.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     CGSize imageSize = [UIImage imageNamed:@"cupcakes.jpg"].size;
@@ -166,7 +166,7 @@
 
     BubbleItem * i15 = [[BubbleItem alloc] init];
     i15.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
-    i15.colorScheme = HXOBubbleColorSchemeWhite;
+    i15.colorScheme = HXOBubbleColorSchemeIncoming;
     i15.pointDirection = HXOMessageDirectionIncoming;
     i15.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i15.imageAspect = imageSize.width / imageSize.height;
@@ -177,7 +177,7 @@
 
     BubbleItem * i16 = [[BubbleItem alloc] init];
     i16.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
-    i16.colorScheme = HXOBubbleColorSchemeRed;
+    i16.colorScheme = HXOBubbleColorSchemeFailed;
     i16.pointDirection = HXOMessageDirectionOutgoing;
     i16.attachmentStyle = HXOAttachmentStyleThumbnail;
     i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
@@ -188,7 +188,7 @@
 
     BubbleItem * i17 = [[BubbleItem alloc] init];
     i17.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
-    i17.colorScheme = HXOBubbleColorSchemeBlue;
+    i17.colorScheme = HXOBubbleColorSchemeSuccess;
     i17.pointDirection = HXOMessageDirectionOutgoing;
     i17.attachmentStyle = HXOAttachmentStyleThumbnail;
     i17.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_voice"];
@@ -198,7 +198,7 @@
 
     BubbleItem * i18 = [[BubbleItem alloc] init];
     i18.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
-    i18.colorScheme = HXOBubbleColorSchemeEtched;
+    i18.colorScheme = HXOBubbleColorSchemeInProgress;
     i18.pointDirection = HXOMessageDirectionOutgoing;
     i18.attachmentStyle = HXOAttachmentStyleThumbnail;
     i18.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_video"];
@@ -367,7 +367,7 @@
     self = [super init];
     if (self != nil) {
         self.pointDirection = HXOMessageDirectionOutgoing;
-        self.colorScheme = HXOBubbleColorSchemeBlue;
+        self.colorScheme = HXOBubbleColorSchemeSuccess;
     }
     return self;
 }

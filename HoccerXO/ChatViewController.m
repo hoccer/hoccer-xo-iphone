@@ -1445,7 +1445,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
 
     if ([message.isOutgoing isEqualToNumber: @NO]) {
-        return HXOBubbleColorSchemeWhite;
+        return HXOBubbleColorSchemeIncoming;
     }
 
     if ([message.deliveries count] > 1) {
@@ -1455,18 +1455,18 @@ static const CGFloat    kSectionHeaderHeight = 40;
         if ([myDelivery.state isEqualToString:kDeliveryStateNew] ||
             [myDelivery.state isEqualToString:kDeliveryStateDelivering])
         {
-            return HXOBubbleColorSchemeEtched;
+            return HXOBubbleColorSchemeInProgress;
         } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered] ||
                    [myDelivery.state isEqualToString:kDeliveryStateConfirmed])
         {
-            return HXOBubbleColorSchemeBlue;
+            return HXOBubbleColorSchemeSuccess;
         } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-            return HXOBubbleColorSchemeRed;
+            return HXOBubbleColorSchemeFailed;
         } else {
             NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
         }
     }
-    return HXOBubbleColorSchemeBlue;
+    return HXOBubbleColorSchemeSuccess;
 }
 
 - (NSAttributedString*) attributedAttachmentTitle: (HXOMessage*) message {

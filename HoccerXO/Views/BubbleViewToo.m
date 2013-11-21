@@ -70,7 +70,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     [self addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
-    self.colorScheme = HXOBubbleColorSchemeWhite;
+    self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
     _authorLabel = [[UILabel alloc] initWithFrame: CGRectMake(0, kHXOBubbleMinimumHeight + kHXOBubblePadding, kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding, 12)];
@@ -126,24 +126,16 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (void)drawRect:(CGRect)rect {
     UIBezierPath * path = [self createBubblePathInRect: [self bubbleFrame]];
-    CGFloat glowAlpha = self.colorScheme != HXOBubbleColorSchemeEtched ? 0.3 : 0.0;
-    [self drawBubblePath: path inRect: [self bubbleFrame] fillColor: [self fillColor] strokeColor: [self strokeColor] withFillImage: nil innerGlowAlpha: glowAlpha isEtched: self.colorScheme == HXOBubbleColorSchemeEtched];
+    CGFloat glowAlpha = self.colorScheme != HXOBubbleColorSchemeInProgress ? 0.3 : 0.0;
+    [self drawBubblePath: path inRect: [self bubbleFrame] fillColor: [self fillColor]  withFillImage: nil innerGlowAlpha: glowAlpha isEtched: self.colorScheme == HXOBubbleColorSchemeInProgress];
 }
 
-- (void)drawBubblePath: (UIBezierPath*) bubblePath inRect: (CGRect) bubbleRect fillColor: (UIColor*) fillColor strokeColor: (UIColor*) strokeColor withFillImage: (UIImage*) fillImage innerGlowAlpha: (CGFloat) glowAlpha isEtched: (BOOL) isEtched {
+- (void)drawBubblePath: (UIBezierPath*) bubblePath inRect: (CGRect) bubbleRect fillColor: (UIColor*) fillColor withFillImage: (UIImage*) fillImage innerGlowAlpha: (CGFloat) glowAlpha isEtched: (BOOL) isEtched {
 
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     //// Color Declarations
     UIColor* bubbleFillColor = fillColor;
-    UIColor* bubbleStrokeColor = strokeColor;
-    CGFloat innerShadowAlpha = isEtched ? 0.15 : 0.07;
-    UIColor* bubbleInnerShadowColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: innerShadowAlpha];
-
-    //// Shadow Declarations
-    UIColor* bubbleInnerShadow = bubbleInnerShadowColor;
-    CGSize bubbleInnerShadowOffset = isEtched ? CGSizeMake(0.1, 2.1) : CGSizeMake(0.1, -2.1);
-    CGFloat bubbleInnerShadowBlurRadius = isEtched ? 5 : 3;
 
     //// Bubble Drawing    
     CGContextSaveGState(context);
@@ -229,30 +221,16 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (UIColor*) fillColor {
     switch (self.colorScheme) {
-        case HXOBubbleColorSchemeWhite:
-            return [UIColor whiteColor];
-        case HXOBubbleColorSchemeBlue:
-            return [UIColor colorWithRed: 0.855 green: 0.925 blue: 0.996 alpha: 1];
-        case HXOBubbleColorSchemeEtched:
-            return [UIColor colorWithWhite: 0.95 alpha: 1.0];
-        case HXOBubbleColorSchemeRed:
-            return [UIColor colorWithRed: 0.996 green: 0.796 blue: 0.804 alpha: 1];
+        case HXOBubbleColorSchemeIncoming:
+            return [UIColor colorWithRed: 0.902 green: 0.906 blue: 0.922 alpha: 1];
+        case HXOBubbleColorSchemeSuccess:
+            return [UIColor colorWithRed: 0.224 green: 0.753 blue: 0.702 alpha: 1];
+        case HXOBubbleColorSchemeInProgress:
+            return [UIColor colorWithRed: 0.725 green: 0.851 blue: 0.839 alpha: 1];
+        case HXOBubbleColorSchemeFailed:
+            return [UIColor colorWithRed: 0.741 green: 0.224 blue: 0.208 alpha: 1];
     }
 }
-
-- (UIColor*) strokeColor {
-    switch (self.colorScheme) {
-        case HXOBubbleColorSchemeWhite:
-            return [UIColor colorWithWhite: 0.75 alpha: 1.0];
-        case HXOBubbleColorSchemeBlue:
-            return [UIColor colorWithRed: 0.49 green: 0.663 blue: 0.792 alpha: 1];
-        case HXOBubbleColorSchemeEtched:
-            return [UIColor whiteColor];
-        case HXOBubbleColorSchemeRed:
-            return [UIColor colorWithRed: 0.792 green: 0.314 blue: 0.329 alpha: 1];
-    }
-}
-
 
 - (HXOLinkyLabel*) createMessageLabel {
     HXOLinkyLabel * label = [[HXOLinkyLabel alloc] init];
@@ -263,8 +241,6 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 //    label.font = [UIFont systemFontOfSize: 13.0];
     label.font = [UIFont systemFontOfSize: fontSize];
     label.lineBreakMode = NSLineBreakByWordWrapping;
-    label.shadowColor = [UIColor colorWithWhite: 1.0 alpha: 0.8];
-    label.shadowOffset = CGSizeMake(0, 1);
     [self addSubview: label];
     return label;
 }
@@ -276,33 +252,33 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (UIColor*) textColorForColorScheme: (HXOBubbleColorScheme) colorScheme {
     switch (colorScheme) {
-        case HXOBubbleColorSchemeWhite:
-            return [UIColor colorWithRed: 51.0/255 green: 51.0/255 blue: 51.0/255 alpha: 1.0];
-        case HXOBubbleColorSchemeBlue:
-            return [UIColor colorWithRed: 32.0/255 green: 92.0/255 blue: 153.0/255 alpha: 1.0];
-        case HXOBubbleColorSchemeEtched:
-            return [UIColor colorWithRed: 153.0/255 green: 153.0/255 blue: 153.0/255 alpha: 1.0];
-        case HXOBubbleColorSchemeRed:
-            return [UIColor colorWithRed: 153.0/255 green: 31.0/255 blue: 31.0/255 alpha: 1.0];
+        case HXOBubbleColorSchemeIncoming:
+            return [UIColor blackColor];
+        case HXOBubbleColorSchemeSuccess:
+        case HXOBubbleColorSchemeInProgress:
+        case HXOBubbleColorSchemeFailed:
+            return [UIColor whiteColor];
     }
 }
 
 - (NSDictionary*) linkStyleForColorScheme: (HXOBubbleColorScheme) colorScheme {
-    UIColor * color;
+    UIColor * color = [UIColor colorWithRed: 0.0/255 green: 85.0/255 blue: 255.0/255 alpha: 1.0];
+    /*
     switch (colorScheme) {
-        case HXOBubbleColorSchemeWhite:
+        case HXOBubbleColorSchemeIncoming:
             color = [UIColor colorWithRed: 0.0/255 green: 85.0/255 blue: 255.0/255 alpha: 1.0];
             break;
-        case HXOBubbleColorSchemeBlue:
+        case HXOBubbleColorSchemeSuccess:
             color = [UIColor colorWithRed: 0.0/255 green: 0.0/255 blue: 229.0/255 alpha: 1.0];
             break;
-        case HXOBubbleColorSchemeEtched:
+        case HXOBubbleColorSchemeInProgress:
             color = [UIColor colorWithRed: 61.0/255 green: 77.0/255 blue: 153.0/255 alpha: 1.0];
             break;
-        case HXOBubbleColorSchemeRed:
+        case HXOBubbleColorSchemeFailed:
             color = [UIColor colorWithRed: 18.0/255 green: 18.0/255 blue: 179.0/255 alpha: 1.0];
             break;
     }
+     */
     return @{(id)kCTForegroundColorAttributeName: (id)color.CGColor};
 }
 
@@ -508,7 +484,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
     UIColor * fillColor;
     UIColor * strokeColor;
-    if (self.colorScheme == HXOBubbleColorSchemeRed) {
+    if (self.colorScheme == HXOBubbleColorSchemeFailed) {
         fillColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"attachment_pattern_red"]];
         strokeColor = [UIColor colorWithRed: 107.0/255 green: 21.0/255 blue: 24.0/255 alpha: 1.0];
     } else {
@@ -517,14 +493,14 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     }
     if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
         UIBezierPath * path = [self thumbnailedBubblePathInRect: [self attachmentFrame]];
-        [self drawBubblePath: path inRect: [self attachmentFrame] fillColor: fillColor strokeColor: strokeColor withFillImage: nil innerGlowAlpha: 0.2 isEtched: NO];
+        [self drawBubblePath: path inRect: [self attachmentFrame] fillColor: fillColor withFillImage: nil innerGlowAlpha: 0.2 isEtched: NO];
         [self drawThumbnailInContext: context];
         if (self.previewImage != nil) {
             [self drawTypeIconInContext: context];
         }
     } else {
         UIBezierPath * path = [self createBubblePathInRect: [self attachmentFrame]];
-        [self drawBubblePath: path inRect: [self attachmentFrame] fillColor: fillColor strokeColor: strokeColor withFillImage: self.previewImage innerGlowAlpha: 0.3 isEtched: NO];
+        [self drawBubblePath: path inRect: [self attachmentFrame] fillColor: fillColor withFillImage: self.previewImage innerGlowAlpha: 0.3 isEtched: NO];
 
         switch (self.runButtonStyle) {
             case HXOBubbleRunButtonNone:
@@ -862,7 +838,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     textBoxFrame.origin.y -= kHXOBubbleBottomTextBoxOversize;
     textBoxFrame.size.height += kHXOBubbleBottomTextBoxOversize;
     UIBezierPath * p = [self bottomTextBoxPathInRect: textBoxFrame];
-    [self drawBubblePath: p inRect: textBoxFrame fillColor: [self fillColor] strokeColor: [self strokeColor] withFillImage: nil innerGlowAlpha: 0.3 isEtched: self.colorScheme == HXOBubbleColorSchemeEtched];
+    [self drawBubblePath: p inRect: textBoxFrame fillColor: [self fillColor] withFillImage: nil innerGlowAlpha: 0.3 isEtched: self.colorScheme == HXOBubbleColorSchemeInProgress];
 
     [super drawRect: rect];
 

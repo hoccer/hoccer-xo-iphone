@@ -22,10 +22,10 @@ typedef enum HXOAttachmentStyles {
 } HXOAttachmentStyle;
 
 typedef enum HXOBubbleColorSchemes {
-    HXOBubbleColorSchemeWhite,
-    HXOBubbleColorSchemeRed,
-    HXOBubbleColorSchemeBlue,
-    HXOBubbleColorSchemeEtched
+    HXOBubbleColorSchemeIncoming,
+    HXOBubbleColorSchemeFailed,
+    HXOBubbleColorSchemeSuccess,
+    HXOBubbleColorSchemeInProgress
 } HXOBubbleColorScheme;
 
 typedef enum HXOMessageDirections {
