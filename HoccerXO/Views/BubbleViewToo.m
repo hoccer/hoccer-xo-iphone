@@ -71,10 +71,6 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     self.colorScheme = HXOBubbleColorSchemeWhite;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
-    self.layer.shouldRasterize = YES;
-    self.layer.shadowOffset = CGSizeMake(0.1, 2.1);
-    [self configureDropShadow];
-
     _authorLabel = [[UILabel alloc] initWithFrame: CGRectMake(0, kHXOBubbleMinimumHeight + kHXOBubblePadding, kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding, 12)];
     _authorLabel.font = [UIFont systemFontOfSize: 10];
     _authorLabel.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
@@ -92,7 +88,6 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
     _colorScheme = colorScheme;
-    [self configureDropShadow];
     [self setNeedsLayout];
 }
 
@@ -109,7 +104,6 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
         _authorLabel.hidden = YES;
     }
     _avatar.frame = frame;
-    [self configureDropShadow];
     [self setNeedsLayout];
 }
 
@@ -119,7 +113,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (void) layoutSubviews {
     [super layoutSubviews];
-    self.layer.shadowPath = [self createShadowPath].CGPath;
+    //self.layer.shadowPath = [self createShadowPath].CGPath;
     [self setNeedsDisplay];
 }
 
@@ -127,12 +121,6 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
      return [self createBubblePathInRect: [self bubbleFrame]];
 }
 
-- (void) configureDropShadow {
-    BOOL hasShadow = self.colorScheme != HXOBubbleColorSchemeEtched;
-    self.layer.shadowColor = hasShadow ? [UIColor blackColor].CGColor : NULL;
-    self.layer.shadowOpacity = hasShadow ? 0.15 : 0;
-    self.layer.shadowRadius = hasShadow ? 2 : 0;
-}
 
 - (void)drawRect:(CGRect)rect {
     UIBezierPath * path = [self createBubblePathInRect: [self bubbleFrame]];
@@ -167,42 +155,9 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
         [bubblePath fill];
     }
 
-    ////// Bubble Inner Shadow
-    CGRect bubbleBorderRect = CGRectInset([bubblePath bounds], -bubbleInnerShadowBlurRadius, -bubbleInnerShadowBlurRadius);
-    bubbleBorderRect = CGRectOffset(bubbleBorderRect, -bubbleInnerShadowOffset.width, -bubbleInnerShadowOffset.height);
-    bubbleBorderRect = CGRectInset(CGRectUnion(bubbleBorderRect, [bubblePath bounds]), -1, -1);
-
-    UIBezierPath* bubbleNegativePath = [UIBezierPath bezierPathWithRect: bubbleBorderRect];
-    [bubbleNegativePath appendPath: bubblePath];
-    bubbleNegativePath.usesEvenOddFillRule = YES;
-
-    CGContextSaveGState(context);
-    {
-        CGFloat xOffset = bubbleInnerShadowOffset.width + round(bubbleBorderRect.size.width);
-        CGFloat yOffset = bubbleInnerShadowOffset.height;
-        CGContextSetShadowWithColor(context,
-                                    CGSizeMake(xOffset + copysign(0.1, xOffset), yOffset + copysign(0.1, yOffset)),
-                                    bubbleInnerShadowBlurRadius,
-                                    bubbleInnerShadow.CGColor);
-
-        [bubblePath addClip];
-        CGAffineTransform transform = CGAffineTransformMakeTranslation(-round(bubbleBorderRect.size.width), 0);
-        [bubbleNegativePath applyTransform: transform];
-        [[UIColor grayColor] setFill];
-        [bubbleNegativePath fill];
-    }
-    CGContextRestoreGState(context);
-
 
     CGContextRestoreGState(context);
 
-    if (glowAlpha > 0) {
-        [self drawInnerGlow: context path: bubblePath alpha: glowAlpha];
-    }
-
-    [bubbleStrokeColor setStroke];
-    bubblePath.lineWidth = 1;
-    [bubblePath stroke];
 }
 
 - (CGRect) fillImageRectForImage: (UIImage*) image {
@@ -210,19 +165,6 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 }
 
 - (void) drawInnerGlow: (CGContextRef) context path: (UIBezierPath*) path alpha: (CGFloat) alpha {
-    UIColor * innerGlowColor = [UIColor colorWithWhite: 1.0 alpha: alpha];
-
-    CGContextSaveGState(context);
-
-    path.lineWidth = 3;
-    path.lineJoinStyle = kCGLineJoinRound;
-
-    [path addClip];
-
-    [innerGlowColor setStroke];
-    [path stroke];
-
-    CGContextRestoreGState(context);
 }
 
 - (CGRect) bubbleFrame {
@@ -247,19 +189,18 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (UIBezierPath*) rightPointingBubblePathInRect: (CGRect) frame {
     UIBezierPath* bubblePath = [UIBezierPath bezierPath];
-    [bubblePath moveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 27.07)];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMaxY(frame) - 1.5)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 9, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 7.9, CGRectGetMaxY(frame))];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMaxY(frame))];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 0.4)];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 2)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMinY(frame))];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 9, CGRectGetMinY(frame))];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 0.9)];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 18.43)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 3.5, CGRectGetMinY(frame) + 20.01) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 19.53) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 5.04, CGRectGetMinY(frame) + 20)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 18.43) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 2.04, CGRectGetMinY(frame) + 20.01) controlPoint2: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 19.53)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 27.07) controlPoint1: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 22.71) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 2.99, CGRectGetMinY(frame) + 26.16)];
+    [bubblePath moveToPoint: CGPointMake(CGRectGetMaxX(frame) - 3.42, CGRectGetMaxY(frame))];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 10.4, CGRectGetMaxY(frame) - 2.71) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 6.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 8.54, CGRectGetMaxY(frame) - 1.03)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 18, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 12.47, CGRectGetMaxY(frame) - 1.02) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 15.12, CGRectGetMaxY(frame))];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 12, CGRectGetMaxY(frame))];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 12) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 5.37, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 5.37)];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 12)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 12, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 5.37) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 5.37, CGRectGetMinY(frame))];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 18, CGRectGetMinY(frame))];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 6, CGRectGetMinY(frame) + 12) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 11.37, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 6, CGRectGetMinY(frame) + 5.37)];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 6, CGRectGetMaxY(frame) - 7.5)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 0.59) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 5.51, CGRectGetMaxY(frame) - 4.01) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 3.14, CGRectGetMaxY(frame) - 1.77)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 3.42, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 1.07, CGRectGetMaxY(frame) - 0.21) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 2.22, CGRectGetMaxY(frame))];
     [bubblePath closePath];
 
     return bubblePath;
@@ -267,19 +208,18 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (UIBezierPath*) leftPointingBubblePathInRect: (CGRect) frame {
     UIBezierPath* bubblePath = [UIBezierPath bezierPath];
-    [bubblePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 27.07)];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 1.5)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 7.9, CGRectGetMaxY(frame))];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 2, CGRectGetMaxY(frame))];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 0.9, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 0.4)];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 2)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 2, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 0.9, CGRectGetMinY(frame))];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMinY(frame))];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 0.9)];
-    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 18.43)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 3.5, CGRectGetMinY(frame) + 20.01) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 19.53) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 5.04, CGRectGetMinY(frame) + 20)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 18.43) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 2.04, CGRectGetMinY(frame) + 20.01) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 19.53)];
-    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 27.07) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 22.71) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 2.99, CGRectGetMinY(frame) + 26.16)];
+    [bubblePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 3.42, CGRectGetMaxY(frame))];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 10.4, CGRectGetMaxY(frame) - 2.71) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 6.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 8.54, CGRectGetMaxY(frame) - 1.03)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 18, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 12.47, CGRectGetMaxY(frame) - 1.02) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 15.12, CGRectGetMaxY(frame))];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 12, CGRectGetMaxY(frame))];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 12) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 5.37, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 5.37)];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 12)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 12, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 5.37) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 5.37, CGRectGetMinY(frame))];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 18, CGRectGetMinY(frame))];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 6, CGRectGetMinY(frame) + 12) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 11.37, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 6, CGRectGetMinY(frame) + 5.37)];
+    [bubblePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 6, CGRectGetMaxY(frame) - 7.5)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 0.59) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 5.51, CGRectGetMaxY(frame) - 4.01) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 3.14, CGRectGetMaxY(frame) - 1.77)];
+    [bubblePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 3.42, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 1.07, CGRectGetMaxY(frame) - 0.21) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 2.22, CGRectGetMaxY(frame))];
     [bubblePath closePath];
 
     return bubblePath;
