@@ -64,7 +64,9 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     self.contentMode = UIViewContentModeRedraw;
     self.backgroundColor = [UIColor clearColor];
 
-    _avatar = [[InsetImageView2 alloc] initWithFrame: CGRectMake(kHXOBubblePadding, kHXOBubblePadding, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
+    CGFloat y = self.frame.size.height - (kHXOBubbleMinimumHeight + kHXOBubblePadding);
+    _avatar = [[InsetImageView2 alloc] initWithFrame: CGRectMake(kHXOBubblePadding, y, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
+    _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
@@ -96,11 +98,11 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     CGRect frame = _avatar.frame;
     if (messageDirection == HXOMessageDirectionIncoming) {
         frame.origin.x = kHXOBubblePadding;
-        _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
         _authorLabel.hidden = NO;
     } else {
         frame.origin.x = self.bounds.size.width - frame.size.width - kHXOBubblePadding;
-        _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+        _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
         _authorLabel.hidden = YES;
     }
     _avatar.frame = frame;
