@@ -65,10 +65,12 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     self.backgroundColor = [UIColor clearColor];
 
     CGFloat y = self.frame.size.height - (kHXOBubbleMinimumHeight + kHXOBubblePadding);
-    _avatar = [[InsetImageView2 alloc] initWithFrame: CGRectMake(kHXOBubblePadding, y, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
+    _avatar = [[UIImageView alloc] initWithFrame: CGRectMake(kHXOBubblePadding, y, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    _avatar.clipsToBounds = YES;
+    _avatar.layer.cornerRadius = 0.5 * _avatar.frame.size.width;
     [self addSubview: _avatar];
-    [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
+    //[_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
     self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
