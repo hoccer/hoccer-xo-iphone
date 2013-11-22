@@ -341,6 +341,7 @@
     ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
     peoplePicker.peoplePickerDelegate = self;
     [_viewController presentViewController:peoplePicker animated:YES completion:nil];
+    [AppDelegate setBlackFontStatusbarForViewController:_viewController];
 }
 #pragma mark -
 #pragma mark ABPeoplePickerNavigationController delegate
@@ -466,6 +467,7 @@
     mediaPicker.prompt = nil;
 
     [_viewController presentViewController:mediaPicker animated:YES completion: nil];
+    [AppDelegate setBlackFontStatusbarForViewController:_viewController];
 }
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
