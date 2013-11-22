@@ -24,6 +24,7 @@ static const CGFloat kHXOBubbleProgressSizeSmall = 70;
 static const CGFloat kHXOBubbleProgressSizeLarge = 150;
 static const CGFloat kHXOBubblePlayButtonSize = 49;
 static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
+static const CGFloat kHXOAvatarSize = 40;
 
 @implementation BubbleViewToo
 
@@ -64,11 +65,13 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     self.contentMode = UIViewContentModeRedraw;
     self.backgroundColor = [UIColor clearColor];
 
-    CGFloat y = self.frame.size.height - (kHXOBubbleMinimumHeight + kHXOBubblePadding);
-    _avatar = [[InsetImageView2 alloc] initWithFrame: CGRectMake(kHXOBubblePadding, y, kHXOBubbleMinimumHeight, kHXOBubbleMinimumHeight)];
+    CGFloat y = self.frame.size.height - (kHXOAvatarSize + kHXOBubblePadding);
+    _avatar = [[UIImageView alloc] initWithFrame: CGRectMake(kHXOBubblePadding, y, kHXOAvatarSize, kHXOAvatarSize)];
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    _avatar.clipsToBounds = YES;
+    _avatar.layer.cornerRadius = 0.5 * _avatar.frame.size.width;
     [self addSubview: _avatar];
-    [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
+    //[_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
     self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
@@ -163,7 +166,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 
 - (CGRect) bubbleFrame {
     CGRect frame = CGRectInset(self.bounds, kHXOBubblePadding, kHXOBubblePadding);
-    CGFloat dx = kHXOBubbleMinimumHeight + kHXOBubblePadding;
+    CGFloat dx = kHXOAvatarSize; // + kHXOBubblePadding;
     frame.size.width -= dx;
     if (self.messageDirection == HXOMessageDirectionIncoming) {
         frame.origin.x += dx;
@@ -302,7 +305,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
     CGRect frame = CGRectInset(self.bounds, 0, 2 * kHXOBubblePadding);
     frame.size.width = [self textWidthForWidth: self.bounds.size.width];
     if (self.messageDirection == HXOMessageDirectionIncoming) {
-        frame.origin.x += kHXOBubbleMinimumHeight +  4 * kHXOBubblePadding;
+        frame.origin.x += kHXOAvatarSize +  3 * kHXOBubblePadding;
     } else {
         frame.origin.x += 2 * kHXOBubblePadding;
     }
@@ -310,7 +313,7 @@ static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
 }
 
 - (CGFloat) textWidthForWidth: (CGFloat) width {
-    return width - (kHXOBubbleMinimumHeight + 6 * kHXOBubblePadding);
+    return width - (kHXOAvatarSize + 5 * kHXOBubblePadding);
 }
 
 
