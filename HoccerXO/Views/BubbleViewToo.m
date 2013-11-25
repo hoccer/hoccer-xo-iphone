@@ -77,11 +77,12 @@ static const CGFloat kHXOAvatarSize = 40;
     self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
-    _authorLabel = [[UILabel alloc] initWithFrame: CGRectMake(0, kHXOBubbleMinimumHeight + kHXOBubblePadding, kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding, 12)];
-    _authorLabel.font = [UIFont systemFontOfSize: 10];
+    // TODO: increase frame width... needs thinking
+    _authorLabel = [[UILabel alloc] initWithFrame: CGRectMake(kHXOAvatarSize + 2 * kHXOBubblePadding, self.frame.size.height - kHXOBubblePadding, kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding, 10)];
+    _authorLabel.font = [UIFont systemFontOfSize: 8];
     _authorLabel.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
     _authorLabel.backgroundColor = [UIColor clearColor];
-    _authorLabel.textAlignment = NSTextAlignmentCenter;
+    _authorLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview: _authorLabel];
 }
 
