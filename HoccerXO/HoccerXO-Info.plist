@@ -32,7 +32,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.10</string>
+	<string>1.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -60,7 +60,7 @@
 		<string>Peter Amende</string>
 	</array>
 	<key>HXOReleaseName</key>
-	<string>Balmorals</string>
+	<string>Espadrilles</string>
 	<key>HXOServerDevelopers</key>
 	<array>
 		<string>Björn Heller</string>
