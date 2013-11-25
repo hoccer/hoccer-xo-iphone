@@ -1400,25 +1400,25 @@ static const CGFloat    kSectionHeaderHeight = 40;
     NSString * smallIconName;
     NSString * largeIconName;
     if ([message.attachment.mediaType isEqualToString: @"image"]) {
-        smallIconName = @"attachment_icon_s_image";
-        largeIconName = @"attachment_icon_image";
+        //smallIconName = @"attachment_icon_s_image";
+        largeIconName = @"cnt-photo";
     } else if ([message.attachment.mediaType isEqualToString: @"video"]) {
-        smallIconName = @"attachment_icon_s_video";
-        largeIconName = @"attachment_icon_video";
+        //smallIconName = @"attachment_icon_s_video";
+        largeIconName = @"cnt-video";
     }  else if ([message.attachment.mediaType isEqualToString: @"vcard"]) {
-        smallIconName = @"attachment_icon_s_contact";
-        largeIconName = @"attachment_icon_contact";
+        //smallIconName = @"attachment_icon_s_contact";
+        largeIconName = @"cnt-contact";
     }  else if ([message.attachment.mediaType isEqualToString: @"geolocation"]) {
-        smallIconName = @"attachment_icon_s_location";
-        largeIconName = @"attachment_icon_location";
+        //smallIconName = @"attachment_icon_s_location";
+        largeIconName = @"cnt-location";
     }  else if ([message.attachment.mediaType isEqualToString: @"audio"]) {
         NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
         if (findResult.length == @"recording".length && findResult.location == 0) {
-            smallIconName = @"attachment_icon_s_voice";
-            largeIconName = @"attachment_icon_voice";
+            //smallIconName = @"attachment_icon_s_voice";
+            largeIconName = @"cnt-record";
         } else {
-            smallIconName = @"attachment_icon_s_music";
-            largeIconName = @"attachment_icon_music";
+            //smallIconName = @"attachment_icon_s_music";
+            largeIconName = @"cnt-music";
         }
     }
     cell.smallAttachmentTypeIcon = [UIImage imageNamed: smallIconName];

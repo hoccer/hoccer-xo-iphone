@@ -518,7 +518,6 @@ static const CGFloat kHXOAvatarSize = 40;
 
 - (void) drawThumbnailInContext: (CGContextRef) context {
 
-    UIColor* thumbnailFrameColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
     CGRect frame = [self attachmentFrame];
 
     UIBezierPath* thumbnailFramePath = self.messageDirection == HXOMessageDirectionIncoming ? [self rightAlignedThumbnailFrameInRect: frame] : [self leftAlignedThumbnailFrameInRect: frame];
@@ -530,24 +529,6 @@ static const CGFloat kHXOAvatarSize = 40;
     CGRect thumbnailFrameBounds = CGPathGetPathBoundingBox(thumbnailFramePath.CGPath);
 
     if (self.previewImage == nil) {
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        UIColor* thumbnailFrameGradientDark = [UIColor colorWithRed: 0.102 green: 0.102 blue: 0.102 alpha: 1];
-        UIColor* thumbnailFrameGradientLight = [UIColor colorWithRed: 0.149 green: 0.149 blue: 0.149 alpha: 1];
-
-        NSArray* thumbnailFrameGradientColors = [NSArray arrayWithObjects:
-                                                 (id)thumbnailFrameGradientDark.CGColor,
-                                                 (id)thumbnailFrameGradientLight.CGColor, nil];
-        CGFloat thumbnailFrameGradientLocations[] = {0, 1};
-        CGGradientRef thumbnailFrameGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)thumbnailFrameGradientColors, thumbnailFrameGradientLocations);
-
-
-        CGContextDrawLinearGradient(context, thumbnailFrameGradient,
-                                    CGPointMake(CGRectGetMidX(thumbnailFrameBounds), CGRectGetMinY(thumbnailFrameBounds)),
-                                    CGPointMake(CGRectGetMidX(thumbnailFrameBounds), CGRectGetMaxY(thumbnailFrameBounds)),
-                                    0);
-        CGGradientRelease(thumbnailFrameGradient);
-        CGColorSpaceRelease(colorSpace);
-
         UIImage * icon = self.attachmentTransferState == HXOAttachmentTranserStateDownloadPending ? [UIImage imageNamed: @"download-btn"] : self.largeAttachmentTypeIcon;
         CGPoint iconOrigin = CGPointMake(thumbnailFrameBounds.origin.x + 0.5 * thumbnailFrameBounds.size.width - 0.5 * icon.size.width,
                                          thumbnailFrameBounds.origin.y + 0.5 * thumbnailFrameBounds.size.height - 0.5 * icon.size.height);
@@ -558,9 +539,6 @@ static const CGFloat kHXOAvatarSize = 40;
         [self.previewImage drawInRect: imageFrame];
     }
     CGContextRestoreGState(context);
-    [thumbnailFrameColor setStroke];
-    thumbnailFramePath.lineWidth = 1;
-    [thumbnailFramePath stroke];
 }
 
 
@@ -616,35 +594,11 @@ static const CGFloat kHXOAvatarSize = 40;
 }
 
 - (UIBezierPath*) leftAlignedThumbnailFrameInRect: (CGRect) frame {
-    UIBezierPath* thumbnailFramePath = [UIBezierPath bezierPath];
-    [thumbnailFramePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 1.5)];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMaxY(frame))];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMaxY(frame))];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 0.4)];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 2)];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMinY(frame))];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMinY(frame))];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 0.9)];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 1.5)];
-    [thumbnailFramePath closePath];
-
-    return thumbnailFramePath;
+    return [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame), CGRectGetMinY(frame), 48, 48) cornerRadius: 12];
 }
 
 - (UIBezierPath*) rightAlignedThumbnailFrameInRect: (CGRect) frame {
-    UIBezierPath* thumbnailFramePath = [UIBezierPath bezierPath];
-    [thumbnailFramePath moveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 1.5)];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 2, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 0.9, CGRectGetMaxY(frame))];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMaxY(frame))];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 0.4)];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 2)];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMinY(frame))];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 2, CGRectGetMinY(frame))];
-    [thumbnailFramePath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 0.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 0.9)];
-    [thumbnailFramePath addLineToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 1.5)];
-    [thumbnailFramePath closePath];
-
-    return thumbnailFramePath;
+    return [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame) + CGRectGetWidth(frame) - 48, CGRectGetMinY(frame), 48, 48) cornerRadius: 12];
 }
 
 - (CGRect) thumbnailFrame: (CGRect) thumbnailFrame {

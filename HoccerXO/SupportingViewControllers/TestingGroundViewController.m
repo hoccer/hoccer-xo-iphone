@@ -28,7 +28,7 @@
 @property (nonatomic,strong) UIImage  *                 previewImage;
 @property (nonatomic,assign) CGFloat                    imageAspect;
 @property (nonatomic,assign) HXOAttachmentStyle         attachmentStyle;
-@property (nonatomic,strong) UIImage *                  smallAttachmentTypeIcon;
+//@property (nonatomic,strong) UIImage *                  smallAttachmentTypeIcon;
 @property (nonatomic,strong) UIImage *                  largeAttachmentTypeIcon;
 @property (nonatomic,strong) NSString *                 attachmentText;
 @property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
@@ -118,8 +118,8 @@
     i10.colorScheme = HXOBubbleColorSchemeSuccess;
     i10.pointDirection = HXOMessageDirectionOutgoing;
     i10.attachmentStyle = HXOAttachmentStyleThumbnail;
-    i10.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
-    i10.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_image"];
+    //i10.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
+    i10.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-photo"];
     i10.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i10.attachmentText = @"cupcakes.jpg";
     i10.attachmentTransferState = HXOAttachmentTransferStateInProgress;
@@ -130,8 +130,8 @@
     i11.colorScheme = HXOBubbleColorSchemeIncoming;
     i11.pointDirection = HXOMessageDirectionIncoming;
     i11.attachmentStyle = HXOAttachmentStyleThumbnail;
-    i11.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
-    i11.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_image"];
+    //i11.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_image"];
+    i11.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-photo"];
     i11.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i11.attachmentText = @"cupcakes.jpg";
 
@@ -140,8 +140,8 @@
     i12.colorScheme = HXOBubbleColorSchemeFailed;
     i12.pointDirection = HXOMessageDirectionOutgoing;
     i12.attachmentStyle = HXOAttachmentStyleThumbnail;
-    i12.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_music"];
-    i12.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_music"];
+    //i12.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_music"];
+    i12.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-music"];
     i12.attachmentText = @"Cool Song";
 
     BubbleItem * i13 = [[BubbleItem alloc] init];
@@ -149,8 +149,8 @@
     i13.colorScheme = HXOBubbleColorSchemeIncoming;
     i13.pointDirection = HXOMessageDirectionIncoming;
     i13.attachmentStyle = HXOAttachmentStyleThumbnail;
-    i13.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_location"];
-    i13.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_location"];
+    //i13.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_location"];
+    i13.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-location"];
     i13.attachmentText = @"Nice Place";
     i13.attachmentTransferState = HXOAttachmentTransferStateInProgress;
 
@@ -180,8 +180,8 @@
     i16.colorScheme = HXOBubbleColorSchemeFailed;
     i16.pointDirection = HXOMessageDirectionOutgoing;
     i16.attachmentStyle = HXOAttachmentStyleThumbnail;
-    i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
-    i16.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_contact"];
+    //i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
+    //i16.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_contact"];
     i16.attachmentText = @"Some Dude";
     i16.text = @"Oat cake dragée tiramisu. .";
 
@@ -191,8 +191,8 @@
     i17.colorScheme = HXOBubbleColorSchemeSuccess;
     i17.pointDirection = HXOMessageDirectionOutgoing;
     i17.attachmentStyle = HXOAttachmentStyleThumbnail;
-    i17.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_voice"];
-    i17.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_voice"];
+    //i17.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_voice"];
+    i17.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-record"];
     i17.attachmentText = @"Recording 1";
     i17.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
 
@@ -201,8 +201,8 @@
     i18.colorScheme = HXOBubbleColorSchemeInProgress;
     i18.pointDirection = HXOMessageDirectionOutgoing;
     i18.attachmentStyle = HXOAttachmentStyleThumbnail;
-    i18.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_video"];
-    i18.largeAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_video"];
+    //i18.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_video"];
+    i18.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-video"];
     i18.attachmentText = @"Classic Movie";
     i18.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
@@ -334,7 +334,7 @@
     cell.previewImage = item.previewImage;
     cell.imageAspect = item.imageAspect;
     cell.attachmentStyle = item.attachmentStyle;
-    cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
+    //cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
     cell.largeAttachmentTypeIcon = item.largeAttachmentTypeIcon;
     cell.attachmentTransferState = item.attachmentTransferState;
     cell.progressBar.progress = item.progress;
