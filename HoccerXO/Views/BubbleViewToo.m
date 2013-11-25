@@ -23,7 +23,7 @@ static const CGFloat kHXOBubbleTypeIconPadding = 3;
 static const CGFloat kHXOBubbleProgressSizeSmall = 70;
 static const CGFloat kHXOBubbleProgressSizeLarge = 150;
 static const CGFloat kHXOBubblePlayButtonSize = 49;
-static const CGFloat kHXOBubbleBottomTextBoxOversize = 4;
+static const CGFloat kHXOBubbleBottomTextBoxOversize = 12;
 static const CGFloat kHXOAvatarSize = 40;
 
 @implementation BubbleViewToo
@@ -123,11 +123,6 @@ static const CGFloat kHXOAvatarSize = 40;
     //self.layer.shadowPath = [self createShadowPath].CGPath;
     [self setNeedsDisplay];
 }
-
-- (UIBezierPath*) createShadowPath {
-     return [self createBubblePathInRect: [self bubbleFrame]];
-}
-
 
 - (void)drawRect:(CGRect)rect {
     UIBezierPath * path = [self createBubblePathInRect: [self bubbleFrame]];
@@ -705,43 +700,12 @@ static const CGFloat kHXOAvatarSize = 40;
 }
 
 - (UIBezierPath*) thumbnailedBubblePathInRect: (CGRect) frame {
-    UIBezierPath* thumbnailedBubblePathPath = [UIBezierPath bezierPath];
 
     if (self.messageDirection == HXOMessageDirectionIncoming) {
-        [thumbnailedBubblePathPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 2)];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 18.43)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 3.5, CGRectGetMinY(frame) + 20.01) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 19.53) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 5.04, CGRectGetMinY(frame) + 20)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 18.43) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 2.04, CGRectGetMinY(frame) + 20.01) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 19.53)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 27.07) controlPoint1: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame) + 22.71) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 2.99, CGRectGetMinY(frame) + 26.16)];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 1.5)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 7.9, CGRectGetMaxY(frame))];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMaxY(frame))];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMaxY(frame) - 0.4)];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 2)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 46, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 48, CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 47.1, CGRectGetMinY(frame))];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMinY(frame))];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame) + 0.9)];
-        [thumbnailedBubblePathPath closePath];
-
-
+        return [self leftPointingBubblePathInRect: frame];
     } else {
-        [thumbnailedBubblePathPath moveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 2)];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 18.43)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 3.5, CGRectGetMinY(frame) + 20.01) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 19.53) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 5.04, CGRectGetMinY(frame) + 20)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 18.43) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 2.04, CGRectGetMinY(frame) + 20.01) controlPoint2: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 19.53)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 27.07) controlPoint1: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame) + 22.71) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 2.99, CGRectGetMinY(frame) + 26.16)];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMaxY(frame) - 1.5)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 9, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 7.9, CGRectGetMaxY(frame))];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMaxY(frame))];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMaxY(frame) - 0.4)];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 2)];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 46, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 48, CGRectGetMinY(frame) + 0.9) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 47.1, CGRectGetMinY(frame))];
-        [thumbnailedBubblePathPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 9, CGRectGetMinY(frame))];
-        [thumbnailedBubblePathPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 2) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7.9, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame) + 0.9)];
-        [thumbnailedBubblePathPath closePath];
-        
+        return [self rightPointingBubblePathInRect: frame];
     }
-    return thumbnailedBubblePathPath;
 }
 
 - (CGRect) fillImageRectForImage: (UIImage*) image {
@@ -856,25 +820,39 @@ static const CGFloat kHXOAvatarSize = 40;
      */
 }
 
+- (UIBezierPath*) rightPointingBubblePathInRect: (CGRect) frame {
+    return [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame), CGRectGetMinY(frame), CGRectGetWidth(frame) - 6, CGRectGetHeight(frame)) cornerRadius: 12];
+}
+
+- (UIBezierPath*) leftPointingBubblePathInRect: (CGRect) frame {
+    return [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame) + 6, CGRectGetMinY(frame), CGRectGetWidth(frame) - 6, CGRectGetHeight(frame)) cornerRadius: 12];
+}
+
 - (UIBezierPath*) bottomTextBoxPathInRect: (CGRect) frame {
     UIBezierPath* textBoxPath = [UIBezierPath bezierPath];
     if (self.messageDirection == HXOMessageDirectionIncoming) {
-        [textBoxPath moveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 1.5)];
-        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 2, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 0.9, CGRectGetMaxY(frame))];
-        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMaxY(frame))];
-        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 7.9, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMaxY(frame) - 0.4)];
-        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 7, CGRectGetMinY(frame))];
+        [textBoxPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 3.42, CGRectGetMaxY(frame))];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 10.4, CGRectGetMaxY(frame) - 2.71) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 6.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 8.54, CGRectGetMaxY(frame) - 1.03)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 18, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 12.47, CGRectGetMaxY(frame) - 1.02) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 15.12, CGRectGetMaxY(frame))];
+        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 12, CGRectGetMaxY(frame))];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 12) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 5.37, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 5.37)];
         [textBoxPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMinY(frame))];
-        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 1.5)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 6, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 0.16, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 6, CGRectGetMinY(frame))];
+        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 6, CGRectGetMaxY(frame) - 7.5)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 0.59) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 5.51, CGRectGetMaxY(frame) - 4.01) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 3.14, CGRectGetMaxY(frame) - 1.77)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 3.42, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 1.07, CGRectGetMaxY(frame) - 0.21) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 2.22, CGRectGetMaxY(frame))];
         [textBoxPath closePath];
     } else {
-        [textBoxPath moveToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMaxY(frame) - 1.5)];
-        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 9, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMaxY(frame) - 0.4) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 7.9, CGRectGetMaxY(frame))];
-        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 2, CGRectGetMaxY(frame))];
-        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 1.5) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.9, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 0.4)];
+        [textBoxPath moveToPoint: CGPointMake(CGRectGetMaxX(frame) - 3.42, CGRectGetMaxY(frame))];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 10.4, CGRectGetMaxY(frame) - 2.71) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 6.1, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 8.54, CGRectGetMaxY(frame) - 1.03)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 18, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 12.47, CGRectGetMaxY(frame) - 1.02) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 15.12, CGRectGetMaxY(frame))];
+        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 12, CGRectGetMaxY(frame))];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 12) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 5.37, CGRectGetMaxY(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame), CGRectGetMaxY(frame) - 5.37)];
         [textBoxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame), CGRectGetMinY(frame))];
-        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMinY(frame))];
-        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 7, CGRectGetMaxY(frame) - 1.5)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 6, CGRectGetMinY(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.16, CGRectGetMinY(frame)) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 6, CGRectGetMinY(frame))];
+        [textBoxPath addLineToPoint: CGPointMake(CGRectGetMaxX(frame) - 6, CGRectGetMaxY(frame) - 7.5)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame), CGRectGetMaxY(frame) - 0.59) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 5.51, CGRectGetMaxY(frame) - 4.01) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 3.14, CGRectGetMaxY(frame) - 1.77)];
+        [textBoxPath addCurveToPoint: CGPointMake(CGRectGetMaxX(frame) - 3.42, CGRectGetMaxY(frame)) controlPoint1: CGPointMake(CGRectGetMaxX(frame) - 1.07, CGRectGetMaxY(frame) - 0.21) controlPoint2: CGPointMake(CGRectGetMaxX(frame) - 2.22, CGRectGetMaxY(frame))];
         [textBoxPath closePath];
     }
     return textBoxPath;
