@@ -37,7 +37,7 @@ typedef enum HXOMessageDirections {
 
 @property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
 @property (nonatomic,assign) HXOMessageDirection     messageDirection;
-@property (nonatomic,readonly) UIImageView *     avatar;
+@property (nonatomic,readonly) UIButton *     avatar;
 @property (nonatomic,readonly) UILabel *             authorLabel;
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width;

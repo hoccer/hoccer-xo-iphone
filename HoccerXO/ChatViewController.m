@@ -1334,7 +1334,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     id author = [self getAuthor: message];
     UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
-    cell.avatar.image = avatar;
+    [cell.avatar setImage: avatar forState: UIControlStateNormal];
     cell.authorLabel.text = [self.partner.type isEqualToString: @"Group"] ? [author nickName] : @"";
 
 

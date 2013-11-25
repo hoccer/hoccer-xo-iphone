@@ -66,12 +66,13 @@ static const CGFloat kHXOAvatarSize = 40;
     self.backgroundColor = [UIColor clearColor];
 
     CGFloat y = self.frame.size.height - (kHXOAvatarSize + kHXOBubblePadding);
-    _avatar = [[UIImageView alloc] initWithFrame: CGRectMake(kHXOBubblePadding, y, kHXOAvatarSize, kHXOAvatarSize)];
+    _avatar = [UIButton buttonWithType: UIButtonTypeCustom];
+    _avatar.frame = CGRectMake(kHXOBubblePadding, y, kHXOAvatarSize, kHXOAvatarSize);
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
     _avatar.clipsToBounds = YES;
     _avatar.layer.cornerRadius = 0.5 * _avatar.frame.size.width;
     [self addSubview: _avatar];
-    //[_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
+    [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
     self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
@@ -369,7 +370,6 @@ static const CGFloat kHXOAvatarSize = 40;
     _attachmentTitle.textColor = [UIColor whiteColor];
     _attachmentTitle.shadowColor = [UIColor blackColor];
     _attachmentTitle.shadowOffset = CGSizeMake(0, -1);
-    //_attachmentTitle.backgroundColor = [UIColor orangeColor];
     [self addSubview: _attachmentTitle];
 }
 

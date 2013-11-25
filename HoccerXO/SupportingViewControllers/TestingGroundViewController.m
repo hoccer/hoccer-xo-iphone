@@ -303,7 +303,7 @@
     BubbleViewToo * cell = (BubbleViewToo*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
     cell.colorScheme = item.colorScheme;
     cell.messageDirection = item.pointDirection;
-    cell.avatar.image = [UIImage imageNamed: @"cupcakes.jpg"];
+    [cell.avatar setImage:[UIImage imageNamed: @"cupcakes.jpg"] forState: UIControlStateNormal];
     cell.authorLabel.text = @"Someone";
     [self configureCell: cell item: item];
     return cell;
