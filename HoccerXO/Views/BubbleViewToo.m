@@ -529,7 +529,7 @@ static const CGFloat kHXOAvatarSize = 40;
     CGRect thumbnailFrameBounds = CGPathGetPathBoundingBox(thumbnailFramePath.CGPath);
 
     if (self.previewImage == nil) {
-        UIImage * icon = self.attachmentTransferState == HXOAttachmentTranserStateDownloadPending ? [UIImage imageNamed: @"download-btn"] : self.largeAttachmentTypeIcon;
+        UIImage * icon = self.attachmentTransferState == HXOAttachmentTranserStateDownloadPending ? [UIImage imageNamed: @"ctn-download"] : self.largeAttachmentTypeIcon;
         CGPoint iconOrigin = CGPointMake(thumbnailFrameBounds.origin.x + 0.5 * thumbnailFrameBounds.size.width - 0.5 * icon.size.width,
                                          thumbnailFrameBounds.origin.y + 0.5 * thumbnailFrameBounds.size.height - 0.5 * icon.size.height);
         [icon drawAtPoint: iconOrigin];
