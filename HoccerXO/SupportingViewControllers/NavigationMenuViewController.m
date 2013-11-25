@@ -14,7 +14,6 @@
 {
     NSArray * _menuItems;
     NSMutableDictionary * _viewControllers;
-    BOOL _viewAppeared;
 }
 @end
 
@@ -24,7 +23,6 @@
     self = [super initWithCoder: aDecoder];
     if (self != nil) {
         _viewControllers = [[NSMutableDictionary alloc] init];
-        _viewAppeared = NO;
     }
     return self;
 }
@@ -80,9 +78,8 @@
 
 }
 
-- (void) viewWillAppear:(BOOL)animated {
-    [super viewWillAppear: animated];
-    _viewAppeared = YES;
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     [self updateSelectedItem];
 }
 
@@ -127,9 +124,7 @@
 }
 
 - (void) navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    if (_viewAppeared) {
-        [self updateSelectedItem];
-    }
+    [self updateSelectedItem];
 }
 
 - (void) updateSelectedItem {
