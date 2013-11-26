@@ -966,9 +966,7 @@ static NSInteger validationErrorCount = 0;
 }
 
 + (void) updateStatusbarForViewController:(UIViewController*)viewcontroller style:(UIStatusBarStyle)theStyle {
-    NSLog(@"updateStatusbar");
-    // self.preferredStatusBarStyle = UIStatusBarStyleBlackTranslucent;
-    //[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent
+    // NSLog(@"updateStatusbar");
     
     [UIView animateWithDuration:0.5
      
@@ -983,12 +981,11 @@ static NSInteger validationErrorCount = 0;
                      }
      
                      completion:^(BOOL finished){
-                         NSLog(@"statusBarStyle animation done");
-                         
+                         // NSLog(@"statusBarStyle animation done");
                      }];
     
     [viewcontroller setNeedsStatusBarAppearanceUpdate];
-    NSLog(@"setNeedsStatusBarAppearanceUpdate");
+    // NSLog(@"setNeedsStatusBarAppearanceUpdate");
 }
 
 + (void) setBlackFontStatusbarForViewController:(UIViewController*)viewcontroller {
