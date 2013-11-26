@@ -18,6 +18,7 @@
 #import "Vcard.h"
 #import "GCHTTPRequestOperation.h"
 #import "GCNetworkRequest.h"
+#import "Contact.h"
 
 #import "NSData+Base64.h"
 
@@ -1192,6 +1193,10 @@ NSArray * TransferStateName = @[@"detached",
     }
     
     NSData * messageKey = self.message.cryptoKey;
+    if ([HXOBackend isInvalid:messageKey]) {
+        NSLog(@"ERROR: invalid message key for attachment remoteURL=%@, attachment.contentSize=%@, contact=%@", self.remoteURL, self.contentSize, self.message.contact.nickName);
+        return;
+    }
     NSError * myError = nil;
     self.decryptionEngine = [[CryptoEngine alloc]
                                initWithOperation:kCCDecrypt

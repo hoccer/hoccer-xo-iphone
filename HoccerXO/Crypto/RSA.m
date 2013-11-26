@@ -167,7 +167,7 @@ static RSA *instance;
                            &plainBufferSize);
     
     if (status != noErr) {
-        //NSLog(@"Error decrypting, OSStatus = %d", (NSInteger)status);
+        NSLog(@"Error decrypting, OSStatus = %d", (NSInteger)status);
         NSNotification *notification = [NSNotification notificationWithName:@"encryptionError" object:self];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
     }
