@@ -1452,16 +1452,20 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         latestChange = [self getLatestChangeDateForGroups];
     }
-//    NSDate * preUpdateTime = [NSDate date];
+    NSDate * preUpdateTime = [NSDate date];
     // NSLog(@"latest date %@", latestChange);
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
-        if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
-        for (NSDictionary * groupDict in changedGroups) {
-            [self updateGroupHere: groupDict];
+        if (changedGroups.count > 0) {
+            if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
+            BOOL ok = YES;
+            for (NSDictionary * groupDict in changedGroups) {
+                BOOL stateOk =[self updateGroupHere: groupDict];
+                ok = ok && stateOk;
+            }
+            if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]] && ok) {
+                [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
+            }
         }
-//        if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]]) {
-//            [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
-//        }
         [self finishFirstConnectionAfterCrashOrUpdate];
     }];
 }
@@ -1486,7 +1490,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
-- (void) updateGroupHere: (NSDictionary*) groupDict {
+- (BOOL) updateGroupHere: (NSDictionary*) groupDict {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
         
     if (GROUP_DEBUG) NSLog(@"updateGroupHere with %@",groupDict);
@@ -1497,7 +1501,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSString * groupState = groupDict[@"state"];
     if (groupState == nil) {
         NSLog(@"Error: group without group state, dict=%@", groupDict);
-        return;
+        return NO;
     }
     if (group != nil) {
         group.lastUpdateReceived = [NSDate date];
@@ -1515,7 +1519,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [self handleDeletionOfGroup:group];
         }
         if (GROUP_DEBUG) NSLog(@"updateGroupHere: end processing of a removed group");
-        return;
+        return YES;
     }
 
     if (group == nil) {
@@ -1557,7 +1561,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (!group.iAmAdmin && groupDict[@"groupAvatarUrl"] != group.avatarURL) {
         [self updateAvatarForContact:group forAvatarURL:groupDict[@"groupAvatarUrl"]];
     }
-    
+    return YES;
 }
 
 // update a group on the server (as admin)
