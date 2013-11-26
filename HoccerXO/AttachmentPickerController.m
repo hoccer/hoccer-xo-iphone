@@ -384,17 +384,11 @@
 @synthesize geoLocationViewController = _geoLocationViewController;
 @synthesize modalLocationPickerHelper = _modalLocationPickerHelper;
 
-- (GeoLocationPicker*) geoLocationViewController {
-    if (_geoLocationViewController == nil) {
-        _geoLocationViewController = [_viewController.storyboard instantiateViewControllerWithIdentifier:@"GeoLocationViewController"];
-    }
-    return _geoLocationViewController;
-}
-
 - (UINavigationController*) modalLocationPickerHelper {
     if (_modalLocationPickerHelper == nil) {
         self.geoLocationViewController.delegate = self;
         _modalLocationPickerHelper = [_viewController.storyboard instantiateViewControllerWithIdentifier: @"ModalGeoLocationViewController"];
+        ((GeoLocationPicker*)[_modalLocationPickerHelper childViewControllers][0]).delegate = self;
     }
     return _modalLocationPickerHelper;
 }
