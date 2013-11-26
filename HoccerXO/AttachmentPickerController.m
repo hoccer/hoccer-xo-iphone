@@ -412,12 +412,6 @@
     [AppDelegate setBlackFontStatusbarForViewController:viewController];
 }
 
-//- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-//{
-//    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault; // black font
-//    [viewController setNeedsStatusBarAppearanceUpdate];
-//}
-
 #pragma mark - image/video picking
 
 
