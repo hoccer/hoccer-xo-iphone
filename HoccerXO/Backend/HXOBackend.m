@@ -1528,31 +1528,31 @@ static NSTimer * _stateNotificationDelayTimer;
     
     NSDate * lastKnown = group.lastChanged; // remember the previously local lastChanged date before overwriting
     [group updateWithDictionary: groupDict];
-#ifdef FASTER_BETTER
+//#ifdef FASTER_BETTER
     NSDate * latestMemberChangeDate = [group latestMemberChangeDate];
-#endif
-
+//#endif
+    
     /*
-    NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    NSLog(@"lastKnown = %@",lastKnown);
-    NSLog(@"group.lastChanged = %@, equal=%d",group.lastChanged,[group.lastChanged isEqualToDate:lastKnown]);
-    NSLog(@"latestMemberChangeDate = %@, equal=%d",latestMemberChangeDate,[latestMemberChangeDate isEqualToDate:lastKnown]);
-    */
+     NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+     NSLog(@"lastKnown = %@",lastKnown);
+     NSLog(@"group.lastChanged = %@, equal=%d",group.lastChanged,[group.lastChanged isEqualToDate:lastKnown]);
+     NSLog(@"latestMemberChangeDate = %@, equal=%d",latestMemberChangeDate,[latestMemberChangeDate isEqualToDate:lastKnown]);
+     */
     if (self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown) {
         [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0]];
     } else {
-#ifdef FASTER_BETTER
+        //#ifdef FASTER_BETTER
         if (!([group.lastChanged isEqualToDate:lastKnown] && [group.lastChanged isEqualToDate:latestMemberChangeDate])) {
-        // TODO: right now, latestMemberChangeDate always differs from the group changed date, it is implemented this
-        // way on the server; we should discuss if we keep it that way or not.
-        // update members
-        [self getGroupMembers:group lastKnown:latestMemberChangeDate];
-    } else {
-#endif
-        [self getGroupMembers:group lastKnown:lastKnown];
+            // TODO: right now, latestMemberChangeDate always differs from the group changed date, it is implemented this
+            // way on the server; we should discuss if we keep it that way or not.
+            // update members
+            [self getGroupMembers:group lastKnown:latestMemberChangeDate];
+        } else {
+            //#endif
+            [self getGroupMembers:group lastKnown:lastKnown];
+        }
+        //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
-    //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    
     // TODO: make this work for multiple admins (need to check if my avatar upload is in progress)
     if (!group.iAmAdmin && groupDict[@"groupAvatarUrl"] != group.avatarURL) {
         [self updateAvatarForContact:group forAvatarURL:groupDict[@"groupAvatarUrl"]];
