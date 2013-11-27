@@ -691,7 +691,7 @@
                                                     <action selector="addAttachmentPressed:" destination="21" eventType="touchUpInside" id="Xoj-u6-0ru"/>
                                                 </connections>
                                             </button>
-                                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" style="white" id="Fyy-CK-c8b" userLabel="Activity Indicator - Attachment">
+                                            <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" style="gray" id="Fyy-CK-c8b" userLabel="Activity Indicator - Attachment">
                                                 <rect key="frame" x="20" y="10" width="20" height="20"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             </activityIndicatorView>
