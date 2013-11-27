@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="5">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -22,13 +23,13 @@
         <!--Chat View Controller - Detail-->
         <scene sceneID="16">
             <objects>
-                <viewController storyboardIdentifier="" title="Detail" id="4" customClass="ChatViewController" sceneMemberID="viewController">
+                <viewController title="Detail" id="4" customClass="ChatViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i4Q-Of-M4w">
-                        <rect key="frame" x="0.0" y="64" width="703" height="704"/>
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="Xxh-ZM-WLF">
-                                <rect key="frame" x="0.0" y="662" width="703" height="42"/>
+                                <rect key="frame" x="0.0" y="726" width="703" height="42"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="GdI-AR-aC2">
@@ -57,7 +58,7 @@
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <containerView contentMode="scaleToFill" id="k3t-uL-pjy">
-                                <rect key="frame" x="0.0" y="0.0" width="703" height="662"/>
+                                <rect key="frame" x="0.0" y="0.0" width="703" height="726"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <connections>
@@ -86,7 +87,7 @@
             <objects>
                 <splitViewController id="5" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <segue destination="3" kind="relationship" relationship="masterViewController" id="9"/>
@@ -100,17 +101,17 @@
         <!--Conversation View Controller - Master-->
         <scene sceneID="24">
             <objects>
-                <tableViewController storyboardIdentifier="" title="Master" clearsSelectionOnViewWillAppear="NO" id="19" customClass="ConversationViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="20">
-                        <rect key="frame" x="0.0" y="64" width="320" height="704"/>
+                <tableViewController title="Master" clearsSelectionOnViewWillAppear="NO" id="19" customClass="ConversationViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="20">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ContactCell" id="klq-RR-SOm" customClass="ConversationCell">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="klq-RR-SOm" id="bPs-ZZ-1v4">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
@@ -134,8 +135,7 @@
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
+                                </tableViewCellContentView>
                                 <connections>
                                     <outlet property="avatar" destination="aPx-8R-JlE" id="9D6-EY-FU7"/>
                                     <outlet property="messageCountLabel" destination="ecg-2A-iKw" id="Vx5-ZM-tfy"/>
@@ -175,7 +175,7 @@
             <objects>
                 <viewController id="M2K-x0-9nS" customClass="ChatTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="93" sectionHeaderHeight="22" sectionFooterHeight="22" id="Xoo-Uh-zTO" customClass="NonFloatingSectionHeaderTableView">
-                        <rect key="frame" x="0.0" y="0.0" width="703" height="662"/>
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="726"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -183,16 +183,16 @@
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="LeftMessageCell" rowHeight="93" id="yko-xe-E35" customClass="LeftMessageCell">
                                 <rect key="frame" x="0.0" y="22" width="703" height="93"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="703" height="92"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yko-xe-E35" id="7x2-B7-ZUe">
+                                    <rect key="frame" x="0.0" y="0.0" width="703" height="93"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" id="MOx-eC-3Rp" customClass="BubbleView">
-                                            <rect key="frame" x="92" y="14" width="591" height="64"/>
+                                            <rect key="frame" x="92" y="14" width="590" height="64"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9Nd-MF-ScL" customClass="AutoheightLabel">
-                                                    <rect key="frame" x="20" y="21" width="551" height="21"/>
+                                                    <rect key="frame" x="20" y="21" width="550" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -210,8 +210,7 @@
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
+                                </tableViewCellContentView>
                                 <connections>
                                     <outlet property="avatar" destination="BCS-am-703" id="lct-9H-8vZ"/>
                                     <outlet property="bubble" destination="MOx-eC-3Rp" id="u23-Tm-CqX"/>
@@ -221,16 +220,16 @@
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="RightMessageCell" rowHeight="93" id="DOh-mq-c1B" customClass="RightMessageCell">
                                 <rect key="frame" x="0.0" y="115" width="703" height="93"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="703" height="92"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DOh-mq-c1B" id="NNw-Ea-RyR">
+                                    <rect key="frame" x="0.0" y="0.0" width="703" height="93"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" id="Pb3-4Q-kVt" customClass="BubbleView">
-                                            <rect key="frame" x="20" y="14" width="591" height="64"/>
+                                            <rect key="frame" x="20" y="14" width="590" height="64"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jBu-Xd-fgw" customClass="AutoheightLabel">
-                                                    <rect key="frame" x="20" y="21" width="551" height="21"/>
+                                                    <rect key="frame" x="20" y="21" width="550" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -243,13 +242,12 @@
                                             </connections>
                                         </view>
                                         <view contentMode="scaleToFill" id="CuN-Sc-1n4" customClass="InsetImageView">
-                                            <rect key="frame" x="619" y="14" width="64" height="64"/>
+                                            <rect key="frame" x="618" y="14" width="64" height="64"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
+                                </tableViewCellContentView>
                                 <connections>
                                     <outlet property="avatar" destination="CuN-Sc-1n4" id="Nhm-a4-eXZ"/>
                                     <outlet property="bubble" destination="Pb3-4Q-kVt" id="k3l-w2-TzI"/>
@@ -259,20 +257,19 @@
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="SectionHeaderCell" rowHeight="56" id="f6F-Fd-lzC" customClass="ChatTableSectionHeaderCell">
                                 <rect key="frame" x="0.0" y="208" width="703" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="703" height="55"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="f6F-Fd-lzC" id="O0u-jA-3zG">
+                                    <rect key="frame" x="0.0" y="0.0" width="703" height="56"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rFj-vY-UNf">
-                                            <rect key="frame" x="20" y="17" width="663" height="21"/>
+                                            <rect key="frame" x="20" y="17" width="662" height="21"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
+                                </tableViewCellContentView>
                                 <connections>
                                     <outlet property="label" destination="rFj-vY-UNf" id="gGd-2r-3gl"/>
                                 </connections>
@@ -286,90 +283,8 @@
             <point key="canvasLocation" x="1322" y="342"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="AutoheightLabel" superclassName="UILabel">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutoheightLabel.h"/>
-        </class>
-        <class className="BubbleView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BubbleView.h"/>
-            <relationships>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="ChatTableSectionHeaderCell" superclassName="HXOTableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableSectionHeaderCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="backgroundImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="label" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ChatTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatTableViewController.h"/>
-        </class>
-        <class className="ChatViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChatViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addAttachmentPressed:"/>
-                <relationship kind="action" name="sendPressed:"/>
-                <relationship kind="outlet" name="attachmentButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="attachmentSpinner" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="chatTableContainer" candidateClass="UIView"/>
-                <relationship kind="outlet" name="chatbar" candidateClass="UIView"/>
-                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="textField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="ConversationAndContactsCell" superclassName="HXOTableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationAndContactsCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
-                <relationship kind="outlet" name="nickName" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ConversationCell" superclassName="ConversationAndContactsCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="latestMessage" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="latestMessageTime" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ConversationViewController" superclassName="TableViewControllerWithPlaceholder">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConversationViewController.h"/>
-        </class>
-        <class className="GrowingTextView" superclassName="UITextView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/GrowingTextView.h"/>
-        </class>
-        <class className="HXOTableViewCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/HXOTableViewCell.h"/>
-        </class>
-        <class className="InsetImageView" superclassName="UIControl">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InsetImageView.h"/>
-        </class>
-        <class className="LeftMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/LeftMessageCell.h"/>
-        </class>
-        <class className="MessageCell" superclassName="HXOTableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MessageCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="avatar" candidateClass="InsetImageView"/>
-                <relationship kind="outlet" name="bubble" candidateClass="BubbleView"/>
-                <relationship kind="outlet" name="message" candidateClass="AutoheightLabel"/>
-            </relationships>
-        </class>
-        <class className="NonFloatingSectionHeaderTableView" superclassName="UITableView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NonFloatingSectionHeaderTableView.h"/>
-        </class>
-        <class className="RightMessageCell" superclassName="MessageCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RightMessageCell.h"/>
-        </class>
-        <class className="TableViewControllerWithPlaceholder" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TableViewControllerWithPlaceholder.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
+        <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>

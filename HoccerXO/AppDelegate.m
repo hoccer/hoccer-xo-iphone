@@ -983,8 +983,9 @@ static NSInteger validationErrorCount = 0;
                      completion:^(BOOL finished){
                          // NSLog(@"statusBarStyle animation done");
                      }];
-    
-    [viewcontroller setNeedsStatusBarAppearanceUpdate];
+    if ([viewcontroller respondsToSelector:(@selector(setNeedsStatusBarAppearanceUpdate))]) {
+        [viewcontroller setNeedsStatusBarAppearanceUpdate];
+    }
     // NSLog(@"setNeedsStatusBarAppearanceUpdate");
 }
 
