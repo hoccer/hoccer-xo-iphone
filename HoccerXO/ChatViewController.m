@@ -41,6 +41,7 @@
 #import "NickNameLabelWithStatus.h"
 
 #define ACTION_MENU_DEBUG NO
+#define DEBUG_ATTACHMENT_BUTTONS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const CGFloat    kSectionHeaderHeight = 40;
@@ -626,20 +627,27 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
-                    NSLog (@"AVAssetExportSessionStatusCompleted");
+                    if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted");
                     [AppDelegate setDefaultAudioSession];
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
                         self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
                         if (self.currentAttachment.previewImage == nil) {
+                            if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: makeAudioAttachment - creating preview image from db artwork");
                             // In case we fail getting the artwork from file try get artwork from Media Item
                             // However, this only displays the artwork on the upload side. The artwork is *not*
                             // included in the exported file.
                             // It should be possible to add the image using _currentExportSession.metadata. But
                             // merging with existing metadata is non trivial and we should tackle it later.
                             MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
-                            self.currentAttachment.previewImage = [artwork imageWithSize:CGSizeMake(400,400)];
-
+                            if (artwork != nil) {
+                                if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: got artwork, creating preview image");
+                                self.currentAttachment.previewImage = [artwork imageWithSize:CGSizeMake(400,400)];
+                            } else {
+                                if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: no artwork");
+                            }
+                        } else {
+                            if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: artwork is in media file");
                         }
                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
                     }];
@@ -775,9 +783,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) decorateAttachmentButton:(UIImage *) theImage {
-    // NSLog(@"decorateAttachmentButton with %@", theImage);
+    
+    if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton with %@", theImage);
     if (theImage != nil) {
         if (self.attachmentPreview != nil) {
+            if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeFromSuperview");
             [self.attachmentPreview removeFromSuperview];
         }
         InsetImageView* preview = [[InsetImageView alloc] init];
@@ -786,11 +796,13 @@ static const CGFloat    kSectionHeaderHeight = 40;
         preview.image = theImage;
         preview.borderColor = [UIColor blackColor];
         preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
+        preview.backgroundColor = [UIColor blueColor];
         preview.autoresizingMask = _attachmentButton.autoresizingMask;
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.chatbar addSubview: preview];
         _attachmentButton.hidden = YES;
     } else {
+        if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeAttachmentPreview");
         [self removeAttachmentPreview];
     }
 }
@@ -802,7 +814,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
         self.attachmentButton.hidden = NO;
     }
 }
-
 
 - (void) startPickedAttachmentProcessingForObject:(id)info {
     if (_currentAttachment != nil) {
@@ -816,29 +827,34 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
-    // NSLog(@"finishPickedAttachmentProcessingWithImage:%@ withError:%@",theImage, theError);
-    _currentPickInfo = nil;
-    [self hideAttachmentSpinner];
-    if (theError == nil && theImage != nil) {
-        if (theImage.size.height == 0) {
-            [self decorateAttachmentButton:self.currentAttachment.previewIcon];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage:%@ previewIcon:%@ withError:%@",theImage, self.currentAttachment.previewIcon, theError);
+        _currentPickInfo = nil;
+        [self hideAttachmentSpinner];
+        if (theError == nil && theImage != nil) {
+            if (theImage.size.height == 0) {
+                if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: decorateAttachmentButton with currentAttachment.previewIcon");
+                [self decorateAttachmentButton:self.currentAttachment.previewIcon];
+            } else {
+                if (DEBUG_ATTACHMENT_BUTTONS)NSLog(@"finishPickedAttachmentProcessingWithImage: decorateAttachmentButton with theImage");
+                [self decorateAttachmentButton:theImage];
+            }
+            _sendButton.enabled = YES;
         } else {
-            [self decorateAttachmentButton:theImage];
+            if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: trashCurrentAttachment");
+            [self trashCurrentAttachment];
         }
-    } else {
-        [self trashCurrentAttachment];
-    }
-    _sendButton.enabled = YES; // wait for attachment ready
+    });
 }
 
 - (void) showAttachmentSpinner {
-    // NSLog(@"showAttachmentSpinner");
+    if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"showAttachmentSpinner");
     _attachmentSpinner.hidden = NO;
     [_attachmentSpinner startAnimating];
 }
 
 - (void) hideAttachmentSpinner {
-    // NSLog(@"hideAttachmentSpinner");
+    if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"hideAttachmentSpinner");
     [_attachmentSpinner stopAnimating];
     _attachmentSpinner.hidden = YES;
 }
