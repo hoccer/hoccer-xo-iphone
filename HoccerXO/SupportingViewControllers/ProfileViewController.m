@@ -722,7 +722,9 @@ typedef enum ActionSheetTags {
             return @[ _avatarSection, _utilitySection, _profileItemsSection, _fingerprintSection, _destructiveSection];
         } else if ([self.contact.relationshipState isEqualToString: @"groupfriend"]) {
             return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _destructiveSection];
-        } else {
+        } else if ([self.contact.relationshipState isEqualToString: @"kept"]) {
+            return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _destructiveSection];
+       } else {
             return @[_avatarSection, _profileItemsSection, _fingerprintSection];
         }
     } else {
@@ -843,7 +845,8 @@ typedef enum ActionSheetTags {
 
 - (void) deleteContact: (Contact*) contact {
     [self.navigationController popViewControllerAnimated: YES];
-    if ([contact.relationshipState isEqualToString:@"groupfriend"]) {
+    NSLog(@"deleting contact with relationshipState %@", contact.relationshipState);
+    if ([contact.relationshipState isEqualToString:@"groupfriend"] || [contact.relationshipState isEqualToString:@"kept"]) {
         [self.chatBackend handleDeletionOfContact:contact];
         return;
     }
