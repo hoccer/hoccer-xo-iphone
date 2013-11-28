@@ -616,6 +616,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             int exportStatus = _currentExportSession.status;
             switch (exportStatus) {
                 case AVAssetExportSessionStatusFailed: {
+                    NSLog (@"AVAssetExportSessionStatusFailed");
                     // log error to text view
                     NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
@@ -625,7 +626,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
-                    // NSLog (@"AVAssetExportSessionStatusCompleted");
+                    NSLog (@"AVAssetExportSessionStatusCompleted");
                     [AppDelegate setDefaultAudioSession];
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;

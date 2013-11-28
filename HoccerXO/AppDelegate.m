@@ -172,6 +172,7 @@ static NSInteger validationErrorCount = 0;
 
 + (void) setDefaultAudioSession {
     NSLog(@"setDefaultAudioSession");
+    //NSLog(@"%@", [NSThread callStackSymbols]);
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
