@@ -417,23 +417,26 @@ NSArray * TransferStateName = @[@"detached",
 
 - (UIImage *)previewIcon {
     if (_previewIcon == nil) {
-        NSString * largeIconName = nil;
+        NSString * largeIconName = @"cnt-download"; // use as default icon
         if ([self.mediaType isEqualToString: @"vcard"]) {
-            largeIconName = @"attachment_icon_contact";
+            largeIconName = @"cnt-contact";
         }  else if ([self.mediaType isEqualToString: @"geolocation"]) {
-            largeIconName = @"attachment_icon_location";
+            largeIconName = @"cnt-location";
         }  else if ([self.mediaType isEqualToString: @"audio"]) {
             NSRange findResult = [self.humanReadableFileName rangeOfString:@"recording"];
             if (findResult.length == @"recording".length && findResult.location == 0) {
-                largeIconName = @"attachment_icon_voice";
+                largeIconName = @"cnt-record";
             } else {
-                largeIconName = @"attachment_icon_music";
+                largeIconName = @"cnt-music";
             }
         }
+        // NSLog(@"previewIcon: largeIconName=%@",largeIconName);
         if (largeIconName != nil) {
             _previewIcon = [UIImage imageNamed:largeIconName];
         }
     }
+    
+    // NSLog(@"previewIcon: returning%@",_previewIcon);
     return _previewIcon;
 }
 
