@@ -407,4 +407,8 @@
 
 "back_button_title" = "Zurück";
 
+"microphone_access_denied_title"="Mikrofonzugriff ist abgeschaltet";
+"microphone_access_denied_message"="Erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff um Sprache aufzunehmen.";
+
+
 

@@ -1870,7 +1870,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     if (group.messages.count == 0) {
         // if theres nothing to save, delete right away and dont ask
-        if (GROUP_DEBUG) NSLog(@"handleDeletionOfGroup: nothing to save, delete group with id %@",group.clientId);
+        if (GROUP_DEBUG, YES) NSLog(@"handleDeletionOfGroup: nothing to save, delete group with name ‘%@' id %@",group.nickName, group.clientId);
         [self deleteInDatabaseAllMembersAndContactsofGroup:group];
         [moc deleteObject: group];
         [self.delegate saveDatabase];

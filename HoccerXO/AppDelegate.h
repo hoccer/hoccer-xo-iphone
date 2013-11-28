@@ -57,6 +57,7 @@
 + (void) setRecordingAudioSession;
 + (void) setMusicAudioSession;
 + (void) setProcessingAudioSession;
++ (void) requestRecordPermission;
 
 + (id) registerKeyboardHidingOnSheetPresentationFor:(UIViewController*)controller;
 

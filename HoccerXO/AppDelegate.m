@@ -171,6 +171,7 @@ static NSInteger validationErrorCount = 0;
 
 
 + (void) setDefaultAudioSession {
+    NSLog(@"setDefaultAudioSession");
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
@@ -191,6 +192,9 @@ static NSInteger validationErrorCount = 0;
 }
 
 + (void) setRecordingAudioSession {
+    NSLog(@"setRecordingAudioSession");
+
+    
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
@@ -199,7 +203,8 @@ static NSInteger validationErrorCount = 0;
         NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
     }
     
-    [session setCategory:AVAudioSessionCategoryRecord error:&myError];
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&myError];
+    //[session setCategory:AVAudioSessionCategoryRecord error:&myError];
     if (myError != nil) {
         NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryRecord, error=%@",myError);
     }
@@ -208,9 +213,11 @@ static NSInteger validationErrorCount = 0;
     if (myError != nil) {
         NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryRecord, error=%@",myError);
     }
+    [AppDelegate requestRecordPermission];
 }
 
 + (void) setProcessingAudioSession {
+    NSLog(@"setProcessingAudioSession");
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
@@ -231,8 +238,8 @@ static NSInteger validationErrorCount = 0;
 }
 
 
-
 + (void) setMusicAudioSession {
+    NSLog(@"setMusicAudioSession");
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
@@ -249,6 +256,38 @@ static NSInteger validationErrorCount = 0;
     if (myError != nil) {
         NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategorySoloAmbient, error=%@",myError);
     }
+}
+
++ (void) requestRecordPermission {
+    
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    
+    if ([session respondsToSelector:@selector(requestRecordPermission:)]) {
+        [session performSelector:@selector(requestRecordPermission:) withObject:^(BOOL granted) {
+            if (granted) {
+                // Microphone enabled code
+                NSLog(@"Microphone is enabled..");
+            }
+            else {
+                // Microphone disabled code
+                NSLog(@"Microphone is disabled..");
+                
+                // We're in a background thread here, so jump to main thread to do UI work.
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [AppDelegate showMicrophoneAcccessDeniedAlert];
+                });
+            }
+        }];
+    }
+}
+
++ (void) showMicrophoneAcccessDeniedAlert {
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"microphone_access_denied_title", nil)
+                                                     message: NSLocalizedString(@"microphone_access_denied_message", nil)
+                                             completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { }
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
 }
 
 - (void) seedRand {

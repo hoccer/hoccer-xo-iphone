@@ -13,6 +13,8 @@
 // #import "UIButton+GlossyRounded.h"
 #import "AppDelegate.h"
 
+#define ENABLE_METERING NO
+
 @interface RecordViewController ()
 @end
 
@@ -60,6 +62,8 @@
     [self updateTimeDisplay:nil];
     
     self.useButton.enabled = NO;
+    [AppDelegate requestRecordPermission];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -135,6 +139,10 @@
     NSTimeInterval seconds = 0;
     if (_audioRecorder.recording) {
         seconds = _audioRecorder.currentTime;
+        if (ENABLE_METERING) {
+            [_audioRecorder updateMeters];
+            NSLog(@"Average input: %f Peak input: %f", [_audioRecorder averagePowerForChannel:0], [_audioRecorder peakPowerForChannel:0]);
+        }
     }
     if (_audioPlayer.playing) {
         seconds = _audioPlayer.currentTime;
@@ -154,6 +162,9 @@
         [AppDelegate setRecordingAudioSession];
 
         [_audioRecorder record];
+        if (ENABLE_METERING) {
+            _audioRecorder.meteringEnabled = YES;
+        }
         [self startTimer];
         // NSLog(@"Audiorecorder record: %d", _audioRecorder.recording);
     }
@@ -164,6 +175,8 @@
     if (!_audioRecorder.recording) {
         [self disableRecord];
         [self enableStop];
+        
+        [AppDelegate setMusicAudioSession];
         
         NSError *error;
         
