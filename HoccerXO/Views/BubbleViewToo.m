@@ -522,23 +522,24 @@ static const CGFloat kHXOAvatarSize = 40;
 
     UIBezierPath* thumbnailFramePath = self.messageDirection == HXOMessageDirectionIncoming ? [self rightAlignedThumbnailFrameInRect: frame] : [self leftAlignedThumbnailFrameInRect: frame];
 
-    
-    CGContextSaveGState(context);
-    [thumbnailFramePath addClip];
-
     CGRect thumbnailFrameBounds = CGPathGetPathBoundingBox(thumbnailFramePath.CGPath);
 
     if (self.previewImage == nil) {
+
         UIImage * icon = self.attachmentTransferState == HXOAttachmentTranserStateDownloadPending ? [UIImage imageNamed: @"ctn-download"] : self.largeAttachmentTypeIcon;
         CGPoint iconOrigin = CGPointMake(thumbnailFrameBounds.origin.x + 0.5 * thumbnailFrameBounds.size.width - 0.5 * icon.size.width,
                                          thumbnailFrameBounds.origin.y + 0.5 * thumbnailFrameBounds.size.height - 0.5 * icon.size.height);
         [icon drawAtPoint: iconOrigin];
 
     } else {
+        CGContextSaveGState(context);
+        [thumbnailFramePath addClip];
+
         CGRect imageFrame = [self thumbnailFrame: thumbnailFrameBounds];
         [self.previewImage drawInRect: imageFrame];
+
+        CGContextRestoreGState(context);
     }
-    CGContextRestoreGState(context);
 }
 
 
@@ -594,11 +595,11 @@ static const CGFloat kHXOAvatarSize = 40;
 }
 
 - (UIBezierPath*) leftAlignedThumbnailFrameInRect: (CGRect) frame {
-    return [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame), CGRectGetMinY(frame), 48, 48) cornerRadius: 12];
+    return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 8, CGRectGetMinY(frame) + 8 , 32, 32)];
 }
 
 - (UIBezierPath*) rightAlignedThumbnailFrameInRect: (CGRect) frame {
-    return [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame) + CGRectGetWidth(frame) - 48, CGRectGetMinY(frame), 48, 48) cornerRadius: 12];
+    return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + CGRectGetWidth(frame) - 40, CGRectGetMinY(frame) + 8, 32, 32)];
 }
 
 - (CGRect) thumbnailFrame: (CGRect) thumbnailFrame {

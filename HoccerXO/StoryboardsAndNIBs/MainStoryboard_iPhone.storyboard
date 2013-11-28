@@ -12,7 +12,7 @@
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="4">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" red="0.15270782919032114" green="0.55095108695652173" blue="0.49882560239588097" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.14509803921568626" green="0.72156862745098038" blue="0.6705882352941176" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="4nm-mG-zhE">
                         <rect key="frame" x="0.0" y="416" width="320" height="44"/>
@@ -657,12 +657,10 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5x6-4c-VVf">
-                                                <rect key="frame" x="265" y="5" width="49" height="30"/>
+                                                <rect key="frame" x="272" y="9" width="40" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="Send">
-                                                    <color key="titleColor" red="0.5215686559677124" green="0.5215686559677124" blue="0.5372549295425415" alpha="1" colorSpace="deviceRGB"/>
-                                                </state>
+                                                <state key="normal" image="chatbar_icon-send.png"/>
                                                 <connections>
                                                     <action selector="sendPressed:" destination="21" eventType="touchUpInside" id="TLE-up-7TW"/>
                                                 </connections>
@@ -698,7 +696,7 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             </activityIndicatorView>
                                             <view contentMode="scaleToFill" id="Zuu-F2-dP2" customClass="HPGrowingTextView">
-                                                <rect key="frame" x="63" y="5" width="194" height="30"/>
+                                                <rect key="frame" x="63" y="5" width="201" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             </view>
@@ -1106,7 +1104,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         </view>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="N0x-VT-hvZ">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="N0x-VT-hvZ" customClass="NickNameLabelWithStatus">
                                             <rect key="frame" x="64" y="10" width="228" height="21"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -1164,6 +1162,7 @@
     </scenes>
     <resources>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
+        <image name="chatbar_icon-send.png" width="26" height="19"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

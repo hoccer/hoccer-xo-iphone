@@ -16,7 +16,6 @@
 		63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63126C2F170E46F800A6804A /* MessageUI.framework */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
 		631457CA16F0E76D00AA8EB9 /* HXOBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HXOBackend.m */; };
-		6315F00317302D1D0027BCA7 /* InviteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6315F00217302D1D0027BCA7 /* InviteCell.xib */; };
 		6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6316D68E171EEC0A007441D9 /* libObjCSRP.a */; };
 		6317259A177089230070823C /* PerforatedPlateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63172599177089230070823C /* PerforatedPlateView.m */; };
 		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
@@ -296,7 +295,6 @@
 		63F4CF03172846D600699394 /* conversation_cell_bg_new.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F4CF01172846D600699394 /* conversation_cell_bg_new.png */; };
 		63F4CF04172846D600699394 /* conversation_cell_bg_new@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */; };
 		63F4CF10172892EB00699394 /* InvitationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF0F172892EB00699394 /* InvitationController.m */; };
-		63F4CF1B17289DB600699394 /* InviteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF1A17289DB600699394 /* InviteCell.m */; };
 		63F62DE81773168400435F21 /* table_view_bottom_terminator.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F62DE61773168400435F21 /* table_view_bottom_terminator.png */; };
 		63F62DE91773168400435F21 /* table_view_bottom_terminator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63F62DE71773168400435F21 /* table_view_bottom_terminator@2x.png */; };
 		63F62E0817799D6B00435F21 /* MFSideMenuContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */; };
@@ -504,7 +502,6 @@
 		631457A916EF96B500AA8EB9 /* Attachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Attachment.m; sourceTree = "<group>"; };
 		631457C816F0E76D00AA8EB9 /* HXOBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOBackend.h; sourceTree = "<group>"; };
 		631457C916F0E76D00AA8EB9 /* HXOBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOBackend.m; sourceTree = "<group>"; };
-		6315F00217302D1D0027BCA7 /* InviteCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InviteCell.xib; sourceTree = "<group>"; };
 		6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjCSRP.xcodeproj; path = ObjCSRP/ObjCSRP.xcodeproj; sourceTree = "<group>"; };
 		63172598177089230070823C /* PerforatedPlateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerforatedPlateView.h; sourceTree = "<group>"; };
 		63172599177089230070823C /* PerforatedPlateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerforatedPlateView.m; sourceTree = "<group>"; };
@@ -883,8 +880,6 @@
 		63F4CF02172846D600699394 /* conversation_cell_bg_new@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "conversation_cell_bg_new@2x.png"; sourceTree = "<group>"; };
 		63F4CF0E172892EB00699394 /* InvitationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitationController.h; sourceTree = "<group>"; };
 		63F4CF0F172892EB00699394 /* InvitationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvitationController.m; sourceTree = "<group>"; };
-		63F4CF1917289DB600699394 /* InviteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteCell.h; sourceTree = "<group>"; };
-		63F4CF1A17289DB600699394 /* InviteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteCell.m; sourceTree = "<group>"; };
 		63F62DE61773168400435F21 /* table_view_bottom_terminator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table_view_bottom_terminator.png; sourceTree = "<group>"; };
 		63F62DE71773168400435F21 /* table_view_bottom_terminator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table_view_bottom_terminator@2x.png"; sourceTree = "<group>"; };
 		63F62E0517799D6B00435F21 /* MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenu.h; sourceTree = "<group>"; };
@@ -1639,7 +1634,6 @@
 				63DC01861715FE8B00609513 /* UserDefaultsCells */,
 				63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */,
 				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
-				6315F00217302D1D0027BCA7 /* InviteCell.xib */,
 			);
 			path = StoryboardsAndNIBs;
 			sourceTree = "<group>";
@@ -1853,8 +1847,6 @@
 				6320D7CC16E0C79A00E58478 /* InsetImageView.m */,
 				6385EC9217A68E770024028A /* InsetImageView2.h */,
 				6385EC9317A68E770024028A /* InsetImageView2.m */,
-				63F4CF1917289DB600699394 /* InviteCell.h */,
-				63F4CF1A17289DB600699394 /* InviteCell.m */,
 				63B2178B181FDFAA00C057D9 /* NickNameLabelWithStatus.h */,
 				63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */,
 				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
@@ -2360,7 +2352,6 @@
 				63A7F6AC172C418A00C0EC26 /* zbar-samples.png in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
-				6315F00317302D1D0027BCA7 /* InviteCell.xib in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				E9D114641733010400737EF7 /* vcard_error_preview.png in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
@@ -2548,7 +2539,6 @@
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 				E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */,
 				63F4CF10172892EB00699394 /* InvitationController.m in Sources */,
-				63F4CF1B17289DB600699394 /* InviteCell.m in Sources */,
 				E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */,
 				E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */,
 				E9D1145817316DCC00737EF7 /* StartupViewController.m in Sources */,

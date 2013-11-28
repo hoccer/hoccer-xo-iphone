@@ -22,7 +22,6 @@
 #import "HXOUserDefaults.h"
 #import "HXONavigationBar.h"
 #import "ProfileViewController.h"
-#import "InviteCell.h"
 #import "InvitationController.h"
 #import "Attachment.h"
 #import "Environment.h"
@@ -30,7 +29,6 @@
 @interface ConversationViewController ()
 
 @property (nonatomic,strong) ConversationCell * conversationCell;
-@property (nonatomic,strong) InviteCell       * inviteCell;
 
 @property (strong, nonatomic) id connectionInfoObserver;
 
@@ -47,10 +45,6 @@
     }
     self.conversationCell = [self.tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier]];
 
-    UINib * nib = [UINib nibWithNibName: @"InviteCell" bundle: [NSBundle mainBundle]];
-    [self.tableView registerNib: nib forCellReuseIdentifier: [InviteCell reuseIdentifier]];
-    self.inviteCell = [self.tableView dequeueReusableCellWithIdentifier: [InviteCell reuseIdentifier]];
-
     [super awakeFromNib];
 }
 
@@ -58,7 +52,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
+
+    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(inviteFriendsPressed:)];
+
+    self.navigationItem.rightBarButtonItem = addContactButton;
 
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.leftBarButtonItem.enabled = NO;
@@ -132,19 +129,13 @@
         return 0;
     }
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects] + 1;
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self isLastCell: indexPath]) {
-        InviteCell * cell = [tableView dequeueReusableCellWithIdentifier: [InviteCell reuseIdentifier] forIndexPath: indexPath];
-        [cell.button addTarget: self action: @selector(inviteFriendsPressed:) forControlEvents: UIControlEventTouchUpInside];
-        return cell;
-    } else {
-        UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath: indexPath];
-        [self configureCell:cell atIndexPath:indexPath];
-        return cell;
-    }
+    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath: indexPath];
+    [self configureCell:cell atIndexPath:indexPath];
+    return cell;
 }
 
 - (BOOL) isLastCell: (NSIndexPath*) indexPath {
@@ -156,11 +147,7 @@
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self isLastCell: indexPath]) {
-        return self.inviteCell.bounds.size.height;
-    } else {
-        return self.conversationCell.bounds.size.height;
-    }
+    return self.conversationCell.bounds.size.height;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
