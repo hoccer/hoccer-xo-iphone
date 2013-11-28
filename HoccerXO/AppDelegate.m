@@ -31,6 +31,7 @@
 
 #define CONNECTION_TRACE NO
 #define MIGRATION_DEBUG NO
+#define AUDIOSESSION_DEBUG NO
 
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
@@ -171,7 +172,7 @@ static NSInteger validationErrorCount = 0;
 
 
 + (void) setDefaultAudioSession {
-    NSLog(@"setDefaultAudioSession");
+    if (AUDIOSESSION_DEBUG) NSLog(@"setDefaultAudioSession");
     //NSLog(@"%@", [NSThread callStackSymbols]);
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -193,9 +194,8 @@ static NSInteger validationErrorCount = 0;
 }
 
 + (void) setRecordingAudioSession {
-    NSLog(@"setRecordingAudioSession");
+    if (AUDIOSESSION_DEBUG) NSLog(@"setRecordingAudioSession");
 
-    
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
@@ -218,7 +218,7 @@ static NSInteger validationErrorCount = 0;
 }
 
 + (void) setProcessingAudioSession {
-    NSLog(@"setProcessingAudioSession");
+    if (AUDIOSESSION_DEBUG) NSLog(@"setProcessingAudioSession");
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
@@ -240,7 +240,7 @@ static NSInteger validationErrorCount = 0;
 
 
 + (void) setMusicAudioSession {
-    NSLog(@"setMusicAudioSession");
+    if (AUDIOSESSION_DEBUG) NSLog(@"setMusicAudioSession");
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
@@ -267,11 +267,11 @@ static NSInteger validationErrorCount = 0;
         [session performSelector:@selector(requestRecordPermission:) withObject:^(BOOL granted) {
             if (granted) {
                 // Microphone enabled code
-                NSLog(@"Microphone is enabled..");
+                if (AUDIOSESSION_DEBUG) NSLog(@"Microphone is enabled..");
             }
             else {
                 // Microphone disabled code
-                NSLog(@"Microphone is disabled..");
+                if (AUDIOSESSION_DEBUG) NSLog(@"Microphone is disabled..");
                 
                 // We're in a background thread here, so jump to main thread to do UI work.
                 dispatch_async(dispatch_get_main_queue(), ^{
