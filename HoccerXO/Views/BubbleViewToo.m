@@ -520,22 +520,21 @@ static const CGFloat kHXOAvatarSize = 40;
 
     CGRect frame = [self attachmentFrame];
 
-    UIBezierPath* thumbnailFramePath = self.messageDirection == HXOMessageDirectionIncoming ? [self rightAlignedThumbnailFrameInRect: frame] : [self leftAlignedThumbnailFrameInRect: frame];
+    CGRect thumbnailFrame = self.messageDirection == HXOMessageDirectionIncoming ? [self rightAlignedThumbnailFrameInRect: frame] : [self leftAlignedThumbnailFrameInRect: frame];
 
-    CGRect thumbnailFrameBounds = CGPathGetPathBoundingBox(thumbnailFramePath.CGPath);
 
     if (self.previewImage == nil) {
 
         UIImage * icon = self.attachmentTransferState == HXOAttachmentTranserStateDownloadPending ? [UIImage imageNamed: @"ctn-download"] : self.largeAttachmentTypeIcon;
-        CGPoint iconOrigin = CGPointMake(thumbnailFrameBounds.origin.x + 0.5 * thumbnailFrameBounds.size.width - 0.5 * icon.size.width,
-                                         thumbnailFrameBounds.origin.y + 0.5 * thumbnailFrameBounds.size.height - 0.5 * icon.size.height);
+        CGPoint iconOrigin = CGPointMake(thumbnailFrame.origin.x + 0.5 * thumbnailFrame.size.width - 0.5 * icon.size.width,
+                                         thumbnailFrame.origin.y + 0.5 * thumbnailFrame.size.height - 0.5 * icon.size.height);
         [icon drawAtPoint: iconOrigin];
 
     } else {
         CGContextSaveGState(context);
-        [thumbnailFramePath addClip];
+        [[UIBezierPath bezierPathWithOvalInRect: thumbnailFrame] addClip];
 
-        CGRect imageFrame = [self thumbnailFrame: thumbnailFrameBounds];
+        CGRect imageFrame = [self thumbnailFrame: thumbnailFrame];
         [self.previewImage drawInRect: imageFrame];
 
         CGContextRestoreGState(context);
@@ -594,12 +593,12 @@ static const CGFloat kHXOAvatarSize = 40;
     [bezier2Path stroke];
 }
 
-- (UIBezierPath*) leftAlignedThumbnailFrameInRect: (CGRect) frame {
-    return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 8, CGRectGetMinY(frame) + 8 , 32, 32)];
+- (CGRect) leftAlignedThumbnailFrameInRect: (CGRect) frame {
+    return CGRectMake(CGRectGetMinX(frame) + 8, CGRectGetMinY(frame) + 8 , 32, 32);
 }
 
-- (UIBezierPath*) rightAlignedThumbnailFrameInRect: (CGRect) frame {
-    return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + CGRectGetWidth(frame) - 40, CGRectGetMinY(frame) + 8, 32, 32)];
+- (CGRect) rightAlignedThumbnailFrameInRect: (CGRect) frame {
+    return CGRectMake(CGRectGetMinX(frame) + CGRectGetWidth(frame) - 40, CGRectGetMinY(frame) + 8, 32, 32);
 }
 
 - (CGRect) thumbnailFrame: (CGRect) thumbnailFrame {
