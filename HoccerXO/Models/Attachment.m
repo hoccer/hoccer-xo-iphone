@@ -160,7 +160,7 @@ NSArray * TransferStateName = @[@"detached",
         } else {
             name = self.contentURL.lastPathComponent;
         }
-        NSLog(@"Attachment '%@' state='%@'",name, [Attachment getStateName:myState]);
+        // NSLog(@"Attachment '%@' state='%@'",name, [Attachment getStateName:myState]);
     }
     return myState;
 }
