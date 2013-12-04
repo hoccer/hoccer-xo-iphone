@@ -419,15 +419,15 @@ NSArray * TransferStateName = @[@"detached",
     if (_previewIcon == nil) {
         NSString * largeIconName = @"cnt-download"; // use as default icon
         if ([self.mediaType isEqualToString: @"vcard"]) {
-            largeIconName = @"cnt-contact";
+            largeIconName = @"chatbar-attachment-icon-contact";
         }  else if ([self.mediaType isEqualToString: @"geolocation"]) {
-            largeIconName = @"cnt-location";
+            largeIconName = @"chatbar-attachment-icon-location";
         }  else if ([self.mediaType isEqualToString: @"audio"]) {
             NSRange findResult = [self.humanReadableFileName rangeOfString:@"recording"];
             if (findResult.length == @"recording".length && findResult.location == 0) {
-                largeIconName = @"cnt-record";
+                largeIconName = @"chatbar-attachment-icon-record";
             } else {
-                largeIconName = @"cnt-music";
+                largeIconName = @"chatbar-attachment-icon-music";
             }
         }
         // NSLog(@"previewIcon: largeIconName=%@",largeIconName);
