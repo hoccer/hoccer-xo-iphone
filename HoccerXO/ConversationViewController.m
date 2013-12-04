@@ -66,7 +66,7 @@
     self.navigationItem.backBarButtonItem = backButton;
 
 //    self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
-    self.navigationItem.title = @"Conversations";
+    self.navigationItem.title = NSLocalizedString(@"Chats", nil);
 
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
     
@@ -237,12 +237,14 @@
 }    
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    //NSLog(@"Conv controllerWillChangeContent");
     [self.tableView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    //NSLog(@"Conv didChangeSection");
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         return;
     }
@@ -261,20 +263,24 @@
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    //NSLog(@"Conv didChangeObject newIndexPath=%@, indexPath=%@",newIndexPath, indexPath);
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         return;
     }
     UITableView *tableView = self.tableView;
     switch(type) {
         case NSFetchedResultsChangeInsert:
+            //NSLog(@"Conv NSFetchedResultsChangeInsert");
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
+            //NSLog(@"Conv NSFetchedResultsChangeInsert");
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
+            //NSLog(@"Conv NSFetchedResultsChangeUpdate");
             /* workaround - see:
              * http://stackoverflow.com/questions/14354315/simultaneous-move-and-update-of-uitableviewcell-and-nsfetchedresultscontroller
              * and
@@ -284,6 +290,7 @@
             break;
             
         case NSFetchedResultsChangeMove:
+            //NSLog(@"Conv NSFetchedResultsChangeMove");
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
@@ -291,6 +298,7 @@
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    //NSLog(@"Conv controllerDidChangeContent");
     [self.tableView endUpdates];
 }
 
@@ -305,6 +313,7 @@
  */
 
 - (void)configureCell:(UITableViewCell *)aCell atIndexPath:(NSIndexPath *)indexPath {
+    //NSLog(@"Conv configureCell atIndexPath=%@",indexPath);
     ConversationCell * cell = (ConversationCell*)aCell;
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
@@ -345,8 +354,6 @@
         }
     }
     //[cell.latestMessageLabel sizeToFit];
-    
-    
 
     if (latestMessageTime) {
         NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -369,6 +376,7 @@
     }
 
     NSUInteger unreadCount = contact.unreadMessages.count;
+    // NSLog(@"Conv unreadCount=%d",unreadCount);
     cell.hasNewMessages = unreadCount > 0;
     cell.unreadMessageCountLabel.hidden = unreadCount == 0;
     cell.unreadMessageCountLabel.text = unreadCount > 99 ? @">99" : [@(unreadCount) stringValue];
