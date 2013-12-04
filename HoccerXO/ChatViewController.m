@@ -926,6 +926,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
     r.origin.y += diff;
 	_chatbar.frame = r;
 
+    r = self.tableView.frame;
+    r.size.height += diff;
+    self.tableView.frame = r;
+
+    CGPoint contentOffset = self.tableView.contentOffset;
+    contentOffset.y -= diff;
+    self.tableView.contentOffset = contentOffset;
+
 }
 
 #pragma mark - Table view data source
