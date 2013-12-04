@@ -1364,6 +1364,9 @@ NSArray * TransferStateName = @[@"detached",
     NSString * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
     NSString * myRemoteFileName = myRemoteURL.lastPathComponent;
     NSURL * myNewFile = [NSURL URLWithString:myRemoteFileName relativeToURL:theDirectory];
+    if (self.mimeType == nil) {
+        self.mimeType = @"application/octet-stream";
+    }
     NSString * myNewFilename = [[[myNewFile absoluteString] stringByAppendingString:@"." ] stringByAppendingString: [Attachment fileExtensionFromMimeType: self.mimeType]];
     return myNewFilename;
 }
@@ -1427,7 +1430,7 @@ NSArray * TransferStateName = @[@"detached",
     if (result == nil) {
         result = [theMimeType lastPathComponent];
     }
-    NSLog(@"fileExtensionFromMimeType result=%@", result);
+    // NSLog(@"fileExtensionFromMimeType result=%@", result);
     return result;
 }
 
