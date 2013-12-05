@@ -79,6 +79,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void)viewDidLoad {
+    // NSLog(@"ChatViewController:viewDidLoad");
     [super viewDidLoad];
     self.messageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
 
@@ -136,7 +137,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
-
     [self configureView];
 }
 
@@ -154,6 +154,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void) viewWillDisappear:(BOOL)animated {
+    // NSLog(@"ChatViewController:viewWillDisappear");
     [self rememberLastVisibleCell];
 }
 
@@ -165,6 +166,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (void)configureView
 {
+    // NSLog(@"ChatViewController:configureView");
     // Update the user interface for the detail item.
 
     if (self.partner) {
@@ -186,7 +188,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void)defaultsChanged:(NSNotification*)aNotification {
-    NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
+    // NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
     double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
     if (fontSize != self.messageFontSize) {
         self.messageFontSize = fontSize;
@@ -790,13 +792,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeFromSuperview");
             [self.attachmentPreview removeFromSuperview];
         }
-        InsetImageView* preview = [[InsetImageView alloc] init];
+        //InsetImageView* preview = [[InsetImageView alloc] init];
+        UIButton* preview = [[UIButton alloc] init];
         self.attachmentPreview = preview;
+        preview.imageView.contentMode = UIViewContentModeScaleAspectFill;
         preview.frame = _attachmentButton.frame;
-        preview.image = theImage;
-        preview.borderColor = [UIColor blackColor];
-        preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
-        preview.backgroundColor = [UIColor blueColor];
+        //preview.image = theImage;
+        [preview setImage:theImage forState:UIControlStateNormal];
+        //preview.borderColor = [UIColor blackColor];
+        //preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
+        //preview.backgroundColor = [UIColor blueColor];
         preview.autoresizingMask = _attachmentButton.autoresizingMask;
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.chatbar addSubview: preview];
@@ -1005,7 +1010,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
+    //NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
     if (message.attachment != nil) {
         if (![message.isOutgoing boolValue]) {
@@ -1097,6 +1102,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void) setPartner: (Contact*) partner {
+    // NSLog(@"setPartner %@", partner.nickName);
+    // NSLog(@"%@", [NSThread callStackSymbols]);
     if (_partner != nil) {
         [_partner removeObserver: self forKeyPath: @"nickName"];
         [_partner removeObserver: self forKeyPath: @"connectionStatus"];
@@ -1155,7 +1162,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     self.firstNewMessage = nil;
     [self.tableView reloadData];
-    [self scrollToRememberedCellOrToBottomIfNone];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self scrollToRememberedCellOrToBottomIfNone];
+    });
     [self configureView];
     [self insertForwardedMessage];
 }
@@ -1192,6 +1201,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    //NSLog(@"observeValueForKeyPath %@ change %@", keyPath, change);
+    //NSLog(@"%@", [NSThread callStackSymbols]);
     if ([keyPath isEqualToString: @"nickName"] ||
         [keyPath isEqualToString: @"connectionStatus"]) {
         // self.title = [object nickName];
@@ -1205,7 +1216,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         [self updateVisibleCells];
     } else if ([keyPath isEqualToString: @"members"]) {
         if ([change[NSKeyValueChangeKindKey] isEqualToNumber: @(NSKeyValueChangeInsertion)]) {
-            NSLog(@"==== got new group member");
+            // NSLog(@"==== got new group member");
             NSSet * oldMembers = change[NSKeyValueChangeOldKey];
             NSMutableSet * newMembers = [NSMutableSet setWithSet: change[NSKeyValueChangeNewKey]];
             [newMembers minusSet: oldMembers];
@@ -1213,7 +1224,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 [self addContactKVO: [obj contact]];
             }];
         } else if ([change[NSKeyValueChangeKindKey] isEqualToNumber: @(NSKeyValueChangeRemoval)]) {
-            NSLog(@"==== group member removed");
+            // NSLog(@"==== group member removed");
             NSMutableSet * removedMembers = [NSMutableSet setWithSet: change[NSKeyValueChangeOldKey]];
             NSSet * newMembers = change[NSKeyValueChangeNewKey];
             [removedMembers minusSet: newMembers];
@@ -1229,6 +1240,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) updateVisibleCells {
+    // NSLog(@"updateVisibleCells");
     NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
     [self.tableView beginUpdates];
     for (int i = 0; i < indexPaths.count; ++i) {
@@ -1249,12 +1261,15 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    //NSLog(@"controller:didChangeSection");
     switch(type) {
         case NSFetchedResultsChangeInsert:
+            // NSLog(@"NSFetchedResultsChangeInsert");
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
         case NSFetchedResultsChangeDelete:
+            // NSLog(@"NSFetchedResultsChangeDelete");
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
@@ -1264,31 +1279,36 @@ static const CGFloat    kSectionHeaderHeight = 40;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    // NSLog(@"controller:didChangeObject");
+    //NSLog(@"didChangeObject indexPath=%@ newIndexPath=%@", indexPath, newIndexPath);
     UITableView *tableView = self.tableView;
 
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            // NSLog(@"didChangeObject insert");
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            //NSLog(@"NSFetchedResultsChangeInsert");
             if (self.firstNewMessage == nil) {
                 self.firstNewMessage = newIndexPath;
-                // NSLog(@"didChangeObject insert: set firstNewMessage indexPath=%@", newIndexPath);
+                //NSLog(@"didChangeObject insert: set firstNewMessage indexPath=%@", newIndexPath);
             }
             break;
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //NSLog(@"NSFetchedResultsChangeDelete ");
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
 
         case NSFetchedResultsChangeUpdate:
         {
+            //NSLog(@"NSFetchedResultsChangeUpdate");
             HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
             [self configureCell: (BubbleViewToo*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
             break;
         }
 
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //NSLog(@"NSFetchedResultsChangeMove");
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
     }
 }
@@ -1346,16 +1366,24 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }
 }
 
+- (BOOL) viewIsVisible {
+    return self.isViewLoaded && self.view.window;
+}
+
 - (void)configureCell:(BubbleViewToo*)cell forMessage:(HXOMessage *) message {
+    //NSLog(@"configureCell forMessage: %@", message.body);
 
     cell.delegate = self;
     cell.fetchedResultsController = self.fetchedResultsController;
 
     [self prepareLayoutOfCell: cell withMessage: message];
 
-    if ([message.isRead isEqualToNumber: @NO]) {
-        message.isRead = @YES;
-        [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
+    if ([self viewIsVisible]){
+        if ([message.isRead isEqualToNumber: @NO]) {
+            // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
+            message.isRead = @YES;
+            [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
+        }
     }
 
     cell.colorScheme = [self colorSchemeForMessage: message];
@@ -1635,7 +1663,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) messageCell:(MessageCell *)theCell resendMessage:(id)sender {
-    NSLog(@"resendMessage");
+    //NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     for (int i = 0; i < 10;++i) {
         [self.chatBackend forwardMessage: message.body toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment];
@@ -1643,7 +1671,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) messageCell:(MessageCell *)theCell forwardMessage:(id)sender {
-    NSLog(@"forwardMessage");
+    //NSLog(@"forwardMessage");
     self.messageToForward = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     [self.menuContainerViewController toggleRightSideMenuCompletion:^{}];
     // [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
@@ -1883,12 +1911,17 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 
 - (void) scrollToBottomAnimated: (BOOL) animated {
-    // NSLog(@"atscrollToBottomAnimated %d", animated);
+    //NSLog(@"scrollToBottomAnimated %d", animated);
+    //NSLog(@"%@", [NSThread callStackSymbols]);
     if ([self.fetchedResultsController.fetchedObjects count]) {
         NSInteger lastSection = [self numberOfSectionsInTableView: self.tableView] - 1;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  [self tableView: self.tableView numberOfRowsInSection: lastSection] - 1 inSection: lastSection];
+        NSInteger lastRow = [self tableView: self.tableView numberOfRowsInSection: lastSection] - 1;
+        // NSLog(@"lastSection=%d, lastRow=%d", lastSection, lastRow);
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:  lastRow inSection: lastSection];
+        // NSLog(@"scrollToBottomAnimated indexPath=%@ ", indexPath);
         [self.tableView scrollToRowAtIndexPath: indexPath atScrollPosition: UITableViewScrollPositionBottom animated: animated];
     }
+    
 }
 
 - (void) scrollToBottomAnimatedWithObject:(id)theObject {
@@ -1900,13 +1933,17 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) rememberLastVisibleCell {
+    //    NSLog(@"rememberLastVisibleCell");
     // save index path of bottom most visible cell
     NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
     self.partner.rememberedLastVisibleChatCell = [indexPaths lastObject];
+    // NSLog(@"rememberLastVisibleCell = %@",self.partner.rememberedLastVisibleChatCell);
 }
 
 - (void) scrollToCell:(NSIndexPath*)theCell {
     // save index path of bottom most visible cell
+    //NSLog(@"scrollToCell %@", theCell);
+    //NSLog(@"%@", [NSThread callStackSymbols]);
     [self.tableView scrollToRowAtIndexPath: self.partner.rememberedLastVisibleChatCell atScrollPosition:UITableViewScrollPositionBottom animated: NO];
 }
 

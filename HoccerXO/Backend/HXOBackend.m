@@ -579,7 +579,6 @@ static NSTimer * _stateNotificationDelayTimer;
     contact.latestMessageTime = message.timeAccepted;
     
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
-
     
     [self.delegate saveDatabase];
     if (attachment.state == kAttachmentWantsTransfer) {
