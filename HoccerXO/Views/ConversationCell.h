@@ -19,10 +19,6 @@
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageTimeLabel;
 @property (nonatomic,strong) IBOutlet UILabel* unreadMessageCountLabel;
 
-@property (nonatomic,strong) IBOutlet UIImageView* latestMessageDirection;
-
-@property (nonatomic,strong) UIView * unreadMessageBackground;
-
 @property (nonatomic,assign) BOOL hasNewMessages;
 
 @end

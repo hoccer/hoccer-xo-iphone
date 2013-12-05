@@ -23,7 +23,6 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
 
 - (void) setHasNewMessages:(BOOL)hasNewMessages {
     _hasNewMessages = hasNewMessages;
-    self.unreadMessageBackground.hidden = self.unreadMessageCountLabel.hidden = ! _hasNewMessages;
 }
 
 - (void) layoutSubviews {
@@ -31,26 +30,9 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
 
     [self.latestMessageTimeLabel sizeToFit];
 
-    CGRect frame = self.latestMessageTimeLabel.frame;
-    if (self.latestMessageDirection.image == nil) {
-        frame.origin.x = (self.latestMessageDirection.frame.origin.x + self.latestMessageDirection.frame.size.width) - frame.size.width;
-    } else {
-        frame.origin.x = self.latestMessageDirection.frame.origin.x - (kHXOTimeDirectionPading + frame.size.width);
-    }
-    self.latestMessageTimeLabel.frame = frame;
-
-    frame = self.nickName.frame;
+    CGRect frame = self.nickName.frame;
     frame.size.width = self.latestMessageTimeLabel.frame.origin.x - (kHXOTimeDirectionPading + frame.origin.x);
     self.nickName.frame = frame;
-}
-
-- (UIView*) unreadMessageBackground {
-    if (_unreadMessageBackground == nil) {
-        _unreadMessageBackground = [[UIView alloc] initWithFrame: CGRectMake(15, 0, self.bounds.size.width, self.bounds.size.height)];
-        _unreadMessageBackground.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
-        [self.contentView insertSubview: _unreadMessageBackground atIndex: 0];
-    }
-    return _unreadMessageBackground;
 }
 
 @end

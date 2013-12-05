@@ -321,9 +321,7 @@
     cell.latestMessageLabel.frame = self.conversationCell.latestMessageLabel.frame;
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){
-        cell.latestMessageLabel.text = NSLocalizedString(@"no_messages_exchanged", nil);
-        cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
-        cell.latestMessageDirection.image = nil;
+        cell.latestMessageLabel.text = nil;
     } else {
         HXOMessage * message = contact.latestMessage[0];
         if (message.body.length > 0) {
@@ -338,11 +336,6 @@
             cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
         }
         latestMessageTime = message.timeAccepted;
-        if ([message.isOutgoing boolValue] == YES) {
-            cell.latestMessageDirection.image = [UIImage imageNamed:@"conversation-icon-me"];
-        } else {
-            cell.latestMessageDirection.image = nil;
-        }
     }
     //[cell.latestMessageLabel sizeToFit];
     

@@ -509,16 +509,12 @@
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="15.02.2013" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TRS-dL-kmg" userLabel="Latest Message Time">
-                                            <rect key="frame" x="218" y="15" width="54" height="10"/>
+                                            <rect key="frame" x="230" y="15" width="54" height="10"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                             <color key="textColor" red="0.65098041296005249" green="0.65098041296005249" blue="0.66666668653488159" alpha="1" colorSpace="deviceRGB"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Nz6-hf-3Ms">
-                                            <rect key="frame" x="277" y="16" width="10" height="10"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hku-Rf-SVT" userLabel="Unread Message Count" customClass="BezeledLabel">
                                             <rect key="frame" x="62" y="10" width="14" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -531,7 +527,6 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="avatar" destination="lkO-00-gch" id="nsl-sr-5Ze"/>
-                                    <outlet property="latestMessageDirection" destination="Nz6-hf-3Ms" id="1YD-uY-fDu"/>
                                     <outlet property="latestMessageLabel" destination="BYf-td-Ce8" id="Fny-Sk-V6c"/>
                                     <outlet property="latestMessageTimeLabel" destination="TRS-dL-kmg" id="ihv-cF-LV1"/>
                                     <outlet property="nickName" destination="mH8-ys-z78" id="3A2-m8-Q55"/>
