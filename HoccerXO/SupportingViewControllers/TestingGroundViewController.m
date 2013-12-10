@@ -42,57 +42,57 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self registerCellClass: [TextMessageCell class]];
-    [self registerCellClass: [AttachmentMessageCell class]];
-    [self registerCellClass: [AttachmentWithTextMessageCell class]];
+    [self registerCellClass: [CrappyTextMessageCell class]];
+    [self registerCellClass: [CrappyAttachmentMessageCell class]];
+    [self registerCellClass: [CrappyAttachmentWithTextMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
-    i0.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i0.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i0.colorScheme = HXOBubbleColorSchemeIncoming;
     i0.pointDirection = HXOMessageDirectionIncoming;
     i0.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
-    i1.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i1.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i1.colorScheme = HXOBubbleColorSchemeInProgress;
     i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com";
 
     BubbleItem * i2 = [[BubbleItem alloc] init];
-    i2.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i2.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i2.colorScheme = HXOBubbleColorSchemeSuccess;
     i2.text = @"Oat cake dragée tiramisu.";
 
     BubbleItem * i3 = [[BubbleItem alloc] init];
-    i3.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i3.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i3.colorScheme = HXOBubbleColorSchemeFailed;
     i3.text = @"Oat cake dragée tiramisu. Icing tiramisu apple pie carrot cake.";
 
     BubbleItem * i4 = [[BubbleItem alloc] init];
-    i4.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i4.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i4.colorScheme = HXOBubbleColorSchemeSuccess;
     i4.pointDirection = HXOMessageDirectionOutgoing;
     i4.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i5 = [[BubbleItem alloc] init];
-    i5.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i5.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i5.colorScheme = HXOBubbleColorSchemeIncoming;
     i5.pointDirection = HXOMessageDirectionIncoming;
     i5.text = @"Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i6 = [[BubbleItem alloc] init];
-    i6.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i6.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i6.colorScheme = HXOBubbleColorSchemeSuccess;
     i6.pointDirection = HXOMessageDirectionOutgoing;
     i6.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 
     BubbleItem * i7 = [[BubbleItem alloc] init];
-    i7.cellIdentifier = [TextMessageCell reuseIdentifier];
+    i7.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i7.colorScheme = HXOBubbleColorSchemeIncoming;
     i7.pointDirection = HXOMessageDirectionIncoming;
     i7.text = @"Chocolate cake danish tart ice cream. 030 87654321"; // Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
 
     BubbleItem * i8 = [[BubbleItem alloc] init];
-    i8.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i8.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i8.colorScheme = HXOBubbleColorSchemeSuccess;
     i8.pointDirection = HXOMessageDirectionOutgoing;
     i8.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
@@ -102,7 +102,7 @@
     i8.progress = 0.90;
 
     BubbleItem * i9 = [[BubbleItem alloc] init];
-    i9.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i9.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i9.colorScheme = HXOBubbleColorSchemeIncoming;
     i9.pointDirection = HXOMessageDirectionIncoming;
     i9.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
@@ -114,7 +114,7 @@
 
 
     BubbleItem * i10 = [[BubbleItem alloc] init];
-    i10.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i10.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i10.colorScheme = HXOBubbleColorSchemeSuccess;
     i10.pointDirection = HXOMessageDirectionOutgoing;
     i10.attachmentStyle = HXOAttachmentStyleThumbnail;
@@ -126,7 +126,7 @@
     i10.progress = 0.33;
 
     BubbleItem * i11 = [[BubbleItem alloc] init];
-    i11.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i11.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i11.colorScheme = HXOBubbleColorSchemeIncoming;
     i11.pointDirection = HXOMessageDirectionIncoming;
     i11.attachmentStyle = HXOAttachmentStyleThumbnail;
@@ -136,7 +136,7 @@
     i11.attachmentText = @"cupcakes.jpg";
 
     BubbleItem * i12 = [[BubbleItem alloc] init];
-    i12.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i12.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i12.colorScheme = HXOBubbleColorSchemeFailed;
     i12.pointDirection = HXOMessageDirectionOutgoing;
     i12.attachmentStyle = HXOAttachmentStyleThumbnail;
@@ -145,7 +145,7 @@
     i12.attachmentText = @"Cool Song";
 
     BubbleItem * i13 = [[BubbleItem alloc] init];
-    i13.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i13.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i13.colorScheme = HXOBubbleColorSchemeIncoming;
     i13.pointDirection = HXOMessageDirectionIncoming;
     i13.attachmentStyle = HXOAttachmentStyleThumbnail;
@@ -155,7 +155,7 @@
     i13.attachmentTransferState = HXOAttachmentTransferStateInProgress;
 
     BubbleItem * i14 = [[BubbleItem alloc] init];
-    i14.cellIdentifier = [AttachmentMessageCell reuseIdentifier];
+    i14.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i14.colorScheme = HXOBubbleColorSchemeIncoming;
     i14.pointDirection = HXOMessageDirectionIncoming;
     i14.attachmentStyle = HXOAttachmentStyleOriginalAspect;
@@ -165,7 +165,7 @@
     i14.progress = 0.5;
 
     BubbleItem * i15 = [[BubbleItem alloc] init];
-    i15.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i15.cellIdentifier = [CrappyAttachmentWithTextMessageCell reuseIdentifier];
     i15.colorScheme = HXOBubbleColorSchemeIncoming;
     i15.pointDirection = HXOMessageDirectionIncoming;
     i15.attachmentStyle = HXOAttachmentStyleOriginalAspect;
@@ -176,7 +176,7 @@
 
 
     BubbleItem * i16 = [[BubbleItem alloc] init];
-    i16.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i16.cellIdentifier = [CrappyAttachmentWithTextMessageCell reuseIdentifier];
     i16.colorScheme = HXOBubbleColorSchemeFailed;
     i16.pointDirection = HXOMessageDirectionOutgoing;
     i16.attachmentStyle = HXOAttachmentStyleThumbnail;
@@ -187,7 +187,7 @@
 
 
     BubbleItem * i17 = [[BubbleItem alloc] init];
-    i17.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i17.cellIdentifier = [CrappyAttachmentWithTextMessageCell reuseIdentifier];
     i17.colorScheme = HXOBubbleColorSchemeSuccess;
     i17.pointDirection = HXOMessageDirectionOutgoing;
     i17.attachmentStyle = HXOAttachmentStyleThumbnail;
@@ -197,7 +197,7 @@
     i17.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i18 = [[BubbleItem alloc] init];
-    i18.cellIdentifier = [AttachmentWithTextMessageCell reuseIdentifier];
+    i18.cellIdentifier = [CrappyAttachmentWithTextMessageCell reuseIdentifier];
     i18.colorScheme = HXOBubbleColorSchemeInProgress;
     i18.pointDirection = HXOMessageDirectionOutgoing;
     i18.attachmentStyle = HXOAttachmentStyleThumbnail;
@@ -304,18 +304,18 @@
     cell.colorScheme = item.colorScheme;
     cell.messageDirection = item.pointDirection;
     [cell.avatar setImage:[UIImage imageNamed: @"cupcakes.jpg"] forState: UIControlStateNormal];
-    cell.authorLabel.text = @"Someone";
+    cell.subtitle.text = @"Someone";
     [self configureCell: cell item: item];
     return cell;
 }
 
 - (void) configureCell: (BubbleViewToo*) cell item: (BubbleItem*) item {
-    if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
-        [self configureTextCell: (TextMessageCell*)cell item: item];
-    } else if ([item.cellIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (AttachmentMessageCell*)cell item: item];
-    } else if ([item.cellIdentifier isEqualToString: [AttachmentWithTextMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (AttachmentMessageCell*)cell item: item];
+    if ([item.cellIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
+        [self configureTextCell: (CrappyTextMessageCell*)cell item: item];
+    } else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
+        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell item: item];
+    } else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
+        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell item: item];
         [self configureTextCell: cell item: item];
     }
 }
@@ -330,7 +330,7 @@
     [cell label].text = item.text;
 }
 
-- (void) configureAttachmentCell: (AttachmentMessageCell*) cell item: (BubbleItem*) item {
+- (void) configureAttachmentCell: (CrappyAttachmentMessageCell*) cell item: (BubbleItem*) item {
     cell.previewImage = item.previewImage;
     cell.imageAspect = item.imageAspect;
     cell.attachmentStyle = item.attachmentStyle;

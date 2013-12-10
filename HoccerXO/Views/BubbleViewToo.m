@@ -17,75 +17,16 @@
 #import "HXOUserDefaults.h"
 
 static const CGFloat kHXOBubblePadding = 8;
-static const CGFloat kHXOBubbleMinimumHeight = 48;
+static const CGFloat kHXOBubbleMinimumHeight_ = 48;
 static const CGFloat kHXOBubbleTypeIconSize = 16;
 static const CGFloat kHXOBubbleTypeIconPadding = 3;
 static const CGFloat kHXOBubbleProgressSizeSmall = 70;
 static const CGFloat kHXOBubbleProgressSizeLarge = 150;
 static const CGFloat kHXOBubblePlayButtonSize = 49;
 static const CGFloat kHXOBubbleBottomTextBoxOversize = 12;
-static const CGFloat kHXOAvatarSize = 40;
+static const CGFloat kHXOAvatarSize_ = 40;
 
 @implementation BubbleViewToo
-
-- (id) init {
-    self = [super init];
-    if (self != nil) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
-    if (self != nil) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (id) initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder: aDecoder];
-    if (self != nil) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (void) commonInit {
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
-    self.contentMode = UIViewContentModeRedraw;
-    self.backgroundColor = [UIColor clearColor];
-
-    CGFloat y = self.frame.size.height - (kHXOAvatarSize + kHXOBubblePadding);
-    _avatar = [UIButton buttonWithType: UIButtonTypeCustom];
-    _avatar.frame = CGRectMake(kHXOBubblePadding, y, kHXOAvatarSize, kHXOAvatarSize);
-    _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-    _avatar.clipsToBounds = YES;
-    _avatar.layer.cornerRadius = 0.5 * _avatar.frame.size.width;
-    [self addSubview: _avatar];
-    [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
-
-    self.colorScheme = HXOBubbleColorSchemeIncoming;
-    self.messageDirection = HXOMessageDirectionOutgoing;
-
-    // TODO: increase frame width... needs thinking
-    _authorLabel = [[UILabel alloc] initWithFrame: CGRectMake(kHXOAvatarSize + 2 * kHXOBubblePadding, self.frame.size.height - kHXOBubblePadding, kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding, 10)];
-    _authorLabel.font = [UIFont systemFontOfSize: 8];
-    _authorLabel.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
-    _authorLabel.backgroundColor = [UIColor clearColor];
-    _authorLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [self addSubview: _authorLabel];
-}
-
 
 - (void) avatarPressed: (id) sender {
     if (self.delegate != nil) {
@@ -98,24 +39,8 @@ static const CGFloat kHXOAvatarSize = 40;
     [self setNeedsLayout];
 }
 
-- (void) setMessageDirection:(HXOMessageDirection)messageDirection {
-    _messageDirection = messageDirection;
-    CGRect frame = _avatar.frame;
-    if (messageDirection == HXOMessageDirectionIncoming) {
-        frame.origin.x = kHXOBubblePadding;
-        _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-        _authorLabel.hidden = NO;
-    } else {
-        frame.origin.x = self.bounds.size.width - frame.size.width - kHXOBubblePadding;
-        _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _authorLabel.hidden = YES;
-    }
-    _avatar.frame = frame;
-    [self setNeedsLayout];
-}
-
 - (CGFloat) calculateHeightForWidth: (CGFloat) width {
-    return kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding;
+    return kHXOBubbleMinimumHeight_ + 2 * kHXOBubblePadding;
 }
 
 - (void) layoutSubviews {
@@ -163,7 +88,7 @@ static const CGFloat kHXOAvatarSize = 40;
 
 - (CGRect) bubbleFrame {
     CGRect frame = CGRectInset(self.bounds, kHXOBubblePadding, kHXOBubblePadding);
-    CGFloat dx = kHXOAvatarSize; // + kHXOBubblePadding;
+    CGFloat dx = kHXOAvatarSize_; // + kHXOBubblePadding;
     frame.size.width -= dx;
     if (self.messageDirection == HXOMessageDirectionIncoming) {
         frame.origin.x += dx;
@@ -302,7 +227,7 @@ static const CGFloat kHXOAvatarSize = 40;
     CGRect frame = CGRectInset(self.bounds, 0, 2 * kHXOBubblePadding);
     frame.size.width = [self textWidthForWidth: self.bounds.size.width];
     if (self.messageDirection == HXOMessageDirectionIncoming) {
-        frame.origin.x += kHXOAvatarSize +  3 * kHXOBubblePadding;
+        frame.origin.x += kHXOAvatarSize_ +  3 * kHXOBubblePadding;
     } else {
         frame.origin.x += 2 * kHXOBubblePadding;
     }
@@ -310,13 +235,13 @@ static const CGFloat kHXOAvatarSize = 40;
 }
 
 - (CGFloat) textWidthForWidth: (CGFloat) width {
-    return width - (kHXOAvatarSize + 5 * kHXOBubblePadding);
+    return width - (kHXOAvatarSize_ + 5 * kHXOBubblePadding);
 }
 
 
 @end
 
-@implementation TextMessageCell
+@implementation CrappyTextMessageCell
 
 - (void) commonInit {
     [super commonInit];
@@ -333,7 +258,7 @@ static const CGFloat kHXOAvatarSize = 40;
     CGRect frame = CGRectMake(0, 0, [self textWidthForWidth: width], 10000);
     _label.frame = frame;
     if (_label.currentNumberOfLines <= 2) {
-        return kHXOBubbleMinimumHeight + 2 * kHXOBubblePadding;
+        return kHXOBubbleMinimumHeight_ + 2 * kHXOBubblePadding;
     } else {
         CGSize textSize = [_label sizeThatFits: CGSizeMake([self textWidthForWidth: width], 0)];
         return textSize.height + 4 * kHXOBubblePadding;
@@ -349,7 +274,7 @@ static const CGFloat kHXOAvatarSize = 40;
 
 @end
 
-@implementation AttachmentMessageCell
+@implementation CrappyAttachmentMessageCell
 
 - (void) commonInit {
     [super commonInit];
@@ -431,11 +356,11 @@ static const CGFloat kHXOAvatarSize = 40;
     labelFrame.origin.y = contentFrame.origin.y + 0.5 * (contentFrame.size.height - labelFrame.size.height);
     labelFrame.origin.x = contentFrame.origin.x;
     if (self.attachmentStyle == HXOAttachmentStyleThumbnail) {
-        labelFrame.size.width = contentFrame.size.width - (2 * kHXOBubblePadding + kHXOBubbleMinimumHeight);
+        labelFrame.size.width = contentFrame.size.width - (2 * kHXOBubblePadding + kHXOBubbleMinimumHeight_);
         if (self.messageDirection == HXOMessageDirectionIncoming) {
             labelFrame.origin.x += kHXOBubblePadding;
         } else {
-            labelFrame.origin.x += kHXOBubblePadding + kHXOBubbleMinimumHeight;
+            labelFrame.origin.x += kHXOBubblePadding + kHXOBubbleMinimumHeight_;
         }
         if (self.previewImage != nil) {
             labelFrame.origin.x += kHXOBubbleTypeIconSize + kHXOBubbleTypeIconPadding;
@@ -544,7 +469,7 @@ static const CGFloat kHXOAvatarSize = 40;
 
 - (void) drawTypeIconInContext: (CGContextRef) context {
     CGRect bubbleFrame = [self attachmentFrame];
-    CGFloat x = bubbleFrame.origin.x + kHXOBubblePadding + 0.5 * (kHXOBubbleTypeIconSize - self.smallAttachmentTypeIcon.size.width) + (self.messageDirection == HXOMessageDirectionOutgoing ? kHXOBubbleMinimumHeight : kHXOBubblePadding);
+    CGFloat x = bubbleFrame.origin.x + kHXOBubblePadding + 0.5 * (kHXOBubbleTypeIconSize - self.smallAttachmentTypeIcon.size.width) + (self.messageDirection == HXOMessageDirectionOutgoing ? kHXOBubbleMinimumHeight_ : kHXOBubblePadding);
     CGFloat y = bubbleFrame.origin.y + 0.5 * (bubbleFrame.size.height - self.smallAttachmentTypeIcon.size.height);
     CGPoint position = CGPointMake(x, y);
     [self.smallAttachmentTypeIcon drawAtPoint: position];
@@ -649,7 +574,7 @@ static const CGFloat kHXOAvatarSize = 40;
 }
 
 - (CGFloat) imageWidthForWidth: (CGFloat) width {
-    return width - (kHXOBubbleMinimumHeight + 3 * kHXOBubblePadding);
+    return width - (kHXOBubbleMinimumHeight_ + 3 * kHXOBubblePadding);
 
 }
 
@@ -684,7 +609,7 @@ static const CGFloat kHXOAvatarSize = 40;
 @end
 
 
-@implementation AttachmentWithTextMessageCell
+@implementation CrappyAttachmentWithTextMessageCell
 
 - (void) commonInit {
     [super commonInit];

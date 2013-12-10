@@ -28,23 +28,15 @@ typedef enum HXOBubbleColorSchemes {
     HXOBubbleColorSchemeInProgress
 } HXOBubbleColorScheme;
 
-typedef enum HXOMessageDirections {
-    HXOMessageDirectionIncoming,
-    HXOMessageDirectionOutgoing
-} HXOMessageDirection;
-
 @interface BubbleViewToo : MessageCell
 
 @property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
-@property (nonatomic,assign) HXOMessageDirection     messageDirection;
-@property (nonatomic,readonly) UIButton *     avatar;
-@property (nonatomic,readonly) UILabel *             authorLabel;
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width;
 
 @end
 
-@interface TextMessageCell : BubbleViewToo
+@interface CrappyTextMessageCell : BubbleViewToo
 
 @property (nonatomic,readonly) HXOLinkyLabel * label;
 
@@ -67,7 +59,7 @@ typedef enum HXOThumbnailScaleModes {
     HXOThumbnailScaleModeActualSize
 } HXOThumbnailScaleMode;
 
-@interface AttachmentMessageCell : BubbleViewToo <TransferProgressIndication>
+@interface CrappyAttachmentMessageCell : BubbleViewToo <TransferProgressIndication>
 
 @property (nonatomic,readonly) UIProgressView *         progressBar;
 @property (nonatomic,readonly) UILabel *                attachmentTitle;
@@ -82,7 +74,7 @@ typedef enum HXOThumbnailScaleModes {
 
 @end
 
-@interface AttachmentWithTextMessageCell : AttachmentMessageCell
+@interface CrappyAttachmentWithTextMessageCell : CrappyAttachmentMessageCell
 {
     CGFloat _textPartHeight;
 }

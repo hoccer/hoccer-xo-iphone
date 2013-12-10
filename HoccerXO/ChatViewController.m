@@ -124,9 +124,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
 //    gestureRecognizer.cancelsTouchesInView = NO;
 //    [self.tableView addGestureRecognizer:gestureRecognizer];
 
-    [self registerCellClass: [TextMessageCell class]];
-    [self registerCellClass: [AttachmentMessageCell class]];
-    [self registerCellClass: [AttachmentWithTextMessageCell class]];
+    [self registerCellClass: [CrappyTextMessageCell class]];
+    [self registerCellClass: [CrappyAttachmentMessageCell class]];
+    [self registerCellClass: [CrappyAttachmentWithTextMessageCell class]];
 
 
     self.titleLabel = [[NickNameLabelWithStatus alloc] init];
@@ -1036,14 +1036,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
     BOOL hasAttachment = message.attachment != nil;
     BOOL hasText = message.body != nil && ! [message.body isEqualToString: @""];
     if (hasAttachment && hasText) {
-        return [AttachmentWithTextMessageCell reuseIdentifier];
+        return [CrappyAttachmentWithTextMessageCell reuseIdentifier];
     } else if (hasAttachment) {
-        return [AttachmentMessageCell reuseIdentifier];
+        return [CrappyAttachmentMessageCell reuseIdentifier];
     } else if (hasText) {
-        return [TextMessageCell reuseIdentifier];
+        return [CrappyTextMessageCell reuseIdentifier];
     } else {
         NSLog(@"Error: message has neither text nor attachment");
-        return [TextMessageCell reuseIdentifier]; // avoid crash in case of unreadable or empty text
+        return [CrappyTextMessageCell reuseIdentifier]; // avoid crash in case of unreadable or empty text
     }
     return @"";
 }
@@ -1349,16 +1349,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) prepareLayoutOfCell: (BubbleViewToo*) cell withMessage: (HXOMessage*) message {
-    if ([cell.reuseIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
-        TextMessageCell * textCell = (TextMessageCell*) cell;
+    if ([cell.reuseIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
+        CrappyTextMessageCell * textCell = (CrappyTextMessageCell*) cell;
         textCell.label.text = message.body;
-    } else if ([cell.reuseIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
-        AttachmentMessageCell * attachmentCell = (AttachmentMessageCell*) cell;
+    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
+        CrappyAttachmentMessageCell * attachmentCell = (CrappyAttachmentMessageCell*) cell;
         attachmentCell.imageAspect = message.attachment.aspectRatio;
         attachmentCell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
 
-    } else if ([cell.reuseIdentifier isEqualToString: [AttachmentWithTextMessageCell reuseIdentifier]]) {
-        AttachmentWithTextMessageCell * doubleCell = (AttachmentWithTextMessageCell*) cell;
+    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
+        CrappyAttachmentWithTextMessageCell * doubleCell = (CrappyAttachmentWithTextMessageCell*) cell;
         doubleCell.label.text = message.body;
         doubleCell.imageAspect = message.attachment.aspectRatio;
         doubleCell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
@@ -1374,6 +1374,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     //NSLog(@"configureCell forMessage: %@", message.body);
 
     cell.delegate = self;
+    // TODO: clean up this shit...
     cell.fetchedResultsController = self.fetchedResultsController;
 
     [self prepareLayoutOfCell: cell withMessage: message];
@@ -1392,15 +1393,15 @@ static const CGFloat    kSectionHeaderHeight = 40;
     id author = [self getAuthor: message];
     UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
-    cell.authorLabel.text = [self.partner.type isEqualToString: @"Group"] ? [author nickName] : @"";
+    cell.subtitle.text = [self.partner.type isEqualToString: @"Group"] ? [author nickName] : @"";
 
 
-    if ([cell.reuseIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
-        [self configureTextCell: (TextMessageCell*)cell forMessage: message];
-    } else if ([cell.reuseIdentifier isEqualToString: [AttachmentMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (AttachmentMessageCell*)cell forMessage: message];
-    } else if ([cell.reuseIdentifier isEqualToString: [AttachmentWithTextMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (AttachmentMessageCell*)cell forMessage: message];
+    if ([cell.reuseIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
+        [self configureTextCell: (CrappyTextMessageCell*)cell forMessage: message];
+    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
+        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell forMessage: message];
+    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
+        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell forMessage: message];
         [self configureTextCell: cell forMessage: message];
     }
 }
@@ -1417,16 +1418,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
 //    label.text = message.body;
 }
 
-- (void) configureAttachmentCell: (AttachmentMessageCell*) cell forMessage: (HXOMessage*) message {
+- (void) configureAttachmentCell: (CrappyAttachmentMessageCell*) cell forMessage: (HXOMessage*) message {
     //cell.imageAspect = message.attachment.aspectRatio;
 
-    message.attachment.progressIndicatorDelegate = (AttachmentMessageCell*) cell;
+    message.attachment.progressIndicatorDelegate = (CrappyAttachmentMessageCell*) cell;
 
     if (message.attachment.previewImage == nil && message.attachment.available) {
         [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
             if (theError == nil) {
                 // TODO: find a better way to get the right cell...
-                AttachmentMessageCell * currentCell = (AttachmentMessageCell*)cell;//[self.tableView cellForRowAtIndexPath: indexPath];
+                CrappyAttachmentMessageCell * currentCell = (CrappyAttachmentMessageCell*)cell;//[self.tableView cellForRowAtIndexPath: indexPath];
                 if (currentCell != nil) {
                     if (message.attachment.previewImage.size.height != 0) {
                         currentCell.previewImage = message.attachment.previewImage;

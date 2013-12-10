@@ -25,10 +25,24 @@
 - (void) messageCellDidPressAvatar:(MessageCell *)cell;
 @end
 
+typedef enum HXOMessageDirections {
+    HXOMessageDirectionIncoming,
+    HXOMessageDirectionOutgoing
+} HXOMessageDirection;
+
+
 @interface MessageCell : HXOTableViewCell
 
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
-@property (weak, nonatomic) NSFetchedResultsController * fetchedResultsController;
+
+// TODO: clean up
+@property (weak, nonatomic) NSFetchedResultsController *      fetchedResultsController;
+
+@property (nonatomic,readonly) UILabel *             subtitle;
+@property (nonatomic,readonly) UIButton *     avatar;
+@property (nonatomic,assign) HXOMessageDirection     messageDirection;
+
+- (void) commonInit;
 
 @end
 
