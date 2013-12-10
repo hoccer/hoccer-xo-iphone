@@ -35,24 +35,13 @@ typedef enum HXOMessageDirections {
 
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 
-// TODO: clean up
+// TODO: clean up this mess
 @property (weak, nonatomic) NSFetchedResultsController *      fetchedResultsController;
 
-@property (nonatomic,readonly) UILabel *             subtitle;
-@property (nonatomic,readonly) UIButton *     avatar;
-@property (nonatomic,assign) HXOMessageDirection     messageDirection;
+@property (nonatomic,readonly) UILabel *           subtitle;
+@property (nonatomic,readonly) UIButton *          avatar;
+@property (nonatomic,assign)   HXOMessageDirection messageDirection;
 
 - (void) commonInit;
 
 @end
-
-/*
-@interface ChatTableSectionHeaderCell : HXOTableViewCell <UIGestureRecognizerDelegate>
-
-@property (strong, nonatomic) IBOutlet UILabel *label;
-@property (strong, nonatomic) IBOutlet UIImageView * backgroundImage;
-
-@end
- 
- */
-

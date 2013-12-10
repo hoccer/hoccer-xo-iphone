@@ -1399,6 +1399,13 @@
 			path = Actionsheet;
 			sourceTree = "<group>";
 		};
+		63808A1A1857607F0001AC96 /* MessageCells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MessageCells;
+			sourceTree = "<group>";
+		};
 		6381FEB91745536B001D16E0 /* ChatView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1833,6 +1840,7 @@
 		63D4916716CAA17D00FD395F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				63808A1A1857607F0001AC96 /* MessageCells */,
 				63477F4016CBAFF300FBAF62 /* AutoheightLabel.h */,
 				63477F4116CBAFF300FBAF62 /* AutoheightLabel.m */,
 				63B21788181EDA4C00C057D9 /* BezeledLabel.h */,
