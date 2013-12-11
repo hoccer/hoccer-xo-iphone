@@ -6,13 +6,13 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ChatTableCells.h"
+#import "MessageCell.h"
 #import "AutoheightLabel.h"
 #import "HXOMessage.h"
 #import "InsetImageView.h"
 
 
-static const CGFloat kHXOGridSpacing = 8; // TODO: make this global
+const CGFloat kHXOGridSpacing = 8; // TODO: make this global
 static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
 static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
@@ -51,6 +51,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 }
 
 - (void) commonInit {
+    _sections = [NSMutableArray array];
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentMode = UIViewContentModeRedraw;
@@ -60,46 +61,117 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
     _avatar = [UIButton buttonWithType: UIButtonTypeCustom];
-    CGFloat y = self.frame.size.height - (kHXOAvatarSize + kHXOGridSpacing);
+    CGFloat y = self.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);
 
     _avatar.frame = CGRectMake(kHXOGridSpacing, y, kHXOAvatarSize, kHXOAvatarSize);
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
     _avatar.clipsToBounds = YES;
     _avatar.layer.cornerRadius = 0.5 * _avatar.frame.size.width;
+    _avatar.imageView.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
-    _avatar.backgroundColor = [UIColor orangeColor];
-
-    // TODO: set correct frame;
-    _subtitle = [[UILabel alloc] initWithFrame: CGRectMake(kHXOAvatarSize + 2 * kHXOGridSpacing, self.frame.size.height - kHXOGridSpacing, kHXOBubbleMinimumHeight + 2 * kHXOGridSpacing, 10)];
+    _subtitle = [[UILabel alloc] initWithFrame: CGRectMake(8 * kHXOGridSpacing, self.frame.size.height - 2 * kHXOGridSpacing, self.bubbleWidth - 4 * kHXOGridSpacing, 2 * kHXOGridSpacing)];
     _subtitle.font = [UIFont systemFontOfSize: 8];
     _subtitle.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
     _subtitle.backgroundColor = [UIColor clearColor];
     _subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self addSubview: _subtitle];
+}
 
-
+- (void) avatarPressed: (id) sender {
+    if (self.delegate != nil) {
+        [self.delegate messageCellDidPressAvatar: self];
+    }
 }
 
 - (void) setMessageDirection:(HXOMessageDirection)messageDirection {
     _messageDirection = messageDirection;
-    CGRect frame = _avatar.frame;
+    CGRect avatarFrame = _avatar.frame;
     if (messageDirection == HXOMessageDirectionIncoming) {
-        frame.origin.x = kHXOGridSpacing;
+        avatarFrame.origin.x = kHXOGridSpacing;
         _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
         _subtitle.textAlignment = NSTextAlignmentLeft;
     } else {
-        frame.origin.x = self.bounds.size.width - frame.size.width - kHXOGridSpacing;
+        avatarFrame.origin.x = self.bounds.size.width - avatarFrame.size.width - kHXOGridSpacing;
         _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
         _subtitle.textAlignment = NSTextAlignmentRight;
     }
-    _avatar.frame = frame;
-    [self setNeedsLayout];
+    _avatar.frame = avatarFrame;
+    [self updateSections];
+
 }
 
+- (void) updateSections {
+    CGFloat x = self.messageDirection == HXOMessageDirectionIncoming ? 6 * kHXOGridSpacing : 0;
+    CGRect frame;
+    NSUInteger i = 0;
+    for (MessageSection * section in self.sections) {
+        frame = section.frame;
+        frame.origin.x = x;
+        section.frame = frame;
+        if (self.sections.count == 1) {
+            section.position = HXOSectionPositionSingle;
+        } else if (i == 0) {
+            section.position = HXOSectionPositionFirst;
+        } else if (i == self.sections.count - 1) {
+            section.position = HXOSectionPositionLast;
+        } else {
+            section.position = HXOSectionPositionInner;
+        }
+        i += 1;
+    }
 
+    frame = self.subtitle.frame;
+    frame.origin.x = x + 2 * kHXOGridSpacing;
+    self.subtitle.frame = frame;
+}
 
+- (CGSize) sizeThatFits:(CGSize)size {
+    CGFloat height = 0;
+    CGSize sectionSize = CGSizeZero;
+    CGSize bubbleSize = CGSizeMake(self.bubbleWidth, size.height);
+    for (MessageSection * section in self.sections) {
+        sectionSize = [section sizeThatFits: bubbleSize];
+        height += sectionSize.height;
+    }
+    height += kHXOGridSpacing + 2 * kHXOGridSpacing;
+    return CGSizeMake(size.width, height);
+}
+
+- (void) addSection:(MessageSection *)section {
+    section.cell = self;
+    section.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.sections addObject: section];
+    [self addSubview: section];
+}
+
+- (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
+    _colorScheme = colorScheme;
+    [self setNeedsDisplay];
+}
+
+- (CGFloat) gridSpacing {
+    return kHXOGridSpacing;
+}
+
+- (CGFloat) bubbleWidth {
+    return self.bounds.size.width - 6 * kHXOGridSpacing;
+}
+
+// TODO: move this to MessageSection after BubbleViewToo is retiered
+- (UIColor*) fillColor {
+    switch (self.colorScheme) {
+        case HXOBubbleColorSchemeIncoming:
+            return [UIColor colorWithRed: 0.902 green: 0.906 blue: 0.922 alpha: 1];
+        case HXOBubbleColorSchemeSuccess:
+            return [UIColor colorWithRed: 0.224 green: 0.753 blue: 0.702 alpha: 1];
+        case HXOBubbleColorSchemeInProgress:
+            return [UIColor colorWithRed: 0.725 green: 0.851 blue: 0.839 alpha: 1];
+        case HXOBubbleColorSchemeFailed:
+            return [UIColor colorWithRed: 0.741 green: 0.224 blue: 0.208 alpha: 1];
+    }
+}
 
 -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
     if (self.delegate != nil) {
@@ -143,45 +215,4 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 }
 @end
 
-
-/*
-@implementation ChatTableSectionHeaderCell
-
-#if 0
-// We dont't need it right now, but may come in handy for doing some section navigation
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    //[self addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)]]; // add non-working longpress gesture recognizer to avoid crash
-    self.userInteractionEnabled = NO;
-    self.label.userInteractionEnabled = NO;
-    self.backgroundImage.userInteractionEnabled = NO;
-}
--(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
-     NSLog(@"ChatTableSectionHeaderCell:canPerformAction");
-     return NO;
-}
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    NSLog(@"ChatTableSectionHeaderCell:gestureRecognizerShouldBegin");
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    NSLog(@"ChatTableSectionHeaderCell:shouldReceiveTouch");
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    NSLog(@"ChatTableSectionHeaderCell:shouldRecognizeSimultaneouslyWithGestureRecognizer");
-    return NO;
-}
-
--(void)handleLongPress:(UILongPressGestureRecognizer*)longPressRecognizer {
-    NSLog(@"ChatTableSectionHeaderCell:handleLongPress");
-}
-#endif
-
-
-@end
- */
 

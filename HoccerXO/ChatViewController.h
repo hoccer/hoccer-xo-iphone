@@ -10,7 +10,7 @@
 #import "Contact.h"
 #import "AttachmentPickerController.h"
 #import "GrowingTextView.h"
-#import "ChatTableCells.h"
+#import "MessageCell.h"
 #import "HXOActionSheet.h"
 #import "HXOLinkyLabel.h"
 #import "HPGrowingTextView.h"

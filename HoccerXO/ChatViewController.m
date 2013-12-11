@@ -24,7 +24,7 @@
 #import "InsetImageView.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenu.h"
-#import "ChatTableCells.h"
+#import "MessageCell.h"
 #import "AutoheightLabel.h"
 #import "Attachment.h"
 #import "HXOUserDefaults.h"

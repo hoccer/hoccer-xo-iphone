@@ -28,16 +28,6 @@ static const CGFloat kHXOAvatarSize_ = 40;
 
 @implementation BubbleViewToo
 
-- (void) avatarPressed: (id) sender {
-    if (self.delegate != nil) {
-        [self.delegate messageCellDidPressAvatar: self];
-    }
-}
-
-- (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
-    _colorScheme = colorScheme;
-    [self setNeedsLayout];
-}
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width {
     return kHXOBubbleMinimumHeight_ + 2 * kHXOBubblePadding;
@@ -142,19 +132,6 @@ static const CGFloat kHXOAvatarSize_ = 40;
     [bubblePath closePath];
 
     return bubblePath;
-}
-
-- (UIColor*) fillColor {
-    switch (self.colorScheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor colorWithRed: 0.902 green: 0.906 blue: 0.922 alpha: 1];
-        case HXOBubbleColorSchemeSuccess:
-            return [UIColor colorWithRed: 0.224 green: 0.753 blue: 0.702 alpha: 1];
-        case HXOBubbleColorSchemeInProgress:
-            return [UIColor colorWithRed: 0.725 green: 0.851 blue: 0.839 alpha: 1];
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor colorWithRed: 0.741 green: 0.224 blue: 0.208 alpha: 1];
-    }
 }
 
 - (HXOLinkyLabel*) createMessageLabel {

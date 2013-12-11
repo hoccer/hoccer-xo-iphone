@@ -247,7 +247,12 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
         UIBezierPath * framePath = [UIBezierPath bezierPathWithRect: self.bounds];
         _textFrame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0,0), framePath.CGPath, 0);
     }
-    CGAffineTransform translateY = CGAffineTransformMakeTranslation(0, self.bounds.size.height);
+
+    CGSize fittingSize = CTFramesetterSuggestFrameSizeWithConstraints(_framesetter, CFRangeMake(0, 0), NULL, self.bounds.size, NULL);
+
+    CGFloat dx = 0.5 * (self.bounds.size.height - fittingSize.height);
+
+    CGAffineTransform translateY = CGAffineTransformMakeTranslation(0, self.bounds.size.height + dx);
     CGAffineTransform mirrorY = CGAffineTransformMakeScale(1, -1);
     _textToViewTransform = CGAffineTransformConcat(mirrorY, translateY);
 

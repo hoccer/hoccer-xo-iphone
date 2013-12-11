@@ -11,7 +11,8 @@
 #import "UIAlertView+BlockExtensions.h"
 
 #import "HXOLinkyLabel.h"
-#import "BubbleViewToo.h"
+//#import "BubbleViewToo.h"
+#import "TextMessageCell.h"
 #import "InsetImageView2.h"
 #import "HXOUserDefaults.h"
 
@@ -27,13 +28,13 @@
 @property (nonatomic,strong) NSString *                 text;
 @property (nonatomic,strong) UIImage  *                 previewImage;
 @property (nonatomic,assign) CGFloat                    imageAspect;
-@property (nonatomic,assign) HXOAttachmentStyle         attachmentStyle;
+//@property (nonatomic,assign) HXOAttachmentStyle         attachmentStyle;
 //@property (nonatomic,strong) UIImage *                  smallAttachmentTypeIcon;
 @property (nonatomic,strong) UIImage *                  largeAttachmentTypeIcon;
 @property (nonatomic,strong) NSString *                 attachmentText;
-@property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
+//@property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
 @property (nonatomic,assign) float                      progress;
-@property (nonatomic,assign) HXOBubbleRunButtonStyle    runButtonStyle;
+//@property (nonatomic,assign) HXOBubbleRunButtonStyle    runButtonStyle;
 
 @end
 
@@ -42,21 +43,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self registerCellClass: [CrappyTextMessageCell class]];
-    [self registerCellClass: [CrappyAttachmentMessageCell class]];
-    [self registerCellClass: [CrappyAttachmentWithTextMessageCell class]];
+    [self registerCellClass: [TextMessageCell class]];
+    //[self registerCellClass: [CrappyAttachmentMessageCell class]];
+    //[self registerCellClass: [CrappyAttachmentWithTextMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
-    i0.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i0.cellIdentifier = [TextMessageCell reuseIdentifier];
     i0.colorScheme = HXOBubbleColorSchemeIncoming;
     i0.pointDirection = HXOMessageDirectionIncoming;
     i0.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
-    i1.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i1.cellIdentifier = [TextMessageCell reuseIdentifier];
     i1.colorScheme = HXOBubbleColorSchemeInProgress;
     i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com";
-
+/*
     BubbleItem * i2 = [[BubbleItem alloc] init];
     i2.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
     i2.colorScheme = HXOBubbleColorSchemeSuccess;
@@ -206,10 +207,10 @@
     i18.attachmentText = @"Classic Movie";
     i18.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
-
-    _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
+*/
+    _items = @[i0, i1/*, i2, i3, i4, i5, i6, i7,
                i8, i9, i10, i11, i12, i13, i14,
-               i15, i16, i17, i18];
+               i15, i16, i17, i18*/];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
 
@@ -293,14 +294,14 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     BubbleItem * item = _items[indexPath.row];
-    BubbleViewToo * cell = [_cellPrototypes objectForKey: item.cellIdentifier];
+    MessageCell * cell = [_cellPrototypes objectForKey: item.cellIdentifier];
     [self configureCell: cell item: item];
-    return [cell calculateHeightForWidth: self.tableView.bounds.size.width];
+    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     BubbleItem * item = _items[indexPath.row];
-    BubbleViewToo * cell = (BubbleViewToo*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
+    MessageCell * cell = (MessageCell*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
     cell.colorScheme = item.colorScheme;
     cell.messageDirection = item.pointDirection;
     [cell.avatar setImage:[UIImage imageNamed: @"cupcakes.jpg"] forState: UIControlStateNormal];
@@ -309,27 +310,30 @@
     return cell;
 }
 
-- (void) configureCell: (BubbleViewToo*) cell item: (BubbleItem*) item {
-    if ([item.cellIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
-        [self configureTextCell: (CrappyTextMessageCell*)cell item: item];
-    } else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
+- (void) configureCell: (MessageCell*) cell item: (BubbleItem*) item {
+    if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
+        [self configureTextCell: (TextMessageCell*)cell item: item];
+    } /*else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
         [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell item: item];
     } else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
         [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell item: item];
         [self configureTextCell: cell item: item];
-    }
+    }*/
 }
 
-- (void) configureTextCell: (id) cell item: (BubbleItem*) item {
+- (void) configureTextCell: (TextMessageCell*) cell item: (BubbleItem*) item {
+    /*
     if ([cell label].tokenClasses.count == 0) {
         [self registerTokenClasses: [cell label]];
         [cell label].delegate = self;
     }
+     */
     double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
     [cell label].font = [UIFont systemFontOfSize: fontSize];
-    [cell label].text = item.text;
+    cell.label.text = item.text;
 }
 
+/*
 - (void) configureAttachmentCell: (CrappyAttachmentMessageCell*) cell item: (BubbleItem*) item {
     cell.previewImage = item.previewImage;
     cell.imageAspect = item.imageAspect;
@@ -358,6 +362,7 @@
 
     cell.attachmentTitle.attributedText = attributedTitle;
 }
+*/
 
 @end
 

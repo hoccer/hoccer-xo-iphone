@@ -10,7 +10,7 @@
 
 #import "HXOTableViewCell.h"
 #import "Attachment.h"
-#import "ChatTableCells.h"
+#import "MessageCell.h"
 
 @class InsetImageView2;
 @class HXOLinkyLabel;
@@ -21,16 +21,9 @@ typedef enum HXOAttachmentStyles {
     HXOAttachmentStyleCropped16To9
 } HXOAttachmentStyle;
 
-typedef enum HXOBubbleColorSchemes {
-    HXOBubbleColorSchemeIncoming,
-    HXOBubbleColorSchemeFailed,
-    HXOBubbleColorSchemeSuccess,
-    HXOBubbleColorSchemeInProgress
-} HXOBubbleColorScheme;
 
 @interface BubbleViewToo : MessageCell
 
-@property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
 
 - (CGFloat) calculateHeightForWidth: (CGFloat) width;
 
