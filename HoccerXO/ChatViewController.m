@@ -749,18 +749,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
             NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
             NSURL * myURL2 = attachmentInfo[UIImagePickerControllerMediaURL];
-            NSString *tempFilePath = [myURL2 path];
-            if (myURL == nil) { // video was just recorded
-                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
-                {
-                    UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, nil, nil, nil);
-                } else {
-                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
-                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                    return;
-                }
-            }
+
             // move file from temp directory to document directory
             NSString * newFileName = @"video.mov";
             NSURL * myNewURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
@@ -770,6 +759,22 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                 return;
             }
+            
+            NSString *tempFilePath = [myNewURL path];
+            if (myURL == nil) { // video was just recorded
+                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
+                {
+                    UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                    NSLog(@"Saved new video at %@ to album",tempFilePath);
+                } else {
+                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
+                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                    NSLog(@"%@", myDescription);
+                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                    return;
+                }
+            }            
+            
             NSString * myNewURLString = [myNewURL absoluteString];
             self.currentAttachment.ownedURL = myNewURLString;
             
@@ -783,6 +788,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // just in case, but we should never get here
     [self finishPickedAttachmentProcessingWithImage: nil withError:nil];
 }
+    
+- (void) video: (NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo: (void *)contextInfo {
+    NSLog(@"Completed: Saved new video at %@ to album, error=%@",videoPath, error);
+}
+    
 
 - (void) decorateAttachmentButton:(UIImage *) theImage {
     
@@ -1648,7 +1658,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if (action == @selector(forwardMessage:)) {return YES;}
     
     if (action == @selector(saveMessage:)) {
-        if ([message.isOutgoing isEqualToNumber: @NO]) {
+        if ([message.isOutgoing isEqualToNumber: @NO], YES) {
             Attachment * myAttachment = message.attachment;
             if (myAttachment != nil) {
                 if ([myAttachment.mediaType isEqualToString: @"video"] ||
@@ -1684,40 +1694,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if (attachment != nil) {
         [attachment trySaveToAlbum];
     }
-    /*
-    if ([attachment.mediaType isEqualToString: @"image"]) {
-        [attachment loadImageAttachmentImage: ^(UIImage* image, NSError* error) {
-            // NSLog(@"saveMessage: loadImageAttachmentImage done");
-            if (image) {
-                // funky method using ALAssetsLibrary
-                ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
-                    if (!error) {
-                        // NSLog(@"Saved image to Library");
-                    } else {
-                        NSLog(@"Error saving image in Library, error = %@", error);
-                    }
-                };
-                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                [library writeImageToSavedPhotosAlbum:[image CGImage]
-                                          orientation:(ALAssetOrientation)[image imageOrientation]
-                                      completionBlock:completeBlock];
-            } else {
-                NSLog(@"saveMessage: Failed to get image: %@", error);
-            }
-        }];
-        return;
-    }
-    if ([attachment.mediaType isEqualToString: @"video"]) {
-        NSString * myVideoFilePath = [[NSURL URLWithString: attachment.localURL] path];
-        
-        if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(myVideoFilePath)) {
-            UISaveVideoAtPathToSavedPhotosAlbum(myVideoFilePath, nil, nil, nil);
-            // NSLog(@"didPickAttachment: saved video in album at path = %@",myVideoFilePath);
-        } else {
-            NSLog(@"didPickAttachment: failed to save video in album at path = %@",myVideoFilePath);
-        }
-    }
-     */
+
 }
 
 - (void) messageCell:(MessageCell *)theCell copy:(id)sender {
