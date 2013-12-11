@@ -139,6 +139,8 @@ typedef enum AttachmentStates {
 - (NSNumber*) calcCipheredSize;
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing;
+- (void) trySaveToAlbum;
+
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;

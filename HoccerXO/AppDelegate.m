@@ -906,7 +906,22 @@ static NSInteger validationErrorCount = 0;
     [NSTimer scheduledTimerWithTimeInterval: 1.0 target: alert selector: @selector(show) userInfo: nil repeats: NO];
 }
 
++ (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title {
 
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate: nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+    
++ (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [AppDelegate showErrorAlertWithMessage:message withTitle:title];
+    });
+}
+    
 - (void) showFatalErrorAlertWithMessage:  (NSString *) message withTitle:(NSString *) title {
     if (title == nil) {
         title = NSLocalizedString(@"fatal_error_default_title", nil);
