@@ -1682,7 +1682,10 @@ static const CGFloat    kSectionHeaderHeight = 40;
     // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
-    
+    if (attachment != nil) {
+        [attachment trySaveToAlbum];
+    }
+    /*
     if ([attachment.mediaType isEqualToString: @"image"]) {
         [attachment loadImageAttachmentImage: ^(UIImage* image, NSError* error) {
             // NSLog(@"saveMessage: loadImageAttachmentImage done");
@@ -1715,6 +1718,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             NSLog(@"didPickAttachment: failed to save video in album at path = %@",myVideoFilePath);
         }
     }
+     */
 }
 
 - (void) messageCell:(MessageCell *)theCell copy:(id)sender {

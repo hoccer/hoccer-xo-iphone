@@ -65,4 +65,7 @@
 + (void) setBlackFontStatusbarForViewController:(UIViewController*)viewcontroller;
 + (void) setWhiteFontStatusbarForViewController:(UIViewController*)viewcontroller;
 
++ (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title;
++ (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title;
+
 @end

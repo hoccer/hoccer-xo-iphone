@@ -1764,6 +1764,44 @@ NSArray * TransferStateName = @[@"detached",
         NSLog(@"ERROR: Attachment transferConnection didFailWithError without valid connection");
     }
 }
+    
+-(void) trySaveToAlbum {
+    if ([self.mediaType isEqualToString: @"image"]) {
+        [self loadImageAttachmentImage: ^(UIImage* image, NSError* error) {
+            // NSLog(@"saveMessage: loadImageAttachmentImage done");
+            if (image) {
+                // funky method using ALAssetsLibrary
+                ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
+                    if (!error) {
+                        // NSLog(@"Saved image to Library");
+                    } else {
+                        NSLog(@"trySaveToAlbum: Error saving image in Library, error = %@", error);
+                        [AppDelegate showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not save image in Album"];
+                    }
+                };
+                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                [library writeImageToSavedPhotosAlbum:[image CGImage]
+                                          orientation:(ALAssetOrientation)[image imageOrientation]
+                                      completionBlock:completeBlock];
+            } else {
+                [AppDelegate showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not load image to save it in Album"];
+                NSLog(@"trySaveToAlbum: Failed to get image: %@", error);
+            }
+        }];
+        return;
+    }
+    if ([self.mediaType isEqualToString: @"video"]) {
+        NSString * myVideoFilePath = [[NSURL URLWithString: self.localURL] path];
+        
+        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(myVideoFilePath)) {
+            UISaveVideoAtPathToSavedPhotosAlbum(myVideoFilePath, nil, nil, nil);
+            // NSLog(@"didPickAttachment: saved video in album at path = %@",myVideoFilePath);
+        } else {
+            NSLog(@"trySaveToAlbum: failed to save video in album at path = %@",myVideoFilePath);
+            [AppDelegate showErrorAlertWithMessage:@"Video not compatible with album" withTitle:@"Can not save video in Album"];
+        }
+    }
+}
 
 -(void)connectionDidFinishLoading:(NSURLConnection*)connection
 {
@@ -1795,6 +1833,9 @@ NSArray * TransferStateName = @[@"detached",
                 if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);}
                 self.localURL = self.ownedURL;
                 [self.chatBackend downloadFinished:self];
+                if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"autoSaveMedia"] boolValue]) {
+                    [self trySaveToAlbum];
+                }
             } else {
                 NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection connectionDidFinishLoading download failed, contentSize=%@, self.transferSize=%@", self.contentSize, self.transferSize];
                 NSLog(@"%@", myDescription);
