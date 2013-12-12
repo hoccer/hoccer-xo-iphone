@@ -130,12 +130,12 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 - (CGSize) sizeThatFits:(CGSize)size {
     CGFloat height = 0;
     CGSize sectionSize = CGSizeZero;
-    CGSize bubbleSize = CGSizeMake(self.bubbleWidth, size.height);
+    CGSize bubbleSize = CGSizeMake([self bubbleWidthForWidth: size.width], size.height);
     for (MessageSection * section in self.sections) {
         sectionSize = [section sizeThatFits: bubbleSize];
         height += sectionSize.height;
     }
-    height += kHXOGridSpacing + 2 * kHXOGridSpacing;
+    height += kHXOGridSpacing + (self.sections.count - 1) * kHXOGridSpacing + 2 * kHXOGridSpacing;
     return CGSizeMake(size.width, height);
 }
 
@@ -144,6 +144,17 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     section.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.sections addObject: section];
     [self addSubview: section];
+}
+
+- (void) layoutSubviews {
+    CGFloat y = kHXOGridSpacing;
+    for (MessageSection * section in self.sections) {
+        [section sizeToFit];
+        CGRect frame = section.frame;
+        frame.origin.y = y;
+        section.frame = frame;
+        y += frame.size.height;
+    }
 }
 
 - (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
@@ -160,8 +171,13 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 }
 
 - (CGFloat) bubbleWidth {
-    return self.bounds.size.width - 6 * kHXOGridSpacing;
+    return [self bubbleWidthForWidth: self.bounds.size.width];
 }
+
+- (CGFloat) bubbleWidthForWidth: (CGFloat) width {
+    return width - 6 * kHXOGridSpacing;
+}
+
 
 // TODO: move this to MessageSection after BubbleViewToo is retiered
 - (UIColor*) fillColor {

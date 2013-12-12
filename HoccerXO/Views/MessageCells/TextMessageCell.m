@@ -11,7 +11,6 @@
 
 @interface TextMessageCell ()
 
-@property (nonatomic,strong) TextSection * textSection;
 
 @end
 
@@ -20,16 +19,12 @@
 - (void) commonInit {
     [super commonInit];
 
-    self.textSection = [[TextSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
+    _textSection = [[TextSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
     [self addSection: _textSection];
 }
 
 - (HXOLinkyLabel*) label {
     return self.textSection.label;
-}
-
-- (void) layoutSubviews {
-    [self.textSection sizeToFit];
 }
 
 @end

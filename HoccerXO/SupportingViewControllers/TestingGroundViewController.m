@@ -13,7 +13,9 @@
 #import "HXOLinkyLabel.h"
 //#import "BubbleViewToo.h"
 #import "TextMessageCell.h"
+#import "TextSection.h"
 #import "ImageAttachmentMessageCell.h"
+#import "ImageAttachmentSection.h"
 #import "InsetImageView2.h"
 #import "HXOUserDefaults.h"
 
@@ -92,17 +94,17 @@
     i7.colorScheme = HXOBubbleColorSchemeIncoming;
     i7.pointDirection = HXOMessageDirectionIncoming;
     i7.text = @"Chocolate cake danish tart ice cream. 030 87654321"; // Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
-/*
+
     BubbleItem * i8 = [[BubbleItem alloc] init];
-    i8.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
+    i8.cellIdentifier = [ImageAttachmentMessageCell reuseIdentifier];
     i8.colorScheme = HXOBubbleColorSchemeSuccess;
     i8.pointDirection = HXOMessageDirectionOutgoing;
     i8.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
-    i8.attachmentStyle = HXOAttachmentStyleOriginalAspect;
+//    i8.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i8.attachmentText = @"cupcakes.jpg";
-    i8.attachmentTransferState = HXOAttachmentTransferStateInProgress;
+//    i8.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i8.progress = 0.90;
-
+/*
     BubbleItem * i9 = [[BubbleItem alloc] init];
     i9.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i9.colorScheme = HXOBubbleColorSchemeIncoming;
@@ -209,8 +211,8 @@
     i18.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 */
-    _items = @[i0, i1, i2, i3, i4, i5, i6, i7/*,
-               i8, i9, i10, i11, i12, i13, i14,
+    _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
+               i8/*, i9, i10, i11, i12, i13, i14,
                i15, i16, i17, i18*/];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
@@ -313,31 +315,30 @@
 
 - (void) configureCell: (MessageCell*) cell item: (BubbleItem*) item {
     if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
-        [self configureTextCell: (TextMessageCell*)cell item: item];
-    } /*else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell item: item];
-    } else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
+        [self configureTextSection: ((TextMessageCell*)cell).textSection item: item];
+    } else if ([item.cellIdentifier isEqualToString: [ImageAttachmentMessageCell reuseIdentifier]]) {
+        [self configureImageAttachmentSection: ((ImageAttachmentMessageCell*)cell).imageAttachmentSection item: item];
+    }/* else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
         [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell item: item];
         [self configureTextCell: cell item: item];
     }*/
 }
 
-- (void) configureTextCell: (TextMessageCell*) cell item: (BubbleItem*) item {
-    /*
-    if ([cell label].tokenClasses.count == 0) {
-        [self registerTokenClasses: [cell label]];
-        [cell label].delegate = self;
+- (void) configureTextSection: (TextSection*) section item: (BubbleItem*) item {
+    if (section.label.tokenClasses.count == 0) {
+        [self registerTokenClasses: section.label];
+        section.label.delegate = self;
     }
-     */
     double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
-    [cell label].font = [UIFont systemFontOfSize: fontSize];
-    cell.label.text = item.text;
+    section.label.font = [UIFont systemFontOfSize: fontSize];
+    section.label.text = item.text;
 }
 
+
+- (void) configureImageAttachmentSection: (ImageAttachmentSection*) section item: (BubbleItem*) item {
+    section.imageAspect = item.imageAspect;
+    section.image = item.previewImage;
 /*
-- (void) configureAttachmentCell: (CrappyAttachmentMessageCell*) cell item: (BubbleItem*) item {
-    cell.previewImage = item.previewImage;
-    cell.imageAspect = item.imageAspect;
     cell.attachmentStyle = item.attachmentStyle;
     //cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
     cell.largeAttachmentTypeIcon = item.largeAttachmentTypeIcon;
@@ -362,8 +363,9 @@
     }
 
     cell.attachmentTitle.attributedText = attributedTitle;
+ */
 }
-*/
+
 
 @end
 

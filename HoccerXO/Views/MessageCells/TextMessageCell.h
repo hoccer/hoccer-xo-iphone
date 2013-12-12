@@ -13,6 +13,6 @@
 
 @interface TextMessageCell : MessageCell
 
-@property (nonatomic,readonly) HXOLinkyLabel * label;
+@property (nonatomic,readonly) TextSection * textSection;
 
 @end
