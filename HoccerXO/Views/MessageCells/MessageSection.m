@@ -20,31 +20,28 @@
     return self;
 }
 
-
 - (void) commonInit {
     self.backgroundColor = [UIColor clearColor];
     self.contentMode = UIViewContentModeRedraw;
 }
 
 - (void) drawRect:(CGRect)rect {
-    UIBezierPath * path;
-    if (self.position == HXOSectionPositionSingle) {
-        path = [self bubblePathWithRoundedCorners: YES];
-    } else if (self.position == HXOSectionPositionFirst) {
-        path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, 8, 0) byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii: CGSizeMake(self.cell.gridSpacing, self.cell.gridSpacing)];
-    }
     [[self fillColor] setFill];
-    [path fill];
+    [[self bubblePath] fill];
 }
 
-- (UIBezierPath*) bubblePathWithRoundedCorners: (BOOL) rounded {
+- (UIBezierPath*) bubblePath {
     CGRect frame = self.bounds;
     frame.size.width -= self.cell.gridSpacing;
-    if (self.cell.messageDirection == HXOMessageDirectionIncoming) {
-        return [self leftPointingBubblePathInRect: frame];
+    if (self.position == HXOSectionPositionSingle || self.position == HXOSectionPositionLast) {
+        if (self.cell.messageDirection == HXOMessageDirectionIncoming) {
+            return [self leftPointingBubblePathInRect: frame];
+        } else {
+            frame.origin.x += self.cell.gridSpacing;
+            return [self rightPointingBubblePathInRect: frame];
+        }
     } else {
-        frame.origin.x += self.cell.gridSpacing;
-        return [self rightPointingBubblePathInRect: frame];
+        return [UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, 8, 0) cornerRadius: 12];
     }
 }
 
@@ -88,6 +85,9 @@
     [bubblePath closePath];
 
     return bubblePath;
+}
+
+- (void) colorSchemeDidChange {
 }
 
 @end

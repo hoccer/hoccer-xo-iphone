@@ -13,6 +13,7 @@
 #import "HXOLinkyLabel.h"
 //#import "BubbleViewToo.h"
 #import "TextMessageCell.h"
+#import "ImageAttachmentMessageCell.h"
 #import "InsetImageView2.h"
 #import "HXOUserDefaults.h"
 
@@ -44,54 +45,54 @@
     [super viewDidLoad];
 
     [self registerCellClass: [TextMessageCell class]];
-    //[self registerCellClass: [CrappyAttachmentMessageCell class]];
+    [self registerCellClass: [ImageAttachmentMessageCell class]];
     //[self registerCellClass: [CrappyAttachmentWithTextMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
     i0.colorScheme = HXOBubbleColorSchemeIncoming;
     i0.pointDirection = HXOMessageDirectionIncoming;
-    i0.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
+    i0.text = @"Icing tiramisu";
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
     i1.cellIdentifier = [TextMessageCell reuseIdentifier];
     i1.colorScheme = HXOBubbleColorSchemeInProgress;
     i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com";
-/*
+
     BubbleItem * i2 = [[BubbleItem alloc] init];
-    i2.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i2.cellIdentifier = [TextMessageCell reuseIdentifier];
     i2.colorScheme = HXOBubbleColorSchemeSuccess;
     i2.text = @"Oat cake dragée tiramisu.";
 
     BubbleItem * i3 = [[BubbleItem alloc] init];
-    i3.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i3.cellIdentifier = [TextMessageCell reuseIdentifier];
     i3.colorScheme = HXOBubbleColorSchemeFailed;
     i3.text = @"Oat cake dragée tiramisu. Icing tiramisu apple pie carrot cake.";
 
     BubbleItem * i4 = [[BubbleItem alloc] init];
-    i4.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i4.cellIdentifier = [TextMessageCell reuseIdentifier];
     i4.colorScheme = HXOBubbleColorSchemeSuccess;
     i4.pointDirection = HXOMessageDirectionOutgoing;
     i4.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i5 = [[BubbleItem alloc] init];
-    i5.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i5.cellIdentifier = [TextMessageCell reuseIdentifier];
     i5.colorScheme = HXOBubbleColorSchemeIncoming;
     i5.pointDirection = HXOMessageDirectionIncoming;
     i5.text = @"Icing tiramisu 🍎 pie carrot 🍰.";
 
     BubbleItem * i6 = [[BubbleItem alloc] init];
-    i6.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i6.cellIdentifier = [TextMessageCell reuseIdentifier];
     i6.colorScheme = HXOBubbleColorSchemeSuccess;
     i6.pointDirection = HXOMessageDirectionOutgoing;
     i6.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 
     BubbleItem * i7 = [[BubbleItem alloc] init];
-    i7.cellIdentifier = [CrappyTextMessageCell reuseIdentifier];
+    i7.cellIdentifier = [TextMessageCell reuseIdentifier];
     i7.colorScheme = HXOBubbleColorSchemeIncoming;
     i7.pointDirection = HXOMessageDirectionIncoming;
     i7.text = @"Chocolate cake danish tart ice cream. 030 87654321"; // Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
-
+/*
     BubbleItem * i8 = [[BubbleItem alloc] init];
     i8.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i8.colorScheme = HXOBubbleColorSchemeSuccess;
@@ -208,7 +209,7 @@
     i18.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 */
-    _items = @[i0, i1/*, i2, i3, i4, i5, i6, i7,
+    _items = @[i0, i1, i2, i3, i4, i5, i6, i7/*,
                i8, i9, i10, i11, i12, i13, i14,
                i15, i16, i17, i18*/];
 

@@ -9,20 +9,27 @@
 #import "TextMessageCell.h"
 #import "TextSection.h"
 
+@interface TextMessageCell ()
+
+@property (nonatomic,strong) TextSection * textSection;
+
+@end
+
 @implementation TextMessageCell
 
 - (void) commonInit {
     [super commonInit];
 
-    _textSection = [[TextSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
+    self.textSection = [[TextSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
     [self addSection: _textSection];
 }
 
 - (HXOLinkyLabel*) label {
-    return _textSection.label;
+    return self.textSection.label;
 }
 
 - (void) layoutSubviews {
-    [_textSection sizeToFit];
+    [self.textSection sizeToFit];
 }
+
 @end

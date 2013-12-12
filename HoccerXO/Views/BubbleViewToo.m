@@ -148,19 +148,8 @@ static const CGFloat kHXOAvatarSize_ = 40;
 }
 
 - (void) configureTextColors: (HXOLinkyLabel*) label {
-    label.textColor = [self textColorForColorScheme: self.colorScheme];
+    label.textColor = [self textColor];
     label.defaultTokenStyle = [self linkStyleForColorScheme: self.colorScheme];
-}
-
-- (UIColor*) textColorForColorScheme: (HXOBubbleColorScheme) colorScheme {
-    switch (colorScheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor blackColor];
-        case HXOBubbleColorSchemeSuccess:
-        case HXOBubbleColorSchemeInProgress:
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor whiteColor];
-    }
 }
 
 - (NSDictionary*) linkStyleForColorScheme: (HXOBubbleColorScheme) colorScheme {

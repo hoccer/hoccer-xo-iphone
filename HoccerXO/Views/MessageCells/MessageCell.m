@@ -72,7 +72,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
     _subtitle = [[UILabel alloc] initWithFrame: CGRectMake(8 * kHXOGridSpacing, self.frame.size.height - 2 * kHXOGridSpacing, self.bubbleWidth - 4 * kHXOGridSpacing, 2 * kHXOGridSpacing)];
-    _subtitle.font = [UIFont systemFontOfSize: 8];
+    _subtitle.font = [UIFont systemFontOfSize: 10];
     _subtitle.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
     _subtitle.backgroundColor = [UIColor clearColor];
     _subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -148,6 +148,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
 - (void) setColorScheme:(HXOBubbleColorScheme)colorScheme {
     _colorScheme = colorScheme;
+    for (MessageSection * section in self.sections) {
+        [section colorSchemeDidChange];
+    }
+    self.subtitle.textColor = [self subtitleColor];
     [self setNeedsDisplay];
 }
 
@@ -172,6 +176,23 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
             return [UIColor colorWithRed: 0.741 green: 0.224 blue: 0.208 alpha: 1];
     }
 }
+
+
+- (UIColor*) textColor {
+    switch (self.colorScheme) {
+        case HXOBubbleColorSchemeIncoming:
+            return [UIColor blackColor];
+        case HXOBubbleColorSchemeSuccess:
+        case HXOBubbleColorSchemeInProgress:
+        case HXOBubbleColorSchemeFailed:
+            return [UIColor whiteColor];
+    }
+}
+
+- (UIColor*) subtitleColor {
+    return [self fillColor];
+}
+
 
 -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
     if (self.delegate != nil) {

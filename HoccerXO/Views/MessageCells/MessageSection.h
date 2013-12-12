@@ -35,5 +35,7 @@ typedef enum HXOSectionPositions {
 @property (nonatomic,assign) HXOSSectionPosition position;
 
 - (void) commonInit;
+- (void) colorSchemeDidChange;
+- (UIBezierPath*) bubblePath;
 
 @end

@@ -162,6 +162,8 @@
 		63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1C1857CF3F0001AC96 /* TextMessageCell.m */; };
 		63808A201858A6F90001AC96 /* MessageSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1F1858A6F90001AC96 /* MessageSection.m */; };
 		63808A231858A76E0001AC96 /* TextSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A221858A76E0001AC96 /* TextSection.m */; };
+		63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A281859426B0001AC96 /* ImageAttachmentMessageCell.m */; };
+		63808A2C185942D20001AC96 /* ImageAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A2B185942D20001AC96 /* ImageAttachmentSection.m */; };
 		6381FEB0174552DF001D16E0 /* contacts_and_groups_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEAE174552DF001D16E0 /* contacts_and_groups_cell_bg.png */; };
 		6381FEB1174552DF001D16E0 /* contacts_and_groups_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEAF174552DF001D16E0 /* contacts_and_groups_cell_bg@2x.png */; };
 		6381FEBE17455675001D16E0 /* contact-settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEBC17455675001D16E0 /* contact-settings.png */; };
@@ -703,6 +705,10 @@
 		63808A1F1858A6F90001AC96 /* MessageSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageSection.m; sourceTree = "<group>"; };
 		63808A211858A76E0001AC96 /* TextSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextSection.h; sourceTree = "<group>"; };
 		63808A221858A76E0001AC96 /* TextSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextSection.m; sourceTree = "<group>"; };
+		63808A271859426B0001AC96 /* ImageAttachmentMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachmentMessageCell.h; sourceTree = "<group>"; };
+		63808A281859426B0001AC96 /* ImageAttachmentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentMessageCell.m; sourceTree = "<group>"; };
+		63808A2A185942D20001AC96 /* ImageAttachmentSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachmentSection.h; sourceTree = "<group>"; };
+		63808A2B185942D20001AC96 /* ImageAttachmentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentSection.m; sourceTree = "<group>"; };
 		6381FEAE174552DF001D16E0 /* contacts_and_groups_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contacts_and_groups_cell_bg.png; sourceTree = "<group>"; };
 		6381FEAF174552DF001D16E0 /* contacts_and_groups_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contacts_and_groups_cell_bg@2x.png"; sourceTree = "<group>"; };
 		6381FEBC17455675001D16E0 /* contact-settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact-settings.png"; sourceTree = "<group>"; };
@@ -1411,12 +1417,16 @@
 		63808A1A1857607F0001AC96 /* MessageCells */ = {
 			isa = PBXGroup;
 			children = (
+				63808A271859426B0001AC96 /* ImageAttachmentMessageCell.h */,
+				63808A281859426B0001AC96 /* ImageAttachmentMessageCell.m */,
+				63808A2A185942D20001AC96 /* ImageAttachmentSection.h */,
+				63808A2B185942D20001AC96 /* ImageAttachmentSection.m */,
 				6343B4E316CD604700B3A29E /* MessageCell.h */,
 				6343B4E416CD604700B3A29E /* MessageCell.m */,
-				63808A1B1857CF3F0001AC96 /* TextMessageCell.h */,
-				63808A1C1857CF3F0001AC96 /* TextMessageCell.m */,
 				63808A1E1858A6F90001AC96 /* MessageSection.h */,
 				63808A1F1858A6F90001AC96 /* MessageSection.m */,
+				63808A1B1857CF3F0001AC96 /* TextMessageCell.h */,
+				63808A1C1857CF3F0001AC96 /* TextMessageCell.m */,
 				63808A211858A76E0001AC96 /* TextSection.h */,
 				63808A221858A76E0001AC96 /* TextSection.m */,
 			);
@@ -2638,9 +2648,11 @@
 				639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
 				63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */,
+				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */,
 				63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */,
+				63808A2C185942D20001AC96 /* ImageAttachmentSection.m in Sources */,
 				63AF819517471EFB00D007E3 /* HXONavigationItem.m in Sources */,
 				6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */,
 				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,

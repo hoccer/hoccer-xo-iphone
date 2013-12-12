@@ -33,14 +33,21 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
-    size.width -= 4 * kHXOGridSpacing;
-    size.height -= 2 * kHXOGridSpacing;
+    CGSize labelSize = size;
+    labelSize.width -= 4 * kHXOGridSpacing;
+    labelSize.height -= 2 * kHXOGridSpacing;
 
-    CGSize result = [_label sizeThatFits: size];
+    labelSize = [_label sizeThatFits: labelSize];
 
-    result.width = size.width + 4 * kHXOGridSpacing;
-    result.height += 2 * kHXOGridSpacing;
-    return result;
+    labelSize.width = size.width;
+    labelSize.height = kHXOGridSpacing * ceil(labelSize.height / kHXOGridSpacing);
+    labelSize.height += 2 * kHXOGridSpacing;
+    labelSize.height = MAX(labelSize.height, 5 * kHXOGridSpacing);
+    return labelSize;
+}
+
+- (void) colorSchemeDidChange {
+    self.label.textColor = [self.cell textColor];
 }
 
 @end

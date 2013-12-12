@@ -12,9 +12,6 @@
 @class HXOLinkyLabel;
 
 @interface TextMessageCell : MessageCell
-{
-    TextSection * _textSection;
-}
 
 @property (nonatomic,readonly) HXOLinkyLabel * label;
 

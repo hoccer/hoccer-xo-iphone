@@ -43,5 +43,7 @@
 - (void) addSection: (MessageSection*) section;
 //- (CGFloat) calculateHeightForWidth: (CGFloat) width;
 - (UIColor*) fillColor;
+- (UIColor*) textColor;
+- (UIColor*) subtitleColor;
 
 @end
