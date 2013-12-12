@@ -1430,6 +1430,9 @@ NSArray * TransferStateName = @[@"detached",
     if (result == nil) {
         result = [theMimeType lastPathComponent];
     }
+    if (result == nil) {
+        return @"bin";
+    }
     // NSLog(@"fileExtensionFromMimeType result=%@", result);
     return result;
 }
