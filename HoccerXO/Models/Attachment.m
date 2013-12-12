@@ -1430,6 +1430,9 @@ NSArray * TransferStateName = @[@"detached",
     if (result == nil) {
         result = [theMimeType lastPathComponent];
     }
+    if (result == nil) {
+        return @"bin";
+    }
     // NSLog(@"fileExtensionFromMimeType result=%@", result);
     return result;
 }
@@ -1795,7 +1798,7 @@ NSArray * TransferStateName = @[@"detached",
         
         if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(myVideoFilePath)) {
             UISaveVideoAtPathToSavedPhotosAlbum(myVideoFilePath, nil, nil, nil);
-            // NSLog(@"didPickAttachment: saved video in album at path = %@",myVideoFilePath);
+            NSLog(@"trySaveToAlbum: saved video in album at path = %@",myVideoFilePath);
         } else {
             NSLog(@"trySaveToAlbum: failed to save video in album at path = %@",myVideoFilePath);
             [AppDelegate showErrorAlertWithMessage:@"Video not compatible with album" withTitle:@"Can not save video in Album"];
