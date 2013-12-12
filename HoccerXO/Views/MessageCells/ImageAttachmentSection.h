@@ -11,5 +11,6 @@
 @interface ImageAttachmentSection : MessageSection
 
 @property (nonatomic,strong) UIImage * image;
+@property (nonatomic,assign) CGFloat   imageAspect;
 
 @end

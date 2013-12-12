@@ -11,7 +11,6 @@
 
 @interface ImageAttachmentMessageCell ()
 
-@property (nonatomic,strong) ImageAttachmentSection * imageAttachmentSection;
 
 @end
 
@@ -20,7 +19,7 @@
 - (void) commonInit {
     [super commonInit];
 
-    self.imageAttachmentSection = [[ImageAttachmentSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
+    _imageAttachmentSection = [[ImageAttachmentSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
     [self addSection: self.imageAttachmentSection];
 }
 
