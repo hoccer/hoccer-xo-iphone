@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "MessageSection.h"
+#import "AttachmentSection.h"
 
-@interface ImageAttachmentSection : MessageSection
+@interface ImageAttachmentSection : AttachmentSection
 
 @property (nonatomic,strong) UIImage * image;
 @property (nonatomic,assign) CGFloat   imageAspect;

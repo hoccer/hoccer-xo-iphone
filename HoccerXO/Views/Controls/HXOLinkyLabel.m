@@ -14,7 +14,6 @@
 //#define HXO_CHATTY_LABEL_DRAW_TOKEN_RECTS
 //#define HXO_CHATTY_LABEL_SHOW_BUTTONS
 
-static NSDictionary* ourDefaultStyle;
 static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabelTokenIndex";
 
 @interface HXOCLTokenClass : NSObject
@@ -51,10 +50,6 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 
 #pragma mark - Con- and Destruction
 
-+ (void) initialize {
-    ourDefaultStyle = @{(id)kCTForegroundColorAttributeName: (id)[UIColor blueColor].CGColor};
-}
-
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -73,7 +68,7 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
 
 - (void) commonInit {
     _tokenClasses = [NSMutableArray array];
-    _defaultTokenStyle = ourDefaultStyle;
+    _defaultTokenStyle = @{(id)kCTForegroundColorAttributeName: (id)[UIColor blueColor].CGColor};
     [self createAttributedText: self.text];
     self.userInteractionEnabled = YES;
 

@@ -16,6 +16,8 @@
 #import "TextSection.h"
 #import "ImageAttachmentMessageCell.h"
 #import "ImageAttachmentSection.h"
+#import "GenericAttachmentMessageCell.h"
+#import "GenericAttachmentSection.h"
 #import "InsetImageView2.h"
 #import "HXOUserDefaults.h"
 
@@ -48,7 +50,7 @@
 
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [ImageAttachmentMessageCell class]];
-    //[self registerCellClass: [CrappyAttachmentWithTextMessageCell class]];
+    [self registerCellClass: [GenericAttachmentMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
@@ -101,22 +103,24 @@
     i8.pointDirection = HXOMessageDirectionOutgoing;
     i8.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
 //    i8.attachmentStyle = HXOAttachmentStyleOriginalAspect;
-    i8.attachmentText = @"cupcakes.jpg";
+//    i8.attachmentText = @"cupcakes.jpg";
 //    i8.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i8.progress = 0.90;
-/*
+
     BubbleItem * i9 = [[BubbleItem alloc] init];
-    i9.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
+    i9.cellIdentifier = [ImageAttachmentMessageCell reuseIdentifier];
     i9.colorScheme = HXOBubbleColorSchemeIncoming;
     i9.pointDirection = HXOMessageDirectionIncoming;
-    i9.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
-    i9.attachmentStyle = HXOAttachmentStyleOriginalAspect;
+    CGSize imageSize = [UIImage imageNamed:@"cupcakes.jpg"].size;
+    i9.imageAspect = imageSize.width / imageSize.height;
+    //i9.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
+    //i9.attachmentStyle = HXOAttachmentStyleOriginalAspect;
     i9.attachmentText = @"cupcakes.jpg";
-    i9.runButtonStyle = HXOBubbleRunButtonPlay;
-    i9.attachmentTransferState = HXOAttachmentTransferStateInProgress;
+    //i9.runButtonStyle = HXOBubbleRunButtonPlay;
+    //i9.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i9.progress = 1.0;
 
-
+/*
     BubbleItem * i10 = [[BubbleItem alloc] init];
     i10.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i10.colorScheme = HXOBubbleColorSchemeSuccess;
@@ -138,16 +142,16 @@
     i11.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-photo"];
     i11.previewImage = [UIImage imageNamed:@"cupcakes.jpg"];
     i11.attachmentText = @"cupcakes.jpg";
-
+*/
     BubbleItem * i12 = [[BubbleItem alloc] init];
-    i12.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
-    i12.colorScheme = HXOBubbleColorSchemeFailed;
+    i12.cellIdentifier = [GenericAttachmentMessageCell reuseIdentifier];
+    i12.colorScheme = HXOBubbleColorSchemeSuccess;
     i12.pointDirection = HXOMessageDirectionOutgoing;
-    i12.attachmentStyle = HXOAttachmentStyleThumbnail;
+    //i12.attachmentStyle = HXOAttachmentStyleThumbnail;
     //i12.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_music"];
     i12.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-music"];
     i12.attachmentText = @"Cool Song";
-
+/*
     BubbleItem * i13 = [[BubbleItem alloc] init];
     i13.cellIdentifier = [CrappyAttachmentMessageCell reuseIdentifier];
     i13.colorScheme = HXOBubbleColorSchemeIncoming;
@@ -163,7 +167,6 @@
     i14.colorScheme = HXOBubbleColorSchemeIncoming;
     i14.pointDirection = HXOMessageDirectionIncoming;
     i14.attachmentStyle = HXOAttachmentStyleOriginalAspect;
-    CGSize imageSize = [UIImage imageNamed:@"cupcakes.jpg"].size;
     i14.imageAspect = imageSize.width / imageSize.height;
     i14.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i14.progress = 0.5;
@@ -211,8 +214,8 @@
     i18.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 */
-    _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
-               i8/*, i9, i10, i11, i12, i13, i14,
+    _items = @[/*0, i1, i2, i3, i4, i5, i6, i7,
+               i8, i9, i10, i11,*/i12/*, i13, i14,
                i15, i16, i17, i18*/];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
@@ -318,10 +321,9 @@
         [self configureTextSection: ((TextMessageCell*)cell).textSection item: item];
     } else if ([item.cellIdentifier isEqualToString: [ImageAttachmentMessageCell reuseIdentifier]]) {
         [self configureImageAttachmentSection: ((ImageAttachmentMessageCell*)cell).imageAttachmentSection item: item];
-    }/* else if ([item.cellIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell item: item];
-        [self configureTextCell: cell item: item];
-    }*/
+    } else if ([item.cellIdentifier isEqualToString: [GenericAttachmentMessageCell reuseIdentifier]]) {
+        [self configureGenericAttachmentSection: ((GenericAttachmentMessageCell*)cell).genericAttachmentSection item: item];
+    }
 }
 
 - (void) configureTextSection: (TextSection*) section item: (BubbleItem*) item {
@@ -334,10 +336,17 @@
     section.label.text = item.text;
 }
 
+- (void) configureAttachmentSection: (AttachmentSection*) section item: (BubbleItem*) item {
+    section.subtitle.text = nil; // TODO ...
+    // TODO: progress setup goes here
+}
+
 
 - (void) configureImageAttachmentSection: (ImageAttachmentSection*) section item: (BubbleItem*) item {
+    [self configureAttachmentSection: section item: item];
     section.imageAspect = item.imageAspect;
     section.image = item.previewImage;
+
 /*
     cell.attachmentStyle = item.attachmentStyle;
     //cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
@@ -346,24 +355,13 @@
     cell.progressBar.progress = item.progress;
     cell.runButtonStyle = item.runButtonStyle;
 
-    NSString * title = item.attachmentText;
-    NSMutableAttributedString * attributedTitle;
-    NSString * fileExtension = [title pathExtension];
-    if (title != nil) {
-        if (item.attachmentTransferState == HXOAttachmentTransferStateInProgress) {
-            NSDictionary * attributes = @{NSForegroundColorAttributeName: [UIColor colorWithWhite: 0.5 alpha:1.0]};
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
-        } else if ( ! [fileExtension isEqualToString: @""]) {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-            NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
-            [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor colorWithWhite: 0.5 alpha: 1.0] range: range];
-        } else {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-        }
-    }
-
-    cell.attachmentTitle.attributedText = attributedTitle;
  */
+}
+
+- (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section item: (BubbleItem*) item {
+    [self configureAttachmentSection: section item: item];
+
+    section.title.text = item.attachmentText;
 }
 
 

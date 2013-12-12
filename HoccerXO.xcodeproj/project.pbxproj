@@ -164,6 +164,9 @@
 		63808A231858A76E0001AC96 /* TextSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A221858A76E0001AC96 /* TextSection.m */; };
 		63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A281859426B0001AC96 /* ImageAttachmentMessageCell.m */; };
 		63808A2C185942D20001AC96 /* ImageAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A2B185942D20001AC96 /* ImageAttachmentSection.m */; };
+		63808A2F185A11B60001AC96 /* AttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A2E185A11B60001AC96 /* AttachmentSection.m */; };
+		63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A31185A25B10001AC96 /* GenericAttachmentSection.m */; };
+		63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A34185A27730001AC96 /* GenericAttachmentMessageCell.m */; };
 		6381FEB0174552DF001D16E0 /* contacts_and_groups_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEAE174552DF001D16E0 /* contacts_and_groups_cell_bg.png */; };
 		6381FEB1174552DF001D16E0 /* contacts_and_groups_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEAF174552DF001D16E0 /* contacts_and_groups_cell_bg@2x.png */; };
 		6381FEBE17455675001D16E0 /* contact-settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6381FEBC17455675001D16E0 /* contact-settings.png */; };
@@ -709,6 +712,12 @@
 		63808A281859426B0001AC96 /* ImageAttachmentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentMessageCell.m; sourceTree = "<group>"; };
 		63808A2A185942D20001AC96 /* ImageAttachmentSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachmentSection.h; sourceTree = "<group>"; };
 		63808A2B185942D20001AC96 /* ImageAttachmentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentSection.m; sourceTree = "<group>"; };
+		63808A2D185A11B60001AC96 /* AttachmentSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentSection.h; sourceTree = "<group>"; };
+		63808A2E185A11B60001AC96 /* AttachmentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentSection.m; sourceTree = "<group>"; };
+		63808A30185A25B10001AC96 /* GenericAttachmentSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentSection.h; sourceTree = "<group>"; };
+		63808A31185A25B10001AC96 /* GenericAttachmentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentSection.m; sourceTree = "<group>"; };
+		63808A33185A27730001AC96 /* GenericAttachmentMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentMessageCell.h; sourceTree = "<group>"; };
+		63808A34185A27730001AC96 /* GenericAttachmentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentMessageCell.m; sourceTree = "<group>"; };
 		6381FEAE174552DF001D16E0 /* contacts_and_groups_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contacts_and_groups_cell_bg.png; sourceTree = "<group>"; };
 		6381FEAF174552DF001D16E0 /* contacts_and_groups_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contacts_and_groups_cell_bg@2x.png"; sourceTree = "<group>"; };
 		6381FEBC17455675001D16E0 /* contact-settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact-settings.png"; sourceTree = "<group>"; };
@@ -1417,6 +1426,12 @@
 		63808A1A1857607F0001AC96 /* MessageCells */ = {
 			isa = PBXGroup;
 			children = (
+				63808A2D185A11B60001AC96 /* AttachmentSection.h */,
+				63808A2E185A11B60001AC96 /* AttachmentSection.m */,
+				63808A33185A27730001AC96 /* GenericAttachmentMessageCell.h */,
+				63808A34185A27730001AC96 /* GenericAttachmentMessageCell.m */,
+				63808A30185A25B10001AC96 /* GenericAttachmentSection.h */,
+				63808A31185A25B10001AC96 /* GenericAttachmentSection.m */,
 				63808A271859426B0001AC96 /* ImageAttachmentMessageCell.h */,
 				63808A281859426B0001AC96 /* ImageAttachmentMessageCell.m */,
 				63808A2A185942D20001AC96 /* ImageAttachmentSection.h */,
@@ -2602,12 +2617,14 @@
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
 				E96CB02B171457F9005F8FFA /* PublicKeyManager.m in Sources */,
+				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
 				E96CB02C171457F9005F8FFA /* RSA.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
 				63808A231858A76E0001AC96 /* TextSection.m in Sources */,
 				E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */,
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
+				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
 				63DC01851715205300609513 /* HXOSwitch.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */,
 				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
@@ -2636,6 +2653,7 @@
 				E9D1145E1732E74000737EF7 /* Vcard.m in Sources */,
 				E9D1148A1736702E00737EF7 /* GCHTTPRequestOperation.m in Sources */,
 				E9D1148B1736702E00737EF7 /* GCImageRequestOperation.m in Sources */,
+				63808A2F185A11B60001AC96 /* AttachmentSection.m in Sources */,
 				E9D1148C1736702E00737EF7 /* GCJSONRequestOperation.m in Sources */,
 				E9D1148D1736702E00737EF7 /* GCNetworkQueue.m in Sources */,
 				E9D1148E1736702E00737EF7 /* GCNetworkReachability.m in Sources */,
