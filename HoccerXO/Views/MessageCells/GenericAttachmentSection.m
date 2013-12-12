@@ -11,7 +11,6 @@
 
 extern CGFloat kHXOGridSpacing;
 
-
 @implementation GenericAttachmentSection
 
 - (void) commonInit {
@@ -19,11 +18,10 @@ extern CGFloat kHXOGridSpacing;
 
     _title = [[UILabel alloc] initWithFrame:CGRectMake(2 * kHXOGridSpacing, 0, self.bounds.size.width - 9 * kHXOGridSpacing, 32)];
     self.title.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.title.backgroundColor = [UIColor orangeColor];
     [self addSubview: self.title];
 
     // TODO: assign subtitle frame
-    
+
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
@@ -34,4 +32,5 @@ extern CGFloat kHXOGridSpacing;
 - (void) colorSchemeDidChange {
     self.title.textColor = [self.cell textColor];
 }
+
 @end

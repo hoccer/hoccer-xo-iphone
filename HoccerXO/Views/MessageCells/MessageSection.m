@@ -90,4 +90,7 @@
 - (void) colorSchemeDidChange {
 }
 
+- (void) messageDirectionDidChange {
+}
+
 @end

@@ -98,11 +98,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
         _subtitle.textAlignment = NSTextAlignmentRight;
     }
     _avatar.frame = avatarFrame;
-    [self updateSections];
 
-}
-
-- (void) updateSections {
     CGFloat x = self.messageDirection == HXOMessageDirectionIncoming ? 6 * kHXOGridSpacing : 0;
     CGRect frame;
     NSUInteger i = 0;
@@ -120,12 +116,14 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
             section.position = HXOSectionPositionInner;
         }
         i += 1;
+        [section messageDirectionDidChange];
     }
 
     frame = self.subtitle.frame;
     frame.origin.x = x + 2 * kHXOGridSpacing;
     self.subtitle.frame = frame;
 }
+
 
 - (CGSize) sizeThatFits:(CGSize)size {
     CGFloat height = 0;
