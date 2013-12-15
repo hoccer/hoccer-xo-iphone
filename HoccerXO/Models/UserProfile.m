@@ -14,6 +14,7 @@
 #import "HXOUserDefaults.h"
 #import "Environment.h"
 #import "NSString+UUID.h"
+#import "AppDelegate.h"
 
 static UserProfile * profileInstance;
 
@@ -139,8 +140,80 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
     [_saltItem setObject: keychainItemBugWorkaround forKey: (__bridge id)(kSecAttrAccount)]; 
     [_saltItem setObject: [salt hexadecimalString] forKey: (__bridge id)(kSecValueData)];
+    [self exportCredentials];
     return [verifier hexadecimalString];
 }
+    
+-  (NSDictionary *) extractCredentials {
+    NSDictionary * credentials = @{ @"password": [self password],
+                                    @"salt" :[self salt],
+                                    @"clientId" : self.clientId };
+    return credentials;
+}
+    
+- (void) setCredentialsWithDict:(NSDictionary*)credentials {
+    [_accountItem setObject: credentials[@"clientId"] forKey: (__bridge id)(kSecAttrAccount)];
+    [_accountItem setObject: credentials[@"password"] forKey: (__bridge id)(kSecValueData)];
+    NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
+    [_saltItem setObject: keychainItemBugWorkaround forKey: (__bridge id)(kSecAttrAccount)];
+    [_saltItem setObject: credentials[@"salt"] forKey: (__bridge id)(kSecValueData)];
+}
+    
+-(NSURL*)getCredentialsURL {
+    NSString *newFileName = @"credentials.json";
+    NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSString * myDocDir = [appDocDir path];
+    NSString * savePath = [myDocDir stringByAppendingPathComponent: newFileName];
+    NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
+    return myLocalURL;
+}
+    
+- (void)exportCredentials {
+    NSURL * myLocalURL = [self getCredentialsURL];
+
+    NSDictionary * json = [self extractCredentials];
+    NSError * error;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
+    if ( jsonData == nil) {
+        NSLog(@"failed to extract credentials: %@", error);
+        return;
+    }
+    [jsonData writeToURL:myLocalURL atomically:NO];
+    NSLog(@"Exported credentials to %@", myLocalURL);
+    NSLog(@"Credentials: %@", jsonData);
+}
+
+- (NSDictionary*) loadCredentials {
+    NSURL * url = [self getCredentialsURL];
+    NSError * error = nil;
+    NSDictionary * credentials = nil;
+    NSData * jsonCredentials = nil;
+    @try {
+        jsonCredentials = [NSData dataWithContentsOfURL: url];
+        if (jsonCredentials == nil) {
+            return nil;
+        }
+        credentials = [NSJSONSerialization JSONObjectWithData: jsonCredentials options: 0 error: & error];
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR parsing credentials, jsonCredentials = %@, ex=%@, contentURL=%@", jsonCredentials, ex, url);
+        return nil;
+    }
+    if (credentials[@"clientId"] == nil ||  credentials[@"password"] == nil || credentials[@"salt"] == nil) {
+        NSLog(@"ERROR: missing field in jsonCredentials = %@", credentials);
+        return nil;
+    }
+    return credentials;
+}
+    
+- (BOOL) importCredentials {
+    NSDictionary * credentials = [self loadCredentials];
+    if (credentials != nil) {
+        [self setCredentialsWithDict:credentials];
+        return YES;
+    }
+    return NO;
+}
+    
 
 @synthesize srpUser = _srpUser;
 - (HCSRPUser*) srpUser {

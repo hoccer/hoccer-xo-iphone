@@ -226,6 +226,24 @@
 
 "delete_credentials_confirm" = "Delete Credentials";
 
+"import_credentials_alert_title"="Import Credentials?";
+"import_credentials_alert_text"="An exported login has been found. You must use this login on one device only! Do you want to import the login?";
+"import_credentials_button_title"="Import";
+"import_credentials_not_button_title"="New Login";
+
+"export_credentials"="Export Login Credentials";
+"import_credentials"="Import Login Credentials";
+"delete_credentials"="Delete Login Credentials";
+
+"import_credentials_safety_question"="Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
+"import_credentials_confirm"="Import";
+
+"delete_credentials_safety_question"="Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
+"delete_credentials_confirm"="Delete Credentials";
+
+"credentials_exported"="Login credentials have been exported to the document directory.";
+
+
 "Save" = "Save";
 
 "Forward" = "Forward";
