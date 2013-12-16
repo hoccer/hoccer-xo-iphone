@@ -60,6 +60,11 @@ typedef enum ProfileViewModes {
     ProfileItem *         _deleteContactItem;
     ProfileSection *      _destructiveSection;
 
+    ProfileItem *         _exportCredentialsItem;
+    ProfileItem *         _importCredentialsItem;
+    ProfileItem *         _deleteCredentialsItem;
+    ProfileSection *      _credentialsSection;
+    
     NSArray *             _profileItems;
     NSMutableArray *      _allProfileItems;
     ProfileViewMode       _mode;

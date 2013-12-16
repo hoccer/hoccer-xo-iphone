@@ -208,6 +208,24 @@
 
 "delete_credentials_saftey_question" = "Alte Zugangsdaten:";
 
+"import_credentials_alert_title"="Zugangsdaten importieren?";
+"import_credentials_alert_text"="Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
+"import_credentials_button_title"="Importieren";
+"import_credentials_not_button_title"="Neu anlegen";
+
+"export_credentials"="Zugangsdaten exportieren";
+"import_credentials"="Zugangsdaten importieren";
+"delete_credentials"="Zugangsdaten löschen";
+
+"import_credentials_safety_question"="Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
+"import_credentials_confirm"="Importieren";
+
+"delete_credentials_safety_question"="Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
+"delete_credentials_confirm"="Zugangsdaten löschen";
+
+"credentials_exported"="Zugangsdaten wurden ins Dokumentenverzeichnis exportiert";
+
+
 "Save" = "Speichern";
 
 "Forward" = "Weiterleiten";

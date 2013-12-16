@@ -42,6 +42,10 @@
 
 - (NSString*) registerClientAndComputeVerifier: (NSString*) clientId;
 - (void) deleteCredentials;
+    
+- (NSDictionary*) loadCredentials;
+- (BOOL) importCredentials;
+- (void) exportCredentials;
 
 - (NSString*) startSrpAuthentication;
 - (NSString*) processSrpChallenge: (NSString*) challenge;

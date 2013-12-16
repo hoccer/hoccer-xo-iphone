@@ -32,6 +32,8 @@
 #import "Environment.h"
 #import "ProfileDataSource.h"
 #import "HXOBackend.h"
+#import "UIAlertView+BlockExtensions.h"
+#import "AppDelegate.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
@@ -43,7 +45,9 @@ static const NSUInteger kHXOMaxNickNameLength = 25;
 
 typedef enum ActionSheetTags {
     kActionSheetDeleteCredentials = 1,
-    kActionSheetDeleteContact
+    kActionSheetDeleteContact,
+    kActionSheetImportCredentials,
+    kActionSheetDeleteCredentialsLate
 } ActionSheetTag;
 
 @interface ProfileViewController ()
@@ -99,7 +103,12 @@ typedef enum ActionSheetTags {
                 NSLog(@"INFO: First run, old credentials found.");
                 [self showOldCredentialsAlert];
             } else {
-                [self.appDelegate setupDone: YES];
+                if ([[UserProfile sharedProfile] loadCredentials] != nil) {
+                    NSLog(@"INFO: First run, no old credentials in keychain found, but credentials document found.");
+                    [self showOldCredentialsDocumentAlert];
+                } else {
+                    [self.appDelegate setupDone: YES];
+                }
             }
         }
     }
@@ -287,7 +296,30 @@ typedef enum ActionSheetTags {
     NSString * delete = NSLocalizedString(@"delete_credentials_delete_title", nil);
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title message: message delegate: self cancelButtonTitle: delete otherButtonTitles: keep, nil];
     [alert show];
-
+}
+    
+- (void) showOldCredentialsDocumentAlert {
+    NSString * title = NSLocalizedString(@"import_credentials_alert_title", nil);
+    NSString * message = NSLocalizedString(@"import_credentials_alert_text", nil);
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                     message: message
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 switch (buttonIndex) {
+                                                     case 0:
+                                                     // import_credentials_not_button_title, perform new registration
+                                                     NSLog(@"Not Importing credentials, performing registration");
+                                                     [self.appDelegate setupDone: YES];
+                                                     break;
+                                                     case 1:
+                                                     NSLog(@"Importing credentials");
+                                                     [[UserProfile sharedProfile] importCredentials];
+                                                     [self.appDelegate setupDone: NO];
+                                                     break;
+                                                 }
+                                             }
+                                           cancelButtonTitle: NSLocalizedString(@"import_credentials_not_button_title", nil)
+                                           otherButtonTitles: NSLocalizedString(@"import_credentials_button_title",nil),nil];
+    [alert show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -321,6 +353,20 @@ typedef enum ActionSheetTags {
     } else if (actionSheet.tag == kActionSheetDeleteContact) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [self deleteContact: self.contact];
+        }
+    } else if (actionSheet.tag == kActionSheetDeleteCredentialsLate) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [[UserProfile sharedProfile] deleteCredentials];
+            [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"Your login credentials have been deleted. Hoccer XO will terminate now." withTitle:@"Login Credentials Deleted"];
+
+        }
+    } else if (actionSheet.tag == kActionSheetImportCredentials) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            if ([[UserProfile sharedProfile] importCredentials]) {
+                [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"New login credentials have been imported. Restart Hoccer XO to use them" withTitle:@"New Login Credentials Imported"];
+            } else {
+                
+            }
         }
     }
 }
@@ -645,6 +691,35 @@ typedef enum ActionSheetTags {
 
     _destructiveSection = [ProfileSection sectionWithName:@"DestructiveSection" items: _deleteContactItem];
 
+    _exportCredentialsItem = [[ProfileItem alloc] initWithName:@"ExportCredentialsItem"];
+    _exportCredentialsItem.currentValue = NSLocalizedString(@"export_credentials", nil);
+    _exportCredentialsItem.editLabel = NSLocalizedString(@"export_credentials", nil);
+    _exportCredentialsItem.cellClass = [UserDefaultsCell class];
+    _exportCredentialsItem.action = @selector(exportCredentialsPressed:);
+    _exportCredentialsItem.target = self;
+    _exportCredentialsItem.textAlignment = NSTextAlignmentLeft;
+    //_exportCredentialsItem.icon = [UIImage imageNamed: [self exportCredentialsIconName]];
+
+    _importCredentialsItem = [[ProfileItem alloc] initWithName:@"ImportCredentialsItem"];
+    _importCredentialsItem.currentValue = NSLocalizedString(@"import_credentials", nil);
+    _importCredentialsItem.editLabel = NSLocalizedString(@"import_credentials", nil);
+    _importCredentialsItem.cellClass = [UserDefaultsCell class];
+    _importCredentialsItem.action = @selector(importCredentialsPressed:);
+    _importCredentialsItem.target = self;
+    _importCredentialsItem.textAlignment = NSTextAlignmentLeft;
+    //_importCredentialsItem.icon = [UIImage imageNamed: [self exportCredentialsIconName]];
+
+    _deleteCredentialsItem = [[ProfileItem alloc] initWithName:@"ExportCredentialsItem"];
+    _deleteCredentialsItem.currentValue = NSLocalizedString(@"delete_credentials", nil);
+    _deleteCredentialsItem.editLabel = NSLocalizedString(@"delete_credentials", nil);
+    _deleteCredentialsItem.cellClass = [UserDefaultsCell class];
+    _deleteCredentialsItem.action = @selector(deleteCredentialsPressed:);
+    _deleteCredentialsItem.target = self;
+    _deleteCredentialsItem.textAlignment = NSTextAlignmentLeft;
+    _deleteCredentialsItem.icon = [UIImage imageNamed: [self deleteIconName]];
+    
+    _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem, _deleteCredentialsItem, nil];
+    
     //return [self populateValues];
 }
 
@@ -729,7 +804,11 @@ typedef enum ActionSheetTags {
         }
     } else {
         if (editing) {
-            return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection];
+            if (_mode == ProfileViewModeFirstRun) {
+                return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection];
+            } else {
+                return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection, _credentialsSection];
+            }
         } else {
             return @[ _avatarSection, _profileItemsSection, _fingerprintSection];
         }
@@ -858,6 +937,33 @@ typedef enum ActionSheetTags {
     }];
 }
 
+- (void) exportCredentialsPressed: (id) sender {
+    [[UserProfile sharedProfile] exportCredentials];
+    [AppDelegate showErrorAlertWithMessageAsync: nil withTitle:@"Credentials successfully exported"];
+}
+
+- (void) importCredentialsPressed: (id) sender {
+    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
+                                                    delegate: self
+                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                      destructiveButtonTitle: NSLocalizedString(@"import_credentials_confirm", nil)
+                                           otherButtonTitles: nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    sheet.tag = kActionSheetImportCredentials;
+    [sheet showInView: self.view];
+}
+    
+- (void) deleteCredentialsPressed: (id) sender {
+    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_safety_question", nil)
+                                                    delegate: self
+                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                      destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
+                                           otherButtonTitles: nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    sheet.tag = kActionSheetDeleteCredentialsLate;
+    [sheet showInView: self.view];
+}
+    
 #pragma mark - Attachment Picker Controller
 
 - (AttachmentPickerController*) attachmentPicker {

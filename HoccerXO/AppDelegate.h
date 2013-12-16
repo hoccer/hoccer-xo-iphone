@@ -52,7 +52,8 @@
 
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 
-
+- (void) showFatalErrorAlertWithMessage:(NSString *)message withTitle:(NSString *)title;
+    
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;
 + (void) setMusicAudioSession;
@@ -64,6 +65,7 @@
 + (void) updateStatusbarForViewController:(UIViewController*)viewcontroller style:(UIStatusBarStyle)theStyle;
 + (void) setBlackFontStatusbarForViewController:(UIViewController*)viewcontroller;
 + (void) setWhiteFontStatusbarForViewController:(UIViewController*)viewcontroller;
+
 
 + (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title;
 + (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title;
