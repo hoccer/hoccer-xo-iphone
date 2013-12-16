@@ -8,6 +8,7 @@
 
 #import "ImageAttachmentSection.h"
 #import "MessageCell.h"
+#import "HXOUpDownLoadControl.h"
 
 extern CGFloat kHXOGridSpacing;
 
@@ -19,6 +20,8 @@ extern CGFloat kHXOGridSpacing;
     self.subtitle.textAlignment = NSTextAlignmentCenter;
     self.subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.subtitle.frame = CGRectMake(0, self.bounds.size.height - 40, self.bounds.size.width, 40);
+
+    self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -48,5 +51,8 @@ extern CGFloat kHXOGridSpacing;
     return size;
 }
 
+- (CGRect) attachmentControlFrame {
+    return self.bounds;
+}
 
 @end

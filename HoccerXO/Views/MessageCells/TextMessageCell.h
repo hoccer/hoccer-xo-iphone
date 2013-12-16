@@ -13,6 +13,4 @@
 
 @interface TextMessageCell : MessageCell
 
-@property (nonatomic,readonly) TextSection * textSection;
-
 @end

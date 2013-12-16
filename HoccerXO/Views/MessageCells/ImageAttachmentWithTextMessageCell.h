@@ -1,8 +1,8 @@
 //
-//  ImageAttachmentMessageCell.h
+//  ImageAttachmentWithTextMessageCell.h
 //  HoccerXO
 //
-//  Created by David Siegel on 12.12.13.
+//  Created by David Siegel on 14.12.13.
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 @class ImageAttachmentSection;
 
-@interface ImageAttachmentMessageCell : MessageCell
+@interface ImageAttachmentWithTextMessageCell : MessageCell
 
 @property (nonatomic,readonly) ImageAttachmentSection * imageSection;
 

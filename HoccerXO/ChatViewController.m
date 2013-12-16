@@ -35,7 +35,14 @@
 #import "NSData+Base64.h"
 #import "Group.h"
 #import "UIAlertView+BlockExtensions.h"
-#import "BubbleViewToo.h"
+#import "TextMessageCell.h"
+#import "ImageAttachmentMessageCell.h"
+#import "GenericAttachmentMessageCell.h"
+#import "ImageAttachmentWithTextMessageCell.h"
+#import "GenericAttachmentWithTextMessageCell.h"
+#import "ImageAttachmentSection.h"
+#import "TextSection.h"
+#import "GenericAttachmentSection.h"
 #import "InsetImageView2.h"
 #import "ProfileViewController.h"
 #import "NickNameLabelWithStatus.h"
@@ -124,9 +131,11 @@ static const CGFloat    kSectionHeaderHeight = 40;
 //    gestureRecognizer.cancelsTouchesInView = NO;
 //    [self.tableView addGestureRecognizer:gestureRecognizer];
 
-    [self registerCellClass: [CrappyTextMessageCell class]];
-    [self registerCellClass: [CrappyAttachmentMessageCell class]];
-    [self registerCellClass: [CrappyAttachmentWithTextMessageCell class]];
+    [self registerCellClass: [TextMessageCell class]];
+    [self registerCellClass: [ImageAttachmentMessageCell class]];
+    [self registerCellClass: [GenericAttachmentMessageCell class]];
+    [self registerCellClass: [ImageAttachmentWithTextMessageCell class]];
+    [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
 
 
     self.titleLabel = [[NickNameLabelWithStatus alloc] init];
@@ -966,7 +975,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
-    BubbleViewToo *cell = [tableView dequeueReusableCellWithIdentifier: [self cellIdentifierForMessage: message] forIndexPath:indexPath];
+    MessageCell *cell = [tableView dequeueReusableCellWithIdentifier: [self cellIdentifierForMessage: message] forIndexPath:indexPath];
     // Hack to get the look of a plain (non grouped) table with non-floating headers without using private APIs
     // http://corecocoa.wordpress.com/2011/09/17/how-to-disable-floating-header-in-uitableview/
     // ... for now just use the private API
@@ -1037,25 +1046,27 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    BubbleViewToo * cell = [self.cellPrototypes objectForKey: [self cellIdentifierForMessage: message]];
-    [self prepareLayoutOfCell: cell withMessage: message];
-    return [cell calculateHeightForWidth: self.tableView.bounds.size.width];
-}
+    MessageCell * cell = [_cellPrototypes objectForKey: [self cellIdentifierForMessage: message]];
+    [self configureCell: cell forMessage: message];
+    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;}
 
 - (NSString*) cellIdentifierForMessage: (HXOMessage*) message {
     BOOL hasAttachment = message.attachment != nil;
     BOOL hasText = message.body != nil && ! [message.body isEqualToString: @""];
     if (hasAttachment && hasText) {
-        return [CrappyAttachmentWithTextMessageCell reuseIdentifier];
+        return [self hasImageAttachment: message] ? [ImageAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentWithTextMessageCell reuseIdentifier];
     } else if (hasAttachment) {
-        return [CrappyAttachmentMessageCell reuseIdentifier];
+        return [self hasImageAttachment: message] ? [ImageAttachmentMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
     } else if (hasText) {
-        return [CrappyTextMessageCell reuseIdentifier];
+        return [TextMessageCell reuseIdentifier];
     } else {
         NSLog(@"Error: message has neither text nor attachment");
-        return [CrappyTextMessageCell reuseIdentifier]; // avoid crash in case of unreadable or empty text
+        return [TextMessageCell reuseIdentifier]; // avoid crash in case of unreadable or empty text
     }
-    return @"";
+}
+
+- (BOOL) hasImageAttachment: (HXOMessage*) message {
+    return [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -1256,7 +1267,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     for (int i = 0; i < indexPaths.count; ++i) {
         NSIndexPath * indexPath = indexPaths[i];
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        [self configureCell: (BubbleViewToo*)[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+        [self configureCell: (MessageCell*)[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
     }
     [self.tableView endUpdates];
 }
@@ -1311,7 +1322,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         {
             //NSLog(@"NSFetchedResultsChangeUpdate");
             HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-            [self configureCell: (BubbleViewToo*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+            [self configureCell: (MessageCell*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
             break;
         }
 
@@ -1340,7 +1351,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (void) registerCellClass: (Class) cellClass {
     [self.tableView registerClass: cellClass forCellReuseIdentifier: [cellClass reuseIdentifier]];
-    BubbleViewToo * prototype = [[cellClass alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: [cellClass reuseIdentifier]];
+    MessageCell * prototype = [[cellClass alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: [cellClass reuseIdentifier]];
     //    HXOTableViewCell * prototype = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
     if (_cellPrototypes == nil) {
         _cellPrototypes = [NSMutableDictionary dictionary];
@@ -1358,7 +1369,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }
 }
 
-- (void) prepareLayoutOfCell: (BubbleViewToo*) cell withMessage: (HXOMessage*) message {
+/*
+- (void) prepareLayoutOfCell: (MessageCell*) cell withMessage: (HXOMessage*) message {
     if ([cell.reuseIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
         CrappyTextMessageCell * textCell = (CrappyTextMessageCell*) cell;
         textCell.label.text = message.body;
@@ -1375,19 +1387,39 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     }
 }
+ */
 
 - (BOOL) viewIsVisible {
     return self.isViewLoaded && self.view.window;
 }
 
-- (void)configureCell:(BubbleViewToo*)cell forMessage:(HXOMessage *) message {
+- (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message {
+
+    cell.colorScheme = [self colorSchemeForMessage: message];
+    cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
+    id author = [self getAuthor: message];
+    UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
+    [cell.avatar setImage: avatar forState: UIControlStateNormal];
+    cell.subtitle.text = [self subtitleForMessage: message];
+
+
+    for (MessageSection * section in cell.sections) {
+        if ([section isKindOfClass: [TextSection class]]) {
+            [self configureTextSection: (TextSection*)section forMessage: message];
+        } else if ([section isKindOfClass: [ImageAttachmentSection class]]) {
+            [self configureImageAttachmentSection: (ImageAttachmentSection*)section forMessage: message];
+        } else if ([section isKindOfClass: [GenericAttachmentSection class]]) {
+            [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message];
+        }
+    }
+/*
     //NSLog(@"configureCell forMessage: %@", message.body);
 
     cell.delegate = self;
     // TODO: clean up this shit...
     cell.fetchedResultsController = self.fetchedResultsController;
 
-    [self prepareLayoutOfCell: cell withMessage: message];
+    //[self prepareLayoutOfCell: cell withMessage: message];
 
     if ([self viewIsVisible]){
         if ([message.isRead isEqualToNumber: @NO]) {
@@ -1414,35 +1446,43 @@ static const CGFloat    kSectionHeaderHeight = 40;
         [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell forMessage: message];
         [self configureTextCell: cell forMessage: message];
     }
+*/
 }
 
-- (void) configureTextCell: (id) cell forMessage: (HXOMessage*) message {
-    HXOLinkyLabel * label = (HXOLinkyLabel*)[cell label];
-    if (label.tokenClasses.count == 0) {
-        [self registerTokenClasses: label];
-        label.delegate = self;
+- (void) configureTextSection: (TextSection*) section forMessage: (HXOMessage*) message {
+    if (section.label.tokenClasses.count == 0) {
+        [self registerTokenClasses: section.label];
+        section.label.delegate = self;
     }
     // maybe we find a better way to properly respond to font size changes
-    label.font = [UIFont systemFontOfSize: self.messageFontSize];
+    section.label.font = [UIFont systemFontOfSize: self.messageFontSize];
     
-//    label.text = message.body;
+    section.label.text = message.body;
 }
 
-- (void) configureAttachmentCell: (CrappyAttachmentMessageCell*) cell forMessage: (HXOMessage*) message {
-    //cell.imageAspect = message.attachment.aspectRatio;
+- (void) configureAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message {
+}
 
-    message.attachment.progressIndicatorDelegate = (CrappyAttachmentMessageCell*) cell;
+- (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message {
+    [self configureAttachmentSection: section forMessage: message];
+}
+
+- (void) configureImageAttachmentSection: (ImageAttachmentSection*) section forMessage: (HXOMessage*) message {
+    [self configureAttachmentSection: section forMessage: message];
+    section.imageAspect = message.attachment.aspectRatio;
 
     if (message.attachment.previewImage == nil && message.attachment.available) {
         [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
             if (theError == nil) {
-                // TODO: find a better way to get the right cell...
-                CrappyAttachmentMessageCell * currentCell = (CrappyAttachmentMessageCell*)cell;//[self.tableView cellForRowAtIndexPath: indexPath];
-                if (currentCell != nil) {
-                    if (message.attachment.previewImage.size.height != 0) {
-                        currentCell.previewImage = message.attachment.previewImage;
-                    } else {
-                        currentCell.previewImage = nil;
+                NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: message];
+                if (indexPath) {
+                    ImageAttachmentSection * section = [((id)[self.tableView cellForRowAtIndexPath: indexPath]) imageSection];
+                    if (section) {
+                        if (message.attachment.previewImage.size.height != 0) {
+                            section.image = message.attachment.previewImage;
+                        } else {
+                            section.image = nil;
+                        }
                     }
                 }
             } else {
@@ -1451,11 +1491,16 @@ static const CGFloat    kSectionHeaderHeight = 40;
         }];
     } else {
         if (message.attachment.available && message.attachment.previewImage.size.height != 0) {
-            cell.previewImage = message.attachment.previewImage;
+            section.image = message.attachment.previewImage;
         } else {
-            cell.previewImage = nil;
+            section.image = nil;
         }
     }
+
+/*
+
+    message.attachment.progressIndicatorDelegate = (CrappyAttachmentMessageCell*) cell;
+
 
 //    cell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
 
@@ -1508,6 +1553,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             cell.attachmentTransferState = HXOAttachmentTransferStateDone;
         }
     }
+ */
 }
 
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
@@ -1535,6 +1581,40 @@ static const CGFloat    kSectionHeaderHeight = 40;
         }
     }
     return HXOBubbleColorSchemeSuccess;
+}
+
+- (NSString*) stateStringForMessage: (HXOMessage*) message {
+
+    if ([message.deliveries count] > 1) {
+        NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
+    }
+
+    for (Delivery * myDelivery in message.deliveries) {
+        if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
+            return NSLocalizedString(@"message_pending", nil);
+        } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering] ||
+                   [myDelivery.state isEqualToString:kDeliveryStateDelivered])
+        {
+            return NSLocalizedString(@"message_sent", nil);
+        } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
+            return NSLocalizedString(@"message_received", nil);
+        } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
+            return NSLocalizedString(@"message_failed", nil);
+        /* TODO } else if () {
+             return NSLocalizedString(@"message_read", nil); */
+        } else {
+            NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
+        }
+    }
+    return @"";
+}
+
+- (NSString*) subtitleForMessage: (HXOMessage*) message {
+    if ([message.isOutgoing isEqualToNumber: @YES]) {
+        return [self stateStringForMessage: message];
+    } else {
+        return message.contact.nickName;
+    }
 }
 
 - (NSAttributedString*) attributedAttachmentTitle: (HXOMessage*) message {

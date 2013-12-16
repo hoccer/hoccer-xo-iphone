@@ -8,6 +8,7 @@
 
 #import "GenericAttachmentSection.h"
 #import "MessageCell.h"
+#import "HXOUpDownLoadControl.h"
 
 extern CGFloat kHXOGridSpacing;
 
@@ -19,6 +20,8 @@ extern CGFloat kHXOGridSpacing;
     _title = [[UILabel alloc] initWithFrame:CGRectMake(2 * kHXOGridSpacing, 0, self.bounds.size.width - 9 * kHXOGridSpacing, 32)];
     self.title.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self addSubview: self.title];
+
+    self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 
     // TODO: assign subtitle frame
 
@@ -32,5 +35,11 @@ extern CGFloat kHXOGridSpacing;
 - (void) colorSchemeDidChange {
     self.title.textColor = [self.cell textColor];
 }
+
+- (CGRect) attachmentControlFrame {
+    return CGRectMake(self.bounds.size.width - (2 * kHXOGridSpacing + 4 * kHXOGridSpacing), kHXOGridSpacing, 4 * kHXOGridSpacing, 4 * kHXOGridSpacing);
+}
+
+
 
 @end

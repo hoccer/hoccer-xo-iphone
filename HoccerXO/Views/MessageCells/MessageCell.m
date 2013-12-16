@@ -151,7 +151,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
         CGRect frame = section.frame;
         frame.origin.y = y;
         section.frame = frame;
-        y += frame.size.height;
+        y += frame.size.height + kHXOGridSpacing;
     }
 }
 
@@ -162,10 +162,6 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     }
     self.subtitle.textColor = [self subtitleColor];
     [self setNeedsDisplay];
-}
-
-- (CGFloat) gridSpacing {
-    return kHXOGridSpacing;
 }
 
 - (CGFloat) bubbleWidth {

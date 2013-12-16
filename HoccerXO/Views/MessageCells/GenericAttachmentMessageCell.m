@@ -15,9 +15,7 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) commonInit {
     [super commonInit];
-    
-    _genericAttachmentSection = [[GenericAttachmentSection alloc] initWithFrame:CGRectMake(0, 0, self.bubbleWidth, 0)];
-    [self addSection: _genericAttachmentSection];
+    [self addSection: [[GenericAttachmentSection alloc] initWithFrame:CGRectMake(0, 0, self.bubbleWidth, 0)]];
 }
 
 

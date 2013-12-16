@@ -7,9 +7,10 @@
 //
 
 #import "AttachmentSection.h"
+#import "HXOUpDownLoadControl.h"
+#import "MessageCell.h"
 
 @implementation AttachmentSection
-
 
 - (void) commonInit {
     [super commonInit];
@@ -18,7 +19,18 @@
     _subtitle.textColor = [UIColor blueColor];
     [self addSubview: self.subtitle];
 
-    
+    _upDownLoadControl = [[HXOUpDownLoadControl alloc] initWithFrame: [self attachmentControlFrame]];
+    self.upDownLoadControl.frame = [self attachmentControlFrame];
+    [self addSubview: self.upDownLoadControl];
+}
+
+- (CGRect) attachmentControlFrame {
+    return CGRectZero;
+}
+
+- (void) messageDirectionDidChange {
+    [super messageDirectionDidChange];
+    self.upDownLoadControl.transferDirection = self.cell.messageDirection == HXOMessageDirectionIncoming ? HXOTranserDirectionReceiving : HXOTranserDirectionSending;
 }
 
 @end

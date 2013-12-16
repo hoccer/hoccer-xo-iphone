@@ -13,10 +13,12 @@
 #import "HXOLinkyLabel.h"
 //#import "BubbleViewToo.h"
 #import "TextMessageCell.h"
-#import "TextSection.h"
 #import "ImageAttachmentMessageCell.h"
-#import "ImageAttachmentSection.h"
 #import "GenericAttachmentMessageCell.h"
+#import "ImageAttachmentWithTextMessageCell.h"
+#import "GenericAttachmentWithTextMessageCell.h"
+#import "ImageAttachmentSection.h"
+#import "TextSection.h"
 #import "GenericAttachmentSection.h"
 #import "InsetImageView2.h"
 #import "HXOUserDefaults.h"
@@ -51,6 +53,8 @@
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [ImageAttachmentMessageCell class]];
     [self registerCellClass: [GenericAttachmentMessageCell class]];
+    [self registerCellClass: [ImageAttachmentWithTextMessageCell class]];
+    [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
 
     BubbleItem * i0 = [[BubbleItem alloc] init];
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
@@ -170,28 +174,28 @@
     i14.imageAspect = imageSize.width / imageSize.height;
     i14.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i14.progress = 0.5;
-
+*/
     BubbleItem * i15 = [[BubbleItem alloc] init];
-    i15.cellIdentifier = [CrappyAttachmentWithTextMessageCell reuseIdentifier];
+    i15.cellIdentifier = [ImageAttachmentWithTextMessageCell reuseIdentifier];
     i15.colorScheme = HXOBubbleColorSchemeIncoming;
     i15.pointDirection = HXOMessageDirectionIncoming;
-    i15.attachmentStyle = HXOAttachmentStyleOriginalAspect;
-    i15.imageAspect = imageSize.width / imageSize.height;
-    i15.attachmentTransferState = HXOAttachmentTransferStateInProgress;
+    //i15.attachmentStyle = HXOAttachmentStyleOriginalAspect;
+    i15.previewImage = [UIImage imageNamed: @"cupcakes.jpg"];
+    //i15.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i15.progress = 0.5;
     i15.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
 
 
     BubbleItem * i16 = [[BubbleItem alloc] init];
-    i16.cellIdentifier = [CrappyAttachmentWithTextMessageCell reuseIdentifier];
+    i16.cellIdentifier = [GenericAttachmentWithTextMessageCell reuseIdentifier];
     i16.colorScheme = HXOBubbleColorSchemeFailed;
     i16.pointDirection = HXOMessageDirectionOutgoing;
-    i16.attachmentStyle = HXOAttachmentStyleThumbnail;
+    //i16.attachmentStyle = HXOAttachmentStyleThumbnail;
     //i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
     i16.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-contact"];
     i16.attachmentText = @"Some Dude";
     i16.text = @"Oat cake dragée tiramisu. .";
-
+/*
 
     BubbleItem * i17 = [[BubbleItem alloc] init];
     i17.cellIdentifier = [CrappyAttachmentWithTextMessageCell reuseIdentifier];
@@ -215,8 +219,8 @@
     i18.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
 */
     _items = @[i0, i1, i2, i3, i4, i5, i6, i7,
-               i8, i9,/* i10, i11,*/i12/*, i13, i14,
-               i15, i16, i17, i18*/];
+               i8, i9,/* i10, i11,*/i12/*, i13, i14*/,
+               i15, i16/*, i17, i18*/];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
 
@@ -317,12 +321,14 @@
 }
 
 - (void) configureCell: (MessageCell*) cell item: (BubbleItem*) item {
-    if ([item.cellIdentifier isEqualToString: [TextMessageCell reuseIdentifier]]) {
-        [self configureTextSection: ((TextMessageCell*)cell).textSection item: item];
-    } else if ([item.cellIdentifier isEqualToString: [ImageAttachmentMessageCell reuseIdentifier]]) {
-        [self configureImageAttachmentSection: ((ImageAttachmentMessageCell*)cell).imageAttachmentSection item: item];
-    } else if ([item.cellIdentifier isEqualToString: [GenericAttachmentMessageCell reuseIdentifier]]) {
-        [self configureGenericAttachmentSection: ((GenericAttachmentMessageCell*)cell).genericAttachmentSection item: item];
+    for (MessageSection * section in cell.sections) {
+        if ([section isKindOfClass: [TextSection class]]) {
+            [self configureTextSection: (TextSection*)section item: item];
+        } else if ([section isKindOfClass: [ImageAttachmentSection class]]) {
+            [self configureImageAttachmentSection: (ImageAttachmentSection*)section item: item];
+        } else if ([section isKindOfClass: [GenericAttachmentSection class]]) {
+            [self configureGenericAttachmentSection: (GenericAttachmentSection*)section item: item];
+        }
     }
 }
 

@@ -9,6 +9,8 @@
 #import "MessageSection.h"
 #import "MessageCell.h"
 
+extern CGFloat kHXOGridSpacing;
+
 @implementation MessageSection
 
 - (id)initWithFrame:(CGRect)frame
@@ -32,12 +34,12 @@
 
 - (UIBezierPath*) bubblePath {
     CGRect frame = self.bounds;
-    frame.size.width -= self.cell.gridSpacing;
+    frame.size.width -= kHXOGridSpacing;
     if (self.position == HXOSectionPositionSingle || self.position == HXOSectionPositionLast) {
         if (self.cell.messageDirection == HXOMessageDirectionIncoming) {
             return [self leftPointingBubblePathInRect: frame];
         } else {
-            frame.origin.x += self.cell.gridSpacing;
+            frame.origin.x += kHXOGridSpacing;
             return [self rightPointingBubblePathInRect: frame];
         }
     } else {
@@ -91,6 +93,7 @@
 }
 
 - (void) messageDirectionDidChange {
+    [self setNeedsDisplay];
 }
 
 @end

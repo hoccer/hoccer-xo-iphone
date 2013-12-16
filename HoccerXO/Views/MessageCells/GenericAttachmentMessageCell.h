@@ -12,6 +12,4 @@
 
 @interface GenericAttachmentMessageCell : MessageCell
 
-@property (nonatomic,readonly) GenericAttachmentSection * genericAttachmentSection;
-
 @end

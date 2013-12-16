@@ -9,8 +9,9 @@
 #import "TextMessageCell.h"
 #import "TextSection.h"
 
-@interface TextMessageCell ()
+extern CGFloat kHXOGridSpacing;
 
+@interface TextMessageCell ()
 
 @end
 
@@ -19,12 +20,7 @@
 - (void) commonInit {
     [super commonInit];
 
-    _textSection = [[TextSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
-    [self addSection: _textSection];
-}
-
-- (HXOLinkyLabel*) label {
-    return self.textSection.label;
+    [self addSection: [[TextSection alloc] initWithFrame:CGRectMake(0, 0, self.bubbleWidth, 5 * kHXOGridSpacing)]];
 }
 
 @end

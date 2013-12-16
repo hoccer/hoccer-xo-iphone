@@ -96,6 +96,7 @@
 		634B47051796EA3E001C1C0D /* chatbar_icon-send.png in Resources */ = {isa = PBXBuildFile; fileRef = 634B47031796EA3D001C1C0D /* chatbar_icon-send.png */; };
 		634B47061796EA3E001C1C0D /* chatbar_icon-send@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 634B47041796EA3D001C1C0D /* chatbar_icon-send@2x.png */; };
 		634B474C1798B07F001C1C0D /* HXOProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 634B474B1798B07F001C1C0D /* HXOProgressView.m */; };
+		634BE1BE185C9B2B00B2DF05 /* HXOUpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		636492CF1711CDAB00E35514 /* icon_profile-name.png in Resources */ = {isa = PBXBuildFile; fileRef = 636492CD1711CDAB00E35514 /* icon_profile-name.png */; };
 		636492D01711CDAB00E35514 /* icon_profile-name@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 636492CE1711CDAB00E35514 /* icon_profile-name@2x.png */; };
@@ -123,6 +124,8 @@
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
 		636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */; };
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
+		63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */; };
+		63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */; };
 		6374B819174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */; };
 		6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6374B822174D0F6900506EE9 /* GroupMemberCell.m */; };
 		637847A516F24E5700DE03C2 /* conversation_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847A416F24E5700DE03C2 /* conversation_cell_bg@2x.png */; };
@@ -625,6 +628,8 @@
 		634B47041796EA3D001C1C0D /* chatbar_icon-send@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_icon-send@2x.png"; sourceTree = "<group>"; };
 		634B474A1798B07F001C1C0D /* HXOProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOProgressView.h; sourceTree = "<group>"; };
 		634B474B1798B07F001C1C0D /* HXOProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOProgressView.m; sourceTree = "<group>"; };
+		634BE1BC185C9B2B00B2DF05 /* HXOUpDownLoadControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOUpDownLoadControl.h; sourceTree = "<group>"; };
+		634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUpDownLoadControl.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
 		636492CD1711CDAB00E35514 /* icon_profile-name.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-name.png"; sourceTree = "<group>"; };
@@ -661,6 +666,10 @@
 		636D4006171072CD00304EDF /* HXOUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUserDefaults.m; sourceTree = "<group>"; };
 		636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HXOUserDefaultsDefaults.plist; sourceTree = "<group>"; };
 		636D400A171081AB00304EDF /* Environment.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Environment.plist; sourceTree = "<group>"; };
+		63716BB0185CC8C90094987D /* ImageAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
+		63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
+		63716BBB185CCEE60094987D /* GenericAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
+		63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupMemberCell_iPhone.xib; sourceTree = "<group>"; };
 		6374B821174D0F6900506EE9 /* GroupMemberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberCell.h; sourceTree = "<group>"; };
 		6374B822174D0F6900506EE9 /* GroupMemberCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberCell.m; sourceTree = "<group>"; };
@@ -1235,6 +1244,8 @@
 				633A9B27177B3BA900E066EF /* HXOSheetView.m */,
 				E9A619DC17DF6E3700D4CFC3 /* CopyableUITextField.h */,
 				E9A619DD17DF6E3700D4CFC3 /* CopyableUITextField.m */,
+				634BE1BC185C9B2B00B2DF05 /* HXOUpDownLoadControl.h */,
+				634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -1432,10 +1443,14 @@
 				63808A34185A27730001AC96 /* GenericAttachmentMessageCell.m */,
 				63808A30185A25B10001AC96 /* GenericAttachmentSection.h */,
 				63808A31185A25B10001AC96 /* GenericAttachmentSection.m */,
+				63716BBB185CCEE60094987D /* GenericAttachmentWithTextMessageCell.h */,
+				63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */,
 				63808A271859426B0001AC96 /* ImageAttachmentMessageCell.h */,
 				63808A281859426B0001AC96 /* ImageAttachmentMessageCell.m */,
 				63808A2A185942D20001AC96 /* ImageAttachmentSection.h */,
 				63808A2B185942D20001AC96 /* ImageAttachmentSection.m */,
+				63716BB0185CC8C90094987D /* ImageAttachmentWithTextMessageCell.h */,
+				63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */,
 				6343B4E316CD604700B3A29E /* MessageCell.h */,
 				6343B4E416CD604700B3A29E /* MessageCell.m */,
 				63808A1E1858A6F90001AC96 /* MessageSection.h */,
@@ -2636,6 +2651,7 @@
 				E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */,
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
+				63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
 				63B217901821272B00C057D9 /* ChatBar.m in Sources */,
@@ -2650,6 +2666,7 @@
 				E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */,
 				E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */,
 				E9D1145817316DCC00737EF7 /* StartupViewController.m in Sources */,
+				63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */,
 				E9D1145E1732E74000737EF7 /* Vcard.m in Sources */,
 				E9D1148A1736702E00737EF7 /* GCHTTPRequestOperation.m in Sources */,
 				E9D1148B1736702E00737EF7 /* GCImageRequestOperation.m in Sources */,
@@ -2660,6 +2677,7 @@
 				E9D1148F1736702E00737EF7 /* GCNetworkRequest.m in Sources */,
 				E9D114901736702E00737EF7 /* GCXMLRequestOperation.m in Sources */,
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
+				634BE1BE185C9B2B00B2DF05 /* HXOUpDownLoadControl.m in Sources */,
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,

@@ -9,19 +9,12 @@
 #import "ImageAttachmentMessageCell.h"
 #import "ImageAttachmentSection.h"
 
-@interface ImageAttachmentMessageCell ()
-
-
-@end
-
 @implementation ImageAttachmentMessageCell
 
 - (void) commonInit {
     [super commonInit];
-
-    _imageAttachmentSection = [[ImageAttachmentSection alloc] initWithFrame:CGRectMake(0, self.gridSpacing, self.bubbleWidth, 5 * self.gridSpacing)];
-    [self addSection: self.imageAttachmentSection];
+    _imageSection = [[ImageAttachmentSection alloc] initWithFrame:CGRectMake(0, 0, self.bubbleWidth, 0)];
+    [self addSection: self.imageSection];
 }
-
 
 @end

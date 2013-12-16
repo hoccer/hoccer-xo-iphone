@@ -8,9 +8,13 @@
 
 #import "MessageSection.h"
 
+@class HXOUpDownLoadControl;
+
 @interface AttachmentSection : MessageSection
 
 @property (nonatomic,readonly) UILabel * subtitle;
-@property (nonatomic,readonly) UIProgressView * progressView;
+@property (nonatomic,readonly) HXOUpDownLoadControl * upDownLoadControl;
+
+- (CGRect) attachmentControlFrame;
 
 @end

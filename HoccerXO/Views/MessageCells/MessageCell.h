@@ -30,18 +30,16 @@
 // TODO: clean up this mess
 @property (weak, nonatomic) NSFetchedResultsController *      fetchedResultsController;
 
-@property (nonatomic,readonly) UILabel *           subtitle;
-@property (nonatomic,readonly) UIButton *          avatar;
-@property (nonatomic,assign)   HXOMessageDirection messageDirection;
-@property (nonatomic,readonly) NSMutableArray *    sections;
-@property (nonatomic,assign) HXOBubbleColorScheme    colorScheme;
-@property (nonatomic,readonly) CGFloat bubbleWidth;
-@property (nonatomic,readonly) CGFloat gridSpacing;
+@property (nonatomic,readonly) UILabel *             subtitle;
+@property (nonatomic,readonly) UIButton *            avatar;
+@property (nonatomic,assign)   HXOMessageDirection   messageDirection;
+@property (nonatomic,readonly) NSMutableArray *      sections;
+@property (nonatomic,assign)   HXOBubbleColorScheme  colorScheme;
+@property (nonatomic,readonly) CGFloat               bubbleWidth;
 
 
 - (void) commonInit;
 - (void) addSection: (MessageSection*) section;
-//- (CGFloat) calculateHeightForWidth: (CGFloat) width;
 - (UIColor*) fillColor;
 - (UIColor*) textColor;
 - (UIColor*) subtitleColor;
