@@ -1620,7 +1620,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (NSString*) attachmentSubtitle: (Attachment*) attachment {
     NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
     NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
-    return [NSString stringWithFormat: @"%@ – %@", name, fileSize];
+    NSString * sizeString;
+    if ([attachment.contentSize longLongValue] == [attachment.transferSize longLongValue]) {
+        sizeString = fileSize;
+    } else {
+        NSString * currentSize = [NSByteCountFormatter stringFromByteCount: [attachment.transferSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
+        sizeString = [NSString stringWithFormat: @"%@ / %@", currentSize, fileSize];
+    }
+    return [NSString stringWithFormat: @"%@ – %@", name, sizeString];
 }
 
 - (UIImage*) typeIconForAttachment: (Attachment*) attachment {
@@ -2112,6 +2119,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     AttachmentSection * section = [self getSectionForAttachment: attachment];
     if (section) {
         [self configureUpDownLoadControl: section.upDownLoadControl attachment: attachment];
+        section.subtitle.text = [self attachmentSubtitle: attachment];
     }
 }
 
@@ -2119,7 +2127,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     AttachmentSection * section = [self getSectionForAttachment: attachment];
     if (section) {
         [self configureUpDownLoadControl: section.upDownLoadControl attachment: attachment];
-
+        section.subtitle.text = [self attachmentSubtitle: attachment];
     }
 }
 
@@ -2127,7 +2135,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     AttachmentSection * section = [self getSectionForAttachment: attachment];
     if (section) {
         [self configureUpDownLoadControl: section.upDownLoadControl attachment: attachment];
-
+        section.subtitle.text = [self attachmentSubtitle: attachment];
     }
 
 }
@@ -2136,6 +2144,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     AttachmentSection * section = [self getSectionForAttachment: attachment];
     if (section) {
         [section.upDownLoadControl setProgress: theProgress animated: YES];
+        section.subtitle.text = [self attachmentSubtitle: attachment];
     }
 }
 
