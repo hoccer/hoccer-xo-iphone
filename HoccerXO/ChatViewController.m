@@ -1539,8 +1539,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     if (indexPath) {
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: indexPath];
         if (message && message.attachment) {
-            NSLog(@"toggle");
-
             if (message.attachment.state == kAttachmentTransfering ||
                 message.attachment.state == kAttachmentWantsTransfer) {
                 [message.attachment pauseTransfer];
@@ -1553,6 +1551,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             } else if (message.attachment.state == kAttachmentTransferPaused) {
                 [message.attachment unpauseTransfer];
             }
+            [self configureUpDownLoadControl: section.upDownLoadControl attachment: message.attachment];
         }
     }
 }
@@ -1642,7 +1641,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
             iconName = @"cnt-music";
         }
     }
-    return [UIImage imageNamed: iconName];
+    UIImage * icon = [UIImage imageNamed: iconName];
+    return [icon imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate];
 }
 
 - (BOOL) attachmentIsActive: (Attachment*) attachment {
@@ -1655,7 +1655,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
             return NO;
     }
 }
-
 
 - (NSString*) attachmentTitle: (HXOMessage*) message {
     Attachment * attachment = message.attachment;

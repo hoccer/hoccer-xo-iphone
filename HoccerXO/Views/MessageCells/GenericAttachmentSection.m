@@ -24,6 +24,7 @@ extern CGFloat kHXOGridSpacing;
     self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 
     _icon = [[UIImageView alloc] initWithFrame: [self attachmentControlFrame]];
+    self.icon.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self addSubview: self.icon];
 
     self.subtitle.frame = CGRectMake(2 * kHXOGridSpacing, 24, self.bounds.size.width - 9 * kHXOGridSpacing, 16);
@@ -39,6 +40,8 @@ extern CGFloat kHXOGridSpacing;
 - (void) colorSchemeDidChange {
     self.title.textColor = [self.cell textColor];
     self.subtitle.textColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? [UIColor lightGrayColor] : [UIColor whiteColor];
+
+    self.icon.tintColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? [UIColor blueColor] : [UIColor whiteColor];
 }
 
 - (CGRect) attachmentControlFrame {
