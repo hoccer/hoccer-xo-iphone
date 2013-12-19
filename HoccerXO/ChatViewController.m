@@ -1031,6 +1031,15 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 return;
             }
         }
+        if (message.attachment.state == kAttachmentTransferPaused) {
+            [message.attachment unpauseTransfer];
+            return;
+        }
+        if (message.attachment.state == kAttachmentTransfering ||
+            message.attachment.state == kAttachmentWantsTransfer) {
+            [message.attachment pauseTransfer];
+            return;
+        }
         [self presentViewForAttachment: message.attachment];
     }
 }
