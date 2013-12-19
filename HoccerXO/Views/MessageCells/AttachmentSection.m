@@ -16,7 +16,8 @@
     [super commonInit];
 
     _subtitle = [[UILabel alloc] init];
-    _subtitle.textColor = [UIColor blueColor];
+    self.subtitle.textColor = [UIColor blueColor];
+    self.subtitle.lineBreakMode = NSLineBreakByTruncatingMiddle;
     [self addSubview: self.subtitle];
 
     _upDownLoadControl = [[HXOUpDownLoadControl alloc] initWithFrame: [self attachmentControlFrame]];

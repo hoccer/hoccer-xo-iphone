@@ -36,7 +36,7 @@
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 
 // TODO: clean up this mess
-@property (weak, nonatomic) NSFetchedResultsController *      fetchedResultsController;
+//@property (weak, nonatomic) NSFetchedResultsController *      fetchedResultsController;
 
 @property (nonatomic,readonly) UILabel *             subtitle;
 @property (nonatomic,readonly) UIButton *            avatar;

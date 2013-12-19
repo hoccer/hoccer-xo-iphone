@@ -11,5 +11,6 @@
 @interface GenericAttachmentSection : AttachmentSection
 
 @property (nonatomic,readonly) UILabel * title;
+@property (nonatomic,readonly) UIImageView * icon;
 
 @end

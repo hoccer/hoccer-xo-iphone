@@ -1367,6 +1367,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message {
 
+    cell.delegate = self;
+
     if ([self viewIsVisible]){
         if ([message.isRead isEqualToNumber: @NO]) {
             // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
@@ -1395,7 +1397,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 /*
     //NSLog(@"configureCell forMessage: %@", message.body);
 
-    cell.delegate = self;
     // TODO: clean up this shit...
     cell.fetchedResultsController = self.fetchedResultsController;
 
@@ -1438,19 +1439,58 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [section.upDownLoadControl addTarget: self action: @selector(didToggleTransfer:) forControlEvents: UIControlEventTouchUpInside];
     [self configureUpDownLoadControl: section.upDownLoadControl attachment: message.attachment];
 
+    section.subtitle.text = [self attachmentSubtitle: message.attachment];
+
 }
 
 - (void) configureUpDownLoadControl: (HXOUpDownLoadControl*) upDownLoadControl attachment: (Attachment*) attachment{
     upDownLoadControl.hidden = attachment.available && attachment.state == kAttachmentTransfered;
     BOOL isActive = [self attachmentIsActive: attachment];
     upDownLoadControl.selected = isActive;
-    if (isActive) {
-
-    }
 }
 
 - (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
+
+    if (message.attachment.state == kAttachmentTransfered) {
+        section.icon.hidden = NO;
+        section.icon.image = [self typeIconForAttachment: message.attachment];
+    } else {
+        section.icon.hidden = YES;
+    }
+
+    NSString * title = message.attachment.humanReadableFileName;
+    if (title == nil || [title isEqualToString: @""]) {
+
+    }
+    section.title.text = [self attachmentTitle: message];
+}
+
+- (NSString*) attachmentSubtitle: (Attachment*) attachment {
+    NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
+    NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
+   return [NSString stringWithFormat: @"%@ – %@", name, fileSize];
+}
+
+- (UIImage*) typeIconForAttachment: (Attachment*) attachment {
+    NSString * iconName;
+    if ([attachment.mediaType isEqualToString: @"image"]) {
+        iconName = @"cnt-photo";
+    } else if ([attachment.mediaType isEqualToString: @"video"]) {
+        iconName = @"cnt-video";
+    }  else if ([attachment.mediaType isEqualToString: @"vcard"]) {
+        iconName = @"cnt-contact";
+    }  else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
+        iconName = @"cnt-location";
+    }  else if ([attachment.mediaType isEqualToString: @"audio"]) {
+        NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
+        if (findResult.length == @"recording".length && findResult.location == 0) {
+            iconName = @"cnt-record";
+        } else {
+            iconName = @"cnt-music";
+        }
+    }
+    return [UIImage imageNamed: iconName];
 }
 
 - (BOOL) attachmentIsActive: (Attachment*) attachment {
@@ -1483,6 +1523,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                         } else {
                             section.image = nil;
                         }
+                        section.subtitle.hidden = section.image != nil;
                     }
                 }
             } else {
@@ -1495,43 +1536,12 @@ static const CGFloat    kSectionHeaderHeight = 40;
         } else {
             section.image = nil;
         }
+        section.subtitle.hidden = section.image != nil;
     }
 
 /*
 
-    message.attachment.progressIndicatorDelegate = (CrappyAttachmentMessageCell*) cell;
-
-
-//    cell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
-
     cell.runButtonStyle = [message.attachment.mediaType isEqualToString: @"video"] ? HXOBubbleRunButtonPlay : HXOBubbleRunButtonNone;
-
-    NSString * smallIconName;
-    NSString * largeIconName;
-    if ([message.attachment.mediaType isEqualToString: @"image"]) {
-        //smallIconName = @"attachment_icon_s_image";
-        largeIconName = @"cnt-photo";
-    } else if ([message.attachment.mediaType isEqualToString: @"video"]) {
-        //smallIconName = @"attachment_icon_s_video";
-        largeIconName = @"cnt-video";
-    }  else if ([message.attachment.mediaType isEqualToString: @"vcard"]) {
-        //smallIconName = @"attachment_icon_s_contact";
-        largeIconName = @"cnt-contact";
-    }  else if ([message.attachment.mediaType isEqualToString: @"geolocation"]) {
-        //smallIconName = @"attachment_icon_s_location";
-        largeIconName = @"cnt-location";
-    }  else if ([message.attachment.mediaType isEqualToString: @"audio"]) {
-        NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
-        if (findResult.length == @"recording".length && findResult.location == 0) {
-            //smallIconName = @"attachment_icon_s_voice";
-            largeIconName = @"cnt-record";
-        } else {
-            //smallIconName = @"attachment_icon_s_music";
-            largeIconName = @"cnt-music";
-        }
-    }
-    cell.smallAttachmentTypeIcon = [UIImage imageNamed: smallIconName];
-    cell.largeAttachmentTypeIcon = [UIImage imageNamed: largeIconName];
 
     cell.attachmentTitle.attributedText = [self attributedAttachmentTitle: message];
 
@@ -1638,7 +1648,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }
 }
 
-- (NSAttributedString*) attributedAttachmentTitle: (HXOMessage*) message {
+- (NSString*) attachmentTitle: (HXOMessage*) message {
     Attachment * attachment = message.attachment;
     BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
@@ -1648,7 +1658,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     // TODO: some of this stuff is quite expensive: reading vcards, loading audio metadata, &c.
     // It is probably a good idea to cache the attachment titles in the database.
-    NSMutableAttributedString * attributedTitle;
+    NSString * title;
     if (isComplete || isOutgoing) {
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
             if (attachment.localURL != nil) {
@@ -1658,21 +1668,20 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     if (name == nil) {
                         name = @"?";
                     }
-                    attributedTitle = [[NSMutableAttributedString alloc] initWithString:name ];
+                    title = name;
                 }
             } else {
-                attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"vcard_default_title", nil)];
+                title = NSLocalizedString(@"vcard_default_title", nil);
             }
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
-            attributedTitle = [[NSMutableAttributedString alloc] initWithString: NSLocalizedString(@"location_default_title", nil)];
+            title = NSLocalizedString(@"location_default_title", nil);
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
             NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
             if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
                 AVURLAsset *asset = [AVURLAsset URLAssetWithURL:attachment.contentURL options:nil];
                 NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
                 NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
-                NSString * title;
-                
+
                 if (titles.count > 0 && artists.count > 0) {
                     AVMetadataItem * titleItem = titles[0];
                     AVMetadataItem * artistItem = artists[0];
@@ -1684,48 +1693,21 @@ static const CGFloat    kSectionHeaderHeight = 40;
                     AVMetadataItem * artistItem = artists[0];
                     title = artistItem.stringValue;
                 }
-                if (title != nil) {
-                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-                }
-                // NSLog(@"Title=%@", title);
             }
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
         NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [message.attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
         NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(message.attachment.mediaType, nil);
-        NSString * title = [NSString stringWithFormat: @"%@ [%@]", name, fileSize];
-        attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
+        title = [NSString stringWithFormat: @"%@ [%@]", name, fileSize];
     }
 
-    if (attributedTitle == nil) {
-        NSString * title = attachment.humanReadableFileName;
-        if (title != nil) {
-            if ( ! isOutgoing && ! isComplete) {
-                NSDictionary * attributes = @{NSForegroundColorAttributeName: grey};
-                attributedTitle = [[NSMutableAttributedString alloc] initWithString: title attributes: attributes];
-                attributed = YES;
-            } else {
-                NSString * fileExtension = [title pathExtension];
-                if ( ! [fileExtension isEqualToString: @""]) {
-                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-                    NSRange preRange = NSMakeRange(0,title.length - fileExtension.length);
-                    NSRange range = NSMakeRange(title.length - (fileExtension.length + 1), fileExtension.length + 1);
-                    [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor whiteColor] range: preRange];
-                    [attributedTitle addAttribute: NSForegroundColorAttributeName value: grey range: range];
-                    attributed = YES;
-                } else {
-                    attributedTitle = [[NSMutableAttributedString alloc] initWithString: title];
-                }
-            }
-        }
+    if (title == nil) {
+        title = attachment.humanReadableFileName;
     }
-    if (!attributed) {
-        [attributedTitle addAttribute: NSForegroundColorAttributeName value: [UIColor whiteColor] range: NSMakeRange(0,attributedTitle.length)];
-    }
-    return attributedTitle;
+    return title;
 }
 
-
+/*
 - (void) tableView: (UITableView*) table didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     // NSLog(@"didEndDisplayingCell %@ %@",cell, indexPath);
     if ([cell isKindOfClass:[MessageCell class]]) {
@@ -1743,6 +1725,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
         }
     }
 }
+ */
 
 #pragma mark - MessageViewControllerDelegate methods
 
