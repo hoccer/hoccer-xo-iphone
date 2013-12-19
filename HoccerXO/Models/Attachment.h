@@ -121,6 +121,9 @@ typedef enum AttachmentStates {
 - (void) download;
 - (void) downloadOnTimer: (NSTimer*) theTimer;
 - (void) uploadOnTimer: (NSTimer*) theTimer;
+    
+- (void) pauseTransfer;
+- (void) unpauseTransfer;
 
 - (void) makeImageAttachment:(NSString *)theURL anOtherURL:(NSString *)otherURL image:(UIImage*)theImage withCompletion:(CompletionBlock)completion;
 - (void) makeVideoAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;

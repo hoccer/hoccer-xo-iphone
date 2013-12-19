@@ -133,6 +133,8 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 - (void) enqueueUploadOfAttachment:(Attachment*) theAttachment;
 - (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment;
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment;
+    
+- (void) checkTransferQueues;
 
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;

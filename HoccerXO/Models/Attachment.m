@@ -1219,6 +1219,25 @@ NSArray * TransferStateName = @[@"detached",
     }
     [self download];
 }
+    
+- (void) pauseTransfer {
+    if (self.transferPaused == nil && self.state >= kAttachmentTransfering && self.state <= kAttachmentWantsTransfer) {
+        if (_transferConnection != nil) {
+            [_transferConnection cancel];
+            _transferConnection = nil;
+        }
+        NSLog(@"pausedTransfer transfer, cipherTransferSize=%@, cipheredSize=%@",self.cipherTransferSize,self.cipheredSize);
+        self.transferPaused = [[NSDate alloc] init];
+    }
+}
+
+- (void) unpauseTransfer {
+    NSLog(@"unpausedTransfer");
+    if (self.transferPaused != nil) {
+        self.transferPaused = nil;
+        [self.chatBackend checkTransferQueues];
+    }
+}
 
 - (void) uploadOnTimer: (NSTimer*) theTimer {
     if (theTimer != _transferRetryTimer) {

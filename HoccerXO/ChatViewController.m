@@ -1030,6 +1030,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
+
     if (message.attachment.available) {
         [self presentViewForAttachment: message.attachment];
     }
@@ -1466,44 +1467,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     section.title.text = [self attachmentTitle: message];
 }
 
-- (NSString*) attachmentSubtitle: (Attachment*) attachment {
-    NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
-    NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
-   return [NSString stringWithFormat: @"%@ – %@", name, fileSize];
-}
-
-- (UIImage*) typeIconForAttachment: (Attachment*) attachment {
-    NSString * iconName;
-    if ([attachment.mediaType isEqualToString: @"image"]) {
-        iconName = @"cnt-photo";
-    } else if ([attachment.mediaType isEqualToString: @"video"]) {
-        iconName = @"cnt-video";
-    }  else if ([attachment.mediaType isEqualToString: @"vcard"]) {
-        iconName = @"cnt-contact";
-    }  else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
-        iconName = @"cnt-location";
-    }  else if ([attachment.mediaType isEqualToString: @"audio"]) {
-        NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
-        if (findResult.length == @"recording".length && findResult.location == 0) {
-            iconName = @"cnt-record";
-        } else {
-            iconName = @"cnt-music";
-        }
-    }
-    return [UIImage imageNamed: iconName];
-}
-
-- (BOOL) attachmentIsActive: (Attachment*) attachment {
-    switch (attachment.state) {
-        case kAttachmentTransfering:
-        case kAttachmentTransferScheduled:
-        case kAttachmentWantsTransfer:
-            return YES;
-        default:
-            return NO;
-    }
-}
-
 - (void) configureImageAttachmentSection: (ImageAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
     section.imageAspect = message.attachment.aspectRatio;
@@ -1566,6 +1529,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
  */
 }
 
+
+
+
 - (void) didToggleTransfer: (id) sender {
     // XXX hackish
     AttachmentSection * section = (AttachmentSection*)[sender superview];
@@ -1574,14 +1540,18 @@ static const CGFloat    kSectionHeaderHeight = 40;
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: indexPath];
         if (message && message.attachment) {
             NSLog(@"toggle");
-            if ([self attachmentIsActive: message.attachment]) {
-                //[message.attachment pauseTransfer];
-            } else {
+
+            if (message.attachment.state == kAttachmentTransfering ||
+                message.attachment.state == kAttachmentWantsTransfer) {
+                [message.attachment pauseTransfer];
+            } else if (message.attachment.state == kAttachmentTransferOnHold) {
                 if (message.isOutgoing.boolValue) {
                     [message.attachment upload];
                 } else {
                     [message.attachment download];
                 }
+            } else if (message.attachment.state == kAttachmentTransferPaused) {
+                [message.attachment unpauseTransfer];
             }
         }
     }
@@ -1648,13 +1618,49 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }
 }
 
+- (NSString*) attachmentSubtitle: (Attachment*) attachment {
+    NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
+    NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
+    return [NSString stringWithFormat: @"%@ – %@", name, fileSize];
+}
+
+- (UIImage*) typeIconForAttachment: (Attachment*) attachment {
+    NSString * iconName;
+    if ([attachment.mediaType isEqualToString: @"image"]) {
+        iconName = @"cnt-photo";
+    } else if ([attachment.mediaType isEqualToString: @"video"]) {
+        iconName = @"cnt-video";
+    }  else if ([attachment.mediaType isEqualToString: @"vcard"]) {
+        iconName = @"cnt-contact";
+    }  else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
+        iconName = @"cnt-location";
+    }  else if ([attachment.mediaType isEqualToString: @"audio"]) {
+        NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
+        if (findResult.length == @"recording".length && findResult.location == 0) {
+            iconName = @"cnt-record";
+        } else {
+            iconName = @"cnt-music";
+        }
+    }
+    return [UIImage imageNamed: iconName];
+}
+
+- (BOOL) attachmentIsActive: (Attachment*) attachment {
+    switch (attachment.state) {
+        case kAttachmentTransfering:
+        case kAttachmentTransferScheduled:
+        case kAttachmentWantsTransfer:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
+
 - (NSString*) attachmentTitle: (HXOMessage*) message {
     Attachment * attachment = message.attachment;
     BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
-    UIColor * grey = [UIColor colorWithWhite: 0.5 alpha: 1.0];
-    BOOL attributed = NO;
-
 
     // TODO: some of this stuff is quite expensive: reading vcards, loading audio metadata, &c.
     // It is probably a good idea to cache the attachment titles in the database.
