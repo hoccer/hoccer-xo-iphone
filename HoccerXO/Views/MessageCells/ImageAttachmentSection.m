@@ -21,7 +21,7 @@ extern CGFloat kHXOGridSpacing;
     self.subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.subtitle.frame = CGRectMake(0, self.bounds.size.height - 40, self.bounds.size.width, 40);
 
-    self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -34,11 +34,26 @@ extern CGFloat kHXOGridSpacing;
         [self.image drawInRect: path.bounds];
         CGContextRestoreGState(context);
         if (self.cell.colorScheme == HXOBubbleColorSchemeFailed) {
-            [[UIColor colorWithRed: 1.0 green: 0.0 blue: 0.0 alpha: 0.5] setFill];
+            [[UIColor colorWithRed: 1.0 green: 0.0 blue: 0.0 alpha: 0.8] setFill];
             [path fill];
         }
     } else {
         [super drawRect:rect];
+    }
+
+    if (self.showPlayButton) {
+        CGRect frame = [self attachmentControlFrame];
+        UIBezierPath* playPath = [UIBezierPath bezierPathWithOvalInRect: frame];
+        [playPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43403 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.32986 * CGRectGetHeight(frame))];
+        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.64236 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.49653 * CGRectGetHeight(frame))];
+        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43403 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.65625 * CGRectGetHeight(frame))];
+        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43403 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.32986 * CGRectGetHeight(frame))];
+        [playPath closePath];
+
+        [[UIColor colorWithWhite: 1.0 alpha: 0.5] setStroke];
+        playPath.lineWidth = 1.5;
+        playPath.lineJoinStyle = kCGLineJoinRound;
+        [playPath strokeWithBlendMode: kCGBlendModeNormal alpha: 1.0];
     }
 }
 
@@ -52,8 +67,10 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (CGRect) attachmentControlFrame {
-    CGFloat d = 0.25 * self.bounds.size.width;
-    return CGRectInset(self.bounds, d, d);
+    CGFloat s = 9 * kHXOGridSpacing;
+    CGFloat x = 0.5 * (self.bounds.size.width - s);
+    CGFloat y = 0.5 * (self.bounds.size.height - s);
+    return CGRectMake(x, y, s, s);
 }
 
 @end

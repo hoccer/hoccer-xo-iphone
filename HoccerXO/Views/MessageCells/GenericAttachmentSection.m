@@ -41,7 +41,7 @@ extern CGFloat kHXOGridSpacing;
     self.title.textColor = [self.cell textColor];
     self.subtitle.textColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? [UIColor lightGrayColor] : [UIColor whiteColor];
 
-    self.icon.tintColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? [UIColor blueColor] : [UIColor whiteColor];
+    self.icon.tintColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? self.tintColor : [UIColor whiteColor];
 }
 
 - (CGRect) attachmentControlFrame {

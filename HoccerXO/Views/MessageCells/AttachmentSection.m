@@ -16,7 +16,7 @@
     [super commonInit];
 
     _subtitle = [[UILabel alloc] init];
-    self.subtitle.textColor = [UIColor blueColor];
+    self.subtitle.textColor = self.tintColor;
     self.subtitle.lineBreakMode = NSLineBreakByTruncatingMiddle;
     [self addSubview: self.subtitle];
 

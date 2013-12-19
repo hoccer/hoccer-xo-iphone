@@ -17,7 +17,7 @@ typedef enum HXOTransferDirections {
 
 @property (nonatomic,assign) CGFloat             progress;
 @property (nonatomic,assign) HXOTranserDirection transferDirection;
-@property (nonatomic,assign) CGFloat lineWidth;
+@property (nonatomic,assign) CGFloat             lineWidth;
 
 - (void) setProgress:(CGFloat)progress animated:(BOOL)animated;
 

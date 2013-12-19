@@ -1473,6 +1473,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     // current progress bar looks odd on images. As a workaround display outgoing images after transfer
     BOOL transferDone = message.attachment.state == kAttachmentTransfered;
+    BOOL isVideo = [message.attachment.mediaType isEqualToString: @"video"];
 
     if (message.attachment.previewImage == nil && message.attachment.available) {
         [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
@@ -1487,6 +1488,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
                             section.image = nil;
                         }
                         section.subtitle.hidden = section.image != nil;
+                        section.showPlayButton = isVideo && section.image != nil;
+
                     }
                 }
             } else {
@@ -1500,6 +1503,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             section.image = nil;
         }
         section.subtitle.hidden = section.image != nil;
+        section.showPlayButton = isVideo && section.image != nil;
     }
 
 /*

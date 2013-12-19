@@ -12,5 +12,6 @@
 
 @property (nonatomic,strong) UIImage * image;
 @property (nonatomic,assign) CGFloat   imageAspect;
+@property (nonatomic,assign) BOOL      showPlayButton;
 
 @end
