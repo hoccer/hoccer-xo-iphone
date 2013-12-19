@@ -21,7 +21,7 @@ extern CGFloat kHXOGridSpacing;
     self.subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.subtitle.frame = CGRectMake(0, self.bounds.size.height - 40, self.bounds.size.width, 40);
 
-    self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -52,7 +52,8 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (CGRect) attachmentControlFrame {
-    return self.bounds;
+    CGFloat d = 0.25 * self.bounds.size.width;
+    return CGRectInset(self.bounds, d, d);
 }
 
 @end

@@ -15,6 +15,7 @@
 @class HXOMessage;
 @class HXOBackend;
 @class CryptoEngine;
+@class Attachment;
 
 typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
@@ -41,10 +42,10 @@ typedef enum AttachmentStates {
 
 @protocol TransferProgressIndication <NSObject>
 
-- (void) showTransferProgress:(float) theProgress;
-- (void) transferStarted;
-- (void) transferFinished;
-- (void) transferScheduled;
+- (void) attachment: (Attachment*) attachment transferDidProgress:(float) theProgress;
+- (void) attachmentTransferStarted: (Attachment*) attachment;
+- (void) attachmentTransferFinished: (Attachment*) attachment;
+- (void) attachmentTransferScheduled: (Attachment*) attachment;
 
 @end
 
@@ -90,7 +91,7 @@ typedef enum AttachmentStates {
 
 @property (readonly, strong, nonatomic) HXOBackend *  chatBackend;
 
-@property (nonatomic, strong) id<TransferProgressIndication> progressIndicatorDelegate;
+@property (nonatomic, weak) id<TransferProgressIndication> progressIndicatorDelegate;
 
 @property (nonatomic, strong) CryptoEngine * decryptionEngine;
 @property (nonatomic, strong) CryptoEngine * encryptionEngine;
@@ -147,6 +148,6 @@ typedef enum AttachmentStates {
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;
 + (UIImage *) qualityAdjustedImage:(UIImage *)theFullImage;
 + (BOOL) tooLargeImage:(UIImage *)theFullImage;
-+( NSString*) getStateName:(AttachmentState)state;
++ (NSString*) getStateName:(AttachmentState)state;
 
 @end

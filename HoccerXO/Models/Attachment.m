@@ -7,6 +7,15 @@
 //
 
 #import "Attachment.h"
+
+#import <Foundation/NSURL.h>
+#import <MediaPlayer/MPMoviePlayerController.h>
+#import <MobileCoreServices/UTType.h>
+#import <MobileCoreServices/UTCoreTypes.h>
+#import <AVFoundation/AVAsset.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AddressBookUI/AddressBookUI.h>
+
 #import "HXOMessage.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
@@ -23,14 +32,6 @@
 #import "NSData+Base64.h"
 
 #import "NSString+StringWithData.h"
-
-#import <Foundation/NSURL.h>
-#import <MediaPlayer/MPMoviePlayerController.h>
-#import <MobileCoreServices/UTType.h>
-#import <MobileCoreServices/UTCoreTypes.h>
-#import <AVFoundation/AVAsset.h>
-#import <AVFoundation/AVFoundation.h>
-#import <AddressBookUI/AddressBookUI.h>
 
 #define TRANSFER_TRACE ([[self verbosityLevel]isEqualToString:@"moretrace"])
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"] || TRANSFER_TRACE)
@@ -108,14 +109,9 @@
 @synthesize didResume; // DEBUG
 @synthesize resumeSize; // DEBUG
 #endif
-
 - (void) setTransferRetryTimer:(NSTimer*) theTimer {
     if (theTimer.isValid) {
-        if (progressIndicatorDelegate) {
-            [progressIndicatorDelegate transferScheduled];
-        } else {
-            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:uploadData - no delegate for transferStarted");}
-        }
+        [self notifyTransferScheduled];
     }
     _transferRetryTimer = theTimer;
 }
@@ -845,11 +841,7 @@ NSArray * TransferStateName = @[@"detached",
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
-            if (progressIndicatorDelegate) {
-                [progressIndicatorDelegate transferStarted];
-            } else {
-                if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:uploadData - no delegate for transferStarted");}
-            }
+            [self notifyTransferStarted];
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
@@ -899,11 +891,7 @@ NSArray * TransferStateName = @[@"detached",
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
-            if (progressIndicatorDelegate) {
-                [progressIndicatorDelegate transferStarted];
-            } else {
-                NSLog(@"Attachment:withUploadStream - no delegate to signal transferStarted");
-            }
+            [self notifyTransferStarted];
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
@@ -1015,11 +1003,7 @@ NSArray * TransferStateName = @[@"detached",
         NSLog(@"Attachment:resumeUploadStreamFromPosition: upload has already been completed, fromPos=%@+1 == %@ (cipheredSize)", fromPos,self.cipheredSize);
         self.cipherTransferSize = self.cipheredSize;
         self.transferSize = self.contentSize;
-        if (progressIndicatorDelegate) {
-            [progressIndicatorDelegate transferFinished];
-        } else {
-            NSLog(@"Attachment:withUploadStream - no delegate to signal transferStarted");
-        }
+        [self notifyTransferFinished];
         [self.chatBackend uploadFinished:self];
         return;
     }
@@ -1053,11 +1037,7 @@ NSArray * TransferStateName = @[@"detached",
             self.cipherTransferSize = fromPos;
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
-            if (progressIndicatorDelegate) {
-                [progressIndicatorDelegate transferStarted];
-            } else {
-                NSLog(@"Attachment:withUploadStream - no delegate to signal transferStarted");
-            }
+            [self notifyTransferStarted];
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
@@ -1154,11 +1134,7 @@ NSArray * TransferStateName = @[@"detached",
 #endif
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
     [self registerBackgroundTask];
-    if (progressIndicatorDelegate) {
-        [progressIndicatorDelegate transferStarted];
-    } else {
-        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:download - no delegate for transferStarted");}
-    }
+    [self notifyTransferStarted];
 }
 
 - (void) download {
@@ -1232,11 +1208,7 @@ NSArray * TransferStateName = @[@"detached",
 
     self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self downloadDelegate]];
     [self registerBackgroundTask];
-    if (progressIndicatorDelegate) {
-        [progressIndicatorDelegate transferStarted];
-    } else {
-        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:download - no delegate for transferStarted");}
-    }
+    [self notifyTransferStarted];
 }
 
 - (void) downloadOnTimer: (NSTimer*) theTimer {
@@ -1688,11 +1660,7 @@ NSArray * TransferStateName = @[@"detached",
             
             self.transferSize = [Attachment fileSize: self.ownedURL withError:&myError];
             self.cipherTransferSize = [NSNumber numberWithLong:[self.cipherTransferSize longLongValue]+ data.length];
-            if (progressIndicatorDelegate) {
-                [progressIndicatorDelegate showTransferProgress: [self.transferSize floatValue] / [self.contentSize floatValue]];
-            } else {
-                if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"Attachment:didReceiveData - no delegate for showTransferProgress");}
-            }
+            [self notifyTransferProgress: [self.transferSize floatValue] / [self.contentSize floatValue]];
 #ifdef LET_DOWNLOAD_FAIL
             /// DEBUG: abort artificially
             NSInteger limit = [self.cipheredSize unsignedLongValue] - self.resumeSize/2 + 1000;
@@ -1735,12 +1703,7 @@ NSArray * TransferStateName = @[@"detached",
             return;
         }
 #endif
-        if (progressIndicatorDelegate) {
-            // [progressIndicatorDelegate showTransferProgress: (float)totalBytesWritten / (float) totalBytesExpectedToWrite];
-            [progressIndicatorDelegate showTransferProgress: [self.cipherTransferSize floatValue] / [self.cipheredSize floatValue]];
-        } else {
-            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"didSendBodyData - no delegate for showTransferProgress");}
-        }
+        [self notifyTransferProgress: [self.cipherTransferSize floatValue] / [self.cipheredSize floatValue]];
     } else {
         NSLog(@"ERROR: Attachment transferConnection didSendBodyData without valid connection");
     }
@@ -1752,11 +1715,7 @@ NSArray * TransferStateName = @[@"detached",
         NSLog(@"ERROR: Attachment transferConnection didFailWithError %@, url=%@", error, self.remoteURL);
         self.transferConnection = nil;
         self.transferError = error;
-        if (progressIndicatorDelegate) {
-            [progressIndicatorDelegate transferFinished];
-        } else {
-            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"didFailWithError - no delegate for transferFinished");}
-        }
+        [self notifyTransferFinished];
         if ([self.message.isOutgoing isEqualToNumber: @YES]) {
             [self.chatBackend uploadFailed:self];
         } else {
@@ -1859,11 +1818,7 @@ NSArray * TransferStateName = @[@"detached",
             }
         }
         [self unregisterBackgroundTask];
-        if (progressIndicatorDelegate) {
-            [progressIndicatorDelegate transferFinished];
-        } else {
-            if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"connectionDidFinishLoading - no delegate for transferFinished");}
-        }
+        [self notifyTransferFinished];
     } else {
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
     }
@@ -2024,6 +1979,39 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
     // remove from transfer queues
     [self.chatBackend dequeueDownloadOfAttachment:self];
     [self.chatBackend dequeueUploadOfAttachment:self];
+}
+
+
+- (void) notifyTransferScheduled {
+    if (progressIndicatorDelegate) {
+        [progressIndicatorDelegate attachmentTransferScheduled: self];
+    } else {
+        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"no delegate for attachmentTransferScheduled");}
+    }
+}
+
+- (void) notifyTransferStarted {
+    if (progressIndicatorDelegate) {
+        [progressIndicatorDelegate attachmentTransferStarted: self];
+    } else {
+        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"no delegate for attachmentTransferStarted");}
+    }
+}
+
+- (void) notifyTransferFinished {
+    if (progressIndicatorDelegate) {
+        [progressIndicatorDelegate attachmentTransferFinished: self];
+    } else {
+        NSLog(@"no delegate to signal attachmentTransferFinished");
+    }
+}
+
+- (void) notifyTransferProgress: (CGFloat) progress {
+    if (progressIndicatorDelegate) {
+        [progressIndicatorDelegate attachment: self transferDidProgress: progress];
+    } else {
+        if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"no delegate for transferDidProgress");}
+    }
 }
 
 @end

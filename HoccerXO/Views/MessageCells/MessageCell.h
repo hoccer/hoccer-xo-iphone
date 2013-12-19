@@ -12,6 +12,14 @@
 #import "MessageSection.h"
 
 @class MessageCell;
+@class AttachmentSection;
+
+@protocol AttachmentMessageCell <NSObject>
+
+@property (nonatomic,readonly) AttachmentSection* attachmentSection;
+
+@end
+
 
 @protocol MessageViewControllerDelegate <NSObject>
 

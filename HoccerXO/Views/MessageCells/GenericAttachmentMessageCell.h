@@ -10,6 +10,8 @@
 
 @class GenericAttachmentSection;
 
-@interface GenericAttachmentMessageCell : MessageCell
+@interface GenericAttachmentMessageCell : MessageCell <AttachmentMessageCell>
+
+@property (nonatomic,readonly) AttachmentSection* attachmentSection;
 
 @end

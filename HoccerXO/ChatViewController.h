@@ -14,11 +14,12 @@
 #import "HXOActionSheet.h"
 #import "HXOLinkyLabel.h"
 #import "HPGrowingTextView.h"
+#import "Attachment.h"
 
 @class HXOBackend;
 @class AVAssetExportSession;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,ActionSheetDelegate,HPGrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,ActionSheetDelegate,HPGrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate, TransferProgressIndication>
 {
     NSMutableDictionary        *resultsControllers;
 }

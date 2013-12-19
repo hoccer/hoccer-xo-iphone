@@ -26,7 +26,6 @@
 #import "UIViewController+HXOSideMenu.h"
 #import "MessageCell.h"
 #import "AutoheightLabel.h"
-#import "Attachment.h"
 #import "HXOUserDefaults.h"
 #import "ImageViewController.h"
 #import "UserProfile.h"
@@ -46,6 +45,7 @@
 #import "InsetImageView2.h"
 #import "ProfileViewController.h"
 #import "NickNameLabelWithStatus.h"
+#import "HXOUpDownLoadControl.h"
 
 #define ACTION_MENU_DEBUG NO
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -136,7 +136,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [self registerCellClass: [GenericAttachmentMessageCell class]];
     [self registerCellClass: [ImageAttachmentWithTextMessageCell class]];
     [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
-
 
     self.titleLabel = [[NickNameLabelWithStatus alloc] init];
     self.navigationItem.titleView = self.titleLabel;
@@ -1031,15 +1030,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
-    if (message.attachment != nil) {
-        if (![message.isOutgoing boolValue]) {
-            if (message.attachment.state == kAttachmentTransferOnHold) {
-                [message.attachment download];
-                return;
-            } else if (message.attachment.state != kAttachmentTransfered) {
-                return;
-            }
-        }
+    if (message.attachment.available) {
         [self presentViewForAttachment: message.attachment];
     }
 }
@@ -1048,7 +1039,8 @@ static const CGFloat    kSectionHeaderHeight = 40;
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     MessageCell * cell = [_cellPrototypes objectForKey: [self cellIdentifierForMessage: message]];
     [self configureCell: cell forMessage: message];
-    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;}
+    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
+}
 
 - (NSString*) cellIdentifierForMessage: (HXOMessage*) message {
     BOOL hasAttachment = message.attachment != nil;
@@ -1369,31 +1361,19 @@ static const CGFloat    kSectionHeaderHeight = 40;
     }
 }
 
-/*
-- (void) prepareLayoutOfCell: (MessageCell*) cell withMessage: (HXOMessage*) message {
-    if ([cell.reuseIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
-        CrappyTextMessageCell * textCell = (CrappyTextMessageCell*) cell;
-        textCell.label.text = message.body;
-    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
-        CrappyAttachmentMessageCell * attachmentCell = (CrappyAttachmentMessageCell*) cell;
-        attachmentCell.imageAspect = message.attachment.aspectRatio;
-        attachmentCell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
-
-    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
-        CrappyAttachmentWithTextMessageCell * doubleCell = (CrappyAttachmentWithTextMessageCell*) cell;
-        doubleCell.label.text = message.body;
-        doubleCell.imageAspect = message.attachment.aspectRatio;
-        doubleCell.attachmentStyle = [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"] ? HXOAttachmentStyleOriginalAspect : HXOAttachmentStyleThumbnail;
-
-    }
-}
- */
-
 - (BOOL) viewIsVisible {
     return self.isViewLoaded && self.view.window;
 }
 
 - (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message {
+
+    if ([self viewIsVisible]){
+        if ([message.isRead isEqualToNumber: @NO]) {
+            // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
+            message.isRead = @YES;
+            [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
+        }
+    }
 
     cell.colorScheme = [self colorSchemeForMessage: message];
     cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
@@ -1421,13 +1401,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     //[self prepareLayoutOfCell: cell withMessage: message];
 
-    if ([self viewIsVisible]){
-        if ([message.isRead isEqualToNumber: @NO]) {
-            // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
-            message.isRead = @YES;
-            [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
-        }
-    }
 
     cell.colorScheme = [self colorSchemeForMessage: message];
     cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
@@ -1461,15 +1434,42 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) configureAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message {
+    message.attachment.progressIndicatorDelegate = self;
+    [section.upDownLoadControl addTarget: self action: @selector(didToggleTransfer:) forControlEvents: UIControlEventTouchUpInside];
+    [self configureUpDownLoadControl: section.upDownLoadControl attachment: message.attachment];
+
+}
+
+- (void) configureUpDownLoadControl: (HXOUpDownLoadControl*) upDownLoadControl attachment: (Attachment*) attachment{
+    upDownLoadControl.hidden = attachment.available && attachment.state == kAttachmentTransfered;
+    BOOL isActive = [self attachmentIsActive: attachment];
+    upDownLoadControl.selected = isActive;
+    if (isActive) {
+
+    }
 }
 
 - (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
 }
 
+- (BOOL) attachmentIsActive: (Attachment*) attachment {
+    switch (attachment.state) {
+        case kAttachmentTransfering:
+        case kAttachmentTransferScheduled:
+        case kAttachmentWantsTransfer:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
 - (void) configureImageAttachmentSection: (ImageAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
     section.imageAspect = message.attachment.aspectRatio;
+
+    // current progress bar looks odd on images. As a workaround display outgoing images after transfer
+    BOOL transferDone = message.attachment.state == kAttachmentTransfered;
 
     if (message.attachment.previewImage == nil && message.attachment.available) {
         [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
@@ -1478,7 +1478,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
                 if (indexPath) {
                     ImageAttachmentSection * section = [((id)[self.tableView cellForRowAtIndexPath: indexPath]) imageSection];
                     if (section) {
-                        if (message.attachment.previewImage.size.height != 0) {
+                        if (message.attachment.previewImage.size.height != 0 && transferDone) {
                             section.image = message.attachment.previewImage;
                         } else {
                             section.image = nil;
@@ -1490,7 +1490,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
             }
         }];
     } else {
-        if (message.attachment.available && message.attachment.previewImage.size.height != 0) {
+        if (message.attachment.available && message.attachment.previewImage.size.height != 0 && transferDone) {
             section.image = message.attachment.previewImage;
         } else {
             section.image = nil;
@@ -1554,6 +1554,27 @@ static const CGFloat    kSectionHeaderHeight = 40;
         }
     }
  */
+}
+
+- (void) didToggleTransfer: (id) sender {
+    // XXX hackish
+    AttachmentSection * section = (AttachmentSection*)[sender superview];
+    NSIndexPath * indexPath = [self.tableView indexPathForCell: section.cell];
+    if (indexPath) {
+        HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: indexPath];
+        if (message && message.attachment) {
+            NSLog(@"toggle");
+            if ([self attachmentIsActive: message.attachment]) {
+                //[message.attachment pauseTransfer];
+            } else {
+                if (message.isOutgoing.boolValue) {
+                    [message.attachment upload];
+                } else {
+                    [message.attachment download];
+                }
+            }
+        }
+    }
 }
 
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
@@ -2089,5 +2110,45 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [alert show];
 }
 
+- (AttachmentSection*) getSectionForAttachment: (Attachment*) attachment {
+    NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: attachment.message];
+    if (indexPath) {
+        return ((id<AttachmentMessageCell>)[self.tableView cellForRowAtIndexPath: indexPath]).attachmentSection;
+    } else {
+        attachment.progressIndicatorDelegate = nil;
+    }
+    return nil;
+}
+
+- (void) attachmentTransferScheduled: (Attachment*) attachment {
+    AttachmentSection * section = [self getSectionForAttachment: attachment];
+    if (section) {
+        [self configureUpDownLoadControl: section.upDownLoadControl attachment: attachment];
+    }
+}
+
+- (void) attachmentTransferStarted:(Attachment *)attachment {
+    AttachmentSection * section = [self getSectionForAttachment: attachment];
+    if (section) {
+        [self configureUpDownLoadControl: section.upDownLoadControl attachment: attachment];
+
+    }
+}
+
+- (void) attachmentTransferFinished:(Attachment *)attachment {
+    AttachmentSection * section = [self getSectionForAttachment: attachment];
+    if (section) {
+        [self configureUpDownLoadControl: section.upDownLoadControl attachment: attachment];
+
+    }
+
+}
+
+- (void) attachment:(Attachment *)attachment transferDidProgress:(float)theProgress {
+    AttachmentSection * section = [self getSectionForAttachment: attachment];
+    if (section) {
+        [section.upDownLoadControl setProgress: theProgress animated: YES];
+    }
+}
 
 @end

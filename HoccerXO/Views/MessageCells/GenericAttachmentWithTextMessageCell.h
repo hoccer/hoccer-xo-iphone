@@ -8,6 +8,8 @@
 
 #import "MessageCell.h"
 
-@interface GenericAttachmentWithTextMessageCell : MessageCell
+@interface GenericAttachmentWithTextMessageCell : MessageCell <AttachmentMessageCell>
+
+@property (nonatomic,readonly) AttachmentSection* attachmentSection;
 
 @end

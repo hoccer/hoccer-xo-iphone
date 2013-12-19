@@ -18,11 +18,15 @@ extern CGFloat kHXOGridSpacing;
 - (void) commonInit {
     [super commonInit];
 
-    _imageSection = [[ImageAttachmentSection alloc] initWithFrame: CGRectMake(0, 0, self.bubbleWidth, 0)];
+    _imageSection = [[ImageAttachmentSection alloc] initWithFrame: CGRectMake(0, 0, self.bubbleWidth, self.bubbleWidth)];
 
     [self addSection: self.imageSection];
 
     [self addSection: [[TextSection alloc] initWithFrame:CGRectMake(0, 0, self.bubbleWidth, 5 * kHXOGridSpacing)]];
-
 }
+
+- (AttachmentSection*) attachmentSection {
+    return self.imageSection;
+}
+
 @end
