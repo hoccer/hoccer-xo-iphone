@@ -324,7 +324,7 @@ typedef enum ActionSheetTags {
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == alertView.cancelButtonIndex) {
-        ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_saftey_question", nil)
+        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_saftey_question", nil)
                                                             delegate: self
                                                    cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                               destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
@@ -338,7 +338,7 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // NSLog(@"button index %d", buttonIndex);
     if (actionSheet.tag == kActionSheetDeleteCredentials) {
         if (buttonIndex == actionSheet.cancelButtonIndex) {
@@ -912,7 +912,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) deleteContactPressed: (id) sender {
-    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
                                                         delegate: self
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                           destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
@@ -943,7 +943,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) importCredentialsPressed: (id) sender {
-    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
                                                     delegate: self
                                            cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                       destructiveButtonTitle: NSLocalizedString(@"import_credentials_confirm", nil)
@@ -954,7 +954,7 @@ typedef enum ActionSheetTags {
 }
     
 - (void) deleteCredentialsPressed: (id) sender {
-    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_safety_question", nil)
                                                     delegate: self
                                            cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                       destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
@@ -1002,7 +1002,7 @@ typedef enum ActionSheetTags {
     return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
 }
 
-- (void) prependAdditionalActionButtons:(ActionSheet *)actionSheet {
+- (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
     if (_avatarItem.currentValue != nil) {
         actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_delete_avatar_button_title", nil)];
     }

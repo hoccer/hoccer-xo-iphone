@@ -53,6 +53,8 @@
 static const NSUInteger kMaxMessageBytes = 10000;
 static const CGFloat    kSectionHeaderHeight = 40;
 
+typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
+
 @interface ChatViewController ()
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -933,7 +935,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 }
 
 - (void) showAttachmentOptions {
-    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", @"Actionsheet Title")
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", @"Actionsheet Title")
                                                         delegate: self
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
                                           destructiveButtonTitle: nil
@@ -945,7 +947,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [sheet showInView: self.view];
 }
 
--(void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // NSLog(@"Clicked button at index %d", buttonIndex);
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
@@ -1017,15 +1019,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView * header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kSectionHeaderHeight)];
-
-    /*
-    UIImage * backgroundImage = [UIImage imageNamed: @"date_cell_bg"];
-    CGFloat y = 0.5 * (kSectionHeaderHeight - backgroundImage.size.height);
-    UIImageView * background = [[UIImageView alloc] initWithFrame: CGRectMake(0, y, 320, backgroundImage.size.height)];
-    background.image = backgroundImage;
-    background.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [header addSubview: background];
-     */
 
     UILabel * label = [[UILabel alloc] initWithFrame: header.frame];
     label.backgroundColor = [UIColor clearColor];
@@ -1484,12 +1477,23 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
 
-    if (message.attachment.state == kAttachmentTransfered) {
-        section.icon.hidden = NO;
-        section.icon.image = [self typeIconForAttachment: message.attachment];
-    } else {
-        section.icon.hidden = YES;
-    }
+
+    [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
+        if ([section isKindOfClass: [GenericAttachmentSection class]]) {
+            GenericAttachmentSection * attachmentSection = (GenericAttachmentSection*)section;
+
+            if (attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
+                attachmentSection.icon.image = attachment.previewImage;
+                attachmentSection.icon.layer.cornerRadius = 0.5 * attachmentSection.icon.frame.size.width;
+                attachmentSection.icon.layer.masksToBounds = YES;
+            } else if (attachment.state == kAttachmentTransfered) {
+                attachmentSection.icon.image = [self typeIconForAttachment: message.attachment];
+                attachmentSection.icon.layer.masksToBounds = NO;
+            } else {
+                attachmentSection.icon.image = nil;
+            }
+        }
+    }];
 
     NSString * title = message.attachment.humanReadableFileName;
     if (title == nil || [title isEqualToString: @""]) {
@@ -1502,25 +1506,31 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [self configureAttachmentSection: section forMessage: message];
     section.imageAspect = message.attachment.aspectRatio;
 
-    // current progress bar looks odd on images. As a workaround display outgoing images after transfer
-    BOOL transferDone = message.attachment.state == kAttachmentTransfered;
-    BOOL isVideo = [message.attachment.mediaType isEqualToString: @"video"];
+    [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
+        if ([section isKindOfClass: [ImageAttachmentSection class]]) {
+            ImageAttachmentSection * imageSection = (ImageAttachmentSection*)section;
+            if (attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
+                imageSection.image = message.attachment.previewImage;
+            } else {
+                imageSection.image = nil;
+            }
+            imageSection.subtitle.hidden = imageSection.image != nil;
+            imageSection.showPlayButton = [attachment.mediaType isEqualToString: @"video"] && imageSection.image != nil;
+        }
+    }];
+}
 
-    if (message.attachment.previewImage == nil && message.attachment.available) {
-        [message.attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
+
+- (void) loadAttachmentImage: (Attachment*) attachment withSection: (AttachmentSection*) section completion: (AttachmentImageCompletion) completion {
+
+    if (attachment.previewImage == nil && attachment.available) {
+        [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
             if (theError == nil) {
-                NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: message];
+                NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: attachment.message];
                 if (indexPath) {
-                    ImageAttachmentSection * section = [((id)[self.tableView cellForRowAtIndexPath: indexPath]) imageSection];
+                    AttachmentSection * section = [((id)[self.tableView cellForRowAtIndexPath: indexPath]) attachmentSection];
                     if (section) {
-                        if (message.attachment.previewImage.size.height != 0 && transferDone) {
-                            section.image = message.attachment.previewImage;
-                        } else {
-                            section.image = nil;
-                        }
-                        section.subtitle.hidden = section.image != nil;
-                        section.showPlayButton = isVideo && section.image != nil;
-
+                        completion(attachment, section);
                     }
                 }
             } else {
@@ -1528,42 +1538,9 @@ static const CGFloat    kSectionHeaderHeight = 40;
             }
         }];
     } else {
-        if (message.attachment.available && message.attachment.previewImage.size.height != 0 && transferDone) {
-            section.image = message.attachment.previewImage;
-        } else {
-            section.image = nil;
-        }
-        section.subtitle.hidden = section.image != nil;
-        section.showPlayButton = isVideo && section.image != nil;
+        completion(attachment, section);
     }
-
-/*
-
-    cell.runButtonStyle = [message.attachment.mediaType isEqualToString: @"video"] ? HXOBubbleRunButtonPlay : HXOBubbleRunButtonNone;
-
-    cell.attachmentTitle.attributedText = [self attributedAttachmentTitle: message];
-
-    if ([message.attachment.mediaType isEqualToString: @"vcard"]) {
-        cell.thumbnailScaleMode = HXOThumbnailScaleModeStretchToFit;
-    } else if ([message.attachment.mediaType isEqualToString: @"geolocation"]) {
-        cell.thumbnailScaleMode = HXOThumbnailScaleModeActualSize;
-    } else {
-        cell.thumbnailScaleMode = HXOThumbnailScaleModeAspectFill;
-    }
-    
-    AttachmentState state = message.attachment.state;
-    if (state == kAttachmentTransferOnHold && ! [message.isOutgoing boolValue]) {
-        cell.attachmentTransferState = HXOAttachmentTranserStateDownloadPending;
-    } else {
-        if (state >= kAttachmentTransfering && state <= kAttachmentTransferPaused) {
-            cell.attachmentTransferState = HXOAttachmentTransferStateInProgress;
-        } else {
-            cell.attachmentTransferState = HXOAttachmentTransferStateDone;
-        }
-    }
- */
 }
-
 
 
 

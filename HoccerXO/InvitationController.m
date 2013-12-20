@@ -81,7 +81,7 @@ static InvitationController * _sharedInvitationController;
 
 - (void) presentWithViewController: (UIViewController*) viewController {
     self.viewController = viewController;
-    ActionSheet * sheet = [[ActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
                                                         delegate: self
                                                cancelButtonTitle: nil
                                           destructiveButtonTitle: nil
@@ -96,7 +96,7 @@ static InvitationController * _sharedInvitationController;
     [sheet showInView: viewController.view];
 }
 
--(void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
     }

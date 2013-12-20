@@ -44,14 +44,14 @@ extern CGFloat kHXOGridSpacing;
     if (self.showPlayButton) {
         CGRect frame = [self attachmentControlFrame];
         UIBezierPath* playPath = [UIBezierPath bezierPathWithOvalInRect: frame];
-        [playPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43403 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.32986 * CGRectGetHeight(frame))];
-        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.64236 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.49653 * CGRectGetHeight(frame))];
-        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43403 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.65625 * CGRectGetHeight(frame))];
-        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43403 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.32986 * CGRectGetHeight(frame))];
+        [playPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34722 * CGRectGetHeight(frame))];
+        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.62500 * CGRectGetHeight(frame))];
+        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.63194 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.48611 * CGRectGetHeight(frame))];
+        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34722 * CGRectGetHeight(frame))];
         [playPath closePath];
 
         [[UIColor colorWithWhite: 1.0 alpha: 0.5] setStroke];
-        playPath.lineWidth = 1.5;
+        playPath.lineWidth = 2.0;
         playPath.lineJoinStyle = kCGLineJoinRound;
         [playPath strokeWithBlendMode: kCGBlendModeNormal alpha: 1.0];
     }

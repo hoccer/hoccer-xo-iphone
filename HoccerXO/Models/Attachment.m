@@ -696,7 +696,6 @@ NSArray * TransferStateName = @[@"detached",
             return;
         }
     }
-    // block([UIImage imageNamed:@"vcard_error_preview.png"], nil);
     block([[UIImage alloc]init], nil);
 }
 
