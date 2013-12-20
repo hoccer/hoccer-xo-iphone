@@ -1630,16 +1630,29 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (NSString*) attachmentSubtitle: (Attachment*) attachment {
-    NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
     NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
     NSString * sizeString;
-    if ([attachment.contentSize longLongValue] == [attachment.transferSize longLongValue]) {
+    
+    long long contentSize;
+    long long doneSize;
+    if ([attachment.message.isOutgoing isEqualToNumber: @NO]) {
+        contentSize = [attachment.contentSize longLongValue];
+        doneSize = [attachment.transferSize longLongValue];
+    } else {
+        contentSize = [attachment.cipheredSize longLongValue];
+        doneSize = [attachment.cipherTransferSize longLongValue];
+    }
+    NSString * fileSize = [NSByteCountFormatter stringFromByteCount: contentSize countStyle:NSByteCountFormatterCountStyleFile];
+    
+    if (contentSize == doneSize) {
         sizeString = fileSize;
     } else {
-        NSString * currentSize = [NSByteCountFormatter stringFromByteCount: [attachment.transferSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
+        NSString * currentSize = [NSByteCountFormatter stringFromByteCount: doneSize countStyle:NSByteCountFormatterCountStyleFile];
         sizeString = [NSString stringWithFormat: @"%@ / %@", currentSize, fileSize];
     }
-    return [NSString stringWithFormat: @"%@ – %@", name, sizeString];
+    NSString * result = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
+    // NSLog(@"attachmentSubtitle = '%@'",result);
+    return result;
 }
 
 - (UIImage*) typeIconForAttachment: (Attachment*) attachment {
