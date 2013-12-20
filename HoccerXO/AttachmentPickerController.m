@@ -200,7 +200,7 @@
     } else {
         title = NSLocalizedString(@"Add Attachement", @"Attachment Actionsheet Title");
     }
-    ActionSheet *attachmentSheet = [[ActionSheet alloc] initWithTitle: title
+    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: title
                                                                  delegate: self
                                                         cancelButtonTitle: nil
                                                    destructiveButtonTitle: nil
@@ -222,7 +222,7 @@
     [attachmentSheet showInView: view];
 }
 
--(void)actionSheet:(ActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         [self.delegate didPickAttachment: nil];
         return;

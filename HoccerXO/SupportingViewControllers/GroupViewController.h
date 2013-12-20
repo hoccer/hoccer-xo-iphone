@@ -7,13 +7,12 @@
 //
 
 #import "ProfileViewController.h"
-#import "HXOActionSheet.h"
 
 @class HXOBackend;
 @class Group;
 @class AvatarItem;
 
-@interface GroupViewController : ProfileViewController <NSFetchedResultsControllerDelegate, ActionSheetDelegate>
+@interface GroupViewController : ProfileViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic,strong) Group * group;
 @property (nonatomic,readonly) HXOBackend * backend;

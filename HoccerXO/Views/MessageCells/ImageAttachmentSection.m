@@ -51,7 +51,7 @@ extern CGFloat kHXOGridSpacing;
         [playPath closePath];
 
         [[UIColor colorWithWhite: 1.0 alpha: 0.5] setStroke];
-        playPath.lineWidth = 1.5;
+        playPath.lineWidth = 2.0;
         playPath.lineJoinStyle = kCGLineJoinRound;
         [playPath strokeWithBlendMode: kCGBlendModeNormal alpha: 1.0];
     }

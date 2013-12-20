@@ -12,7 +12,7 @@
 
 #import "RecordViewController.h"
 #import "GeoLocationPicker.h"
-#import "HXOActionSheet.h"
+#import "UIActionSheet+BlockExtensions.h"
 
 @class Attachment;
 @class RecordViewController;
@@ -42,15 +42,15 @@ typedef enum AttachmentPickerTypes {
 - (BOOL) wantsAttachmentsOfType: (AttachmentPickerType) type;
 - (NSString*) attachmentPickerActionSheetTitle;
 - (BOOL) allowsEditing;
-- (void) prependAdditionalActionButtons: (ActionSheet*) actionSheet;
-- (void) appendAdditionalActionButtons: (ActionSheet*) actionSheet;
+- (void) prependAdditionalActionButtons: (UIActionSheet*) actionSheet;
+- (void) appendAdditionalActionButtons: (UIActionSheet*) actionSheet;
 - (void) additionalButtonPressed: (NSUInteger) buttonIndex;
 - (BOOL) shouldSaveImagesToAlbum;
 - (BOOL) shouldSaveVideosToAlbum;
 
 @end
 
-@interface AttachmentPickerController : NSObject <ActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate,ABPeoplePickerNavigationControllerDelegate,GeoLocationPickerDelegate>
+@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate,ABPeoplePickerNavigationControllerDelegate,GeoLocationPickerDelegate>
 
 @property (nonatomic, weak) id<AttachmentPickerControllerDelegate> delegate;
 

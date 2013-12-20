@@ -11,7 +11,6 @@
 #import "AttachmentPickerController.h"
 #import "GrowingTextView.h"
 #import "MessageCell.h"
-#import "HXOActionSheet.h"
 #import "HXOLinkyLabel.h"
 #import "HPGrowingTextView.h"
 #import "Attachment.h"
@@ -19,7 +18,7 @@
 @class HXOBackend;
 @class AVAssetExportSession;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,ActionSheetDelegate,HPGrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate, TransferProgressIndication>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,HPGrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate, TransferProgressIndication>
 {
     NSMutableDictionary        *resultsControllers;
 }
