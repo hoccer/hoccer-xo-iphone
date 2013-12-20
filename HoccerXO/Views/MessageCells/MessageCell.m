@@ -205,6 +205,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
 
 -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
+    // NSLog(@"MessageCell: canPerformAction %s withSender %@, delegate=%@", sel_getName(action), sender, self.delegate);
     if (self.delegate != nil) {
         return [self.delegate messageCell:self canPerformAction:action withSender:sender];
     }

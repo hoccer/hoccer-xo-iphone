@@ -47,7 +47,7 @@
 #import "NickNameLabelWithStatus.h"
 #import "HXOUpDownLoadControl.h"
 
-#define ACTION_MENU_DEBUG NO
+#define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
@@ -116,13 +116,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
     [_chatbar sendSubviewToBack: textViewBackgroundView];
 
     // setup longpress menus
-    UIMenuController *menuController = [UIMenuController sharedMenuController];
-    UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
-    UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
-    UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Resend", nil) action:@selector(resendMessage:)];
-    UIMenuItem *myForwardMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
-    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem, myResendMessageMenuItem, myForwardMessageMenuItem]];
-    [menuController update];
+    //[self setupLongPressMenu];
     
     [self hideAttachmentSpinner];
     [HXOBackend registerConnectionInfoObserverFor:self];
@@ -130,6 +124,10 @@ static const CGFloat    kSectionHeaderHeight = 40;
 //    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
 //    gestureRecognizer.cancelsTouchesInView = NO;
 //    [self.tableView addGestureRecognizer:gestureRecognizer];
+    
+    
+    UILongPressGestureRecognizer *gr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    [self.view addGestureRecognizer:gr];
 
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [ImageAttachmentMessageCell class]];
@@ -146,6 +144,39 @@ static const CGFloat    kSectionHeaderHeight = 40;
     self.navigationItem.backBarButtonItem = backButton;
 
     [self configureView];
+}
+
+- (UIMenuController *)setupLongPressMenu {
+    UIMenuController *menuController = [UIMenuController sharedMenuController];
+    UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
+    UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
+    UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Resend", nil) action:@selector(resendMessage:)];
+    UIMenuItem *myForwardMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
+    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem, myResendMessageMenuItem, myForwardMessageMenuItem]];
+    [menuController update];
+    return menuController;
+}
+
+
+-(void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer {
+    //NSLog(@"ChatViewController:handleLongPress");
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint p = [gestureRecognizer locationInView: self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:p];
+        if (indexPath != nil) {
+            //NSLog(@"ChatViewController:handleLongPress:path=%@", indexPath);
+            
+            UITableViewCell * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
+            //NSLog(@"ChatViewController:handleLongPress:myCell=%@", myCell);
+
+            [myCell becomeFirstResponder];
+            
+            UIMenuController * menu = [self setupLongPressMenu];
+            [menu setTargetRect:[self.tableView rectForRowAtIndexPath:indexPath] inView:self.tableView];
+            [menu setMenuVisible:YES animated:YES];
+            //NSLog(@"ChatViewController:handleLongPress:setMenuVisible");
+        }
+    }
 }
 
 
@@ -461,7 +492,6 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: self.managedObjectContext];
-
 
     // handle geolocation
     if ([attachmentInfo isKindOfClass: [NSDictionary class]] &&
@@ -1028,7 +1058,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    //NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
+    // NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
 
     if (message.attachment.available) {
@@ -1070,12 +1100,13 @@ static const CGFloat    kSectionHeaderHeight = 40;
 
 #pragma mark - Table view menu delegate
 
-
+/*
 - (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - YES",indexPath);}
+    // NSLog(@"%@", [NSThread callStackSymbols]);
     return YES;
 }
-
+*/
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
     UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
     if ([[myCell class] isKindOfClass:[MessageCell class]]) {
@@ -1746,7 +1777,7 @@ static const CGFloat    kSectionHeaderHeight = 40;
 #pragma mark - MessageViewControllerDelegate methods
 
 -(BOOL) messageCell:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
-    // NSLog(@"messageCell:canPerformAction:");
+    //NSLog(@"messageCell:canPerformAction:");
     if (action == @selector(deleteMessage:)) return YES;
     if (action == @selector(copy:)) {return YES;}
 
@@ -1801,8 +1832,14 @@ static const CGFloat    kSectionHeaderHeight = 40;
 - (void) messageCell:(MessageCell *)theCell copy:(id)sender {
     // NSLog(@"copy");
     UIPasteboard * board = [UIPasteboard generalPasteboard];
-    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-
+    NSIndexPath * ip = [self.tableView indexPathForCell:theCell];
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: ip];
+/*
+    NSLog(@"ip=%@", ip);
+    NSLog(@"cell=%@", theCell);
+    NSLog(@"message=%@", message);
+    NSLog(@"body=%@", message.body);
+ */
     board.string = message.body; // always put in string first to clear board
     
     Attachment * myAttachment = message.attachment;

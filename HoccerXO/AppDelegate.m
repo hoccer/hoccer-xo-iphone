@@ -39,6 +39,41 @@ static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
 static NSInteger validationErrorCount = 0;
 
+#ifdef DEBUG_RESPONDER
+
+#import <objc/runtime.h>
+
+@implementation UIResponder (MYHijack)
++ (void)hijackSelector:(SEL)originalSelector withSelector:(SEL)newSelector
+    {
+        Class class = [UIResponder class];
+        Method originalMethod = class_getInstanceMethod(class, originalSelector);
+        Method categoryMethod = class_getInstanceMethod(class, newSelector);
+        method_exchangeImplementations(originalMethod, categoryMethod);
+    }
+    
++ (void)hijack
+    {
+        [self hijackSelector:@selector(touchesBegan:withEvent:) withSelector:@selector(MYHijack_touchesBegan:withEvent:)];
+    }
+    
+- (void)MYHijack_touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+    {
+        NSLog(@"touchesBegan self=%@, touches=%@", self, touches);
+        for (UITouch * t in touches) {
+            NSLog(@"touch=%@",t);
+            NSLog(@"gestureRecognizers#=%d",t.gestureRecognizers.count);
+            for (UIGestureRecognizer * r in t.gestureRecognizers) {
+                NSLog(@"recognizer=%@",r);
+            }
+        }
+        NSLog(@"Responder Chain %@", NBResponderChain());
+        [self MYHijack_touchesBegan:touches withEvent:event]; // Calls the original version of this method
+    }
+@end
+#endif
+
+
 @implementation AppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -53,7 +88,11 @@ static NSInteger validationErrorCount = 0;
     [self seedRand];
     _backgroundTask = UIBackgroundTaskInvalid;
     //[[UserProfile sharedProfile] deleteCredentials];
-    
+
+#ifdef DEBUG_RESPONDER
+    //[UIResponder hijack];
+    NSLog(@"Responder Chain %@", NBResponderChain());
+#endif
     return YES;
 }
 
@@ -1053,6 +1092,5 @@ static NSInteger validationErrorCount = 0;
 }
 
 
-
-
 @end
+

@@ -348,6 +348,7 @@
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
+		E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = E980E27418648D80004AF79D /* UIResponder+Debug.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BB1725CB3F0089A510 /* ABPersonCreator.m */; };
 		E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BD1725CB3F0089A510 /* ABPersonVCardCreator.m */; };
@@ -987,6 +988,8 @@
 		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
 		E980D445171EF8950060C1B5 /* CryptingInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptingInputStream.h; sourceTree = "<group>"; };
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
+		E980E27318648D80004AF79D /* UIResponder+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+Debug.h"; sourceTree = "<group>"; };
+		E980E27418648D80004AF79D /* UIResponder+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+Debug.m"; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E99886BA1725CB3F0089A510 /* ABPersonCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPersonCreator.h; sourceTree = "<group>"; };
 		E99886BB1725CB3F0089A510 /* ABPersonCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPersonCreator.m; sourceTree = "<group>"; };
@@ -1163,6 +1166,8 @@
 				631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */,
 				638EBE32178596D000F1B9AD /* NSString+Emojis.h */,
 				638EBE33178596D000F1B9AD /* NSString+Emojis.m */,
+				E980E27318648D80004AF79D /* UIResponder+Debug.h */,
+				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
@@ -2642,6 +2647,7 @@
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
 				63DC01851715205300609513 /* HXOSwitch.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */,
+				E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */,
 				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
 				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
