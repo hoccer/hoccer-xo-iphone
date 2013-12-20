@@ -11,6 +11,15 @@
 
 extern CGFloat kHXOGridSpacing;
 
+
+#ifdef MESSAGE_CELL_USE_LAYERS
+@interface MessageSection ()
+
+
+@end
+#endif
+
+
 @implementation MessageSection
 
 - (id)initWithFrame:(CGRect)frame
@@ -25,12 +34,31 @@ extern CGFloat kHXOGridSpacing;
 - (void) commonInit {
     self.backgroundColor = [UIColor clearColor];
     self.contentMode = UIViewContentModeRedraw;
+
+#ifdef MESSAGE_CELL_USE_LAYERS
+    _bubbleLayer = [CAShapeLayer layer];
+    self.bubbleLayer.path = [self bubblePath].CGPath;
+    [self.layer addSublayer: self.bubbleLayer];
+#endif
 }
 
+#ifdef MESSAGE_CELL_USE_LAYERS
+- (void) layoutSublayersOfLayer:(CALayer *)layer {
+    if (layer == self.layer) {
+        self.bubbleLayer.frame = self.bounds;
+        self.bubbleLayer.path = [self bubblePath].CGPath;
+    }
+}
+#endif
+
+
+#ifndef MESSAGE_CELL_USE_LAYERS
 - (void) drawRect:(CGRect)rect {
     [[self fillColor] setFill];
     [[self bubblePath] fill];
 }
+#endif
+
 
 - (UIBezierPath*) bubblePath {
     CGRect frame = self.bounds;
@@ -90,10 +118,14 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (void) colorSchemeDidChange {
+    self.bubbleLayer.fillColor = [self fillColor].CGColor;
 }
 
 - (void) messageDirectionDidChange {
-    [self setNeedsDisplay];
+    self.bubbleLayer.path = [self bubblePath].CGPath;
+#ifndef MESSAGE_CELL_USE_LAYERS
+    //[self setNeedsDisplay];
+#endif
 }
 
 @end

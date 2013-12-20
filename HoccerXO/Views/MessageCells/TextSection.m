@@ -47,6 +47,7 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (void) colorSchemeDidChange {
+    [super colorSchemeDidChange];
     self.label.textColor = [self.cell textColor];
 }
 

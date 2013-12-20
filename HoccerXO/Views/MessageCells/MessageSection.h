@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define MESSAGE_CELL_USE_LAYERS
+
 @class MessageCell;
 
 typedef enum HXOMessageDirections {
@@ -38,5 +40,9 @@ typedef enum HXOSectionPositions {
 - (void) colorSchemeDidChange;
 - (void) messageDirectionDidChange;
 - (UIBezierPath*) bubblePath;
+
+#ifdef MESSAGE_CELL_USE_LAYERS
+@property (nonatomic,readonly) CAShapeLayer* bubbleLayer;
+#endif
 
 @end

@@ -38,6 +38,7 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (void) colorSchemeDidChange {
+    [super colorSchemeDidChange];
     self.title.textColor = [self.cell textColor];
     self.subtitle.textColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? [UIColor lightGrayColor] : [UIColor whiteColor];
 
