@@ -60,10 +60,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     //self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
-    CGFloat y = self.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);
+    CGFloat y = self.contentView.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);
     _avatar = [[HXOAvatarButton alloc] initWithFrame:CGRectMake(kHXOGridSpacing, y, kHXOAvatarSize, kHXOAvatarSize)];
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-    [self addSubview: _avatar];
+    [self.contentView addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
     _subtitle = [[UILabel alloc] initWithFrame: CGRectMake(8 * kHXOGridSpacing, self.frame.size.height - 2 * kHXOGridSpacing, self.bubbleWidth - 4 * kHXOGridSpacing, 2 * kHXOGridSpacing)];
@@ -71,7 +71,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     _subtitle.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
     _subtitle.backgroundColor = [UIColor clearColor];
     _subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [self addSubview: _subtitle];
+    [self.contentView addSubview: _subtitle];
 }
 
 - (void) avatarPressed: (id) sender {
@@ -136,10 +136,11 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     section.cell = self;
     section.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.sections addObject: section];
-    [self addSubview: section];
+    [self.contentView addSubview: section];
 }
 
 - (void) layoutSubviews {
+    [super layoutSubviews];
     CGFloat y = kHXOGridSpacing;
     for (MessageSection * section in self.sections) {
         [section sizeToFit];
