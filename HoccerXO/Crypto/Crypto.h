@@ -7,35 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-//static NSData* randomSalt();
 
 
-@protocol Cryptor <NSObject>
-- (NSData *)encrypt: (NSData *)data;
-- (NSData *)decrypt: (NSData *)data;
-- (NSString *)encryptString: (NSString *)string;
-- (NSString *)decryptString: (NSString *)string;
-- (void)appendInfoToDictionary: (NSMutableDictionary *)dictionary;
+NSData * randomBytes(size_t count);
 
-@end
-
-@interface NoCryptor : NSObject <Cryptor> 
-@end
-
-@interface AESCryptor: NSObject <Cryptor>
-
-{
-@private
-    NSString *key;
-    NSData *salt;
-}
+@interface Crypto : NSObject
 
 + (NSData *) random256BitKey;
-
-- (id)initWithKey:(NSString *)key;
-- (id)initWithKey:(NSString *)key salt: (NSData *)salt;
-- (id)initWithRandomKey;
-- (id)initWithRandomKeyWithSalt:(NSData *)theSalt;
-- (NSDictionary *)getEncryptedRandomStringForClient;
++ (NSData *) random256BitSalt;
++ (NSData *) XOR:(NSData*)a with:(NSData*)b;
++ (NSData*) make256BitKeyFromPassword:(NSString*)password withSalt:(NSData*)salt;
 
 @end

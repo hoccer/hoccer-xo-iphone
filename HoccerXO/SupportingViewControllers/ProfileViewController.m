@@ -47,7 +47,8 @@ typedef enum ActionSheetTags {
     kActionSheetDeleteCredentials = 1,
     kActionSheetDeleteContact,
     kActionSheetImportCredentials,
-    kActionSheetDeleteCredentialsLate
+    kActionSheetDeleteCredentialsLate,
+    kActionSheetDeleteCredentialsFile
 } ActionSheetTag;
 
 @interface ProfileViewController ()
@@ -103,7 +104,7 @@ typedef enum ActionSheetTags {
                 NSLog(@"INFO: First run, old credentials found.");
                 [self showOldCredentialsAlert];
             } else {
-                if ([[UserProfile sharedProfile] loadCredentials] != nil) {
+                if ([[UserProfile sharedProfile] foundCredentialsFile]) {
                     NSLog(@"INFO: First run, no old credentials in keychain found, but credentials document found.");
                     [self showOldCredentialsDocumentAlert];
                 } else {
@@ -312,7 +313,7 @@ typedef enum ActionSheetTags {
                                                      break;
                                                      case 1:
                                                      NSLog(@"Importing credentials");
-                                                     [[UserProfile sharedProfile] importCredentials];
+                                                     [ProfileViewController importCredentials];
                                                      [self.appDelegate setupDone: NO];
                                                      break;
                                                  }
@@ -360,15 +361,43 @@ typedef enum ActionSheetTags {
             [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"Your login credentials have been deleted. Hoccer XO will terminate now." withTitle:@"Login Credentials Deleted"];
 
         }
+    } else if (actionSheet.tag == kActionSheetDeleteCredentialsFile) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            if ([[UserProfile sharedProfile] deleteCredentialsFile]) {
+                [AppDelegate showErrorAlertWithMessageAsync: @"The exported credentials have been deleted." withTitle:@"Credentials File Deleted"];
+            }
+            // TODO: show error message if it has not been deleted
+            _canceled = YES;
+            [self setEditing:NO animated:NO];
+        }
     } else if (actionSheet.tag == kActionSheetImportCredentials) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            if ([[UserProfile sharedProfile] importCredentials]) {
-                [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"New login credentials have been imported. Restart Hoccer XO to use them" withTitle:@"New Login Credentials Imported"];
-            } else {
-                
-            }
+            [ProfileViewController importCredentials];
         }
+    } else {
     }
+}
+
++ (void)importCredentials {
+    [AppDelegate enterStringAlert:nil withTitle:NSLocalizedString(@"Enter decryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+                     onCompletion:^(NSString *entry) {
+                         if (entry != nil) {
+                             int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:entry];
+                             if (result == 1) {
+                                 [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"New login credentials have been imported. Restart Hoccer XO to use them" withTitle:@"New Login Credentials Imported"];
+                                 return;
+                             }
+                             if (result == -1) {
+                                 [AppDelegate showErrorAlertWithMessageAsync:@"Wrong decryption passphrase or credentials file damaged. Try again." withTitle:@"Credentials Import Failed"];
+                                 return;
+                             }
+                             if (result == 0) {
+                                 [AppDelegate showErrorAlertWithMessageAsync:@"Imported credentials are the same as the active ones." withTitle:@"Same credentials"];
+                                 return;
+                             }
+                         }
+                     }
+     ];
 }
 
 - (void) setupNavigationButtons {
@@ -709,7 +738,7 @@ typedef enum ActionSheetTags {
     _importCredentialsItem.textAlignment = NSTextAlignmentLeft;
     //_importCredentialsItem.icon = [UIImage imageNamed: [self exportCredentialsIconName]];
 
-    _deleteCredentialsItem = [[ProfileItem alloc] initWithName:@"ExportCredentialsItem"];
+    _deleteCredentialsItem = [[ProfileItem alloc] initWithName:@"DeleteCredentialsItem"];
     _deleteCredentialsItem.currentValue = NSLocalizedString(@"delete_credentials", nil);
     _deleteCredentialsItem.editLabel = NSLocalizedString(@"delete_credentials", nil);
     _deleteCredentialsItem.cellClass = [UserDefaultsCell class];
@@ -717,8 +746,17 @@ typedef enum ActionSheetTags {
     _deleteCredentialsItem.target = self;
     _deleteCredentialsItem.textAlignment = NSTextAlignmentLeft;
     _deleteCredentialsItem.icon = [UIImage imageNamed: [self deleteIconName]];
+
+    _deleteCredentialsFileItem = [[ProfileItem alloc] initWithName:@"DeleteCredentialsFileItem"];
+    _deleteCredentialsFileItem.currentValue = NSLocalizedString(@"delete_credentials_file", nil);
+    _deleteCredentialsFileItem.editLabel = NSLocalizedString(@"delete_credentials_file", nil);
+    _deleteCredentialsFileItem.cellClass = [UserDefaultsCell class];
+    _deleteCredentialsFileItem.action = @selector(deleteCredentialsFilePressed:);
+    _deleteCredentialsFileItem.target = self;
+    _deleteCredentialsFileItem.textAlignment = NSTextAlignmentLeft;
+    _deleteCredentialsFileItem.icon = [UIImage imageNamed: [self deleteIconName]];
     
-    _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem, _deleteCredentialsItem, nil];
+    _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem,_deleteCredentialsFileItem, _deleteCredentialsItem, nil];
     
     //return [self populateValues];
 }
@@ -807,6 +845,12 @@ typedef enum ActionSheetTags {
             if (_mode == ProfileViewModeFirstRun) {
                 return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection];
             } else {
+                if ([[UserProfile sharedProfile] foundCredentialsFile]) {
+                    _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem, _deleteCredentialsFileItem, _deleteCredentialsItem, nil];
+                } else {
+                    _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _deleteCredentialsItem, nil];
+
+                }
                 return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection, _credentialsSection];
             }
         } else {
@@ -937,12 +981,24 @@ typedef enum ActionSheetTags {
     }];
 }
 
++ (void) exportCredentials {
+    [AppDelegate enterStringAlert:nil withTitle:NSLocalizedString(@"Enter encryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+                     onCompletion:^(NSString *entry) {
+                         if (entry != nil) {
+                             [[UserProfile sharedProfile] exportCredentialsWithPassphrase:entry];
+                             [AppDelegate showErrorAlertWithMessageAsync: nil withTitle:@"credentials_exported"];
+                         }
+                     }];
+}
+
 - (void) exportCredentialsPressed: (id) sender {
-    [[UserProfile sharedProfile] exportCredentials];
-    [AppDelegate showErrorAlertWithMessageAsync: nil withTitle:@"Credentials successfully exported"];
+    [ProfileViewController exportCredentials];
+    _canceled = YES;
+    [self setEditing:NO animated:NO];
 }
 
 - (void) importCredentialsPressed: (id) sender {
+
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
                                                     delegate: self
                                            cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
@@ -950,6 +1006,17 @@ typedef enum ActionSheetTags {
                                            otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetImportCredentials;
+    [sheet showInView: self.view];
+}
+
+- (void) deleteCredentialsFilePressed: (id) sender {
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_file_safety_question", nil)
+                                                        delegate: self
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"delete_credentials_file_confirm", nil)
+                                               otherButtonTitles: nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    sheet.tag = kActionSheetDeleteCredentialsFile;
     [sheet showInView: self.view];
 }
     

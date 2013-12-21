@@ -61,6 +61,7 @@ typedef enum ProfileViewModes {
 
     ProfileItem *         _exportCredentialsItem;
     ProfileItem *         _importCredentialsItem;
+    ProfileItem *         _deleteCredentialsFileItem;
     ProfileItem *         _deleteCredentialsItem;
     ProfileSection *      _credentialsSection;
     
@@ -84,5 +85,9 @@ typedef enum ProfileViewModes {
 - (void) populateItems;
 - (void) composeProfileItems: (BOOL) editing;
 - (void) populateValues;
+
++ (void) exportCredentials;
++ (void) importCredentials;
+
 
 @end

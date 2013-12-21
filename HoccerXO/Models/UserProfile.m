@@ -11,10 +11,13 @@
 #import <ObjCSRP/HCSRP.h>
 #import "NSString+RandomString.h"
 #import "NSData+HexString.h"
+#import "NSString+StringWithData.h"
 #import "HXOUserDefaults.h"
 #import "Environment.h"
 #import "NSString+UUID.h"
 #import "AppDelegate.h"
+#import "CryptoJSON.h"
+#import "ProfileViewController.h"
 
 static UserProfile * profileInstance;
 
@@ -140,7 +143,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
     [_saltItem setObject: keychainItemBugWorkaround forKey: (__bridge id)(kSecAttrAccount)]; 
     [_saltItem setObject: [salt hexadecimalString] forKey: (__bridge id)(kSecValueData)];
-    [self exportCredentials];
+    [ProfileViewController exportCredentials];
     return [verifier hexadecimalString];
 }
     
@@ -150,7 +153,15 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
                                     @"clientId" : self.clientId };
     return credentials;
 }
-    
+
+- (BOOL) sameCredentialsInDict:(NSDictionary*)credentials {
+    NSDictionary * currentCredentials = [self extractCredentials];
+    return  [credentials[@"password"] isEqualToString:currentCredentials[@"password"]] &&
+            [credentials[@"salt"] isEqualToString:currentCredentials[@"salt"]] &&
+            [credentials[@"clientId"] isEqualToString:currentCredentials[@"clientId"]];
+}
+
+
 - (void) setCredentialsWithDict:(NSDictionary*)credentials {
     [_accountItem setObject: credentials[@"clientId"] forKey: (__bridge id)(kSecAttrAccount)];
     [_accountItem setObject: credentials[@"password"] forKey: (__bridge id)(kSecValueData)];
@@ -168,7 +179,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     return myLocalURL;
 }
     
-- (void)exportCredentials {
+- (void)exportCredentialsWithPassphrase:(NSString*)passphrase {
     NSURL * myLocalURL = [self getCredentialsURL];
 
     NSDictionary * json = [self extractCredentials];
@@ -178,19 +189,53 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
         NSLog(@"failed to extract credentials: %@", error);
         return;
     }
-    [jsonData writeToURL:myLocalURL atomically:NO];
+    NSData * cryptedJsonData = [CryptoJSON encryptedContainer:jsonData withPassword:passphrase withType:@"credentials"];
+    
+    [cryptedJsonData writeToURL:myLocalURL atomically:NO];
     NSLog(@"Exported credentials to %@", myLocalURL);
-    NSLog(@"Credentials: %@", jsonData);
+    NSLog(@"Credentials: %@", [NSString stringWithData:jsonData usingEncoding:NSUTF8StringEncoding]);
+    NSLog(@"Crypted Credentials: %@", [NSString stringWithData:cryptedJsonData usingEncoding:NSUTF8StringEncoding]);
 }
 
-- (NSDictionary*) loadCredentials {
+- (BOOL) foundCredentialsFile {
+    NSURL * url = [self getCredentialsURL];
+    NSDictionary * credentials = nil;
+    NSData * cryptedJsonCredentials = nil;
+    @try {
+        cryptedJsonCredentials = [NSData dataWithContentsOfURL: url];
+        if (cryptedJsonCredentials == nil) {
+            return NO;
+        }
+        credentials = [CryptoJSON parseEncryptedContainer:cryptedJsonCredentials withContentType:@"credentials"];
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR parsing credentials, cryptedJsonCredentials = %@, ex=%@, contentURL=%@", cryptedJsonCredentials, ex, url);
+        return NO;
+    }
+    return credentials != nil;
+}
+
+- (BOOL) deleteCredentialsFile {
+    NSError * myError = nil;
+    NSURL * url = [self getCredentialsURL];
+    [[NSFileManager defaultManager] removeItemAtURL:url error:&myError];
+    return myError == nil;
+}
+
+
+- (NSDictionary*) loadCredentialsWithPassphrase:(NSString*)passphrase {
     NSURL * url = [self getCredentialsURL];
     NSError * error = nil;
     NSDictionary * credentials = nil;
     NSData * jsonCredentials = nil;
+    NSData * cryptedJsonCredentials = nil;
     @try {
-        jsonCredentials = [NSData dataWithContentsOfURL: url];
+        cryptedJsonCredentials = [NSData dataWithContentsOfURL: url];
+        if (cryptedJsonCredentials == nil) {
+            return nil;
+        }
+        jsonCredentials = [CryptoJSON decryptedContainer:cryptedJsonCredentials withPassword:passphrase withType:@"credentials"];
         if (jsonCredentials == nil) {
+            NSLog(@"failed to decrypt credentials: %@", error);
             return nil;
         }
         credentials = [NSJSONSerialization JSONObjectWithData: jsonCredentials options: 0 error: & error];
@@ -205,13 +250,16 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     return credentials;
 }
     
-- (BOOL) importCredentials {
-    NSDictionary * credentials = [self loadCredentials];
+- (int) importCredentialsWithPassphrase:(NSString*)passphrase {
+    NSDictionary * credentials = [self loadCredentialsWithPassphrase:passphrase];
     if (credentials != nil) {
-        [self setCredentialsWithDict:credentials];
-        return YES;
+        if (![self sameCredentialsInDict:credentials]) {
+            [self setCredentialsWithDict:credentials];
+            return 1;
+        }
+        return 0;
     }
-    return NO;
+    return -1;
 }
     
 

@@ -960,7 +960,40 @@ static NSInteger validationErrorCount = 0;
         [AppDelegate showErrorAlertWithMessage:message withTitle:title];
     });
 }
-    
+
++ (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                       message: message
+                               completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) {
+                                   NSString * enteredText;
+                                   switch (buttonIndex) {
+                                       case 0:
+                                           NSLog(@"enterStringAlert: cancel pressed");
+                                           completionBlock(nil);
+                                           break;
+                                       case 1:
+                                           enteredText = [[alertView textFieldAtIndex:0] text];
+                                           NSLog(@"enterStringAlert: enteredText = %@", enteredText);
+                                           if (enteredText.length>0) {
+                                               NSLog(@"enterStringAlert: calling completionblock with text = %@", enteredText);
+                                               completionBlock(enteredText);
+                                           } else {
+                                               NSLog(@"enterStringAlert: calling completionblock with nil");
+                                              completionBlock(nil);
+                                           }
+                                           break;
+                                   }
+                               }
+                             cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
+                             otherButtonTitles:NSLocalizedString(@"OK",nil),nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField * alertTextField = [alert textFieldAtIndex:0];
+    alertTextField.keyboardType = UIKeyboardTypeDefault;
+    alertTextField.placeholder = placeholder;
+    [alert show];
+
+}
+
 - (void) showFatalErrorAlertWithMessage:  (NSString *) message withTitle:(NSString *) title {
     if (title == nil) {
         title = NSLocalizedString(@"fatal_error_default_title", nil);

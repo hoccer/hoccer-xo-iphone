@@ -217,13 +217,32 @@
 "import_credentials"="Zugangsdaten importieren";
 "delete_credentials"="Zugangsdaten löschen";
 
+"delete_credentials_file"="Exportierte Zugangsdaten löschen";
+
+"delete_credentials_file_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
+"delete_credentials_file_confirm"="Löschen";
+
+"The exported credentials have been deleted."="Die exportierten Zugangsdaten wurden gelöscht.";
+"Credentials File Deleted"="Exportierte Zugangsdaten gelöscht";
+
+
 "import_credentials_safety_question"="Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
 "import_credentials_confirm"="Importieren";
 
 "delete_credentials_safety_question"="Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
 "delete_credentials_confirm"="Zugangsdaten löschen";
 
-"credentials_exported"="Zugangsdaten wurden ins Dokumentenverzeichnis exportiert";
+"credentials_exported"="Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
+
+"Enter decryption passphrase"="Enschlüsselungskennwort eingeben";
+"Enter encryption passphrase"="Verschlüsselungskennwort eingeben und merken";
+"Enter passphrase"="Kennwort eingeben";
+
+"Wrong decryption passphrase or credentials file damaged. Try again."="Falsches Kennwort oder ungültige Zugangsdaten. Versuchen sie es noch einmal.";
+"Credentials Import Failed"="Zugangsdatenimport fehlgeschlagen";
+
+"Imported credentials are the same as the active ones."="Importiere Zugangsdaten sind mit den geltenden identisch.";
+"Same credentials"="Identische Zugangsdaten";
 
 
 "Save" = "Speichern";

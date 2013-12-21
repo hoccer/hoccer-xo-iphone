@@ -1391,7 +1391,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     group.type = [Group entityName];
     group.groupTag = [NSString stringWithUUID];
-    group.groupKey = [AESCryptor random256BitKey];
+    group.groupKey = [Crypto random256BitKey];
     
     GroupMembership * myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
     //AUTOREL [group addMembersObject:myMember];
@@ -2042,7 +2042,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if ([HXOBackend isInvalid:group.groupKey]) {
                 // We have lost the group key, generate a new one
                 if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
-                group.groupKey = [AESCryptor random256BitKey];
+                group.groupKey = [Crypto random256BitKey];
             }
             if ([memberContact getPublicKeyRef] == nil) {
                 if (memberContact.publicKeyId != nil) {
@@ -2105,7 +2105,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if (GROUPKEY_DEBUG) {NSLog(@"myMember.group.groupKey=%@, group.groupKey=%@", myMember.group.groupKey,group.groupKey);}
             if ([HXOBackend isInvalid: group.groupKey]) {
                 if ([group iAmAdmin]) {
-                    group.groupKey = [AESCryptor random256BitKey];
+                    group.groupKey = [Crypto random256BitKey];
                     if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
                 } else {
                     NSLog(@"NO GROUP KEY, cant generate (not admin), group nick %@, id %@", group.nickName, group.clientId);

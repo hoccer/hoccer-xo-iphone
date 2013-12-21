@@ -54,7 +54,7 @@
             if (KEY_DEBUG) {NSLog(@"key=%@", key);}
             if (KEY_DEBUG) {NSLog(@"salt=%@", self.salt);}
             if (self.salt.length == key.length) {
-                _cryptoKey = [HXOMessage XOR:key with:self.salt];
+                _cryptoKey = [Crypto XOR:key with:self.salt];
             } else {
                 _cryptoKey = key;
             }
@@ -117,29 +117,14 @@
 - (void) setupOutgoingEncryption {
     if (self.outgoingCryptoKey == nil) {
         if ([self.contact.type isEqualToString:@"Group"]) {
-            self.salt =  [AESCryptor random256BitKey];
+            self.salt =  [Crypto random256BitKey];
             Group * group = (Group*)self.contact;
-            self.outgoingCryptoKey = [HXOMessage XOR:group.groupKey with:self.salt];
+            self.outgoingCryptoKey = [Crypto XOR:group.groupKey with:self.salt];
         } else {
-            self.outgoingCryptoKey = [AESCryptor random256BitKey];
+            self.outgoingCryptoKey = [Crypto random256BitKey];
         }
     }
     [self setCryptoKey:self.outgoingCryptoKey];
-}
-
-+ (NSData *) XOR:(NSData*)a with:(NSData*)b {
-    if (a.length != b.length) {
-        NSLog(@"ERROR: XOR: a.length != b.length");
-        return nil;
-    }
-    const uint8_t *a_bytes = (uint8_t *)[a bytes];
-    const uint8_t *b_bytes = (uint8_t *)[b bytes];
-    NSMutableData * result = [NSMutableData dataWithLength:a.length];
-    uint8_t *result_bytes = (uint8_t *)[result bytes];
-    for (int i = 0; i < a.length; ++i) {
-        result_bytes[i] = a_bytes[i] ^ b_bytes[i];
-    }
-    return result;
 }
 
 

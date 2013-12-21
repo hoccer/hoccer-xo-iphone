@@ -6,27 +6,21 @@
 //  Copyright 2011 Hoccer GmbH. All rights reserved.
 //
 
-#import "NSData+CommonCrypto.h"
+#import <CommonCrypto/CommonKeyDerivation.h>
 
 #import "Crypto.h"
-#import "NSString+StringWithData.h"
-#import "NSData+Base64.h"
-#import "RSA.h"
-#import "PublicKeyManager.h"
 
-// fixed salt for testing
-static NSData * NotSoRandomSalt() {
-    NSMutableData *data = [NSMutableData data];
-    
-    for (NSInteger i = 1; i < 33; i++) {
-        char c = (char)i;
-        [data appendBytes:&c length:sizeof(char)];
+// Makes a random 256-bit salt
+static NSData * arc4RandomBytes(size_t count) {
+    NSMutableData* data = [NSMutableData dataWithLength:count];
+    unsigned char * bytes = [data mutableBytes];
+    for (int i=0; i<count; i++) {
+        bytes[i] = (unsigned char)arc4random();
     }
-    
-    return data;    
+    return data;
 }
 
-static NSData * RandomBytes(size_t count) {
+static NSData * secRandomBytes(size_t count) {
     NSMutableData* data = [NSMutableData dataWithLength:count];
     int err = SecRandomCopyBytes(kSecRandomDefault, count, [data mutableBytes]);
     if (err != 0) {
@@ -35,167 +29,50 @@ static NSData * RandomBytes(size_t count) {
     return [data copy];
 }
 
-static NSData * RandomSalt() {
-    return RandomBytes(32);
+NSData * randomBytes(size_t count) {
+    NSData * secBytes = secRandomBytes(count);
+    NSData * arc4Bytes = arc4RandomBytes(count);
+    
+    return [Crypto XOR:secBytes with:arc4Bytes];
 }
 
+@implementation Crypto
 
-@implementation NoCryptor
-
-- (NSData *)encrypt:(NSData *)data {
-    return data;
++ (NSData *) XOR:(NSData*)a with:(NSData*)b {
+    if (a.length != b.length) {
+        NSLog(@"ERROR: XOR: a.length != b.length");
+        return nil;
+    }
+    const uint8_t *a_bytes = (uint8_t *)[a bytes];
+    const uint8_t *b_bytes = (uint8_t *)[b bytes];
+    NSMutableData * result = [NSMutableData dataWithLength:a.length];
+    uint8_t *result_bytes = (uint8_t *)[result bytes];
+    for (int i = 0; i < a.length; ++i) {
+        result_bytes[i] = a_bytes[i] ^ b_bytes[i];
+    }
+    return result;
 }
-
-- (NSData *)decrypt:(NSData *)data {
-    return data;
-}
-
-- (NSString *)encryptString: (NSString *)string {
-	
-    return string;
-}
-
-- (NSString *)decryptString: (NSString *)string {
-    return string;
-}
-
-- (void)appendInfoToDictionary:(NSMutableDictionary *)dictionary {
-    // not encryption - nothing to do here
-}
-
-@end
-
-@interface AESCryptor ()
-- (NSData *)saltedKeyHash;
-@end
-
-
-@implementation AESCryptor
 
 + (NSData *)random256BitKey {
-    return RandomBytes(32);
+    return randomBytes(32);
 }
 
-- (id)initWithKey: (NSString *)theKey {
-    return [self initWithKey:theKey salt:RandomSalt()];
++ (NSData *)random256BitSalt {
+    return randomBytes(32);
 }
 
-- (id)initWithKey:(NSString *)theKey salt: (NSData *)theSalt {
-    self = [self init];
-    if (self) {
-        key  = theKey;        
-        salt = theSalt;
-    }
-    return self;
-}
-
-- (id)initWithRandomKey{
-    NSString *theKey = [[RSA sharedInstance] generateRandomString:64];
-    return [self initWithKey:theKey salt:RandomSalt()];
-}
-
-- (id)initWithRandomKeyWithSalt:(NSData *)theSalt{
-    NSString *theKey = [[RSA sharedInstance] generateRandomString:64];
-    return [self initWithKey:theKey salt:theSalt];
-}
-
-- (NSData *)encrypt:(NSData *)data {
-    return [data AES256EncryptedDataUsingKey:[self saltedKeyHash] error:nil];
-}
-
-- (NSData *)decrypt:(NSData *)data {
-    return [data decryptedAES256DataUsingKey:[self saltedKeyHash] error:nil];
-}
-
-- (NSString *)encryptString: (NSString *)string {
-    NSData *data      = [string dataUsingEncoding:NSUTF8StringEncoding];
-    // NSLog(@"encryptString data=%@", data);
-    NSData *encripted = [self encrypt:data];
-    // NSLog(@"encryptString encripted=%@", encripted);
-    return [encripted asBase64EncodedString];
-}
-
-- (NSString *)decryptString: (NSString *)string {
-    NSData *data      = [NSData dataWithBase64EncodedString:string];
-    // NSLog(@"decryptString:data crypted=%@", data);
-    NSData *decrypted = [self decrypt:data];
-    // NSLog(@"decryptString: decrypted=%@", decrypted);
-    return [NSString stringWithData:decrypted usingEncoding:NSUTF8StringEncoding];
-}
-
-- (void)appendInfoToDictionary: (NSMutableDictionary *)dictionary {
++ (NSData*)make256BitKeyFromPassword:(NSString*)password withSalt:(NSData*)salt {
+    NSData* myPassData = [password dataUsingEncoding:NSUTF8StringEncoding];
+    const int rounds = 10000;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"sendPassword"]){
-        NSDictionary *cryptedPassword = [self getEncryptedRandomStringForClient];
-        if (cryptedPassword!=nil){
-            NSDictionary *encryption = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    @"AES", @"method",
-                                    @256, @"keysize",
-                                    [salt asBase64EncodedString], @"salt", 
-                                    @"SHA256", @"hash", cryptedPassword, @"password", nil];
-
-    
-            [dictionary setObject:encryption forKey:@"encryption"];
-        }
-        else {
-            NSNotification *notification = [NSNotification notificationWithName:@"noPublicKey" object:self];
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
-        }
-    }
-    else {
-        NSDictionary *encryption = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    @"AES", @"method",
-                                    @256, @"keysize",
-                                    [salt asBase64EncodedString], @"salt", 
-                                    @"SHA256", @"hash", nil];
-        
-        
-        [dictionary setObject:encryption forKey:@"encryption"];
-
-    }
-    
+    // see CommonKeyDerivation.h
+    NSMutableData* keyData = [NSMutableData dataWithLength:32];
+    unsigned char * key = [keyData mutableBytes];
+    CCKeyDerivationPBKDF(kCCPBKDF2, myPassData.bytes, myPassData.length, salt.bytes, salt.length, kCCPRFHmacAlgSHA256, rounds, key, 32);
+    return keyData;
 }
-
-
-- (NSDictionary *)getEncryptedRandomStringForClient {
-    
-    NSArray *selectedClients;
-    PublicKeyManager *keyManager = [[PublicKeyManager alloc]init];
-    
-    if ([[NSUserDefaults standardUserDefaults] arrayForKey:@"selected_clients"] !=nil){
-           selectedClients = [[NSUserDefaults standardUserDefaults] arrayForKey:@"selected_clients"];
-        
-        if (selectedClients.count == 0 ){
-            return nil;
-        }
-        else {
-            NSDictionary *toReturn = [[NSMutableDictionary alloc]initWithCapacity:selectedClients.count];
-            
-            for (NSDictionary *aClient in selectedClients){
-                
-                NSString *thePass = [[NSUserDefaults standardUserDefaults] stringForKey:@"encryptionKey"];
-                NSData *passData = [thePass dataUsingEncoding:NSUTF8StringEncoding];
-                SecKeyRef theKeyRef = [keyManager getKeyForClient:aClient];            
-                if (theKeyRef != nil){
-        
-                    NSData *cipher = [[RSA sharedInstance] encryptWithKey:theKeyRef plainData:passData];
-                    [toReturn setValue:[cipher asBase64EncodedString] forKey:[aClient objectForKey:@"id"]];
-                }
-            }
-            return toReturn;
-        }
-    }
-    return nil;
-}
-
-
-#pragma mark -
-#pragma mark Private Methods
-- (NSData *)saltedKeyHash {
-    NSMutableData *saltedKey = [[key dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
-    [saltedKey appendData:salt];
-    return [[saltedKey SHA256Hash] subdataWithRange:NSMakeRange(0, 32)];
-}
-
 
 @end
+
+
+

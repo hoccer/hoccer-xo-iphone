@@ -48,6 +48,4 @@
 - (NSData *)encrypt:(NSData *)data;
 - (NSData *)decrypt:(NSData *)data;
 
-+ (NSData *) XOR:(NSData*)a with:(NSData*)b;
-
 @end

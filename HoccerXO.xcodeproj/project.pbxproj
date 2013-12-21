@@ -357,6 +357,7 @@
 		E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */; };
 		E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D67C4D175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m */; };
 		E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D67C4F175C22DE007FE4AA /* UIAlertView+BlockExtensions.m */; };
+		E9DBE3E31865C0A000880252 /* CryptoJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DBE3E21865C0A000880252 /* CryptoJSON.m */; };
 		E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F592D6171F460A00E2FFAC /* CryptoEngine.m */; };
 /* End PBXBuildFile section */
 
@@ -965,6 +966,8 @@
 		E9D67C4D175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+BlockExtensions.m"; sourceTree = "<group>"; };
 		E9D67C4E175C22DE007FE4AA /* UIAlertView+BlockExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+BlockExtensions.h"; sourceTree = "<group>"; };
 		E9D67C4F175C22DE007FE4AA /* UIAlertView+BlockExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+BlockExtensions.m"; sourceTree = "<group>"; };
+		E9DBE3E11865C0A000880252 /* CryptoJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoJSON.h; sourceTree = "<group>"; };
+		E9DBE3E21865C0A000880252 /* CryptoJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoJSON.m; sourceTree = "<group>"; };
 		E9F592D5171F460900E2FFAC /* CryptoEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoEngine.h; sourceTree = "<group>"; };
 		E9F592D6171F460A00E2FFAC /* CryptoEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1846,6 +1849,8 @@
 				E96CB026171457F9005F8FFA /* PublicKeyManager.m */,
 				E96CB027171457F9005F8FFA /* RSA.h */,
 				E96CB028171457F9005F8FFA /* RSA.m */,
+				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
+				E9DBE3E21865C0A000880252 /* CryptoJSON.m */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -2421,6 +2426,7 @@
 				E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */,
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
+				E9DBE3E31865C0A000880252 /* CryptoJSON.m in Sources */,
 				63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
@@ -2600,7 +2606,7 @@
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 				);
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/ZBarSDK\"",
@@ -2633,7 +2639,7 @@
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
 				);
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/ZBarSDK\"",

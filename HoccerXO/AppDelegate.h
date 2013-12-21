@@ -11,6 +11,7 @@
 #import "HXOBackend.h"
 #import "GCNetworkReachability.h"
 
+typedef void(^StringEntryCompletion)(NSString* entry);
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
@@ -69,5 +70,7 @@
 
 + (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title;
 + (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title;
+
++ (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock;
 
 @end
