@@ -12,12 +12,6 @@
 extern CGFloat kHXOGridSpacing;
 
 
-#ifdef MESSAGE_CELL_USE_LAYERS
-@interface MessageSection ()
-
-
-@end
-#endif
 
 
 @implementation MessageSection
@@ -33,32 +27,21 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) commonInit {
     self.backgroundColor = [UIColor clearColor];
+
+    // TODO: do we need this? is there a better way?
     self.contentMode = UIViewContentModeRedraw;
 
-#ifdef MESSAGE_CELL_USE_LAYERS
     _bubbleLayer = [CAShapeLayer layer];
     self.bubbleLayer.path = [self bubblePath].CGPath;
     [self.layer addSublayer: self.bubbleLayer];
-#endif
 }
 
-#ifdef MESSAGE_CELL_USE_LAYERS
 - (void) layoutSublayersOfLayer:(CALayer *)layer {
     if (layer == self.layer) {
         self.bubbleLayer.frame = self.bounds;
         self.bubbleLayer.path = [self bubblePath].CGPath;
     }
 }
-#endif
-
-
-#ifndef MESSAGE_CELL_USE_LAYERS
-- (void) drawRect:(CGRect)rect {
-    [[self fillColor] setFill];
-    [[self bubblePath] fill];
-}
-#endif
-
 
 - (UIBezierPath*) bubblePath {
     CGRect frame = self.bounds;

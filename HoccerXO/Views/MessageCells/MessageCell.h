@@ -10,6 +10,7 @@
 
 #import "HXOTableViewCell.h"
 #import "MessageSection.h"
+#import "HXOAvatarButton.h"
 
 @class MessageCell;
 @class AttachmentSection;
@@ -35,11 +36,8 @@
 @interface MessageCell : HXOTableViewCell
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 
-// TODO: clean up this mess
-//@property (weak, nonatomic) NSFetchedResultsController *      fetchedResultsController;
-
 @property (nonatomic,readonly) UILabel *             subtitle;
-@property (nonatomic,readonly) UIButton *            avatar;
+@property (nonatomic,readonly) HXOAvatarButton *     avatar;
 @property (nonatomic,assign)   HXOMessageDirection   messageDirection;
 @property (nonatomic,readonly) NSMutableArray *      sections;
 @property (nonatomic,assign)   HXOBubbleColorScheme  colorScheme;

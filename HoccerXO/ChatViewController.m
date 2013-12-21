@@ -58,7 +58,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @interface ChatViewController ()
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
-@property (strong, readonly) AttachmentPickerController* attachmentPicker;
+@property (strong, readonly)  AttachmentPickerController* attachmentPicker;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (nonatomic,strong) NSMutableDictionary * cellPrototypes;
@@ -70,7 +70,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
 @property (nonatomic) double messageFontSize;
-
 
 @end
 
@@ -988,20 +987,15 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView * header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kSectionHeaderHeight)];
 
-    UILabel * label = [[UILabel alloc] initWithFrame: header.frame];
+    UILabel * label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 320, kSectionHeaderHeight)];
     label.backgroundColor = [UIColor clearColor];
     label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     label.textAlignment = NSTextAlignmentCenter;
     label.text = [self tableView:tableView titleForHeaderInSection:section];
     label.textColor = [UIColor colorWithWhite: 0.33 alpha: 1.0];
-    label.shadowColor = [UIColor whiteColor];
-    label.shadowOffset = CGSizeMake(0, 1);
     label.font = [UIFont boldSystemFontOfSize: 9];
-    [header addSubview: label];
-
-    return header;
+    return label;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -1033,7 +1027,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     MessageCell * cell = [_cellPrototypes objectForKey: [self cellIdentifierForMessage: message]];
     [self configureCell: cell forMessage: message];
-    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
+    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, 10000)].height;
 }
 
 - (NSString*) cellIdentifierForMessage: (HXOMessage*) message {
@@ -1376,6 +1370,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     id author = [self getAuthor: message];
     UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
+    cell.avatar.showLed = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && [[(Contact*)[message.deliveries.anyObject sender] connectionStatus] isEqualToString: @"online"];
+
     cell.subtitle.text = [self subtitleForMessage: message];
 
 

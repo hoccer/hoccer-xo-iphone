@@ -60,14 +60,9 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     //self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
-    _avatar = [UIButton buttonWithType: UIButtonTypeCustom];
     CGFloat y = self.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);
-
-    _avatar.frame = CGRectMake(kHXOGridSpacing, y, kHXOAvatarSize, kHXOAvatarSize);
+    _avatar = [[HXOAvatarButton alloc] initWithFrame:CGRectMake(kHXOGridSpacing, y, kHXOAvatarSize, kHXOAvatarSize)];
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-    _avatar.clipsToBounds = YES;
-    _avatar.layer.cornerRadius = 0.5 * _avatar.frame.size.width;
-    _avatar.imageView.contentMode = UIViewContentModeScaleAspectFill;
     [self addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
