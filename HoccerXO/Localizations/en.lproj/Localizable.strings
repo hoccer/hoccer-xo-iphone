@@ -452,10 +452,10 @@
 
 "Chats"="Chats";
 
-"message_pending"  = "pending";
-"message_sent"     = "sent";
-"message_received" = "received";
-"message_read"     = "read";
-"message_failed"   = "failed";
+"message_pending"   = "pending";
+"message_sent"      = "sent";
+"message_delivered" = "delivered";
+"message_read"      = "read";
+"message_failed"    = "failed";
 
 

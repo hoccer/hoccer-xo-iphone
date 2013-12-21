@@ -1123,16 +1123,16 @@
 		633A9B18177B21A700E066EF /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				E9A619DC17DF6E3700D4CFC3 /* CopyableUITextField.h */,
+				E9A619DD17DF6E3700D4CFC3 /* CopyableUITextField.m */,
+				6325029718658D4000543D80 /* HXOAvatarButton.h */,
+				6325029818658D4000543D80 /* HXOAvatarButton.m */,
 				638EBE351787004200F1B9AD /* HXOLinkyLabel.h */,
 				638EBE361787004200F1B9AD /* HXOLinkyLabel.m */,
 				634B474A1798B07F001C1C0D /* HXOProgressView.h */,
 				634B474B1798B07F001C1C0D /* HXOProgressView.m */,
-				E9A619DC17DF6E3700D4CFC3 /* CopyableUITextField.h */,
-				E9A619DD17DF6E3700D4CFC3 /* CopyableUITextField.m */,
 				634BE1BC185C9B2B00B2DF05 /* HXOUpDownLoadControl.h */,
 				634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */,
-				6325029718658D4000543D80 /* HXOAvatarButton.h */,
-				6325029818658D4000543D80 /* HXOAvatarButton.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";

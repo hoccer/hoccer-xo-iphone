@@ -430,9 +430,9 @@
 
 "Chats"="Chats";
 
-"message_pending"  = "ausgehend";
-"message_sent"     = "gesendet";
-"message_received" = "empfangen";
-"message_read"     = "gelesen";
-"message_failed"   = "kaputt";
+"message_pending"   = "ausgehend";
+"message_sent"      = "gesendet";
+"message_delivered" = "zugestellt";
+"message_read"      = "gelesen";
+"message_failed"    = "kaputt";
 

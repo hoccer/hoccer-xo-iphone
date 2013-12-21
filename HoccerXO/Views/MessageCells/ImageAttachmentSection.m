@@ -33,14 +33,14 @@ extern CGFloat kHXOGridSpacing;
     self.imageLayer = [CALayer layer];
     self.imageLayer.frame = self.bounds;
     self.imageLayer.mask = self.bubbleLayer;
-    [self.layer addSublayer:self.imageLayer];
+    [self.layer insertSublayer: self.imageLayer atIndex: 0];
 
     self.playButton = [CAShapeLayer layer];
     self.playButton.frame = [self attachmentControlFrame];
     self.playButton.path = [self playButtonPathWithSize: self.playButton.frame.size.width].CGPath;
     self.playButton.strokeColor = [UIColor colorWithWhite: 1.0 alpha:0.5].CGColor;
     self.playButton.fillColor = NULL;
-    [self.layer addSublayer: self.playButton];
+    [self.layer insertSublayer: self.playButton atIndex: 1];
 }
 
 - (void) setImage:(UIImage *)image {
@@ -90,4 +90,8 @@ extern CGFloat kHXOGridSpacing;
     return size;
 }
 
+- (void) colorSchemeDidChange {
+    [super colorSchemeDidChange];
+    self.imageLayer.backgroundColor = [self.cell fillColor].CGColor;
+}
 @end

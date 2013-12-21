@@ -1574,7 +1574,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         {
             return NSLocalizedString(@"message_sent", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
-            return NSLocalizedString(@"message_received", nil);
+            return NSLocalizedString(@"message_delivered", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
             return NSLocalizedString(@"message_failed", nil);
         /* TODO } else if () {
