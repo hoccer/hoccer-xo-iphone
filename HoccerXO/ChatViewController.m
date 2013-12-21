@@ -46,12 +46,13 @@
 #import "ProfileViewController.h"
 #import "NickNameLabelWithStatus.h"
 #import "HXOUpDownLoadControl.h"
+#import "DateSectionHeaderView.h"
 
 #define ACTION_MENU_DEBUG NO
 #define DEBUG_ATTACHMENT_BUTTONS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
-static const CGFloat    kSectionHeaderHeight = 40;
+static const CGFloat    kSectionHeaderHeight = 3 * 8;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
@@ -137,6 +138,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self registerCellClass: [GenericAttachmentMessageCell class]];
     [self registerCellClass: [ImageAttachmentWithTextMessageCell class]];
     [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
+    [self.tableView registerClass: [DateSectionHeaderView class] forHeaderFooterViewReuseIdentifier: @"date_header"];
 
     self.titleLabel = [[NickNameLabelWithStatus alloc] init];
     self.navigationItem.titleView = self.titleLabel;
@@ -988,24 +990,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 
-    UILabel * label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 320, kSectionHeaderHeight)];
-    label.backgroundColor = [UIColor clearColor];
-    label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    label.textAlignment = NSTextAlignmentCenter;
-    label.text = [self tableView:tableView titleForHeaderInSection:section];
-    label.textColor = [UIColor colorWithWhite: 0.33 alpha: 1.0];
-    label.font = [UIFont boldSystemFontOfSize: 9];
-    return label;
-}
+    DateSectionHeaderView * header = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: @"date_header"];
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    
     NSArray *objects = [sectionInfo objects];
     NSManagedObject *managedObject = objects[0];
     NSDate *timeSection = (NSDate *)[managedObject valueForKey:@"timeSection"];
-    // NSLog(@"titleForHeaderInSection: timeSection = %@",timeSection);
-    return [Contact sectionTitleForMessageTime:timeSection];
+    header.dateLabel.text = [Contact sectionTitleForMessageTime:timeSection];
+    return header;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

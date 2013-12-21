@@ -33,6 +33,7 @@ extern CGFloat kHXOGridSpacing;
     self.imageLayer = [CALayer layer];
     self.imageLayer.frame = self.bounds;
     self.imageLayer.mask = self.bubbleLayer;
+    self.imageLayer.contentsGravity = kCAGravityResizeAspectFill;
     [self.layer insertSublayer: self.imageLayer atIndex: 0];
 
     self.playButton = [CAShapeLayer layer];
@@ -93,5 +94,10 @@ extern CGFloat kHXOGridSpacing;
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
     self.imageLayer.backgroundColor = [self.cell fillColor].CGColor;
+}
+
+- (void) messageDirectionDidChange {
+    [super messageDirectionDidChange];
+    [self.layer setNeedsLayout];
 }
 @end

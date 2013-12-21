@@ -11,9 +11,6 @@
 
 extern CGFloat kHXOGridSpacing;
 
-
-
-
 @implementation MessageSection
 
 - (id)initWithFrame:(CGRect)frame
@@ -109,6 +106,10 @@ extern CGFloat kHXOGridSpacing;
 #ifndef MESSAGE_CELL_USE_LAYERS
     //[self setNeedsDisplay];
 #endif
+}
+
+- (BOOL) canBecomeFirstResponder {
+    return NO;
 }
 
 @end
