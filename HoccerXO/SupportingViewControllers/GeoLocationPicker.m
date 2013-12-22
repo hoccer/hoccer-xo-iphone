@@ -30,8 +30,18 @@ static const CGFloat kGeoLocationCityZoom = 500;
     self.locationManager.delegate = self;
 
     self.customNavigationItem.title = NSLocalizedString(@"geolocation_picker_title", nil);
+    
+    NSDictionary *attributes = @{ NSFontAttributeName: [UIFont fontWithName:@"Helvetica Neue" size:16],
+                                  NSForegroundColorAttributeName: [UIColor whiteColor]};
+    [self.navigationController.navigationBar setTitleTextAttributes:attributes];
+    
     self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(cancelPressed:)];
+    self.customNavigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
+    [self.customNavigationItem.leftBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
     self.customNavigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action:@selector(donePressed:)];
+    self.customNavigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
+    [self.customNavigationItem.rightBarButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
 
 }
 

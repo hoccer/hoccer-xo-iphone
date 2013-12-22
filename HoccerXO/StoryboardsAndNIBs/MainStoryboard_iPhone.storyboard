@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="MEK-d2-s1c">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
@@ -890,12 +890,12 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="oDn-ba-OW5">
                                 <rect key="frame" x="0.0" y="-8" width="320" height="512"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="delegate" destination="7cB-uF-Ia0" id="Fcx-Jc-zcL"/>
                                 </connections>
                             </mapView>
                         </subviews>
-                        <color key="backgroundColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Drag the Pin" id="dZo-z5-Fid">
@@ -917,7 +917,10 @@
                 <navigationController storyboardIdentifier="ModalGeoLocationViewController" title="Modal Map View Helper" definesPresentationContext="YES" id="ISl-ar-14M" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="YuO-st-Z2w">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="0.15270782920000001" green="0.55095108699999995" blue="0.49882560240000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.1450980392" green="0.72156862749999995" blue="0.6705882353" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="7cB-uF-Ia0" kind="relationship" relationship="rootViewController" id="evu-cH-CKo"/>
