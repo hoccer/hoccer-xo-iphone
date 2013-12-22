@@ -7,7 +7,7 @@
 //
 
 #import "TextSection.h"
-#import "HXOLinkyLabel.h"
+#import "HXOHyperLabel.h"
 #import "MessageCell.h"
 
 // TODO: remove this
@@ -20,8 +20,7 @@ extern CGFloat kHXOGridSpacing;
 - (void) commonInit {
     [super commonInit];
 
-    _label = [[HXOLinkyLabel alloc] initWithFrame: CGRectInset(self.bounds, 2 * kHXOGridSpacing, kHXOGridSpacing)];
-    _label.numberOfLines = 0;
+    _label = [[HXOHyperLabel alloc] initWithFrame: CGRectInset(self.bounds, 2 * kHXOGridSpacing, kHXOGridSpacing)];
     _label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _label.backgroundColor = [UIColor clearColor];
     // TODO move font assignment to the view controller
@@ -49,6 +48,7 @@ extern CGFloat kHXOGridSpacing;
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
     self.label.textColor = [self.cell textColor];
+    self.label.linkColor = [self.cell linkColor];
 }
 
 @end

@@ -55,7 +55,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentMode = UIViewContentModeRedraw;
-    self.backgroundColor = [UIColor clearColor];
+//    self.backgroundColor = [UIColor clearColor];
 
     //self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
@@ -193,6 +193,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
         case HXOBubbleColorSchemeFailed:
             return [UIColor whiteColor];
     }
+}
+
+- (UIColor*) linkColor {
+    return [UIColor blueColor];
 }
 
 - (UIColor*) subtitleColor {

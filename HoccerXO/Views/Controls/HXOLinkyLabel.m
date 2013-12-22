@@ -176,9 +176,8 @@ static const NSString * kHXOChattyLabelTokenIndexAttributeName = @"HXOChattyLabe
         NSArray * matches = [tokenClass.regex matchesInString: self.text options: 0 range: NSMakeRange(0, self.text.length)];
         for (NSTextCheckingResult * match in matches) {
             NSMutableDictionary * attributes = [NSMutableDictionary dictionaryWithDictionary: style];
-            [attributes addEntriesFromDictionary: [self fontAttributes]];
             [attributes setObject: @(_tokens.count) forKey: kHXOChattyLabelTokenIndexAttributeName];
-            [attributedText setAttributes: attributes range: match.range];
+            [attributedText addAttributes: attributes range: match.range];
             HXOCLToken * token = [[HXOCLToken alloc] init];
             token.tokenClass = tokenClass;
             token.match = match;

@@ -388,7 +388,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="GlV-BX-SM5">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="438"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -396,10 +396,16 @@
                                     <outlet property="delegate" destination="auO-Jz-Dlt" id="Xgx-qy-GQi"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" id="Tgo-L5-gxT" customClass="HXOHyperLabel">
+                                <rect key="frame" x="0.0" y="446" width="320" height="122"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="label" destination="Tgo-L5-gxT" id="75W-Tz-9yO"/>
                         <outlet property="tableView" destination="GlV-BX-SM5" id="EM7-cb-fRv"/>
                     </connections>
                 </viewController>

@@ -32,7 +32,7 @@
 @property (nonatomic,assign) HXOBubbleColorScheme       colorScheme;
 @property (nonatomic,assign) HXOMessageDirection        pointDirection;
 @property (nonatomic,strong) NSString *                 cellIdentifier;
-@property (nonatomic,strong) NSString *                 text;
+@property (nonatomic,strong) NSAttributedString *                 text;
 @property (nonatomic,strong) UIImage  *                 previewImage;
 @property (nonatomic,assign) CGFloat                    imageAspect;
 //@property (nonatomic,assign) HXOAttachmentStyle         attachmentStyle;
@@ -50,6 +50,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    NSMutableAttributedString * text = [[NSMutableAttributedString alloc] initWithString: @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com"];
+
+    NSError * error;
+    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes: NSTextCheckingTypeLink
+                                                               error:&error];
+
+    [text addLinksMatching: detector];
+
+    self.label.attributedText = text;
+    self.label.backgroundColor = [UIColor orangeColor];
+    self.label.delegate = self;
+
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [ImageAttachmentMessageCell class]];
     [self registerCellClass: [GenericAttachmentMessageCell class]];
@@ -60,46 +72,46 @@
     i0.cellIdentifier = [TextMessageCell reuseIdentifier];
     i0.colorScheme = HXOBubbleColorSchemeIncoming;
     i0.pointDirection = HXOMessageDirectionIncoming;
-    i0.text = @"Icing tiramisu";
+    i0.text = [self addLinks: @"Icing tiramisu"];
 
     BubbleItem * i1 = [[BubbleItem alloc] init];
     i1.cellIdentifier = [TextMessageCell reuseIdentifier];
     i1.colorScheme = HXOBubbleColorSchemeInProgress;
-    i1.text = @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com";
+    i1.text = [self addLinks: @"Candy cupcake cupcake toffee danish cotton candy cookie wafer by http://cupcakeipsum.com"];
 
     BubbleItem * i2 = [[BubbleItem alloc] init];
     i2.cellIdentifier = [TextMessageCell reuseIdentifier];
     i2.colorScheme = HXOBubbleColorSchemeSuccess;
-    i2.text = @"Oat cake dragée tiramisu.";
+    i2.text = [self addLinks: @"Oat cake dragée tiramisu."];
 
     BubbleItem * i3 = [[BubbleItem alloc] init];
     i3.cellIdentifier = [TextMessageCell reuseIdentifier];
     i3.colorScheme = HXOBubbleColorSchemeFailed;
-    i3.text = @"Oat cake dragée tiramisu. Icing tiramisu apple pie carrot cake.";
+    i3.text = [self addLinks: @"Oat cake dragée tiramisu. Icing tiramisu apple pie carrot cake."];
 
     BubbleItem * i4 = [[BubbleItem alloc] init];
     i4.cellIdentifier = [TextMessageCell reuseIdentifier];
     i4.colorScheme = HXOBubbleColorSchemeSuccess;
     i4.pointDirection = HXOMessageDirectionOutgoing;
-    i4.text = @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰.";
+    i4.text = [self addLinks: @"Oat 🍰 dragée tiramisu. Icing tiramisu 🍎 pie carrot 🍰."];
 
     BubbleItem * i5 = [[BubbleItem alloc] init];
     i5.cellIdentifier = [TextMessageCell reuseIdentifier];
     i5.colorScheme = HXOBubbleColorSchemeIncoming;
     i5.pointDirection = HXOMessageDirectionIncoming;
-    i5.text = @"Icing tiramisu 🍎 pie carrot 🍰.";
+    i5.text = [self addLinks: @"Icing tiramisu 🍎 pie carrot 🍰."];
 
     BubbleItem * i6 = [[BubbleItem alloc] init];
     i6.cellIdentifier = [TextMessageCell reuseIdentifier];
     i6.colorScheme = HXOBubbleColorSchemeSuccess;
     i6.pointDirection = HXOMessageDirectionOutgoing;
-    i6.text = @"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com";
+    i6.text = [self addLinks:@"Cheesecake toffee jelly-o chocolate bar chocolate powder applicake tootsie roll. Applicake sweet roll tiramisu dragée muffin. Gummies marzipan apple pie brownie candy by http://cupcakeipsum.com"];
 
     BubbleItem * i7 = [[BubbleItem alloc] init];
     i7.cellIdentifier = [TextMessageCell reuseIdentifier];
     i7.colorScheme = HXOBubbleColorSchemeIncoming;
     i7.pointDirection = HXOMessageDirectionIncoming;
-    i7.text = @"Chocolate cake danish tart ice cream. 030 87654321"; // Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321";
+    i7.text = [self addLinks: @"Chocolate cake danish tart ice cream. 030 87654321"]; // Lemon drops apple pie jujubes pie apple pie pie applicake. Lemon drops biscuit candy. Soufflé soufflé toffee cupcake lollipop jujubes. Chocolate cake chocolate apple pie carrot cake. Chocolate cake danish cupcake lemon drops cake marshmallow. Chupa chups tiramisu gingerbread fruitcake pie oat cake cotton candy sesame snaps gingerbread. Lemon drops tootsie roll sugar plum marshmallow croissant chocolate bar. Gummi bears jelly lollipop marzipan bonbon. Brownie unerdwear.com lemon drops marzipan cookie dragée chupa chups. Bear claw sesame snaps jujubes wafer. Dragée gummi bears lollipop carrot cake by http://cupcakeipsum.com 030 87654321"];
 
     BubbleItem * i8 = [[BubbleItem alloc] init];
     i8.cellIdentifier = [ImageAttachmentMessageCell reuseIdentifier];
@@ -183,7 +195,7 @@
     i15.previewImage = [UIImage imageNamed: @"cupcakes.jpg"];
     //i15.attachmentTransferState = HXOAttachmentTransferStateInProgress;
     i15.progress = 0.5;
-    i15.text = @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com";
+    i15.text = [self addLinks: @"Icing tiramisu apple pie carrot cake by http://cupcakeipsum.com"];
 
 
     BubbleItem * i16 = [[BubbleItem alloc] init];
@@ -194,7 +206,7 @@
     //i16.smallAttachmentTypeIcon = [UIImage imageNamed:@"attachment_icon_s_contact"];
     i16.largeAttachmentTypeIcon = [UIImage imageNamed:@"cnt-contact"];
     i16.attachmentText = @"Some Dude";
-    i16.text = @"Oat cake dragée tiramisu. .";
+    i16.text = [self addLinks: @"Oat cake dragée tiramisu. ."];
 /*
 
     BubbleItem * i17 = [[BubbleItem alloc] init];
@@ -226,6 +238,29 @@
 
 }
 
+- (NSAttributedString*) addLinks: (NSString*) text {
+    NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString: text];
+
+    NSError * error = nil;
+    NSTextCheckingTypes types = (NSTextCheckingTypes)NSTextCheckingTypeLink;
+    if ([[UIDevice currentDevice].model isEqualToString: @"iPhone"]) {
+        types |= NSTextCheckingTypePhoneNumber;
+    }
+
+    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes: types
+                                                               error:&error];
+    if (error == nil) {
+        NSArray * links = [detector matchesInString: text options: 0 range: NSMakeRange(0, text.length)];
+        for (NSTextCheckingResult* link in links) {
+            [string addAttribute: kHXOLinkAttributeName value: link range: link.range];
+        }
+    } else {
+        NSLog(@"failed to create regex: %@", error);
+    }
+
+    return string;
+}
+
 - (void)defaultsChanged:(NSNotification*)aNotification {
     NSLog(@"defaultsChanged testingGround: %@", aNotification);
     //[self updateVisibleCells];
@@ -233,6 +268,10 @@
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
     [self.tableView reloadData];
+}
+
+- (void) hyperLabel:(HXOHyperLabel *)label didPressLink:(NSTextCheckingResult*)link long:(BOOL)longPress {
+    NSLog(@"clicked: %@", link.URL);
 }
 
 - (void) registerTokenClasses: (HXOLinkyLabel*) label {
@@ -333,13 +372,9 @@
 }
 
 - (void) configureTextSection: (TextSection*) section item: (BubbleItem*) item {
-    if (section.label.tokenClasses.count == 0) {
-        [self registerTokenClasses: section.label];
-        section.label.delegate = self;
-    }
     double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
     section.label.font = [UIFont systemFontOfSize: fontSize];
-    section.label.text = item.text;
+    section.label.attributedText = item.text;
 }
 
 - (void) configureAttachmentSection: (AttachmentSection*) section item: (BubbleItem*) item {

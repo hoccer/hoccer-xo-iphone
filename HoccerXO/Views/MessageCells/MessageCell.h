@@ -49,5 +49,6 @@
 - (UIColor*) fillColor;
 - (UIColor*) textColor;
 - (UIColor*) subtitleColor;
+- (UIColor*) linkColor;
 
 @end

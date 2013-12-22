@@ -47,6 +47,8 @@
 #import "NickNameLabelWithStatus.h"
 #import "HXOUpDownLoadControl.h"
 #import "DateSectionHeaderView.h"
+#import "MessageItems.h"
+#import "HXOHyperLabel.h"
 
 #define ACTION_MENU_DEBUG NO
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -70,6 +72,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
+@property (nonatomic, readonly) NSMutableDictionary * messageItems;
+
 @property (nonatomic) double messageFontSize;
 
 @end
@@ -85,6 +89,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize currentExportSession = _currentExportSession;
 @synthesize currentPickInfo = _currentPickInfo;
 @synthesize fetchedResultsController = _fetchedResultsController;
+@synthesize messageItems = _messageItems;
 
 
 - (void)viewDidLoad {
@@ -163,6 +168,22 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [AppDelegate setWhiteFontStatusbarForViewController:self];
 }
 
+- (NSMutableDictionary*) messageItems {
+    if ( ! _messageItems ) {
+        _messageItems = [[NSMutableDictionary alloc] init];
+    }
+    return _messageItems;
+}
+
+- (MessageItem*) getItemWithMessage: (HXOMessage*) message {
+    MessageItem * item = [self.messageItems objectForKey: message.objectID];
+    if ( ! item) {
+        item = [[MessageItem alloc] initWithMessage: message];
+        [self.messageItems setObject: item forKey: message.objectID];
+    }
+    item.message = message;
+    return item;
+}
 
 - (void) viewWillDisappear:(BOOL)animated {
     // NSLog(@"ChatViewController:viewWillDisappear");
@@ -173,6 +194,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    _messageItems = nil;
 }
 
 - (void)configureView
@@ -1406,14 +1428,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) configureTextSection: (TextSection*) section forMessage: (HXOMessage*) message {
-    if (section.label.tokenClasses.count == 0) {
-        [self registerTokenClasses: section.label];
-        section.label.delegate = self;
-    }
+    section.label.delegate = self;
     // maybe we find a better way to properly respond to font size changes
     section.label.font = [UIFont systemFontOfSize: self.messageFontSize];
     
-    section.label.text = message.body;
+    section.label.attributedText = [self getItemWithMessage: message].attributedBody;
 }
 
 - (void) configureAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message {
@@ -2007,36 +2026,18 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 #pragma mark - Link Highlighing and Handling
 
-
-- (void) registerTokenClasses: (HXOLinkyLabel*) label {
-
-    NSError * error = nil;
-    NSTextCheckingTypes types = (NSTextCheckingTypes)NSTextCheckingTypeLink;
-    if ([[UIDevice currentDevice].model isEqualToString: @"iPhone"]) {
-        types |= NSTextCheckingTypePhoneNumber;
-    }
-
-    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes: types
-                                                               error:&error];
-    if (error == nil) {
-        [label registerTokenClass: @"dataDetector" withExpression: detector style: nil];
-    } else {
-        NSLog(@"failed to create regex: %@", error);
-    }
-}
-
-- (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass isLongPress:(BOOL)isLongPress {
-    switch (match.resultType) {
+- (void) hyperLabel:(HXOHyperLabel *)label didPressLink: (NSTextCheckingResult*) link long:(BOOL)longPress {
+    switch (link.resultType) {
         case NSTextCheckingTypeLink:
-            NSLog(@"tapped link %@ long: %d", match.URL, isLongPress);
-            [[UIApplication sharedApplication] openURL: match.URL];
+            NSLog(@"tapped link %@ long: %d", link.URL, longPress);
+            [[UIApplication sharedApplication] openURL: link.URL];
             break;
         case NSTextCheckingTypePhoneNumber:
-            NSLog(@"tapped phone number %@ long: %d", match.phoneNumber, isLongPress);
-            [self makePhoneCall: match.phoneNumber];
+            NSLog(@"tapped phone number %@ long: %d", link.phoneNumber, longPress);
+            [self makePhoneCall: link.phoneNumber];
             break;
         default:
-            NSLog(@"tapped unhandled token '%@' of type %@", [label.text substringWithRange: match.range], tokenClass);
+            NSLog(@"tapped unhandled link");
     }
 }
 

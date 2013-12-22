@@ -8,10 +8,10 @@
 
 #import "MessageSection.h"
 
-@class HXOLinkyLabel;
+@class HXOHyperLabel;
 
 @interface TextSection : MessageSection
 
-@property (nonatomic,readonly) HXOLinkyLabel * label;
+@property (nonatomic,readonly) HXOHyperLabel * label;
 
 @end
