@@ -58,6 +58,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     self.lineBreakMode = NSLineBreakByWordWrapping;
     self.textToViewTransform = CGAffineTransformIdentity;
     self.linkColor = [UIColor blueColor];
+    self.textColor = [UIColor blackColor];
 
     [self addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
     [self addGestureRecognizer: [[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
@@ -94,7 +95,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     if ( ! [_linkColor isEqual: linkColor]) {
         _linkColor = linkColor;
         [self releaseFramesetter];
-        [self setNeedsDisplay];
+        [self setNeedsLayout];
     }
 }
 

@@ -22,9 +22,12 @@
 
 @end
 
+@interface VcardMultiValueItem : NSObject
+@property (nonatomic,strong) NSString * label;
+@property (nonatomic,strong) NSString * value;
+@end
 
-@interface Vcard : NSObject {
-}
+@interface Vcard : NSObject
 
 @property (readonly) ABRecordRef person;
 
@@ -34,11 +37,16 @@
 - (id) initWithVcardURL: (NSURL *)vcard;
 
 // vcard fields
-- (NSString *)nameString;
-- (NSString *)organization;
-- (NSString *)previewName;
-- (NSString *)stringPropertyWithId: (ABPropertyID) propertyId;
-- (UIImage *) personImage;
+@property (nonatomic,readonly) NSString * firstName;
+@property (nonatomic,readonly) NSString * lastName;
+@property (nonatomic,readonly) NSString * middleName;
+@property (nonatomic,readonly) NSString * organization;
+@property (nonatomic,readonly) NSArray * emails;
+@property (nonatomic,readonly) UIImage  * personImage;
+
+@property (nonatomic,readonly) NSString * nameString;
+
+- (NSString*) previewName;
 
 // preview
 - (UIImage *) previewImage;

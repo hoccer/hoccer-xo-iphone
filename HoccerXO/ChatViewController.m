@@ -73,6 +73,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
 @property (nonatomic, readonly) NSMutableDictionary * messageItems;
+@property (nonatomic, readonly) NSDateFormatter * dateFormatter;
+@property (nonatomic, readonly) NSByteCountFormatter * byteCountFormatter;
 
 @property (nonatomic) double messageFontSize;
 
@@ -90,7 +92,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize currentPickInfo = _currentPickInfo;
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize messageItems = _messageItems;
-
+@synthesize dateFormatter = _dateFormatter;
+@synthesize byteCountFormatter = _byteCountFormatter;
 
 - (void)viewDidLoad {
     // NSLog(@"ChatViewController:viewDidLoad");
@@ -154,6 +157,24 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.navigationItem.backBarButtonItem = backButton;
 
     [self configureView];
+}
+
+- (NSDateFormatter*) dateFormatter {
+    if ( ! _dateFormatter) {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setDateStyle:NSDateFormatterLongStyle];
+        [_dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [_dateFormatter setDoesRelativeDateFormatting:YES];
+    }
+    return _dateFormatter;
+}
+
+- (NSByteCountFormatter*) byteCountFormatter {
+    if ( ! _byteCountFormatter) {
+        _byteCountFormatter = [[NSByteCountFormatter alloc] init];
+        _byteCountFormatter.countStyle = NSByteCountFormatterCountStyleFile;
+    }
+    return _byteCountFormatter;
 }
 
 
@@ -1018,7 +1039,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSArray *objects = [sectionInfo objects];
     NSManagedObject *managedObject = objects[0];
     NSDate *timeSection = (NSDate *)[managedObject valueForKey:@"timeSection"];
-    header.dateLabel.text = [Contact sectionTitleForMessageTime:timeSection];
+    header.dateLabel.text = [self.dateFormatter stringFromDate: timeSection];
     return header;
 }
 
@@ -1605,19 +1626,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
-- (NSString*) attachmentSubtitle: (Attachment*) attachment {
-    NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
-    NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
-    NSString * sizeString;
-    if ([attachment.contentSize longLongValue] == [attachment.transferSize longLongValue]) {
-        sizeString = fileSize;
-    } else {
-        NSString * currentSize = [NSByteCountFormatter stringFromByteCount: [attachment.transferSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
-        sizeString = [NSString stringWithFormat: @"%@ / %@", currentSize, fileSize];
-    }
-    return [NSString stringWithFormat: @"%@ – %@", name, sizeString];
-}
-
 - (UIImage*) typeIconForAttachment: (Attachment*) attachment {
     NSString * iconName;
     if ([attachment.mediaType isEqualToString: @"image"]) {
@@ -1652,6 +1660,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (NSString*) attachmentTitle: (HXOMessage*) message {
+
+    MessageItem * item = [self getItemWithMessage: message];
+
     Attachment * attachment = message.attachment;
     BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
@@ -1661,50 +1672,77 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSString * title;
     if (isComplete || isOutgoing) {
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
-            if (attachment.localURL != nil) {
-                Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
-                if (myVcard != nil) {
-                    NSString * name = [myVcard previewName];
-                    if (name == nil) {
-                        name = @"?";
-                    }
-                    title = name;
-                }
-            } else {
-                title = NSLocalizedString(@"vcard_default_title", nil);
-            }
+            title = item.vcardName;
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
             title = NSLocalizedString(@"location_default_title", nil);
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
             NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
             if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:attachment.contentURL options:nil];
-                NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-                NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
-
-                if (titles.count > 0 && artists.count > 0) {
-                    AVMetadataItem * titleItem = titles[0];
-                    AVMetadataItem * artistItem = artists[0];
-                    title = [NSString stringWithFormat: @"%@ – %@", artistItem.stringValue, titleItem.stringValue];
-                } else if (titles.count > 0) {
-                    AVMetadataItem * titleItem = titles[0];
-                    title = titleItem.stringValue;
-                } else if (artists.count > 0) {
-                    AVMetadataItem * artistItem = artists[0];
-                    title = artistItem.stringValue;
-                }
+                title = item.audioTitle;
             }
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
-        NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [message.attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
         NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(message.attachment.mediaType, nil);
-        title = [NSString stringWithFormat: @"%@ [%@]", name, fileSize];
+        title = name;
     }
 
     if (title == nil) {
         title = attachment.humanReadableFileName;
     }
     return title;
+}
+
+- (NSString*) attachmentSubtitle: (Attachment*) attachment {
+
+    MessageItem * item = [self getItemWithMessage: attachment.message];
+    NSString * fileSize = [self.byteCountFormatter stringFromByteCount: [attachment.contentSize longLongValue]];
+    NSString * sizeString;
+    if ([attachment.contentSize longLongValue] == [attachment.transferSize longLongValue]) {
+        sizeString = fileSize;
+    } else {
+        NSString * currentSize = [self.byteCountFormatter stringFromByteCount: [attachment.transferSize longLongValue]];
+        sizeString = [NSString stringWithFormat: @"%@ / %@", currentSize, fileSize];
+    }
+
+    if (attachment.state == kAttachmentTransferOnHold) {
+        NSString * question = attachment.message.isOutgoing.boolValue ? @"upload_question" : @"download_question";
+        return [NSString stringWithFormat: NSLocalizedString(question, nil), fileSize];
+    }
+
+    NSString * subtitle;
+    if (item.attachmentInfoLoaded) {
+        if ([attachment.mediaType isEqualToString: @"vcard"]) {
+            NSString * info = item.vcardEmail;
+            if (! info) {
+                info = item.vcardOrganization;
+            }
+            subtitle = info;
+        } else if ([attachment.mediaType isEqualToString: @"audio"]) {
+            NSString * duration = [self stringFromTimeInterval: item.audioDuration];
+            sizeString =[NSString stringWithFormat:@"%@ %@", duration, sizeString];
+            if (item.audioArtist) {
+                subtitle = item.audioArtist;
+            }
+        }
+            
+    }
+    if (subtitle == nil) {
+        NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
+        subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
+     }
+    return subtitle;
+}
+
+- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
+    NSInteger ti = (NSInteger)interval;
+    NSInteger seconds = ti % 60;
+    NSInteger minutes = (ti / 60) % 60;
+    NSInteger hours = (ti / 3600);
+    if (hours) {
+        return [NSString stringWithFormat: @"%i:%02i:%02i", hours, minutes, seconds];
+    } else {
+        return [NSString stringWithFormat: @"%i:%02i", minutes, seconds];
+    }
 }
 
 #pragma mark - MessageViewControllerDelegate methods

@@ -458,4 +458,7 @@
 "message_read"      = "read";
 "message_failed"    = "failed";
 
+"upload_question" = "Upload %@?";
+"download_question" = "Download %@?";
+
 

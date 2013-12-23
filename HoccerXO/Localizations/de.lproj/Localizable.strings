@@ -436,3 +436,6 @@
 "message_read"      = "gelesen";
 "message_failed"    = "kaputt";
 
+"upload_question"   = "%@ hochladen?";
+"download_question" = "%@ runterladen?";
+
