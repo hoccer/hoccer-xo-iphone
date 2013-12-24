@@ -30,7 +30,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #define CONNECTION_TRACE NO
-#define MIGRATION_DEBUG NO
+#define MIGRATION_DEBUG YES
 #define AUDIOSESSION_DEBUG NO
 
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
@@ -734,6 +734,7 @@ static NSInteger validationErrorCount = 0;
     }
     
     NSDictionary *migrationOptions = nil;
+#if 0
     if ([[NSFileManager defaultManager] fileExistsAtPath:myPath]) {
         
         NSManagedObjectModel * storeModel = [self findModelForStore:storeURL];
@@ -759,7 +760,8 @@ static NSInteger validationErrorCount = 0;
             }
             if (MIGRATION_DEBUG) NSLog(@"Automigration possible");
             migrationOptions = @{NSMigratePersistentStoresAutomaticallyOption : @(YES),
-                                 NSInferMappingModelAutomaticallyOption : @(YES)};
+                                 NSInferMappingModelAutomaticallyOption : @(YES),
+                                 NSSQLitePragmasOption : @{@"journal_mode" : @"DELETE"}};
             
             
             NSURL * newStoreURL = [self tempPersistentStoreURL];
@@ -783,7 +785,12 @@ static NSInteger validationErrorCount = 0;
             }
         }
     }
-    
+#endif
+    if (migrationOptions == nil) {
+        migrationOptions = @{NSMigratePersistentStoresAutomaticallyOption : @(YES),
+                             NSInferMappingModelAutomaticallyOption : @(YES),
+                             NSSQLitePragmasOption : @{@"journal_mode" : @"DELETE"}};
+    }
     
     NSPersistentStoreCoordinator * theNewStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     

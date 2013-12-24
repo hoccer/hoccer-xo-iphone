@@ -143,7 +143,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
     [_saltItem setObject: keychainItemBugWorkaround forKey: (__bridge id)(kSecAttrAccount)]; 
     [_saltItem setObject: [salt hexadecimalString] forKey: (__bridge id)(kSecValueData)];
-    [ProfileViewController exportCredentials];
+    //[ProfileViewController exportCredentials];
     return [verifier hexadecimalString];
 }
     
