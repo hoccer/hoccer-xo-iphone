@@ -41,6 +41,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSArray*       latestMessage;
 
 @property (nonatomic, strong) NSData*       publicKey; // public key of this contact
+@property (nonatomic, strong) NSData*       verifiedKey; // verified public key of this contact
 @property (nonatomic, strong) NSString*     publicKeyId; // id of public key
 @property (nonatomic, strong) NSString*     connectionStatus;
 

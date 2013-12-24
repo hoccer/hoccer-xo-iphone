@@ -312,6 +312,42 @@
 				<integer>24</integer>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Security</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>RSA Key Size</string>
+			<key>Key</key>
+			<string>rsaKeySize</string>
+			<key>DefaultValue</key>
+			<integer>1024</integer>
+			<key>Titles</key>
+			<array>
+				<string>1024 Bit</string>
+				<string>2048 Bit</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>1024</integer>
+				<integer>2048</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Manual Key Mgmt.</string>
+			<key>Key</key>
+			<string>manualKeyManagement</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

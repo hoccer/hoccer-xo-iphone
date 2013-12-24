@@ -50,10 +50,15 @@ typedef enum ProfileViewModes {
 
     ProfileItem *         _fingerprintItem;
     ProfileItem *         _fingerprintInfoItem;
+    ProfileItem *         _exportPublicKeyItem;
+    ProfileItem *         _importPublicKeyItem;
+    ProfileItem *         _verifyPublicKeyItem;
     ProfileSection *      _fingerprintSection;
 
     ProfileItem *         _renewKeyPairItem;
     ProfileItem *         _renewKeyPairInfoItem;
+    ProfileItem *         _exportPrivateKeyItem;
+    ProfileItem *         _importPrivateKeyItem;
     ProfileSection *      _keypairSection;
 
     ProfileItem *         _deleteContactItem;

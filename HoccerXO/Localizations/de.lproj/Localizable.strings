@@ -165,7 +165,7 @@
 
 "profile_delete_avatar_button_title" = "Avatar löschen";
 
-"profile_renew_keypair" = "Renew RSA Keypair";
+"profile_renew_keypair" = "RSA-Schlüssel erneuern";
 
 "profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen Händen war kannst Du hier Deine Schlüssel erneuern.";
 
@@ -243,6 +243,33 @@
 
 "Imported credentials are the same as the active ones."="Importiere Zugangsdaten sind mit den geltenden identisch.";
 "Same credentials"="Identische Zugangsdaten";
+
+"export_publickey"="Öffentl. Schlüssel exportieren";
+"export_privatekey"="Priv. Schlüssel exportieren";
+"import_publickey"="Öffentl. Schlüssel importieren";
+"import_privatekey"="Priv. Schlüssel importieren";
+
+"key_export_success"="Schlüssel wurde erfolgreich in die Zwischenablage exportiert";
+"key_export_success_title"="Schlüssel exportiert";
+
+"key_export_failed"="Der Schlüssel konnte leider nicht exportiert werden.";
+"key_export_failed_title"="Schlüsselexport fehlgeschlagen";
+
+"key_import_success"="Schlüssel wurde erfolgreich aus der Zwischenablage importiert.";
+"key_import_success_title"="Schlüssel importiert";
+
+"key_import_failed"="Es konnte kein Schlüssel aus der Zwischenablage importiert werden.";
+"key_import_failed_title"="Schlüsselimport fehlgeschlagen";
+
+
+"verify_publickey"="Als verifiziert markieren";
+"unverify_publickey"="Verifikation aufheben";
+
+"import_confirm"="Import";
+"import_key_safety_question"="Diese Funktion import einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest es nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
+
+"export_confirm"="Exportieren";
+"export_private_key_safety_question"="Mit ihrem privaten Schlüssel können an sie gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich davon ab. Wollen sie den Schlüssel dennoch in die Zwischenablage exportieren?";
 
 
 "Save" = "Speichern";

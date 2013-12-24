@@ -73,4 +73,8 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 
 + (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock;
 
++ (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
++ (NSString *)sanitizeFileNameString:(NSString *)fileName;
++ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint;
+
 @end

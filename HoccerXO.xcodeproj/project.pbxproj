@@ -857,6 +857,7 @@
 		E93ED67817B93D6F0072FD2C /* EC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EC.h; sourceTree = "<group>"; };
 		E93ED67917B93D6F0072FD2C /* EC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EC.m; sourceTree = "<group>"; };
 		E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-22.xcdatamodel"; sourceTree = "<group>"; };
+		E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-23.xcdatamodel"; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
 		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
 		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
@@ -2692,8 +2693,9 @@
 				E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */,
 				E93ED64F17A33CE10072FD2C /* HoccerXO-21.xcdatamodel */,
 				E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */,
+				E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */,
 			);
-			currentVersion = E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */;
+			currentVersion = E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

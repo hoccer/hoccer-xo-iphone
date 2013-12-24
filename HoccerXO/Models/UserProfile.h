@@ -55,5 +55,6 @@
 - (BOOL)      verifySrpSession: (NSString*) HAMK;
 
 + (UserProfile*) sharedProfile;
++(NSURL*)getKeyFileURLWithKeyTypeName:(NSString*)keyTypeName forUser:(NSString*)userName withKeyId:(NSString*)keyId;
 
 @end

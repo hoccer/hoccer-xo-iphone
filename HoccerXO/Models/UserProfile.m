@@ -261,7 +261,16 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     }
     return -1;
 }
-    
+
++(NSURL*)getKeyFileURLWithKeyTypeName:(NSString*)keyTypeName forUser:(NSString*)userName withKeyId:(NSString*)keyId {
+    NSString *newFileName = [NSString stringWithFormat:@"%@-%@-%@.pem",keyTypeName,userName,keyId];
+    newFileName = [AppDelegate sanitizeFileNameString:newFileName];
+    NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSString * myDocDir = [appDocDir path];
+    NSString * savePath = [myDocDir stringByAppendingPathComponent: newFileName];
+    NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
+    return myLocalURL;
+}
 
 @synthesize srpUser = _srpUser;
 - (HCSRPUser*) srpUser {

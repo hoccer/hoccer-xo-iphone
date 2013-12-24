@@ -262,6 +262,33 @@
 "Imported credentials are the same as the active ones."="Imported credentials are the same as the active ones.";
 "Same credentials"="Same credentials";
 
+"export_publickey"="Export Public Key";
+"export_privatekey"="Export Private Key";
+"import_publickey"="Import Public Key";
+"import_privatekey"="Import Private Key";
+
+"key_export_success"="The key has been succesfully exported to the pasteboard";
+"key_export_success_title"="Key exported";
+
+"key_export_failed"="Sorry, the key export has failed.";
+"key_export_failed_title"="Key export failed";
+
+"key_import_success"="The key has been successfully imported from the pasteboard";
+"key_import_success_title"="Key Import Succeeded";
+
+"key_import_failed"="Sorry, the key import from pasteboard has failed.";
+"key_import_failed_title"="Key Import Failed";
+
+
+"verify_publickey"="Mark key verified";
+"unverify_publickey"="Mark key not verified";
+
+"import_confirm"="Import";
+"import_key_safety_question"="This will import an RSA key in PEM-format from the pasteboard. Only do it when you know what you are doing. Do you want to proceed?";
+
+
+"export_confirm"="Export";
+"export_private_key_safety_question"="Your private key can be used to decrypt messages sent to you. Therefore exporting a private key is generally not recommended. Do you want to export it to the pasteboard anyway?";
 
 "Save" = "Save";
 

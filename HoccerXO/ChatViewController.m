@@ -423,38 +423,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     return _attachmentPicker;
 }
 
-+ (NSString *)sanitizeFileNameString:(NSString *)fileName {
-    NSCharacterSet* illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>"];
-    return [[fileName componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@"_"];
-}
-
-+ (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory {
-    
-	if (![[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:theFilename]]) {
-		return theFilename;
-	};
-	
-	NSString *ext = [theFilename pathExtension];
-	NSString *baseFilename = [theFilename stringByDeletingPathExtension];
-	
-	NSInteger i = 1;
-	NSString* newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [@(i) stringValue]];
-    
-    if ((ext == nil) || (ext.length <= 0)) {
-        ext = @"";
-        //NSLog(@"empty ext 3");
-    }
-	newFilename = [newFilename stringByAppendingPathExtension: ext];
-	while ([[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:newFilename]]) {
-		newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [@(i) stringValue]];
-		newFilename = [newFilename stringByAppendingPathExtension: ext];
-		
-		i++;
-	}
-	
-	return newFilename;
-}
-
 // unused yet, but may need it in the future
 + (NSString *)contentTypeForImageData:(NSData *)data {
     uint8_t c;
@@ -472,17 +440,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             return @"image/tiff";
     }
     return nil;
-}
-
-+ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint {
-    
-    NSString *newFileName = [ChatViewController sanitizeFileNameString: fileNameHint];
-    NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
-    NSString * myDocDir = [appDocDir path];
-    NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
-    NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
-    NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
-    return myLocalURL;
 }
 
 - (void) didPickAttachment: (id) attachmentInfo {
@@ -508,7 +465,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         //NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
         NSData * previewData = UIImagePNGRepresentation( preview );
 
-        NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike: @"location.json"];
+        NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.json"];
         NSDictionary * json = @{ @"location": @{ @"type": @"point",
                                                  @"coordinates": @[ @(placemark.coordinate.longitude), @(placemark.coordinate.latitude)]},
                                  @"previewImage": [previewData asBase64EncodedString]};
@@ -537,7 +494,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             
             // find a suitable unique file name and path
             NSString * newFileName = [NSString stringWithFormat:@"%@.vcf",personName];
-            NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+            NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
             
             [vcardData writeToURL:myLocalURL atomically:NO];
             CompletionBlock completion  = ^(NSError *myerror) {
@@ -590,7 +547,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 
                 // find a suitable unique file name and path
                 NSString * newFileName = @"pastedImage.jpg";
-                NSURL * myLocalURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+                NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
                                 
                 // write the image
                 myImage = [Attachment qualityAdjustedImage:myImage];
@@ -621,7 +578,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         // make a nice and unique filename
         NSString * newFileName = [NSString stringWithFormat:@"%@ - %@.%@",[song valueForProperty:MPMediaItemPropertyArtist],[song valueForProperty:MPMediaItemPropertyTitle],@"m4a" ];
 
-        NSURL * myExportURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+        NSURL * myExportURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
         
         NSURL *assetURL = [song valueForProperty:MPMediaItemPropertyAssetURL];
         // NSLog(@"audio assetURL = %@", assetURL);
@@ -731,7 +688,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 if ([Attachment tooLargeImage:myImage]) {
                     myImage = [Attachment qualityAdjustedImage:myOriginalImage];
                     NSString * newFileName = @"reducedSnapshotImage.jpg";
-                    myFileURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+                    myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
                     
                     float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
                     [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
@@ -772,7 +729,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 if ([Attachment tooLargeImage:myImage]) {
                     myImage = [Attachment qualityAdjustedImage:myImage];
                     NSString * newFileName = @"reducedSnapshotImage.jpg";
-                    myURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+                    myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
                     
                     float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
                     [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
@@ -792,7 +749,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
             // move file from temp directory to document directory
             NSString * newFileName = @"video.mov";
-            NSURL * myNewURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];
+            NSURL * myNewURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
             NSError * myError = nil;
             [[NSFileManager defaultManager] moveItemAtURL:myURL2 toURL:myNewURL error:&myError];
             if (myError != nil) {

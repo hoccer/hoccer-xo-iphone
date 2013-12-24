@@ -34,6 +34,7 @@
 #import "HXOBackend.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "AppDelegate.h"
+#import "NSData+Base64.h"
 
 #import <Foundation/NSKeyValueCoding.h>
 
@@ -48,8 +49,12 @@ typedef enum ActionSheetTags {
     kActionSheetDeleteContact,
     kActionSheetImportCredentials,
     kActionSheetDeleteCredentialsLate,
-    kActionSheetDeleteCredentialsFile
+    kActionSheetDeleteCredentialsFile,
+    kActionSheetExportPrivateKey,
+    kActionSheetImportPublicKey,
+    kActionSheetImportPrivateKey
 } ActionSheetTag;
+
 
 @interface ProfileViewController ()
 
@@ -175,6 +180,7 @@ typedef enum ActionSheetTags {
     _blockContactItem.currentValue = [modelObject nickName];
     //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [modelObject nickName]];
     _chatWithContactItem.currentValue = [modelObject nickName];
+    
 
     for (ProfileItem* item in _allProfileItems) {
         item.currentValue = [modelObject valueForKey: item.valueKey];
@@ -198,6 +204,11 @@ typedef enum ActionSheetTags {
     } else {
         keyId = [HXOBackend ownPublicKeyIdString];
     }
+    if (self.contact.verifiedKey == nil || ![self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
+        _verifyPublicKeyItem.currentValue = NSLocalizedString((@"verify_publickey"), nil);
+    } else {
+        _verifyPublicKeyItem.currentValue = NSLocalizedString((@"unverify_publickey"), nil);
+    }
 
     // XXX hack to display fingerprint while editing...
     _fingerprintItem.currentValue = _fingerprintItem.editLabel = [self formatKeyIdAsFingerprint: keyId];
@@ -210,6 +221,7 @@ typedef enum ActionSheetTags {
     }
     [_contact addObserver: self forKeyPath: @"relationshipState" options: NSKeyValueObservingOptionNew context: nil];
     [_contact addObserver: self forKeyPath: @"publicKeyId" options: NSKeyValueObservingOptionNew context: nil];
+    [_contact addObserver: self forKeyPath: @"verifiedKey" options: NSKeyValueObservingOptionNew context: nil];
 }
 
 - (void) setupContactPropertyKVO: (id) item {
@@ -230,12 +242,18 @@ typedef enum ActionSheetTags {
         id item = _itemsByKeyPath[keyPath];
         if ([keyPath isEqualToString: @"avatarImage"]) {
             [(AvatarItem*)item setCurrentValue: [object avatarImage]];
-        } else if ([keyPath isEqualToString: @"publicKeyId"]) {
+        } else if ([keyPath isEqualToString: @"publicKeyId"] || [keyPath isEqualToString: @"verifiedKey"]) {
             [self updateKeyFingerprint];
+            
             [self.tableView beginUpdates];
-            NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _fingerprintInfoItem];
+            NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _fingerprintItem];
             UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
             [cell configure: _fingerprintItem];
+            
+            indexPath = [_profileDataSource indexPathForObject: _verifyPublicKeyItem];
+            cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
+            [cell configure: _verifyPublicKeyItem];
+            
             [self.tableView endUpdates];
         } else {
             [item setCurrentValue: [object valueForKey: keyPath]];
@@ -284,6 +302,16 @@ typedef enum ActionSheetTags {
         [fingerprint appendString: [keyId substringWithRange: NSMakeRange( i, 2)]];
         if (i + 2 < keyId.length) {
             [fingerprint appendString: @":"];
+        }
+    }
+    //NSLog(@"self.contact = %@", self.contact);
+    if (_mode == ProfileViewModeContactProfile) {
+        if (self.contact.verifiedKey == nil) {
+            [fingerprint appendString: @" 🔶"];
+        } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
+            [fingerprint appendString: @" ✅"];
+        } else {
+            [fingerprint appendString: @" 🔴"];
         }
     }
     return fingerprint;
@@ -374,9 +402,22 @@ typedef enum ActionSheetTags {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [ProfileViewController importCredentials];
         }
+    } else if (actionSheet.tag == kActionSheetExportPrivateKey) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self doExportPrivateKey];
+        }
+    } else if (actionSheet.tag == kActionSheetImportPublicKey) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self doImportPublicKey];
+        }
+    } else if (actionSheet.tag == kActionSheetImportPrivateKey) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self doImportPrivateKey];
+        }
     } else {
     }
 }
+
 
 + (void)importCredentials {
     [AppDelegate enterStringAlert:nil withTitle:NSLocalizedString(@"Enter decryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
@@ -696,8 +737,16 @@ typedef enum ActionSheetTags {
     _fingerprintInfoItem = [[ProfileItem alloc] initWithName:@"FingerprintInfoItem"];
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
 
-    _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem, _fingerprintInfoItem, nil];
-
+    _verifyPublicKeyItem = [[ProfileItem alloc] initWithName:@"VerifyPublicKeyItem"];
+    _verifyPublicKeyItem.currentValue = NSLocalizedString(@"verify_publickey", nil);
+    _verifyPublicKeyItem.editLabel = NSLocalizedString(@"verify_publickey", nil);
+    _verifyPublicKeyItem.cellClass = [UserDefaultsCell class];
+    _verifyPublicKeyItem.action = @selector(verifyPublicKeyPressed:);
+    _verifyPublicKeyItem.target = self;
+    _verifyPublicKeyItem.textAlignment = NSTextAlignmentLeft;
+    //_verifyPublicKeyItem.icon = [UIImage imageNamed: [self _verifyPublicKeyItemIconName]];
+    _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem, nil];
+    
     _renewKeyPairItem = [[ProfileItem alloc] initWithName:@"RenewKeypairItem"];
     _renewKeyPairItem.cellClass = [UserDefaultsCell class];
     _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
@@ -708,7 +757,46 @@ typedef enum ActionSheetTags {
     _renewKeyPairInfoItem.cellClass = [UserDefaultsCellInfoText class];
     _renewKeyPairInfoItem.currentValue = _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
 
-    _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, nil];
+    _exportPublicKeyItem = [[ProfileItem alloc] initWithName:@"ExportPublicKeyItem"];
+    _exportPublicKeyItem.currentValue = NSLocalizedString(@"export_publickey", nil);
+    _exportPublicKeyItem.editLabel = NSLocalizedString(@"export_publickey", nil);
+    _exportPublicKeyItem.cellClass = [UserDefaultsCell class];
+    _exportPublicKeyItem.action = @selector(exportPublicKeyPressed:);
+    _exportPublicKeyItem.target = self;
+    _exportPublicKeyItem.textAlignment = NSTextAlignmentLeft;
+    //_exportPublicKeyItem.icon = [UIImage imageNamed: [self _exportPublicKeyItemIconName]];
+    
+    _importPublicKeyItem = [[ProfileItem alloc] initWithName:@"ImportPublicKeyItem"];
+    _importPublicKeyItem.currentValue = NSLocalizedString(@"import_publickey", nil);
+    _importPublicKeyItem.editLabel = NSLocalizedString(@"import_publickey", nil);
+    _importPublicKeyItem.cellClass = [UserDefaultsCell class];
+    _importPublicKeyItem.action = @selector(importPublicKeyPressed:);
+    _importPublicKeyItem.target = self;
+    _importPublicKeyItem.textAlignment = NSTextAlignmentLeft;
+    //_importPublicKeyItem.icon = [UIImage imageNamed: [self _importPublicKeyItemIconName]];
+
+    _exportPrivateKeyItem = [[ProfileItem alloc] initWithName:@"ExportPrivateKeyItem"];
+    _exportPrivateKeyItem.currentValue = NSLocalizedString(@"export_privatekey", nil);
+    _exportPrivateKeyItem.editLabel = NSLocalizedString(@"export_privatekey", nil);
+    _exportPrivateKeyItem.cellClass = [UserDefaultsCell class];
+    _exportPrivateKeyItem.action = @selector(exportPrivateKeyPressed:);
+    _exportPrivateKeyItem.target = self;
+    _exportPrivateKeyItem.textAlignment = NSTextAlignmentLeft;
+    //_exportPrivateKeyItem.icon = [UIImage imageNamed: [self _exportPrivateKeyItemIconName]];
+    
+    _importPrivateKeyItem = [[ProfileItem alloc] initWithName:@"ImportPrivateKeyItem"];
+    _importPrivateKeyItem.currentValue = NSLocalizedString(@"import_privatekey", nil);
+    _importPrivateKeyItem.editLabel = NSLocalizedString(@"import_privatekey", nil);
+    _importPrivateKeyItem.cellClass = [UserDefaultsCell class];
+    _importPrivateKeyItem.action = @selector(importPrivateKeyPressed:);
+    _importPrivateKeyItem.target = self;
+    _importPrivateKeyItem.textAlignment = NSTextAlignmentLeft;
+    //_importPrivateKeyItem.icon = [UIImage imageNamed: [self _importPrivateKeyItemIconName]];
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOManualKeyManagement]) {
+        _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, _importPrivateKeyItem, _importPublicKeyItem, nil];
+    } else {
+        _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, nil];
+    }
 
     _deleteContactItem = [[ProfileItem alloc] initWithName:@"DeleteContactItem"];
     _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
@@ -827,6 +915,12 @@ typedef enum ActionSheetTags {
     // just don't ask ... needs refactoring
     [self composeProfileItems: editing];
     if (_mode == ProfileViewModeContactProfile) {
+        if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOManualKeyManagement]) {
+        _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,_exportPublicKeyItem,_importPublicKeyItem, nil];
+        } else {
+            _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,nil];
+        }
+
         if ([self.contact.relationshipState isEqualToString: @"friend"]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
             return @[ _avatarSection, _utilitySection, _profileItemsSection, _fingerprintSection, _destructiveSection];
@@ -841,6 +935,13 @@ typedef enum ActionSheetTags {
             return @[_avatarSection, _profileItemsSection, _fingerprintSection];
         }
     } else {
+        if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOManualKeyManagement]) {
+            _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_fingerprintInfoItem, _exportPublicKeyItem,_exportPrivateKeyItem,nil];
+            _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, _importPrivateKeyItem, _importPublicKeyItem, nil];
+        } else {
+            _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_fingerprintInfoItem,nil];
+            _keypairSection = [ProfileSection sectionWithName: @"KeypairSection" items: _renewKeyPairItem, _renewKeyPairInfoItem, nil];
+        }
         if (editing) {
             if (_mode == ProfileViewModeFirstRun) {
                 return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection];
@@ -849,7 +950,6 @@ typedef enum ActionSheetTags {
                     _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem, _deleteCredentialsFileItem, _deleteCredentialsItem, nil];
                 } else {
                     _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _deleteCredentialsItem, nil];
-
                 }
                 return @[ _avatarSection, _profileItemsSection, _fingerprintSection, _keypairSection, _credentialsSection];
             }
@@ -997,6 +1097,117 @@ typedef enum ActionSheetTags {
     [self setEditing:NO animated:NO];
 }
 
+
+- (void) importPublicKeyPressed: (id) sender {
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_key_safety_question", nil)
+                                                        delegate: self
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"import_confirm", nil)
+                                               otherButtonTitles: nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    sheet.tag = kActionSheetImportPublicKey;
+    [sheet showInView: self.view];
+}
+
+- (void) importPrivateKeyPressed: (id) sender {
+     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_key_safety_question", nil)
+     delegate: self
+     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+     destructiveButtonTitle: NSLocalizedString(@"import_confirm", nil)
+     otherButtonTitles: nil];
+     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+     sheet.tag = kActionSheetImportPrivateKey;
+     [sheet showInView: self.view];
+}
+
+- (void) exportPublicKeyPressed: (id) sender {
+    NSData * myKeyBits;
+    NSURL * myUrl;
+    if (_mode == ProfileViewModeContactProfile) {
+        myKeyBits = self.contact.publicKey;
+        myUrl = [UserProfile getKeyFileURLWithKeyTypeName:@"pubkey" forUser:self.contact.nickName withKeyId:self.contact.publicKeyId];
+    } else if (_mode == ProfileViewModeMyProfile) {
+        myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
+        myUrl = [UserProfile getKeyFileURLWithKeyTypeName:@"ownpubkey" forUser:[[self getModelObject] nickName] withKeyId:self.contact.publicKeyId];
+    }
+    if (myKeyBits != nil) {
+        NSString * exportStuff = [RSA makeX509FormattedPublicKey:myKeyBits];
+        NSError * myError = nil;
+        [[UIPasteboard generalPasteboard] setString:exportStuff];
+        //[exportStuff writeToURL:myUrl atomically:NO encoding:NSUTF8StringEncoding error:&myError];
+        if (myError== nil) {
+            [AppDelegate showErrorAlertWithMessage:@"key_export_success" withTitle:@"key_export_success_title"];
+            return;
+        }
+    }
+    [AppDelegate showErrorAlertWithMessage:@"key_export_failed" withTitle:@"key_export_failed_title"];
+}
+
+- (void) exportPrivateKeyPressed: (id) sender {
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"export_private_key_safety_question", nil)
+                                                        delegate: self
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"export_confirm", nil)
+                                               otherButtonTitles: nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    sheet.tag = kActionSheetExportPrivateKey;
+    [sheet showInView: self.view];
+}
+
+- (void) doExportPrivateKey {
+    NSData * myKeyBits;
+    NSURL * myUrl;
+    if (_mode == ProfileViewModeMyProfile) {
+        myKeyBits = [[RSA sharedInstance] getPrivateKeyBits];
+        myUrl = [UserProfile getKeyFileURLWithKeyTypeName:@"ownpubkey" forUser:[[self getModelObject] nickName] withKeyId:self.contact.publicKeyId];
+    }
+    if (myKeyBits != nil) {
+        NSString * exportStuff = [RSA makePEMFormattedPrivateKey:myKeyBits];
+        NSError * myError = nil;
+        [[UIPasteboard generalPasteboard] setString:exportStuff];
+        //[exportStuff writeToURL:myUrl atomically:NO encoding:NSUTF8StringEncoding error:&myError];
+        if (myError== nil) {
+            [AppDelegate showErrorAlertWithMessage:@"key_export_success" withTitle:@"key_export_success_title"];
+            return;
+        }
+    }
+    [AppDelegate showErrorAlertWithMessage:@"key_export_failed" withTitle:@"key_export_failed_title"];
+}
+
+- (void) doImportPublicKey {
+    NSString * myKeyText = [UIPasteboard generalPasteboard].string;
+    NSData * myKeyBits = [RSA extractPublicKeyBitsFromPEM:myKeyText];
+    if (myKeyBits != nil) {
+        if (_mode == ProfileViewModeMyProfile) {
+            // set public key of some peer
+            if ([[RSA sharedInstance] addPublicKeyBits:myKeyBits withTag:[self.contact.clientId dataUsingEncoding:NSUTF8StringEncoding]]) {
+                self.contact.publicKeyString = [myKeyBits asBase64EncodedString];
+                [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
+                return;
+            }
+        } else {
+            if ([[RSA sharedInstance] setPublicKeyBits:myKeyBits]) {
+                [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
+                return;
+            }
+        }
+    }
+    [AppDelegate showErrorAlertWithMessage:@"key_import_failed" withTitle:@"key_import_failed_title"];
+}
+
+- (void) doImportPrivateKey {
+    NSString * myKeyText = [UIPasteboard generalPasteboard].string;
+    NSData * myKeyBits = [RSA extractPrivateKeyBitsFromPEM:myKeyText];
+    if (myKeyBits != nil) {
+        if ([[RSA sharedInstance] setPrivateKeyBits:myKeyBits]) {
+            [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
+            return;
+        }
+    }
+    [AppDelegate showErrorAlertWithMessage:@"key_import_failed" withTitle:@"key_import_failed_title"];
+}
+
+
 - (void) importCredentialsPressed: (id) sender {
 
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
@@ -1106,6 +1317,19 @@ typedef enum ActionSheetTags {
     _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
     [self.tableView beginUpdates];
     [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath:sender] configure: _renewKeyPairItem];
+    [self.tableView endUpdates];
+}
+    
+- (void) verifyPublicKeyPressed: (id) sender {
+    NSLog(@"verifyPublicKeyPressed");
+    if (self.contact.verifiedKey == nil || ![self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
+        self.contact.verifiedKey = self.contact.publicKey;
+    } else {
+        self.contact.verifiedKey = nil;
+    }
+    [self.tableView beginUpdates];
+    [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath:sender] configure: _verifyPublicKeyItem];
+    //[(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath:sender] configure: _fingerprintItem];
     [self.tableView endUpdates];
 }
 

@@ -786,8 +786,6 @@ static NSInteger validationErrorCount = 0;
     
     
     NSPersistentStoreCoordinator * theNewStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-
-    
     
     if (![theNewStoreCoordinator addPersistentStoreWithType:[self storeType] configuration:nil URL:storeURL options:migrationOptions error:&myError]) {
 
@@ -1124,6 +1122,49 @@ static NSInteger validationErrorCount = 0;
     [AppDelegate updateStatusbarForViewController:viewcontroller style:UIStatusBarStyleLightContent];
 }
 
+//TODO: maybe remove strange UNICODE chars as well
++ (NSString *)sanitizeFileNameString:(NSString *)fileName {
+    NSCharacterSet* illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>"];
+    return [[fileName componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@"_"];
+}
+
++ (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory {
+    
+	if (![[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:theFilename]]) {
+		return theFilename;
+	};
+	
+	NSString *ext = [theFilename pathExtension];
+	NSString *baseFilename = [theFilename stringByDeletingPathExtension];
+	
+	NSInteger i = 1;
+	NSString* newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [@(i) stringValue]];
+    
+    if ((ext == nil) || (ext.length <= 0)) {
+        ext = @"";
+        //NSLog(@"empty ext 3");
+    }
+	newFilename = [newFilename stringByAppendingPathExtension: ext];
+	while ([[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:newFilename]]) {
+		newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [@(i) stringValue]];
+		newFilename = [newFilename stringByAppendingPathExtension: ext];
+		
+		i++;
+	}
+	
+	return newFilename;
+}
+
++ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint {
+    
+    NSString *newFileName = [AppDelegate sanitizeFileNameString: fileNameHint];
+    NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSString * myDocDir = [appDocDir path];
+    NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
+    NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
+    NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
+    return myLocalURL;
+}
 
 @end
 

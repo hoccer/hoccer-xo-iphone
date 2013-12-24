@@ -13,10 +13,10 @@
 #import "NSData+HexString.h"
 #import "NSString+RandomString.h"
 
+#import "HXOUserDefaults.h"
 
-#import "HXOBackend.h" // debug, remove later
 
-
+//#import "HXOBackend.h" // debug, remove later
 
 @implementation RSA
 
@@ -63,7 +63,12 @@ static RSA *instance;
 
 - (void)generateKeyPairKeys
 {
-    // NSLog(@"Generating RSA Keys");
+    NSNumber * bits =[[HXOUserDefaults standardUserDefaults] valueForKey:kHXORsaKeySize];
+    if ([bits longLongValue] != 1024 && [bits longLongValue] != 2048) {
+        bits = @(1024);
+    }
+    
+    NSLog(@"Generating RSA Keys with %@ bits", bits);
     OSStatus status = noErr;	
     NSMutableDictionary *privateKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *publicKeyAttr = [[NSMutableDictionary alloc] init];
@@ -332,6 +337,11 @@ static RSA *instance;
 	return publicKeyBits;
 }
 
+- (BOOL)setPublicKeyBits:(NSData*)publiceKeyBits {
+    return [self addPublicKeyBits:publiceKeyBits withTag:publicTag];
+}
+
+
 - (NSData *)getPrivateKeyBits {
 	OSStatus sanityCheck = noErr;
 	NSData * privateKeyBits = nil;
@@ -355,6 +365,49 @@ static RSA *instance;
     	
 	return privateKeyBits;
 }
+
++(BOOL)setPrivateKeyBits:(NSData*)privateKeyBits tag:(NSData*)privateTag
+{
+    NSMutableDictionary *privateKey = [[NSMutableDictionary alloc] init];
+    [privateKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
+    [privateKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [privateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
+    SecItemDelete((__bridge CFDictionaryRef)privateKey);
+    
+    CFTypeRef persistKey = nil;
+    [privateKey setObject:privateKeyBits forKey:(__bridge id)kSecValueData];
+    [privateKey setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
+    [privateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
+    
+    OSStatus secStatus = SecItemAdd((__bridge CFDictionaryRef)privateKey, &persistKey);
+    
+    if (persistKey != nil) CFRelease(persistKey);
+    
+    if ((secStatus != noErr) && (secStatus != errSecDuplicateItem)) {
+        NSLog(@"#ERROR: setPrivateKeyBits: Could not set private key.");
+        return FALSE;
+    }
+    
+    SecKeyRef keyRef = nil;
+    [privateKey removeObjectForKey:(__bridge id)kSecValueData];
+    [privateKey removeObjectForKey:(__bridge id)kSecReturnPersistentRef];
+    [privateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+    [privateKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    
+    SecItemCopyMatching((__bridge CFDictionaryRef)privateKey,(CFTypeRef *)&keyRef);
+    
+    if (!keyRef) {
+        NSLog(@"#ERROR: setPrivateKeyBits: Could not set private key (2).");
+        return FALSE;
+    }
+    if (keyRef) CFRelease(keyRef);
+    return TRUE;
+}
+
+-(BOOL)setPrivateKeyBits:(NSData*)privateKeyBits {
+    return [RSA setPrivateKeyBits:privateKeyBits tag:privateTag];
+}
+
 
 - (NSData *)stripPublicKeyHeader:(NSData *)d_key
 {
@@ -391,6 +444,7 @@ static RSA *instance;
     return([NSData dataWithBytes:&c_key[idx] length:len - idx]);
 }
 
+
 - (BOOL)addPublicKey:(NSString *)key withTag:(NSString *)tag
 {
     NSString *s_key = key;
@@ -398,8 +452,12 @@ static RSA *instance;
     NSData *d_key = [NSData dataWithBase64EncodedString:s_key];
     //d_key = [self stripPublicKeyHeader:d_key];
     if (d_key == nil) return(FALSE);
-    
     NSData *d_tag = [NSData dataWithBytes:[tag UTF8String] length:[tag length]];
+    return [self addPublicKeyBits: d_key withTag:d_tag];
+}
+
+- (BOOL)addPublicKeyBits:(NSData *)d_key withTag:(NSData *)d_tag
+{
     
     // Delete any old lingering key with the same tag
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
@@ -538,5 +596,261 @@ static RSA *instance;
         	
 	return publicKeyBits;
 }
+
+static unsigned char oidSequence[] = { 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00 };
+
+static NSString *x509PublicHeader = @"-----BEGIN PUBLIC KEY-----";
+static NSString *x509PublicFooter = @"-----END PUBLIC KEY-----";
+static NSString *pKCS1PublicHeader = @"-----BEGIN RSA PUBLIC KEY-----";
+static NSString *pKCS1PublicFooter = @"-----END RSA PUBLIC KEY-----";
+static NSString *pemPrivateHeader = @"-----BEGIN RSA PRIVATE KEY-----";
+static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
+
+
++ (NSString*)makeSSHFormattedPublicKey:(NSData *)publicKeyBits {
+    char length[4] = {0,0,0,7};
+    NSMutableData * data = [NSMutableData dataWithBytes:length length:4];
+    NSString * stringToWriteInFile = @"ssh-rsa";
+    [data appendData:[stringToWriteInFile dataUsingEncoding:NSUTF8StringEncoding]];
+    length[3] = 3;
+    [data appendBytes:length length:4];
+    char version[3] = {1,0,1};
+    [data appendBytes:version length:3];
+    length[3] = [[RSA getPublicKeyMod:publicKeyBits] length];
+    [data appendBytes:length length:4];
+    [data appendData:[RSA getPublicKeyMod:publicKeyBits]];
+    
+    stringToWriteInFile = @"ssh-rsa ";
+    stringToWriteInFile = [stringToWriteInFile stringByAppendingString:[data asBase64EncodedString:1]];
+    stringToWriteInFile = [stringToWriteInFile stringByAppendingString:@" some.hostaddress.com\n"];
+    
+    return stringToWriteInFile;
+}
+
++(NSString *)makeX509FormattedPublicKey:(NSData *)publicKeyBits
+{
+    unsigned char builder[15];
+    NSMutableData *encKey = [[NSMutableData alloc] init];
+    int bitstringEncLength;
+    if ([publicKeyBits length ] + 1 < 128 )
+        bitstringEncLength = 1 ;
+    else
+        bitstringEncLength = (([publicKeyBits length ] +1 ) / 256) + 2 ;
+    
+    builder[0] = 0x30;
+    size_t i = sizeof(oidSequence) + 2 + bitstringEncLength + [publicKeyBits length];
+    size_t j = encodeLength(&builder[1], i);
+    [encKey appendBytes:builder length:j +1];
+    
+    [encKey appendBytes:oidSequence length:sizeof(oidSequence)];
+    
+    builder[0] = 0x03;
+    j = encodeLength(&builder[1], [publicKeyBits length] + 1);
+    builder[j+1] = 0x00;
+    [encKey appendBytes:builder length:j + 2];
+    [encKey appendData:publicKeyBits];
+    
+    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
+    NSLog(@"PEM formatted key:\n%@",returnString);
+    
+    return returnString;
+}
+
++(NSData*)extractPublicKeyBitsFromPEM:(NSString *)pemPublicKeyString
+{
+    BOOL isX509 = NO;
+    
+    NSString *strippedKey = nil;
+    if (([pemPublicKeyString rangeOfString:x509PublicHeader].location != NSNotFound) &&
+        ([pemPublicKeyString rangeOfString:x509PublicFooter].location != NSNotFound))
+    {
+        strippedKey = [[pemPublicKeyString stringByReplacingOccurrencesOfString:x509PublicHeader withString:@""] stringByReplacingOccurrencesOfString:x509PublicFooter withString:@""];
+        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+        
+        isX509 = YES;
+    } else if (([pemPublicKeyString rangeOfString:pKCS1PublicHeader].location != NSNotFound) &&
+               ([pemPublicKeyString rangeOfString:pKCS1PublicFooter].location != NSNotFound))
+    {
+        strippedKey = [[pemPublicKeyString stringByReplacingOccurrencesOfString:pKCS1PublicHeader withString:@""] stringByReplacingOccurrencesOfString:pKCS1PublicFooter withString:@""];
+        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+        
+        isX509 = NO;
+    } else {
+        NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format");
+        return nil;
+    }
+    
+    NSData *strippedPublicKeyData = [NSData dataWithBase64EncodedString:strippedKey];
+    
+    if (isX509)
+    {
+        unsigned char * bytes = (unsigned char *)[strippedPublicKeyData bytes];
+        size_t bytesLen = [strippedPublicKeyData length];
+        
+        size_t i = 0;
+        if (bytes[i++] != 0x30) {
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (2)");
+            return nil;
+        }
+        
+        /* Skip size bytes */
+        if (bytes[i] > 0x80)
+            i += bytes[i] - 0x80 + 1;
+        else
+            i++;
+        
+        if (i >= bytesLen){
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (3)");
+            return nil;
+        }
+        if (bytes[i] != 0x30){
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (4)");
+            return nil;
+        }
+        
+        /* Skip OID */
+        i += 15;
+        
+        if (i >= bytesLen - 2){
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (5)");
+            return nil;
+        }
+        if (bytes[i++] != 0x03){
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (6)");
+            return nil;
+        }
+        /* Skip length and null */
+        if (bytes[i] > 0x80)
+            i += bytes[i] - 0x80 + 1;
+        else
+            i++;
+        
+        if (i >= bytesLen){
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (7)");
+            return nil;
+        }
+        if (bytes[i++] != 0x00){
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (8)");
+            return nil;
+        }
+        if (i >= bytesLen){
+            NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (9)");
+            return nil;
+        }
+        strippedPublicKeyData = [NSData dataWithBytes:&bytes[i] length:bytesLen - i];
+    }
+    
+    NSLog(@"X.509 Formatted Public Key bytes:\n%@",[strippedPublicKeyData description]);
+    
+    if (strippedPublicKeyData == nil){
+        NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (2)");
+        return nil;
+    }
+    NSLog(@"Stripped Public Key Bytes:\n%@",[strippedPublicKeyData description]);
+    return strippedPublicKeyData;
+}
+
+size_t encodeLength(unsigned char * buf, size_t length) {
+    if (length < 128)
+    {
+        buf[0] = length;
+        return 1;
+    }
+    
+    size_t i = (length / 256) + 1;
+    buf[0] = i + 0x80;
+    for (size_t j = 0 ; j < i; ++j)
+    {
+        buf[i - j] = length & 0xFF;
+        length = length >> 8;
+    }
+    
+    return i + 1;
+}
+
++(NSString*)makePEMFormattedPrivateKey:(NSData *)privateKeyBits {
+    NSString * stringToWriteInFile = pemPrivateHeader;
+    stringToWriteInFile = [stringToWriteInFile stringByAppendingString:@"\n"];
+    stringToWriteInFile = [stringToWriteInFile stringByAppendingString:[privateKeyBits asBase64EncodedString:1]];
+    stringToWriteInFile = [stringToWriteInFile stringByAppendingString:@"\n"];
+    stringToWriteInFile = [stringToWriteInFile stringByAppendingString:pemPrivateFooter];
+    stringToWriteInFile = [stringToWriteInFile stringByAppendingString:@"\n"];
+    return stringToWriteInFile;
+}
+
++(NSData*)extractPrivateKeyBitsFromPEM:(NSString *)pemPrivateKeyString {
+    NSString *strippedKey = nil;
+    if (([pemPrivateKeyString rangeOfString:pemPrivateHeader].location != NSNotFound) && ([pemPrivateKeyString rangeOfString:pemPrivateFooter].location != NSNotFound))
+    {
+        strippedKey = [[pemPrivateKeyString stringByReplacingOccurrencesOfString:pemPrivateHeader withString:@""] stringByReplacingOccurrencesOfString:pemPrivateFooter withString:@""];
+        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    }
+    else {
+        NSLog(@"importPrivateKeyBits: not in PEM format");
+        return nil;
+    }
+    
+    NSData *privateKeyBits = [NSData dataWithBase64EncodedString:strippedKey];
+    return privateKeyBits;
+}
+
+-(BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString {
+    NSData * myBits = [RSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
+    return [RSA setPrivateKeyBits:myBits tag:privateTag];
+}
+
+
++ (int)derEncodingGetSizeFrom:(NSData*)buf at:(int*)iterator
+{
+    const uint8_t* data = [buf bytes];
+    int itr = *iterator;
+    int num_bytes = 1;
+    int ret = 0;
+    
+    if (data[itr] > 0x80) {
+        num_bytes = data[itr] - 0x80;
+        itr++;
+    }
+    
+    for (int i = 0 ; i < num_bytes; i++) ret = (ret * 0x100) + data[itr + i];
+    
+    *iterator = itr + num_bytes;
+    return ret;
+}
+
++ (NSData *)getPublicKeyExp:(NSData *)publicKeyBits
+{
+    if (publicKeyBits == nil) return nil;
+    
+    int iterator = 0;
+    
+    iterator++; // TYPE - bit stream - mod + exp
+    [self derEncodingGetSizeFrom:publicKeyBits at:&iterator]; // Total size
+    
+    iterator++; // TYPE - bit stream mod
+    int mod_size = [self derEncodingGetSizeFrom:publicKeyBits at:&iterator];
+    iterator += mod_size;
+    
+    iterator++; // TYPE - bit stream exp
+    int exp_size = [self derEncodingGetSizeFrom:publicKeyBits at:&iterator];
+    
+    return [publicKeyBits subdataWithRange:NSMakeRange(iterator, exp_size)];
+}
+
++ (NSData *)getPublicKeyMod:(NSData *)publicKeyBits
+{
+    if (publicKeyBits == NULL) return NULL;
+    
+    int iterator = 0;
+    
+    iterator++; // TYPE - bit stream - mod + exp
+    [self derEncodingGetSizeFrom:publicKeyBits at:&iterator]; // Total size
+    
+    iterator++; // TYPE - bit stream mod
+    int mod_size = [self derEncodingGetSizeFrom:publicKeyBits at:&iterator];
+    
+    return [publicKeyBits subdataWithRange:NSMakeRange(iterator, mod_size)];
+}
+
 
 @end

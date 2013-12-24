@@ -34,6 +34,7 @@
 @dynamic unreadMessages;
 @dynamic latestMessage;
 @dynamic publicKey;
+@dynamic verifiedKey;
 @dynamic publicKeyId;
 @dynamic connectionStatus;
 @dynamic presenceLastUpdated;

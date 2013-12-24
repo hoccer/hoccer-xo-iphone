@@ -75,7 +75,7 @@
 -(NSURL*) ensureAudioURL {
     if (self.audioFileURL == nil) {
         NSString * newFileName = @"recording.m4a";
-        self.audioFileURL = [ChatViewController uniqueNewFileURLForFileLike:newFileName];        
+        self.audioFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
     }
     return self.audioFileURL;
 }
