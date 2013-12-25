@@ -10,8 +10,6 @@
 
 #import "UIAlertView+BlockExtensions.h"
 
-#import "HXOLinkyLabel.h"
-//#import "BubbleViewToo.h"
 #import "TextMessageCell.h"
 #import "ImageAttachmentMessageCell.h"
 #import "GenericAttachmentMessageCell.h"
@@ -271,38 +269,17 @@
 }
 
 - (void) hyperLabel:(HXOHyperLabel *)label didPressLink:(NSTextCheckingResult*)link long:(BOOL)longPress {
-    NSLog(@"clicked: %@", link.URL);
-}
-
-- (void) registerTokenClasses: (HXOLinkyLabel*) label {
-
-    NSError * error = nil;
-    NSTextCheckingTypes types = (NSTextCheckingTypes)NSTextCheckingTypeLink;
-    if ([[UIDevice currentDevice].model isEqualToString: @"iPhone"]) {
-        types |= NSTextCheckingTypePhoneNumber;
-    }
-
-    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes: types
-                                                               error:&error];
-    if (error == nil) {
-        [label registerTokenClass: @"dataDetector" withExpression: detector style: nil];
-    } else {
-        NSLog(@"failed to create regex: %@", error);
-    }
-}
-
-- (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass isLongPress:(BOOL)isLongPress {
-    switch (match.resultType) {
+    switch (link.resultType) {
         case NSTextCheckingTypeLink:
-            NSLog(@"tapped link %@", match.URL);
-            [[UIApplication sharedApplication] openURL: match.URL];
+            NSLog(@"tapped link %@", link.URL);
+            [[UIApplication sharedApplication] openURL: link.URL];
             break;
         case NSTextCheckingTypePhoneNumber:
-            NSLog(@"tapped phone number %@", match.phoneNumber);
-            [self makePhoneCall: match.phoneNumber];
+            NSLog(@"tapped phone number %@", link.phoneNumber);
+            [self makePhoneCall: link.phoneNumber];
             break;
         default:
-            NSLog(@"tapped unhandled token '%@' of type %@", [label.text substringWithRange: match.range], tokenClass);
+            NSLog(@"tapped unhandled token '%@'", [label.attributedText.string substringWithRange: link.range]);
     }
 }
 
