@@ -97,6 +97,12 @@ static NSDataDetector * _linkDetector;
                 _audioArtist = metaItem.stringValue;
             }
 
+            metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
+            if (metaData.count > 0) {
+                metaItem = metaData[0];
+                _audioAlbum = metaItem.stringValue;
+            }
+
         }
     }
 

@@ -24,6 +24,7 @@
 
 @property (nonatomic,readonly) NSString * audioTitle;
 @property (nonatomic,readonly) NSString * audioArtist;
+@property (nonatomic,readonly) NSString * audioAlbum;
 @property (nonatomic,readonly) NSTimeInterval audioDuration;
 
 
