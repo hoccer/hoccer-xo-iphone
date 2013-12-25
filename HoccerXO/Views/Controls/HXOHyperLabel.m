@@ -23,10 +23,10 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
 
 @interface HXOHyperLabel ()
 
-@property (nonatomic,readonly) CTFramesetterRef framesetter;
-@property (nonatomic,readonly) CTFrameRef       textFrame;
-@property (nonatomic,readonly) CTFontRef        ctfont;
-@property (nonatomic,strong)   NSDictionary*    links;
+@property (nonatomic,readonly) CTFramesetterRef  framesetter;
+@property (nonatomic,readonly) CTFrameRef        textFrame;
+@property (nonatomic,readonly) CTFontRef         ctfont;
+@property (nonatomic,strong)   NSDictionary*     links;
 @property (nonatomic,assign)   CGAffineTransform textToViewTransform;
 
 @end
@@ -58,7 +58,6 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     self.lineBreakMode = NSLineBreakByWordWrapping;
     self.textToViewTransform = CGAffineTransformIdentity;
     self.linkColor = [UIColor blueColor];
-    self.textColor = [UIColor blackColor];
 
     [self addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
     [self addGestureRecognizer: [[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
@@ -87,7 +86,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     if ( ! [_textColor isEqual: textColor]) {
         _textColor = textColor;
         [self releaseFramesetter];
-        [self setNeedsDisplay];
+        [self setNeedsLayout];
     }
 }
 
@@ -129,6 +128,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     CGAffineTransform translateY = CGAffineTransformMakeTranslation(0, self.bounds.size.height + dx);
     CGAffineTransform mirrorY = CGAffineTransformMakeScale(1, -1);
     self.textToViewTransform = CGAffineTransformConcat(mirrorY, translateY);
+    [self setNeedsDisplay]; // XXX labels are occasionally empty... try to trap this
 }
 
 - (void) drawRect:(CGRect)rect {
