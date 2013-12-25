@@ -31,6 +31,9 @@ extern CGFloat kHXOGridSpacing;
     _bubbleLayer = [CAShapeLayer layer];
     self.bubbleLayer.path = [self bubblePath].CGPath;
     [self.layer addSublayer: self.bubbleLayer];
+
+    //self.layer.shouldRasterize = YES;
+    //self.layer.rasterizationScale = 2.0; // XXX
 }
 
 - (void) layoutSublayersOfLayer:(CALayer *)layer {

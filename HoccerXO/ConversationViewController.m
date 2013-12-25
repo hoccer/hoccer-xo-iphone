@@ -318,7 +318,7 @@
     Contact * contact = (Contact*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
     // cell.nickName.text = contact.nickName;
-    cell.nickName.text = contact.nickNameWithStatus;
+    cell.nickName.label.text = contact.nickNameWithStatus;
     cell.nickName.isOnline = [contact.connectionStatus isEqualToString: @"online"];
 
     UIImage * avatar = contact.avatarImage;

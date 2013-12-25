@@ -17,6 +17,8 @@
 - (void) awakeFromNib {
     _avatar.layer.cornerRadius = 10;
     _avatar.clipsToBounds = YES;
+
+    self.nickName.label.font = [UIFont boldSystemFontOfSize: 14];
 }
 
 @end
