@@ -28,7 +28,7 @@
     self.imageView.clipsToBounds = YES;
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
 
-    self.ledSize = 4;
+    self.ledSize = 5;
     self.ledLayer = [CALayer layer];
     self.ledLayer.backgroundColor = [UIColor redColor].CGColor;
     [self.layer addSublayer: self.ledLayer];
