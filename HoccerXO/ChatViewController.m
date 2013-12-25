@@ -150,8 +150,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     self.titleLabel = [[NickNameLabelWithStatus alloc] init];
     self.navigationItem.titleView = self.titleLabel;
-    self.titleLabel.textColor = [UIColor whiteColor];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.label.textColor = [UIColor whiteColor];
+    self.titleLabel.label.textAlignment = NSTextAlignmentCenter;
 
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
@@ -229,7 +229,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) configureTitle {
-    self.titleLabel.text = self.partner.nickNameWithStatus;
+    self.titleLabel.label.text = self.partner.nickNameWithStatus;
     self.titleLabel.isOnline = [self.partner.connectionStatus isEqualToString: @"online"];
     [self.titleLabel sizeToFit];
 }
@@ -1469,6 +1469,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     upDownLoadControl.hidden = attachment.available && attachment.state == kAttachmentTransfered;
     BOOL isActive = [self attachmentIsActive: attachment];
     upDownLoadControl.selected = isActive;
+    if (attachment.state == kAttachmentWantsTransfer || attachment.state == kAttachmentTransferScheduled) {
+        [upDownLoadControl startSpinning];
+    }
 }
 
 - (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message {
@@ -1719,9 +1722,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             subtitle = info;
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
             NSString * duration = [self stringFromTimeInterval: item.audioDuration];
-            sizeString =[NSString stringWithFormat:@"%@ %@", duration, sizeString];
-            if (item.audioArtist) {
-                subtitle = item.audioArtist;
+            if (item.audioArtist && item.audioAlbum) {
+                subtitle = [NSString stringWithFormat:@"%@ – %@ – %@", item.audioArtist, item.audioAlbum, duration];
+            } else if (item.audioArtist || item.audioAlbum) {
+                NSString * name = item.audioAlbum ? item.audioAlbum : item.audioArtist;
+                subtitle = [NSString stringWithFormat:@"%@ – %@", name, duration];
             }
         }
             
@@ -2131,7 +2136,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) attachment:(Attachment *)attachment transferDidProgress:(float)theProgress {
     AttachmentSection * section = [self getSectionForAttachment: attachment];
     if (section) {
-        [section.upDownLoadControl setProgress: theProgress animated: YES];
+        section.upDownLoadControl.progress = theProgress;
         section.subtitle.text = [self attachmentSubtitle: attachment];
     }
 }
