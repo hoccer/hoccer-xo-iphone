@@ -529,6 +529,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 [self.currentAttachment makeVcardAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
             } else if ([myMediaType isEqualToString:@"geolocation"]) {
                 [self.currentAttachment makeGeoLocationAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+            } else if ([myMediaType isEqualToString:@"data"]) {
+                [self.currentAttachment makeDataAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
             }
             return;
         }
@@ -1629,6 +1631,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         } else {
             iconName = @"cnt-music";
         }
+    }  else if ([attachment.mediaType isEqualToString: @"data"]) {
+        iconName = @"cnt-data";
     }
     UIImage * icon = [UIImage imageNamed: iconName];
     return [icon imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate];

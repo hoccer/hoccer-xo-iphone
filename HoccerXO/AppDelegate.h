@@ -39,6 +39,12 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 @property (strong, nonatomic)  NSDate * lastDatebaseSaveDate;
 @property (strong, nonatomic)  NSTimer * nextDatabaseSaveTimer;
 
+@property (nonatomic, strong) NSURL * openedFileURL;
+@property (nonatomic, strong) NSString * openedFileName;
+@property (nonatomic, strong) NSString * openedFileDocumentType;
+@property (nonatomic, strong) NSString * openedFileMediaType;
+@property (nonatomic, strong) NSString * openedFileMimeType;
+
 
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;

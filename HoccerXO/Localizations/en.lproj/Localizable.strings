@@ -59,6 +59,12 @@
 /* Action Sheet Button Ttitle */
 "Paste Image" = "Pasteboard (Image)";
 
+"Paste data Attachment"="Pasteboard (%@)";
+
+"Opened data Attachment %@"="External (%@)";
+
+
+
 
 /* Profile View Avatar Chooser Action Sheet Title */
 "Pick an Avatar"="Get Avatar Image from:";

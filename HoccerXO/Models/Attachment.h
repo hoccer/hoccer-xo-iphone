@@ -57,7 +57,7 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSString * assetURL;              // a url that typically starts with "assets-library://"
 @property (nonatomic)         NSNumber * contentSize;           // authoritative file size in bytes; supports assignment by string
 @property (nonatomic)         double     aspectRatio;           // ratio image width/height
-@property (nonatomic, strong) NSString * humanReadableFileName; // an optional human readable filename with any path component, mostly used for audio files
+@property (nonatomic, strong) NSString * humanReadableFileName; // an optional human readable filename without any path component, mostly used for audio files
 @property (nonatomic, strong) NSString * localURL;              // a file url
 @property (nonatomic, strong) NSString * ownedURL;              // a file url to a file that is owned this attachment and will be removed when the Attachment is removed
 @property (nonatomic, strong) NSString * mediaType;             // image, audio, video, contact, other
@@ -130,6 +130,7 @@ typedef enum AttachmentStates {
 - (void) makeAudioAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
 - (void) makeVcardAttachment:(NSString *)theURL anOtherURL:(NSString *)theOtherURL withCompletion:(CompletionBlock)completion;
 - (void) makeGeoLocationAttachment: (NSString*) theURL anOtherURL: (NSString*) theOtherURL withCompletion: (CompletionBlock) completion;
+- (void) makeDataAttachment: (NSString*) theURL anOtherURL: (NSString*) theOtherURL withCompletion: (CompletionBlock) completion;
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock) block;
@@ -149,6 +150,11 @@ typedef enum AttachmentStates {
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;
++ (NSString *) mimeTypeFromUTI: (NSString *) uti;
++ (NSString*) UTIfromMimeType:(NSString*)mimeType;
++ (NSString*) localizedDescriptionOfUTI:(NSString*)uti;
++ (NSString*) localizedDescriptionOfMimeType:(NSString*)mimeType;
+
 + (UIImage *) qualityAdjustedImage:(UIImage *)theFullImage;
 + (BOOL) tooLargeImage:(UIImage *)theFullImage;
 + (NSString*) getStateName:(AttachmentState)state;

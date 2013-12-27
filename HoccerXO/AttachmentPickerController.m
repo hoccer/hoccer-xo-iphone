@@ -13,6 +13,7 @@
 #import "TDSemiModal.h"
 #import "GeoLocationPicker.h"
 #import "AppDelegate.h"
+#import "Attachment.h"
 
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTType.h>
@@ -74,7 +75,6 @@
     }
 #endif
 
-    
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
@@ -166,6 +166,24 @@
             item.type = AttachmentPickerTypeGeoLocationAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
+        if ([mediaType isEqualToString:@"data"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeDataAttachmentFromPasteboard]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            NSString * dataDescription = nil;
+            NSArray * myMediaTypeArray = [board valuesForPasteboardType:@"com.hoccer.xo.mimeType" inItemSet:nil];
+            if (myMediaTypeArray.count == 1) {
+                NSString * mimeType = [[NSString alloc] initWithData:myMediaTypeArray[0] encoding:NSUTF8StringEncoding];
+                dataDescription = [Attachment fileExtensionFromMimeType:mimeType];
+                //dataDescription = [Attachment localizedDescriptionOfMimeType:mimeType];
+            }
+            if (dataDescription == nil) {
+                dataDescription = NSLocalizedString(mediaType, "");
+            }
+            NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Paste data Attachment %@",""),dataDescription];
+            item.localizedButtonTitle = title;
+            item.type = AttachmentPickerTypeDataAttachmentFromPasteboard;
+            [_supportedItems addObject: item];
+        }
     }
     //if ([board containsPasteboardTypes:UIPasteboardTypeListImage inItemSet:nil]) {
     if (board.image != nil && !imageAttachmentinPasteboard) {
@@ -183,7 +201,55 @@
         // NSLog(@"Video uri=%@", myURL);
     }
     
-    // TODO: add other types
+    AppDelegate * myAppDelegate =  ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
+    if (myAppDelegate.openedFileURL != nil) {
+        NSString * mediaType = myAppDelegate.openedFileMediaType;
+        AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+        BOOL match = NO;
+        NSString * dataDescription = nil;
+
+        if ([mediaType isEqualToString:@"image"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeImageAttachmentFromOpenedFile]) {
+            item.type = AttachmentPickerTypeImageAttachmentFromOpenedFile;
+            match = YES;
+        }
+        if ([mediaType isEqualToString:@"video"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeVideoAttachmentFromOpenedFile]) {
+            item.type = AttachmentPickerTypeVideoAttachmentFromOpenedFile;
+            match = YES;
+        }
+        if ([mediaType isEqualToString:@"audio"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromOpenedFile]) {
+            item.type = AttachmentPickerTypeAudioAttachmentFromOpenedFile;
+            match = YES;
+        }
+        if ([mediaType isEqualToString:@"vcard"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromOpenedFile]) {
+            item.type = AttachmentPickerTypeVcardAttachmentFromOpenedFile;
+            match = YES;
+        }
+        if ([mediaType isEqualToString:@"geolocation"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromOpenedFile]) {
+            item.type = AttachmentPickerTypeGeoLocationAttachmentFromOpenedFile;
+            match = YES;
+        }
+        if ([mediaType isEqualToString:@"data"] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypeDataAttachmentFromOpenedFile]) {
+            item.type = AttachmentPickerTypeDataAttachmentFromOpenedFile;
+            dataDescription = [Attachment fileExtensionFromMimeType:myAppDelegate.openedFileMimeType];
+            //dataDescription = [Attachment localizedDescriptionOfUTI:myAppDelegate.openedFileDocumentType];
+            match = YES;
+        }
+        if (match) {
+            if (dataDescription == nil) {
+                dataDescription = NSLocalizedString(mediaType, "");
+            }
+            NSString * title = [NSString stringWithFormat:NSLocalizedString(@"Opened data Attachment %@",""),dataDescription];
+            item.localizedButtonTitle = title;
+            NSLog(@"item.type=%d",item.type);
+            [_supportedItems addObject: item];
+        }
+    }
 }
 
 - (BOOL) delegateWantsAttachmentsOfType: (AttachmentPickerType) type {
@@ -227,6 +293,7 @@
         [self.delegate didPickAttachment: nil];
         return;
     }
+    // NSLog(@"buttonIndex=%d, firstPicker=%d",buttonIndex, _firstPickerButton);
     if (buttonIndex >= _firstPickerButton && buttonIndex < _firstPickerButton + _supportedItems.count) {
         AttachmentPickerItem * item = _supportedItems[buttonIndex - _firstPickerButton];
         [self showPickerForType: item.type];
@@ -237,6 +304,7 @@
 
 - (void) showPickerForType: (AttachmentPickerType) type {
     BOOL wantsVideo = YES;
+    // NSLog(@"showPickerForType=%d",type);
     switch (type) {
         case AttachmentPickerTypePhotoFromLibrary:
             wantsVideo = NO;
@@ -258,6 +326,7 @@
         case AttachmentPickerTypeAudioAttachmentFromPasteboard:
         case AttachmentPickerTypeVcardAttachmentFromPasteboard:
         case AttachmentPickerTypeGeoLocationAttachmentFromPasteboard:
+        case AttachmentPickerTypeDataAttachmentFromPasteboard:
             [self pickAttachmentFromPasteBoard];
             break;
         case AttachmentPickerTypeImageFromPasteboard:
@@ -272,6 +341,14 @@
         case AttachmentPickerTypeGeoLocation:
             [self pickGeoLocation];
             break;
+        case AttachmentPickerTypeImageAttachmentFromOpenedFile:
+        case AttachmentPickerTypeVideoAttachmentFromOpenedFile:
+        case AttachmentPickerTypeAudioAttachmentFromOpenedFile:
+        case AttachmentPickerTypeVcardAttachmentFromOpenedFile:
+        case AttachmentPickerTypeGeoLocationAttachmentFromOpenedFile:
+        case AttachmentPickerTypeDataAttachmentFromOpenedFile:
+            [self pickAttachmentFromOpenedFile];
+            break;
     }
 }
 
@@ -285,6 +362,17 @@
             NSLog(@"ERROR: copyCustomStringFromPasteBoard: non-optional attachment info type not found: %@", theType);
         }
     }
+}
+
+- (void) pickAttachmentFromOpenedFile {
+    AppDelegate * myAppDelegate =  ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
+    
+    NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.mediaType" : myAppDelegate.openedFileMediaType,
+                                              @"com.hoccer.xo.mimeType" : myAppDelegate.openedFileMimeType,
+                                              @"com.hoccer.xo.fileName" : myAppDelegate.openedFileName,
+                                              @"com.hoccer.xo.url1" : [myAppDelegate.openedFileURL absoluteString]
+                                              };
+    [self.delegate didPickAttachment: myAttachmentInfo];
 }
 
 - (void) pickAttachmentFromPasteBoard {

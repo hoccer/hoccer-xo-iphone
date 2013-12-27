@@ -59,6 +59,11 @@
 /* Action Sheet Button Ttitle */
 "Paste Image" = "Ablage (Bild)";
 
+"Paste data Attachment %@"="Ablage (%@)";
+
+"Opened data Attachment %@"="Extern (%@)";
+
+
 
 /* Profile View Avatar Chooser Action Sheet Title */
 "Pick an Avatar"="Wähle ein Avatarbild aus:";

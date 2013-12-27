@@ -342,6 +342,8 @@ NSArray * TransferStateName = @[@"detached",
         [self loadVcardAttachmentImage: block];
     } else if ([self.mediaType isEqualToString: @"geolocation"]) {
         [self loadGeoLocationAttachmentImage: block];
+    } else if ([self.mediaType isEqualToString: @"data"]) {
+        [self loadDataAttachmentImage: block];
     } else {
         NSLog(@"WARNING - Attachment loadImage: unhandled attachment type %@", self.mediaType);
     }
@@ -425,6 +427,8 @@ NSArray * TransferStateName = @[@"detached",
             } else {
                 largeIconName = @"chatbar-attachment-icon-music";
             }
+        }  else if ([self.mediaType isEqualToString: @"data"]) {
+            largeIconName = @"chatbar-attachment-icon-data";
         }
         // NSLog(@"previewIcon: largeIconName=%@",largeIconName);
         if (largeIconName != nil) {
@@ -565,6 +569,15 @@ NSArray * TransferStateName = @[@"detached",
     [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 
+- (void) makeDataAttachment: (NSString*) theURL anOtherURL: (NSString*) theOtherURL withCompletion: (CompletionBlock) completion {
+    self.mediaType = @"data";
+    if (self.mimeType == nil) {
+        self.mimeType = @"application/octet-stream";
+    }
+    [self useURLs: theURL anOtherURL: theOtherURL];
+    [self loadPreviewImageIntoCacheWithCompletion: completion];
+}
+
 // works only for geolocations right now 
 - (void) loadAttachmentDict:(DictLoaderBlock) block {
     if (![self.mediaType isEqualToString:@"geolocation"]) {
@@ -681,6 +694,15 @@ NSArray * TransferStateName = @[@"detached",
         // block([UIImage imageNamed:@"audio-default.png"], nil);
         block([[UIImage alloc]init], nil);
     }
+}
+
+- (void) loadDataAttachmentImage: (ImageLoaderBlock) block {
+    if (self.localURL == nil) {
+        block(nil, nil);
+        return;
+    }
+    // block([UIImage imageNamed:@"audio-default.png"], nil);
+    block([[UIImage alloc]init], nil);
 }
 
 - (void) loadVcardAttachmentImage: (ImageLoaderBlock) block {
@@ -1041,6 +1063,18 @@ NSArray * TransferStateName = @[@"detached",
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
     }];
+}
+
+- (void)computeFileNameIfNeeded {
+    if (self.humanReadableFileName == nil) {
+        NSNumber * now = [HXOBackend millisFromDate:[[NSDate alloc]init]];
+        NSNumber * zero = @(1387983712850);
+        NSNumber * diff = [NSNumber numberWithLongLong:[now longLongValue]-[zero longLongValue]];
+
+        NSString * extension = [Attachment fileExtensionFromMimeType:self.mimeType];
+        NSString * myFileName = [NSString stringWithFormat:@"%@-%@.%@",self.mediaType,diff,extension];
+        self.humanReadableFileName = myFileName;
+    }
 }
 
 - (void) upload {
@@ -1445,6 +1479,28 @@ NSArray * TransferStateName = @[@"detached",
     CFStringRef mimetype = UTTypeCopyPreferredTagWithClass (uti, kUTTagClassMIMEType);
     CFRelease(uti);
     return CFBridgingRelease(mimetype);
+}
+
++ (NSString *) mimeTypeFromUTI: (NSString *) uti {
+    if (uti == nil) return nil;
+    CFStringRef mimetype = UTTypeCopyPreferredTagWithClass ((__bridge CFStringRef)(uti), kUTTagClassMIMEType);
+    return CFBridgingRelease(mimetype);
+}
+
++ (NSString*) UTIfromMimeType:(NSString*)mimeType {
+    if (mimeType == nil) return nil;
+    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(mimeType), NULL);
+    return CFBridgingRelease(uti);
+}
+
++ (NSString*) localizedDescriptionOfUTI:(NSString*)uti {
+    if (uti == nil) return nil;
+    return CFBridgingRelease(UTTypeCopyDescription((__bridge CFStringRef)(uti)));
+}
+
++ (NSString*) localizedDescriptionOfMimeType:(NSString*)mimeType {
+    if (mimeType == nil) return nil;
+    return [Attachment localizedDescriptionOfUTI:[Attachment UTIfromMimeType:mimeType]];
 }
 
 // connection delegate methods
@@ -1922,9 +1978,11 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (NSString*) attachmentJsonString {
+    [self computeFileNameIfNeeded];
     NSDictionary * myRepresentation = [HXOModel createDictionaryFromObject:self withKeys:self.JsonKeys];
     NSData * myJsonData = [NSJSONSerialization dataWithJSONObject: myRepresentation options: 0 error: nil];
     NSString * myJsonUTF8String = [[NSString alloc] initWithData:myJsonData encoding:NSUTF8StringEncoding];
+    NSLog(@"attachmentJsonString=%@",myJsonUTF8String);
     return myJsonUTF8String;
 }
 
@@ -1938,6 +1996,7 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
             NSLog(@"ERROR: setAttachmentJsonString: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], theJsonString);
             return;
         }
+        NSLog(@"attachment=%@",json);
         if ([json isKindOfClass: [NSDictionary class]]) {
             [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];
         } else {

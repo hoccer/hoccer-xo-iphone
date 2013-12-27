@@ -381,6 +381,8 @@ static NSTimer * _stateNotificationDelayTimer;
             [newAttachment makeVcardAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
         } else if ([newAttachment.mediaType isEqualToString:@"geolocation"]) {
             [newAttachment makeGeoLocationAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"data"]) {
+            [newAttachment makeDataAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
         }
     }
     return newAttachment;

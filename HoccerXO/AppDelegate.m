@@ -12,6 +12,7 @@
 
 #import "ConversationViewController.h"
 #import "Contact.h"
+#import "Attachment.h"
 #import "HXOMessage.h"
 #import "AssetStore.h"
 #import "NavigationMenuViewController.h"
@@ -24,6 +25,8 @@
 #import "UserProfile.h"
 #import "MFSideMenu.h"
 #import "UIAlertView+BlockExtensions.h"
+#import <MobileCoreServices/UTType.h>
+#import <MobileCoreServices/UTCoreTypes.h>
 
 #import <CoreData/NSMappingModel.h>
 
@@ -920,7 +923,62 @@ static NSInteger validationErrorCount = 0;
         // TODO: input verification
         [self.chatBackend acceptInvitation: url.host];
     }
+    if ([[url scheme] isEqualToString:@"file"]) {
+        NSString *documentType;
+        NSError *error;
+        if (![url getResourceValue:&documentType forKey:NSURLTypeIdentifierKey error:&error]) {
+            NSLog(@"handleOpenURL: could not get documentType, using default, err=%@",error);
+            documentType = @"public.data";
+        }
+        return [self handleFileURL:url withDocumentType:documentType];
+    }
     return NO;
+}
+
+- (BOOL)handleFileURL: (NSURL *)url withDocumentType:(NSString*)documentType
+{
+    NSString *fileName = [url lastPathComponent];
+    NSURL *destURL = [AppDelegate uniqueNewFileURLForFileLike:fileName];
+    NSError *error = nil;
+    
+    [[NSFileManager defaultManager] copyItemAtURL:url toURL:destURL error:&error];
+
+    NSLog(@"url=%@", url);
+    NSLog(@"documentType=%@", documentType);
+    NSLog(@"destURL=%@", destURL);
+
+    NSLog(@"mimeType=%@",[Attachment mimeTypeFromUTI:documentType]);
+    if (error != nil) {
+        NSLog(@"handleFileURL error %@", error);
+        return NO;
+    }
+    NSString * mediaType = nil;
+    if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
+        mediaType=@"text";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeImage)) {
+        mediaType=@"image";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeMovie)) {
+        mediaType=@"video";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVideo)) {
+        mediaType=@"video";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeAudio)) {
+        mediaType=@"audio";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVCard)) {
+        mediaType=@"vcard";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
+        mediaType=@"text";
+    } else {
+        mediaType=@"data";
+    }
+    NSLog(@"mediaType=%@", mediaType);
+
+    self.openedFileURL = destURL;
+    self.openedFileDocumentType = documentType;
+    self.openedFileMediaType = mediaType;
+    self.openedFileMimeType = [Attachment mimeTypeFromUTI:documentType];
+    self.openedFileName = [destURL lastPathComponent];
+    
+    return YES;
 }
 
 - (void) didPairWithStatus: (BOOL) success { // pregnant...
