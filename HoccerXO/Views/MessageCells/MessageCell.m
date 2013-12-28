@@ -245,6 +245,18 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
         return [self.delegate messageCell:self deleteMessage:sender];
     }
 }
+
+-(void) openWithMessage:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageCell:self openWithMessage:sender];
+    }
+}
+
+-(void) shareMessage:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageCell:self shareMessage:sender];
+    }
+}
 @end
 
 

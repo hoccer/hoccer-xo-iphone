@@ -218,7 +218,7 @@
         if (bytesRead < 0) {
             thisStreamError = parentStream.streamError;
             [self setThisStreamStatus:NSStreamStatusError];
-            NSLog(@"Error in EncrypingInputStream while reading plaintext stream%@", thisStreamError);
+            NSLog(@"Error in CryptingInputStream while reading plaintext stream%@", thisStreamError);
             return bytesRead;
         }
         // encrypt them
@@ -236,7 +236,7 @@
             myTransformedData = myTransformedMutableData;
         }
         if (myError != nil) {
-            NSLog(@"Error in EncrypingInputStream: %@", thisStreamError);
+            NSLog(@"Error in CryptingInputStream: %@", thisStreamError);
             [self setThisStreamStatus:NSStreamStatusError];
             thisStreamError = myError;
             return -1;

@@ -154,7 +154,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
     UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Resend", nil) action:@selector(resendMessage:)];
     UIMenuItem *myForwardMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
-    [menuController setMenuItems:@[mySaveMenuItem,myDeleteMessageMenuItem, myResendMessageMenuItem, myForwardMessageMenuItem]];
+    UIMenuItem *myOpenWithMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Open with...", nil) action:@selector(openWithMessage:)];
+    UIMenuItem *myShareMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Share", nil) action:@selector(shareMessage:)];
+    [menuController setMenuItems:@[myShareMessageMenuItem,myOpenWithMessageMenuItem,myDeleteMessageMenuItem,myResendMessageMenuItem, myForwardMessageMenuItem,mySaveMenuItem]];
     [menuController update];
     return menuController;
 }
@@ -1740,6 +1742,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 #endif
     if (action == @selector(forwardMessage:)) {return YES;}
     
+    if (action == @selector(openWithMessage:)) {return YES;}
+
+    if (action == @selector(shareMessage:)) {return YES;}
+    
     if (action == @selector(saveMessage:)) {
         if ([message.isOutgoing isEqualToNumber: @NO], YES) {
             Attachment * myAttachment = message.attachment;
@@ -1777,7 +1783,21 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (attachment != nil) {
         [attachment trySaveToAlbum];
     }
+}
 
+- (void) messageCell:(MessageCell *)theCell openWithMessage:(id)sender {
+    // NSLog(@"saveMessage");
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    Attachment * attachment = message.attachment;
+    if (attachment != nil) {
+        [self openWithInteractionController:message];
+    }
+}
+
+- (void) messageCell:(MessageCell *)theCell shareMessage:(id)sender {
+    // NSLog(@"saveMessage");
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    [self openWithActivityController:message];
 }
 
 - (void) messageCell:(MessageCell *)theCell copy:(id)sender {
@@ -1879,8 +1899,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self.navigationController pushViewController: profileViewController animated: YES];
 }
 
+
 - (void) presentViewForAttachment:(Attachment *) myAttachment {
-    if ([myAttachment.mediaType isEqual: @"video"]) {
+    if ([myAttachment.mediaType isEqual: @"data"] || [myAttachment.mediaType isEqual: @"video"] || [myAttachment.mediaType isEqual: @"image"] || [myAttachment.mediaType isEqual: @"audio"]) {
+        [self previewAttachment:myAttachment];
+    } else  if ([myAttachment.mediaType isEqual: @"video"]) {
         // TODO: lazily allocate _moviePlayerController once
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
@@ -1960,6 +1983,73 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }
     }
 }
+
+- (void) openWithInteractionController:(HXOMessage *)message {
+    NSLog(@"openWithInteractionController");
+    Attachment * attachment = message.attachment;
+    if (attachment != nil) {
+        NSURL * myURL = [attachment contentURL];
+        NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
+        NSString * name = attachment.humanReadableFileName;
+        NSLog(@"openWithInteractionController: uti=%@, name = %@", uti, name);
+        self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
+        self.interactionController.delegate = self;
+        self.interactionController.UTI = uti;
+        self.interactionController.name = name;
+        [self.interactionController presentOpenInMenuFromRect:CGRectNull inView:self.view animated:YES];
+    }
+}
+
+- (void) openWithActivityController:(HXOMessage *)message {
+    NSLog(@"openWithActivityController");
+    Attachment * attachment = message.attachment;
+    
+    NSMutableArray *activityItems = [[NSMutableArray alloc]init];
+    
+    if (message.body.length > 0) {
+        [activityItems addObject:message];
+    }
+    if (attachment != nil) {
+        [activityItems addObject:attachment];
+    }
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    activityViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
+    [self presentViewController:activityViewController animated:YES completion:nil];
+}
+
+- (void) previewAttachment:(Attachment *)attachment {
+    NSLog(@"previewAttachment");
+    if (attachment != nil) {
+        NSURL * myURL = [attachment contentURL];
+        NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
+        NSString * name = attachment.humanReadableFileName;
+        NSLog(@"openWithInteractionController: uti=%@, name = %@", uti, name);
+        self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
+        self.interactionController.delegate = self;
+        self.interactionController.UTI = uti;
+        self.interactionController.name = name;
+        [self.interactionController presentPreviewAnimated:YES];
+    }
+}
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
+{
+	return self;
+}
+
+- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
+{
+	return self.view;
+}
+
+- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller
+{
+	return self.view.frame;
+}
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
+}
+
 
 - (ImageViewController*) imageViewController {
     if (_imageViewController == nil) {

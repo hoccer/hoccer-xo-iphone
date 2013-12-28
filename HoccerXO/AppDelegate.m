@@ -33,7 +33,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #define CONNECTION_TRACE NO
-#define MIGRATION_DEBUG YES
+#define MIGRATION_DEBUG NO
 #define AUDIOSESSION_DEBUG NO
 
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
@@ -941,7 +941,21 @@ static NSInteger validationErrorCount = 0;
     NSURL *destURL = [AppDelegate uniqueNewFileURLForFileLike:fileName];
     NSError *error = nil;
     
-    [[NSFileManager defaultManager] copyItemAtURL:url toURL:destURL error:&error];
+    BOOL isDirectory;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[url path] isDirectory:&isDirectory];
+    if (exists) {
+        if (!isDirectory) {
+            [[NSFileManager defaultManager] copyItemAtURL:url toURL:destURL error:&error];
+        } else {
+            NSArray * subpaths = [[NSFileManager defaultManager] subpathsAtPath:[url path]];
+            for (NSObject * o in subpaths) {
+                NSLog(@"%@",o);
+            }
+        }
+    } else {
+        NSLog(@"handleFileURL: file at path does not exist:%@",[url path]);
+    }
+    
 
     NSLog(@"url=%@", url);
     NSLog(@"documentType=%@", documentType);

@@ -177,4 +177,26 @@
              };
 }
 
+#pragma mark - HXOMessage UIActivityItemSource Protocol
+
+- (NSString *)activityViewController:(UIActivityViewController *)activityViewController dataTypeIdentifierForActivityType:(NSString *)activityType {
+    return @"public.text";
+}
+
+- (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType {
+    return self.body;
+}
+/*
+- (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
+    
+}
+
+- (UIImage *)activityViewController:(UIActivityViewController *)activityViewController thumbnailImageForActivityType:(NSString *)activityType suggestedSize:(CGSize)size {
+    
+}
+*/
+- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController {
+    return self.body;
+}
+
 @end

@@ -50,7 +50,7 @@ typedef enum AttachmentStates {
 @end
 
 
-@interface Attachment : HXOModel < NSURLConnectionDelegate >
+@interface Attachment : HXOModel < NSURLConnectionDelegate,UIActivityItemSource >
 
 // persistent properties from model
 

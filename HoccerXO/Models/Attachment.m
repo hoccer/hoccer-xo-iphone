@@ -1314,6 +1314,12 @@ NSArray * TransferStateName = @[@"detached",
     if (self.localURL != nil) {
         // NSLog(@"Attachment withUploadStream self.localURL=%@", self.localURL);
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
+        BOOL isDirectory;
+        BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:myPath isDirectory:&isDirectory];
+        if (!exists || isDirectory) {
+            execution(nil, [NSError errorWithDomain:@"HoccerXO" code:1101 userInfo: nil]);
+            return;
+        }
         NSInputStream * myStream = [NSInputStream inputStreamWithFileAtPath:myPath];
         // NSLog(@"Attachment returning input stream for file at path=%@", myPath);
         execution(myStream, nil); // TODO: better error handling
@@ -1478,17 +1484,28 @@ NSArray * TransferStateName = @[@"detached",
     CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)(theExtension), NULL);
     CFStringRef mimetype = UTTypeCopyPreferredTagWithClass (uti, kUTTagClassMIMEType);
     CFRelease(uti);
-    return CFBridgingRelease(mimetype);
+    if (mimetype != nil) {
+        return CFBridgingRelease(mimetype);
+    } else {
+        return @"application/octet-stream";
+    }
 }
 
 + (NSString *) mimeTypeFromUTI: (NSString *) uti {
     if (uti == nil) return nil;
     CFStringRef mimetype = UTTypeCopyPreferredTagWithClass ((__bridge CFStringRef)(uti), kUTTagClassMIMEType);
-    return CFBridgingRelease(mimetype);
+    if (mimetype != nil) {
+        return CFBridgingRelease(mimetype);
+    } else {
+        return @"application/octet-stream";
+    }
 }
 
 + (NSString*) UTIfromMimeType:(NSString*)mimeType {
     if (mimeType == nil) return nil;
+    if ([mimeType isEqualToString:@"application/octet-stream"]) {
+        return @"public.data";
+    }
     CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(mimeType), NULL);
     return CFBridgingRelease(uti);
 }
@@ -2089,6 +2106,32 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
     } else {
         if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"no delegate for transferDidProgress");}
     }
+}
+
+
+#pragma mark - Attachment UIActivityItemSource Protocol
+
+- (NSString *)activityViewController:(UIActivityViewController *)activityViewController dataTypeIdentifierForActivityType:(NSString *)activityType {
+    NSLog(@"dataTypeIdentifierForActivityType %@ = %@",activityType, [Attachment UTIfromMimeType:self.mimeType]);
+    return [Attachment UTIfromMimeType:self.mimeType];
+}
+
+- (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType {
+    NSLog(@"itemForActivityType %@ = %@",activityType, self.contentURL);
+    return self.contentURL;
+}
+/*
+ - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType {
+ 
+ }
+ 
+ - (UIImage *)activityViewController:(UIActivityViewController *)activityViewController thumbnailImageForActivityType:(NSString *)activityType suggestedSize:(CGSize)size {
+ 
+ }
+ */
+- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController {
+    NSLog(@"activityViewControllerPlaceholderItem %@", self.contentURL);
+    return self.contentURL;
 }
 
 @end

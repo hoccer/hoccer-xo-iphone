@@ -18,7 +18,7 @@
 @class HXOBackend;
 @class AVAssetExportSession;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,HPGrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate, TransferProgressIndication>
+@interface ChatViewController : UIViewController <UISplitViewControllerDelegate,AttachmentPickerControllerDelegate,UIActionSheetDelegate,HPGrowingTextViewDelegate,UITextViewDelegate,NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOLinkyLabelDelegate, TransferProgressIndication, UIDocumentInteractionControllerDelegate>
 {
     NSMutableDictionary        *resultsControllers;
 }
@@ -43,6 +43,8 @@
 @property (strong, nonatomic) id currentPickInfo;
 
 @property (strong, nonatomic) id connectionInfoObserver;
+
+@property (strong, nonatomic) UIDocumentInteractionController *interactionController;
 
 // @property UIInterfaceOrientation interfaceOrientation;
 

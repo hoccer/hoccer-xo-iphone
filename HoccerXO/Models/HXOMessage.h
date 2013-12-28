@@ -14,7 +14,7 @@
 
 #import "HXOModel.h"
 
-@interface HXOMessage : HXOModel
+@interface HXOMessage : HXOModel<UIActivityItemSource>
 
 @property (nonatomic, strong) NSString* body;
 @property (nonatomic, strong) NSDate*   timeSent; // estimated server time when message was sent, set by client and passed unchanged to receivers in message object
