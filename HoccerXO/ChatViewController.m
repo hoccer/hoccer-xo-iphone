@@ -71,6 +71,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property (nonatomic) double messageFontSize;
 
+@property (nonatomic) BOOL keyBoardShown;
 
 @end
 
@@ -279,6 +280,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     // this catches orientation changes, too
     _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height - (self.navigationController.navigationBar.frame.origin.y  + self.navigationController.navigationBar.frame.size.height);
+    self.keyBoardShown = YES;
 }
 
 - (void)keyboardWillHide:(NSNotification*)aNotification {
@@ -292,10 +294,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         frame.size.height += keyboardHeight;
         self.chatViewResizer.frame = frame;
     }];
+    self.keyBoardShown = NO;
 }
 
 - (void) hideKeyboard {
-    [self.view endEditing: NO];
+    if (self.keyBoardShown) {
+        NSLog(@"hideKeyboard:self = %@, self.view=%@", self, self.view);
+        [self.view endEditing: NO];
+    }
 }
 
 #pragma mark - Actions
