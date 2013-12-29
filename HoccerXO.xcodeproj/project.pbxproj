@@ -289,6 +289,8 @@
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
 		E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC2186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png */; };
+		E92FAED51870960D00D72D79 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAECE18708EF400D72D79 /* libZipArchive-ios.a */; };
+		E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAED61870A0F900D72D79 /* libz.dylib */; };
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
 		E93ED67A17B93D6F0072FD2C /* EC.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED67917B93D6F0072FD2C /* EC.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
@@ -442,6 +444,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = F6B2082C1450F597009315AF;
 			remoteInfo = SocketRocket;
+		};
+		E92FAECD18708EF400D72D79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = "ZipArchive ios";
+		};
+		E92FAECF18708EF400D72D79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C908A96F160AC26D000395DB;
+			remoteInfo = "ZipArchive mac";
+		};
+		E92FAED118708EF400D72D79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C95AB35817E1C37700120861;
+			remoteInfo = "ZipArchive ios Tests";
+		};
+		E92FAED318708EF400D72D79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C95AB37417E1C47D00120861;
+			remoteInfo = "ZipArchive mac Tests";
 		};
 		E96DC1D8176C90AE00BDDF4E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -859,6 +889,8 @@
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
 		E92FAEC2186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data@2x.png"; sourceTree = "<group>"; };
+		E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipArchive.xcodeproj; path = 3rdParty/ZipArchive/ZipArchive/ZipArchive.xcodeproj; sourceTree = "<group>"; };
+		E92FAED61870A0F900D72D79 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
 		E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
 		E93ED64F17A33CE10072FD2C /* HoccerXO-21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-21.xcdatamodel"; sourceTree = "<group>"; };
@@ -986,6 +1018,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */,
+				E92FAED51870960D00D72D79 /* libZipArchive-ios.a in Frameworks */,
 				638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */,
 				E924C958176C8CD6008185E0 /* libInAppSettingsKit.a in Frameworks */,
 				639094C21739970200DF889B /* CoreLocation.framework in Frameworks */,
@@ -1612,6 +1646,7 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E92FAED61870A0F900D72D79 /* libz.dylib */,
 				E99886CD1725CE0F0089A510 /* AddressBook.framework */,
 				E9D11469173307FC00737EF7 /* AddressBookUI.framework */,
 				6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */,
@@ -1718,6 +1753,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */,
 				6367C9131833BE11005C60B3 /* GrowingTextView */,
 				63F62E0417799D6B00435F21 /* MFSideMenu */,
 				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
@@ -1839,6 +1875,17 @@
 			);
 			name = MFSideMenu;
 			path = 3rdParty/MFSideMenu/MFSideMenu;
+			sourceTree = "<group>";
+		};
+		E92FAEC618708EF300D72D79 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E92FAECE18708EF400D72D79 /* libZipArchive-ios.a */,
+				E92FAED018708EF400D72D79 /* libZipArchive-mac.a */,
+				E92FAED218708EF400D72D79 /* ZipArchive ios Tests.xctest */,
+				E92FAED418708EF400D72D79 /* ZipArchive mac Tests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
@@ -2044,6 +2091,10 @@
 					ProductGroup = 63C413A316E8FA0C004E1F6D /* Products */;
 					ProjectRef = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
 				},
+				{
+					ProductGroup = E92FAEC618708EF300D72D79 /* Products */;
+					ProjectRef = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -2114,6 +2165,34 @@
 			fileType = wrapper.application;
 			path = TestChat.app;
 			remoteRef = 63C413AF16E8FA0C004E1F6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E92FAECE18708EF400D72D79 /* libZipArchive-ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libZipArchive-ios.a";
+			remoteRef = E92FAECD18708EF400D72D79 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E92FAED018708EF400D72D79 /* libZipArchive-mac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libZipArchive-mac.a";
+			remoteRef = E92FAECF18708EF400D72D79 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E92FAED218708EF400D72D79 /* ZipArchive ios Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ZipArchive ios Tests.xctest";
+			remoteRef = E92FAED118708EF400D72D79 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E92FAED418708EF400D72D79 /* ZipArchive mac Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ZipArchive mac Tests.xctest";
+			remoteRef = E92FAED318708EF400D72D79 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */ = {
@@ -2637,7 +2716,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2671,7 +2750,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

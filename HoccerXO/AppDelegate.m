@@ -25,6 +25,8 @@
 #import "UserProfile.h"
 #import "MFSideMenu.h"
 #import "UIAlertView+BlockExtensions.h"
+#import "ZipArchive.h"
+
 #import <MobileCoreServices/UTType.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 
@@ -935,61 +937,117 @@ static NSInteger validationErrorCount = 0;
     return NO;
 }
 
++(BOOL)zipDirectoryAtURL:(NSURL*)theDirectoryURL toZipFile:(NSURL*)zipFileURL {
+    NSLog(@"zipDirectoryAtURL: %@ -> %@",theDirectoryURL,zipFileURL);
+    BOOL isDirectory;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[theDirectoryURL path] isDirectory:&isDirectory];
+    if (exists) {
+        if (!isDirectory) {
+            NSLog(@"zipDirectoryAtURL: file at path is not a directory:%@",[theDirectoryURL path]);
+        } else {
+            ZipArchive* zip = [[ZipArchive alloc] init];
+            if([zip CreateZipFile2:[zipFileURL path]]) {
+                NSLog(@"Zip File Created:%@",[zipFileURL path]);
+                NSArray * subpaths = [[NSFileManager defaultManager] subpathsAtPath:[theDirectoryURL path]];
+                for (NSString * subpath in subpaths) {
+                    NSLog(@"added to zip: %@",subpath);
+                    NSString * fullPath = [[theDirectoryURL path] stringByAppendingPathComponent: subpath];
+                    //NSLog(@"fullPath=%@",fullPath);
+                    if([zip addFileToZip:fullPath newname:subpath]) {
+                        //NSLog(@"File '%@' Added to zip as '%@'",fullPath,subpath);
+                    } else {
+                        NSLog(@"#ERROR: Failed to add file '%@' Added to zip as '%@'",fullPath,subpath);
+                    }
+                }
+                if ([zip CloseZipFile2]) {
+                    return YES;
+                } else {
+                    NSLog(@"#ERROR: Failed to close zip file '%@'",[zipFileURL path]);
+                }
+            } else {
+                NSLog(@"#ERROR: Failed to open zip file '%@'",[zipFileURL path]);
+            }
+        }
+    } else {
+        NSLog(@"zipDirectoryAtURL: file at path does not exist:%@",[theDirectoryURL path]);
+    }
+    return NO;
+}
+
+
+
 - (BOOL)handleFileURL: (NSURL *)url withDocumentType:(NSString*)documentType
 {
     NSString *fileName = [url lastPathComponent];
     NSURL *destURL = [AppDelegate uniqueNewFileURLForFileLike:fileName];
     NSError *error = nil;
     
+    NSString * mimeType = nil;
+    NSString * mediaType = nil;
+
+    NSLog(@"url=%@", url);
+    NSLog(@"documentType in=%@", documentType);
+
     BOOL isDirectory;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[url path] isDirectory:&isDirectory];
     if (exists) {
         if (!isDirectory) {
             [[NSFileManager defaultManager] copyItemAtURL:url toURL:destURL error:&error];
         } else {
-            NSArray * subpaths = [[NSFileManager defaultManager] subpathsAtPath:[url path]];
-            for (NSObject * o in subpaths) {
-                NSLog(@"%@",o);
+            // When inbox item is a directory, zip it into a file
+            NSString * urlpath = [destURL path];
+            NSString * zippath = [urlpath stringByAppendingString:@".zip"];
+            NSURL *zipfile = [NSURL fileURLWithPath:zippath];
+            if ([AppDelegate zipDirectoryAtURL:url toZipFile:zipfile]) {
+                destURL = zipfile;
+                documentType = @"public.zip-archive";
+                mimeType = @"application/zip";
+                mediaType = @"data";
+            } else {
+                return NO;
             }
         }
     } else {
         NSLog(@"handleFileURL: file at path does not exist:%@",[url path]);
     }
     
-
-    NSLog(@"url=%@", url);
     NSLog(@"documentType=%@", documentType);
     NSLog(@"destURL=%@", destURL);
 
-    NSLog(@"mimeType=%@",[Attachment mimeTypeFromUTI:documentType]);
-    if (error != nil) {
-        NSLog(@"handleFileURL error %@", error);
-        return NO;
-    }
-    NSString * mediaType = nil;
-    if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
-        mediaType=@"text";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeImage)) {
-        mediaType=@"image";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeMovie)) {
-        mediaType=@"video";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVideo)) {
-        mediaType=@"video";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeAudio)) {
-        mediaType=@"audio";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVCard)) {
-        mediaType=@"vcard";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
-        mediaType=@"text";
-    } else {
-        mediaType=@"data";
+    if (mediaType == nil) {
+        if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
+            mediaType=@"text";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeImage)) {
+            mediaType=@"image";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeMovie)) {
+            mediaType=@"video";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVideo)) {
+            mediaType=@"video";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeAudio)) {
+            mediaType=@"audio";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVCard)) {
+            mediaType=@"vcard";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
+            mediaType=@"text";
+        } else {
+            mediaType=@"data";
+        }
     }
     NSLog(@"mediaType=%@", mediaType);
 
+    if (mimeType == nil) {
+        mimeType = [Attachment mimeTypeFromUTI:documentType];
+        if (error != nil) {
+            NSLog(@"handleFileURL error %@", error);
+            return NO;
+        }
+    }
+    NSLog(@"mimeType=%@", mimeType);
+    
     self.openedFileURL = destURL;
     self.openedFileDocumentType = documentType;
     self.openedFileMediaType = mediaType;
-    self.openedFileMimeType = [Attachment mimeTypeFromUTI:documentType];
+    self.openedFileMimeType = mimeType;
     self.openedFileName = [destURL lastPathComponent];
     
     return YES;

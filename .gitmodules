@@ -25,3 +25,6 @@
 [submodule "3rdParty/GrowingTextView"]
 	path = 3rdParty/GrowingTextView
 	url = https://github.com/HansPinckaers/GrowingTextView.git
+[submodule "3rdParty/ZipArchive"]
+	path = 3rdParty/ZipArchive
+	url = git@github.com:mattconnolly/ZipArchive.git
