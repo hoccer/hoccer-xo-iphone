@@ -491,3 +491,10 @@
 "message_read"     = "gelesen";
 "message_failed"   = "kaputt";
 
+"Can not save image in Album"="Bild konnte nicht im Album gespeichert werden";
+"Can not load image to save it in Album"="Bild konnte nicht geladen werden, um es im Album zu speichern";
+"Can not save video in Album"="Video konnte nicht im Album gespeichert werden";
+"Video not compatible with Album"="Videoformat ist inkompatibel mit dem Album";
+
+
+

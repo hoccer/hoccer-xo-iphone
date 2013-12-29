@@ -514,4 +514,10 @@
 "message_read"     = "read";
 "message_failed"   = "failed";
 
+"Can not save image in Album"="Can not save image in Album";
+"Can not load image to save it in Album"="Can not load image to save it in Album";
+"Can not save video in Album"="Can not save video in Album";
+"Video not compatible with Album"="Video not compatible with Album";
+
+
 
