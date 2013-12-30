@@ -470,7 +470,7 @@
 
 "geolocation_picker_title"="Drag the Pin";
 
-"membership_state_invited" = "inivted";
+"membership_state_invited" = "invited";
 "membership_state_joined" = "joined";
 
 "membership_role_admin" = "admin";

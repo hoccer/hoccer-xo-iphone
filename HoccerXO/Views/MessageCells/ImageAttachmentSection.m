@@ -24,14 +24,34 @@ extern CGFloat kHXOGridSpacing;
     self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 }
 
+-(UIImage*)bubbleClipImage:(CGRect)rect withPath:(UIBezierPath*)path{
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
+    //CGBitmapContextCreate();
+    //[[UIColor redColor] setFill];
+    [[UIColor colorWithRed:1 green:1 blue:1 alpha:1] setFill];
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0.0, rect.size.height);
+    CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1.0, -1.0);
+    [path fill];
+    UIImage *clipImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return clipImage;
+}
+
 - (void) drawRect:(CGRect)rect {
     if (self.image != nil) {
         CGContextRef context = UIGraphicsGetCurrentContext();
 
         UIBezierPath * path = [self bubblePath];
         CGContextSaveGState(context);
+#define CLIP_PATH
+#ifdef CLIP_PATH
         [path addClip];
+#else
+        UIImage * clipImage = [self bubbleClipImage:rect withPath:path];
+        CGContextClipToMask(UIGraphicsGetCurrentContext(),path.bounds,clipImage.CGImage);
+#endif
         [self.image drawInRect: path.bounds];
+        //[clipImage drawInRect: path.bounds];
         CGContextRestoreGState(context);
         if (self.cell.colorScheme == HXOBubbleColorSchemeFailed) {
             [[UIColor colorWithRed: 1.0 green: 0.0 blue: 0.0 alpha: 0.8] setFill];

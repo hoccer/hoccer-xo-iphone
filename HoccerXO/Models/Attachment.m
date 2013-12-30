@@ -919,19 +919,6 @@ NSArray * TransferStateName = @[@"detached",
     }];
 }
 
-+ (BOOL)scanRange:(NSString*)theRange rangeStart:(long long*)rangeStart rangeEnd:(long long*)rangeEnd contentLength:(long long*)contentLength
-{
-    NSScanner * theScanner = [NSScanner scannerWithString:theRange];
-    [theScanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@" ="]];
-    return ([theScanner scanString:@"bytes" intoString:NULL] &&
-            //[theScanner scanCharactersFromSet: intoString:NULL] &&
-            [theScanner scanLongLong:rangeStart] &&
-            [theScanner scanString:@"-" intoString:NULL] &&
-            [theScanner scanLongLong:rangeEnd] &&
-            [theScanner scanString:@"/" intoString:NULL] &&
-            [theScanner scanLongLong:contentLength]
-            );
-}
 
 - (void) checkResumeUploadStream {
     if (CONNECTION_TRACE) {NSLog(@"checkResumeUploadStream uploadURL=%@, attachment=%@", self.uploadURL, self );}
@@ -963,7 +950,7 @@ NSArray * TransferStateName = @[@"detached",
                                   long long rangeEnd;
                                   long long contentLength;
                                   
-                                  if ([Attachment scanRange:myRangeString
+                                  if ([HXOBackend scanRange:myRangeString
                                                  rangeStart:&rangeStart
                                                    rangeEnd:&rangeEnd
                                               contentLength:&contentLength])

@@ -38,6 +38,7 @@ typedef void (^GroupMemberChanged)(GroupMembership* member);
 typedef void (^GroupHandler)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
+typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
 
 @protocol HXODelegate <NSObject>
 
@@ -157,6 +158,9 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
                          payloadData:(NSData *)payload
                        payloadStream:(NSInputStream*)stream
                              headers:(NSDictionary *)headers;
+
++ (BOOL)scanRange:(NSString*)theRange rangeStart:(long long*)rangeStart rangeEnd:(long long*)rangeEnd contentLength:(long long*)contentLength;
+
 
 + (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler;
 + (HXOBackend*)instance;

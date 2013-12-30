@@ -47,6 +47,8 @@
 #define GROUP_DEBUG NO
 #define RELATIONSHIP_DEBUG NO
 #define TRANSFER_DEBUG NO
+#define CHECK_URL_TRACE NO
+
 
 #ifdef DEBUG
 #define USE_VALIDATOR YES
@@ -88,11 +90,11 @@ static NSTimer * _stateNotificationDelayTimer;
     BackendState       _state;
     double             _backoffTime;
     NSString *         _apnsDeviceToken;
-    NSURLConnection *  _avatarUploadConnection;
+    //NSURLConnection *  _avatarUploadConnection;
     NSString *         _avatarUploadURL;
     NSString *         _avatarURL;
-    NSInteger          _avatarBytesUploaded;
-    NSInteger          _avatarBytesTotal;
+    //NSInteger          _avatarBytesUploaded;
+    //NSInteger          _avatarBytesTotal;
     BOOL               _performRegistration;
     id                 _internetConnectionObserver;
     NSUInteger         _certificateVerificationErrors;
@@ -100,6 +102,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSTimer *          _backgroundDisconnectTimer;
     NSTimer *          _helloTimer;
     GCNetworkQueue *   _avatarDownloadQueue;
+    GCNetworkQueue *   _avatarUploadQueue;
     BOOL               _uncleanConnectionShutdown;
     
     NSMutableArray * _attachmentDownloadsWaiting;
@@ -128,6 +131,10 @@ static NSTimer * _stateNotificationDelayTimer;
         _avatarDownloadQueue = [[GCNetworkQueue alloc] init];
         [_avatarDownloadQueue setMaximumConcurrentOperationsCount:1];
         [_avatarDownloadQueue enableNetworkActivityIndicator:YES];
+        
+        _avatarUploadQueue = [[GCNetworkQueue alloc] init];
+        [_avatarUploadQueue setMaximumConcurrentOperationsCount:1];
+        [_avatarUploadQueue enableNetworkActivityIndicator:YES];
         
         [_serverConnection registerIncomingCall: @"incomingDelivery"    withSelector:@selector(incomingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"outgoingDelivery"    withSelector:@selector(outgoingDelivery:) isNotification: YES];
@@ -408,7 +415,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
-    if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toCOntact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
+    if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toContact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
 
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     
@@ -550,10 +557,38 @@ static NSTimer * _stateNotificationDelayTimer;
     };
 
     if (sender == nil || (groupId != nil && group == nil)) {
-        NSLog(@"Ignoring message from unknown sender %@ or group %@", senderId, groupId);
-        [self.delegate.managedObjectContext deleteObject: message];
-        [self.delegate.managedObjectContext deleteObject: delivery];
-        return;
+        BOOL doReceive = NO;
+        NSLog(@"Strange message:");
+        if (sender == nil) {
+            NSLog(@"from unknown sender with id %@", senderId);
+        } else {
+            NSLog(@"from known sender with name %@ relation %@", sender.nickName, sender.relationshipState);
+        }
+        
+        if (groupId != nil && group == nil) {
+            NSLog(@"with unknown group id %@", groupId);
+        } else if (group != nil) {
+            NSLog(@"from known group name %@ state %@", group.nickName, group.groupState);
+            Contact * contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+            contact.type = [Contact entityName];
+            contact.clientId = senderId;
+            contact.nickName = [senderId substringWithRange: NSMakeRange( 0, 8)];
+            NSDictionary * myFakeRelationship = @{@"clientId":[UserProfile sharedProfile].clientId,
+                                                  @"otherClientId":senderId,
+                                                  @"state":@"none",
+                                                  @"lastChanged":@(0)};
+            [self updateRelationship:myFakeRelationship];
+            Contact * sender = [self getContactByClientId:senderId];
+            if (sender != 0) {
+                doReceive = YES;
+                NSLog(@"created unknown sender with name %@",sender.nickName);
+            }
+        }
+        if (!doReceive) {
+            [self.delegate.managedObjectContext deleteObject: message];
+            [self.delegate.managedObjectContext deleteObject: delivery];
+            return;
+        }
     }
     Contact * contact = nil;
     if (group != nil) {
@@ -670,6 +705,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 self.firstConnectionAfterCrashOrUpdate = NO;
             }
         }];
+        [self makeSureAvatarUploaded];
     }
 }
 
@@ -1335,7 +1371,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     myContact.avatar = myNewAvatar;
                     myContact.avatarURL = theAvatarURL;
                 } else {
-                    NSLog(@"presenceUpdated, avatar download for contact '%@' id ‘%@' of URL %@ failed, error=%@", myContact.nickName, myContact.clientId, theAvatarURL, error);
+                    NSLog(@"presenceUpdated, avatar download for contact '%@' id ‘%@' of URL %@ failed, error=%@ reason=%@", myContact.nickName, myContact.clientId, theAvatarURL, error.localizedDescription,error.localizedFailureReason);
                 }
             }];
         } else {
@@ -1461,6 +1497,12 @@ static NSTimer * _stateNotificationDelayTimer;
             BOOL ok = YES;
             for (NSDictionary * groupDict in changedGroups) {
                 BOOL stateOk =[self updateGroupHere: groupDict];
+                Group * group = [self getGroupById:groupDict[@"groupId"]];
+                if (group != nil) {
+                [self makeSureAvatarUploadedForGroup:group withCompletion:^(NSError *theError) {
+                    if (CHECK_URL_TRACE) NSLog(@"makeSureAvatarUploadedForGroup %@ error=%@",group.nickName,theError);
+                }];
+                }
                 ok = ok && stateOk;
             }
             if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]] && ok) {
@@ -1588,6 +1630,13 @@ static NSTimer * _stateNotificationDelayTimer;
                      NSLog(@"updateGroup() failed: %@", responseOrError);
                  }
              }];
+        } else {
+            // retry after some time
+            double delayInSeconds = 10.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [self updateGroup:group];
+            });
         }
     }];
 }
@@ -2156,7 +2205,6 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 
 }
-
 
 + (BOOL) isZeroData:(NSData*)theData {
     const uint8_t * buffer = (uint8_t *)[theData bytes];
@@ -3545,6 +3593,34 @@ static NSTimer * _stateNotificationDelayTimer;
 
 #pragma mark - Group Avatar uploading
 
+-(void)makeSureAvatarUploadedForGroup:(Group*)group withCompletion:(CompletionBlock)completion{
+    if ([group iAmAdmin]) {
+        NSData * myAvatarData = group.avatar;
+        if (myAvatarData != nil && myAvatarData.length>0) {
+            NSString * myCurrentAvatarURL = group.avatarURL;
+            NSString * myCurrentAvatarUploadURL = group.avatarUploadURL;
+            if (myCurrentAvatarURL != nil && myCurrentAvatarURL.length > 0) {
+                if (myCurrentAvatarUploadURL != nil && myCurrentAvatarUploadURL.length > 0) {
+                    [self checkUploadStatus:myCurrentAvatarUploadURL hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
+                        if (!ok) {
+                            group.avatarURL = @"";
+                            [self uploadAvatarIfNeededForGroup:group withCompletion:^(NSError *theError) {
+                                NSLog(@"#ERROR: makeSureAvatarUploadedForGroup group %@ done, error=%@", group.nickName, theError);
+                                completion(theError);
+                            }];
+                            return;
+                        }
+                        completion(nil);
+                    }];
+                    return;
+                }
+            }
+        }
+    }
+    completion(nil);
+}
+
+
 - (void) uploadAvatarIfNeededForGroup:(Group*)group withCompletion:(CompletionBlock)completion{
     if ([group iAmAdmin]) {
         NSData * myAvatarData = group.avatar;
@@ -3553,7 +3629,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if (myCurrentAvatarURL == nil || myCurrentAvatarURL.length == 0 || group.avatarUploadURL == nil) {
                 [self getAvatarURLForGroup:group withCompletion:^(NSDictionary *urls) {
                     if (urls) {
-                        [self uploadAvatar:myAvatarData toURL:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"] withCompletion:^(NSError *theError) {
+                        [self uploadAvatar:myAvatarData toURL:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"] inQueue:_avatarUploadQueue withCompletion:^(NSError *theError) {
                             if (theError != nil) {
                                 NSLog(@"#ERROR: Avatar upload for group %@ failed, error=%@", group, theError);
                                 completion(theError);
@@ -3575,7 +3651,7 @@ static NSTimer * _stateNotificationDelayTimer;
     completion(nil);
 }
 
-- (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL withCompletion:(CompletionBlock)handler {
+- (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL inQueue:(GCNetworkQueue*)queue withCompletion:(CompletionBlock)handler {
     if (CONNECTION_TRACE) {NSLog(@"uploadAvatar size %d uploadURL=%@, downloadURL=%@", avatar.length, toURL, downloadURL );}
     
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:toURL HTTPMethod:@"PUT" parameters:nil];
@@ -3596,8 +3672,17 @@ static NSTimer * _stateNotificationDelayTimer;
                               NSLog(@"uploadAvatar response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
                           }
                           if (response.statusCode == 301 || response.statusCode == 308 || response.statusCode == 200) {
-                              if (CONNECTION_TRACE) {NSLog(@"uploadAvatar: ok");}
-                              handler(nil);
+                              if (CONNECTION_TRACE) {NSLog(@"uploadAvatar: seems ok, lets check");}
+                              [self checkUploadStatus:toURL hasSize:avatar.length withCompletion:^(NSString *url, BOOL ok) {
+                                  if (ok) {
+                                      handler(nil);
+                                  } else {
+                                      NSString * myDescription = @"uploadAvatar check failed";
+                                      // NSLog(@"%@", myDescription);
+                                      NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.avatar.upload" code: 947 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                                      handler(myError);
+                                 }
+                              }];
                               
                           } else {
                               NSString * myDescription = [NSString stringWithFormat:@"uploadAvatar irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields];
@@ -3615,7 +3700,11 @@ static NSTimer * _stateNotificationDelayTimer;
                            [self connection:connection willSendRequestForAuthenticationChallenge:challenge];
                        }
      ];
-    [operation startRequest];
+    if (queue == nil) {
+        [operation startRequest];
+    } else {
+        [queue enqueueOperation:operation];
+    }
 }
 
 + (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler {
@@ -3675,6 +3764,58 @@ static NSTimer * _stateNotificationDelayTimer;
 
 #pragma mark - Avatar uploading
 
+-(void)makeSureAvatarUploaded {
+    NSData * myAvatarData = [UserProfile sharedProfile].avatar;
+    if (myAvatarData != nil && myAvatarData.length>0) {
+        NSString * myCurrentAvatarURL = [UserProfile sharedProfile].avatarURL;
+        NSString * myCurrentAvatarUploadURL = [UserProfile sharedProfile].avatarUploadURL;
+        if (myCurrentAvatarURL != nil && myCurrentAvatarURL.length > 0) {
+            if (myCurrentAvatarUploadURL != nil && myCurrentAvatarUploadURL.length > 0) {
+                [self checkUploadStatus:myCurrentAvatarUploadURL hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
+                    if (!ok) {
+                        [UserProfile sharedProfile].avatarURL = @"";
+                        [self uploadAvatarIfNeeded];
+                    }
+                }];
+            }
+        }
+    }
+}
+
+- (void) uploadAvatarIfNeeded {
+    NSData * myAvatarData = [UserProfile sharedProfile].avatar;
+    if (myAvatarData != nil && myAvatarData.length>0) {
+        NSString * myCurrentAvatarURL = [UserProfile sharedProfile].avatarURL;
+        NSString * myCurrentAvatarUploadURL = [UserProfile sharedProfile].avatarUploadURL;
+        if (myCurrentAvatarURL == nil || myCurrentAvatarURL.length == 0 || myCurrentAvatarUploadURL == nil) {
+            [self getAvatarURLWithCompletion:^(NSDictionary *urls) {
+                if (urls) {
+                    [self uploadAvatar:myAvatarData toURL:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"] inQueue:_avatarUploadQueue withCompletion:^(NSError *theError) {
+                        if (theError != nil) {
+                            NSLog(@"#ERROR: Avatar upload failed, error=%@", theError);
+                        } else {
+                            NSLog(@"Avatar upload succeeded, lets check");
+                            [self checkUploadStatus:urls[@"uploadUrl"] hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
+                                if (ok) {
+                                    [UserProfile sharedProfile].avatarURL = urls[@"downloadUrl"];
+                                    [UserProfile sharedProfile].avatarUploadURL = urls[@"uploadUrl"];
+                                    [self updatePresenceWithHandler:^(BOOL success) {
+                                        NSLog(@"Avatar upload succeeded=%d",success);
+                                    }];
+                                }
+                            }];
+                        }
+                    }];
+                    return;
+                } else {
+                    NSLog(@"Failed to get Avatar upload urls");
+                }
+            }];
+        }
+    }
+}
+
+/*
 - (void) uploadAvatarIfNeeded {
     NSData * myAvatarData = [UserProfile sharedProfile].avatar;
     if (myAvatarData != nil && myAvatarData.length>0) {
@@ -3682,13 +3823,14 @@ static NSTimer * _stateNotificationDelayTimer;
         if (myCurrentAvatarURL == nil || myCurrentAvatarURL.length == 0) {
             [self getAvatarURLWithCompletion:^(NSDictionary *urls) {
                 if (urls) {
-                    [self uploadAvatarTo:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"]];
+                    //[self uploadAvatarTo:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"]];
                 }
             }];
         }
     }
 }
-
+*/
+/*
 - (void) uploadAvatarTo: (NSString*)toURL withDownloadURL:(NSString*)downloadURL{
     if (self.avatarUploadConnection != nil) {
         NSLog(@"avatar is still being uploaded");
@@ -3708,7 +3850,7 @@ static NSTimer * _stateNotificationDelayTimer;
     _avatarBytesUploaded = 0;
     _avatarUploadConnection = [NSURLConnection connectionWithRequest:myRequest delegate:self];
 }
-
+*/
 -(NSDictionary*) httpHeaderWithContentLength: (NSUInteger) theLength {
 	
     NSDictionary * headers = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -3810,6 +3952,7 @@ static NSTimer * _stateNotificationDelayTimer;
     return NO;
 }
 
+#if 0
 -(void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
 {
     if (connection == _avatarUploadConnection) {
@@ -3869,6 +4012,93 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         NSLog(@"ERROR: Attachment _avatarUploadConnection connectionDidFinishLoading without valid connection");
     }
+}
+#endif
+
+
++ (BOOL)scanRange:(NSString*)theRange rangeStart:(long long*)rangeStart rangeEnd:(long long*)rangeEnd contentLength:(long long*)contentLength
+{
+    NSScanner * theScanner = [NSScanner scannerWithString:theRange];
+    [theScanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@" ="]];
+    return ([theScanner scanString:@"bytes" intoString:NULL] &&
+            //[theScanner scanCharactersFromSet: intoString:NULL] &&
+            [theScanner scanLongLong:rangeStart] &&
+            [theScanner scanString:@"-" intoString:NULL] &&
+            [theScanner scanLongLong:rangeEnd] &&
+            [theScanner scanString:@"/" intoString:NULL] &&
+            [theScanner scanLongLong:contentLength]
+            );
+}
+
+- (void) checkUploadStatus:(NSString*)theURL hasSize:(long long)expectedSize withCompletion:(DataURLStatusHandler)handler {
+    if (CHECK_URL_TRACE) {NSLog(@"checkUploadStatus uploadURL=%@, expectedSize=%lld", theURL, expectedSize );}
+    
+    GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:theURL HTTPMethod:@"PUT" parameters:nil];
+    NSDictionary * headers = @{@"Content-Length": @"0"};
+    if (CHECK_URL_TRACE) {NSLog(@"checkUploadStatus: headers=%@", headers);}
+	for (NSString *key in headers) {
+		[request addValue:[headers objectForKey:key] forHTTPHeaderField:key];
+	}
+	[request addValue:self.delegate.userAgent forHTTPHeaderField:@"User-Agent"];
+    
+    if (CHECK_URL_TRACE) {NSLog(@"checkUploadStatus: request header for check= %@",request.allHTTPHeaderFields);}
+    GCHTTPRequestOperation *operation =
+    [GCHTTPRequestOperation HTTPRequest:request
+                          callBackQueue:nil
+                      completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
+                          if (CHECK_URL_TRACE) {
+                              NSLog(@"checkUploadStatus got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
+                              NSLog(@"response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
+                          }
+                          if (response.statusCode != 404) {
+                              NSDictionary * myHeaders = response.allHeaderFields;
+                              
+                              NSString * myRangeString = myHeaders[@"Range"];
+                              
+                              if (myRangeString != nil) {
+                                  
+                                  long long rangeStart;
+                                  long long rangeEnd;
+                                  long long contentLength;
+                                  
+                                  if ([HXOBackend scanRange:myRangeString
+                                                 rangeStart:&rangeStart
+                                                   rangeEnd:&rangeEnd
+                                              contentLength:&contentLength])
+                                  {
+                                      if (rangeEnd + 1 == expectedSize) {
+                                          if (CHECK_URL_TRACE) NSLog(@"checkUploadStatus size %lld matches", rangeEnd+1);
+                                          handler(theURL, YES);
+                                          return;
+                                      }
+                                      NSLog(@"checkUploadStatus size returned %lld mismatch expected=%lld", rangeEnd+1, expectedSize);
+                                  } else {
+                                      NSLog(@"checkUploadStatus could not parse Content-Range Header, headers=%@", response.allHeaderFields);
+                                  }
+                              } else {
+                                  NSString * ContentLength = myHeaders[@"Content-Length"];
+                                  if (ContentLength != nil && [ContentLength integerValue] == 0) {
+                                      NSLog(@"checkUploadStatus: empty data");
+                                  } else {
+                                      NSLog(@"checkUploadStatus irregular Content-Length %@, response status = %d, headers=%@",ContentLength, response.statusCode, response.allHeaderFields);
+                                  }
+                              }
+                              handler(theURL, NO);
+                              
+                          } else {
+                              NSLog(@"checkUploadStatus irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields);
+                          }
+                          handler(theURL, NO);
+                      }
+                           errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
+                               NSLog(@"checkUploadStatus error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               handler(theURL, NO);
+                           }
+                       challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
+                           [[HXOBackend instance] connection:connection willSendRequestForAuthenticationChallenge:challenge];
+                       }
+     ];
+    [operation startRequest];
 }
 
 
