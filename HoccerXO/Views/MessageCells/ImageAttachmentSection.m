@@ -59,7 +59,8 @@ extern CGFloat kHXOGridSpacing;
 
 - (CGSize) sizeThatFits:(CGSize)size {
     size.width -= 2 * kHXOGridSpacing;
-    CGFloat aspect = self.image != nil ? self.image.size.width / self.image.size.height : self.imageAspect;
+    //CGFloat aspect = self.image != nil ? self.image.size.width / self.image.size.height : self.imageAspect;
+    CGFloat aspect = self.imageAspect;
 
     size.height = size.width / aspect;
     size.width += 2 * kHXOGridSpacing;
