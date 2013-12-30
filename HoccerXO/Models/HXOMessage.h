@@ -41,6 +41,13 @@
 @property (nonatomic) NSNumber *   timeSentMillis;
 @property (nonatomic) NSNumber *   timeAcceptedMillis;
 
+@property (nonatomic) CGFloat cachedPortraitCellHeight;
+@property (nonatomic) CGFloat cachedLandscapeCellHeight;
+@property (nonatomic) NSString * cachedBuildNumber;
+@property (nonatomic) double cachedMessageFontSize;
+
+@property (nonatomic) CGFloat cachedCellHeight;
+
 
 - (void) setupOutgoingEncryption;
 - (NSString *)encryptString: (NSString *)string;

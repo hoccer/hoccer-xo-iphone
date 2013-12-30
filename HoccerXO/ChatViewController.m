@@ -49,6 +49,7 @@
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
+#define DEBUG_TABLE_CELLS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const CGFloat    kSectionHeaderHeight = 40;
@@ -299,7 +300,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) hideKeyboard {
     if (self.keyBoardShown) {
-        NSLog(@"hideKeyboard:self = %@, self.view=%@", self, self.view);
+        // NSLog(@"hideKeyboard:self = %@, self.view=%@", self, self.view);
         [self.view endEditing: NO];
     }
 }
@@ -971,6 +972,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (DEBUG_TABLE_CELLS) NSLog(@"cellForRowAtIndexPath:%@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
     MessageCell *cell = [tableView dequeueReusableCellWithIdentifier: [self cellIdentifierForMessage: message] forIndexPath:indexPath];
@@ -979,8 +981,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     // ... for now just use the private API
     // cell.backgroundView= [[UIView alloc] initWithFrame:cell.bounds];
 
-    [self configureCell: cell forMessage: message];
-
+    [self configureCell: cell forMessage: message withAttachmentPreview:YES];
+    if (DEBUG_TABLE_CELLS) NSLog(@"cellForRowAtIndexPath: returning cell %@",cell);
     return cell;
 }
 
@@ -1028,9 +1030,17 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    CGFloat myHeight = message.cachedCellHeight;
+    if (myHeight != 0) {
+        return myHeight;
+    }
+
     MessageCell * cell = [_cellPrototypes objectForKey: [self cellIdentifierForMessage: message]];
-    [self configureCell: cell forMessage: message];
-    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
+    [self configureCell: cell forMessage: message withAttachmentPreview:NO];
+    CGFloat height = [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
+    message.cachedCellHeight = height;
+    return height;
 }
 
 - (NSString*) cellIdentifierForMessage: (HXOMessage*) message {
@@ -1251,7 +1261,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     for (int i = 0; i < indexPaths.count; ++i) {
         NSIndexPath * indexPath = indexPaths[i];
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        [self configureCell: (MessageCell*)[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+        [self configureCell: (MessageCell*)[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message withAttachmentPreview:YES];
     }
     [self.tableView endUpdates];
 }
@@ -1306,7 +1316,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         {
             //NSLog(@"NSFetchedResultsChangeUpdate");
             HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-            [self configureCell: (MessageCell*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message];
+            [self configureCell: (MessageCell*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message withAttachmentPreview:YES];
             break;
         }
 
@@ -1357,7 +1367,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     return self.isViewLoaded && self.view.window;
 }
 
-- (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message {
+- (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message withAttachmentPreview:(BOOL)loadPreview {
+    if (DEBUG_TABLE_CELLS) NSLog(@"configureCell %@ withPreview=%d",cell,loadPreview);
 
     cell.delegate = self;
 
@@ -1381,9 +1392,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         if ([section isKindOfClass: [TextSection class]]) {
             [self configureTextSection: (TextSection*)section forMessage: message];
         } else if ([section isKindOfClass: [ImageAttachmentSection class]]) {
-            [self configureImageAttachmentSection: (ImageAttachmentSection*)section forMessage: message];
+            [self configureImageAttachmentSection: (ImageAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         } else if ([section isKindOfClass: [GenericAttachmentSection class]]) {
-            [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message];
+            [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         }
     }
 /*
@@ -1441,26 +1452,16 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     upDownLoadControl.selected = isActive;
 }
 
-- (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message {
+- (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
     [self configureAttachmentSection: section forMessage: message];
 
-
-    [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
-        if ([section isKindOfClass: [GenericAttachmentSection class]]) {
-            GenericAttachmentSection * attachmentSection = (GenericAttachmentSection*)section;
-
-            if (attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
-                attachmentSection.icon.image = attachment.previewImage;
-                attachmentSection.icon.layer.cornerRadius = 0.5 * attachmentSection.icon.frame.size.width;
-                attachmentSection.icon.layer.masksToBounds = YES;
-            } else if (attachment.state == kAttachmentTransfered) {
-                attachmentSection.icon.image = [self typeIconForAttachment: message.attachment];
-                attachmentSection.icon.layer.masksToBounds = NO;
-            } else {
-                attachmentSection.icon.image = nil;
-            }
-        }
-    }];
+    if (loadPreview) {
+        [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
+            [self finishConfigureGenericAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
+        }];
+    } else {
+        [self finishConfigureGenericAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
+    }
 
     NSString * title = message.attachment.humanReadableFileName;
     if (title == nil || [title isEqualToString: @""]) {
@@ -1469,47 +1470,81 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     section.title.text = [self attachmentTitle: message];
 }
 
-- (void) configureImageAttachmentSection: (ImageAttachmentSection*) section forMessage: (HXOMessage*) message {
+- (void)finishConfigureGenericAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
+    if ([section isKindOfClass: [GenericAttachmentSection class]]) {
+        Attachment * attachment = message.attachment;
+        GenericAttachmentSection * attachmentSection = (GenericAttachmentSection*)section;
+        
+        if (loadPreview && attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
+            attachmentSection.icon.image = attachment.previewImage;
+            attachmentSection.icon.layer.cornerRadius = 0.5 * attachmentSection.icon.frame.size.width;
+            attachmentSection.icon.layer.masksToBounds = YES;
+        } else if (attachment.state == kAttachmentTransfered) {
+            attachmentSection.icon.image = [self typeIconForAttachment: message.attachment];
+            attachmentSection.icon.layer.masksToBounds = NO;
+        } else {
+            attachmentSection.icon.image = nil;
+        }
+    }
+}
+
+- (void) configureImageAttachmentSection: (ImageAttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
+    if (DEBUG_TABLE_CELLS) NSLog(@"configureImageAttachmentSection %@ withPreview=%d",section,loadPreview);
     [self configureAttachmentSection: section forMessage: message];
     section.imageAspect = message.attachment.aspectRatio;
 
-    [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
-        if ([section isKindOfClass: [ImageAttachmentSection class]]) {
-            ImageAttachmentSection * imageSection = (ImageAttachmentSection*)section;
-            if (attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
-                imageSection.image = message.attachment.previewImage;
-            } else {
-                imageSection.image = nil;
-            }
-            imageSection.subtitle.hidden = imageSection.image != nil;
-            imageSection.showPlayButton = [attachment.mediaType isEqualToString: @"video"] && imageSection.image != nil;
-        }
-    }];
+    if (loadPreview) {
+        [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
+            [self finishConfigureImageAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
+        }];
+    } else {
+        [self finishConfigureImageAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
+    }
 }
 
+-(void)finishConfigureImageAttachmentSection:(AttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
+    if (DEBUG_TABLE_CELLS) NSLog(@"finishConfigureImageAttachmentSection %@ withPreview=%d",section,loadPreview);
+    if ([section isKindOfClass: [ImageAttachmentSection class]]) {
+        Attachment * attachment = message.attachment;
+        ImageAttachmentSection * imageSection = (ImageAttachmentSection*)section;
+        if (loadPreview && attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
+            imageSection.image = message.attachment.previewImage;
+        } else {
+            imageSection.image = nil;
+        }
+        imageSection.subtitle.hidden = imageSection.image != nil;
+        imageSection.showPlayButton = [attachment.mediaType isEqualToString: @"video"] && imageSection.image != nil;
+    }
+}
 
 - (void) loadAttachmentImage: (Attachment*) attachment withSection: (AttachmentSection*) section completion: (AttachmentImageCompletion) completion {
+    if (DEBUG_TABLE_CELLS) NSLog(@"loadAttachmentImage section %@",section);
 
     if (attachment.previewImage == nil && attachment.available) {
-        [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
-            if (theError == nil) {
-                NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: attachment.message];
-                if (indexPath) {
-                    AttachmentSection * section = [((id)[self.tableView cellForRowAtIndexPath: indexPath]) attachmentSection];
-                    if (section) {
-                        completion(attachment, section);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *theError) {
+                if (theError == nil) {
+                    NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: attachment.message];
+                    if (indexPath) {
+                        if (DEBUG_TABLE_CELLS) NSLog(@"loadAttachmentImage:calling cellForRowAtIndexPath with section %@",section);
+                        id cell = ((id)[self.tableView cellForRowAtIndexPath: indexPath]);
+                        if (DEBUG_TABLE_CELLS) NSLog(@"loadAttachmentImage:called cellForRowAtIndexPath %@ returned cell %@",indexPath, cell);
+                        if (cell) {
+                            AttachmentSection * inSection = [cell attachmentSection];
+                            if (DEBUG_TABLE_CELLS) NSLog(@"loadAttachmentImage: cell section = %@", inSection);
+                            completion(attachment, inSection);
+                            [inSection setNeedsDisplay];
+                        }
                     }
+                } else {
+                    NSLog(@"ERROR: Failed to load attachment preview image: %@", theError);
                 }
-            } else {
-                NSLog(@"ERROR: Failed to load attachment preview image: %@", theError);
-            }
-        }];
+            }];
+        });
     } else {
         completion(attachment, section);
     }
 }
-
-
 
 - (void) didToggleTransfer: (id) sender {
     // XXX hackish

@@ -1009,6 +1009,7 @@
 		E9D67C4F175C22DE007FE4AA /* UIAlertView+BlockExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+BlockExtensions.m"; sourceTree = "<group>"; };
 		E9DBE3E11865C0A000880252 /* CryptoJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoJSON.h; sourceTree = "<group>"; };
 		E9DBE3E21865C0A000880252 /* CryptoJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoJSON.m; sourceTree = "<group>"; };
+		E9E92F1218711A62007B8042 /* HoccerXO-24.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO-24.xcdatamodel"; sourceTree = "<group>"; };
 		E9F592D5171F460900E2FFAC /* CryptoEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoEngine.h; sourceTree = "<group>"; };
 		E9F592D6171F460A00E2FFAC /* CryptoEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2789,8 +2790,9 @@
 				E93ED64F17A33CE10072FD2C /* HoccerXO-21.xcdatamodel */,
 				E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */,
 				E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */,
+				E9E92F1218711A62007B8042 /* HoccerXO-24.xcdatamodel */,
 			);
-			currentVersion = E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */;
+			currentVersion = E9E92F1218711A62007B8042 /* HoccerXO-24.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -14,6 +14,7 @@
 #import "NSString+StringWithData.h"
 #import "HXOBackend.h"
 #import "Group.h"
+#import "HXOUserDefaults.h"
 
 @implementation HXOMessage
 
@@ -35,12 +36,55 @@
 @dynamic deliveries;
 @dynamic saltString;
 
+@dynamic cachedLandscapeCellHeight;
+@dynamic cachedPortraitCellHeight;
+@dynamic cachedBuildNumber;
+@dynamic cachedMessageFontSize;
+@dynamic cachedCellHeight;
 
 @synthesize cryptoKey = _cryptoKey;
 
 @dynamic bodyCipherText;
 
+
+
 #define KEY_DEBUG NO
+
+-(CGFloat) cachedCellHeight {
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    double messageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+    NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
+    
+    if (messageFontSize == self.cachedMessageFontSize
+#ifdef USE_BUILD_NUMBER_CACHE
+        && [buildNumber isEqualToString:self.cachedBuildNumber]
+#endif
+        ) {
+        if (orientation == UIInterfaceOrientationPortrait) {
+            if (self.cachedPortraitCellHeight != 0) {
+                return self.cachedPortraitCellHeight;
+            }
+        } else {
+            if (self.cachedLandscapeCellHeight != 0) {
+                return self.cachedLandscapeCellHeight;
+            }
+        }
+    }
+    return 0.0;
+}
+
+-(void) setCachedCellHeight:(CGFloat)height {
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    self.cachedMessageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+    self.cachedBuildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
+    
+    if (orientation == UIInterfaceOrientationPortrait) {
+        self.cachedPortraitCellHeight = height;
+    } else {
+        self.cachedLandscapeCellHeight = height;
+    }
+}
+
 
 -(NSData*) cryptoKey {
     if (_cryptoKey == nil) {
