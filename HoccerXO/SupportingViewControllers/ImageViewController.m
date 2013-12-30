@@ -82,7 +82,7 @@ static const CGFloat kImageViewerOversize = 1.0;
     CGFloat minScale = MIN(scaleWidth, scaleHeight) / kImageViewerOversize;
     self.scrollView.minimumZoomScale = minScale;
 
-    self.scrollView.maximumZoomScale = 1.0f;
+    self.scrollView.maximumZoomScale = 2.0f;
     self.scrollView.zoomScale = minScale;
 
     [self centerScrollViewContents];

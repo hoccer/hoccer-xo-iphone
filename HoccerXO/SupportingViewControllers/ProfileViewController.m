@@ -34,6 +34,8 @@
 #import "HXOBackend.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "AppDelegate.h"
+#import "ImageViewController.h"
+
 #import "NSData+Base64.h"
 
 #import <Foundation/NSKeyValueCoding.h>
@@ -62,11 +64,15 @@ typedef enum ActionSheetTags {
 @property (strong, readonly) NSPredicate * hasValuePredicate;
 @property (strong, readonly) HXOBackend * chatBackend;
 
+@property (readonly, strong, nonatomic) ImageViewController * imageViewController;
+
+
 @end
 
 @implementation ProfileViewController
 
 @synthesize attachmentPicker = _attachmentPicker;
+@synthesize imageViewController = _imageViewController;
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -503,7 +509,8 @@ typedef enum ActionSheetTags {
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     id<ProfileItemInfo> item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [AvatarItem class]]) {
-        return nil;
+        //return nil;
+        return indexPath;
     } else if ([item isKindOfClass: [ProfileItem class]]) {
         return item != nil && [item target] != nil && [item action] != nil ? indexPath : nil;
     } else {
@@ -1005,13 +1012,34 @@ typedef enum ActionSheetTags {
 
 #pragma mark - Avatar Handling
 
+- (ImageViewController*) imageViewController {
+    if (_imageViewController == nil) {
+        _imageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ImageViewController"];
+    }
+    return _imageViewController;
+}
+
+
+- (void) viewAvatar:(UIImage *)avatarImage {
+    //NSLog(@"viewAvatar");
+    if (avatarImage != nil) {
+        self.imageViewController.image = avatarImage;
+        //[self presentViewController: self.imageViewController animated: YES completion: nil];
+        [self.navigationController pushViewController: self.imageViewController animated: YES];
+    }
+}
+
 - (IBAction)avatarTapped:(id)sender {
     // TODO: when we will have other text input field, make them resign first responder, too
     NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _nickNameItem];
     UserDefaultsCellTextInput * cell = (UserDefaultsCellTextInput*)[self.tableView cellForRowAtIndexPath: indexPath];
     [cell.textField resignFirstResponder];
-    
-    [self.attachmentPicker showInView: self.view];
+    if (self.editing) {
+        [self.attachmentPicker showInView: self.view];
+    } else {
+        id modelObject = [self getModelObject];
+        [self viewAvatar:[modelObject valueForKey: _avatarItem.valueKey]];
+    }
 }
 
 - (void) updateAvatar: (UIImage*) image {

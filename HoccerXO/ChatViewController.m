@@ -1942,7 +1942,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 
 - (void) presentViewForAttachment:(Attachment *) myAttachment {
-    if ([myAttachment.mediaType isEqual: @"data"] || [myAttachment.mediaType isEqual: @"video"] || [myAttachment.mediaType isEqual: @"image"] || [myAttachment.mediaType isEqual: @"audio"]) {
+    if ([myAttachment.mediaType isEqual: @"data"]
+        || [myAttachment.mediaType isEqual: @"video"]
+        || [myAttachment.mediaType isEqual: @"image"]
+        //|| [myAttachment.mediaType isEqual: @"audio"]
+        )
+    {
         [self previewAttachment:myAttachment];
     } else  if ([myAttachment.mediaType isEqual: @"video"]) {
         // TODO: lazily allocate _moviePlayerController once
@@ -2060,7 +2065,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) previewAttachment:(Attachment *)attachment {
-    NSLog(@"previewAttachment");
+    // NSLog(@"previewAttachment");
     if (attachment != nil) {
         NSURL * myURL = [attachment contentURL];
         NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
