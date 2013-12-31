@@ -53,8 +53,9 @@
 -(CGFloat) cachedCellHeight {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     double messageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+#ifdef USE_BUILD_NUMBER_CACHE
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
-    
+#endif
     if (messageFontSize == self.cachedMessageFontSize
 #ifdef USE_BUILD_NUMBER_CACHE
         && [buildNumber isEqualToString:self.cachedBuildNumber]

@@ -214,11 +214,17 @@
 }
 
 -(CGSize) calcLabelSize:(NSString *)string withFont:(UIFont *)font maxSize:(CGSize)maxSize {
+    
+#ifdef PRE_IOS7
     return [string
             sizeWithFont:font
             constrainedToSize:maxSize
             lineBreakMode:NSLineBreakByWordWrapping];
-    
+#else
+    NSDictionary *attributes = @{ NSFontAttributeName: font};
+    CGRect bounds = [string boundingRectWithSize:maxSize options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:attributes context:nil];
+    return bounds.size;
+#endif
 }
 
 

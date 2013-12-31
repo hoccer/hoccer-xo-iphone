@@ -30,7 +30,13 @@
 
 - (CGSize) calculateSize: (NSString*) text {
     CGSize constraint = CGSizeMake(self.frame.size.width, MAXFLOAT);
+#ifdef PRE_IOS7
     CGSize size = [text sizeWithFont:self.font constrainedToSize: constraint lineBreakMode: NSLineBreakByWordWrapping];
+#else
+    NSDictionary *attributes = @{ NSFontAttributeName: self.font};
+    CGRect bounds = [text boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:attributes context:nil];
+    CGSize size = bounds.size;
+#endif
     size.height = MAX(size.height, self.minHeight);
     return size;
 }

@@ -170,6 +170,9 @@
 
 @implementation ProfileSection
 
+@synthesize action;
+@synthesize target;
+
 - (id) init {
     self = [super init];
     if (self != nil) {

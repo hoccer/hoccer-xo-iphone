@@ -306,7 +306,9 @@
     BubbleItem * item = _items[indexPath.row];
     MessageCell * cell = [_cellPrototypes objectForKey: item.cellIdentifier];
     [self configureCell: cell item: item];
-    return [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
+    CGFloat height = [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
+    NSLog(@"path %@ height %f",indexPath,height);
+    return height;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

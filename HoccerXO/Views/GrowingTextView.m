@@ -118,9 +118,16 @@
     for (NSInteger i = 1; i < lineCount; ++i) {
         testText = [testText stringByAppendingString:@"\n|W|"];
     }
+#ifdef PRE_IOS7
     return [testText sizeWithFont: self.font
                 constrainedToSize: CGSizeMake(self.contentSize.width, 1000000)
-                    lineBreakMode :NSLineBreakByWordWrapping].height;
+                   lineBreakMode :NSLineBreakByWordWrapping].height;
+#else
+    CGSize constraint = CGSizeMake(self.contentSize.width,MAXFLOAT);
+    NSDictionary *attributes = @{ NSFontAttributeName: self.font};
+    CGRect bounds = [testText boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:attributes context:nil];
+    return bounds.size.height;
+#endif
 }
 
 - (void) textViewDidChange:(UITextView *)textView {

@@ -122,12 +122,23 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
     CGFloat maxWidth = self.contentView.bounds.size.width - kHXOCellIconSize - 20;
     NSString * value = self.currentValue;
     NSString * text = [NSString stringWithFormat: self.valueFormat, value];
+#ifdef PRE_IOS7
     CGFloat width = [text sizeWithFont: self.textLabel.font].width;
+#else
+    CGSize constraint = CGSizeMake(MAXFLOAT,MAXFLOAT);
+    NSDictionary *attributes = @{ NSFontAttributeName: self.textLabel.font};
+    CGRect bounds = [text boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:attributes context:nil];
+    CGFloat width = bounds.size.width;
+#endif
     unichar ellipse = 0x2026;
     while (width > maxWidth && [value length] > 0) {
         value = [value substringToIndex: [value length] - 1];
         text = [NSString stringWithFormat: self.valueFormat, [NSString stringWithFormat: @"%@%C", value, ellipse]];
+#ifdef PRE_IOS7
         width = [text sizeWithFont: self.textLabel.font].width;
+#else
+        width = [text boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:attributes context:nil].size.width;
+#endif
     }
     return text;
 }
