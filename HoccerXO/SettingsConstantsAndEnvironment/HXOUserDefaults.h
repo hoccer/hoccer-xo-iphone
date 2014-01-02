@@ -45,6 +45,9 @@ FOUNDATION_EXPORT NSString * const kHXOMessageFontSize;
 FOUNDATION_EXPORT NSString * const kHXORsaKeySize;
 FOUNDATION_EXPORT NSString * const kHXOManualKeyManagement;
 
+FOUNDATION_EXPORT NSString * const kHXOHttpServerPassword;
+
+
 FOUNDATION_EXPORT NSString * const kHXODefaultScreenShooting;
 
 

@@ -137,6 +137,8 @@ typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
     
 - (void) checkTransferQueues;
 
+-(Contact *) getContactByClientId:(NSString *) theClientId;
+
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;
 + (NSData *) ownPublicKey;

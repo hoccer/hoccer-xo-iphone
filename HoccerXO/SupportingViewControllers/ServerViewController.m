@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "HTTPServer.h"
 #import "GCDAsyncSocket.h"
+#import "HXOUserDefaults.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -76,6 +77,37 @@
     [self updateTextFields];
 }
 
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    NSLog(@"textFieldDidEndEditing");
+    if ([textField isEqual:self.passwordTextField]) {
+        [[HXOUserDefaults standardUserDefaults] setValue:self.passwordTextField.text forKey:kHXOHttpServerPassword];
+        [self updateTextFields];
+    }
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return NO;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
+ replacementText:(NSString *)atext {
+	
+	//weird 1 pixel bug when clicking backspace when textView is empty
+	if(![textView hasText] && [atext isEqualToString:@""]) return NO;
+    
+	if ([atext isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+	}
+	
+	return YES;
+}
+
 static inline NSString * URLEncodedString(NSString *string)
 {
 	return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,  (__bridge CFStringRef)string,  NULL,  CFSTR(":/.?&=;+!@$()~"),  kCFStringEncodingUTF8);
@@ -95,8 +127,9 @@ static inline NSString * URLEncodedString(NSString *string)
     } else {
         self.statusTextField.text = NSLocalizedString(@"Server is stopped", nil);
         self.urlTextField.text = NSLocalizedString(@"Server is stopped", nil);
-        self.logTextField.text = NSLocalizedString(@"Server is stopped", nil);
     }
+    self.passwordTextField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
+
 }
 
 

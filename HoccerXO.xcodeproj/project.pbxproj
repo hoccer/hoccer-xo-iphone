@@ -393,6 +393,8 @@
 		E9E92F8C18748F21007B8042 /* ServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F8B18748F21007B8042 /* ServerViewController.m */; };
 		E9E92F901874E7A3007B8042 /* MyHttpConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F8F1874E7A3007B8042 /* MyHttpConnection.m */; };
 		E9E92F93187503F7007B8042 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F92187503F7007B8042 /* NSString+HTML.m */; };
+		E9E92F961875D41E007B8042 /* TypedHTTPDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F951875D41E007B8042 /* TypedHTTPDataResponse.m */; };
+		E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F9818760B05007B8042 /* TypedHTTPFileResponse.m */; };
 		E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F592D6171F460A00E2FFAC /* CryptoEngine.m */; };
 /* End PBXBuildFile section */
 
@@ -1098,6 +1100,10 @@
 		E9E92F8F1874E7A3007B8042 /* MyHttpConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHttpConnection.m; sourceTree = "<group>"; };
 		E9E92F91187503F7007B8042 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
 		E9E92F92187503F7007B8042 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
+		E9E92F941875D41E007B8042 /* TypedHTTPDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypedHTTPDataResponse.h; sourceTree = "<group>"; };
+		E9E92F951875D41E007B8042 /* TypedHTTPDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypedHTTPDataResponse.m; sourceTree = "<group>"; };
+		E9E92F9718760B05007B8042 /* TypedHTTPFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypedHTTPFileResponse.h; sourceTree = "<group>"; };
+		E9E92F9818760B05007B8042 /* TypedHTTPFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypedHTTPFileResponse.m; sourceTree = "<group>"; };
 		E9F592D5171F460900E2FFAC /* CryptoEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoEngine.h; sourceTree = "<group>"; };
 		E9F592D6171F460A00E2FFAC /* CryptoEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2255,6 +2261,10 @@
 			children = (
 				E9E92F8E1874E7A3007B8042 /* MyHttpConnection.h */,
 				E9E92F8F1874E7A3007B8042 /* MyHttpConnection.m */,
+				E9E92F941875D41E007B8042 /* TypedHTTPDataResponse.h */,
+				E9E92F951875D41E007B8042 /* TypedHTTPDataResponse.m */,
+				E9E92F9718760B05007B8042 /* TypedHTTPFileResponse.h */,
+				E9E92F9818760B05007B8042 /* TypedHTTPFileResponse.m */,
 			);
 			name = Server;
 			sourceTree = "<group>";
@@ -2714,6 +2724,7 @@
 				E9E92F7418733D01007B8042 /* MultipartMessageHeaderField.m in Sources */,
 				E9E92F7718733D01007B8042 /* HTTPDynamicFileResponse.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
+				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				633129D716F95220008F5B04 /* GrowingTextView.m in Sources */,
 				6330490416FC99820045E64E /* ContactQuickListViewCells.m in Sources */,
 				6330490716FC9A030045E64E /* ContactQuickListViewController.m in Sources */,
@@ -2752,6 +2763,7 @@
 				63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */,
 				E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */,
 				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
+				E9E92F961875D41E007B8042 /* TypedHTTPDataResponse.m in Sources */,
 				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
 				E9E92F3E18733B7A007B8042 /* DDLog.m in Sources */,
