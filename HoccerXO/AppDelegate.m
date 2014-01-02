@@ -27,6 +27,15 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
 
+#import "HTTPServer.h"
+#import "DDLog.h"
+#import "DDTTYLogger.h"
+#import "MyHttpConnection.h"
+
+#include <ifaddrs.h>
+#include <arpa/inet.h>
+#include <net/if.h>
+
 #import <MobileCoreServices/UTType.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 
@@ -43,6 +52,9 @@ typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
 static NSInteger validationErrorCount = 0;
+
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+
 
 #ifdef DEBUG_RESPONDER
 
@@ -84,6 +96,7 @@ static NSInteger validationErrorCount = 0;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize httpServer = _httpServer;
 
 @synthesize rpcObjectModel = _rpcObjectModel;
 
@@ -100,6 +113,112 @@ static NSInteger validationErrorCount = 0;
 #endif
     return YES;
 }
+
+-(HTTPServer*)httpServer {
+    if (_httpServer == nil) {
+        // Create server using our custom MyHTTPServer class
+        _httpServer = [[HTTPServer alloc] init];
+        [_httpServer setConnectionClass:[MyHTTPConnection class]];
+       
+        // Tell the server to broadcast its presence via Bonjour.
+        // This allows browsers such as Safari to automatically discover our service.
+        [_httpServer setType:@"_http._tcp."];
+        
+        // Normally there's no need to run our server on any specific port.
+        // Technologies like Bonjour allow clients to dynamically discover the server's port at runtime.
+        // However, for easy testing you may want force a certain port so you can just hit the refresh button.
+        // [httpServer setPort:12345];
+        
+        // Serve files from our embedded Web folder
+//        NSString *webPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Web"];
+        NSString *webPath = [self.applicationDocumentsDirectory path];
+        DDLogInfo(@"Setting document root: %@", webPath);
+        
+        [_httpServer setDocumentRoot:webPath];
+    }
+    return _httpServer;
+}
+
+- (void)startHttpServer
+{
+    // Start the server (and check for problems)
+	
+	NSError *error;
+	if([self.httpServer start:&error])
+	{
+		DDLogInfo(@"Started HTTP Server on port %hu", [self.httpServer listeningPort]);
+	}
+	else
+	{
+		DDLogError(@"Error starting HTTP Server: %@", error);
+	}
+}
+
+- (void)stopHttpServer {
+    if (_httpServer) {
+        [_httpServer stop];
+    }
+}
+-(BOOL)httpServerIsRunning {
+    if (_httpServer) {
+        return _httpServer.isRunning;
+    }
+    return NO;
+}
+
+
+#define IOS_CELLULAR    @"pdp_ip0"
+#define IOS_WIFI        @"en0"
+#define IP_ADDR_IPv4    @"ipv4"
+#define IP_ADDR_IPv6    @"ipv6"
+
+- (NSString *)ownIPAddress:(BOOL)preferIPv4
+{
+    NSArray *searchArray = preferIPv4 ?
+    @[ IOS_WIFI @"/" IP_ADDR_IPv4, IOS_WIFI @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6 ] :
+    @[ IOS_WIFI @"/" IP_ADDR_IPv6, IOS_WIFI @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4 ] ;
+    
+    NSDictionary *addresses = [self ownIPAddresses];
+    //NSLog(@"addresses: %@", addresses);
+    
+    __block NSString *address;
+    [searchArray enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop)
+     {
+         address = addresses[key];
+         if(address) *stop = YES;
+     } ];
+    return address ? address : @"0.0.0.0";
+}
+
+- (NSDictionary *)ownIPAddresses
+{
+    NSMutableDictionary *addresses = [NSMutableDictionary dictionaryWithCapacity:8];
+    
+    // retrieve the current interfaces - returns 0 on success
+    struct ifaddrs *interfaces;
+    if(!getifaddrs(&interfaces)) {
+        // Loop through linked list of interfaces
+        struct ifaddrs *interface;
+        for(interface=interfaces; interface; interface=interface->ifa_next) {
+            if(!(interface->ifa_flags & IFF_UP) || (interface->ifa_flags & IFF_LOOPBACK)) {
+                continue; // deeply nested code harder to read
+            }
+            const struct sockaddr_in *addr = (const struct sockaddr_in*)interface->ifa_addr;
+            if(addr && (addr->sin_family==AF_INET || addr->sin_family==AF_INET6)) {
+                NSString *name = [NSString stringWithUTF8String:interface->ifa_name];
+                char addrBuf[INET6_ADDRSTRLEN];
+                if(inet_ntop(addr->sin_family, &addr->sin_addr, addrBuf, sizeof(addrBuf))) {
+                    NSString *key = [NSString stringWithFormat:@"%@/%@", name, addr->sin_family == AF_INET ? IP_ADDR_IPv4 : IP_ADDR_IPv6];
+                    addresses[key] = [NSString stringWithUTF8String:addrBuf];
+                }
+            }
+        }
+        // Free memory
+        freeifaddrs(interfaces);
+    }
+    return [addresses count] ? addresses : nil;
+}
+
 
 - (void)registerForRemoteNotifications {
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -124,6 +243,8 @@ static NSInteger validationErrorCount = 0;
     if ([self persistentStoreCoordinator] == nil) {
         return NO;
     }
+    
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
     [self registerForRemoteNotifications];
     
@@ -1285,10 +1406,8 @@ static NSInteger validationErrorCount = 0;
 	while ([[NSFileManager defaultManager] fileExistsAtPath: [directory stringByAppendingPathComponent:newFilename]]) {
 		newFilename = [NSString stringWithFormat:@"%@_%@", baseFilename, [@(i) stringValue]];
 		newFilename = [newFilename stringByAppendingPathExtension: ext];
-		
 		i++;
 	}
-	
 	return newFilename;
 }
 
@@ -1301,6 +1420,10 @@ static NSInteger validationErrorCount = 0;
     NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
     NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
     return myLocalURL;
+}
+
++ (AppDelegate*)instance {
+    return (AppDelegate*)[[UIApplication sharedApplication] delegate];
 }
 
 @end

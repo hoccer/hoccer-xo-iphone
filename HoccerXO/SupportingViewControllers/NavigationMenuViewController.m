@@ -55,6 +55,10 @@
                        @"storyboardId": @"inAppSettingsViewController"
                        },
 #endif
+                    @{ @"title": NSLocalizedString(@"Server", nil),
+                       @"icon": @"navigation_button_settings",
+                       @"storyboardId": @"serverViewController"
+                    },
                     @{ @"title": NSLocalizedString(@"Tutorial", nil),
                        @"icon": @"navigation_button_tutorial",
                        @"storyboardId": @"tutorialViewController"

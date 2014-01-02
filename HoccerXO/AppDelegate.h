@@ -15,6 +15,7 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
+@class HTTPServer;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate>
 {
@@ -45,6 +46,11 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 @property (nonatomic, strong) NSString * openedFileMediaType;
 @property (nonatomic, strong) NSString * openedFileMimeType;
 
+@property (readonly,nonatomic, strong) HTTPServer *httpServer;
+
+- (void)startHttpServer;
+- (void)stopHttpServer;
+- (BOOL)httpServerIsRunning;
 
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;
@@ -82,5 +88,11 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
 + (NSString *)sanitizeFileNameString:(NSString *)fileName;
 + (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint;
+
+- (NSString *)ownIPAddress:(BOOL)preferIPv4;
+- (NSDictionary *)ownIPAddresses;
+
++ (AppDelegate*)instance;
+
 
 @end
