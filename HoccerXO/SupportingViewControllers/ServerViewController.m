@@ -44,6 +44,9 @@
 
     self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
+    
+    self.passwordTextField.backgroundColor = [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1.0];
+    self.passwordTextField.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,11 +61,27 @@
     [super viewDidUnload];
 }
 
+- (void) startTimer {
+    // NSLog(@"startTimer:");
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(updateTextFields) userInfo:nil repeats:YES];
+}
+
+- (void) stopTimer {
+    // NSLog(@"stopTimer:");
+    [self.updateTimer invalidate];
+    self.updateTimer = nil;
+}
+
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
     [self updateTextFields];
+    [self startTimer];
+}
+
+- (void) viewWillDisappear:(BOOL)animated  {
+    [self stopTimer];
 }
 
 - (IBAction)startServer:(id)sender {
@@ -72,30 +91,39 @@
 }
 
 - (IBAction)stopServer:(id)sender {
-    NSLog(@"ServerViewController:startServer");
+    NSLog(@"ServerViewController:stopServer");
     [AppDelegate.instance stopHttpServer];
     [self updateTextFields];
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    NSLog(@"textFieldDidEndEditing");
+- (void)textViewDidBeginEditing:(UITextView *)textField {
+    [self stopTimer];
+}
+
+
+- (void)textViewDidEndEditing:(UITextView *)textField {
+    // NSLog(@"textViewDidEndEditing");
     if ([textField isEqual:self.passwordTextField]) {
+        NSLog(@"%@",self.passwordTextField.text);
         [[HXOUserDefaults standardUserDefaults] setValue:self.passwordTextField.text forKey:kHXOHttpServerPassword];
+        [[HXOUserDefaults standardUserDefaults] synchronize];
         [self updateTextFields];
+        [self startTimer];
     }
 }
 
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+- (BOOL)textViewShouldEndEditing:(UITextView *)textField {
     return YES;
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL)textViewShouldReturn:(UITextView *)textField {
     [textField resignFirstResponder];
     return NO;
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
  replacementText:(NSString *)atext {
+    NSLog(@"shouldChangeTextInRange");
 	
 	//weird 1 pixel bug when clicking backspace when textView is empty
 	if(![textView hasText] && [atext isEqualToString:@""]) return NO;
@@ -117,16 +145,26 @@ static inline NSString * URLEncodedString(NSString *string)
     if (AppDelegate.instance.httpServerIsRunning) {
         HTTPServer * server = AppDelegate.instance.httpServer;
         //self.statusTextField.text = NSLocalizedString(@"Server is running", nil);
-        NSString * statusFormat = NSLocalizedString(@"Server is running on port=%d, name=%@, adresses=%@", nil);
-        self.statusTextField.text = [NSString stringWithFormat:statusFormat, server.listeningPort, server.publishedName, AppDelegate.instance.ownIPAddresses];
-        NSLog(@"%@",self.statusTextField.text);
+        NSDictionary * adresses = AppDelegate.instance.ownIPAddresses;
+        NSString * ipV4 = adresses[@"en0/ipv4"];
+        NSString * ipV6 = adresses[@"en0/ipv6"];
+        NSString * wanIPV4 = adresses[@"pdp_ip0/ipv4"];
+        NSString * wanIPV6 = adresses[@"pdp_ip0/ipv6"];
+        int port = server.listeningPort;
+        NSString * status = [NSString stringWithFormat:@"Server is running\nIPV4-LAN-Address:%@\nIPV6-LAN-Address:%@\nIPV4-WAN-Address:%@\nIPV6-WAN-Address:%@\nport=%d\nBonjour name=%@\nBonjour domain=%@",ipV4, ipV6, wanIPV4, wanIPV6,port,server.publishedName,server.domain];
+        
+        self.statusTextField.text = status;
+        //NSLog(@"%@",self.statusTextField.text);
 
-        NSString * encodedName = URLEncodedString(server.publishedName);
-        NSString * encodedDomain = URLEncodedString(server.domain);
-        self.urlTextField.text = [NSString stringWithFormat:@"http://%@:%d/ http://%@.%@/",[AppDelegate.instance ownIPAddress:YES],server.listeningPort, encodedName, encodedDomain];
+        //self.urlTextField.text = [NSString stringWithFormat:@"IPV4: http://%@:%d/ \nIPV6: http://[%@]:%d/",ipV4,port, ipV6,port];
+        self.urlTextField.text = [NSString stringWithFormat:@"http://%@:%d/",ipV4,port];
+        self.startButton.enabled = NO;
+        self.stopButton.enabled = YES;
     } else {
+        self.urlTextField.text = @"";//NSLocalizedString(@"Server is stopped", nil);
         self.statusTextField.text = NSLocalizedString(@"Server is stopped", nil);
-        self.urlTextField.text = NSLocalizedString(@"Server is stopped", nil);
+        self.startButton.enabled = YES;
+        self.stopButton.enabled = NO;
     }
     self.passwordTextField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
 

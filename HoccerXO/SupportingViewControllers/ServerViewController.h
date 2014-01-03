@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ServerViewController : UIViewController<UITextFieldDelegate>
+@interface ServerViewController : UIViewController<UITextViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIButton *startButton;
 @property (strong, nonatomic) IBOutlet UIButton *stopButton;
@@ -22,6 +22,8 @@
 @property (strong, nonatomic) IBOutlet UITextView * passwordTextField;
 
 @property (strong, nonatomic) IBOutlet UINavigationItem *navigationItem;
+
+@property (strong, nonatomic) NSTimer *updateTimer;
 
 - (IBAction)startServer:(id)sender;
 - (IBAction)stopServer:(id)sender;

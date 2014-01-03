@@ -278,6 +278,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
                 }
                 if (message.attachment != nil && message.attachment.contentURL != nil) {
                     myMessageDict[@"attachmentType"] = [message.attachment.mediaType copy];
+                    myMessageDict[@"attachmentMimeType"] = [message.attachment.mimeType copy];
                     myMessageDict[@"attachmentAspect"] = @(message.attachment.aspectRatio);
                     //NSString * myURL = [message.attachment.contentURL path];
                     NSURL * myURL = message.attachment.contentURL;
@@ -311,9 +312,9 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
             float aspect = [message[@"attachmentAspect"] floatValue];
             int width = 256;
             int height = width / aspect;
-            NSLog(@"width=%d, height=%d",width, height);
+            //NSLog(@"width=%d, height=%d",width, height);
 
-            NSString * item = [NSString stringWithFormat:@"<div><a href='%@'><img src='%@' width='%d' height='%d' border='0' alt='preview'/><br/>%@</a><br/></div><br/>\n",attachmentFileURL,attachmentPreviewURL,width, height, [message[@"attachmentType"] stringByEscapingForHTML]];
+            NSString * item = [NSString stringWithFormat:@"<div><a href='%@'><img src='%@' width='%d' height='%d' border='0' alt='preview'/><br/>%@ (%@)</a><br/></div><br/>\n",attachmentFileURL,attachmentPreviewURL,width, height, [message[@"attachmentType"] stringByEscapingForHTML], [message[@"attachmentMimeType"] stringByEscapingForHTML]];
             result = [result stringByAppendingString:item];
         }
         
@@ -352,7 +353,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 	
 	//NSString *relativePath = [filePath substringFromIndex:[documentRoot length]];
     
-    if (pathComponents.count >= 2 && [pathComponents[1] isEqualToString:@"chats"]) {
+    if ((pathComponents.count >= 2 && [pathComponents[1] isEqualToString:@"chats"]) || [path isEqualToString:@"/"]) {
         NSString * responseString = [self chats];
         if (responseString != nil) {
             responseString = [NSString stringWithFormat:@"<html xmlns='http://www.w3.org/1999/xhtml'>%@</html>",responseString];
@@ -459,6 +460,16 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 	// For simplicity, we're not going to check the username, only the password.
 	// return @"secret";
     return [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
+}
+
+- (NSString *)realm
+{
+	HTTPLogTrace();
+	
+	// Override me to provide a custom realm...
+	// You can configure it for the entire server, or based on the current request
+	
+	return @"Hoccer XO WebServer on Client App";
 }
 
 @end
