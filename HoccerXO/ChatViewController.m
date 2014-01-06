@@ -1419,33 +1419,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message];
         }
     }
-/*
-    //NSLog(@"configureCell forMessage: %@", message.body);
-
-    // TODO: clean up this shit...
-    cell.fetchedResultsController = self.fetchedResultsController;
-
-    //[self prepareLayoutOfCell: cell withMessage: message];
-
-
-    cell.colorScheme = [self colorSchemeForMessage: message];
-    cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
-
-    id author = [self getAuthor: message];
-    UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
-    [cell.avatar setImage: avatar forState: UIControlStateNormal];
-    cell.subtitle.text = [self.partner.type isEqualToString: @"Group"] ? [author nickName] : @"";
-
-
-    if ([cell.reuseIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
-        [self configureTextCell: (CrappyTextMessageCell*)cell forMessage: message];
-    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell forMessage: message];
-    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell forMessage: message];
-        [self configureTextCell: cell forMessage: message];
-    }
-*/
 }
 
 - (void) configureTextSection: (TextSection*) section forMessage: (HXOMessage*) message {
