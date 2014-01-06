@@ -159,7 +159,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self configureView];
 }
 
-/*
 - (UIMenuController *)setupLongPressMenu {
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
@@ -172,7 +171,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [menuController update];
     return menuController;
 }
-
 
 -(void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer {
     //NSLog(@"ChatViewController:handleLongPress");
@@ -194,7 +192,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }
     }
  }
-*/
 
 - (NSDateFormatter*) dateFormatter {
     if ( ! _dateFormatter) {
@@ -1100,35 +1097,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
-#pragma mark - Table view menu delegate
-
-/*
-- (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (ACTION_MENU_DEBUG) {NSLog(@"tableView:shouldShowMenuForRowAtIndexPath %@ - YES",indexPath);}
-    // NSLog(@"%@", [NSThread callStackSymbols]);
-    return YES;
-}
-*/
-- (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if ([[myCell class] isKindOfClass:[MessageCell class]]) {
-        if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender ? - %@",sel_getName(action),(action == @selector(copy:))?@"YES":@"NO");}
-        return (action == @selector(copy:));
-    }
-    if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender - NO",sel_getName(action));}
-    return NO;
-}
-
-- (BOOL)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-    UIView * myCell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if (ACTION_MENU_DEBUG) {NSLog(@"tableView::performAction:(%s):forRowAtIndexPath::withSender:sender",sel_getName(action));}
-    if ([[myCell class] isKindOfClass:[MessageCell class]]) {
-        return YES;
-    }
-    return NO;
-}
-
-
 #pragma mark - Core Data Stack
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -1777,9 +1745,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 -(BOOL) messageCell:(MessageCell *)theCell canPerformAction:(SEL)action withSender:(id)sender {
     //NSLog(@"messageCell:canPerformAction:");
     if (action == @selector(deleteMessage:)) return YES;
-    if (action == @selector(copy:)) {return YES;}
-
-    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
 
     if (action == @selector(copy:)) {return YES;}
 #ifdef DEBUG
@@ -1792,6 +1757,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (action == @selector(shareMessage:)) {return YES;}
     
     if (action == @selector(saveMessage:)) {
+        HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
         if ([message.isOutgoing isEqualToNumber: @NO], YES) {
             Attachment * myAttachment = message.attachment;
             if (myAttachment != nil) {
