@@ -12,6 +12,13 @@
 
 extern CGFloat kHXOGridSpacing;
 
+@interface ImageAttachmentSection ()
+
+@property (nonatomic,strong) CALayer* imageLayer;
+@property (nonatomic,strong) CAShapeLayer* playButton;
+
+@end
+
 @implementation ImageAttachmentSection
 
 - (void) commonInit {
@@ -22,59 +29,57 @@ extern CGFloat kHXOGridSpacing;
     self.subtitle.frame = CGRectMake(0, self.bounds.size.height - 40, self.bounds.size.width, 40);
 
     self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+
+    self.imageLayer = [CALayer layer];
+    self.imageLayer.frame = self.bounds;
+    self.imageLayer.mask = self.bubbleLayer;
+    self.imageLayer.contentsGravity = kCAGravityResizeAspectFill;
+    [self.layer insertSublayer: self.imageLayer atIndex: 0];
+
+    self.playButton = [CAShapeLayer layer];
+    self.playButton.frame = [self attachmentControlFrame];
+    self.playButton.path = [self playButtonPathWithSize: self.playButton.frame.size.width].CGPath;
+    self.playButton.strokeColor = [UIColor colorWithWhite: 1.0 alpha:0.5].CGColor;
+    self.playButton.fillColor = NULL;
+    [self.layer insertSublayer: self.playButton atIndex: 1];
 }
 
--(UIImage*)bubbleClipImage:(CGRect)rect withPath:(UIBezierPath*)path{
-    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
-    //CGBitmapContextCreate();
-    //[[UIColor redColor] setFill];
-    [[UIColor colorWithRed:1 green:1 blue:1 alpha:1] setFill];
-    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0.0, rect.size.height);
-    CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1.0, -1.0);
-    [path fill];
-    UIImage *clipImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return clipImage;
+- (void) setImage:(UIImage *)image {
+    _image = image;
+    self.imageLayer.contents = (id)image.CGImage;
+    [self setNeedsDisplay];
 }
 
-- (void) drawRect:(CGRect)rect {
-    if (self.image != nil) {
-        CGContextRef context = UIGraphicsGetCurrentContext();
+- (void) setShowPlayButton:(BOOL)showPlayButton {
+    _showPlayButton = showPlayButton;
+    self.playButton.opacity = showPlayButton ? 1.0 : 0.0;
+}
 
-        UIBezierPath * path = [self bubblePath];
-        CGContextSaveGState(context);
-#define CLIP_PATH
-#ifdef CLIP_PATH
-        [path addClip];
-#else
-        UIImage * clipImage = [self bubbleClipImage:rect withPath:path];
-        CGContextClipToMask(UIGraphicsGetCurrentContext(),path.bounds,clipImage.CGImage);
-#endif
-        [self.image drawInRect: path.bounds];
-        //[clipImage drawInRect: path.bounds];
-        CGContextRestoreGState(context);
-        if (self.cell.colorScheme == HXOBubbleColorSchemeFailed) {
-            [[UIColor colorWithRed: 1.0 green: 0.0 blue: 0.0 alpha: 0.8] setFill];
-            [path fill];
-        }
-    } else {
-        [super drawRect:rect];
+- (void) layoutSublayersOfLayer:(CALayer *)layer {
+    [super layoutSublayersOfLayer:layer];
+    if (layer == self.layer) {
+        self.imageLayer.frame = self.bounds;
+        self.playButton.frame = [self attachmentControlFrame];
     }
+}
 
-    if (self.showPlayButton) {
-        CGRect frame = [self attachmentControlFrame];
-        UIBezierPath* playPath = [UIBezierPath bezierPathWithOvalInRect: frame];
-        [playPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34722 * CGRectGetHeight(frame))];
-        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.62500 * CGRectGetHeight(frame))];
-        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.63194 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.48611 * CGRectGetHeight(frame))];
-        [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34722 * CGRectGetHeight(frame))];
-        [playPath closePath];
+- (UIBezierPath*) playButtonPathWithSize: (CGFloat) size {
+    CGRect frame = CGRectMake(0, 0, size, size);
+    UIBezierPath* playPath = [UIBezierPath bezierPathWithOvalInRect: frame];
+    [playPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34722 * CGRectGetHeight(frame))];
+    [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.62500 * CGRectGetHeight(frame))];
+    [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.63194 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.48611 * CGRectGetHeight(frame))];
+    [playPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34722 * CGRectGetHeight(frame))];
+    [playPath closePath];
+    return playPath;
+}
 
-        [[UIColor colorWithWhite: 1.0 alpha: 0.5] setStroke];
-        playPath.lineWidth = 2.0;
-        playPath.lineJoinStyle = kCGLineJoinRound;
-        [playPath strokeWithBlendMode: kCGBlendModeNormal alpha: 1.0];
-    }
+- (CGRect) attachmentControlFrame {
+    CGFloat s = MIN(9 * kHXOGridSpacing, MIN(self.bounds.size.height, self.bounds.size.width));
+    s = MAX(s - 2 * kHXOGridSpacing, 3 * kHXOGridSpacing);
+    CGFloat x = 0.5 * (self.bounds.size.width - s);
+    CGFloat y = 0.5 * (self.bounds.size.height - s);
+    return CGRectMake(x, y, s, s);
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
@@ -87,11 +92,13 @@ extern CGFloat kHXOGridSpacing;
     return size;
 }
 
-- (CGRect) attachmentControlFrame {
-    CGFloat s = 9 * kHXOGridSpacing;
-    CGFloat x = 0.5 * (self.bounds.size.width - s);
-    CGFloat y = 0.5 * (self.bounds.size.height - s);
-    return CGRectMake(x, y, s, s);
+- (void) colorSchemeDidChange {
+    [super colorSchemeDidChange];
+    self.imageLayer.backgroundColor = [self.cell fillColor].CGColor;
 }
 
+- (void) messageDirectionDidChange {
+    [super messageDirectionDidChange];
+    [self.layer setNeedsLayout];
+}
 @end

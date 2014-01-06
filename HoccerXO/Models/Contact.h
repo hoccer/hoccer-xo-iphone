@@ -71,8 +71,6 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
 @property BOOL friendMessageShown;
 
-+ (NSString*) sectionTitleForMessageTime: (NSDate*) date;
-
 - (SecKeyRef) getPublicKeyRef;
 - (SecKeyRef) getPublicKeyRefRSA;
 - (SecKeyRef) getPublicKeyRefEC;

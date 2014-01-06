@@ -580,7 +580,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     GroupMembership * membership = _profileDataSource[indexPath.section][indexPath.row];
     id contact = [self getContact: membership];
     // TODO: move to a configure method...
-    cell.nickName.text = [contact nickName];
+    cell.nickName.label.text = [contact nickName];
     if ([membership.state isEqualToString: @"invited"]) {
         cell.nickName.alpha = 0.5;
     } else {

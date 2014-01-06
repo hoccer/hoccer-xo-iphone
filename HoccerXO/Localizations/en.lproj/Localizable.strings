@@ -508,11 +508,14 @@
 
 "Chats"="Chats";
 
-"message_pending"  = "pending";
-"message_sent"     = "sent";
-"message_received" = "received";
-"message_read"     = "read";
-"message_failed"   = "failed";
+"message_pending"   = "pending";
+"message_sent"      = "sent";
+"message_delivered" = "delivered";
+"message_read"      = "read";
+"message_failed"    = "failed";
+
+"upload_question" = "Upload %@?";
+"download_question" = "Download %@?";
 
 "Can not save image in Album"="Can not save image in Album";
 "Can not load image to save it in Album"="Can not load image to save it in Album";

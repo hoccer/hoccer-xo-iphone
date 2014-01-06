@@ -485,11 +485,14 @@
 
 "Chats"="Chats";
 
-"message_pending"  = "ausgehend";
-"message_sent"     = "gesendet";
-"message_received" = "empfangen";
-"message_read"     = "gelesen";
-"message_failed"   = "kaputt";
+"message_pending"   = "ausgehend";
+"message_sent"      = "gesendet";
+"message_delivered" = "zugestellt";
+"message_read"      = "gelesen";
+"message_failed"    = "kaputt";
+
+"upload_question"   = "%@ hochladen?";
+"download_question" = "%@ runterladen?";
 
 "Can not save image in Album"="Bild konnte nicht im Album gespeichert werden";
 "Can not load image to save it in Album"="Bild konnte nicht geladen werden, um es im Album zu speichern";

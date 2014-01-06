@@ -24,12 +24,23 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) commonInit {
     self.backgroundColor = [UIColor clearColor];
+
+    // TODO: do we need this? is there a better way?
     self.contentMode = UIViewContentModeRedraw;
+
+    _bubbleLayer = [CAShapeLayer layer];
+    self.bubbleLayer.path = [self bubblePath].CGPath;
+    [self.layer addSublayer: self.bubbleLayer];
+
+    //self.layer.shouldRasterize = YES;
+    //self.layer.rasterizationScale = 2.0; // XXX
 }
 
-- (void) drawRect:(CGRect)rect {
-    [[self fillColor] setFill];
-    [[self bubblePath] fill];
+- (void) layoutSublayersOfLayer:(CALayer *)layer {
+    if (layer == self.layer) {
+        self.bubbleLayer.frame = self.bounds;
+        self.bubbleLayer.path = [self bubblePath].CGPath;
+    }
 }
 
 - (UIBezierPath*) bubblePath {
@@ -90,10 +101,18 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (void) colorSchemeDidChange {
+    self.bubbleLayer.fillColor = [self fillColor].CGColor;
 }
 
 - (void) messageDirectionDidChange {
-    [self setNeedsDisplay];
+    self.bubbleLayer.path = [self bubblePath].CGPath;
+#ifndef MESSAGE_CELL_USE_LAYERS
+    //[self setNeedsDisplay];
+#endif
+}
+
+- (BOOL) canBecomeFirstResponder {
+    return NO;
 }
 
 @end

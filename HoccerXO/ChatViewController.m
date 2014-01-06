@@ -46,20 +46,23 @@
 #import "ProfileViewController.h"
 #import "NickNameLabelWithStatus.h"
 #import "HXOUpDownLoadControl.h"
+#import "DateSectionHeaderView.h"
+#import "MessageItems.h"
+#import "HXOHyperLabel.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
-static const CGFloat    kSectionHeaderHeight = 40;
+static const CGFloat    kSectionHeaderHeight = 3 * 8;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @interface ChatViewController ()
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
-@property (strong, readonly) AttachmentPickerController* attachmentPicker;
+@property (strong, readonly)  AttachmentPickerController* attachmentPicker;
 @property (strong, nonatomic) UIView* attachmentPreview;
 @property (nonatomic,strong) NSIndexPath * firstNewMessage;
 @property (nonatomic,strong) NSMutableDictionary * cellPrototypes;
@@ -70,9 +73,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
-@property (nonatomic) double messageFontSize;
+@property (nonatomic, readonly) NSMutableDictionary * messageItems;
+@property (nonatomic, readonly) NSDateFormatter * dateFormatter;
+@property (nonatomic, readonly) NSByteCountFormatter * byteCountFormatter;
 
 @property (nonatomic) BOOL keyBoardShown;
+@property (nonatomic) double messageFontSize;
 
 @end
 
@@ -87,7 +93,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize currentExportSession = _currentExportSession;
 @synthesize currentPickInfo = _currentPickInfo;
 @synthesize fetchedResultsController = _fetchedResultsController;
-
+@synthesize messageItems = _messageItems;
+@synthesize dateFormatter = _dateFormatter;
+@synthesize byteCountFormatter = _byteCountFormatter;
 
 - (void)viewDidLoad {
     // NSLog(@"ChatViewController:viewDidLoad");
@@ -138,11 +146,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self registerCellClass: [GenericAttachmentMessageCell class]];
     [self registerCellClass: [ImageAttachmentWithTextMessageCell class]];
     [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
+    [self.tableView registerClass: [DateSectionHeaderView class] forHeaderFooterViewReuseIdentifier: @"date_header"];
 
     self.titleLabel = [[NickNameLabelWithStatus alloc] init];
     self.navigationItem.titleView = self.titleLabel;
-    self.titleLabel.textColor = [UIColor whiteColor];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.label.textColor = [UIColor whiteColor];
+    self.titleLabel.label.textAlignment = NSTextAlignmentCenter;
 
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
@@ -150,6 +159,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self configureView];
 }
 
+/*
 - (UIMenuController *)setupLongPressMenu {
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
@@ -183,6 +193,25 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             //NSLog(@"ChatViewController:handleLongPress:setMenuVisible");
         }
     }
+ }
+*/
+
+- (NSDateFormatter*) dateFormatter {
+    if ( ! _dateFormatter) {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setDateStyle:NSDateFormatterLongStyle];
+        [_dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [_dateFormatter setDoesRelativeDateFormatting:YES];
+    }
+    return _dateFormatter;
+}
+
+- (NSByteCountFormatter*) byteCountFormatter {
+    if ( ! _byteCountFormatter) {
+        _byteCountFormatter = [[NSByteCountFormatter alloc] init];
+        _byteCountFormatter.countStyle = NSByteCountFormatterCountStyleFile;
+    }
+    return _byteCountFormatter;
 }
 
 
@@ -197,6 +226,22 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [AppDelegate setWhiteFontStatusbarForViewController:self];
 }
 
+- (NSMutableDictionary*) messageItems {
+    if ( ! _messageItems ) {
+        _messageItems = [[NSMutableDictionary alloc] init];
+    }
+    return _messageItems;
+}
+
+- (MessageItem*) getItemWithMessage: (HXOMessage*) message {
+    MessageItem * item = [self.messageItems objectForKey: message.objectID];
+    if ( ! item) {
+        item = [[MessageItem alloc] initWithMessage: message];
+        [self.messageItems setObject: item forKey: message.objectID];
+    }
+    item.message = message;
+    return item;
+}
 
 - (void) viewWillDisappear:(BOOL)animated {
     // NSLog(@"ChatViewController:viewWillDisappear");
@@ -207,6 +252,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    _messageItems = nil;
 }
 
 - (void)configureView
@@ -220,7 +266,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) configureTitle {
-    self.titleLabel.text = self.partner.nickNameWithStatus;
+    self.titleLabel.label.text = self.partner.nickNameWithStatus;
     self.titleLabel.isOnline = [self.partner.connectionStatus isEqualToString: @"online"];
     [self.titleLabel sizeToFit];
 }
@@ -987,30 +1033,15 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView * header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kSectionHeaderHeight)];
 
-    UILabel * label = [[UILabel alloc] initWithFrame: header.frame];
-    label.backgroundColor = [UIColor clearColor];
-    label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    label.textAlignment = NSTextAlignmentCenter;
-    label.text = [self tableView:tableView titleForHeaderInSection:section];
-    label.textColor = [UIColor colorWithWhite: 0.33 alpha: 1.0];
-    label.shadowColor = [UIColor whiteColor];
-    label.shadowOffset = CGSizeMake(0, 1);
-    label.font = [UIFont boldSystemFontOfSize: 9];
-    [header addSubview: label];
+    DateSectionHeaderView * header = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: @"date_header"];
 
-    return header;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    
     NSArray *objects = [sectionInfo objects];
     NSManagedObject *managedObject = objects[0];
     NSDate *timeSection = (NSDate *)[managedObject valueForKey:@"timeSection"];
-    // NSLog(@"titleForHeaderInSection: timeSection = %@",timeSection);
-    return [Contact sectionTitleForMessageTime:timeSection];
+    header.dateLabel.text = [self.dateFormatter stringFromDate: timeSection];
+    return header;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -1385,6 +1416,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     id author = [self getAuthor: message];
     UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
+    cell.avatar.showLed = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && [[(Contact*)[message.deliveries.anyObject sender] connectionStatus] isEqualToString: @"online"];
+
     cell.subtitle.text = [self subtitleForMessage: message];
 
 
@@ -1397,44 +1430,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         }
     }
-/*
-    //NSLog(@"configureCell forMessage: %@", message.body);
-
-    // TODO: clean up this shit...
-    cell.fetchedResultsController = self.fetchedResultsController;
-
-    //[self prepareLayoutOfCell: cell withMessage: message];
-
-
-    cell.colorScheme = [self colorSchemeForMessage: message];
-    cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
-
-    id author = [self getAuthor: message];
-    UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
-    [cell.avatar setImage: avatar forState: UIControlStateNormal];
-    cell.subtitle.text = [self.partner.type isEqualToString: @"Group"] ? [author nickName] : @"";
-
-
-    if ([cell.reuseIdentifier isEqualToString: [CrappyTextMessageCell reuseIdentifier]]) {
-        [self configureTextCell: (CrappyTextMessageCell*)cell forMessage: message];
-    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell forMessage: message];
-    } else if ([cell.reuseIdentifier isEqualToString: [CrappyAttachmentWithTextMessageCell reuseIdentifier]]) {
-        [self configureAttachmentCell: (CrappyAttachmentMessageCell*)cell forMessage: message];
-        [self configureTextCell: cell forMessage: message];
-    }
-*/
 }
 
 - (void) configureTextSection: (TextSection*) section forMessage: (HXOMessage*) message {
-    if (section.label.tokenClasses.count == 0) {
-        [self registerTokenClasses: section.label];
-        section.label.delegate = self;
-    }
+    section.label.delegate = self;
     // maybe we find a better way to properly respond to font size changes
     section.label.font = [UIFont systemFontOfSize: self.messageFontSize];
     
-    section.label.text = message.body;
+    section.label.attributedText = [self getItemWithMessage: message].attributedBody;
 }
 
 - (void) configureAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message {
@@ -1450,6 +1453,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     upDownLoadControl.hidden = attachment.available && attachment.state == kAttachmentTransfered;
     BOOL isActive = [self attachmentIsActive: attachment];
     upDownLoadControl.selected = isActive;
+    if (attachment.state == kAttachmentWantsTransfer || attachment.state == kAttachmentTransferScheduled) {
+        [upDownLoadControl startSpinning];
+    }
 }
 
 - (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
@@ -1611,7 +1617,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         {
             return NSLocalizedString(@"message_sent", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
-            return NSLocalizedString(@"message_received", nil);
+            return NSLocalizedString(@"message_delivered", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
             return NSLocalizedString(@"message_failed", nil);
         /* TODO } else if () {
@@ -1629,32 +1635,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     } else {
         return message.contact.nickName;
     }
-}
-
-- (NSString*) attachmentSubtitle: (Attachment*) attachment {
-    NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
-    NSString * sizeString;
-    
-    long long contentSize;
-    long long doneSize;
-    if ([attachment.message.isOutgoing isEqualToNumber: @NO]) {
-        contentSize = [attachment.contentSize longLongValue];
-        doneSize = [attachment.transferSize longLongValue];
-    } else {
-        contentSize = [attachment.cipheredSize longLongValue];
-        doneSize = [attachment.cipherTransferSize longLongValue];
-    }
-    NSString * fileSize = [NSByteCountFormatter stringFromByteCount: contentSize countStyle:NSByteCountFormatterCountStyleFile];
-    
-    if (contentSize == doneSize) {
-        sizeString = fileSize;
-    } else {
-        NSString * currentSize = [NSByteCountFormatter stringFromByteCount: doneSize countStyle:NSByteCountFormatterCountStyleFile];
-        sizeString = [NSString stringWithFormat: @"%@ / %@", currentSize, fileSize];
-    }
-    NSString * result = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
-    // NSLog(@"attachmentSubtitle = '%@'",result);
-    return result;
 }
 
 - (UIImage*) typeIconForAttachment: (Attachment*) attachment {
@@ -1693,6 +1673,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (NSString*) attachmentTitle: (HXOMessage*) message {
+
+    MessageItem * item = [self getItemWithMessage: message];
+
     Attachment * attachment = message.attachment;
     BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
@@ -1702,44 +1685,18 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSString * title;
     if (isComplete || isOutgoing) {
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
-            if (attachment.localURL != nil) {
-                Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
-                if (myVcard != nil) {
-                    NSString * name = [myVcard previewName];
-                    if (name == nil) {
-                        name = @"?";
-                    }
-                    title = name;
-                }
-            } else {
-                title = NSLocalizedString(@"vcard_default_title", nil);
-            }
+            title = item.vcardName;
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
             title = NSLocalizedString(@"location_default_title", nil);
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
             NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
             if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:attachment.contentURL options:nil];
-                NSArray *titles = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-                NSArray *artists = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
-
-                if (titles.count > 0 && artists.count > 0) {
-                    AVMetadataItem * titleItem = titles[0];
-                    AVMetadataItem * artistItem = artists[0];
-                    title = [NSString stringWithFormat: @"%@ – %@", artistItem.stringValue, titleItem.stringValue];
-                } else if (titles.count > 0) {
-                    AVMetadataItem * titleItem = titles[0];
-                    title = titleItem.stringValue;
-                } else if (artists.count > 0) {
-                    AVMetadataItem * artistItem = artists[0];
-                    title = artistItem.stringValue;
-                }
+                title = item.audioTitle;
             }
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
-        NSString * fileSize = [NSByteCountFormatter stringFromByteCount: [message.attachment.contentSize longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
         NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(message.attachment.mediaType, nil);
-        title = [NSString stringWithFormat: @"%@ [%@]", name, fileSize];
+        title = name;
     }
 
     if (title == nil) {
@@ -1748,25 +1705,71 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     return title;
 }
 
-/*
-- (void) tableView: (UITableView*) table didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    // NSLog(@"didEndDisplayingCell %@ %@",cell, indexPath);
-    if ([cell isKindOfClass:[MessageCell class]]) {
-        MessageCell * mCell = (MessageCell *)cell;
-        if (mCell.fetchedResultsController != nil && mCell.fetchedResultsController.fetchedObjects.count > 0) {
-            @try {
-                // TODO: when deleting messages, the following call will raise an exception; this should be avoided
-                HXOMessage * message = (HXOMessage*)[mCell.fetchedResultsController objectAtIndexPath: indexPath];
-                if (message.attachment != nil) {
-                    message.attachment.progressIndicatorDelegate = nil;
-                }            }
-            @catch (NSException *exception) {
-                NSLog(@"didEndDisplayingCell: indexPath %@ out of range",indexPath);
+
+- (NSString*) attachmentSubtitle: (Attachment*) attachment {
+
+    MessageItem * item = [self getItemWithMessage: attachment.message];
+    NSString * sizeString;
+    long long contentSize;
+    long long doneSize;
+    if ([attachment.message.isOutgoing isEqualToNumber: @NO]) {
+        contentSize = [attachment.contentSize longLongValue];
+        doneSize = [attachment.transferSize longLongValue];
+    } else {
+        contentSize = [attachment.cipheredSize longLongValue];
+        doneSize = [attachment.cipherTransferSize longLongValue];
+    }
+    NSString * fileSize = [self.byteCountFormatter stringFromByteCount: contentSize];
+
+    if (contentSize == doneSize) {
+        sizeString = fileSize;
+    } else {
+        NSString * currentSize = [self.byteCountFormatter stringFromByteCount: doneSize];
+        sizeString = [NSString stringWithFormat: @"%@ / %@", currentSize, fileSize];
+    }
+
+    if (attachment.state == kAttachmentTransferOnHold) {
+        NSString * question = attachment.message.isOutgoing.boolValue ? @"upload_question" : @"download_question";
+        return [NSString stringWithFormat: NSLocalizedString(question, nil), fileSize];
+    }
+
+    NSString * subtitle;
+    if (item.attachmentInfoLoaded) {
+        if ([attachment.mediaType isEqualToString: @"vcard"]) {
+            NSString * info = item.vcardEmail;
+            if (! info) {
+                info = item.vcardOrganization;
+            }
+            subtitle = info;
+        } else if ([attachment.mediaType isEqualToString: @"audio"]) {
+            NSString * duration = [self stringFromTimeInterval: item.audioDuration];
+            if (item.audioArtist && item.audioAlbum) {
+                subtitle = [NSString stringWithFormat:@"%@ – %@ – %@", item.audioArtist, item.audioAlbum, duration];
+            } else if (item.audioArtist || item.audioAlbum) {
+                NSString * name = item.audioAlbum ? item.audioAlbum : item.audioArtist;
+                subtitle = [NSString stringWithFormat:@"%@ – %@", name, duration];
             }
         }
+            
+    }
+    if (subtitle == nil) {
+        NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
+        subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
+     }
+    return subtitle;
+}
+
+- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
+    NSInteger ti = (NSInteger)interval;
+    NSInteger seconds = ti % 60;
+    NSInteger minutes = (ti / 60) % 60;
+    NSInteger hours = (ti / 3600);
+    if (hours) {
+        return [NSString stringWithFormat: @"%i:%02i:%02i", hours, minutes, seconds];
+    } else {
+        return [NSString stringWithFormat: @"%i:%02i", minutes, seconds];
     }
 }
- */
 
 #pragma mark - MessageViewControllerDelegate methods
 
@@ -2186,36 +2189,18 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 #pragma mark - Link Highlighing and Handling
 
-
-- (void) registerTokenClasses: (HXOLinkyLabel*) label {
-
-    NSError * error = nil;
-    NSTextCheckingTypes types = (NSTextCheckingTypes)NSTextCheckingTypeLink;
-    if ([[UIDevice currentDevice].model isEqualToString: @"iPhone"]) {
-        types |= NSTextCheckingTypePhoneNumber;
-    }
-
-    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes: types
-                                                               error:&error];
-    if (error == nil) {
-        [label registerTokenClass: @"dataDetector" withExpression: detector style: nil];
-    } else {
-        NSLog(@"failed to create regex: %@", error);
-    }
-}
-
-- (void) chattyLabel:(HXOLinkyLabel *)label didTapToken:(NSTextCheckingResult *)match ofClass:(id)tokenClass isLongPress:(BOOL)isLongPress {
-    switch (match.resultType) {
+- (void) hyperLabel:(HXOHyperLabel *)label didPressLink: (NSTextCheckingResult*) link long:(BOOL)longPress {
+    switch (link.resultType) {
         case NSTextCheckingTypeLink:
-            NSLog(@"tapped link %@ long: %d", match.URL, isLongPress);
-            [[UIApplication sharedApplication] openURL: match.URL];
+            NSLog(@"tapped link %@ long: %d", link.URL, longPress);
+            [[UIApplication sharedApplication] openURL: link.URL];
             break;
         case NSTextCheckingTypePhoneNumber:
-            NSLog(@"tapped phone number %@ long: %d", match.phoneNumber, isLongPress);
-            [self makePhoneCall: match.phoneNumber];
+            NSLog(@"tapped phone number %@ long: %d", link.phoneNumber, longPress);
+            [self makePhoneCall: link.phoneNumber];
             break;
         default:
-            NSLog(@"tapped unhandled token '%@' of type %@", [label.text substringWithRange: match.range], tokenClass);
+            NSLog(@"tapped unhandled link");
     }
 }
 
@@ -2271,7 +2256,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) attachment:(Attachment *)attachment transferDidProgress:(float)theProgress {
     AttachmentSection * section = [self getSectionForAttachment: attachment];
     if (section) {
-        [section.upDownLoadControl setProgress: theProgress animated: YES];
+        section.upDownLoadControl.progress = theProgress;
         section.subtitle.text = [self attachmentSubtitle: attachment];
     }
 }

@@ -55,20 +55,15 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentMode = UIViewContentModeRedraw;
-    self.backgroundColor = [UIColor clearColor];
+//    self.backgroundColor = [UIColor clearColor];
 
     //self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
-    _avatar = [UIButton buttonWithType: UIButtonTypeCustom];
-    CGFloat y = self.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);
-
-    _avatar.frame = CGRectMake(kHXOGridSpacing, y, kHXOAvatarSize, kHXOAvatarSize);
+    CGFloat y = self.contentView.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);
+    _avatar = [[HXOAvatarButton alloc] initWithFrame:CGRectMake(kHXOGridSpacing, y, kHXOAvatarSize, kHXOAvatarSize)];
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-    _avatar.clipsToBounds = YES;
-    _avatar.layer.cornerRadius = 0.5 * _avatar.frame.size.width;
-    _avatar.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    [self addSubview: _avatar];
+    [self.contentView addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
 
     _subtitle = [[UILabel alloc] initWithFrame: CGRectMake(8 * kHXOGridSpacing, self.frame.size.height - 2 * kHXOGridSpacing, self.bubbleWidth - 4 * kHXOGridSpacing, 2 * kHXOGridSpacing)];
@@ -76,7 +71,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     _subtitle.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
     _subtitle.backgroundColor = [UIColor clearColor];
     _subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [self addSubview: _subtitle];
+    [self.contentView addSubview: _subtitle];
 }
 
 - (void) avatarPressed: (id) sender {
@@ -141,10 +136,11 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     section.cell = self;
     section.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.sections addObject: section];
-    [self addSubview: section];
+    [self.contentView addSubview: section];
 }
 
 - (void) layoutSubviews {
+    [super layoutSubviews];
     CGFloat y = kHXOGridSpacing;
     for (MessageSection * section in self.sections) {
         [section sizeToFit];
@@ -197,6 +193,10 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
         case HXOBubbleColorSchemeFailed:
             return [UIColor whiteColor];
     }
+}
+
+- (UIColor*) linkColor {
+    return [UIColor blueColor];
 }
 
 - (UIColor*) subtitleColor {

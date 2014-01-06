@@ -28,8 +28,6 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
 - (void) layoutSubviews {
     [super layoutSubviews];
 
-    [self.latestMessageTimeLabel sizeToFit];
-
     CGRect frame = self.nickName.frame;
     frame.size.width = self.latestMessageTimeLabel.frame.origin.x - (kHXOTimeDirectionPading + frame.origin.x);
     self.nickName.frame = frame;

@@ -8,17 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HXOLinkyLabel.h"
+#import "HXOHyperLabel.h"
 
 @class BubbleViewToo;
 
-@interface TestingGroundViewController : UIViewController <HXOLinkyLabelDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface TestingGroundViewController : UIViewController <HXOHyperLabelDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     NSArray * _items;
     NSMutableDictionary * _cellPrototypes;
 }
 
-@property (nonatomic,weak) IBOutlet HXOLinkyLabel * label;
+@property (nonatomic,weak) IBOutlet HXOHyperLabel * label;
 
 @property (nonatomic,weak) IBOutlet UITableView * tableView;
 

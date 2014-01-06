@@ -127,12 +127,6 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 
-+ (NSString*) sectionTitleForMessageTime: (NSDate*) date {
-    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    [formatter setTimeStyle:NSDateFormatterShortStyle];
-    return[formatter stringFromDate: date];
-}
 /*
 - (NSDate*) sectionTimeForMessageTime: (NSDate*) date {
     return [NSDate dateWithTimeIntervalSince1970:100];

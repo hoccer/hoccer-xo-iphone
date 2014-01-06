@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NickNameLabelWithStatus : UILabel
+@interface NickNameLabelWithStatus : UIView
 
 @property (nonatomic, assign) BOOL isOnline;
+@property (nonatomic,readonly) UILabel * label;
 
 @end

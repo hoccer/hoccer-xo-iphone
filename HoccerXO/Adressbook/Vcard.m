@@ -37,8 +37,7 @@
 	return self;
 }
 
-- (id) initWithVcardURL: (NSURL *)theVcardURL
-{
+- (id) initWithVcardURL: (NSURL *)theVcardURL {
 	self = [super init];
 	if (self != nil) {
         NSData * myVcardData = [NSData dataWithContentsOfURL:theVcardURL];
@@ -49,9 +48,25 @@
 	return self;
 }
 
+- (NSString*) firstName {
+	return [self stringPropertyWithId: kABPersonFirstNameProperty];
+}
+
+- (NSString*) lastName {
+    return [self stringPropertyWithId: kABPersonLastNameProperty];
+}
+
+- (NSString*) middleName {
+    return [self stringPropertyWithId: kABPersonMiddleNameProperty];
+}
+
+- (NSArray*) emails {
+    return [self multiValuePropertyWithId: kABPersonEmailProperty];
+}
+
 - (NSString *)nameString {
-	NSString *firstName = [self stringPropertyWithId: kABPersonFirstNameProperty];
-	NSString *lastName = [self stringPropertyWithId: kABPersonLastNameProperty];
+	NSString *firstName = self.firstName;
+	NSString *lastName = self.lastName;
 	
 	if (lastName == nil && firstName == nil) {
 		return nil;
@@ -82,13 +97,35 @@
 
 - (NSString *)stringPropertyWithId: (ABPropertyID) propertyId {
 	CFStringRef propertyValue = (CFStringRef) ABRecordCopyValue(_person, propertyId);
-	if (propertyValue == NULL)
+	if (propertyValue == NULL) {
 		return nil;
+    }
 	
 	NSString *propertyString = [NSString stringWithString: (__bridge NSString *)propertyValue];
 	
 	CFRelease(propertyValue);
 	return propertyString;
+}
+
+- (NSArray*) multiValuePropertyWithId: (ABPropertyID) propertyId {
+	ABMultiValueRef multiValue = (ABMultiValueRef) ABRecordCopyValue(_person, propertyId);
+	if (multiValue == NULL) {
+		return nil;
+    }
+
+    CFIndex count = ABMultiValueGetCount(multiValue);
+    NSMutableArray * result = [NSMutableArray arrayWithCapacity:count];
+    for (unsigned i = 0; i < count; ++i) {
+        CFStringRef label = ABMultiValueCopyLabelAtIndex(multiValue, i);
+        CFStringRef value = ABMultiValueCopyValueAtIndex(multiValue, i);
+        VcardMultiValueItem * item = [[VcardMultiValueItem alloc] init];
+        item.label = (__bridge_transfer NSString*)label;
+        item.value = (__bridge_transfer NSString*)value;
+        [result addObject: item];
+    }
+
+	CFRelease(multiValue);
+	return result;
 }
 
 - (UIImage *) personImage {
@@ -227,5 +264,8 @@
 #endif
 }
 
+@end
 
+
+@implementation VcardMultiValueItem
 @end
