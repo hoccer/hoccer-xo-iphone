@@ -447,6 +447,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void)reallySendMessage {
+    [self.textField resignFirstResponder]; // trigger autocompletion on last word
     [self.chatBackend sendMessage:self.textField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
     self.currentAttachment = nil;
     self.textField.text = @"";
