@@ -311,6 +311,7 @@
         // your cell guts here
         Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
         // cell.nickName.text = contact.nickName;
+        cell.nickName.label.textColor = [UIColor colorWithWhite: 0.8 alpha: 1.0];
         cell.nickName.label.text = contact.nickNameWithStatus;
         cell.nickName.isOnline = [contact.connectionStatus isEqualToString:@"online"];
         cell.avatar.image = contact.avatarImage;
