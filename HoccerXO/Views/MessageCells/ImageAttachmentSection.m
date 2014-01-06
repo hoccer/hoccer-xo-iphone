@@ -26,7 +26,7 @@ extern CGFloat kHXOGridSpacing;
 
     self.subtitle.textAlignment = NSTextAlignmentCenter;
     self.subtitle.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    self.subtitle.frame = CGRectMake(0, self.bounds.size.height - 40, self.bounds.size.width, 40);
+    self.subtitle.frame = CGRectMake(2 * kHXOGridSpacing, self.bounds.size.height - 40, self.bounds.size.width - 4 * kHXOGridSpacing, 40);
 
     self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 
