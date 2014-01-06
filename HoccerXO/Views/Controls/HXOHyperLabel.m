@@ -93,8 +93,9 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
 - (void) setLinkColor:(UIColor *)linkColor {
     if ( ! [_linkColor isEqual: linkColor]) {
         _linkColor = linkColor;
-        [self releaseFramesetter];
-        [self setNeedsLayout];
+        //[self releaseFramesetter];
+        //[self setNeedsLayout];
+        [self setNeedsDisplay];
     }
 }
 
@@ -193,24 +194,20 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
             CGFloat x = 0;
 
             for (id run in (__bridge NSArray *)runs) {
-                CGFloat ascent = 0;
-                CGFloat descent = 0;
-
                 CGFloat width = CTRunGetTypographicBounds((__bridge CTRunRef) run,
                                                           CFRangeMake(0, 0),
-                                                          &ascent,
-                                                          &descent, NULL);
+                                                          NULL,
+                                                          NULL, NULL);
 
                 NSDictionary *attributes = (__bridge NSDictionary *)CTRunGetAttributes((__bridge CTRunRef) run);
 
                 id link = [attributes objectForKey: kHXOLinkAttributeName];
 
                 if (link != nil) {
-                    // TODO: improve link rect placement
                     CGFloat lineHeight = lineIndex > 0 ? (origins[lineIndex - 1].y - origins[lineIndex].y) : self.bounds.size.height - origins[lineIndex].y;
                     CGRect bounds = CGRectMake(lineBounds.origin.x + x,
                                                lineBounds.origin.y,
-                                               width, /*ascent + descent*/ lineHeight);
+                                               width, lineHeight);
                     if (bounds.origin.x + bounds.size.width > CGRectGetMaxX(lineBounds)) {
                         bounds.size.width = CGRectGetMaxX(lineBounds) - bounds.origin.x;
                     }

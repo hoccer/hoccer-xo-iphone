@@ -17,6 +17,7 @@ FOUNDATION_EXTERN NSString * kHXOLinkAttributeName;
 
 - (void) hyperLabel: (HXOHyperLabel*) label didPressLink: (id) link long: (BOOL) longPress;
 
+
 @end
 
 @interface NSMutableAttributedString (HXOHyperLabel)
