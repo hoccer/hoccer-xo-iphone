@@ -14,6 +14,7 @@ static const CGFloat kLEDSize = 5.0;
 @interface NickNameLabelWithStatus ()
 
 @property (nonatomic,strong) CALayer * ledLayer;
+@property (nonatomic,readonly) UILabel * label;
 
 @end
 
@@ -26,6 +27,7 @@ static const CGFloat kLEDSize = 5.0;
     }
     return self;
 }
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -80,6 +82,41 @@ static const CGFloat kLEDSize = 5.0;
 - (void) setIsOnline:(BOOL)isOnline {
     _isOnline = isOnline;
     self.ledLayer.opacity = isOnline ? 1.0 : 0.0;
+}
+
+- (void) setText:(NSString *)text {
+    self.label.text = text;
+    [self setNeedsLayout];
+}
+
+- (NSString*) text {
+    return self.label.text;
+}
+
+- (void) setTextAlignment:(NSTextAlignment)textAlignment {
+    self.label.textAlignment = textAlignment;
+    [self setNeedsLayout];
+}
+
+- (NSTextAlignment) textAlignment {
+    return self.label.textAlignment;
+}
+
+- (void) setFont:(UIFont *)font {
+    self.label.font = font;
+    [self setNeedsLayout];
+}
+
+- (UIFont*) font {
+    return self.label.font;
+}
+
+- (void) setTextColor:(UIColor *)textColor {
+    self.label.textColor = textColor;
+}
+
+- (UIColor*) textColor {
+    return self.label.textColor;
 }
 
 @end

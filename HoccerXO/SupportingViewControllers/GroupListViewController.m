@@ -80,7 +80,7 @@
     // your cell guts here
     Group * group = (Group*)[fetchedResultsController objectAtIndexPath:indexPath];
     // cell.nickName.text = contact.nickName;
-    cell.nickName.label.text = group.nickName;
+    cell.nickName.text = group.nickName;
     
     cell.avatar.image = group.avatarImage != nil ? group.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
     

@@ -18,7 +18,7 @@
     _avatar.layer.cornerRadius = 10;
     _avatar.clipsToBounds = YES;
 
-    self.nickName.label.font = [UIFont boldSystemFontOfSize: 14];
+    self.nickName.font = [UIFont boldSystemFontOfSize: 14];
 }
 
 @end

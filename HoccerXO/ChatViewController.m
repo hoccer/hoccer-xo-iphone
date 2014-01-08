@@ -150,8 +150,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     self.titleLabel = [[NickNameLabelWithStatus alloc] init];
     self.navigationItem.titleView = self.titleLabel;
-    self.titleLabel.label.textColor = [UIColor whiteColor];
-    self.titleLabel.label.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.textColor = [UIColor whiteColor];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
 
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
@@ -263,7 +263,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) configureTitle {
-    self.titleLabel.label.text = self.partner.nickNameWithStatus;
+    self.titleLabel.text = self.partner.nickNameWithStatus;
     self.titleLabel.isOnline = [self.partner.connectionStatus isEqualToString: @"online"];
     [self.titleLabel sizeToFit];
 }
