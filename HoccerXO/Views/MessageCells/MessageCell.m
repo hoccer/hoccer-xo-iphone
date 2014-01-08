@@ -88,13 +88,13 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
         _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
         _subtitle.textAlignment = NSTextAlignmentLeft;
     } else {
-        avatarFrame.origin.x = self.bounds.size.width - avatarFrame.size.width - kHXOGridSpacing;
+        avatarFrame.origin.x = self.contentView.bounds.size.width - avatarFrame.size.width - kHXOGridSpacing;
         _avatar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
         _subtitle.textAlignment = NSTextAlignmentRight;
     }
     _avatar.frame = avatarFrame;
 
-    CGFloat x = self.messageDirection == HXOMessageDirectionIncoming ? 6 * kHXOGridSpacing : 0;
+    CGFloat x = messageDirection == HXOMessageDirectionIncoming ? 6 * kHXOGridSpacing : 0;
     CGRect frame;
     NSUInteger i = 0;
     for (MessageSection * section in self.sections) {
@@ -257,6 +257,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
         return [self.delegate messageCell:self shareMessage:sender];
     }
 }
+
 @end
 
 
