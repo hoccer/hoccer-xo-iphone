@@ -80,6 +80,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic) BOOL keyBoardShown;
 @property (nonatomic) double messageFontSize;
 
+@property (nonatomic,strong) UITextField * autoCorrectTriggerHelper;
+
 @end
 
 @implementation ChatViewController
@@ -115,6 +117,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     _textField.delegate = self;
     _textField.backgroundColor = [UIColor clearColor];
     _textField.placeholder = NSLocalizedString(@"chat_view_message_placeholder", nil);
+
+    self.autoCorrectTriggerHelper = [[UITextField alloc] init];
+    self.autoCorrectTriggerHelper.hidden = YES;
+    [self.chatbar addSubview: self.autoCorrectTriggerHelper];
 
     UIView * textViewBackgroundView = [[UIImageView alloc] initWithFrame: CGRectInset(_textField.frame, 0, 2)];
     textViewBackgroundView.backgroundColor = [UIColor whiteColor];
@@ -444,7 +450,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void)reallySendMessage {
-    [self.textField resignFirstResponder]; // trigger autocompletion on last word
+    [self.autoCorrectTriggerHelper becomeFirstResponder]; // trigger autocompletion on last word ...
+    [self.textField becomeFirstResponder];                // ... without hiding the keyboard
     [self.chatBackend sendMessage:self.textField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
     self.currentAttachment = nil;
     self.textField.text = @"";
