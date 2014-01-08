@@ -55,10 +55,12 @@
                        @"storyboardId": @"inAppSettingsViewController"
                        },
 #endif
+#ifdef WITH_WEBSERVER
                     @{ @"title": NSLocalizedString(@"Server", nil),
                        @"icon": @"navigation_button_settings",
                        @"storyboardId": @"serverViewController"
                     },
+#endif
                     @{ @"title": NSLocalizedString(@"Tutorial", nil),
                        @"icon": @"navigation_button_tutorial",
                        @"storyboardId": @"tutorialViewController"

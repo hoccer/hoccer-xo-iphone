@@ -46,11 +46,13 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 @property (nonatomic, strong) NSString * openedFileMediaType;
 @property (nonatomic, strong) NSString * openedFileMimeType;
 
+#ifdef WITH_WEBSERVER
 @property (readonly,nonatomic, strong) HTTPServer *httpServer;
 
 - (void)startHttpServer;
 - (void)stopHttpServer;
 - (BOOL)httpServerIsRunning;
+#endif
 
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;

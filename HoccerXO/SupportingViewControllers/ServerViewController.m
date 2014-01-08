@@ -76,7 +76,9 @@
     [super viewWillAppear: animated];
     [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
+#ifdef WITH_WEBSERVER
     [self updateTextFields];
+#endif
     [self startTimer];
 }
 
@@ -86,19 +88,24 @@
 
 - (IBAction)startServer:(id)sender {
     NSLog(@"ServerViewController:startServer");
+#ifdef WITH_WEBSERVER
     [AppDelegate.instance startHttpServer];
     [self updateTextFields];
+#endif
 }
 
 - (IBAction)stopServer:(id)sender {
     NSLog(@"ServerViewController:stopServer");
+#ifdef WITH_WEBSERVER
     [AppDelegate.instance stopHttpServer];
     [self updateTextFields];
+#endif
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textField {
     [self stopTimer];
 }
+#ifdef WITH_WEBSERVER
 
 
 - (void)textViewDidEndEditing:(UITextView *)textField {
@@ -169,7 +176,7 @@ static inline NSString * URLEncodedString(NSString *string)
     self.passwordTextField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
 
 }
-
+#endif
 
 @end
 

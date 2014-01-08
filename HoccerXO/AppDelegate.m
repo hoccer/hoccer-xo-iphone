@@ -27,10 +27,12 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
 
+#ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "MyHttpConnection.h"
+#endif
 
 #include <ifaddrs.h>
 #include <arpa/inet.h>
@@ -53,8 +55,9 @@ static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 static const NSInteger kDatabaseDeleteAlertTag = 200;
 static NSInteger validationErrorCount = 0;
 
+#ifdef WITH_WEBSERVER
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-
+#endif
 
 #ifdef DEBUG_RESPONDER
 
@@ -96,7 +99,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+
+#ifdef WITH_WEBSERVER
 @synthesize httpServer = _httpServer;
+#endif
 
 @synthesize rpcObjectModel = _rpcObjectModel;
 
@@ -113,6 +119,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #endif
     return YES;
 }
+
+#ifdef WITH_WEBSERVER
 
 -(HTTPServer*)httpServer {
     if (_httpServer == nil) {
@@ -167,7 +175,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
     return NO;
 }
-
+#endif
 
 #define IOS_CELLULAR    @"pdp_ip0"
 #define IOS_WIFI        @"en0"
@@ -245,9 +253,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if ([self persistentStoreCoordinator] == nil) {
         return NO;
     }
-    
+#ifdef WITH_WEBSERVER
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    
+#endif
     [self registerForRemoteNotifications];
     
     [self checkForCrash];

@@ -31,6 +31,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 
 @implementation MyHTTPConnection
 
+#ifdef WITH_WEBSERVER
 
 - (NSString*)directoryListingOf:(NSString*)directoryPath {
     HTTPLogVerbose(@"%@[%p]: Serving up dynamic content", THIS_FILE, self);
@@ -471,5 +472,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 	
 	return @"Hoccer XO WebServer on Client App";
 }
+
+#endif
 
 @end
