@@ -195,7 +195,7 @@ typedef enum ActionSheetTags {
     [self validateItems];
 
     [self updateKeyFingerprint];
-    // XXX hack to display fingerprint while editing...
+    // XXX hack to display _fingerprintInfoItem while editing...
     _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
 }
 
@@ -307,9 +307,9 @@ typedef enum ActionSheetTags {
 
 - (NSString*) formatKeyIdAsFingerprint: (NSString*) keyId forKey:(NSData*)theKey {
     NSMutableString * fingerprint = [[NSMutableString alloc] init];
-    for (int i = 0; i < keyId.length; i += 2) {
+    for (int i = 0; i < keyId.length-2; i += 2) {
         [fingerprint appendString: [keyId substringWithRange: NSMakeRange( i, 2)]];
-        if (i + 2 < keyId.length) {
+        if (i + 2 < keyId.length-2) {
             [fingerprint appendString: @":"];
         }
     }
@@ -1333,23 +1333,11 @@ typedef enum ActionSheetTags {
     } else {
         [[RSA sharedInstance] cleanKeyChain];
     }
-    /*
-    [self.chatBackend updateKeyWithHandler:^(BOOL ok) {
-        [self updateKeyFingerprint];
-        if (ok) {
-            [self.chatBackend updatePresenceWithHandler:^(BOOL ok) {
-                [self.chatBackend updateGroupKeysForMyGroupMemberships];
-            }];
-        }
-    }];  
-     */
 }
 
 - (void) renewKeypairPressed: (id) sender {
     //NSLog(@"renewKeypairPressed, sender=%@",sender);
     _renewKeypairRequested = !_renewKeypairRequested;
-    
-    [self updateKeyFingerprint];
     _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
     [self.tableView beginUpdates];
     [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath:sender] configure: _renewKeyPairItem];
