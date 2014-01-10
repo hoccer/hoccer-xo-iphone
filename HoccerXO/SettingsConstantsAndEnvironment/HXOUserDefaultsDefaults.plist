@@ -7,7 +7,7 @@
 	<key>manualKeyManagement</key>
 	<false/>
 	<key>rsaKeySize</key>
-	<integer>1024</integer>
+	<integer>2048</integer>
 	<key>autoSaveMedia</key>
 	<false/>
 	<key>playAlertSounds</key>

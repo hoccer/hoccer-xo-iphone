@@ -61,5 +61,7 @@
 
 + (BOOL)setPrivateKeyBits:(NSData*)privateKeyBits tag:(NSData*)privateTag;
 
++ (int)getPublicKeySize:(NSData*)keyBits;
+
 
 @end

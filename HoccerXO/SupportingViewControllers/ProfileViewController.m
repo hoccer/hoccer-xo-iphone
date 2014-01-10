@@ -205,10 +205,13 @@ typedef enum ActionSheetTags {
 
 - (void) updateKeyFingerprint {
     NSString * keyId;
+    NSData * key;
     if (_mode == ProfileViewModeContactProfile) {
         keyId = _contact.publicKeyId;
+        key = _contact.publicKey;
     } else {
         keyId = [HXOBackend ownPublicKeyIdString];
+        key = [HXOBackend ownPublicKey];
     }
     if (self.contact.verifiedKey == nil || ![self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
         _verifyPublicKeyItem.currentValue = NSLocalizedString((@"verify_publickey"), nil);
@@ -217,7 +220,7 @@ typedef enum ActionSheetTags {
     }
 
     // XXX hack to display fingerprint while editing...
-    _fingerprintItem.currentValue = _fingerprintItem.editLabel = [self formatKeyIdAsFingerprint: keyId];
+    _fingerprintItem.currentValue = _fingerprintItem.editLabel = [self formatKeyIdAsFingerprint: keyId forKey:key];
 }
 
 - (void) setupContactKVO {
@@ -302,7 +305,7 @@ typedef enum ActionSheetTags {
     }
 }
 
-- (NSString*) formatKeyIdAsFingerprint: (NSString*) keyId {
+- (NSString*) formatKeyIdAsFingerprint: (NSString*) keyId forKey:(NSData*)theKey {
     NSMutableString * fingerprint = [[NSMutableString alloc] init];
     for (int i = 0; i < keyId.length; i += 2) {
         [fingerprint appendString: [keyId substringWithRange: NSMakeRange( i, 2)]];
@@ -310,6 +313,9 @@ typedef enum ActionSheetTags {
             [fingerprint appendString: @":"];
         }
     }
+    int keySize =[ RSA getPublicKeySize:theKey];
+    [fingerprint appendString: [NSString stringWithFormat:@"-%d", keySize]];
+
     //NSLog(@"self.contact = %@", self.contact);
     if (_mode == ProfileViewModeContactProfile) {
         if (self.contact.verifiedKey == nil) {
@@ -562,6 +568,8 @@ typedef enum ActionSheetTags {
             if (_renewKeypairRequested) {
                 [self performKeypairRenewal];
                 _renewKeypairRequested = NO;
+                _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
+                [self updateKeyFingerprint];
             }
             [self save];
         }
@@ -596,7 +604,7 @@ typedef enum ActionSheetTags {
 - (IBAction)onCancel:(id)sender {
     _canceled = YES;
     _renewKeypairRequested = NO;
-    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
+    _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
 
     //[self populateValues];
     [self setEditing: NO animated: YES];
@@ -756,7 +764,7 @@ typedef enum ActionSheetTags {
     
     _renewKeyPairItem = [[ProfileItem alloc] initWithName:@"RenewKeypairItem"];
     _renewKeyPairItem.cellClass = [UserDefaultsCell class];
-    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
+    _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
     _renewKeyPairItem.target = self;
     _renewKeyPairItem.action = @selector(renewKeypairPressed:);
 
@@ -1342,7 +1350,7 @@ typedef enum ActionSheetTags {
     _renewKeypairRequested = !_renewKeypairRequested;
     
     [self updateKeyFingerprint];
-    _renewKeyPairItem.editLabel = [self renewKeypairButtonTitle];
+    _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
     [self.tableView beginUpdates];
     [(UserDefaultsCell*)[self.tableView cellForRowAtIndexPath:sender] configure: _renewKeyPairItem];
     [self.tableView endUpdates];

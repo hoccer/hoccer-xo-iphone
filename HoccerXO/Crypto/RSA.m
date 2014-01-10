@@ -84,7 +84,7 @@ static RSA *instance;
 	[publicKeyAttr setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     
     [keyPairAttr setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    [keyPairAttr setObject:@1024 forKey:(__bridge id)kSecAttrKeySizeInBits];
+    [keyPairAttr setObject:bits forKey:(__bridge id)kSecAttrKeySizeInBits];
     
     [keyPairAttr setObject:privateKeyAttr forKey:(__bridge id)kSecPrivateKeyAttrs];
 	[keyPairAttr setObject:publicKeyAttr forKey:(__bridge id)kSecPublicKeyAttrs];
@@ -141,7 +141,7 @@ static RSA *instance;
                            &cipherBufferSize);
     
     if (status != noErr) {
-        //NSLog(@"Error encrypring, OSStatus: %d", (NSInteger)status);
+        NSLog(@"RSA:encryptWithKey: Error encrypting, OSStatus = %d", (NSInteger)status);
     }
         
     cipher = [NSData dataWithBytes:(const void *)cipherBuffer length:(NSUInteger)cipherBufferSize];
@@ -172,9 +172,10 @@ static RSA *instance;
                            &plainBufferSize);
     
     if (status != noErr) {
-        NSLog(@"Error decrypting, OSStatus = %d", (NSInteger)status);
-        NSNotification *notification = [NSNotification notificationWithName:@"encryptionError" object:self];
+        NSLog(@"RSA:decryptWithKey: Error decrypting, OSStatus = %d", (NSInteger)status);
+        NSNotification *notification = [NSNotification notificationWithName:@"decryptionError" object:self];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
+        // NSLog(@"%@", [NSThread callStackSymbols]);
     }
     
     //NSLog(@"decoded %d bytes, status %d", (NSInteger)plainBufferSize, (NSInteger)status);
@@ -852,5 +853,14 @@ size_t encodeLength(unsigned char * buf, size_t length) {
     return [publicKeyBits subdataWithRange:NSMakeRange(iterator, mod_size)];
 }
 
++ (int)getPublicKeySize:(NSData*)keyBits {
+    @try {
+        NSData * modulus = [RSA getPublicKeyMod:keyBits];
+        return modulus.length * 8;
+    } @catch (NSException* ex) {
+        NSLog(@"getPublicKeySize exception: %@", ex);
+    }
+    return 0;
+}
 
 @end

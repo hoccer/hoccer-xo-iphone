@@ -326,7 +326,7 @@
 			<key>Key</key>
 			<string>rsaKeySize</string>
 			<key>DefaultValue</key>
-			<integer>1024</integer>
+			<integer>2048</integer>
 			<key>Titles</key>
 			<array>
 				<string>1024 Bit</string>

@@ -2,7 +2,7 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="RPC_TalkDelivery" syncable="YES">
         <attribute name="groupId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
-        <attribute name="keyCiphertext" transient="YES" attributeType="String" minValueString="4" maxValueString="200" syncable="YES"/>
+        <attribute name="keyCiphertext" transient="YES" attributeType="String" minValueString="4" maxValueString="2000" syncable="YES"/>
         <attribute name="keyId" transient="YES" attributeType="String" minValueString="16" maxValueString="16" regularExpressionString="[0-9a-fA-F]{16}" syncable="YES"/>
         <attribute name="messageTag" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
         <attribute name="receiverId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
