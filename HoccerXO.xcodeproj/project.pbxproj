@@ -2315,6 +2315,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Hoccer GmbH";
+				TargetAttributes = {
+					63AEE2D316CA4D0200522F92 = {
+						DevelopmentTeam = SK64A5FJ3Z;
+					};
+				};
 			};
 			buildConfigurationList = 63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "HoccerXO" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2980,6 +2985,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
