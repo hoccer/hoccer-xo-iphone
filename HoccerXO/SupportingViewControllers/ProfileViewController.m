@@ -307,23 +307,27 @@ typedef enum ActionSheetTags {
 
 - (NSString*) formatKeyIdAsFingerprint: (NSString*) keyId forKey:(NSData*)theKey {
     NSMutableString * fingerprint = [[NSMutableString alloc] init];
-    for (int i = 0; i < keyId.length-2; i += 2) {
-        [fingerprint appendString: [keyId substringWithRange: NSMakeRange( i, 2)]];
-        if (i + 2 < keyId.length-2) {
-            [fingerprint appendString: @":"];
+    [fingerprint appendString:@""];
+    
+    if (keyId) {
+        for (int i = 0; i < keyId.length-2; i += 2) {
+            [fingerprint appendString: [keyId substringWithRange: NSMakeRange( i, 2)]];
+            if (i + 2 < keyId.length-2) {
+                [fingerprint appendString: @":"];
+            }
         }
-    }
-    int keySize =[ RSA getPublicKeySize:theKey];
-    [fingerprint appendString: [NSString stringWithFormat:@"-%d", keySize]];
-
-    //NSLog(@"self.contact = %@", self.contact);
-    if (_mode == ProfileViewModeContactProfile) {
-        if (self.contact.verifiedKey == nil) {
-            [fingerprint appendString: @" 🔶"];
-        } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
-            [fingerprint appendString: @" ✅"];
-        } else {
-            [fingerprint appendString: @" 🔴"];
+        int keySize =[ RSA getPublicKeySize:theKey];
+        [fingerprint appendString: [NSString stringWithFormat:@"-%d", keySize]];
+        
+        //NSLog(@"self.contact = %@", self.contact);
+        if (_mode == ProfileViewModeContactProfile) {
+            if (self.contact.verifiedKey == nil) {
+                [fingerprint appendString: @" 🔶"];
+            } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
+                [fingerprint appendString: @" ✅"];
+            } else {
+                [fingerprint appendString: @" 🔴"];
+            }
         }
     }
     return fingerprint;
