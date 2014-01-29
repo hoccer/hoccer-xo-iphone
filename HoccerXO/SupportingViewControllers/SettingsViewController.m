@@ -31,7 +31,6 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundWithLines];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

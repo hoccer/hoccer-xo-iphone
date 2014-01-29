@@ -15,9 +15,6 @@
 - (UIBarButtonItem*) hxoMenuButton;
 - (UIBarButtonItem*) hxoContactsButton;
 
-- (void) setNavigationBarBackgroundWithLines;
-- (void) setNavigationBarBackgroundPlain;
-
 - (MFSideMenuContainerViewController*) menuContainerViewController;
 
 @end

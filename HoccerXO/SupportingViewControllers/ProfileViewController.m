@@ -87,7 +87,6 @@ typedef enum ActionSheetTags {
 - (void) viewWillAppear:(BOOL)animated {
     _renewKeypairRequested = NO;
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundPlain];
 
     [self configureMode];
 

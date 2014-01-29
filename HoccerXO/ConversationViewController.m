@@ -90,7 +90,6 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
 
     [AppDelegate setWhiteFontStatusbarForViewController:self];

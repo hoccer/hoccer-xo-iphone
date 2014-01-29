@@ -74,7 +74,6 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
 #ifdef WITH_WEBSERVER
     [self updateTextFields];

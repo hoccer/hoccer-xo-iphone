@@ -222,7 +222,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     // NSLog(@"ChatViewController:viewWillAppear");
     [super viewWillAppear: animated];
 
-    [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
 
     [self scrollToRememberedCellOrToBottomIfNone];

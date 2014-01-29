@@ -85,15 +85,4 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
     return self;
 }
 
-- (void) layoutSubviews {
-    CGFloat r = kSectionHeaderShadowRaius;
-    [super layoutSubviews];
-    self.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.layer.shadowOpacity = 0.8;
-    self.layer.shadowRadius = r;
-    self.layer.shadowOffset = CGSizeMake(0.0, r);
-    CGRect shadowRect = CGRectMake(- 2 * r, 0, self.bounds.size.width + 4 * r, self.bounds.size.height);
-    self.layer.shadowPath = [UIBezierPath bezierPathWithRect: shadowRect].CGPath;
-}
-
 @end
