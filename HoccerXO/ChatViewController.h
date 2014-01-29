@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "Contact.h"
 #import "AttachmentPickerController.h"
-#import "GrowingTextView.h"
 #import "MessageCell.h"
 #import "HXOHyperLabel.h"
 #import "HPGrowingTextView.h"

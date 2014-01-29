@@ -20,7 +20,6 @@
 #import "AppDelegate.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
-#import "HXONavigationBar.h"
 #import "ProfileViewController.h"
 #import "InvitationController.h"
 #import "Attachment.h"

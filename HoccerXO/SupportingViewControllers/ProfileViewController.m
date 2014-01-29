@@ -14,8 +14,6 @@
 #import "AssetStore.h"
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
-#import "RadialGradientView.h"
-#import "HXONavigationItem.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "HXOGroupedTableViewController.h"
 #import "NSString+UUID.h"
@@ -555,8 +553,6 @@ typedef enum ActionSheetTags {
         [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
     }
     [self validateItems];
-
-    ((HXONavigationItem*)self.navigationItem).flexibleLeftButton = editing;
 
     if (editing) {
         if (_mode != ProfileViewModeFirstRun) {

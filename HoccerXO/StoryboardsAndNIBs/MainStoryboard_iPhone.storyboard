@@ -119,11 +119,7 @@
                             <outlet property="delegate" destination="EIf-F7-14l" id="3k0-YY-ntu"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="JWP-wR-2FC" customClass="HXONavigationItem">
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="flexibleRightButton" value="YES"/>
-                        </userDefinedRuntimeAttributes>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="JWP-wR-2FC"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jnn-H5-Wg0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -133,7 +129,7 @@
         <scene sceneID="y7h-Kn-V4S">
             <objects>
                 <tableViewController storyboardIdentifier="contactsViewController" id="Aez-fu-qAl" customClass="ContactListViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" id="M0x-FM-fp1">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="72" sectionHeaderHeight="22" sectionFooterHeight="22" id="M0x-FM-fp1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -252,7 +248,7 @@
         <scene sceneID="ejt-cC-MZQ">
             <objects>
                 <viewController storyboardIdentifier="aboutViewController" id="5iI-Wc-d3H" userLabel="About View Controller" customClass="AboutViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="XfY-BT-iZ1" customClass="RadialGradientView">
+                    <view key="view" contentMode="scaleToFill" id="XfY-BT-iZ1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -388,7 +384,7 @@
         <scene sceneID="hHM-9N-fqL">
             <objects>
                 <viewController storyboardIdentifier="testingGround" id="auO-Jz-Dlt" userLabel="Testing Ground View Controller" customClass="TestingGroundViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="0Cr-iC-Nt8" customClass="RadialGradientView">
+                    <view key="view" contentMode="scaleToFill" id="0Cr-iC-Nt8">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -422,7 +418,7 @@
         <scene sceneID="ksw-ZB-GKb">
             <objects>
                 <viewController storyboardIdentifier="inviteCodeView" id="eR1-06-BmS" userLabel="Invite Code View Controller" customClass="InviteCodeViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="IIE-bJ-Iuq" customClass="RadialGradientView">
+                    <view key="view" contentMode="scaleToFill" id="IIE-bJ-Iuq">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -552,11 +548,7 @@
                             <outlet property="delegate" destination="12" id="15"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="36" customClass="HXONavigationItem">
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="showLogo" value="YES"/>
-                        </userDefinedRuntimeAttributes>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="36"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
             </objects>
@@ -1198,11 +1190,7 @@
                             <outlet property="delegate" destination="e7o-9L-I8f" id="VX0-lO-R5k"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="DBu-6m-BdZ" customClass="HXONavigationItem">
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="flexibleRightButton" value="YES"/>
-                        </userDefinedRuntimeAttributes>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="DBu-6m-BdZ"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OER-5k-Byo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1301,7 +1289,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="09b-JC-XgT"/>
-        <segue reference="vC3-xT-FWi"/>
+        <segue reference="zhf-Yf-w9m"/>
+        <segue reference="lna-0K-80T"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -18,7 +18,6 @@
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
 #import "GroupAdminCell.h"
-#import "HXONavigationBar.h"
 
 #define GROUPVIEW_DEBUG NO
 
