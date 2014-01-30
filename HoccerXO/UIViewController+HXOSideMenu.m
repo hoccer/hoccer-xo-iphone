@@ -8,7 +8,6 @@
 
 #import "UIViewController+HXOSideMenu.h"
 #import "MFSideMenu.h"
-#import "AssetStore.h"
 
 @implementation UIViewController (HXOSideMenu)
 

@@ -14,7 +14,6 @@
 #import "Contact.h"
 #import "ConversationCell.h"
 #import "InsetImageView2.h"
-#import "AssetStore.h"
 #import "HXOMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"

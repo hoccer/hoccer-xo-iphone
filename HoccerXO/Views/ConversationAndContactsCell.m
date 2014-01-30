@@ -10,7 +10,6 @@
 #import "InsetImageView.h"
 #import "QuartzCore/QuartzCore.h"
 
-#import "AssetStore.h"
 
 @implementation ConversationAndContactsCell
 

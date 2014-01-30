@@ -10,8 +10,6 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "AssetStore.h"
-
 static const CGFloat kHXOTimeDirectionPading = 2.0;
 
 @interface ConversationCell () {

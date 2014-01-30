@@ -11,7 +11,6 @@
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
-#import "AssetStore.h"
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 #import "UIImage+ScaleAndCrop.h"

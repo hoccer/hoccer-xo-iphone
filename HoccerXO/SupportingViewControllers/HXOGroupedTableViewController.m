@@ -7,7 +7,6 @@
 //
 
 #import "HXOGroupedTableViewController.h"
-#import "AssetStore.h"
 #import "UserDefaultsCells.h"
 
 @interface HXOGroupedTableViewController ()
