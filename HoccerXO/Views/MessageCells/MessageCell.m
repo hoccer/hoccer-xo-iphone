@@ -7,10 +7,6 @@
 //
 
 #import "MessageCell.h"
-#import "AutoheightLabel.h"
-#import "HXOMessage.h"
-#import "InsetImageView.h"
-
 
 const CGFloat kHXOGridSpacing = 8; // TODO: make this global
 static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
@@ -55,9 +51,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentMode = UIViewContentModeRedraw;
-//    self.backgroundColor = [UIColor clearColor];
 
-    //self.colorScheme = HXOBubbleColorSchemeIncoming;
     self.messageDirection = HXOMessageDirectionOutgoing;
 
     CGFloat y = self.contentView.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);

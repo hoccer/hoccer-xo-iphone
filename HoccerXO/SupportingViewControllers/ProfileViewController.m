@@ -481,7 +481,8 @@ typedef enum ActionSheetTags {
     id item = _profileDataSource[indexPath.section][indexPath.row];
     UITableViewCell * cell = [self prototypeCellOfClass: [item cellClass]];
     if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
-        return [(UserDefaultsCellInfoText*)cell heightForText: [item currentValue]];
+        ((UserDefaultsCellInfoText*)cell).textLabel.text = [item currentValue];
+        return [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
     } else {
         return cell.bounds.size.height;
     }

@@ -25,7 +25,6 @@
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "MessageCell.h"
-#import "AutoheightLabel.h"
 #import "HXOUserDefaults.h"
 #import "ImageViewController.h"
 #import "UserProfile.h"

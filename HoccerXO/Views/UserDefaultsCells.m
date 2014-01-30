@@ -303,14 +303,15 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 
 @implementation UserDefaultsCellInfoText
 
+/*
 - (CGFloat) heightForText: (NSString*) text {
     [self updateLabelFrame];
     return [self.textLabel calculateSize: text].height + 22;
 }
-
+*/
 - (void) configure:(id)item {
     [super configure: item];
-    [self updateLabelFrame];
+    //[self updateLabelFrame];
     [self.textLabel sizeToFit];
 }
 
@@ -325,6 +326,12 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
     frame.size.width = width;
     frame.origin.x = 12.0;
     self.textLabel.frame = frame;
+}
+
+- (CGSize) sizeThatFits:(CGSize)size {
+    size = [self.textLabel sizeThatFits: size];
+    size.height += 22;
+    return size;
 }
 
 @end
