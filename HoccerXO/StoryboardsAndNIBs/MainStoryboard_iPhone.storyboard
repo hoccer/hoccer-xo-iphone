@@ -139,11 +139,6 @@
                             <color key="tintColor" white="0.84999999999999998" alpha="1" colorSpace="calibratedWhite"/>
                             <textInputTraits key="textInputTraits"/>
                         </searchBar>
-                        <view key="tableFooterView" contentMode="scaleToFill" id="EH2-gb-syU">
-                            <rect key="frame" x="0.0" y="592" width="320" height="20"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        </view>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ContactCell" rowHeight="72" id="bLT-Ef-JpH" customClass="ContactCell">
                                 <rect key="frame" x="0.0" y="66" width="320" height="72"/>
