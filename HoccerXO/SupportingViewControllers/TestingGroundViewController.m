@@ -18,7 +18,6 @@
 #import "ImageAttachmentSection.h"
 #import "TextSection.h"
 #import "GenericAttachmentSection.h"
-#import "InsetImageView2.h"
 #import "HXOUserDefaults.h"
 
 @interface TestingGroundViewController ()
@@ -33,13 +32,9 @@
 @property (nonatomic,strong) NSAttributedString *                 text;
 @property (nonatomic,strong) UIImage  *                 previewImage;
 @property (nonatomic,assign) CGFloat                    imageAspect;
-//@property (nonatomic,assign) HXOAttachmentStyle         attachmentStyle;
-//@property (nonatomic,strong) UIImage *                  smallAttachmentTypeIcon;
 @property (nonatomic,strong) UIImage *                  largeAttachmentTypeIcon;
 @property (nonatomic,strong) NSString *                 attachmentText;
-//@property (nonatomic,assign) HXOAttachmentTranserState  attachmentTransferState;
 @property (nonatomic,assign) float                      progress;
-//@property (nonatomic,assign) HXOBubbleRunButtonStyle    runButtonStyle;
 
 @end
 
@@ -366,16 +361,6 @@
     [self configureAttachmentSection: section item: item];
     section.imageAspect = item.imageAspect;
     section.image = item.previewImage;
-
-/*
-    cell.attachmentStyle = item.attachmentStyle;
-    //cell.smallAttachmentTypeIcon = item.smallAttachmentTypeIcon;
-    cell.largeAttachmentTypeIcon = item.largeAttachmentTypeIcon;
-    cell.attachmentTransferState = item.attachmentTransferState;
-    cell.progressBar.progress = item.progress;
-    cell.runButtonStyle = item.runButtonStyle;
-
- */
 }
 
 - (void) configureGenericAttachmentSection: (GenericAttachmentSection*) section item: (BubbleItem*) item {

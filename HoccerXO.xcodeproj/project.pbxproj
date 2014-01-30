@@ -74,7 +74,6 @@
 		634B47021795C4A0001C1C0D /* cupcakes.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 634B47011795C4A0001C1C0D /* cupcakes.jpg */; };
 		634B47051796EA3E001C1C0D /* chatbar_icon-send.png in Resources */ = {isa = PBXBuildFile; fileRef = 634B47031796EA3D001C1C0D /* chatbar_icon-send.png */; };
 		634B47061796EA3E001C1C0D /* chatbar_icon-send@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 634B47041796EA3D001C1C0D /* chatbar_icon-send@2x.png */; };
-		634B474C1798B07F001C1C0D /* HXOProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 634B474B1798B07F001C1C0D /* HXOProgressView.m */; };
 		634BE1BE185C9B2B00B2DF05 /* HXOUpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		636492CF1711CDAB00E35514 /* icon_profile-name.png in Resources */ = {isa = PBXBuildFile; fileRef = 636492CD1711CDAB00E35514 /* icon_profile-name.png */; };
@@ -118,7 +117,6 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
 		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
-		6385EC9417A68E770024028A /* InsetImageView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 6385EC9317A68E770024028A /* InsetImageView2.m */; };
 		638EBE34178596D000F1B9AD /* NSString+Emojis.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE33178596D000F1B9AD /* NSString+Emojis.m */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
 		638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */; };
@@ -560,8 +558,6 @@
 		634B47011795C4A0001C1C0D /* cupcakes.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cupcakes.jpg; sourceTree = "<group>"; };
 		634B47031796EA3D001C1C0D /* chatbar_icon-send.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_icon-send.png"; sourceTree = "<group>"; };
 		634B47041796EA3D001C1C0D /* chatbar_icon-send@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_icon-send@2x.png"; sourceTree = "<group>"; };
-		634B474A1798B07F001C1C0D /* HXOProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOProgressView.h; sourceTree = "<group>"; };
-		634B474B1798B07F001C1C0D /* HXOProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOProgressView.m; sourceTree = "<group>"; };
 		634BE1BC185C9B2B00B2DF05 /* HXOUpDownLoadControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOUpDownLoadControl.h; sourceTree = "<group>"; };
 		634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUpDownLoadControl.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
@@ -630,8 +626,6 @@
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
 		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
-		6385EC9217A68E770024028A /* InsetImageView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetImageView2.h; sourceTree = "<group>"; };
-		6385EC9317A68E770024028A /* InsetImageView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsetImageView2.m; sourceTree = "<group>"; };
 		638EBE32178596D000F1B9AD /* NSString+Emojis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Emojis.h"; sourceTree = "<group>"; };
 		638EBE33178596D000F1B9AD /* NSString+Emojis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Emojis.m"; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -1155,8 +1149,6 @@
 				6325029818658D4000543D80 /* HXOAvatarButton.m */,
 				632502AB1866500800543D80 /* HXOHyperLabel.h */,
 				632502AC1866500800543D80 /* HXOHyperLabel.m */,
-				634B474A1798B07F001C1C0D /* HXOProgressView.h */,
-				634B474B1798B07F001C1C0D /* HXOProgressView.m */,
 				634BE1BC185C9B2B00B2DF05 /* HXOUpDownLoadControl.h */,
 				634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */,
 			);
@@ -1725,8 +1717,6 @@
 				63DC015A17147B1600609513 /* HXOTableViewCell.m */,
 				6320D7CB16E0C79A00E58478 /* InsetImageView.h */,
 				6320D7CC16E0C79A00E58478 /* InsetImageView.m */,
-				6385EC9217A68E770024028A /* InsetImageView2.h */,
-				6385EC9317A68E770024028A /* InsetImageView2.m */,
 				63B2178B181FDFAA00C057D9 /* NickNameLabelWithStatus.h */,
 				63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */,
 				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
@@ -2583,11 +2573,9 @@
 				6325029918658D4000543D80 /* HXOAvatarButton.m in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
-				634B474C1798B07F001C1C0D /* HXOProgressView.m in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
 				E9E92F4118733B7A007B8042 /* DispatchQueueLogFormatter.m in Sources */,
 				632502A71866340A00543D80 /* MessageItems.m in Sources */,
-				6385EC9417A68E770024028A /* InsetImageView2.m in Sources */,
 				E93ED67A17B93D6F0072FD2C /* EC.m in Sources */,
 				E9A619DE17DF6E3700D4CFC3 /* CopyableUITextField.m in Sources */,
 				E9E92F3D18733B7A007B8042 /* DDFileLogger.m in Sources */,

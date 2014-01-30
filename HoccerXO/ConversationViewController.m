@@ -13,7 +13,6 @@
 #import "ChatViewController.h"
 #import "Contact.h"
 #import "ConversationCell.h"
-#import "InsetImageView2.h"
 #import "HXOMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"

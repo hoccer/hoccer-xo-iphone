@@ -21,7 +21,6 @@
 #import "Delivery.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
-#import "InsetImageView.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "MessageCell.h"
@@ -41,7 +40,6 @@
 #import "ImageAttachmentSection.h"
 #import "TextSection.h"
 #import "GenericAttachmentSection.h"
-#import "InsetImageView2.h"
 #import "ProfileViewController.h"
 #import "NickNameLabelWithStatus.h"
 #import "HXOUpDownLoadControl.h"
@@ -859,16 +857,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeFromSuperview");
             [self.attachmentPreview removeFromSuperview];
         }
-        //InsetImageView* preview = [[InsetImageView alloc] init];
         UIButton* preview = [[UIButton alloc] init];
         self.attachmentPreview = preview;
         preview.imageView.contentMode = UIViewContentModeScaleAspectFill;
         preview.frame = _attachmentButton.frame;
-        //preview.image = theImage;
         [preview setImage:theImage forState:UIControlStateNormal];
-        //preview.borderColor = [UIColor blackColor];
-        //preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
-        //preview.backgroundColor = [UIColor blueColor];
         preview.autoresizingMask = _attachmentButton.autoresizingMask;
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.chatbar addSubview: preview];

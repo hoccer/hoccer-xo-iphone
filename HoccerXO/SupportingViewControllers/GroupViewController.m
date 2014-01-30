@@ -14,7 +14,6 @@
 #import "UserDefaultsCells.h"
 #import "GroupMemberCell.h"
 #import "GroupMembership.h"
-#import "InsetImageView2.h"
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
 #import "GroupAdminCell.h"

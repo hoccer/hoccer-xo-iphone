@@ -11,8 +11,6 @@
 #import "HXOTableViewCell.h"
 #import "NickNameLabelWithStatus.h"
 
-@class InsetImageView2;
-
 @interface ConversationAndContactsCell : HXOTableViewCell
 
 @property (nonatomic,strong) IBOutlet NickNameLabelWithStatus * nickName;

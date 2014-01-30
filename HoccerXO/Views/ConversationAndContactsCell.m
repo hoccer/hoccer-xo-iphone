@@ -7,7 +7,6 @@
 //
 
 #import "ConversationAndContactsCell.h"
-#import "InsetImageView.h"
 #import "QuartzCore/QuartzCore.h"
 
 
