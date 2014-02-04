@@ -523,7 +523,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
         NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.json"];
         NSDictionary * json = @{ @"location": @{ @"type": @"point",
-                                                 @"coordinates": @[ @(placemark.coordinate.longitude), @(placemark.coordinate.latitude)]},
+                                                 @"coordinates": @[ @(placemark.coordinate.latitude), @(placemark.coordinate.longitude)]},
                                  @"previewImage": [previewData asBase64EncodedString]};
         NSError * error;
         NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
@@ -1973,7 +1973,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                         NSArray * coordinates = geoLocation[@"location"][@"coordinates"];
                         //NSLog(@"geoLocation=%@",geoLocation);
                         // NSLog(@"coordinates=%@",coordinates);
-                        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([coordinates[1] doubleValue], [coordinates[0] doubleValue]);
+                        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([coordinates[0] doubleValue], [coordinates[1] doubleValue]);
                         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate
                                                                        addressDictionary:nil];
                         MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
