@@ -85,18 +85,6 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 }
 
 + (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount{
-    NSString * imageName;
-    //UIImage * image;
-    if (cellCount == 1) {
-        imageName = @"user_defaults_cell_bg_single";
-    } else if (position == 0) {
-        imageName = @"user_defaults_cell_bg_first";
-    } else if (position == cellCount - 1) {
-        imageName = @"user_defaults_cell_bg_last";
-    } else {
-        imageName = @"user_defaults_cell_bg";
-    }
-    cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: imageName] stretchableImageWithLeftCapWidth: 4 topCapHeight: 4]];
 }
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
@@ -106,13 +94,17 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 - (void) configure: (id) item {
     self.valueFormat = [item valueFormat];
     self.currentValue = [item currentValue];
-    self.imageView.image = [item icon];
+    //self.imageView.image = [item icon];
     self.textLabel.textAlignment = [item textAlignment];
+    /*
     if (self.isEditing) {
         self.textLabel.text = [item editLabel];
     } else {
         self.textLabel.text = self.valueFormat == nil ? [item currentValue] : [self formattedValue];
     }
+     */
+    self.textLabel.text = [item editLabel];
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
@@ -196,10 +188,11 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
     self.textInputBackground.image = [[UIImage imageNamed: @"profile_text_input_bg"] stretchableImageWithLeftCapWidth: 3 topCapHeight: 3];
     self.textInputBackground.frame = CGRectInset(self.textField.frame, -8, 2);
     self.textField.backgroundColor = [UIColor clearColor];
-    self.textField.alpha = 0;
+    //self.textField.alpha = 0;
     self.textInputBackground.alpha = 0;
 }
 
+/*
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
     if (editing != self.isEditing) {
         [super setEditing: editing animated: animated];
@@ -221,12 +214,12 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
         }
     }
 }
-
 - (void) showEditControls: (BOOL) editing {
     CGFloat alpha = editing ? 1 : 0;
     self.textField.alpha = alpha;
     self.textInputBackground.alpha = alpha;
 }
+ */
 
 - (void) textFieldDidEndEditing:(UITextField *)textField {
     if ([self.delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
