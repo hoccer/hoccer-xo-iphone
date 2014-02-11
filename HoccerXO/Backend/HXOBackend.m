@@ -2328,6 +2328,7 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
+# if 0
 // void updateGroupMember(TalkGroupMember member);
 - (void) updateGroupMember:(GroupMembership *) member  {
     NSDictionary * myGroupMemberDict = [self dictOfGroupMember:member];
@@ -2341,6 +2342,7 @@ static NSTimer * _stateNotificationDelayTimer;
          }
      }];    
 }
+#endif
 
 
 #pragma mark - Attachment upload and download
