@@ -1189,6 +1189,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
+/* never called. dead code? [DS]
 // delete all group member contacts that are not friends or contacts in other group
 - (void)deleteContactIfNotInAGroup:(Contact*) contact {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
@@ -1200,7 +1201,8 @@ static NSTimer * _stateNotificationDelayTimer;
         [moc deleteObject: contact];
     }
 }
-
+*/
+ 
 - (void) handleDeletionOfContact:(Contact*)contact {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     if (contact.messages.count == 0 && contact.groupMemberships.count == 0) {

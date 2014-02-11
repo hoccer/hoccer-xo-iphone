@@ -53,7 +53,6 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundWithLines];
     
     NSString * myLocalizedUrlString = NSLocalizedString(self.homeUrl,"@webview");
     //NSLog(@"webview url: %@, localized url: %@", self.homeUrl, myLocalizedUrlString);

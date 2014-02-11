@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "HXOTableViewCell.h"
-#import "AutoheightLabel.h"
 #import "ProfileDataSource.h"
 
 @protocol UserDefaultsCellTextInputDelegate <NSObject>
@@ -104,9 +103,9 @@
 
 @interface UserDefaultsCellInfoText : UserDefaultsCell
 
-@property (nonatomic,strong) IBOutlet AutoheightLabel * textLabel;
+@property (nonatomic,strong) IBOutlet UILabel * textLabel;
 
-- (CGFloat) heightForText: (NSString*) text;
+//- (CGFloat) heightForText: (NSString*) text;
 
 @end
 

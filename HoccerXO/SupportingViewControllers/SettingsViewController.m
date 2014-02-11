@@ -11,7 +11,6 @@
 #import "IASKSpecifierValuesViewController.h"
 
 #import "UIViewController+HXOSideMenu.h"
-#import "RadialGradientView.h"
 #import "UserDefaultsCells.h"
 
 
@@ -32,7 +31,6 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundWithLines];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

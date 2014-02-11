@@ -25,5 +25,4 @@
 @interface ContactQuickListSectionHeaderView : UIView
 
 @property (nonatomic,strong) IBOutlet UILabel     * title;
-@property (nonatomic,strong) IBOutlet UIImageView * icon;
 @end

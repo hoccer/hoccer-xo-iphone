@@ -11,11 +11,8 @@
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
-#import "AssetStore.h"
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
-#import "RadialGradientView.h"
-#import "HXONavigationItem.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "HXOGroupedTableViewController.h"
 #import "NSString+UUID.h"
@@ -89,7 +86,6 @@ typedef enum ActionSheetTags {
 - (void) viewWillAppear:(BOOL)animated {
     _renewKeypairRequested = NO;
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundPlain];
 
     [self configureMode];
 
@@ -307,23 +303,27 @@ typedef enum ActionSheetTags {
 
 - (NSString*) formatKeyIdAsFingerprint: (NSString*) keyId forKey:(NSData*)theKey {
     NSMutableString * fingerprint = [[NSMutableString alloc] init];
-    for (int i = 0; i < keyId.length-2; i += 2) {
-        [fingerprint appendString: [keyId substringWithRange: NSMakeRange( i, 2)]];
-        if (i + 2 < keyId.length-2) {
-            [fingerprint appendString: @":"];
+    [fingerprint appendString:@""];
+    
+    if (keyId) {
+        for (int i = 0; i < keyId.length-2; i += 2) {
+            [fingerprint appendString: [keyId substringWithRange: NSMakeRange( i, 2)]];
+            if (i + 2 < keyId.length-2) {
+                [fingerprint appendString: @":"];
+            }
         }
-    }
-    int keySize =[ RSA getPublicKeySize:theKey];
-    [fingerprint appendString: [NSString stringWithFormat:@"-%d", keySize]];
-
-    //NSLog(@"self.contact = %@", self.contact);
-    if (_mode == ProfileViewModeContactProfile) {
-        if (self.contact.verifiedKey == nil) {
-            [fingerprint appendString: @" 🔶"];
-        } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
-            [fingerprint appendString: @" ✅"];
-        } else {
-            [fingerprint appendString: @" 🔴"];
+        int keySize =[ RSA getPublicKeySize:theKey];
+        [fingerprint appendString: [NSString stringWithFormat:@"-%d", keySize]];
+        
+        //NSLog(@"self.contact = %@", self.contact);
+        if (_mode == ProfileViewModeContactProfile) {
+            if (self.contact.verifiedKey == nil) {
+                [fingerprint appendString: @" 🔶"];
+            } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
+                [fingerprint appendString: @" ✅"];
+            } else {
+                [fingerprint appendString: @" 🔴"];
+            }
         }
     }
     return fingerprint;
@@ -481,7 +481,8 @@ typedef enum ActionSheetTags {
     id item = _profileDataSource[indexPath.section][indexPath.row];
     UITableViewCell * cell = [self prototypeCellOfClass: [item cellClass]];
     if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
-        return [(UserDefaultsCellInfoText*)cell heightForText: [item currentValue]];
+        ((UserDefaultsCellInfoText*)cell).textLabel.text = [item currentValue];
+        return [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
     } else {
         return cell.bounds.size.height;
     }
@@ -551,8 +552,6 @@ typedef enum ActionSheetTags {
         [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
     }
     [self validateItems];
-
-    ((HXONavigationItem*)self.navigationItem).flexibleLeftButton = editing;
 
     if (editing) {
         if (_mode != ProfileViewModeFirstRun) {

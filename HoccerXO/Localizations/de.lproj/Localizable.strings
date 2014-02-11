@@ -271,10 +271,10 @@
 "unverify_publickey"="Verifikation aufheben";
 
 "import_confirm"="Import";
-"import_key_safety_question"="Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest es nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
+"import_key_safety_question"="Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest das nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
 
 "export_confirm"="Exportieren";
-"export_private_key_safety_question"="Mit ihrem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
+"export_private_key_safety_question"="Mit deinem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
 
 
 "Save" = "Speichern";

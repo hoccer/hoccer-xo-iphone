@@ -7,7 +7,6 @@
 //
 
 #import "UserDefaultsCells.h"
-#import "AssetStore.h"
 #import "ProfileAvatarView.h"
 
 static const CGFloat kEditAnimationDuration = 0.5;
@@ -86,18 +85,18 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 }
 
 + (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount{
-    UIImage * image;
+    NSString * imageName;
+    //UIImage * image;
     if (cellCount == 1) {
-        image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg_single" withLeftCapWidth: 4 topCapHeight: 4];
+        imageName = @"user_defaults_cell_bg_single";
     } else if (position == 0) {
-        image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg_first" withLeftCapWidth: 4 topCapHeight: 4];
+        imageName = @"user_defaults_cell_bg_first";
     } else if (position == cellCount - 1) {
-        image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg_last" withLeftCapWidth: 4 topCapHeight: 4];
+        imageName = @"user_defaults_cell_bg_last";
     } else {
-        image = [AssetStore stretchableImageNamed: @"user_defaults_cell_bg" withLeftCapWidth: 4 topCapHeight: 4];
+        imageName = @"user_defaults_cell_bg";
     }
-    cell.backgroundView = [[UIImageView alloc] initWithImage: image];
-
+    cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: imageName] stretchableImageWithLeftCapWidth: 4 topCapHeight: 4]];
 }
 
 - (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
@@ -194,7 +193,7 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
                                              selector:@selector(textFieldDidChange:)
                                                  name:UITextFieldTextDidChangeNotification
                                                object:self.textField];
-    self.textInputBackground.image = [AssetStore stretchableImageNamed: @"profile_text_input_bg" withLeftCapWidth:3 topCapHeight:3];
+    self.textInputBackground.image = [[UIImage imageNamed: @"profile_text_input_bg"] stretchableImageWithLeftCapWidth: 3 topCapHeight: 3];
     self.textInputBackground.frame = CGRectInset(self.textField.frame, -8, 2);
     self.textField.backgroundColor = [UIColor clearColor];
     self.textField.alpha = 0;
@@ -284,11 +283,11 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 }
 
 + (UIImage*) validBackground {
-    return [AssetStore stretchableImageNamed: @"profile_text_input_bg" withLeftCapWidth:3 topCapHeight:3];
+    return [[UIImage imageNamed: @"profile_text_input_bg"] stretchableImageWithLeftCapWidth: 3 topCapHeight: 3];
 }
 
 + (UIImage*) invalidBackground {
-    return [AssetStore stretchableImageNamed: @"profile_text_input_bg_invalid" withLeftCapWidth:3 topCapHeight:3];
+    return [[UIImage imageNamed: @"profile_text_input_bg_invalid"] stretchableImageWithLeftCapWidth: 3 topCapHeight: 3];
 }
 
 @end
@@ -304,14 +303,15 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 
 @implementation UserDefaultsCellInfoText
 
+/*
 - (CGFloat) heightForText: (NSString*) text {
     [self updateLabelFrame];
     return [self.textLabel calculateSize: text].height + 22;
 }
-
+*/
 - (void) configure:(id)item {
     [super configure: item];
-    [self updateLabelFrame];
+    //[self updateLabelFrame];
     [self.textLabel sizeToFit];
 }
 
@@ -326,6 +326,12 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
     frame.size.width = width;
     frame.origin.x = 12.0;
     self.textLabel.frame = frame;
+}
+
+- (CGSize) sizeThatFits:(CGSize)size {
+    size = [self.textLabel sizeThatFits: size];
+    size.height += 22;
+    return size;
 }
 
 @end

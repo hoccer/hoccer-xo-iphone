@@ -78,7 +78,6 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundWithLines];
 }
 
 - (void) moveView: (UIView*) view by: (float) dy {

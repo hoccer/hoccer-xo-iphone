@@ -13,14 +13,11 @@
 #import "ChatViewController.h"
 #import "Contact.h"
 #import "ConversationCell.h"
-#import "InsetImageView2.h"
-#import "AssetStore.h"
 #import "HXOMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
-#import "HXONavigationBar.h"
 #import "ProfileViewController.h"
 #import "InvitationController.h"
 #import "Attachment.h"
@@ -91,7 +88,6 @@
 
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
-    [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
 
     [AppDelegate setWhiteFontStatusbarForViewController:self];

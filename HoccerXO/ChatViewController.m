@@ -21,11 +21,9 @@
 #import "Delivery.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
-#import "InsetImageView.h"
 #import "MFSideMenu.h"
 #import "UIViewController+HXOSideMenu.h"
 #import "MessageCell.h"
-#import "AutoheightLabel.h"
 #import "HXOUserDefaults.h"
 #import "ImageViewController.h"
 #import "UserProfile.h"
@@ -42,7 +40,6 @@
 #import "ImageAttachmentSection.h"
 #import "TextSection.h"
 #import "GenericAttachmentSection.h"
-#import "InsetImageView2.h"
 #import "ProfileViewController.h"
 #import "NickNameLabelWithStatus.h"
 #import "HXOUpDownLoadControl.h"
@@ -222,7 +219,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     // NSLog(@"ChatViewController:viewWillAppear");
     [super viewWillAppear: animated];
 
-    [self setNavigationBarBackgroundWithLines];
     [HXOBackend broadcastConnectionInfo];
 
     [self scrollToRememberedCellOrToBottomIfNone];
@@ -527,7 +523,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
         NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.json"];
         NSDictionary * json = @{ @"location": @{ @"type": @"point",
-                                                 @"coordinates": @[ @(placemark.coordinate.longitude), @(placemark.coordinate.latitude)]},
+                                                 @"coordinates": @[ @(placemark.coordinate.latitude), @(placemark.coordinate.longitude)]},
                                  @"previewImage": [previewData asBase64EncodedString]};
         NSError * error;
         NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
@@ -861,16 +857,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeFromSuperview");
             [self.attachmentPreview removeFromSuperview];
         }
-        //InsetImageView* preview = [[InsetImageView alloc] init];
         UIButton* preview = [[UIButton alloc] init];
         self.attachmentPreview = preview;
         preview.imageView.contentMode = UIViewContentModeScaleAspectFill;
         preview.frame = _attachmentButton.frame;
-        //preview.image = theImage;
         [preview setImage:theImage forState:UIControlStateNormal];
-        //preview.borderColor = [UIColor blackColor];
-        //preview.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.3];
-        //preview.backgroundColor = [UIColor blueColor];
         preview.autoresizingMask = _attachmentButton.autoresizingMask;
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.chatbar addSubview: preview];
@@ -1982,7 +1973,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                         NSArray * coordinates = geoLocation[@"location"][@"coordinates"];
                         //NSLog(@"geoLocation=%@",geoLocation);
                         // NSLog(@"coordinates=%@",coordinates);
-                        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([coordinates[1] doubleValue], [coordinates[0] doubleValue]);
+                        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([coordinates[0] doubleValue], [coordinates[1] doubleValue]);
                         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate
                                                                        addressDictionary:nil];
                         MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemark];

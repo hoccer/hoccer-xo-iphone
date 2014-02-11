@@ -11,8 +11,6 @@
 #import "HXOTableViewCell.h"
 #import "ConversationAndContactsCell.h"
 
-@class InsetImageView;
-
 @interface ConversationCell : ConversationAndContactsCell
 
 @property (nonatomic,strong) IBOutlet UILabel* latestMessageLabel;

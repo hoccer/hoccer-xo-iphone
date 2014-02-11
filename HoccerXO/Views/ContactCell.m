@@ -14,14 +14,6 @@
     [super awakeFromNib];
 
     self.nickName.textColor = [UIColor colorWithWhite: 0.2 alpha: 1.0];
-    
-//    self.statusLabel.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
-    
-//    self.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"contact-settings"]];
-}
-
-- (NSString*) backgroundName {
-    return @"contacts_and_groups_cell_bg";
 }
 
 @end

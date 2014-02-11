@@ -10,7 +10,6 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "AssetStore.h"
 #import "InsetImageView.h"
 
 @interface ContactQuickListCell ()
@@ -35,7 +34,7 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
     self.avatar.insetColor = [UIColor colorWithWhite: 1.0 alpha: 0.2];
     self.avatar.borderColor = [UIColor colorWithWhite: 0 alpha: 0.66];
 
-    _messageCountBackground = [[UIImageView alloc] initWithImage: [AssetStore stretchableImageNamed: @"bg_message-count-grey" withLeftCapWidth: 10 topCapHeight: 10]];
+    _messageCountBackground = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: @"bg_message-count-grey"] stretchableImageWithLeftCapWidth: 10 topCapHeight:10]];
     [self.contentView addSubview: _messageCountBackground];
     [self.contentView sendSubviewToBack: _messageCountBackground];
 }
@@ -50,7 +49,6 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 }
 
 - (void) setMessageCount: (NSInteger) count isUnread: (BOOL) unreadFlag {
-
     _messageCount.text = [@(count) stringValue];
     _messageCount.highlighted = unreadFlag;
     CGFloat rightEdge = _messageCount.frame.origin.x + _messageCount.frame.size.width;
@@ -58,7 +56,7 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
     CGRect frame = _messageCount.frame;
     frame.origin.x = rightEdge - frame.size.width;
     _messageCount.frame = frame;
-    _messageCountBackground.image = [AssetStore stretchableImageNamed: unreadFlag ? @"bg_message-count-red" : @"bg_message-count-grey" withLeftCapWidth: 10 topCapHeight: 10];
+    _messageCountBackground.image = [[UIImage imageNamed: unreadFlag ? @"bg_message-count-red" : @"bg_message-count-grey"] stretchableImageWithLeftCapWidth: 10 topCapHeight: 10];
     frame.size.height = _messageCountBackground.image.size.height;
     frame.origin.x -= kMessageCountBackgroundPadding;
     frame.size.width += 2 * kMessageCountBackgroundPadding;
@@ -83,17 +81,6 @@ static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
     }
     return self;
-}
-
-- (void) layoutSubviews {
-    CGFloat r = kSectionHeaderShadowRaius;
-    [super layoutSubviews];
-    self.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.layer.shadowOpacity = 0.8;
-    self.layer.shadowRadius = r;
-    self.layer.shadowOffset = CGSizeMake(0.0, r);
-    CGRect shadowRect = CGRectMake(- 2 * r, 0, self.bounds.size.width + 4 * r, self.bounds.size.height);
-    self.layer.shadowPath = [UIBezierPath bezierPathWithRect: shadowRect].CGPath;
 }
 
 @end

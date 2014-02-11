@@ -11,7 +11,6 @@
 #import "AppDelegate.h"
 #import "GroupViewController.h"
 #import "ContactCell.h"
-#import "InsetImageView2.h"
 #import "GroupMembership.h"
 
 @interface GroupListViewController ()
