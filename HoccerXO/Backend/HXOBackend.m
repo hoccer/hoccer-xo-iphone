@@ -554,41 +554,24 @@ static NSTimer * _stateNotificationDelayTimer;
     Group * group = nil;
     if (groupId != nil) {
         group = [self getGroupById:groupId];
-    };
+    }
 
+    // Abort messages from unknown sender. This happens if someone becomes a member of a group,
+    // sends some messages and leaves the group again while this client is offline.
+    // There is a small possibilty of message loss, though. It happens if a message by some client
+    // to a group arrives before the membership is known to this client.
     if (sender == nil || (groupId != nil && group == nil)) {
-        BOOL doReceive = NO;
         NSLog(@"Strange message:");
         if (sender == nil) {
             NSLog(@"from unknown sender with id %@", senderId);
         } else {
             NSLog(@"from known sender with name %@ relation %@", sender.nickName, sender.relationshipState);
         }
-        
-        if (groupId != nil && group == nil) {
-            NSLog(@"with unknown group id %@", groupId);
-        } else if (group != nil) {
-            NSLog(@"from known group name %@ state %@", group.nickName, group.groupState);
-            Contact * contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-            contact.type = [Contact entityName];
-            contact.clientId = senderId;
-            contact.nickName = [senderId substringWithRange: NSMakeRange( 0, 8)];
-            NSDictionary * myFakeRelationship = @{@"clientId":[UserProfile sharedProfile].clientId,
-                                                  @"otherClientId":senderId,
-                                                  @"state":@"none",
-                                                  @"lastChanged":@(0)};
-            [self updateRelationship:myFakeRelationship];
-            Contact * sender = [self getContactByClientId:senderId];
-            if (sender != 0) {
-                doReceive = YES;
-                NSLog(@"created unknown sender with name %@",sender.nickName);
-            }
-        }
-        if (!doReceive) {
-            [self.delegate.managedObjectContext deleteObject: message];
-            [self.delegate.managedObjectContext deleteObject: delivery];
-            return;
-        }
+
+        [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
+        [self.delegate.managedObjectContext deleteObject: message];
+        [self.delegate.managedObjectContext deleteObject: delivery];
+        return;
     }
     Contact * contact = nil;
     if (group != nil) {
