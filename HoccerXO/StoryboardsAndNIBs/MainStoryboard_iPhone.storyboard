@@ -29,13 +29,7 @@
         <!--Side Menu Container View Controller-->
         <scene sceneID="LWj-jm-QEt">
             <objects>
-                <viewController id="MEK-d2-s1c" customClass="MFSideMenuContainerViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="YBz-3f-CAl" customClass="PerforatedPlateView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
+                <viewController id="MEK-d2-s1c" customClass="MFSideMenuContainerViewController" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ufc-a1-TyC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-674" y="82"/>
