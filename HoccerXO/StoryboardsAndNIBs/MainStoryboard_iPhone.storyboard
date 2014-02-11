@@ -1213,7 +1213,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" id="wAw-Zo-oS0" userLabel="Avatar" customClass="InsetImageView2">
+                                        <view contentMode="scaleToFill" id="wAw-Zo-oS0" userLabel="Avatar" customClass="UIImageView">
                                             <rect key="frame" x="8" y="8" width="48" height="48"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
