@@ -73,6 +73,8 @@
 		6339CDDF18A9940D00DA2729 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDCB18A991A700DA2729 /* libqrencoder.a */; };
 		6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDD518A991C200DA2729 /* libSocketRocket.a */; };
 		6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDB718A9911800DA2729 /* libZipArchive-ios.a */; };
+		6339CDE918A998C800DA2729 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDE318A998C800DA2729 /* libTestFlight.a */; };
+		6339CDEB18A998C800DA2729 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 6339CDE518A998C800DA2729 /* release_notes.md */; };
 		633A999B1779D23900E066EF /* HXOSideMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A999A1779D23900E066EF /* HXOSideMenuViewController.m */; };
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
@@ -300,7 +302,6 @@
 		E9D1148E1736702E00737EF7 /* GCNetworkReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114841736702E00737EF7 /* GCNetworkReachability.m */; };
 		E9D1148F1736702E00737EF7 /* GCNetworkRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114861736702E00737EF7 /* GCNetworkRequest.m */; };
 		E9D114901736702E00737EF7 /* GCXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114881736702E00737EF7 /* GCXMLRequestOperation.m */; };
-		E9D114911736702E00737EF7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E9D114891736702E00737EF7 /* README.md */; };
 		E9D1149A173679CC00737EF7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D11499173679CC00737EF7 /* SystemConfiguration.framework */; };
 		E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */; };
 		E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D67C4D175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m */; };
@@ -527,6 +528,11 @@
 		633462AE174FCA3C008D98FC /* GroupAdminCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupAdminCell.m; sourceTree = "<group>"; };
 		633462B1174FE3E3008D98FC /* group_member_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_member_divider.png; sourceTree = "<group>"; };
 		633462B2174FE3E3008D98FC /* group_member_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_divider@2x.png"; sourceTree = "<group>"; };
+		6339CDE318A998C800DA2729 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		6339CDE518A998C800DA2729 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		6339CDE618A998C800DA2729 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		6339CDE718A998C800DA2729 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		6339CDE818A998C800DA2729 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		633A99991779D23900E066EF /* HXOSideMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOSideMenuViewController.h; sourceTree = "<group>"; };
 		633A999A1779D23900E066EF /* HXOSideMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOSideMenuViewController.m; sourceTree = "<group>"; };
 		633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberInviteViewController.h; sourceTree = "<group>"; };
@@ -882,7 +888,6 @@
 		E9D114861736702E00737EF7 /* GCNetworkRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCNetworkRequest.m; sourceTree = "<group>"; };
 		E9D114871736702E00737EF7 /* GCXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCXMLRequestOperation.h; sourceTree = "<group>"; };
 		E9D114881736702E00737EF7 /* GCXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCXMLRequestOperation.m; sourceTree = "<group>"; };
-		E9D114891736702E00737EF7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		E9D11499173679CC00737EF7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		E9D114A41736E43E00737EF7 /* RNCachingURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNCachingURLProtocol.h; sourceTree = "<group>"; };
 		E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCachingURLProtocol.m; sourceTree = "<group>"; };
@@ -997,6 +1002,7 @@
 				63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */,
 				63AEE2DE16CA4D0200522F92 /* CoreData.framework in Frameworks */,
 				6339CDDC18A9930C00DA2729 /* libzbar.a in Frameworks */,
+				6339CDE918A998C800DA2729 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1152,6 +1158,18 @@
 				6339CDDB18A991C200DA2729 /* TestChat.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6339CDE218A998C800DA2729 /* TestFlightSDK2.2.1 */ = {
+			isa = PBXGroup;
+			children = (
+				6339CDE318A998C800DA2729 /* libTestFlight.a */,
+				6339CDE518A998C800DA2729 /* release_notes.md */,
+				6339CDE618A998C800DA2729 /* TestFlight+AsyncLogging.h */,
+				6339CDE718A998C800DA2729 /* TestFlight+ManualSessions.h */,
+				6339CDE818A998C800DA2729 /* TestFlight.h */,
+			);
+			path = TestFlightSDK2.2.1;
 			sourceTree = "<group>";
 		};
 		633A9B18177B21A700E066EF /* Controls */ = {
@@ -1666,18 +1684,19 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				6339CDE218A998C800DA2729 /* TestFlightSDK2.2.1 */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
-				E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */,
-				6367C9131833BE11005C60B3 /* GrowingTextView */,
-				63F62E0417799D6B00435F21 /* MFSideMenu */,
-				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
+				6367C9131833BE11005C60B3 /* GrowingTextView */,
+				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
+				63F62E0417799D6B00435F21 /* MFSideMenu */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
 				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */,
 				639094AD1739380E00DF889B /* TDSemiModal */,
 				E9D67C49175C22DC007FE4AA /* UIAlertViewExtentsions */,
 				63A7F68A172C418A00C0EC26 /* ZBarSDK */,
+				E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */,
 			);
 			path = 3rdParty;
 			sourceTree = "<group>";
@@ -1853,7 +1872,6 @@
 				E9D114861736702E00737EF7 /* GCNetworkRequest.m */,
 				E9D114871736702E00737EF7 /* GCXMLRequestOperation.h */,
 				E9D114881736702E00737EF7 /* GCXMLRequestOperation.m */,
-				E9D114891736702E00737EF7 /* README.md */,
 			);
 			path = GCNetworkRequest;
 			sourceTree = "<group>";
@@ -2315,7 +2333,6 @@
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
-				E9D114911736702E00737EF7 /* README.md in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
 				5048263E174796F10048538A /* navigation_button_groups@2x.png in Resources */,
@@ -2349,6 +2366,7 @@
 				6AE9768917BB880400D60E7C /* icon_profile-delete.png in Resources */,
 				6AE9768A17BB880400D60E7C /* icon_profile-delete@2x.png in Resources */,
 				6AE9768B17BB880400D60E7C /* icon_profile-block.png in Resources */,
+				6339CDEB18A998C800DA2729 /* release_notes.md in Resources */,
 				6AE9768C17BB880400D60E7C /* icon_profile-block@2x.png in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
 				6AE9768D17BB880400D60E7C /* icon_profile-chat@2x.png in Resources */,
@@ -2650,6 +2668,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/3rdParty/ZBarSDK/",
+					"/Users/david/hoccer/hoccer-xo-iphone/3rdParty/TestFlightSDK2.2.1",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -2683,6 +2702,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/3rdParty/ZBarSDK/",
+					"/Users/david/hoccer/hoccer-xo-iphone/3rdParty/TestFlightSDK2.2.1",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
