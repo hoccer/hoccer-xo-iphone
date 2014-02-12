@@ -53,3 +53,8 @@
 "Security"="Sicherheit";
 "RSA Key Size"="RSA Schlüssellänge";
 "Manual Key Mgmt."="Schlüssel manuell";
+
+
+/* Debug Settings */
+
+"Server" = "Server";
