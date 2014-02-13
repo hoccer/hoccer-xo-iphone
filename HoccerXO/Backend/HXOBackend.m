@@ -863,6 +863,12 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (NSURLRequest*) urlRequest {
     NSURL * url = [NSURL URLWithString: [[Environment sharedEnvironment] talkServer]];
+#ifdef DEBUG
+    NSString * debugServerURL = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXODebugServerURL];
+    if (debugServerURL && ! [debugServerURL isEqualToString: @""]) {
+        url = [NSURL URLWithString: debugServerURL];
+    }
+#endif
     NSLog(@"using server: %@", [url absoluteString]);
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL: url];
     NSArray * certificates = [self certificates];

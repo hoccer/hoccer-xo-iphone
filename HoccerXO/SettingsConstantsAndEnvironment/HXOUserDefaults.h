@@ -50,6 +50,8 @@ FOUNDATION_EXPORT NSString * const kHXOHttpServerPassword;
 
 FOUNDATION_EXPORT NSString * const kHXODefaultScreenShooting;
 
+FOUNDATION_EXPORT NSString * const kHXODebugServerURL;
+
 
 @interface HXOUserDefaults : NSObject
 

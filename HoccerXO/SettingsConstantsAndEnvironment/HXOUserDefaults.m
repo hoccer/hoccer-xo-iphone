@@ -45,7 +45,9 @@ NSString * const kHXOPreviewImageWidth      = @"previewImageWidth";
 NSString * const kHXOMessageFontSize       = @"messageFontSize";
 NSString * const kHXORsaKeySize            = @"rsaKeySize";
 NSString * const kHXOManualKeyManagement   = @"manualKeyManagement";
-NSString * const kHXOHttpServerPassword   = @"httpServerPassword";
+NSString * const kHXOHttpServerPassword    = @"httpServerPassword";
+
+NSString * const kHXODebugServerURL        = @"debugServerURL";
 
 NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 

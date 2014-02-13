@@ -1,4 +1,4 @@
-﻿/* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
+/* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
 
 "Sound" = "Töne";
 "Message Sound" = "Benachrichtigungston";
@@ -60,3 +60,5 @@
 "Debug" = "Debug Einstellungen";
 
 "Server" = "Server";
+
+"server_changed_instructions" =  "Nach dem Wechsel auf einen anderen Server gehe auf die Profilseite, drücke 'Bearbeiten', scrolle nach unten und lösche deine Zugangsdaten. Dabei verlierst du alle Daten auf dem Client. Wenn sich nur die IP Adresse des Servers geändert hat reicht es die App kurz in den Hintergrund zu schieben um einen Neuaufbau der Verbindung auszulösen.";

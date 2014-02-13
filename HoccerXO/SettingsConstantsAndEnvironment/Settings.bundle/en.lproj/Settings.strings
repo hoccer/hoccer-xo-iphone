@@ -1,4 +1,4 @@
-﻿
+
 "Sound" = "Sound";
 "Message Sound" = "New Message Sound";
 "Effect Sounds" = "Other Effect Sounds";
@@ -59,3 +59,5 @@
 "Debug" = "Debug Settings";
 
 "Server" = "Server";
+
+"server_changed_instructions" = "When switching to new server instance go to the profile page, press 'Edit', scroll to the bottom and delete your credentials. You'll loose all client data. If the server just changed its IP address put the app in the background for a second to trigger a reconnect.";
