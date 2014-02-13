@@ -55,7 +55,7 @@
 "Manual Key Mgmt."="Schlüssel manuell";
 
 "support_mode" = "Support Mode";
-"support_mode_explanation" = "Unser Team kann sie bitten den Support Mode zu aktivieren um eventuellen Problemen besser nachgehen zu können.";
+"support_mode_explanation" = "Unser Team kann dich bitten den Support Mode zu aktivieren wenn du dich mit einem Problem an uns gewendet hast.";
 
 
 /* Debug Settings */
