@@ -2398,15 +2398,14 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/SettingsConstantsAndEnvironment/Settings.bundle/Root.plist",
+				"$(BUILT_PRODUCTS_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Settings.bundle/Root.plist",
 			);
 			name = "Inject Debug Settings Pane";
 			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Settings.bundle/Root.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n  $SRCROOT/HoccerXO/Scripts/injectSettingsPane.sh \"$SCRIPT_OUTPUT_FILE_0\"\nfi";
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n  $SRCROOT/HoccerXO/Scripts/injectSettingsPane.sh \"$SCRIPT_INPUT_FILE_0\"\nfi";
 		};
 		6330492317019ED60045E64E /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
