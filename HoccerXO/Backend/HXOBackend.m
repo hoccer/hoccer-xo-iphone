@@ -3883,7 +3883,8 @@ static NSTimer * _stateNotificationDelayTimer;
 
 + (BOOL) allowUntrustedServerCertificate {
 #ifdef DEBUG
-    return ![[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"];
+    //return ![[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"];
+    return [[[HXOUserDefaults standardUserDefaults] valueForKey: kHXODebugAllowUntrustedCertificates] boolValue];
 #else
     return NO;
 #endif

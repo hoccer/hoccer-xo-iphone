@@ -48,6 +48,7 @@ NSString * const kHXOManualKeyManagement   = @"manualKeyManagement";
 NSString * const kHXOHttpServerPassword    = @"httpServerPassword";
 
 NSString * const kHXODebugServerURL        = @"debugServerURL";
+NSString * const kHXODebugAllowUntrustedCertificates = @"debugAllowUntrustedCertificates";
 
 NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 
