@@ -2775,15 +2775,17 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed updateFlag:(BOOL)hasUpdated unclean:(BOOL)uncleanShutdown handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
 #ifdef FULL_HELLO
+    NSLog(@"Support Mode: '%@'", [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportMode]);
     NSDictionary * initParams = @{
-                             @"clientTime" : clientTime,
+                             @"clientTime"     : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
-                             @"deviceModel" : [UIDevice currentDevice].model,
-                             @"systemName" : [UIDevice currentDevice].systemName,
-                             @"systemVersion" : [UIDevice currentDevice].systemVersion,
-                             @"clientName" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-                             @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
-                             @"clientLanguage" : NSLocalizedString(@"language_code", nil)
+                             @"deviceModel"    : [UIDevice currentDevice].model,
+                             @"systemName"     : [UIDevice currentDevice].systemName,
+                             @"systemVersion"  : [UIDevice currentDevice].systemVersion,
+                             @"clientName"     : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                             @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
+                             @"clientLanguage" : NSLocalizedString(@"language_code", nil),
+                             @"supportMode"    : [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportMode]
                              };
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:initParams];
     if (hasCrashed) {

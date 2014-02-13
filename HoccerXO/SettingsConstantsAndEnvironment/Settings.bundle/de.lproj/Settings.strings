@@ -54,6 +54,9 @@
 "RSA Key Size"="RSA Schlüssellänge";
 "Manual Key Mgmt."="Schlüssel manuell";
 
+"support_mode" = "Support Mode";
+"support_mode_explanation" = "Unser Team kann sie bitten den Support Mode zu aktivieren um eventuellen Problemen besser nachgehen zu können.";
+
 
 /* Debug Settings */
 

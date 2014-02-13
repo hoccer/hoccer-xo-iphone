@@ -47,6 +47,8 @@ NSString * const kHXORsaKeySize            = @"rsaKeySize";
 NSString * const kHXOManualKeyManagement   = @"manualKeyManagement";
 NSString * const kHXOHttpServerPassword    = @"httpServerPassword";
 
+NSString * const kHXOSupportMode           = @"supportMode";
+
 NSString * const kHXODebugServerURL        = @"debugServerURL";
 NSString * const kHXODebugAllowUntrustedCertificates = @"debugAllowUntrustedCertificates";
 
