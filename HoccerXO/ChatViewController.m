@@ -1917,7 +1917,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) presentViewForAttachment:(Attachment *) myAttachment {
     if ([myAttachment.mediaType isEqual: @"data"]
         || [myAttachment.mediaType isEqual: @"video"]
-        || [myAttachment.mediaType isEqual: @"image"]
+        // guard against old DB entries triggering https://github.com/hoccer/hoccer-xo-iphone/issues/211
+        || ([myAttachment.mediaType isEqual: @"image"] && myAttachment.localURL != nil)
         //|| [myAttachment.mediaType isEqual: @"audio"]
         )
     {
@@ -1950,6 +1951,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
+        // used with old DB entries preventing https://github.com/hoccer/hoccer-xo-iphone/issues/211
         [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
             // NSLog(@"attachment view loadimage done");
             if (theImage != nil) {
