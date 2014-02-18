@@ -53,6 +53,9 @@
 "RSA Key Size"="RSA Key Size";
 "Manual Key Mgmt."="Manage keys manually";
 
+"report_crashes" = "Report Crashes";
+
+
 "support_mode" = "Support Mode";
 "support_mode_explanation" = "Our support team may ask you to switch on support mode to help with resolving issues you reported.";
 

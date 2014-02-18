@@ -50,6 +50,7 @@ FOUNDATION_EXPORT NSString * const kHXOHttpServerPassword;
 
 FOUNDATION_EXPORT NSString * const kHXODefaultScreenShooting;
 
+FOUNDATION_EXPORT NSString * const kHXOReportCrashes;
 FOUNDATION_EXPORT NSString * const kHXOSupportMode;
 
 FOUNDATION_EXPORT NSString * const kHXODebugServerURL;

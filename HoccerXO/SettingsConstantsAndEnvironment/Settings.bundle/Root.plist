@@ -358,6 +358,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>report_crashes</string>
+			<key>Key</key>
+			<string>reportCrashes</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>support_mode</string>
 			<key>Key</key>
 			<string>supportMode</string>
