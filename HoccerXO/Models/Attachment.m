@@ -1977,7 +1977,7 @@ NSArray * TransferStateName = @[@"detached",
              @"mediaType": @"mediaType",
              @"mimeType": @"mimeType",
              @"aspectRatio": @"aspectRatio",
-             @"fileName": @"humanReadableFileName"
+             @"filename": @"humanReadableFileName"
              };
 }
 
@@ -2002,7 +2002,9 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
         }
         NSLog(@"attachment=%@",json);
         if ([json isKindOfClass: [NSDictionary class]]) {
-            [HXOModel updateObject:self withDictionary:json withKeys:[self JsonKeys]];
+            NSMutableDictionary * backwardsCompatibleJsonKeys = [NSMutableDictionary dictionaryWithDictionary: [self JsonKeys]];
+            [backwardsCompatibleJsonKeys setObject: backwardsCompatibleJsonKeys[@"filename"] forKey: @"fileName"];
+            [HXOModel updateObject:self withDictionary:json withKeys: backwardsCompatibleJsonKeys];
         } else {
             NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
         }
