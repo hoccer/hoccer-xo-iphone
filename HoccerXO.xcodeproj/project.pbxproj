@@ -68,6 +68,13 @@
 		633462AF174FCA3C008D98FC /* GroupAdminCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633462AE174FCA3C008D98FC /* GroupAdminCell.m */; };
 		633462B3174FE3E3008D98FC /* group_member_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B1174FE3E3008D98FC /* group_member_divider.png */; };
 		633462B4174FE3E3008D98FC /* group_member_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B2174FE3E3008D98FC /* group_member_divider@2x.png */; };
+		6339CDDC18A9930C00DA2729 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F6A2172C418A00C0EC26 /* libzbar.a */; };
+		6339CDDE18A993F600DA2729 /* libInAppSettingsKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDC318A9918500DA2729 /* libInAppSettingsKit.a */; };
+		6339CDDF18A9940D00DA2729 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDCB18A991A700DA2729 /* libqrencoder.a */; };
+		6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDD518A991C200DA2729 /* libSocketRocket.a */; };
+		6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDB718A9911800DA2729 /* libZipArchive-ios.a */; };
+		6339CDE918A998C800DA2729 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDE318A998C800DA2729 /* libTestFlight.a */; };
+		6339CDEB18A998C800DA2729 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 6339CDE518A998C800DA2729 /* release_notes.md */; };
 		633A999B1779D23900E066EF /* HXOSideMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633A999A1779D23900E066EF /* HXOSideMenuViewController.m */; };
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
@@ -125,11 +132,9 @@
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
 		639094C21739970200DF889B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094C11739970200DF889B /* CoreLocation.framework */; };
 		639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094C7173A871500DF889B /* UIButton+GlossyRounded.m */; };
-		63A7F660172C2E4800C0EC26 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F65B172C2E3100C0EC26 /* libqrencoder.a */; };
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
 		63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F688172C328D00C0EC26 /* libstdc++.dylib */; };
-		63A7F6A8172C418A00C0EC26 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F6A2172C418A00C0EC26 /* libzbar.a */; };
 		63A7F6A9172C418A00C0EC26 /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 63A7F6A4172C418A00C0EC26 /* zbar-back.png */; };
 		63A7F6AA172C418A00C0EC26 /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = 63A7F6A5172C418A00C0EC26 /* zbar-help.html */; };
 		63A7F6AB172C418A00C0EC26 /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = 63A7F6A6172C418A00C0EC26 /* zbar-helpicons.png */; };
@@ -197,7 +202,6 @@
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
 		63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */; };
-		63C413B116E8FBA4004E1F6D /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
 		63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B816E8FD15004E1F6D /* Security.framework */; };
@@ -227,12 +231,10 @@
 		6AE9768C17BB880400D60E7C /* icon_profile-block@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AE9768617BB880400D60E7C /* icon_profile-block@2x.png */; };
 		6AE9768D17BB880400D60E7C /* icon_profile-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AE9768717BB880400D60E7C /* icon_profile-chat@2x.png */; };
 		6AE9768E17BB880400D60E7C /* icon_profile-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AE9768817BB880400D60E7C /* icon_profile-chat.png */; };
-		E924C958176C8CD6008185E0 /* libInAppSettingsKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
 		E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC2186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png */; };
-		E92FAED51870960D00D72D79 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAECE18708EF400D72D79 /* libZipArchive-ios.a */; };
 		E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAED61870A0F900D72D79 /* libz.dylib */; };
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
 		E93ED67A17B93D6F0072FD2C /* EC.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED67917B93D6F0072FD2C /* EC.m */; };
@@ -300,7 +302,6 @@
 		E9D1148E1736702E00737EF7 /* GCNetworkReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114841736702E00737EF7 /* GCNetworkReachability.m */; };
 		E9D1148F1736702E00737EF7 /* GCNetworkRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114861736702E00737EF7 /* GCNetworkRequest.m */; };
 		E9D114901736702E00737EF7 /* GCXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114881736702E00737EF7 /* GCXMLRequestOperation.m */; };
-		E9D114911736702E00737EF7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E9D114891736702E00737EF7 /* README.md */; };
 		E9D1149A173679CC00737EF7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D11499173679CC00737EF7 /* SystemConfiguration.framework */; };
 		E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */; };
 		E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D67C4D175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m */; };
@@ -360,110 +361,89 @@
 			remoteGlobalIDString = 631F6D85170B9F5800FB28D5;
 			remoteInfo = SRPDemo;
 		};
-		63A7F65A172C2E3100C0EC26 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9672D35713BD662F0002B0E2;
-			remoteInfo = qrencoder;
-		};
-		63A7F65C172C2E3100C0EC26 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9621844115431DBA00447877;
-			remoteInfo = QRCodeEncoderDemo;
-		};
-		63A7F65E172C2E3F00C0EC26 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9672D35613BD662F0002B0E2;
-			remoteInfo = qrencoder;
-		};
-		63C413A916E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F6B2082D1450F597009315AF;
-			remoteInfo = SocketRocket;
-		};
-		63C413AB16E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F668C880153E91210044DBAC;
-			remoteInfo = SocketRocketOSX;
-		};
-		63C413AD16E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F6BDA802145900D200FE3253;
-			remoteInfo = SRWebSocketTests;
-		};
-		63C413AF16E8FA0C004E1F6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F62417E314D52F3C003CE997;
-			remoteInfo = TestChat;
-		};
-		63C413B216E8FBB0004E1F6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F6B2082C1450F597009315AF;
-			remoteInfo = SocketRocket;
-		};
-		E92FAECD18708EF400D72D79 /* PBXContainerItemProxy */ = {
+		6339CDB618A9911800DA2729 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = "ZipArchive ios";
 		};
-		E92FAECF18708EF400D72D79 /* PBXContainerItemProxy */ = {
+		6339CDB818A9911800DA2729 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = C908A96F160AC26D000395DB;
 			remoteInfo = "ZipArchive mac";
 		};
-		E92FAED118708EF400D72D79 /* PBXContainerItemProxy */ = {
+		6339CDBA18A9911800DA2729 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = C95AB35817E1C37700120861;
 			remoteInfo = "ZipArchive ios Tests";
 		};
-		E92FAED318708EF400D72D79 /* PBXContainerItemProxy */ = {
+		6339CDBC18A9911800DA2729 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = C95AB37417E1C47D00120861;
 			remoteInfo = "ZipArchive mac Tests";
 		};
-		E96DC1D8176C90AE00BDDF4E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = E42ADA8E168202D700295D85;
-			remoteInfo = InAppSettingsKit;
-		};
-		E9A41DDE1764F45E006E76B2 /* PBXContainerItemProxy */ = {
+		6339CDC218A9918500DA2729 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = E42ADA8F168202D700295D85;
 			remoteInfo = InAppSettingsKit;
 		};
-		E9A41DE01764F45E006E76B2 /* PBXContainerItemProxy */ = {
+		6339CDC418A9918500DA2729 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = E42ADAA2168202D700295D85;
 			remoteInfo = InAppSettingsKitTests;
+		};
+		6339CDCA18A991A700DA2729 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9672D35713BD662F0002B0E2;
+			remoteInfo = qrencoder;
+		};
+		6339CDCC18A991A700DA2729 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9621844115431DBA00447877;
+			remoteInfo = QRCodeEncoderDemo;
+		};
+		6339CDD418A991C200DA2729 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F6B2082D1450F597009315AF;
+			remoteInfo = SocketRocket;
+		};
+		6339CDD618A991C200DA2729 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F668C880153E91210044DBAC;
+			remoteInfo = SocketRocketOSX;
+		};
+		6339CDD818A991C200DA2729 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F6BDA802145900D200FE3253;
+			remoteInfo = SRWebSocketTests;
+		};
+		6339CDDA18A991C200DA2729 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F62417E314D52F3C003CE997;
+			remoteInfo = TestChat;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -481,6 +461,7 @@
 		631457C816F0E76D00AA8EB9 /* HXOBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOBackend.h; sourceTree = "<group>"; };
 		631457C916F0E76D00AA8EB9 /* HXOBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOBackend.m; sourceTree = "<group>"; };
 		6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjCSRP.xcodeproj; path = ObjCSRP/ObjCSRP.xcodeproj; sourceTree = "<group>"; };
+		631A96F918AB9D82003363F5 /* injectSettingsPane.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = injectSettingsPane.sh; sourceTree = "<group>"; };
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ScaleAndCrop.h"; sourceTree = "<group>"; };
 		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
@@ -548,6 +529,11 @@
 		633462AE174FCA3C008D98FC /* GroupAdminCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupAdminCell.m; sourceTree = "<group>"; };
 		633462B1174FE3E3008D98FC /* group_member_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_member_divider.png; sourceTree = "<group>"; };
 		633462B2174FE3E3008D98FC /* group_member_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_divider@2x.png"; sourceTree = "<group>"; };
+		6339CDE318A998C800DA2729 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		6339CDE518A998C800DA2729 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		6339CDE618A998C800DA2729 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		6339CDE718A998C800DA2729 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		6339CDE818A998C800DA2729 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		633A99991779D23900E066EF /* HXOSideMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOSideMenuViewController.h; sourceTree = "<group>"; };
 		633A999A1779D23900E066EF /* HXOSideMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOSideMenuViewController.m; sourceTree = "<group>"; };
 		633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberInviteViewController.h; sourceTree = "<group>"; };
@@ -637,7 +623,7 @@
 		639094C11739970200DF889B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		639094C6173A871500DF889B /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
 		639094C7173A871500DF889B /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
-		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
+		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		63A7F688172C328D00C0EC26 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
@@ -751,7 +737,7 @@
 		63C1356C1716A4AB00969B0B /* Invite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invite.m; sourceTree = "<group>"; };
 		63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_contact_large.png; sourceTree = "<group>"; };
 		63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_contact_large@2x.png"; sourceTree = "<group>"; };
-		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = 3rdParty/SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
+		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		63C413B816E8FD15004E1F6D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -794,7 +780,7 @@
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
 		E92FAEC2186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data@2x.png"; sourceTree = "<group>"; };
-		E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipArchive.xcodeproj; path = 3rdParty/ZipArchive/ZipArchive/ZipArchive.xcodeproj; sourceTree = "<group>"; };
+		E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipArchive.xcodeproj; path = ZipArchive/ZipArchive/ZipArchive.xcodeproj; sourceTree = "<group>"; };
 		E92FAED61870A0F900D72D79 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
 		E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
@@ -864,7 +850,7 @@
 		E9A41DC717625BA5006E76B2 /* group_member_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_add@2x.png"; sourceTree = "<group>"; };
 		E9A41DC817625BA5006E76B2 /* group_member_remove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_member_remove.png; sourceTree = "<group>"; };
 		E9A41DC917625BA5006E76B2 /* group_member_remove@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_remove@2x.png"; sourceTree = "<group>"; };
-		E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InAppSettingsKit.xcodeproj; path = 3rdParty/InAppSettingsKit/InAppSettingsKit.xcodeproj; sourceTree = "<group>"; };
+		E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InAppSettingsKit.xcodeproj; path = InAppSettingsKit/InAppSettingsKit.xcodeproj; sourceTree = "<group>"; };
 		E9A619DC17DF6E3700D4CFC3 /* CopyableUITextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyableUITextField.h; sourceTree = "<group>"; };
 		E9A619DD17DF6E3700D4CFC3 /* CopyableUITextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CopyableUITextField.m; sourceTree = "<group>"; };
 		E9A85D90184FD1AC00EB9B68 /* chatbar-attachment-icon-contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-contact.png"; sourceTree = "<group>"; };
@@ -903,7 +889,6 @@
 		E9D114861736702E00737EF7 /* GCNetworkRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCNetworkRequest.m; sourceTree = "<group>"; };
 		E9D114871736702E00737EF7 /* GCXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCXMLRequestOperation.h; sourceTree = "<group>"; };
 		E9D114881736702E00737EF7 /* GCXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCXMLRequestOperation.m; sourceTree = "<group>"; };
-		E9D114891736702E00737EF7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		E9D11499173679CC00737EF7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		E9D114A41736E43E00737EF7 /* RNCachingURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNCachingURLProtocol.h; sourceTree = "<group>"; };
 		E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCachingURLProtocol.m; sourceTree = "<group>"; };
@@ -986,10 +971,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */,
+				6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */,
+				6339CDDF18A9940D00DA2729 /* libqrencoder.a in Frameworks */,
+				6339CDDE18A993F600DA2729 /* libInAppSettingsKit.a in Frameworks */,
 				E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */,
-				E92FAED51870960D00D72D79 /* libZipArchive-ios.a in Frameworks */,
 				638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */,
-				E924C958176C8CD6008185E0 /* libInAppSettingsKit.a in Frameworks */,
 				639094C21739970200DF889B /* CoreLocation.framework in Frameworks */,
 				639094C01739842A00DF889B /* MapKit.framework in Frameworks */,
 				E9D1149A173679CC00737EF7 /* SystemConfiguration.framework in Frameworks */,
@@ -1010,14 +997,13 @@
 				63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */,
 				63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */,
 				63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */,
-				63C413B116E8FBA4004E1F6D /* libSocketRocket.a in Frameworks */,
 				63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */,
 				63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */,
 				63AEE2DA16CA4D0200522F92 /* Foundation.framework in Frameworks */,
 				63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */,
 				63AEE2DE16CA4D0200522F92 /* CoreData.framework in Frameworks */,
-				63A7F660172C2E4800C0EC26 /* libqrencoder.a in Frameworks */,
-				63A7F6A8172C418A00C0EC26 /* libzbar.a in Frameworks */,
+				6339CDDC18A9930C00DA2729 /* libzbar.a in Frameworks */,
+				6339CDE918A998C800DA2729 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1043,6 +1029,14 @@
 				6316D692171EEC0A007441D9 /* SRPDemo.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		631A96F818AB9D24003363F5 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				631A96F918AB9D82003363F5 /* injectSettingsPane.sh */,
+			);
+			path = Scripts;
 			sourceTree = "<group>";
 		};
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
@@ -1133,6 +1127,58 @@
 				633462B2174FE3E3008D98FC /* group_member_divider@2x.png */,
 			);
 			path = GroupView;
+			sourceTree = "<group>";
+		};
+		6339CDAF18A9911800DA2729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6339CDB718A9911800DA2729 /* libZipArchive-ios.a */,
+				6339CDB918A9911800DA2729 /* libZipArchive-mac.a */,
+				6339CDBB18A9911800DA2729 /* ZipArchive ios Tests.xctest */,
+				6339CDBD18A9911800DA2729 /* ZipArchive mac Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6339CDBE18A9918500DA2729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6339CDC318A9918500DA2729 /* libInAppSettingsKit.a */,
+				6339CDC518A9918500DA2729 /* InAppSettingsKitTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6339CDC618A991A700DA2729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6339CDCB18A991A700DA2729 /* libqrencoder.a */,
+				6339CDCD18A991A700DA2729 /* QRCodeEncoderDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6339CDCE18A991C200DA2729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6339CDD518A991C200DA2729 /* libSocketRocket.a */,
+				6339CDD718A991C200DA2729 /* SocketRocket.framework */,
+				6339CDD918A991C200DA2729 /* SRWebSocketTests.octest */,
+				6339CDDB18A991C200DA2729 /* TestChat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6339CDE218A998C800DA2729 /* TestFlightSDK2.2.1 */ = {
+			isa = PBXGroup;
+			children = (
+				6339CDE318A998C800DA2729 /* libTestFlight.a */,
+				6339CDE518A998C800DA2729 /* release_notes.md */,
+				6339CDE618A998C800DA2729 /* TestFlight+AsyncLogging.h */,
+				6339CDE718A998C800DA2729 /* TestFlight+ManualSessions.h */,
+				6339CDE818A998C800DA2729 /* TestFlight.h */,
+			);
+			path = TestFlightSDK2.2.1;
 			sourceTree = "<group>";
 		};
 		633A9B18177B21A700E066EF /* Controls */ = {
@@ -1232,8 +1278,7 @@
 				6367C91E1833BE5A005C60B3 /* HPTextViewInternal.h */,
 				6367C91F1833BE5A005C60B3 /* HPTextViewInternal.m */,
 			);
-			name = GrowingTextView;
-			path = 3rdParty/GrowingTextView;
+			path = GrowingTextView;
 			sourceTree = "<group>";
 		};
 		636D40041710724900304EDF /* SettingsConstantsAndEnvironment */ = {
@@ -1334,17 +1379,7 @@
 				E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */,
 				E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */,
 			);
-			name = TDSemiModal;
-			path = 3rdParty/TDSemiModal;
-			sourceTree = "<group>";
-		};
-		63A7F656172C2E3100C0EC26 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				63A7F65B172C2E3100C0EC26 /* libqrencoder.a */,
-				63A7F65D172C2E3100C0EC26 /* QRCodeEncoderDemo.app */,
-			);
-			name = Products;
+			path = TDSemiModal;
 			sourceTree = "<group>";
 		};
 		63A7F68A172C418A00C0EC26 /* ZBarSDK */ = {
@@ -1583,7 +1618,6 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXGroup;
 			children = (
-				E9E92F8D1874E6DD007B8042 /* Server */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -1603,6 +1637,8 @@
 				632502A51866340A00543D80 /* MessageItems.h */,
 				632502A61866340A00543D80 /* MessageItems.m */,
 				63AEE30516CA562F00522F92 /* Models */,
+				631A96F818AB9D24003363F5 /* Scripts */,
+				E9E92F8D1874E6DD007B8042 /* Server */,
 				636D40041710724900304EDF /* SettingsConstantsAndEnvironment */,
 				E99886DB1728135C0089A510 /* SoundEffects */,
 				63AE45521705E18D0099F0CB /* StoryboardsAndNIBs */,
@@ -1658,31 +1694,21 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				6339CDE218A998C800DA2729 /* TestFlightSDK2.2.1 */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
-				E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */,
-				6367C9131833BE11005C60B3 /* GrowingTextView */,
-				63F62E0417799D6B00435F21 /* MFSideMenu */,
-				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
+				6367C9131833BE11005C60B3 /* GrowingTextView */,
+				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
+				63F62E0417799D6B00435F21 /* MFSideMenu */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
 				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */,
 				639094AD1739380E00DF889B /* TDSemiModal */,
 				E9D67C49175C22DC007FE4AA /* UIAlertViewExtentsions */,
 				63A7F68A172C418A00C0EC26 /* ZBarSDK */,
+				E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */,
 			);
-			name = 3rdParty;
-			sourceTree = "<group>";
-		};
-		63C413A316E8FA0C004E1F6D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */,
-				63C413AC16E8FA0C004E1F6D /* SocketRocket.framework */,
-				63C413AE16E8FA0C004E1F6D /* SRWebSocketTests.octest */,
-				63C413B016E8FA0C004E1F6D /* TestChat.app */,
-			);
-			name = Products;
+			path = 3rdParty;
 			sourceTree = "<group>";
 		};
 		63D4916716CAA17D00FD395F /* Views */ = {
@@ -1749,18 +1775,7 @@
 				63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */,
 			);
 			name = MFSideMenu;
-			path = 3rdParty/MFSideMenu/MFSideMenu;
-			sourceTree = "<group>";
-		};
-		E92FAEC618708EF300D72D79 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E92FAECE18708EF400D72D79 /* libZipArchive-ios.a */,
-				E92FAED018708EF400D72D79 /* libZipArchive-mac.a */,
-				E92FAED218708EF400D72D79 /* ZipArchive ios Tests.xctest */,
-				E92FAED418708EF400D72D79 /* ZipArchive mac Tests.xctest */,
-			);
-			name = Products;
+			path = MFSideMenu/MFSideMenu;
 			sourceTree = "<group>";
 		};
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
@@ -1829,15 +1844,6 @@
 			path = Sounds;
 			sourceTree = "<group>";
 		};
-		E9A41DDA1764F45D006E76B2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */,
-				E9A41DE11764F45E006E76B2 /* InAppSettingsKitTests.octest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		E9A85D8F184FD1AC00EB9B68 /* ChatbarAttachments */ = {
 			isa = PBXGroup;
 			children = (
@@ -1876,10 +1882,8 @@
 				E9D114861736702E00737EF7 /* GCNetworkRequest.m */,
 				E9D114871736702E00737EF7 /* GCXMLRequestOperation.h */,
 				E9D114881736702E00737EF7 /* GCXMLRequestOperation.m */,
-				E9D114891736702E00737EF7 /* README.md */,
 			);
-			name = GCNetworkRequest;
-			path = 3rdParty/GCNetworkRequest;
+			path = GCNetworkRequest;
 			sourceTree = "<group>";
 		};
 		E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */ = {
@@ -1888,8 +1892,7 @@
 				E9D114A41736E43E00737EF7 /* RNCachingURLProtocol.h */,
 				E9D114A51736E43E00737EF7 /* RNCachingURLProtocol.m */,
 			);
-			name = RNCachingURLProtocol;
-			path = 3rdParty/RNCachingURLProtocol;
+			path = RNCachingURLProtocol;
 			sourceTree = "<group>";
 		};
 		E9D67C49175C22DC007FE4AA /* UIAlertViewExtentsions */ = {
@@ -1900,8 +1903,7 @@
 				E9D67C4E175C22DE007FE4AA /* UIAlertView+BlockExtensions.h */,
 				E9D67C4F175C22DE007FE4AA /* UIAlertView+BlockExtensions.m */,
 			);
-			name = UIAlertViewExtentsions;
-			path = 3rdParty/UIAlertViewExtentsions;
+			path = UIAlertViewExtentsions;
 			sourceTree = "<group>";
 		};
 		E9E92F2018733B15007B8042 /* CocoaHttpServer */ = {
@@ -1920,7 +1922,7 @@
 				E9E92F2618733B79007B8042 /* CocoaLumberjack */,
 			);
 			name = Vendor;
-			path = 3rdParty/CocoaHTTPServer/Vendor;
+			path = CocoaHTTPServer/Vendor;
 			sourceTree = "<group>";
 		};
 		E9E92F2218733B79007B8042 /* CocoaAsyncSocket */ = {
@@ -1982,7 +1984,7 @@
 				E9E92F6A18733D01007B8042 /* WebSocket.m */,
 			);
 			name = Core;
-			path = 3rdParty/CocoaHTTPServer/Core;
+			path = CocoaHTTPServer/Core;
 			sourceTree = "<group>";
 		};
 		E9E92F4418733D01007B8042 /* Categories */ = {
@@ -2055,13 +2057,11 @@
 				6330492317019ED60045E64E /* Increment Build Number */,
 				633049241701A02B0045E64E /* Increment Patch Level When Archiving */,
 				63AEE2D216CA4D0200522F92 /* Resources */,
+				631A96FA18AB9E84003363F5 /* Inject Debug Settings Pane */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E96DC1D9176C90AE00BDDF4E /* PBXTargetDependency */,
-				63A7F65F172C2E3F00C0EC26 /* PBXTargetDependency */,
-				63C413B316E8FBB0004E1F6D /* PBXTargetDependency */,
 			);
 			name = HoccerXO;
 			productName = Hoccenger;
@@ -2095,7 +2095,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = E9A41DDA1764F45D006E76B2 /* Products */;
+					ProductGroup = 6339CDBE18A9918500DA2729 /* Products */;
 					ProjectRef = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
 				},
 				{
@@ -2103,15 +2103,15 @@
 					ProjectRef = 6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */;
 				},
 				{
-					ProductGroup = 63A7F656172C2E3100C0EC26 /* Products */;
+					ProductGroup = 6339CDC618A991A700DA2729 /* Products */;
 					ProjectRef = 63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
 				},
 				{
-					ProductGroup = 63C413A316E8FA0C004E1F6D /* Products */;
+					ProductGroup = 6339CDCE18A991C200DA2729 /* Products */;
 					ProjectRef = 63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */;
 				},
 				{
-					ProductGroup = E92FAEC618708EF300D72D79 /* Products */;
+					ProductGroup = 6339CDAF18A9911800DA2729 /* Products */;
 					ProjectRef = E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */;
 				},
 			);
@@ -2144,88 +2144,88 @@
 			remoteRef = 6316D691171EEC0A007441D9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		63A7F65B172C2E3100C0EC26 /* libqrencoder.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libqrencoder.a;
-			remoteRef = 63A7F65A172C2E3100C0EC26 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		63A7F65D172C2E3100C0EC26 /* QRCodeEncoderDemo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = QRCodeEncoderDemo.app;
-			remoteRef = 63A7F65C172C2E3100C0EC26 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		63C413AA16E8FA0C004E1F6D /* libSocketRocket.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSocketRocket.a;
-			remoteRef = 63C413A916E8FA0C004E1F6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		63C413AC16E8FA0C004E1F6D /* SocketRocket.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SocketRocket.framework;
-			remoteRef = 63C413AB16E8FA0C004E1F6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		63C413AE16E8FA0C004E1F6D /* SRWebSocketTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = SRWebSocketTests.octest;
-			remoteRef = 63C413AD16E8FA0C004E1F6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		63C413B016E8FA0C004E1F6D /* TestChat.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = TestChat.app;
-			remoteRef = 63C413AF16E8FA0C004E1F6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		E92FAECE18708EF400D72D79 /* libZipArchive-ios.a */ = {
+		6339CDB718A9911800DA2729 /* libZipArchive-ios.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libZipArchive-ios.a";
-			remoteRef = E92FAECD18708EF400D72D79 /* PBXContainerItemProxy */;
+			remoteRef = 6339CDB618A9911800DA2729 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E92FAED018708EF400D72D79 /* libZipArchive-mac.a */ = {
+		6339CDB918A9911800DA2729 /* libZipArchive-mac.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libZipArchive-mac.a";
-			remoteRef = E92FAECF18708EF400D72D79 /* PBXContainerItemProxy */;
+			remoteRef = 6339CDB818A9911800DA2729 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E92FAED218708EF400D72D79 /* ZipArchive ios Tests.xctest */ = {
+		6339CDBB18A9911800DA2729 /* ZipArchive ios Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "ZipArchive ios Tests.xctest";
-			remoteRef = E92FAED118708EF400D72D79 /* PBXContainerItemProxy */;
+			remoteRef = 6339CDBA18A9911800DA2729 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E92FAED418708EF400D72D79 /* ZipArchive mac Tests.xctest */ = {
+		6339CDBD18A9911800DA2729 /* ZipArchive mac Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "ZipArchive mac Tests.xctest";
-			remoteRef = E92FAED318708EF400D72D79 /* PBXContainerItemProxy */;
+			remoteRef = 6339CDBC18A9911800DA2729 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E9A41DDF1764F45E006E76B2 /* libInAppSettingsKit.a */ = {
+		6339CDC318A9918500DA2729 /* libInAppSettingsKit.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libInAppSettingsKit.a;
-			remoteRef = E9A41DDE1764F45E006E76B2 /* PBXContainerItemProxy */;
+			remoteRef = 6339CDC218A9918500DA2729 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E9A41DE11764F45E006E76B2 /* InAppSettingsKitTests.octest */ = {
+		6339CDC518A9918500DA2729 /* InAppSettingsKitTests.octest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = InAppSettingsKitTests.octest;
-			remoteRef = E9A41DE01764F45E006E76B2 /* PBXContainerItemProxy */;
+			remoteRef = 6339CDC418A9918500DA2729 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6339CDCB18A991A700DA2729 /* libqrencoder.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libqrencoder.a;
+			remoteRef = 6339CDCA18A991A700DA2729 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6339CDCD18A991A700DA2729 /* QRCodeEncoderDemo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = QRCodeEncoderDemo.app;
+			remoteRef = 6339CDCC18A991A700DA2729 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6339CDD518A991C200DA2729 /* libSocketRocket.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSocketRocket.a;
+			remoteRef = 6339CDD418A991C200DA2729 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6339CDD718A991C200DA2729 /* SocketRocket.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SocketRocket.framework;
+			remoteRef = 6339CDD618A991C200DA2729 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6339CDD918A991C200DA2729 /* SRWebSocketTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SRWebSocketTests.octest;
+			remoteRef = 6339CDD818A991C200DA2729 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6339CDDB18A991C200DA2729 /* TestChat.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = TestChat.app;
+			remoteRef = 6339CDDA18A991C200DA2729 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2344,7 +2344,6 @@
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
-				E9D114911736702E00737EF7 /* README.md in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
 				5048263E174796F10048538A /* navigation_button_groups@2x.png in Resources */,
@@ -2378,6 +2377,7 @@
 				6AE9768917BB880400D60E7C /* icon_profile-delete.png in Resources */,
 				6AE9768A17BB880400D60E7C /* icon_profile-delete@2x.png in Resources */,
 				6AE9768B17BB880400D60E7C /* icon_profile-block.png in Resources */,
+				6339CDEB18A998C800DA2729 /* release_notes.md in Resources */,
 				6AE9768C17BB880400D60E7C /* icon_profile-block@2x.png in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
 				6AE9768D17BB880400D60E7C /* icon_profile-chat@2x.png in Resources */,
@@ -2392,6 +2392,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		631A96FA18AB9E84003363F5 /* Inject Debug Settings Pane */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Settings.bundle/Root.plist",
+			);
+			name = "Inject Debug Settings Pane";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n  $SRCROOT/HoccerXO/Scripts/injectSettingsPane.sh \"$SCRIPT_INPUT_FILE_0\"\nfi";
+		};
 		6330492317019ED60045E64E /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2578,24 +2593,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		63A7F65F172C2E3F00C0EC26 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = qrencoder;
-			targetProxy = 63A7F65E172C2E3F00C0EC26 /* PBXContainerItemProxy */;
-		};
-		63C413B316E8FBB0004E1F6D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SocketRocket;
-			targetProxy = 63C413B216E8FBB0004E1F6D /* PBXContainerItemProxy */;
-		};
-		E96DC1D9176C90AE00BDDF4E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = InAppSettingsKit;
-			targetProxy = E96DC1D8176C90AE00BDDF4E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		63AE45581705EE770099F0CB /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -2696,7 +2693,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/ZBarSDK\"",
+					"$(SRCROOT)/3rdParty/ZBarSDK/",
+					"$(SRCROOT)/3rdParty/TestFlightSDK2.2.1",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -2729,7 +2727,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/ZBarSDK\"",
+					"$(SRCROOT)/3rdParty/ZBarSDK/",
+					"$(SRCROOT)/3rdParty/TestFlightSDK2.2.1",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -2738,7 +2737,6 @@
 				);
 				PRODUCT_NAME = "Hoccer XO";
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";

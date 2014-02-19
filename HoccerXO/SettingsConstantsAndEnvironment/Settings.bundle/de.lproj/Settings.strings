@@ -1,4 +1,4 @@
-﻿/* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
+/* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
 
 "Sound" = "Töne";
 "Message Sound" = "Benachrichtigungston";
@@ -53,3 +53,20 @@
 "Security"="Sicherheit";
 "RSA Key Size"="RSA Schlüssellänge";
 "Manual Key Mgmt."="Schlüssel manuell";
+
+"report_crashes" = "Abstürze melden";
+
+
+"support_mode" = "Support Mode";
+"support_mode_explanation" = "Unser Team kann dich bitten den Support Mode zu aktivieren wenn du dich mit einem Problem an uns gewendet hast.";
+
+
+/* Debug Settings */
+
+"Debug" = "Debug Einstellungen";
+
+"Server" = "Server";
+
+"server_changed_instructions" =  "Nach dem Wechsel auf einen anderen Server gehe auf die Profilseite, drücke 'Bearbeiten', scrolle nach unten und lösche deine Zugangsdaten. Dabei verlierst du alle Daten auf dem Client. Wenn sich nur die IP Adresse des Servers geändert hat reicht es die App kurz in den Hintergrund zu schieben um einen Neuaufbau der Verbindung auszulösen.";
+
+"allow_untrusted_certificates" = "Allen Zertifikaten vertrauen";

@@ -554,41 +554,24 @@ static NSTimer * _stateNotificationDelayTimer;
     Group * group = nil;
     if (groupId != nil) {
         group = [self getGroupById:groupId];
-    };
+    }
 
+    // Abort messages from unknown sender. This happens if someone becomes a member of a group,
+    // sends some messages and leaves the group again while this client is offline.
+    // There is a small possibilty of message loss, though. It happens if a message by some client
+    // to a group arrives before the membership is known to this client.
     if (sender == nil || (groupId != nil && group == nil)) {
-        BOOL doReceive = NO;
         NSLog(@"Strange message:");
         if (sender == nil) {
             NSLog(@"from unknown sender with id %@", senderId);
         } else {
             NSLog(@"from known sender with name %@ relation %@", sender.nickName, sender.relationshipState);
         }
-        
-        if (groupId != nil && group == nil) {
-            NSLog(@"with unknown group id %@", groupId);
-        } else if (group != nil) {
-            NSLog(@"from known group name %@ state %@", group.nickName, group.groupState);
-            Contact * contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-            contact.type = [Contact entityName];
-            contact.clientId = senderId;
-            contact.nickName = [senderId substringWithRange: NSMakeRange( 0, 8)];
-            NSDictionary * myFakeRelationship = @{@"clientId":[UserProfile sharedProfile].clientId,
-                                                  @"otherClientId":senderId,
-                                                  @"state":@"none",
-                                                  @"lastChanged":@(0)};
-            [self updateRelationship:myFakeRelationship];
-            Contact * sender = [self getContactByClientId:senderId];
-            if (sender != 0) {
-                doReceive = YES;
-                NSLog(@"created unknown sender with name %@",sender.nickName);
-            }
-        }
-        if (!doReceive) {
-            [self.delegate.managedObjectContext deleteObject: message];
-            [self.delegate.managedObjectContext deleteObject: delivery];
-            return;
-        }
+
+        [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
+        [self.delegate.managedObjectContext deleteObject: message];
+        [self.delegate.managedObjectContext deleteObject: delivery];
+        return;
     }
     Contact * contact = nil;
     if (group != nil) {
@@ -880,6 +863,12 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (NSURLRequest*) urlRequest {
     NSURL * url = [NSURL URLWithString: [[Environment sharedEnvironment] talkServer]];
+#ifdef DEBUG
+    NSString * debugServerURL = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXODebugServerURL];
+    if (debugServerURL && ! [debugServerURL isEqualToString: @""]) {
+        url = [NSURL URLWithString: debugServerURL];
+    }
+#endif
     NSLog(@"using server: %@", [url absoluteString]);
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL: url];
     NSArray * certificates = [self certificates];
@@ -1189,6 +1178,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
+/* never called. dead code? [DS]
 // delete all group member contacts that are not friends or contacts in other group
 - (void)deleteContactIfNotInAGroup:(Contact*) contact {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
@@ -1200,7 +1190,8 @@ static NSTimer * _stateNotificationDelayTimer;
         [moc deleteObject: contact];
     }
 }
-
+*/
+ 
 - (void) handleDeletionOfContact:(Contact*)contact {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     if (contact.messages.count == 0 && contact.groupMemberships.count == 0) {
@@ -2328,6 +2319,7 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
+# if 0
 // void updateGroupMember(TalkGroupMember member);
 - (void) updateGroupMember:(GroupMembership *) member  {
     NSDictionary * myGroupMemberDict = [self dictOfGroupMember:member];
@@ -2341,6 +2333,7 @@ static NSTimer * _stateNotificationDelayTimer;
          }
      }];    
 }
+#endif
 
 
 #pragma mark - Attachment upload and download
@@ -2783,14 +2776,15 @@ static NSTimer * _stateNotificationDelayTimer;
     // NSLog(@"hello: %@", clientTime);
 #ifdef FULL_HELLO
     NSDictionary * initParams = @{
-                             @"clientTime" : clientTime,
+                             @"clientTime"     : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
-                             @"deviceModel" : [UIDevice currentDevice].model,
-                             @"systemName" : [UIDevice currentDevice].systemName,
-                             @"systemVersion" : [UIDevice currentDevice].systemVersion,
-                             @"clientName" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-                             @"clientVersion" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
-                             @"clientLanguage" : NSLocalizedString(@"language_code", nil)
+                             @"deviceModel"    : [UIDevice currentDevice].model,
+                             @"systemName"     : [UIDevice currentDevice].systemName,
+                             @"systemVersion"  : [UIDevice currentDevice].systemVersion,
+                             @"clientName"     : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                             @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
+                             @"clientLanguage" : NSLocalizedString(@"language_code", nil),
+                             @"supportTag"     : [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportMode]
                              };
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:initParams];
     if (hasCrashed) {
@@ -3890,7 +3884,8 @@ static NSTimer * _stateNotificationDelayTimer;
 
 + (BOOL) allowUntrustedServerCertificate {
 #ifdef DEBUG
-    return ![[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"];
+    //return ![[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"];
+    return [[[HXOUserDefaults standardUserDefaults] valueForKey: kHXODebugAllowUntrustedCertificates] boolValue];
 #else
     return NO;
 #endif

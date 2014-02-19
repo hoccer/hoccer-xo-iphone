@@ -1,4 +1,4 @@
-﻿
+
 "Sound" = "Sound";
 "Message Sound" = "New Message Sound";
 "Effect Sounds" = "Other Effect Sounds";
@@ -52,3 +52,19 @@
 "Security"="Security";
 "RSA Key Size"="RSA Key Size";
 "Manual Key Mgmt."="Manage keys manually";
+
+"report_crashes" = "Report Crashes";
+
+
+"support_mode" = "Support Mode";
+"support_mode_explanation" = "Our support team may ask you to switch on support mode to help with resolving issues you reported.";
+
+/* Debug Settings */
+
+"Debug" = "Debug Settings";
+
+"Server" = "Server";
+
+"server_changed_instructions" = "When switching to new server instance go to the profile page, press 'Edit', scroll to the bottom and delete your credentials. You'll loose all client data. If the server just changed its IP address put the app in the background for a second to trigger a reconnect.";
+
+"allow_untrusted_certificates" = "Trust any certificate";

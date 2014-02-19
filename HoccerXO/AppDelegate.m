@@ -25,6 +25,7 @@
 #import "MFSideMenu.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
+#import "TestFlight.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -247,7 +248,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
  
-    // [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+    if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
+        [TestFlight takeOff:@"26645843-f312-456c-8954-444e435d4ad2"];
+    } else {
+        NSLog(@"TestFlight crash reporting is disabled");
+    }
 
     if ([self persistentStoreCoordinator] == nil) {
         return NO;

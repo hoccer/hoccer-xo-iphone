@@ -40,5 +40,9 @@
 	<integer>250</integer>
 	<key>photoCompressionQuality</key>
 	<integer>0</integer>
+	<key>supportMode</key>
+	<string></string>
+	<key>reportCrashes</key>
+	<false/>
 </dict>
 </plist>

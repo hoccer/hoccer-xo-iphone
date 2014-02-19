@@ -742,16 +742,18 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 UIImage * myImage = myOriginalImage;
                 NSURL * myFileURL = nil;
                 
-                // create a lower quality image to attach dependend on quality settings
-                if ([Attachment tooLargeImage:myImage]) {
+                // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
+                //if ([Attachment tooLargeImage:myImage]) {
                     myImage = [Attachment qualityAdjustedImage:myOriginalImage];
                     NSString * newFileName = @"reducedSnapshotImage.jpg";
                     myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
                     
                     float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
                     [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
-                }
-                
+                //} else {
+                //  TODO: save a local copy of the image without JPEG reencoding
+                //}
+
                 // funky method using ALAssetsLibrary
                 ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
                     if (!error) {
@@ -784,14 +786,17 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             } else {
                 // image from album
                 UIImage * myImage = attachmentInfo[UIImagePickerControllerOriginalImage];
-                if ([Attachment tooLargeImage:myImage]) {
+                // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
+                //if ([Attachment tooLargeImage:myImage]) {
                     myImage = [Attachment qualityAdjustedImage:myImage];
                     NSString * newFileName = @"reducedSnapshotImage.jpg";
                     myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
                     
                     float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
                     [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
-                }
+                //} else {
+                //  TODO: save a local copy of the image without JPEG reencoding
+                //}
                 [self.currentAttachment makeImageAttachment: [myURL absoluteString]
                                                  anOtherURL:nil
                                                       image: myImage
@@ -1912,7 +1917,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) presentViewForAttachment:(Attachment *) myAttachment {
     if ([myAttachment.mediaType isEqual: @"data"]
         || [myAttachment.mediaType isEqual: @"video"]
-        || [myAttachment.mediaType isEqual: @"image"]
+        // guard against old DB entries triggering https://github.com/hoccer/hoccer-xo-iphone/issues/211
+        || ([myAttachment.mediaType isEqual: @"image"] && myAttachment.localURL != nil)
         //|| [myAttachment.mediaType isEqual: @"audio"]
         )
     {
@@ -1945,6 +1951,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
+        // used with old DB entries preventing https://github.com/hoccer/hoccer-xo-iphone/issues/211
         [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
             // NSLog(@"attachment view loadimage done");
             if (theImage != nil) {
@@ -2038,7 +2045,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         NSURL * myURL = [attachment contentURL];
         NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
         NSString * name = attachment.humanReadableFileName;
-        NSLog(@"openWithInteractionController: uti=%@, name = %@", uti, name);
+        NSLog(@"openWithInteractionController: uti=%@, name = %@ url = %@", uti, name, myURL);
         self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
         self.interactionController.delegate = self;
         self.interactionController.UTI = uti;
