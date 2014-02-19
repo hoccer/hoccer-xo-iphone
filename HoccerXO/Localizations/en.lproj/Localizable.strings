@@ -161,31 +161,7 @@
 
 "profile_name_placeholder" = "Your Name";
 
-"profile_phone_label" = "Phone";
-
-"profile_phone_placeholder" = "Phone Number";
-
-"profile_mail_label" = "Mail";
-
-"profile_mail_placeholder" = "Mail Address";
-
 "profile_delete_avatar_button_title" = "Delete Avatar";
-
-"profile_twitter_label" = "Twitter";
-
-"profile_twitter_placeholder" = "@twitter";
-
-"profile_facebook_label" = "Facebook";
-
-"profile_facebook_placeholder" = "@facebook";
-
-"profile_google_plus_label" = "Google+";
-
-"profile_google_plus_placeholder" = "@google+";
-
-"profile_github_label" = "GitHub";
-
-"profile_github_placeholder" = "@github";
 
 "profile_renew_keypair" = "Renew RSA Keypair";
 

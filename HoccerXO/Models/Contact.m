@@ -39,13 +39,6 @@
 @dynamic connectionStatus;
 @dynamic presenceLastUpdated;
 
-@dynamic phoneNumber;
-@dynamic mailAddress;
-@dynamic twitterName;
-@dynamic facebookName;
-@dynamic googlePlusName;
-@dynamic githubName;
-
 @dynamic messages;
 @dynamic groupMemberships;
 @dynamic nickNameWithStatus;

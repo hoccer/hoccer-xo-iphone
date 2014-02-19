@@ -21,12 +21,6 @@ NSString * const kHXOAvatarURL             = @"avatarURL";
 NSString * const kHXOAvatarUploadURL       = @"avatarUploadURL";
 NSString * const kHXONickName              = @"nickName";
 NSString * const kHXOUserStatus            = @"userStatus";
-NSString * const kHXOPhoneNumber           = @"phoneNumber";
-NSString * const kHXOMailAddress           = @"mailAddress";
-NSString * const kHXOTwitterName           = @"twitterName";
-NSString * const kHXOFacebookName          = @"facebookName";
-NSString * const kHXOGooglePlusName        = @"googlePlusName";
-NSString * const kHXOGithubName            = @"githubName";
 
 NSString * const kHXODefaultScreenShooting = @"defaultScreenShooting";
 NSString * const kHXOAutoDownloadLimitWLAN     = @"autoDownloadLimitWLAN";

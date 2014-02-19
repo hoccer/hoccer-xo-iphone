@@ -764,6 +764,7 @@
 		63F62E0517799D6B00435F21 /* MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenu.h; sourceTree = "<group>"; };
 		63F62E0617799D6B00435F21 /* MFSideMenuContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenuContainerViewController.h; sourceTree = "<group>"; };
 		63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSideMenuContainerViewController.m; sourceTree = "<group>"; };
+		63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO- 25.xcdatamodel"; sourceTree = "<group>"; };
 		6A6D94F117B2913F00E8833E /* icon_profile-fingerprint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-fingerprint.png"; sourceTree = "<group>"; };
 		6A6D94F217B2913F00E8833E /* icon_profile-fingerprint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-fingerprint@2x.png"; sourceTree = "<group>"; };
 		6AA19EB21750057C00B4807A /* icon_profile-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-group.png"; sourceTree = "<group>"; };
@@ -2779,8 +2780,9 @@
 				E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */,
 				E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */,
 				E9E92F1218711A62007B8042 /* HoccerXO-24.xcdatamodel */,
+				63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */,
 			);
-			currentVersion = E9E92F1218711A62007B8042 /* HoccerXO-24.xcdatamodel */;
+			currentVersion = 63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
