@@ -76,19 +76,10 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 }
 
 - (void) setupLabelAndIcon {
-    self.textLabel.shadowColor = [UIColor whiteColor];
-    self.textLabel.shadowOffset = CGSizeMake(0, 1);
-    self.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];
+    self.textLabel.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
     self.textLabel.backgroundColor = [UIColor clearColor];
 
     self.imageView.contentMode = UIViewContentModeCenter;
-}
-
-+ (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount{
-}
-
-- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
-    [UserDefaultsCell configureGroupedCell: self forPosition: position inSectionWithCellCount: cellCount];
 }
 
 - (void) configure: (id) item {

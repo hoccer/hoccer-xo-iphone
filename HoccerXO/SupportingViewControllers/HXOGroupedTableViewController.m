@@ -31,8 +31,6 @@
     [super viewDidLoad];
     [self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
     _prototypes[(id)[UserDefaultsCell class]] = [[UserDefaultsCell alloc] init];
-    self.tableView.backgroundColor = [UIColor whiteColor];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
 
@@ -47,7 +45,6 @@
 - (UserDefaultsCell*) dequeueReusableCellOfClass:(id)cellClass forIndexPath:(NSIndexPath *)indexPath {
     [self registerNibForCellClass: cellClass];
     UserDefaultsCell * cell = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier] forIndexPath: indexPath];
-    [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
     return cell;
 }
 

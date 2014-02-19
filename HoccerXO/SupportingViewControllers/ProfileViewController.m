@@ -509,10 +509,6 @@ typedef enum ActionSheetTags {
     return NO;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 22;
-}
-
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     id<ProfileItemInfo> item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [AvatarItem class]]) {
@@ -547,10 +543,6 @@ typedef enum ActionSheetTags {
 
     [_profileDataSource updateModel: [self composeModel: editing]];
     
-    for (UserDefaultsCell* cell in [self.tableView visibleCells]) {
-        NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
-        [cell configureBackgroundViewForPosition: indexPath.row inSectionWithCellCount: [self.tableView numberOfRowsInSection: indexPath.section]];
-    }
     [self validateItems];
 
     if (editing) {
