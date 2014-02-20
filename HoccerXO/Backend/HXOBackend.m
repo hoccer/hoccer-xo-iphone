@@ -39,6 +39,8 @@
 #import "GCNetworkQueue.h"
 #import "NSMutableArray+QueueAdditions.h"
 
+#import <sys/utsname.h>
+
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
@@ -667,8 +669,8 @@ static NSTimer * _stateNotificationDelayTimer;
         [self updateRelationships];
         [self updatePresences];
         [self flushPendingInvites];
-        [self updatePresenceWithHandler:^(BOOL ok) {
-            [self updateKeyWithHandler:^(BOOL ok) {
+        [self updateKeyWithHandler:^(BOOL ok) {
+            [self updatePresenceWithHandler:^(BOOL ok) {
                 [self getGroupsForceAll:NO];
                 [self flushPendingMessages];
                 [self flushPendingFiletransfers];
@@ -1634,6 +1636,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // void deleteGroup(String groupId);
 - (void) deleteGroup:(Group *) group onDeletion:(GroupHandler)handler {
+    if (group.clientId == nil) {
+        NSLog(@"deleteGroup: group.clientId is nil");
+        handler(nil);
+        return;
+    }
     [_serverConnection invoke: @"deleteGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             if (GROUP_DEBUG) NSLog(@"deleteGroup() ok: got result: %@", responseOrError);
@@ -1647,6 +1654,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // void joinGroup(String groupId);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler {
+    if (group.clientId == nil) {
+        NSLog(@"joinGroup: group.clientId is nil");
+        handler(nil);
+        return;
+    }
     [_serverConnection invoke: @"joinGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             if (GROUP_DEBUG) NSLog(@"joinGroup() ok: got result: %@", responseOrError);
@@ -1660,6 +1672,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // void leaveGroup(String groupId);
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler {
+    if (group.clientId == nil) {
+        NSLog(@"leaveGroup: group.clientId is nil");
+        handler(nil);
+        return;
+    }
     [_serverConnection invoke: @"leaveGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             if (GROUP_DEBUG) NSLog(@"leaveGroup() ok: got result: %@", responseOrError);
@@ -2775,10 +2792,15 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed updateFlag:(BOOL)hasUpdated unclean:(BOOL)uncleanShutdown handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
 #ifdef FULL_HELLO
+    
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+
     NSDictionary * initParams = @{
                              @"clientTime"     : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
-                             @"deviceModel"    : [UIDevice currentDevice].model,
+                             @"deviceModel"    : machineName,
                              @"systemName"     : [UIDevice currentDevice].systemName,
                              @"systemVersion"  : [UIDevice currentDevice].systemVersion,
                              @"clientName"     : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
@@ -3079,9 +3101,9 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
     if (_state == kBackendReady) {
         [self uploadAvatarIfNeeded];
-        [self updatePresenceWithHandler:^(BOOL ok) {
+        [self updateKeyWithHandler:^(BOOL ok) {
             if (ok) {
-                [self updateKeyWithHandler:^(BOOL ok) {
+                [self updatePresenceWithHandler:^(BOOL ok) {
                     if (ok) {
                         [self updateGroupKeysForMyGroupMemberships];
                     }
