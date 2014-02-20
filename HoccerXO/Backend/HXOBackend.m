@@ -1636,6 +1636,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // void deleteGroup(String groupId);
 - (void) deleteGroup:(Group *) group onDeletion:(GroupHandler)handler {
+    if (group.clientId == nil) {
+        NSLog(@"deleteGroup: group.clientId is nil");
+        handler(nil);
+        return;
+    }
     [_serverConnection invoke: @"deleteGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             if (GROUP_DEBUG) NSLog(@"deleteGroup() ok: got result: %@", responseOrError);
@@ -1649,6 +1654,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // void joinGroup(String groupId);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler {
+    if (group.clientId == nil) {
+        NSLog(@"joinGroup: group.clientId is nil");
+        handler(nil);
+        return;
+    }
     [_serverConnection invoke: @"joinGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             if (GROUP_DEBUG) NSLog(@"joinGroup() ok: got result: %@", responseOrError);
@@ -1662,6 +1672,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // void leaveGroup(String groupId);
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler {
+    if (group.clientId == nil) {
+        NSLog(@"leaveGroup: group.clientId is nil");
+        handler(nil);
+        return;
+    }
     [_serverConnection invoke: @"leaveGroup" withParams: @[group.clientId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             if (GROUP_DEBUG) NSLog(@"leaveGroup() ok: got result: %@", responseOrError);
