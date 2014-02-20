@@ -669,8 +669,8 @@ static NSTimer * _stateNotificationDelayTimer;
         [self updateRelationships];
         [self updatePresences];
         [self flushPendingInvites];
-        [self updatePresenceWithHandler:^(BOOL ok) {
-            [self updateKeyWithHandler:^(BOOL ok) {
+        [self updateKeyWithHandler:^(BOOL ok) {
+            [self updatePresenceWithHandler:^(BOOL ok) {
                 [self getGroupsForceAll:NO];
                 [self flushPendingMessages];
                 [self flushPendingFiletransfers];
@@ -3101,9 +3101,9 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
     if (_state == kBackendReady) {
         [self uploadAvatarIfNeeded];
-        [self updatePresenceWithHandler:^(BOOL ok) {
+        [self updateKeyWithHandler:^(BOOL ok) {
             if (ok) {
-                [self updateKeyWithHandler:^(BOOL ok) {
+                [self updatePresenceWithHandler:^(BOOL ok) {
                     if (ok) {
                         [self updateGroupKeysForMyGroupMemberships];
                     }
