@@ -248,7 +248,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
  
-    [TestFlight takeOff:@"26645843-f312-456c-8954-444e435d4ad2"];
+    if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
+        [TestFlight takeOff:@"26645843-f312-456c-8954-444e435d4ad2"];
+    } else {
+        NSLog(@"TestFlight crash reporting is disabled");
+    }
 
     if ([self persistentStoreCoordinator] == nil) {
         return NO;
