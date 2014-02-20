@@ -39,6 +39,8 @@
 #import "GCNetworkQueue.h"
 #import "NSMutableArray+QueueAdditions.h"
 
+#import <sys/utsname.h>
+
 #define DELIVERY_TRACE NO
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
@@ -2786,10 +2788,16 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) hello:(NSNumber*) clientTime  crashFlag:(BOOL)hasCrashed updateFlag:(BOOL)hasUpdated unclean:(BOOL)uncleanShutdown handler:(HelloHandler) handler {
     // NSLog(@"hello: %@", clientTime);
 #ifdef FULL_HELLO
+    
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+
     NSDictionary * initParams = @{
                              @"clientTime" : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
-                             @"deviceModel" : [UIDevice currentDevice].model,
+                             //@"deviceModel" : [UIDevice currentDevice].model,
+                             @"deviceModel" : machineName,
                              @"systemName" : [UIDevice currentDevice].systemName,
                              @"systemVersion" : [UIDevice currentDevice].systemVersion,
                              @"clientName" : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
