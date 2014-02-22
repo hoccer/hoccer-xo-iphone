@@ -64,7 +64,8 @@ typedef enum ActionSheetTags {
 
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 
-@property (nonatomic,strong) UIImageView * avatarView;
+@property (nonatomic,strong) ProfileAvatarView * avatarView;
+@property (nonatomic,strong) UIImageView * avatarBackgroundView;
 
 
 @end
@@ -88,13 +89,15 @@ typedef enum ActionSheetTags {
 
 - (void) awakeFromNib {
     CGRect frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.width * (10.0/16));
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame: frame];
-    self.avatarView = [[UIImageView alloc] initWithFrame: frame];
+    self.avatarView = [[ProfileAvatarView alloc] initWithFrame: frame];
+    self.tableView.tableHeaderView = self.avatarView;
+    self.avatarBackgroundView = [[UIImageView alloc] initWithFrame: frame];
     //self.avatarView.layer.borderColor = [UIColor blackColor].CGColor;
     //self.avatarView.layer.borderWidth = 10;
-    self.avatarView.contentMode = UIViewContentModeScaleAspectFill;
-    [self.tableView addSubview: self.avatarView];
-    [self.tableView sendSubviewToBack:self.avatarView];
+    self.avatarBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
+    self.avatarBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.tableView addSubview: self.avatarBackgroundView];
+    [self.tableView sendSubviewToBack:self.avatarBackgroundView];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -102,8 +105,8 @@ typedef enum ActionSheetTags {
     CGFloat y =  scrollView.contentOffset.y + self.navigationController.navigationBar.frame.size.height + MIN(statusBarSize.width, statusBarSize.height);
     if (y  < 0) {
         CGSize restingSize = CGSizeMake(self.tableView.frame.size.width, 320 * (10.0/16));
-        self.avatarView.frame = CGRectMake(0, y, restingSize.width - y, restingSize.height - y);
-        self.avatarView.center = CGPointMake(self.view.center.x, self.avatarView.center.y);
+        self.avatarBackgroundView.frame = CGRectMake(0, y, restingSize.width - y, restingSize.height - y);
+        self.avatarBackgroundView.center = CGPointMake(self.view.center.x, self.avatarBackgroundView.center.y);
     }
 }
 
@@ -201,7 +204,9 @@ typedef enum ActionSheetTags {
 - (void) populateValues {
     id modelObject = [self getModelObject];
     _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
-    self.avatarView.image = [[modelObject valueForKey: _avatarItem.valueKey] applyLightEffect];
+    UIImage * avatar = [modelObject valueForKey: _avatarItem.valueKey];
+    self.avatarView.image = avatar;
+    self.avatarBackgroundView.image = [avatar applyLightEffect];
 
     _blockContactItem.valueFormat = [self blockFormatForRelationshipState: _contact.relationshipState];
     _blockContactItem.currentValue = [modelObject nickName];
@@ -1002,7 +1007,8 @@ typedef enum ActionSheetTags {
 
 - (void) updateAvatar: (UIImage*) image {
     _avatarItem.currentValue = image;
-    self.avatarView.image = [image applyLightEffect];
+    self.avatarView.image = image;
+    self.avatarBackgroundView.image = [image applyLightEffect];
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
     UserDefaultsCellAvatarPicker * cell = (UserDefaultsCellAvatarPicker*)[self.tableView cellForRowAtIndexPath: indexPath];
     [self.tableView beginUpdates];
