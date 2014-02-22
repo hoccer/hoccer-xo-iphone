@@ -26,7 +26,7 @@ extern CGFloat kHXOGridSpacing;
         self.opaque = NO;
         self.avatarLayer = [CALayer layer];
 
-        CGFloat size = frame.size.height - 8 * kHXOGridSpacing;
+        CGFloat size = frame.size.height - 7 * kHXOGridSpacing;
         self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
         self.avatarLayer.position = self.center;
 

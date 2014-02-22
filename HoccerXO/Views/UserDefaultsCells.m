@@ -11,9 +11,6 @@
 
 static const CGFloat kEditAnimationDuration = 0.5;
 
-static const CGFloat kHXOCellIconSize = 32.0;
-static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
-
 extern CGFloat kHXOGridSpacing;
 
 @implementation ProfileItem
@@ -66,25 +63,22 @@ extern CGFloat kHXOGridSpacing;
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
     if (self != nil) {
-        CGFloat h = 3 * kHXOGridSpacing;
-        self.label = [[UILabel alloc] initWithFrame:CGRectMake(12, 0.5 * (self.contentView.frame.size.height - h) , self.contentView.frame.size.width, h)];
+        CGFloat height = 3 * kHXOGridSpacing;
+        CGFloat padding = 2 * kHXOGridSpacing;
+        self.label = [[UILabel alloc] initWithFrame: CGRectMake(padding, padding, self.contentView.frame.size.width, height)];
+        self.label.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
+        self.label.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview: self.label];
-        [self setupLabelAndIcon];
     }
     return self;
 }
 
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    [self setupLabelAndIcon];
+- (CGSize) sizeThatFits:(CGSize)size {
+    size = [self.label sizeThatFits: CGSizeMake(size.width,0)];
+    size.height += 4 * kHXOGridSpacing;
+    return size;
 }
 
-- (void) setupLabelAndIcon {
-    self.label.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
-    self.label.backgroundColor = [UIColor clearColor];
-
-    //self.imageView.contentMode = UIViewContentModeCenter;
-}
 
 - (void) configure: (id) item {
     self.valueFormat = [item valueFormat];
@@ -107,7 +101,7 @@ extern CGFloat kHXOGridSpacing;
 
 // ugly, iterative value formating to ellipsise at the right place
 - (NSString*) formattedValue {
-    CGFloat maxWidth = self.contentView.bounds.size.width - kHXOCellIconSize - 20;
+    CGFloat maxWidth = self.contentView.bounds.size.width - 20;
     NSString * value = self.currentValue;
     NSString * text = [NSString stringWithFormat: self.valueFormat, value];
 #ifdef PRE_IOS7
@@ -139,33 +133,27 @@ extern CGFloat kHXOGridSpacing;
     }
 }
 
-
-@end
-
-@implementation UserDefaultsCellAvatarPicker
-
-- (void) setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing: editing animated: animated];
-    //self.avatar.enabled = editing;
-    //self.avatar.outerShadowColor = editing ? [UIColor orangeColor] : [UIColor whiteColor];
-}
-
-- (void) configure: (AvatarItem*) item {
-    // does not call super class
-    self.avatarImage = item.currentValue;
-    self.separatorInset = UIEdgeInsetsZero;
-/*
-    if (self.avatar.defaultImage == nil) {
-        self.avatar.defaultImage = [UIImage imageNamed: item.defaultImageName];
-    }
-    [self.avatar addTarget: [item target] action: [item action] forControlEvents: UIControlEventTouchUpInside];
- */
-}
-
 @end
 
 @implementation UserDefaultsCellTextInput
 
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self != nil) {
+        self.textField = [[UITextField alloc] initWithFrame: CGRectMake(0, 2 * kHXOGridSpacing, 0, 3 * kHXOGridSpacing)];
+        [self.contentView addSubview: self.textField];
+        self.textField.delegate = self;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(textFieldDidChange:)
+                                                     name:UITextFieldTextDidChangeNotification
+                                                   object:self.textField];
+
+    }
+    return self;
+}
+
+
+/*
 - (void) awakeFromNib {
     [super awakeFromNib];
     self.textField.delegate = self;
@@ -179,6 +167,7 @@ extern CGFloat kHXOGridSpacing;
     //self.textField.alpha = 0;
     self.textInputBackground.alpha = 0;
 }
+*/
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
     self.textField.enabled = editing;
@@ -267,15 +256,17 @@ extern CGFloat kHXOGridSpacing;
 
 @implementation UserDefaultsCellInfoText
 
-/*
-- (CGFloat) heightForText: (NSString*) text {
-    [self updateLabelFrame];
-    return [self.textLabel calculateSize: text].height + 22;
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self) {
+        self.label.font = [UIFont systemFontOfSize: 12];
+        self.label.numberOfLines = 0;
+    }
+    return self;
 }
-*/
+
 - (void) configure:(id)item {
     [super configure: item];
-    //[self updateLabelFrame];
 }
 
 - (void) layoutSubviews {
@@ -284,16 +275,17 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (void) updateLabelFrame {
-    CGFloat width = self.frame.size.width - 2 * 12.0;
+    CGFloat width = self.frame.size.width - 2 * kHXOGridSpacing;
     CGRect frame = self.label.frame;
     frame.size.width = width;
-    frame.origin.x = 12.0;
+    frame.origin.x = 2 * kHXOGridSpacing;
+    frame.origin.y = 2 * kHXOGridSpacing;
     self.label.frame = frame;
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
-    size = [self.label sizeThatFits: size];
-    size.height += 22;
+    size = [self.label sizeThatFits: CGSizeMake(size.width,0)];
+    size.height += 4 * kHXOGridSpacing;
     return size;
 }
 

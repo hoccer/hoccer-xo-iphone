@@ -44,6 +44,8 @@
 static const CGFloat kProfileEditAnimationDuration = 0.5;
 static const NSUInteger kHXOMaxNickNameLength = 25;
 
+static const CGFloat kAvatarSectionHeight = 0.5 * 320 + 48;
+
 typedef enum ActionSheetTags {
     kActionSheetDeleteCredentials = 1,
     kActionSheetDeleteContact,
@@ -88,7 +90,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) awakeFromNib {
-    CGRect frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.width * (10.0/16));
+    CGRect frame = CGRectMake(0, 0, self.tableView.frame.size.width, kAvatarSectionHeight);
     self.avatarView = [[ProfileAvatarView alloc] initWithFrame: frame];
     [self.avatarView addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     self.tableView.tableHeaderView = self.avatarView;
@@ -105,7 +107,7 @@ typedef enum ActionSheetTags {
     CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
     CGFloat y =  scrollView.contentOffset.y + self.navigationController.navigationBar.frame.size.height + MIN(statusBarSize.width, statusBarSize.height);
     if (y  < 0) {
-        CGSize restingSize = CGSizeMake(self.tableView.frame.size.width, 320 * (10.0/16));
+        CGSize restingSize = CGSizeMake(self.tableView.frame.size.width, kAvatarSectionHeight);
         self.avatarBackgroundView.frame = CGRectMake(0, y, restingSize.width - y, restingSize.height - y);
         self.avatarBackgroundView.center = CGPointMake(self.view.center.x, self.avatarBackgroundView.center.y);
     }
@@ -511,12 +513,12 @@ typedef enum ActionSheetTags {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _profileDataSource[indexPath.section][indexPath.row];
     UITableViewCell * cell = [self prototypeCellOfClass: [item cellClass]];
-    if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
-        ((UserDefaultsCellInfoText*)cell).label.text = [item currentValue];
+    //if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
+        ((UserDefaultsCell*)cell).label.text = [item currentValue];
         return [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
-    } else {
-        return cell.bounds.size.height;
-    }
+    //} else {
+    //    return cell.bounds.size.height;
+    //}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -638,15 +640,15 @@ typedef enum ActionSheetTags {
 
 - (void) populateItems {
     _itemsByKeyPath = [[NSMutableDictionary alloc] init];
-
     _avatarItem = [[AvatarItem alloc] initWithName:@"AvatarItem"];
     _avatarItem.valueKey = @"avatarImage";
+    /*
     _avatarItem.cellClass = [UserDefaultsCellAvatarPicker class];
     _avatarItem.defaultImageName = [self avatarDefaultImageName];
     _avatarItem.target = self;
     _avatarItem.action = @selector(avatarTapped:);
     [_itemsByKeyPath setObject: _avatarItem forKey: _avatarItem.valueKey];
-
+*/
     _allProfileItems = [[NSMutableArray alloc] init];
     
     _nickNameItem = [[ProfileItem alloc] initWithName:@"NickNameItem"];

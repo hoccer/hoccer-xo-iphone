@@ -31,11 +31,8 @@
 		6327EAB81716F06600AF75E1 /* user_defaults_cell_bg_single@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAB01716F06600AF75E1 /* user_defaults_cell_bg_single@2x.png */; };
 		6327EAB91716F06600AF75E1 /* user_defaults_cell_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAB11716F06600AF75E1 /* user_defaults_cell_bg.png */; };
 		6327EABA1716F06600AF75E1 /* user_defaults_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAB21716F06600AF75E1 /* user_defaults_cell_bg@2x.png */; };
-		6327EABF1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6327EABE1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib */; };
-		6327EAC1171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAC0171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib */; };
 		6327EAC91717567400AF75E1 /* bg-noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAC71717567400AF75E1 /* bg-noise.png */; };
 		6327EACA1717567400AF75E1 /* bg-noise@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAC81717567400AF75E1 /* bg-noise@2x.png */; };
-		6327EACC17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6327EACB17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib */; };
 		6327EACF17175E0200AF75E1 /* user_defaults_disclosure_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EACD17175E0200AF75E1 /* user_defaults_disclosure_arrow.png */; };
 		6327EAD017175E0200AF75E1 /* user_defaults_disclosure_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EACE17175E0200AF75E1 /* user_defaults_disclosure_arrow@2x.png */; };
 		6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAD6171841F200AF75E1 /* ContactListViewController.m */; };
@@ -198,7 +195,6 @@
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
 		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
 		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
-		63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */; };
 		63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */; };
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
@@ -216,7 +212,6 @@
 		63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		63DC01511713976B00609513 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01501713976B00609513 /* ImageViewController.m */; };
 		63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC015A17147B1600609513 /* HXOTableViewCell.m */; };
-		63DC01881715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */; };
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
 		63F4CF10172892EB00699394 /* InvitationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF0F172892EB00699394 /* InvitationController.m */; };
 		63F62E0817799D6B00435F21 /* MFSideMenuContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */; };
@@ -484,11 +479,8 @@
 		6327EAB01716F06600AF75E1 /* user_defaults_cell_bg_single@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_defaults_cell_bg_single@2x.png"; sourceTree = "<group>"; };
 		6327EAB11716F06600AF75E1 /* user_defaults_cell_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_defaults_cell_bg.png; sourceTree = "<group>"; };
 		6327EAB21716F06600AF75E1 /* user_defaults_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_defaults_cell_bg@2x.png"; sourceTree = "<group>"; };
-		6327EABE1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellSwitch_iPhone.xib; sourceTree = "<group>"; };
-		6327EAC0171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellInfoText_iPhone.xib; sourceTree = "<group>"; };
 		6327EAC71717567400AF75E1 /* bg-noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-noise.png"; sourceTree = "<group>"; };
 		6327EAC81717567400AF75E1 /* bg-noise@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-noise@2x.png"; sourceTree = "<group>"; };
-		6327EACB17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellDisclosure_iPhone.xib; sourceTree = "<group>"; };
 		6327EACD17175E0200AF75E1 /* user_defaults_disclosure_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_defaults_disclosure_arrow.png; sourceTree = "<group>"; };
 		6327EACE17175E0200AF75E1 /* user_defaults_disclosure_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_defaults_disclosure_arrow@2x.png"; sourceTree = "<group>"; };
 		6327EAD5171841F200AF75E1 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
@@ -733,7 +725,6 @@
 		63BD7D9617442C1B00118A7F /* GroupListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupListViewController.h; sourceTree = "<group>"; };
 		63BD7D9717442C1B00118A7F /* GroupListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupListViewController.m; sourceTree = "<group>"; };
 		63C1355F1716054C00969B0B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellAvatarPicker_iPhone.xib; sourceTree = "<group>"; };
 		63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOGroupedTableViewController.h; sourceTree = "<group>"; };
 		63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOGroupedTableViewController.m; sourceTree = "<group>"; };
 		63C1356B1716A4AB00969B0B /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
@@ -759,7 +750,6 @@
 		63DC01501713976B00609513 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		63DC015917147B1600609513 /* HXOTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTableViewCell.h; sourceTree = "<group>"; };
 		63DC015A17147B1600609513 /* HXOTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTableViewCell.m; sourceTree = "<group>"; };
-		63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDefaultsCellTextInput_iPhone.xib; sourceTree = "<group>"; };
 		63E0B2151721FF75006058C6 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		63F4CF0E172892EB00699394 /* InvitationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitationController.h; sourceTree = "<group>"; };
@@ -1764,11 +1754,6 @@
 				633462AB174FC9BF008D98FC /* GroupAdminCell_iPhone.xib */,
 				6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */,
 				63C1355F1716054C00969B0B /* README */,
-				63C13564171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib */,
-				6327EACB17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib */,
-				6327EAC0171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib */,
-				6327EABE1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib */,
-				63DC01871715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib */,
 			);
 			path = UserDefaultsCells;
 			sourceTree = "<group>";
@@ -2307,9 +2292,7 @@
 				63B1C9E21843E4FD00B75CD8 /* cnt-music@2x.png in Resources */,
 				63B1C9E51843E4FD00B75CD8 /* cnt-record.png in Resources */,
 				E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */,
-				63DC01881715FF3400609513 /* UserDefaultsCellTextInput_iPhone.xib in Resources */,
 				63C135601716054C00969B0B /* README in Resources */,
-				63C13565171608BD00969B0B /* UserDefaultsCellAvatarPicker_iPhone.xib in Resources */,
 				63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */,
 				63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */,
 				6327EAB31716F06600AF75E1 /* user_defaults_cell_bg_first.png in Resources */,
@@ -2320,11 +2303,8 @@
 				6327EAB81716F06600AF75E1 /* user_defaults_cell_bg_single@2x.png in Resources */,
 				6327EAB91716F06600AF75E1 /* user_defaults_cell_bg.png in Resources */,
 				6327EABA1716F06600AF75E1 /* user_defaults_cell_bg@2x.png in Resources */,
-				6327EABF1717037300AF75E1 /* UserDefaultsCellSwitch_iPhone.xib in Resources */,
-				6327EAC1171705F800AF75E1 /* UserDefaultsCellInfoText_iPhone.xib in Resources */,
 				6327EAC91717567400AF75E1 /* bg-noise.png in Resources */,
 				6327EACA1717567400AF75E1 /* bg-noise@2x.png in Resources */,
-				6327EACC17175C8700AF75E1 /* UserDefaultsCellDisclosure_iPhone.xib in Resources */,
 				6327EACF17175E0200AF75E1 /* user_defaults_disclosure_arrow.png in Resources */,
 				6327EAD017175E0200AF75E1 /* user_defaults_disclosure_arrow@2x.png in Resources */,
 				6327EAF21718951A00AF75E1 /* navigation_button_contacts.png in Resources */,
