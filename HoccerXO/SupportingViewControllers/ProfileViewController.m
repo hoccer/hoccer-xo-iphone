@@ -95,8 +95,10 @@ typedef enum ActionSheetTags {
     [self.avatarView addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     self.tableView.tableHeaderView = self.avatarView;
     self.avatarBackgroundView = [[UIImageView alloc] initWithFrame: frame];
-    //self.avatarView.layer.borderColor = [UIColor blackColor].CGColor;
-    //self.avatarView.layer.borderWidth = 10;
+    //self.avatarBackgroundView.layer.borderColor = [UIColor blackColor].CGColor;
+    //self.avatarBackgroundView.layer.borderWidth = 10;
+    self.avatarBackgroundView.layer.masksToBounds = YES;
+
     self.avatarBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
     self.avatarBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.tableView addSubview: self.avatarBackgroundView];
@@ -209,7 +211,9 @@ typedef enum ActionSheetTags {
     _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
     UIImage * avatar = [modelObject valueForKey: _avatarItem.valueKey];
     self.avatarView.image = avatar;
-    self.avatarBackgroundView.image = [avatar applyLightEffect];
+    //self.avatarBackgroundView.image = self.isEditing ? [_avatarItem.currentValue applyDarkEffect] : [_avatarItem.currentValue applyLightEffect];
+    [self setAvatarBackgroundImage: avatar];
+
 
     _blockContactItem.valueFormat = [self blockFormatForRelationshipState: _contact.relationshipState];
     _blockContactItem.currentValue = [modelObject nickName];
@@ -565,6 +569,8 @@ typedef enum ActionSheetTags {
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+    
+    self.avatarBackgroundView.image = editing ? [_avatarItem.currentValue applyDarkEffect] : [_avatarItem.currentValue applyLightEffect];
     
     if (_canceled) {
         [self revertItemsToSaved];
@@ -1012,7 +1018,8 @@ typedef enum ActionSheetTags {
 - (void) updateAvatar: (UIImage*) image {
     _avatarItem.currentValue = image;
     self.avatarView.image = image;
-    self.avatarBackgroundView.image = [image applyLightEffect];
+    [self setAvatarBackgroundImage: image];
+    //self.avatarBackgroundView.image = self.isEditing ? [_avatarItem.currentValue applyDarkEffect] : [_avatarItem.currentValue applyLightEffect];
     /*
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
     UserDefaultsCellAvatarPicker * cell = (UserDefaultsCellAvatarPicker*)[self.tableView cellForRowAtIndexPath: indexPath];
@@ -1020,6 +1027,11 @@ typedef enum ActionSheetTags {
     [cell configure: _avatarItem];
     [self.tableView endUpdates];
      */
+}
+
+- (void) setAvatarBackgroundImage: (UIImage*) newImage {
+    newImage = self.isEditing ? [newImage applyDarkEffect] : [newImage applyLightEffect];
+    self.avatarBackgroundView.image = newImage;
 }
 
 #pragma mark - Profile Actions
