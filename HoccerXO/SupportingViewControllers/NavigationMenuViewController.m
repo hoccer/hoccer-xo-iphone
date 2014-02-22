@@ -65,7 +65,7 @@
 #ifdef DEBUG
                     @{ @"title": NSLocalizedString(@"Testing Ground", nil),
                        @"icon": @"navigation_button_about",
-                       @"storyboardId": @"testingGround"
+                       @"storyboardId": @"segmentedViewController"
                     }
 #endif
                    ];
