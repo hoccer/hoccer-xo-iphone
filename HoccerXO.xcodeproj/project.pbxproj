@@ -48,6 +48,7 @@
 		6327EB4C171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB4A171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png */; };
 		6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB6E171D55DA00AF75E1 /* libcrypto.a */; };
 		6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */; };
+		6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327F37318B8C390007D79E3 /* Accelerate.framework */; };
 		6330490116FC966F0045E64E /* contact_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490016FC966F0045E64E /* contact_cell_bg@2x.png */; };
 		6330490416FC99820045E64E /* ContactQuickListViewCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330490316FC99820045E64E /* ContactQuickListViewCells.m */; };
 		6330490716FC9A030045E64E /* ContactQuickListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330490616FC9A030045E64E /* ContactQuickListViewController.m */; };
@@ -501,6 +502,7 @@
 		6327EB72171D61A200AF75E1 /* HXOConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOConfig.h; sourceTree = "<group>"; };
 		6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		6327F37318B8C390007D79E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		6330490016FC966F0045E64E /* contact_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_cell_bg@2x.png"; sourceTree = "<group>"; };
 		6330490216FC99820045E64E /* ContactQuickListViewCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQuickListViewCells.h; sourceTree = "<group>"; };
 		6330490316FC99820045E64E /* ContactQuickListViewCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQuickListViewCells.m; sourceTree = "<group>"; };
@@ -965,6 +967,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */,
 				6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */,
 				6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */,
 				6339CDDF18A9940D00DA2729 /* libqrencoder.a in Frameworks */,
@@ -1581,6 +1584,7 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6327F37318B8C390007D79E3 /* Accelerate.framework */,
 				E92FAED61870A0F900D72D79 /* libz.dylib */,
 				E99886CD1725CE0F0089A510 /* AddressBook.framework */,
 				E9D11469173307FC00737EF7 /* AddressBookUI.framework */,
@@ -2668,7 +2672,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2703,7 +2707,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
