@@ -90,6 +90,7 @@ typedef enum ActionSheetTags {
 - (void) awakeFromNib {
     CGRect frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.width * (10.0/16));
     self.avatarView = [[ProfileAvatarView alloc] initWithFrame: frame];
+    [self.avatarView addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     self.tableView.tableHeaderView = self.avatarView;
     self.avatarBackgroundView = [[UIImageView alloc] initWithFrame: frame];
     //self.avatarView.layer.borderColor = [UIColor blackColor].CGColor;
@@ -1009,11 +1010,13 @@ typedef enum ActionSheetTags {
     _avatarItem.currentValue = image;
     self.avatarView.image = image;
     self.avatarBackgroundView.image = [image applyLightEffect];
+    /*
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
     UserDefaultsCellAvatarPicker * cell = (UserDefaultsCellAvatarPicker*)[self.tableView cellForRowAtIndexPath: indexPath];
     [self.tableView beginUpdates];
     [cell configure: _avatarItem];
     [self.tableView endUpdates];
+     */
 }
 
 #pragma mark - Profile Actions
