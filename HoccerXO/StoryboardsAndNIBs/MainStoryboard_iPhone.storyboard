@@ -114,6 +114,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="JWP-wR-2FC"/>
+                    <connections>
+                        <outlet property="tableView" destination="afE-UW-Y54" id="gEg-B1-7v0"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jnn-H5-Wg0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

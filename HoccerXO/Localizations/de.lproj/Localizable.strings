@@ -156,7 +156,7 @@
 /* APN one new message */
 "apn_one_new_message" = "Du hast eine neue Nachricht!";
 
-"profile_name_label" = "Name";
+"profile_name_label" = "Name:";
 
 "profile_name_placeholder" = "Dein Name";
 
@@ -190,6 +190,7 @@
 
 "navigation_title_contact" = "Kontakt";
 
+"profile_fingerprint_label" = "Schlüssel:";
 "profile_fingerprint_info" = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
 
 "contact_unblock" = "%@ entblockieren";

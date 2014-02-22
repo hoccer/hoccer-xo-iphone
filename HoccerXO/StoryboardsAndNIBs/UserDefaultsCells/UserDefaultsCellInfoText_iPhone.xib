@@ -23,7 +23,7 @@
                 </subviews>
             </tableViewCellContentView>
             <connections>
-                <outlet property="textLabel" destination="4" id="5"/>
+                <outlet property="label" destination="4" id="XTl-5B-fa6"/>
             </connections>
         </tableViewCell>
     </objects>

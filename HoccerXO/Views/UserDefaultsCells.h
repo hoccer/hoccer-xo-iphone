@@ -69,6 +69,7 @@
 
 @property (nonatomic,strong) NSString* valueFormat;
 @property (nonatomic,strong) NSString* currentValue;
+@property (nonatomic,strong) IBOutlet UILabel * label;
 
 - (void) configure: (id) item;
 
@@ -76,7 +77,8 @@
 
 @interface UserDefaultsCellAvatarPicker : UserDefaultsCell
 
-@property (nonatomic,strong) IBOutlet ProfileAvatarView * avatar;
+//@property (nonatomic,strong) IBOutlet ProfileAvatarView * avatar;
+@property (nonatomic,strong) IBOutlet UIImage * avatarImage;
 
 @end
 

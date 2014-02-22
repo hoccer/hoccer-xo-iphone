@@ -357,11 +357,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (NSArray*) composeModel: (BOOL) editing {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: composeItems");
-    [self composeProfileItems: editing];
+    //[self composeProfileItems: editing];
     if (editing) {
-        return @[ _avatarSection, _profileItemsSection, _adminInfoSection, _memberListItem];
+        return @[ _coreSection/*, _profileItemsSection*/, _adminInfoSection, _memberListItem];
     }
-    return @[ _avatarSection, [self groupUtilities], _profileItemsSection, _adminInfoSection, _memberListItem];
+    return @[ _coreSection, [self groupUtilities]/*, _profileItemsSection*/, _adminInfoSection, _memberListItem];
 }
 
 - (NSUInteger) groupMemberSectionIndex {
