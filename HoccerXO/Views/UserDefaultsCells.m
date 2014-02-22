@@ -66,7 +66,7 @@ extern CGFloat kHXOGridSpacing;
         CGFloat height = 3 * kHXOGridSpacing;
         CGFloat padding = 2 * kHXOGridSpacing;
         self.label = [[UILabel alloc] initWithFrame: CGRectMake(padding, padding, self.contentView.frame.size.width, height)];
-        self.label.textColor = [UIColor colorWithWhite: 0.5 alpha: 1.0];
+        self.label.textColor = [UIColor colorWithWhite: 0.6 alpha: 1.0];
         self.label.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview: self.label];
     }
@@ -295,7 +295,9 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    self.editingAccessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
+    //self.editingAccessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
+    
+    self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -320,7 +322,9 @@ extern CGFloat kHXOGridSpacing;
     [super configure: item];
     self.editLabel = [item editLabel];
     if ([item alwaysShowDisclosure]) {
-        self.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    } else {
+        self.accessoryType = UITableViewCellAccessoryNone;
     }
 }
 

@@ -774,6 +774,7 @@ typedef enum ActionSheetTags {
     }
 
     _deleteContactItem = [[ProfileItem alloc] initWithName:@"DeleteContactItem"];
+    _deleteContactItem.editLabel = NSLocalizedString(@"delete_contact", nil);
     _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
     _deleteContactItem.cellClass = [UserDefaultsCell class];
     _deleteContactItem.action = @selector(deleteContactPressed:);
