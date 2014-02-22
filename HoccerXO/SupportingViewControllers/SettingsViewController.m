@@ -18,8 +18,8 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
+    //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
+    //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
     self.delegate = self;
 }
@@ -30,6 +30,23 @@
 
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
     
+}
+
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
+    NSLog(@"bonked %@", specifier.key);
+    NSString * storyboardId;
+    if ([specifier.key isEqualToString: @"tutorial"]) {
+        storyboardId = @"tutorialViewController";
+    } else if ([specifier.key isEqualToString: @"faq"]) {
+        storyboardId = @"faqViewController";
+    } else if ([specifier.key isEqualToString: @"about"]) {
+        storyboardId = @"aboutViewController";
+    } else {
+        NSLog(@"unhandled button in settings plist (key:%@)", specifier.key);
+        return;
+    }
+    UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier: storyboardId];
+    [self.navigationController pushViewController: vc animated: YES];
 }
 
 @end

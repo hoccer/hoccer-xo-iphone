@@ -61,20 +61,8 @@
                        @"storyboardId": @"serverViewController"
                     },
 #endif
-                    @{ @"title": NSLocalizedString(@"Tutorial", nil),
-                       @"icon": @"navigation_button_tutorial",
-                       @"storyboardId": @"tutorialViewController"
-                    },
-                    @{ @"title": NSLocalizedString(@"FAQ", nil),
-                       @"icon": @"navigation_button_faq",
-                       @"storyboardId": @"faqViewController"
-                       },
-                    @{ @"title": NSLocalizedString(@"About", nil),
-                       @"icon": @"navigation_button_about",
-                       @"storyboardId": @"aboutViewController"
-                    }
+
 #ifdef DEBUG
-                    ,
                     @{ @"title": NSLocalizedString(@"Testing Ground", nil),
                        @"icon": @"navigation_button_about",
                        @"storyboardId": @"testingGround"

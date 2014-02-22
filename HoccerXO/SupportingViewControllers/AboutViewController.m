@@ -25,8 +25,8 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
+    //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
+    //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
     self.appIcon.image = [UIImage imageNamed: @"hoccer-xo-app-icon"];
     self.appIcon.layer.masksToBounds = YES;
