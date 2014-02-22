@@ -32,6 +32,7 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "AppDelegate.h"
 #import "ImageViewController.h"
+#import "UIImage+ImageEffects.h"
 
 #import "NSData+Base64.h"
 
@@ -200,7 +201,7 @@ typedef enum ActionSheetTags {
 - (void) populateValues {
     id modelObject = [self getModelObject];
     _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
-    self.avatarView.image = [modelObject valueForKey: _avatarItem.valueKey];;
+    self.avatarView.image = [[modelObject valueForKey: _avatarItem.valueKey] applyLightEffect];
 
     _blockContactItem.valueFormat = [self blockFormatForRelationshipState: _contact.relationshipState];
     _blockContactItem.currentValue = [modelObject nickName];
@@ -1001,7 +1002,7 @@ typedef enum ActionSheetTags {
 
 - (void) updateAvatar: (UIImage*) image {
     _avatarItem.currentValue = image;
-    self.avatarView.image = image;
+    self.avatarView.image = [image applyLightEffect];
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
     UserDefaultsCellAvatarPicker * cell = (UserDefaultsCellAvatarPicker*)[self.tableView cellForRowAtIndexPath: indexPath];
     [self.tableView beginUpdates];
