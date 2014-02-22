@@ -50,6 +50,7 @@
 		6327EB4B171A17B900AF75E1 /* profile_text_input_bg_invalid.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB49171A17B900AF75E1 /* profile_text_input_bg_invalid.png */; };
 		6327EB4C171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB4A171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png */; };
 		6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB6E171D55DA00AF75E1 /* libcrypto.a */; };
+		6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */; };
 		6330490116FC966F0045E64E /* contact_cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490016FC966F0045E64E /* contact_cell_bg@2x.png */; };
 		6330490416FC99820045E64E /* ContactQuickListViewCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330490316FC99820045E64E /* ContactQuickListViewCells.m */; };
 		6330490716FC9A030045E64E /* ContactQuickListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330490616FC9A030045E64E /* ContactQuickListViewController.m */; };
@@ -506,6 +507,8 @@
 		6327EB4A171A17B900AF75E1 /* profile_text_input_bg_invalid@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profile_text_input_bg_invalid@2x.png"; sourceTree = "<group>"; };
 		6327EB6E171D55DA00AF75E1 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../ObjCSRP/3rdParty/openssl-xcode/build/Release-iphoneos/libcrypto.a"; sourceTree = "<group>"; };
 		6327EB72171D61A200AF75E1 /* HXOConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOConfig.h; sourceTree = "<group>"; };
+		6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		6330490016FC966F0045E64E /* contact_cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact_cell_bg@2x.png"; sourceTree = "<group>"; };
 		6330490216FC99820045E64E /* ContactQuickListViewCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQuickListViewCells.h; sourceTree = "<group>"; };
 		6330490316FC99820045E64E /* ContactQuickListViewCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQuickListViewCells.m; sourceTree = "<group>"; };
@@ -764,7 +767,7 @@
 		63F62E0517799D6B00435F21 /* MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenu.h; sourceTree = "<group>"; };
 		63F62E0617799D6B00435F21 /* MFSideMenuContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenuContainerViewController.h; sourceTree = "<group>"; };
 		63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSideMenuContainerViewController.m; sourceTree = "<group>"; };
-		63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HoccerXO- 25.xcdatamodel"; sourceTree = "<group>"; };
+		63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 25.xcdatamodel"; sourceTree = "<group>"; };
 		6A6D94F117B2913F00E8833E /* icon_profile-fingerprint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-fingerprint.png"; sourceTree = "<group>"; };
 		6A6D94F217B2913F00E8833E /* icon_profile-fingerprint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-fingerprint@2x.png"; sourceTree = "<group>"; };
 		6AA19EB21750057C00B4807A /* icon_profile-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-group.png"; sourceTree = "<group>"; };
@@ -1043,8 +1046,6 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
-				E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */,
-				E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */,
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
@@ -1053,6 +1054,10 @@
 				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
 				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
 				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
+				E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */,
+				E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */,
+				E9E92F91187503F7007B8042 /* NSString+HTML.h */,
+				E9E92F92187503F7007B8042 /* NSString+HTML.m */,
 				63D8EE1417230050000F9E53 /* NSString+RandomString.h */,
 				63D8EE1517230050000F9E53 /* NSString+RandomString.m */,
 				E99886CA1725CBCF0089A510 /* NSString+Regexp.h */,
@@ -1063,12 +1068,12 @@
 				E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */,
 				6378484B16F4210900DE03C2 /* NSString+UUID.h */,
 				6378484C16F4210A00DE03C2 /* NSString+UUID.m */,
+				6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */,
+				6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */,
 				631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */,
 				631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */,
 				E980E27318648D80004AF79D /* UIResponder+Debug.h */,
 				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
-				E9E92F91187503F7007B8042 /* NSString+HTML.h */,
-				E9E92F92187503F7007B8042 /* NSString+HTML.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
@@ -2466,6 +2471,7 @@
 				E9E92F6D18733D01007B8042 /* DDRange.m in Sources */,
 				6367C9211833BE5A005C60B3 /* HPTextViewInternal.m in Sources */,
 				E9E92F7418733D01007B8042 /* MultipartMessageHeaderField.m in Sources */,
+				6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */,
 				E9E92F7718733D01007B8042 /* HTTPDynamicFileResponse.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
@@ -2682,6 +2688,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2716,6 +2723,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
