@@ -83,7 +83,7 @@
         <!--Contact Management View Controller-->
         <scene sceneID="gPy-Sd-xUQ">
             <objects>
-                <viewController storyboardIdentifier="segmentedViewController" id="lIc-Qc-7WE" customClass="ContactManagementViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="contactManagementViewController" id="lIc-Qc-7WE" customClass="ContactManagementViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="f74-iy-2GK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -418,7 +418,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y5O-8T-bVz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-287" y="2276"/>
+            <point key="canvasLocation" x="-911" y="1252"/>
         </scene>
         <!--Invite Code View Controller-->
         <scene sceneID="ksw-ZB-GKb">
@@ -1283,20 +1283,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xnq-vz-dI8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1179" y="-587"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="lSF-vq-I33">
-            <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="PbX-VB-CXc" sceneMemberID="viewController">
-                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="8HN-nl-X0F">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <toolbarItems/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DYz-tM-5kA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
         </scene>
     </scenes>
     <resources>

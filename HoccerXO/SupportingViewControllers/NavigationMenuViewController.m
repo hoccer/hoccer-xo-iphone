@@ -34,39 +34,21 @@
                     },
                     @{ @"title": NSLocalizedString(@"contacts_menu_item", nil),
                        @"icon": @"navigation_button_contacts",
-                       @"storyboardId": @"contactsViewController"
+                       @"storyboardId": @"contactManagementViewController"
                        },
-                    @{ @"title": NSLocalizedString(@"groups_menu_item", nil),
-                       @"icon": @"navigation_button_groups",
-                       @"storyboardId": @"groupListViewController"
-                     },
                     @{ @"title": NSLocalizedString(@"Profile", nil),
                        @"icon": @"navigation_button_profile",
                        @"storyboardId": @"profileViewController"
                     },
-#if 0
-                    @{ @"title": NSLocalizedString(@"Settings", nil),
-                       @"icon": @"navigation_button_settings",
-                       @"storyboardId": @"settingsViewController"
-                    },
-#else
                     @{ @"title": NSLocalizedString(@"Settings", nil),
                        @"icon": @"navigation_button_settings",
                        @"storyboardId": @"inAppSettingsViewController"
                        },
-#endif
 #ifdef WITH_WEBSERVER
                     @{ @"title": NSLocalizedString(@"Server", nil),
                        @"icon": @"navigation_button_settings",
                        @"storyboardId": @"serverViewController"
                     },
-#endif
-
-#ifdef DEBUG
-                    @{ @"title": NSLocalizedString(@"Testing Ground", nil),
-                       @"icon": @"navigation_button_about",
-                       @"storyboardId": @"segmentedViewController"
-                    }
 #endif
                    ];
 

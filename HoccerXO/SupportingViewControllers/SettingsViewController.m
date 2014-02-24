@@ -41,11 +41,27 @@
         storyboardId = @"faqViewController";
     } else if ([specifier.key isEqualToString: @"about"]) {
         storyboardId = @"aboutViewController";
+    } else if ([specifier.key isEqualToString: @"testingGround"]) {
+        storyboardId = @"testingGround";
+    } else if ([specifier.key isEqualToString: @"webServer"]) {
+#ifdef WITH_WEBSERVER
+        storyboardId = @"serverViewController";
+#else
+        NSLog(@"Web server is not enabled in this build");
+#endif
     } else {
         NSLog(@"unhandled button in settings plist (key:%@)", specifier.key);
+    }
+
+    if ( ! storyboardId) {
         return;
     }
-    UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier: storyboardId];
+
+    UIViewController * vc = self;
+    while (vc.storyboard == nil) {
+        vc = vc.parentViewController;
+    }
+    vc = [vc.storyboard instantiateViewControllerWithIdentifier: storyboardId];
     [self.navigationController pushViewController: vc animated: YES];
 }
 

@@ -32,6 +32,26 @@
 			<key>KeyboardType</key>
 			<string>URL</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Chat Cell Testing</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Key</key>
+			<string>testingGround</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Web Server</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Key</key>
+			<string>webServer</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Settings</string>
