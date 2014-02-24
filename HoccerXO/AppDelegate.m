@@ -22,7 +22,6 @@
 #import "HXOUserDefaults.h"
 #import "Environment.h"
 #import "UserProfile.h"
-#import "MFSideMenu.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
 #import "TestFlight.h"
@@ -267,27 +266,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     UIStoryboard *storyboard = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        /*
-        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        self.navigationController = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate = (id)self.navigationController.topViewController;
-        UINavigationController *masterNavigationController = splitViewController.viewControllers[0];
-        self.conversationViewController = (ConversationViewController *)masterNavigationController.topViewController;
-         */
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
-        /*
-        self.navigationController = (UINavigationController *)self.window.rootViewController;
-        UIViewController * myStartupVC = self.navigationController.topViewController;
-        [myStartupVC performSegueWithIdentifier:@"startupReady" sender:myStartupVC];
-        
-        self.navigationController.viewControllers = @[self.navigationController.topViewController]; // make new root controller
-        self.conversationViewController = (ConversationViewController *)self.navigationController.topViewController;
-         */
     }
-
-    [self setupSideMenusWithStoryboard: storyboard];
 
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         [self setupDone: NO];
@@ -474,25 +456,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     unsigned seed;
     SecRandomCopyBytes(kSecRandomDefault, sizeof seed, (uint8_t*)&seed);
     srand(seed);
-}
-
-- (void) setupSideMenusWithStoryboard: (UIStoryboard*) storyboard {
-    UINavigationController * navigationController = [storyboard instantiateViewControllerWithIdentifier:@"navigationController"];
-    ContactQuickListViewController * contactListViewController = [storyboard instantiateViewControllerWithIdentifier:@"contactListViewController"];
-    NavigationMenuViewController * navigationMenuViewController = [storyboard instantiateViewControllerWithIdentifier:@"navigationMenuViewController"];
-    MFSideMenuContainerViewController * container = (MFSideMenuContainerViewController*)self.window.rootViewController;
-    [container setCenterViewController: navigationController];
-    [container setLeftMenuViewController: navigationMenuViewController];
-    [container setRightMenuViewController: contactListViewController];
-
-    [container setMenuWidth: 256];
-    [container setMenuSlideAnimationEnabled: YES];
-    [container setMenuSlideAnimationFactor: 320.0/64];
-
-    self.conversationViewController = (ConversationViewController *)navigationController.topViewController;
-    contactListViewController.conversationViewController = self.conversationViewController;
-    navigationController.delegate = navigationMenuViewController;
-    [navigationMenuViewController cacheViewController: self.conversationViewController withStoryboardId: @"conversationViewController"];
 }
 
 - (void) setupDone: (BOOL) performRegistration {
