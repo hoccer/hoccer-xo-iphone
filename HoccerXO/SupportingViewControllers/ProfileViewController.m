@@ -904,7 +904,7 @@ typedef enum ActionSheetTags {
 
     if (_mode == ProfileViewModeContactProfile) {
         if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOManualKeyManagement]) {
-        _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,_exportPublicKeyItem,_importPublicKeyItem, nil];
+            _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,_exportPublicKeyItem,_importPublicKeyItem, nil];
         } else {
             _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,nil];
         }
@@ -919,8 +919,8 @@ typedef enum ActionSheetTags {
             return @[ _coreSection/*, _profileItemsSection, _fingerprintSection*/, _destructiveSection];
         } else if ([self.contact.relationshipState isEqualToString: @"kept"]) {
             return @[ _coreSection/*, _profileItemsSection, _fingerprintSection*/, _destructiveSection];
-       } else {
-           return @[_coreSection];//, _profileItemsSection, _fingerprintSection];
+        } else {
+            return @[_coreSection];//, _profileItemsSection, _fingerprintSection];
         }
     } else {
         if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOManualKeyManagement]) {
