@@ -674,6 +674,7 @@ typedef enum ActionSheetTags {
     _nickNameItem.keyboardType = UIKeyboardTypeDefault;
     _nickNameItem.required = YES;
     _nickNameItem.maxLength = kHXOMaxNickNameLength;
+    _nickNameItem.isEditable = YES;
     [_allProfileItems addObject: _nickNameItem];
     [_itemsByKeyPath setObject: _nickNameItem forKey: _nickNameItem.valueKey];
     

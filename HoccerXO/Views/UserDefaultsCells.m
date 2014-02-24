@@ -21,6 +21,7 @@ extern CGFloat kHXOGridSpacing;
         self.valid = YES;
         self.textAlignment = NSTextAlignmentLeft;
         self.name = name;
+        self.isEditable = NO;
     }
     return self;
 }
@@ -152,25 +153,8 @@ extern CGFloat kHXOGridSpacing;
     return self;
 }
 
-
-/*
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    self.textField.delegate = self;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(textFieldDidChange:)
-                                                 name:UITextFieldTextDidChangeNotification
-                                               object:self.textField];
-    self.textInputBackground.image = [[UIImage imageNamed: @"profile_text_input_bg"] stretchableImageWithLeftCapWidth: 3 topCapHeight: 3];
-    self.textInputBackground.frame = CGRectInset(self.textField.frame, -8, 2);
-    self.textField.backgroundColor = [UIColor clearColor];
-    //self.textField.alpha = 0;
-    self.textInputBackground.alpha = 0;
-}
-*/
-
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
-    self.textField.enabled = editing;
+    self.textField.enabled = editing && [self.delegate isEditable];
 }
 
 - (void) textFieldDidEndEditing:(UITextField *)textField {
@@ -217,8 +201,8 @@ extern CGFloat kHXOGridSpacing;
     self.editLabel = [item editLabel];
 
     self.textField.keyboardType = [item keyboardType];
-
     self.textField.secureTextEntry = [item secure];
+    self.textField.enabled = [item isEditable];
 
     self.maxLength = [item maxLength];
 }

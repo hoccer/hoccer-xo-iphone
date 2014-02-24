@@ -13,6 +13,8 @@
 
 @protocol UserDefaultsCellTextInputDelegate <NSObject>
 
+@property (nonatomic,assign) BOOL isEditable;
+
 @optional
 
 - (BOOL) validateTextField: (UITextField*) textField;
@@ -40,6 +42,7 @@
 @property (nonatomic,strong) NSString *      name;
 @property (nonatomic,assign) NSUInteger      maxLength;
 @property (nonatomic,strong) NSString *      valueFormat;
+@property (nonatomic,assign) BOOL            isEditable;
 
 - (id) initWithName: (NSString*) name;
 
