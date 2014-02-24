@@ -218,6 +218,7 @@
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
 		63F4CF10172892EB00699394 /* InvitationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF0F172892EB00699394 /* InvitationController.m */; };
 		63F62E0817799D6B00435F21 /* MFSideMenuContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */; };
+		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
 		6A6D94F317B2913F00E8833E /* icon_profile-fingerprint.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6D94F117B2913F00E8833E /* icon_profile-fingerprint.png */; };
 		6A6D94F417B2913F00E8833E /* icon_profile-fingerprint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6D94F217B2913F00E8833E /* icon_profile-fingerprint@2x.png */; };
 		6AA19EB41750057C00B4807A /* icon_profile-group.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA19EB21750057C00B4807A /* icon_profile-group.png */; };
@@ -766,6 +767,7 @@
 		63F62E0617799D6B00435F21 /* MFSideMenuContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenuContainerViewController.h; sourceTree = "<group>"; };
 		63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSideMenuContainerViewController.m; sourceTree = "<group>"; };
 		63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 25.xcdatamodel"; sourceTree = "<group>"; };
+		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6A6D94F117B2913F00E8833E /* icon_profile-fingerprint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-fingerprint.png"; sourceTree = "<group>"; };
 		6A6D94F217B2913F00E8833E /* icon_profile-fingerprint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-fingerprint@2x.png"; sourceTree = "<group>"; };
 		6AA19EB21750057C00B4807A /* icon_profile-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_profile-group.png"; sourceTree = "<group>"; };
@@ -1658,6 +1660,7 @@
 				63AE453F170488FB0099F0CB /* UIViewController+HXOSideMenu.m */,
 				631F6CDA170654A600FB28D5 /* UtilityCategories */,
 				63D4916716CAA17D00FD395F /* Views */,
+				6A568B8A18BA8F0400584A04 /* Images.xcassets */,
 			);
 			path = HoccerXO;
 			sourceTree = "<group>";
@@ -2291,6 +2294,7 @@
 				63AE45501705E1440099F0CB /* MainStoryboard_iPad.storyboard in Resources */,
 				63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
+				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
 				63B1C9DF1843E4FD00B75CD8 /* cnt-location.png in Resources */,
 				501F1B33170C676E00F559F0 /* contact_cell_bg_selected.png in Resources */,
@@ -2684,6 +2688,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2719,6 +2724,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
