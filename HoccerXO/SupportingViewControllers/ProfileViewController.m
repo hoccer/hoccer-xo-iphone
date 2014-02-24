@@ -837,7 +837,7 @@ typedef enum ActionSheetTags {
     _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem,_deleteCredentialsFileItem, _deleteCredentialsItem, nil];
     
 
-    _coreSection = [ProfileSection sectionWithName: @"CoreSection" items: /*_avatarItem,*/ _nickNameItem, _fingerprintItem, _fingerprintInfoItem, nil];
+    _coreSection = [ProfileSection sectionWithName: @"CoreSection" items: /*_avatarItem,*/ _nickNameItem/*, _fingerprintItem, _fingerprintInfoItem*/, nil];
 
 
     //return [self populateValues];
@@ -911,16 +911,16 @@ typedef enum ActionSheetTags {
 
         if ([self.contact.relationshipState isEqualToString: @"friend"]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
-            return @[ _coreSection, _utilitySection/*, _profileItemsSection, _fingerprintSection*/, _destructiveSection];
+            return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
-            return @[ _coreSection, _utilitySection/*, _profileItemsSection, _fingerprintSection*/, _destructiveSection];
+            return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else if ([self.contact.relationshipState isEqualToString: @"groupfriend"]) {
-            return @[ _coreSection/*, _profileItemsSection, _fingerprintSection*/, _destructiveSection];
+            return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else if ([self.contact.relationshipState isEqualToString: @"kept"]) {
-            return @[ _coreSection/*, _profileItemsSection, _fingerprintSection*/, _destructiveSection];
+            return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else {
-            return @[_coreSection];//, _profileItemsSection, _fingerprintSection];
+            return @[_coreSection, _fingerprintSection];//, _profileItemsSection, _fingerprintSection];
         }
     } else {
         if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOManualKeyManagement]) {
@@ -932,17 +932,17 @@ typedef enum ActionSheetTags {
         }
         if (editing) {
             if (_mode == ProfileViewModeFirstRun) {
-                return @[ _coreSection/*, _profileItemsSection, _fingerprintSection*/, _keypairSection];
+                return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _keypairSection];
             } else {
                 if ([[UserProfile sharedProfile] foundCredentialsFile]) {
                     _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem, _deleteCredentialsFileItem, _deleteCredentialsItem, nil];
                 } else {
                     _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _deleteCredentialsItem, nil];
                 }
-                return @[ _coreSection/*, _profileItemsSection, _fingerprintSection*/, _keypairSection, _credentialsSection];
+                return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _keypairSection, _credentialsSection];
             }
         } else {
-            return @[ _coreSection];//, _profileItemsSection, _fingerprintSection];
+            return @[ _coreSection, _fingerprintSection];//, _profileItemsSection, _fingerprintSection];
         }
     }
 }
