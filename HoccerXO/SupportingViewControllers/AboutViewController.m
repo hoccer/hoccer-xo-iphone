@@ -28,7 +28,7 @@
     //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
-    self.appIcon.image = [UIImage imageNamed: @"hoccer-xo-app-icon"];
+    self.appIcon.image = [UIImage imageNamed: @"AppIcon60x60"]; // TODO: use best fit.
     self.appIcon.layer.masksToBounds = YES;
     self.appIcon.layer.cornerRadius = 12.0;
     self.appIconShadow.layer.shadowColor = [UIColor blackColor].CGColor;
