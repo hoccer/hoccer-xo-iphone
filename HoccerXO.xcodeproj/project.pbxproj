@@ -98,7 +98,6 @@
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
 		63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */; };
 		63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */; };
-		6374B819174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */; };
 		6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6374B822174D0F6900506EE9 /* GroupMemberCell.m */; };
 		6378480716F348E400DE03C2 /* chatbar_btn_add-content.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847D816F348E300DE03C2 /* chatbar_btn_add-content.png */; };
 		6378480816F348E400DE03C2 /* chatbar_btn_add-content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847D916F348E300DE03C2 /* chatbar_btn_add-content@2x.png */; };
@@ -194,7 +193,6 @@
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
 		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
-		63C135601716054C00969B0B /* README in Resources */ = {isa = PBXBuildFile; fileRef = 63C1355F1716054C00969B0B /* README */; };
 		63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */; };
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
@@ -569,7 +567,6 @@
 		63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		63716BBB185CCEE60094987D /* GenericAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
 		63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
-		6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupMemberCell_iPhone.xib; sourceTree = "<group>"; };
 		6374B821174D0F6900506EE9 /* GroupMemberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberCell.h; sourceTree = "<group>"; };
 		6374B822174D0F6900506EE9 /* GroupMemberCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberCell.m; sourceTree = "<group>"; };
 		637847D816F348E300DE03C2 /* chatbar_btn_add-content.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content.png"; sourceTree = "<group>"; };
@@ -725,7 +722,6 @@
 		63BD7D941744232D00118A7F /* GroupMembership.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMembership.m; sourceTree = "<group>"; };
 		63BD7D9617442C1B00118A7F /* GroupListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupListViewController.h; sourceTree = "<group>"; };
 		63BD7D9717442C1B00118A7F /* GroupListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupListViewController.m; sourceTree = "<group>"; };
-		63C1355F1716054C00969B0B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOGroupedTableViewController.h; sourceTree = "<group>"; };
 		63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOGroupedTableViewController.m; sourceTree = "<group>"; };
 		63C1356B1716A4AB00969B0B /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
@@ -1543,7 +1539,6 @@
 			isa = PBXGroup;
 			children = (
 				E9D1145A1732CFE800737EF7 /* VcardPreview.xib */,
-				63DC01861715FE8B00609513 /* UserDefaultsCells */,
 				63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */,
 				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
 			);
@@ -1749,15 +1744,6 @@
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		63DC01861715FE8B00609513 /* UserDefaultsCells */ = {
-			isa = PBXGroup;
-			children = (
-				6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */,
-				63C1355F1716054C00969B0B /* README */,
-			);
-			path = UserDefaultsCells;
 			sourceTree = "<group>";
 		};
 		63F62E0417799D6B00435F21 /* MFSideMenu */ = {
@@ -2295,7 +2281,6 @@
 				63B1C9E21843E4FD00B75CD8 /* cnt-music@2x.png in Resources */,
 				63B1C9E51843E4FD00B75CD8 /* cnt-record.png in Resources */,
 				E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */,
-				63C135601716054C00969B0B /* README in Resources */,
 				63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */,
 				63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */,
 				6327EAB31716F06600AF75E1 /* user_defaults_cell_bg_first.png in Resources */,
@@ -2336,7 +2321,6 @@
 				5048263E174796F10048538A /* navigation_button_groups@2x.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				5048263F174796F10048538A /* navigation_button_groups.png in Resources */,
-				6374B819174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
 				633462B3174FE3E3008D98FC /* group_member_divider.png in Resources */,
 				633462B4174FE3E3008D98FC /* group_member_divider@2x.png in Resources */,

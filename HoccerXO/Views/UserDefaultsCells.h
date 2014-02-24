@@ -64,8 +64,6 @@
 
 @end
 
-
-
 @class ProfileAvatarView;
 
 @interface UserDefaultsCell : HXOTableViewCell
@@ -84,8 +82,6 @@
 @property (nonatomic,strong) IBOutlet UIImage * avatarImage;
 
 @end
-
-
 
 @interface UserDefaultsCellTextInput : UserDefaultsCell  <UITextFieldDelegate>
 
