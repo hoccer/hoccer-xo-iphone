@@ -123,8 +123,6 @@
 		6382545117503531000347CD /* server_production.der in Resources */ = {isa = PBXBuildFile; fileRef = 6382545017503531000347CD /* server_production.der */; };
 		6382549B175F746C000347CD /* ProfileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6382549A175F746B000347CD /* ProfileDataSource.m */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
-		6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */; };
-		6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
 		638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */; };
 		638EBE50178ADFD700F1B9AD /* ContactQuickListSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE4F178ADFD600F1B9AD /* ContactQuickListSearchBar.m */; };
@@ -269,8 +267,6 @@
 		E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EB17282C950089A510 /* sweep_in_sound.wav */; };
 		E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EC17282C950089A510 /* sweep_out_sound.wav */; };
 		E99886F517282C950089A510 /* throw_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EE17282C950089A510 /* throw_sound.wav */; };
-		E9A2A30C17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2A30A17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png */; };
-		E9A2A30D17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A2A30B17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png */; };
 		E9A41DCA17625BA5006E76B2 /* group_member_add.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A41DC617625BA5006E76B2 /* group_member_add.png */; };
 		E9A41DCB17625BA5006E76B2 /* group_member_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A41DC717625BA5006E76B2 /* group_member_add@2x.png */; };
 		E9A41DCC17625BA5006E76B2 /* group_member_remove.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A41DC817625BA5006E76B2 /* group_member_remove.png */; };
@@ -613,8 +609,6 @@
 		63825499175F746B000347CD /* ProfileDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileDataSource.h; sourceTree = "<group>"; };
 		6382549A175F746B000347CD /* ProfileDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileDataSource.m; sourceTree = "<group>"; };
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon.png"; sourceTree = "<group>"; };
-		6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon@2x.png"; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingGroundViewController.h; sourceTree = "<group>"; };
 		638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingGroundViewController.m; sourceTree = "<group>"; };
@@ -848,8 +842,6 @@
 		E99886EB17282C950089A510 /* sweep_in_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_in_sound.wav; sourceTree = "<group>"; };
 		E99886EC17282C950089A510 /* sweep_out_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_out_sound.wav; sourceTree = "<group>"; };
 		E99886EE17282C950089A510 /* throw_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = throw_sound.wav; sourceTree = "<group>"; };
-		E9A2A30A17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon-60.png"; sourceTree = "<group>"; };
-		E9A2A30B17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hoccer-xo-app-icon-120.png"; sourceTree = "<group>"; };
 		E9A41DC617625BA5006E76B2 /* group_member_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_member_add.png; sourceTree = "<group>"; };
 		E9A41DC717625BA5006E76B2 /* group_member_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "group_member_add@2x.png"; sourceTree = "<group>"; };
 		E9A41DC817625BA5006E76B2 /* group_member_remove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_member_remove.png; sourceTree = "<group>"; };
@@ -1572,11 +1564,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
-				E9A2A30A17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png */,
-				E9A2A30B17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png */,
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
-				6383FF8B172A10D700835C91 /* hoccer-xo-app-icon@2x.png */,
-				6383FF89172A10C700835C91 /* hoccer-xo-app-icon.png */,
 				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */,
@@ -1644,6 +1632,7 @@
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 				E96CB01D1714572C005F8FFA /* Crypto */,
+				6A568B8A18BA8F0400584A04 /* Images.xcassets */,
 				63F4CF0E172892EB00699394 /* InvitationController.h */,
 				63F4CF0F172892EB00699394 /* InvitationController.m */,
 				632502A51866340A00543D80 /* MessageItems.h */,
@@ -1660,7 +1649,6 @@
 				63AE453F170488FB0099F0CB /* UIViewController+HXOSideMenu.m */,
 				631F6CDA170654A600FB28D5 /* UtilityCategories */,
 				63D4916716CAA17D00FD395F /* Views */,
-				6A568B8A18BA8F0400584A04 /* Images.xcassets */,
 			);
 			path = HoccerXO;
 			sourceTree = "<group>";
@@ -2338,8 +2326,6 @@
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
-				6383FF8A172A10C700835C91 /* hoccer-xo-app-icon.png in Resources */,
-				6383FF8C172A10D700835C91 /* hoccer-xo-app-icon@2x.png in Resources */,
 				63A7F6A9172C418A00C0EC26 /* zbar-back.png in Resources */,
 				63A7F6AA172C418A00C0EC26 /* zbar-help.html in Resources */,
 				63A7F6AB172C418A00C0EC26 /* zbar-helpicons.png in Resources */,
@@ -2388,8 +2374,6 @@
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
 				6AE9768E17BB880400D60E7C /* icon_profile-chat.png in Resources */,
 				E9A85DA0184FD1AD00EB9B68 /* chatbar-attachment-icon-music.png in Resources */,
-				E9A2A30C17E3E2400080C1D2 /* hoccer-xo-app-icon-60.png in Resources */,
-				E9A2A30D17E3E2400080C1D2 /* hoccer-xo-app-icon-120.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
