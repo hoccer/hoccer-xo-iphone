@@ -208,8 +208,11 @@ typedef enum ActionSheetTags {
 
 - (void) populateValues {
     id modelObject = [self getModelObject];
-    _avatarItem.currentValue = [modelObject valueForKey: _avatarItem.valueKey];
     UIImage * avatar = [modelObject valueForKey: _avatarItem.valueKey];
+    _avatarItem.currentValue = avatar;
+    if ( ! avatar) {
+        avatar = [UIImage imageNamed: [self avatarDefaultImageName]];
+    }
     self.avatarView.image = avatar;
     //self.avatarBackgroundView.image = self.isEditing ? [_avatarItem.currentValue applyDarkEffect] : [_avatarItem.currentValue applyLightEffect];
     [self setAvatarBackgroundImage: avatar];
@@ -516,13 +519,17 @@ typedef enum ActionSheetTags {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     id item = _profileDataSource[indexPath.section][indexPath.row];
-    UITableViewCell * cell = [self prototypeCellOfClass: [item cellClass]];
-    //if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
-        ((UserDefaultsCell*)cell).label.text = [item currentValue];
-        return [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
-    //} else {
-    //    return cell.bounds.size.height;
-    //}
+    UserDefaultsCell * cell = (UserDefaultsCell*)[self prototypeCellOfClass: [item cellClass]];
+    CGFloat height;
+    if ([item currentValue] && ! [[item currentValue] isEqualToString: @""]) {
+        cell.label.text = [item currentValue];
+        height = [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
+    } else {
+        cell.label.numberOfLines = 1;
+        height = [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
+        cell.label.numberOfLines = 0;
+    }
+    return height;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
