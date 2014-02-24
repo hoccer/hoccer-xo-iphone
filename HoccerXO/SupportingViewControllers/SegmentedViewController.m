@@ -57,6 +57,7 @@
         [self.view addSubview: vc.view];
     } completion:^(BOOL finished) {
         [vc didMoveToParentViewController:self];
+        [self.currentViewController willMoveToParentViewController: nil];
         [self.currentViewController removeFromParentViewController];
         self.currentViewController = vc;
     }];
