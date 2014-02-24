@@ -97,12 +97,6 @@
 
 @end
 
-@interface UserDefaultsCellSwitch: UserDefaultsCell
-
-@property (nonatomic,strong) IBOutlet UISwitch * toggle;
-
-@end
-
 @interface UserDefaultsCellInfoText : UserDefaultsCell
 
 @property (nonatomic,strong) IBOutlet UILabel * textLabel;

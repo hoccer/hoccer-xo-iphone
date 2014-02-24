@@ -229,15 +229,6 @@ extern CGFloat kHXOGridSpacing;
 
 @end
 
-@implementation UserDefaultsCellSwitch
-
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    self.label.font = [UIFont boldSystemFontOfSize: 14];
-}
-
-@end
-
 @implementation UserDefaultsCellInfoText
 
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {

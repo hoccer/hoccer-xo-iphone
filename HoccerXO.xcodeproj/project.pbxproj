@@ -65,7 +65,6 @@
 		6330491B170044940045E64E /* avatar_default_nearby@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63304913170044940045E64E /* avatar_default_nearby@2x.png */; };
 		633049271701A3A80045E64E /* NavigationMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633049261701A3A80045E64E /* NavigationMenuViewController.m */; };
 		6330492A1701B3390045E64E /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633049291701B3390045E64E /* ProfileViewController.m */; };
-		633462AC174FC9BF008D98FC /* GroupAdminCell_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633462AB174FC9BF008D98FC /* GroupAdminCell_iPhone.xib */; };
 		633462AF174FCA3C008D98FC /* GroupAdminCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633462AE174FCA3C008D98FC /* GroupAdminCell.m */; };
 		633462B3174FE3E3008D98FC /* group_member_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B1174FE3E3008D98FC /* group_member_divider.png */; };
 		633462B4174FE3E3008D98FC /* group_member_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633462B2174FE3E3008D98FC /* group_member_divider@2x.png */; };
@@ -524,7 +523,6 @@
 		633049261701A3A80045E64E /* NavigationMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationMenuViewController.m; sourceTree = "<group>"; };
 		633049281701B3390045E64E /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		633049291701B3390045E64E /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
-		633462AB174FC9BF008D98FC /* GroupAdminCell_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupAdminCell_iPhone.xib; sourceTree = "<group>"; };
 		633462AD174FCA3C008D98FC /* GroupAdminCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupAdminCell.h; sourceTree = "<group>"; };
 		633462AE174FCA3C008D98FC /* GroupAdminCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupAdminCell.m; sourceTree = "<group>"; };
 		633462B1174FE3E3008D98FC /* group_member_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group_member_divider.png; sourceTree = "<group>"; };
@@ -1756,7 +1754,6 @@
 		63DC01861715FE8B00609513 /* UserDefaultsCells */ = {
 			isa = PBXGroup;
 			children = (
-				633462AB174FC9BF008D98FC /* GroupAdminCell_iPhone.xib */,
 				6374B818174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib */,
 				63C1355F1716054C00969B0B /* README */,
 			);
@@ -2341,7 +2338,6 @@
 				5048263F174796F10048538A /* navigation_button_groups.png in Resources */,
 				6374B819174D0ECF00506EE9 /* GroupMemberCell_iPhone.xib in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
-				633462AC174FC9BF008D98FC /* GroupAdminCell_iPhone.xib in Resources */,
 				633462B3174FE3E3008D98FC /* group_member_divider.png in Resources */,
 				633462B4174FE3E3008D98FC /* group_member_divider@2x.png in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
