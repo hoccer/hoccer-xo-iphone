@@ -17,6 +17,8 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
 
+    self.navigationItem.title = NSLocalizedString(@"Settings", nil);
+
     //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
     //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 

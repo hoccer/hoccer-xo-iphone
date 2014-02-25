@@ -23,6 +23,7 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
 #import "TestFlight.h"
+#import "HXOTheme.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -261,6 +262,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     [self checkForCrash];
     self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
+
+    [[HXOTheme theme] setupAppearanceProxies];
 
     UIStoryboard *storyboard = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
