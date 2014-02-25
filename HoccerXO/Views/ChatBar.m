@@ -28,7 +28,7 @@
 
 
 - (void) commonInit {
-    self.borderColor = [UIColor colorWithRed: 0.749 green: 0.753 blue: 0.757 alpha: 1];
+    self.borderColor = [UIColor colorWithWhite: 0.85 alpha: 1];
 }
 
 - (void)drawRect:(CGRect)rect {
