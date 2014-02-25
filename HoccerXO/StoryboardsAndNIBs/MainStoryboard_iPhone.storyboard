@@ -10,10 +10,8 @@
             <objects>
                 <navigationController storyboardIdentifier="navigationController" id="3" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Chats" image="tabbar_conversations.png" id="rtu-HQ-rkp"/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="4">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" red="0.14509803921568626" green="0.72156862745098038" blue="0.6705882352941176" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="4nm-mG-zhE">
                         <rect key="frame" x="0.0" y="416" width="320" height="44"/>
