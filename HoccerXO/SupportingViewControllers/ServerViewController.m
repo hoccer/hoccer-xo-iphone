@@ -7,7 +7,6 @@
 //
 
 #import "ServerViewController.h"
-#import "UIViewController+HXOSideMenu.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "HTTPServer.h"
@@ -41,9 +40,6 @@
 {
     [super viewDidLoad];
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
-
-    self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
     
     self.passwordTextField.backgroundColor = [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1.0];
     self.passwordTextField.delegate = self;

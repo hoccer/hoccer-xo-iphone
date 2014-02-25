@@ -29,7 +29,7 @@
 - (void) messageCell:(MessageCell *)cell copy:(id)sender;
 - (void) messageCell:(MessageCell *)cell deleteMessage:(id)sender;
 - (void) messageCell:(MessageCell *)cell resendMessage:(id)sender;
-- (void) messageCell:(MessageCell *)cell forwardMessage:(id)sender;
+//- (void) messageCell:(MessageCell *)cell forwardMessage:(id)sender;
 - (void) messageCell:(MessageCell *)cell openWithMessage:(id)sender;
 - (void) messageCell:(MessageCell *)cell shareMessage:(id)sender;
 - (void) messageCellDidPressAvatar:(MessageCell *)cell;

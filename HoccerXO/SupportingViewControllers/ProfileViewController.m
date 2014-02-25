@@ -9,7 +9,6 @@
 #import "HXOConfig.h"
 #import "ProfileViewController.h"
 #import "MFSideMenu.h"
-#import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
@@ -505,7 +504,7 @@ typedef enum ActionSheetTags {
             if (self.isEditing) {
                 self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action:@selector(onCancel:)];
             } else {
-                self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
+                self.navigationItem.leftBarButtonItem = nil;
             }
             break;
         case ProfileViewModeContactProfile:
@@ -610,19 +609,11 @@ typedef enum ActionSheetTags {
             }
             [self save];
         }
-        self.navigationItem.leftBarButtonItem = [self leftNonEditButton];
+        self.navigationItem.leftBarButtonItem = nil;
         for (ProfileItem* item in _allProfileItems) {
             [item removeObserver: self forKeyPath: @"valid"];
         }
         [self onEditingDone];
-    }
-}
-
-- (UIBarButtonItem*) leftNonEditButton {
-    if (_mode == ProfileViewModeMyProfile) {
-        return self.navigationController.viewControllers.count == 1 ? self.hxoMenuButton : nil;
-    } else {
-        return nil;
     }
 }
 

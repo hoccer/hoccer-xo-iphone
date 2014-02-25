@@ -8,7 +8,6 @@
 
 #import "ContactListViewController.h"
 
-#import "UIViewController+HXOSideMenu.h"
 #import "Contact.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
@@ -56,7 +55,6 @@
 }
 
 - (void) setupNavigationBar {
-    self.navigationItem.leftBarButtonItem = self.hxoMenuButton;
 
     UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addButtonPressed:)];
     self.navigationItem.rightBarButtonItem = addContactButton;

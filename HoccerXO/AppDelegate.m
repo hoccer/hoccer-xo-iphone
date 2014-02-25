@@ -14,8 +14,6 @@
 #import "Contact.h"
 #import "Attachment.h"
 #import "HXOMessage.h"
-#import "NavigationMenuViewController.h"
-#import "ContactQuickListViewController.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
 #import "InviteCodeViewController.h"

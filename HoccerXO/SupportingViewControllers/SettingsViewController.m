@@ -10,7 +10,6 @@
 
 #import "IASKSpecifierValuesViewController.h"
 
-#import "UIViewController+HXOSideMenu.h"
 #import "UserDefaultsCells.h"
 
 @implementation SettingsViewController

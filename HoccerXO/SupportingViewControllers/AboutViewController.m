@@ -11,8 +11,6 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "UIViewController+HXOSideMenu.h"
-
 #ifdef DEBUG
 # define kReleaseBuild NO 
 #else
