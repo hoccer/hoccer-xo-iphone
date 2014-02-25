@@ -9,7 +9,7 @@
         <scene sceneID="11">
             <objects>
                 <navigationController storyboardIdentifier="navigationController" id="3" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Chats" id="rtu-HQ-rkp"/>
+                    <tabBarItem key="tabBarItem" title="Chats" image="tabbar_conversations.png" id="rtu-HQ-rkp"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" barStyle="black" id="4">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -618,7 +618,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="546" y="82"/>
+            <point key="canvasLocation" x="756" y="82"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="Cde-1N-k7V">
@@ -938,7 +938,7 @@
         <scene sceneID="YWf-kL-LN8">
             <objects>
                 <navigationController definesPresentationContext="YES" id="ndO-Hb-TaY" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Contacts" id="93c-hp-8Jv"/>
+                    <tabBarItem key="tabBarItem" title="Contacts" image="tabbar_contacts.png" id="93c-hp-8Jv"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5K-80-wga">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -954,7 +954,7 @@
         <scene sceneID="389-Am-i9Z">
             <objects>
                 <navigationController definesPresentationContext="YES" id="dNK-Pr-I05" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Profile" id="Yft-kE-KJs"/>
+                    <tabBarItem key="tabBarItem" title="Profile" image="tabbar_profile.png" id="Yft-kE-KJs"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wrH-DR-hdJ">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -970,7 +970,7 @@
         <scene sceneID="9Th-6A-c3s">
             <objects>
                 <navigationController definesPresentationContext="YES" id="TcE-yq-ikP" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" id="fSA-6P-YP2"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="tabbar_settings.png" id="fSA-6P-YP2"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="6dU-Bk-nuX">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1242,6 +1242,10 @@
     <resources>
         <image name="chatbar_btn_add-content.png" width="50" height="30"/>
         <image name="chatbar_icon-send.png" width="26" height="19"/>
+        <image name="tabbar_contacts.png" width="32" height="32"/>
+        <image name="tabbar_conversations.png" width="32" height="32"/>
+        <image name="tabbar_profile.png" width="32" height="32"/>
+        <image name="tabbar_settings.png" width="32" height="32"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
