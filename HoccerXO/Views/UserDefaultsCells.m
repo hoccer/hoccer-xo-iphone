@@ -270,8 +270,6 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    //self.editingAccessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
-    
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 }
 
