@@ -1297,6 +1297,8 @@
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
+				6327F37818B8D45B007D79E3 /* ContactManagementViewController.h */,
+				6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				63BD7D9617442C1B00118A7F /* GroupListViewController.h */,
@@ -1325,14 +1327,12 @@
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
 				E9D1145517316DCC00737EF7 /* StartupViewController.h */,
 				E9D1145617316DCC00737EF7 /* StartupViewController.m */,
+				6324C03C18BE09AE00E4BD82 /* SubViewController.h */,
+				6324C03D18BE09AE00E4BD82 /* SubViewController.m */,
 				638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */,
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				6327F37818B8D45B007D79E3 /* ContactManagementViewController.h */,
-				6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */,
-				6324C03C18BE09AE00E4BD82 /* SubViewController.h */,
-				6324C03D18BE09AE00E4BD82 /* SubViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;

@@ -32,8 +32,9 @@
     [self addChildViewController:vc];
     vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
+    self.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem;
+    self.navigationItem.rightBarButtonItem = vc.navigationItem.rightBarButtonItem;
     self.currentViewController = vc;
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,6 +59,8 @@
         vc.view.frame = self.view.bounds;
         [self.view addSubview: vc.view];
     } completion:^(BOOL finished) {
+        self.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem;
+        self.navigationItem.rightBarButtonItem = vc.navigationItem.rightBarButtonItem;
         [vc didMoveToParentViewController:self];
         [self.currentViewController willMoveToParentViewController: nil];
         [self.currentViewController removeFromParentViewController];
