@@ -29,7 +29,7 @@
         <scene sceneID="l7g-Ph-Tm8">
             <objects>
                 <tabBarController definesPresentationContext="YES" id="YW5-Fa-tl0" sceneMemberID="viewController">
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="DN9-K4-w2g">
                         <rect key="frame" x="129" y="330" width="163" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -1251,7 +1251,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="09b-JC-XgT"/>
+        <segue reference="lna-0K-80T"/>
         <segue reference="zhf-Yf-w9m"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "SubViewController.h"
 
 @class ContactCell;
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
+@interface ContactListViewController : SubViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;

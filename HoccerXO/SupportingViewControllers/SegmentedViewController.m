@@ -33,11 +33,13 @@
     vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
     self.currentViewController = vc;
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    self.cachedViewControllers = [NSMutableDictionary dictionary];
 }
 
 - (NSArray*) localizedSegmentTitles {

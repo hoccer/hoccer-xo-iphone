@@ -25,6 +25,7 @@
 		6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6316D68E171EEC0A007441D9 /* libObjCSRP.a */; };
 		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
 		6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* InsetImageView.m */; };
+		6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6324C03D18BE09AE00E4BD82 /* SubViewController.m */; };
 		6325029918658D4000543D80 /* HXOAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325029818658D4000543D80 /* HXOAvatarButton.m */; };
 		632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502A31865FC2600543D80 /* DateSectionHeaderView.m */; };
 		632502A71866340A00543D80 /* MessageItems.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502A61866340A00543D80 /* MessageItems.m */; };
@@ -469,6 +470,8 @@
 		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
 		6320D7CB16E0C79A00E58478 /* InsetImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetImageView.h; sourceTree = "<group>"; };
 		6320D7CC16E0C79A00E58478 /* InsetImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsetImageView.m; sourceTree = "<group>"; };
+		6324C03C18BE09AE00E4BD82 /* SubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
+		6324C03D18BE09AE00E4BD82 /* SubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
 		6325029718658D4000543D80 /* HXOAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAvatarButton.h; sourceTree = "<group>"; };
 		6325029818658D4000543D80 /* HXOAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAvatarButton.m; sourceTree = "<group>"; };
 		632502A21865FC2600543D80 /* DateSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateSectionHeaderView.h; sourceTree = "<group>"; };
@@ -1540,6 +1543,8 @@
 				63AE45461704945C0099F0CB /* WebViewController.m */,
 				6327F37818B8D45B007D79E3 /* ContactManagementViewController.h */,
 				6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */,
+				6324C03C18BE09AE00E4BD82 /* SubViewController.h */,
+				6324C03D18BE09AE00E4BD82 /* SubViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -2544,6 +2549,7 @@
 				63808A2C185942D20001AC96 /* ImageAttachmentSection.m in Sources */,
 				E9E92F7518733D01007B8042 /* HTTPAsyncFileResponse.m in Sources */,
 				6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */,
+				6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
 				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,
 				633462AF174FCA3C008D98FC /* GroupAdminCell.m in Sources */,
