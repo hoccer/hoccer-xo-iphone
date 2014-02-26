@@ -24,6 +24,7 @@
 #import "ZipArchive.h"
 #import "TestFlight.h"
 #import "HXOTheme.h"
+#import "ChatViewController.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -1322,10 +1323,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [alert show];
 }
 
-- (void) connectionStatusDidChange {
-    self.navigationController.topViewController.navigationItem.prompt = @"blub";
-}
-
 + (void) updateStatusbarForViewController:(UIViewController*)viewcontroller style:(UIStatusBarStyle)theStyle {
     // NSLog(@"updateStatusbar");
     
@@ -1398,6 +1395,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
     NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
     return myLocalURL;
+}
+
+- (void) jumpToChat: (Contact*) contact {
+    UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
+    tabBarController.selectedIndex = 0;
+    UINavigationController * navigationController = (UINavigationController*)tabBarController.selectedViewController;
+    ChatViewController * chatViewController = [navigationController.storyboard instantiateViewControllerWithIdentifier: @"chatViewController"];
+    chatViewController.partner = contact;
+    [navigationController setViewControllers: @[navigationController.topViewController, chatViewController]];
 }
 
 + (AppDelegate*)instance {

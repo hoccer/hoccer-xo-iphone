@@ -1018,14 +1018,6 @@ typedef enum ActionSheetTags {
     _avatarItem.currentValue = image;
     self.avatarView.image = image;
     [self setAvatarBackgroundImage: image];
-    //self.avatarBackgroundView.image = self.isEditing ? [_avatarItem.currentValue applyDarkEffect] : [_avatarItem.currentValue applyLightEffect];
-    /*
-    NSIndexPath * indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
-    UserDefaultsCellAvatarPicker * cell = (UserDefaultsCellAvatarPicker*)[self.tableView cellForRowAtIndexPath: indexPath];
-    [self.tableView beginUpdates];
-    [cell configure: _avatarItem];
-    [self.tableView endUpdates];
-     */
 }
 
 - (void) setAvatarBackgroundImage: (UIImage*) newImage {
@@ -1036,11 +1028,7 @@ typedef enum ActionSheetTags {
 #pragma mark - Profile Actions
 
 - (void) chatWithContactPressed: (id) sender {
-    ConversationViewController * conversationViewController = self.appDelegate.conversationViewController;
-    ChatViewController * chatViewController = conversationViewController.chatViewController;
-    chatViewController.partner = self.contact;
-    NSArray * viewControllers = @[conversationViewController, chatViewController];
-    [self.navigationController setViewControllers: viewControllers animated: YES];
+    [self.appDelegate jumpToChat: self.contact];
 }
 
 - (void) toggleBlockedPressed: (id) sender {
