@@ -95,8 +95,6 @@ extern CGFloat kHXOGridSpacing;
      */
     self.label.text = [item editLabel];
     [self.label sizeToFit];
-
-    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
@@ -129,6 +127,7 @@ extern CGFloat kHXOGridSpacing;
 - (void) layoutSubviews {
     [super layoutSubviews];
     if (self.valueFormat != nil && ! self.isEditing) {
+        NSString * t = [self formattedValue];
         self.label.text = [self formattedValue];
         [self.label sizeToFit];
     }
@@ -259,7 +258,7 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
-    size = [self.label sizeThatFits: CGSizeMake(size.width,0)];
+    size = [self.label sizeThatFits: size];
     size.height += 4 * kHXOGridSpacing;
     return size;
 }

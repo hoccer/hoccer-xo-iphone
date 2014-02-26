@@ -520,14 +520,18 @@ typedef enum ActionSheetTags {
     id item = _profileDataSource[indexPath.section][indexPath.row];
     UserDefaultsCell * cell = (UserDefaultsCell*)[self prototypeCellOfClass: [item cellClass]];
     CGFloat height;
-    if ([item currentValue] && ! [[item currentValue] isEqualToString: @""]) {
-        cell.label.text = [item currentValue];
-        height = [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
+    if ([cell isKindOfClass: [UserDefaultsCellInfoText class]]) {
+        cell.label.numberOfLines = 0;
     } else {
         cell.label.numberOfLines = 1;
-        height = [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
-        cell.label.numberOfLines = 0;
     }
+    
+    if ([item currentValue] && ! [[item currentValue] isEqualToString: @""]) {
+        cell.label.text = [item currentValue];
+    } else {
+        cell.label.text = @"XXX";
+    }
+    height = [cell sizeThatFits: CGSizeMake(self.view.bounds.size.width, FLT_MAX)].height;
     return height;
 }
 

@@ -405,7 +405,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
         UITableViewCell * cell = [self prototypeCellOfClass: [GroupMemberCell class]];
         return cell.bounds.size.height;
     }
-    // TODO: Admin cell requires dynamic height ...
     return [super tableView: tableView heightForRowAtIndexPath: indexPath];
 }
 
