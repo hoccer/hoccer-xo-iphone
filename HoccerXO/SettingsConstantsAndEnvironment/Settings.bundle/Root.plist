@@ -378,6 +378,36 @@
 			<key>FalseValue</key>
 			<string></string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>Tutorial</string>
+			<key>Key</key>
+			<string>tutorial</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>FAQ</string>
+			<key>Key</key>
+			<string>faq</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>About</string>
+			<key>Key</key>
+			<string>about</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Settings</string>

@@ -10,45 +10,44 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+extern CGFloat kHXOGridSpacing;
+
+@interface ProfileAvatarView ()
+
+@property (nonatomic,strong) CALayer * avatarLayer;
+
+@end
+
 @implementation ProfileAvatarView
 
-- (id) initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder: aDecoder];
+- (id) initWithFrame:(CGRect)frame {
+    self = [super initWithFrame: frame];
     if (self != nil) {
         self.opaque = NO;
-        self.backgroundColor = [UIColor clearColor];
+        self.avatarLayer = [CALayer layer];
+
+        CGFloat size = frame.size.height - 7 * kHXOGridSpacing;
+        self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
+        self.avatarLayer.position = self.center;
+
+        CAShapeLayer * mask = [CAShapeLayer layer];
+        mask.path = [UIBezierPath bezierPathWithOvalInRect: self.avatarLayer.bounds].CGPath;
+        self.avatarLayer.mask = mask;
+
+        [self.layer addSublayer: self.avatarLayer];
     }
     return self;
 }
 
-- (void) drawRect:(CGRect)rect {
-    //// Image Declarations
-    UIImage* image = self.image != nil ? self.image : self.defaultImage;
-
-    //// Frames
-    CGRect frame = CGRectInset(self.bounds, -10, -10);
-    
-
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
-
-    //// Oval Drawing
-    CGRect ovalRect = CGRectMake(CGRectGetMinX(frame) + 43, CGRectGetMinY(frame) + 43, CGRectGetWidth(frame) - 86, CGRectGetHeight(frame) - 86);
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: ovalRect];
-    CGContextSaveGState(context);
-    [ovalPath addClip];
-    [image drawInRect: ovalRect];
-    CGContextRestoreGState(context);
-}
-
-- (void) setOuterShadowColor:(UIColor *)outerShadowColor {
-    _outerShadowColor = outerShadowColor;
-    [self setNeedsDisplay];
-}
 - (void) setImage:(UIImage *)image {
     _image = image;
+    self.avatarLayer.contents = (id)image.CGImage;
     [self setNeedsDisplay];
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    self.avatarLayer.position = self.center;
 }
 
 @end

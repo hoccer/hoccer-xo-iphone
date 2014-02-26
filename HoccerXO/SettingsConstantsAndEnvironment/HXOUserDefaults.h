@@ -23,12 +23,6 @@ FOUNDATION_EXPORT NSString * const kHXONickName;
 FOUNDATION_EXPORT NSString * const kHXOAvatarURL;
 FOUNDATION_EXPORT NSString * const kHXOAvatarUploadURL;
 FOUNDATION_EXPORT NSString * const kHXOUserStatus;
-FOUNDATION_EXPORT NSString * const kHXOPhoneNumber;
-FOUNDATION_EXPORT NSString * const kHXOMailAddress;
-FOUNDATION_EXPORT NSString * const kHXOTwitterName;
-FOUNDATION_EXPORT NSString * const kHXOFacebookName;
-FOUNDATION_EXPORT NSString * const kHXOGooglePlusName;
-FOUNDATION_EXPORT NSString * const kHXOGithubName;
 
 FOUNDATION_EXPORT NSString * const kHXOAutoDownloadLimitWLAN;
 FOUNDATION_EXPORT NSString * const kHXOAutoUploadLimitWLAN;

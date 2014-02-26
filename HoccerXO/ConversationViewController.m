@@ -16,7 +16,6 @@
 #import "HXOMessage.h"
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
-#import "UIViewController+HXOSideMenu.h"
 #import "HXOUserDefaults.h"
 #import "ProfileViewController.h"
 #import "InvitationController.h"
@@ -49,7 +48,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
 
     UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(inviteFriendsPressed:)];
 

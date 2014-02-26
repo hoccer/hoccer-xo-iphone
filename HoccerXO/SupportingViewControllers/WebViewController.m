@@ -10,7 +10,6 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "UIViewController+HXOSideMenu.h"
 #import "RNCachingURLProtocol.h"
 #import "HXOBackend.h"
 
@@ -33,8 +32,8 @@
     
     _requestsRunning = 0;
 
-    self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
+    //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
+    //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
     
     self.webView.suppressesIncrementalRendering = YES;
     self.webView.delegate = self;

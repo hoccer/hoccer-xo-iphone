@@ -45,7 +45,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     ProfileSection * _groupUtilitiesSection;
 
     ProfileItem * _adminsItem;
-    ProfileSection * _adminInfoSection;
+    //ProfileSection * _adminInfoSection;
     
     FetchedResultsSectionAdapter * _memberListItem;
     BOOL _deleteGroupFlag;
@@ -279,20 +279,20 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (void) populateItems {
     _inviteMemberItem = [[ProfileItem alloc] initWithName:@"InviteGroupMemberItem"];
-    _inviteMemberItem.currentValue = NSLocalizedString(@"group_invite_button", nil);
+    _inviteMemberItem.editLabel = NSLocalizedString(@"group_invite_button", nil);
     _inviteMemberItem.cellClass = [UserDefaultsCellDisclosure class];
     _inviteMemberItem.action = @selector(inviteMemberPressed:);
     _inviteMemberItem.target = self;
     _inviteMemberItem.alwaysShowDisclosure = YES;
 
     _joinGroupItem = [[ProfileItem alloc] initWithName:@"JoinGroupItem"];
-    _joinGroupItem.currentValue = NSLocalizedString(@"group_join_button", nil);
+    _joinGroupItem.editLabel = NSLocalizedString(@"group_join_button", nil);
     _joinGroupItem.cellClass = [UserDefaultsCellDisclosure class];
     _joinGroupItem.action = @selector(joinGroupPressed:);
     _joinGroupItem.target = self;
 
     _declineInviteOrLeaveOrDeleteGroupItem = [[ProfileItem alloc] initWithName:@"DeclineInviteOrLeaveGroupItem"];
-    _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
+    _declineInviteOrLeaveOrDeleteGroupItem.editLabel = [self declineOrLeaveOrDeleteLabel];
     _declineInviteOrLeaveOrDeleteGroupItem.cellClass = [UserDefaultsCellDisclosure class];
     _declineInviteOrLeaveOrDeleteGroupItem.action = @selector(declineOrLeaveOrDeletePressed:);
     _declineInviteOrLeaveOrDeleteGroupItem.target = self;
@@ -303,7 +303,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     _adminsItem.currentValue = [self adminsLabelText];
     _adminsItem.cellClass = [GroupAdminCell class];
 
-    _adminInfoSection = [ProfileSection sectionWithName:@"AdminInfoSection" items: _adminsItem, nil];
+    //_adminInfoSection = [ProfileSection sectionWithName:@"AdminInfoSection" items: _adminsItem, nil];
 
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self name: @"GroupMemberSection"];
 
@@ -357,11 +357,11 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (NSArray*) composeModel: (BOOL) editing {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: composeItems");
-    [self composeProfileItems: editing];
+    //[self composeProfileItems: editing];
     if (editing) {
-        return @[ _avatarSection, _profileItemsSection, _adminInfoSection, _memberListItem];
+        return @[ _coreSection/*, _profileItemsSection, _adminInfoSection*/, _memberListItem];
     }
-    return @[ _avatarSection, [self groupUtilities], _profileItemsSection, _adminInfoSection, _memberListItem];
+    return @[ _coreSection, [self groupUtilities]/*, _profileItemsSection, _adminInfoSection*/, _memberListItem];
 }
 
 - (NSUInteger) groupMemberSectionIndex {
@@ -420,6 +420,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     return [super tableView: tableView cellForRowAtIndexPath: indexPath];
 }
 
+
 - (id) getContact: (GroupMembership*) membership {
     if (![self.group isEqual:membership.contact]) {
         return membership.contact;
@@ -433,10 +434,24 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: heightForHeaderInSection %d",section);
-    return section == [self groupMemberSectionIndex] ? 5 : [super tableView: tableView heightForHeaderInSection: section];
+    return section == [self groupMemberSectionIndex] ? 24 : [super tableView: tableView heightForHeaderInSection: section];
 }
 
 - (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == [self groupMemberSectionIndex]) {
+        UILabel * adminHeader = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, 24)];
+        adminHeader.font = [UIFont systemFontOfSize: 12];
+        adminHeader.textColor = [UIColor colorWithWhite: 0.6 alpha: 1.0];
+        adminHeader.text = [self adminsLabelText];
+        adminHeader.textAlignment = NSTextAlignmentCenter;
+        return adminHeader;
+    }
+    return [super tableView: tableView viewForHeaderInSection: section];
+/*
+    
+    
+    
+    
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: viewForHeaderInSection %d",section);
     if (section != [self groupMemberSectionIndex]) {
         return nil;
@@ -444,6 +459,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     UIView * header = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.frame.size.width, 5)];
     header.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"group_member_divider"]];
     return header;
+ */
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {

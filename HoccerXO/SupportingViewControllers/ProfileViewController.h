@@ -34,7 +34,7 @@ typedef enum ProfileViewModes {
 @interface ProfileViewController : HXOGroupedTableViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate, ProfileDataSourceDelegate>
 {
     AvatarItem *          _avatarItem;
-    ProfileSection *      _avatarSection;
+    ProfileSection *      _coreSection;
     
     ProfileItem *         _nickNameItem;
 //#ifdef DEBUG
@@ -83,12 +83,10 @@ typedef enum ProfileViewModes {
 @property (nonatomic,strong) Contact* contact;
 @property (strong, readonly) AppDelegate * appDelegate;
 
-
 - (void) setupNavigationButtons;
 - (void) setupContactKVO;
 - (IBAction)onCancel:(id)sender;
 - (void) populateItems;
-- (void) composeProfileItems: (BOOL) editing;
 - (void) populateValues;
 
 + (void) exportCredentials;

@@ -63,18 +63,6 @@ static InvitationController * _sharedInvitationController;
         channel.handler = @selector(acceptInviteCode);
         [self.invitationChannels addObject: channel];
 
-        /* action sheet test dummy buttons
-        channel = [[InvitationChannel alloc] init];
-        channel.localizedButtonTitle = @"Gnurbel";
-        channel.handler = @selector(acceptInviteCode);
-        [self.invitationChannels addObject: channel];
-
-        channel = [[InvitationChannel alloc] init];
-        channel.localizedButtonTitle = @"Fnurbel";
-        channel.handler = @selector(acceptInviteCode);
-        [self.invitationChannels addObject: channel];
-         */
-
     }
     return self;
 }

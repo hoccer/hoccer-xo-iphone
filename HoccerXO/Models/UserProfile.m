@@ -91,12 +91,6 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
      */
     NSData * avatar     = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAvatar];
     self.status         = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOUserStatus];
-    self.phoneNumber    = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOPhoneNumber];
-    self.mailAddress    = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOMailAddress];
-    self.twitterName    = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOTwitterName];
-    self.facebookName   = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOFacebookName];
-    self.googlePlusName = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOGooglePlusName];
-    self.githubName     = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOGithubName];
     self.avatarImage = [UIImage imageWithData: avatar];
 }
 
@@ -106,12 +100,6 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     [[HXOUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHXONickName];
     [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
     [[HXOUserDefaults standardUserDefaults] setValue: self.status         forKey: kHXOUserStatus];
-    [[HXOUserDefaults standardUserDefaults] setValue: self.phoneNumber    forKey: kHXOPhoneNumber];
-    [[HXOUserDefaults standardUserDefaults] setValue: self.mailAddress    forKey: kHXOMailAddress];
-    [[HXOUserDefaults standardUserDefaults] setValue: self.twitterName    forKey: kHXOTwitterName];
-    [[HXOUserDefaults standardUserDefaults] setValue: self.facebookName   forKey: kHXOFacebookName];
-    [[HXOUserDefaults standardUserDefaults] setValue: self.googlePlusName forKey: kHXOGooglePlusName];
-    [[HXOUserDefaults standardUserDefaults] setValue: self.githubName     forKey: kHXOGithubName];
     [[HXOUserDefaults standardUserDefaults] synchronize];
 }
 

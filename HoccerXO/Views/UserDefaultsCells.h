@@ -13,6 +13,8 @@
 
 @protocol UserDefaultsCellTextInputDelegate <NSObject>
 
+@property (nonatomic,assign) BOOL isEditable;
+
 @optional
 
 - (BOOL) validateTextField: (UITextField*) textField;
@@ -40,6 +42,7 @@
 @property (nonatomic,strong) NSString *      name;
 @property (nonatomic,assign) NSUInteger      maxLength;
 @property (nonatomic,strong) NSString *      valueFormat;
+@property (nonatomic,assign) BOOL            isEditable;
 
 - (id) initWithName: (NSString*) name;
 
@@ -61,29 +64,24 @@
 
 @end
 
-
-
 @class ProfileAvatarView;
 
 @interface UserDefaultsCell : HXOTableViewCell
 
 @property (nonatomic,strong) NSString* valueFormat;
 @property (nonatomic,strong) NSString* currentValue;
+@property (nonatomic,strong) IBOutlet UILabel * label;
 
-- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) count;
 - (void) configure: (id) item;
-
-+ (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount;
 
 @end
 
 @interface UserDefaultsCellAvatarPicker : UserDefaultsCell
 
-@property (nonatomic,strong) IBOutlet ProfileAvatarView * avatar;
+//@property (nonatomic,strong) IBOutlet ProfileAvatarView * avatar;
+@property (nonatomic,strong) IBOutlet UIImage * avatarImage;
 
 @end
-
-
 
 @interface UserDefaultsCellTextInput : UserDefaultsCell  <UITextFieldDelegate>
 
@@ -92,12 +90,6 @@
 @property (nonatomic,strong) NSString* editLabel;
 @property (nonatomic,strong) id<UserDefaultsCellTextInputDelegate> delegate;
 @property (nonatomic,assign) NSUInteger maxLength;
-
-@end
-
-@interface UserDefaultsCellSwitch: UserDefaultsCell
-
-@property (nonatomic,strong) IBOutlet UISwitch * toggle;
 
 @end
 

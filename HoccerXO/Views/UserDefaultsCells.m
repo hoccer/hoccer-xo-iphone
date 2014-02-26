@@ -11,9 +11,7 @@
 
 static const CGFloat kEditAnimationDuration = 0.5;
 
-static const CGFloat kHXOCellIconSize = 32.0;
-static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
-
+extern CGFloat kHXOGridSpacing;
 
 @implementation ProfileItem
 
@@ -23,6 +21,7 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
         self.valid = YES;
         self.textAlignment = NSTextAlignmentLeft;
         self.name = name;
+        self.isEditable = NO;
     }
     return self;
 }
@@ -65,67 +64,52 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
     if (self != nil) {
-        [self setupLabelAndIcon];
+        CGFloat height = 3 * kHXOGridSpacing;
+        CGFloat padding = 2 * kHXOGridSpacing;
+        self.label = [[UILabel alloc] initWithFrame: CGRectMake(padding, padding, self.contentView.frame.size.width, height)];
+        self.label.textColor = [UIColor colorWithWhite: 0.6 alpha: 1.0];
+        self.label.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview: self.label];
     }
     return self;
 }
 
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    [self setupLabelAndIcon];
+- (CGSize) sizeThatFits:(CGSize)size {
+    size = [self.label sizeThatFits: CGSizeMake(size.width,0)];
+    size.height += 4 * kHXOGridSpacing;
+    return size;
 }
 
-- (void) setupLabelAndIcon {
-    self.textLabel.shadowColor = [UIColor whiteColor];
-    self.textLabel.shadowOffset = CGSizeMake(0, 1);
-    self.textLabel.textColor = [UIColor colorWithWhite: 0.25 alpha: 1.0];
-    self.textLabel.backgroundColor = [UIColor clearColor];
-
-    self.imageView.contentMode = UIViewContentModeCenter;
-}
-
-+ (void) configureGroupedCell: (UITableViewCell*) cell forPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount{
-    NSString * imageName;
-    //UIImage * image;
-    if (cellCount == 1) {
-        imageName = @"user_defaults_cell_bg_single";
-    } else if (position == 0) {
-        imageName = @"user_defaults_cell_bg_first";
-    } else if (position == cellCount - 1) {
-        imageName = @"user_defaults_cell_bg_last";
-    } else {
-        imageName = @"user_defaults_cell_bg";
-    }
-    cell.backgroundView = [[UIImageView alloc] initWithImage: [[UIImage imageNamed: imageName] stretchableImageWithLeftCapWidth: 4 topCapHeight: 4]];
-}
-
-- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) cellCount {
-    [UserDefaultsCell configureGroupedCell: self forPosition: position inSectionWithCellCount: cellCount];
-}
 
 - (void) configure: (id) item {
     self.valueFormat = [item valueFormat];
     self.currentValue = [item currentValue];
-    self.imageView.image = [item icon];
-    self.textLabel.textAlignment = [item textAlignment];
+    //self.imageView.image = [item icon];
+    self.label.textAlignment = [item textAlignment];
+    /*
     if (self.isEditing) {
         self.textLabel.text = [item editLabel];
     } else {
         self.textLabel.text = self.valueFormat == nil ? [item currentValue] : [self formattedValue];
     }
+     */
+    self.label.text = [item editLabel];
+    [self.label sizeToFit];
+
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 // ugly, iterative value formating to ellipsise at the right place
 - (NSString*) formattedValue {
-    CGFloat maxWidth = self.contentView.bounds.size.width - kHXOCellIconSize - 20;
+    CGFloat maxWidth = self.contentView.bounds.size.width - 20;
     NSString * value = self.currentValue;
     NSString * text = [NSString stringWithFormat: self.valueFormat, value];
 #ifdef PRE_IOS7
-    CGFloat width = [text sizeWithFont: self.textLabel.font].width;
+    CGFloat width = [text sizeWithFont: self.label.font].width;
 #else
     CGSize constraint = CGSizeMake(MAXFLOAT,MAXFLOAT);
-    NSDictionary *attributes = @{ NSFontAttributeName: self.textLabel.font};
+    NSDictionary *attributes = @{ NSFontAttributeName: self.label.font};
     CGRect bounds = [text boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:attributes context:nil];
     CGFloat width = bounds.size.width;
 #endif
@@ -134,7 +118,7 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
         value = [value substringToIndex: [value length] - 1];
         text = [NSString stringWithFormat: self.valueFormat, [NSString stringWithFormat: @"%@%C", value, ellipse]];
 #ifdef PRE_IOS7
-        width = [text sizeWithFont: self.textLabel.font].width;
+        width = [text sizeWithFont: self.label.font].width;
 #else
         width = [text boundingRectWithSize:constraint options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:attributes context:nil].size.width;
 #endif
@@ -145,87 +129,32 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 - (void) layoutSubviews {
     [super layoutSubviews];
     if (self.valueFormat != nil && ! self.isEditing) {
-        self.textLabel.text = [self formattedValue];
+        self.label.text = [self formattedValue];
+        [self.label sizeToFit];
     }
-
-    CGRect frame = self.imageView.frame;
-    frame.size.width = kHXOCellIconSize;
-    self.imageView.frame = frame;
-
-    frame = self.textLabel.frame;
-    frame.origin.x = kHXOCellLabelPosition;
-    frame.size.width = self.frame.size.width - kHXOCellLabelPosition - 12.0;
-    self.textLabel.frame = frame;
-}
-
-
-@end
-
-@implementation UserDefaultsCellAvatarPicker
-
-- (void) configureBackgroundViewForPosition: (NSUInteger) position inSectionWithCellCount: (NSUInteger) count {
-    self.backgroundView = [[UIView alloc] initWithFrame:self.bounds];
-}
-
-- (void) setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing: editing animated: animated];
-    self.avatar.enabled = editing;
-    self.avatar.outerShadowColor = editing ? [UIColor orangeColor] : [UIColor whiteColor];
-}
-
-- (void) configure: (AvatarItem*) item {
-    // does not call super class
-    self.avatar.image = item.currentValue;
-    if (self.avatar.defaultImage == nil) {
-        self.avatar.defaultImage = [UIImage imageNamed: item.defaultImageName];
-    }
-    [self.avatar addTarget: [item target] action: [item action] forControlEvents: UIControlEventTouchUpInside];
 }
 
 @end
 
 @implementation UserDefaultsCellTextInput
 
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    self.textField.delegate = self;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(textFieldDidChange:)
-                                                 name:UITextFieldTextDidChangeNotification
-                                               object:self.textField];
-    self.textInputBackground.image = [[UIImage imageNamed: @"profile_text_input_bg"] stretchableImageWithLeftCapWidth: 3 topCapHeight: 3];
-    self.textInputBackground.frame = CGRectInset(self.textField.frame, -8, 2);
-    self.textField.backgroundColor = [UIColor clearColor];
-    self.textField.alpha = 0;
-    self.textInputBackground.alpha = 0;
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self != nil) {
+        self.textField = [[UITextField alloc] initWithFrame: CGRectMake(0, 2 * kHXOGridSpacing, 0, 3 * kHXOGridSpacing)];
+        [self.contentView addSubview: self.textField];
+        self.textField.delegate = self;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(textFieldDidChange:)
+                                                     name:UITextFieldTextDidChangeNotification
+                                                   object:self.textField];
+
+    }
+    return self;
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
-    if (editing != self.isEditing) {
-        [super setEditing: editing animated: animated];
-        if (animated) {
-            [UIView animateWithDuration: kEditAnimationDuration animations:^{
-                [self showEditControls: editing];
-            }];
-            [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-                self.textLabel.alpha = 0;
-            } completion:^(BOOL finished) {
-                self.textLabel.text = editing ? self.editLabel : self.textField.text;
-                [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-                    self.textLabel.alpha = 1;
-                }];
-            }];
-        } else {
-            [self showEditControls: editing];
-            self.textLabel.text = editing ? self.editLabel : self.textField.text;
-        }
-    }
-}
-
-- (void) showEditControls: (BOOL) editing {
-    CGFloat alpha = editing ? 1 : 0;
-    self.textField.alpha = alpha;
-    self.textInputBackground.alpha = alpha;
+    self.textField.enabled = editing && [self.delegate isEditable];
 }
 
 - (void) textFieldDidEndEditing:(UITextField *)textField {
@@ -272,10 +201,18 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
     self.editLabel = [item editLabel];
 
     self.textField.keyboardType = [item keyboardType];
-
     self.textField.secureTextEntry = [item secure];
+    self.textField.enabled = [item isEditable];
 
     self.maxLength = [item maxLength];
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    CGRect frame = self.textField.frame;
+    frame.origin.x = CGRectGetMaxX(self.label.frame) + kHXOGridSpacing;
+    frame.size.width = self.contentView.frame.size.width - frame.origin.x;
+    self.textField.frame = frame;
 }
 
 - (void) dealloc {
@@ -292,27 +229,19 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 
 @end
 
-@implementation UserDefaultsCellSwitch
-
-- (void) awakeFromNib {
-    [super awakeFromNib];
-    self.textLabel.font = [UIFont boldSystemFontOfSize: 14];
-}
-
-@end
-
 @implementation UserDefaultsCellInfoText
 
-/*
-- (CGFloat) heightForText: (NSString*) text {
-    [self updateLabelFrame];
-    return [self.textLabel calculateSize: text].height + 22;
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self) {
+        self.label.font = [UIFont systemFontOfSize: 12];
+        self.label.numberOfLines = 0;
+    }
+    return self;
 }
-*/
+
 - (void) configure:(id)item {
     [super configure: item];
-    //[self updateLabelFrame];
-    [self.textLabel sizeToFit];
 }
 
 - (void) layoutSubviews {
@@ -321,16 +250,17 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 }
 
 - (void) updateLabelFrame {
-    CGFloat width = self.frame.size.width - 2 * 12.0;
-    CGRect frame = self.textLabel.frame;
+    CGFloat width = self.frame.size.width - 2 * kHXOGridSpacing;
+    CGRect frame = self.label.frame;
     frame.size.width = width;
-    frame.origin.x = 12.0;
-    self.textLabel.frame = frame;
+    frame.origin.x = 2 * kHXOGridSpacing;
+    frame.origin.y = 2 * kHXOGridSpacing;
+    self.label.frame = frame;
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
-    size = [self.textLabel sizeThatFits: size];
-    size.height += 22;
+    size = [self.label sizeThatFits: CGSizeMake(size.width,0)];
+    size.height += 4 * kHXOGridSpacing;
     return size;
 }
 
@@ -340,7 +270,7 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    self.editingAccessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
+    self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -348,15 +278,15 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
     if (editing != self.isEditing) {
         if (animated) {
             [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-                self.textLabel.alpha = 0;
+                self.label.alpha = 0;
             } completion:^(BOOL finished) {
-                self.textLabel.text = editing ? self.editLabel : @"TODO";
+                self.label.text = editing ? self.editLabel : @"TODO";
                 [UIView animateWithDuration: 0.5 * kEditAnimationDuration animations:^{
-                    self.textLabel.alpha = 1;
+                    self.label.alpha = 1;
                 }];
             }];
         } else {
-            self.textLabel.text = editing ? self.editLabel : @"TODO";
+            self.label.text = editing ? self.editLabel : @"TODO";
         }
     }
 }
@@ -365,7 +295,9 @@ static const CGFloat kHXOCellLabelPosition = 45.0 + 8.0;
     [super configure: item];
     self.editLabel = [item editLabel];
     if ([item alwaysShowDisclosure]) {
-        self.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"user_defaults_disclosure_arrow"]];
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    } else {
+        self.accessoryType = UITableViewCellAccessoryNone;
     }
 }
 

@@ -28,12 +28,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property (nonatomic, strong) NSDate*        presenceLastUpdated;
 @property (nonatomic, strong) NSString*      nickName;
 @property (nonatomic, strong) NSString*      status;
-@property (nonatomic, strong) NSString*      phoneNumber;
-@property (nonatomic, strong) NSString*      mailAddress;
-@property (nonatomic, strong) NSString*      twitterName;
-@property (nonatomic, strong) NSString*      facebookName;
-@property (nonatomic, strong) NSString*      googlePlusName;
-@property (nonatomic, strong) NSString*      githubName;
+
 @property (nonatomic, retain) GroupMembership * myGroupMembership;
 
 // @property (nonatomic, strong) NSDate*        currentTimeSection;

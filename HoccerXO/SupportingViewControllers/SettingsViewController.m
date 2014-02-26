@@ -10,21 +10,17 @@
 
 #import "IASKSpecifierValuesViewController.h"
 
-#import "UIViewController+HXOSideMenu.h"
 #import "UserDefaultsCells.h"
-
-
-@interface HXOSpecifierValuesViewController : IASKSpecifierValuesViewController
-
-@end
 
 @implementation SettingsViewController
 
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
+    self.navigationItem.title = NSLocalizedString(@"Settings", nil);
+
+    //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
+    //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
 
     self.delegate = self;
 }
@@ -33,32 +29,41 @@
     [super viewWillAppear: animated];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell * cell = [super tableView: tableView cellForRowAtIndexPath: indexPath];
-    [UserDefaultsCell configureGroupedCell: cell forPosition: indexPath.row inSectionWithCellCount: [self tableView: tableView numberOfRowsInSection: indexPath.section]];
-    cell.textLabel.backgroundColor = [UIColor clearColor];
-    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
-    return cell;
-}
-
-- (IASKSpecifierValuesViewController*) specifierValuesViewControllerForSettingsViewController:(IASKAppSettingsViewController *)sender {
-    return [[HXOSpecifierValuesViewController alloc] initWithTableClass: sender.tableView.class];
-}
-
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
     
 }
 
-@end
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
+    NSLog(@"bonked %@", specifier.key);
+    NSString * storyboardId;
+    if ([specifier.key isEqualToString: @"tutorial"]) {
+        storyboardId = @"tutorialViewController";
+    } else if ([specifier.key isEqualToString: @"faq"]) {
+        storyboardId = @"faqViewController";
+    } else if ([specifier.key isEqualToString: @"about"]) {
+        storyboardId = @"aboutViewController";
+    } else if ([specifier.key isEqualToString: @"testingGround"]) {
+        storyboardId = @"testingGround";
+    } else if ([specifier.key isEqualToString: @"webServer"]) {
+#ifdef WITH_WEBSERVER
+        storyboardId = @"serverViewController";
+#else
+        NSLog(@"Web server is not enabled in this build");
+#endif
+    } else {
+        NSLog(@"unhandled button in settings plist (key:%@)", specifier.key);
+    }
 
-@implementation HXOSpecifierValuesViewController
+    if ( ! storyboardId) {
+        return;
+    }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell * cell = [super tableView: tableView cellForRowAtIndexPath: indexPath];
-    [UserDefaultsCell configureGroupedCell: cell forPosition: indexPath.row inSectionWithCellCount: [self tableView: tableView numberOfRowsInSection: indexPath.section]];
-    cell.textLabel.backgroundColor = [UIColor clearColor];
-    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
-    return cell;
+    UIViewController * vc = self;
+    while (vc.storyboard == nil) {
+        vc = vc.parentViewController;
+    }
+    vc = [vc.storyboard instantiateViewControllerWithIdentifier: storyboardId];
+    [self.navigationController pushViewController: vc animated: YES];
 }
 
 @end

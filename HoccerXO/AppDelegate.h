@@ -30,8 +30,6 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 @property (readonly, strong, nonatomic) NSManagedObjectModel *rpcObjectModel;
 
 @property (nonatomic, strong) HXOBackend * chatBackend;
-@property (nonatomic, strong) UINavigationController * navigationController;
-@property (nonatomic, strong) ConversationViewController * conversationViewController;
 
 @property (nonatomic, strong) NSString * userAgent;
 
@@ -96,6 +94,8 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 
 - (NSString *)ownIPAddress:(BOOL)preferIPv4;
 - (NSDictionary *)ownIPAddresses;
+
+- (void) jumpToChat: (Contact*) contact;
 
 + (AppDelegate*)instance;
 
