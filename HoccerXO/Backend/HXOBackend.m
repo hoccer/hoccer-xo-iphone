@@ -1277,6 +1277,13 @@ static NSTimer * _stateNotificationDelayTimer;
         
         if (keyRecord != nil) {
             if ([theId isEqualToString: keyRecord[@"keyId"]]) {
+                if (![keyRecord[@"keyId"] isEqualToString: theContact.publicKeyId] &&
+                    theContact.verifiedKey != nil &&
+                    [theContact.publicKey isEqualToData: theContact.verifiedKey])
+                {
+                    // a verified key has been changed, warn about it
+                    [AppDelegate showAlertWithMessageAsync:@"Verified key of contact %@ has changed" withTitle: @"Verified Key Changed" withArgument: theContact.nickName];
+                }
                 theContact.publicKeyString = keyRecord[@"key"];
                 theContact.publicKeyId = keyRecord[@"keyId"];
                 // NSLog(@"Key for contact updated: %@", theContact);
@@ -3139,12 +3146,11 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits {
-    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
-    return myKeyId;
+    return [RSA calcKeyId:myKeyBits];
 }
 
 + (NSString *) keyIdString:(NSData *) myKeyId {
-    return [myKeyId hexadecimalString];
+    return [RSA keyIdString:myKeyId];
 }
 
 - (void) updateKey: (NSData*) publicKey handler:(GenericResultHandler) handler {

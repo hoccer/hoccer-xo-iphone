@@ -27,8 +27,15 @@
 - (NSData *)getPublicKeyBits;
 - (SecKeyRef)getPublicKeyRef;
 - (NSData *)getPrivateKeyBits;
-- (BOOL)setPrivateKeyBits:(NSData*)privateKeyBits;
-- (BOOL)setPublicKeyBits:(NSData*)publiceKeyBits;
+
+- (BOOL)addPrivateKeyBits:(NSData*)privateKeyBits;
+- (BOOL)addPrivateKeyBits:(NSData*)privateKeyBits withTag:(NSData*)privateTag;
+
+- (BOOL)addPublicKeyBits:(NSData*)publiceKeyBits;
+- (BOOL)addPublicKeyBits:(NSData *)d_key withTag:(NSData *)d_tag;
+- (BOOL)addPublicKey:(NSString *)key withTag:(NSString *)tag;
+
+
 - (BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString;
 
 // - (void)decryptWithPrivateKey:(uint8_t *)cipherBuffer plainBuffer:(uint8_t *)plainBuffer;
@@ -43,14 +50,13 @@
 - (SecKeyRef)getPeerKeyRef:(NSString *)peerName;
 
 - (NSData*)stripPublicKeyHeader:(NSData *)d_key;
-- (BOOL)addPublicKey:(NSString *)key withTag:(NSString *)tag;
-- (BOOL)addPublicKeyBits:(NSData *)d_key withTag:(NSData *)d_tag;
 
 - (NSData *)getKeyBitsForPeerRef:(NSString *)peerName;
 
 - (void)getCertificate;
 
--(void)cleanKeyChain;
+-(void)cleanKeyPairKeys;
+-(BOOL)cloneKeyPairKeys;
 
 + (NSString*)makeSSHFormattedPublicKey:(NSData *)publicKeyBits;
 + (NSString*)makeX509FormattedPublicKey:(NSData *)publicKeyBits;
@@ -59,9 +65,10 @@
 + (NSString*)makePEMFormattedPrivateKey:(NSData *)privateKeyBits;
 + (NSData*)extractPrivateKeyBitsFromPEM:(NSString *)pemPrivateKeyString;
 
-+ (BOOL)setPrivateKeyBits:(NSData*)privateKeyBits tag:(NSData*)privateTag;
 
 + (int)getPublicKeySize:(NSData*)keyBits;
 
++ (NSData *) calcKeyId:(NSData *) myKeyBits;
++ (NSString *) keyIdString:(NSData *) myKeyId;
 
 @end

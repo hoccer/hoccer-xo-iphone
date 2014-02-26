@@ -1231,6 +1231,25 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     });
 }
 
++ (void) showAlertWithMessage: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
+    
+    NSString * localizedMessage = NSLocalizedString(message, "");
+    NSString * fullMessage = [NSString stringWithFormat:localizedMessage, argument];
+    
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
+                                                     message: NSLocalizedString(fullMessage, nil)
+                                                    delegate: nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
++ (void) showAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [AppDelegate showAlertWithMessage:message withTitle:title withArgument:argument];
+    });
+}
+
 + (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                        message: message

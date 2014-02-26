@@ -289,6 +289,9 @@
 "verify_publickey"="Mark key verified";
 "unverify_publickey"="Mark key not verified";
 
+"Verified key of contact %@ has changed"="The key of contact '%@' has changed, and the old key had been verified. Verify the new key for additional security.";
+"Verified Key Changed" = "Verified Key has Changed";
+
 "import_confirm"="Import";
 "import_key_safety_question"="This will import an RSA key in PEM-format from the pasteboard. Only do it when you know what you are doing. Do you want to proceed?";
 

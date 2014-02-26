@@ -1221,7 +1221,7 @@ typedef enum ActionSheetTags {
                 return;
             }
         } else {
-            if ([[RSA sharedInstance] setPublicKeyBits:myKeyBits]) {
+            if ([[RSA sharedInstance] addPublicKeyBits:myKeyBits]) {
                 [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
                 return;
             }
@@ -1234,7 +1234,7 @@ typedef enum ActionSheetTags {
     NSString * myKeyText = [UIPasteboard generalPasteboard].string;
     NSData * myKeyBits = [RSA extractPrivateKeyBitsFromPEM:myKeyText];
     if (myKeyBits != nil) {
-        if ([[RSA sharedInstance] setPrivateKeyBits:myKeyBits]) {
+        if ([[RSA sharedInstance] addPrivateKeyBits:myKeyBits]) {
             [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
             return;
         }
@@ -1330,7 +1330,8 @@ typedef enum ActionSheetTags {
     if ([HXOBackend use_elliptic_curves]) {
         [[EC sharedInstance] cleanKeyChain];
     } else {
-        [[RSA sharedInstance] cleanKeyChain];
+        [[RSA sharedInstance] cloneKeyPairKeys];
+        [[RSA sharedInstance] cleanKeyPairKeys];
     }
 }
 

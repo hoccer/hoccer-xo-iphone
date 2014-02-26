@@ -12,6 +12,7 @@
 #import "NSData+Base64.h"
 #import "NSData+HexString.h"
 #import "NSString+RandomString.h"
+#import "NSData+CommonCrypto.h"
 
 #import "HXOUserDefaults.h"
 
@@ -175,7 +176,7 @@ static RSA *instance;
         NSLog(@"RSA:decryptWithKey: Error decrypting, OSStatus = %d", (NSInteger)status);
         NSNotification *notification = [NSNotification notificationWithName:@"decryptionError" object:self];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
-        // NSLog(@"%@", [NSThread callStackSymbols]);
+        NSLog(@"%@", [NSThread callStackSymbols]);
     }
     
     //NSLog(@"decoded %d bytes, status %d", (NSInteger)plainBufferSize, (NSInteger)status);
@@ -288,16 +289,16 @@ static RSA *instance;
 }
 
 
-- (SecKeyRef)getPrivateKeyRef {
+- (SecKeyRef)getPrivateKeyRefForTag:(NSData*)tag {
     OSStatus resultCode = noErr;
     SecKeyRef privateKeyReference = NULL;
 	
     if(privateKey == NULL) {
         NSMutableDictionary * queryPrivateKey = [[NSMutableDictionary alloc] init];
-
+        
         // Set the private key query dictionary.
         [queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-        [queryPrivateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
+        [queryPrivateKey setObject:tag forKey:(__bridge id)kSecAttrApplicationTag];
         [queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
         [queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
 		
@@ -310,18 +311,22 @@ static RSA *instance;
         }
         privateKey = privateKeyReference;
     }
-    
     return privateKey;
 }
 
-- (NSData *)getPublicKeyBits {
+- (SecKeyRef)getPrivateKeyRef {
+    return [self getPrivateKeyRefForTag:privateTag];
+}
+
+
+- (NSData *)getPublicKeyBitsForTag:(NSData*)tag {
 	OSStatus sanityCheck = noErr;
 	NSData * publicKeyBits = nil;
 	
 	NSMutableDictionary * queryPublicKey = [[NSMutableDictionary alloc] init];
-
+    
 	[queryPublicKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-	[queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
+	[queryPublicKey setObject:tag forKey:(__bridge id)kSecAttrApplicationTag];
 	[queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
 	[queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     
@@ -338,19 +343,23 @@ static RSA *instance;
 	return publicKeyBits;
 }
 
-- (BOOL)setPublicKeyBits:(NSData*)publiceKeyBits {
+- (NSData *)getPublicKeyBits {
+    return [self getPublicKeyBitsForTag:publicTag];
+}
+
+- (BOOL)addPublicKeyBits:(NSData*)publiceKeyBits {
     return [self addPublicKeyBits:publiceKeyBits withTag:publicTag];
 }
 
 
-- (NSData *)getPrivateKeyBits {
+- (NSData *)getPrivateKeyBitsForTag:(NSData*)tag {
 	OSStatus sanityCheck = noErr;
 	NSData * privateKeyBits = nil;
 	
 	NSMutableDictionary * queryPrivateKey = [[NSMutableDictionary alloc] init];
     
 	[queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-	[queryPrivateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
+	[queryPrivateKey setObject:tag forKey:(__bridge id)kSecAttrApplicationTag];
 	[queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
 	[queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnData];
     
@@ -367,12 +376,17 @@ static RSA *instance;
 	return privateKeyBits;
 }
 
-+(BOOL)setPrivateKeyBits:(NSData*)privateKeyBits tag:(NSData*)privateTag
+- (NSData *)getPrivateKeyBits {
+    return [self getPublicKeyBitsForTag:privateTag];
+}
+
+
+- (BOOL)addPrivateKeyBits:(NSData*)privateKeyBits withTag:(NSData*)tag
 {
     NSMutableDictionary *privateKey = [[NSMutableDictionary alloc] init];
     [privateKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
     [privateKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    [privateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
+    [privateKey setObject:tag forKey:(__bridge id)kSecAttrApplicationTag];
     SecItemDelete((__bridge CFDictionaryRef)privateKey);
     
     CFTypeRef persistKey = nil;
@@ -405,10 +419,56 @@ static RSA *instance;
     return TRUE;
 }
 
--(BOOL)setPrivateKeyBits:(NSData*)privateKeyBits {
-    return [RSA setPrivateKeyBits:privateKeyBits tag:privateTag];
+-(BOOL)addPrivateKeyBits:(NSData*)privateKeyBits {
+    return [self addPrivateKeyBits:privateKeyBits withTag:privateTag];
 }
 
+-(BOOL)cloneKeyPairKeys {
+    NSData * publicBits = [self getPublicKeyBits];
+    if (publicBits == nil) {
+        return NO;
+    }
+    NSData * privateBits = [self getPrivateKeyBits];
+    if (publicBits == nil) {
+        return NO;
+    }
+    
+    NSString * publicKeyIdString = [RSA keyIdString:[RSA calcKeyId:publicBits]];
+    NSData * publicTagSpec = [self publicTagForKeyId:publicKeyIdString];
+    NSData * privateTagSpec = [self privateTagForKeyId:publicKeyIdString];
+    
+    if (![self addPrivateKeyBits:privateBits withTag:privateTagSpec]) {
+        return NO;
+    }
+    if (![self addPublicKeyBits:publicBits withTag:publicTagSpec]) {
+        return NO;
+    };
+    
+    return YES;
+}
+
+- (NSData *) publicTagForKeyId:(NSString *) keyIdString {
+    NSMutableData * tag = [NSMutableData dataWithData:publicTag];
+    [tag appendData:[keyIdString dataUsingEncoding:NSUTF8StringEncoding]];
+    return tag;
+}
+
+- (NSData *) privateTagForKeyId:(NSString *) keyIdString {
+    NSMutableData * tag = [NSMutableData dataWithData:privateTag];
+    [tag appendData:[keyIdString dataUsingEncoding:NSUTF8StringEncoding]];
+    return tag;
+}
+
+
+
++ (NSData *) calcKeyId:(NSData *) myKeyBits {
+    NSData * myKeyId = [[myKeyBits SHA256Hash] subdataWithRange:NSMakeRange(0, 8)];
+    return myKeyId;
+}
+
++ (NSString *) keyIdString:(NSData *) myKeyId {
+    return [myKeyId hexadecimalString];
+}
 
 - (NSData *)stripPublicKeyHeader:(NSData *)d_key
 {
@@ -505,8 +565,8 @@ static RSA *instance;
     SecItemDelete((__bridge CFDictionaryRef)publicKey);
 }
 
-- (void)cleanKeyChain {
-    // NSLog(@"Cleaning keychain");
+- (void)cleanKeyPairKeys {
+    // NSLog(@"Cleaning cleanKeyPairKeys");
 
     NSMutableDictionary * privateKey = [[NSMutableDictionary alloc] init];
 	[privateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
@@ -797,7 +857,7 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 
 -(BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString {
     NSData * myBits = [RSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
-    return [RSA setPrivateKeyBits:myBits tag:privateTag];
+    return [self addPrivateKeyBits:myBits withTag:privateTag];
 }
 
 

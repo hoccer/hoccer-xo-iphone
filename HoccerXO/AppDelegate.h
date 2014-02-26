@@ -85,6 +85,9 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 + (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title;
 + (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title;
 
++ (void) showAlertWithMessage: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument;
++ (void) showAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument;
+
 + (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock;
 
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
