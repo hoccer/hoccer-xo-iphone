@@ -8,6 +8,7 @@
 
 #import "HXOTheme.h"
 #import "UIColor+HSBUtilities.h"
+#import "UIColor+HexUtilities.h"
 
 static HXOTheme * _currentTheme;
 
