@@ -38,7 +38,7 @@
     if (_prototypes[cellClass] == nil) {
         //[self registerNibForCellClass: cellClass];
         [self.tableView registerClass: cellClass forCellReuseIdentifier: [cellClass reuseIdentifier]];
-        _prototypes[cellClass] = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
+        _prototypes[cellClass] = [[cellClass alloc] initWithStyle: UITableViewStyleGrouped  reuseIdentifier: [cellClass reuseIdentifier]];
     }
     return _prototypes[cellClass];
 }

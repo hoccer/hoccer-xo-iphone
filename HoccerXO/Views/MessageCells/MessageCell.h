@@ -48,9 +48,4 @@
 
 - (void) commonInit;
 - (void) addSection: (MessageSection*) section;
-- (UIColor*) fillColor;
-- (UIColor*) textColor;
-- (UIColor*) subtitleColor;
-- (UIColor*) linkColor;
-
 @end

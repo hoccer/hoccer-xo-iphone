@@ -8,6 +8,7 @@
 
 #import "MessageSection.h"
 #import "MessageCell.h"
+#import "HXOTheme.h"
 
 extern CGFloat kHXOGridSpacing;
 
@@ -58,10 +59,6 @@ extern CGFloat kHXOGridSpacing;
     }
 }
 
-- (UIColor*) fillColor {
-    return [self.cell fillColor];
-}
-
 - (UIBezierPath*) rightPointingBubblePathInRect: (CGRect) frame {
     UIBezierPath* bubblePath = [UIBezierPath bezierPath];
     [bubblePath moveToPoint: CGPointMake(CGRectGetMaxX(frame) - 3.42, CGRectGetMaxY(frame))];
@@ -101,7 +98,7 @@ extern CGFloat kHXOGridSpacing;
 }
 
 - (void) colorSchemeDidChange {
-    self.bubbleLayer.fillColor = [self fillColor].CGColor;
+    self.bubbleLayer.fillColor = [[HXOTheme theme] messageBackgroundColorForScheme: self.cell.colorScheme].CGColor;
 }
 
 - (void) messageDirectionDidChange {

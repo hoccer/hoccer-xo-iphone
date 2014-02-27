@@ -1048,7 +1048,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="e7o-9L-I8f" kind="relationship" relationship="rootViewController" id="vC3-xT-FWi"/>
+                        <segue destination="Jlh-NQ-jBU" kind="relationship" relationship="rootViewController" id="RfY-oR-EsL"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kai-kk-yVc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1137,6 +1137,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OER-5k-Byo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1301" y="-1410"/>
+        </scene>
+        <!--Modal Group View Controller-->
+        <scene sceneID="LUE-9u-iJb">
+            <objects>
+                <tableViewController restorationIdentifier="" storyboardIdentifier="groupViewController" id="Jlh-NQ-jBU" userLabel="Modal Group View Controller" customClass="GroupViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="L43-7f-ocf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <connections>
+                            <outlet property="dataSource" destination="Jlh-NQ-jBU" id="qbS-fo-uRI"/>
+                            <outlet property="delegate" destination="Jlh-NQ-jBU" id="8ts-cR-WxI"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="kPo-ZZ-imC"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Dp-dg-reI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1253" y="-2146"/>
         </scene>
         <!--Group Member Invite View Controller-->
         <scene sceneID="oUE-fo-iM0">
@@ -1237,6 +1256,5 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="lna-0K-80T"/>
-        <segue reference="vC3-xT-FWi"/>
     </inferredMetricsTieBreakers>
 </document>

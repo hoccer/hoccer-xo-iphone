@@ -1602,7 +1602,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if ([message.isOutgoing isEqualToNumber: @YES]) {
         return [self stateStringForMessage: message];
     } else {
-        return message.contact.nickName;
+        return [[self getAuthor: message] nickName];
     }
 }
 

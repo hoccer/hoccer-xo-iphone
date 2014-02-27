@@ -7,6 +7,7 @@
 //
 
 #import "MessageCell.h"
+#import "HXOTheme.h"
 
 const CGFloat kHXOGridSpacing = 8; // TODO: make this global
 static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
@@ -150,7 +151,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     for (MessageSection * section in self.sections) {
         [section colorSchemeDidChange];
     }
-    self.subtitle.textColor = [self subtitleColor];
+    self.subtitle.textColor = [[HXOTheme theme] messageFooterTextColorForScheme: self.colorScheme];
     [self setNeedsDisplay];
 }
 
@@ -161,42 +162,6 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 - (CGFloat) bubbleWidthForWidth: (CGFloat) width {
     return width - 6 * kHXOGridSpacing;
 }
-
-
-// TODO: move this to MessageSection after BubbleViewToo is retiered
-- (UIColor*) fillColor {
-    switch (self.colorScheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor colorWithRed: 0.902 green: 0.906 blue: 0.922 alpha: 1];
-        case HXOBubbleColorSchemeSuccess:
-            return [UIColor colorWithRed: 0.224 green: 0.753 blue: 0.702 alpha: 1];
-        case HXOBubbleColorSchemeInProgress:
-            return [UIColor colorWithRed: 0.725 green: 0.851 blue: 0.839 alpha: 1];
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor colorWithRed: 0.741 green: 0.224 blue: 0.208 alpha: 1];
-    }
-}
-
-
-- (UIColor*) textColor {
-    switch (self.colorScheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor blackColor];
-        case HXOBubbleColorSchemeSuccess:
-        case HXOBubbleColorSchemeInProgress:
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor whiteColor];
-    }
-}
-
-- (UIColor*) linkColor {
-    return [UIColor blueColor];
-}
-
-- (UIColor*) subtitleColor {
-    return [self fillColor];
-}
-
 
 -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
     // NSLog(@"MessageCell: canPerformAction %s withSender %@, delegate=%@", sel_getName(action), sender, self.delegate);

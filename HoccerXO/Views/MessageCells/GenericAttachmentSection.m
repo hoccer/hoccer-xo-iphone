@@ -9,6 +9,7 @@
 #import "GenericAttachmentSection.h"
 #import "MessageCell.h"
 #import "HXOUpDownLoadControl.h"
+#import "HXOTheme.h"
 
 extern CGFloat kHXOGridSpacing;
 
@@ -39,10 +40,9 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
-    self.title.textColor = [self.cell textColor];
-    self.subtitle.textColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? [UIColor lightGrayColor] : [UIColor whiteColor];
-
-    self.icon.tintColor = self.cell.colorScheme == HXOBubbleColorSchemeIncoming ? self.tintColor : [UIColor whiteColor];
+    self.title.textColor = [[HXOTheme theme] messageAttachmentTitleColorForScheme: self.cell.colorScheme];
+    self.subtitle.textColor = [[HXOTheme theme] messageAttachmentSubtitleColorForScheme: self.cell.colorScheme];
+    self.icon.tintColor = [[HXOTheme theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
 }
 
 - (CGRect) attachmentControlFrame {

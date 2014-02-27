@@ -9,6 +9,7 @@
 #import "ImageAttachmentSection.h"
 #import "MessageCell.h"
 #import "HXOUpDownLoadControl.h"
+#import "HXOTheme.h"
 
 extern CGFloat kHXOGridSpacing;
 
@@ -94,7 +95,7 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
-    self.imageLayer.backgroundColor = [self.cell fillColor].CGColor;
+    self.imageLayer.backgroundColor = [[HXOTheme theme] messageBackgroundColorForScheme: self.cell.colorScheme].CGColor;
 }
 
 - (void) messageDirectionDidChange {

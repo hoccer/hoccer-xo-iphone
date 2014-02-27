@@ -9,6 +9,7 @@
 #import "TextSection.h"
 #import "HXOHyperLabel.h"
 #import "MessageCell.h"
+#import "HXOTheme.h"
 
 // TODO: remove this
 #import "HXOUserDefaults.h"
@@ -47,8 +48,8 @@ extern CGFloat kHXOGridSpacing;
 
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
-    self.label.textColor = [self.cell textColor];
-    self.label.linkColor = [self.cell linkColor];
+    self.label.textColor = [[HXOTheme theme] messageTextColorForScheme: self.cell.colorScheme];
+    self.label.linkColor = [[HXOTheme theme] messageLinkColorForScheme: self.cell.colorScheme];
 }
 
 @end
