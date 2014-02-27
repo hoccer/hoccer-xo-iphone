@@ -154,6 +154,7 @@
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
 		63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */; };
+		63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
 		63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B816E8FD15004E1F6D /* Security.framework */; };
@@ -626,6 +627,8 @@
 		63C1356C1716A4AB00969B0B /* Invite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invite.m; sourceTree = "<group>"; };
 		63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_contact_large.png; sourceTree = "<group>"; };
 		63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_contact_large@2x.png"; sourceTree = "<group>"; };
+		63C178C118BF57A600F29BC4 /* UIColor+HSBUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HSBUtilities.h"; sourceTree = "<group>"; };
+		63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HSBUtilities.m"; sourceTree = "<group>"; };
 		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -957,6 +960,8 @@
 				631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */,
 				E980E27318648D80004AF79D /* UIResponder+Debug.h */,
 				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
+				63C178C118BF57A600F29BC4 /* UIColor+HSBUtilities.h */,
+				63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
@@ -2247,6 +2252,7 @@
 				E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */,
 				E9D1145817316DCC00737EF7 /* StartupViewController.m in Sources */,
 				63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */,
+				63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */,
 				E9E92F3B18733B7A007B8042 /* DDAbstractDatabaseLogger.m in Sources */,
 				E9D1145E1732E74000737EF7 /* Vcard.m in Sources */,
 				E9D1148A1736702E00737EF7 /* GCHTTPRequestOperation.m in Sources */,
