@@ -443,7 +443,7 @@ static RSA *instance;
     if (![self addPublicKeyBits:publicBits withTag:publicTagSpec]) {
         return NO;
     };
-    
+    [self findKeyPairs];
     return YES;
 }
 
@@ -625,7 +625,6 @@ static RSA *instance;
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     [publicKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
     [publicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
-    [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];    
     [publicKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
     SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&persistentRef);
         
@@ -657,6 +656,45 @@ static RSA *instance;
         	
 	return publicKeyBits;
 }
+
+
+- (NSDictionary*) findPrivateKeysWithPrefix:(NSData*)prefix {
+    // create query
+//    CFMutableDictionaryRef query = CFDictionaryCreateMutable(kCFAllocatorDefault, 3, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+//    CFDictionaryAddValue(query, kSecReturnAttributes, kCFBooleanTrue);
+//    CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitAll);
+//    CFDictionaryAddValue(query, kSecClass, kSecClassInternetPassword);
+ 
+    NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
+    [query setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
+    [query setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [query setObject: @YES forKey:(__bridge id)kSecReturnRef];
+    [query setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
+    [query setObject:(__bridge id) kSecMatchLimit forKey:(__bridge id)kSecMatchLimitAll];
+    
+    // get search results
+    CFArrayRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef*)&result);
+
+    if (status == 0) {
+        // do something with the result
+        int results = CFArrayGetCount(result);
+        NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+        for (int i = 0; i < results;++i ) {
+            NSLog(@"result %d = %@",i,CFArrayGetValueAtIndex((__bridge CFArrayRef)(result), i));
+        }
+        return result;
+    } else {
+        NSLog(@"findKeyPairsWithPrefix: error OSStatus %d",(int)status);
+        return nil;
+    }
+}
+
+- (NSDictionary*) findKeyPairs {
+    return [self findPrivateKeysWithPrefix:privateTag];
+}
+
+
 
 static unsigned char oidSequence[] = { 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00 };
 
