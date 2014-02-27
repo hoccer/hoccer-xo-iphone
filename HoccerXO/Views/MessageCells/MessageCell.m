@@ -151,7 +151,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     for (MessageSection * section in self.sections) {
         [section colorSchemeDidChange];
     }
-    self.subtitle.textColor = [self subtitleColor];
+    self.subtitle.textColor = [[HXOTheme theme] messageFooterTextColorForScheme: self.colorScheme];
     [self setNeedsDisplay];
 }
 
@@ -162,26 +162,6 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 - (CGFloat) bubbleWidthForWidth: (CGFloat) width {
     return width - 6 * kHXOGridSpacing;
 }
-
-
-// TODO: move this to MessageSection after BubbleViewToo is retiered
-- (UIColor*) fillColor {
-    return [[HXOTheme theme] messageBackgroundColorForScheme: self.colorScheme];
-}
-
-
-- (UIColor*) textColor {
-    return [[HXOTheme theme] messageTextColorForScheme: self.colorScheme];
-}
-
-- (UIColor*) linkColor {
-    return [[HXOTheme theme] messageLinkColorForScheme: self.colorScheme];
-}
-
-- (UIColor*) subtitleColor {
-    return [[HXOTheme theme] messageSubtitleColorForScheme: self.colorScheme];
-}
-
 
 -(BOOL) canPerformAction:(SEL)action withSender:(id)sender {
     // NSLog(@"MessageCell: canPerformAction %s withSender %@, delegate=%@", sel_getName(action), sender, self.delegate);

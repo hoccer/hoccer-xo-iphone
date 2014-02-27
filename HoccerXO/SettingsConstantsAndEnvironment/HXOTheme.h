@@ -16,10 +16,13 @@
 @property (nonatomic,readonly) UIColor * navigationBarBackgroundColor;
 @property (nonatomic,readonly) UIColor * navigationBarTintColor;
 
-- (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme;
-- (UIColor*) messageTextColorForScheme:       (HXOBubbleColorScheme) scheme;
-- (UIColor*) messageSubtitleColorForScheme:   (HXOBubbleColorScheme) scheme;
-- (UIColor*) messageLinkColorForScheme:       (HXOBubbleColorScheme) scheme;
+- (UIColor*) messageBackgroundColorForScheme:         (HXOBubbleColorScheme) scheme;
+- (UIColor*) messageTextColorForScheme:               (HXOBubbleColorScheme) scheme;
+- (UIColor*) messageFooterTextColorForScheme:         (HXOBubbleColorScheme) scheme;
+- (UIColor*) messageLinkColorForScheme:               (HXOBubbleColorScheme) scheme;
+- (UIColor*) messageAttachmentTitleColorForScheme:    (HXOBubbleColorScheme) scheme;
+- (UIColor*) messageAttachmentSubtitleColorForScheme: (HXOBubbleColorScheme) scheme;
+- (UIColor*) messageAttachmentIconTintColorForScheme: (HXOBubbleColorScheme) scheme;
 
 - (void) setupAppearanceProxies;
 

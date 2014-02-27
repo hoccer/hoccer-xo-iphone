@@ -13,7 +13,7 @@ static HXOTheme * _currentTheme;
 
 @implementation HXOTheme
 
-#pragma mark - zutrinken land
+#pragma mark - Applicationwide Colors
 
 - (UIColor*) navigationBarBackgroundColor {
     return [UIColor colorWithRed: 37.0 / 255 green: 184.0 / 255 blue: 171.0 / 255 alpha: 1.0];
@@ -22,6 +22,8 @@ static HXOTheme * _currentTheme;
 - (UIColor*) navigationBarTintColor {
     return [UIColor whiteColor];
 }
+
+#pragma mark - Message Color Schemes
 
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
@@ -43,13 +45,40 @@ static HXOTheme * _currentTheme;
     }
 }
 
-- (UIColor*) messageSubtitleColorForScheme: (HXOBubbleColorScheme) scheme {
+- (UIColor*) messageFooterTextColorForScheme: (HXOBubbleColorScheme) scheme {
     return [[self messageBackgroundColorForScheme: scheme] darken];
 }
 
 - (UIColor*) messageLinkColorForScheme: (HXOBubbleColorScheme) scheme {
     return [UIColor blueColor];
 }
+
+- (UIColor*) messageAttachmentTitleColorForScheme: (HXOBubbleColorScheme) scheme {
+    return [self messageTextColorForScheme: scheme];
+}
+
+- (UIColor*) messageAttachmentSubtitleColorForScheme: (HXOBubbleColorScheme) scheme {
+    switch (scheme) {
+        case HXOBubbleColorSchemeIncoming:
+            return [UIColor lightGrayColor];
+        case HXOBubbleColorSchemeSuccess:
+        case HXOBubbleColorSchemeInProgress:
+        case HXOBubbleColorSchemeFailed:
+            return [UIColor whiteColor];
+    }
+}
+
+- (UIColor*) messageAttachmentIconTintColorForScheme: (HXOBubbleColorScheme) scheme {
+    switch (scheme) {
+        case HXOBubbleColorSchemeIncoming:
+            return [UIColor colorWithRed: 0 green: 122.0 / 255 blue: 1 alpha: 1];
+        case HXOBubbleColorSchemeSuccess:
+        case HXOBubbleColorSchemeInProgress:
+        case HXOBubbleColorSchemeFailed:
+            return [UIColor whiteColor];
+    }
+}
+
 
 #pragma mark - agnat land
 
