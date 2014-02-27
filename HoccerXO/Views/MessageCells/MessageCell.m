@@ -7,6 +7,7 @@
 //
 
 #import "MessageCell.h"
+#import "HXOTheme.h"
 
 const CGFloat kHXOGridSpacing = 8; // TODO: make this global
 static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
@@ -165,36 +166,20 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
 // TODO: move this to MessageSection after BubbleViewToo is retiered
 - (UIColor*) fillColor {
-    switch (self.colorScheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor colorWithRed: 0.902 green: 0.906 blue: 0.922 alpha: 1];
-        case HXOBubbleColorSchemeSuccess:
-            return [UIColor colorWithRed: 0.224 green: 0.753 blue: 0.702 alpha: 1];
-        case HXOBubbleColorSchemeInProgress:
-            return [UIColor colorWithRed: 0.725 green: 0.851 blue: 0.839 alpha: 1];
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor colorWithRed: 0.741 green: 0.224 blue: 0.208 alpha: 1];
-    }
+    return [[HXOTheme theme] messageBackgroundColorForScheme: self.colorScheme];
 }
 
 
 - (UIColor*) textColor {
-    switch (self.colorScheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor blackColor];
-        case HXOBubbleColorSchemeSuccess:
-        case HXOBubbleColorSchemeInProgress:
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor whiteColor];
-    }
+    return [[HXOTheme theme] messageTextColorForScheme: self.colorScheme];
 }
 
 - (UIColor*) linkColor {
-    return [UIColor blueColor];
+    return [[HXOTheme theme] messageLinkColorForScheme: self.colorScheme];
 }
 
 - (UIColor*) subtitleColor {
-    return [self fillColor];
+    return [[HXOTheme theme] messageSubtitleColorForScheme: self.colorScheme];
 }
 
 

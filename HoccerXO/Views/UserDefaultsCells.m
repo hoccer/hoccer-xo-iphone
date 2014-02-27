@@ -127,7 +127,6 @@ extern CGFloat kHXOGridSpacing;
 - (void) layoutSubviews {
     [super layoutSubviews];
     if (self.valueFormat != nil && ! self.isEditing) {
-        NSString * t = [self formattedValue];
         self.label.text = [self formattedValue];
         [self.label sizeToFit];
     }
