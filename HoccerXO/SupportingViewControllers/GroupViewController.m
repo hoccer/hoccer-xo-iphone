@@ -16,7 +16,6 @@
 #import "GroupMembership.h"
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
-#import "GroupAdminCell.h"
 
 #define GROUPVIEW_DEBUG NO
 
@@ -301,9 +300,6 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
     _adminsItem = [[ProfileItem alloc] initWithName:@"GroupAdminsItem"];
     _adminsItem.currentValue = [self adminsLabelText];
-    _adminsItem.cellClass = [GroupAdminCell class];
-
-    //_adminInfoSection = [ProfileSection sectionWithName:@"AdminInfoSection" items: _adminsItem, nil];
 
     _memberListItem = [[FetchedResultsSectionAdapter alloc] initWithDelegate: self name: @"GroupMemberSection"];
 
