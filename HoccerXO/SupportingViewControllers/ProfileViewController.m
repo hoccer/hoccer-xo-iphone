@@ -213,7 +213,6 @@ typedef enum ActionSheetTags {
         avatar = [UIImage imageNamed: [self avatarDefaultImageName]];
     }
     self.avatarView.image = avatar;
-    //self.avatarBackgroundView.image = self.isEditing ? [_avatarItem.currentValue applyDarkEffect] : [_avatarItem.currentValue applyLightEffect];
     [self setAvatarBackgroundImage: avatar];
 
 
@@ -1020,6 +1019,9 @@ typedef enum ActionSheetTags {
 
 - (void) updateAvatar: (UIImage*) image {
     _avatarItem.currentValue = image;
+    if ( ! image) {
+        image = [UIImage imageNamed: [self avatarDefaultImageName]];
+    }
     self.avatarView.image = image;
     [self setAvatarBackgroundImage: image];
 }
