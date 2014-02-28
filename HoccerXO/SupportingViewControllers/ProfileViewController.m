@@ -102,6 +102,9 @@ typedef enum ActionSheetTags {
     self.avatarBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.tableView addSubview: self.avatarBackgroundView];
     [self.tableView sendSubviewToBack:self.avatarBackgroundView];
+
+    self.tableView.allowsSelection = YES;
+    self.tableView.allowsSelectionDuringEditing = YES;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -660,7 +663,6 @@ typedef enum ActionSheetTags {
     
     _nickNameItem = [[ProfileItem alloc] initWithName:@"NickNameItem"];
     _nickNameItem.textAlignment = NSTextAlignmentLeft;
-    _nickNameItem.icon = [UIImage imageNamed: [self nickNameIconName]];
     _nickNameItem.valueKey = kHXONickName;
     _nickNameItem.editLabel = NSLocalizedString(@"profile_name_label", @"Profile Edit Label Nick Name");
     _nickNameItem.placeholder = NSLocalizedString([self namePlaceholderKey], @"Profile Placeholder Nick Name");
@@ -693,7 +695,6 @@ typedef enum ActionSheetTags {
     _chatWithContactItem.currentValue = _contact.nickName;
     _chatWithContactItem.valueFormat = NSLocalizedString(@"chat_with_contact", nil);
     _chatWithContactItem.textAlignment = NSTextAlignmentLeft;
-    _chatWithContactItem.icon = [UIImage imageNamed: [self chatWithIconName]];
     _chatWithContactItem.cellClass = [UserDefaultsCellDisclosure class];
     _chatWithContactItem.action = @selector(chatWithContactPressed:);
     _chatWithContactItem.target = self;
@@ -701,7 +702,6 @@ typedef enum ActionSheetTags {
 
     _blockContactItem = [[ProfileItem alloc] initWithName: @"BlockContactItem"];
     _blockContactItem.textAlignment = NSTextAlignmentLeft;
-    _blockContactItem.icon = [UIImage imageNamed: [self blockContactIconName]];
     _blockContactItem.currentValue = nil;
     _blockContactItem.cellClass = [UserDefaultsCell class];
     _blockContactItem.action = @selector(toggleBlockedPressed:);
@@ -731,7 +731,7 @@ typedef enum ActionSheetTags {
     _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem, nil];
     
     _renewKeyPairItem = [[ProfileItem alloc] initWithName:@"RenewKeypairItem"];
-    _renewKeyPairItem.cellClass = [UserDefaultsCell class];
+    _renewKeyPairItem.cellClass = [UserDefaultsCellDisclosure class];
     _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
     _renewKeyPairItem.target = self;
     _renewKeyPairItem.action = @selector(renewKeypairPressed:);
@@ -788,7 +788,6 @@ typedef enum ActionSheetTags {
     _deleteContactItem.action = @selector(deleteContactPressed:);
     _deleteContactItem.target = self;
     _deleteContactItem.textAlignment = NSTextAlignmentLeft;
-    _deleteContactItem.icon = [UIImage imageNamed: [self deleteIconName]];
 
     _destructiveSection = [ProfileSection sectionWithName:@"DestructiveSection" items: _deleteContactItem];
 
@@ -817,7 +816,6 @@ typedef enum ActionSheetTags {
     _deleteCredentialsItem.action = @selector(deleteCredentialsPressed:);
     _deleteCredentialsItem.target = self;
     _deleteCredentialsItem.textAlignment = NSTextAlignmentLeft;
-    _deleteCredentialsItem.icon = [UIImage imageNamed: [self deleteIconName]];
 
     _deleteCredentialsFileItem = [[ProfileItem alloc] initWithName:@"DeleteCredentialsFileItem"];
     _deleteCredentialsFileItem.currentValue = NSLocalizedString(@"delete_credentials_file", nil);
@@ -826,7 +824,6 @@ typedef enum ActionSheetTags {
     _deleteCredentialsFileItem.action = @selector(deleteCredentialsFilePressed:);
     _deleteCredentialsFileItem.target = self;
     _deleteCredentialsFileItem.textAlignment = NSTextAlignmentLeft;
-    _deleteCredentialsFileItem.icon = [UIImage imageNamed: [self deleteIconName]];
     
     _credentialsSection = [ProfileSection sectionWithName: @"CredentialsSection" items: _exportCredentialsItem, _importCredentialsItem,_deleteCredentialsFileItem, _deleteCredentialsItem, nil];
     
