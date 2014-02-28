@@ -13,7 +13,7 @@
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 #import "UIImage+ScaleAndCrop.h"
-#import "HXOGroupedTableViewController.h"
+#import "HXOTableViewController.h"
 #import "NSString+UUID.h"
 #import "AppDelegate.h"
 #import "ContactListViewController.h"

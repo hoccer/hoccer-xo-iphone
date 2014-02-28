@@ -23,12 +23,4 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
     _hasNewMessages = hasNewMessages;
 }
 
-- (void) layoutSubviews {
-    [super layoutSubviews];
-
-    CGRect frame = self.nickName.frame;
-    frame.size.width = self.latestMessageTimeLabel.frame.origin.x - (kHXOTimeDirectionPading + frame.origin.x);
-    self.nickName.frame = frame;
-}
-
 @end

@@ -21,10 +21,11 @@
 #import "InvitationController.h"
 #import "Attachment.h"
 #import "Environment.h"
+#import "GridView.h"
 
 @interface ConversationViewController ()
 
-@property (nonatomic,strong) ConversationCell * conversationCell;
+@property (nonatomic,readonly) ConversationCell * conversationCell;
 
 @property (strong, nonatomic) id connectionInfoObserver;
 
@@ -37,12 +38,13 @@
 - (void)awakeFromNib {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.clearsSelectionOnViewWillAppear = NO;
-        // self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
     }
-    self.conversationCell = [self.tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier]];
-
     [super awakeFromNib];
+}
+
+- (ConversationCell*) conversationCell {
+    return (ConversationCell*)[self prototypeCellOfClass: [ConversationCell class]];
 }
 
 - (void)viewDidLoad {
@@ -61,21 +63,17 @@
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
-//    self.navigationItem.titleView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"navbar_logo"]];
     self.navigationItem.title = NSLocalizedString(@"Chats", nil);
 
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
     
+    
+    GridView * grid =  [[GridView alloc] initWithFrame: self.view.bounds];
+    [self.view addSubview: grid];
+    [self.view bringSubviewToFront: grid];
+
+    
 }
-
-
-//-(UIStatusBarStyle) preferredStatusBarStyle
-//{
-//    NSLog(@"preferredStatusBarStyle called");
-//    return UIStatusBarStyleLightContent;
-//    //return UIStatusBarStyleBlackTranslucent;
-//}
-
 
 - (ChatViewController*) chatViewController {
     if (_chatViewController == nil) {
@@ -128,7 +126,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier: [ConversationCell reuseIdentifier] forIndexPath: indexPath];
+    UITableViewCell * cell = [self dequeueReusableCellOfClass: [ConversationCell class] forIndexPath: indexPath];
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
@@ -321,7 +319,9 @@
         NSString * avatarName = [contact.type isEqualToString: @"Group"] ?  @"avatar_default_group" : @"avatar_default_contact";
         avatar = [UIImage imageNamed: avatarName];
     }
-    cell.avatar.image = avatar;
+    [cell.avatar setImage: avatar forState: UIControlStateNormal];
+    cell.avatar.showLed = NO;
+    
     cell.latestMessageLabel.frame = self.conversationCell.latestMessageLabel.frame;
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){

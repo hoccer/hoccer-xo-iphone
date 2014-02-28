@@ -10,7 +10,7 @@
 
 #import "AttachmentPickerController.h"
 
-#import "HXOGroupedTableViewController.h"
+#import "HXOTableViewController.h"
 #import "ProfileDataSource.h"
 
 @class UserDefaultsCellAvatarPicker;
@@ -31,7 +31,7 @@ typedef enum ProfileViewModes {
     ProfileViewModeShowGroup
 } ProfileViewMode;
 
-@interface ProfileViewController : HXOGroupedTableViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate, ProfileDataSourceDelegate>
+@interface ProfileViewController : HXOTableViewController <AttachmentPickerControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate, ProfileDataSourceDelegate>
 {
     AvatarItem *          _avatarItem;
     ProfileSection *      _coreSection;

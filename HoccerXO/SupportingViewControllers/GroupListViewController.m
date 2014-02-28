@@ -81,7 +81,8 @@
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = group.nickName;
     
-    cell.avatar.image = group.avatarImage != nil ? group.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+    UIImage * avatar = group.avatarImage != nil ? group.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+    [cell.avatar setImage: avatar forState: UIControlStateNormal];
     
     NSInteger joinedMemberCount = [group.otherJoinedMembers count];
     NSInteger invitedMemberCount = [group.otherInvitedMembers count];

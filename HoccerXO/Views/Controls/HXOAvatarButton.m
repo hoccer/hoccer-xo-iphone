@@ -31,6 +31,7 @@
     self.ledSize = 5;
     self.ledLayer = [CALayer layer];
     self.ledLayer.backgroundColor = [UIColor redColor].CGColor;
+    self.ledLayer.opacity = 0;
     [self.layer addSublayer: self.ledLayer];
 }
 
@@ -49,6 +50,7 @@
 }
 
 - (void) layoutSubviews {
+    NSLog(@"%@", NSStringFromCGRect(self.frame));
     [super layoutSubviews];
     self.imageView.layer.cornerRadius = 0.5 * self.frame.size.width;
 }

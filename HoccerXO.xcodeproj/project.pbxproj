@@ -20,7 +20,6 @@
 		631457CA16F0E76D00AA8EB9 /* HXOBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HXOBackend.m */; };
 		6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6316D68E171EEC0A007441D9 /* libObjCSRP.a */; };
 		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
-		6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* InsetImageView.m */; };
 		6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6324C03D18BE09AE00E4BD82 /* SubViewController.m */; };
 		6325029918658D4000543D80 /* HXOAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325029818658D4000543D80 /* HXOAvatarButton.m */; };
 		632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502A31865FC2600543D80 /* DateSectionHeaderView.m */; };
@@ -38,7 +37,7 @@
 		6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327F37318B8C390007D79E3 /* Accelerate.framework */; };
 		6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F37618B8D018007D79E3 /* SegmentedViewController.m */; };
 		6327F37A18B8D45B007D79E3 /* ContactManagementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */; };
-		6330490416FC99820045E64E /* ContactQuickListViewCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330490316FC99820045E64E /* ContactQuickListViewCells.m */; };
+		6329F7B018C0000E007AFF32 /* GridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6329F7AF18C0000E007AFF32 /* GridView.m */; };
 		63304914170044940045E64E /* avatar_default_channel.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490C170044940045E64E /* avatar_default_channel.png */; };
 		63304915170044940045E64E /* avatar_default_channel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490D170044940045E64E /* avatar_default_channel@2x.png */; };
 		63304916170044940045E64E /* avatar_default_contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490E170044940045E64E /* avatar_default_contact.png */; };
@@ -94,7 +93,6 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
 		638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */; };
-		638EBE50178ADFD700F1B9AD /* ContactQuickListSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE4F178ADFD600F1B9AD /* ContactQuickListSearchBar.m */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
@@ -149,7 +147,7 @@
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
 		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
-		63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */; };
+		63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* HXOTableViewController.m */; };
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
 		63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356F1716BFDE00969B0B /* avatar_default_contact_large@2x.png */; };
@@ -405,8 +403,6 @@
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ScaleAndCrop.h"; sourceTree = "<group>"; };
 		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
-		6320D7CB16E0C79A00E58478 /* InsetImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsetImageView.h; sourceTree = "<group>"; };
-		6320D7CC16E0C79A00E58478 /* InsetImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsetImageView.m; sourceTree = "<group>"; };
 		6324C03C18BE09AE00E4BD82 /* SubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
 		6324C03D18BE09AE00E4BD82 /* SubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
 		6325029718658D4000543D80 /* HXOAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAvatarButton.h; sourceTree = "<group>"; };
@@ -436,8 +432,8 @@
 		6327F37618B8D018007D79E3 /* SegmentedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentedViewController.m; sourceTree = "<group>"; };
 		6327F37818B8D45B007D79E3 /* ContactManagementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactManagementViewController.h; sourceTree = "<group>"; };
 		6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactManagementViewController.m; sourceTree = "<group>"; };
-		6330490216FC99820045E64E /* ContactQuickListViewCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQuickListViewCells.h; sourceTree = "<group>"; };
-		6330490316FC99820045E64E /* ContactQuickListViewCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQuickListViewCells.m; sourceTree = "<group>"; };
+		6329F7AE18C0000E007AFF32 /* GridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridView.h; sourceTree = "<group>"; };
+		6329F7AF18C0000E007AFF32 /* GridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridView.m; sourceTree = "<group>"; };
 		6330490C170044940045E64E /* avatar_default_channel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_channel.png; sourceTree = "<group>"; };
 		6330490D170044940045E64E /* avatar_default_channel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_channel@2x.png"; sourceTree = "<group>"; };
 		6330490E170044940045E64E /* avatar_default_contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_contact.png; sourceTree = "<group>"; };
@@ -520,8 +516,6 @@
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingGroundViewController.h; sourceTree = "<group>"; };
 		638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingGroundViewController.m; sourceTree = "<group>"; };
-		638EBE4E178ADFD600F1B9AD /* ContactQuickListSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQuickListSearchBar.h; sourceTree = "<group>"; };
-		638EBE4F178ADFD600F1B9AD /* ContactQuickListSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQuickListSearchBar.m; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
@@ -619,8 +613,8 @@
 		63BD7D941744232D00118A7F /* GroupMembership.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMembership.m; sourceTree = "<group>"; };
 		63BD7D9617442C1B00118A7F /* GroupListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupListViewController.h; sourceTree = "<group>"; };
 		63BD7D9717442C1B00118A7F /* GroupListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupListViewController.m; sourceTree = "<group>"; };
-		63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOGroupedTableViewController.h; sourceTree = "<group>"; };
-		63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOGroupedTableViewController.m; sourceTree = "<group>"; };
+		63C1356617160E2E00969B0B /* HXOTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTableViewController.h; sourceTree = "<group>"; };
+		63C1356717160E2E00969B0B /* HXOTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTableViewController.m; sourceTree = "<group>"; };
 		63C1356B1716A4AB00969B0B /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
 		63C1356C1716A4AB00969B0B /* Invite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Invite.m; sourceTree = "<group>"; };
 		63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_contact_large.png; sourceTree = "<group>"; };
@@ -1314,8 +1308,8 @@
 				633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */,
 				63AF81901746AA1E00D007E3 /* GroupViewController.h */,
 				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
-				63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */,
-				63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */,
+				63C1356617160E2E00969B0B /* HXOTableViewController.h */,
+				63C1356717160E2E00969B0B /* HXOTableViewController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -1520,10 +1514,6 @@
 				63B2178F1821272B00C057D9 /* ChatBar.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
-				638EBE4E178ADFD600F1B9AD /* ContactQuickListSearchBar.h */,
-				638EBE4F178ADFD600F1B9AD /* ContactQuickListSearchBar.m */,
-				6330490216FC99820045E64E /* ContactQuickListViewCells.h */,
-				6330490316FC99820045E64E /* ContactQuickListViewCells.m */,
 				633A9B18177B21A700E066EF /* Controls */,
 				6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */,
 				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
@@ -1533,8 +1523,6 @@
 				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 				63DC015917147B1600609513 /* HXOTableViewCell.h */,
 				63DC015A17147B1600609513 /* HXOTableViewCell.m */,
-				6320D7CB16E0C79A00E58478 /* InsetImageView.h */,
-				6320D7CC16E0C79A00E58478 /* InsetImageView.m */,
 				63808A1A1857607F0001AC96 /* MessageCells */,
 				63B2178B181FDFAA00C057D9 /* NickNameLabelWithStatus.h */,
 				63B2178C181FDFAB00C057D9 /* NickNameLabelWithStatus.m */,
@@ -1546,6 +1534,8 @@
 				639094C7173A871500DF889B /* UIButton+GlossyRounded.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
+				6329F7AE18C0000E007AFF32 /* GridView.h */,
+				6329F7AF18C0000E007AFF32 /* GridView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2167,9 +2157,9 @@
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
-				6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */,
 				63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */,
 				63C413BC16E94735004E1F6D /* ConversationCell.m in Sources */,
+				6329F7B018C0000E007AFF32 /* GridView.m in Sources */,
 				631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */,
 				63808A201858A6F90001AC96 /* MessageSection.m in Sources */,
 				631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */,
@@ -2188,7 +2178,6 @@
 				E9E92F7718733D01007B8042 /* HTTPDynamicFileResponse.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
-				6330490416FC99820045E64E /* ContactQuickListViewCells.m in Sources */,
 				6327F37A18B8D45B007D79E3 /* ContactManagementViewController.m in Sources */,
 				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
@@ -2218,7 +2207,7 @@
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
 				632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */,
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
-				63C1356817160E2E00969B0B /* HXOGroupedTableViewController.m in Sources */,
+				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
 				E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */,
 				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
 				E9E92F961875D41E007B8042 /* TypedHTTPDataResponse.m in Sources */,
@@ -2297,7 +2286,6 @@
 				632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */,
 				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
 				E9E92F6B18733D01007B8042 /* DDData.m in Sources */,
-				638EBE50178ADFD700F1B9AD /* ContactQuickListSearchBar.m in Sources */,
 				6325029918658D4000543D80 /* HXOAvatarButton.m in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,

@@ -307,7 +307,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
-
     return YES;
 }
 

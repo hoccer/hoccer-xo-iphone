@@ -57,6 +57,7 @@ static const CGFloat kLEDSize = 5.0;
 
     _label = [[UILabel alloc] initWithFrame: self.bounds];
     [self addSubview: self.label];
+    _label.numberOfLines = 1;
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {

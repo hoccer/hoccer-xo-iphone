@@ -8,14 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HXOGroupedTableViewController : UITableViewController
+@interface HXOTableViewController : UITableViewController
 {
     NSMutableDictionary * _prototypes;
-    //NSArray *             _items;
 }
 
 - (UITableViewCell*) prototypeCellOfClass: (id) cellClass;
 - (UITableViewCell*) dequeueReusableCellOfClass: (id) cellClass forIndexPath: (NSIndexPath*) indexPath;
-//- (NSArray*) populateItems;
 
 @end

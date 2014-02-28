@@ -326,7 +326,8 @@
     cell.nickName.text = contact.nickNameWithStatus;
     cell.nickName.isOnline = [contact.connectionStatus isEqualToString: @"online"];
 
-    cell.avatar.image = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+    UIImage * avatar = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+    [cell.avatar setImage: avatar forState: UIControlStateNormal];
     
     cell.statusLabel.text = NSLocalizedString(contact.relationshipState, nil);
 }

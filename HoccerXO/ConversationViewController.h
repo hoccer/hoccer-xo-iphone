@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "HXOTableViewController.h"
 
 @class ChatViewController;
 
 
-@interface ConversationViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface ConversationViewController : HXOTableViewController <NSFetchedResultsControllerDelegate>
 
 @property (strong, nonatomic) ChatViewController *chatViewController;
 
