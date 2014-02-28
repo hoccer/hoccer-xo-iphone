@@ -25,7 +25,6 @@
 
 @interface ProfileItem : NSObject <UserDefaultsCellTextInputDelegate,ProfileItemInfo>
 
-@property (nonatomic,strong) UIImage  *      icon;
 @property (nonatomic,strong) NSString *      valueKey; // used to access the model
 @property (nonatomic,strong) NSString *      currentValue;
 @property (nonatomic,strong) NSString *      editLabel;

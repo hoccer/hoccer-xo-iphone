@@ -12,6 +12,7 @@
 
 @property (nonatomic,strong) NSMutableDictionary * cachedViewControllers;
 @property (nonatomic,strong) UIViewController    * currentViewController;
+@property (nonatomic,assign) BOOL                  inTransition;
 
 @end
 
@@ -21,11 +22,12 @@
     [super viewDidLoad];
     
     self.cachedViewControllers = [NSMutableDictionary dictionary];
-
+    self.inTransition = NO;
     UISegmentedControl * segmentedControl = [[UISegmentedControl alloc] initWithItems: [self localizedSegmentTitles]];
     self.navigationItem.titleView = segmentedControl;
     
     segmentedControl.selectedSegmentIndex = 0;
+    
     
     [segmentedControl addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
     UIViewController *vc = [self viewControllerForSegmentIndex: segmentedControl.selectedSegmentIndex];
@@ -52,9 +54,13 @@
 }
 
 - (IBAction)segmentChanged:(UISegmentedControl *)sender {
+    if (self.inTransition) {
+        return;
+    }
     UIViewController *vc = [self viewControllerForSegmentIndex: sender.selectedSegmentIndex];
     [self addChildViewController:vc];
-    [self transitionFromViewController: self.currentViewController toViewController:vc duration:0.5 options: UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    self.inTransition = YES;
+    [self transitionFromViewController: self.currentViewController toViewController:vc duration:0.2 options: UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [self.currentViewController.view removeFromSuperview];
         vc.view.frame = self.view.bounds;
         [self.view addSubview: vc.view];
@@ -65,6 +71,10 @@
         [self.currentViewController willMoveToParentViewController: nil];
         [self.currentViewController removeFromParentViewController];
         self.currentViewController = vc;
+        self.inTransition = NO;
+        if ([self viewControllerForSegmentIndex: sender.selectedSegmentIndex] != self.currentViewController) {
+            [self segmentChanged: sender];
+        }
     }];
     self.navigationItem.title = vc.title;
 }
