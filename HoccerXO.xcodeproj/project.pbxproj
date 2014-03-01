@@ -164,7 +164,6 @@
 		63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC015A17147B1600609513 /* HXOTableViewCell.m */; };
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
 		63F4CF10172892EB00699394 /* InvitationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F4CF0F172892EB00699394 /* InvitationController.m */; };
-		63F62E0817799D6B00435F21 /* MFSideMenuContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
 		6AA19EB81750059900B4807A /* avatar_default_group_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA19EB61750059900B4807A /* avatar_default_group_large@2x.png */; };
 		6AA19EB91750059900B4807A /* avatar_default_group_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AA19EB71750059900B4807A /* avatar_default_group_large.png */; };
@@ -642,9 +641,6 @@
 		63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		63F4CF0E172892EB00699394 /* InvitationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitationController.h; sourceTree = "<group>"; };
 		63F4CF0F172892EB00699394 /* InvitationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvitationController.m; sourceTree = "<group>"; };
-		63F62E0517799D6B00435F21 /* MFSideMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenu.h; sourceTree = "<group>"; };
-		63F62E0617799D6B00435F21 /* MFSideMenuContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSideMenuContainerViewController.h; sourceTree = "<group>"; };
-		63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSideMenuContainerViewController.m; sourceTree = "<group>"; };
 		63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 25.xcdatamodel"; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6AA19EB61750059900B4807A /* avatar_default_group_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_group_large@2x.png"; sourceTree = "<group>"; };
@@ -1493,7 +1489,6 @@
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
 				6367C9131833BE11005C60B3 /* GrowingTextView */,
 				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
-				63F62E0417799D6B00435F21 /* MFSideMenu */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
 				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */,
@@ -1538,17 +1533,6 @@
 				6329F7AF18C0000E007AFF32 /* GridView.m */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		63F62E0417799D6B00435F21 /* MFSideMenu */ = {
-			isa = PBXGroup;
-			children = (
-				63F62E0517799D6B00435F21 /* MFSideMenu.h */,
-				63F62E0617799D6B00435F21 /* MFSideMenuContainerViewController.h */,
-				63F62E0717799D6B00435F21 /* MFSideMenuContainerViewController.m */,
-			);
-			name = MFSideMenu;
-			path = MFSideMenu/MFSideMenu;
 			sourceTree = "<group>";
 		};
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
@@ -2281,7 +2265,6 @@
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,
 				6382549B175F746C000347CD /* ProfileDataSource.m in Sources */,
 				E9E92F3C18733B7A007B8042 /* DDASLLogger.m in Sources */,
-				63F62E0817799D6B00435F21 /* MFSideMenuContainerViewController.m in Sources */,
 				E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */,
 				632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */,
 				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
