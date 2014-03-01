@@ -255,6 +255,7 @@ typedef enum ActionSheetTags {
     } else {
         _verifyPublicKeyItem.currentValue = NSLocalizedString((@"unverify_publickey"), nil);
     }
+    _verifyPublicKeyItem.editLabel = _verifyPublicKeyItem.currentValue;
 
     // XXX hack to display fingerprint while editing...
     _fingerprintItem.currentValue = [self formatKeyIdAsFingerprint: keyId forKey:key];
@@ -275,6 +276,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    NSLog(@"observeValueForKeyPath: keyPath %@ ofObject %@",keyPath, object);
     if ([object isKindOfClass: [ProfileItem class]] && [keyPath isEqualToString: @"valid"]) {
             [self validateItems];
     } else if ([keyPath isEqualToString: @"relationshipState"]) {
@@ -612,6 +614,11 @@ typedef enum ActionSheetTags {
                 _renewKeypairRequested = NO;
                 _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
                 [self updateKeyFingerprint];
+                [self.tableView beginUpdates];
+                NSIndexPath * indexPath = [_profileDataSource indexPathForObject: _fingerprintItem];
+                UserDefaultsCell * cell = (UserDefaultsCell*)[self.tableView cellForRowAtIndexPath: indexPath];
+                [cell configure: _fingerprintItem];
+                [self.tableView endUpdates];
             }
             [self save];
         }
@@ -1296,7 +1303,7 @@ typedef enum ActionSheetTags {
     if ([HXOBackend use_elliptic_curves]) {
         [[EC sharedInstance] cleanKeyChain];
     } else {
-        [[RSA sharedInstance] cloneKeyPairKeys];
+        //[[RSA sharedInstance] cloneKeyPairKeys];
         [[RSA sharedInstance] cleanKeyPairKeys];
     }
 }
