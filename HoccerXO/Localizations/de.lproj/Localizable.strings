@@ -271,6 +271,9 @@
 "verify_publickey"="Als verifiziert markieren";
 "unverify_publickey"="Verifikation aufheben";
 
+"Verified key of contact %@ has changed"="Der von ihnen verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
+"Verified Key Changed" = "Verifizierter Schlüssel wurde geändert.";
+
 "import_confirm"="Import";
 "import_key_safety_question"="Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest das nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
 
