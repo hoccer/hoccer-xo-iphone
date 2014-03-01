@@ -1,6 +1,3 @@
-[submodule "3rdParty/MFSideMenu"]
-	path = 3rdParty/MFSideMenu
-	url = https://github.com/mikefrederick/MFSideMenu.git
 [submodule "ObjCSRP"]
 	path = ObjCSRP
 	url = git@github.com:hoccer/ObjCSRP.git
