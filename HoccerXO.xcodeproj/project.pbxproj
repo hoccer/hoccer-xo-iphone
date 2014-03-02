@@ -398,7 +398,7 @@
 		631457C816F0E76D00AA8EB9 /* HXOBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOBackend.h; sourceTree = "<group>"; };
 		631457C916F0E76D00AA8EB9 /* HXOBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOBackend.m; sourceTree = "<group>"; };
 		6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjCSRP.xcodeproj; path = ObjCSRP/ObjCSRP.xcodeproj; sourceTree = "<group>"; };
-		631A96F918AB9D82003363F5 /* injectSettingsPane.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = injectSettingsPane.sh; sourceTree = "<group>"; };
+		631A96F918AB9D82003363F5 /* injectSettingsPane */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = text.script.sh; path = injectSettingsPane; sourceTree = "<group>"; };
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ScaleAndCrop.h"; sourceTree = "<group>"; };
 		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
@@ -443,6 +443,7 @@
 		63304913170044940045E64E /* avatar_default_nearby@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_nearby@2x.png"; sourceTree = "<group>"; };
 		633049281701B3390045E64E /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		633049291701B3390045E64E /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		63334F2118C2350B0032005A /* mergeBuildNumber */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = text.script.sh; path = mergeBuildNumber; sourceTree = "<group>"; };
 		6339CDE318A998C800DA2729 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		6339CDE518A998C800DA2729 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
 		6339CDE618A998C800DA2729 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
@@ -911,12 +912,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		631A96F818AB9D24003363F5 /* Scripts */ = {
+		631A96F818AB9D24003363F5 /* BuildUtilities */ = {
 			isa = PBXGroup;
 			children = (
-				631A96F918AB9D82003363F5 /* injectSettingsPane.sh */,
+				631A96F918AB9D82003363F5 /* injectSettingsPane */,
+				63334F2118C2350B0032005A /* mergeBuildNumber */,
 			);
-			path = Scripts;
+			path = BuildUtilities;
 			sourceTree = "<group>";
 		};
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
@@ -1418,6 +1420,7 @@
 				6378482716F37E9500DE03C2 /* AttachmentPickerController.h */,
 				6378482816F37E9500DE03C2 /* AttachmentPickerController.m */,
 				631254C716EC190E009A6584 /* Backend */,
+				631A96F818AB9D24003363F5 /* BuildUtilities */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
@@ -1429,7 +1432,6 @@
 				632502A51866340A00543D80 /* MessageItems.h */,
 				632502A61866340A00543D80 /* MessageItems.m */,
 				63AEE30516CA562F00522F92 /* Models */,
-				631A96F818AB9D24003363F5 /* Scripts */,
 				E9E92F8D1874E6DD007B8042 /* Server */,
 				636D40041710724900304EDF /* SettingsConstantsAndEnvironment */,
 				E99886DB1728135C0089A510 /* SoundEffects */,
@@ -1446,8 +1448,8 @@
 			isa = PBXGroup;
 			children = (
 				6390949D1738751800DF889B /* Certificates */,
-				63AEE2E116CA4D0200522F92 /* HoccerXO-Info.plist */,
 				63AEE2E716CA4D0200522F92 /* HoccerXO-Prefix.pch */,
+				63AEE2E116CA4D0200522F92 /* HoccerXO-Info.plist */,
 				63AE45571705EE030099F0CB /* Localizations */,
 				63AEE2E516CA4D0200522F92 /* main.m */,
 			);
@@ -2096,7 +2098,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n  $SRCROOT/HoccerXO/Scripts/injectSettingsPane.sh \"$SCRIPT_INPUT_FILE_0\"\nfi";
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n  $SRCROOT/HoccerXO/BuildUtilities/injectSettingsPane \"$SCRIPT_INPUT_FILE_0\"\nfi";
 		};
 		6330492317019ED60045E64E /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;

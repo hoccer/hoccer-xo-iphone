@@ -443,6 +443,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="36"/>
+                    <connections>
+                        <segue destination="21" kind="push" identifier="showChat" id="4Tx-uH-B8w"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
             </objects>
@@ -838,6 +841,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gLn-qK-sTg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="223" y="1053"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="PEa-ki-M48">
+            <objects>
+                <viewController id="szJ-JJ-yid" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="LU9-Nv-cbI"/>
+                        <viewControllerLayoutGuide type="bottom" id="G0D-KA-Eb4"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cw2-mS-eYn">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qhS-ps-zoL">
+                                <rect key="frame" x="149" y="336" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Uz3-wn-JR1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="606" y="1090"/>
         </scene>
         <!--Geo Location View Controller-->
         <scene sceneID="Kqv-Ob-IEj">

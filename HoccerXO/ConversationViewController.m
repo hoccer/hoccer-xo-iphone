@@ -67,7 +67,7 @@
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
     
     
-    GridView * grid =  [[GridView alloc] initWithFrame: self.view.bounds];
+    GridView * grid = nil;//[[GridView alloc] initWithFrame: self.view.bounds];
     [self.view addSubview: grid];
     [self.view bringSubviewToFront: grid];
 
@@ -139,6 +139,7 @@
 }
 
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.conversationCell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, 0)].height;
     return self.conversationCell.bounds.size.height;
 }
 
@@ -159,6 +160,8 @@
         Contact * contact = (Contact*)[[self fetchedResultsController] objectAtIndexPath:indexPath];
         self.chatViewController.partner = contact;
     }
+    
+    [self performSegueWithIdentifier: @"showChat" sender: self];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -321,7 +324,7 @@
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
     cell.avatar.showLed = NO;
     
-    cell.latestMessageLabel.frame = self.conversationCell.latestMessageLabel.frame;
+    //cell.latestMessageLabel.frame = self.conversationCell.latestMessageLabel.frame;
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){
         cell.latestMessageLabel.text = nil;
@@ -340,7 +343,6 @@
         }
         latestMessageTime = message.timeAccepted;
     }
-    //[cell.latestMessageLabel sizeToFit];
 
     if (latestMessageTime) {
         NSCalendar *calendar = [NSCalendar currentCalendar];

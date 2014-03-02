@@ -13,9 +13,9 @@
 
 @interface ConversationCell : ConversationAndContactsCell
 
-@property (nonatomic,strong) IBOutlet UILabel* latestMessageLabel;
-@property (nonatomic,strong) IBOutlet UILabel* latestMessageTimeLabel;
-@property (nonatomic,strong) IBOutlet UILabel* unreadMessageCountLabel;
+@property (nonatomic,readonly) UILabel* latestMessageLabel;
+@property (nonatomic,readonly) UILabel* latestMessageTimeLabel;
+@property (nonatomic,readonly) UILabel* unreadMessageCountLabel;
 
 @property (nonatomic,assign) BOOL hasNewMessages;
 

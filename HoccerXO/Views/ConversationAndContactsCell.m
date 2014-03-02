@@ -30,24 +30,48 @@ extern const CGFloat kHXOGridSpacing;
 }
 
 - (void) commonInit {
+    
     CGRect frame = self.frame;
-    frame.size.height = 7 * kHXOGridSpacing;
+    frame.size.height = 10 * kHXOGridSpacing;
     self.frame = frame;
     
-    frame = CGRectMake( 2 * kHXOGridSpacing, 1 * kHXOGridSpacing, 5 * kHXOGridSpacing, 5 * kHXOGridSpacing);
-    self.avatar = [[HXOAvatarButton alloc] initWithFrame: frame];
+    frame = CGRectMake( 2 * kHXOGridSpacing, 2 * kHXOGridSpacing, 6 * kHXOGridSpacing, 6 * kHXOGridSpacing);
+    HXOAvatarButton * avatar = self.avatar = [[HXOAvatarButton alloc] initWithFrame: frame];
+    self.avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.contentView addSubview: self.avatar];
     
-    
     CGFloat x = CGRectGetMaxX(frame) + kHXOGridSpacing;
-    self.nickName = [[NickNameLabelWithStatus alloc] initWithFrame: CGRectMake(x, kHXOGridSpacing, self.bounds.size.width - x, 3 * kHXOGridSpacing)];
-    self.nickName.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    CGFloat w = self.contentView.frame.size.width - x;
+    UIFont * font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    NickNameLabelWithStatus * nickName = self.nickName = [[NickNameLabelWithStatus alloc] initWithFrame: CGRectMake(x, 2 * kHXOGridSpacing, w, font.lineHeight)];
+    self.nickName.font = font;
+    self.nickName.autoresizingMask = 0;//UIViewAutoresizingFlexibleWidth;
+    [self.nickName setTranslatesAutoresizingMaskIntoConstraints: NO];
     [self.contentView addSubview: self.nickName];
     
-    self.statusLabel = [[UILabel alloc] initWithFrame: CGRectMake(x, 4 * kHXOGridSpacing, self.bounds.size.width - x, 2 * kHXOGridSpacing)];
-    self.statusLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleFootnote];
+    
+    
+    font = [UIFont preferredFontForTextStyle: UIFontTextStyleFootnote];
+    UILabel * statusLabel = self.statusLabel = [[UILabel alloc] initWithFrame: CGRectMake(x, 5 * kHXOGridSpacing, w, font.lineHeight * 2)];
+    self.statusLabel.font = font;
     self.statusLabel.textColor = [UIColor colorWithWhite: 0.6 alpha: 1.0];
+    self.statusLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.statusLabel setTranslatesAutoresizingMaskIntoConstraints: NO];
     [self.contentView addSubview: self.statusLabel];
+
+    NSDictionary *viewsDictionary =
+    NSDictionaryOfVariableBindings(avatar, nickName, statusLabel);
+    NSMutableArray * constraints = [NSMutableArray array];
+    [constraints addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-16-[nickName]->=24-[statusLabel]"
+                                            options:0 metrics:nil views:viewsDictionary]];
+    [constraints addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-80-[nickName]-8-|"
+                                                                              options:0 metrics:nil views:viewsDictionary]];
+    [constraints addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-80-[statusLabel]-8-|"
+                                                                              options:0 metrics:nil views:viewsDictionary]];
+    [self.contentView addConstraints: constraints];
+
+    //self.statusLabel.backgroundColor = [UIColor orangeColor];
+    //self.nickName.backgroundColor = [UIColor orangeColor];
 }
 
 @end

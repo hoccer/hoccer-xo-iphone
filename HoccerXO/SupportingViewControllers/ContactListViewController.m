@@ -52,6 +52,7 @@
 
     [HXOBackend registerConnectionInfoObserverFor:self];
     self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
+    [self.tableView registerClass: [ContactCell class] forCellReuseIdentifier: [ContactCell reuseIdentifier]];
 }
 
 - (void) setupNavigationBar {

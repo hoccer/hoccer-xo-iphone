@@ -18,4 +18,6 @@
 @property (nonatomic,strong) HXOAvatarButton * avatar;
 @property (nonatomic,strong) UILabel * statusLabel;
 
+- (void) commonInit;
+
 @end

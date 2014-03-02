@@ -42,17 +42,12 @@
         self.ledLayer.cornerRadius = 0.5 * self.ledSize;
         self.ledLayer.frame = CGRectMake(self.bounds.size.width - self.ledSize, 0, self.ledSize, self.ledSize);
     }
+    self.imageView.layer.cornerRadius = 0.5 * self.imageView.frame.size.width;
 }
 
 - (void) setShowLed:(BOOL)showLed {
     _showLed = showLed;
     self.ledLayer.opacity = showLed ? 1.0 : 0.0;
-}
-
-- (void) layoutSubviews {
-    NSLog(@"%@", NSStringFromCGRect(self.frame));
-    [super layoutSubviews];
-    self.imageView.layer.cornerRadius = 0.5 * self.frame.size.width;
 }
 
 @end
