@@ -147,9 +147,10 @@ static InvitationController * _sharedInvitationController;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
     
-    InviteCodeViewController * controller = [storyboard instantiateViewControllerWithIdentifier:@"inviteCodeView"];
+    UINavigationController * modalHelper = [storyboard instantiateViewControllerWithIdentifier: @"modalInviteCodeView"];
+    InviteCodeViewController * controller = (InviteCodeViewController*)modalHelper.childViewControllers[0];
     controller.presentCodeMode = presentCodeMode;
-    [self.viewController presentViewController: controller animated: YES completion: nil];
+    [self.viewController presentViewController: modalHelper animated: YES completion: nil];
     
 }
 

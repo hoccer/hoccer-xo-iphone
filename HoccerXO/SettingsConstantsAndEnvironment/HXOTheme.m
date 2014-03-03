@@ -9,6 +9,7 @@
 #import "HXOTheme.h"
 #import "UIColor+HSBUtilities.h"
 #import "UIColor+HexUtilities.h"
+#import "HXOThemedNavigationController.h"
 
 static HXOTheme * _currentTheme;
 
@@ -92,9 +93,10 @@ static HXOTheme * _currentTheme;
 }
 
 - (void) setupAppearanceProxies {
-    [[UINavigationBar appearance] setBarTintColor: self.navigationBarBackgroundColor];
-    [[UINavigationBar appearance] setBarStyle:     UIBarStyleBlackTranslucent];
-    [[UINavigationBar appearance] setTintColor:    self.navigationBarTintColor];
+    id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
+    [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
+    [navigationBarAppearance setBarStyle:     UIBarStyleBlackTranslucent];
+    [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
 }
 
 @end

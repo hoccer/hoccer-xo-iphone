@@ -48,6 +48,7 @@
 		6330491A170044940045E64E /* avatar_default_nearby.png in Resources */ = {isa = PBXBuildFile; fileRef = 63304912170044940045E64E /* avatar_default_nearby.png */; };
 		6330491B170044940045E64E /* avatar_default_nearby@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63304913170044940045E64E /* avatar_default_nearby@2x.png */; };
 		6330492A1701B3390045E64E /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633049291701B3390045E64E /* ProfileViewController.m */; };
+		63334FA018C4AE640032005A /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */; };
 		633462AF174FCA3C008D98FC /* GroupAdminCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633462AE174FCA3C008D98FC /* GroupAdminCell.m */; };
 		6339CDDC18A9930C00DA2729 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F6A2172C418A00C0EC26 /* libzbar.a */; };
 		6339CDDE18A993F600DA2729 /* libInAppSettingsKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDC318A9918500DA2729 /* libInAppSettingsKit.a */; };
@@ -448,6 +449,8 @@
 		63304913170044940045E64E /* avatar_default_nearby@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_default_nearby@2x.png"; sourceTree = "<group>"; };
 		633049281701B3390045E64E /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		633049291701B3390045E64E /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOThemedNavigationController.h; sourceTree = "<group>"; };
+		63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
 		633462AD174FCA3C008D98FC /* GroupAdminCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupAdminCell.h; sourceTree = "<group>"; };
 		633462AE174FCA3C008D98FC /* GroupAdminCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupAdminCell.m; sourceTree = "<group>"; };
 		6339CDE318A998C800DA2729 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
@@ -1339,6 +1342,8 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
+				63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */,
+				63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -2183,6 +2188,7 @@
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
 				63AE45471704945C0099F0CB /* WebViewController.m in Sources */,
+				63334FA018C4AE640032005A /* HXOThemedNavigationController.m in Sources */,
 				63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */,
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
