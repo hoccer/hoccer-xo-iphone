@@ -140,6 +140,7 @@ extern CGFloat kHXOGridSpacing;
     self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
     if (self != nil) {
         self.textField = [[UITextField alloc] initWithFrame: CGRectMake(0, 2 * kHXOGridSpacing, 0, 3 * kHXOGridSpacing)];
+        self.textField.enabled = NO;
         [self.contentView addSubview: self.textField];
         self.textField.delegate = self;
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -200,7 +201,7 @@ extern CGFloat kHXOGridSpacing;
 
     self.textField.keyboardType = [item keyboardType];
     self.textField.secureTextEntry = [item secure];
-    self.textField.enabled = [item isEditable];
+    self.textField.enabled = [item isEditable] && self.isEditing;
 
     self.maxLength = [item maxLength];
 }
