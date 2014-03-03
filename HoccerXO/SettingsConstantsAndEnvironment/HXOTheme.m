@@ -97,6 +97,7 @@ static HXOTheme * _currentTheme;
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
     [navigationBarAppearance setBarStyle:     UIBarStyleBlackTranslucent];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
+    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
 }
 
 @end
