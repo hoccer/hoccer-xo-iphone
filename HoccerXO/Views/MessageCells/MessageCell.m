@@ -193,6 +193,7 @@ static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
     }
 }
 */
+
 -(void) copy:(id)sender {
     if (self.delegate != nil) {
         return [self.delegate messageCell:self copy:sender];

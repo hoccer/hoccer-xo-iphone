@@ -1779,15 +1779,15 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
-/*
 
+/*
 - (void) messageCell:(MessageCell *)theCell forwardMessage:(id)sender {
     //NSLog(@"forwardMessage");
     self.messageToForward = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     [self.menuContainerViewController toggleRightSideMenuCompletion:^{}];
     // [self.chatBackend forwardMessage: message.body toContact:message.contact withAttachment:message.attachment];
 }
-*/
+ */
 
 - (void) messageCell:(MessageCell *)theCell saveMessage:(id)sender {
     // NSLog(@"saveMessage");
