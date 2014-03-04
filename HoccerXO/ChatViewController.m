@@ -21,7 +21,6 @@
 #import "Delivery.h"
 #import "AppDelegate.h"
 #import "AttachmentPickerController.h"
-#import "MFSideMenu.h"
 #import "MessageCell.h"
 #import "HXOUserDefaults.h"
 #import "ImageViewController.h"

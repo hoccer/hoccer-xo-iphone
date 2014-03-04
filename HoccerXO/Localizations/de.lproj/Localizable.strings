@@ -85,7 +85,7 @@
 "invitation_mail_subject" = "Einladung zu Hoccer XO";
 
 /* SMS Invitation Body */
-"invitation_sms_text" = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/ und mich als Kontakt hinzufügen: %@\nxo, %@";
+"invitation_sms_text" = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
 
 /* Actionsheet Title */
 "Invite by" = "Einladung";
