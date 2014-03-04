@@ -426,7 +426,7 @@
 }
 
 - (void) pickVCardFromAdressbook {
-    ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
+    ABPeoplePickerNavigationController *peoplePicker = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).peoplePicker;
     peoplePicker.peoplePickerDelegate = self;
     [_viewController presentViewController:peoplePicker animated:YES completion:nil];
     [AppDelegate setBlackFontStatusbarForViewController:_viewController];
@@ -469,13 +469,14 @@
 
 #pragma mark - Geo Location Picking
 
-@synthesize geoLocationViewController = _geoLocationViewController;
+//@synthesize geoLocationViewController = _geoLocationViewController;
 @synthesize modalLocationPickerHelper = _modalLocationPickerHelper;
 
 - (UINavigationController*) modalLocationPickerHelper {
     if (_modalLocationPickerHelper == nil) {
-        self.geoLocationViewController.delegate = self;
+//        self.geoLocationViewController.delegate = self;
         _modalLocationPickerHelper = [_viewController.storyboard instantiateViewControllerWithIdentifier: @"ModalGeoLocationViewController"];
+        NSLog(@"geo picker: %@", _modalLocationPickerHelper.childViewControllers[0]);
         ((GeoLocationPicker*)[_modalLocationPickerHelper childViewControllers][0]).delegate = self;
     }
     return _modalLocationPickerHelper;

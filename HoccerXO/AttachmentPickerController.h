@@ -65,6 +65,6 @@ typedef enum AttachmentPickerTypes {
 - (void) showInView: (UIView*) view;
 
 @property (readonly, strong, nonatomic) RecordViewController * recordViewController;
-@property (readonly, nonatomic) GeoLocationPicker * geoLocationViewController;
+//@property (readonly, nonatomic) GeoLocationPicker * geoLocationViewController;
 
 @end

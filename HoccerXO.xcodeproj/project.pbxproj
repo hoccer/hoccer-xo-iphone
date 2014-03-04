@@ -52,8 +52,9 @@
 		6339CDDF18A9940D00DA2729 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDCB18A991A700DA2729 /* libqrencoder.a */; };
 		6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDD518A991C200DA2729 /* libSocketRocket.a */; };
 		6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDB718A9911800DA2729 /* libZipArchive-ios.a */; };
-		6339CDE918A998C800DA2729 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDE318A998C800DA2729 /* libTestFlight.a */; };
-		6339CDEB18A998C800DA2729 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 6339CDE518A998C800DA2729 /* release_notes.md */; };
+		633AA86918C4DCF6009403CB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633AA86318C4DCF6009403CB /* libTestFlight.a */; };
+		633AA86A18C4DCF6009403CB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 633AA86418C4DCF6009403CB /* README.md */; };
+		633AA86B18C4DCF6009403CB /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 633AA86518C4DCF6009403CB /* release_notes.md */; };
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634B47021795C4A0001C1C0D /* cupcakes.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 634B47011795C4A0001C1C0D /* cupcakes.jpg */; };
@@ -850,6 +851,7 @@
 				639094C01739842A00DF889B /* MapKit.framework in Frameworks */,
 				E9D1149A173679CC00737EF7 /* SystemConfiguration.framework in Frameworks */,
 				E9D1146A173307FF00737EF7 /* AddressBookUI.framework in Frameworks */,
+				633AA86918C4DCF6009403CB /* libTestFlight.a in Frameworks */,
 				63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */,
 				63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */,
 				63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */,
@@ -872,7 +874,6 @@
 				63AEE2DC16CA4D0200522F92 /* CoreGraphics.framework in Frameworks */,
 				63AEE2DE16CA4D0200522F92 /* CoreData.framework in Frameworks */,
 				6339CDDC18A9930C00DA2729 /* libzbar.a in Frameworks */,
-				6339CDE918A998C800DA2729 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1039,18 +1040,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6339CDE218A998C800DA2729 /* TestFlightSDK2.2.1 */ = {
-			isa = PBXGroup;
-			children = (
-				6339CDE318A998C800DA2729 /* libTestFlight.a */,
-				6339CDE518A998C800DA2729 /* release_notes.md */,
-				6339CDE618A998C800DA2729 /* TestFlight+AsyncLogging.h */,
-				6339CDE718A998C800DA2729 /* TestFlight+ManualSessions.h */,
-				6339CDE818A998C800DA2729 /* TestFlight.h */,
-			);
-			path = TestFlightSDK2.2.1;
-			sourceTree = "<group>";
-		};
 		633A9B18177B21A700E066EF /* Controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -1064,6 +1053,19 @@
 				634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */,
 			);
 			path = Controls;
+			sourceTree = "<group>";
+		};
+		633AA86218C4DCF6009403CB /* TestFlightSDK-3.0.0 */ = {
+			isa = PBXGroup;
+			children = (
+				633AA86318C4DCF6009403CB /* libTestFlight.a */,
+				633AA86418C4DCF6009403CB /* README.md */,
+				633AA86518C4DCF6009403CB /* release_notes.md */,
+				633AA86618C4DCF6009403CB /* TestFlight+AsyncLogging.h */,
+				633AA86718C4DCF6009403CB /* TestFlight+ManualSessions.h */,
+				633AA86818C4DCF6009403CB /* TestFlight.h */,
+			);
+			path = "TestFlightSDK-3.0.0";
 			sourceTree = "<group>";
 		};
 		634B47071796EA51001C1C0D /* AttachmentTypeIcons */ = {
@@ -1332,6 +1334,8 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
+				63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */,
+				63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -1486,7 +1490,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
-				6339CDE218A998C800DA2729 /* TestFlightSDK2.2.1 */,
+				633AA86218C4DCF6009403CB /* TestFlightSDK-3.0.0 */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
 				6367C9131833BE11005C60B3 /* GrowingTextView */,
@@ -2056,6 +2060,7 @@
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
+				633AA86A18C4DCF6009403CB /* README.md in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
 				630FD44C18BCAF52000D8C55 /* tabbar_conversations@2x.png in Resources */,
@@ -2069,13 +2074,13 @@
 				E9A41DCD17625BA5006E76B2 /* group_member_remove@2x.png in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
+				633AA86B18C4DCF6009403CB /* release_notes.md in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
 				E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */,
 				63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */,
 				634B47021795C4A0001C1C0D /* cupcakes.jpg in Resources */,
 				634B47051796EA3E001C1C0D /* chatbar_icon-send.png in Resources */,
 				634B47061796EA3E001C1C0D /* chatbar_icon-send@2x.png in Resources */,
-				6339CDEB18A998C800DA2729 /* release_notes.md in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
 				E9A85DA0184FD1AD00EB9B68 /* chatbar-attachment-icon-music.png in Resources */,
@@ -2169,6 +2174,7 @@
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
 				63AE45471704945C0099F0CB /* WebViewController.m in Sources */,
+				63334FA018C4AE640032005A /* HXOThemedNavigationController.m in Sources */,
 				63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */,
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
@@ -2360,8 +2366,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "52E13936-560D-4116-83A4-FE153778F3F4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "52E13936-560D-4116-83A4-FE153778F3F4";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2388,7 +2394,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/3rdParty/ZBarSDK/",
-					"$(SRCROOT)/3rdParty/TestFlightSDK2.2.1",
+					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -2411,8 +2417,8 @@
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2424,7 +2430,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/3rdParty/ZBarSDK/",
-					"$(SRCROOT)/3rdParty/TestFlightSDK2.2.1",
+					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -2432,7 +2438,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "52E13936-560D-4116-83A4-FE153778F3F4";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";

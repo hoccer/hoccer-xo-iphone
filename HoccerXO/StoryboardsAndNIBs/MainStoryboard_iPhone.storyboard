@@ -5,10 +5,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller - Chats-->
+        <!--Themed Navigation Controller - Chats-->
         <scene sceneID="11">
             <objects>
-                <navigationController storyboardIdentifier="navigationController" id="3" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navigationController" id="3" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Chats" image="tabbar_conversations.png" id="rtu-HQ-rkp"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4">
                         <autoresizingMask key="autoresizingMask"/>
@@ -68,7 +68,7 @@
         <!--Modal View with Navigation Bar Helper-->
         <scene sceneID="FUT-t7-A6G">
             <objects>
-                <navigationController storyboardIdentifier="modalProfileViewController" definesPresentationContext="YES" id="thk-mF-NB4" userLabel="Modal View with Navigation Bar Helper" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="modalProfileViewController" definesPresentationContext="YES" id="thk-mF-NB4" userLabel="Modal View with Navigation Bar Helper" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" tag="2342" contentMode="scaleToFill" id="ytv-nR-rCv">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -415,10 +415,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="2xm-tX-aty"/>
                     <connections>
                         <outlet property="codeTextField" destination="IYH-HM-fuD" id="5My-Po-TLi"/>
                         <outlet property="label" destination="f1W-Tz-1h6" id="uc7-Yl-WaQ"/>
-                        <outlet property="navigationItem" destination="qmV-1g-bVn" id="kQG-WW-hCR"/>
                         <outlet property="qrCodeReaderView" destination="MKT-dw-Ytk" id="Ddb-E0-wOV"/>
                         <outlet property="qrCodeView" destination="lUL-nN-WgG" id="roS-l4-5K0"/>
                         <outlet property="qrLabel" destination="QuR-3C-PHY" id="jgv-61-hu1"/>
@@ -426,7 +426,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="14N-wc-Mhv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2649" y="1349"/>
+            <point key="canvasLocation" x="2592" y="633"/>
+        </scene>
+        <!--Themed Navigation Controller-->
+        <scene sceneID="h6L-DL-Ivj">
+            <objects>
+                <navigationController storyboardIdentifier="modalInviteCodeView" definesPresentationContext="YES" id="AJd-DF-m6D" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ttX-C7-Pp2">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="eR1-06-BmS" kind="relationship" relationship="rootViewController" id="wX8-mF-8V9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="w0O-Rw-Zfc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2140" y="633"/>
         </scene>
         <!--Conversation View Controller - Contacts-->
         <scene sceneID="18">
@@ -892,22 +907,29 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Drag the Pin" id="dZo-z5-Fid">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG"/>
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="d5J-zS-hRq"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG">
+                            <connections>
+                                <action selector="cancelPressed:" destination="7cB-uF-Ia0" id="AMu-TO-1G5"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="d5J-zS-hRq">
+                            <connections>
+                                <action selector="donePressed:" destination="7cB-uF-Ia0" id="6Y1-Fa-TAs"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="customNavigationItem" destination="dZo-z5-Fid" id="BPv-Au-YJm"/>
                         <outlet property="mapView" destination="oDn-ba-OW5" id="g5t-ee-PnJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kom-cA-fQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5154" y="1349"/>
+            <point key="canvasLocation" x="2592" y="-121"/>
         </scene>
-        <!--Navigation Controller - Contacts-->
+        <!--Themed Navigation Controller - Contacts-->
         <scene sceneID="YWf-kL-LN8">
             <objects>
-                <navigationController definesPresentationContext="YES" id="ndO-Hb-TaY" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="ndO-Hb-TaY" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Contacts" image="tabbar_contacts.png" id="93c-hp-8Jv"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5K-80-wga">
                         <autoresizingMask key="autoresizingMask"/>
@@ -920,10 +942,10 @@
             </objects>
             <point key="canvasLocation" x="-281" y="-1067"/>
         </scene>
-        <!--Navigation Controller - Profile-->
+        <!--Themed Navigation Controller - Profile-->
         <scene sceneID="389-Am-i9Z">
             <objects>
-                <navigationController definesPresentationContext="YES" id="dNK-Pr-I05" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="dNK-Pr-I05" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="tabbar_profile.png" id="Yft-kE-KJs"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wrH-DR-hdJ">
                         <autoresizingMask key="autoresizingMask"/>
@@ -936,10 +958,10 @@
             </objects>
             <point key="canvasLocation" x="-295" y="1053"/>
         </scene>
-        <!--Navigation Controller - Settings-->
+        <!--Themed Navigation Controller - Settings-->
         <scene sceneID="9Th-6A-c3s">
             <objects>
-                <navigationController definesPresentationContext="YES" id="TcE-yq-ikP" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="TcE-yq-ikP" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Settings" image="tabbar_settings.png" id="fSA-6P-YP2"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="6dU-Bk-nuX">
                         <autoresizingMask key="autoresizingMask"/>
@@ -952,10 +974,10 @@
             </objects>
             <point key="canvasLocation" x="-295" y="1773"/>
         </scene>
-        <!--Navigation Controller - Modal Map View Helper-->
+        <!--Themed Navigation Controller - Modal Map View Helper-->
         <scene sceneID="qHY-n4-1jX">
             <objects>
-                <navigationController storyboardIdentifier="ModalGeoLocationViewController" title="Modal Map View Helper" definesPresentationContext="YES" id="ISl-ar-14M" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ModalGeoLocationViewController" title="Modal Map View Helper" definesPresentationContext="YES" id="ISl-ar-14M" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="YuO-st-Z2w">
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
@@ -968,7 +990,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="thc-tU-MYG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4693" y="1349"/>
+            <point key="canvasLocation" x="2131" y="-121"/>
         </scene>
         <!--FAQ View Controller-->
         <scene sceneID="77G-og-1tU">
@@ -1026,7 +1048,7 @@
         <!--Modal Group Helper-->
         <scene sceneID="85O-7J-0bj">
             <objects>
-                <navigationController storyboardIdentifier="modalGroupViewController" definesPresentationContext="YES" id="Vze-gt-vZc" userLabel="Modal Group Helper" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="modalGroupViewController" definesPresentationContext="YES" id="Vze-gt-vZc" userLabel="Modal Group Helper" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" tag="2342" contentMode="scaleToFill" id="8XP-wG-fW7">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
