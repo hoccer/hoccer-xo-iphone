@@ -22,7 +22,6 @@
 @property (nonatomic, strong) UIViewController * viewController;
 @property (nonatomic, readonly) HXOBackend * chatBackend;
 
-
 @end
 
 static InvitationController * _sharedInvitationController;
@@ -99,7 +98,7 @@ static InvitationController * _sharedInvitationController;
         if (token == nil) {
             return;
         }
-        MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
+        MFMailComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).mailPicker = [[MFMailComposeViewController alloc] init];
         picker.mailComposeDelegate = self;
 
         [picker setSubject: NSLocalizedString(@"invitation_mail_subject", @"Mail Invitation Subject")];
@@ -120,7 +119,7 @@ static InvitationController * _sharedInvitationController;
         if (token == nil) {
             return;
         }
-        MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
+        MFMessageComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).smsPicker = [[MFMessageComposeViewController alloc] init];
         picker.messageComposeDelegate = self;
 
         NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
@@ -169,7 +168,6 @@ static InvitationController * _sharedInvitationController;
 - (void)mailComposeController:(MFMailComposeViewController*)controller
           didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
 
-    // TODO: handle mail result?
 	switch (result) {
 		case MFMailComposeResultCancelled:
 			break;
@@ -178,6 +176,7 @@ static InvitationController * _sharedInvitationController;
 		case MFMailComposeResultSent:
 			break;
 		case MFMailComposeResultFailed:
+            NSLog(@"mailComposeControllerr:didFinishWithResult MFMailComposeResultFailed");
 			break;
 		default:
 			break;
@@ -188,13 +187,13 @@ static InvitationController * _sharedInvitationController;
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
                  didFinishWithResult:(MessageComposeResult)result {
 
-    // TODO: handle message result?
 	switch (result) {
 		case MessageComposeResultCancelled:
 			break;
 		case MessageComposeResultSent:
 			break;
 		case MessageComposeResultFailed:
+            NSLog(@"messageComposeViewController:didFinishWithResult MessageComposeResultFailed");
 			break;
 		default:
 			break;

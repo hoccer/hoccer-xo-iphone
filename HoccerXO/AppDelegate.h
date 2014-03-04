@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <MessageUI/MessageUI.h>
+
 #import "HXOBackend.h"
 #import "GCNetworkReachability.h"
 
@@ -54,6 +56,10 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;
+
+@property (nonatomic, strong) MFMessageComposeViewController *smsPicker;
+@property (nonatomic, strong) MFMailComposeViewController *mailPicker;
+
 
 - (void)saveContext;
 - (void)saveDatabase;
