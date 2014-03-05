@@ -15,48 +15,57 @@ extern const CGFloat kHXOGridSpacing;
 static const CGFloat kHXOTimeDirectionPading = 2.0;
 
 @interface ConversationCell ()
-{
-    BOOL _hasNewMessages;
-}
 
-@property (nonatomic,strong) UIView * ourAccessoryView;
+@property (nonatomic,strong) UIView  * actualAccessoryView;
+
 @end
+
 
 @implementation ConversationCell
 
 - (void) commonInit {
+    
+    _dateLabel = [[HXOLabel alloc] initWithFrame: CGRectZero];
+    _dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    _dateLabel.autoresizingMask = UIViewAutoresizingNone;
+    _dateLabel.numberOfLines = 1;
+    _dateLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleFootnote];
+    _dateLabel.text = @"jetze";
+    //_dateLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    [self.contentView addSubview: _dateLabel];
+
     [super commonInit];
-    self.statusLabel.numberOfLines = 2;
-    self.statusLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     
-    //self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 16, 16)];
-    [self.accessoryView setTranslatesAutoresizingMaskIntoConstraints: NO];
+    [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.nickName attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
     
+    CGFloat accessorySize = 2 * kHXOGridSpacing;
+    self.accessoryView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 16, 16)];
+    CGRect frame = CGRectMake(self.frame.size.width - (accessorySize + kHXOGridSpacing), kPadding, accessorySize, accessorySize);
+    self.actualAccessoryView = [[UIView alloc] initWithFrame: frame];
+    self.actualAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.actualAccessoryView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    //self.accessoryView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    
+    [self addSubview: self.actualAccessoryView];
+    
+    self.subtitleLabel.numberOfLines = 2;
+    self.subtitleLabel.text = @"Lorem\nIpsum\n";
+
+}
+
+- (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
+    NSMutableDictionary * v = [NSMutableDictionary dictionaryWithDictionary: views];
+    v[@"date"] = self.dateLabel;
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", 16.0, 6.0 * 8, 16.0, 16.0];
+    [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
+                                                                              options: 0 metrics: nil views: v]];
     
 }
 
-- (void) setHasNewMessages:(BOOL)hasNewMessages {
-    _hasNewMessages = hasNewMessages;
-}
-
-
-- (void) layoutSubviews {
-    [super layoutSubviews];
-    if ( ! self.ourAccessoryView) {
-        CGRect frame = self.accessoryView.frame;
-        frame.origin.y = 2 * kHXOGridSpacing;
-        self.ourAccessoryView = [[UIView alloc] initWithFrame: frame];
-        self.ourAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-        self.ourAccessoryView.backgroundColor = [UIColor orangeColor];
-        [self.accessoryView.superview addSubview: self.ourAccessoryView];
-        //self.accessoryView = nil;
-    }
-}
-
-
-- (UILabel*) latestMessageLabel {
-    return self.statusLabel;
+- (void) preferredContentSizeChanged: (NSNotification*) notification {
+    [super preferredContentSizeChanged: notification];
+    
+    self.dateLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleFootnote];
 }
 
 @end

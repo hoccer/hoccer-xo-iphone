@@ -22,14 +22,17 @@
 #import "Environment.h"
 #import "GridView.h"
 
+
+//#define HIDE_SEPARATORS
+
 @interface ConversationViewController ()
 
 @property (nonatomic,readonly) ConversationCell * conversationCell;
 
 @property (strong, nonatomic) id connectionInfoObserver;
 
-
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 @implementation ConversationViewController
@@ -70,8 +73,22 @@
     GridView * grid = nil;//[[GridView alloc] initWithFrame: self.view.bounds];
     [self.view addSubview: grid];
     [self.view bringSubviewToFront: grid];
-
     
+    [self.tableView registerClass: [ConversationCell class] forCellReuseIdentifier: [ConversationCell reuseIdentifier]];
+    self.tableView.rowHeight = [self.conversationCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
+    NSLog(@"row height: %f", self.tableView.rowHeight);
+    self.tableView.separatorInset = self.conversationCell.separatorInset;
+#ifdef HIDE_SEPARATORS
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+#endif
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+}
+
+- (void) preferredContentSizeChanged: (NSNotification*) notification {
+    [self.conversationCell preferredContentSizeChanged: notification];
+    self.tableView.rowHeight = [self.conversationCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    [self.tableView reloadData];
 }
 
 - (ChatViewController*) chatViewController {
@@ -109,6 +126,7 @@
 
 #pragma mark - Table View
 
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         return 0;
@@ -137,11 +155,12 @@
 - (void) inviteFriendsPressed: (id) sender {
     [[InvitationController sharedInvitationController] presentWithViewController: self];
 }
-
+/*
 - (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [self.conversationCell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, 0)].height;
     return self.conversationCell.bounds.size.height;
 }
+ */
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -314,7 +333,7 @@
 
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
-    cell.nickName.isOnline = [contact.connectionStatus isEqualToString: @"online"];
+    cell.nickName.ledOn = [contact.connectionStatus isEqualToString: @"online"];
 
     UIImage * avatar = contact.avatarImage;
     if (avatar == nil) {
@@ -327,19 +346,19 @@
     //cell.latestMessageLabel.frame = self.conversationCell.latestMessageLabel.frame;
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){
-        cell.latestMessageLabel.text = nil;
+        cell.subtitleLabel.text = nil;
     } else {
         HXOMessage * message = contact.latestMessage[0];
         if (message.body.length > 0) {
-            cell.latestMessageLabel.text = message.body;            
-            cell.latestMessageLabel.font = [UIFont systemFontOfSize: cell.latestMessageLabel.font.pointSize];
+            cell.subtitleLabel.text = message.body;
+            cell.subtitleLabel.font = [UIFont systemFontOfSize: cell.subtitleLabel.font.pointSize];
         } else {
             if (message.attachment != nil) {
-                cell.latestMessageLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(message.attachment.mediaType,nil)];
+                cell.subtitleLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(message.attachment.mediaType,nil)];
             } else {
-                cell.latestMessageLabel.text = @"<>"; // should never happen
+                cell.subtitleLabel.text = @"<>"; // should never happen
             }
-            cell.latestMessageLabel.font = [UIFont italicSystemFontOfSize: cell.latestMessageLabel.font.pointSize];
+            cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
         }
         latestMessageTime = message.timeAccepted;
     }
@@ -359,14 +378,15 @@
             [formatter setDateStyle:NSDateFormatterMediumStyle];
             [formatter setTimeStyle:NSDateFormatterNoStyle];
         }
-        cell.latestMessageTimeLabel.text = [formatter stringFromDate: latestMessageTime];
+        cell.dateLabel.text = [formatter stringFromDate: latestMessageTime];
     } else {
-        cell.latestMessageTimeLabel.text = @"";
+        cell.dateLabel.text = @"";
     }
 
     NSUInteger unreadCount = contact.unreadMessages.count;
     // NSLog(@"Conv unreadCount=%d",unreadCount);
     cell.hasNewMessages = unreadCount > 0;
+/*
     cell.unreadMessageCountLabel.hidden = unreadCount == 0;
     cell.unreadMessageCountLabel.text = unreadCount > 99 ? @">99" : [@(unreadCount) stringValue];
     CGRect frame = cell.unreadMessageCountLabel.bounds;
@@ -376,6 +396,7 @@
     frame = cell.unreadMessageCountLabel.frame;
     frame.origin.x += dx;
     cell.unreadMessageCountLabel.frame = frame;
+ */
 
     [cell setNeedsLayout];
 }

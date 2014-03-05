@@ -81,7 +81,6 @@ static HXOTheme * _currentTheme;
     }
 }
 
-
 #pragma mark - agnat land
 
 + (void) initialize {

@@ -29,8 +29,8 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    [self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
-    _prototypes[(id)[UserDefaultsCell class]] = [[UserDefaultsCell alloc] init];
+    //[self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
+    //_prototypes[(id)[UserDefaultsCell class]] = [[UserDefaultsCell alloc] init];
 }
 
 - (UITableViewCell*) prototypeCellOfClass:(id)cellClass {

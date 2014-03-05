@@ -9,15 +9,18 @@
 #import <UIKit/UIKit.h>
 
 #import "HXOTableViewCell.h"
-#import "NickNameLabelWithStatus.h"
+#import "LabelWithLED.h"
 #import "HXOAvatarButton.h"
 
-@interface ConversationAndContactsCell : HXOTableViewCell
+/*
 
+@interface ConversationAndContactsCell : HXOTableViewCell
 @property (nonatomic,strong) NickNameLabelWithStatus * nickName;
 @property (nonatomic,strong) HXOAvatarButton * avatar;
 @property (nonatomic,strong) UILabel * statusLabel;
 
 - (void) commonInit;
-
 @end
+
+*/
+

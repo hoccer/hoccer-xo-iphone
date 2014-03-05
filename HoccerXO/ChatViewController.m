@@ -39,7 +39,7 @@
 #import "TextSection.h"
 #import "GenericAttachmentSection.h"
 #import "ProfileViewController.h"
-#import "NickNameLabelWithStatus.h"
+#import "LabelWithLED.h"
 #import "HXOUpDownLoadControl.h"
 #import "DateSectionHeaderView.h"
 #import "MessageItems.h"
@@ -64,7 +64,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 @property (readonly, strong, nonatomic) ABUnknownPersonViewController * vcardViewController;
-@property (nonatomic,strong) NickNameLabelWithStatus * titleLabel;
+@property (nonatomic,strong) LabelWithLED * titleLabel;
 
 @property (strong, nonatomic) HXOMessage * messageToForward;
 
@@ -147,7 +147,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
     [self.tableView registerClass: [DateSectionHeaderView class] forHeaderFooterViewReuseIdentifier: @"date_header"];
 
-    self.titleLabel = [[NickNameLabelWithStatus alloc] init];
+    self.titleLabel = [[LabelWithLED alloc] init];
     self.navigationItem.titleView = self.titleLabel;
     self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -262,7 +262,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) configureTitle {
     self.titleLabel.text = self.partner.nickNameWithStatus;
-    self.titleLabel.isOnline = [self.partner.connectionStatus isEqualToString: @"online"];
+    self.titleLabel.ledOn = [self.partner.connectionStatus isEqualToString: @"online"];
     [self.titleLabel sizeToFit];
 }
 

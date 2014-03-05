@@ -11,6 +11,7 @@
 
 extern const CGFloat kHXOGridSpacing;
 
+/*
 @implementation ConversationAndContactsCell
 
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -75,3 +76,5 @@ extern const CGFloat kHXOGridSpacing;
 }
 
 @end
+
+*/

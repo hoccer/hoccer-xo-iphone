@@ -16,6 +16,7 @@
 #import "GroupMembership.h"
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
+#import "LabelWithLED.h"
 
 #define GROUPVIEW_DEBUG NO
 
@@ -597,7 +598,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     }
     NSString * membershipStateKey = [NSString stringWithFormat: @"membership_state_%@", membership.state];
     NSString * membershipRoleKey = [NSString stringWithFormat: @"membership_role_%@", membership.role];
-    cell.statusLabel.text = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(membershipRoleKey, nil), NSLocalizedString(membershipStateKey, nil)];
+    cell.subtitleLabel.text = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(membershipRoleKey, nil), NSLocalizedString(membershipStateKey, nil)];
     UIImage * avatar = [contact avatarImage] != nil ? [contact avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
 }

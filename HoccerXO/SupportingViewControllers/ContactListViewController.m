@@ -325,12 +325,12 @@
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
     // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
-    cell.nickName.isOnline = [contact.connectionStatus isEqualToString: @"online"];
+    cell.nickName.ledOn = [contact.connectionStatus isEqualToString: @"online"];
 
     UIImage * avatar = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
     
-    cell.statusLabel.text = NSLocalizedString(contact.relationshipState, nil);
+    cell.subtitleLabel.text = NSLocalizedString(contact.relationshipState, nil);
 }
 
 - (NSString*) defaultAvatarName {

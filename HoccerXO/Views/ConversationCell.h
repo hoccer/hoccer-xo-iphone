@@ -8,14 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "HXOTableViewCell.h"
-#import "ConversationAndContactsCell.h"
+#import "ContactCell.h"
 
-@interface ConversationCell : ConversationAndContactsCell
+@interface ConversationCell : ContactCell
 
-@property (nonatomic,readonly) UILabel* latestMessageLabel;
-@property (nonatomic,readonly) UILabel* latestMessageTimeLabel;
-@property (nonatomic,readonly) UILabel* unreadMessageCountLabel;
+@property (nonatomic,readonly) HXOLabel * dateLabel;
 
 @property (nonatomic,assign) BOOL hasNewMessages;
 
