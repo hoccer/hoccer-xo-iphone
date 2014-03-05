@@ -18,6 +18,10 @@ static HXOTheme * _currentTheme;
 
 #pragma mark - Applicationwide Colors
 
+- (UIColor*) tintColor {
+    return [UIColor blueColor];
+}
+
 - (UIColor*) navigationBarBackgroundColor {
     return [UIColor colorWithRed: 37.0 / 255 green: 184.0 / 255 blue: 171.0 / 255 alpha: 1.0];
 }
@@ -96,7 +100,10 @@ static HXOTheme * _currentTheme;
     return _currentTheme;
 }
 
-- (void) setupAppearanceProxies {
+- (void) setupTheming {
+    NSLog(@"window: %@", [UIApplication sharedApplication].delegate.window);
+    [UIApplication sharedApplication].delegate.window.tintColor = [self tintColor];
+    
     id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
     [navigationBarAppearance setBarStyle:     UIBarStyleBlackTranslucent];

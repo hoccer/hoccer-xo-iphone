@@ -264,14 +264,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self checkForCrash];
     self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
 
-    [[HXOTheme theme] setupAppearanceProxies];
-
     UIStoryboard *storyboard = nil;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
     } else {
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
+
+    [[HXOTheme theme] setupTheming];
 
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         [self setupDone: NO];

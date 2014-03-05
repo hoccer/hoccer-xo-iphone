@@ -25,6 +25,6 @@
 - (UIColor*) messageAttachmentSubtitleColorForScheme: (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageAttachmentIconTintColorForScheme: (HXOBubbleColorScheme) scheme;
 
-- (void) setupAppearanceProxies;
+- (void) setupTheming;
 
 @end
