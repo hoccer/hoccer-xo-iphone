@@ -10,6 +10,7 @@
 
 @interface LabelWithLED : UILabel
 
-@property (nonatomic, assign) BOOL ledOn;
+@property (nonatomic, assign) BOOL      ledOn;
+@property (nonatomic,strong)  UIColor * ledColor UI_APPEARANCE_SELECTOR;
 
 @end

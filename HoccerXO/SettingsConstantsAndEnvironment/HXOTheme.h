@@ -15,6 +15,7 @@
 
 @property (nonatomic,readonly) UIColor * navigationBarBackgroundColor;
 @property (nonatomic,readonly) UIColor * navigationBarTintColor;
+@property (nonatomic,readonly) UIColor * ledColor;
 
 - (UIColor*) messageBackgroundColorForScheme:         (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageTextColorForScheme:               (HXOBubbleColorScheme) scheme;

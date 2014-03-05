@@ -10,6 +10,7 @@
 #import "UIColor+HSBUtilities.h"
 #import "UIColor+HexUtilities.h"
 #import "HXOThemedNavigationController.h"
+#import "LabelWithLED.h"
 
 static HXOTheme * _currentTheme;
 
@@ -23,6 +24,10 @@ static HXOTheme * _currentTheme;
 
 - (UIColor*) navigationBarTintColor {
     return [UIColor whiteColor];
+}
+
+- (UIColor*) ledColor {
+    return [UIColor redColor];
 }
 
 #pragma mark - Message Color Schemes
@@ -97,6 +102,8 @@ static HXOTheme * _currentTheme;
     [navigationBarAppearance setBarStyle:     UIBarStyleBlackTranslucent];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
     [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+    
+    [[LabelWithLED appearance] setLedColor: self.ledColor];
 }
 
 @end
