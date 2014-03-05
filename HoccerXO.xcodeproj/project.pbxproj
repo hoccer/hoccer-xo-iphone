@@ -28,7 +28,6 @@
 		6327EAC91717567400AF75E1 /* bg-noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAC71717567400AF75E1 /* bg-noise.png */; };
 		6327EACA1717567400AF75E1 /* bg-noise@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAC81717567400AF75E1 /* bg-noise@2x.png */; };
 		6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAD6171841F200AF75E1 /* ContactListViewController.m */; };
-		6327EADF17186D2F00AF75E1 /* ConversationAndContactsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */; };
 		6327EAEC171883C400AF75E1 /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAEB171883C300AF75E1 /* ContactCell.m */; };
 		6327EB401719C2AF00AF75E1 /* navbar-icon-add.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB3E1719C2AF00AF75E1 /* navbar-icon-add.png */; };
 		6327EB411719C2AF00AF75E1 /* navbar-icon-add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */; };
@@ -422,8 +421,6 @@
 		6327EAC81717567400AF75E1 /* bg-noise@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-noise@2x.png"; sourceTree = "<group>"; };
 		6327EAD5171841F200AF75E1 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
 		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationAndContactsCell.h; sourceTree = "<group>"; };
-		6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationAndContactsCell.m; sourceTree = "<group>"; };
 		6327EAEA171883C200AF75E1 /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
 		6327EAEB171883C300AF75E1 /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
 		6327EB3E1719C2AF00AF75E1 /* navbar-icon-add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-icon-add.png"; sourceTree = "<group>"; };
@@ -1527,8 +1524,6 @@
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 				633A9B18177B21A700E066EF /* Controls */,
-				6327EADD17186D2F00AF75E1 /* ConversationAndContactsCell.h */,
-				6327EADE17186D2F00AF75E1 /* ConversationAndContactsCell.m */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
 				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
@@ -2221,7 +2216,6 @@
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
 				E9E92F3E18733B7A007B8042 /* DDLog.m in Sources */,
 				6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */,
-				6327EADF17186D2F00AF75E1 /* ConversationAndContactsCell.m in Sources */,
 				E9E92F901874E7A3007B8042 /* MyHttpConnection.m in Sources */,
 				6327EAEC171883C400AF75E1 /* ContactCell.m in Sources */,
 				E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */,
