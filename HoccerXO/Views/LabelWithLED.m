@@ -8,7 +8,7 @@
 
 #import "LabelWithLED.h"
 
-static const CGFloat kLEDPadding = 2.0;
+static const CGFloat kLEDPadding = 4.0;
 static const CGFloat kLEDSize = 5.0;
 
 @interface LabelWithLED ()
@@ -18,38 +18,29 @@ static const CGFloat kLEDSize = 5.0;
 @end
 
 @implementation LabelWithLED
-{
-    BOOL _isInitializing;
-}
 @synthesize ledColor = _ledColor;
 
 - (id) init {
-    _isInitializing = YES;
     self = [super init];
     if (self) {
         [self commonInit];
     }
-    _isInitializing = NO;
     return self;
 }
 
 - (id)initWithFrame: (CGRect) frame {
-    _isInitializing = YES;
     self = [super initWithFrame:frame];
     if (self) {
         [self commonInit];
     }
-    _isInitializing = NO;
     return self;
 }
 
 - (id)initWithCoder: (NSCoder*) aDecoder {
-    _isInitializing = YES;
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self commonInit];
     }
-    _isInitializing = NO;
     return self;
 }
 
@@ -60,9 +51,11 @@ static const CGFloat kLEDSize = 5.0;
     self.ledLayer.cornerRadius = 0.5 * kLEDSize;
     self.ledLayer.bounds = CGRectMake(0,0,kLEDSize,kLEDSize);
     self.ledLayer.backgroundColor = _ledColor.CGColor;
-    [self.layer addSublayer: self.ledLayer];
     self.ledLayer.opacity = 0;
+    [self.layer addSublayer: self.ledLayer];
 }
+
+#pragma mark - Layout
 
 - (CGSize) intrinsicContentSize {
     CGSize s = [super intrinsicContentSize];
@@ -70,20 +63,27 @@ static const CGFloat kLEDSize = 5.0;
     return s;
 }
 
+- (CGSize) sizeThatFits:(CGSize)size {
+    size = [super sizeThatFits:size];
+    size.width += [self ledSpace];
+    return size;
+}
+
 - (CGFloat) ledSpace {
     CGFloat totalSize = kLEDPadding + kLEDSize;
     return self.textAlignment == NSTextAlignmentCenter ? 2 * totalSize : totalSize;
 }
 
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    self.ledLayer.position = CGPointMake(self.bounds.size.width - kLEDSize, self.font.ascender - 0.5 * self.font.xHeight);
+}
+
+#pragma mark - LED State
+
 - (void) setLedOn: (BOOL) ledOn {
     _ledOn = ledOn;
     self.ledLayer.opacity = ledOn ? 1.0 : 0.0;
-}
-
-- (void) layoutSubviews {
-    [super layoutSubviews];
-    // TODO: compute proper position
-    self.ledLayer.position = CGPointMake(self.bounds.size.width - kLEDSize, 0.5 * self.bounds.size.height);
 }
 
 - (void) setLedColor:(UIColor *)ledColor {
