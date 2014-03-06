@@ -15,6 +15,7 @@
 #import "HXOBackend.h"
 #import "ProfileViewController.h"
 #import "InvitationController.h"
+#import "HXOTheme.h"
 
 static const CGFloat kMagicSearchBarHeight = 44;
 
@@ -44,6 +45,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
+    [self setupTitle];
 
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight)];
     self.searchBar.delegate = self;
@@ -53,7 +55,28 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     [HXOBackend registerConnectionInfoObserverFor:self];
     self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
-    [self.tableView registerClass: [ContactCell class] forCellReuseIdentifier: [ContactCell reuseIdentifier]];
+
+    CGFloat h = [self.prototypeCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
+    self.tableView.rowHeight = [self.prototypeCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
+    // Apple bug: Order matters. Setting the inset before the color leaves the "no cell separators" in the wrong color.
+    self.tableView.separatorColor = [[HXOTheme theme] tableSeparatorColor];
+    self.tableView.separatorInset = self.prototypeCell.separatorInset;
+#ifdef HIDE_SEPARATORS
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+#endif
+
+}
+
+- (void) setupTitle {
+    if (self.hasGroupContactToggle) {
+        UISegmentedControl * groupContactToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"Contacts", nil), NSLocalizedString(@"Groups", nil)]];
+        groupContactToggle.selectedSegmentIndex = 0;
+        self.navigationItem.titleView = groupContactToggle;
+    }
+}
+
+- (UITableViewCell*) prototypeCell {
+    return [self prototypeCellOfClass: [ContactCell class]];
 }
 
 - (void)dealloc {
@@ -201,7 +224,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
     return [Contact entityName];
 }
 
-
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
@@ -218,8 +240,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
     _searchFetchedResultsController = [self newFetchedResultsControllerWithSearch: self.searchBar.text];
     return _searchFetchedResultsController;
 }
-
-
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView beginUpdates];

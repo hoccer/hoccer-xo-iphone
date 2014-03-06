@@ -45,6 +45,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     _subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _subtitleLabel.autoresizingMask = UIViewAutoresizingNone;
     _subtitleLabel.numberOfLines = 1;
+    _subtitleLabel.text = @"Lorem ipsum";
     _subtitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     _subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _subtitleLabel];

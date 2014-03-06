@@ -46,25 +46,6 @@
             </objects>
             <point key="canvasLocation" x="-983" y="-747"/>
         </scene>
-        <!--Contact Management View Controller-->
-        <scene sceneID="gPy-Sd-xUQ">
-            <objects>
-                <viewController storyboardIdentifier="contactManagementViewController" id="lIc-Qc-7WE" customClass="ContactManagementViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="351-B4-FM1"/>
-                        <viewControllerLayoutGuide type="bottom" id="s36-Tx-RfH"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="f74-iy-2GK">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Fup-rI-bYf"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="rsQ-1e-5Ao" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="529" y="-739"/>
-        </scene>
         <!--Modal View with Navigation Bar Helper-->
         <scene sceneID="FUT-t7-A6G">
             <objects>
@@ -112,8 +93,10 @@
                             <outlet property="delegate" destination="Aez-fu-qAl" id="pOc-oD-Lqi"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="Gmw-2Z-d1Y"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="hasAddButton" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasGroupContactToggle" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="EIf-F7-14l" kind="push" identifier="showContact" id="Pgl-az-fKQ"/>
@@ -909,7 +892,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="lIc-Qc-7WE" kind="relationship" relationship="rootViewController" id="EzP-Qf-5PB"/>
+                        <segue destination="Aez-fu-qAl" kind="relationship" relationship="rootViewController" id="laL-dY-0EM"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7uf-Fa-gnR" userLabel="First Responder" sceneMemberID="firstResponder"/>

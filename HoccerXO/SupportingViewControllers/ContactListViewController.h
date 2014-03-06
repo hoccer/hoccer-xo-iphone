@@ -7,15 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SubViewController.h"
+#import "HXOTableViewController.h"
 
 @class ContactCell;
 
-@interface ContactListViewController : SubViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
+@interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic, readonly) UISearchBar *                searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (nonatomic, assign)   BOOL                         hasAddButton;
+@property (nonatomic, assign)   BOOL                         hasGroupContactToggle;
 
 - (void) clearFetchedResultsControllers;
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
@@ -26,5 +27,6 @@
 - (NSArray*) sortDescriptors;
 - (void) addPredicates: (NSMutableArray*) predicates;
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString;
+- (UITableViewCell*) prototypeCell;
 
 @end

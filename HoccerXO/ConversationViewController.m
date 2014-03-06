@@ -56,19 +56,17 @@
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
-    self.navigationItem.title = NSLocalizedString(@"Chats", nil);
-
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
-    
-        self.tableView.rowHeight = [self.conversationCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
-    // Apple bug: Order matters. Setting the inset before the color leaves the "no cell separators" in the wrong color.
-    self.tableView.separatorColor = [[HXOTheme theme] tableSeparatorColor];
-    self.tableView.separatorInset = self.conversationCell.separatorInset;
-#ifdef HIDE_SEPARATORS
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-#endif
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+}
+
+
+- (UITableViewCell*) prototypeCell {
+    return [self prototypeCellOfClass: [ConversationCell class]];
+}
+
+- (void) setupTitle {
+    self.navigationItem.title = NSLocalizedString(@"Chats", nil);
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
