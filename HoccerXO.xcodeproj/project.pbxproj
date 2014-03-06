@@ -52,11 +52,7 @@
 		6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDD518A991C200DA2729 /* libSocketRocket.a */; };
 		6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDB718A9911800DA2729 /* libZipArchive-ios.a */; };
 		633AA86918C4DCF6009403CB /* (null) in Frameworks */ = {isa = PBXBuildFile; };
-		633AA86A18C4DCF6009403CB /* (null) in Resources */ = {isa = PBXBuildFile; };
-		633AA86B18C4DCF6009403CB /* (null) in Resources */ = {isa = PBXBuildFile; };
 		633AA8E718C66DCE009403CB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633AA8E118C66DCE009403CB /* libTestFlight.a */; };
-		633AA8E818C66DCE009403CB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 633AA8E218C66DCE009403CB /* README.md */; };
-		633AA8E918C66DCE009403CB /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 633AA8E318C66DCE009403CB /* release_notes.md */; };
 		633AA8FC18C66DF7009403CB /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AA8FB18C66DF7009403CB /* HXOThemedNavigationController.m */; };
 		633AA90318C75B9D009403CB /* HXOLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AA90218C75B9D009403CB /* HXOLabel.m */; };
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
@@ -106,10 +102,6 @@
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
 		63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F688172C328D00C0EC26 /* libstdc++.dylib */; };
-		63A7F6A9172C418A00C0EC26 /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 63A7F6A4172C418A00C0EC26 /* zbar-back.png */; };
-		63A7F6AA172C418A00C0EC26 /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = 63A7F6A5172C418A00C0EC26 /* zbar-help.html */; };
-		63A7F6AB172C418A00C0EC26 /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = 63A7F6A6172C418A00C0EC26 /* zbar-helpicons.png */; };
-		63A7F6AC172C418A00C0EC26 /* zbar-samples.png in Resources */ = {isa = PBXBuildFile; fileRef = 63A7F6A7172C418A00C0EC26 /* zbar-samples.png */; };
 		63AE4516170350750099F0CB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4513170350750099F0CB /* Default.png */; };
 		63AE4517170350750099F0CB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4514170350750099F0CB /* Default@2x.png */; };
 		63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE451A1703519B0099F0CB /* Default-568h@2x.png */; };
@@ -253,7 +245,6 @@
 		E9E92F3E18733B7A007B8042 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F2F18733B79007B8042 /* DDLog.m */; };
 		E9E92F4018733B7A007B8042 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F3418733B79007B8042 /* ContextFilterLogFormatter.m */; };
 		E9E92F4118733B7A007B8042 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F3618733B79007B8042 /* DispatchQueueLogFormatter.m */; };
-		E9E92F4218733B7A007B8042 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = E9E92F3718733B79007B8042 /* README.txt */; };
 		E9E92F6B18733D01007B8042 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F4618733D01007B8042 /* DDData.m */; };
 		E9E92F6C18733D01007B8042 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F4818733D01007B8042 /* DDNumber.m */; };
 		E9E92F6D18733D01007B8042 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F4A18733D01007B8042 /* DDRange.m */; };
@@ -2012,7 +2003,6 @@
 				63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */,
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
-				E9E92F4218733B7A007B8042 /* README.txt in Resources */,
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
 				63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */,
 				63304914170044940045E64E /* avatar_default_channel.png in Resources */,
@@ -2048,29 +2038,22 @@
 				63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */,
 				63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */,
 				6327EAC91717567400AF75E1 /* bg-noise.png in Resources */,
-				633AA8E818C66DCE009403CB /* README.md in Resources */,
 				6327EACA1717567400AF75E1 /* bg-noise@2x.png in Resources */,
 				6327EB401719C2AF00AF75E1 /* navbar-icon-add.png in Resources */,
 				6327EB411719C2AF00AF75E1 /* navbar-icon-add@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
-				633AA8E918C66DCE009403CB /* release_notes.md in Resources */,
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
 				630FD44B18BCAF52000D8C55 /* tabbar_contacts@2x.png in Resources */,
 				630FD44E18BCAF52000D8C55 /* tabbar_profile@2x.png in Resources */,
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
-				63A7F6A9172C418A00C0EC26 /* zbar-back.png in Resources */,
-				63A7F6AA172C418A00C0EC26 /* zbar-help.html in Resources */,
-				63A7F6AB172C418A00C0EC26 /* zbar-helpicons.png in Resources */,
-				63A7F6AC172C418A00C0EC26 /* zbar-samples.png in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
-				633AA86A18C4DCF6009403CB /* (null) in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
 				630FD44C18BCAF52000D8C55 /* tabbar_conversations@2x.png in Resources */,
@@ -2084,7 +2067,6 @@
 				E9A41DCD17625BA5006E76B2 /* group_member_remove@2x.png in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
-				633AA86B18C4DCF6009403CB /* (null) in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
 				E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */,
 				63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */,
