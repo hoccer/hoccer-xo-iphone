@@ -60,6 +60,11 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: v]];
     
+    format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]|", kPadding];
+    [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
+                                                                              options: 0 metrics: nil views: views]];
+
+    
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {

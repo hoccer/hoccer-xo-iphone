@@ -74,9 +74,7 @@
     [self.view addSubview: grid];
     [self.view bringSubviewToFront: grid];
     
-    [self.tableView registerClass: [ConversationCell class] forCellReuseIdentifier: [ConversationCell reuseIdentifier]];
     self.tableView.rowHeight = [self.conversationCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
-    NSLog(@"row height: %f", self.tableView.rowHeight);
     self.tableView.separatorInset = self.conversationCell.separatorInset;
 #ifdef HIDE_SEPARATORS
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];

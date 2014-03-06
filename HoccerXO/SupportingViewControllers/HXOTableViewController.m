@@ -27,12 +27,6 @@
     _prototypes = [[NSMutableDictionary alloc] init];
 }
 
-- (void) viewDidLoad {
-    [super viewDidLoad];
-    //[self.tableView registerClass: [UserDefaultsCell class] forCellReuseIdentifier: [UserDefaultsCell reuseIdentifier]];
-    //_prototypes[(id)[UserDefaultsCell class]] = [[UserDefaultsCell alloc] init];
-}
-
 - (UITableViewCell*) prototypeCellOfClass:(id)cellClass {
     [self cacheClass: cellClass];
     return _prototypes[cellClass];

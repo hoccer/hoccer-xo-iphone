@@ -55,8 +55,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     _avatar.backgroundColor = [UIColor lightGrayColor];
     _avatar.layer.cornerRadius = kMaxImageSize * 0.5;
     [self.contentView addSubview: _avatar];
-    
-    
+
     UIView * title = _nickName;
     UIView * subtitle = _subtitleLabel;
     UIView * image = _avatar;
@@ -67,9 +66,6 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(%f)]", kPadding, kMaxImageSize];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
-    format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]|", kPadding];
-    [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
-                                                                              options: 0 metrics: nil views: views]];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
@@ -78,10 +74,12 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]|", kPadding, kMaxImageSize, kPadding];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-|", kPadding, kMaxImageSize, kPadding, kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
-    
+    format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]->=%f-|", kPadding, kHXOGridSpacing];
+    [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
+                                                                              options: 0 metrics: nil views: views]];    
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
