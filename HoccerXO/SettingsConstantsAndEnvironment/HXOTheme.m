@@ -30,6 +30,10 @@ static HXOTheme * _currentTheme;
     return [UIColor whiteColor];
 }
 
+- (UIColor*) tableSeparatorColor {
+    return [UIColor colorWithHexString: @"#D"];
+}
+
 - (UIColor*) ledColor {
     return [UIColor redColor];
 }
@@ -101,7 +105,6 @@ static HXOTheme * _currentTheme;
 }
 
 - (void) setupTheming {
-    NSLog(@"window: %@", [UIApplication sharedApplication].delegate.window);
     [UIApplication sharedApplication].delegate.window.tintColor = [self tintColor];
     
     id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];

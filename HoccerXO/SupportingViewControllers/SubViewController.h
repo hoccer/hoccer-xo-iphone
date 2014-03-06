@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SubViewController : UITableViewController
+#import "HXOTableViewController.h"
+
+@interface SubViewController : HXOTableViewController
 
 @end

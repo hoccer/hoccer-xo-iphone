@@ -8,16 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
-#import "HXOTableViewController.h"
+#import "ContactListViewController.h"
 
 @class ChatViewController;
 
 
-@interface ConversationViewController : HXOTableViewController <NSFetchedResultsControllerDelegate>
+@interface ConversationViewController : ContactListViewController <NSFetchedResultsControllerDelegate>
 
 @property (strong, nonatomic) ChatViewController *chatViewController;
 
-@property (readonly, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (readonly, nonatomic) NSFetchedResultsController * fetchedResultsController;
+//@property (readonly, nonatomic) NSManagedObjectContext *     managedObjectContext;
+
 
 @end

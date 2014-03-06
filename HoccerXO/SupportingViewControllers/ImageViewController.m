@@ -49,8 +49,6 @@ static const CGFloat kImageViewerOversize = 1.0;
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical   = YES;
     self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"bg-noise"]];
-
-    [self.doneButton setBackgroundImage: [UIImage imageNamed: @"navbar-btn-blue"] forState: UIControlStateNormal barMetrics:UIBarMetricsDefault];
 }
 
 - (void) viewWillAppear:(BOOL)animated {

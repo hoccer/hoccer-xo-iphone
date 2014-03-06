@@ -12,7 +12,7 @@
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "UserDefaultsCells.h"
-#import "GroupMemberCell.h"
+#import "ContactCell.h"
 #import "GroupMembership.h"
 #import "UserProfile.h"
 #import "GroupMemberInviteViewController.h"
@@ -399,7 +399,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: heightForRowAtIndexPath");
     id item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
-        UITableViewCell * cell = [self prototypeCellOfClass: [GroupMemberCell class]];
+        UITableViewCell * cell = [self prototypeCellOfClass: [ContactCell class]];
         return cell.bounds.size.height;
     }
     return [super tableView: tableView heightForRowAtIndexPath: indexPath];
@@ -409,7 +409,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: cellForRowAtIndexPath %@",indexPath);
     id item = _profileDataSource[indexPath.section][indexPath.row];
     if ([item isKindOfClass: [GroupMembership class]]) {
-        GroupMemberCell * cell = (GroupMemberCell*)[self dequeueReusableCellOfClass: [GroupMemberCell class] forIndexPath: indexPath];
+        ContactCell * cell = (ContactCell*)[self dequeueReusableCellOfClass: [ContactCell class] forIndexPath: indexPath];
         [self configureMembershipCell: cell atIndexPath: indexPath];
         return cell;
     }
@@ -585,7 +585,7 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if (GROUPVIEW_DEBUG) NSLog(@"controllerDidChangeContent ready");
 }
 
-- (void) configureMembershipCell: (GroupMemberCell*) cell atIndexPath: (NSIndexPath*) indexPath {
+- (void) configureMembershipCell: (ContactCell*) cell atIndexPath: (NSIndexPath*) indexPath {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: configureMembershipCell atIndexPath %@",indexPath);
     GroupMembership * membership = _profileDataSource[indexPath.section][indexPath.row];
     id contact = [self getContact: membership];

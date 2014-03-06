@@ -16,6 +16,7 @@
 #import "ProfileViewController.h"
 #import "InvitationController.h"
 
+static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()
 
@@ -33,21 +34,21 @@
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize contactCellPrototype = _contactCellPrototype;
 
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self setupNavigationBar];
+    if (self.hasAddButton) {
+        UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd target: self action: @selector(addButtonPressed:)];
+        self.navigationItem.rightBarButtonItem = addButton;
+    }
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backButton;
 
+
+    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight)];
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
+    self.tableView.tableHeaderView = self.searchBar;
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
     [HXOBackend registerConnectionInfoObserverFor:self];
@@ -55,22 +56,8 @@
     [self.tableView registerClass: [ContactCell class] forCellReuseIdentifier: [ContactCell reuseIdentifier]];
 }
 
-- (void) setupNavigationBar {
-
-    UIBarButtonItem *addContactButton = [[UIBarButtonItem alloc] initWithImage: [UIImage imageNamed: @"navbar-icon-add"] landscapeImagePhone: nil style: UIBarButtonItemStylePlain target: self action: @selector(addButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = addContactButton;
-
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = backButton;
-
-}
-
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self.keyboardHidingObserver];
-}
-
-- (NSString*) navigationItemBackButtonImageName {
-    return @"navbar-icon-contacts";
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -109,15 +96,6 @@
 
 #pragma mark - Table view data source
 
-- (BOOL) isEmpty {
-    if (self.currentFetchedResultsController.sections.count == 0) {
-        return YES;
-    } else {
-        id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[0];
-        return [sectionInfo numberOfObjects] == 0;
-    }
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [self.currentFetchedResultsController.sections count];
 }
@@ -126,12 +104,6 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = self.currentFetchedResultsController.sections[section];
     return [sectionInfo numberOfObjects];
 }
-
-/*
-- (CGFloat) tableView: (UITableView*) tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return self.contactCellPrototype.bounds.size.height;
-}
- */
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
@@ -177,38 +149,21 @@
 }
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
-    NSSortDescriptor *nameSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES];
-    NSArray *sortDescriptors = @[nameSortDescriptor];
-
-    //NSArray *sortDescriptors = // your sort descriptors here
-    NSPredicate *filterPredicate = nil; // your predicate here
-
-    /*
-     Set up the fetched results controller.
-     */
-    // Create the fetch request for the entity.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    NSEntityDescription *callEntity = [NSEntityDescription entityForName: [Contact entityName] inManagedObjectContext: self.managedObjectContext];
-    [fetchRequest setEntity:callEntity];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: [self entityName] inManagedObjectContext: self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setSortDescriptors: self.sortDescriptors];
 
     NSMutableArray *predicateArray = [NSMutableArray array];
-    [self addContactPredicates: predicateArray];
+    [self addPredicates: predicateArray];
     if(searchString.length) {
-        // your search predicate(s) are added to this array
-        [predicateArray addObject:[NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
+        [self addSearchPredicates: predicateArray searchString: searchString];
     }
-    // finally add the filter predicate for this view
-    filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArray];
+    NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArray];
     [fetchRequest setPredicate:filterPredicate];
 
-    // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
 
-    [fetchRequest setSortDescriptors:sortDescriptors];
-
-    // Edit the section name key path and cache name if appropriate.
-    // nil for section name key path means "no sections".
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                                                 managedObjectContext:self.managedObjectContext
                                                                                                   sectionNameKeyPath: nil
@@ -229,8 +184,16 @@
     return aFetchedResultsController;
 }
 
-- (void) addContactPredicates: (NSMutableArray*) predicates {
+- (NSArray*) sortDescriptors {
+    return @[[[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES]];
+}
+
+- (void) addPredicates: (NSMutableArray*) predicates {
     [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend')", [self entityName]]];
+}
+
+- (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
+    [predicates addObject: [NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
 }
 
 
@@ -240,11 +203,10 @@
 
 
 - (NSFetchedResultsController *)fetchedResultsController {
-    if (_fetchedResultsController != nil)
-    {
+    if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
-    _fetchedResultsController = [self newFetchedResultsControllerWithSearch:nil];
+    _fetchedResultsController = [self newFetchedResultsControllerWithSearch: nil];
     return _fetchedResultsController;
 }
 
@@ -259,8 +221,7 @@
 
 
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView beginUpdates];
 }
 
@@ -293,7 +254,13 @@
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self fetchedResultsController: controller configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            /* workaround - see:
+             * http://stackoverflow.com/questions/14354315/simultaneous-move-and-update-of-uitableviewcell-and-nsfetchedresultscontroller
+             * and
+             * http://developer.apple.com/library/ios/#releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/
+             */
+            [self fetchedResultsController: controller configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath]
+                               atIndexPath: newIndexPath ? newIndexPath : indexPath];
             break;
 
         case NSFetchedResultsChangeMove:
@@ -303,33 +270,25 @@
     }
 }
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView endUpdates];
 }
-
-/*
- // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
- {
- // In the simplest, most efficient, case, reload the table view.
- [self.tableView reloadData];
- }
- */
 
 
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
                    configureCell:(ContactCell *)cell
                      atIndexPath:(NSIndexPath *)indexPath
 {
-    // your cell guts here
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
-    // cell.nickName.text = contact.nickName;
     cell.nickName.text = contact.nickNameWithStatus;
     cell.nickName.ledOn = [contact.connectionStatus isEqualToString: @"online"];
 
-    UIImage * avatar = contact.avatarImage != nil ? contact.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
+    
+    UIImage * avatar = contact.avatarImage;
+    if (avatar == nil) {
+        NSString * avatarName = [contact.type isEqualToString: @"Group"] ?  @"avatar_default_group" : @"avatar_default_contact";
+        avatar = [UIImage imageNamed: avatarName];
+    }
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
     
     cell.subtitleLabel.text = NSLocalizedString(contact.relationshipState, nil);

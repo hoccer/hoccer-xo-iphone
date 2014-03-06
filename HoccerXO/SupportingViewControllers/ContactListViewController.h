@@ -13,11 +13,18 @@
 
 @interface ContactListViewController : SubViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
-@property (nonatomic,strong) IBOutlet UISearchBar* searchBar;
+@property (nonatomic, readonly) UISearchBar *                searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
+@property (nonatomic, assign)   BOOL                         hasAddButton;
 
 - (void) clearFetchedResultsControllers;
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
                    configureCell:(ContactCell *)cell
                      atIndexPath:(NSIndexPath *)indexPath;
+
+- (id) entityName;
+- (NSArray*) sortDescriptors;
+- (void) addPredicates: (NSMutableArray*) predicates;
+- (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString;
+
 @end

@@ -36,12 +36,6 @@
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.codeTextField.placeholder = NSLocalizedString(@"invite_code_field_placeholder", nil);
 
-    /*
-    UIImage * background = [[UIImage imageNamed: @"navbar-btn-blue"] stretchableImageWithLeftCapWidth: 4 topCapHeight: 0];
-    self.getNewCodeButton.backgroundColor = [UIColor clearColor];
-    [self.getNewCodeButton setBackgroundImage: background forState: UIControlStateNormal];
-    [self.getNewCodeButton setTitle: NSLocalizedString(@"invite_get_new_code_button", nil) forState:UIControlStateNormal];
-*/
     self.qrCodeView.hidden = YES;
     self.qrCodeReaderView.readerDelegate = self;
     self.qrCodeReaderView.layer.borderColor = [UIColor blackColor].CGColor;
@@ -55,7 +49,6 @@
 #endif
 
     [HXOBackend registerConnectionInfoObserverFor:self];
-
 }
 
 - (void) viewWillAppear:(BOOL)animated {

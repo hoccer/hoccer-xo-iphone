@@ -29,8 +29,6 @@
 		6327EACA1717567400AF75E1 /* bg-noise@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EAC81717567400AF75E1 /* bg-noise@2x.png */; };
 		6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAD6171841F200AF75E1 /* ContactListViewController.m */; };
 		6327EAEC171883C400AF75E1 /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAEB171883C300AF75E1 /* ContactCell.m */; };
-		6327EB401719C2AF00AF75E1 /* navbar-icon-add.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB3E1719C2AF00AF75E1 /* navbar-icon-add.png */; };
-		6327EB411719C2AF00AF75E1 /* navbar-icon-add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */; };
 		6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB6E171D55DA00AF75E1 /* libcrypto.a */; };
 		6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */; };
 		6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327F37318B8C390007D79E3 /* Accelerate.framework */; };
@@ -73,7 +71,6 @@
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
 		63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */; };
 		63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */; };
-		6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6374B822174D0F6900506EE9 /* GroupMemberCell.m */; };
 		6378480716F348E400DE03C2 /* chatbar_btn_add-content.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847D816F348E300DE03C2 /* chatbar_btn_add-content.png */; };
 		6378480816F348E400DE03C2 /* chatbar_btn_add-content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637847D916F348E300DE03C2 /* chatbar_btn_add-content@2x.png */; };
 		6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378482816F37E9500DE03C2 /* AttachmentPickerController.m */; };
@@ -222,7 +219,6 @@
 		E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */; };
 		E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B7BAB8172EA15E00212420 /* RecordViewController.m */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
-		E9D1145817316DCC00737EF7 /* StartupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D1145617316DCC00737EF7 /* StartupViewController.m */; };
 		E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9D1145A1732CFE800737EF7 /* VcardPreview.xib */; };
 		E9D1145E1732E74000737EF7 /* Vcard.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D1145D1732E74000737EF7 /* Vcard.m */; };
 		E9D1146A173307FF00737EF7 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D11469173307FC00737EF7 /* AddressBookUI.framework */; };
@@ -414,8 +410,6 @@
 		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6327EAEA171883C200AF75E1 /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
 		6327EAEB171883C300AF75E1 /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
-		6327EB3E1719C2AF00AF75E1 /* navbar-icon-add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-icon-add.png"; sourceTree = "<group>"; };
-		6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-icon-add@2x.png"; sourceTree = "<group>"; };
 		6327EB6E171D55DA00AF75E1 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../ObjCSRP/3rdParty/openssl-xcode/build/Release-iphoneos/libcrypto.a"; sourceTree = "<group>"; };
 		6327EB72171D61A200AF75E1 /* HXOConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOConfig.h; sourceTree = "<group>"; };
 		6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
@@ -479,8 +473,6 @@
 		63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		63716BBB185CCEE60094987D /* GenericAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
 		63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
-		6374B821174D0F6900506EE9 /* GroupMemberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberCell.h; sourceTree = "<group>"; };
-		6374B822174D0F6900506EE9 /* GroupMemberCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberCell.m; sourceTree = "<group>"; };
 		637847D816F348E300DE03C2 /* chatbar_btn_add-content.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content.png"; sourceTree = "<group>"; };
 		637847D916F348E300DE03C2 /* chatbar_btn_add-content@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar_btn_add-content@2x.png"; sourceTree = "<group>"; };
 		6378482716F37E9500DE03C2 /* AttachmentPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentPickerController.h; sourceTree = "<group>"; };
@@ -736,8 +728,6 @@
 		E9B7BAB7172EA15E00212420 /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		E9D1145517316DCC00737EF7 /* StartupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupViewController.h; sourceTree = "<group>"; };
-		E9D1145617316DCC00737EF7 /* StartupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupViewController.m; sourceTree = "<group>"; };
 		E9D1145A1732CFE800737EF7 /* VcardPreview.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VcardPreview.xib; sourceTree = "<group>"; };
 		E9D1145C1732E73F00737EF7 /* Vcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vcard.h; sourceTree = "<group>"; };
 		E9D1145D1732E74000737EF7 /* Vcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vcard.m; sourceTree = "<group>"; };
@@ -1099,7 +1089,6 @@
 				63AE4511170350750099F0CB /* Default */,
 				633462B0174FE3C2008D98FC /* GroupView */,
 				6327EAC31717564700AF75E1 /* ImageViewer */,
-				637847E616F348E400DE03C2 /* NavigationBar */,
 				E99886E717282C950089A510 /* Sounds */,
 				630FD44518BCAF52000D8C55 /* TabBar */,
 			);
@@ -1143,15 +1132,6 @@
 				637847D916F348E300DE03C2 /* chatbar_btn_add-content@2x.png */,
 			);
 			path = ChatBar;
-			sourceTree = "<group>";
-		};
-		637847E616F348E400DE03C2 /* NavigationBar */ = {
-			isa = PBXGroup;
-			children = (
-				6327EB3E1719C2AF00AF75E1 /* navbar-icon-add.png */,
-				6327EB3F1719C2AF00AF75E1 /* navbar-icon-add@2x.png */,
-			);
-			path = NavigationBar;
 			sourceTree = "<group>";
 		};
 		63808A1A1857607F0001AC96 /* MessageCells */ = {
@@ -1327,8 +1307,6 @@
 				E9E92F8B18748F21007B8042 /* ServerViewController.m */,
 				63AE4542170493140099F0CB /* SettingsViewController.h */,
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
-				E9D1145517316DCC00737EF7 /* StartupViewController.h */,
-				E9D1145617316DCC00737EF7 /* StartupViewController.m */,
 				6324C03C18BE09AE00E4BD82 /* SubViewController.h */,
 				6324C03D18BE09AE00E4BD82 /* SubViewController.m */,
 				638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */,
@@ -1517,8 +1495,6 @@
 				633A9B18177B21A700E066EF /* Controls */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
-				6374B821174D0F6900506EE9 /* GroupMemberCell.h */,
-				6374B822174D0F6900506EE9 /* GroupMemberCell.m */,
 				63DC015917147B1600609513 /* HXOTableViewCell.h */,
 				63DC015A17147B1600609513 /* HXOTableViewCell.m */,
 				63808A1A1857607F0001AC96 /* MessageCells */,
@@ -2039,8 +2015,6 @@
 				63C135711716BFDE00969B0B /* avatar_default_contact_large@2x.png in Resources */,
 				6327EAC91717567400AF75E1 /* bg-noise.png in Resources */,
 				6327EACA1717567400AF75E1 /* bg-noise@2x.png in Resources */,
-				6327EB401719C2AF00AF75E1 /* navbar-icon-add.png in Resources */,
-				6327EB411719C2AF00AF75E1 /* navbar-icon-add@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
@@ -2222,7 +2196,6 @@
 				63F4CF10172892EB00699394 /* InvitationController.m in Sources */,
 				E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */,
 				E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */,
-				E9D1145817316DCC00737EF7 /* StartupViewController.m in Sources */,
 				63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */,
 				63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */,
 				E9E92F3B18733B7A007B8042 /* DDAbstractDatabaseLogger.m in Sources */,
@@ -2254,7 +2227,6 @@
 				63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */,
 				63808A2C185942D20001AC96 /* ImageAttachmentSection.m in Sources */,
 				E9E92F7518733D01007B8042 /* HTTPAsyncFileResponse.m in Sources */,
-				6374B823174D0F6900506EE9 /* GroupMemberCell.m in Sources */,
 				6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
 				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,

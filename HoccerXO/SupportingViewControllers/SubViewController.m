@@ -15,7 +15,7 @@
 
 @implementation SubViewController
 
-
+/*
 - (void)didMoveToParentViewController:(UIViewController *)parent {
     if (parent) {
         CGFloat top = parent.topLayoutGuide.length;
@@ -28,5 +28,5 @@
     }
     [super didMoveToParentViewController:parent];
 }
-
+*/
 @end
