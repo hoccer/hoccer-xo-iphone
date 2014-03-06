@@ -19,7 +19,7 @@ static HXOTheme * _currentTheme;
 #pragma mark - Applicationwide Colors
 
 - (UIColor*) tintColor {
-    return [UIColor blueColor];
+    return [UIColor colorWithHexString: @"#0079FF"];
 }
 
 - (UIColor*) navigationBarBackgroundColor {
