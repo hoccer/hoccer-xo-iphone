@@ -171,4 +171,8 @@ typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
 + (BOOL) isZeroData:(NSData*)theData;
 + (BOOL) isInvalid:(NSData*)theData;
 
+#ifdef DEBUG
++ (NSString*)checkForceFilecacheUrl:(NSString*)theURL;
+#endif
+
 @end

@@ -45,6 +45,8 @@ NSString * const kHXOReportCrashes         = @"reportCrashes";
 NSString * const kHXOSupportMode           = @"supportMode";
 
 NSString * const kHXODebugServerURL        = @"debugServerURL";
+NSString * const kHXOForceFilecacheURL     = @"forceFilecacheURL";
+
 NSString * const kHXODebugAllowUntrustedCertificates = @"debugAllowUntrustedCertificates";
 
 NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
