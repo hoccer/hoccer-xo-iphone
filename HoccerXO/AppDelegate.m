@@ -1425,6 +1425,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [navigationController setViewControllers: @[navigationController.topViewController, chatViewController]];
 }
 
+@synthesize peoplePicker = _peoplePicker;
+- (ABPeoplePickerNavigationController*) peoplePicker {
+    if ( ! _peoplePicker) {
+        _peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
+    }
+    return _peoplePicker;
+}
+
 + (AppDelegate*)instance {
     return (AppDelegate*)[[UIApplication sharedApplication] delegate];
 }

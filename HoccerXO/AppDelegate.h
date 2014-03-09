@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import <AddressBookUI/AddressBookUI.h>
 #import <MessageUI/MessageUI.h>
 
 #import "HXOBackend.h"
@@ -45,6 +46,9 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 @property (nonatomic, strong) NSString * openedFileDocumentType;
 @property (nonatomic, strong) NSString * openedFileMediaType;
 @property (nonatomic, strong) NSString * openedFileMimeType;
+
+
+@property (nonatomic,readonly) ABPeoplePickerNavigationController * peoplePicker;
 
 #ifdef WITH_WEBSERVER
 @property (readonly,nonatomic, strong) HTTPServer *httpServer;

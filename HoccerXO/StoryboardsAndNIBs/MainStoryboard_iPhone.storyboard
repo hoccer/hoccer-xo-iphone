@@ -446,7 +446,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w0O-Rw-Zfc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2008" y="633"/>
+            <point key="canvasLocation" x="2140" y="633"/>
         </scene>
         <!--Conversation View Controller - Contacts-->
         <scene sceneID="18">
@@ -904,7 +904,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="oDn-ba-OW5">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" id="oDn-ba-OW5">
                                 <rect key="frame" x="0.0" y="-8" width="320" height="512"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -916,17 +916,24 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Drag the Pin" id="dZo-z5-Fid">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG"/>
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="d5J-zS-hRq"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG">
+                            <connections>
+                                <action selector="cancelPressed:" destination="7cB-uF-Ia0" id="AMu-TO-1G5"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="d5J-zS-hRq">
+                            <connections>
+                                <action selector="donePressed:" destination="7cB-uF-Ia0" id="6Y1-Fa-TAs"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="customNavigationItem" destination="dZo-z5-Fid" id="BPv-Au-YJm"/>
                         <outlet property="mapView" destination="oDn-ba-OW5" id="g5t-ee-PnJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kom-cA-fQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5154" y="1349"/>
+            <point key="canvasLocation" x="2592" y="-121"/>
         </scene>
         <!--Themed Navigation Controller - Contacts-->
         <scene sceneID="YWf-kL-LN8">
@@ -992,7 +999,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="thc-tU-MYG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4693" y="1349"/>
+            <point key="canvasLocation" x="2131" y="-121"/>
         </scene>
         <!--FAQ View Controller-->
         <scene sceneID="77G-og-1tU">
