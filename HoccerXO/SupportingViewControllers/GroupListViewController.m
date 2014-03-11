@@ -76,9 +76,7 @@
                    configureCell:(ContactCell *)cell
                      atIndexPath:(NSIndexPath *)indexPath
 {
-    // your cell guts here
     Group * group = (Group*)[fetchedResultsController objectAtIndexPath:indexPath];
-    // cell.nickName.text = contact.nickName;
     cell.nickName.text = group.nickName;
     
     UIImage * avatar = group.avatarImage != nil ? group.avatarImage : [UIImage imageNamed: [self defaultAvatarName]];
@@ -121,10 +119,7 @@
         }
     }
     
-    // cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,joinedStatus];
-    // cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,group.clientId];
-    cell.subtitleLabel.text = joinedStatus;
-    
+    cell.subtitleLabel.text = joinedStatus;    
 }
 
 @end

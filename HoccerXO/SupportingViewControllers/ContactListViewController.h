@@ -17,6 +17,7 @@
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (nonatomic, assign)   BOOL                         hasAddButton;
 @property (nonatomic, assign)   BOOL                         hasGroupContactToggle;
+@property (nonatomic,strong)    UISegmentedControl *         groupContactsToggle;
 
 - (void) clearFetchedResultsControllers;
 - (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController

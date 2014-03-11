@@ -17,6 +17,8 @@
 #import "InvitationController.h"
 #import "HXOTheme.h"
 
+#define HIDE_SEPARATORS
+
 static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()
@@ -56,7 +58,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [HXOBackend registerConnectionInfoObserverFor:self];
     self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
 
-    CGFloat h = [self.prototypeCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
     self.tableView.rowHeight = [self.prototypeCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
     // Apple bug: Order matters. Setting the inset before the color leaves the "no cell separators" in the wrong color.
     self.tableView.separatorColor = [[HXOTheme theme] tableSeparatorColor];
@@ -71,8 +72,13 @@ static const CGFloat kMagicSearchBarHeight = 44;
     if (self.hasGroupContactToggle) {
         UISegmentedControl * groupContactToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"Contacts", nil), NSLocalizedString(@"Groups", nil)]];
         groupContactToggle.selectedSegmentIndex = 0;
+        [groupContactToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
         self.navigationItem.titleView = groupContactToggle;
     }
+}
+
+- (void) segmentChanged: (id) sender {
+    NSLog(@"Plonk");
 }
 
 - (UITableViewCell*) prototypeCell {
@@ -218,7 +224,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
     [predicates addObject: [NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
 }
-
 
 - (id) entityName {
     return [Contact entityName];
