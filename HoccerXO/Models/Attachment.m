@@ -855,7 +855,11 @@ NSArray * TransferStateName = @[@"detached",
         if (myError == nil) {
             // NSLog(@"Attachment:upload starting withUploadData");
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
-                                             absoluteURI:[self uploadURL]
+#ifdef DEBUG
+                                                absoluteURI:[HXOBackend checkForceFilecacheUrl:[self uploadURL]]
+#else
+                                                absoluteURI:[self uploadURL]
+#endif
                                                  payloadData:myData
                                                  payloadStream:nil
                                                  headers:[self uploadHttpHeaders]
@@ -905,10 +909,14 @@ NSArray * TransferStateName = @[@"detached",
                                        error:&myError];
             CryptingInputStream * myEncryptingStream = [[CryptingInputStream alloc] initWithInputStream:myStream cryptoEngine:encryptionEngine skipOutputBytes:0];
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
+#ifdef DEBUG
+                                                         absoluteURI:[HXOBackend checkForceFilecacheUrl:[self uploadURL]]
+#else
                                                          absoluteURI:[self uploadURL]
-                                                             payloadData:nil
-                                                             payloadStream:myEncryptingStream
-                                                             headers:[self uploadHttpHeadersWithCrypto]
+#endif                                                         
+                                                         payloadData:nil
+                                                         payloadStream:myEncryptingStream
+                                                         headers:[self uploadHttpHeadersWithCrypto]
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
@@ -922,8 +930,11 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) checkResumeUploadStream {
     if (CONNECTION_TRACE) {NSLog(@"checkResumeUploadStream uploadURL=%@, attachment=%@", self.uploadURL, self );}
-    
+#ifdef DEBUG
+    GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:[HXOBackend checkForceFilecacheUrl:self.uploadURL] HTTPMethod:@"PUT" parameters:nil];
+#else
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:self.uploadURL HTTPMethod:@"PUT" parameters:nil];
+#endif
     NSDictionary * headers = [self uploadHttpHeadersForRequestingUploadedRange];
 	for (NSString *key in headers) {
 		[request addValue:[headers objectForKey:key] forHTTPHeaderField:key];
@@ -1037,7 +1048,11 @@ NSArray * TransferStateName = @[@"detached",
                                                                                            cryptoEngine:encryptionEngine
                                                                                         skipOutputBytes:[fromPos integerValue]];
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
+#ifdef DEBUG
+                                                         absoluteURI:[HXOBackend checkForceFilecacheUrl:self.uploadURL]
+#else
                                                          absoluteURI:[self uploadURL]
+#endif
                                                          payloadData:nil
                                                        payloadStream:myEncryptingStream
                                                              headers:[self uploadHttpHeadersWithCryptoFromPos:fromPos]
@@ -1143,7 +1158,11 @@ NSArray * TransferStateName = @[@"detached",
     
     
     NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"GET"
+#ifdef DEBUG
+                                                 absoluteURI:[HXOBackend checkForceFilecacheUrl:[self remoteURL]]
+#else
                                                  absoluteURI:[self remoteURL]
+#endif
                                                  payloadData:nil
                                                payloadStream:nil
                                                      headers:myHeaders
@@ -1205,7 +1224,11 @@ NSArray * TransferStateName = @[@"detached",
                                IV:nil
                                error:&myError];
     NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"GET"
-                                     absoluteURI:[self remoteURL]
+#ifdef DEBUG
+                                                 absoluteURI:[HXOBackend checkForceFilecacheUrl:[self remoteURL]]
+#else
+                                                 absoluteURI:[self remoteURL]
+#endif
                                         payloadData:nil
                                         payloadStream:nil
                                         headers:[self downloadHttpHeaders]

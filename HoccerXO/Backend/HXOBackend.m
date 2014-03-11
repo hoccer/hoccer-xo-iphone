@@ -3673,9 +3673,27 @@ static NSTimer * _stateNotificationDelayTimer;
     completion(nil);
 }
 
+#ifdef DEBUG
+
++ (NSString*)checkForceFilecacheUrl:(NSString*)theURL {
+    NSString * forceFilecacheURL = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOForceFilecacheURL];
+    if (forceFilecacheURL && ! [forceFilecacheURL isEqualToString: @""]) {
+        NSURL * origURL = [NSURL URLWithString:theURL];
+        NSURL * newBaseURL = [NSURL URLWithString:forceFilecacheURL];
+        NSURL * newURL = [[NSURL alloc] initWithScheme:[newBaseURL scheme] host:[newBaseURL host] path:[origURL path]];
+        NSLog(@"force URL %@ => %@",theURL, newURL);
+        return [newURL absoluteString];
+    }
+    return theURL;
+}
+#endif
+
 - (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL inQueue:(GCNetworkQueue*)queue withCompletion:(CompletionBlock)handler {
     if (CONNECTION_TRACE) {NSLog(@"uploadAvatar size %d uploadURL=%@, downloadURL=%@", avatar.length, toURL, downloadURL );}
     
+#ifdef DEBUG
+    toURL = [HXOBackend checkForceFilecacheUrl:toURL];
+#endif
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:toURL HTTPMethod:@"PUT" parameters:nil];
     NSDictionary * headers = [self httpHeaderWithContentLength: avatar.length];
     for (NSString *key in headers) {
@@ -3732,6 +3750,9 @@ static NSTimer * _stateNotificationDelayTimer;
 + (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler {
     if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL  %@", fromURL );}
     
+#ifdef DEBUG
+    fromURL = [HXOBackend checkForceFilecacheUrl:fromURL];
+#endif
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:fromURL HTTPMethod:@"GET" parameters:nil];
     NSString * userAgent = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).userAgent;
     [request addValue:userAgent forHTTPHeaderField:@"User-Agent"];
@@ -4056,6 +4077,9 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) checkUploadStatus:(NSString*)theURL hasSize:(long long)expectedSize withCompletion:(DataURLStatusHandler)handler {
     if (CHECK_URL_TRACE) {NSLog(@"checkUploadStatus uploadURL=%@, expectedSize=%lld", theURL, expectedSize );}
     
+#ifdef DEBUG
+    theURL = [HXOBackend checkForceFilecacheUrl:theURL];
+#endif
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:theURL HTTPMethod:@"PUT" parameters:nil];
     NSDictionary * headers = @{@"Content-Length": @"0"};
     if (CHECK_URL_TRACE) {NSLog(@"checkUploadStatus: headers=%@", headers);}
