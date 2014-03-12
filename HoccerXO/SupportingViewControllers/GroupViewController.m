@@ -259,8 +259,12 @@ static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: onEditingDone");
     if (_mode == ProfileViewModeNewGroup) {
         if (_canceled) {
-            NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
-            [moc deleteObject: self.group];
+            // XXX: workaround for #276
+            // TODO: clean-up group handling and replace this mess with something sane.
+            if (self.group) {
+                NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
+                [moc deleteObject: self.group];
+            }
         } else {
             // update group on server
             [self.appDelegate.chatBackend updateGroup: self.group];
