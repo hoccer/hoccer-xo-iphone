@@ -24,13 +24,13 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()
 
-@property (nonatomic,strong)    UISegmentedControl *         groupContactsToggle;
+@property (nonatomic,strong) UISegmentedControl *                    groupContactsToggle;
 
-@property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
-@property (strong, nonatomic, readonly) NSFetchedResultsController *fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSFetchedResultsController *           searchFetchedResultsController;
+@property (strong, nonatomic, readonly) NSFetchedResultsController * fetchedResultsController;
+@property (strong, nonatomic) NSManagedObjectContext *               managedObjectContext;
 
-@property (nonatomic, readonly) ContactCell * contactCellPrototype;
+@property (nonatomic, readonly) ContactCell *                        contactCellPrototype;
 @property id keyboardHidingObserver;
 
 @end
