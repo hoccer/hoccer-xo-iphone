@@ -140,7 +140,6 @@
 		63B217901821272B00C057D9 /* ChatBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178F1821272B00C057D9 /* ChatBar.m */; };
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
-		63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D9717442C1B00118A7F /* GroupListViewController.m */; };
 		63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* HXOTableViewController.m */; };
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C135701716BFDE00969B0B /* avatar_default_contact_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63C1356E1716BFDE00969B0B /* avatar_default_contact_large.png */; };
@@ -603,8 +602,6 @@
 		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		63BD7D931744232D00118A7F /* GroupMembership.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMembership.h; sourceTree = "<group>"; };
 		63BD7D941744232D00118A7F /* GroupMembership.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMembership.m; sourceTree = "<group>"; };
-		63BD7D9617442C1B00118A7F /* GroupListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupListViewController.h; sourceTree = "<group>"; };
-		63BD7D9717442C1B00118A7F /* GroupListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupListViewController.m; sourceTree = "<group>"; };
 		63C1356617160E2E00969B0B /* HXOTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTableViewController.h; sourceTree = "<group>"; };
 		63C1356717160E2E00969B0B /* HXOTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTableViewController.m; sourceTree = "<group>"; };
 		63C1356B1716A4AB00969B0B /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
@@ -1284,8 +1281,6 @@
 				6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
-				63BD7D9617442C1B00118A7F /* GroupListViewController.h */,
-				63BD7D9717442C1B00118A7F /* GroupListViewController.m */,
 				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
 				633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */,
 				63AF81901746AA1E00D007E3 /* GroupViewController.h */,
@@ -2223,7 +2218,6 @@
 				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				E9E92F7118733D01007B8042 /* HTTPServer.m in Sources */,
-				63BD7D9817442C1B00118A7F /* GroupListViewController.m in Sources */,
 				630FD45218BCCCA7000D8C55 /* HXOTheme.m in Sources */,
 				E9E92F7918733D01007B8042 /* HTTPFileResponse.m in Sources */,
 				63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */,

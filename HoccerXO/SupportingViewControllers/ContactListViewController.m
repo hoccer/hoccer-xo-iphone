@@ -9,6 +9,7 @@
 #import "ContactListViewController.h"
 
 #import "Contact.h"
+#import "Group.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
 #import "InviteCodeViewController.h"
@@ -22,6 +23,8 @@
 static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()
+
+@property (nonatomic,strong)    UISegmentedControl *         groupContactsToggle;
 
 @property (nonatomic, strong) NSFetchedResultsController *searchFetchedResultsController;
 @property (strong, nonatomic, readonly) NSFetchedResultsController *fetchedResultsController;
@@ -70,15 +73,17 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (void) setupTitle {
     if (self.hasGroupContactToggle) {
-        UISegmentedControl * groupContactToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"Contacts", nil), NSLocalizedString(@"Groups", nil)]];
-        groupContactToggle.selectedSegmentIndex = 0;
-        [groupContactToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
-        self.navigationItem.titleView = groupContactToggle;
+        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"Contacts", nil), NSLocalizedString(@"Groups", nil)]];
+        self.groupContactsToggle.selectedSegmentIndex = 0;
+        [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
+        self.navigationItem.titleView = self.groupContactsToggle;
     }
 }
 
 - (void) segmentChanged: (id) sender {
-    NSLog(@"Plonk");
+    self.currentFetchedResultsController.delegate = nil;
+    [self clearFetchedResultsControllers];
+    [self.tableView reloadData];
 }
 
 - (UITableViewCell*) prototypeCell {
@@ -104,7 +109,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) addButtonPressed: (id) sender {
-    [[InvitationController sharedInvitationController] presentWithViewController: self];
+    if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 0) {
+        [[InvitationController sharedInvitationController] presentWithViewController: self];
+    } else {
+        UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupViewController"];
+        [self presentViewController: modalGroupView animated: YES completion:nil];
+    }
 }
 
 - (ContactCell*) contactCellPrototype {
@@ -119,7 +129,9 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) clearFetchedResultsControllers {
+    _fetchedResultsController.delegate = nil;
     _fetchedResultsController = nil;
+    _searchFetchedResultsController.delegate = nil;
     _searchFetchedResultsController = nil;
 }
 
@@ -148,8 +160,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
     return [sectionInfo name];
 }
 
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self performSegueWithIdentifier: @"showContact" sender: self];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"showProfile"]) {
+    if ([[segue identifier] isEqualToString:@"showContact"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
         ProfileViewController* profileView = (ProfileViewController*)[segue destinationViewController];
@@ -218,7 +234,11 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {
-    [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend')", [self entityName]]];
+    if ([self.entityName isEqualToString: @"Contact"]) {
+        [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend')", [self entityName]]];
+    } /* else {
+       [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@", [self entityName]]];
+    } */
 }
 
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
@@ -226,6 +246,13 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (id) entityName {
+    if (self.hasGroupContactToggle) {
+        if (self.groupContactsToggle.selectedSegmentIndex == 0) {
+            return [Contact entityName];
+        } else {
+            return [Group entityName];
+        }
+    }
     return [Contact entityName];
 }
 
