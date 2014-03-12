@@ -88,9 +88,12 @@
         NSLog(@"ERROR:No Group key for me yet");
         return nil;
     }
-    // get public key of receiver first
     RSA * rsa = [RSA sharedInstance];
-    SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRef];
+    SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRefForPublicKeyIdString:self.memberKeyId];
+    if (myPrivateKeyRef == NULL) {
+        NSLog(@"ERROR:group member key id does not match my own key");
+        return nil;
+    }
     NSData * theClearTextKey = [rsa decryptWithKey:myPrivateKeyRef cipherData:self.cipheredGroupKey];
     return theClearTextKey;
 }

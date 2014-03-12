@@ -153,13 +153,13 @@ NSString * const kRelationStateBlocked = @"blocked";
     SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
     if (myResult == nil) {
         // store public key from contact in key store
-        [rsa addPublicKey: self.publicKeyString withTag: self.clientId];
+        [rsa addPublicPeerKey: self.publicKeyString withPeerName: self.clientId];
     } else {
         // check if correct key id in key store
         NSData * myKeyBits = [rsa getKeyBitsForPeerRef:self.clientId];
         if (![myKeyBits isEqualToData:self.publicKey]) {
             [rsa removePeerPublicKey:self.clientId];
-            [rsa addPublicKey: self.publicKeyString withTag: self.clientId];
+            [rsa addPublicPeerKey: self.publicKeyString withPeerName: self.clientId];
             // NSLog(@"Contact:getPublicKeyRef: changed public key of %@", self.nickName);
         }
     }

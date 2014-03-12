@@ -186,7 +186,6 @@
 		E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB01717137D37005F8FFA /* CoreMedia.framework */; };
 		E96CB029171457F9005F8FFA /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB022171457F9005F8FFA /* Crypto.m */; };
 		E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */; };
-		E96CB02B171457F9005F8FFA /* PublicKeyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB026171457F9005F8FFA /* PublicKeyManager.m */; };
 		E96CB02C171457F9005F8FFA /* RSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB028171457F9005F8FFA /* RSA.m */; };
 		E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB02E17145979005F8FFA /* NSString+StringWithData.m */; };
 		E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03017145ABF005F8FFA /* Base64Transcoder.c */; };
@@ -678,14 +677,13 @@
 		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
 		E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TDSemiModalExtension.h"; path = "Source/UIViewController+TDSemiModalExtension.h"; sourceTree = "<group>"; };
 		E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TDSemiModalExtension.m"; path = "Source/UIViewController+TDSemiModalExtension.m"; sourceTree = "<group>"; };
+		E95F7C3E18D10E5000F2CAEB /* HoccerXO-26.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-26.xcdatamodel"; sourceTree = "<group>"; };
 		E96CB011171217D3005F8FFA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E96CB01717137D37005F8FFA /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		E96CB021171457F9005F8FFA /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
 		E96CB022171457F9005F8FFA /* Crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Crypto.m; sourceTree = "<group>"; };
 		E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CommonCrypto.h"; sourceTree = "<group>"; };
 		E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CommonCrypto.m"; sourceTree = "<group>"; };
-		E96CB025171457F9005F8FFA /* PublicKeyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicKeyManager.h; sourceTree = "<group>"; };
-		E96CB026171457F9005F8FFA /* PublicKeyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicKeyManager.m; sourceTree = "<group>"; };
 		E96CB027171457F9005F8FFA /* RSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSA.h; sourceTree = "<group>"; };
 		E96CB028171457F9005F8FFA /* RSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSA.m; sourceTree = "<group>"; };
 		E96CB02D17145979005F8FFA /* NSString+StringWithData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+StringWithData.h"; path = "../Crypto/NSString+StringWithData.h"; sourceTree = "<group>"; };
@@ -1574,8 +1572,6 @@
 				63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */,
 				E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */,
 				E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */,
-				E96CB025171457F9005F8FFA /* PublicKeyManager.h */,
-				E96CB026171457F9005F8FFA /* PublicKeyManager.m */,
 				E96CB027171457F9005F8FFA /* RSA.h */,
 				E96CB028171457F9005F8FFA /* RSA.m */,
 				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
@@ -2207,7 +2203,6 @@
 				63DC01511713976B00609513 /* ImageViewController.m in Sources */,
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
-				E96CB02B171457F9005F8FFA /* PublicKeyManager.m in Sources */,
 				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
 				E96CB02C171457F9005F8FFA /* RSA.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
@@ -2504,8 +2499,9 @@
 				E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */,
 				E9E92F1218711A62007B8042 /* HoccerXO-24.xcdatamodel */,
 				63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */,
+				E95F7C3E18D10E5000F2CAEB /* HoccerXO-26.xcdatamodel */,
 			);
-			currentVersion = 63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */;
+			currentVersion = E95F7C3E18D10E5000F2CAEB /* HoccerXO-26.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -529,9 +529,9 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
 
-    if (![deliveryDictionary[@"keyId"] isEqualToString:[HXOBackend ownPublicKeyIdString]]) {
-        NSLog(@"ERROR: receiveMessage: aborting received message with bad public keyId = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HXOBackend ownPublicKeyIdString]);
-       // - (void) deliveryAbort: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId {
+    SecKeyRef myPrivateKeyRef = [[RSA sharedInstance] getPrivateKeyRefForPublicKeyIdString:deliveryDictionary[@"keyId"]];
+    if (myPrivateKeyRef == NULL) {
+        NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HXOBackend ownPublicKeyIdString]);
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
         return;
     }

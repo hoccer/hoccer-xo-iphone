@@ -56,6 +56,7 @@
     </entity>
     <entity name="Delivery" representedClassName="Delivery" syncable="YES">
         <attribute name="keyCiphertext" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="keyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" defaultValueString="new" syncable="YES"/>
         <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupDeliveries" inverseEntity="Group" syncable="YES"/>
@@ -133,7 +134,7 @@
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="345"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="404"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="Delivery" positionX="0" positionY="0" width="128" height="165"/>
         <element name="Group" positionX="0" positionY="0" width="128" height="135"/>
         <element name="GroupMembership" positionX="0" positionY="0" width="128" height="195"/>
         <element name="HXOMessage" positionX="0" positionY="0" width="128" height="359"/>
