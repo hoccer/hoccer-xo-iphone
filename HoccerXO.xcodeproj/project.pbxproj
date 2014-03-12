@@ -78,6 +78,7 @@
 		6378484616F4000500DE03C2 /* Delivery.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484516F4000500DE03C2 /* Delivery.m */; };
 		6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484916F4040C00DE03C2 /* HXOModel.m */; };
 		6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484C16F4210A00DE03C2 /* NSString+UUID.m */; };
+		637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DA53418D0BECF00B11AB9 /* VectorArtView.m */; };
 		63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1C1857CF3F0001AC96 /* TextMessageCell.m */; };
 		63808A201858A6F90001AC96 /* MessageSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1F1858A6F90001AC96 /* MessageSection.m */; };
 		63808A231858A76E0001AC96 /* TextSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A221858A76E0001AC96 /* TextSection.m */; };
@@ -484,6 +485,8 @@
 		6378484916F4040C00DE03C2 /* HXOModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOModel.m; sourceTree = "<group>"; };
 		6378484B16F4210900DE03C2 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
 		6378484C16F4210A00DE03C2 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
+		637DA53318D0BECF00B11AB9 /* VectorArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorArtView.h; sourceTree = "<group>"; };
+		637DA53418D0BECF00B11AB9 /* VectorArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorArtView.m; sourceTree = "<group>"; };
 		63808A1B1857CF3F0001AC96 /* TextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextMessageCell.h; sourceTree = "<group>"; };
 		63808A1C1857CF3F0001AC96 /* TextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextMessageCell.m; sourceTree = "<group>"; };
 		63808A1E1858A6F90001AC96 /* MessageSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSection.h; sourceTree = "<group>"; };
@@ -1508,6 +1511,8 @@
 				6329F7AF18C0000E007AFF32 /* GridView.m */,
 				633AA90118C75B9D009403CB /* HXOLabel.h */,
 				633AA90218C75B9D009403CB /* HXOLabel.m */,
+				637DA53318D0BECF00B11AB9 /* VectorArtView.h */,
+				637DA53418D0BECF00B11AB9 /* VectorArtView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2147,6 +2152,7 @@
 				636492DA1711F4B000E35514 /* UserDefaultsCells.m in Sources */,
 				6367C9201833BE5A005C60B3 /* HPGrowingTextView.m in Sources */,
 				63DC01511713976B00609513 /* ImageViewController.m in Sources */,
+				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
 				E96CB02B171457F9005F8FFA /* PublicKeyManager.m in Sources */,

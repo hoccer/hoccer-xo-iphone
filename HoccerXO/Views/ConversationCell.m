@@ -9,6 +9,7 @@
 #import "ConversationCell.h"
 
 #import <QuartzCore/QuartzCore.h>
+#import "VectorArtView.h"
 
 extern const CGFloat kHXOGridSpacing;
 
@@ -38,13 +39,15 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
     
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.nickName attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
     
-    CGFloat accessorySize = 2 * kHXOGridSpacing;
-    self.accessoryView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 16, 16)];
-    CGRect frame = CGRectMake(self.frame.size.width - (accessorySize + kHXOGridSpacing), kPadding, accessorySize, accessorySize);
-    self.actualAccessoryView = [[UIView alloc] initWithFrame: frame];
+    VectorArtView * accessoryView = [VectorArtView disclosureArrow];
+    self.accessoryView = [[UIView alloc] initWithFrame: accessoryView.frame];
+    CGRect frame = accessoryView.frame;
+    frame.origin.x = self.frame.size.width - (frame.size.width + kHXOGridSpacing);
+    frame.origin.y = kPadding;
+    accessoryView.frame = frame;
+    self.actualAccessoryView = accessoryView;
     self.actualAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.actualAccessoryView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
-    //self.accessoryView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    //self.actualAccessoryView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     
     [self addSubview: self.actualAccessoryView];
     

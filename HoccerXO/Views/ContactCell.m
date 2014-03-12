@@ -37,7 +37,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     _nickName.autoresizingMask = UIViewAutoresizingNone;
     _nickName.numberOfLines = 1;
     _nickName.lineBreakMode = NSLineBreakByTruncatingTail;
-    _nickName.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    //_nickName.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     _nickName.text = @"Random Joe";
     [self.contentView addSubview: _nickName];
     
@@ -47,7 +47,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     _subtitleLabel.numberOfLines = 1;
     _subtitleLabel.text = @"Lorem ipsum";
     _subtitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    _subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    //_subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _subtitleLabel];
     
     _avatar = [[HXOAvatarButton alloc] initWithFrame: CGRectMake(0, 0, 5 * 8, 5 * 8)];

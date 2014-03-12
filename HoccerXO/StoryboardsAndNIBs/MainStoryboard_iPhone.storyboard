@@ -78,7 +78,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jnn-H5-Wg0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1599" y="-361"/>
+            <point key="canvasLocation" x="1041" y="-739"/>
         </scene>
         <!--Contact List View Controller-->
         <scene sceneID="y7h-Kn-V4S">
@@ -104,7 +104,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1030" y="-361"/>
+            <point key="canvasLocation" x="544" y="-739"/>
         </scene>
         <!--Tutorial View Controller-->
         <scene sceneID="wlt-xN-hk4">
@@ -1020,30 +1020,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kai-kk-yVc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3141" y="-1427"/>
-        </scene>
-        <!--Group List View Controller-->
-        <scene sceneID="yKt-X8-1q7">
-            <objects>
-                <tableViewController storyboardIdentifier="groupListViewController" id="LuP-42-HB8" userLabel="Group List View Controller" customClass="GroupListViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" id="CMZ-uC-6tS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="LuP-42-HB8" id="TbC-yr-27E"/>
-                            <outlet property="delegate" destination="LuP-42-HB8" id="HFP-wA-UoU"/>
-                        </connections>
-                    </tableView>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasAddButton" value="YES"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <segue destination="e7o-9L-I8f" kind="push" identifier="showGroup" id="GVt-bd-2ub"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="aAv-YK-kat" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1030" y="-1082"/>
         </scene>
         <!--Group View Controller-->
         <scene sceneID="aQ8-O5-CU1">
