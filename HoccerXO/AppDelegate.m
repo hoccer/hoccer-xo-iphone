@@ -1437,5 +1437,24 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return (AppDelegate*)[[UIApplication sharedApplication] delegate];
 }
 
++ (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern
+{
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSAssert(regex, @"Unable to create regular expression");
+    
+    NSRange textRange = NSMakeRange(0, string.length);
+    NSRange matchRange = [regex rangeOfFirstMatchInString:string options:NSMatchingReportProgress range:textRange];
+    
+    BOOL didValidate = NO;
+    
+    // Did we find a matching range
+    if (matchRange.location != NSNotFound)
+        didValidate = YES;
+    
+    return didValidate;
+}
+
 @end
 

@@ -419,6 +419,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
     if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toContact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
 
+    message.hmac = [message computeHMAC];
+    message.messageTag = [message hmacString];
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     
     if (_state == kBackendReady) {
@@ -446,7 +448,7 @@ static NSTimer * _stateNotificationDelayTimer;
     message.isOutgoing = @YES;
     // message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
     message.messageId = @"";
-    message.messageTag = [NSString stringWithUUID];
+    //message.messageTag = [NSString stringWithUUID];
 
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
@@ -597,6 +599,21 @@ static NSTimer * _stateNotificationDelayTimer;
     
     message.saltString = messageDictionary[@"salt"]; // set up before decryption
     [message updateWithDictionary: messageDictionary];
+    
+    BOOL tagIsUUID = [AppDelegate validateString:message.messageTag withPattern:@"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"];
+    
+    if (!tagIsUUID) {
+        NSData * hmac = [message computeHMAC];
+        message.hmacString = message.messageTag; // TODO: remove
+        if (message.hmac != nil) {
+            if (![message.hmac isEqualToData:hmac]) {
+                NSLog(@"ERROR: Message hmac is %@, should be %@",[hmac asBase64EncodedString], message.hmacString);
+                // TODO: throw away message or mark as bad
+            } else {
+                NSLog(@"INFO: Message hmac is ok");
+            }
+        }
+    }
 
     contact.latestMessageTime = message.timeAccepted;
     

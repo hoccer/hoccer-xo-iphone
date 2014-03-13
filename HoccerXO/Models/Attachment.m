@@ -16,8 +16,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AddressBookUI/AddressBookUI.h>
 
-#import <CommonCrypto/CommonDigest.h>
-#import <CommonCrypto/CommonCryptor.h>
+//#import <CommonCrypto/CommonDigest.h>
+//#import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonHMAC.h>
 
 #import "HXOMessage.h"

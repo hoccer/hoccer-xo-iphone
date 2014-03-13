@@ -25,9 +25,11 @@
 @property (nonatomic, strong) NSNumber* isRead;
 @property (nonatomic, strong) NSString* messageId;
 @property (nonatomic, strong) NSString* messageTag;
+@property (nonatomic, strong) NSString* senderId;
 @property (nonatomic, strong) NSString* attachmentFileId;
 @property (nonatomic, strong) NSData* salt;
 @property (nonatomic, strong) NSData* outgoingCryptoKey;
+@property (nonatomic, strong) NSData* hmac;
 
 @property (nonatomic, strong) Contact*  contact;
 @property (nonatomic, strong) Attachment * attachment;
@@ -35,8 +37,9 @@
 
 @property (nonatomic, strong) NSData * cryptoKey;
 
-@property (nonatomic) NSString* bodyCipherText;
+@property (nonatomic) NSString * bodyCiphertext;
 @property (nonatomic, strong) NSString* saltString;
+@property (nonatomic, strong) NSString* hmacString;
 
 @property (nonatomic) NSNumber *   timeSentMillis;
 @property (nonatomic) NSNumber *   timeAcceptedMillis;
@@ -54,5 +57,8 @@
 - (NSString *)decryptString: (NSString *)string;
 - (NSData *)encrypt:(NSData *)data;
 - (NSData *)decrypt:(NSData *)data;
+
+- (NSData*)computeHMAC;
+
 
 @end

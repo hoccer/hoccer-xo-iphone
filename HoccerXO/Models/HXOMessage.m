@@ -15,6 +15,9 @@
 #import "HXOBackend.h"
 #import "Group.h"
 #import "HXOUserDefaults.h"
+#import "Attachment.h"
+
+#import <CommonCrypto/CommonHMAC.h>
 
 @implementation HXOMessage
 
@@ -30,6 +33,8 @@
 @dynamic salt;
 @dynamic outgoingCryptoKey;
 @dynamic attachmentFileId;
+@dynamic senderId;
+@dynamic hmac;
 
 @dynamic contact;
 @dynamic attachment;
@@ -44,8 +49,8 @@
 
 @synthesize cryptoKey = _cryptoKey;
 
-@dynamic bodyCipherText;
-
+@dynamic bodyCiphertext;
+@dynamic hmacString;
 
 
 #define KEY_DEBUG NO
@@ -198,6 +203,14 @@
     self.salt = [NSData dataWithBase64EncodedString:theB64String];
 }
 
+-(NSString*) hmacString {
+    return [self.hmac asBase64EncodedString];
+}
+
+-(void) setHmacString:(NSString*) theB64String {
+    self.hmac = [NSData dataWithBase64EncodedString:theB64String];
+}
+
 - (void) setTimeAccepted:(NSDate *)newTimeAccepted {
     NSDate * oldTimeAccepted = self.timeAccepted;
     if (![newTimeAccepted isEqualToDate:oldTimeAccepted]) {
@@ -206,6 +219,43 @@
         [self didChangeValueForKey:@"timeAccepted"];
         [HXOBackend adjustTimeSectionsForMessage:self];
     }
+}
+
+// computes a SHA256 hash over body
+- (NSData*)computeHMAC {
+    CC_SHA256_CTX ctx;
+    CC_SHA256_Init(&ctx);
+
+    {
+    //NSData * tagData = [self.messageTag dataUsingEncoding:NSUTF8StringEncoding];
+    //CC_SHA256_Update(&ctx,[tagData bytes],[tagData length]);
+    }{
+    NSData * senderData = [self.senderId dataUsingEncoding:NSUTF8StringEncoding];
+    CC_SHA256_Update(&ctx,[senderData bytes],[senderData length]);
+    }{
+    NSData * timeSentData = [[self.timeSentMillis stringValue] dataUsingEncoding:NSUTF8StringEncoding];
+    CC_SHA256_Update(&ctx,[timeSentData bytes],[timeSentData length]);
+    }{
+    NSData * bodyData = [self.bodyCiphertext dataUsingEncoding:NSUTF8StringEncoding];
+    CC_SHA256_Update(&ctx,[bodyData bytes],[bodyData length]);
+    }
+    if (self.attachment != nil) {
+        NSData * attachmentData = [self.attachment.attachmentJsonStringCipherText dataUsingEncoding:NSUTF8StringEncoding];
+        CC_SHA256_Update(&ctx,[attachmentData bytes],[attachmentData length]);
+        
+        NSData * fileIdData = [self.attachmentFileId dataUsingEncoding:NSUTF8StringEncoding];
+        CC_SHA256_Update(&ctx,[fileIdData bytes],[fileIdData length]);
+    }
+    
+    if (self.salt != nil) {
+        NSData * saltData = [self.saltString dataUsingEncoding:NSUTF8StringEncoding];
+        CC_SHA256_Update(&ctx,[saltData bytes],[saltData length]);
+    }
+    
+    NSMutableData * result = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256_Final([result mutableBytes], &ctx);
+    
+    return result;
 }
 
 
@@ -218,7 +268,8 @@
              // @"senderId": @"contact.clientId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
              @"timeSent": @"timeSentMillis", // our own time stamp
-             @"attachmentFileId":@"attachmentFileId"
+             @"attachmentFileId":@"attachmentFileId",
+             @"hmac":@"hmacString"
              };
 }
 
