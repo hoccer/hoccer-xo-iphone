@@ -26,7 +26,7 @@ static const CGFloat kHXOTimeDirectionPading = 2.0;
 
 - (void) commonInit {
     
-    _dateLabel = [[HXOLabel alloc] initWithFrame: CGRectZero];
+    _dateLabel = [[UILabel alloc] initWithFrame: CGRectZero];
     _dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _dateLabel.autoresizingMask = UIViewAutoresizingNone;
     _dateLabel.numberOfLines = 1;

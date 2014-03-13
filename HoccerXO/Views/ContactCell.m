@@ -41,7 +41,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     _nickName.text = @"Random Joe";
     [self.contentView addSubview: _nickName];
     
-    _subtitleLabel = [[HXOLabel alloc] initWithFrame: CGRectZero];
+    _subtitleLabel = [[UILabel alloc] initWithFrame: CGRectZero];
     _subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _subtitleLabel.autoresizingMask = UIViewAutoresizingNone;
     _subtitleLabel.numberOfLines = 1;

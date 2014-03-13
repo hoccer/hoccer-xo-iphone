@@ -12,7 +12,7 @@
 
 @interface ConversationCell : ContactCell
 
-@property (nonatomic,readonly) HXOLabel * dateLabel;
+@property (nonatomic,readonly) UILabel * dateLabel;
 
 @property (nonatomic,assign) BOOL hasNewMessages;
 
