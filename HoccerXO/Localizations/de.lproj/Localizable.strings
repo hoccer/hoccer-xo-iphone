@@ -1,8 +1,5 @@
 "language_code"="de";
 
-/* Navigation Menu Item */
-"About" = "Über Hoccer XO";
-
 /* Attachment Actionsheet Title */
 "Add Attachement" = "Anhang hinzufügen aus:";
 
@@ -143,9 +140,6 @@
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "Der Code wurde abgelehnt";
-
-/* Navigation Menu Item */
-"Tutorial" = "Anleitung";
 
 /* Actionsheet Button Title */
 "View Attachment" = "Anhang anzeigen";

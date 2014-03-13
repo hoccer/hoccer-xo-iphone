@@ -355,10 +355,10 @@
 			<string>support_mode_explanation</string>
 		</dict>
 		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>report_crashes</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
 			<key>Key</key>
 			<string>reportCrashes</string>
 			<key>DefaultValue</key>
@@ -388,7 +388,7 @@
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Title</key>
-			<string>Tutorial</string>
+			<string>tutorial_button_title</string>
 			<key>Key</key>
 			<string>tutorial</string>
 		</dict>
@@ -396,7 +396,7 @@
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Title</key>
-			<string>FAQ</string>
+			<string>faq_button_title</string>
 			<key>Key</key>
 			<string>faq</string>
 		</dict>
@@ -404,7 +404,7 @@
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Title</key>
-			<string>About</string>
+			<string>about_button_title</string>
 			<key>Key</key>
 			<string>about</string>
 		</dict>

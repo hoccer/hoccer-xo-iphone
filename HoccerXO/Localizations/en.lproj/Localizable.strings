@@ -1,8 +1,5 @@
 "language_code"="en";
 
-/* Navigation Menu Item */
-"About" = "About";
-
 /* Attachment Actionsheet Title */
 "Add Attachement" = "Add Attachement from:";
 
@@ -144,9 +141,6 @@
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "The code has been rejected";
-
-/* Navigation Menu Item */
-"Tutorial" = "Tutorial";
 
 /* Actionsheet Button Title */
 "View Attachment" = "View Attachment";
