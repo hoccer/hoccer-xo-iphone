@@ -17,7 +17,7 @@
 #import "AppDelegate.h"
 #import "ContactListViewController.h"
 #import "Contact.h"
-#import "RSA.h"
+#import "CCRSA.h"
 #import "EC.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
@@ -39,7 +39,7 @@
 #define RELATIONSHIP_DEBUG NO
 #define ADD_DEBUG_ITEMS NO
 
-static const CGFloat kProfileEditAnimationDuration = 0.5;
+//static const CGFloat kProfileEditAnimationDuration = 0.5;
 static const NSUInteger kHXOMaxNickNameLength = 25;
 
 static const CGFloat kAvatarSectionHeight = 0.5 * 320 + 48;
@@ -354,7 +354,7 @@ typedef enum ActionSheetTags {
                 [fingerprint appendString: @":"];
             }
         }
-        int keySize =[ RSA getPublicKeySize:theKey];
+        int keySize =[ CCRSA getPublicKeySize:theKey];
         [fingerprint appendString: [NSString stringWithFormat:@"-%d", keySize]];
         
         //NSLog(@"self.contact = %@", self.contact);
@@ -1134,11 +1134,11 @@ typedef enum ActionSheetTags {
         myKeyBits = self.contact.publicKey;
         myUrl = [UserProfile getKeyFileURLWithKeyTypeName:@"pubkey" forUser:self.contact.nickName withKeyId:self.contact.publicKeyId];
     } else if (_mode == ProfileViewModeMyProfile) {
-        myKeyBits = [[RSA sharedInstance] getPublicKeyBits];
+        myKeyBits = [[CCRSA sharedInstance] getPublicKeyBits];
         myUrl = [UserProfile getKeyFileURLWithKeyTypeName:@"ownpubkey" forUser:[[self getModelObject] nickName] withKeyId:self.contact.publicKeyId];
     }
     if (myKeyBits != nil) {
-        NSString * exportStuff = [RSA makeX509FormattedPublicKey:myKeyBits];
+        NSString * exportStuff = [CCRSA makeX509FormattedPublicKey:myKeyBits];
         NSError * myError = nil;
         [[UIPasteboard generalPasteboard] setString:exportStuff];
         //[exportStuff writeToURL:myUrl atomically:NO encoding:NSUTF8StringEncoding error:&myError];
@@ -1165,11 +1165,11 @@ typedef enum ActionSheetTags {
     NSData * myKeyBits;
     NSURL * myUrl;
     if (_mode == ProfileViewModeMyProfile) {
-        myKeyBits = [[RSA sharedInstance] getPrivateKeyBits];
+        myKeyBits = [[CCRSA sharedInstance] getPrivateKeyBits];
         myUrl = [UserProfile getKeyFileURLWithKeyTypeName:@"ownpubkey" forUser:[[self getModelObject] nickName] withKeyId:self.contact.publicKeyId];
     }
     if (myKeyBits != nil) {
-        NSString * exportStuff = [RSA makePEMFormattedPrivateKey:myKeyBits];
+        NSString * exportStuff = [CCRSA makePEMFormattedPrivateKey:myKeyBits];
         NSError * myError = nil;
         [[UIPasteboard generalPasteboard] setString:exportStuff];
         //[exportStuff writeToURL:myUrl atomically:NO encoding:NSUTF8StringEncoding error:&myError];
@@ -1183,17 +1183,17 @@ typedef enum ActionSheetTags {
 
 - (void) doImportPublicKey {
     NSString * myKeyText = [UIPasteboard generalPasteboard].string;
-    NSData * myKeyBits = [RSA extractPublicKeyBitsFromPEM:myKeyText];
+    NSData * myKeyBits = [CCRSA extractPublicKeyBitsFromPEM:myKeyText];
     if (myKeyBits != nil) {
         if (_mode == ProfileViewModeMyProfile) {
             // set public key of some peer
-            if ([[RSA sharedInstance] addPublicKeyBits:myKeyBits withTag:[[RSA sharedInstance] publicTagForPeer:self.contact.clientId]]) {
+            if ([[CCRSA sharedInstance] addPublicKeyBits:myKeyBits withTag:[[CCRSA sharedInstance] publicTagForPeer:self.contact.clientId]]) {
                 self.contact.publicKeyString = [myKeyBits asBase64EncodedString];
                 [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
                 return;
             }
         } else {
-            if ([[RSA sharedInstance] addPublicKeyBits:myKeyBits]) {
+            if ([[CCRSA sharedInstance] addPublicKeyBits:myKeyBits]) {
                 [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
                 return;
             }
@@ -1204,9 +1204,9 @@ typedef enum ActionSheetTags {
 
 - (void) doImportPrivateKey {
     NSString * myKeyText = [UIPasteboard generalPasteboard].string;
-    NSData * myKeyBits = [RSA extractPrivateKeyBitsFromPEM:myKeyText];
+    NSData * myKeyBits = [CCRSA extractPrivateKeyBitsFromPEM:myKeyText];
     if (myKeyBits != nil) {
-        if ([[RSA sharedInstance] addPrivateKeyBits:myKeyBits]) {
+        if ([[CCRSA sharedInstance] addPrivateKeyBits:myKeyBits]) {
             [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
             return;
         }
@@ -1302,8 +1302,8 @@ typedef enum ActionSheetTags {
     if ([HXOBackend use_elliptic_curves]) {
         [[EC sharedInstance] cleanKeyChain];
     } else {
-        [[RSA sharedInstance] cloneKeyPairKeys];
-        [[RSA sharedInstance] cleanKeyPairKeys];
+        [[CCRSA sharedInstance] cloneKeyPairKeys];
+        [[CCRSA sharedInstance] cleanKeyPairKeys];
     }
 }
 

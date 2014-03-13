@@ -8,7 +8,7 @@
 //
 //
 
-#import "RSA.h"
+#import "CCRSA.h"
 #import "NSData+Base64.h"
 #import "NSData+HexString.h"
 #import "NSString+RandomString.h"
@@ -16,10 +16,12 @@
 
 #import "HXOUserDefaults.h"
 
+#import "OpenSSLCrypto.h"
+
 
 //#import "HXOBackend.h" // debug, remove later
 
-@implementation RSA
+@implementation CCRSA
 
 //static const size_t BUFFER_SIZE = 64;
 //static const size_t CIPHER_BUFFER_SIZE = 1024;
@@ -33,12 +35,12 @@ static const uint8_t publicPeerKeyIdentifier[]  = "com.hoccertalk.peer.publickey
 //SecKeyRef publicKey;
 //SecKeyRef privateKey;
 
-static RSA *instance;
+static CCRSA *instance;
 
-+ (RSA*)sharedInstance {
++ (CCRSA*)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[RSA alloc] init];
+        instance = [[CCRSA alloc] init];
         if ([instance getPrivateKeyRef] == nil || [instance getPublicKeyRef] == nil) {
             NSLog(@"There are no RSA keys, generate them...");
             [instance generateKeyPairKeys];
@@ -65,11 +67,25 @@ static RSA *instance;
     return [NSString stringWithRandomCharactersOfLength: length usingCharacterSet: letters];
 }
 
+-(void)generateKeyPairKeysWithOpenSSLandSize:(int)bits {
+    NSString * pubkey;
+    NSString * privkey;
+    [OpenSSLCrypto makeRSAKeyPairPEMWithSize:bits withPublicKey:&pubkey withPrivateKey:&privkey];
+    
+    NSData * pubBits = [CCRSA extractPublicKeyBitsFromPEM:pubkey];
+    NSData * privBits = [CCRSA extractPrivateKeyBitsFromPEM:privkey];
+
+    [self addPrivateKeyBits:privBits];
+    [self addPublicKeyBits:pubBits];
+}
+
+
 - (void)generateKeyPairKeys
 {
     NSNumber * bits =[[HXOUserDefaults standardUserDefaults] valueForKey:kHXORsaKeySize];
-    if ([bits longLongValue] != 1024 && [bits longLongValue] != 2048) {
-        bits = @(1024);
+    if ([bits longLongValue] != 1024 /*&& [bits longLongValue] != 2048*/) {
+        [self generateKeyPairKeysWithOpenSSLandSize:[bits intValue]];
+        return;
     }
     
     NSLog(@"Generating RSA Keys with %@ bits", bits);
@@ -314,17 +330,17 @@ static RSA *instance;
 }
 
 - (SecKeyRef)getPrivateKeyRefForPublicKeyIdString:(NSString*) publicKeyIdString {
-    if ([publicKeyIdString isEqualToString:[RSA keyIdString:[RSA calcKeyId:[self getPublicKeyBits]]]]) {
+    if ([publicKeyIdString isEqualToString:[CCRSA keyIdString:[CCRSA calcKeyId:[self getPublicKeyBits]]]]) {
         return [self getPrivateKeyRef];
     }
     return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:publicKeyIdString]];
 }
 
 - (SecKeyRef)getPrivateKeyRefForPublicKeyId:(NSData*) publicKeyId {
-    if ([publicKeyId isEqualToData:[RSA calcKeyId:[self getPublicKeyBits]]]) {
+    if ([publicKeyId isEqualToData:[CCRSA calcKeyId:[self getPublicKeyBits]]]) {
         return [self getPrivateKeyRef];
     }
-    return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:[RSA keyIdString:publicKeyId]]];
+    return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:[CCRSA keyIdString:publicKeyId]]];
 }
 
 
@@ -442,7 +458,7 @@ static RSA *instance;
         return NO;
     }
     
-    NSString * publicKeyIdString = [RSA keyIdString:[RSA calcKeyId:publicBits]];
+    NSString * publicKeyIdString = [CCRSA keyIdString:[CCRSA calcKeyId:publicBits]];
     NSData * publicTagSpec = [self publicTagForKeyIdString:publicKeyIdString];
     NSData * privateTagSpec = [self privateTagForKeyIdString:publicKeyIdString];
     
@@ -846,9 +862,9 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
     [data appendBytes:length length:4];
     char version[3] = {1,0,1};
     [data appendBytes:version length:3];
-    length[3] = [[RSA getPublicKeyMod:publicKeyBits] length];
+    length[3] = [[CCRSA getPublicKeyMod:publicKeyBits] length];
     [data appendBytes:length length:4];
-    [data appendData:[RSA getPublicKeyMod:publicKeyBits]];
+    [data appendData:[CCRSA getPublicKeyMod:publicKeyBits]];
     
     stringToWriteInFile = @"ssh-rsa ";
     stringToWriteInFile = [stringToWriteInFile stringByAppendingString:[data asBase64EncodedString:1]];
@@ -1025,7 +1041,7 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 }
 
 -(BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString {
-    NSData * myBits = [RSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
+    NSData * myBits = [CCRSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
     return [self addPrivateKeyBits:myBits withTag:privateTag];
 }
 
@@ -1084,7 +1100,7 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 
 + (int)getPublicKeySize:(NSData*)keyBits {
     @try {
-        NSData * modulus = [RSA getPublicKeyMod:keyBits];
+        NSData * modulus = [CCRSA getPublicKeyMod:keyBits];
         return modulus.length * 8;
     } @catch (NSException* ex) {
         NSLog(@"getPublicKeySize exception: %@", ex);

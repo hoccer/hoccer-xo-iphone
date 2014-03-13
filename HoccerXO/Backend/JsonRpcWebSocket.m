@@ -15,8 +15,8 @@
 static const NSInteger kJsonRpcParseError     = -32700;
 static const NSInteger kJsonRpcInvalidRequest = -32600;
 static const NSInteger kJsonRpcMethodNotFound = -32601;
-static const NSInteger kJsonRpcInvalidParams  = -32602;
-static const NSInteger kJsonRpcInternal       = -32603;
+//static const NSInteger kJsonRpcInvalidParams  = -32602;
+//static const NSInteger kJsonRpcInternal       = -32603;
 
 //-32000 to -32099	Server error
 

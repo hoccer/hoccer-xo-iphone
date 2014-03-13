@@ -22,7 +22,7 @@
 @end
 
 static const CGFloat kMessageCountBackgroundPadding = 8.0;
-static const CGFloat kSectionHeaderShadowRaius = 2.0;
+//static const CGFloat kSectionHeaderShadowRaius = 2.0;
 
 @implementation ContactQuickListCell
 

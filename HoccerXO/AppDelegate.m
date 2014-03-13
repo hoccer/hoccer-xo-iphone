@@ -26,6 +26,8 @@
 #import "HXOTheme.h"
 #import "ChatViewController.h"
 
+#import "OpenSSLCrypto.h";
+
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
 #import "DDLog.h"
@@ -50,8 +52,8 @@
 
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
-static const NSInteger kFatalDatabaseErrorAlertTag = 100;
-static const NSInteger kDatabaseDeleteAlertTag = 200;
+//static const NSInteger kFatalDatabaseErrorAlertTag = 100;
+//static const NSInteger kDatabaseDeleteAlertTag = 200;
 static NSInteger validationErrorCount = 0;
 
 #ifdef WITH_WEBSERVER
@@ -307,9 +309,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
-
+    
     return YES;
 }
+
 
 - (void) checkForCrash {
     self.launchedAfterCrash = NO;

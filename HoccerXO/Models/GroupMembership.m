@@ -10,7 +10,7 @@
 #import "Contact.h"
 #import "Group.h"
 #import "HXOBackend.h"
-#import "RSA.h"
+#import "CCRSA.h"
 #import "EC.h"
 #import "NSData+Base64.h"
 
@@ -74,7 +74,7 @@
 - (NSData *) calcCipheredGroupKeyRSA {
     // get public key of receiver first
     SecKeyRef myReceiverKey = [self.contact getPublicKeyRef];
-    RSA * rsa = [RSA sharedInstance];
+    CCRSA * rsa = [CCRSA sharedInstance];
     //NSLog(@"self.group.groupKey=%@",[self.group.groupKey asBase64EncodedString]);
     return [rsa encryptWithKey:myReceiverKey plainData:self.group.groupKey];
 }
@@ -88,7 +88,7 @@
         NSLog(@"ERROR:No Group key for me yet");
         return nil;
     }
-    RSA * rsa = [RSA sharedInstance];
+    CCRSA * rsa = [CCRSA sharedInstance];
     SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRefForPublicKeyIdString:self.memberKeyId];
     if (myPrivateKeyRef == NULL) {
         NSLog(@"ERROR:group member key id does not match my own key");
