@@ -16,6 +16,10 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AddressBookUI/AddressBookUI.h>
 
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCryptor.h>
+#import <CommonCrypto/CommonHMAC.h>
+
 #import "HXOMessage.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
@@ -82,6 +86,11 @@
 @dynamic previewImageData;
 
 @dynamic message;
+
+@dynamic sourceMAC;
+@dynamic destinationMAC;
+
+@dynamic sourceMACString;
 
 @dynamic transferFailed;
 @dynamic transferPaused;
@@ -327,6 +336,7 @@ NSArray * TransferStateName = @[@"detached",
     } else {
         NSLog(@"ERROR: both urls are nil, could not determine content size");
     }
+    [self computeSourceMac];
 }
 
 // loads or creates an image representation of the attachment and calls ImageLoaderBlock when ready
@@ -1320,7 +1330,7 @@ NSArray * TransferStateName = @[@"detached",
     execution(nil, [NSError errorWithDomain:@"HoccerXO" code:1000 userInfo: nil]);
 }
 
--(void) withUploadStream: (StreamSetterBlock) execution {
+-(void) withUploadStream:(StreamSetterBlock) execution {
     if (self.localURL != nil) {
         // NSLog(@"Attachment withUploadStream self.localURL=%@", self.localURL);
         NSString * myPath = [[NSURL URLWithString: self.localURL] path];
@@ -1341,6 +1351,71 @@ NSArray * TransferStateName = @[@"detached",
         return;
     }
     execution(nil, [NSError errorWithDomain:@"HoccerXO" code:1000 userInfo: nil]);
+}
+
+-(void) computeMAC:(MACSetterBlock) setMAC {
+    [self withUploadStream:^(NSInputStream *theStream, NSError *theError) {
+        
+        NSUInteger bufferSize = 8192;
+        NSInteger read = 0;
+        uint8_t     *buff = (uint8_t *)malloc(sizeof(uint8_t)*bufferSize);
+        
+        CC_SHA256_CTX ctx;
+        CC_SHA256_Init(&ctx);
+        
+        [theStream open];
+        
+        do {
+            read = [theStream read:buff maxLength:bufferSize];
+            //NSLog(@"computeMAC: read %d bytes", read);
+            if (read > 0) {
+                CC_SHA256_Update(&ctx,buff,read);
+            }
+        } while (read > 0);
+        
+        free(buff);
+        
+        if (read < 0) {
+            setMAC(nil,theStream.streamError);
+            [theStream close];
+            return;
+        }
+        [theStream close];
+        
+        NSMutableData * result = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
+        CC_SHA256_Final([result mutableBytes], &ctx);
+        setMAC(result, nil);
+    }];
+}
+
+-(void) computeSourceMac {
+    [self computeMAC:^(NSData *theMAC, NSError *theError) {
+        if (theError == nil && theMAC != nil) {
+            self.sourceMAC = theMAC;
+            NSLog(@"computeSourceMac: MAC=%@", self.sourceMACString);
+        } else {
+            NSLog(@"ERROR: failed to compute MAC for attachment URL %@, error = %@", [self contentURL], theError);
+        }
+    }];
+}
+
+-(void) computeDestMac {
+    [self computeMAC:^(NSData *theMAC, NSError *theError) {
+        if (theError == nil && theMAC != nil) {
+            self.destinationMAC = theMAC;
+            if (self.sourceMAC != nil) {
+                if (![self.destinationMAC isEqualToData:self.sourceMAC]) {
+                    NSLog(@"ERROR: MAC differs for attachment URL %@, source MAC = %@, computed MAC = %@", [self contentURL], [self.sourceMAC asBase64EncodedString], [self.destinationMAC asBase64EncodedString]);
+                } else {
+                    NSLog(@"computeDestMac: MAC=%@ ok", self.sourceMACString);
+                }
+            } else {
+                NSLog(@"computeDestMac: No Source MAC, dest MAC =%@", self.sourceMACString);
+            }
+        } else {
+            NSLog(@"ERROR: failed to compute MAC for attachment URL %@, error = %@", [self contentURL], theError);
+        }
+    }];
 }
 
 -(NSDictionary*) uploadHttpHeadersWithCrypto {
@@ -1895,6 +1970,7 @@ NSArray * TransferStateName = @[@"detached",
             if ([self.transferSize isEqualToNumber: self.contentSize]) {
                 if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);}
                 self.localURL = self.ownedURL;
+                [self computeDestMac];
                 [self.chatBackend downloadFinished:self];
                 if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"autoSaveMedia"] boolValue]) {
                     [self trySaveToAlbum];
@@ -2000,7 +2076,8 @@ NSArray * TransferStateName = @[@"detached",
              @"mediaType": @"mediaType",
              @"mimeType": @"mimeType",
              @"aspectRatio": @"aspectRatio",
-             @"fileName": @"humanReadableFileName"
+             @"fileName": @"humanReadableFileName",
+             @"MAC": @"sourceMACString"
              };
 }
 
@@ -2010,10 +2087,11 @@ NSArray * TransferStateName = @[@"detached",
     NSData * myJsonData = [NSJSONSerialization dataWithJSONObject: myRepresentation options: 0 error: nil];
     NSString * myJsonUTF8String = [[NSString alloc] initWithData:myJsonData encoding:NSUTF8StringEncoding];
     NSLog(@"attachmentJsonString=%@",myJsonUTF8String);
+    NSLog(@"%@", [NSThread callStackSymbols]);
     return myJsonUTF8String;
 }
 
-static const NSInteger kJsonRpcAttachmentParseError  = -32700;
+//static const NSInteger kJsonRpcAttachmentParseError  = -32700;
 
 -  (void) setAttachmentJsonString:(NSString*) theJsonString {
     NSError * error;
@@ -2034,6 +2112,14 @@ static const NSInteger kJsonRpcAttachmentParseError  = -32700;
     } @catch (NSException * ex) {
         NSLog(@"ERROR: setAttachmentJsonString: parsing json, jsonData = %@, ex=%@", theJsonString, ex);
     }
+}
+
+- (NSString*) sourceMACString {
+    return [self.sourceMAC asBase64EncodedString];
+}
+
+-(void) setSourceMACString:(NSString *)theB64String {
+    self.sourceMAC = [NSData dataWithBase64EncodedString:theB64String];
 }
 
 - (NSString*) attachmentJsonStringCipherText {
