@@ -76,4 +76,7 @@
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;
 
++ (NSData *)makeSignatureOf:(NSData *)hash withPrivateKey:(SecKeyRef)privateKey;
++ (BOOL) verifySignature:(NSData *)signature forHash:(NSData *)hash withPublicKey:(SecKeyRef)publicKey;
+
 @end

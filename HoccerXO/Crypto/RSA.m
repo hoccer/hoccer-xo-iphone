@@ -1092,4 +1092,27 @@ size_t encodeLength(unsigned char * buf, size_t length) {
     return 0;
 }
 
++ (NSData *)makeSignatureOf:(NSData *)hash withPrivateKey:(SecKeyRef)privateKey {
+    OSStatus sanityCheck = noErr;
+    NSData * signedHash = nil;
+    size_t signedHashBytesSize = SecKeyGetBlockSize(privateKey);
+    uint8_t * signedHashBytes = malloc(signedHashBytesSize * sizeof(uint8_t));
+    memset((void *)signedHashBytes, 0x0, signedHashBytesSize);
+    sanityCheck = SecKeyRawSign(privateKey,
+                                kSecPaddingPKCS1SHA256,
+                                [hash bytes],
+                                CC_SHA256_DIGEST_LENGTH,
+                                (uint8_t *)signedHashBytes,
+                                &signedHashBytesSize);
+    signedHash = [NSData dataWithBytes:(const void *)signedHashBytes length:(NSUInteger)signedHashBytesSize];
+    if (signedHashBytes) free(signedHashBytes);
+    return signedHash;
+}
+
++ (BOOL) verifySignature:(NSData *)signature forHash:(NSData *)hash withPublicKey:(SecKeyRef)publicKey {
+    OSStatus result = SecKeyRawVerify(publicKey, kSecPaddingPKCS1SHA256, [hash bytes], [hash length], [signature bytes], [signature length]);
+    return (result == noErr) ? YES : NO;
+}
+
+
 @end

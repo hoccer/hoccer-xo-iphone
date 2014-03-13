@@ -63,6 +63,8 @@
 "tutorial_button_title" = "Anleitung";
 "faq_button_title"      = "FAQ";
 
+"Sign Messages"="Sign Messages";
+
 /* Debug Settings */
 
 "Debug" = "Debug Settings";

@@ -677,6 +677,7 @@
 		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
 		E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TDSemiModalExtension.h"; path = "Source/UIViewController+TDSemiModalExtension.h"; sourceTree = "<group>"; };
 		E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TDSemiModalExtension.m"; path = "Source/UIViewController+TDSemiModalExtension.m"; sourceTree = "<group>"; };
+		E95A758F18D2201D0027AE3E /* HoccerXO-29.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-29.xcdatamodel"; sourceTree = "<group>"; };
 		E95F7C3E18D10E5000F2CAEB /* HoccerXO-26.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-26.xcdatamodel"; sourceTree = "<group>"; };
 		E95F7C3F18D1B4E600F2CAEB /* HoccerXO-27.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-27.xcdatamodel"; sourceTree = "<group>"; };
 		E95F7C4018D1E11400F2CAEB /* HoccerXO-28.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-28.xcdatamodel"; sourceTree = "<group>"; };
@@ -2504,8 +2505,9 @@
 				E95F7C3E18D10E5000F2CAEB /* HoccerXO-26.xcdatamodel */,
 				E95F7C3F18D1B4E600F2CAEB /* HoccerXO-27.xcdatamodel */,
 				E95F7C4018D1E11400F2CAEB /* HoccerXO-28.xcdatamodel */,
+				E95A758F18D2201D0027AE3E /* HoccerXO-29.xcdatamodel */,
 			);
-			currentVersion = E95F7C4018D1E11400F2CAEB /* HoccerXO-28.xcdatamodel */;
+			currentVersion = E95A758F18D2201D0027AE3E /* HoccerXO-29.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
