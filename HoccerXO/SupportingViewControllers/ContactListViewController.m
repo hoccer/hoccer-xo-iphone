@@ -114,7 +114,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 0) {
         [[InvitationController sharedInvitationController] presentWithViewController: self];
     } else {
-        UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupViewController"];
+        UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupNavigationController"];
         [self presentViewController: modalGroupView animated: YES completion:nil];
     }
 }

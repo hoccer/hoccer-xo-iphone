@@ -13,8 +13,6 @@
 
 extern const CGFloat kHXOGridSpacing;
 
-static const CGFloat kHXOTimeDirectionPading = 2.0;
-
 @interface ConversationCell ()
 
 @property (nonatomic,strong) UIView  * actualAccessoryView;
