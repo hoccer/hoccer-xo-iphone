@@ -17,6 +17,8 @@
 #import "ProfileViewController.h"
 #import "InvitationController.h"
 #import "HXOTheme.h"
+#import "Group.h"
+#import "GroupMembership.h"
 
 #define HIDE_SEPARATORS
 
@@ -343,11 +345,52 @@ static const CGFloat kMagicSearchBarHeight = 44;
     }
     [cell.avatar setImage: avatar forState: UIControlStateNormal];
     
-    cell.subtitleLabel.text = NSLocalizedString(contact.relationshipState, nil);
+    cell.subtitleLabel.text = [self statusStringForContact: contact];
 }
 
-- (NSString*) defaultAvatarName {
-    return @"avatar_default_contact";
+- (NSString*) statusStringForContact: (Contact*) contact {
+    if ([contact isKindOfClass: [Group class]]) {
+        Group * group = (Group*)contact;
+        NSInteger joinedMemberCount = [group.otherJoinedMembers count];
+        NSInteger invitedMemberCount = [group.otherInvitedMembers count];
+
+        NSString * joinedStatus = @"";
+
+        if ([group.groupState isEqualToString:@"kept"]) {
+            joinedStatus = NSLocalizedString(@"Group Deactivated", nil);
+        } else if ([group.myGroupMembership.state isEqualToString:@"invited"]){
+            joinedStatus = NSLocalizedString(@"Invitation not yet accepted", nil);
+        } else {
+            if (group.iAmAdmin) {
+                joinedStatus = NSLocalizedString(@"Admin", nil);
+            }
+            if (joinedMemberCount > 0) {
+                if (joinedStatus.length>0) {
+                    joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
+                }
+                if (joinedMemberCount > 1) {
+                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d joined",nil), joinedStatus,joinedMemberCount];
+                } else {
+                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@one joined",nil), joinedStatus];
+                }
+            } else {
+                if (joinedStatus.length>0) {
+                    joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
+                }
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@you are alone",nil), joinedStatus,joinedMemberCount];
+
+            }
+            if (invitedMemberCount > 0) {
+                if (joinedStatus.length>0) {
+                    joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
+                }
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d invited",nil), joinedStatus,invitedMemberCount];
+            }
+        }
+        return joinedStatus;
+    } else {
+        return NSLocalizedString(contact.relationshipState, nil);
+    }
 }
 
 @end
