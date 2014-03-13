@@ -421,6 +421,16 @@ static NSTimer * _stateNotificationDelayTimer;
 
     message.hmac = [message computeHMAC];
     message.messageTag = [message hmacString];
+    
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOSignMessages]) {
+        [message sign];
+        if ([message verifySignatureWithPublicKey:[[RSA sharedInstance] getPublicKeyRef]]) {
+            NSLog(@"Outgoing signature verified");
+        } else {
+            NSLog(@"Outgoing signature verification failed");
+        }
+    }
+    
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     
     if (_state == kBackendReady) {
@@ -611,6 +621,18 @@ static NSTimer * _stateNotificationDelayTimer;
                 // TODO: throw away message or mark as bad
             } else {
                 NSLog(@"INFO: Message hmac is ok");
+            }
+        }
+        if (message.signature != nil && message.signature.length > 0) {
+            SecKeyRef peerKey = [[RSA sharedInstance] getPeerKeyRef:message.senderId];
+            if (peerKey != NULL) {
+                if ([message verifySignatureWithPublicKey:peerKey]) {
+                    NSLog(@"INFO: incoming signature ok for message %@ from client %@", message.messageId, message.senderId);
+                } else {
+                    NSLog(@"ERROR: bad incoming signature for message %@ from client %@", message.messageId, message.senderId);
+                }
+            } else {
+                NSLog(@"ERROR:no public key for signature verification of message %@ from client %@", message.messageId, message.senderId);
             }
         }
     }

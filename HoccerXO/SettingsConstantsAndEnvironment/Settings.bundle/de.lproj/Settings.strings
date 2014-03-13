@@ -60,6 +60,7 @@
 "support_mode" = "Support Mode";
 "support_mode_explanation" = "Unser Team kann dich bitten den Support Mode zu aktivieren wenn du dich mit einem Problem an uns gewendet hast.";
 
+"Sign Messages"="Signieren";
 
 /* Debug Settings */
 

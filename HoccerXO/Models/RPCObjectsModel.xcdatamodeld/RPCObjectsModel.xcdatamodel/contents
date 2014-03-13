@@ -42,6 +42,7 @@
         <attribute name="hmac" optional="YES" transient="YES" attributeType="String" maxValueString="100" syncable="YES"/>
         <attribute name="salt" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="senderId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
+        <attribute name="signature" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeSent" optional="YES" transient="YES" attributeType="Integer 64" syncable="YES"/>
     </entity>
     <entity name="RPC_TalkMessage_in" parentEntity="RPC_TalkMessage" syncable="YES">
@@ -82,7 +83,7 @@
         <element name="RPC_TalkKey" positionX="0" positionY="0" width="128" height="75"/>
         <element name="RPC_TalkKey_in" positionX="0" positionY="0" width="128" height="75"/>
         <element name="RPC_TalkKey_out" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="RPC_TalkMessage" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="RPC_TalkMessage" positionX="0" positionY="0" width="128" height="163"/>
         <element name="RPC_TalkMessage_in" positionX="0" positionY="0" width="128" height="88"/>
         <element name="RPC_TalkMessage_out" positionX="0" positionY="0" width="128" height="75"/>
         <element name="RPC_TalkPresence" positionX="0" positionY="0" width="128" height="105"/>

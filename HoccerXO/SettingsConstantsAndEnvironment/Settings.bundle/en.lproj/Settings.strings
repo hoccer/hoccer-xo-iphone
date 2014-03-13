@@ -59,6 +59,8 @@
 "support_mode" = "Support Mode";
 "support_mode_explanation" = "Our support team may ask you to switch on support mode to help with resolving issues you reported.";
 
+"Sign Messages"="Sign Messages";
+
 /* Debug Settings */
 
 "Debug" = "Debug Settings";

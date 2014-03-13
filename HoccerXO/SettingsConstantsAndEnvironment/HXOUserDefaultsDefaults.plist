@@ -6,6 +6,8 @@
 	<string>xopassword</string>
 	<key>manualKeyManagement</key>
 	<false/>
+	<key>signMessages</key>
+	<false/>
 	<key>rsaKeySize</key>
 	<integer>2048</integer>
 	<key>autoSaveMedia</key>

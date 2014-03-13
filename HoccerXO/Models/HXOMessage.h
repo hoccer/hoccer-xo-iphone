@@ -30,6 +30,7 @@
 @property (nonatomic, strong) NSData* salt;
 @property (nonatomic, strong) NSData* outgoingCryptoKey;
 @property (nonatomic, strong) NSData* hmac;
+@property (nonatomic, strong) NSData* signature;
 
 @property (nonatomic, strong) Contact*  contact;
 @property (nonatomic, strong) Attachment * attachment;
@@ -40,6 +41,7 @@
 @property (nonatomic) NSString * bodyCiphertext;
 @property (nonatomic, strong) NSString* saltString;
 @property (nonatomic, strong) NSString* hmacString;
+@property (nonatomic, strong) NSString* signatureString;
 
 @property (nonatomic) NSNumber *   timeSentMillis;
 @property (nonatomic) NSNumber *   timeAcceptedMillis;
@@ -59,6 +61,8 @@
 - (NSData *)decrypt:(NSData *)data;
 
 - (NSData*)computeHMAC;
+- (void)sign;
+- (BOOL)verifySignatureWithPublicKey:(SecKeyRef)publicKey;
 
 
 @end

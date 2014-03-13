@@ -16,6 +16,7 @@
 #import "Group.h"
 #import "HXOUserDefaults.h"
 #import "Attachment.h"
+#import "RSA.h"
 
 #import <CommonCrypto/CommonHMAC.h>
 
@@ -211,6 +212,14 @@
     self.hmac = [NSData dataWithBase64EncodedString:theB64String];
 }
 
+-(NSString*) signatureString {
+    return [self.signature asBase64EncodedString];
+}
+
+-(void) setSignatureString:(NSString*) theB64String {
+    self.signature = [NSData dataWithBase64EncodedString:theB64String];
+}
+
 - (void) setTimeAccepted:(NSDate *)newTimeAccepted {
     NSDate * oldTimeAccepted = self.timeAccepted;
     if (![newTimeAccepted isEqualToDate:oldTimeAccepted]) {
@@ -258,6 +267,13 @@
     return result;
 }
 
+- (void)sign {
+    self.signature = [RSA makeSignatureOf:self.hmac withPrivateKey:[[RSA sharedInstance] getPrivateKeyRef]];
+}
+
+- (BOOL)verifySignatureWithPublicKey:(SecKeyRef)publicKey {
+    return [RSA verifySignature:self.signature forHash:self.hmac withPublicKey:publicKey];
+}
 
 - (NSDictionary*) rpcKeys {
     return @{
@@ -265,11 +281,12 @@
              @"body": @"bodyCiphertext",
              @"messageId": @"messageId",
              @"messageTag": @"messageTag",
-             // @"senderId": @"contact.clientId",
+             @"senderId": @"senderId",
              @"attachment": @"attachment.attachmentJsonStringCipherText",
              @"timeSent": @"timeSentMillis", // our own time stamp
              @"attachmentFileId":@"attachmentFileId",
-             @"hmac":@"hmacString"
+             @"hmac":@"hmacString",
+             @"signature":@"signatureString"
              };
 }
 
