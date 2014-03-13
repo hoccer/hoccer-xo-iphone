@@ -496,5 +496,11 @@
 "Can not save video in Album"="Can not save video in Album";
 "Video not compatible with Album"="Video not compatible with Album";
 
+"recorder_play_button_title"   = "Play";
+"recorder_stop_button_title"   = "Stop";
+"recorder_record_button_title" = "Record";
+"recorder_use_button_title"    = "Use"; 
 
-
+"recorder_status_recording" = "Recording";
+"recorder_status_playing"   = "Playing";
+"recorder_status_stopped"   = "Stopped";

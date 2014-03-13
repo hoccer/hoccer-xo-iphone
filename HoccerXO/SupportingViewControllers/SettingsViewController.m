@@ -16,6 +16,8 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+
+    self.navigationItem.title = self.parentViewController.tabBarItem.title;
     self.delegate = self;
 }
 
