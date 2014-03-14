@@ -2828,7 +2828,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (success) {
             handler(responseOrError);
         } else {
-            NSLog(@"SRP Phase 2 failed");
+            NSLog(@"SRP Phase 2 failed: %@", responseOrError);
             handler(nil);
             //abort();
         }

@@ -1,8 +1,5 @@
 "language_code"="de";
 
-/* Navigation Menu Item */
-"About" = "Über Hoccer XO";
-
 /* Attachment Actionsheet Title */
 "Add Attachement" = "Anhang hinzufügen aus:";
 
@@ -143,9 +140,6 @@
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "Der Code wurde abgelehnt";
-
-/* Navigation Menu Item */
-"Tutorial" = "Anleitung";
 
 /* Actionsheet Button Title */
 "View Attachment" = "Anhang anzeigen";
@@ -504,4 +498,12 @@
 "Video not compatible with Album"="Videoformat ist inkompatibel mit dem Album";
 
 
+"recorder_play_button_title"   = "Anhören";
+"recorder_stop_button_title"   = "Stop";
+"recorder_record_button_title" = "Aufnahme";
+"recorder_use_button_title"    = "Benutzen";
+
+"recorder_status_recording" = "Aufnahme";
+"recorder_status_playing"   = "Wiedergabe";
+"recorder_status_stopped"   = "Stop";
 

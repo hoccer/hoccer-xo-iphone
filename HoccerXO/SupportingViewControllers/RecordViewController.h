@@ -18,13 +18,14 @@
 @property (strong, nonatomic) AVAudioRecorder *audioRecorder;
 @property (strong, nonatomic) AVAudioPlayer *audioPlayer;
 
+
 @property (strong, nonatomic) IBOutlet UIView *view;
 @property (strong, nonatomic) IBOutlet UIView *sheetView;
 @property (strong, nonatomic) IBOutlet UIView *dimView;
 
-@property (strong, nonatomic) IBOutlet UIButton *recordButton;
+@property (strong, nonatomic) IBOutlet UIButton *recordStopButton;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
-@property (strong, nonatomic) IBOutlet UIButton *stopButton;
+//@property (strong, nonatomic) IBOutlet UIButton *stopButton;
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *useButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
@@ -38,9 +39,9 @@
 
 @property (strong, nonatomic) NSTimer *updateTimer;
 
-- (IBAction)recordAudio:(id)sender;
-- (IBAction)playAudio:(id)sender;
-- (IBAction)stop:(id)sender;
+//- (IBAction)recordAudio:(id)sender;
+//- (IBAction)playAudio:(id)sender;
+//- (IBAction)stop:(id)sender;
 
 @end
 

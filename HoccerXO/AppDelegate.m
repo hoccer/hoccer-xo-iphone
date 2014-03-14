@@ -26,7 +26,7 @@
 #import "HXOTheme.h"
 #import "ChatViewController.h"
 
-#import "OpenSSLCrypto.h";
+#import "OpenSSLCrypto.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -275,6 +275,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
 
+    [self localizeTabBar];
+
+
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         [self setupDone: NO];
     }
@@ -313,6 +316,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return YES;
 }
 
+- (void) localizeTabBar {
+    UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
+    for (UITabBarItem * item in tabBarController.tabBar.items) {
+        item.title = NSLocalizedString(item.title, nil);
+    }
+}
 
 - (void) checkForCrash {
     self.launchedAfterCrash = NO;

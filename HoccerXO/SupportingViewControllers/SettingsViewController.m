@@ -17,11 +17,7 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.title = NSLocalizedString(@"Settings", nil);
-
-    //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
-
+    self.navigationItem.title = self.parentViewController.tabBarItem.title;
     self.delegate = self;
 }
 
