@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="RPC_TalkDelivery" syncable="YES">
         <attribute name="groupId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="keyCiphertext" transient="YES" attributeType="String" minValueString="4" maxValueString="2000" syncable="YES"/>
         <attribute name="keyId" transient="YES" attributeType="String" minValueString="16" maxValueString="16" regularExpressionString="[0-9a-fA-F]{16}" syncable="YES"/>
-        <attribute name="messageTag" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
+        <attribute name="messageTag" transient="YES" attributeType="String" minValueString="36" maxValueString="64" syncable="YES"/>
         <attribute name="receiverId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="timeUpdatedIn" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
         <attribute name="timeUpdatedOut" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
@@ -39,18 +39,20 @@
         <attribute name="attachment" optional="YES" transient="YES" attributeType="String" maxValueString="1000" syncable="YES"/>
         <attribute name="attachmentFileId" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="body" optional="YES" transient="YES" attributeType="String" maxValueString="12000" syncable="YES"/>
+        <attribute name="hmac" optional="YES" transient="YES" attributeType="String" maxValueString="100" syncable="YES"/>
         <attribute name="salt" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="senderId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
+        <attribute name="signature" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeSent" optional="YES" transient="YES" attributeType="Integer 64" syncable="YES"/>
     </entity>
     <entity name="RPC_TalkMessage_in" parentEntity="RPC_TalkMessage" syncable="YES">
         <attribute name="messageId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
-        <attribute name="messageTag" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
+        <attribute name="messageTag" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="64" syncable="YES"/>
         <attribute name="numDeliveries" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="RPC_TalkMessage_out" parentEntity="RPC_TalkMessage" syncable="YES">
         <attribute name="messageId" optional="YES" transient="YES" attributeType="String" maxValueString="0" syncable="YES"/>
-        <attribute name="messageTag" transient="YES" attributeType="String" minValueString="36" maxValueString="36" syncable="YES"/>
+        <attribute name="messageTag" transient="YES" attributeType="String" minValueString="36" maxValueString="64" syncable="YES"/>
     </entity>
     <entity name="RPC_TalkPresence" syncable="YES">
         <attribute name="avatarUrl" optional="YES" transient="YES" attributeType="String" maxValueString="255" syncable="YES"/>
@@ -75,18 +77,18 @@
         <attribute name="state" transient="YES" attributeType="String" minValueString="4" maxValueString="7" regularExpressionString="none|friend|blocked" syncable="YES"/>
     </entity>
     <elements>
-        <element name="RPC_TalkDelivery" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkDelivery_in" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkDelivery_out" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkKey" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkKey_in" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkKey_out" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkMessage" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkMessage_in" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkMessage_out" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkPresence" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkPresence_in" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkPresence_out" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RPC_TalkRelationship" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="RPC_TalkDelivery" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="RPC_TalkDelivery_in" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="RPC_TalkDelivery_out" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="RPC_TalkKey" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="RPC_TalkKey_in" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="RPC_TalkKey_out" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="RPC_TalkMessage" positionX="0" positionY="0" width="128" height="163"/>
+        <element name="RPC_TalkMessage_in" positionX="0" positionY="0" width="128" height="88"/>
+        <element name="RPC_TalkMessage_out" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="RPC_TalkPresence" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="RPC_TalkPresence_in" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="RPC_TalkPresence_out" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="RPC_TalkRelationship" positionX="0" positionY="0" width="128" height="105"/>
     </elements>
 </model>

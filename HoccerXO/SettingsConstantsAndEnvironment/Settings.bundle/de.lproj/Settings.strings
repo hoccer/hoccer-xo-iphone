@@ -60,6 +60,12 @@
 "support_mode" = "Support Mode";
 "support_mode_explanation" = "Unser Team kann dich bitten den Support Mode zu aktivieren wenn du dich mit einem Problem an uns gewendet hast.";
 
+"about_button_title"    = "Über Hoccer XO";
+"tutorial_button_title" = "Anleitung";
+"faq_button_title"      = "FAQ";
+
+
+"Sign Messages"="Signieren";
 
 /* Debug Settings */
 

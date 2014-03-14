@@ -1,8 +1,5 @@
 "language_code"="en";
 
-/* Navigation Menu Item */
-"About" = "About";
-
 /* Attachment Actionsheet Title */
 "Add Attachement" = "Add Attachement from:";
 
@@ -136,7 +133,7 @@
 /* Chat Send Button Title */
 "Send" = "Send";
 
-/* Navigation Menu Item */
+/* Settings View Title */
 "Settings" = "Settings";
 
 /* Invite Alert Message */
@@ -144,9 +141,6 @@
 
 /* Invite Alert Message */
 "The server rejected your invite code" = "The code has been rejected";
-
-/* Navigation Menu Item */
-"Tutorial" = "Tutorial";
 
 /* Actionsheet Button Title */
 "View Attachment" = "View Attachment";
@@ -502,5 +496,11 @@
 "Can not save video in Album"="Can not save video in Album";
 "Video not compatible with Album"="Video not compatible with Album";
 
+"recorder_play_button_title"   = "Play";
+"recorder_stop_button_title"   = "Stop";
+"recorder_record_button_title" = "Record";
+"recorder_use_button_title"    = "Use"; 
 
-
+"recorder_status_recording" = "Recording";
+"recorder_status_playing"   = "Playing";
+"recorder_status_stopped"   = "Stopped";

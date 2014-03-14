@@ -47,15 +47,15 @@
             continue;
         }
         if (OBJECT_DUMP) {NSLog(@"check value for key '%@'", key);}
-        id oldValue = [object valueForKeyPath: keys[key]];
-        if (OBJECT_DUMP) {NSLog(@"oldCoreDataValue (%@) = '%@'",keys[key],oldValue);}
+//        id oldValue = [object valueForKeyPath: keys[key]];
+//        if (OBJECT_DUMP) {NSLog(@"oldCoreDataValue (%@) = '%@'",keys[key],oldValue);}
         id newIncomingValue = dict[key];
         if (OBJECT_DUMP) {NSLog(@"newIncomingValue = '%@'", newIncomingValue);}
         
-        if ( ! [newIncomingValue isEqual: oldValue]) {
+//        if ( ! [newIncomingValue isEqual: oldValue]) {
             if (OBJECT_DUMP) {NSLog(@"updating value in '%@' from dict key '%@' with newIncomingValue", keys[key], key);}
             [object setValue: newIncomingValue forKeyPath: keys[key]];
-        }
+//        }
     }
 }
 

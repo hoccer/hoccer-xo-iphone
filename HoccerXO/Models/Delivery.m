@@ -54,22 +54,24 @@ NSString * const kDeliveryStateFailed     = @"failed";
     }
 }
 
-// for outgoing deliveries
 -(NSString*) receiverKeyId {
-    if ([self.message.contact.type isEqualToString:@"Group"]) {
-        return @"0000000000000000"; // sent arbitrary string, will be substited by server
+    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+        // for outgoing deliveries
+        if ([self.message.contact.type isEqualToString:@"Group"]) {
+            self.keyId = @"0000000000000000";  // sent arbitrary string, will be substituted by server
+        } else {
+            self.keyId = self.receiver.publicKeyId;
+        }
+        return self.keyId;
     } else {
-        return self.receiver.publicKeyId;
+        // for incoming deliveries
+        return self.keyId;
     }
 }
 
 // for incoming deliveries
 -(void) setReceiverKeyId:(NSString *) theKeyId {
-    NSString * myKeyIdString = [HXOBackend ownPublicKeyIdString];
-    
-    if (![theKeyId isEqualToString:myKeyIdString]) {
-        NSLog(@"ERROR: incoming message was encrypted with a public key with id %@, but my key id is %@ - decryption will fail",theKeyId,myKeyIdString);
-    }
+    self.keyId = theKeyId;
 }
 
 - (NSData *) keyCleartext {
@@ -96,7 +98,11 @@ NSString * const kDeliveryStateFailed     = @"failed";
         return nil; // can not decrypt outgoing key
     }
     RSA * rsa = [RSA sharedInstance];
-    SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRef];
+    SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRefForPublicKeyIdString:self.receiverKeyId];
+    if (myPrivateKeyRef == NULL) {
+        NSLog(@"ERROR: I have no private key for key id %@", self.receiverKeyId);
+        return nil;
+    }
     NSData * theClearTextKey = [rsa decryptWithKey:myPrivateKeyRef cipherData:self.keyCiphertext];
     return theClearTextKey;
 }

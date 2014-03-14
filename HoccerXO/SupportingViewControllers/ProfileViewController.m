@@ -1187,7 +1187,7 @@ typedef enum ActionSheetTags {
     if (myKeyBits != nil) {
         if (_mode == ProfileViewModeMyProfile) {
             // set public key of some peer
-            if ([[RSA sharedInstance] addPublicKeyBits:myKeyBits withTag:[self.contact.clientId dataUsingEncoding:NSUTF8StringEncoding]]) {
+            if ([[RSA sharedInstance] addPublicKeyBits:myKeyBits withTag:[[RSA sharedInstance] publicTagForPeer:self.contact.clientId]]) {
                 self.contact.publicKeyString = [myKeyBits asBase64EncodedString];
                 [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
                 return;
@@ -1302,7 +1302,7 @@ typedef enum ActionSheetTags {
     if ([HXOBackend use_elliptic_curves]) {
         [[EC sharedInstance] cleanKeyChain];
     } else {
-        //[[RSA sharedInstance] cloneKeyPairKeys];
+        [[RSA sharedInstance] cloneKeyPairKeys];
         [[RSA sharedInstance] cleanKeyPairKeys];
     }
 }

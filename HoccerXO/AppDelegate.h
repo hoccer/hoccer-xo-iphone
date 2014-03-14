@@ -107,6 +107,8 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 
 - (void) jumpToChat: (Contact*) contact;
 
++ (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern;
+
 + (AppDelegate*)instance;
 
 

@@ -6,6 +6,7 @@
         <attribute name="cipheredSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="cipherTransferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="contentSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="destinationMAC" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="humanReadableFileName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -14,6 +15,7 @@
         <attribute name="ownedURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="previewImageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="remoteURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sourceMAC" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="transferAborted" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="transferFailed" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="transferFailures" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -56,6 +58,7 @@
     </entity>
     <entity name="Delivery" representedClassName="Delivery" syncable="YES">
         <attribute name="keyCiphertext" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="keyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" defaultValueString="new" syncable="YES"/>
         <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupDeliveries" inverseEntity="Group" syncable="YES"/>
@@ -131,9 +134,9 @@
     <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="128" height="345"/>
+        <element name="Attachment" positionX="0" positionY="0" width="128" height="375"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="404"/>
-        <element name="Delivery" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="Delivery" positionX="0" positionY="0" width="128" height="165"/>
         <element name="Group" positionX="0" positionY="0" width="128" height="135"/>
         <element name="GroupMembership" positionX="0" positionY="0" width="128" height="195"/>
         <element name="HXOMessage" positionX="0" positionY="0" width="128" height="359"/>

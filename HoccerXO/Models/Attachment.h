@@ -23,6 +23,7 @@ typedef void(^DataSetterBlock)(NSData* theData,NSError* theError);
 typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 typedef void(^CompletionBlock)(NSError* theError);
 typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
+typedef void(^MACSetterBlock)(NSData* theMAC,NSError* theError);
 
 typedef enum AttachmentStates {
     kAttachmentDetached,
@@ -74,6 +75,9 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSDate   * transferAborted;       // if not nil it containes the date the transfer was aborted by the user
 @property (nonatomic, strong) NSDate   * transferFailed;        // if not nil it containes the date the transfer has failed the last time
 @property (nonatomic, strong) HXOMessage *message;
+@property (nonatomic, strong) NSData * sourceMAC;               // Message Authentication Code computed at data source
+@property (nonatomic, strong) NSData * destinationMAC;          // Message Authentication Code computed at data destination
+
 
 // virtual properties
 @property (nonatomic) NSString * attachmentJsonString;
@@ -101,9 +105,14 @@ typedef enum AttachmentStates {
 
 @property (readonly) AttachmentState state;
 
+@property (nonatomic) NSString * sourceMACString;
+
 @property (nonatomic) NSUInteger resumePos;
 
 @property (readonly) BOOL available; // return true if attachment is outgoing or transfered
+
+-(void) computeSourceMac;
+-(void) computeDestMac;
 
 // encryption/decryption properties
 

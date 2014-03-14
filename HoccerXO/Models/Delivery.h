@@ -27,6 +27,7 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 @property (nonatomic, strong) NSString * state;
 @property (nonatomic, strong) HXOMessage *message;
 @property (nonatomic, strong) NSDate * timeChanged;
+@property (nonatomic, strong) NSString * keyId;
 
 @property (nonatomic, strong) Contact* receiver;
 @property (nonatomic, strong) Contact* sender;

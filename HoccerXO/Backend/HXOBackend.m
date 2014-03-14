@@ -419,6 +419,18 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
     if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toContact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
 
+    message.hmac = [message computeHMAC];
+    message.messageTag = [message hmacString];
+    
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOSignMessages]) {
+        [message sign];
+        if ([message verifySignatureWithPublicKey:[[RSA sharedInstance] getPublicKeyRef]]) {
+            NSLog(@"Outgoing signature verified");
+        } else {
+            NSLog(@"Outgoing signature verification failed");
+        }
+    }
+    
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
     
     if (_state == kBackendReady) {
@@ -446,7 +458,7 @@ static NSTimer * _stateNotificationDelayTimer;
     message.isOutgoing = @YES;
     // message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
     message.messageId = @"";
-    message.messageTag = [NSString stringWithUUID];
+    //message.messageTag = [NSString stringWithUUID];
 
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
@@ -529,9 +541,9 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
 
-    if (![deliveryDictionary[@"keyId"] isEqualToString:[HXOBackend ownPublicKeyIdString]]) {
-        NSLog(@"ERROR: receiveMessage: aborting received message with bad public keyId = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HXOBackend ownPublicKeyIdString]);
-       // - (void) deliveryAbort: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId {
+    SecKeyRef myPrivateKeyRef = [[RSA sharedInstance] getPrivateKeyRefForPublicKeyIdString:deliveryDictionary[@"keyId"]];
+    if (myPrivateKeyRef == NULL) {
+        NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HXOBackend ownPublicKeyIdString]);
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
         return;
     }
@@ -597,6 +609,33 @@ static NSTimer * _stateNotificationDelayTimer;
     
     message.saltString = messageDictionary[@"salt"]; // set up before decryption
     [message updateWithDictionary: messageDictionary];
+    
+    BOOL tagIsUUID = [AppDelegate validateString:message.messageTag withPattern:@"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"];
+    
+    if (!tagIsUUID) {
+        NSData * hmac = [message computeHMAC];
+        message.hmacString = message.messageTag; // TODO: remove
+        if (message.hmac != nil) {
+            if (![message.hmac isEqualToData:hmac]) {
+                NSLog(@"ERROR: Message hmac is %@, should be %@",[hmac asBase64EncodedString], message.hmacString);
+                // TODO: throw away message or mark as bad
+            } else {
+                NSLog(@"INFO: Message hmac is ok");
+            }
+        }
+        if (message.signature != nil && message.signature.length > 0) {
+            SecKeyRef peerKey = [[RSA sharedInstance] getPeerKeyRef:message.senderId];
+            if (peerKey != NULL) {
+                if ([message verifySignatureWithPublicKey:peerKey]) {
+                    NSLog(@"INFO: incoming signature ok for message %@ from client %@", message.messageId, message.senderId);
+                } else {
+                    NSLog(@"ERROR: bad incoming signature for message %@ from client %@", message.messageId, message.senderId);
+                }
+            } else {
+                NSLog(@"ERROR:no public key for signature verification of message %@ from client %@", message.messageId, message.senderId);
+            }
+        }
+    }
 
     contact.latestMessageTime = message.timeAccepted;
     

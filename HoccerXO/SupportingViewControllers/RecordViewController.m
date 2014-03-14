@@ -16,6 +16,9 @@
 #define ENABLE_METERING NO
 
 @interface RecordViewController ()
+
+@property (nonatomic,assign) BOOL hasRecording;
+
 @end
 
 @implementation RecordViewController
@@ -28,15 +31,8 @@
     
     disabledAlpha = 0.1;
 
-    //[self.playButton makeRoundAndGlossy];
-    //[self.stopButton makeRoundAndGlossy];
-    //[self.recordButton makeRoundAndGlossy];
-    
     self.useButton.style = UIBarButtonItemStyleDone;
-
-    [self disablePlay];
-    [self disableStop];
-    [self enableRecord];
+    self.useButton.title = NSLocalizedString(@"recorder_use_button_title", nil);
     
     NSDictionary *recordSettings = @{AVEncoderAudioQualityKey : @(AVAudioQualityMin),
                                      AVEncoderBitRateKey : @(16),
@@ -55,6 +51,7 @@
     if (error) {
         NSLog(@"error: %@", [error localizedDescription]);
     } else {
+        _audioRecorder.delegate = self;
         [_audioRecorder prepareToRecord];
     }
     // NSLog(@"Audiorecorder prepared, URL: %@", self.audioFileURL);
@@ -64,6 +61,11 @@
     self.useButton.enabled = NO;
     [AppDelegate requestRecordPermission];
 
+    [self updateButtons];
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    self.hasRecording = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -83,15 +85,15 @@
 #pragma mark -- Action methods
 
 -(void) updateStatusDisplay {
+    NSString * statusKey;
     if (_audioRecorder.recording) {
-        self.statusLabel.text = @"Recording";
-        return;
+        statusKey = @"recorder_status_recording";
+    } else if (_audioPlayer.playing) {
+        statusKey = @"recorder_status_playing";
+    } else {
+        statusKey = @"recorder_status_stopped";
     }
-    if (_audioPlayer.playing) {
-        self.statusLabel.text = @"Playing";
-        return;
-    }
-    self.statusLabel.text = @"Stopped";
+    self.statusLabel.text = NSLocalizedString(statusKey, nil);
 }
 
 - (void) startTimer {
@@ -105,34 +107,20 @@
     self.updateTimer = nil;
 }
 
-- (void)enableStop {
-    _stopButton.enabled = YES;
-    _stopButton.alpha = 1.0;;
-}
+- (void) updateButtons {
+    NSString * recordStopKey;
+    if (_audioRecorder.isRecording || _audioPlayer.isPlaying) {
+        recordStopKey = @"recorder_stop_button_title";
+    } else {
+        recordStopKey = @"recorder_record_button_title";
+    }
+    [self.playButton setTitle: NSLocalizedString(@"recorder_play_button_title", nil) forState: UIControlStateNormal];
+    [self.recordStopButton setTitle: NSLocalizedString(recordStopKey, nil) forState: UIControlStateNormal];
 
-- (void)enablePlay {
-    _playButton.enabled = YES;
-    _playButton.alpha = 1.0;;
-}
-
-- (void)enableRecord {
-    _recordButton.enabled = YES;
-    _recordButton.alpha = 1.0;;
-}
-
-- (void)disableStop {
-    _stopButton.enabled = NO;
-    _stopButton.alpha = disabledAlpha;;
-}
-
-- (void)disablePlay {
-    _playButton.enabled = NO;
-    _playButton.alpha = disabledAlpha;;
-}
-
-- (void)disableRecord {
-    _recordButton.enabled = NO;
-    _recordButton.alpha = disabledAlpha;;
+    self.useButton.enabled = self.hasRecording;
+    BOOL playButtonEnabled = self.hasRecording && ! (_audioRecorder.isRecording || _audioPlayer.isPlaying);
+    self.playButton.enabled = playButtonEnabled;
+    self.playButton.alpha = playButtonEnabled ? 1.0 : 0.5;
 }
 
 - (void) updateTimeDisplay:(NSTimer *)theTimer {
@@ -152,13 +140,42 @@
     self.timeLabel.text = myTime;
 }
 
-- (IBAction)recordAudio:(id)sender {
-    // NSLog(@"recordAudio:");
-    if (!_audioRecorder.recording)
-    {
-        [self disablePlay];
-        [self enableStop];
-        
+- (IBAction)play:(id)sender {
+    if (_audioRecorder) {
+        [AppDelegate setMusicAudioSession];
+    }
+
+    NSError *error;
+
+    // NSLog(@"Audiorecorder init url: %@", _audioRecorder.url);
+
+    _audioPlayer = [[AVAudioPlayer alloc]
+                    initWithContentsOfURL:_audioRecorder.url
+                    error:&error];
+
+    _audioPlayer.delegate = self;
+
+    if (error) {
+        NSLog(@"Error: %@", [error localizedDescription]);
+    } else {
+        // NSLog(@"Audioplayer play: %@", _audioRecorder.url);
+        [_audioPlayer play];
+        [self startTimer];
+    }
+    [self updateButtons];
+    [self updateStatusDisplay];
+}
+
+- (IBAction)recordOrStop:(id)sender {
+    if (_audioRecorder.isRecording) {
+        [self stopTimer];
+        [_audioRecorder stop];
+        [AppDelegate setDefaultAudioSession];
+    } else if (_audioPlayer.isPlaying) {
+        [self stopTimer];
+        [_audioPlayer stop];
+        [AppDelegate setDefaultAudioSession];
+    } else {
         [AppDelegate setRecordingAudioSession];
 
         [_audioRecorder record];
@@ -169,52 +186,13 @@
         // NSLog(@"Audiorecorder record: %d", _audioRecorder.recording);
     }
     [self updateStatusDisplay];
+    [self updateButtons];
 }
 
-- (IBAction)playAudio:(id)sender {
-    if (!_audioRecorder.recording) {
-        [self disableRecord];
-        [self enableStop];
-        
-        [AppDelegate setMusicAudioSession];
-        
-        NSError *error;
-        
-        // NSLog(@"Audiorecorder init url: %@", _audioRecorder.url);
+- (void) stopAll {
+    [_audioPlayer stop];
+    [_audioRecorder stop];
 
-        _audioPlayer = [[AVAudioPlayer alloc]
-                        initWithContentsOfURL:_audioRecorder.url
-                        error:&error];
-        
-        _audioPlayer.delegate = self;
-        
-        if (error) {
-            NSLog(@"Error: %@", [error localizedDescription]);
-        } else {
-            // NSLog(@"Audioplayer play: %@", _audioRecorder.url);
-            [_audioPlayer play];
-            [self startTimer];
-        }
-    }
-    [self updateStatusDisplay];
-}
-
-- (IBAction)stop:(id)sender {
-    [self enableRecord];
-    [self enablePlay];
-    [self disableStop];
-    
-    if (_audioRecorder.recording) {
-        [self stopTimer];
-        [_audioRecorder stop];
-        self.useButton.enabled = YES;
-    } else if (_audioPlayer.playing) {
-        [self stopTimer];
-        [_audioPlayer stop];
-    }
-    [AppDelegate setDefaultAudioSession];
-    
-    [self updateStatusDisplay];
 }
 
 #pragma mark -- Navigation action methods
@@ -222,7 +200,7 @@
 
 - (IBAction)usePressed:(id)sender {
     // NSLog(@"usePressed:");
-    [self stop:nil];
+    [self stopAll];
 	[self dismissSemiModalViewController:self];
     
     if (self.delegate != nil) {
@@ -232,7 +210,7 @@
 }
 
 - (IBAction)cancelPressed:(id)sender {
-    [self stop:nil];
+    [self stopAll];
     [_audioRecorder deleteRecording];
 	[self dismissSemiModalViewController:self];
 
@@ -240,13 +218,8 @@
 
 #pragma mark -- delegate methods
 
--(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
-{
-    [self enableRecord];
-    [self enablePlay];
-    [self disableStop];
-    _recordButton.enabled = YES;
-    _stopButton.enabled = NO;
+-(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+    [self updateButtons];
     [self updateStatusDisplay];
     [self stopTimer];
 }
@@ -257,15 +230,14 @@
     NSLog(@"Decode Error occurred, %@", error);
 }
 
--(void)audioRecorderDidFinishRecording: (AVAudioRecorder *)recorder successfully:(BOOL)flag
-{
+-(void)audioRecorderDidFinishRecording: (AVAudioRecorder *)recorder successfully:(BOOL)flag {
     NSLog(@"audioRecorderDidFinishRecording, successfully=%d", flag);
+    self.hasRecording = flag;
+    [self updateButtons];
     [self updateStatusDisplay];
-    self.useButton.enabled = flag;
 }
 
--(void)audioRecorderEncodeErrorDidOccur: (AVAudioRecorder *)recorder error:(NSError *)error
-{
+-(void)audioRecorderEncodeErrorDidOccur: (AVAudioRecorder *)recorder error:(NSError *)error {
     NSLog(@"Encode Error occurred, %@", error);
 }
 

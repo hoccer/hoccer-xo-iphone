@@ -21,15 +21,17 @@
 
 @implementation RSA
 
-static const size_t BUFFER_SIZE = 64;
-static const size_t CIPHER_BUFFER_SIZE = 1024;
+//static const size_t BUFFER_SIZE = 64;
+//static const size_t CIPHER_BUFFER_SIZE = 1024;
 static const uint32_t PADDING = kSecPaddingPKCS1;
 
 static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.publickey";
 static const uint8_t privateKeyIdentifier[] = "com.hoccertalk.client.privatekey";
+static const uint8_t publicPeerKeyIdentifier[]  = "com.hoccertalk.peer.publickey";
 
-SecKeyRef publicKey;
-SecKeyRef privateKey; 
+
+//SecKeyRef publicKey;
+//SecKeyRef privateKey;
 
 static RSA *instance;
 
@@ -52,6 +54,7 @@ static RSA *instance;
     if (self) {
         privateTag = [[NSData alloc] initWithBytes:privateKeyIdentifier length:sizeof(privateKeyIdentifier)];
         publicTag = [[NSData alloc] initWithBytes:publicKeyIdentifier length:sizeof(publicKeyIdentifier)];
+        publicPeerTag = [[NSData alloc] initWithBytes:publicPeerKeyIdentifier length:sizeof(publicPeerKeyIdentifier)];
     }
 
     return self;
@@ -75,8 +78,8 @@ static RSA *instance;
     NSMutableDictionary *publicKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *keyPairAttr = [[NSMutableDictionary alloc] init];
 	
-    publicKey = NULL;
-    privateKey = NULL;
+    SecKeyRef publicKey = NULL;
+    SecKeyRef privateKey = NULL;
 	
     [privateKeyAttr setObject: @YES forKey:(__bridge id)kSecAttrIsPermanent];
     [privateKeyAttr setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
@@ -93,7 +96,7 @@ static RSA *instance;
     status = SecKeyGeneratePair((__bridge CFDictionaryRef)keyPairAttr, &publicKey, &privateKey);
     
     if (status != noErr) {
-        NSLog(@"generateKeyPairKeys: something went wrong %d", (int)status);
+        NSLog(@"generateKeyPairKeys: something went wrong, error=%d", (int)status);
     }else {
         NSLog(@"generateKeyPairKeys: successfully generated RSA key pairs");
     }
@@ -115,7 +118,6 @@ static RSA *instance;
     NSString *decryptedString = [[NSString alloc] initWithData:decryptedData encoding:NSUTF8StringEncoding];
     
     NSLog(@"decrypted %@", decryptedString);
-    
 }
 
 
@@ -243,27 +245,23 @@ static RSA *instance;
     OSStatus resultCode = noErr;
     SecKeyRef publicKeyReference = NULL;
 	
-    if(publicKey == NULL) {
-        NSMutableDictionary * queryPublicKey = [[NSMutableDictionary alloc] init];
-				
-        // Set the public key query dictionary.
-        [queryPublicKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-        [queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
-        [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-        [queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
-		
-		// Get the key.
-        resultCode = SecItemCopyMatching((__bridge CFDictionaryRef)queryPublicKey, (CFTypeRef *)&publicKeyReference);
-		
-        if(resultCode != noErr)
-        {
-            publicKeyReference = NULL;
-        }
-		
-        publicKey = publicKeyReference;
-    } 
+    NSMutableDictionary * queryPublicKey = [[NSMutableDictionary alloc] init];
+    
+    // Set the public key query dictionary.
+    [queryPublicKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
+    [queryPublicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
+    [queryPublicKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [queryPublicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
+    
+    // Get the key.
+    resultCode = SecItemCopyMatching((__bridge CFDictionaryRef)queryPublicKey, (CFTypeRef *)&publicKeyReference);
+    
+    if(resultCode != noErr)
+    {
+        publicKeyReference = NULL;
+    }
 	
-    return publicKey;
+    return publicKeyReference;
 }
 
 - (void)getCertificate {
@@ -293,29 +291,40 @@ static RSA *instance;
     OSStatus resultCode = noErr;
     SecKeyRef privateKeyReference = NULL;
 	
-    if(privateKey == NULL) {
-        NSMutableDictionary * queryPrivateKey = [[NSMutableDictionary alloc] init];
-        
-        // Set the private key query dictionary.
-        [queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
-        [queryPrivateKey setObject:tag forKey:(__bridge id)kSecAttrApplicationTag];
-        [queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-        [queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
-		
-        // Get the key.
-        resultCode = SecItemCopyMatching((__bridge CFDictionaryRef)queryPrivateKey, (CFTypeRef *)&privateKeyReference);
-		
-        if(resultCode != noErr)
-        {
-            privateKeyReference = NULL;
-        }
-        privateKey = privateKeyReference;
+    NSMutableDictionary * queryPrivateKey = [[NSMutableDictionary alloc] init];
+    
+    // Set the private key query dictionary.
+    [queryPrivateKey setObject:(__bridge id)kSecClassKey forKey:(__bridge id)kSecClass];
+    [queryPrivateKey setObject:tag forKey:(__bridge id)kSecAttrApplicationTag];
+    [queryPrivateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [queryPrivateKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
+    
+    // Get the key.
+    resultCode = SecItemCopyMatching((__bridge CFDictionaryRef)queryPrivateKey, (CFTypeRef *)&privateKeyReference);
+    
+    if(resultCode != noErr)
+    {
+        privateKeyReference = NULL;
     }
-    return privateKey;
+    return privateKeyReference;
 }
 
 - (SecKeyRef)getPrivateKeyRef {
     return [self getPrivateKeyRefForTag:privateTag];
+}
+
+- (SecKeyRef)getPrivateKeyRefForPublicKeyIdString:(NSString*) publicKeyIdString {
+    if ([publicKeyIdString isEqualToString:[RSA keyIdString:[RSA calcKeyId:[self getPublicKeyBits]]]]) {
+        return [self getPrivateKeyRef];
+    }
+    return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:publicKeyIdString]];
+}
+
+- (SecKeyRef)getPrivateKeyRefForPublicKeyId:(NSData*) publicKeyId {
+    if ([publicKeyId isEqualToData:[RSA calcKeyId:[self getPublicKeyBits]]]) {
+        return [self getPrivateKeyRef];
+    }
+    return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:[RSA keyIdString:publicKeyId]]];
 }
 
 
@@ -434,8 +443,11 @@ static RSA *instance;
     }
     
     NSString * publicKeyIdString = [RSA keyIdString:[RSA calcKeyId:publicBits]];
-    NSData * publicTagSpec = [self publicTagForKeyId:publicKeyIdString];
-    NSData * privateTagSpec = [self privateTagForKeyId:publicKeyIdString];
+    NSData * publicTagSpec = [self publicTagForKeyIdString:publicKeyIdString];
+    NSData * privateTagSpec = [self privateTagForKeyIdString:publicKeyIdString];
+    
+    NSLog(@"cloneKeyPairKeys, cloning private key to %@", [[NSString alloc] initWithData:privateTagSpec encoding:NSUTF8StringEncoding]);
+    NSLog(@"cloneKeyPairKeys, cloning public key to %@", [[NSString alloc] initWithData:publicTagSpec encoding:NSUTF8StringEncoding]);
     
     if (![self addPrivateKeyBits:privateBits withTag:privateTagSpec]) {
         return NO;
@@ -447,18 +459,41 @@ static RSA *instance;
     return YES;
 }
 
-- (NSData *) publicTagForKeyId:(NSString *) keyIdString {
-    NSMutableData * tag = [NSMutableData dataWithData:publicTag];
-    [tag appendData:[keyIdString dataUsingEncoding:NSUTF8StringEncoding]];
+- (NSData *) publicTagForKeyIdString:(NSString *) keyIdString {
+    // NSLog(@"publicTagForKeyIdString keyIdString = %@",keyIdString);
+    
+    NSString * tagStr = [NSString stringWithUTF8String:[publicTag bytes]];
+    tagStr = [tagStr stringByAppendingString:@"."];
+    tagStr = [tagStr stringByAppendingString:keyIdString];
+    
+    NSData * tag = [tagStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"publicTagForKeyIdString, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
     return tag;
 }
 
-- (NSData *) privateTagForKeyId:(NSString *) keyIdString {
-    NSMutableData * tag = [NSMutableData dataWithData:privateTag];
-    [tag appendData:[keyIdString dataUsingEncoding:NSUTF8StringEncoding]];
+- (NSData *) privateTagForKeyIdString:(NSString *) keyIdString {
+    //NSLog(@"privateTagForKeyIdString keyIdString = %@",keyIdString);
+    
+    NSString * tagStr = [NSString stringWithUTF8String:[privateTag bytes]];
+    tagStr = [tagStr stringByAppendingString:@"."];
+    tagStr = [tagStr stringByAppendingString:keyIdString];
+    
+    NSData * tag = [tagStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"privateTagForKeyIdString, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
     return tag;
 }
 
+- (NSData *) publicTagForPeer:(NSString *) peerName {
+    //NSLog(@"publicTagForPeer peerName = %@",peerName);
+    
+    NSString * tagStr = [NSString stringWithUTF8String:[publicPeerTag bytes]];
+    tagStr = [tagStr stringByAppendingString:@"."];
+    tagStr = [tagStr stringByAppendingString:peerName];
+    
+    NSData * tag = [tagStr dataUsingEncoding:NSUTF8StringEncoding];
+    //NSLog(@"publicTagForPeer, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
+    return tag;
+}
 
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits {
@@ -506,16 +541,21 @@ static RSA *instance;
 }
 
 
-- (BOOL)addPublicKey:(NSString *)key withTag:(NSString *)tag
+- (BOOL)addPublicPeerKey:(NSString *)key withPeerName:(NSString *)peerName
+{
+    return [self addPublicKey:key withTag:[self publicTagForPeer:peerName]];
+}
+
+- (BOOL)addPublicKey:(NSString *)key withTag:(NSData *)tag
 {
     NSString *s_key = key;
     // This will be base64 encoded, decode it.
     NSData *d_key = [NSData dataWithBase64EncodedString:s_key];
     //d_key = [self stripPublicKeyHeader:d_key];
     if (d_key == nil) return(FALSE);
-    NSData *d_tag = [NSData dataWithBytes:[tag UTF8String] length:[tag length]];
-    return [self addPublicKeyBits: d_key withTag:d_tag];
+    return [self addPublicKeyBits: d_key withTag:tag];
 }
+
 
 - (BOOL)addPublicKeyBits:(NSData *)d_key withTag:(NSData *)d_tag
 {
@@ -557,7 +597,8 @@ static RSA *instance;
 
 - (void)removePeerPublicKey:(NSString *)peerName {
 	
-	NSData * peerTag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
+	//NSData * peerTag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
+	NSData * peerTag = [self publicTagForPeer:peerName];
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
@@ -566,6 +607,7 @@ static RSA *instance;
 }
 
 - (void)cleanKeyPairKeys {
+    //[self cleanAllRSAKeys];
     // NSLog(@"Cleaning cleanKeyPairKeys");
 
     NSMutableDictionary * privateKey = [[NSMutableDictionary alloc] init];
@@ -619,7 +661,8 @@ static RSA *instance;
 - (SecKeyRef)getPeerKeyRef:(NSString *)peerName {
     SecKeyRef persistentRef = NULL;
 	
-    NSData *d_tag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
+    //NSData *d_tag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
+	NSData * d_tag = [self publicTagForPeer:peerName];
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
@@ -636,7 +679,8 @@ static RSA *instance;
 	OSStatus sanityCheck = noErr;
 	NSData * publicKeyBits = nil;
 	
-    NSData *d_tag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
+    //NSData *d_tag = [NSData dataWithBytes:[peerName UTF8String] length:[peerName length]];
+	NSData * d_tag = [self publicTagForPeer:peerName];
 
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
@@ -658,40 +702,127 @@ static RSA *instance;
 }
 
 
-- (NSDictionary*) findPrivateKeysWithPrefix:(NSData*)prefix {
-    // create query
-//    CFMutableDictionaryRef query = CFDictionaryCreateMutable(kCFAllocatorDefault, 3, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-//    CFDictionaryAddValue(query, kSecReturnAttributes, kCFBooleanTrue);
-//    CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitAll);
-//    CFDictionaryAddValue(query, kSecClass, kSecClassInternetPassword);
- 
-    NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
-    [query setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
-    [query setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    [query setObject: @YES forKey:(__bridge id)kSecReturnRef];
-    [query setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
-    [query setObject:(__bridge id) kSecMatchLimit forKey:(__bridge id)kSecMatchLimitAll];
+- (NSDictionary*) findeKeypairsWithPrivatePrefix:(NSData*)privatePrefix withPublicPrefix:(NSData*) publicPrefix {
+
+    NSDictionary * query = @{(__bridge id) kSecClass: (__bridge id) kSecClassKey,
+                             (__bridge id) kSecAttrKeyType: (__bridge id) kSecAttrKeyTypeRSA,
+                             (__bridge id) kSecReturnAttributes: @YES,
+                             //(__bridge id) kSecAttrKeyClass: (__bridge id) kSecAttrKeyClassPrivate,
+                             (__bridge id) kSecMatchLimit: (__bridge id)kSecMatchLimitAll
+                             };
     
     // get search results
-    CFArrayRef result = nil;
+    CFTypeRef result = nil;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef*)&result);
+    
+    id resultObj = CFBridgingRelease(result);
+    //NSLog(@"resultObj = %@", resultObj);
 
-    if (status == 0) {
+    if (status == 0 && resultObj != nil) {
         // do something with the result
-        int results = CFArrayGetCount(result);
-        NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+        int results = [resultObj count];
+        NSMutableDictionary *found = [[NSMutableDictionary alloc] init];
+        NSString * privatePrefixString = [NSString stringWithUTF8String:[privatePrefix bytes]];
+        NSString * publicPrefixString = [NSString stringWithUTF8String:[publicPrefix bytes]];
         for (int i = 0; i < results;++i ) {
-            NSLog(@"result %d = %@",i,CFArrayGetValueAtIndex((__bridge CFArrayRef)(result), i));
+            //NSLog(@"result %d = %@",i,resultObj[i]);
+            NSData * atag = resultObj[i][@"atag"];
+            if (atag != nil ) {
+                NSString * tag;
+                if ([atag isKindOfClass:[NSData class]]) {
+                    tag = [[NSString alloc] initWithData:atag encoding:NSUTF8StringEncoding];
+                } else if ([atag isKindOfClass:[NSString class]]){
+                    tag = (NSString*)atag;
+                } else {
+                    break;
+                }
+                //NSString * prefixString = [[NSString alloc] initWithData:prefix encoding:NSUTF8StringEncoding];
+                //NSLog(@"result %d = %@",i,resultObj[i]);
+                NSLog(@"tag %d = ‘%@‘",i,tag);
+                //NSLog(@"priv prefix %d = ‘%@‘",i,privatePrefixString);
+                //NSLog(@"pub  prefix %d = ‘%@‘",i,publicPrefixString);
+                NSString * postFix;
+                NSScanner * theScanner = [NSScanner scannerWithString:tag];
+                BOOL isPublic = [theScanner scanString:publicPrefixString intoString:NULL];
+                BOOL isPrivate = [theScanner scanString:privatePrefixString intoString:NULL];
+                BOOL s2 = [theScanner scanString:@"." intoString:NULL];
+                BOOL s3 = [theScanner scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:&postFix];
+                if ((isPublic || isPrivate) && s2 && s3) {
+                    //NSLog(@"postFix %d = %@",i,postFix);
+                    if (found[postFix] == nil) {
+                        found[postFix] = [[NSMutableDictionary alloc]init];
+                    }
+                    if (isPrivate) {
+                        found[postFix][@"private"] = tag;
+                    }
+                    if (isPublic) {
+                        found[postFix][@"public"] = tag;
+                    }
+                } else {
+                    // NSLog(@"no postfix");
+                }
+            } else {
+                NSLog(@"Error no atag for item %d = %@",i,resultObj[i]);
+                
+            }
         }
-        return result;
+        NSLog(@"found=%@",found);
+        return found;
     } else {
         NSLog(@"findKeyPairsWithPrefix: error OSStatus %d",(int)status);
         return nil;
     }
 }
 
+- (void) cleanAllRSAKeys {
+    
+    NSDictionary * query = @{(__bridge id) kSecClass: (__bridge id) kSecClassKey,
+                             (__bridge id) kSecAttrKeyType: (__bridge id) kSecAttrKeyTypeRSA,
+                             (__bridge id) kSecReturnAttributes: @YES,
+                             //(__bridge id) kSecAttrKeyClass: (__bridge id) kSecAttrKeyClassPrivate,
+                             (__bridge id) kSecMatchLimit: (__bridge id)kSecMatchLimitAll
+                             };
+    
+    // get search results
+    CFTypeRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef*)&result);
+    
+    id resultObj = CFBridgingRelease(result);
+    NSLog(@"resultObj = %@", resultObj);
+    
+    
+    int deleted = 0;
+    if (status == 0 && resultObj != nil) {
+        // do something with the result
+        int results = [resultObj count];
+        NSLog(@"found %d keys",results);
+        for (int i = 0; i < results;++i ) {
+            //NSLog(@"result %d = %@",i,resultObj[i]);
+            NSData * atag = resultObj[i][@"atag"];
+            if (atag != nil ) {
+                NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                [dict setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
+                [dict setObject:atag forKey:(__bridge id)kSecAttrApplicationTag];
+                [dict setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+                OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)dict);
+                NSLog(@"SecItemDelete returned %ld on dict %@", myStatus, dict);
+                if (myStatus == 0) {
+                    ++deleted;
+                }
+                
+            } else {
+                NSLog(@"Error no atag for item %d = %@",i,resultObj[i]);
+            }
+        }
+        NSLog(@"deleted %d keys",deleted);
+    } else {
+        NSLog(@"cleanAllRSAKeys: find error OSStatus %d",(int)status);
+    }
+}
+
+
 - (NSDictionary*) findKeyPairs {
-    return [self findPrivateKeysWithPrefix:privateTag];
+    return [self findeKeypairsWithPrivatePrefix:privateTag withPublicPrefix:publicTag];
 }
 
 
@@ -960,5 +1091,28 @@ size_t encodeLength(unsigned char * buf, size_t length) {
     }
     return 0;
 }
+
++ (NSData *)makeSignatureOf:(NSData *)hash withPrivateKey:(SecKeyRef)privateKey {
+    OSStatus sanityCheck = noErr;
+    NSData * signedHash = nil;
+    size_t signedHashBytesSize = SecKeyGetBlockSize(privateKey);
+    uint8_t * signedHashBytes = malloc(signedHashBytesSize * sizeof(uint8_t));
+    memset((void *)signedHashBytes, 0x0, signedHashBytesSize);
+    sanityCheck = SecKeyRawSign(privateKey,
+                                kSecPaddingPKCS1SHA256,
+                                [hash bytes],
+                                CC_SHA256_DIGEST_LENGTH,
+                                (uint8_t *)signedHashBytes,
+                                &signedHashBytesSize);
+    signedHash = [NSData dataWithBytes:(const void *)signedHashBytes length:(NSUInteger)signedHashBytesSize];
+    if (signedHashBytes) free(signedHashBytes);
+    return signedHash;
+}
+
++ (BOOL) verifySignature:(NSData *)signature forHash:(NSData *)hash withPublicKey:(SecKeyRef)publicKey {
+    OSStatus result = SecKeyRawVerify(publicKey, kSecPaddingPKCS1SHA256, [hash bytes], [hash length], [signature bytes], [signature length]);
+    return (result == noErr) ? YES : NO;
+}
+
 
 @end

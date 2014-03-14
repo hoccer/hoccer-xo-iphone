@@ -272,6 +272,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
 
     [[HXOTheme theme] setupTheming];
+    [self localizeTabBar];
+
 
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         [self setupDone: NO];
@@ -308,6 +310,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
     return YES;
+}
+
+- (void) localizeTabBar {
+    UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
+    for (UITabBarItem * item in tabBarController.tabBar.items) {
+        item.title = NSLocalizedString(item.title, nil);
+    }
 }
 
 - (void) checkForCrash {
@@ -1434,6 +1443,25 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 + (AppDelegate*)instance {
     return (AppDelegate*)[[UIApplication sharedApplication] delegate];
+}
+
++ (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern
+{
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSAssert(regex, @"Unable to create regular expression");
+    
+    NSRange textRange = NSMakeRange(0, string.length);
+    NSRange matchRange = [regex rangeOfFirstMatchInString:string options:NSMatchingReportProgress range:textRange];
+    
+    BOOL didValidate = NO;
+    
+    // Did we find a matching range
+    if (matchRange.location != NSNotFound)
+        didValidate = YES;
+    
+    return didValidate;
 }
 
 @end
