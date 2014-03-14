@@ -64,6 +64,14 @@
 			<key>Key</key>
 			<string>webServer</string>
 		</dict>
+		<dict>
+			<key>Title</key>
+			<string>QR Scanner</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Key</key>
+			<string>qrScanner</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Settings</string>

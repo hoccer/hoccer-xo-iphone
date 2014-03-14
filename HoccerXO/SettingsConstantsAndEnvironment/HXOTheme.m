@@ -94,6 +94,38 @@ static HXOTheme * _currentTheme;
     }
 }
 
+#pragma mark - Fonts & Text Colors
+
+- (NSDictionary*) smallTextFontSizes {
+    return @{  UIContentSizeCategoryExtraSmall:                          @(9.0)
+               , UIContentSizeCategorySmall:                             @(10.0)
+               , UIContentSizeCategoryMedium:                            @(11.0)
+               , UIContentSizeCategoryLarge:                             @(12.0)
+               , UIContentSizeCategoryExtraLarge:                        @(13.0)
+               , UIContentSizeCategoryExtraExtraLarge:                   @(14)
+               , UIContentSizeCategoryExtraExtraExtraLarge:              @(15)
+
+               , UIContentSizeCategoryAccessibilityMedium:               @(12)
+               , UIContentSizeCategoryAccessibilityLarge:                @(13)
+               , UIContentSizeCategoryAccessibilityExtraLarge:           @(14)
+               , UIContentSizeCategoryAccessibilityExtraExtraLarge:      @(16)
+               , UIContentSizeCategoryAccessibilityExtraExtraExtraLarge: @(18)
+               };
+}
+
+@synthesize smallTextFont = _smallTextFont;
+- (UIFont*) smallTextFont {
+    CGFloat size = [self.smallTextFontSizes[[UIApplication sharedApplication].preferredContentSizeCategory] doubleValue];
+    if (_smallTextFont.pointSize != size) {
+        _smallTextFont = [UIFont systemFontOfSize: size];
+    }
+    return _smallTextFont;
+}
+
+- (UIColor*) lightTextColor {
+    return [UIColor colorWithHexString:@"#A8AFB8"];
+}
+
 #pragma mark - agnat land
 
 + (void) initialize {

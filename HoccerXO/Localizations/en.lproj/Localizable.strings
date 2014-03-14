@@ -348,8 +348,6 @@
 
 "groups_menu_item" = "Groups";
 
-"groups_empty_placeholder" = "Groups";
-
 "invalid_cert_title" = "Invalid Server Certificate";
 
 "invalid_cert_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";

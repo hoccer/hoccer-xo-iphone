@@ -18,6 +18,11 @@
 @property (nonatomic,readonly) UIColor * ledColor;
 @property (nonatomic,readonly) UIColor * tableSeparatorColor;
 
+@property (nonatomic,readonly) UIFont *   smallTextFont;
+@property (nonatomic,readonly) UIFont *   smallBoldTextFont;
+@property (nonatomic,readonly) UIColor *  lightTextColor;
+
+
 - (UIColor*) messageBackgroundColorForScheme:         (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageTextColorForScheme:               (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageFooterTextColorForScheme:         (HXOBubbleColorScheme) scheme;

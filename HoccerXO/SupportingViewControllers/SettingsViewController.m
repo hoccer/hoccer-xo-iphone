@@ -30,7 +30,6 @@
 }
 
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
-    NSLog(@"bonked %@", specifier.key);
     NSString * storyboardId;
     if ([specifier.key isEqualToString: @"tutorial"]) {
         storyboardId = @"tutorialViewController";
@@ -46,6 +45,8 @@
 #else
         NSLog(@"Web server is not enabled in this build");
 #endif
+    } else if ([specifier.key isEqualToString: @"qrScanner"]) {
+        storyboardId = @"nativeQRScanner";
     } else {
         NSLog(@"unhandled button in settings plist (key:%@)", specifier.key);
     }

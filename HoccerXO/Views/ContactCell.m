@@ -7,6 +7,7 @@
 //
 
 #import "ContactCell.h"
+#import "HXOTheme.h"
 
 static const CGFloat kHXOGridSpacing = 8.0;
 
@@ -47,6 +48,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     _subtitleLabel.numberOfLines = 1;
     _subtitleLabel.text = @"Lorem ipsum";
     _subtitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    _subtitleLabel.textColor = [[HXOTheme theme] lightTextColor];
     //_subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _subtitleLabel];
     
@@ -85,7 +87,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     self.nickName.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    self.subtitleLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleFootnote];
+    self.subtitleLabel.font = [[HXOTheme theme] smallTextFont];
     
     if (self.verticalConstraints) {
         [self.contentView removeConstraints: self.verticalConstraints];
