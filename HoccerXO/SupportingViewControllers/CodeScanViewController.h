@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
-@interface CodeScanViewController : UIViewController
+
+@interface CodeScanViewController : UIViewController<AVCaptureMetadataOutputObjectsDelegate>
 
 @end
