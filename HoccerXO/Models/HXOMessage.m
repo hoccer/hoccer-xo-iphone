@@ -232,39 +232,71 @@
     }
 }
 
+-(void) printHash:(CC_SHA256_CTX *) ctx {
+    NSData * d = [NSData dataWithBytes:&ctx->hash length:32];
+    NSLog(@"hash=%@",[d asBase64EncodedString]);
+}
+
 // computes a SHA256 hash over body
 - (NSData*)computeHMAC {
     CC_SHA256_CTX ctx;
     CC_SHA256_Init(&ctx);
 
-    {
     //NSData * tagData = [self.messageTag dataUsingEncoding:NSUTF8StringEncoding];
     //CC_SHA256_Update(&ctx,[tagData bytes],[tagData length]);
-    }{
+
     NSData * senderData = [self.senderId dataUsingEncoding:NSUTF8StringEncoding];
     CC_SHA256_Update(&ctx,[senderData bytes],[senderData length]);
-    }{
+
+#ifdef DEBUG_HMAC
+    NSLog(@"checked sender='%@' len=%d", [NSString stringWithData:senderData usingEncoding:NSUTF8StringEncoding], [senderData length]);
+    [self printHash:&ctx];
+#endif
+    
     NSData * timeSentData = [[self.timeSentMillis stringValue] dataUsingEncoding:NSUTF8StringEncoding];
     CC_SHA256_Update(&ctx,[timeSentData bytes],[timeSentData length]);
-    }{
+#ifdef DEBUG_HMAC
+    NSLog(@"checked timeSentMillis='%@' len=%d", [NSString stringWithData:timeSentData usingEncoding:NSUTF8StringEncoding], [timeSentData length]);
+    [self printHash:&ctx];
+#endif
+
     NSData * bodyData = [self.bodyCiphertext dataUsingEncoding:NSUTF8StringEncoding];
     CC_SHA256_Update(&ctx,[bodyData bytes],[bodyData length]);
-    }
+#ifdef DEBUG_HMAC
+    NSLog(@"checked body='%@' len=%d", [NSString stringWithData:bodyData usingEncoding:NSUTF8StringEncoding], [bodyData length]);
+    [self printHash:&ctx];
+#endif
+
     if (self.attachment != nil) {
         NSData * attachmentData = [self.attachment.attachmentJsonStringCipherText dataUsingEncoding:NSUTF8StringEncoding];
         CC_SHA256_Update(&ctx,[attachmentData bytes],[attachmentData length]);
-        
+#ifdef DEBUG_HMAC
+        NSLog(@"checked attachment='%@' len=%d", [NSString stringWithData:attachmentData usingEncoding:NSUTF8StringEncoding], [attachmentData length]);
+        [self printHash:&ctx];
+#endif
+       
         NSData * fileIdData = [self.attachmentFileId dataUsingEncoding:NSUTF8StringEncoding];
         CC_SHA256_Update(&ctx,[fileIdData bytes],[fileIdData length]);
+#ifdef DEBUG_HMAC
+        NSLog(@"checked fileId='%@' len=%d", [NSString stringWithData:fileIdData usingEncoding:NSUTF8StringEncoding], [fileIdData length]);
+        [self printHash:&ctx];
+#endif
     }
-    
-    if (self.salt != nil) {
+
+    if (self.salt != nil && self.salt.length > 0) {
         NSData * saltData = [self.saltString dataUsingEncoding:NSUTF8StringEncoding];
         CC_SHA256_Update(&ctx,[saltData bytes],[saltData length]);
+#ifdef DEBUG_HMAC
+        NSLog(@"checked salt='%@' len=%d", [NSString stringWithData:saltData usingEncoding:NSUTF8StringEncoding], [saltData length]);
+        [self printHash:&ctx];
+#endif
     }
-    
+
     NSMutableData * result = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     CC_SHA256_Final([result mutableBytes], &ctx);
+#ifdef DEBUG_HMAC
+    [self printHash:&ctx];
+#endif
     
     return result;
 }
