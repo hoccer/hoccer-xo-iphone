@@ -10,6 +10,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "VectorArtView.h"
+#import "HXOTheme.h"
+#import "DisclosureArrow.h"
 
 extern const CGFloat kHXOGridSpacing;
 
@@ -28,7 +30,7 @@ extern const CGFloat kHXOGridSpacing;
     _dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _dateLabel.autoresizingMask = UIViewAutoresizingNone;
     _dateLabel.numberOfLines = 1;
-    _dateLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleFootnote];
+    _dateLabel.textColor = [[HXOTheme theme] smallBoldTextColor];
     _dateLabel.text = @"jetze";
     //_dateLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _dateLabel];
@@ -37,7 +39,7 @@ extern const CGFloat kHXOGridSpacing;
     
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.nickName attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
     
-    VectorArtView * accessoryView = [VectorArtView disclosureArrow];
+    VectorArtView * accessoryView = [[VectorArtView alloc] initWithVectorArt: [[DisclosureArrow alloc] init]];
     self.accessoryView = [[UIView alloc] initWithFrame: accessoryView.frame];
     CGRect frame = accessoryView.frame;
     frame.origin.x = self.frame.size.width - (frame.size.width + kHXOGridSpacing);
@@ -55,6 +57,7 @@ extern const CGFloat kHXOGridSpacing;
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
+    self.dateLabel.font = [[HXOTheme theme] smallBoldTextFont];
     NSMutableDictionary * v = [NSMutableDictionary dictionaryWithDictionary: views];
     v[@"date"] = self.dateLabel;
     NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", 16.0, 6.0 * 8, 16.0, 16.0];

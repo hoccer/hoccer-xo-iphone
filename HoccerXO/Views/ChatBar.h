@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ChatBar : UIView
+@interface ChatBar : UIToolbar <UITextViewDelegate>
 
-@property (nonatomic,strong) UIColor * borderColor;
+@property (nonatomic,readonly) UIButton   * attachmentButton;
+@property (nonatomic,readonly) UITextView * messageField;
+@property (nonatomic,readonly) UIButton   * sendButton;
 
 @end

@@ -8,6 +8,12 @@
 
 #import "ChatBar.h"
 
+#import "PaperClip.h"
+#import "PaperDart.h"
+#import "HXOTheme.h"
+
+extern const CGFloat kHXOGridSpacing;
+
 @implementation ChatBar
 
 - (id)initWithFrame:(CGRect)frame {
@@ -26,19 +32,35 @@
     return self;
 }
 
-
 - (void) commonInit {
-    self.borderColor = [UIColor colorWithWhite: 0.85 alpha: 1];
+    float s = 44;
+
+    _attachmentButton = [UIButton buttonWithType: UIButtonTypeSystem];
+    [_attachmentButton setImage: [[PaperClip alloc] init].image forState: UIControlStateNormal];
+    _attachmentButton.frame = CGRectMake(0, 0, s, s);
+    [self addSubview: _attachmentButton];
+
+    UIFont * font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    CGFloat height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, 0));
+
+    _messageField = [[UITextView alloc] initWithFrame: CGRectMake(s + kHXOGridSpacing, kHXOGridSpacing, self.bounds.size.width - 2 * s, height)];
+    _messageField.autoresizingMask = UIViewAutoresizingFlexibleWidth/* | UIViewAutoresizingFlexibleHeight*/;
+    _messageField.backgroundColor = [UIColor whiteColor];
+    _messageField.layer.cornerRadius = kHXOGridSpacing / 2;
+    _messageField.layer.borderWidth = 1.0;
+    _messageField.layer.borderColor = [HXOTheme theme].messageFieldBorderColor.CGColor;
+    _messageField.font = font;
+    _messageField.textContainerInset = UIEdgeInsetsMake(6, 0, 2, 0);
+    _messageField.text = @"k";
+    [self addSubview: _messageField];
+    _messageField.text = @"";
+
+    _sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
+    [_sendButton setImage: [[PaperDart alloc] init].image forState: UIControlStateNormal];
+    _sendButton.frame = CGRectMake(CGRectGetMaxX(_messageField.frame), 0, s, s);
+    [self addSubview: _sendButton];
 }
 
-- (void)drawRect:(CGRect)rect {
-    [super drawRect: rect];
-
-    UIBezierPath* bezierPath = [UIBezierPath bezierPath];
-    [bezierPath moveToPoint: CGPointMake(0, 0.5)];
-    [bezierPath addLineToPoint: CGPointMake(self.bounds.size.width, 0.5)];
-    [self.borderColor setStroke];
-    [bezierPath stroke];
+- (void) dealloc {
 }
-
 @end

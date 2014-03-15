@@ -11,17 +11,22 @@
 
 @interface HXOTheme : NSObject
 
-+ (id) theme;
++ (HXOTheme*) theme;
 
 @property (nonatomic,readonly) UIColor * navigationBarBackgroundColor;
 @property (nonatomic,readonly) UIColor * navigationBarTintColor;
 @property (nonatomic,readonly) UIColor * ledColor;
 @property (nonatomic,readonly) UIColor * tableSeparatorColor;
+@property (nonatomic,readonly) UIColor * cellAccessoryColor;
+@property (nonatomic,readonly) UIColor * messageFieldBackgroundColor;
+@property (nonatomic,readonly) UIColor * messageFieldBorderColor;
 
+@property (nonatomic,readonly) UIFont *   messageFont;
+@property (nonatomic,readonly) UIFont *   titleFont;
 @property (nonatomic,readonly) UIFont *   smallTextFont;
 @property (nonatomic,readonly) UIFont *   smallBoldTextFont;
 @property (nonatomic,readonly) UIColor *  lightTextColor;
-
+@property (nonatomic,readonly) UIColor *  smallBoldTextColor;
 
 - (UIColor*) messageBackgroundColorForScheme:         (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageTextColorForScheme:               (HXOBubbleColorScheme) scheme;

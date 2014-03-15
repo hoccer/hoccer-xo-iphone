@@ -25,6 +25,10 @@
 #import "TestFlight.h"
 #import "HXOTheme.h"
 #import "ChatViewController.h"
+#import "IconChats.h"
+#import "IconContacts.h"
+#import "IconProfile.h"
+#import "IconSettings.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -315,6 +319,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void) localizeTabBar {
     UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
     for (UITabBarItem * item in tabBarController.tabBar.items) {
+        if ([item.title isEqualToString: @"Chats"]) {
+            item.image = [[[IconChats alloc] init] image];
+        } else if ([item.title isEqualToString: @"Contacts"]) {
+            item.image = [[[IconContacts alloc] init] image];
+        } else if ([item.title isEqualToString: @"Profile"]) {
+            item.image = [[[IconProfile alloc] init] image];
+        } else if ([item.title isEqualToString: @"Settings"]) {
+            item.image = [[[IconSettings alloc] init] image];
+        }
         item.title = NSLocalizedString(item.title, nil);
     }
 }

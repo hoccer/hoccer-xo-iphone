@@ -25,17 +25,24 @@ extern CGFloat kHXOGridSpacing;
     _label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _label.backgroundColor = [UIColor clearColor];
     // TODO move font assignment to the view controller
-    double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
-    //    label.font = [UIFont systemFontOfSize: 13.0];
-    _label.font = [UIFont systemFontOfSize: fontSize];
+    _label.font = [HXOTheme theme].messageFont;
     _label.lineBreakMode = NSLineBreakByWordWrapping;
     [self addSubview: _label];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+
+    [self preferredContentSizeChanged: nil];
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (CGSize) sizeThatFits:(CGSize)size {
     CGSize labelSize = size;
     labelSize.width -= 4 * kHXOGridSpacing;
-    labelSize.height -= 2 * kHXOGridSpacing;
+    //labelSize.height -= 2 * kHXOGridSpacing;
+    labelSize.height = 0;
 
     labelSize = [_label sizeThatFits: labelSize];
 
@@ -51,5 +58,11 @@ extern CGFloat kHXOGridSpacing;
     self.label.textColor = [[HXOTheme theme] messageTextColorForScheme: self.cell.colorScheme];
     self.label.linkColor = [[HXOTheme theme] messageLinkColorForScheme: self.cell.colorScheme];
 }
+
+- (void) preferredContentSizeChanged: (NSNotification*) notification {
+    self.label.font = [[HXOTheme theme] messageFont];
+    [self setNeedsLayout];
+}
+
 
 @end

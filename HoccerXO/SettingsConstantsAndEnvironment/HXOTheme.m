@@ -23,7 +23,7 @@ static HXOTheme * _currentTheme;
 }
 
 - (UIColor*) navigationBarBackgroundColor {
-    return [UIColor colorWithRed: 37.0 / 255 green: 184.0 / 255 blue: 171.0 / 255 alpha: 1.0];
+    return [UIColor colorWithHexString: @"#39C0B3"];
 }
 
 - (UIColor*) navigationBarTintColor {
@@ -38,14 +38,26 @@ static HXOTheme * _currentTheme;
     return [UIColor redColor];
 }
 
+- (UIColor*) cellAccessoryColor {
+    return [UIColor colorWithHexString:@"#20B4A4"];
+}
+
+- (UIColor*) messageFieldBackgroundColor {
+    return [UIColor whiteColor];
+}
+
+- (UIColor*) messageFieldBorderColor {
+    return [UIColor colorWithHexString: @"#D0"];
+}
+
 #pragma mark - Message Color Schemes
 
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
-        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithRed: 0.902 green: 0.906 blue: 0.922 alpha: 1];
-        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithRed: 0.224 green: 0.753 blue: 0.702 alpha: 1];
-        case HXOBubbleColorSchemeInProgress: return [UIColor colorWithRed: 0.725 green: 0.851 blue: 0.839 alpha: 1];
-        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithRed: 0.741 green: 0.224 blue: 0.208 alpha: 1];
+        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: @"#E6E7EB"];
+        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#39C0B3"];
+        case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: @"#B8CCCA"];
+        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: @"#BD3935"];
     }
 }
 
@@ -86,7 +98,7 @@ static HXOTheme * _currentTheme;
 - (UIColor*) messageAttachmentIconTintColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
         case HXOBubbleColorSchemeIncoming:
-            return [UIColor colorWithRed: 0 green: 122.0 / 255 blue: 1 alpha: 1];
+            return [self tintColor];
         case HXOBubbleColorSchemeSuccess:
         case HXOBubbleColorSchemeInProgress:
         case HXOBubbleColorSchemeFailed:
@@ -95,6 +107,14 @@ static HXOTheme * _currentTheme;
 }
 
 #pragma mark - Fonts & Text Colors
+
+- (UIFont*) messageFont {
+    return [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+}
+
+- (UIFont*) titleFont {
+    return [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+}
 
 - (NSDictionary*) smallTextFontSizes {
     return @{  UIContentSizeCategoryExtraSmall:                          @(9.0)
@@ -113,6 +133,34 @@ static HXOTheme * _currentTheme;
                };
 }
 
+- (NSDictionary*) smallBoldTextFontSizes {
+    return @{  UIContentSizeCategoryExtraSmall:                          @(8.0)
+               , UIContentSizeCategorySmall:                             @(9.0)
+               , UIContentSizeCategoryMedium:                            @(10.0)
+               , UIContentSizeCategoryLarge:                             @(11.0)
+               , UIContentSizeCategoryExtraLarge:                        @(12.0)
+               , UIContentSizeCategoryExtraExtraLarge:                   @(13)
+               , UIContentSizeCategoryExtraExtraExtraLarge:              @(14)
+
+               , UIContentSizeCategoryAccessibilityMedium:               @(12)
+               , UIContentSizeCategoryAccessibilityLarge:                @(13)
+               , UIContentSizeCategoryAccessibilityExtraLarge:           @(14)
+               , UIContentSizeCategoryAccessibilityExtraExtraLarge:      @(16)
+               , UIContentSizeCategoryAccessibilityExtraExtraExtraLarge: @(18)
+               };
+}
+
+- (UIColor*) lightTextColor {
+    return [UIColor colorWithHexString:@"#A8AFB8"];
+}
+
+- (UIColor*) smallBoldTextColor {
+    return [UIColor colorWithHexString:@"#9FA3AC"];
+}
+
+
+#pragma mark - No settings beyond this point
+
 @synthesize smallTextFont = _smallTextFont;
 - (UIFont*) smallTextFont {
     CGFloat size = [self.smallTextFontSizes[[UIApplication sharedApplication].preferredContentSizeCategory] doubleValue];
@@ -122,17 +170,22 @@ static HXOTheme * _currentTheme;
     return _smallTextFont;
 }
 
-- (UIColor*) lightTextColor {
-    return [UIColor colorWithHexString:@"#A8AFB8"];
+@synthesize smallBoldTextFont = _smallBoldTextFont;
+- (UIFont*) smallBoldTextFont {
+    CGFloat size = [self.smallBoldTextFontSizes[[UIApplication sharedApplication].preferredContentSizeCategory] doubleValue];
+    if (_smallBoldTextFont.pointSize != size) {
+        _smallBoldTextFont = [UIFont boldSystemFontOfSize: size];
+    }
+    return _smallBoldTextFont;
 }
 
-#pragma mark - agnat land
+
 
 + (void) initialize {
     _currentTheme = [[HXOTheme alloc] init];
 }
 
-+ (id) theme {
++ (HXOTheme*) theme {
     return _currentTheme;
 }
 

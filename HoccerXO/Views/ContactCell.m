@@ -86,8 +86,8 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
-    self.nickName.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    self.subtitleLabel.font = [[HXOTheme theme] smallTextFont];
+    self.nickName.font = [HXOTheme theme].titleFont;
+    self.subtitleLabel.font = [HXOTheme theme].smallTextFont;
     
     if (self.verticalConstraints) {
         [self.contentView removeConstraints: self.verticalConstraints];

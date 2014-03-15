@@ -49,6 +49,8 @@ static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
 - (void) commonInit {
     _sections = [NSMutableArray array];
 
+    self.backgroundColor = [UIColor clearColor];
+
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentMode = UIViewContentModeRedraw;
 

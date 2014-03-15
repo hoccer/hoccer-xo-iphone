@@ -22,6 +22,8 @@
 #import "Environment.h"
 #import "HXOTheme.h"
 
+extern const CGFloat kHXOGridSpacing;
+
 
 //#define HIDE_SEPARATORS
 
@@ -71,7 +73,7 @@
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     [self.conversationCell preferredContentSizeChanged: notification];
-    self.tableView.rowHeight = [self.conversationCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    self.tableView.rowHeight = ceilf([self.conversationCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height / kHXOGridSpacing) * 8;
     [self.tableView reloadData];
 }
 
@@ -195,6 +197,7 @@
         HXOMessage * message = contact.latestMessage[0];
         if (message.body.length > 0) {
             cell.subtitleLabel.text = message.body;
+            // TODO: do not mess with the fonts
             cell.subtitleLabel.font = [UIFont systemFontOfSize: cell.subtitleLabel.font.pointSize];
         } else {
             if (message.attachment != nil) {
@@ -202,6 +205,7 @@
             } else {
                 cell.subtitleLabel.text = @"<>"; // should never happen
             }
+            // TODO: do not mess with the fonts
             cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
         }
         latestMessageTime = message.timeAccepted;

@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class VectorArt;
+
 @interface VectorArtView : UIView
 
-@property (nonatomic,strong) CAShapeLayer * shape;
+@property (nonatomic,strong) VectorArt * shape;
 
-+ (id) disclosureArrow;
+- (id) initWithVectorArt: (VectorArt*) shape;
 
 @end

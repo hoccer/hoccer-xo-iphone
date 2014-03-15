@@ -44,6 +44,7 @@
 #import "DateSectionHeaderView.h"
 #import "MessageItems.h"
 #import "HXOHyperLabel.h"
+#import "ChatBar.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -73,7 +74,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, readonly) NSByteCountFormatter * byteCountFormatter;
 
 @property (nonatomic) BOOL keyBoardShown;
-@property (nonatomic) double messageFontSize;
 
 @property (nonatomic,strong) UITextField * autoCorrectTriggerHelper;
 
@@ -95,26 +95,29 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize byteCountFormatter = _byteCountFormatter;
 
 - (void)viewDidLoad {
-    // NSLog(@"ChatViewController:viewDidLoad");
     [super viewDidLoad];
-    self.messageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
 
-	// Do any additional setup after loading the view, typically from a nib.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
-    
-    [self.view bringSubviewToFront: _chatbar];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
+//    [self.view bringSubviewToFront: _chatbar];
+
+    [self.chatbar.messageField addObserver: self forKeyPath: @"contentSize" options: 0 context: nil];
+
+
+    /*
     _textField.delegate = self;
     _textField.backgroundColor = [UIColor clearColor];
-    _textField.placeholder = NSLocalizedString(@"chat_view_message_placeholder", nil);
+     */
+    //self.chatbar.messageField.placeholder = NSLocalizedString(@"chat_view_message_placeholder", nil);
 
     self.autoCorrectTriggerHelper = [[UITextField alloc] init];
     self.autoCorrectTriggerHelper.hidden = YES;
     [self.chatbar addSubview: self.autoCorrectTriggerHelper];
 
+    /*
     UIView * textViewBackgroundView = [[UIImageView alloc] initWithFrame: CGRectInset(_textField.frame, 0, 2)];
     textViewBackgroundView.backgroundColor = [UIColor whiteColor];
     textViewBackgroundView.layer.cornerRadius = 6;
@@ -123,19 +126,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     textViewBackgroundView.clipsToBounds = YES;
     [_chatbar addSubview: textViewBackgroundView];
     textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
     [_chatbar sendSubviewToBack: textViewBackgroundView];
+*/
 
-    // setup longpress menus
-    //[self setupLongPressMenu];
-    
+    [self.chatbar.sendButton addTarget: self action: @selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
+    [self.chatbar.attachmentButton addTarget: self action: @selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
+
     [self hideAttachmentSpinner];
     [HXOBackend registerConnectionInfoObserverFor:self];
-
-//    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-//    gestureRecognizer.cancelsTouchesInView = NO;
-//    [self.tableView addGestureRecognizer:gestureRecognizer];
-    
     
     UILongPressGestureRecognizer *gr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     [self.view addGestureRecognizer:gr];
@@ -273,6 +271,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     return _chatBackend;
 }
 
+
+- (void) preferredContentSizeChanged: (NSNotification*) notification {
+    self.chatbar.messageField.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    [self.tableView reloadData];
+    [self updateVisibleCells];
+}
+
+/*
 - (void)defaultsChanged:(NSNotification*)aNotification {
     // NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
     double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
@@ -282,6 +288,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [self.tableView reloadData];
     }
 }
+*/
 
 #pragma mark - Split view
 
@@ -301,7 +308,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 #pragma mark - Keyboard Handling
 
-- (void)keyboardWillShow:(NSNotification*)aNotification {
+- (void)keyboardWillShow:(NSNotification*) notification {
+/*
     //NSLog(@"keyboardWasShown");
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -323,9 +331,25 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     // this catches orientation changes, too
     _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height - (self.navigationController.navigationBar.frame.origin.y  + self.navigationController.navigationBar.frame.size.height);
     self.keyBoardShown = YES;
+*/
+    NSTimeInterval duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationOptions curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    CGRect keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+
+    CGFloat height = keyboardFrame.size.height;
+    CGPoint contentOffset = self.tableView.contentOffset;
+    contentOffset.y += height;
+
+    [UIView animateWithDuration: duration delay: 0 options: curve animations:^{
+        self.keyboardHeight.constant = height;
+        self.tableView.contentOffset = contentOffset;
+        [self.view layoutIfNeeded];
+    } completion: nil];
+
 }
 
-- (void)keyboardWillHide:(NSNotification*)aNotification {
+- (void)keyboardWillHide:(NSNotification*) notification {
+    /*
     NSDictionary* info = [aNotification userInfo];
     CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
@@ -337,13 +361,22 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.chatViewResizer.frame = frame;
     }];
     self.keyBoardShown = NO;
+     */
+    NSTimeInterval duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationOptions curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+
+    [UIView animateWithDuration: duration delay: 0 options: curve animations:^{
+        self.keyboardHeight.constant = 0;
+        [self.view layoutIfNeeded];
+    } completion: nil];
+
 }
 
 - (void) hideKeyboard {
-    if (self.keyBoardShown) {
+//    if (self.keyBoardShown) {
         // NSLog(@"hideKeyboard:self = %@, self.view=%@", self, self.view);
         [self.view endEditing: NO];
-    }
+//    }
 }
 
 #pragma mark - Actions
@@ -397,9 +430,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         
     }
 
-    if (self.textField.text.length > 0 || self.attachmentPreview != nil) {
+    if (self.chatbar.messageField.text.length > 0 || self.attachmentPreview != nil) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
-            if ([self.textField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
+            if ([self.chatbar.messageField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
                 NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"message_too_long_text", nil), kMaxMessageBytes];
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"message_too_long_title", nil)
                                                                  message: messageText
@@ -443,28 +476,28 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void)reallySendMessage {
     [self.autoCorrectTriggerHelper becomeFirstResponder]; // trigger autocompletion on last word ...
-    [self.textField becomeFirstResponder];                // ... without hiding the keyboard
-    [self.chatBackend sendMessage:self.textField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
+    [self.chatbar.messageField becomeFirstResponder];     // ... without hiding the keyboard
+    [self.chatBackend sendMessage:self.chatbar.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
     self.currentAttachment = nil;
-    self.textField.text = @"";
+    self.chatbar.messageField.text = @"";
     [self trashCurrentAttachment];
 }
 
 - (IBAction)addAttachmentPressed:(id)sender {
     // NSLog(@"addAttachmentPressed");
-    [self.textField resignFirstResponder];
+    [self.chatbar.messageField resignFirstResponder];
     [self.attachmentPicker showInView: self.view];
 }
 
 - (IBAction)attachmentPressed: (id)sender {
     // NSLog(@"attachmentPressed");
-    [self.textField resignFirstResponder];
+    [self.chatbar.messageField resignFirstResponder];
     [self showAttachmentOptions];
 }
 
 - (IBAction)cancelAttachmentProcessingPressed: (id)sender {
     // NSLog(@"cancelPressed");
-    [self.textField resignFirstResponder];
+    [self.chatbar.messageField resignFirstResponder];
     [self showAttachmentOptions];
 }
 
@@ -858,15 +891,19 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeFromSuperview");
             [self.attachmentPreview removeFromSuperview];
         }
+        // TODO:
+        /*
         UIButton* preview = [[UIButton alloc] init];
         self.attachmentPreview = preview;
         preview.imageView.contentMode = UIViewContentModeScaleAspectFill;
+
         preview.frame = _attachmentButton.frame;
         [preview setImage:theImage forState:UIControlStateNormal];
         preview.autoresizingMask = _attachmentButton.autoresizingMask;
         [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.chatbar addSubview: preview];
         _attachmentButton.hidden = YES;
+         */
     } else {
         if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeAttachmentPreview");
         [self removeAttachmentPreview];
@@ -874,11 +911,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) removeAttachmentPreview {
+    // TODO:
+    /*
     if (self.attachmentPreview != nil) {
         [self.attachmentPreview removeFromSuperview];
         self.attachmentPreview = nil;
         self.attachmentButton.hidden = NO;
     }
+     */
 }
 
 - (void) startPickedAttachmentProcessingForObject:(id)info {
@@ -888,8 +928,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     _currentPickInfo = info;
     // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
     [self showAttachmentSpinner];
-    _attachmentButton.hidden = YES;
-    _sendButton.enabled = NO; // wait for attachment ready
+
+    // TODO:
+    //_attachmentButton.hidden = YES;
+    //_sendButton.enabled = NO; // wait for attachment ready
 }
 
 - (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
@@ -905,7 +947,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 if (DEBUG_ATTACHMENT_BUTTONS)NSLog(@"finishPickedAttachmentProcessingWithImage: decorateAttachmentButton with theImage");
                 [self decorateAttachmentButton:theImage];
             }
-            _sendButton.enabled = YES;
+            // TODO:
+
+//            _sendButton.enabled = YES;
         } else {
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: trashCurrentAttachment");
             [self trashCurrentAttachment];
@@ -915,14 +959,16 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) showAttachmentSpinner {
     if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"showAttachmentSpinner");
-    _attachmentSpinner.hidden = NO;
-    [_attachmentSpinner startAnimating];
+    // TODO:
+    //_attachmentSpinner.hidden = NO;
+    //[_attachmentSpinner startAnimating];
 }
 
 - (void) hideAttachmentSpinner {
     if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"hideAttachmentSpinner");
-    [_attachmentSpinner stopAnimating];
-    _attachmentSpinner.hidden = YES;
+    // TODO:
+    //[_attachmentSpinner stopAnimating];
+    //_attachmentSpinner.hidden = YES;
 }
 
 
@@ -942,7 +988,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.currentAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
-    _attachmentButton.hidden = NO;
+    // TODO:
+    //_attachmentButton.hidden = NO;
 }
 
 - (void) showAttachmentOptions {
@@ -1180,7 +1227,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [self scrollToRememberedCellOrToBottomIfNone];
     });
     [self configureView];
-    [self insertForwardedMessage];
+    //[self insertForwardedMessage];
 }
 
 - (void) addContactKVO: (Contact*) contact {
@@ -1195,10 +1242,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [contact removeObserver: self forKeyPath: @"avatarImage"];
 }
 
+/*
 - (void) insertForwardedMessage {
     if (self.messageToForward) {
         // NSLog(@"insertForwardedMessage");
-        self.textField.text = self.messageToForward.body;
+        self.chatbar.messageField.text = self.messageToForward.body;
         
         if (self.currentAttachment) {
             [self trashCurrentAttachment];
@@ -1213,6 +1261,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.messageToForward = nil;
     }
 }
+*/
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     //NSLog(@"observeValueForKeyPath %@ change %@", keyPath, change);
@@ -1248,6 +1297,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         } else {
             //NSLog(@"ChatViewController observeValueForKeyPath: unhandled change");
         }
+    } else if ([keyPath isEqualToString: @"contentSize"] && [object isEqual: self.chatbar.messageField]) {
+        NSLog(@"content size: %@", NSStringFromCGSize(self.chatbar.messageField.contentSize));
+        CGRect frame = self.chatbar.messageField.frame;
+        CGFloat kHXOGridSpacing = 8;
+        frame.size.height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, self.chatbar.messageField.contentSize.height));
+        self.chatbar.messageField.frame = frame;
+        self.chatbarHeight.constant = frame.size.height + 2 * kHXOGridSpacing;
+        
     } else {
         NSLog(@"ChatViewController observeValueForKeyPath: unhandled key path '%@'", keyPath);
     }
@@ -1403,7 +1460,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) configureTextSection: (TextSection*) section forMessage: (HXOMessage*) message {
     section.label.delegate = self;
     // maybe we find a better way to properly respond to font size changes
-    section.label.font = [UIFont systemFontOfSize: self.messageFontSize];
+    //section.label.font = [UIFont systemFontOfSize: self.messageFontSize];
     
     section.label.attributedText = [self getItemWithMessage: message].attributedBody;
 }
@@ -2145,6 +2202,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
     [self removeContactKVO: self.partner];
     if ([self.partner isKindOfClass: [Group class]]) {
         Group * group = (Group*) self.partner;
@@ -2156,6 +2214,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }];
         [group removeObserver: self forKeyPath: @"members"];
     }
+    [self.chatbar.messageField removeObserver: self forKeyPath: @"contentSize"];
 }
 
 #pragma mark - Link Highlighing and Handling
