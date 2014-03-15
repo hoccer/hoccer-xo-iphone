@@ -10,7 +10,7 @@
 #import "Contact.h"
 #import "HXOMessage.h"
 #import "NSData+Base64.h"
-#import "RSA.h"
+#import "CCRSA.h"
 #import "EC.h"
 
 #import "NSData+HexString.h"
@@ -39,6 +39,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic receiverKeyId;
 @dynamic timeChanged;
 @dynamic timeChangedMillis;
+@dynamic keyId;
 
 -(NSString*) keyCiphertextString {
     return [self.keyCiphertext asBase64EncodedString];
@@ -97,7 +98,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         return nil; // can not decrypt outgoing key
     }
-    RSA * rsa = [RSA sharedInstance];
+    CCRSA * rsa = [CCRSA sharedInstance];
     SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRefForPublicKeyIdString:self.receiverKeyId];
     if (myPrivateKeyRef == NULL) {
         NSLog(@"ERROR: I have no private key for key id %@", self.receiverKeyId);
@@ -127,7 +128,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
     // get public key of receiver first
     SecKeyRef myReceiverKey = [self.receiver getPublicKeyRef];
     
-    RSA * rsa = [RSA sharedInstance];
+    CCRSA * rsa = [CCRSA sharedInstance];
     self.keyCiphertext = [rsa encryptWithKey:myReceiverKey plainData:theMessageKey];
 }
 

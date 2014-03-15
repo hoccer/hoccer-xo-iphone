@@ -23,7 +23,7 @@
 #import "NSData+CommonCrypto.h"
 #import "NSData+Base64.h"
 #import "NSString+StringWithData.h"
-#import "RSA.h"
+#import "CCRSA.h"
 #import "EC.h"
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
@@ -424,7 +424,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOSignMessages]) {
         [message sign];
-        if ([message verifySignatureWithPublicKey:[[RSA sharedInstance] getPublicKeyRef]]) {
+        if ([message verifySignatureWithPublicKey:[[CCRSA sharedInstance] getPublicKeyRef]]) {
             NSLog(@"Outgoing signature verified");
         } else {
             NSLog(@"Outgoing signature verification failed");
@@ -541,7 +541,7 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
 
-    SecKeyRef myPrivateKeyRef = [[RSA sharedInstance] getPrivateKeyRefForPublicKeyIdString:deliveryDictionary[@"keyId"]];
+    SecKeyRef myPrivateKeyRef = [[CCRSA sharedInstance] getPrivateKeyRefForPublicKeyIdString:deliveryDictionary[@"keyId"]];
     if (myPrivateKeyRef == NULL) {
         NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HXOBackend ownPublicKeyIdString]);
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
@@ -624,7 +624,7 @@ static NSTimer * _stateNotificationDelayTimer;
             }
         }
         if (message.signature != nil && message.signature.length > 0) {
-            SecKeyRef peerKey = [[RSA sharedInstance] getPeerKeyRef:message.senderId];
+            SecKeyRef peerKey = [[CCRSA sharedInstance] getPeerKeyRef:message.senderId];
             if (peerKey != NULL) {
                 if ([message verifySignatureWithPublicKey:peerKey]) {
                     NSLog(@"INFO: incoming signature ok for message %@ from client %@", message.messageId, message.senderId);
@@ -2223,8 +2223,8 @@ static NSTimer * _stateNotificationDelayTimer;
                 EC * ec = [EC sharedInstance];
                 myMember.cipheredGroupKey = [ec encryptWithKey:myReceiverKey plainData:group.groupKey];
             } else {
-                SecKeyRef myReceiverKey = [[RSA sharedInstance] getPublicKeyRef];
-                RSA * rsa = [RSA sharedInstance];
+                SecKeyRef myReceiverKey = [[CCRSA sharedInstance] getPublicKeyRef];
+                CCRSA * rsa = [CCRSA sharedInstance];
                 myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
             }
             
@@ -3169,7 +3169,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 + (NSData *) ownPublicKeyRSA {
-    return[[RSA sharedInstance] getPublicKeyBits];
+    return[[CCRSA sharedInstance] getPublicKeyBits];
 }
 
 + (NSData *) ownPublicKeyEC {
@@ -3185,11 +3185,11 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits {
-    return [RSA calcKeyId:myKeyBits];
+    return [CCRSA calcKeyId:myKeyBits];
 }
 
 + (NSString *) keyIdString:(NSData *) myKeyId {
-    return [RSA keyIdString:myKeyId];
+    return [CCRSA keyIdString:myKeyId];
 }
 
 - (void) updateKey: (NSData*) publicKey handler:(GenericResultHandler) handler {

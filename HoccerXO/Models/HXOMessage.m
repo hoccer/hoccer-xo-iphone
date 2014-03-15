@@ -16,7 +16,7 @@
 #import "Group.h"
 #import "HXOUserDefaults.h"
 #import "Attachment.h"
-#import "RSA.h"
+#import "CCRSA.h"
 
 // TODO: a model accessing the theme? get rid of that...
 #import "HXOTheme.h"
@@ -39,11 +39,14 @@
 @dynamic attachmentFileId;
 @dynamic senderId;
 @dynamic hmac;
+@dynamic signature;
 
 @dynamic contact;
 @dynamic attachment;
 @dynamic deliveries;
 @dynamic saltString;
+@dynamic hmacString;
+@dynamic signatureString;
 
 @dynamic cachedLandscapeCellHeight;
 @dynamic cachedPortraitCellHeight;
@@ -54,7 +57,6 @@
 @synthesize cryptoKey = _cryptoKey;
 
 @dynamic bodyCiphertext;
-@dynamic hmacString;
 
 
 #define KEY_DEBUG NO
@@ -271,11 +273,11 @@
 }
 
 - (void)sign {
-    self.signature = [RSA makeSignatureOf:self.hmac withPrivateKey:[[RSA sharedInstance] getPrivateKeyRef]];
+    self.signature = [CCRSA makeSignatureOf:self.hmac withPrivateKey:[[CCRSA sharedInstance] getPrivateKeyRef]];
 }
 
 - (BOOL)verifySignatureWithPublicKey:(SecKeyRef)publicKey {
-    return [RSA verifySignature:self.signature forHash:self.hmac withPublicKey:publicKey];
+    return [CCRSA verifySignature:self.signature forHash:self.hmac withPublicKey:publicKey];
 }
 
 - (NSDictionary*) rpcKeys {

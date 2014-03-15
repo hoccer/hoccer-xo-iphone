@@ -9,7 +9,7 @@
 #import "Contact.h"
 #import "Crypto.h"
 #import "NSData+Base64.h"
-#import "RSA.h"
+#import "CCRSA.h"
 #import "EC.h"
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h" // for date conversion
@@ -149,7 +149,7 @@ NSString * const kRelationStateBlocked = @"blocked";
 
 
 - (SecKeyRef) getPublicKeyRefRSA {
-    RSA * rsa = [RSA sharedInstance];
+    CCRSA * rsa = [CCRSA sharedInstance];
     SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
     if (myResult == nil) {
         // store public key from contact in key store

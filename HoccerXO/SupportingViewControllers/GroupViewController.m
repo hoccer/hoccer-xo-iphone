@@ -20,7 +20,7 @@
 
 #define GROUPVIEW_DEBUG NO
 
-static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
+// static const NSUInteger kHXOGroupUtilitySectionIndex = 1;
 
 @interface FetchedResultsSectionAdapter : NSObject
 {

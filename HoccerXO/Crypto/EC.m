@@ -20,8 +20,8 @@
 
 @implementation EC
 
-static const size_t BUFFER_SIZE = 64;
-static const size_t CIPHER_BUFFER_SIZE = 1024;
+//static const size_t BUFFER_SIZE = 64;
+//static const size_t CIPHER_BUFFER_SIZE = 1024;
 static const uint32_t PADDING = kSecPaddingPKCS1;
 
 static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.ec.publickey";

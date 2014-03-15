@@ -12,13 +12,13 @@
 //       the other half to UserProfile. En- and decryption don't need members and should
 //       be class methods.
 
-@interface RSA : NSObject {
+@interface CCRSA : NSObject {
     NSData *publicTag;
     NSData *privateTag;
     NSData *publicPeerTag;
 }
 
-+ (RSA*)sharedInstance;
++ (CCRSA*)sharedInstance;
 
 - (void)generateKeyPairKeys;
 - (void)testEncryption;

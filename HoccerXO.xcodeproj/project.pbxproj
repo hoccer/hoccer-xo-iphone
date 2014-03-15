@@ -169,11 +169,13 @@
 		E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F3118733B79007B8042 /* DDTTYLogger.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
+		E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */; };
+		E95A75A818D257FD0027AE3E /* fmemopen.c in Sources */ = {isa = PBXBuildFile; fileRef = E95A75A618D257FD0027AE3E /* fmemopen.c */; };
 		E96CB012171217D3005F8FFA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB011171217D3005F8FFA /* AVFoundation.framework */; };
 		E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB01717137D37005F8FFA /* CoreMedia.framework */; };
 		E96CB029171457F9005F8FFA /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB022171457F9005F8FFA /* Crypto.m */; };
 		E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */; };
-		E96CB02C171457F9005F8FFA /* RSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB028171457F9005F8FFA /* RSA.m */; };
+		E96CB02C171457F9005F8FFA /* CCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB028171457F9005F8FFA /* CCRSA.m */; };
 		E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB02E17145979005F8FFA /* NSString+StringWithData.m */; };
 		E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03017145ABF005F8FFA /* Base64Transcoder.c */; };
 		E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
@@ -660,6 +662,10 @@
 		E959F0891738553C00CD14BB /* UIViewController+TDSemiModalExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TDSemiModalExtension.h"; path = "Source/UIViewController+TDSemiModalExtension.h"; sourceTree = "<group>"; };
 		E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TDSemiModalExtension.m"; path = "Source/UIViewController+TDSemiModalExtension.m"; sourceTree = "<group>"; };
 		E95A758F18D2201D0027AE3E /* HoccerXO-29.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-29.xcdatamodel"; sourceTree = "<group>"; };
+		E95A75A018D24C060027AE3E /* OpenSSLCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSSLCrypto.h; sourceTree = "<group>"; };
+		E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenSSLCrypto.m; sourceTree = "<group>"; };
+		E95A75A618D257FD0027AE3E /* fmemopen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fmemopen.c; sourceTree = "<group>"; };
+		E95A75A718D257FD0027AE3E /* fmemopen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fmemopen.h; sourceTree = "<group>"; };
 		E95F7C3E18D10E5000F2CAEB /* HoccerXO-26.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-26.xcdatamodel"; sourceTree = "<group>"; };
 		E95F7C3F18D1B4E600F2CAEB /* HoccerXO-27.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-27.xcdatamodel"; sourceTree = "<group>"; };
 		E95F7C4018D1E11400F2CAEB /* HoccerXO-28.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-28.xcdatamodel"; sourceTree = "<group>"; };
@@ -669,8 +675,8 @@
 		E96CB022171457F9005F8FFA /* Crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Crypto.m; sourceTree = "<group>"; };
 		E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CommonCrypto.h"; sourceTree = "<group>"; };
 		E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CommonCrypto.m"; sourceTree = "<group>"; };
-		E96CB027171457F9005F8FFA /* RSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSA.h; sourceTree = "<group>"; };
-		E96CB028171457F9005F8FFA /* RSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSA.m; sourceTree = "<group>"; };
+		E96CB027171457F9005F8FFA /* CCRSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRSA.h; sourceTree = "<group>"; };
+		E96CB028171457F9005F8FFA /* CCRSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCRSA.m; sourceTree = "<group>"; };
 		E96CB02D17145979005F8FFA /* NSString+StringWithData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+StringWithData.h"; path = "../Crypto/NSString+StringWithData.h"; sourceTree = "<group>"; };
 		E96CB02E17145979005F8FFA /* NSString+StringWithData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+StringWithData.m"; path = "../Crypto/NSString+StringWithData.m"; sourceTree = "<group>"; };
 		E96CB03017145ABF005F8FFA /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
@@ -1464,6 +1470,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				E95A75A518D257FD0027AE3E /* fmemopen */,
 				633AA86218C4DCF6009403CB /* TestFlightSDK-3.0.0 */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
@@ -1536,6 +1543,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		E95A75A518D257FD0027AE3E /* fmemopen */ = {
+			isa = PBXGroup;
+			children = (
+				E95A75A618D257FD0027AE3E /* fmemopen.c */,
+				E95A75A718D257FD0027AE3E /* fmemopen.h */,
+			);
+			path = fmemopen;
+			sourceTree = "<group>";
+		};
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
@@ -1551,10 +1567,12 @@
 				63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */,
 				E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */,
 				E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */,
-				E96CB027171457F9005F8FFA /* RSA.h */,
-				E96CB028171457F9005F8FFA /* RSA.m */,
+				E96CB027171457F9005F8FFA /* CCRSA.h */,
+				E96CB028171457F9005F8FFA /* CCRSA.m */,
 				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
 				E9DBE3E21865C0A000880252 /* CryptoJSON.m */,
+				E95A75A018D24C060027AE3E /* OpenSSLCrypto.h */,
+				E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -2132,6 +2150,7 @@
 				631457CA16F0E76D00AA8EB9 /* HXOBackend.m in Sources */,
 				6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */,
 				6378484616F4000500DE03C2 /* Delivery.m in Sources */,
+				E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */,
 				6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */,
 				63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */,
 				63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */,
@@ -2139,6 +2158,7 @@
 				E9E92F8C18748F21007B8042 /* ServerViewController.m in Sources */,
 				E9E92F6D18733D01007B8042 /* DDRange.m in Sources */,
 				6367C9211833BE5A005C60B3 /* HPTextViewInternal.m in Sources */,
+				E95A75A818D257FD0027AE3E /* fmemopen.c in Sources */,
 				E9E92F7418733D01007B8042 /* MultipartMessageHeaderField.m in Sources */,
 				6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */,
 				E9E92F7718733D01007B8042 /* HTTPDynamicFileResponse.m in Sources */,
@@ -2166,7 +2186,7 @@
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
 				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
-				E96CB02C171457F9005F8FFA /* RSA.m in Sources */,
+				E96CB02C171457F9005F8FFA /* CCRSA.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
 				63808A231858A76E0001AC96 /* TextSection.m in Sources */,
 				E9E92F7318733D01007B8042 /* MultipartMessageHeader.m in Sources */,
@@ -2368,6 +2388,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
 					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(SRCROOT)/ObjCSRP/3rdParty/openssl-xcode/openssl/include/",
 				);
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
