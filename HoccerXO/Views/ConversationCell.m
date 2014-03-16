@@ -74,7 +74,7 @@ extern const CGFloat kHXOGridSpacing;
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     [super preferredContentSizeChanged: notification];
     
-    self.dateLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleFootnote];
+    self.dateLabel.font = [HXOTheme theme].smallBoldTextFont;
 }
 
 @end
