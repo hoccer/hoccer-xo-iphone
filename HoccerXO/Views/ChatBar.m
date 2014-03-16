@@ -38,10 +38,11 @@ extern const CGFloat kHXOGridSpacing;
     _attachmentButton = [UIButton buttonWithType: UIButtonTypeSystem];
     [_attachmentButton setImage: [[PaperClip alloc] init].image forState: UIControlStateNormal];
     _attachmentButton.frame = CGRectMake(0, 0, s, s);
+    _attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addSubview: _attachmentButton];
 
     UIFont * font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    CGFloat height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, 0));
+    CGFloat height = MIN(150, MAX( s - 2 * kHXOGridSpacing, 0));
 
     _messageField = [[UITextView alloc] initWithFrame: CGRectMake(s + kHXOGridSpacing, kHXOGridSpacing, self.bounds.size.width - 2 * s, height)];
     _messageField.autoresizingMask = UIViewAutoresizingFlexibleWidth/* | UIViewAutoresizingFlexibleHeight*/;
@@ -58,6 +59,7 @@ extern const CGFloat kHXOGridSpacing;
     _sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
     [_sendButton setImage: [[PaperDart alloc] init].image forState: UIControlStateNormal];
     _sendButton.frame = CGRectMake(CGRectGetMaxX(_messageField.frame), 0, s, s);
+    _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addSubview: _sendButton];
 }
 
