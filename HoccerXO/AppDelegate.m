@@ -31,6 +31,7 @@
 #import "IconSettings.h"
 
 #import "OpenSSLCrypto.h"
+#import "Crypto.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -315,6 +316,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
+#ifdef PASSWORD_BASELINE
+    unsigned char salt[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
+    NSData * mySalt = [NSData dataWithBytes:&salt length:32];
+    NSData * myKey = [Crypto make256BitKeyFromPassword:@"myPassword" withSalt:mySalt];
+    NSLog(@"myKey=%@", [myKey hexadecimalString]);
+#endif
     return YES;
 }
 

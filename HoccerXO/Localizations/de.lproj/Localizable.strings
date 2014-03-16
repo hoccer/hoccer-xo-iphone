@@ -505,3 +505,7 @@
 "recorder_status_playing"   = "Wiedergabe";
 "recorder_status_stopped"   = "Stop";
 
+"location_picker_title" = "Pin verschieben";
+"location_picker_done_button_title" = "Fertig";
+
+

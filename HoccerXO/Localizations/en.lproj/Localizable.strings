@@ -498,3 +498,6 @@
 "recorder_status_recording" = "Recording";
 "recorder_status_playing"   = "Playing";
 "recorder_status_stopped"   = "Stopped";
+
+"location_picker_title" = "Drag the Pin";
+"location_picker_done_button_title" = "Done";
