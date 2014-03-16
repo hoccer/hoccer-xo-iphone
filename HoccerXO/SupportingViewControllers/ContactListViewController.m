@@ -75,7 +75,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (void) setupTitle {
     if (self.hasGroupContactToggle) {
-        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"Contacts", nil), NSLocalizedString(@"Groups", nil)]];
+        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"Contacts", nil), NSLocalizedString(@"group_segment_title", nil)]];
         self.groupContactsToggle.selectedSegmentIndex = 0;
         [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
         self.navigationItem.titleView = self.groupContactsToggle;

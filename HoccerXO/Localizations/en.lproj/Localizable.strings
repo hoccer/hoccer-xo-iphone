@@ -9,8 +9,6 @@
 /* Actionsheet Button Title */
 "Cancel" = "Cancel";
 
-
-
 /* Action Sheet Button Ttitle */
 "Choose Photo/Video" = "Album";
 
@@ -59,8 +57,6 @@
 "Paste data Attachment"="Pasteboard (%@)";
 
 "Opened data Attachment %@"="External (%@)";
-
-
 
 
 /* Profile View Avatar Chooser Action Sheet Title */
@@ -346,7 +342,7 @@
 "http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
 "http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
 
-"groups_menu_item" = "Groups";
+"group_segment_title" = "Groups";
 
 "invalid_cert_title" = "Invalid Server Certificate";
 

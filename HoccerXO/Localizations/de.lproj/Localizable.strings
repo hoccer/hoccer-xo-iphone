@@ -349,9 +349,7 @@
 "http://hoccer.com/hoccer-xo-tutorial/"="http://hoccer.com/hoccer-xo-anleitung/";
 "http://hoccer.com/hoccer-xo-faq/"="http://hoccer.com/hoccer-xo-fragen-antworten/";
 
-"groups_menu_item" = "Gruppen";
-
-"groups_empty_placeholder" = "Gruppen";
+"group_segment_title" = "Gruppen";
 
 "invalid_cert_title" = "Ungültiges Server Zertifikat";
 
