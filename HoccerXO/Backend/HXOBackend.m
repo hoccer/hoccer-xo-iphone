@@ -459,6 +459,7 @@ static NSTimer * _stateNotificationDelayTimer;
     // message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
     message.messageId = @"";
     //message.messageTag = [NSString stringWithUUID];
+    message.senderId = [UserProfile sharedProfile].clientId;
 
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.managedObjectContext];
     [message.deliveries addObject: delivery];
