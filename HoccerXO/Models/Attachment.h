@@ -77,6 +77,7 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) HXOMessage *message;
 @property (nonatomic, strong) NSData * sourceMAC;               // Message Authentication Code computed at data source
 @property (nonatomic, strong) NSData * destinationMAC;          // Message Authentication Code computed at data destination
+@property (nonatomic, strong) NSString * origCryptedJsonString; // the original encrypted json rep. of the incoming attachment for hmac calculation
 
 
 // virtual properties

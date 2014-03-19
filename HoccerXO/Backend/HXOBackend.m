@@ -419,8 +419,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
     if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toContact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
 
-    message.hmac = [message computeHMAC];
-    message.messageTag = [message hmacString];
+    message.sourceMAC = [message computeHMAC];
+    message.messageTag = [message sourceMACString];
     
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOSignMessages]) {
         [message sign];
@@ -614,11 +614,14 @@ static NSTimer * _stateNotificationDelayTimer;
     BOOL tagIsUUID = [AppDelegate validateString:message.messageTag withPattern:@"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"];
     
     if (!tagIsUUID) {
-        NSData * hmac = [message computeHMAC];
-        message.hmacString = message.messageTag; // TODO: remove
-        if (message.hmac != nil) {
-            if (![message.hmac isEqualToData:hmac]) {
-                NSLog(@"ERROR: Message hmac is %@, should be %@",[hmac asBase64EncodedString], message.hmacString);
+        if (message.attachment != nil) {
+            message.attachment.origCryptedJsonString = messageDictionary[@"attachment"];
+        }
+        message.destinationMAC = [message computeHMAC];
+        message.sourceMACString = message.messageTag; // TODO: remove
+        if (message.sourceMAC != nil) {
+            if (![message.sourceMAC isEqualToData:message.destinationMAC]) {
+                NSLog(@"ERROR: Message hmac is %@, should be %@",[message.destinationMAC asBase64EncodedString], message.sourceMACString);
                 // TODO: throw away message or mark as bad
             } else {
                 NSLog(@"INFO: Message hmac is ok");

@@ -35,14 +35,15 @@
 @dynamic outgoingCryptoKey;
 @dynamic attachmentFileId;
 @dynamic senderId;
-@dynamic hmac;
+@dynamic sourceMAC;
+@dynamic destinationMAC;
 @dynamic signature;
 
 @dynamic contact;
 @dynamic attachment;
 @dynamic deliveries;
 @dynamic saltString;
-@dynamic hmacString;
+@dynamic sourceMACString;
 @dynamic signatureString;
 
 @dynamic cachedLandscapeCellHeight;
@@ -114,6 +115,7 @@
             if (KEY_DEBUG) {NSLog(@"message  cryptoKey=%@", _cryptoKey);}
         }
     }
+    if (KEY_DEBUG) {NSLog(@"returning message  cryptoKey=%@", _cryptoKey);}
     return _cryptoKey;
 }
 
@@ -206,12 +208,12 @@
     self.salt = [NSData dataWithBase64EncodedString:theB64String];
 }
 
--(NSString*) hmacString {
-    return [self.hmac asBase64EncodedString];
+-(NSString*) sourceMACString {
+    return [self.sourceMAC asBase64EncodedString];
 }
 
--(void) setHmacString:(NSString*) theB64String {
-    self.hmac = [NSData dataWithBase64EncodedString:theB64String];
+-(void) setSourceMACString:(NSString*) theB64String {
+    self.sourceMAC = [NSData dataWithBase64EncodedString:theB64String];
 }
 
 -(NSString*) signatureString {
@@ -268,15 +270,20 @@
 #endif
 
     if (self.attachment != nil) {
-        NSData * attachmentData = [self.attachment.attachmentJsonStringCipherText dataUsingEncoding:NSUTF8StringEncoding];
+        NSData * attachmentData;
+        if (self.attachment.origCryptedJsonString != nil) {
+            attachmentData = [self.attachment.origCryptedJsonString dataUsingEncoding:NSUTF8StringEncoding];
+        } else {
+            attachmentData = [self.attachment.attachmentJsonStringCipherText dataUsingEncoding:NSUTF8StringEncoding];
+        }
         CC_SHA256_Update(&ctx,[attachmentData bytes],[attachmentData length]);
 #ifdef DEBUG_HMAC
         NSLog(@"checked attachment='%@' len=%d", [NSString stringWithData:attachmentData usingEncoding:NSUTF8StringEncoding], [attachmentData length]);
         [self printHash:&ctx];
 #endif
        
-        NSData * fileIdData = [self.attachmentFileId dataUsingEncoding:NSUTF8StringEncoding];
-        CC_SHA256_Update(&ctx,[fileIdData bytes],[fileIdData length]);
+        //NSData * fileIdData = [self.attachmentFileId dataUsingEncoding:NSUTF8StringEncoding];
+        //CC_SHA256_Update(&ctx,[fileIdData bytes],[fileIdData length]);
 #ifdef DEBUG_HMAC
         NSLog(@"checked fileId='%@' len=%d", [NSString stringWithData:fileIdData usingEncoding:NSUTF8StringEncoding], [fileIdData length]);
         [self printHash:&ctx];
@@ -302,11 +309,13 @@
 }
 
 - (void)sign {
-    self.signature = [CCRSA makeSignatureOf:self.hmac withPrivateKey:[[CCRSA sharedInstance] getPrivateKeyRef]];
+    self.signature = [CCRSA makeSignatureOf:self.sourceMAC withPrivateKey:[[CCRSA sharedInstance] getPrivateKeyRef]];
 }
 
+
 - (BOOL)verifySignatureWithPublicKey:(SecKeyRef)publicKey {
-    return [CCRSA verifySignature:self.signature forHash:self.hmac withPublicKey:publicKey];
+    // TODO: verify destinationMAC when we actually transfer signature
+    return [CCRSA verifySignature:self.signature forHash:self.sourceMAC withPublicKey:publicKey];
 }
 
 - (NSDictionary*) rpcKeys {
@@ -319,7 +328,7 @@
              @"attachment": @"attachment.attachmentJsonStringCipherText",
              @"timeSent": @"timeSentMillis", // our own time stamp
              @"attachmentFileId":@"attachmentFileId",
-             @"hmac":@"hmacString",
+             @"hmac":@"sourceMACString",
              @"signature":@"signatureString"
              };
 }

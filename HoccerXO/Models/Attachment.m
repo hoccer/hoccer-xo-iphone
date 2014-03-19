@@ -99,6 +99,8 @@
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;
 
+@dynamic origCryptedJsonString;
+
 @dynamic state;
 @dynamic available;
 
@@ -2077,7 +2079,7 @@ NSArray * TransferStateName = @[@"detached",
              @"mimeType": @"mimeType",
              @"aspectRatio": @"aspectRatio",
              @"fileName": @"humanReadableFileName",
-             @"MAC": @"sourceMACString"
+             @"hmac": @"sourceMACString"
              };
 }
 

@@ -709,6 +709,8 @@
 		E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-18.xcdatamodel"; sourceTree = "<group>"; };
 		E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-19.xcdatamodel"; sourceTree = "<group>"; };
 		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
+		E97D34C418DA0931009E7FCB /* HoccerXO-30.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-30.xcdatamodel"; sourceTree = "<group>"; };
+		E97D34D518DA13FE009E7FCB /* HoccerXO-31.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-31.xcdatamodel"; sourceTree = "<group>"; };
 		E980D445171EF8950060C1B5 /* CryptingInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptingInputStream.h; sourceTree = "<group>"; };
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E980E27318648D80004AF79D /* UIResponder+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+Debug.h"; sourceTree = "<group>"; };
@@ -2527,8 +2529,10 @@
 				E95F7C3F18D1B4E600F2CAEB /* HoccerXO-27.xcdatamodel */,
 				E95F7C4018D1E11400F2CAEB /* HoccerXO-28.xcdatamodel */,
 				E95A758F18D2201D0027AE3E /* HoccerXO-29.xcdatamodel */,
+				E97D34C418DA0931009E7FCB /* HoccerXO-30.xcdatamodel */,
+				E97D34D518DA13FE009E7FCB /* HoccerXO-31.xcdatamodel */,
 			);
-			currentVersion = E95A758F18D2201D0027AE3E /* HoccerXO-29.xcdatamodel */;
+			currentVersion = E97D34D518DA13FE009E7FCB /* HoccerXO-31.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
