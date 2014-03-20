@@ -44,7 +44,7 @@ NSString * const kHXOSignMessages          = @"signMessages";
 NSString * const kHXOHttpServerPassword    = @"httpServerPassword";
 
 NSString * const kHXOReportCrashes         = @"reportCrashes";
-NSString * const kHXOSupportMode           = @"supportMode";
+NSString * const kHXOSupportTag            = @"supportTag";
 
 NSString * const kHXODebugServerURL        = @"debugServerURL";
 NSString * const kHXOForceFilecacheURL     = @"forceFilecacheURL";

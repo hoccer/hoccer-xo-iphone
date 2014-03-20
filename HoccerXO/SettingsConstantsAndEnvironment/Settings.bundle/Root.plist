@@ -370,7 +370,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
-			<string>support_mode_explanation</string>
+			<string>support_tag_explanation</string>
 		</dict>
 		<dict>
 			<key>Title</key>
@@ -384,17 +384,13 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
+			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>support_mode</string>
+			<string>support_tag</string>
 			<key>Key</key>
-			<string>supportMode</string>
-			<key>DefaultValue</key>
-			<false/>
-			<key>TrueValue</key>
-			<string>log</string>
-			<key>FalseValue</key>
-			<string></string>
+			<string>supportTag</string>
+			<key>AutocorrectionType</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Type</key>

@@ -2847,6 +2847,10 @@ static NSTimer * _stateNotificationDelayTimer;
     uname(&systemInfo);
     NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
 
+    NSString * supportTag = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportTag];
+    if (supportTag && ! [supportTag isEqualToString: @""]) {
+        NSLog(@"Using support tag '%@'", supportTag);
+    }
     NSDictionary * initParams = @{
                              @"clientTime"     : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
@@ -2856,7 +2860,7 @@ static NSTimer * _stateNotificationDelayTimer;
                              @"clientName"     : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
                              @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
                              @"clientLanguage" : NSLocalizedString(@"language_code", nil),
-                             @"supportTag"     : [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportMode]
+                             @"supportTag"     : supportTag
                              };
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:initParams];
     if (hasCrashed) {
@@ -3614,9 +3618,9 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
+    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
     _uncleanConnectionShutdown = code != 0 || [_serverConnection numberOfOpenRequests] !=0 || [_serverConnection numberOfFlushedRequests] != 0;
-    NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
+    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
     BackendState oldState = _state;
     [self setState: kBackendStopped];
     if (oldState == kBackendStopping) {
