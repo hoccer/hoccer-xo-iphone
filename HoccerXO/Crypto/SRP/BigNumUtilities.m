@@ -10,6 +10,7 @@
 
 
 NSString * DSNSStringFromBIGNUM(BIGNUM * a, unsigned radix) {
+    if ( ! a) { return nil; }
     const char * cstr;
     switch (radix) {
         case 10: cstr = BN_bn2dec(a); break;
@@ -24,8 +25,13 @@ NSString * DSNSStringFromBIGNUM(BIGNUM * a, unsigned radix) {
 }
 
 BIGNUM * DSBIGNUMFromNSData(NSData * data) {
-    BIGNUM * a = BN_new();
-    BN_bin2bn(data.bytes, (int)data.length, a);
+    BIGNUM * a = NULL;
+    if (data) {
+        a = BN_new();
+        if (a) {
+            BN_bin2bn(data.bytes, (int)data.length, a);
+        }
+    }
     return a;
 }
 
@@ -43,8 +49,11 @@ BIGNUM * DSBIGNUMFromNSString(NSString * string, unsigned radix) {
 @implementation NSData (BIGNUM)
 
 + (NSData*) dataWithBIGNUM: (BIGNUM*) a {
+    if ( ! a) { return nil; }
     NSMutableData * data = [NSMutableData dataWithLength: BN_num_bytes(a)];
-    BN_bn2bin(a, data.mutableBytes);
+    if (data) {
+        BN_bn2bin(a, data.mutableBytes);
+    }
     return data;
 }
 
