@@ -44,14 +44,16 @@
 #import "DateSectionHeaderView.h"
 #import "MessageItems.h"
 #import "HXOHyperLabel.h"
-#import "ChatBar.h"
+#import "PaperDart.h"
+#import "PaperClip.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
 
+extern const CGFloat kHXOGridSpacing;
+
 static const NSUInteger kMaxMessageBytes = 10000;
-static const CGFloat    kSectionHeaderHeight = 3 * 8;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
@@ -102,35 +104,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-//    [self.view bringSubviewToFront: _chatbar];
-
-    [self.chatbar.messageField addObserver: self forKeyPath: @"contentSize" options: 0 context: nil];
-
-
-    /*
-    _textField.delegate = self;
-    _textField.backgroundColor = [UIColor clearColor];
-     */
-    //self.chatbar.messageField.placeholder = NSLocalizedString(@"chat_view_message_placeholder", nil);
-
-    self.autoCorrectTriggerHelper = [[UITextField alloc] init];
-    self.autoCorrectTriggerHelper.hidden = YES;
-    [self.chatbar addSubview: self.autoCorrectTriggerHelper];
-
-    /*
-    UIView * textViewBackgroundView = [[UIImageView alloc] initWithFrame: CGRectInset(_textField.frame, 0, 2)];
-    textViewBackgroundView.backgroundColor = [UIColor whiteColor];
-    textViewBackgroundView.layer.cornerRadius = 6;
-    textViewBackgroundView.layer.borderColor = [UIColor colorWithRed: 0.784 green: 0.784 blue: 0.804 alpha: 1].CGColor;
-    textViewBackgroundView.layer.borderWidth = 1.0;
-    textViewBackgroundView.clipsToBounds = YES;
-    [_chatbar addSubview: textViewBackgroundView];
-    textViewBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [_chatbar sendSubviewToBack: textViewBackgroundView];
-*/
-
-    [self.chatbar.sendButton addTarget: self action: @selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
-    [self.chatbar.attachmentButton addTarget: self action: @selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
+    [self setupChatbar];
 
     [self hideAttachmentSpinner];
     [HXOBackend registerConnectionInfoObserverFor:self];
@@ -154,6 +128,39 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.navigationItem.backBarButtonItem = backButton;
 
     [self configureView];
+}
+
+- (void) setupChatbar {
+    self.autoCorrectTriggerHelper = [[UITextField alloc] init];
+    self.autoCorrectTriggerHelper.hidden = YES;
+    [self.chatbar addSubview: self.autoCorrectTriggerHelper];
+
+    UIFont * font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+
+    CGFloat s = 50;
+    CGFloat height = MIN(150, MAX( s - 2 * kHXOGridSpacing, 0));
+    self.messageField = [[UITextView alloc] initWithFrame: CGRectMake(0, kHXOGridSpacing, self.chatbar.bounds.size.width - 2 * s, height)];
+    self.messageField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.messageField.backgroundColor = [UIColor whiteColor];
+    self.messageField.layer.cornerRadius = kHXOGridSpacing / 2;
+    self.messageField.layer.borderWidth = 1.0;
+    self.messageField.layer.borderColor = [HXOTheme theme].messageFieldBorderColor.CGColor;
+    self.messageField.font = font;
+    self.messageField.textContainerInset = UIEdgeInsetsMake(6, 0, 2, 0);
+    self.messageField.text = @"k";
+    [self.messageField addObserver: self forKeyPath: @"contentSize" options: 0 context: nil];
+
+    UIBarButtonItem * messageFieldItem = [[UIBarButtonItem alloc] initWithCustomView: self.messageField];
+
+    UIImage * icon = [[PaperDart alloc] init].image;
+    UIBarButtonItemStyle style = UIBarButtonItemStylePlain;
+    UIBarButtonItem * sendButtonItem = [[UIBarButtonItem alloc] initWithImage: icon style: style
+                                                                       target: self action: @selector(sendPressed:)];
+    icon = [[PaperClip alloc] init].image;
+    UIBarButtonItem * attachmentButtonItem = [[UIBarButtonItem alloc] initWithImage: icon style: style
+                                                                             target: self action: @selector(attachmentPressed:)];
+
+    self.chatbar.items = @[attachmentButtonItem, messageFieldItem, sendButtonItem];
 }
 
 - (UIMenuController *)setupLongPressMenu {
@@ -273,22 +280,16 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
-    self.chatbar.messageField.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    [self.tableView reloadData];
-    [self updateVisibleCells];
-}
-
-/*
-- (void)defaultsChanged:(NSNotification*)aNotification {
-    // NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
-    double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
-    if (fontSize != self.messageFontSize) {
-        self.messageFontSize = fontSize;
-        [self updateVisibleCells];
-        [self.tableView reloadData];
+    for (id key in _cellPrototypes) {
+        for (id section in [_cellPrototypes[key] sections])
+        if ([section respondsToSelector: @selector(preferredContentSizeChanged:)]) {
+            [section preferredContentSizeChanged: notification];
+        }
     }
+    self.messageField.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    [self updateVisibleCells];
+    [self.tableView reloadData];
 }
-*/
 
 #pragma mark - Split view
 
@@ -309,34 +310,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 #pragma mark - Keyboard Handling
 
 - (void)keyboardWillShow:(NSNotification*) notification {
-/*
-    //NSLog(@"keyboardWasShown");
-    NSDictionary* info = [aNotification userInfo];
-    CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    double duration = [info[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
-
-    CGPoint contentOffset = self.tableView.contentOffset;
-    contentOffset.y += keyboardHeight;
-
-    [UIView animateWithDuration: duration animations:^{
-        CGRect frame = self.chatViewResizer.frame;
-        frame.size.height -= keyboardHeight;
-        self.chatViewResizer.frame = frame;
-        self.tableView.contentOffset = contentOffset;
-        // NSLog(@"keyboardWillShow did set table contentOffset y to %f", contentOffset.y);
-
-    }];
-
-    // this catches orientation changes, too
-    _textField.maxHeight = _chatbar.frame.origin.y + _textField.frame.size.height - (self.navigationController.navigationBar.frame.origin.y  + self.navigationController.navigationBar.frame.size.height);
-    self.keyBoardShown = YES;
-*/
     NSTimeInterval duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationOptions curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
     CGRect keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
-    CGFloat height = keyboardFrame.size.height;
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGFloat height = orientation == UIInterfaceOrientationIsPortrait(orientation) ? keyboardFrame.size.height : keyboardFrame.size.width;
     CGPoint contentOffset = self.tableView.contentOffset;
     contentOffset.y += height;
 
@@ -349,19 +327,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void)keyboardWillHide:(NSNotification*) notification {
-    /*
-    NSDictionary* info = [aNotification userInfo];
-    CGSize keyboardSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGFloat keyboardHeight = UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ?  keyboardSize.height : keyboardSize.width;
-    double duration = [info[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-
-    [UIView animateWithDuration: duration animations:^{
-        CGRect frame = self.chatViewResizer.frame;
-        frame.size.height += keyboardHeight;
-        self.chatViewResizer.frame = frame;
-    }];
-    self.keyBoardShown = NO;
-     */
     NSTimeInterval duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationOptions curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
 
@@ -430,9 +395,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         
     }
 
-    if (self.chatbar.messageField.text.length > 0 || self.attachmentPreview != nil) {
+    if (self.messageField.text.length > 0 || self.attachmentPreview != nil) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
-            if ([self.chatbar.messageField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
+            if ([self.messageField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
                 NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"message_too_long_text", nil), kMaxMessageBytes];
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"message_too_long_title", nil)
                                                                  message: messageText
@@ -475,29 +440,31 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void)reallySendMessage {
-    [self.autoCorrectTriggerHelper becomeFirstResponder]; // trigger autocompletion on last word ...
-    [self.chatbar.messageField becomeFirstResponder];     // ... without hiding the keyboard
-    [self.chatBackend sendMessage:self.chatbar.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
+    if ([self.messageField isFirstResponder]) {
+        [self.autoCorrectTriggerHelper becomeFirstResponder]; // trigger autocompletion on last word ...
+        [self.messageField becomeFirstResponder];     // ... without hiding the keyboard
+    }
+    [self.chatBackend sendMessage:self.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
     self.currentAttachment = nil;
-    self.chatbar.messageField.text = @"";
+    self.messageField.text = @"";
     [self trashCurrentAttachment];
 }
 
 - (IBAction)addAttachmentPressed:(id)sender {
     // NSLog(@"addAttachmentPressed");
-    [self.chatbar.messageField resignFirstResponder];
+    [self.messageField resignFirstResponder];
     [self.attachmentPicker showInView: self.view];
 }
 
 - (IBAction)attachmentPressed: (id)sender {
     // NSLog(@"attachmentPressed");
-    [self.chatbar.messageField resignFirstResponder];
+    [self.messageField resignFirstResponder];
     [self showAttachmentOptions];
 }
 
 - (IBAction)cancelAttachmentProcessingPressed: (id)sender {
     // NSLog(@"cancelPressed");
-    [self.chatbar.messageField resignFirstResponder];
+    [self.messageField resignFirstResponder];
     [self showAttachmentOptions];
 }
 
@@ -1089,7 +1056,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return kSectionHeaderHeight;
+    return 3 * kHXOGridSpacing;
 }
 
 #pragma mark - Table view delegate
@@ -1297,12 +1264,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         } else {
             //NSLog(@"ChatViewController observeValueForKeyPath: unhandled change");
         }
-    } else if ([keyPath isEqualToString: @"contentSize"] && [object isEqual: self.chatbar.messageField]) {
-        NSLog(@"content size: %@", NSStringFromCGSize(self.chatbar.messageField.contentSize));
-        CGRect frame = self.chatbar.messageField.frame;
+    } else if ([keyPath isEqualToString: @"contentSize"] && [object isEqual: self.messageField]) {
+        NSLog(@"content size: %@", NSStringFromCGSize(self.messageField.contentSize));
+        CGRect frame = self.messageField.frame;
         CGFloat kHXOGridSpacing = 8;
-        frame.size.height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, self.chatbar.messageField.contentSize.height));
-        self.chatbar.messageField.frame = frame;
+        frame.size.height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, self.messageField.contentSize.height));
+        self.messageField.frame = frame;
         self.chatbarHeight.constant = frame.size.height + 2 * kHXOGridSpacing;
         
     } else {
@@ -1461,7 +1428,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     section.label.delegate = self;
     // maybe we find a better way to properly respond to font size changes
     //section.label.font = [UIFont systemFontOfSize: self.messageFontSize];
-    
+
     section.label.attributedText = [self getItemWithMessage: message].attributedBody;
 }
 
@@ -2234,7 +2201,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }];
         [group removeObserver: self forKeyPath: @"members"];
     }
-    [self.chatbar.messageField removeObserver: self forKeyPath: @"contentSize"];
+    [self.messageField removeObserver: self forKeyPath: @"contentSize"];
 }
 
 #pragma mark - Link Highlighing and Handling

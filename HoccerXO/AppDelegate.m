@@ -54,6 +54,7 @@
 #define CONNECTION_TRACE NO
 #define MIGRATION_DEBUG NO
 #define AUDIOSESSION_DEBUG NO
+#define TRACE_DATABASE_SAVE NO
 
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
@@ -534,10 +535,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (void)saveContext
 {
-#ifdef DEBUG
-    NSLog(@"Saving database");
-    NSDate * start = [[NSDate alloc] init];
-#endif
+    NSDate * start;
+    if (TRACE_DATABASE_SAVE) {
+        NSLog(@"Saving database");
+        start = [[NSDate alloc] init];
+    }
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
@@ -554,10 +556,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             // abort();
         }
     }
-#ifdef DEBUG
-    double elapsed = -[start timeIntervalSinceNow];
-    NSLog(@"Saving database took %f secs", elapsed);
-#endif
+    if (start && TRACE_DATABASE_SAVE) {
+        double elapsed = -[start timeIntervalSinceNow];
+        NSLog(@"Saving database took %f secs", elapsed);
+    }
 }
 
 - (void)displayValidationError:(NSError *)anError {

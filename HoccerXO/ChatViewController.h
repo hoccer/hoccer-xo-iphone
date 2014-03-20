@@ -23,16 +23,12 @@
     NSMutableDictionary        *resultsControllers;
 }
 
-@property (strong, nonatomic) Contact *                      partner;
-@property (readonly, strong, nonatomic) HXOBackend *  chatBackend;
-//@property (strong, nonatomic) IBOutlet HPGrowingTextView *   textField;
-//@property (strong, nonatomic) IBOutlet UIButton *            sendButton;
-@property (strong, nonatomic) IBOutlet ChatBar *              chatbar;
-//@property (strong, nonatomic) IBOutlet UIButton *            attachmentButton;
-//@property (strong, nonatomic) IBOutlet UIButton *            cancelButton;
+@property (strong, nonatomic)   Contact *                      partner;
+@property (readonly, nonatomic) HXOBackend *  chatBackend;
+@property (strong, nonatomic)   IBOutlet UIToolbar * chatbar;
+@property (strong, nonatomic)   UITextView *  messageField;
+@property (strong, nonatomic)   UIControl *   attachmentButton;
 @property (strong, nonatomic) IBOutlet UITableView *         tableView;
-//@property (strong, nonatomic) IBOutlet UIActivityIndicatorView * attachmentSpinner;
-//@property (strong, nonatomic) IBOutlet UIView *chatViewResizer;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint * keyboardHeight;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint * chatbarHeight;
 

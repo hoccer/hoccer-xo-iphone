@@ -19,6 +19,7 @@
 #import "TextSection.h"
 #import "GenericAttachmentSection.h"
 #import "HXOUserDefaults.h"
+#import "HXOTheme.h"
 
 @interface TestingGroundViewController ()
 
@@ -346,8 +347,7 @@
 }
 
 - (void) configureTextSection: (TextSection*) section item: (BubbleItem*) item {
-    double fontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
-    section.label.font = [UIFont systemFontOfSize: fontSize];
+    section.label.font = [HXOTheme theme].messageFont;
     section.label.attributedText = item.text;
 }
 

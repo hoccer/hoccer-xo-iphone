@@ -59,6 +59,7 @@
 #endif
 
 #define FULL_HELLO
+#define TRACE_TIME_DIFFERENCE NO
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -355,9 +356,7 @@ static NSTimer * _stateNotificationDelayTimer;
     self.latestKnownServerTimeAtClientTime = [NSDate date];
     self.latestKnownServerTimeOffset = [self.latestKnownServerTime timeIntervalSinceDate:self.latestKnownServerTimeAtClientTime];
     // offest is positive if server time is ahead of client time
-#ifdef DEBUG
-    NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
-#endif
+    if (TRACE_TIME_DIFFERENCE) NSLog(@"Server time differs by %f secs. from our time, estimated server time = %@", self.latestKnownServerTimeOffset, [self estimatedServerTime]);
 }
 
 #define DEBUG_TIME_DAY (86400 * 1000)
@@ -1308,7 +1307,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (error != nil) {
         NSLog(@"Error=%@",error);
     }
-    NSLog(@"found %d contacts last updated before time %@", contacts.count, lastUpdateTime);
+    // NSLog(@"found %d contacts last updated before time %@", contacts.count, lastUpdateTime);
     if (contacts == nil) {
         NSLog(@"Fetch request failed: %@", error);
         abort();
