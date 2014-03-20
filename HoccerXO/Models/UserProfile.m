@@ -17,8 +17,8 @@
 #import "AppDelegate.h"
 #import "CryptoJSON.h"
 #import "ProfileViewController.h"
-
 #import "SRPClient.h"
+#import "SRPVerifierGenerator.h"
 
 static UserProfile * profileInstance;
 
@@ -118,12 +118,23 @@ static const NSUInteger kHXOPasswordLength    = 23;
     return @"n/a"; //TODO: return something more interesting
 }
 
+
+- (id<SRPDigest>) srpDigest {
+    return [DigestSHA256 digest];
+}
+
+- (SRPParameters*) srpParameters {
+    return SRP.CONSTANTS_1024;
+}
+
 - (NSString*) registerClientAndComputeVerifier: (NSString*) clientId {
     [_accountItem setObject: clientId forKey: (__bridge id)(kSecAttrAccount)];
     [_accountItem setObject: [NSString stringWithRandomCharactersOfLength: kHXOPasswordLength] forKey: (__bridge id)(kSecValueData)];
-    NSData * salt;
-    NSData * verifier;
-    // TODO: [self.srpUser salt: &salt andVerificationKey: &verifier forPassword: self.password];
+    SRPParameters * params = [self srpParameters];
+    id<SRPDigest> digest = [self srpDigest];
+    NSData * salt = [SRP saltForDigest: digest];
+    SRPVerifierGenerator * verifierGenerator = [[SRPVerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
+    NSData * verifier = [verifierGenerator generateVerifierWithSalt: salt username: self.clientId password: self.password];
     // XXX Workaround for keychain item issue:
     // first keychain claims there is no such item. Later it complains it can not create such
     // an item because it already exists. Using a unique identifier in kSecAttrAccount helps...
