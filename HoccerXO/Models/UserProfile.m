@@ -8,7 +8,6 @@
 
 #import "UserProfile.h"
 #import "KeychainItemWrapper.h"
-#import <ObjCSRP/HCSRP.h>
 #import "NSString+RandomString.h"
 #import "NSData+HexString.h"
 #import "NSString+StringWithData.h"
@@ -19,7 +18,7 @@
 #import "CryptoJSON.h"
 #import "ProfileViewController.h"
 
-#import <ObjCSRP/SRP6Client.h>
+#import "SRP6Client.h"
 
 static UserProfile * profileInstance;
 
