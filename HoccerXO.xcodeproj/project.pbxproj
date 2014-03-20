@@ -22,6 +22,8 @@
 		6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98518DA870400B2D04F /* SRP_SRP6aSafeguardsTest.m */; };
 		6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98418DA870400B2D04F /* SRP_RFC5054Test.m */; };
 		6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98318DA870400B2D04F /* SRP_FunctionalTest.m */; };
+		6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */; };
+		6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		630FD44B18BCAF52000D8C55 /* tabbar_contacts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44618BCAF52000D8C55 /* tabbar_contacts@2x.png */; };
 		630FD44C18BCAF52000D8C55 /* tabbar_conversations@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44718BCAF52000D8C55 /* tabbar_conversations@2x.png */; };
 		630FD44D18BCAF52000D8C55 /* tabbar_media@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44818BCAF52000D8C55 /* tabbar_media@2x.png */; };
@@ -421,6 +423,7 @@
 		6302A9B918DA8A9500B2D04F /* HoccerXO Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HoccerXO Tests-Info.plist"; sourceTree = "<group>"; };
 		6302A9BB18DA8A9500B2D04F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6302A9BF18DA8A9500B2D04F /* HoccerXO Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerXO Tests-Prefix.pch"; sourceTree = "<group>"; };
+		6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_FuzzyTest.m; path = HoccerXO/Crypto/SRP/Tests/SRP_FuzzyTest.m; sourceTree = SOURCE_ROOT; };
 		630FD44618BCAF52000D8C55 /* tabbar_contacts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_contacts@2x.png"; sourceTree = "<group>"; };
 		630FD44718BCAF52000D8C55 /* tabbar_conversations@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_conversations@2x.png"; sourceTree = "<group>"; };
 		630FD44818BCAF52000D8C55 /* tabbar_media@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_media@2x.png"; sourceTree = "<group>"; };
@@ -974,6 +977,7 @@
 		6302A9B718DA8A9500B2D04F /* HoccerXO Tests */ = {
 			isa = PBXGroup;
 			children = (
+				6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */,
 				6302A98318DA870400B2D04F /* SRP_FunctionalTest.m */,
 				6302A98418DA870400B2D04F /* SRP_RFC5054Test.m */,
 				6302A98518DA870400B2D04F /* SRP_SRP6aSafeguardsTest.m */,
@@ -2277,8 +2281,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */,
 				6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */,
 				6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */,
+				6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */,
 				6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2512,6 +2518,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2541,6 +2552,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";

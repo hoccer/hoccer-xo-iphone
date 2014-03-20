@@ -15,11 +15,11 @@
 NSString * const username = @"alice";
 NSString * const password = @"password123";
 
-@interface FunctionalTest : XCTestCase
+@interface SRP_FunctionalTest : XCTestCase
 
 @end
 
-@implementation FunctionalTest
+@implementation SRP_FunctionalTest
 
 - (void) testSHA1 {
     DigestSHA1 * digest = [DigestSHA1 digest];

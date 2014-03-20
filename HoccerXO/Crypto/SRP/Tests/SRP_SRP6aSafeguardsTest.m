@@ -16,7 +16,7 @@ static NSString * const username = @"alice";
 static NSString * const password = @"password123";
 
 
-@interface SRP6aSafeguardsTest : XCTestCase
+@interface SRP_SRP6aSafeguardsTest : XCTestCase
 {
     DigestSHA256   * _digest;
     SRP6Parameters * _params;
@@ -26,7 +26,7 @@ static NSString * const password = @"password123";
 
 @end
 
-@implementation SRP6aSafeguardsTest
+@implementation SRP_SRP6aSafeguardsTest
 
 // unfortunately this is called per test. I haven't found a way to run this only once, yet.
 // doesn't matter much, though.

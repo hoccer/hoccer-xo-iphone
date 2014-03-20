@@ -22,9 +22,9 @@
 
 static UserProfile * profileInstance;
 
-static NSString * const         kHXOAccountIdentifier = @"HXOAccount";
-static NSString * const         kHXOSaltIdentifier    = @"HXOSalt";
-static const NSUInteger         kHXOPasswordLength    = 23;
+static NSString * const kHXOAccountIdentifier = @"HXOAccount";
+static NSString * const kHXOSaltIdentifier    = @"HXOSalt";
+static const NSUInteger kHXOPasswordLength    = 23;
 
 @interface UserProfile ()
 {

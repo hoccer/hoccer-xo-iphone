@@ -54,7 +54,7 @@ static NSString * const M1_HEX =
 static NSString * const M2_HEX =
     @"9cab3c575a11de37d3ac1421a9f009236a48eb55";
 
-@interface RFC5054Test : XCTestCase
+@interface SRP_RFC5054Test : XCTestCase
 @end
 
 @interface MockClient : SRP6Client
@@ -75,7 +75,7 @@ static NSString * const M2_HEX =
 }
 @end
 
-@implementation RFC5054Test
+@implementation SRP_RFC5054Test
 
 - (void)testVector {
     DigestSHA1 * digest = [DigestSHA1 digest];
