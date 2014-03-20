@@ -29,7 +29,8 @@
 @property (nonatomic, strong) NSString* attachmentFileId;
 @property (nonatomic, strong) NSData* salt;
 @property (nonatomic, strong) NSData* outgoingCryptoKey;
-@property (nonatomic, strong) NSData* hmac;
+@property (nonatomic, strong) NSData* sourceMAC;
+@property (nonatomic, strong) NSData* destinationMAC;
 @property (nonatomic, strong) NSData* signature;
 
 @property (nonatomic, strong) Contact*  contact;
@@ -40,7 +41,7 @@
 
 @property (nonatomic) NSString * bodyCiphertext;
 @property (nonatomic, strong) NSString* saltString;
-@property (nonatomic, strong) NSString* hmacString;
+@property (nonatomic, strong) NSString* sourceMACString;
 @property (nonatomic, strong) NSString* signatureString;
 
 @property (nonatomic) NSNumber *   timeSentMillis;

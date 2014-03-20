@@ -28,6 +28,26 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6302A99B18DA89F700B2D04F"
+               BuildableName = "SRP Tests.xctest"
+               BlueprintName = "SRP Tests"
+               ReferencedContainer = "container:HoccerXO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6302A9B218DA8A9500B2D04F"
+               BuildableName = "HoccerXO Tests.xctest"
+               BlueprintName = "HoccerXO Tests"
+               ReferencedContainer = "container:HoccerXO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>06571F93-098D-4F5D-96DE-186248325755</string>
 	<key>IDESourceControlProjectName</key>
@@ -70,6 +72,22 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FDD42E6A-F272-431D-8621-B1368815BCD1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>csrp</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>124D5A60-F23A-4CA0-B821-F7AB5A9B6996</string>
+			<key>IDESourceControlWCCName</key>
+			<string>GCNetworkRequest</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>9E334BE3-E32A-41B0-A488-E73A577B783D</string>
 			<key>IDESourceControlWCCName</key>
 			<string>hoccer-xo-iphone</string>
@@ -86,25 +104,9 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>7A7AA57B-6B04-4917-8BA6-8E5C1BFC472D</string>
+			<string>A915FCD2-DBBA-49B5-A9AC-B23F45C84471</string>
 			<key>IDESourceControlWCCName</key>
-			<string>QREncoder</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>CD4BADC0-F88D-43BB-A8E6-348CF23903BA</string>
-			<key>IDESourceControlWCCName</key>
-			<string>UIAlertViewExtentsions</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>414DC9ED-2E9A-428C-AE41-F56140667AD5</string>
-			<key>IDESourceControlWCCName</key>
-			<string>SocketRocket</string>
+			<string>MFSideMenu</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -118,30 +120,6 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D247A4EE-01EB-4400-B7D7-9AEEC3727154</string>
-			<key>IDESourceControlWCCName</key>
-			<string>TDSemiModal</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>124D5A60-F23A-4CA0-B821-F7AB5A9B6996</string>
-			<key>IDESourceControlWCCName</key>
-			<string>GCNetworkRequest</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>A915FCD2-DBBA-49B5-A9AC-B23F45C84471</string>
-			<key>IDESourceControlWCCName</key>
-			<string>MFSideMenu</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>A93D63CE-C901-4B84-BA16-B78080F4FE34</string>
 			<key>IDESourceControlWCCName</key>
 			<string>openssl-xcode</string>
@@ -150,9 +128,33 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>FDD42E6A-F272-431D-8621-B1368815BCD1</string>
+			<string>7A7AA57B-6B04-4917-8BA6-8E5C1BFC472D</string>
 			<key>IDESourceControlWCCName</key>
-			<string>csrp</string>
+			<string>QREncoder</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>414DC9ED-2E9A-428C-AE41-F56140667AD5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SocketRocket</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D247A4EE-01EB-4400-B7D7-9AEEC3727154</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TDSemiModal</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CD4BADC0-F88D-43BB-A8E6-348CF23903BA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>UIAlertViewExtentsions</string>
 		</dict>
 	</array>
 </dict>

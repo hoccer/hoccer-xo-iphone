@@ -42,7 +42,7 @@
 	<integer>250</integer>
 	<key>photoCompressionQuality</key>
 	<integer>0</integer>
-	<key>supportMode</key>
+	<key>supportTag</key>
 	<string></string>
 	<key>reportCrashes</key>
 	<false/>

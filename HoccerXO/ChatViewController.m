@@ -1658,6 +1658,26 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if ([message.isOutgoing isEqualToNumber: @YES]) {
         return [self stateStringForMessage: message];
     } else {
+#ifdef DEBUG
+        NSString * author = [[self getAuthor: message] nickName];
+        NSString * attachmentMac = @"";
+        if (message.attachment != nil) {
+            if (message.attachment.sourceMAC != nil && message.attachment.destinationMAC != nil) {
+                if ([message.attachment.sourceMAC isEqualToData:message.attachment.destinationMAC]) {
+                    attachmentMac = @"[AMAC OK]";
+                } else {
+                    attachmentMac = @"[AMAC ERROR]";
+                }
+            }
+        }
+        if (message.sourceMAC != nil) {
+            if ([message.sourceMAC isEqualToData:message.destinationMAC]) {
+                return [[author stringByAppendingString:@"[MMAC OK]"] stringByAppendingString:attachmentMac];
+            } else {
+                return [[author stringByAppendingString:@"[MMAC ERROR]"] stringByAppendingString:attachmentMac];
+            }
+        }
+#endif
         return [[self getAuthor: message] nickName];
     }
 }

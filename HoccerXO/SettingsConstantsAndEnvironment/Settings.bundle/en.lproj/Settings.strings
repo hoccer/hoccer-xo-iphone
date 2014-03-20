@@ -56,11 +56,11 @@
 "report_crashes" = "Report Crashes";
 
 
-"support_mode" = "Support Mode";
-"support_mode_explanation" = "Our support team may ask you to switch on support mode to help with resolving issues you reported.";
+"support_tag" = "Support Tag";
+"support_tag_explanation" = "Our support team may ask you to enter a support tag to help with resolving issues you reported.";
 
-"about_button_title"    = "Über Hoccer XO";
-"tutorial_button_title" = "Anleitung";
+"about_button_title"    = "About";
+"tutorial_button_title" = "Tutorial";
 "faq_button_title"      = "FAQ";
 
 "Sign Messages"="Sign Messages";

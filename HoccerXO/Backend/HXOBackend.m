@@ -419,8 +419,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
     if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toContact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
 
-    message.hmac = [message computeHMAC];
-    message.messageTag = [message hmacString];
+    message.sourceMAC = [message computeHMAC];
+    message.messageTag = [message sourceMACString];
     
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOSignMessages]) {
         [message sign];
@@ -614,11 +614,14 @@ static NSTimer * _stateNotificationDelayTimer;
     BOOL tagIsUUID = [AppDelegate validateString:message.messageTag withPattern:@"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"];
     
     if (!tagIsUUID) {
-        NSData * hmac = [message computeHMAC];
-        message.hmacString = message.messageTag; // TODO: remove
-        if (message.hmac != nil) {
-            if (![message.hmac isEqualToData:hmac]) {
-                NSLog(@"ERROR: Message hmac is %@, should be %@",[hmac asBase64EncodedString], message.hmacString);
+        if (message.attachment != nil) {
+            message.attachment.origCryptedJsonString = messageDictionary[@"attachment"];
+        }
+        message.destinationMAC = [message computeHMAC];
+        message.sourceMACString = message.messageTag; // TODO: remove
+        if (message.sourceMAC != nil) {
+            if (![message.sourceMAC isEqualToData:message.destinationMAC]) {
+                NSLog(@"ERROR: Message hmac is %@, should be %@",[message.destinationMAC asBase64EncodedString], message.sourceMACString);
                 // TODO: throw away message or mark as bad
             } else {
                 NSLog(@"INFO: Message hmac is ok");
@@ -678,15 +681,21 @@ static NSTimer * _stateNotificationDelayTimer;
         if (challenge == nil) {
             NSLog(@"SRP phase 1 failed");
         } else {
-            NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge];
+            NSError * error;
+            NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge error: &error];
             if (M == nil) {
-                NSLog(@"SRP-6a safety check violation! Closing connection.");
+                NSLog(@"%@", error);
                 // possible tampering ... trigger reconnect by closing the socket
                 [self stopAndRetry];
             } else {
                 [self srpPhase2: M handler:^(NSString * HAMK) {
                     if (HAMK != nil) {
-                        [self didFinishLogin: [[UserProfile sharedProfile] verifySrpSession: HAMK]];
+                        NSError * error;
+                        BOOL success = [[UserProfile sharedProfile] verifySrpSession: HAMK error: &error];
+                        if (! success) {
+                            NSLog(@"%@", error);
+                        }
+                        [self didFinishLogin: success];
                     } else {
                         [self didFinishLogin: NO];
                     }
@@ -2818,7 +2827,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (success) {
             handler(responseOrError);
         } else {
-            NSLog(@"SRP Phase 1 failed");
+            NSLog(@"SRP Phase 1 failed: %@", responseOrError);
             handler(nil);
         }
     }];
@@ -2844,6 +2853,10 @@ static NSTimer * _stateNotificationDelayTimer;
     uname(&systemInfo);
     NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
 
+    NSString * supportTag = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportTag];
+    if (supportTag && ! [supportTag isEqualToString: @""]) {
+        NSLog(@"Using support tag '%@'", supportTag);
+    }
     NSDictionary * initParams = @{
                              @"clientTime"     : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
@@ -2853,7 +2866,7 @@ static NSTimer * _stateNotificationDelayTimer;
                              @"clientName"     : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
                              @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
                              @"clientLanguage" : NSLocalizedString(@"language_code", nil),
-                             @"supportTag"     : [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportMode]
+                             @"supportTag"     : supportTag
                              };
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:initParams];
     if (hasCrashed) {
@@ -3611,9 +3624,9 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
+    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
     _uncleanConnectionShutdown = code != 0 || [_serverConnection numberOfOpenRequests] !=0 || [_serverConnection numberOfFlushedRequests] != 0;
-    NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
+    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
     BackendState oldState = _state;
     [self setState: kBackendStopped];
     if (oldState == kBackendStopping) {
