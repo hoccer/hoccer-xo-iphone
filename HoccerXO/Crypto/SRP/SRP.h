@@ -11,18 +11,18 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SRP6Parameters.h"
+#import "SRPParameters.h"
 #import "Digest.h"
 
 
-FOUNDATION_EXPORT NSString * const SRP6ProtocolErrorDomain;
+FOUNDATION_EXPORT NSString * const SRPProtocolErrorDomain;
 
-typedef enum SRP6ProtocolErrors {
-    SRP6_SAFEGUARD_VIOLATION = 23,
-    SRP6_KEY_VERIFICATION_ERROR
-} SRP6ProtocolError;
+typedef enum SRPProtocolErrors {
+    SRP_SRP6a_SAFEGUARD_VIOLATION = 23,
+    SRP_KEY_VERIFICATION_ERROR
+} SRPProtocolError;
 
-@interface SRP6 : NSObject
+@interface SRP : NSObject
 {
     id<SRPDigest> _digest;
     BigInteger *  _N;
@@ -42,10 +42,10 @@ typedef enum SRP6ProtocolErrors {
 
 + (NSData*) saltForDigest: (id<SRPDigest>) digest;
 
-+ (SRP6Parameters*) CONSTANTS_1024;
-+ (SRP6Parameters*) CONSTANTS_2048;
-+ (SRP6Parameters*) CONSTANTS_4096;
-+ (SRP6Parameters*) CONSTANTS_8192;
++ (SRPParameters*) CONSTANTS_1024;
++ (SRPParameters*) CONSTANTS_2048;
++ (SRPParameters*) CONSTANTS_4096;
++ (SRPParameters*) CONSTANTS_8192;
 
 
 //=== Private ==================================================================
@@ -60,10 +60,5 @@ typedef enum SRP6ProtocolErrors {
 - (NSData*) calculateM1;
 - (NSData*) calculateM2: (NSData*) M1;
 - (BigInteger*) validatePublicValue: (BigInteger*) publicValue error: (NSError**) error;
-
-@end
-
-
-@interface SRP6Exception : NSException
 
 @end

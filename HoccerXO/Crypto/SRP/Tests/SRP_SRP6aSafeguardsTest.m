@@ -8,8 +8,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "SRP6Client.h"
-#import "SRP6Server.h"
+#import "SRPClient.h"
+#import "SRPServer.h"
 #import "BigInteger.h"
 
 static NSString * const username = @"alice";
@@ -19,7 +19,7 @@ static NSString * const password = @"password123";
 @interface SRP_SRP6aSafeguardsTest : XCTestCase
 {
     DigestSHA256   * _digest;
-    SRP6Parameters * _params;
+    SRPParameters * _params;
     NSData         * _salt;
     NSData         * _verifier;
 }
@@ -33,19 +33,19 @@ static NSString * const password = @"password123";
 - (void) setUp {
     _digest = [DigestSHA256 digest];
     _params = SRP6.CONSTANTS_1024;
-    _salt = [SRP6 saltForDigest: _digest];
+    _salt = [SRP saltForDigest: _digest];
     _verifier = [@"2342" dataUsingEncoding: NSUTF8StringEncoding];
 }
 
 - (void)testClientInvalidCredentials0 {
-    SRP6Client * client = [[SRP6Client alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPClient * client = [[SRPClient alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [client generateCredentialsWithSalt: _salt username: username password: password];
     NSData * bogusPublicValue = [NSData dataWithBigInteger: [BigInteger bigIntegerWithValue: 0]];
     XCTAssert([client calculateSecret: bogusPublicValue error: nil] == nil, @"Passing a bogus public value must fail");
 }
 
 - (void)testClientInvalidCredentialsN {
-    SRP6Client * client = [[SRP6Client alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPClient * client = [[SRPClient alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [client generateCredentialsWithSalt: _salt username: username password: password];
     BigInteger * N = [BigInteger bigIntegerWithBigInteger: _params.N];
     NSData * bogusPublicValue = [NSData dataWithBigInteger: N];
@@ -53,7 +53,7 @@ static NSString * const password = @"password123";
 }
 
 - (void)testClientInvalidCredentialsTwoN {
-    SRP6Client * client = [[SRP6Client alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPClient * client = [[SRPClient alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [client generateCredentialsWithSalt: _salt username: username password: password];
     BigInteger * twoN = [BigInteger bigIntegerWithBigInteger: _params.N];
     BN_mul_word(twoN.n, 2);
@@ -62,7 +62,7 @@ static NSString * const password = @"password123";
 }
 
 - (void)testClientInvalidCredentialsRandN {
-    SRP6Client * client = [[SRP6Client alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPClient * client = [[SRPClient alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [client generateCredentialsWithSalt: _salt username: username password: password];
     BigInteger * randN = [BigInteger bigIntegerWithBigInteger: _params.N];
     BN_mul_word(randN.n, rand());
@@ -71,14 +71,14 @@ static NSString * const password = @"password123";
 }
 
 - (void) testServerInvalidCredentials0 {
-    SRP6Server * server = [[SRP6Server alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPServer * server = [[SRPServer alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [server generateCredentialsWithSalt: _salt username: username verifier: _verifier];
     NSData * bogusPublicValue = [NSData dataWithBigInteger: [BigInteger bigIntegerWithValue: 0]];
     XCTAssert([server calculateSecret: bogusPublicValue error: nil] == nil, @"Passing a bogus public value must fail");
 }
 
 - (void) testServerInvalidCredentialsN {
-    SRP6Server * server = [[SRP6Server alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPServer * server = [[SRPServer alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [server generateCredentialsWithSalt: _salt username: username verifier: _verifier];
     BigInteger * N = [BigInteger bigIntegerWithBigInteger: _params.N];
     NSData * bogusPublicValue = [NSData dataWithBigInteger: N];
@@ -86,7 +86,7 @@ static NSString * const password = @"password123";
 }
 
 - (void) testServerInvalidCredentialsTwoN {
-    SRP6Server * server = [[SRP6Server alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPServer * server = [[SRPServer alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [server generateCredentialsWithSalt: _salt username: username verifier: _verifier];
     BigInteger * twoN = [BigInteger bigIntegerWithBigInteger: _params.N];
     BN_mul_word(twoN.n, 2);
@@ -95,7 +95,7 @@ static NSString * const password = @"password123";
 }
 
 - (void) testServerInvalidCredentialsRandN {
-    SRP6Server * server = [[SRP6Server alloc] initWithDigest: _digest N: _params.N g: _params.g];
+    SRPServer * server = [[SRPServer alloc] initWithDigest: _digest N: _params.N g: _params.g];
     [server generateCredentialsWithSalt: _salt username: username verifier: _verifier];
     BigInteger * randN = [BigInteger bigIntegerWithBigInteger: _params.N];
     BN_mul_word(randN.n, rand());

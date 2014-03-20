@@ -8,9 +8,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "SRP6VerifierGenerator.h"
-#import "SRP6Server.h"
-#import "SRP6Client.h"
+#import "SRPVerifierGenerator.h"
+#import "SRPServer.h"
+#import "SRPClient.h"
 #import "NSData+HexString.h"
 #import "BigInteger.h"
 
@@ -57,7 +57,7 @@ static NSString * const M2_HEX =
 @interface SRP_RFC5054Test : XCTestCase
 @end
 
-@interface MockClient : SRP6Client
+@interface MockClient : SRPClient
 @end
 
 @implementation MockClient
@@ -66,7 +66,7 @@ static NSString * const M2_HEX =
 }
 @end
 
-@interface MockServer : SRP6Server
+@interface MockServer : SRPServer
 @end
 
 @implementation MockServer
@@ -79,11 +79,11 @@ static NSString * const M2_HEX =
 
 - (void)testVector {
     DigestSHA1 * digest = [DigestSHA1 digest];
-    SRP6Parameters * params = SRP6.CONSTANTS_1024;
+    SRPParameters * params = SRP6.CONSTANTS_1024;
 
     NSData * salt = [NSData dataWithHexadecimalString: salt_HEX];
 
-    SRP6VerifierGenerator * verifierGenerator = [[SRP6VerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
+    SRPVerifierGenerator * verifierGenerator = [[SRPVerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
     NSData * verifier = [verifierGenerator generateVerifierWithSalt: salt username: username password: password];
     NSData * verifierRef = [NSData dataWithHexadecimalString: verifier_HEX];
     XCTAssert([verifier isEqualToData: verifierRef], @"Verifier must match reference value");

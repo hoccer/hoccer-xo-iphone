@@ -10,11 +10,11 @@
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
-		6302A98A18DA870400B2D04F /* SRP6.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97918DA870400B2D04F /* SRP6.m */; };
-		6302A98B18DA870400B2D04F /* SRP6Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97B18DA870400B2D04F /* SRP6Client.m */; };
-		6302A98C18DA870400B2D04F /* SRP6Parameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97D18DA870400B2D04F /* SRP6Parameters.m */; };
-		6302A98D18DA870400B2D04F /* SRP6Server.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97F18DA870400B2D04F /* SRP6Server.m */; };
-		6302A98E18DA870400B2D04F /* SRP6VerifierGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98118DA870400B2D04F /* SRP6VerifierGenerator.m */; };
+		6302A98A18DA870400B2D04F /* SRP.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97918DA870400B2D04F /* SRP.m */; };
+		6302A98B18DA870400B2D04F /* SRPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97B18DA870400B2D04F /* SRPClient.m */; };
+		6302A98C18DA870400B2D04F /* SRPParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97D18DA870400B2D04F /* SRPParameters.m */; };
+		6302A98D18DA870400B2D04F /* SRPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97F18DA870400B2D04F /* SRPServer.m */; };
+		6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98118DA870400B2D04F /* SRPVerifierGenerator.m */; };
 		6302A9B418DA8A9500B2D04F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6302A99D18DA89F700B2D04F /* XCTest.framework */; };
 		6302A9B518DA8A9500B2D04F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
 		6302A9B618DA8A9500B2D04F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
@@ -404,16 +404,16 @@
 		6302A97318DA870400B2D04F /* BigNumUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigNumUtilities.m; sourceTree = "<group>"; };
 		6302A97418DA870400B2D04F /* Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Digest.h; sourceTree = "<group>"; };
 		6302A97518DA870400B2D04F /* Digest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Digest.m; sourceTree = "<group>"; };
-		6302A97818DA870400B2D04F /* SRP6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRP6.h; sourceTree = "<group>"; };
-		6302A97918DA870400B2D04F /* SRP6.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRP6.m; sourceTree = "<group>"; };
-		6302A97A18DA870400B2D04F /* SRP6Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRP6Client.h; sourceTree = "<group>"; };
-		6302A97B18DA870400B2D04F /* SRP6Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRP6Client.m; sourceTree = "<group>"; };
-		6302A97C18DA870400B2D04F /* SRP6Parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRP6Parameters.h; sourceTree = "<group>"; };
-		6302A97D18DA870400B2D04F /* SRP6Parameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRP6Parameters.m; sourceTree = "<group>"; };
-		6302A97E18DA870400B2D04F /* SRP6Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRP6Server.h; sourceTree = "<group>"; };
-		6302A97F18DA870400B2D04F /* SRP6Server.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRP6Server.m; sourceTree = "<group>"; };
-		6302A98018DA870400B2D04F /* SRP6VerifierGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRP6VerifierGenerator.h; sourceTree = "<group>"; };
-		6302A98118DA870400B2D04F /* SRP6VerifierGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRP6VerifierGenerator.m; sourceTree = "<group>"; };
+		6302A97818DA870400B2D04F /* SRP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRP.h; sourceTree = "<group>"; };
+		6302A97918DA870400B2D04F /* SRP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRP.m; sourceTree = "<group>"; };
+		6302A97A18DA870400B2D04F /* SRPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPClient.h; sourceTree = "<group>"; };
+		6302A97B18DA870400B2D04F /* SRPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPClient.m; sourceTree = "<group>"; };
+		6302A97C18DA870400B2D04F /* SRPParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPParameters.h; sourceTree = "<group>"; };
+		6302A97D18DA870400B2D04F /* SRPParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPParameters.m; sourceTree = "<group>"; };
+		6302A97E18DA870400B2D04F /* SRPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPServer.h; sourceTree = "<group>"; };
+		6302A97F18DA870400B2D04F /* SRPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPServer.m; sourceTree = "<group>"; };
+		6302A98018DA870400B2D04F /* SRPVerifierGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPVerifierGenerator.h; sourceTree = "<group>"; };
+		6302A98118DA870400B2D04F /* SRPVerifierGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPVerifierGenerator.m; sourceTree = "<group>"; };
 		6302A98318DA870400B2D04F /* SRP_FunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_FunctionalTest.m; path = ../HoccerXO/Crypto/SRP/Tests/SRP_FunctionalTest.m; sourceTree = "<group>"; };
 		6302A98418DA870400B2D04F /* SRP_RFC5054Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_RFC5054Test.m; path = ../HoccerXO/Crypto/SRP/Tests/SRP_RFC5054Test.m; sourceTree = "<group>"; };
 		6302A98518DA870400B2D04F /* SRP_SRP6aSafeguardsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_SRP6aSafeguardsTest.m; path = ../HoccerXO/Crypto/SRP/Tests/SRP_SRP6aSafeguardsTest.m; sourceTree = "<group>"; };
@@ -952,16 +952,16 @@
 				6302A97318DA870400B2D04F /* BigNumUtilities.m */,
 				6302A97418DA870400B2D04F /* Digest.h */,
 				6302A97518DA870400B2D04F /* Digest.m */,
-				6302A97818DA870400B2D04F /* SRP6.h */,
-				6302A97918DA870400B2D04F /* SRP6.m */,
-				6302A97A18DA870400B2D04F /* SRP6Client.h */,
-				6302A97B18DA870400B2D04F /* SRP6Client.m */,
-				6302A97C18DA870400B2D04F /* SRP6Parameters.h */,
-				6302A97D18DA870400B2D04F /* SRP6Parameters.m */,
-				6302A97E18DA870400B2D04F /* SRP6Server.h */,
-				6302A97F18DA870400B2D04F /* SRP6Server.m */,
-				6302A98018DA870400B2D04F /* SRP6VerifierGenerator.h */,
-				6302A98118DA870400B2D04F /* SRP6VerifierGenerator.m */,
+				6302A97818DA870400B2D04F /* SRP.h */,
+				6302A97918DA870400B2D04F /* SRP.m */,
+				6302A97A18DA870400B2D04F /* SRPClient.h */,
+				6302A97B18DA870400B2D04F /* SRPClient.m */,
+				6302A97C18DA870400B2D04F /* SRPParameters.h */,
+				6302A97D18DA870400B2D04F /* SRPParameters.m */,
+				6302A97E18DA870400B2D04F /* SRPServer.h */,
+				6302A97F18DA870400B2D04F /* SRPServer.m */,
+				6302A98018DA870400B2D04F /* SRPVerifierGenerator.h */,
+				6302A98118DA870400B2D04F /* SRPVerifierGenerator.m */,
 			);
 			path = SRP;
 			sourceTree = "<group>";
@@ -1230,12 +1230,12 @@
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
 				6327EB72171D61A200AF75E1 /* HXOConfig.h */,
+				630FD45018BCCCA7000D8C55 /* HXOTheme.h */,
+				630FD45118BCCCA7000D8C55 /* HXOTheme.m */,
 				636D4005171072CD00304EDF /* HXOUserDefaults.h */,
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
 				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
 				6383FF751729DC2200835C91 /* Settings.bundle */,
-				630FD45018BCCCA7000D8C55 /* HXOTheme.h */,
-				630FD45118BCCCA7000D8C55 /* HXOTheme.m */,
 			);
 			path = SettingsConstantsAndEnvironment;
 			sourceTree = "<group>";
@@ -1415,6 +1415,8 @@
 				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
 				63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */,
 				63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */,
+				63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */,
+				63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -1439,8 +1441,6 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */,
-				63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -1449,9 +1449,9 @@
 		63AE45521705E18D0099F0CB /* StoryboardsAndNIBs */ = {
 			isa = PBXGroup;
 			children = (
-				E9D1145A1732CFE800737EF7 /* VcardPreview.xib */,
 				63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */,
 				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
+				E9D1145A1732CFE800737EF7 /* VcardPreview.xib */,
 			);
 			path = StoryboardsAndNIBs;
 			sourceTree = "<group>";
@@ -1570,7 +1570,6 @@
 		63AEE30516CA562F00522F92 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */,
 				631457A816EF96B400AA8EB9 /* Attachment.h */,
 				631457A916EF96B500AA8EB9 /* Attachment.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
@@ -1581,6 +1580,7 @@
 				63BD7D8D174422D500118A7F /* Group.m */,
 				63BD7D931744232D00118A7F /* GroupMembership.h */,
 				63BD7D941744232D00118A7F /* GroupMembership.m */,
+				E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */,
 				63AEE30916CA6B1900522F92 /* HXOMessage.h */,
 				63AEE30A16CA6B1900522F92 /* HXOMessage.m */,
 				6378484816F4040C00DE03C2 /* HXOModel.h */,
@@ -1668,25 +1668,25 @@
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				6302A96F18DA870400B2D04F /* SRP */,
-				E93ED67817B93D6F0072FD2C /* EC.h */,
-				E93ED67917B93D6F0072FD2C /* EC.m */,
+				E96CB027171457F9005F8FFA /* CCRSA.h */,
+				E96CB028171457F9005F8FFA /* CCRSA.m */,
 				E980D445171EF8950060C1B5 /* CryptingInputStream.h */,
 				E980D446171EF8950060C1B5 /* CryptingInputStream.m */,
 				E96CB021171457F9005F8FFA /* Crypto.h */,
 				E96CB022171457F9005F8FFA /* Crypto.m */,
 				E9F592D5171F460900E2FFAC /* CryptoEngine.h */,
 				E9F592D6171F460A00E2FFAC /* CryptoEngine.m */,
+				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
+				E9DBE3E21865C0A000880252 /* CryptoJSON.m */,
+				E93ED67817B93D6F0072FD2C /* EC.h */,
+				E93ED67917B93D6F0072FD2C /* EC.m */,
 				63E0B2151721FF75006058C6 /* KeychainItemWrapper.h */,
 				63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */,
 				E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */,
 				E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */,
-				E96CB027171457F9005F8FFA /* CCRSA.h */,
-				E96CB028171457F9005F8FFA /* CCRSA.m */,
-				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
-				E9DBE3E21865C0A000880252 /* CryptoJSON.m */,
 				E95A75A018D24C060027AE3E /* OpenSSLCrypto.h */,
 				E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */,
+				6302A96F18DA870400B2D04F /* SRP */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -1700,13 +1700,13 @@
 				E99886BD1725CB3F0089A510 /* ABPersonVCardCreator.m */,
 				E99886BE1725CB3F0089A510 /* ACAddressBookPerson.h */,
 				E99886BF1725CB3F0089A510 /* ACAddressBookPerson.m */,
+				E9D1145C1732E73F00737EF7 /* Vcard.h */,
+				E9D1145D1732E74000737EF7 /* Vcard.m */,
 				E99886C01725CB3F0089A510 /* VcardParser.h */,
 				E99886C11725CB3F0089A510 /* VcardParser.m */,
 				E99886C21725CB3F0089A510 /* VcardParserDelegate.h */,
 				E99886C31725CB3F0089A510 /* VcardWriter.h */,
 				E99886C41725CB3F0089A510 /* VcardWriter.m */,
-				E9D1145C1732E73F00737EF7 /* Vcard.h */,
-				E9D1145D1732E74000737EF7 /* Vcard.m */,
 			);
 			path = Adressbook;
 			sourceTree = "<group>";
@@ -2293,7 +2293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6302A98A18DA870400B2D04F /* SRP6.m in Sources */,
+				6302A98A18DA870400B2D04F /* SRP.m in Sources */,
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
 				63AEE2FC16CA4D0300522F92 /* ConversationViewController.m in Sources */,
@@ -2323,14 +2323,14 @@
 				E9E92F7418733D01007B8042 /* MultipartMessageHeaderField.m in Sources */,
 				6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */,
 				E9E92F7718733D01007B8042 /* HTTPDynamicFileResponse.m in Sources */,
-				6302A98C18DA870400B2D04F /* SRP6Parameters.m in Sources */,
+				6302A98C18DA870400B2D04F /* SRPParameters.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
-				6302A98E18DA870400B2D04F /* SRP6VerifierGenerator.m in Sources */,
+				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				6330490416FC99820045E64E /* ContactQuickListViewCells.m in Sources */,
 				6327F37A18B8D45B007D79E3 /* ContactManagementViewController.m in Sources */,
 				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
-				6302A98B18DA870400B2D04F /* SRP6Client.m in Sources */,
+				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
 				63AE45471704945C0099F0CB /* WebViewController.m in Sources */,
@@ -2437,7 +2437,7 @@
 				E9E92F3C18733B7A007B8042 /* DDASLLogger.m in Sources */,
 				6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */,
 				E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */,
-				6302A98D18DA870400B2D04F /* SRP6Server.m in Sources */,
+				6302A98D18DA870400B2D04F /* SRPServer.m in Sources */,
 				632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */,
 				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
 				E9E92F6B18733D01007B8042 /* DDData.m in Sources */,

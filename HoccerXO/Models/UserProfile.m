@@ -18,7 +18,7 @@
 #import "CryptoJSON.h"
 #import "ProfileViewController.h"
 
-#import "SRP6Client.h"
+#import "SRPClient.h"
 
 static UserProfile * profileInstance;
 
@@ -32,7 +32,7 @@ static const NSUInteger kHXOPasswordLength    = 23;
     KeychainItemWrapper * _saltItem;
 }
 
-@property (nonatomic,readonly) SRP6Client * srpClient;
+@property (nonatomic,readonly) SRPClient * srpClient;
 
 @end
 
@@ -260,11 +260,11 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 @synthesize srpClient = _srpClient;
-- (SRP6Client*) srpClient {
+- (SRPClient*) srpClient {
     if (_srpClient == nil) {
         DigestSHA256 * digest = [DigestSHA256 digest];
-        SRP6Parameters * params = SRP6.CONSTANTS_1024;
-        _srpClient = [[SRP6Client alloc] initWithDigest: digest N: params.N g: params.g];
+        SRPParameters * params = SRP.CONSTANTS_1024;
+        _srpClient = [[SRPClient alloc] initWithDigest: digest N: params.N g: params.g];
     }
     return _srpClient;
 }

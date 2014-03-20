@@ -8,9 +8,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "SRP6Client.h"
-#import "SRP6Server.h"
-#import "SRP6VerifierGenerator.h"
+#import "SRPClient.h"
+#import "SRPServer.h"
+#import "SRPVerifierGenerator.h"
 
 #import "NSString+RandomString.h"
 
@@ -33,17 +33,17 @@
 
     for (unsigned i = 0; i < 20; ++i) {
         id digest = [self randomItem: digests];
-        SRP6Parameters * params = [self randomItem: parameters];
+        SRPParameters * params = [self randomItem: parameters];
         NSString * user = [self randomItem: users];
         NSString * password = [NSString stringWithRandomCharactersOfLength: 23];
 
-        NSData * salt = [SRP6 saltForDigest: digest];
+        NSData * salt = [SRP saltForDigest: digest];
 
-        SRP6VerifierGenerator * generator = [[SRP6VerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
+        SRPVerifierGenerator * generator = [[SRPVerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
         NSData * verifier = [generator generateVerifierWithSalt: salt username: user password: password];
 
-        SRP6Client * client = [[SRP6Client alloc] initWithDigest: digest N: params.N g: params.g];
-        SRP6Server * server = [[SRP6Server alloc] initWithDigest: digest N: params.N g: params.g];
+        SRPClient * client = [[SRPClient alloc] initWithDigest: digest N: params.N g: params.g];
+        SRPServer * server = [[SRPServer alloc] initWithDigest: digest N: params.N g: params.g];
 
         NSData * A = [client generateCredentialsWithSalt: salt username: user password: password];
 
@@ -76,13 +76,13 @@
     NSString * user = [self randomItem: users];
     NSString * password = [NSString stringWithRandomCharactersOfLength: 23];
     id digest = [self randomItem: digests];
-    SRP6Parameters * params = [self randomItem: parameters];
+    SRPParameters * params = [self randomItem: parameters];
 
-    NSData * salt = [SRP6 saltForDigest: digest];
+    NSData * salt = [SRP saltForDigest: digest];
 
-    SRP6VerifierGenerator * generator = [[SRP6VerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
+    SRPVerifierGenerator * generator = [[SRPVerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
     NSData * verifier = [generator generateVerifierWithSalt: salt username: user password: password];
-    SRP6Server * server = [[SRP6Server alloc] initWithDigest: digest N: params.N g: params.g];
+    SRPServer * server = [[SRPServer alloc] initWithDigest: digest N: params.N g: params.g];
 
 
     for (unsigned i = 0; i < 1000; ++i) {
@@ -93,7 +93,7 @@
         } while ([wrong isEqualToString: password]);
 
 
-        SRP6Client * client = [[SRP6Client alloc] initWithDigest: digest N: params.N g: params.g];
+        SRPClient * client = [[SRPClient alloc] initWithDigest: digest N: params.N g: params.g];
 
         NSData * A = [client generateCredentialsWithSalt: salt username: user password: wrong];
 

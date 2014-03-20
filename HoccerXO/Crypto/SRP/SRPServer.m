@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "SRP6Server.h"
+#import "SRPServer.h"
 
 #import "BigInteger.h"
 
-@interface SRP6Server ()
+@interface SRPServer ()
 {
     BigInteger * _b;
     BigInteger * _v;
 }
 @end
 
-@implementation SRP6Server
+@implementation SRPServer
 
 - (NSData*) generateCredentialsWithSalt: (NSData*) salt username: (NSString*) username verifier: (NSData*) verifier {
     _username = username;
@@ -55,8 +55,8 @@
     if (error) {
         NSString * description = NSLocalizedString(@"Authentication failed", nil);
         NSString * reason = NSLocalizedString(@"The clients verifier M1 did not match the local version.", nil);
-        *error = [NSError errorWithDomain: SRP6ProtocolErrorDomain
-                                     code: SRP6_KEY_VERIFICATION_ERROR
+        *error = [NSError errorWithDomain: SRPProtocolErrorDomain
+                                     code: SRP_KEY_VERIFICATION_ERROR
                                  userInfo: @{ NSLocalizedDescriptionKey: description,
                                               NSLocalizedFailureReasonErrorKey: reason,
                                               }];

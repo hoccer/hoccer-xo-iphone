@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "SRP6.h"
+#import "SRP.h"
 
-@interface SRP6Client : SRP6
+@interface SRPClient : SRP
 
 - (NSData*) generateCredentialsWithSalt: (NSData*) salt username: (NSString*) username password: (NSString*) password;
 - (NSData*) calculateSecret: (NSData*) serverB error: (NSError**) error;

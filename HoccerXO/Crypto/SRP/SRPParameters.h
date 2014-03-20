@@ -10,7 +10,7 @@
 
 @class BigInteger;
 
-@interface SRP6Parameters : NSObject
+@interface SRPParameters : NSObject
 
 - (id) initWithN: (NSString*) N g: (NSString*) g;
 

@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "SRP6Parameters.h"
+#import "SRPParameters.h"
 #import "BigInteger.h"
 
-@implementation SRP6Parameters
+@implementation SRPParameters
 
 - (id) initWithN: (NSString*) N g: (NSString*) g {
     self = [super init];

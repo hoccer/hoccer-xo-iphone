@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "SRP6VerifierGenerator.h"
+#import "SRPVerifierGenerator.h"
 
 #import "BigInteger.h"
 
-@interface SRP6VerifierGenerator ()
+@interface SRPVerifierGenerator ()
 @end
 
-@implementation SRP6VerifierGenerator
+@implementation SRPVerifierGenerator
 
 - (NSData*) generateVerifierWithSalt: (NSData*) salt username: (NSString*) username password: (NSString*) password {
     BigInteger * x = [self xWithSalt: salt username: username password: password];

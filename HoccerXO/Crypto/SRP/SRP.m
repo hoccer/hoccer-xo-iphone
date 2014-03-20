@@ -6,18 +6,18 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "SRP6.h"
+#import "SRP.h"
 
 #import "openssl/rand.h"
 
 #import "BigInteger.h"
 
-NSString * const SRP6ProtocolErrorDomain = @"SRP6 Protocol Error";
+NSString * const SRPProtocolErrorDomain = @"SRP Protocol Error";
 
 static const unsigned kSeedBufferSize   = 64;
 static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 256 bits in length
 
-@implementation SRP6
+@implementation SRP
 
 + (void) initialize {
     NSMutableData* buffer = [NSMutableData dataWithLength: kSeedBufferSize];
@@ -135,8 +135,8 @@ static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 25
             NSString * description = NSLocalizedString(@"Authentication failed", nil);
             NSString * reason = NSLocalizedString(@"SRP6a safeguard violation: "
                                                   @"The public value of the other end modulo N is zero.", nil);
-            *error = [NSError errorWithDomain: SRP6ProtocolErrorDomain
-                                         code: SRP6_SAFEGUARD_VIOLATION
+            *error = [NSError errorWithDomain: SRPProtocolErrorDomain
+                                         code: SRP_SRP6a_SAFEGUARD_VIOLATION
                                      userInfo: @{ NSLocalizedDescriptionKey: description,
                                                   NSLocalizedFailureReasonErrorKey: reason,
                                                   }];
@@ -150,10 +150,10 @@ static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 25
     return _K;
 }
 
-+ (SRP6Parameters*) CONSTANTS_1024 {
-    static SRP6Parameters * p = nil;
++ (SRPParameters*) CONSTANTS_1024 {
+    static SRPParameters * p = nil;
     if (! p) {
-        p = [[SRP6Parameters alloc] initWithN:
+        p = [[SRPParameters alloc] initWithN:
              @"EEAF0AB9ADB38DD69C33F80AFA8FC5E86072618775FF3C0B9EA2314C"
              @"9C256576D674DF7496EA81D3383B4813D692C6E0E0D5D8E250B98BE4"
              @"8E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B29"
@@ -163,10 +163,10 @@ static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 25
     return p;
 }
 
-+ (SRP6Parameters*) CONSTANTS_2048 {
-    static SRP6Parameters * p = nil;
++ (SRPParameters*) CONSTANTS_2048 {
+    static SRPParameters * p = nil;
     if (! p) {
-        p = [[SRP6Parameters alloc] initWithN:
+        p = [[SRPParameters alloc] initWithN:
              @"AC6BDB41324A9A9BF166DE5E1389582FAF72B6651987EE07FC319294"
              @"3DB56050A37329CBB4A099ED8193E0757767A13DD52312AB4B03310D"
              @"CD7F48A9DA04FD50E8083969EDB767B0CF6095179A163AB3661A05FB"
@@ -181,10 +181,10 @@ static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 25
     return p;
 }
 
-+ (SRP6Parameters*) CONSTANTS_4096 {
-    static SRP6Parameters * p = nil;
++ (SRPParameters*) CONSTANTS_4096 {
+    static SRPParameters * p = nil;
     if (! p) {
-        p = [[SRP6Parameters alloc] initWithN:
+        p = [[SRPParameters alloc] initWithN:
              @"FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E08"
              @"8A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B"
              @"302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9"
@@ -208,10 +208,10 @@ static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 25
     return p;
 
 }
-+ (SRP6Parameters*) CONSTANTS_8192 {
-    static SRP6Parameters * p = nil;
++ (SRPParameters*) CONSTANTS_8192 {
+    static SRPParameters * p = nil;
     if (! p) {
-        p = [[SRP6Parameters alloc] initWithN:
+        p = [[SRPParameters alloc] initWithN:
              @"FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E08"
              @"8A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B"
              @"302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9"
@@ -254,7 +254,4 @@ static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 25
 
 }
 
-@end
-
-@implementation SRP6Exception
 @end

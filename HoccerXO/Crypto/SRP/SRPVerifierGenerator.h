@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SRP6.h"
+#import "SRP.h"
 #import "Digest.h"
 
 @class BigInteger;
 
-@interface SRP6VerifierGenerator : SRP6
+@interface SRPVerifierGenerator : SRP
 
 - (NSData*) generateVerifierWithSalt: (NSData*) salt username: (NSString*) username password: (NSString*) password;
 
