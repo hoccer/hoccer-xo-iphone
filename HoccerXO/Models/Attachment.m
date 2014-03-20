@@ -50,13 +50,16 @@
 //#define NO_UPLOAD_RESUME
 
 
-@interface Attachment() {
-    
-}
+@interface Attachment()
+
 #if defined(LET_DOWNLOAD_FAIL) || defined(NO_DOWNLOAD_RESUME) || defined(NO_UPLOAD_RESUME)
 @property BOOL didResume;
 @property NSInteger resumeSize;
 #endif
+
+@property (nonatomic) NSString * primitiveHumanReadableFileName;
+@property (nonatomic) NSString * primitiveMediaType;
+@property (nonatomic) NSString * primitiveMimeType;
 
 @end
 
@@ -69,10 +72,13 @@
 
 @dynamic localURL;
 @dynamic mimeType;
+@dynamic primitiveMimeType;
 @dynamic assetURL;
 @dynamic mediaType;
+@dynamic primitiveMediaType;
 @dynamic ownedURL;
 @dynamic humanReadableFileName;
+@dynamic primitiveHumanReadableFileName;
 @dynamic contentSize;
 @dynamic aspectRatio;
 
@@ -1079,16 +1085,37 @@ NSArray * TransferStateName = @[@"detached",
     }];
 }
 
-- (void)computeFileNameIfNeeded {
-    if (self.humanReadableFileName == nil) {
-        NSNumber * now = [HXOBackend millisFromDate:[[NSDate alloc]init]];
-        NSNumber * zero = @(1387983712850);
-        NSNumber * diff = [NSNumber numberWithLongLong:[now longLongValue]-[zero longLongValue]];
-
-        NSString * extension = [Attachment fileExtensionFromMimeType:self.mimeType];
-        NSString * myFileName = [NSString stringWithFormat:@"%@-%@.%@",self.mediaType,diff,extension];
-        self.humanReadableFileName = myFileName;
+- (NSString*) humanReadableFileName {
+    [self willAccessValueForKey:@"humanReadableFileName"];
+    NSString * filename = [self primitiveHumanReadableFileName];
+    if (filename == nil) {
+        if (self.mimeType && self.mediaType) {
+            NSString * extension = [Attachment fileExtensionFromMimeType:self.mimeType];
+            filename = [self.mediaType stringByAppendingPathExtension: extension];
+        } else if (self.mediaType) {
+            filename = self.mediaType;
+        }
     }
+    [self didAccessValueForKey:@"humanReadableFileName"];
+    return filename;
+}
+
+- (void) setMediaType:(NSString *)mediaType {
+    NSString * filename = [self primitiveHumanReadableFileName];
+    if ( ! filename) { [self willChangeValueForKey: @"humanReadableFileName"]; }
+    [self willChangeValueForKey: @"mediaType"];
+    [self setPrimitiveMediaType: mediaType];
+    [self didChangeValueForKey: @"mediaType"];
+    if ( ! filename) { [self didChangeValueForKey: @"humanReadableFileName"]; }
+}
+
+- (void) setMimeType:(NSString *)mimeType {
+    NSString * filename = [self primitiveHumanReadableFileName];
+    if ( ! filename) { [self willChangeValueForKey: @"humanReadableFileName"]; }
+    [self willChangeValueForKey: @"mimeType"];
+    [self setPrimitiveMimeType: mimeType];
+    [self didChangeValueForKey: @"mimeType"];
+    if ( ! filename) { [self didChangeValueForKey: @"humanReadableFileName"]; }
 }
 
 - (void) upload {
@@ -2084,7 +2111,6 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 - (NSString*) attachmentJsonString {
-    [self computeFileNameIfNeeded];
     NSDictionary * myRepresentation = [HXOModel createDictionaryFromObject:self withKeys:self.JsonKeys];
     NSData * myJsonData = [NSJSONSerialization dataWithJSONObject: myRepresentation options: 0 error: nil];
     NSString * myJsonUTF8String = [[NSString alloc] initWithData:myJsonData encoding:NSUTF8StringEncoding];
