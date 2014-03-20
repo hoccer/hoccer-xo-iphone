@@ -678,15 +678,21 @@ static NSTimer * _stateNotificationDelayTimer;
         if (challenge == nil) {
             NSLog(@"SRP phase 1 failed");
         } else {
-            NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge];
+            NSError * error;
+            NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge error: &error];
             if (M == nil) {
-                NSLog(@"SRP-6a safety check violation! Closing connection.");
+                NSLog(@"%@", error);
                 // possible tampering ... trigger reconnect by closing the socket
                 [self stopAndRetry];
             } else {
                 [self srpPhase2: M handler:^(NSString * HAMK) {
                     if (HAMK != nil) {
-                        [self didFinishLogin: [[UserProfile sharedProfile] verifySrpSession: HAMK]];
+                        NSError * error;
+                        BOOL success = [[UserProfile sharedProfile] verifySrpSession: HAMK error: &error];
+                        if (! success) {
+                            NSLog(@"%@", error);
+                        }
+                        [self didFinishLogin: success];
                     } else {
                         [self didFinishLogin: NO];
                     }
@@ -2818,7 +2824,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (success) {
             handler(responseOrError);
         } else {
-            NSLog(@"SRP Phase 1 failed");
+            NSLog(@"SRP Phase 1 failed: %@", responseOrError);
             handler(nil);
         }
     }];

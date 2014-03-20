@@ -19,13 +19,13 @@
 #import "CryptoJSON.h"
 #import "ProfileViewController.h"
 
+#import <ObjCSRP/SRP6Client.h>
+
 static UserProfile * profileInstance;
 
 static NSString * const         kHXOAccountIdentifier = @"HXOAccount";
 static NSString * const         kHXOSaltIdentifier    = @"HXOSalt";
 static const NSUInteger         kHXOPasswordLength    = 23;
-static const SRP_HashAlgorithm  kHXOHashAlgorithm     = SRP_SHA256;
-static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 
 @interface UserProfile ()
 {
@@ -33,7 +33,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     KeychainItemWrapper * _saltItem;
 }
 
-@property (nonatomic,readonly) HCSRPUser * srpUser;
+@property (nonatomic,readonly) SRP6Client * srpClient;
 
 @end
 
@@ -124,7 +124,7 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     [_accountItem setObject: [NSString stringWithRandomCharactersOfLength: kHXOPasswordLength] forKey: (__bridge id)(kSecValueData)];
     NSData * salt;
     NSData * verifier;
-    [self.srpUser salt: &salt andVerificationKey: &verifier forPassword: self.password];
+    // TODO: [self.srpUser salt: &salt andVerificationKey: &verifier forPassword: self.password];
     // XXX Workaround for keychain item issue:
     // first keychain claims there is no such item. Later it complains it can not create such
     // an item because it already exists. Using a unique identifier in kSecAttrAccount helps...
@@ -260,13 +260,14 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
     return myLocalURL;
 }
 
-@synthesize srpUser = _srpUser;
-- (HCSRPUser*) srpUser {
-    if (_srpUser == nil) {
-        _srpUser = [[HCSRPUser alloc] initWithUserName: self.clientId andPassword: self.password
-                                         hashAlgorithm: kHXOHashAlgorithm primeAndGenerator:kHXOPrimeAndGenerator];
+@synthesize srpClient = _srpClient;
+- (SRP6Client*) srpClient {
+    if (_srpClient == nil) {
+        DigestSHA256 * digest = [DigestSHA256 digest];
+        SRP6Parameters * params = SRP6.CONSTANTS_1024;
+        _srpClient = [[SRP6Client alloc] initWithDigest: digest N: params.N g: params.g];
     }
-    return _srpUser;
+    return _srpClient;
 }
 
 - (BOOL) isRegistered {
@@ -274,20 +275,26 @@ static const SRP_NGType         kHXOPrimeAndGenerator = SRP_NG_1024;
 }
 
 - (NSString*) startSrpAuthentication {
-    return [[self.srpUser startAuthentication] hexadecimalString];
+    _srpClient = nil;
+    return [[self.srpClient generateCredentialsWithSalt: [NSData dataWithHexadecimalString: self.salt] username: self.clientId password: self.password] hexadecimalString];
 }
 
-- (NSString*) processSrpChallenge: (NSString*) challenge {
-    return [[self.srpUser processChallenge: [NSData dataWithHexadecimalString: self.salt] B: [NSData dataWithHexadecimalString: challenge]] hexadecimalString];
+- (NSString*) processSrpChallenge: (NSString*) challenge error: (NSError**) error {
+    NSData * secret = [self.srpClient calculateSecret: [NSData dataWithHexadecimalString: challenge] error: error];
+    if (secret) {
+        return [[self.srpClient calculateVerifier] hexadecimalString];
+    }
+    return nil;
 }
-- (BOOL) verifySrpSession: (NSString*) HAMK {
-    [self.srpUser verifySession: [NSData dataWithHexadecimalString: HAMK]];
-    return self.srpUser.isAuthenticated;
+- (BOOL) verifySrpSession: (NSString*) HAMK error: (NSError**) error {
+    return [self.srpClient verifyServer: [NSData dataWithHexadecimalString: HAMK] error: error] != nil;
 }
 
+/*
 - (BOOL) isAuthenticated {
     return self.srpUser.isAuthenticated;
 }
+*/
 
 - (void) deleteCredentials {
     [_accountItem resetKeychainItem];
