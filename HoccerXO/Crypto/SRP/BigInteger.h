@@ -16,6 +16,7 @@
 - (id) initWithString: (NSString*) string radix: (int) radix;
 
 - (BOOL) isEqualToBigInt: (BigInteger*) other;
+- (BOOL) isZero;
 
 @property (nonatomic,readonly) BIGNUM * n;
 @property (nonatomic,readonly) NSUInteger length;
@@ -35,16 +36,6 @@
 - (BigInteger*) power: (BigInteger*) y modulo: (BigInteger*) m;
 - (BigInteger*) plus:  (BigInteger*) b modulo: (BigInteger*) m;
 - (BigInteger*) minus: (BigInteger*) b modulo: (BigInteger*) m;
-
-- (BOOL) isZero;
-
-@end
-
-@interface BigIntCtx : NSObject
-
-@property (nonatomic,readonly) BN_CTX * c;
-
-+ (BigIntCtx*) bigIntCtx;
 
 @end
 

@@ -159,26 +159,6 @@ static BN_CTX * ctx;
 
 @end
 
-@implementation BigIntCtx
-
-- (id) init {
-    self = [super init];
-    if (self) {
-        _c = BN_CTX_new();
-    }
-    return self;
-}
-
-- (void) dealloc {
-    BN_CTX_free(_c);
-}
-
-+ (BigIntCtx*) bigIntCtx {
-    return [[BigIntCtx alloc] init];
-}
-
-@end
-
 @implementation NSData (BigInteger)
 
 + (NSData*) dataWithBigInteger: (BigInteger*) a {
