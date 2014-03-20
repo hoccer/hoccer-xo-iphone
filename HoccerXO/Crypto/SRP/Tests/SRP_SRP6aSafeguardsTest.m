@@ -32,7 +32,7 @@ static NSString * const password = @"password123";
 // doesn't matter much, though.
 - (void) setUp {
     _digest = [DigestSHA256 digest];
-    _params = SRP6.CONSTANTS_1024;
+    _params = SRP.CONSTANTS_1024;
     _salt = [SRP saltForDigest: _digest];
     _verifier = [@"2342" dataUsingEncoding: NSUTF8StringEncoding];
 }

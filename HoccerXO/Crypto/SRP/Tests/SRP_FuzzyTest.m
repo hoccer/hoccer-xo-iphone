@@ -27,7 +27,7 @@
 
 
 - (void)testRandomValids {
-    NSArray * parameters = @[SRP6.CONSTANTS_1024, SRP6.CONSTANTS_2048, SRP6.CONSTANTS_4096, SRP6.CONSTANTS_8192];
+    NSArray * parameters = @[SRP.CONSTANTS_1024, SRP.CONSTANTS_2048, SRP.CONSTANTS_4096, SRP.CONSTANTS_8192];
     NSArray * digests = @[[DigestSHA1 digest], [DigestSHA224 digest], [DigestSHA256 digest], [DigestSHA384 digest], [DigestSHA512 digest]];
     NSArray * users = @[@"alice", @"bob", @"carol", @"dude", @"eve", @"fox", @"george", @"henry"];
 
@@ -69,7 +69,7 @@
 }
 
 - (void)testRandomInvalids {
-    NSArray * parameters = @[SRP6.CONSTANTS_1024, SRP6.CONSTANTS_2048, SRP6.CONSTANTS_4096, SRP6.CONSTANTS_8192];
+    NSArray * parameters = @[SRP.CONSTANTS_1024, SRP.CONSTANTS_2048, SRP.CONSTANTS_4096, SRP.CONSTANTS_8192];
     NSArray * digests = @[[DigestSHA1 digest], [DigestSHA224 digest], [DigestSHA256 digest], [DigestSHA384 digest], [DigestSHA512 digest]];
     NSArray * users = @[@"alice", @"bob", @"carol", @"dude", @"eve", @"fox", @"george", @"henry"];
 

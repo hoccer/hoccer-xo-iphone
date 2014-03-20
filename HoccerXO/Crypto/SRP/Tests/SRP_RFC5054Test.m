@@ -1,5 +1,5 @@
 //
-//  SRP6RFC5054Test.m
+//  SRPRFC5054Test.m
 //  ObjCSRP
 //
 //  Created by David Siegel on 16.03.14.
@@ -79,7 +79,7 @@ static NSString * const M2_HEX =
 
 - (void)testVector {
     DigestSHA1 * digest = [DigestSHA1 digest];
-    SRPParameters * params = SRP6.CONSTANTS_1024;
+    SRPParameters * params = SRP.CONSTANTS_1024;
 
     NSData * salt = [NSData dataWithHexadecimalString: salt_HEX];
 
