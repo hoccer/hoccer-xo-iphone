@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "openssl/bn.h"
+#import <openssl/bn.h>
 
 #import "NSData+HexString.h"
 
