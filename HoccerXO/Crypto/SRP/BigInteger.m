@@ -10,7 +10,7 @@
 
 #import "BigNumUtilities.h"
 
-#import "openssl/bn.h"
+#import <openssl/bn.h>
 
 static BN_CTX * ctx;
 

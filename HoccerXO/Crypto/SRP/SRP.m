@@ -8,7 +8,7 @@
 
 #import "SRP.h"
 
-#import "openssl/rand.h"
+#import <openssl/rand.h>
 
 #import "BigInteger.h"
 
