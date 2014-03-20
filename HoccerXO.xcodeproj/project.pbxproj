@@ -7,6 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
+		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
+		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
+		6302A98A18DA870400B2D04F /* SRP.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97918DA870400B2D04F /* SRP.m */; };
+		6302A98B18DA870400B2D04F /* SRPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97B18DA870400B2D04F /* SRPClient.m */; };
+		6302A98C18DA870400B2D04F /* SRPParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97D18DA870400B2D04F /* SRPParameters.m */; };
+		6302A98D18DA870400B2D04F /* SRPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97F18DA870400B2D04F /* SRPServer.m */; };
+		6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98118DA870400B2D04F /* SRPVerifierGenerator.m */; };
+		6302A9B418DA8A9500B2D04F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6302A99D18DA89F700B2D04F /* XCTest.framework */; };
+		6302A9B518DA8A9500B2D04F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D916CA4D0200522F92 /* Foundation.framework */; };
+		6302A9B618DA8A9500B2D04F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
+		6302A9BC18DA8A9500B2D04F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6302A9BA18DA8A9500B2D04F /* InfoPlist.strings */; };
+		6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98518DA870400B2D04F /* SRP_SRP6aSafeguardsTest.m */; };
+		6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98418DA870400B2D04F /* SRP_RFC5054Test.m */; };
+		6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98318DA870400B2D04F /* SRP_FunctionalTest.m */; };
+		6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */; };
+		6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		630FD44B18BCAF52000D8C55 /* tabbar_contacts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44618BCAF52000D8C55 /* tabbar_contacts@2x.png */; };
 		630FD44C18BCAF52000D8C55 /* tabbar_conversations@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44718BCAF52000D8C55 /* tabbar_conversations@2x.png */; };
 		630FD44D18BCAF52000D8C55 /* tabbar_media@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44818BCAF52000D8C55 /* tabbar_media@2x.png */; };
@@ -18,7 +35,6 @@
 		63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63126C2F170E46F800A6804A /* MessageUI.framework */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
 		631457CA16F0E76D00AA8EB9 /* HXOBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HXOBackend.m */; };
-		6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6316D68E171EEC0A007441D9 /* libObjCSRP.a */; };
 		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
 		6320D7CD16E0C79B00E58478 /* InsetImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6320D7CC16E0C79A00E58478 /* InsetImageView.m */; };
 		6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6324C03D18BE09AE00E4BD82 /* SubViewController.m */; };
@@ -281,26 +297,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		6316D68D171EEC0A007441D9 /* PBXContainerItemProxy */ = {
+		6302A99618DA88F200B2D04F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */;
+			containerPortal = 6302A99218DA88F200B2D04F /* openssl.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 631F6CF4170B7E8900FB28D5;
-			remoteInfo = ObjCSRP;
+			remoteGlobalIDString = 9069D28C0FCE659A0042E34C;
+			remoteInfo = crypto;
 		};
-		6316D68F171EEC0A007441D9 /* PBXContainerItemProxy */ = {
+		6302A9C018DA8A9600B2D04F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 631F6D05170B7E8900FB28D5;
-			remoteInfo = ObjCSRPTests;
-		};
-		6316D691171EEC0A007441D9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 631F6D85170B9F5800FB28D5;
-			remoteInfo = SRPDemo;
+			containerPortal = 63AEE2CC16CA4D0200522F92 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63AEE2D316CA4D0200522F92;
+			remoteInfo = HoccerXO;
 		};
 		6339CDB618A9911800DA2729 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -389,6 +398,32 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
+		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
+		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
+		6302A97318DA870400B2D04F /* BigNumUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigNumUtilities.m; sourceTree = "<group>"; };
+		6302A97418DA870400B2D04F /* Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Digest.h; sourceTree = "<group>"; };
+		6302A97518DA870400B2D04F /* Digest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Digest.m; sourceTree = "<group>"; };
+		6302A97818DA870400B2D04F /* SRP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRP.h; sourceTree = "<group>"; };
+		6302A97918DA870400B2D04F /* SRP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRP.m; sourceTree = "<group>"; };
+		6302A97A18DA870400B2D04F /* SRPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPClient.h; sourceTree = "<group>"; };
+		6302A97B18DA870400B2D04F /* SRPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPClient.m; sourceTree = "<group>"; };
+		6302A97C18DA870400B2D04F /* SRPParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPParameters.h; sourceTree = "<group>"; };
+		6302A97D18DA870400B2D04F /* SRPParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPParameters.m; sourceTree = "<group>"; };
+		6302A97E18DA870400B2D04F /* SRPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPServer.h; sourceTree = "<group>"; };
+		6302A97F18DA870400B2D04F /* SRPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPServer.m; sourceTree = "<group>"; };
+		6302A98018DA870400B2D04F /* SRPVerifierGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPVerifierGenerator.h; sourceTree = "<group>"; };
+		6302A98118DA870400B2D04F /* SRPVerifierGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPVerifierGenerator.m; sourceTree = "<group>"; };
+		6302A98318DA870400B2D04F /* SRP_FunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_FunctionalTest.m; path = ../HoccerXO/Crypto/SRP/Tests/SRP_FunctionalTest.m; sourceTree = "<group>"; };
+		6302A98418DA870400B2D04F /* SRP_RFC5054Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_RFC5054Test.m; path = ../HoccerXO/Crypto/SRP/Tests/SRP_RFC5054Test.m; sourceTree = "<group>"; };
+		6302A98518DA870400B2D04F /* SRP_SRP6aSafeguardsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_SRP6aSafeguardsTest.m; path = ../HoccerXO/Crypto/SRP/Tests/SRP_SRP6aSafeguardsTest.m; sourceTree = "<group>"; };
+		6302A99218DA88F200B2D04F /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
+		6302A99D18DA89F700B2D04F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		6302A9B318DA8A9500B2D04F /* HoccerXO Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HoccerXO Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6302A9B918DA8A9500B2D04F /* HoccerXO Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HoccerXO Tests-Info.plist"; sourceTree = "<group>"; };
+		6302A9BB18DA8A9500B2D04F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6302A9BF18DA8A9500B2D04F /* HoccerXO Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerXO Tests-Prefix.pch"; sourceTree = "<group>"; };
+		6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_FuzzyTest.m; path = HoccerXO/Crypto/SRP/Tests/SRP_FuzzyTest.m; sourceTree = SOURCE_ROOT; };
 		630FD44618BCAF52000D8C55 /* tabbar_contacts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_contacts@2x.png"; sourceTree = "<group>"; };
 		630FD44718BCAF52000D8C55 /* tabbar_conversations@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_conversations@2x.png"; sourceTree = "<group>"; };
 		630FD44818BCAF52000D8C55 /* tabbar_media@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_media@2x.png"; sourceTree = "<group>"; };
@@ -404,7 +439,6 @@
 		631457A916EF96B500AA8EB9 /* Attachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Attachment.m; sourceTree = "<group>"; };
 		631457C816F0E76D00AA8EB9 /* HXOBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOBackend.h; sourceTree = "<group>"; };
 		631457C916F0E76D00AA8EB9 /* HXOBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOBackend.m; sourceTree = "<group>"; };
-		6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjCSRP.xcodeproj; path = ObjCSRP/ObjCSRP.xcodeproj; sourceTree = "<group>"; };
 		631A96F918AB9D82003363F5 /* injectSettingsPane.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = injectSettingsPane.sh; sourceTree = "<group>"; };
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ScaleAndCrop.h"; sourceTree = "<group>"; };
@@ -858,6 +892,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6302A9B018DA8A9500B2D04F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6302A9B418DA8A9500B2D04F /* XCTest.framework in Frameworks */,
+				6302A9B618DA8A9500B2D04F /* UIKit.framework in Frameworks */,
+				6302A9B518DA8A9500B2D04F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63AEE2D116CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -879,7 +923,6 @@
 				63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */,
 				E99886E617282C140089A510 /* AudioToolbox.framework in Frameworks */,
 				E99886CE1725CE0F0089A510 /* AddressBook.framework in Frameworks */,
-				6316D693171EECE7007441D9 /* libObjCSRP.a in Frameworks */,
 				6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */,
 				E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */,
 				E96CB012171217D3005F8FFA /* AVFoundation.framework in Frameworks */,
@@ -902,6 +945,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6302A96F18DA870400B2D04F /* SRP */ = {
+			isa = PBXGroup;
+			children = (
+				6302A97018DA870400B2D04F /* BigInteger.h */,
+				6302A97118DA870400B2D04F /* BigInteger.m */,
+				6302A97218DA870400B2D04F /* BigNumUtilities.h */,
+				6302A97318DA870400B2D04F /* BigNumUtilities.m */,
+				6302A97418DA870400B2D04F /* Digest.h */,
+				6302A97518DA870400B2D04F /* Digest.m */,
+				6302A97818DA870400B2D04F /* SRP.h */,
+				6302A97918DA870400B2D04F /* SRP.m */,
+				6302A97A18DA870400B2D04F /* SRPClient.h */,
+				6302A97B18DA870400B2D04F /* SRPClient.m */,
+				6302A97C18DA870400B2D04F /* SRPParameters.h */,
+				6302A97D18DA870400B2D04F /* SRPParameters.m */,
+				6302A97E18DA870400B2D04F /* SRPServer.h */,
+				6302A97F18DA870400B2D04F /* SRPServer.m */,
+				6302A98018DA870400B2D04F /* SRPVerifierGenerator.h */,
+				6302A98118DA870400B2D04F /* SRPVerifierGenerator.m */,
+			);
+			path = SRP;
+			sourceTree = "<group>";
+		};
+		6302A99318DA88F200B2D04F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6302A99718DA88F200B2D04F /* libcrypto.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6302A9B718DA8A9500B2D04F /* HoccerXO Tests */ = {
+			isa = PBXGroup;
+			children = (
+				6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */,
+				6302A98318DA870400B2D04F /* SRP_FunctionalTest.m */,
+				6302A98418DA870400B2D04F /* SRP_RFC5054Test.m */,
+				6302A98518DA870400B2D04F /* SRP_SRP6aSafeguardsTest.m */,
+				6302A9B818DA8A9500B2D04F /* Supporting Files */,
+			);
+			path = "HoccerXO Tests";
+			sourceTree = "<group>";
+		};
+		6302A9B818DA8A9500B2D04F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6302A9B918DA8A9500B2D04F /* HoccerXO Tests-Info.plist */,
+				6302A9BA18DA8A9500B2D04F /* InfoPlist.strings */,
+				6302A9BF18DA8A9500B2D04F /* HoccerXO Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		630FD44518BCAF52000D8C55 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -923,16 +1019,6 @@
 				631254C916EC198E009A6584 /* JsonRpcWebSocket.m */,
 			);
 			path = Backend;
-			sourceTree = "<group>";
-		};
-		6316D687171EEC0A007441D9 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6316D68E171EEC0A007441D9 /* libObjCSRP.a */,
-				6316D690171EEC0A007441D9 /* ObjCSRPTests.octest */,
-				6316D692171EEC0A007441D9 /* SRPDemo.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		631A96F818AB9D24003363F5 /* Scripts */ = {
@@ -1146,12 +1232,12 @@
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
 				6327EB72171D61A200AF75E1 /* HXOConfig.h */,
+				630FD45018BCCCA7000D8C55 /* HXOTheme.h */,
+				630FD45118BCCCA7000D8C55 /* HXOTheme.m */,
 				636D4005171072CD00304EDF /* HXOUserDefaults.h */,
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
 				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
 				6383FF751729DC2200835C91 /* Settings.bundle */,
-				630FD45018BCCCA7000D8C55 /* HXOTheme.h */,
-				630FD45118BCCCA7000D8C55 /* HXOTheme.m */,
 			);
 			path = SettingsConstantsAndEnvironment;
 			sourceTree = "<group>";
@@ -1331,6 +1417,8 @@
 				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
 				63C1356617160E2E00969B0B /* HXOGroupedTableViewController.h */,
 				63C1356717160E2E00969B0B /* HXOGroupedTableViewController.m */,
+				63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */,
+				63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -1355,8 +1443,6 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */,
-				63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -1365,9 +1451,9 @@
 		63AE45521705E18D0099F0CB /* StoryboardsAndNIBs */ = {
 			isa = PBXGroup;
 			children = (
-				E9D1145A1732CFE800737EF7 /* VcardPreview.xib */,
 				63AE454E1705E1420099F0CB /* MainStoryboard_iPad.storyboard */,
 				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
+				E9D1145A1732CFE800737EF7 /* VcardPreview.xib */,
 			);
 			path = StoryboardsAndNIBs;
 			sourceTree = "<group>";
@@ -1386,8 +1472,8 @@
 			children = (
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
 				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
+				6302A9B718DA8A9500B2D04F /* HoccerXO Tests */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
-				6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */,
 				63AEE2D516CA4D0200522F92 /* Products */,
 				63C413A116E8F9E5004E1F6D /* 3rdParty */,
 			);
@@ -1397,6 +1483,7 @@
 			isa = PBXGroup;
 			children = (
 				63AEE2D416CA4D0200522F92 /* Hoccer XO.app */,
+				6302A9B318DA8A9500B2D04F /* HoccerXO Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1431,6 +1518,7 @@
 				63C413B816E8FD15004E1F6D /* Security.framework */,
 				E9D11499173679CC00737EF7 /* SystemConfiguration.framework */,
 				63AEE2D716CA4D0200522F92 /* UIKit.framework */,
+				6302A99D18DA89F700B2D04F /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1484,7 +1572,6 @@
 		63AEE30516CA562F00522F92 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */,
 				631457A816EF96B400AA8EB9 /* Attachment.h */,
 				631457A916EF96B500AA8EB9 /* Attachment.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
@@ -1495,6 +1582,7 @@
 				63BD7D8D174422D500118A7F /* Group.m */,
 				63BD7D931744232D00118A7F /* GroupMembership.h */,
 				63BD7D941744232D00118A7F /* GroupMembership.m */,
+				E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */,
 				63AEE30916CA6B1900522F92 /* HXOMessage.h */,
 				63AEE30A16CA6B1900522F92 /* HXOMessage.m */,
 				6378484816F4040C00DE03C2 /* HXOModel.h */,
@@ -1511,6 +1599,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				6302A99218DA88F200B2D04F /* openssl.xcodeproj */,
 				E95A75A518D257FD0027AE3E /* fmemopen */,
 				633AA86218C4DCF6009403CB /* TestFlightSDK-3.0.0 */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
@@ -1581,24 +1670,25 @@
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				E93ED67817B93D6F0072FD2C /* EC.h */,
-				E93ED67917B93D6F0072FD2C /* EC.m */,
+				E96CB027171457F9005F8FFA /* CCRSA.h */,
+				E96CB028171457F9005F8FFA /* CCRSA.m */,
 				E980D445171EF8950060C1B5 /* CryptingInputStream.h */,
 				E980D446171EF8950060C1B5 /* CryptingInputStream.m */,
 				E96CB021171457F9005F8FFA /* Crypto.h */,
 				E96CB022171457F9005F8FFA /* Crypto.m */,
 				E9F592D5171F460900E2FFAC /* CryptoEngine.h */,
 				E9F592D6171F460A00E2FFAC /* CryptoEngine.m */,
+				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
+				E9DBE3E21865C0A000880252 /* CryptoJSON.m */,
+				E93ED67817B93D6F0072FD2C /* EC.h */,
+				E93ED67917B93D6F0072FD2C /* EC.m */,
 				63E0B2151721FF75006058C6 /* KeychainItemWrapper.h */,
 				63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */,
 				E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */,
 				E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */,
-				E96CB027171457F9005F8FFA /* CCRSA.h */,
-				E96CB028171457F9005F8FFA /* CCRSA.m */,
-				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
-				E9DBE3E21865C0A000880252 /* CryptoJSON.m */,
 				E95A75A018D24C060027AE3E /* OpenSSLCrypto.h */,
 				E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */,
+				6302A96F18DA870400B2D04F /* SRP */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -1612,13 +1702,13 @@
 				E99886BD1725CB3F0089A510 /* ABPersonVCardCreator.m */,
 				E99886BE1725CB3F0089A510 /* ACAddressBookPerson.h */,
 				E99886BF1725CB3F0089A510 /* ACAddressBookPerson.m */,
+				E9D1145C1732E73F00737EF7 /* Vcard.h */,
+				E9D1145D1732E74000737EF7 /* Vcard.m */,
 				E99886C01725CB3F0089A510 /* VcardParser.h */,
 				E99886C11725CB3F0089A510 /* VcardParser.m */,
 				E99886C21725CB3F0089A510 /* VcardParserDelegate.h */,
 				E99886C31725CB3F0089A510 /* VcardWriter.h */,
 				E99886C41725CB3F0089A510 /* VcardWriter.m */,
-				E9D1145C1732E73F00737EF7 /* Vcard.h */,
-				E9D1145D1732E74000737EF7 /* Vcard.m */,
 			);
 			path = Adressbook;
 			sourceTree = "<group>";
@@ -1848,6 +1938,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6302A9B218DA8A9500B2D04F /* HoccerXO Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6302A9C218DA8A9600B2D04F /* Build configuration list for PBXNativeTarget "HoccerXO Tests" */;
+			buildPhases = (
+				6302A9AF18DA8A9500B2D04F /* Sources */,
+				6302A9B018DA8A9500B2D04F /* Frameworks */,
+				6302A9B118DA8A9500B2D04F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6302A9C118DA8A9600B2D04F /* PBXTargetDependency */,
+			);
+			name = "HoccerXO Tests";
+			productName = "HoccerXO Tests";
+			productReference = 6302A9B318DA8A9500B2D04F /* HoccerXO Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		63AEE2D316CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "HoccerXO" */;
@@ -1877,6 +1985,9 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Hoccer GmbH";
 				TargetAttributes = {
+					6302A9B218DA8A9500B2D04F = {
+						TestTargetID = 63AEE2D316CA4D0200522F92;
+					};
 					63AEE2D316CA4D0200522F92 = {
 						DevelopmentTeam = SK64A5FJ3Z;
 					};
@@ -1899,8 +2010,8 @@
 					ProjectRef = E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */;
 				},
 				{
-					ProductGroup = 6316D687171EEC0A007441D9 /* Products */;
-					ProjectRef = 6316D686171EEC0A007441D9 /* ObjCSRP.xcodeproj */;
+					ProductGroup = 6302A99318DA88F200B2D04F /* Products */;
+					ProjectRef = 6302A99218DA88F200B2D04F /* openssl.xcodeproj */;
 				},
 				{
 					ProductGroup = 6339CDC618A991A700DA2729 /* Products */;
@@ -1918,30 +2029,17 @@
 			projectRoot = "";
 			targets = (
 				63AEE2D316CA4D0200522F92 /* HoccerXO */,
+				6302A9B218DA8A9500B2D04F /* HoccerXO Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		6316D68E171EEC0A007441D9 /* libObjCSRP.a */ = {
+		6302A99718DA88F200B2D04F /* libcrypto.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libObjCSRP.a;
-			remoteRef = 6316D68D171EEC0A007441D9 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6316D690171EEC0A007441D9 /* ObjCSRPTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ObjCSRPTests.octest;
-			remoteRef = 6316D68F171EEC0A007441D9 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6316D692171EEC0A007441D9 /* SRPDemo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = SRPDemo.app;
-			remoteRef = 6316D691171EEC0A007441D9 /* PBXContainerItemProxy */;
+			path = libcrypto.a;
+			remoteRef = 6302A99618DA88F200B2D04F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		6339CDB718A9911800DA2729 /* libZipArchive-ios.a */ = {
@@ -2031,6 +2129,14 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6302A9B118DA8A9500B2D04F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6302A9BC18DA8A9500B2D04F /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63AEE2D216CA4D0200522F92 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2173,10 +2279,23 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6302A9AF18DA8A9500B2D04F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */,
+				6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */,
+				6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */,
+				6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */,
+				6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63AEE2D016CA4D0200522F92 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6302A98A18DA870400B2D04F /* SRP.m in Sources */,
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
 				63AEE2FC16CA4D0300522F92 /* ConversationViewController.m in Sources */,
@@ -2206,11 +2325,14 @@
 				E9E92F7418733D01007B8042 /* MultipartMessageHeaderField.m in Sources */,
 				6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */,
 				E9E92F7718733D01007B8042 /* HTTPDynamicFileResponse.m in Sources */,
+				6302A98C18DA870400B2D04F /* SRPParameters.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
+				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				6330490416FC99820045E64E /* ContactQuickListViewCells.m in Sources */,
 				6327F37A18B8D45B007D79E3 /* ContactManagementViewController.m in Sources */,
 				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
+				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
 				63AE45471704945C0099F0CB /* WebViewController.m in Sources */,
@@ -2290,6 +2412,7 @@
 				E9E92F6E18733D01007B8042 /* HTTPAuthenticationRequest.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
 				E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */,
+				6302A98818DA870400B2D04F /* Digest.m in Sources */,
 				E9E92F3918733B7A007B8042 /* GCDAsyncSocket.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
 				639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */,
@@ -2314,12 +2437,15 @@
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,
 				6382549B175F746C000347CD /* ProfileDataSource.m in Sources */,
 				E9E92F3C18733B7A007B8042 /* DDASLLogger.m in Sources */,
+				6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */,
 				E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */,
+				6302A98D18DA870400B2D04F /* SRPServer.m in Sources */,
 				632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */,
 				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
 				E9E92F6B18733D01007B8042 /* DDData.m in Sources */,
 				638EBE50178ADFD700F1B9AD /* ContactQuickListSearchBar.m in Sources */,
 				6325029918658D4000543D80 /* HXOAvatarButton.m in Sources */,
+				6302A98618DA870400B2D04F /* BigInteger.m in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
@@ -2333,7 +2459,23 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		6302A9C118DA8A9600B2D04F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63AEE2D316CA4D0200522F92 /* HoccerXO */;
+			targetProxy = 6302A9C018DA8A9600B2D04F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		6302A9BA18DA8A9500B2D04F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6302A9BB18DA8A9500B2D04F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		63AE45581705EE770099F0CB /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2354,6 +2496,77 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		6302A9C318DA8A9600B2D04F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+				);
+				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		6302A9C418DA8A9600B2D04F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+				);
+				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 		63AEE30016CA4D0300522F92 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2428,9 +2641,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
-					"\"$(OBJROOT)/UninstalledProducts/include\"",
-					"\"$(SRCROOT)/ObjCSRP/3rdParty/openssl-xcode/openssl/include/",
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
 				);
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -2465,8 +2678,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
-					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
 				);
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -2493,6 +2707,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6302A9C218DA8A9600B2D04F /* Build configuration list for PBXNativeTarget "HoccerXO Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6302A9C318DA8A9600B2D04F /* Debug */,
+				6302A9C418DA8A9600B2D04F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "HoccerXO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

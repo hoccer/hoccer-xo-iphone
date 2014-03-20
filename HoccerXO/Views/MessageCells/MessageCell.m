@@ -11,7 +11,6 @@
 
 const CGFloat kHXOGridSpacing = 8; // TODO: make this global
 static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
-static const CGFloat kHXOBubbleMinimumHeight = 6 * kHXOGridSpacing;
 
 @implementation MessageCell
 

@@ -45,8 +45,8 @@
 - (void) exportCredentialsWithPassphrase:(NSString*)passphrase;
 
 - (NSString*) startSrpAuthentication;
-- (NSString*) processSrpChallenge: (NSString*) challenge;
-- (BOOL)      verifySrpSession: (NSString*) HAMK;
+- (NSString*) processSrpChallenge: (NSString*) challenge error: (NSError**) error;
+- (BOOL)      verifySrpSession: (NSString*) HAMK error: (NSError**) error;
 
 + (UserProfile*) sharedProfile;
 +(NSURL*)getKeyFileURLWithKeyTypeName:(NSString*)keyTypeName forUser:(NSString*)userName withKeyId:(NSString*)keyId;
