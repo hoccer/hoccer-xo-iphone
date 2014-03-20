@@ -27,6 +27,5 @@
 - (NSArray*) sortDescriptors;
 - (void) addPredicates: (NSMutableArray*) predicates;
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString;
-- (UITableViewCell*) prototypeCell;
 
 @end

@@ -22,6 +22,7 @@
 
 #define HIDE_SEPARATORS
 
+extern const CGFloat kHXOGridSpacing;
 static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()
@@ -34,6 +35,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @property (nonatomic, readonly) ContactCell *                        contactCellPrototype;
 @property id keyboardHidingObserver;
+@property (strong, nonatomic) id connectionInfoObserver;
 
 @end
 
@@ -63,13 +65,17 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [HXOBackend registerConnectionInfoObserverFor:self];
     self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
 
-    self.tableView.rowHeight = [self.prototypeCell.contentView systemLayoutSizeFittingSize: UILayoutFittingCompressedSize].height;
+    self.tableView.rowHeight = [self calculateRowHeight];
     // Apple bug: Order matters. Setting the inset before the color leaves the "no cell separators" in the wrong color.
     self.tableView.separatorColor = [[HXOTheme theme] tableSeparatorColor];
-    self.tableView.separatorInset = self.prototypeCell.separatorInset;
+    self.tableView.separatorInset = self.contactCellPrototype.separatorInset;
 #ifdef HIDE_SEPARATORS
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 #endif
+
+    self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
 }
 
@@ -82,14 +88,20 @@ static const CGFloat kMagicSearchBarHeight = 44;
     }
 }
 
+- (CGFloat) calculateRowHeight {
+    return ceilf([self.contactCellPrototype.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height / kHXOGridSpacing) * kHXOGridSpacing;
+}
+
+- (void) preferredContentSizeChanged: (NSNotification*) notification {
+    [self.contactCellPrototype preferredContentSizeChanged: notification];
+    self.tableView.rowHeight = [self calculateRowHeight];
+    [self.tableView reloadData];
+}
+
 - (void) segmentChanged: (id) sender {
     self.currentFetchedResultsController.delegate = nil;
     [self clearFetchedResultsControllers];
     [self.tableView reloadData];
-}
-
-- (UITableViewCell*) prototypeCell {
-    return [self prototypeCellOfClass: [ContactCell class]];
 }
 
 - (void)dealloc {
@@ -111,19 +123,20 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) addButtonPressed: (id) sender {
-    if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 0) {
-        [[InvitationController sharedInvitationController] presentWithViewController: self];
+    if (self.groupContactsToggle) {
+        if (self.groupContactsToggle.selectedSegmentIndex == 0) {
+            [[InvitationController sharedInvitationController] presentWithViewController: self];
+        } else {
+            UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupNavigationController"];
+            [self presentViewController: modalGroupView animated: YES completion:nil];
+        }
     } else {
-        UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupNavigationController"];
-        [self presentViewController: modalGroupView animated: YES completion:nil];
+        [[InvitationController sharedInvitationController] presentWithViewController: self];
     }
 }
 
 - (ContactCell*) contactCellPrototype {
-    if (_contactCellPrototype == nil) {
-        _contactCellPrototype = [self.tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier]];
-    }
-    return _contactCellPrototype;
+     return (ContactCell*)[self prototypeCellOfClass: [ContactCell class]];
 }
 
 - (NSFetchedResultsController *)currentFetchedResultsController {

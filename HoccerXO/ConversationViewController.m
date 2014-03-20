@@ -30,7 +30,6 @@ extern const CGFloat kHXOGridSpacing;
 @interface ConversationViewController ()
 
 @property (nonatomic,readonly) ConversationCell * conversationCell;
-@property (strong, nonatomic) id connectionInfoObserver;
 
 @end
 
@@ -58,8 +57,6 @@ extern const CGFloat kHXOGridSpacing;
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     self.navigationItem.backBarButtonItem = backButton;
 
-    self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
 
@@ -69,12 +66,6 @@ extern const CGFloat kHXOGridSpacing;
 
 - (void) setupTitle {
     self.navigationItem.title = NSLocalizedString(@"Chats", nil);
-}
-
-- (void) preferredContentSizeChanged: (NSNotification*) notification {
-    [self.conversationCell preferredContentSizeChanged: notification];
-    self.tableView.rowHeight = ceilf([self.conversationCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height / kHXOGridSpacing) * 8;
-    [self.tableView reloadData];
 }
 
 - (ChatViewController*) chatViewController {

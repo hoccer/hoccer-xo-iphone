@@ -24,11 +24,7 @@
 		6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A98318DA870400B2D04F /* SRP_FunctionalTest.m */; };
 		6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */; };
 		6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
-		630FD44B18BCAF52000D8C55 /* tabbar_contacts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44618BCAF52000D8C55 /* tabbar_contacts@2x.png */; };
-		630FD44C18BCAF52000D8C55 /* tabbar_conversations@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44718BCAF52000D8C55 /* tabbar_conversations@2x.png */; };
-		630FD44D18BCAF52000D8C55 /* tabbar_media@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44818BCAF52000D8C55 /* tabbar_media@2x.png */; };
-		630FD44E18BCAF52000D8C55 /* tabbar_profile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44918BCAF52000D8C55 /* tabbar_profile@2x.png */; };
-		630FD44F18BCAF52000D8C55 /* tabbar_settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 630FD44A18BCAF52000D8C55 /* tabbar_settings@2x.png */; };
+		630CAA0E18DB5DC300782507 /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */; };
 		630FD45218BCCCA7000D8C55 /* HXOTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOTheme.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
@@ -67,7 +63,6 @@
 		6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDB718A9911800DA2729 /* libZipArchive-ios.a */; };
 		633AA86918C4DCF6009403CB /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		633AA8E718C66DCE009403CB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633AA8E118C66DCE009403CB /* libTestFlight.a */; };
-		633AA8FC18C66DF7009403CB /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AA8FB18C66DF7009403CB /* HXOThemedNavigationController.m */; };
 		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634BE1BE185C9B2B00B2DF05 /* HXOUpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */; };
@@ -414,11 +409,8 @@
 		6302A9BB18DA8A9500B2D04F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6302A9BF18DA8A9500B2D04F /* HoccerXO Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerXO Tests-Prefix.pch"; sourceTree = "<group>"; };
 		6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_FuzzyTest.m; path = HoccerXO/Crypto/SRP/Tests/SRP_FuzzyTest.m; sourceTree = SOURCE_ROOT; };
-		630FD44618BCAF52000D8C55 /* tabbar_contacts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_contacts@2x.png"; sourceTree = "<group>"; };
-		630FD44718BCAF52000D8C55 /* tabbar_conversations@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_conversations@2x.png"; sourceTree = "<group>"; };
-		630FD44818BCAF52000D8C55 /* tabbar_media@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_media@2x.png"; sourceTree = "<group>"; };
-		630FD44918BCAF52000D8C55 /* tabbar_profile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_profile@2x.png"; sourceTree = "<group>"; };
-		630FD44A18BCAF52000D8C55 /* tabbar_settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_settings@2x.png"; sourceTree = "<group>"; };
+		630CAA0C18DB5DC300782507 /* HXOThemedNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOThemedNavigationController.h; sourceTree = "<group>"; };
+		630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
 		630FD45018BCCCA7000D8C55 /* HXOTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTheme.h; sourceTree = "<group>"; };
 		630FD45118BCCCA7000D8C55 /* HXOTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTheme.m; sourceTree = "<group>"; };
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
@@ -477,8 +469,6 @@
 		633AA8E418C66DCE009403CB /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		633AA8E518C66DCE009403CB /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
 		633AA8E618C66DCE009403CB /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
-		633AA8FA18C66DF7009403CB /* HXOThemedNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOThemedNavigationController.h; sourceTree = "<group>"; };
-		633AA8FB18C66DF7009403CB /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
 		633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberInviteViewController.h; sourceTree = "<group>"; };
 		633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberInviteViewController.m; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
@@ -1375,6 +1365,8 @@
 			children = (
 				63AE4548170494AF0099F0CB /* AboutViewController.h */,
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
+				63CA315318D272E70069A0C2 /* CodeScanViewController.h */,
+				63CA315418D272E70069A0C2 /* CodeScanViewController.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
 				6327F37818B8D45B007D79E3 /* ContactManagementViewController.h */,
@@ -1387,8 +1379,8 @@
 				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
 				63C1356617160E2E00969B0B /* HXOTableViewController.h */,
 				63C1356717160E2E00969B0B /* HXOTableViewController.m */,
-				63334F9E18C4AE640032005A /* HXOThemedNavigationController.h */,
-				63334F9F18C4AE640032005A /* HXOThemedNavigationController.m */,
+				630CAA0C18DB5DC300782507 /* HXOThemedNavigationController.h */,
+				630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				636D3FF8170F370E00304EDF /* InviteCodeViewController.h */,
@@ -1411,8 +1403,6 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				63CA315318D272E70069A0C2 /* CodeScanViewController.h */,
-				63CA315418D272E70069A0C2 /* CodeScanViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -2416,11 +2406,11 @@
 				6325029918658D4000543D80 /* HXOAvatarButton.m in Sources */,
 				6302A98618DA870400B2D04F /* BigInteger.m in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
-				633AA8FC18C66DF7009403CB /* HXOThemedNavigationController.m in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
 				E9E92F4118733B7A007B8042 /* DispatchQueueLogFormatter.m in Sources */,
 				632502A71866340A00543D80 /* MessageItems.m in Sources */,
+				630CAA0E18DB5DC300782507 /* HXOThemedNavigationController.m in Sources */,
 				E93ED67A17B93D6F0072FD2C /* EC.m in Sources */,
 				E9A619DE17DF6E3700D4CFC3 /* CopyableUITextField.m in Sources */,
 				E9E92F3D18733B7A007B8042 /* DDFileLogger.m in Sources */,
