@@ -301,8 +301,7 @@
  
  - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    // In the simplest, most efficient, case, reload the table view.
-    [self.tableView reloadData];
+    // In the simpdeletw reloadData];
 }
  */
 

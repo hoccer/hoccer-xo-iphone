@@ -38,6 +38,7 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "GCNetworkQueue.h"
 #import "NSMutableArray+QueueAdditions.h"
+#import "HXOEnvironment.h"
 
 #import <sys/utsname.h>
 
@@ -111,6 +112,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableArray * _attachmentUploadsWaiting;
     NSMutableArray * _attachmentDownloadsActive;
     NSMutableArray * _attachmentUploadsActive;
+    BOOL            _locationUpdatePending;
 }
 
 - (void) identify;
@@ -186,10 +188,38 @@ static NSTimer * _stateNotificationDelayTimer;
         _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
         _attachmentDownloadsActive = [[NSMutableArray alloc] init];
         _attachmentUploadsActive = [[NSMutableArray alloc] init];
+        
+        _locationUpdatePending = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
+
     }
     
     return self;
 }
+
+- (void)defaultsChanged:(NSNotification*)aNotification {
+    // NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
+    BOOL updateLocations = [[[HXOUserDefaults standardUserDefaults] valueForKey:@"updateLocations"] boolValue];
+    if (updateLocations) {
+        [HXOEnvironment.sharedInstance activateLocation];
+    } else {
+        [HXOEnvironment.sharedInstance deactivateLocation];
+        if (_state == kBackendReady && [HXOEnvironment sharedInstance].groupId != nil) {
+            [self destroyEnvironment:[HXOEnvironment sharedInstance] withHandler:^(BOOL ok) {
+                NSLog(@"Enviroment destroyed = %d",ok);
+            }];
+        }
+    }
+}
+
+-(void)sendLocationUpdate {
+    if (_state == kBackendReady && !_locationUpdatePending) {
+        [self updateEnvironment:[HXOEnvironment sharedInstance] withHandler:^(NSString * groupId) {
+            _locationUpdatePending = NO;
+        }];
+    }
+}
+
 
 -(void) cleanupTables {
     [self cleanupGroupMembershipTable];
@@ -1512,6 +1542,45 @@ static NSTimer * _stateNotificationDelayTimer;
          } else {
              NSLog(@"createGroup() failed: %@", responseOrError);
              handler(nil);
+         }
+     }];
+}
+
+// String updateEnvironment(TalkEnvironment environment);
+- (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler {
+    NSDictionary * environmentDict = [environment asDictionary];
+    
+    // [self validateObject: groupDict forEntity:@"RPC_Group_out"]; // TODO: Handle Validation Error
+    
+    [_serverConnection invoke: @"updateEnvironment" withParams: @[environmentDict]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSString * groupId = (NSString*)responseOrError;
+             environment.groupId = groupId;
+             [self.delegate saveDatabase];
+             handler(groupId);
+             if (GROUP_DEBUG) NSLog(@"updateEnvironment() returned groupId: %@", responseOrError);
+         } else {
+             NSLog(@"updateEnvironment() failed: %@", responseOrError);
+             handler(nil);
+         }
+     }];
+}
+
+// void destroyEnvironment(String clientId, String groupId);
+- (void) destroyEnvironment:(HXOEnvironment *) environment withHandler:(GenericResultHandler)handler {
+    environment.clientId = [UserProfile sharedProfile].clientId;
+    
+    [_serverConnection invoke: @"destroyEnvironment" withParams: @[environment.clientId, environment.groupId]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             handler(YES);
+             if (GROUP_DEBUG) NSLog(@"destroyEnvironment() returned success");
+         } else {
+             NSLog(@"destroyEnvironment() failed: %@", responseOrError);
+             handler(NO);
          }
      }];
 }
