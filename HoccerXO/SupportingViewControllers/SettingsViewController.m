@@ -39,6 +39,8 @@
         storyboardId = @"aboutViewController";
     } else if ([specifier.key isEqualToString: @"testingGround"]) {
         storyboardId = @"testingGround";
+    } else if ([specifier.key isEqualToString: @"datasheetTesting"]) {
+        storyboardId = @"datasheetTesting";
     } else if ([specifier.key isEqualToString: @"webServer"]) {
 #ifdef WITH_WEBSERVER
         storyboardId = @"serverViewController";

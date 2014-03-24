@@ -1369,6 +1369,8 @@
 				63CA315418D272E70069A0C2 /* CodeScanViewController.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
+				630CAA5318DCC8AE00782507 /* DataSheetViewController.h */,
+				630CAA5418DCC8AE00782507 /* DataSheetViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
@@ -1401,8 +1403,6 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				630CAA5318DCC8AE00782507 /* DataSheetViewController.h */,
-				630CAA5418DCC8AE00782507 /* DataSheetViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;

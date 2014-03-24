@@ -82,6 +82,14 @@
 			<key>Key</key>
 			<string>qrScanner</string>
 		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Datasheet Testing</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Key</key>
+			<string>datasheetTesting</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Settings</string>
