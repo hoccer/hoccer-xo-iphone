@@ -174,7 +174,7 @@ extern const CGFloat kHXOGridSpacing;
                      atIndexPath:(NSIndexPath *)indexPath
 {
     [super fetchedResultsController: fetchedResultsController configureCell: aCell atIndexPath: indexPath];
-    
+
     //NSLog(@"Conv configureCell atIndexPath=%@",indexPath);
     ConversationCell * cell = (ConversationCell*)aCell;
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];

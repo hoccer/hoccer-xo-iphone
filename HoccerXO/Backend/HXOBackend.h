@@ -19,6 +19,7 @@
 @class Group;
 @class GroupMembership;
 @class GCNetworkQueue;
+@class HXOEnvironment;
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^GenerateIdHandler)(NSString*);
@@ -39,6 +40,7 @@ typedef void (^GroupHandler)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
+typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 @protocol HXODelegate <NSObject>
 
@@ -136,6 +138,11 @@ typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment;
     
 - (void) checkTransferQueues;
+
+- (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler;
+- (void) destroyEnvironment:(HXOEnvironment *) environment withHandler:(GenericResultHandler)handler;
+- (void) sendLocationUpdate;
+
 
 -(Contact *) getContactByClientId:(NSString *) theClientId;
 

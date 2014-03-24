@@ -309,6 +309,7 @@ static const NSUInteger kHXOPasswordLength    = 23;
 - (void) deleteCredentials {
     [_accountItem resetKeychainItem];
     [_saltItem resetKeychainItem];
+    [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
 }
 
 

@@ -6,6 +6,16 @@
 	<array>
 		<dict>
 			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Update Locations</string>
+			<key>Key</key>
+			<string>updateLocations</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
 			<string>server_changed_instructions</string>

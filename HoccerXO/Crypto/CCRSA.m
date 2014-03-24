@@ -330,6 +330,9 @@ static CCRSA *instance;
 }
 
 - (SecKeyRef)getPrivateKeyRefForPublicKeyIdString:(NSString*) publicKeyIdString {
+    if (publicKeyIdString == nil) {
+        return nil;
+    }
     if ([publicKeyIdString isEqualToString:[CCRSA keyIdString:[CCRSA calcKeyId:[self getPublicKeyBits]]]]) {
         return [self getPrivateKeyRef];
     }
@@ -337,6 +340,9 @@ static CCRSA *instance;
 }
 
 - (SecKeyRef)getPrivateKeyRefForPublicKeyId:(NSData*) publicKeyId {
+    if (publicKeyId == nil) {
+        return nil;
+    }
     if ([publicKeyId isEqualToData:[CCRSA calcKeyId:[self getPublicKeyBits]]]) {
         return [self getPrivateKeyRef];
     }
