@@ -1014,27 +1014,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
-
-#pragma mark - Growing Text View Delegate
-
-- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height {
-    float diff = (growingTextView.frame.size.height - height);
-
-	CGRect r = _chatbar.frame;
-    r.size.height -= diff;
-    r.origin.y += diff;
-	_chatbar.frame = r;
-
-    r = self.tableView.frame;
-    r.size.height += diff;
-    self.tableView.frame = r;
-
-    CGPoint contentOffset = self.tableView.contentOffset;
-    contentOffset.y -= diff;
-    self.tableView.contentOffset = contentOffset;
-
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
