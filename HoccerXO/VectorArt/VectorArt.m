@@ -32,7 +32,7 @@
     view.clipsToBounds = NO;
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [[UIScreen mainScreen] scale]);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    CGContextRef context = UIGraphicsGetCurrentContext();
+    //CGContextRef context = UIGraphicsGetCurrentContext();
     //CGContextTranslateCTM(context, -(self.path.bounds.origin.x), -(self.path.bounds.origin.y));
 
     if (self.fillColor) {

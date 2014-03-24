@@ -40,7 +40,7 @@
 - (void) cacheClass: (id) cellClass {
     if (_prototypes[cellClass] == nil) {
         [self.tableView registerClass: cellClass forCellReuseIdentifier: [cellClass reuseIdentifier]];
-        _prototypes[cellClass] = [[cellClass alloc] initWithStyle: UITableViewStyleGrouped  reuseIdentifier: [cellClass reuseIdentifier]];
+        _prototypes[cellClass] = [[cellClass alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: [cellClass reuseIdentifier]];
     }
 
 }
