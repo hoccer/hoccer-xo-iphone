@@ -139,7 +139,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     CGFloat s = 50;
     CGFloat height = MIN(150, MAX( s - 2 * kHXOGridSpacing, 0));
-    self.messageField = [[UITextView alloc] initWithFrame: CGRectMake(0, kHXOGridSpacing, self.chatbar.bounds.size.width - 2 * s, height)];
+    self.messageField = [[UITextView alloc] initWithFrame: CGRectMake(0, kHXOGridSpacing, self.chatbar.bounds.size.width - (2 * s + 10), height)];
     self.messageField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.messageField.backgroundColor = [UIColor whiteColor];
     self.messageField.layer.cornerRadius = kHXOGridSpacing / 2;
@@ -153,14 +153,33 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     UIBarButtonItem * messageFieldItem = [[UIBarButtonItem alloc] initWithCustomView: self.messageField];
 
     UIImage * icon = [[PaperDart alloc] init].image;
-    UIBarButtonItemStyle style = UIBarButtonItemStylePlain;
-    UIBarButtonItem * sendButtonItem = [[UIBarButtonItem alloc] initWithImage: icon style: style
-                                                                       target: self action: @selector(sendPressed:)];
+    UIButton * sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
+    sendButton.frame = CGRectMake(0, 0, 30, s);
+    [sendButton setImage: icon forState: UIControlStateNormal];
+    [sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
+    UIBarButtonItem * sendButtonItem = [[UIBarButtonItem alloc] initWithCustomView: [self chatbarAlignmentWrapper: sendButton]];
     icon = [[PaperClip alloc] init].image;
-    UIBarButtonItem * attachmentButtonItem = [[UIBarButtonItem alloc] initWithImage: icon style: style
-                                                                             target: self action: @selector(attachmentPressed:)];
+
+    UIButton * attachmentButton = [UIButton buttonWithType: UIButtonTypeSystem];
+    attachmentButton.frame = CGRectMake(0, 0, 30, s);
+    [attachmentButton setImage: icon forState: UIControlStateNormal];
+    [attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
+    UIBarButtonItem * attachmentButtonItem = [[UIBarButtonItem alloc] initWithCustomView: [self chatbarAlignmentWrapper: attachmentButton]];
 
     self.chatbar.items = @[attachmentButtonItem, messageFieldItem, sendButtonItem];
+    self.messageField.text = @"";
+}
+
+- (UIView*) chatbarAlignmentWrapper: (UIView*) item {
+    CGRect frame = item.frame;
+    frame.size.height = self.chatbar.bounds.size.height;
+    UIView * wrapper = [[UIView alloc] initWithFrame: frame];
+
+    item.autoresizingMask |= UIViewAutoresizingFlexibleTopMargin;
+    [wrapper addSubview: item];
+    //wrapper.backgroundColor = [UIColor orangeColor];
+    wrapper.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    return wrapper;
 }
 
 - (UIMenuController *)setupLongPressMenu {
@@ -1265,7 +1284,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             //NSLog(@"ChatViewController observeValueForKeyPath: unhandled change");
         }
     } else if ([keyPath isEqualToString: @"contentSize"] && [object isEqual: self.messageField]) {
-        NSLog(@"content size: %@", NSStringFromCGSize(self.messageField.contentSize));
         CGRect frame = self.messageField.frame;
         CGFloat kHXOGridSpacing = 8;
         frame.size.height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, self.messageField.contentSize.height));
