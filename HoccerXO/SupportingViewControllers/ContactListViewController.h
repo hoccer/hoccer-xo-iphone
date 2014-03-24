@@ -13,7 +13,7 @@
 
 @interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
-@property (nonatomic, readonly) UISearchBar *                searchBar;
+@property (nonatomic, strong) IBOutlet UISearchBar *                searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (nonatomic, assign)   BOOL                         hasAddButton;
 @property (nonatomic, assign)   BOOL                         hasGroupContactToggle;

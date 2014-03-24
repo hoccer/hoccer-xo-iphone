@@ -56,10 +56,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     [self setupTitle];
 
-    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight)];
+    if ( ! self.searchBar) {
+        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight)];
+        self.tableView.tableHeaderView = self.searchBar;
+    }
     self.searchBar.delegate = self;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
-    self.tableView.tableHeaderView = self.searchBar;
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
     [HXOBackend registerConnectionInfoObserverFor:self];
@@ -76,7 +78,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
-
 }
 
 - (void) setupTitle {
