@@ -25,6 +25,7 @@
 		6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */; };
 		6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		630CAA0E18DB5DC300782507 /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */; };
+		630CAA5518DCC8AE00782507 /* DataSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA5418DCC8AE00782507 /* DataSheetViewController.m */; };
 		630FD45218BCCCA7000D8C55 /* HXOTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOTheme.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
@@ -45,7 +46,6 @@
 		6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */; };
 		6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327F37318B8C390007D79E3 /* Accelerate.framework */; };
 		6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F37618B8D018007D79E3 /* SegmentedViewController.m */; };
-		6327F37A18B8D45B007D79E3 /* ContactManagementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */; };
 		6329F7B018C0000E007AFF32 /* GridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6329F7AF18C0000E007AFF32 /* GridView.m */; };
 		63304914170044940045E64E /* avatar_default_channel.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490C170044940045E64E /* avatar_default_channel.png */; };
 		63304915170044940045E64E /* avatar_default_channel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6330490D170044940045E64E /* avatar_default_channel@2x.png */; };
@@ -411,6 +411,8 @@
 		6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_FuzzyTest.m; path = HoccerXO/Crypto/SRP/Tests/SRP_FuzzyTest.m; sourceTree = SOURCE_ROOT; };
 		630CAA0C18DB5DC300782507 /* HXOThemedNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOThemedNavigationController.h; sourceTree = "<group>"; };
 		630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
+		630CAA5318DCC8AE00782507 /* DataSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetViewController.h; sourceTree = "<group>"; };
+		630CAA5418DCC8AE00782507 /* DataSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetViewController.m; sourceTree = "<group>"; };
 		630FD45018BCCCA7000D8C55 /* HXOTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTheme.h; sourceTree = "<group>"; };
 		630FD45118BCCCA7000D8C55 /* HXOTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTheme.m; sourceTree = "<group>"; };
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
@@ -448,8 +450,6 @@
 		6327F37318B8C390007D79E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		6327F37518B8D018007D79E3 /* SegmentedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentedViewController.h; sourceTree = "<group>"; };
 		6327F37618B8D018007D79E3 /* SegmentedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentedViewController.m; sourceTree = "<group>"; };
-		6327F37818B8D45B007D79E3 /* ContactManagementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactManagementViewController.h; sourceTree = "<group>"; };
-		6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactManagementViewController.m; sourceTree = "<group>"; };
 		6329F7AE18C0000E007AFF32 /* GridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridView.h; sourceTree = "<group>"; };
 		6329F7AF18C0000E007AFF32 /* GridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridView.m; sourceTree = "<group>"; };
 		6330490C170044940045E64E /* avatar_default_channel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_default_channel.png; sourceTree = "<group>"; };
@@ -1369,8 +1369,6 @@
 				63CA315418D272E70069A0C2 /* CodeScanViewController.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
-				6327F37818B8D45B007D79E3 /* ContactManagementViewController.h */,
-				6327F37918B8D45B007D79E3 /* ContactManagementViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
@@ -1403,6 +1401,8 @@
 				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
+				630CAA5318DCC8AE00782507 /* DataSheetViewController.h */,
+				630CAA5418DCC8AE00782507 /* DataSheetViewController.m */,
 			);
 			name = "Supporting View Controllers";
 			path = SupportingViewControllers;
@@ -2287,7 +2287,6 @@
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
-				6327F37A18B8D45B007D79E3 /* ContactManagementViewController.m in Sources */,
 				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
 				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
@@ -2309,6 +2308,7 @@
 				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
+				630CAA5518DCC8AE00782507 /* DataSheetViewController.m in Sources */,
 				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
 				E96CB02C171457F9005F8FFA /* CCRSA.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
