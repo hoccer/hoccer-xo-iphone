@@ -28,20 +28,22 @@
 }
 
 - (UITableViewCell*) prototypeCellOfClass:(id)cellClass {
-    [self cacheClass: cellClass];
-    return _prototypes[cellClass];
+    return _prototypes[[cellClass reuseIdentifier]];
+}
+
+- (UITableViewCell*) prototypeCellForIdentifier: (NSString*) identifier {
+    return _prototypes[identifier];
 }
 
 - (UITableViewCell*) dequeueReusableCellOfClass:(id)cellClass forIndexPath: (NSIndexPath*) indexPath {
-    [self cacheClass: cellClass];
     return [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier] forIndexPath: indexPath];
 }
 
-- (void) cacheClass: (id) cellClass {
-    if (_prototypes[cellClass] == nil) {
+- (void) registerCellClass: (id) cellClass {
+    if (_prototypes[[cellClass reuseIdentifier]] == nil) {
         [self.tableView registerClass: cellClass forCellReuseIdentifier: [cellClass reuseIdentifier]];
-        _prototypes[cellClass] = [[cellClass alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: [cellClass reuseIdentifier]];
+        _prototypes[[cellClass reuseIdentifier]] = [self.tableView dequeueReusableCellWithIdentifier: [cellClass reuseIdentifier]];
     }
-
 }
+
 @end

@@ -26,6 +26,13 @@
 		6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		630CAA0E18DB5DC300782507 /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */; };
 		630CAA5518DCC8AE00782507 /* DataSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA5418DCC8AE00782507 /* DataSheetViewController.m */; };
+		630CAB7818E0F6C400782507 /* ContactSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7718E0F6C400782507 /* ContactSheetController.m */; };
+		630CAB7B18E0F78500782507 /* DataSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7A18E0F78500782507 /* DataSheetController.m */; };
+		630CAB8218E1E00C00782507 /* DataSheetTextInputCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8118E1E00C00782507 /* DataSheetTextInputCell.m */; };
+		630CAB8518E1E31600782507 /* DataSheetActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8418E1E31600782507 /* DataSheetActionCell.m */; };
+		630CAB8818E1E84400782507 /* DataSheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8718E1E84400782507 /* DataSheetCell.m */; };
+		630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8A18E22EBC00782507 /* HXOLabel.m */; };
+		630CAB8E18E2333E00782507 /* DataSheetKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8D18E2333E00782507 /* DataSheetKeyValueCell.m */; };
 		630FD45218BCCCA7000D8C55 /* HXOTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOTheme.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
@@ -411,6 +418,20 @@
 		630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
 		630CAA5318DCC8AE00782507 /* DataSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetViewController.h; sourceTree = "<group>"; };
 		630CAA5418DCC8AE00782507 /* DataSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetViewController.m; sourceTree = "<group>"; };
+		630CAB7618E0F6C400782507 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetController.h; sourceTree = "<group>"; };
+		630CAB7718E0F6C400782507 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetController.m; sourceTree = "<group>"; };
+		630CAB7918E0F78500782507 /* DataSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetController.h; sourceTree = "<group>"; };
+		630CAB7A18E0F78500782507 /* DataSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetController.m; sourceTree = "<group>"; };
+		630CAB8018E1E00C00782507 /* DataSheetTextInputCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetTextInputCell.h; sourceTree = "<group>"; };
+		630CAB8118E1E00C00782507 /* DataSheetTextInputCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetTextInputCell.m; sourceTree = "<group>"; };
+		630CAB8318E1E31600782507 /* DataSheetActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetActionCell.h; sourceTree = "<group>"; };
+		630CAB8418E1E31600782507 /* DataSheetActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetActionCell.m; sourceTree = "<group>"; };
+		630CAB8618E1E84400782507 /* DataSheetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetCell.h; sourceTree = "<group>"; };
+		630CAB8718E1E84400782507 /* DataSheetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetCell.m; sourceTree = "<group>"; };
+		630CAB8918E22EBC00782507 /* HXOLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLabel.h; sourceTree = "<group>"; };
+		630CAB8A18E22EBC00782507 /* HXOLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLabel.m; sourceTree = "<group>"; };
+		630CAB8C18E2333E00782507 /* DataSheetKeyValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetKeyValueCell.h; sourceTree = "<group>"; };
+		630CAB8D18E2333E00782507 /* DataSheetKeyValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetKeyValueCell.m; sourceTree = "<group>"; };
 		630FD45018BCCCA7000D8C55 /* HXOTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTheme.h; sourceTree = "<group>"; };
 		630FD45118BCCCA7000D8C55 /* HXOTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTheme.m; sourceTree = "<group>"; };
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
@@ -973,6 +994,32 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		630CAB7518E0F67200782507 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				630CAB7618E0F6C400782507 /* ContactSheetController.h */,
+				630CAB7718E0F6C400782507 /* ContactSheetController.m */,
+				630CAB7918E0F78500782507 /* DataSheetController.h */,
+				630CAB7A18E0F78500782507 /* DataSheetController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		630CAB7F18E1DFE200782507 /* DataSheetCells */ = {
+			isa = PBXGroup;
+			children = (
+				630CAB8318E1E31600782507 /* DataSheetActionCell.h */,
+				630CAB8418E1E31600782507 /* DataSheetActionCell.m */,
+				630CAB8618E1E84400782507 /* DataSheetCell.h */,
+				630CAB8718E1E84400782507 /* DataSheetCell.m */,
+				630CAB8018E1E00C00782507 /* DataSheetTextInputCell.h */,
+				630CAB8118E1E00C00782507 /* DataSheetTextInputCell.m */,
+				630CAB8C18E2333E00782507 /* DataSheetKeyValueCell.h */,
+				630CAB8D18E2333E00782507 /* DataSheetKeyValueCell.m */,
+			);
+			path = DataSheetCells;
+			sourceTree = "<group>";
+		};
 		630FD44518BCAF52000D8C55 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1479,6 +1526,7 @@
 				631A96F818AB9D24003363F5 /* BuildUtilities */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
+				630CAB7518E0F67200782507 /* Controllers */,
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 				E96CB01D1714572C005F8FFA /* Crypto */,
@@ -1495,8 +1543,8 @@
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
 				63AE4541170490B50099F0CB /* Supporting View Controllers */,
 				631F6CDA170654A600FB28D5 /* UtilityCategories */,
-				63D4916716CAA17D00FD395F /* Views */,
 				63CB3E7618D4A86E006BB511 /* VectorArt */,
+				63D4916716CAA17D00FD395F /* Views */,
 			);
 			path = HoccerXO;
 			sourceTree = "<group>";
@@ -1597,6 +1645,7 @@
 				633A9B18177B21A700E066EF /* Controls */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
+				630CAB7F18E1DFE200782507 /* DataSheetCells */,
 				6329F7AE18C0000E007AFF32 /* GridView.h */,
 				6329F7AF18C0000E007AFF32 /* GridView.m */,
 				63DC015917147B1600609513 /* HXOTableViewCell.h */,
@@ -1612,6 +1661,8 @@
 				639094C7173A871500DF889B /* UIButton+GlossyRounded.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
+				630CAB8918E22EBC00782507 /* HXOLabel.h */,
+				630CAB8A18E22EBC00782507 /* HXOLabel.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2234,6 +2285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				630CAB8E18E2333E00782507 /* DataSheetKeyValueCell.m in Sources */,
 				6302A98A18DA870400B2D04F /* SRP.m in Sources */,
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
@@ -2243,6 +2295,7 @@
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
+				630CAB8518E1E31600782507 /* DataSheetActionCell.m in Sources */,
 				63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */,
 				63B7900318D4E546003A9125 /* IconSettings.m in Sources */,
 				63C413BC16E94735004E1F6D /* ConversationCell.m in Sources */,
@@ -2267,6 +2320,7 @@
 				6302A98C18DA870400B2D04F /* SRPParameters.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
+				630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
 				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
@@ -2289,11 +2343,13 @@
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
 				630CAA5518DCC8AE00782507 /* DataSheetViewController.m in Sources */,
+				630CAB8818E1E84400782507 /* DataSheetCell.m in Sources */,
 				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
 				E96CB02C171457F9005F8FFA /* CCRSA.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
 				63808A231858A76E0001AC96 /* TextSection.m in Sources */,
 				E9E92F7318733D01007B8042 /* MultipartMessageHeader.m in Sources */,
+				630CAB8218E1E00C00782507 /* DataSheetTextInputCell.m in Sources */,
 				E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */,
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
@@ -2345,6 +2401,7 @@
 				E9D1148E1736702E00737EF7 /* GCNetworkReachability.m in Sources */,
 				E9D1148F1736702E00737EF7 /* GCNetworkRequest.m in Sources */,
 				E9D114901736702E00737EF7 /* GCXMLRequestOperation.m in Sources */,
+				630CAB7B18E0F78500782507 /* DataSheetController.m in Sources */,
 				E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */,
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				634BE1BE185C9B2B00B2DF05 /* HXOUpDownLoadControl.m in Sources */,
@@ -2371,6 +2428,7 @@
 				E9E92F7518733D01007B8042 /* HTTPAsyncFileResponse.m in Sources */,
 				6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
+				630CAB7818E0F6C400782507 /* ContactSheetController.m in Sources */,
 				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,

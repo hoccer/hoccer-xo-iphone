@@ -60,11 +60,11 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Chat Cell Testing</string>
+			<string>Datasheet Testing</string>
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Key</key>
-			<string>testingGround</string>
+			<string>datasheetTesting</string>
 		</dict>
 		<dict>
 			<key>Title</key>
@@ -84,11 +84,11 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Datasheet Testing</string>
+			<string>Chat Cell Testing</string>
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Key</key>
-			<string>datasheetTesting</string>
+			<string>testingGround</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>

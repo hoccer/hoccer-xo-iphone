@@ -42,11 +42,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @implementation ContactListViewController
 
 @synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize contactCellPrototype = _contactCellPrototype;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self registerCellClass: [ContactCell class]];
+    
     if (self.hasAddButton) {
         UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd target: self action: @selector(addButtonPressed:)];
         self.navigationItem.rightBarButtonItem = addButton;

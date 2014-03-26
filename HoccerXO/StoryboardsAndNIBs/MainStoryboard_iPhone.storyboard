@@ -60,8 +60,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Datasheet" id="jAW-1q-Ob2"/>
+                    <connections>
+                        <outlet property="dataSheetController" destination="ct6-Sp-MIE" id="0ej-vS-uwK"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E2G-hI-lkN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="ct6-Sp-MIE" customClass="ContactSheetController"/>
             </objects>
             <point key="canvasLocation" x="2322" y="-2000"/>
         </scene>

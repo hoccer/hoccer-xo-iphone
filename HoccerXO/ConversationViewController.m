@@ -50,6 +50,8 @@ extern const CGFloat kHXOGridSpacing;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self registerCellClass: [ConversationCell class]];
+    
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }

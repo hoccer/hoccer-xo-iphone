@@ -8,26 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class DataSheetController;
+#import "HXOTableViewController.h"
 
-@protocol DataSheetControllerDelegate <NSObject>
+#import "DataSheetController.h"
 
-- (void) controllerWillChangeContent: (DataSheetController*) controller;
-- (void) controller: (DataSheetController*) controller didChangeObject: (NSIndexPath*) indexPath forChangeType: (int) type newIndexPath: (NSIndexPath*) newIndexPath;
-- (void) controller: (DataSheetController*) controller didChangeSection: (NSUInteger) sectionIndex;
-- (void) controllerDidChangeContent: (DataSheetController*) controller;
+@interface DataSheetViewController : HXOTableViewController <DataSheetControllerDelegate>
 
-@end
-
-@interface DataSheetController : NSObject
-
-@property (nonatomic,weak)     id<DataSheetControllerDelegate> delegate;
-
-@end
-
-
-@interface DataSheetViewController : UITableViewController<DataSheetControllerDelegate>
-
-@property (nonatomic,strong) DataSheetController * dataSheetController;
+@property (nonatomic,strong) IBOutlet DataSheetController * dataSheetController;
 
 @end

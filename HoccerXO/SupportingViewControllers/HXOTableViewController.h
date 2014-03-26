@@ -13,7 +13,9 @@
     NSMutableDictionary * _prototypes;
 }
 
+- (void) registerCellClass: (id) cellClass;
 - (UITableViewCell*) prototypeCellOfClass: (id) cellClass;
+- (UITableViewCell*) prototypeCellForIdentifier: (NSString*) identifier;
 - (UITableViewCell*) dequeueReusableCellOfClass: (id) cellClass forIndexPath: (NSIndexPath*) indexPath;
 
 @end

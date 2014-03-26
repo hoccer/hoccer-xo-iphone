@@ -57,6 +57,8 @@
         return;
     }
 
+    // InAppSettingsKit ViewControllers don't come from a storyboard.
+    // Search the view controller stack until we find one of ours.
     UIViewController * vc = self;
     while (vc.storyboard == nil) {
         vc = vc.parentViewController;

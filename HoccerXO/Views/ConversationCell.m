@@ -52,7 +52,8 @@ extern const CGFloat kHXOGridSpacing;
     [self addSubview: self.actualAccessoryView];
     
     self.subtitleLabel.numberOfLines = 2;
-    self.subtitleLabel.text = @"Lorem\nIpsum\n";
+    self.subtitleLabel.text = @"Lorem\nIpsum";
+    //self.subtitleLabel.backgroundColor = [UIColor orangeColor];
 
 }
 
@@ -60,7 +61,7 @@ extern const CGFloat kHXOGridSpacing;
     self.dateLabel.font = [[HXOTheme theme] smallBoldTextFont];
     NSMutableDictionary * v = [NSMutableDictionary dictionaryWithDictionary: views];
     v[@"date"] = self.dateLabel;
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", 16.0, 6.0 * 8, 16.0, 16.0];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", 2*kHXOGridSpacing, 6 * kHXOGridSpacing, 2*kHXOGridSpacing, 2*kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: v]];
     
