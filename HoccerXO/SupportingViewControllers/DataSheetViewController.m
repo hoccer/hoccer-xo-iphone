@@ -28,6 +28,9 @@ extern const CGFloat kHXOGridSpacing;
     [self registerCellClass: [DataSheetActionCell class]];
 
     self.dataSheetController.delegate = self;
+
+    self.dataSheetController.inspectedObject = @{@"nickname": @"Dingenshier"};
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -35,15 +38,15 @@ extern const CGFloat kHXOGridSpacing;
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.dataSheetController.items.count;
+    return self.dataSheetController.currentItems.count;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[self.dataSheetController.items[section] items] count];
+    return [[self.dataSheetController.currentItems[section] items] count];
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    DataSheetItem * item = [self.dataSheetController.items[indexPath.section] items][indexPath.row];
+    DataSheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
     DataSheetCell * cell = [self.tableView dequeueReusableCellWithIdentifier: item.cellIdentifier];
     [self configureCell: cell withItem: item forRowAtIndexPath: indexPath];
     return cell;
@@ -66,15 +69,63 @@ extern const CGFloat kHXOGridSpacing;
     return [prototype.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
 }
 
+- (void) controllerDidChangeObject:(DataSheetController *)controller {
+    [self updateRightButton];
+}
+
+- (void) updateRightButton {
+    UIBarButtonItem * button = nil;
+    if (self.dataSheetController.isEditable) {
+        button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: (self.dataSheetController.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit) target: self        action:@selector(rightButtonPressed:)];
+    }
+    self.navigationItem.rightBarButtonItem = button;
+
+}
+
+- (void) rightButtonPressed: (id) sender {
+    [self.dataSheetController editModeChanged: sender];
+    [self updateRightButton];
+}
+
 - (void) controllerWillChangeContent: (DataSheetController*) controller {
     [self.tableView beginUpdates];
 }
 
 - (void) controller: (DataSheetController*) controller didChangeObject: (NSIndexPath*) indexPath forChangeType: (DataSheetChangeType) type newIndexPath: (NSIndexPath*) newIndexPath {
+    switch(type) {
+        case DataSheetChangeInsert:
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
 
+        case DataSheetChangeDelete:
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+
+        case DataSheetChangeUpdate:
+            /* workaround - see:
+             * http://stackoverflow.com/questions/14354315/simultaneous-move-and-update-of-uitableviewcell-and-nsfetchedresultscontroller
+             * and
+             * http://developer.apple.com/library/ios/#releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/
+             */
+            [self configureCell: (DataSheetCell*)[self.tableView cellForRowAtIndexPath:indexPath] withItem: [controller itemForIndexPath: indexPath] forRowAtIndexPath: indexPath];
+            break;
+        default:
+            break;
+    }
 }
 
-- (void) controller: (DataSheetController*) controller didChangeSection: (NSUInteger) sectionIndex {
+- (void) controller: (DataSheetController*) controller didChangeSection: (NSUInteger) sectionIndex forChangeType: (DataSheetChangeType) type {
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+        default:
+            break;
+    }
 
 }
 

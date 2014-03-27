@@ -19,7 +19,7 @@ extern const CGFloat kHXOGridSpacing;
     self.valueView.autoresizingMask = UIViewAutoresizingNone;
     self.valueView.translatesAutoresizingMaskIntoConstraints = NO;
     self.valueView.font = self.titleLabel.font;
-    self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    //self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.valueView];
     NSDictionary * views = @{@"title": self.titleLabel, @"value": self.valueView};
     NSString * format = [NSString stringWithFormat: @"H:|-%f-[title(<=30@750)]-%f-[value]-%f-|", 2 * kHXOGridSpacing, kHXOGridSpacing, kHXOGridSpacing];

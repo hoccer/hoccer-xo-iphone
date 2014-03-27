@@ -17,23 +17,28 @@
 @implementation ContactSheetController
 
 - (void) commonInit {
-    DataSheetItem * nickNameItem = [self itemWithTitle: @"Name" cellIdentifier: @"DataSheetTextInputCell"];
+    [super commonInit];
+    
+    self.isEditable = YES;
+    
+    DataSheetItem * nickNameItem = [self itemWithIdentifier: @"Name" cellIdentifier: @"DataSheetTextInputCell"];
     nickNameItem.valuePath = @"nickname";
     nickNameItem.placeholder = NSLocalizedString(@"Your Name", nil);
+    nickNameItem.enabledMask = DataSheetModeEdit;
 
-    self.keyItem = [self itemWithTitle: @"Key" cellIdentifier: @"DataSheetKeyValueCell"];
+    self.keyItem = [self itemWithIdentifier: @"Key" cellIdentifier: @"DataSheetKeyValueCell"];
 
     DataSheetSection * commonSection = [DataSheetSection dataSheetSection];
     commonSection.items = @[nickNameItem, self.keyItem];
 
-    DataSheetItem * destructiveButton = [self itemWithTitle: @"Delete" cellIdentifier: @"DataSheetActionCell"];
+    DataSheetItem * magicButton = [self itemWithIdentifier: @"Magic" cellIdentifier: @"DataSheetActionCell"];
+    magicButton.visibilityMask = DataSheetModeEdit;
+    DataSheetItem * destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DataSheetActionCell"];
 
     DataSheetSection * destructiveSection = [DataSheetSection dataSheetSection];
-    destructiveSection.items = @[destructiveButton];
+    destructiveSection.items = @[magicButton, destructiveButton];
 
     self.items = @[commonSection, destructiveSection];
-
-    //self.inspectedObject = @{@"nickname": @"Dingenshier"};
 }
 
 - (id) valueForItem:(DataSheetItem *)item {
