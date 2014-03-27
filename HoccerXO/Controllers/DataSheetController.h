@@ -29,7 +29,7 @@ typedef enum DataSheetModes {
 
 - (void) controllerWillChangeContent: (DataSheetController*) controller;
 - (void) controller: (DataSheetController*) controller didChangeObject: (NSIndexPath*) indexPath forChangeType: (DataSheetChangeType) type newIndexPath: (NSIndexPath*) newIndexPath;
-- (void) controller: (DataSheetController*) controller didChangeSection: (NSUInteger) sectionIndex forChangeType: (DataSheetChangeType) type;
+- (void) controller: (DataSheetController*) controller didChangeSection: (NSIndexPath*) indexPath forChangeType: (DataSheetChangeType) type;
 - (void) controllerDidChangeContent: (DataSheetController*) controller;
 
 @end
@@ -52,10 +52,11 @@ typedef enum DataSheetModes {
 
 @interface DataSheetSection : NSObject
 
+@property (nonatomic, strong) NSString * identifier;
 @property (nonatomic,strong) NSArray * items;
 @property (nonatomic,strong) NSAttributedString * footerText;
 
-+ (id) dataSheetSection;
++ (id) dataSheetSectionWithIdentifier: (NSString*) identifier;
 
 @end
 

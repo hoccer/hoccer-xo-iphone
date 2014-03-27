@@ -114,14 +114,14 @@ extern const CGFloat kHXOGridSpacing;
     }
 }
 
-- (void) controller: (DataSheetController*) controller didChangeSection: (NSUInteger) sectionIndex forChangeType: (DataSheetChangeType) type {
+- (void) controller: (DataSheetController*) controller didChangeSection: (NSIndexPath*) indexPath forChangeType: (DataSheetChangeType) type {
     switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+        case DataSheetChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex: indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
             break;
 
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+        case DataSheetChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex: indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
             break;
         default:
             break;

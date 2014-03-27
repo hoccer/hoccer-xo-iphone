@@ -28,17 +28,26 @@
 
     self.keyItem = [self itemWithIdentifier: @"Key" cellIdentifier: @"DataSheetKeyValueCell"];
 
-    DataSheetSection * commonSection = [DataSheetSection dataSheetSection];
+    DataSheetSection * commonSection = [DataSheetSection dataSheetSectionWithIdentifier: @"common_section"];
     commonSection.items = @[nickNameItem, self.keyItem];
+
+    DataSheetItem * bingo = [self itemWithIdentifier: @"Bingo" cellIdentifier: @"DataSheetActionCell"];
+    bingo.visibilityMask = DataSheetModeEdit;
+    DataSheetItem * bongo = [self itemWithIdentifier: @"Bongo" cellIdentifier: @"DataSheetActionCell"];
+    bongo.visibilityMask = DataSheetModeEdit;
+    DataSheetSection * bingoBongoSection = [DataSheetSection dataSheetSectionWithIdentifier: @"bingo_bongo_section"];
+    bingoBongoSection.items = @[bingo, bongo];
+
+
 
     DataSheetItem * magicButton = [self itemWithIdentifier: @"Magic" cellIdentifier: @"DataSheetActionCell"];
     magicButton.visibilityMask = DataSheetModeEdit;
     DataSheetItem * destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DataSheetActionCell"];
 
-    DataSheetSection * destructiveSection = [DataSheetSection dataSheetSection];
+    DataSheetSection * destructiveSection = [DataSheetSection dataSheetSectionWithIdentifier: @"destructive_section"];
     destructiveSection.items = @[magicButton, destructiveButton];
 
-    self.items = @[commonSection, destructiveSection];
+    self.items = @[commonSection, bingoBongoSection, destructiveSection];
 }
 
 - (id) valueForItem:(DataSheetItem *)item {
