@@ -1,16 +1,16 @@
 //
-//  DataSheetTextInputCell.m
+//  DatasheetTextInputCell.m
 //  HoccerXO
 //
 //  Created by David Siegel on 25.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "DataSheetTextInputCell.h"
+#import "DatasheetTextInputCell.h"
 
 extern const CGFloat kHXOGridSpacing;
 
-@implementation DataSheetTextInputCell
+@implementation DatasheetTextInputCell
 
 - (void) commonInit {
     [super commonInit];
@@ -20,6 +20,7 @@ extern const CGFloat kHXOGridSpacing;
     self.valueView.translatesAutoresizingMaskIntoConstraints = NO;
     self.valueView.font = self.titleLabel.font;
     //self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    [self.valueView addTarget: self action: @selector(valueDidChange:) forControlEvents: UIControlEventEditingChanged];
     [self.contentView addSubview: self.valueView];
     NSDictionary * views = @{@"title": self.titleLabel, @"value": self.valueView};
     NSString * format = [NSString stringWithFormat: @"H:|-%f-[title(<=30@750)]-%f-[value]-%f-|", 2 * kHXOGridSpacing, kHXOGridSpacing, kHXOGridSpacing];
@@ -33,6 +34,12 @@ extern const CGFloat kHXOGridSpacing;
 - (void) preferredContentSizeChanged:(NSNotification *)notification {
     [super preferredContentSizeChanged: notification];
     self.valueView.font = self.titleLabel.font;
+}
+
+- (void) valueDidChange: (id) sender {
+    if ([self.delegate respondsToSelector: @selector(valueDidChange:valueView:)]) {
+        [self.delegate valueDidChange: self valueView: self.valueView];
+    }
 }
 
 @end

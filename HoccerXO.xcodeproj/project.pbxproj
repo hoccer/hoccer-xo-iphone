@@ -25,14 +25,14 @@
 		6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */; };
 		6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		630CAA0E18DB5DC300782507 /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */; };
-		630CAA5518DCC8AE00782507 /* DataSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA5418DCC8AE00782507 /* DataSheetViewController.m */; };
+		630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA5418DCC8AE00782507 /* DatasheetViewController.m */; };
 		630CAB7818E0F6C400782507 /* ContactSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7718E0F6C400782507 /* ContactSheetController.m */; };
-		630CAB7B18E0F78500782507 /* DataSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7A18E0F78500782507 /* DataSheetController.m */; };
-		630CAB8218E1E00C00782507 /* DataSheetTextInputCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8118E1E00C00782507 /* DataSheetTextInputCell.m */; };
-		630CAB8518E1E31600782507 /* DataSheetActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8418E1E31600782507 /* DataSheetActionCell.m */; };
-		630CAB8818E1E84400782507 /* DataSheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8718E1E84400782507 /* DataSheetCell.m */; };
+		630CAB7B18E0F78500782507 /* DatasheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7A18E0F78500782507 /* DatasheetController.m */; };
+		630CAB8218E1E00C00782507 /* DatasheetTextInputCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8118E1E00C00782507 /* DatasheetTextInputCell.m */; };
+		630CAB8518E1E31600782507 /* DatasheetActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8418E1E31600782507 /* DatasheetActionCell.m */; };
+		630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8718E1E84400782507 /* DatasheetCell.m */; };
 		630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8A18E22EBC00782507 /* HXOLabel.m */; };
-		630CAB8E18E2333E00782507 /* DataSheetKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8D18E2333E00782507 /* DataSheetKeyValueCell.m */; };
+		630CAB8E18E2333E00782507 /* DatasheetKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */; };
 		630FD45218BCCCA7000D8C55 /* HXOTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOTheme.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
@@ -76,6 +76,7 @@
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		636492D71711E97900E35514 /* ProfileAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* ProfileAvatarView.m */; };
 		636492DA1711F4B000E35514 /* UserDefaultsCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D91711F4B000E35514 /* UserDefaultsCells.m */; };
+		6365EB2C18E4D96D00B41054 /* DatasheetFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */; };
 		636D3FFA170F370E00304EDF /* InviteCodeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 636D3FF9170F370E00304EDF /* InviteCodeViewController.mm */; };
 		636D400317106EC000304EDF /* Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D400217106EC000304EDF /* Environment.m */; };
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
@@ -416,22 +417,22 @@
 		6302A9CA18DA98D200B2D04F /* SRP_FuzzyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRP_FuzzyTest.m; path = HoccerXO/Crypto/SRP/Tests/SRP_FuzzyTest.m; sourceTree = SOURCE_ROOT; };
 		630CAA0C18DB5DC300782507 /* HXOThemedNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOThemedNavigationController.h; sourceTree = "<group>"; };
 		630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
-		630CAA5318DCC8AE00782507 /* DataSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetViewController.h; sourceTree = "<group>"; };
-		630CAA5418DCC8AE00782507 /* DataSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetViewController.m; sourceTree = "<group>"; };
+		630CAA5318DCC8AE00782507 /* DatasheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetViewController.h; sourceTree = "<group>"; };
+		630CAA5418DCC8AE00782507 /* DatasheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetViewController.m; sourceTree = "<group>"; };
 		630CAB7618E0F6C400782507 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetController.h; sourceTree = "<group>"; };
 		630CAB7718E0F6C400782507 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetController.m; sourceTree = "<group>"; };
-		630CAB7918E0F78500782507 /* DataSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetController.h; sourceTree = "<group>"; };
-		630CAB7A18E0F78500782507 /* DataSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetController.m; sourceTree = "<group>"; };
-		630CAB8018E1E00C00782507 /* DataSheetTextInputCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetTextInputCell.h; sourceTree = "<group>"; };
-		630CAB8118E1E00C00782507 /* DataSheetTextInputCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetTextInputCell.m; sourceTree = "<group>"; };
-		630CAB8318E1E31600782507 /* DataSheetActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetActionCell.h; sourceTree = "<group>"; };
-		630CAB8418E1E31600782507 /* DataSheetActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetActionCell.m; sourceTree = "<group>"; };
-		630CAB8618E1E84400782507 /* DataSheetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetCell.h; sourceTree = "<group>"; };
-		630CAB8718E1E84400782507 /* DataSheetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetCell.m; sourceTree = "<group>"; };
+		630CAB7918E0F78500782507 /* DatasheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetController.h; sourceTree = "<group>"; };
+		630CAB7A18E0F78500782507 /* DatasheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetController.m; sourceTree = "<group>"; };
+		630CAB8018E1E00C00782507 /* DatasheetTextInputCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetTextInputCell.h; sourceTree = "<group>"; };
+		630CAB8118E1E00C00782507 /* DatasheetTextInputCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetTextInputCell.m; sourceTree = "<group>"; };
+		630CAB8318E1E31600782507 /* DatasheetActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetActionCell.h; sourceTree = "<group>"; };
+		630CAB8418E1E31600782507 /* DatasheetActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetActionCell.m; sourceTree = "<group>"; };
+		630CAB8618E1E84400782507 /* DatasheetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetCell.h; sourceTree = "<group>"; };
+		630CAB8718E1E84400782507 /* DatasheetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetCell.m; sourceTree = "<group>"; };
 		630CAB8918E22EBC00782507 /* HXOLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLabel.h; sourceTree = "<group>"; };
 		630CAB8A18E22EBC00782507 /* HXOLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLabel.m; sourceTree = "<group>"; };
-		630CAB8C18E2333E00782507 /* DataSheetKeyValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSheetKeyValueCell.h; sourceTree = "<group>"; };
-		630CAB8D18E2333E00782507 /* DataSheetKeyValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSheetKeyValueCell.m; sourceTree = "<group>"; };
+		630CAB8C18E2333E00782507 /* DatasheetKeyValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetKeyValueCell.h; sourceTree = "<group>"; };
+		630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetKeyValueCell.m; sourceTree = "<group>"; };
 		630FD45018BCCCA7000D8C55 /* HXOTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTheme.h; sourceTree = "<group>"; };
 		630FD45118BCCCA7000D8C55 /* HXOTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTheme.m; sourceTree = "<group>"; };
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
@@ -500,6 +501,8 @@
 		636492D61711E97900E35514 /* ProfileAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileAvatarView.m; sourceTree = "<group>"; };
 		636492D81711F4B000E35514 /* UserDefaultsCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsCells.h; sourceTree = "<group>"; };
 		636492D91711F4B000E35514 /* UserDefaultsCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsCells.m; sourceTree = "<group>"; };
+		6365EB2A18E4D96D00B41054 /* DatasheetFooterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetFooterTextView.h; sourceTree = "<group>"; };
+		6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetFooterTextView.m; sourceTree = "<group>"; };
 		636D3FF8170F370E00304EDF /* InviteCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteCodeViewController.h; sourceTree = "<group>"; };
 		636D3FF9170F370E00304EDF /* InviteCodeViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InviteCodeViewController.mm; sourceTree = "<group>"; };
 		636D400117106EC000304EDF /* Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Environment.h; sourceTree = "<group>"; };
@@ -999,25 +1002,27 @@
 			children = (
 				630CAB7618E0F6C400782507 /* ContactSheetController.h */,
 				630CAB7718E0F6C400782507 /* ContactSheetController.m */,
-				630CAB7918E0F78500782507 /* DataSheetController.h */,
-				630CAB7A18E0F78500782507 /* DataSheetController.m */,
+				630CAB7918E0F78500782507 /* DatasheetController.h */,
+				630CAB7A18E0F78500782507 /* DatasheetController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		630CAB7F18E1DFE200782507 /* DataSheetCells */ = {
+		630CAB7F18E1DFE200782507 /* DatasheetCells */ = {
 			isa = PBXGroup;
 			children = (
-				630CAB8318E1E31600782507 /* DataSheetActionCell.h */,
-				630CAB8418E1E31600782507 /* DataSheetActionCell.m */,
-				630CAB8618E1E84400782507 /* DataSheetCell.h */,
-				630CAB8718E1E84400782507 /* DataSheetCell.m */,
-				630CAB8018E1E00C00782507 /* DataSheetTextInputCell.h */,
-				630CAB8118E1E00C00782507 /* DataSheetTextInputCell.m */,
-				630CAB8C18E2333E00782507 /* DataSheetKeyValueCell.h */,
-				630CAB8D18E2333E00782507 /* DataSheetKeyValueCell.m */,
+				630CAB8318E1E31600782507 /* DatasheetActionCell.h */,
+				630CAB8418E1E31600782507 /* DatasheetActionCell.m */,
+				630CAB8618E1E84400782507 /* DatasheetCell.h */,
+				630CAB8718E1E84400782507 /* DatasheetCell.m */,
+				6365EB2A18E4D96D00B41054 /* DatasheetFooterTextView.h */,
+				6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */,
+				630CAB8C18E2333E00782507 /* DatasheetKeyValueCell.h */,
+				630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */,
+				630CAB8018E1E00C00782507 /* DatasheetTextInputCell.h */,
+				630CAB8118E1E00C00782507 /* DatasheetTextInputCell.m */,
 			);
-			path = DataSheetCells;
+			path = DatasheetCells;
 			sourceTree = "<group>";
 		};
 		630FD44518BCAF52000D8C55 /* TabBar */ = {
@@ -1399,8 +1404,8 @@
 				63CA315418D272E70069A0C2 /* CodeScanViewController.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
-				630CAA5318DCC8AE00782507 /* DataSheetViewController.h */,
-				630CAA5418DCC8AE00782507 /* DataSheetViewController.m */,
+				630CAA5318DCC8AE00782507 /* DatasheetViewController.h */,
+				630CAA5418DCC8AE00782507 /* DatasheetViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
@@ -1645,7 +1650,7 @@
 				633A9B18177B21A700E066EF /* Controls */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
-				630CAB7F18E1DFE200782507 /* DataSheetCells */,
+				630CAB7F18E1DFE200782507 /* DatasheetCells */,
 				6329F7AE18C0000E007AFF32 /* GridView.h */,
 				6329F7AF18C0000E007AFF32 /* GridView.m */,
 				63DC015917147B1600609513 /* HXOTableViewCell.h */,
@@ -2285,7 +2290,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				630CAB8E18E2333E00782507 /* DataSheetKeyValueCell.m in Sources */,
+				630CAB8E18E2333E00782507 /* DatasheetKeyValueCell.m in Sources */,
 				6302A98A18DA870400B2D04F /* SRP.m in Sources */,
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
@@ -2295,7 +2300,7 @@
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
-				630CAB8518E1E31600782507 /* DataSheetActionCell.m in Sources */,
+				630CAB8518E1E31600782507 /* DatasheetActionCell.m in Sources */,
 				63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */,
 				63B7900318D4E546003A9125 /* IconSettings.m in Sources */,
 				63C413BC16E94735004E1F6D /* ConversationCell.m in Sources */,
@@ -2331,6 +2336,7 @@
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
 				63CB3E8C18D4AA27006BB511 /* DisclosureArrow.m in Sources */,
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
+				6365EB2C18E4D96D00B41054 /* DatasheetFooterTextView.m in Sources */,
 				636D3FFA170F370E00304EDF /* InviteCodeViewController.mm in Sources */,
 				63B7900018D4E52D003A9125 /* IconProfile.m in Sources */,
 				636D400317106EC000304EDF /* Environment.m in Sources */,
@@ -2342,14 +2348,14 @@
 				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
-				630CAA5518DCC8AE00782507 /* DataSheetViewController.m in Sources */,
-				630CAB8818E1E84400782507 /* DataSheetCell.m in Sources */,
+				630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */,
+				630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */,
 				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
 				E96CB02C171457F9005F8FFA /* CCRSA.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
 				63808A231858A76E0001AC96 /* TextSection.m in Sources */,
 				E9E92F7318733D01007B8042 /* MultipartMessageHeader.m in Sources */,
-				630CAB8218E1E00C00782507 /* DataSheetTextInputCell.m in Sources */,
+				630CAB8218E1E00C00782507 /* DatasheetTextInputCell.m in Sources */,
 				E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */,
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
@@ -2401,7 +2407,7 @@
 				E9D1148E1736702E00737EF7 /* GCNetworkReachability.m in Sources */,
 				E9D1148F1736702E00737EF7 /* GCNetworkRequest.m in Sources */,
 				E9D114901736702E00737EF7 /* GCXMLRequestOperation.m in Sources */,
-				630CAB7B18E0F78500782507 /* DataSheetController.m in Sources */,
+				630CAB7B18E0F78500782507 /* DatasheetController.m in Sources */,
 				E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */,
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				634BE1BE185C9B2B00B2DF05 /* HXOUpDownLoadControl.m in Sources */,

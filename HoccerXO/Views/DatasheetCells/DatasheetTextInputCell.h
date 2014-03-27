@@ -1,14 +1,14 @@
 //
-//  DataSheetTextInputCell.h
+//  DatasheetTextInputCell.h
 //  HoccerXO
 //
 //  Created by David Siegel on 25.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "DataSheetCell.h"
+#import "DatasheetCell.h"
 
-@interface DataSheetTextInputCell : DataSheetCell
+@interface DatasheetTextInputCell : DatasheetCell
 
 @property (nonatomic,readonly) UITextField * valueView;
 

@@ -1,25 +1,25 @@
 //
-//  DataSheetController.m
+//  DatasheetController.m
 //  HoccerXO
 //
 //  Created by David Siegel on 25.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "DataSheetController.h"
+#import "DatasheetController.h"
 
-typedef BOOL(^DataSheetItemVisitorBlock)(DataSheetItem * item);
-typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL doneWithSection);
+typedef BOOL(^DatasheetItemVisitorBlock)(DatasheetItem * item);
+typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL doneWithSection);
 
-@interface DataSheetController ()
+@interface DatasheetController ()
 
 @property (nonatomic,strong) NSArray * currentItems;
-@property (nonatomic,strong) DataSheetSection * root;
-@property (nonatomic,strong) DataSheetSection * currentRoot;
+@property (nonatomic,strong) DatasheetSection * root;
+@property (nonatomic,strong) DatasheetSection * currentRoot;
 
 @end
 
-@implementation DataSheetController
+@implementation DatasheetController
 
 - (id) init {
     self = [super init];
@@ -31,11 +31,11 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
 }
 
 - (void) commonInit {
-    self.root = [DataSheetSection dataSheetSectionWithIdentifier: @"root"];
-    _mode = DataSheetModeView;
+    self.root = [DatasheetSection datasheetSectionWithIdentifier: @"root"];
+    _mode = DatasheetModeView;
 }
 
-- (void) visitItems: (DataSheetSection*) root usingBlock: (DataSheetItemVisitorBlock) itemBlock sectionBlock: (DataSheetSectionVisitorBlock) sectionBlock {
+- (void) visitItems: (DatasheetSection*) root usingBlock: (DatasheetItemVisitorBlock) itemBlock sectionBlock: (DatasheetSectionVisitorBlock) sectionBlock {
     NSMutableArray * stack = [NSMutableArray array];
     NSMutableArray * marks = [NSMutableArray array];
     [stack addObject: root];
@@ -81,7 +81,7 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
 }
 
 - (void) removeObjectObservers: (id) object {
-    [self visitItems: self.root usingBlock:^BOOL(DataSheetItem * item) {
+    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem * item) {
         if (! [@"" isEqualToString: item.valuePath]) {
             [object removeObserver: self forKeyPath: item.valuePath];
         }
@@ -90,7 +90,7 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
 }
 
 - (void) addObjectObservers: (id) object {
-    [self visitItems: self.root usingBlock:^BOOL(DataSheetItem * item) {
+    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem * item) {
         if (item.valuePath && ! [item.valuePath isEqualToString: @""]) {
             [object addObserver: self forKeyPath: item.valuePath options:NSKeyValueObservingOptionNew context: NULL];
         }
@@ -98,13 +98,13 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
     } sectionBlock: nil];
 }
 
-- (id) valueForItem: (DataSheetItem*) item {
+- (id) valueForItem: (DatasheetItem*) item {
     return [_inspectedObject valueForKeyPath: item.valuePath];
 }
 
-- (DataSheetItem*) findItem: (id) root withKeyPath: (NSString*) keyPath equalTo: (id) value {
-    __block DataSheetItem * result = nil;
-    [self visitItems: root usingBlock:^BOOL(DataSheetItem * item) {
+- (DatasheetItem*) findItem: (id) root withKeyPath: (NSString*) keyPath equalTo: (id) value {
+    __block DatasheetItem * result = nil;
+    [self visitItems: root usingBlock:^BOOL(DatasheetItem * item) {
         id v = [item valueForKeyPath: keyPath];
         if ([value isEqual: v] ||
             ([value respondsToSelector:@selector(isEqualToString:)] && [value isEqualToString: v]) ||
@@ -118,9 +118,9 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
     return result;
 }
 
-- (DataSheetSection*) findSection: (id) root withIdentifier: (NSString*) identifier {
-    __block DataSheetSection * result = nil;
-    [self visitItems: root usingBlock: nil sectionBlock:^BOOL(DataSheetSection *section, BOOL doneWithSection) {
+- (DatasheetSection*) findSection: (id) root withIdentifier: (NSString*) identifier {
+    __block DatasheetSection * result = nil;
+    [self visitItems: root usingBlock: nil sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
         if ([section.identifier isEqualToString: identifier]) {
             result = section;
             return YES;
@@ -132,7 +132,7 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
 
 - (NSIndexPath*) indexPathForItem: (id) aItem {
     __block NSMutableArray * path = [NSMutableArray array];
-    [self visitItems: self.currentRoot usingBlock:^BOOL(DataSheetItem *item) {
+    [self visitItems: self.currentRoot usingBlock:^BOOL(DatasheetItem *item) {
         if ([item isEqual: aItem]) {
             return YES;
         }
@@ -141,7 +141,7 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
         index = @([index unsignedIntegerValue] + 1);
         [path addObject: index];
         return NO;
-    } sectionBlock:^BOOL(DataSheetSection *section, BOOL doneWithSection) {
+    } sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
         if (doneWithSection) {
             [path removeLastObject];
             if ([path lastObject]) {
@@ -170,29 +170,29 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([object isEqual: _inspectedObject]) {
 
-        DataSheetItem * item = [self findItem: self.currentRoot withKeyPath: @"valuePath" equalTo: keyPath];
+        DatasheetItem * item = [self findItem: self.currentRoot withKeyPath: @"valuePath" equalTo: keyPath];
         NSIndexPath * indexPath = [self indexPathForItem: item];
         if (item && indexPath) {
             [self.delegate controllerWillChangeContent: self];
-            [self.delegate controller: self didChangeObject: indexPath forChangeType: DataSheetChangeUpdate newIndexPath: nil];
+            [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
             [self.delegate controllerDidChangeContent: self];
         }
     }
 
 }
 
-- (DataSheetItem*) itemWithIdentifier: (NSString*) identifier cellIdentifier: (NSString*) cellIdentifier {
-    DataSheetItem * item = [DataSheetItem dataSheetItem];
+- (DatasheetItem*) itemWithIdentifier: (NSString*) identifier cellIdentifier: (NSString*) cellIdentifier {
+    DatasheetItem * item = [DatasheetItem datasheetItem];
     item.identifier = identifier;
     item.title = NSLocalizedString(identifier, nil);
     item.cellIdentifier = cellIdentifier;
-    item.visibilityMask = DataSheetModeEdit | DataSheetModeView;
-    item.enabledMask = DataSheetModeView | DataSheetModeEdit;
+    item.visibilityMask = DatasheetModeView | DatasheetModeEdit;
+    item.enabledMask = DatasheetModeView | DatasheetModeEdit;
     item.delegate = self;
     return item;
 }
 
-- (DataSheetItem*) itemForIndexPath: (NSIndexPath*) indexPath {
+- (DatasheetItem*) itemForIndexPath: (NSIndexPath*) indexPath {
     id current = self.currentRoot;
     for (unsigned i = 0; i < indexPath.length; ++i) {
         NSUInteger index = [indexPath indexAtPosition: i];
@@ -202,12 +202,49 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
 }
 
 - (void) editModeChanged:(id)sender {
-    _mode = _mode == DataSheetModeEdit ? DataSheetModeView : DataSheetModeEdit;
+    if (_mode == DatasheetModeEdit) {
+        [self updateInspectedObject];
+        [self clearCurrentValues];
+    }
+    _mode = _mode == DatasheetModeEdit ? DatasheetModeView : DatasheetModeEdit;
     [self updateCurrentItems];
 }
 
+- (void) cancelEditing:(id)sender {
+    [self clearCurrentValues];
+    _mode = DatasheetModeView;
+    [self updateCurrentItems];
+}
+
+- (void) clearCurrentValues {
+    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
+        item.currentValue = nil;
+        return NO;
+    } sectionBlock: nil];
+}
+
+- (void) updateInspectedObject {
+    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
+        if (item.valuePath) {
+            id objectValue = [self.inspectedObject valueForKeyPath: item.valuePath];
+            id ourValue = item.currentValue;
+            if (([objectValue respondsToSelector: @selector(isEqualToString:)] && ! [objectValue isEqualToString: ourValue]) ||
+                ! [objectValue isEqual: ourValue])
+            {
+                [self.inspectedObject setValue: ourValue forKeyPath: item.valuePath];
+            }
+        }
+        return NO;
+    } sectionBlock: nil];
+
+    [self didUpdateInspectedObject];
+}
+
+- (void) didUpdateInspectedObject {
+}
+
 - (BOOL) isEditing {
-    return self.mode == DataSheetModeEdit;
+    return self.mode == DatasheetModeEdit;
 }
 
 - (void) updateCurrentItems {
@@ -215,30 +252,35 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
     NSMutableArray * marks = [NSMutableArray array];
     NSMutableArray * insertedItems = [NSMutableArray array];
     NSMutableArray * insertedSections = [NSMutableArray array];
-    DataSheetSection * oldRoot = self.currentRoot;
-    [self visitItems: self.root usingBlock:^BOOL(DataSheetItem *item) {
+    NSMutableArray * survivingItems = [NSMutableArray array];
+    DatasheetSection * oldRoot = self.currentRoot;
+    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
         if (item.visibilityMask & self.mode) {
             [stack addObject: item];
-            if (oldRoot && ! [self findItem: oldRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
-                [insertedItems addObject: item];
+            if (oldRoot) {
+                if([self findItem: oldRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
+                    [survivingItems addObject: item];
+                } else {
+                    [insertedItems addObject: item];
+                }
             }
         }
         return NO;
-    } sectionBlock:^BOOL(DataSheetSection *section, BOOL doneWithSection) {
+    } sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
         if (doneWithSection) {
             NSNumber * mark = [marks lastObject];
             NSUInteger first = [mark unsignedIntegerValue] + 1;
             [marks removeLastObject];
             NSArray * items = [stack subarrayWithRange: NSMakeRange(first, stack.count - first)];
             while (stack.count > first) { [stack removeLastObject]; }
-            DataSheetSection * newSection = [stack lastObject];
+            DatasheetSection * newSection = [stack lastObject];
             if (items.count == 0) {
                 [stack removeLastObject];
             } else {
                 newSection.items = items;
             }
         } else {
-            DataSheetSection * newSection = [DataSheetSection dataSheetSectionWithIdentifier: section.identifier]; // TODO: proper copy
+            DatasheetSection * newSection = [DatasheetSection datasheetSectionWithIdentifier: section.identifier]; // TODO: proper copy
             if (oldRoot && ! [self findSection: oldRoot withIdentifier: section.identifier]) {
                 [insertedSections addObject: newSection];
             }
@@ -248,12 +290,12 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
         return NO;
     }];
 
-    DataSheetSection * newRoot = [stack firstObject];
+    DatasheetSection * newRoot = [stack firstObject];
 
     NSMutableArray * deletedItemsIndexPaths = [NSMutableArray array];
     NSMutableArray * deletedSectionsIndexPaths = [NSMutableArray array];
     if (oldRoot) {
-        [self visitItems: oldRoot usingBlock:^BOOL(DataSheetItem *item) {
+        [self visitItems: oldRoot usingBlock:^BOOL(DatasheetItem *item) {
             if ( ! [self findItem: newRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
                 NSIndexPath * indexPath = [self indexPathForItem: item];
                 NSIndexPath * sectionPath = [indexPath indexPathByRemovingLastIndex];
@@ -269,7 +311,7 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
                 }
             }
             return NO;
-        } sectionBlock:^BOOL(DataSheetSection *section, BOOL doneWithSection) {
+        } sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
             if ( ! doneWithSection) {
 
                 if ( ! [self findSection: newRoot withIdentifier: section.identifier]) {
@@ -286,21 +328,26 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
     [self.delegate controllerWillChangeContent: self];
 
     for (NSIndexPath * indexPath in deletedSectionsIndexPaths) {
-        [self.delegate controller: self didChangeSection: indexPath forChangeType: DataSheetChangeDelete];
+        [self.delegate controller: self didChangeSection: indexPath forChangeType: DatasheetChangeDelete];
     }
 
-    for (DataSheetSection * section in insertedSections) {
+    for (DatasheetSection * section in insertedSections) {
         NSIndexPath * indexPath = [self indexPathForItem: section];
-        [self.delegate controller: self didChangeSection: indexPath forChangeType: DataSheetChangeInsert];
+        [self.delegate controller: self didChangeSection: indexPath forChangeType: DatasheetChangeInsert];
     }
 
-    for (DataSheetItem * item in insertedItems) {
+    for (DatasheetItem * item in insertedItems) {
         NSIndexPath * indexPath = [self indexPathForItem: item];
-        [self.delegate controller: self didChangeObject: nil forChangeType: DataSheetChangeInsert newIndexPath: indexPath];
+        [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: indexPath];
     }
     
     for (NSIndexPath * indexPath in deletedItemsIndexPaths) {
-        [self.delegate controller: self didChangeObject: indexPath forChangeType: DataSheetChangeDelete newIndexPath: nil];
+        [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeDelete newIndexPath: nil];
+    }
+
+    for (DatasheetItem * item in survivingItems) {
+        NSIndexPath * indexPath = [self indexPathForItem: item];
+        [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
     }
     [self.delegate controllerDidChangeContent: self];
 }
@@ -317,25 +364,48 @@ typedef BOOL(^DataSheetSectionVisitorBlock)(DataSheetSection * section, BOOL don
     return self.currentRoot.items;
 }
 
-@end
+- (BOOL) isItemVisible:(DatasheetItem *)item {
+    return (item.visibilityMask & self.mode) != 0;
+}
 
-
-@implementation DataSheetItem
-
-+ (id) dataSheetItem {
-    return [[DataSheetItem alloc] init];
+- (BOOL) isItemEnabled:(DatasheetItem *)item {
+    return (item.enabledMask & self.mode) != 0;
 }
 
 @end
 
-@implementation DataSheetSection
+
+@implementation DatasheetItem
+
+- (BOOL) isVisible {
+    return [self.delegate isItemVisible: self];
+}
+
+- (BOOL) isEnabled {
+    return [self.delegate isItemEnabled: self];
+}
+
+- (id) currentValue {
+    if (_currentValue) {
+        return _currentValue;
+    }
+    return [self.delegate valueForItem: self];
+}
+
++ (id) datasheetItem {
+    return [[DatasheetItem alloc] init];
+}
+
+@end
+
+@implementation DatasheetSection
 
 + (id) dataSheetSection {
-    return [[DataSheetSection alloc] init];
+    return [[DatasheetSection alloc] init];
 }
 
-+ (id) dataSheetSectionWithIdentifier:(NSString *)identifier {
-    DataSheetSection * section = [[DataSheetSection alloc] init];
++ (id) datasheetSectionWithIdentifier:(NSString *)identifier {
+    DatasheetSection * section = [[DatasheetSection alloc] init];
     section.identifier = identifier;
     return section;
 }

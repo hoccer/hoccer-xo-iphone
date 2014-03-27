@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "DataSheetController.h"
+#import "DatasheetController.h"
 
-@interface ContactSheetController : DataSheetController
+@interface ContactSheetController : DatasheetController
 
 
 @end

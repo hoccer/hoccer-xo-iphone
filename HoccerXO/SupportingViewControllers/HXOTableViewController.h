@@ -11,9 +11,11 @@
 @interface HXOTableViewController : UITableViewController
 {
     NSMutableDictionary * _prototypes;
+    NSMutableDictionary * _headerFooterPrototypes;
 }
 
 - (void) registerCellClass: (id) cellClass;
+- (void) registerHeaderFooterViewClass: (id) cellClass;
 - (UITableViewCell*) prototypeCellOfClass: (id) cellClass;
 - (UITableViewCell*) prototypeCellForIdentifier: (NSString*) identifier;
 - (UITableViewCell*) dequeueReusableCellOfClass: (id) cellClass forIndexPath: (NSIndexPath*) indexPath;

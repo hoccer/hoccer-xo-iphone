@@ -1,18 +1,18 @@
 //
-//  DataSheetActionCell.m
+//  DatasheetActionCell.m
 //  HoccerXO
 //
 //  Created by David Siegel on 25.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "DataSheetActionCell.h"
+#import "DatasheetActionCell.h"
 
 #import "HXOTheme.h"
 
 extern const CGFloat kHXOGridSpacing;
 
-@implementation DataSheetActionCell
+@implementation DatasheetActionCell
 
 - (void) commonInit {
     [super commonInit];

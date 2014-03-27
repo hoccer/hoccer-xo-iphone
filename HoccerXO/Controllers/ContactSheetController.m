@@ -10,7 +10,7 @@
 
 @interface ContactSheetController ()
 
-@property (nonatomic,strong) DataSheetItem * keyItem;
+@property (nonatomic,strong) DatasheetItem * keyItem;
 
 @end
 
@@ -21,40 +21,42 @@
     
     self.isEditable = YES;
     
-    DataSheetItem * nickNameItem = [self itemWithIdentifier: @"Name" cellIdentifier: @"DataSheetTextInputCell"];
+    DatasheetItem * nickNameItem = [self itemWithIdentifier: @"Name" cellIdentifier: @"DatasheetTextInputCell"];
     nickNameItem.valuePath = @"nickname";
     nickNameItem.placeholder = NSLocalizedString(@"Your Name", nil);
-    nickNameItem.enabledMask = DataSheetModeEdit;
+    nickNameItem.enabledMask = DatasheetModeEdit;
 
-    self.keyItem = [self itemWithIdentifier: @"Key" cellIdentifier: @"DataSheetKeyValueCell"];
+    self.keyItem = [self itemWithIdentifier: @"Key" cellIdentifier: @"DatasheetKeyValueCell"];
 
-    DataSheetSection * commonSection = [DataSheetSection dataSheetSectionWithIdentifier: @"common_section"];
+    DatasheetSection * commonSection = [DatasheetSection datasheetSectionWithIdentifier: @"common_section"];
     commonSection.items = @[nickNameItem, self.keyItem];
 
-    DataSheetItem * bingo = [self itemWithIdentifier: @"Bingo" cellIdentifier: @"DataSheetActionCell"];
-    bingo.visibilityMask = DataSheetModeEdit;
-    DataSheetItem * bongo = [self itemWithIdentifier: @"Bongo" cellIdentifier: @"DataSheetActionCell"];
-    bongo.visibilityMask = DataSheetModeEdit;
-    DataSheetSection * bingoBongoSection = [DataSheetSection dataSheetSectionWithIdentifier: @"bingo_bongo_section"];
+    DatasheetItem * bingo = [self itemWithIdentifier: @"Bingo" cellIdentifier: @"DatasheetActionCell"];
+    bingo.visibilityMask = DatasheetModeEdit;
+    DatasheetItem * bongo = [self itemWithIdentifier: @"Bongo" cellIdentifier: @"DatasheetActionCell"];
+    bongo.visibilityMask = DatasheetModeEdit;
+    DatasheetSection * bingoBongoSection = [DatasheetSection datasheetSectionWithIdentifier: @"bingo_bongo_section"];
     bingoBongoSection.items = @[bingo, bongo];
 
+    DatasheetItem * magicButton = [self itemWithIdentifier: @"Magic" cellIdentifier: @"DatasheetActionCell"];
+    magicButton.visibilityMask = DatasheetModeEdit;
+    DatasheetItem * destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DatasheetActionCell"];
 
-
-    DataSheetItem * magicButton = [self itemWithIdentifier: @"Magic" cellIdentifier: @"DataSheetActionCell"];
-    magicButton.visibilityMask = DataSheetModeEdit;
-    DataSheetItem * destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DataSheetActionCell"];
-
-    DataSheetSection * destructiveSection = [DataSheetSection dataSheetSectionWithIdentifier: @"destructive_section"];
+    DatasheetSection * destructiveSection = [DatasheetSection datasheetSectionWithIdentifier: @"destructive_section"];
     destructiveSection.items = @[magicButton, destructiveButton];
 
     self.items = @[commonSection, bingoBongoSection, destructiveSection];
 }
 
-- (id) valueForItem:(DataSheetItem *)item {
+- (id) valueForItem:(DatasheetItem *)item {
     if ([item isEqual: _keyItem]) {
         return @"Verified";
     }
     return [super valueForItem: item];
+}
+
+- (void) didUpdateInspectedObject {
+    NSLog(@"name: %@", [self.inspectedObject valueForKeyPath: @"nickname"]);
 }
 
 @end

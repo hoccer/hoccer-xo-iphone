@@ -1,12 +1,12 @@
 //
-//  DataSheetCell.m
+//  DatasheetCell.m
 //  HoccerXO
 //
 //  Created by David Siegel on 25.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "DataSheetCell.h"
+#import "DatasheetCell.h"
 
 #import "HXOTheme.h"
 
@@ -14,7 +14,7 @@
 
 extern const CGFloat kHXOGridSpacing;
 
-@implementation DataSheetCell
+@implementation DatasheetCell
 
 - (id)initWithStyle: (UITableViewCellStyle) style reuseIdentifier: (NSString*) reuseIdentifier {
     self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
@@ -26,6 +26,8 @@ extern const CGFloat kHXOGridSpacing;
 }
 
 - (void) commonInit {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     CGFloat padding = 2 * kHXOGridSpacing;
 
     _titleLabel = [[UILabel alloc] initWithFrame: CGRectZero];

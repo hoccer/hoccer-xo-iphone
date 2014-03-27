@@ -46,10 +46,10 @@
             </objects>
             <point key="canvasLocation" x="-983" y="-747"/>
         </scene>
-        <!--Data Sheet View Controller - Datasheet-->
+        <!--Datasheet View Controller - Datasheet-->
         <scene sceneID="miZ-b5-x0F">
             <objects>
-                <tableViewController storyboardIdentifier="datasheetTesting" id="Ewa-nI-cAA" customClass="DataSheetViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="datasheetTesting" id="Ewa-nI-cAA" customClass="DatasheetViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="eVr-4T-v7P">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

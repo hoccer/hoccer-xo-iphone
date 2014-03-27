@@ -24,7 +24,8 @@
 }
 
 - (void) commonInit {
-    _prototypes = [[NSMutableDictionary alloc] init];
+    _prototypes = [NSMutableDictionary dictionary];
+    _headerFooterPrototypes = [NSMutableDictionary dictionary];
 }
 
 - (UITableViewCell*) prototypeCellOfClass:(id)cellClass {
@@ -46,4 +47,10 @@
     }
 }
 
+- (void) registerHeaderFooterViewClass: (id) class {
+    if (_headerFooterPrototypes[[class reuseIdentifier]] == nil) {
+        [self.tableView registerClass: class forHeaderFooterViewReuseIdentifier: [class reuseIdentifier]];
+        _headerFooterPrototypes[[class reuseIdentifier]] = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: [class reuseIdentifier]];
+    }
+}
 @end
