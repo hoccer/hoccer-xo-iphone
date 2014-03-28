@@ -35,6 +35,12 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     _mode = DatasheetModeView;
 }
 
+- (void) dealloc {
+    if (_inspectedObject) {
+        [self removeObjectObservers: _inspectedObject];
+    }
+}
+
 - (void) visitItems: (DatasheetSection*) root usingBlock: (DatasheetItemVisitorBlock) itemBlock sectionBlock: (DatasheetSectionVisitorBlock) sectionBlock {
     NSMutableArray * stack = [NSMutableArray array];
     NSMutableArray * marks = [NSMutableArray array];
@@ -344,11 +350,11 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     for (NSIndexPath * indexPath in deletedItemsIndexPaths) {
         [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeDelete newIndexPath: nil];
     }
-
+/*
     for (DatasheetItem * item in survivingItems) {
         NSIndexPath * indexPath = [self indexPathForItem: item];
         [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
-    }
+    }*/
     [self.delegate controllerDidChangeContent: self];
 }
 
