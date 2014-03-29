@@ -198,7 +198,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return item;
 }
 
-- (DatasheetItem*) itemForIndexPath: (NSIndexPath*) indexPath {
+- (id) itemForIndexPath: (NSIndexPath*) indexPath {
     id current = self.currentRoot;
     for (unsigned i = 0; i < indexPath.length; ++i) {
         NSUInteger index = [indexPath indexAtPosition: i];
@@ -286,7 +286,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
                 newSection.items = items;
             }
         } else {
-            DatasheetSection * newSection = [DatasheetSection datasheetSectionWithIdentifier: section.identifier]; // TODO: proper copy
+            DatasheetSection * newSection = [section copy];
             if (oldRoot && ! [self findSection: oldRoot withIdentifier: section.identifier]) {
                 [insertedSections addObject: newSection];
             }
@@ -350,11 +350,11 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     for (NSIndexPath * indexPath in deletedItemsIndexPaths) {
         [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeDelete newIndexPath: nil];
     }
-/*
+
     for (DatasheetItem * item in survivingItems) {
         NSIndexPath * indexPath = [self indexPathForItem: item];
         [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
-    }*/
+    }
     [self.delegate controllerDidChangeContent: self];
 }
 
@@ -376,6 +376,22 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (BOOL) isItemEnabled:(DatasheetItem *)item {
     return (item.enabledMask & self.mode) != 0;
+}
+
+- (UIView*) tableHeaderView {
+    return nil;
+}
+
+- (BOOL) allItemsValid {
+    __block BOOL allValid = YES;
+    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
+        if ( ! [item isValid]) {
+            allValid = NO;
+            return YES;
+        }
+        return NO;
+    } sectionBlock: nil];
+    return allValid;
 }
 
 @end
@@ -402,6 +418,10 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return [[DatasheetItem alloc] init];
 }
 
+- (BOOL) isValid {
+    return self.validator ? self.validator(self) : YES;
+}
+
 @end
 
 @implementation DatasheetSection
@@ -414,6 +434,24 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     DatasheetSection * section = [[DatasheetSection alloc] init];
     section.identifier = identifier;
     return section;
+}
+
+- (NSString*) footerViewIdentifier {
+    if (! _footerViewIdentifier && _footerText) {
+        return @"DatasheetFooterTextView";
+    }
+    return _footerViewIdentifier;
+}
+
+-(id)copyWithZone:(NSZone *)zone {
+    // We'll ignore the zone for now
+    DatasheetSection * copy = [[DatasheetSection alloc] init];
+    copy.identifier = _identifier;
+    copy.footerViewIdentifier = _footerViewIdentifier;
+    copy.headerViewIdentifier = _headerViewIdentifier;
+    copy.footerText = _footerText;
+    copy.items = _items;
+    return copy;
 }
 
 

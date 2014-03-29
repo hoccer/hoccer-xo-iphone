@@ -9,10 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface HXOTableViewController : UITableViewController
-{
-    NSMutableDictionary * _prototypes;
-    NSMutableDictionary * _headerFooterPrototypes;
-}
+
+@property (nonatomic,strong) NSMutableDictionary * prototypes;
+@property (nonatomic,strong) NSMutableDictionary * headerFooterPrototypes;
 
 - (void) registerCellClass: (id) cellClass;
 - (void) registerHeaderFooterViewClass: (id) cellClass;

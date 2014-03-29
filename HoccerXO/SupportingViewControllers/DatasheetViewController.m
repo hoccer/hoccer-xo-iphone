@@ -12,6 +12,7 @@
 #import "DatasheetKeyValueCell.h"
 #import "DatasheetActionCell.h"
 #import "DatasheetFooterTextView.h"
+#import "HXOHyperLabel.h"
 
 extern const CGFloat kHXOGridSpacing;
 
@@ -45,7 +46,13 @@ extern const CGFloat kHXOGridSpacing;
     o.nickname = @"Icke";
     self.dataSheetController.inspectedObject = o;
 
-    self.tableView.contentInset = UIEdgeInsetsMake(-1, 0, 0, 0);
+    self.tableView.tableHeaderView = self.dataSheetController.tableHeaderView;
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+}
+
+- (void) viewDidUnload {
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -65,6 +72,16 @@ extern const CGFloat kHXOGridSpacing;
             [valueView setEnabled: item.isEnabled];
         }
     }
+}
+
+- (void) preferredContentSizeChanged: (NSNotification*) notification {
+    for (id key in self.prototypes) {
+        id cell = self.prototypes[key];
+        if ([cell respondsToSelector: @selector(preferredContentSizeChanged:)]) {
+            [cell preferredContentSizeChanged: notification];
+        }
+    }
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table View Delegate & Data Source
@@ -91,18 +108,49 @@ extern const CGFloat kHXOGridSpacing;
     return [prototype.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return 1;
-    }
-    return 4 * kHXOGridSpacing;
-}
-
 - (void) tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell respondsToSelector: @selector(setDelegate:)]) {
         [(id)cell setDelegate: nil];
     }
 }
+
+#pragma mark - Section Headers and Footers
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == 0) {
+        return FLT_MIN;
+    }
+    // TODO: ...
+    return 3 * kHXOGridSpacing;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)sectionIndex {
+    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    if (section.footerViewIdentifier) {
+        id footer = self.headerFooterPrototypes[section.footerViewIdentifier];
+        [self configureFooter: footer forSection: section];
+        CGFloat height = [footer systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        return height;
+    }
+    return 0;
+}
+
+- (UIView*) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)sectionIndex {
+    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    if (section.footerViewIdentifier) {
+        UIView * footerView = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.footerViewIdentifier];
+        [self configureFooter: footerView forSection: section];
+        return footerView;
+    }
+    return nil;
+}
+
+- (void) configureFooter: (id) footer forSection: (DatasheetSection*) section {
+    if ([footer respondsToSelector: @selector(label)]) {
+        [[footer label] setAttributedText:  section.footerText];
+    }
+}
+
 
 #pragma mark - Navigation Buttons
 
@@ -112,6 +160,7 @@ extern const CGFloat kHXOGridSpacing;
     if (self.dataSheetController.isEditable) {
         if (self.dataSheetController.isEditing) {
             rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action:@selector(rightButtonPressed:)];
+            rightButton.enabled = [self.dataSheetController allItemsValid];
 
             leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action: @selector(leftButtonPressed:)];
         } else {
@@ -186,6 +235,7 @@ extern const CGFloat kHXOGridSpacing;
     NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
     DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
     item.currentValue = [valueView text];
+    self.navigationItem.rightBarButtonItem.enabled = [self.dataSheetController allItemsValid];
 }
 
 

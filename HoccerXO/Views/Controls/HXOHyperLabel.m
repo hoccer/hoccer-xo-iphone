@@ -58,12 +58,20 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     self.lineBreakMode = NSLineBreakByWordWrapping;
     self.textToViewTransform = CGAffineTransformIdentity;
     self.linkColor = [UIColor blueColor];
+    self.backgroundColor = [UIColor clearColor];
 
     [self addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
     [self addGestureRecognizer: [[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
 
     self.contentMode = UIViewContentModeRedraw;
 
+}
+
+- (CGSize) intrinsicContentSize {
+    CGSize size = CGSizeMake(320 - 32, 0);
+    size = CTFramesetterSuggestFrameSizeWithConstraints(self.framesetter, CFRangeMake(0, 0), NULL, size, NULL);
+    size.width = ceilf(size.width);
+    return  size;
 }
 
 - (void) setAttributedText:(NSAttributedString *)attributedText {
@@ -124,6 +132,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
 }
 
 - (void) layoutSubviews {
+    [super layoutSubviews];
     [self releaseTextFrame];
     CGFloat dx = 0.5 * (self.bounds.size.height - [self sizeThatFits: self.bounds.size].height);
     CGAffineTransform translateY = CGAffineTransformMakeTranslation(0, self.bounds.size.height + dx);

@@ -38,7 +38,7 @@ extern const CGFloat kHXOGridSpacing;
     [self.contentView addSubview: self.titleLabel];
 
     NSDictionary * views = @{@"label": self.titleLabel};
-    NSString * format = [NSString stringWithFormat: @"V:|-%f-[label]-%f-|", kHXOGridSpacing, kHXOGridSpacing];
+    NSString * format = [NSString stringWithFormat: @"V:|-%f-[label]-%f-|", padding, padding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
     self.separatorInset = UIEdgeInsetsMake(0, padding, 0, 0);
