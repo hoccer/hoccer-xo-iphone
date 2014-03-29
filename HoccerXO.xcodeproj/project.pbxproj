@@ -421,8 +421,8 @@
 		630CAA5418DCC8AE00782507 /* DatasheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetViewController.m; sourceTree = "<group>"; };
 		630CAB7618E0F6C400782507 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetController.h; sourceTree = "<group>"; };
 		630CAB7718E0F6C400782507 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetController.m; sourceTree = "<group>"; };
-		630CAB7918E0F78500782507 /* DatasheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetController.h; sourceTree = "<group>"; };
-		630CAB7A18E0F78500782507 /* DatasheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetController.m; sourceTree = "<group>"; };
+		630CAB7918E0F78500782507 /* DatasheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatasheetController.h; path = HoccerXO/UIComponents/Datasheet/DatasheetController.h; sourceTree = SOURCE_ROOT; };
+		630CAB7A18E0F78500782507 /* DatasheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DatasheetController.m; path = HoccerXO/UIComponents/Datasheet/DatasheetController.m; sourceTree = SOURCE_ROOT; };
 		630CAB8018E1E00C00782507 /* DatasheetTextInputCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetTextInputCell.h; sourceTree = "<group>"; };
 		630CAB8118E1E00C00782507 /* DatasheetTextInputCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetTextInputCell.m; sourceTree = "<group>"; };
 		630CAB8318E1E31600782507 /* DatasheetActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetActionCell.h; sourceTree = "<group>"; };
@@ -997,15 +997,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		630CAB7518E0F67200782507 /* Controllers */ = {
+		630CAB7518E0F67200782507 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				6365EC8218E773F000B41054 /* Datasheet */,
 				630CAB7618E0F6C400782507 /* ContactSheetController.h */,
 				630CAB7718E0F6C400782507 /* ContactSheetController.m */,
-				630CAB7918E0F78500782507 /* DatasheetController.h */,
-				630CAB7A18E0F78500782507 /* DatasheetController.m */,
 			);
-			path = Controllers;
+			name = "UI Components";
+			path = UIComponents;
 			sourceTree = "<group>";
 		};
 		630CAB7F18E1DFE200782507 /* DatasheetCells */ = {
@@ -1235,6 +1235,18 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
+		6365EC8218E773F000B41054 /* Datasheet */ = {
+			isa = PBXGroup;
+			children = (
+				630CAB7F18E1DFE200782507 /* DatasheetCells */,
+				630CAB7918E0F78500782507 /* DatasheetController.h */,
+				630CAB7A18E0F78500782507 /* DatasheetController.m */,
+				630CAA5318DCC8AE00782507 /* DatasheetViewController.h */,
+				630CAA5418DCC8AE00782507 /* DatasheetViewController.m */,
+			);
+			path = Datasheet;
+			sourceTree = "<group>";
+		};
 		636D40041710724900304EDF /* SettingsConstantsAndEnvironment */ = {
 			isa = PBXGroup;
 			children = (
@@ -1404,8 +1416,6 @@
 				63CA315418D272E70069A0C2 /* CodeScanViewController.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
-				630CAA5318DCC8AE00782507 /* DatasheetViewController.h */,
-				630CAA5418DCC8AE00782507 /* DatasheetViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
@@ -1531,7 +1541,7 @@
 				631A96F818AB9D24003363F5 /* BuildUtilities */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
-				630CAB7518E0F67200782507 /* Controllers */,
+				630CAB7518E0F67200782507 /* UI Components */,
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 				E96CB01D1714572C005F8FFA /* Crypto */,
@@ -1650,7 +1660,6 @@
 				633A9B18177B21A700E066EF /* Controls */,
 				63C413BA16E94735004E1F6D /* ConversationCell.h */,
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
-				630CAB7F18E1DFE200782507 /* DatasheetCells */,
 				6329F7AE18C0000E007AFF32 /* GridView.h */,
 				6329F7AF18C0000E007AFF32 /* GridView.m */,
 				63DC015917147B1600609513 /* HXOTableViewCell.h */,

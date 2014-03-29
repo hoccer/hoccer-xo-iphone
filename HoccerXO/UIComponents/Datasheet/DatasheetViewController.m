@@ -46,7 +46,13 @@ extern const CGFloat kHXOGridSpacing;
     o.nickname = @"Icke";
     self.dataSheetController.inspectedObject = o;
 
-    self.tableView.tableHeaderView = self.dataSheetController.tableHeaderView;
+    // TableView changes its behaviour when writing to tableHEaderView :-/
+    if (self.dataSheetController.tableHeaderView) {
+        self.tableView.tableHeaderView = self.dataSheetController.tableHeaderView;
+    }
+    if ( ! self.tableView.tableHeaderView) {
+        self.tableView.contentInset = UIEdgeInsetsMake(-1, 0, 0, 0);
+    }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
@@ -117,11 +123,18 @@ extern const CGFloat kHXOGridSpacing;
 #pragma mark - Section Headers and Footers
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return FLT_MIN;
+    if (section == 0 && ! self.tableView.tableHeaderView) {
+        return 1;
     }
     // TODO: ...
     return 3 * kHXOGridSpacing;
+}
+
+- (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == 0 && ! self.tableView.tableHeaderView) {
+        return nil;
+    }
+    return nil;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)sectionIndex {

@@ -261,7 +261,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     NSMutableArray * survivingItems = [NSMutableArray array];
     DatasheetSection * oldRoot = self.currentRoot;
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
-        if (item.visibilityMask & self.mode) {
+        if ([self isItemVisible: item]) {
             [stack addObject: item];
             if (oldRoot) {
                 if([self findItem: oldRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
