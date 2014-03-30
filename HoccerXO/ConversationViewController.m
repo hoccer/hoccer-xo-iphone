@@ -150,7 +150,7 @@ extern const CGFloat kHXOGridSpacing;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
         _chatViewController = [segue destinationViewController];
-        [_chatViewController setPartner: contact];
+        _chatViewController.inspectedObject = contact;
     }
 }
 

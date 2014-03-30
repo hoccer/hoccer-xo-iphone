@@ -23,6 +23,7 @@
 }
 
 @property (strong, nonatomic)   Contact *                      partner;
+@property (strong, nonatomic)   Contact *                      inspectedObject;
 @property (readonly, nonatomic) HXOBackend *  chatBackend;
 @property (strong, nonatomic)   IBOutlet UIToolbar * chatbar;
 @property (strong, nonatomic)   UITextView *  messageField;

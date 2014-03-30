@@ -48,4 +48,21 @@
 
     return image;
 }
+
+- (UIBezierPath*) pathScaledToSize: (CGSize) size {
+    UIBezierPath * path = [self.path copy];
+    CGRect pathBounds = path.bounds;
+    CGSize pathSize = CGSizeMake(CGRectGetMaxX(pathBounds), CGRectGetMaxY(pathBounds));
+
+
+    CGFloat scale;
+    if (pathSize.width > pathSize.height) {
+        scale = size.width / pathSize.width;
+    } else {
+        scale = size.height / pathSize.height;
+    }
+    CGAffineTransform transform = CGAffineTransformMakeScale(scale, scale);
+    [path applyTransform: transform];
+    return path;
+}
 @end

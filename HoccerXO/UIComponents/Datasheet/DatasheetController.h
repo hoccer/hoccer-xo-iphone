@@ -36,6 +36,8 @@ typedef BOOL(^ValidatorBlock)(DatasheetItem* item);
 - (void) controller: (DatasheetController*) controller didChangeSection: (NSIndexPath*) indexPath forChangeType: (DatasheetChangeType) type;
 - (void) controllerDidChangeContent: (DatasheetController*) controller;
 
+- (void) controller: (DatasheetController*) controller didChangeBackgroundImage: (UIImage*) image;
+
 @end
 
 @interface DatasheetItem : NSObject
@@ -102,5 +104,6 @@ typedef BOOL(^ValidatorBlock)(DatasheetItem* item);
 - (void) didUpdateInspectedObject;
 
 - (UIView*) tableHeaderView;
+- (UIImage*) updateBackgroundImage;
 
 @end

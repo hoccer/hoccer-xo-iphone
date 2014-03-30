@@ -77,6 +77,7 @@
 		636492D71711E97900E35514 /* ProfileAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* ProfileAvatarView.m */; };
 		636492DA1711F4B000E35514 /* UserDefaultsCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D91711F4B000E35514 /* UserDefaultsCells.m */; };
 		6365EB2C18E4D96D00B41054 /* DatasheetFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */; };
+		6365EC8518E7976600B41054 /* AvatarContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EC8418E7976600B41054 /* AvatarContact.m */; };
 		636D3FFA170F370E00304EDF /* InviteCodeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 636D3FF9170F370E00304EDF /* InviteCodeViewController.mm */; };
 		636D400317106EC000304EDF /* Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D400217106EC000304EDF /* Environment.m */; };
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
@@ -108,7 +109,6 @@
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
 		639094C21739970200DF889B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094C11739970200DF889B /* CoreLocation.framework */; };
-		639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094C7173A871500DF889B /* UIButton+GlossyRounded.m */; };
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
 		63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F688172C328D00C0EC26 /* libstdc++.dylib */; };
@@ -503,6 +503,8 @@
 		636492D91711F4B000E35514 /* UserDefaultsCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsCells.m; sourceTree = "<group>"; };
 		6365EB2A18E4D96D00B41054 /* DatasheetFooterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetFooterTextView.h; sourceTree = "<group>"; };
 		6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetFooterTextView.m; sourceTree = "<group>"; };
+		6365EC8318E7976600B41054 /* AvatarContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarContact.h; sourceTree = "<group>"; };
+		6365EC8418E7976600B41054 /* AvatarContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvatarContact.m; sourceTree = "<group>"; };
 		636D3FF8170F370E00304EDF /* InviteCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteCodeViewController.h; sourceTree = "<group>"; };
 		636D3FF9170F370E00304EDF /* InviteCodeViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InviteCodeViewController.mm; sourceTree = "<group>"; };
 		636D400117106EC000304EDF /* Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Environment.h; sourceTree = "<group>"; };
@@ -556,8 +558,6 @@
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
 		639094BF1739842A00DF889B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		639094C11739970200DF889B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		639094C6173A871500DF889B /* UIButton+GlossyRounded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+GlossyRounded.h"; sourceTree = "<group>"; };
-		639094C7173A871500DF889B /* UIButton+GlossyRounded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+GlossyRounded.m"; sourceTree = "<group>"; };
 		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -1646,6 +1646,8 @@
 				63B7900518D4F581003A9125 /* PaperClip.m */,
 				63793C0A18D5024800BB6951 /* PaperDart.h */,
 				63793C0B18D5024800BB6951 /* PaperDart.m */,
+				6365EC8318E7976600B41054 /* AvatarContact.h */,
+				6365EC8418E7976600B41054 /* AvatarContact.m */,
 			);
 			path = VectorArt;
 			sourceTree = "<group>";
@@ -1671,8 +1673,6 @@
 				63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */,
 				636492D51711E97900E35514 /* ProfileAvatarView.h */,
 				636492D61711E97900E35514 /* ProfileAvatarView.m */,
-				639094C6173A871500DF889B /* UIButton+GlossyRounded.h */,
-				639094C7173A871500DF889B /* UIButton+GlossyRounded.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
 				630CAB8918E22EBC00782507 /* HXOLabel.h */,
@@ -2392,6 +2392,7 @@
 				E9E92F7018733D01007B8042 /* HTTPMessage.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
+				6365EC8518E7976600B41054 /* AvatarContact.m in Sources */,
 				E9E92F6C18733D01007B8042 /* DDNumber.m in Sources */,
 				E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */,
 				E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */,
@@ -2427,7 +2428,6 @@
 				6302A98818DA870400B2D04F /* Digest.m in Sources */,
 				E9E92F3918733B7A007B8042 /* GCDAsyncSocket.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
-				639094C8173A871500DF889B /* UIButton+GlossyRounded.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
 				63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */,
 				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,

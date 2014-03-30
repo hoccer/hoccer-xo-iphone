@@ -31,6 +31,7 @@
 #import "AppDelegate.h"
 #import "ImageViewController.h"
 #import "UIImage+ImageEffects.h"
+#import "UserDefaultsCells.h"
 
 #import "NSData+Base64.h"
 
@@ -104,6 +105,11 @@ typedef enum ActionSheetTags {
 
     self.tableView.allowsSelection = YES;
     self.tableView.allowsSelectionDuringEditing = YES;
+
+    [self registerCellClass: [UserDefaultsCell class]];
+    [self registerCellClass: [UserDefaultsCellTextInput class]];
+    [self registerCellClass: [UserDefaultsCellDisclosure class]];
+    [self registerCellClass: [UserDefaultsCellInfoText class]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -19,4 +19,6 @@
 - (void) initPath;
 - (UIImage*) image;
 
+- (UIBezierPath*) pathScaledToSize: (CGSize) size;
+
 @end

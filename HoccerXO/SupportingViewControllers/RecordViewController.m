@@ -10,7 +10,6 @@
 #import "ChatViewController.h"
 
 #import "TDSemiModal.h"
-// #import "UIButton+GlossyRounded.h"
 #import "AppDelegate.h"
 
 #define ENABLE_METERING NO

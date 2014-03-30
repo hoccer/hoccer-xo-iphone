@@ -2275,4 +2275,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
+- (Contact*) inspectedObject {
+    return self.partner;
+}
+
+- (void) setInspectedObject:(Contact *)inspectedObject {
+    self.partner = inspectedObject;
+}
+
 @end

@@ -21,6 +21,10 @@
 @property (nonatomic,readonly) UIColor * messageFieldBackgroundColor;
 @property (nonatomic,readonly) UIColor * messageFieldBorderColor;
 
+@property (nonatomic,readonly) UIColor * defaultAvatarColor;
+@property (nonatomic,readonly) UIColor * defaultAvatarBackgroundColor;
+
+
 @property (nonatomic,readonly) UIFont *   messageFont;
 @property (nonatomic,readonly) UIFont *   titleFont;
 @property (nonatomic,readonly) UIFont *   smallTextFont;

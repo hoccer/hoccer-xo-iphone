@@ -68,7 +68,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
 }
 
 - (CGSize) intrinsicContentSize {
-    CGSize size = CGSizeMake(320 - 32, 0);
+    CGSize size = CGSizeMake(320 - 32/* TODO */, 0);
     size = CTFramesetterSuggestFrameSizeWithConstraints(self.framesetter, CFRangeMake(0, 0), NULL, size, NULL);
     size.width = ceilf(size.width);
     return  size;

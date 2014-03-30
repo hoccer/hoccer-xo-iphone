@@ -18,18 +18,13 @@ extern const CGFloat kHXOGridSpacing;
 
 @interface DatasheetViewController ()
 
-@end
+@property (nonatomic,readonly) UIImageView * backgroundImageView;
 
-@interface InspectionObject : NSObject
-
-@property (nonatomic,strong) NSString * nickname;
-
-@end
-
-@implementation InspectionObject
 @end
 
 @implementation DatasheetViewController
+
+@synthesize backgroundImageView = _backgroundImageView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -42,16 +37,9 @@ extern const CGFloat kHXOGridSpacing;
 
     self.dataSheetController.delegate = self;
 
-    InspectionObject * o = [[InspectionObject alloc] init];
-    o.nickname = @"Icke";
-    self.dataSheetController.inspectedObject = o;
-
     // TableView changes its behaviour when writing to tableHEaderView :-/
     if (self.dataSheetController.tableHeaderView) {
         self.tableView.tableHeaderView = self.dataSheetController.tableHeaderView;
-    }
-    if ( ! self.tableView.tableHeaderView) {
-        self.tableView.contentInset = UIEdgeInsetsMake(-1, 0, 0, 0);
     }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
@@ -123,8 +111,8 @@ extern const CGFloat kHXOGridSpacing;
 #pragma mark - Section Headers and Footers
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0 && ! self.tableView.tableHeaderView) {
-        return 1;
+    if (section == 0) {
+        return FLT_MIN;
     }
     // TODO: ...
     return 3 * kHXOGridSpacing;
@@ -242,6 +230,10 @@ extern const CGFloat kHXOGridSpacing;
     [self.tableView endUpdates];
 }
 
+- (void) controller:(DatasheetController *)controller didChangeBackgroundImage:(UIImage *)image {
+    self.backgroundImageView.image = image;
+}
+
 #pragma mark - Datasheet Cell Delegate
 
 - (void) valueDidChange:(DatasheetCell *)cell valueView:(id)valueView {
@@ -249,6 +241,40 @@ extern const CGFloat kHXOGridSpacing;
     DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
     item.currentValue = [valueView text];
     self.navigationItem.rightBarButtonItem.enabled = [self.dataSheetController allItemsValid];
+}
+
+#pragma mark - Accessors
+
+- (id) inspectedObject {
+    return self.dataSheetController.inspectedObject;
+}
+
+- (void) setInspectedObject: (id) inspectedObject {
+    self.dataSheetController.inspectedObject = inspectedObject;
+}
+
+#pragma mark - Background Image Handling
+
+- (UIImageView*) backgroundImageView {
+    if (! _backgroundImageView) {
+        _backgroundImageView = [[UIImageView alloc] initWithFrame: self.tableView.tableHeaderView.bounds];
+        _backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _backgroundImageView.layer.masksToBounds = YES;
+        _backgroundImageView.autoresizingMask |= UIViewAutoresizingFlexibleWidth;
+        [self.tableView addSubview:_backgroundImageView];
+        [self.tableView sendSubviewToBack: _backgroundImageView];
+    }
+    return _backgroundImageView;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+    CGFloat y =  scrollView.contentOffset.y + self.navigationController.navigationBar.frame.size.height + MIN(statusBarSize.width, statusBarSize.height);
+    if (y  < 0) {
+        CGSize restingSize = self.tableView.tableHeaderView.bounds.size;
+        self.backgroundImageView.frame = CGRectMake(0, y, restingSize.width - y, restingSize.height - y);
+        self.backgroundImageView.center = CGPointMake(self.view.center.x, self.backgroundImageView.center.y);
+    }
 }
 
 

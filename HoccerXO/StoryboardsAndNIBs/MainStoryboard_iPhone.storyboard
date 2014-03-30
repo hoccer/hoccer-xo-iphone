@@ -46,10 +46,31 @@
             </objects>
             <point key="canvasLocation" x="-983" y="-747"/>
         </scene>
+        <!--Conversation View Controller-->
+        <scene sceneID="3Hq-TD-1Vz">
+            <objects>
+                <tableViewController storyboardIdentifier="datasheetTesting" id="Bor-h4-5PD" customClass="ConversationViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZXG-81-O3R">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="Bor-h4-5PD" id="w3n-Vn-DKs"/>
+                            <outlet property="delegate" destination="Bor-h4-5PD" id="aSs-A4-WID"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <segue destination="Ewa-nI-cAA" kind="push" identifier="showChat" id="DV7-Qd-z1g"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bH0-PD-peR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1796" y="-1994"/>
+        </scene>
         <!--Datasheet View Controller - Datasheet-->
         <scene sceneID="miZ-b5-x0F">
             <objects>
-                <tableViewController storyboardIdentifier="datasheetTesting" id="Ewa-nI-cAA" customClass="DatasheetViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="datasheetTestingDetail" id="Ewa-nI-cAA" customClass="DatasheetViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="eVr-4T-v7P">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

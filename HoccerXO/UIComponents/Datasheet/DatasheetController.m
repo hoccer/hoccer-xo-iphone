@@ -88,7 +88,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (void) removeObjectObservers: (id) object {
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem * item) {
-        if (! [@"" isEqualToString: item.valuePath]) {
+        if ( item.valuePath && ! [@"" isEqualToString: item.valuePath]) {
             [object removeObserver: self forKeyPath: item.valuePath];
         }
         return NO;
@@ -392,6 +392,17 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         return NO;
     } sectionBlock: nil];
     return allValid;
+}
+
+- (void) setDelegate:(id<DatasheetControllerDelegate>)delegate {
+    _delegate = delegate;
+    if ([delegate respondsToSelector: @selector(controller:didChangeBackgroundImage:)]) {
+        [delegate controller: self didChangeBackgroundImage: [self updateBackgroundImage]];
+    }
+}
+
+- (UIImage*) updateBackgroundImage {
+    return nil;
 }
 
 @end

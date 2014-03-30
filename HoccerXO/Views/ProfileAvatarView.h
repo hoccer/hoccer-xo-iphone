@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class VectorArt;
+
 @interface ProfileAvatarView : UIControl
 
 @property (nonatomic,strong) UIImage * image;
+@property (nonatomic,strong) VectorArt * defaultIcon;
 
 @end

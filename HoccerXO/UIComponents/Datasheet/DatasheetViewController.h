@@ -16,5 +16,6 @@
 @interface DatasheetViewController : HXOTableViewController <DatasheetControllerDelegate, DatasheetCellDelegate>
 
 @property (nonatomic,strong) IBOutlet DatasheetController * dataSheetController;
+@property (nonatomic,strong) id                             inspectedObject;
 
 @end
