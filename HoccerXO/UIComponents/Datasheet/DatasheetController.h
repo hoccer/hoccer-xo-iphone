@@ -20,6 +20,7 @@ typedef enum DatasheetChangeTypes {
 } DatasheetChangeType;
 
 typedef enum DatasheetModes {
+    DatasheetModeNone = 0,
     DatasheetModeEdit = (1<<0),
     DatasheetModeView = (1<<1)
 } DatasheetMode;
@@ -105,5 +106,6 @@ typedef BOOL(^ValidatorBlock)(DatasheetItem* item);
 
 - (UIView*) tableHeaderView;
 - (UIImage*) updateBackgroundImage;
+- (void) backgroundImageChanged;
 
 @end

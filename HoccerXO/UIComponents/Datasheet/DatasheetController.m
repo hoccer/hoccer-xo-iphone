@@ -98,7 +98,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) addObjectObservers: (id) object {
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem * item) {
         if (item.valuePath && ! [item.valuePath isEqualToString: @""]) {
-            [object addObserver: self forKeyPath: item.valuePath options:NSKeyValueObservingOptionNew context: NULL];
+            [object addObserver: self forKeyPath: item.valuePath options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context: NULL];
         }
         return NO;
     } sectionBlock: nil];
@@ -176,15 +176,21 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([object isEqual: _inspectedObject]) {
 
-        DatasheetItem * item = [self findItem: self.currentRoot withKeyPath: @"valuePath" equalTo: keyPath];
-        NSIndexPath * indexPath = [self indexPathForItem: item];
-        if (item && indexPath) {
-            [self.delegate controllerWillChangeContent: self];
-            [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
-            [self.delegate controllerDidChangeContent: self];
+        DatasheetItem * item = [self findItem: self.root withKeyPath: @"valuePath" equalTo: keyPath];
+        if (item) {
+            NSIndexPath * indexPath = [self indexPathForItem: item];
+            DatasheetItem * currentItem = [self findItem: self.currentRoot withKeyPath: @"valuePath" equalTo: keyPath];
+            if (currentItem && indexPath) {
+                [self.delegate controllerWillChangeContent: self];
+                [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
+                [self.delegate controllerDidChangeContent: self];
+            }
+            [self didChangeValueForItem: item];
         }
     }
+}
 
+- (void) didChangeValueForItem: (DatasheetItem*) item {
 }
 
 - (DatasheetItem*) itemWithIdentifier: (NSString*) identifier cellIdentifier: (NSString*) cellIdentifier {
@@ -396,8 +402,12 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (void) setDelegate:(id<DatasheetControllerDelegate>)delegate {
     _delegate = delegate;
-    if ([delegate respondsToSelector: @selector(controller:didChangeBackgroundImage:)]) {
-        [delegate controller: self didChangeBackgroundImage: [self updateBackgroundImage]];
+    [self backgroundImageChanged];
+}
+
+- (void) backgroundImageChanged {
+    if ([self.delegate respondsToSelector: @selector(controller:didChangeBackgroundImage:)]) {
+        [self.delegate controller: self didChangeBackgroundImage: [self updateBackgroundImage]];
     }
 }
 

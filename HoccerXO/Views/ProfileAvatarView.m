@@ -54,6 +54,7 @@ extern CGFloat kHXOGridSpacing;
 - (void) setImage:(UIImage *)image {
     _image = image;
     self.avatarLayer.contents = (id)image.CGImage;
+    self.defaultAvatarLayer.opacity = image ? 0 : 1;
     [self setNeedsDisplay];
 }
 

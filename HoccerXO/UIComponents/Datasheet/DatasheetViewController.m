@@ -35,12 +35,11 @@ extern const CGFloat kHXOGridSpacing;
 
     [self registerHeaderFooterViewClass: [DatasheetFooterTextView class]];
 
-    self.dataSheetController.delegate = self;
-
-    // TableView changes its behaviour when writing to tableHEaderView :-/
+    // TableView changes its behaviour when writing to tableHeaderView :-/
     if (self.dataSheetController.tableHeaderView) {
         self.tableView.tableHeaderView = self.dataSheetController.tableHeaderView;
     }
+    self.dataSheetController.delegate = self;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
@@ -260,7 +259,7 @@ extern const CGFloat kHXOGridSpacing;
         _backgroundImageView = [[UIImageView alloc] initWithFrame: self.tableView.tableHeaderView.bounds];
         _backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
         _backgroundImageView.layer.masksToBounds = YES;
-        _backgroundImageView.autoresizingMask |= UIViewAutoresizingFlexibleWidth;
+        _backgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self.tableView addSubview:_backgroundImageView];
         [self.tableView sendSubviewToBack: _backgroundImageView];
     }
@@ -276,6 +275,5 @@ extern const CGFloat kHXOGridSpacing;
         self.backgroundImageView.center = CGPointMake(self.view.center.x, self.backgroundImageView.center.y);
     }
 }
-
 
 @end

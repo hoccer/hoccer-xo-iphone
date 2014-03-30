@@ -17,8 +17,9 @@
 
 @interface ContactSheetController ()
 
-@property (nonatomic, strong) DatasheetItem * keyItem;
+@property (nonatomic, strong)   DatasheetItem *     keyItem;
 @property (nonatomic, readonly) ProfileAvatarView * avatarView;
+@property (nonatomic, readonly) DatasheetItem *     avatarItem;
 
 @end
 
@@ -28,6 +29,11 @@
 
 - (void) commonInit {
     [super commonInit];
+
+    _avatarItem = [self itemWithIdentifier: @"avatar_item" cellIdentifier: nil];
+    self.avatarItem.visibilityMask = DatasheetModeNone;
+    self.avatarItem.valuePath = @"avatarImage";
+
     DatasheetItem * nickNameItem = [self itemWithIdentifier: @"Name" cellIdentifier: @"DatasheetTextInputCell"];
     nickNameItem.valuePath = kHXONickName;
     nickNameItem.placeholder = NSLocalizedString(@"Your Name", nil);
@@ -56,7 +62,7 @@
     DatasheetSection * destructiveSection = [DatasheetSection datasheetSectionWithIdentifier: @"destructive_section"];
     destructiveSection.items = @[magicButton, destructiveButton];
 
-    self.items = @[commonSection, bingoBongoSection, destructiveSection];
+    self.items = @[self.avatarItem, commonSection, bingoBongoSection, destructiveSection];
 }
 
 - (id) valueForItem:(DatasheetItem *)item {
@@ -78,19 +84,20 @@
     return _avatarView;
 }
 
+- (void) didChangeValueForItem: (DatasheetItem*) item {
+    if ([item isEqual: _avatarItem]) {
+        self.avatarView.image = item.currentValue;
+        [self backgroundImageChanged];
+    }
+}
+
 - (UIView*) tableHeaderView {
     return self.avatarView;
 }
 
 - (UIImage*) updateBackgroundImage {
-    UIImage * image = [UIImage imageNamed:@"Default"];
-    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], CGRectMake(0, 0, 2 * 320, 2 * 160));
-    image = [UIImage imageWithCGImage:imageRef];
-    CGImageRelease(imageRef);
-    UIColor *tintColor = [UIColor colorWithWhite:1.0 alpha:0.1];
-    //UIColor *tintColor = [UIColor colorWithWhite:0.0 alpha:0.1];
-
-    return [image applyBlurWithRadius: 5.0 tintColor: tintColor saturationDeltaFactor: 1.5 maskImage: nil];
+    UIColor * tintColor = [UIColor colorWithWhite: 1.0 alpha: 0.0];
+    return [self.avatarItem.currentValue applyBlurWithRadius: 20.0 tintColor: tintColor saturationDeltaFactor: 1.5 maskImage: nil];
 }
 
 @end
