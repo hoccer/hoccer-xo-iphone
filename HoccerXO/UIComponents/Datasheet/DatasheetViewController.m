@@ -119,6 +119,24 @@
     }
 }
 
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
+    if (item.target && [item.target respondsToSelector: item.action]) {
+        IMP imp = [item.target methodForSelector: item.action];
+        void (*func)(id, SEL, id) = (void *)imp;
+        func(item.target, item.action, self);
+        //[item.target performSelector: item.action withObject: self];
+    }
+    if (item.segueIdentifier && ! [item.segueIdentifier isEqualToString:@""]) {
+        [self performSegueWithIdentifier: item.segueIdentifier sender: self];
+    }
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    DatasheetItem * item = [self.dataSheetController itemForIndexPath: [self.tableView indexPathForSelectedRow]];
+    [self.dataSheetController prepareForSegue: segue withItem: item sender: sender];
+}
+
 #pragma mark - Section Headers and Footers
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
