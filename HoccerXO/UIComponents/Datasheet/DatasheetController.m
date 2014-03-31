@@ -81,9 +81,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     if (_inspectedObject) {
         [self addObjectObservers: _inspectedObject];
     }
-    if ([self.delegate respondsToSelector:@selector(controllerDidChangeObject:)]) {
-        [self.delegate controllerDidChangeObject: self];
-    }
+    [self inspectedObjectChanged];
 }
 
 - (void) removeObjectObservers: (id) object {
@@ -403,6 +401,13 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) setDelegate:(id<DatasheetControllerDelegate>)delegate {
     _delegate = delegate;
     [self backgroundImageChanged];
+    [self inspectedObjectChanged];
+}
+
+- (void) inspectedObjectChanged {
+    if ([self.delegate respondsToSelector:@selector(controllerDidChangeObject:)]) {
+        [self.delegate controllerDidChangeObject: self];
+    }
 }
 
 - (void) backgroundImageChanged {
