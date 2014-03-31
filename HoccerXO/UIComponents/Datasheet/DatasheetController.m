@@ -125,7 +125,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (DatasheetSection*) findSection: (id) root withIdentifier: (NSString*) identifier {
     __block DatasheetSection * result = nil;
     [self visitItems: root usingBlock: nil sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
-        if ([section.identifier isEqualToString: identifier]) {
+        if ( ! doneWithSection && [section.identifier isEqualToString: identifier]) {
             result = section;
             return YES;
         }
@@ -260,20 +260,10 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) updateCurrentItems {
     NSMutableArray * stack = [NSMutableArray array];
     NSMutableArray * marks = [NSMutableArray array];
-    NSMutableArray * insertedItems = [NSMutableArray array];
-    NSMutableArray * insertedSections = [NSMutableArray array];
-    NSMutableArray * survivingItems = [NSMutableArray array];
     DatasheetSection * oldRoot = self.currentRoot;
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
         if ([self isItemVisible: item]) {
             [stack addObject: item];
-            if (oldRoot) {
-                if([self findItem: oldRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
-                    [survivingItems addObject: item];
-                } else {
-                    [insertedItems addObject: item];
-                }
-            }
         }
         return NO;
     } sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
@@ -291,9 +281,6 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
             }
         } else {
             DatasheetSection * newSection = [section copy];
-            if (oldRoot && ! [self findSection: oldRoot withIdentifier: section.identifier]) {
-                [insertedSections addObject: newSection];
-            }
             [marks addObject: @(stack.count)];
             [stack addObject: newSection];
         }
@@ -301,6 +288,28 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     }];
 
     DatasheetSection * newRoot = [stack firstObject];
+
+
+    NSMutableArray * insertedItems = [NSMutableArray array];
+    NSMutableArray * insertedSections = [NSMutableArray array];
+    NSMutableArray * survivingItems = [NSMutableArray array];
+    if (oldRoot) {
+        [self visitItems: newRoot usingBlock:^BOOL(DatasheetItem *item) {
+            if([self findItem: oldRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
+                [survivingItems addObject: item];
+            } else {
+                [insertedItems addObject: item];
+            }
+            return NO;
+        } sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
+            if (! doneWithSection && ! [self findSection: oldRoot withIdentifier: section.identifier]) {
+                [insertedSections addObject: section];
+            }
+            return NO;
+        }];
+        
+    }
+
 
     NSMutableArray * deletedItemsIndexPaths = [NSMutableArray array];
     NSMutableArray * deletedSectionsIndexPaths = [NSMutableArray array];
