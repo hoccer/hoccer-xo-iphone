@@ -12,7 +12,8 @@
 
 @protocol DatasheetCellDelegate <NSObject>
 
-- (void) valueDidChange: (DatasheetCell*) cell valueView: (id) valueView;
+- (void) datasheetCell: (DatasheetCell*) cell didChangeValueForView: (id) valueView;
+- (BOOL) datasheetCell: (DatasheetCell*) cell shouldChangeValue: (id) oldValue toNewValue: (id) newValue;
 
 @end
 

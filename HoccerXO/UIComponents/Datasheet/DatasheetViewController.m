@@ -247,11 +247,19 @@
 
 #pragma mark - Datasheet Cell Delegate
 
-- (void) valueDidChange:(DatasheetCell *)cell valueView:(id)valueView {
+- (void) datasheetCell:(DatasheetCell *)cell didChangeValueForView:(id)valueView {
     NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
     DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
     item.currentValue = [valueView text];
     self.navigationItem.rightBarButtonItem.enabled = [self.dataSheetController allItemsValid];
+}
+
+- (BOOL) datasheetCell: (DatasheetCell*) cell shouldChangeValue: (id) oldValue toNewValue: (id) newValue {
+    DatasheetItem * item = [self.dataSheetController itemForIndexPath: [self.tableView indexPathForCell: cell]];
+    if (item.changeValidator) {
+        return item.changeValidator(oldValue, newValue);
+    }
+    return YES;
 }
 
 #pragma mark - Accessors

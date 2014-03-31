@@ -27,6 +27,7 @@ typedef enum DatasheetModes {
 
 
 typedef BOOL(^ValidatorBlock)(DatasheetItem* item);
+typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @protocol DatasheetControllerDelegate <NSObject>
 
@@ -58,6 +59,7 @@ typedef BOOL(^ValidatorBlock)(DatasheetItem* item);
 @property (nonatomic,readonly) BOOL       isEnabled;
 @property (nonatomic,readonly) BOOL       isValid;
 @property (nonatomic,copy) ValidatorBlock validator;
+@property (nonatomic,copy) ChangeValidatorBlock changeValidator;
 
 @property (nonatomic,strong) id          currentValue;
 

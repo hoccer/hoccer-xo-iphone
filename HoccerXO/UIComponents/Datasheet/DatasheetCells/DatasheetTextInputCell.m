@@ -19,6 +19,7 @@ extern const CGFloat kHXOGridSpacing;
     self.valueView.autoresizingMask = UIViewAutoresizingNone;
     self.valueView.translatesAutoresizingMaskIntoConstraints = NO;
     self.valueView.font = self.titleLabel.font;
+    self.valueView.delegate = self;
     //self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.valueView addTarget: self action: @selector(valueDidChange:) forControlEvents: UIControlEventEditingChanged];
     [self.contentView addSubview: self.valueView];
@@ -36,9 +37,15 @@ extern const CGFloat kHXOGridSpacing;
     self.valueView.font = self.titleLabel.font;
 }
 
+- (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString * newValue = [textField.text stringByReplacingCharactersInRange: range withString: string];
+    return [self.delegate respondsToSelector: @selector(datasheetCell:shouldChangeValue:toNewValue:)] ?
+        [self.delegate datasheetCell: self shouldChangeValue: textField.text toNewValue: newValue] : YES;
+}
+
 - (void) valueDidChange: (id) sender {
-    if ([self.delegate respondsToSelector: @selector(valueDidChange:valueView:)]) {
-        [self.delegate valueDidChange: self valueView: self.valueView];
+    if ([self.delegate respondsToSelector: @selector(datasheetCell:didChangeValueForView:)]) {
+        [self.delegate datasheetCell: self didChangeValueForView: self.valueView];
     }
 }
 

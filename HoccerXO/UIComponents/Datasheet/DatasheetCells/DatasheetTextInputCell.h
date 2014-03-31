@@ -8,7 +8,7 @@
 
 #import "DatasheetCell.h"
 
-@interface DatasheetTextInputCell : DatasheetCell
+@interface DatasheetTextInputCell : DatasheetCell <UITextFieldDelegate>
 
 @property (nonatomic,readonly) UITextField * valueView;
 

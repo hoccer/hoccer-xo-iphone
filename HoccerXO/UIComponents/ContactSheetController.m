@@ -10,10 +10,13 @@
 
 #import "HXOUserDefaults.h"
 #import "ProfileAvatarView.h"
+#import "DatasheetViewController.h"
 
 #import "AvatarContact.h"
 
 #import "UIImage+ImageEffects.h"
+
+static const NSUInteger kHXOMaxNameLength = 25;
 
 @interface ContactSheetController ()
 
@@ -23,12 +26,15 @@
 
 @end
 
+
 @implementation ContactSheetController
 
 @synthesize avatarView = _avatarView;
 
 - (void) commonInit {
     [super commonInit];
+
+    self.isEditable = YES;
 
     _avatarItem = [self itemWithIdentifier: @"avatar_item" cellIdentifier: nil];
     self.avatarItem.visibilityMask = DatasheetModeNone;
@@ -41,8 +47,15 @@
     nickNameItem.validator = ^BOOL(DatasheetItem* item) {
         return item.currentValue && ! [item.currentValue isEqualToString: @""];
     };
+    nickNameItem.changeValidator = ^BOOL(NSString * old, NSString * new) {
+        if (old.length > kHXOMaxNameLength) {
+            return new.length < old.length;
+        }
+        return new.length <= kHXOMaxNameLength;
+    };
 
     self.keyItem = [self itemWithIdentifier: @"Key" cellIdentifier: @"DatasheetKeyValueCell"];
+    self.keyItem.segueIdentifier = @"showKey";
 
     DatasheetSection * commonSection = [DatasheetSection datasheetSectionWithIdentifier: @"common_section"];
     commonSection.footerText = [[NSAttributedString alloc] initWithString: @"Lorem ipsum dolor sit amet."];
@@ -68,6 +81,10 @@
     self.items = @[self.avatarItem, commonSection, bingoBongoSection, destructiveSection];
 }
 
+- (void) bongoPressed: (UIViewController*) sender {
+    NSLog(@"bongo bongo");
+}
+
 - (id) valueForItem:(DatasheetItem *)item {
     if ([item isEqual: _keyItem]) {
         return @"Verified";
@@ -88,7 +105,7 @@
 }
 
 - (void) didChangeValueForItem: (DatasheetItem*) item {
-    if ([item isEqual: _avatarItem]) {
+    if ([item isEqual: self.avatarItem]) {
         self.avatarView.image = item.currentValue;
         [self backgroundImageChanged];
     }
@@ -101,6 +118,14 @@
 - (UIImage*) updateBackgroundImage {
     UIColor * tintColor = [UIColor colorWithWhite: 1.0 alpha: 0.0];
     return [self.avatarItem.currentValue applyBlurWithRadius: 20.0 tintColor: tintColor saturationDeltaFactor: 1.5 maskImage: nil];
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
+    if ([item isEqual: self.keyItem]) {
+        DatasheetViewController * viewController = segue.destinationViewController;
+        viewController.inspectedObject = @{@"size": @1024};
+        
+    }
 }
 
 @end
