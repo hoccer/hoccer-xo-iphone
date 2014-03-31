@@ -19,10 +19,10 @@
 #import "HXOTheme.h"
 #import "Group.h"
 #import "GroupMembership.h"
+#import "HXOLayout.h"
 
 #define HIDE_SEPARATORS
 
-extern const CGFloat kHXOGridSpacing;
 static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()

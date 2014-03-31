@@ -11,7 +11,7 @@
 #import "ImageAttachmentSection.h"
 #import "TextSection.h"
 
-extern CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @implementation ImageAttachmentWithTextMessageCell
 

@@ -11,8 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "VectorArt.h"
-
-extern CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @interface ProfileAvatarView ()
 
@@ -30,7 +29,7 @@ extern CGFloat kHXOGridSpacing;
         self.avatarLayer = [CALayer layer];
         self.avatarLayer.backgroundColor = [HXOTheme theme].defaultAvatarBackgroundColor.CGColor;
 
-        CGFloat size = frame.size.height - 7 * kHXOGridSpacing;
+        CGFloat size = frame.size.height - 6 * kHXOGridSpacing;
         self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
         self.avatarLayer.position = self.center;
 

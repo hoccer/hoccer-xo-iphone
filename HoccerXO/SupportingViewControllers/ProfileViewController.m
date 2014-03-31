@@ -68,7 +68,6 @@ typedef enum ActionSheetTags {
 @property (nonatomic,strong) ProfileAvatarView * avatarView;
 @property (nonatomic,strong) UIImageView * avatarBackgroundView;
 
-
 @end
 
 @implementation ProfileViewController

@@ -7,8 +7,7 @@
 //
 
 #import "DatasheetKeyValueCell.h"
-
-extern const CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @implementation DatasheetKeyValueCell
 
@@ -22,7 +21,7 @@ extern const CGFloat kHXOGridSpacing;
     //self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.valueView];
     NSDictionary * views = @{@"title": self.titleLabel, @"value": self.valueView};
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[title(<=30@750)]-%f-[value]-%f-|", 2 * kHXOGridSpacing, kHXOGridSpacing, kHXOGridSpacing];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[title(<=30@750)]-%f-[value]-%f-|", kHXOCellPadding, kHXOGridSpacing, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.valueView attribute: NSLayoutAttributeBaseline relatedBy: NSLayoutRelationEqual toItem: self.titleLabel attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];

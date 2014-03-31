@@ -9,9 +9,9 @@
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 
-static const CGFloat kEditAnimationDuration = 0.5;
+#import "HXOLayout.h"
 
-extern CGFloat kHXOGridSpacing;
+static const CGFloat kEditAnimationDuration = 0.5;
 
 @implementation ProfileItem
 

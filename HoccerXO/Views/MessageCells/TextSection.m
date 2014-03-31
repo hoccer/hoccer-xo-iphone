@@ -7,14 +7,14 @@
 //
 
 #import "TextSection.h"
+
 #import "HXOHyperLabel.h"
 #import "MessageCell.h"
 #import "HXOTheme.h"
+#import "HXOLayout.h"
 
 // TODO: remove this
 #import "HXOUserDefaults.h"
-
-extern CGFloat kHXOGridSpacing;
 
 @implementation TextSection
 

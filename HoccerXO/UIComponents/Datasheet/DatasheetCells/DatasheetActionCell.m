@@ -9,19 +9,18 @@
 #import "DatasheetActionCell.h"
 
 #import "HXOTheme.h"
-
-extern const CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @implementation DatasheetActionCell
 
 - (void) commonInit {
     [super commonInit];
 
-    self.titleLabel.textColor = [UIColor blackColor];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    //self.titleLabel.textColor = [UIColor blackColor];
+    //self.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     NSDictionary * views = @{@"label": self.titleLabel};
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-%f-|", kHXOGridSpacing, kHXOGridSpacing];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-%f-|", kHXOCellPadding, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 }
 

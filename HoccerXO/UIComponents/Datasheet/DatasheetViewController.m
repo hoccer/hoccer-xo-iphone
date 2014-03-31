@@ -13,8 +13,8 @@
 #import "DatasheetActionCell.h"
 #import "DatasheetFooterTextView.h"
 #import "HXOHyperLabel.h"
-
-extern const CGFloat kHXOGridSpacing;
+#import "HXOTheme.h"
+#import "HXOLayout.h" // needed for header height hack
 
 @interface DatasheetViewController ()
 

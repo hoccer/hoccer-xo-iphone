@@ -10,8 +10,7 @@
 
 #import "HXOHyperLabel.h"
 #import "HXOTheme.h"
-
-extern const CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @implementation DatasheetFooterTextView
 
@@ -39,10 +38,9 @@ extern const CGFloat kHXOGridSpacing;
     [self.contentView addSubview: self.label];
 
     NSDictionary * views = @{@"label": self.label};
-    CGFloat padding = 2 * kHXOGridSpacing;
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-%f-|", padding, padding];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-%f-|", kHXOCellPadding, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-    format = [NSString stringWithFormat: @"V:|-%f-[label]-%f-|", kHXOGridSpacing, padding];
+    format = [NSString stringWithFormat: @"V:|-%f-[label]-%f-|", kHXOGridSpacing, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 }
 

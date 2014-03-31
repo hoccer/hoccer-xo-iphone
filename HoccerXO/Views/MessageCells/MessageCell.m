@@ -8,9 +8,7 @@
 
 #import "MessageCell.h"
 #import "HXOTheme.h"
-
-const CGFloat kHXOGridSpacing = 8; // TODO: make this global
-static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @implementation MessageCell
 
@@ -56,8 +54,8 @@ static const CGFloat kHXOAvatarSize = 5 * kHXOGridSpacing;
 
     self.messageDirection = HXOMessageDirectionOutgoing;
 
-    CGFloat y = self.contentView.frame.size.height - (kHXOAvatarSize + 2 * kHXOGridSpacing);
-    _avatar = [[HXOAvatarButton alloc] initWithFrame:CGRectMake(kHXOGridSpacing, y, kHXOAvatarSize, kHXOAvatarSize)];
+    CGFloat y = self.contentView.frame.size.height - (kHXOChatAvatarSize + 2 * kHXOGridSpacing);
+    _avatar = [[HXOAvatarButton alloc] initWithFrame:CGRectMake(kHXOGridSpacing, y, kHXOChatAvatarSize, kHXOChatAvatarSize)];
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
     [self.contentView addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];

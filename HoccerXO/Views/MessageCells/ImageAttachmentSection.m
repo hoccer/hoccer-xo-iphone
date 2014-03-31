@@ -7,11 +7,11 @@
 //
 
 #import "ImageAttachmentSection.h"
+
 #import "MessageCell.h"
 #import "HXOUpDownLoadControl.h"
 #import "HXOTheme.h"
-
-extern CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @interface ImageAttachmentSection ()
 

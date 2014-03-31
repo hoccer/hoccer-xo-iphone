@@ -9,8 +9,7 @@
 #import "MessageSection.h"
 #import "MessageCell.h"
 #import "HXOTheme.h"
-
-extern CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @implementation MessageSection
 

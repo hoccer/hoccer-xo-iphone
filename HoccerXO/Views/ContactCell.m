@@ -9,11 +9,7 @@
 #import "ContactCell.h"
 #import "HXOTheme.h"
 #import "HXOLabel.h"
-
-static const CGFloat kHXOGridSpacing = 8.0;
-
-const CGFloat kPadding = 2 * kHXOGridSpacing;
-const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @interface ContactCell ()
 
@@ -32,7 +28,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
 }
 
 - (void) commonInit {
-    self.separatorInset = UIEdgeInsetsMake(0, kPadding + kMaxImageSize + kPadding, 0, 0);
+    self.separatorInset = UIEdgeInsetsMake(0, kHXOCellPadding + kHXOListAvatarSize + kHXOCellPadding, 0, 0);
     
     _nickName = [[LabelWithLED alloc] initWithFrame: CGRectZero];
     _nickName.translatesAutoresizingMaskIntoConstraints = NO;
@@ -57,7 +53,7 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     _subtitleLabel.autoresizingMask = UIViewAutoresizingNone;
     _avatar.translatesAutoresizingMaskIntoConstraints = NO;
     _avatar.backgroundColor = [UIColor lightGrayColor];
-    _avatar.layer.cornerRadius = kMaxImageSize * 0.5;
+    _avatar.layer.cornerRadius = kHXOListAvatarSize * 0.5;
     [self.contentView addSubview: _avatar];
 
     UIView * title = _nickName;
@@ -67,21 +63,20 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     
     [self addFirstRowHorizontalConstraints: views];
     
-    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(%f)]", kPadding, kMaxImageSize];
+    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(%f)]", kHXOCellPadding, kHXOListAvatarSize];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
-    
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     
     [self preferredContentSizeChanged: nil];
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-|", kPadding, kMaxImageSize, kPadding, kHXOGridSpacing];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-|", kHXOCellPadding, kHXOListAvatarSize, kHXOCellPadding, kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
-    format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]->=%f-|", kPadding, kHXOGridSpacing];
+    format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]->=%f-|", kHXOCellPadding, kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];    
 }
@@ -96,8 +91,8 @@ const CGFloat kMaxImageSize = 6 * kHXOGridSpacing;
     UIView * title = self.nickName;
     UIView * subtitle = self.subtitleLabel;
     NSDictionary * views = NSDictionaryOfVariableBindings(title, subtitle);
-    CGFloat y = kPadding - (self.nickName.font.ascender - self.nickName.font.capHeight);
-    NSString * format = [NSString stringWithFormat: @"V:|-%f-[title]-%f-[subtitle]->=%f-|", y, 0.5 * kHXOGridSpacing, kPadding];
+    CGFloat y = kHXOCellPadding - (self.nickName.font.ascender - self.nickName.font.capHeight);
+    NSString * format = [NSString stringWithFormat: @"V:|-%f-[title]-%f-[subtitle]->=%f-|", y, 0.5 * kHXOGridSpacing, kHXOCellPadding];
     self.verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                        options: 0 metrics: nil views: views];
     [self.contentView addConstraints: self.verticalConstraints];

@@ -9,8 +9,6 @@
 #import "GenericAttachmentMessageCell.h"
 #import "GenericAttachmentSection.h"
 
-extern CGFloat kHXOGridSpacing;
-
 @implementation GenericAttachmentMessageCell
 
 - (void) commonInit {

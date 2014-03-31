@@ -12,9 +12,6 @@
 #import "HXOAvatarButton.h"
 #import "LabelWithLED.h"
 
-FOUNDATION_EXPORT const CGFloat kPadding;
-FOUNDATION_EXPORT const CGFloat kMaxImageSize;
-
 @interface ContactCell : HXOTableViewCell
 
 @property (nonatomic,readonly) LabelWithLED * nickName;

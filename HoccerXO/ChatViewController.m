@@ -46,12 +46,11 @@
 #import "HXOHyperLabel.h"
 #import "PaperDart.h"
 #import "PaperClip.h"
+#import "HXOLayout.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
-
-extern const CGFloat kHXOGridSpacing;
 
 static const NSUInteger kMaxMessageBytes = 10000;
 
@@ -1264,7 +1263,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }
     } else if ([keyPath isEqualToString: @"contentSize"] && [object isEqual: self.messageField]) {
         CGRect frame = self.messageField.frame;
-        CGFloat kHXOGridSpacing = 8;
         frame.size.height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, self.messageField.contentSize.height));
         self.messageField.frame = frame;
         self.chatbarHeight.constant = frame.size.height + 2 * kHXOGridSpacing;

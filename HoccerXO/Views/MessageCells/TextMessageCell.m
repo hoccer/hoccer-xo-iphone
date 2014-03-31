@@ -7,9 +7,9 @@
 //
 
 #import "TextMessageCell.h"
-#import "TextSection.h"
 
-extern CGFloat kHXOGridSpacing;
+#import "TextSection.h"
+#import "HXOLayout.h"
 
 @interface TextMessageCell ()
 

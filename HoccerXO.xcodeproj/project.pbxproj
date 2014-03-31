@@ -150,6 +150,7 @@
 		63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B1C9EA1843FA3800B75CD8 /* cnt-contact@2x.png */; };
 		63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B21789181EDA4C00C057D9 /* BezeledLabel.m */; };
 		63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178C181FDFAB00C057D9 /* LabelWithLED.m */; };
+		63B76F6118E9BD8D00E014E6 /* HXOLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F6018E9BD8D00E014E6 /* HXOLayout.m */; };
 		63B78FFA18D4D6C1003A9125 /* IconChats.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FF918D4D6C1003A9125 /* IconChats.m */; };
 		63B78FFD18D4E517003A9125 /* IconContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FFC18D4E517003A9125 /* IconContacts.m */; };
 		63B7900018D4E52D003A9125 /* IconProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FFF18D4E52D003A9125 /* IconProfile.m */; };
@@ -640,6 +641,8 @@
 		63B21789181EDA4C00C057D9 /* BezeledLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezeledLabel.m; sourceTree = "<group>"; };
 		63B2178B181FDFAA00C057D9 /* LabelWithLED.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelWithLED.h; sourceTree = "<group>"; };
 		63B2178C181FDFAB00C057D9 /* LabelWithLED.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelWithLED.m; sourceTree = "<group>"; };
+		63B76F5F18E9BD8D00E014E6 /* HXOLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLayout.h; sourceTree = "<group>"; };
+		63B76F6018E9BD8D00E014E6 /* HXOLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLayout.m; sourceTree = "<group>"; };
 		63B78FF818D4D6C1003A9125 /* IconChats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconChats.h; sourceTree = "<group>"; };
 		63B78FF918D4D6C1003A9125 /* IconChats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconChats.m; sourceTree = "<group>"; };
 		63B78FFB18D4E517003A9125 /* IconContacts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconContacts.h; sourceTree = "<group>"; };
@@ -1260,6 +1263,8 @@
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
 				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
 				6383FF751729DC2200835C91 /* Settings.bundle */,
+				63B76F5F18E9BD8D00E014E6 /* HXOLayout.h */,
+				63B76F6018E9BD8D00E014E6 /* HXOLayout.m */,
 			);
 			path = SettingsConstantsAndEnvironment;
 			sourceTree = "<group>";
@@ -2304,6 +2309,7 @@
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
 				63AEE2FC16CA4D0300522F92 /* ConversationViewController.m in Sources */,
+				63B76F6118E9BD8D00E014E6 /* HXOLayout.m in Sources */,
 				63C178C618BF79A100F29BC4 /* UIColor+HexUtilities.m in Sources */,
 				63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */,
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,

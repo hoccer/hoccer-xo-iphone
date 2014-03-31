@@ -7,11 +7,11 @@
 //
 
 #import "GenericAttachmentSection.h"
+
 #import "MessageCell.h"
 #import "HXOUpDownLoadControl.h"
 #import "HXOTheme.h"
-
-extern CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @implementation GenericAttachmentSection
 

@@ -22,9 +22,6 @@
 #import "Environment.h"
 #import "HXOTheme.h"
 
-extern const CGFloat kHXOGridSpacing;
-
-
 //#define HIDE_SEPARATORS
 
 @interface ConversationViewController ()

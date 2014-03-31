@@ -12,8 +12,7 @@
 #import "VectorArtView.h"
 #import "HXOTheme.h"
 #import "DisclosureArrow.h"
-
-extern const CGFloat kHXOGridSpacing;
+#import "HXOLayout.h"
 
 @interface ConversationCell ()
 
@@ -43,7 +42,7 @@ extern const CGFloat kHXOGridSpacing;
     self.accessoryView = [[UIView alloc] initWithFrame: accessoryView.frame];
     CGRect frame = accessoryView.frame;
     frame.origin.x = self.frame.size.width - (frame.size.width + kHXOGridSpacing);
-    frame.origin.y = kPadding;
+    frame.origin.y = kHXOCellPadding;
     accessoryView.frame = frame;
     self.actualAccessoryView = accessoryView;
     self.actualAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -61,11 +60,11 @@ extern const CGFloat kHXOGridSpacing;
     self.dateLabel.font = [[HXOTheme theme] smallBoldTextFont];
     NSMutableDictionary * v = [NSMutableDictionary dictionaryWithDictionary: views];
     v[@"date"] = self.dateLabel;
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", 2*kHXOGridSpacing, 6 * kHXOGridSpacing, 2*kHXOGridSpacing, 2*kHXOGridSpacing];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", kHXOCellPadding, kHXOListAvatarSize, kHXOCellPadding, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: v]];
     
-    format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]|", kPadding];
+    format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]|", kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
 
