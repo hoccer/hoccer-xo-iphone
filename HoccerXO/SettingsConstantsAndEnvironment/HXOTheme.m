@@ -165,6 +165,9 @@ static HXOTheme * _currentTheme;
     return [UIColor colorWithHexString:@"#9FA3AC"];
 }
 
+- (UIColor*) destructiveTextColor {
+    return [UIColor colorWithHexString: @"#f00"];
+}
 
 #pragma mark - No settings beyond this point
 

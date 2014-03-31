@@ -54,6 +54,18 @@
 
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
     cell.titleLabel.text = item.title;
+
+    UIColor * titleColor = item.titleTextColor;
+    if ( ! titleColor) {
+        if ([cell.reuseIdentifier isEqualToString: @"DatasheetActionCell"]) {
+            //titleColor = self.view.tintColor;
+            titleColor = [UIColor blackColor];
+        } else {
+            titleColor = [HXOTheme theme].lightTextColor;
+        }
+    }
+    cell.titleLabel.textColor = titleColor;
+
     cell.delegate = self;
     if ([cell respondsToSelector: @selector(valueView)]) {
         id valueView = [(id)cell valueView];

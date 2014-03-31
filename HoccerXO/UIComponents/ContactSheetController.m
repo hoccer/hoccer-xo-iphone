@@ -58,6 +58,9 @@
     DatasheetItem * magicButton = [self itemWithIdentifier: @"Magic" cellIdentifier: @"DatasheetActionCell"];
     magicButton.visibilityMask = DatasheetModeEdit;
     DatasheetItem * destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DatasheetActionCell"];
+    destructiveButton.titleTextColor = [HXOTheme theme].destructiveTextColor;
+    destructiveButton.target = self;
+    destructiveButton.action = @selector(bongoPressed:);
 
     DatasheetSection * destructiveSection = [DatasheetSection datasheetSectionWithIdentifier: @"destructive_section"];
     destructiveSection.items = @[magicButton, destructiveButton];

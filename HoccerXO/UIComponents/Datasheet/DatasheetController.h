@@ -46,6 +46,7 @@ typedef BOOL(^ValidatorBlock)(DatasheetItem* item);
 @property (nonatomic, strong) NSString *  identifier;
 @property (nonatomic, strong) NSString *  cellIdentifier;
 @property (nonatomic, strong) NSString *  title;
+@property (nonatomic, strong) UIColor  *  titleTextColor;
 
 @property (nonatomic, strong) NSString *  valuePath;
 @property (nonatomic, strong) NSString *  placeholder;

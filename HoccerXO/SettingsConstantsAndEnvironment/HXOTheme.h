@@ -25,12 +25,13 @@
 @property (nonatomic,readonly) UIColor * defaultAvatarBackgroundColor;
 
 
-@property (nonatomic,readonly) UIFont *   messageFont;
-@property (nonatomic,readonly) UIFont *   titleFont;
-@property (nonatomic,readonly) UIFont *   smallTextFont;
-@property (nonatomic,readonly) UIFont *   smallBoldTextFont;
-@property (nonatomic,readonly) UIColor *  lightTextColor;
-@property (nonatomic,readonly) UIColor *  smallBoldTextColor;
+@property (nonatomic,readonly) UIFont *  messageFont;
+@property (nonatomic,readonly) UIFont *  titleFont;
+@property (nonatomic,readonly) UIFont *  smallTextFont;
+@property (nonatomic,readonly) UIFont *  smallBoldTextFont;
+@property (nonatomic,readonly) UIColor * lightTextColor;
+@property (nonatomic,readonly) UIColor * smallBoldTextColor;
+@property (nonatomic,readonly) UIColor * destructiveTextColor;
 
 - (UIColor*) messageBackgroundColorForScheme:         (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageTextColorForScheme:               (HXOBubbleColorScheme) scheme;
