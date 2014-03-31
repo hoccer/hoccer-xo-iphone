@@ -29,6 +29,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    if (self.tableView.style != UITableViewStyleGrouped) {
+        NSLog(@"ERROR: %@ requires a grouped table view", NSStringFromClass([self class]));
+    }
+
     [self registerCellClass: [DatasheetTextInputCell class]];
     [self registerCellClass: [DatasheetKeyValueCell class]];
     [self registerCellClass: [DatasheetActionCell class]];
