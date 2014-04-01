@@ -72,6 +72,16 @@ NSData * randomBytes(size_t count) {
     return keyData;
 }
 
++ (NSData *) calcSymmetricKeyId:(NSData *)myKeyBits withSalt:(NSData *)salt{
+    const int rounds = 10000;
+    
+    NSMutableData* keyIdData = [NSMutableData dataWithLength:32];
+    unsigned char * keyId = [keyIdData mutableBytes];
+    CCKeyDerivationPBKDF(kCCPBKDF2, myKeyBits.bytes, myKeyBits.length, salt.bytes, salt.length, kCCPRFHmacAlgSHA256, rounds, keyId, 32);
+    NSData * myKeyId = [keyIdData subdataWithRange:NSMakeRange(0, 8)];
+    return myKeyId;
+}
+
 @end
 
 

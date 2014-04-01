@@ -24,7 +24,6 @@
 #import "NSData+Base64.h"
 #import "NSString+StringWithData.h"
 #import "CCRSA.h"
-#import "EC.h"
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
 #import "UserProfile.h"
@@ -1693,16 +1692,19 @@ static NSTimer * _stateNotificationDelayTimer;
     
     NSDate * lastKnown = group.lastChanged; // remember the previously local lastChanged date before overwriting
     [group updateWithDictionary: groupDict];
+
+/** We should not need to call getGroupMembers except when syncing
+    
 //#ifdef FASTER_BETTER
     NSDate * latestMemberChangeDate = [group latestMemberChangeDate];
 //#endif
     
-    /*
+ #if 0
      NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
      NSLog(@"lastKnown = %@",lastKnown);
      NSLog(@"group.lastChanged = %@, equal=%d",group.lastChanged,[group.lastChanged isEqualToDate:lastKnown]);
      NSLog(@"latestMemberChangeDate = %@, equal=%d",latestMemberChangeDate,[latestMemberChangeDate isEqualToDate:lastKnown]);
-     */
+#endif
     if (self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown) {
         [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0]];
     } else {
@@ -1718,7 +1720,8 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
-    // TODO: make this work for multiple admins (need to check if my avatar upload is in progress)
+ */
+    // download group avatar if changed
     if (!group.iAmAdmin && groupDict[@"groupAvatarUrl"] != group.avatarURL) {
         [self updateAvatarForContact:group forAvatarURL:groupDict[@"groupAvatarUrl"]];
     }
@@ -2232,7 +2235,12 @@ static NSTimer * _stateNotificationDelayTimer;
                 if (memberContact.publicKeyId != nil) {
                     [self fetchKeyForContact:memberContact withKeyId:memberContact.publicKeyId withCompletion:^(NSError *theError) {
                         if (theError == nil) {
+#define USE_MEMBERKEY_PROTOCOL_V2
+#ifdef USE_MEMBERKEY_PROTOCOL_V2
+                            [self setGroupMemberKeyV2:myMember];
+#else
                             [self setGroupMemberKey:myMember];
+#endif
                         }
                     }];
                 } else {
@@ -2240,7 +2248,11 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
             } else {
                 if (GROUPKEY_DEBUG) NSLog(@"ifNeededUpdateGroupKeyForOtherMember: setting group member key for contact nick %@ client id %@", memberContact.nickName, memberContact.clientId);
+#ifdef USE_MEMBERKEY_PROTOCOL_V2
+                [self setGroupMemberKeyV2:myMember];
+#else
                 [self setGroupMemberKey:myMember];
+#endif
             }
         } else {
             if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: not updating(2)");}
@@ -2250,6 +2262,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
+#ifndef USE_MEMBERKEY_PROTOCOL_V2
 - (void) setGroupMemberKey:(GroupMembership *)myMember {
     myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
     myMember.keySettingInProgress = YES;
@@ -2261,7 +2274,28 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         [self.delegate saveDatabase];
     }];
-    
+}
+#endif
+
+- (void) setGroupMemberKeyV2:(GroupMembership *)myMember {
+    if ((myMember.sharedKeyIdSalt == nil || myMember.group.sharedKeyIdSalt == nil || ![myMember.sharedKeyIdSalt isEqualToData:myMember.group.sharedKeyIdSalt]) ||
+        (myMember.sharedKeyId == nil || myMember.group.sharedKeyId == nil || [myMember.sharedKeyId isEqualToData:myMember.group.sharedKeyId]))
+    {
+        myMember.sharedKeyIdSalt = [Crypto random256BitSalt];
+        myMember.sharedKeyId = [Crypto calcSymmetricKeyId:myMember.group.groupKey withSalt:myMember.sharedKeyIdSalt];
+        myMember.group.sharedKeyId = myMember.sharedKeyId;
+        myMember.group.sharedKeyIdSalt = myMember.sharedKeyIdSalt;
+    }
+
+    myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
+    myMember.keySettingInProgress = YES;
+    [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
+        myMember.keySettingInProgress = NO;
+        if (unfinishedMembers != nil) {
+            myMember.distributedGroupKey = myMember.group.groupKey;
+        }
+        [self.delegate saveDatabase];
+    }];
 }
 
 - (void) updateGroupKeysForMyGroupMemberships {
@@ -2280,6 +2314,7 @@ static NSTimer * _stateNotificationDelayTimer;
     Group * group = myMember.group;
 
     if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey=%@, memberKeyId=%@\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.memberKeyId);}
+    
     if ([group iJoined] && !myMember.keySettingInProgress) {
         // check if our own key on the server is ok
         if ([HXOBackend isInvalid:myMember.cipheredGroupKey] ||
@@ -2297,18 +2332,14 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
             }
 
-            if ([HXOBackend use_elliptic_curves]) {
-                SecKeyRef myReceiverKey = [[EC sharedInstance] getPublicKeyRef];
-                EC * ec = [EC sharedInstance];
-                myMember.cipheredGroupKey = [ec encryptWithKey:myReceiverKey plainData:group.groupKey];
-            } else {
-                SecKeyRef myReceiverKey = [[CCRSA sharedInstance] getPublicKeyRef];
-                CCRSA * rsa = [CCRSA sharedInstance];
-                myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
-            }
             
-            NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
+            SecKeyRef myReceiverKey = [[CCRSA sharedInstance] getPublicKeyRef];
+            CCRSA * rsa = [CCRSA sharedInstance];
+            myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
+            
             myMember.keySettingInProgress = YES;
+#ifndef USE_MEMBERKEY_PROTOCOL_V2
+            NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
             [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyIdString],myCryptedGroupKeyString]
                            onResponse: ^(id responseOrError, BOOL success)
              {
@@ -2322,6 +2353,15 @@ static NSTimer * _stateNotificationDelayTimer;
                  }
                  [self.delegate saveDatabase];
              }];
+#else
+            [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
+                myMember.keySettingInProgress = NO;
+                if (unfinishedMembers != nil) {
+                    myMember.distributedGroupKey = myMember.group.groupKey;
+                }
+                [self.delegate saveDatabase];
+            }];
+#endif
         } else {
             if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(2)");}
         }
@@ -2329,6 +2369,68 @@ static NSTimer * _stateNotificationDelayTimer;
         if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(1)");}
     }
 }
+
+// newer version
+- (void) ifNeededUpdateGroupKeyForMyMembership2:(GroupMembership*) myMember {
+    // it is us
+    Group * group = myMember.group;
+    
+    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey=%@, memberKeyId=%@\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.memberKeyId);}
+    
+    if ([group iJoined] && !myMember.keySettingInProgress) {
+        // check if our own key on the server is ok
+        if ([HXOBackend isInvalid:myMember.cipheredGroupKey] ||
+            ![[HXOBackend ownPublicKeyIdString] isEqualToString:myMember.memberKeyId] ||
+            ([group iAmAdmin] && ![myMember.distributedGroupKey isEqualToData:group.groupKey]))
+        {
+            if (GROUPKEY_DEBUG) {NSLog(@"myMember.group.groupKey=%@, group.groupKey=%@", myMember.group.groupKey,group.groupKey);}
+            if ([HXOBackend isInvalid: group.groupKey]) {
+                if ([group iAmAdmin]) {
+                    group.groupKey = [Crypto random256BitKey];
+                    if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
+                } else {
+                    NSLog(@"NO GROUP KEY, cant generate (not admin), group nick %@, id %@", group.nickName, group.clientId);
+                    return;
+                }
+            }
+            
+            SecKeyRef myReceiverKey = [[CCRSA sharedInstance] getPublicKeyRef];
+            CCRSA * rsa = [CCRSA sharedInstance];
+            myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
+            
+            myMember.keySettingInProgress = YES;
+#ifndef USE_MEMBERKEY_PROTOCOL_V2
+            NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
+            [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyIdString],myCryptedGroupKeyString]
+                           onResponse: ^(id responseOrError, BOOL success)
+             {
+                 myMember.keySettingInProgress = NO;
+                 if (success) {
+                     //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+                     // myMember.distributedCipheredGroupKey = myMember.cipheredGroupKey;
+                     myMember.distributedGroupKey = group.groupKey;
+                 } else {
+                     NSLog(@"updateGroupKey() failed: %@", responseOrError);
+                 }
+                 [self.delegate saveDatabase];
+             }];
+#else
+            [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
+                myMember.keySettingInProgress = NO;
+                if (unfinishedMembers != nil) {
+                    myMember.distributedGroupKey = myMember.group.groupKey;
+                }
+                [self.delegate saveDatabase];
+            }];
+#endif
+        } else {
+            if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(2)");}
+        }
+    } else {
+        if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(1)");}
+    }
+}
+
 
 + (BOOL) use_elliptic_curves {
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: @"use_elliptic_curves"] boolValue]) {
@@ -2378,7 +2480,7 @@ static NSTimer * _stateNotificationDelayTimer;
 //    private String encryptedGroupKey;
 //    private Date lastChanged;
 //}
-
+#if 0
 - (NSDictionary*) groupMemberKeys {
     return @{
              @"groupId": @"group.clientId",
@@ -2386,13 +2488,16 @@ static NSTimer * _stateNotificationDelayTimer;
              @"role": @"role",
              @"state": @"state",
              @"lastChanged": @"lastChangedMillis",
-             @"encryptedGroupKey": @"cipheredGroupKeyString"
+             @"encryptedGroupKey": @"cipheredGroupKeyString",
+             @"sharedKeyId"  : @"sharedKeyId",
+             @"sharedKeyIdSalt"  : @"sharedKeyIdSalt"
              };
 }
 
 - (NSDictionary*) dictOfGroupMember:(GroupMembership*) member {
     return [HXOModel createDictionaryFromObject:member withKeys:[self groupMemberKeys]];
 }
+#endif
 
 // void inviteGroupMember(String groupId, String clientId);
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler{
@@ -2445,6 +2550,7 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
+#ifndef USE_MEMBERKEY_PROTOCOL_V2
 // void updateGroupKey(String groupId, String clientId, String key);
 - (void) updateGroupKey:(GroupMembership *)member onSuccess:(GroupMemberChanged)changedHandler{
     
@@ -2457,6 +2563,32 @@ static NSTimer * _stateNotificationDelayTimer;
          } else {
              NSLog(@"updateGroupKey() failed: %@", responseOrError);
              changedHandler(nil);
+         }
+     }];
+}
+#endif
+
+// String[] updateGroupKeys(String groupId, String sharedKeyId, String sharedKeyIdSalt, String[] clientIds, String[] publicKeyIds, String[] cryptedSharedKeys);
+- (void) updateGroupKeys:(Group *)group forMembers:(NSArray*) members onSuccess:(GroupMembersOutdatedHandler)outDatedHandler{
+    
+    NSMutableArray * clientIds = [[NSMutableArray alloc]initWithCapacity:members.count];
+    NSMutableArray * publicKeyIds = [[NSMutableArray alloc]initWithCapacity:members.count];
+    NSMutableArray * cryptedSharedKeys = [[NSMutableArray alloc]initWithCapacity:members.count];
+    for (GroupMembership * m in members) {
+        [clientIds addObject:m.contact.clientId];
+        [publicKeyIds addObject:m.contact.publicKeyId];
+        [cryptedSharedKeys addObject:m.cipheredGroupKeyString];
+    }
+    // NSLog(@"%@ - %@ - %@ / %d - %d - %d",group.clientId,group.sharedKeyIdString,group.sharedKeyIdSaltString,clientIds.count,publicKeyIds.count,cryptedSharedKeys.count);
+    [_serverConnection invoke: @"updateGroupKeys" withParams: @[group.clientId,group.sharedKeyIdString,group.sharedKeyIdSaltString,clientIds,publicKeyIds,cryptedSharedKeys]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
+             outDatedHandler(responseOrError);
+         } else {
+             NSLog(@"updateGroupKey() failed: %@", responseOrError);
+             outDatedHandler(nil);
          }
      }];
 }
@@ -3251,21 +3383,10 @@ static NSTimer * _stateNotificationDelayTimer;
     return [HXOBackend calcKeyId:myKeyBits];
 }
 
-+ (NSData *) ownPublicKeyRSA {
++ (NSData *) ownPublicKey {
     return[[CCRSA sharedInstance] getPublicKeyBits];
 }
 
-+ (NSData *) ownPublicKeyEC {
-    return[[EC sharedInstance] getPublicKeyBits];
-}
-
-+ (NSData *) ownPublicKey {
-    if ([HXOBackend use_elliptic_curves]) {
-        return [HXOBackend ownPublicKeyEC];
-    } else {
-        return [HXOBackend ownPublicKeyRSA];
-    }
-}
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits {
     return [CCRSA calcKeyId:myKeyBits];

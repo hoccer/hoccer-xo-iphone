@@ -11,7 +11,6 @@
 #import "HXOMessage.h"
 #import "NSData+Base64.h"
 #import "CCRSA.h"
-#import "EC.h"
 
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
@@ -75,26 +74,9 @@ NSString * const kDeliveryStateFailed     = @"failed";
     self.keyId = theKeyId;
 }
 
-- (NSData *) keyCleartext {
-    if ([HXOBackend use_elliptic_curves]) {
-        return self.keyCleartextEC;
-    } else {
-        return self.keyCleartextRSA;
-    }
-}
-
-// this function will set the the keyCiphertext by encrypting the theMessageKey with the public key of the receiver
-- (void) setKeyCleartext:(NSData *) theMessageKey {
-    if ([HXOBackend use_elliptic_curves]) {
-        [self setKeyCleartextEC:theMessageKey];
-    } else {
-        [self setKeyCleartextRSA:theMessageKey];
-    }
-}
-
 
 // this function will yield the plaintext the keyCiphertext by decrypting it with the private key
-- (NSData *) keyCleartextRSA {
+- (NSData *) keyCleartext {
     if ([self.message.isOutgoing isEqualToNumber: @YES]) {
         return nil; // can not decrypt outgoing key
     }
@@ -109,7 +91,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 }
 
 // this function will set the the keyCiphertext by encrypting the theMessageKey with the public key of the receiver
-- (void) setKeyCleartextRSA:(NSData *) theMessageKey {
+- (void) setKeyCleartext:(NSData *) theMessageKey {
     self.keyCiphertext = nil;
     // check a lot of preconditions just in case...
     if ([self.message.isOutgoing isEqualToNumber: @NO]) {
@@ -130,41 +112,6 @@ NSString * const kDeliveryStateFailed     = @"failed";
     
     CCRSA * rsa = [CCRSA sharedInstance];
     self.keyCiphertext = [rsa encryptWithKey:myReceiverKey plainData:theMessageKey];
-}
-
-// this function will yield the plaintext the keyCiphertext by decrypting it with the private key
-- (NSData *) keyCleartextEC {
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
-        return nil; // can not decrypt outgoing key
-    }
-    EC * ec = [EC sharedInstance];
-    SecKeyRef myPrivateKeyRef = [ec getPrivateKeyRef];
-    NSData * theClearTextKey = [ec decryptWithKey:myPrivateKeyRef cipherData:self.keyCiphertext];
-    return theClearTextKey;
-}
-
-// this function will set the the keyCiphertext by encrypting the theMessageKey with the public key of the receiver
-- (void) setKeyCleartextEC:(NSData *) theMessageKey {
-    self.keyCiphertext = nil;
-    // check a lot of preconditions just in case...
-    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
-        return;
-    }
-    if (![self.state isEqualToString:kDeliveryStateNew]) {
-        return;
-    }
-    if (self.receiver == nil) {
-        return;
-    }
-    if (theMessageKey == nil) {
-        return;
-    }
-    
-    // get public key of receiver first
-    SecKeyRef myReceiverKey = [self.receiver getPublicKeyRef];
-    
-    EC * ec = [EC sharedInstance];
-    self.keyCiphertext = [ec encryptWithKey:myReceiverKey plainData:theMessageKey];
 }
 
 

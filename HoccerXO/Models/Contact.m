@@ -10,7 +10,6 @@
 #import "Crypto.h"
 #import "NSData+Base64.h"
 #import "CCRSA.h"
-#import "EC.h"
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h" // for date conversion
 
@@ -139,16 +138,8 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 */
 
+
 - (SecKeyRef) getPublicKeyRef {
-    if ([HXOBackend use_elliptic_curves]) {
-        return [self getPublicKeyRefEC];
-    } else {
-        return [self getPublicKeyRefRSA];
-    }
-}
-
-
-- (SecKeyRef) getPublicKeyRefRSA {
     CCRSA * rsa = [CCRSA sharedInstance];
     SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
     if (myResult == nil) {
@@ -164,28 +155,6 @@ NSString * const kRelationStateBlocked = @"blocked";
         }
     }
     myResult = [rsa getPeerKeyRef:self.clientId];
-    if (myResult == nil) {
-        NSLog(@"ERROR: Contact:getPublicKeyRef: failed for client id %@, nick %@", self.clientId, self.nickName);
-    }
-    return myResult;
-}
-
-- (SecKeyRef) getPublicKeyRefEC {
-    EC * ec = [EC sharedInstance];
-    SecKeyRef myResult = [ec getPeerKeyRef:self.clientId];
-    if (myResult == nil) {
-        // store public key from contact in key store
-        [ec addPublicKey: self.publicKeyString withTag: self.clientId];
-    } else {
-        // check if correct key id in key store
-        NSData * myKeyBits = [ec getKeyBitsForPeerRef:self.clientId];
-        if (![myKeyBits isEqualToData:self.publicKey]) {
-            [ec removePeerPublicKey:self.clientId];
-            [ec addPublicKey: self.publicKeyString withTag: self.clientId];
-            // NSLog(@"Contact:getPublicKeyRef: changed public key of %@", self.nickName);
-        }
-    }
-    myResult = [ec getPeerKeyRef:self.clientId];
     if (myResult == nil) {
         NSLog(@"ERROR: Contact:getPublicKeyRef: failed for client id %@, nick %@", self.clientId, self.nickName);
     }

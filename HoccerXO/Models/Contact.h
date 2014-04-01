@@ -67,7 +67,5 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 @property BOOL friendMessageShown;
 
 - (SecKeyRef) getPublicKeyRef;
-- (SecKeyRef) getPublicKeyRefRSA;
-- (SecKeyRef) getPublicKeyRefEC;
 
 @end

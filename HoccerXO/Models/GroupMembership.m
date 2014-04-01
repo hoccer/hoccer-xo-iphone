@@ -11,7 +11,6 @@
 #import "Group.h"
 #import "HXOBackend.h"
 #import "CCRSA.h"
-#import "EC.h"
 #import "NSData+Base64.h"
 
 
@@ -31,6 +30,8 @@
 @dynamic cipheredGroupKeyString;
 @dynamic distributedCipheredGroupKeyString;
 @dynamic lastChangedMillis;
+@dynamic sharedKeyId;
+@dynamic sharedKeyIdSalt;
 
 @synthesize keySettingInProgress;
 
@@ -55,23 +56,23 @@
     self.lastChanged = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
+- (NSString*) sharedKeyIdString {
+    return [self.sharedKeyId asBase64EncodedString];
+}
+
+- (void) setSharedKeyIdString:(NSString*) theB64String {
+    self.sharedKeyId = [NSData dataWithBase64EncodedString:theB64String];
+}
+
+- (NSString*) sharedKeyIdSaltString {
+    return [self.sharedKeyIdSalt asBase64EncodedString];
+}
+
+- (void) setSharedKeyIdSaltString:(NSString*) theB64String {
+    self.sharedKeyIdSalt = [NSData dataWithBase64EncodedString:theB64String];
+}
+
 - (NSData *) calcCipheredGroupKey {
-    if ([HXOBackend use_elliptic_curves]) {
-        return [self calcCipheredGroupKeyEC];
-    } else {
-        return [self calcCipheredGroupKeyRSA];
-    }
-}
-
-- (NSData *) decryptedGroupKey {
-    if ([HXOBackend use_elliptic_curves]) {
-        return [self decryptedGroupKeyEC];
-    } else {
-        return [self decryptedGroupKeyRSA];
-    }
-}
-
-- (NSData *) calcCipheredGroupKeyRSA {
     // get public key of receiver first
     SecKeyRef myReceiverKey = [self.contact getPublicKeyRef];
     CCRSA * rsa = [CCRSA sharedInstance];
@@ -79,7 +80,7 @@
     return [rsa encryptWithKey:myReceiverKey plainData:self.group.groupKey];
 }
 
-- (NSData *) decryptedGroupKeyRSA {
+- (NSData *) decryptedGroupKey {
     if (![self.group isEqual:self.contact]) {
         NSLog(@"ERROR:Group key won't be encrypted for me - must not call this function on other group members except me, contact nick=%@ contact.clientId = %@, group nick=%@, group.clientId = %@", self.contact.nickName, self.contact.clientId ,self.group.nickName, self.group.clientId);
         return nil;
@@ -98,29 +99,6 @@
     return theClearTextKey;
 }
 
-- (NSData *) calcCipheredGroupKeyEC {
-    // get public key of receiver first
-    SecKeyRef myReceiverKey = [self.contact getPublicKeyRefEC];
-    EC * ec = [EC sharedInstance];
-    //NSLog(@"self.group.groupKey=%@",[self.group.groupKey asBase64EncodedString]);
-    return [ec encryptWithKey:myReceiverKey plainData:self.group.groupKey];
-}
-
-- (NSData *) decryptedGroupKeyEC {
-    if (![self.group isEqual:self.contact]) {
-        NSLog(@"ERROR:Group key won't be encrypted for me - must not call this function on other group members except me, contact nick=%@ contact.clientId = %@, group nick=%@, group.clientId = %@", self.contact.nickName, self.contact.clientId ,self.group.nickName, self.group.clientId);
-        return nil;
-    }
-    if (self.cipheredGroupKey == nil || self.cipheredGroupKey.length == 0) {
-        NSLog(@"ERROR:No Group key for me yet");
-        return nil;
-    }
-    // get public key of receiver first
-    EC * ec = [EC sharedInstance];
-    SecKeyRef myPrivateKeyRef = [ec getPrivateKeyRef];
-    NSData * theClearTextKey = [ec decryptWithKey:myPrivateKeyRef cipherData:self.cipheredGroupKey];
-    return theClearTextKey;
-}
 
 -(NSString*) cipheredGroupKeyString {
     return [self.cipheredGroupKey asBase64EncodedString];
@@ -143,7 +121,9 @@
               @"state"        : @"state",
               @"lastChanged"  : @"lastChangedMillis",
               @"encryptedGroupKey": @"cipheredGroupKeyString",
-              @"memberKeyId"  : @"memberKeyId"
+              @"memberKeyId"  : @"memberKeyId",
+              @"sharedKeyId"  : @"sharedKeyIdString",
+              @"sharedKeyIdSalt"  : @"sharedKeyIdSaltString"
               };
 }
 

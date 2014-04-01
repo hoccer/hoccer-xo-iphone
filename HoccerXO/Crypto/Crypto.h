@@ -16,6 +16,7 @@ NSData * randomBytes(size_t count);
 + (NSData *) random256BitKey;
 + (NSData *) random256BitSalt;
 + (NSData *) XOR:(NSData*)a with:(NSData*)b;
-+ (NSData*) make256BitKeyFromPassword:(NSString*)password withSalt:(NSData*)salt;
++ (NSData *) make256BitKeyFromPassword:(NSString*)password withSalt:(NSData*)salt;
++ (NSData *) calcSymmetricKeyId:(NSData *)myKeyBits withSalt:(NSData *)salt;
 
 @end

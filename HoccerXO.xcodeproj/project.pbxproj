@@ -194,7 +194,6 @@
 		E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC2186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png */; };
 		E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAED61870A0F900D72D79 /* libz.dylib */; };
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
-		E93ED67A17B93D6F0072FD2C /* EC.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED67917B93D6F0072FD2C /* EC.m */; };
 		E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = E951759818DE420200EFD1C6 /* HXOEnvironment.m */; };
 		E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F3118733B79007B8042 /* DDTTYLogger.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
@@ -705,11 +704,10 @@
 		E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
 		E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
 		E93ED64F17A33CE10072FD2C /* HoccerXO-21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-21.xcdatamodel"; sourceTree = "<group>"; };
-		E93ED67817B93D6F0072FD2C /* EC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EC.h; sourceTree = "<group>"; };
-		E93ED67917B93D6F0072FD2C /* EC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EC.m; sourceTree = "<group>"; };
 		E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-22.xcdatamodel"; sourceTree = "<group>"; };
 		E951759718DE420200EFD1C6 /* HXOEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOEnvironment.h; sourceTree = "<group>"; };
 		E951759818DE420200EFD1C6 /* HXOEnvironment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOEnvironment.m; sourceTree = "<group>"; };
+		E95175A818E5AF3500EFD1C6 /* HoccerXO-32.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-32.xcdatamodel"; sourceTree = "<group>"; };
 		E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-23.xcdatamodel"; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
 		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
@@ -1685,8 +1683,6 @@
 				E9F592D6171F460A00E2FFAC /* CryptoEngine.m */,
 				E9DBE3E11865C0A000880252 /* CryptoJSON.h */,
 				E9DBE3E21865C0A000880252 /* CryptoJSON.m */,
-				E93ED67817B93D6F0072FD2C /* EC.h */,
-				E93ED67917B93D6F0072FD2C /* EC.m */,
 				63E0B2151721FF75006058C6 /* KeychainItemWrapper.h */,
 				63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */,
 				E96CB023171457F9005F8FFA /* NSData+CommonCrypto.h */,
@@ -2457,7 +2453,6 @@
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
 				E9E92F4118733B7A007B8042 /* DispatchQueueLogFormatter.m in Sources */,
 				632502A71866340A00543D80 /* MessageItems.m in Sources */,
-				E93ED67A17B93D6F0072FD2C /* EC.m in Sources */,
 				E9A619DE17DF6E3700D4CFC3 /* CopyableUITextField.m in Sources */,
 				E9E92F3D18733B7A007B8042 /* DDFileLogger.m in Sources */,
 			);
@@ -2760,8 +2755,9 @@
 				E95A758F18D2201D0027AE3E /* HoccerXO-29.xcdatamodel */,
 				E97D34C418DA0931009E7FCB /* HoccerXO-30.xcdatamodel */,
 				E97D34D518DA13FE009E7FCB /* HoccerXO-31.xcdatamodel */,
+				E95175A818E5AF3500EFD1C6 /* HoccerXO-32.xcdatamodel */,
 			);
-			currentVersion = E97D34D518DA13FE009E7FCB /* HoccerXO-31.xcdatamodel */;
+			currentVersion = E95175A818E5AF3500EFD1C6 /* HoccerXO-32.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

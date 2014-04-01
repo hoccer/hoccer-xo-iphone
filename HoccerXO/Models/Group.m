@@ -9,6 +9,7 @@
 #import "Group.h"
 #import "GroupMembership.h"
 #import "HXOBackend.h"
+#import "NSData+Base64.h"
 
 
 @implementation Group
@@ -18,9 +19,30 @@
 @dynamic groupState;
 @dynamic lastChanged;
 @dynamic members;
+@dynamic sharedKeyId;
+@dynamic sharedKeyIdSalt;
+@dynamic groupType;
+@dynamic keySupplier;
 
 @dynamic lastChangedMillis;
 // @dynamic myGroupMembership;
+
+
+- (NSString*) sharedKeyIdString {
+    return [self.sharedKeyId asBase64EncodedString];
+}
+
+- (void) setSharedKeyIdString:(NSString*) theB64String {
+    self.sharedKeyId = [NSData dataWithBase64EncodedString:theB64String];
+}
+
+- (NSString*) sharedKeyIdSaltString {
+    return [self.sharedKeyIdSalt asBase64EncodedString];
+}
+
+- (void) setSharedKeyIdSaltString:(NSString*) theB64String {
+    self.sharedKeyIdSalt = [NSData dataWithBase64EncodedString:theB64String];
+}
 
 - (NSNumber*) lastChangedMillis {
     return [HXOBackend millisFromDate:self.lastChanged];
@@ -113,10 +135,13 @@
     return @{ @"groupId"         : @"clientId",
               @"groupTag"        : @"groupTag",
               @"groupName"       : @"nickName",
+              @"groupType"       : @"groupType",
+              @"keySupplier"     : @"keySupplier",
               @"state"           : @"groupState",
               //@"groupAvatarUrl"  : @"avatarURL", // only for outgoing
-              @"lastChanged"     : @"lastChangedMillis"
-              };
+              @"lastChanged"     : @"lastChangedMillis",
+              @"sharedKeyId"     : @"sharedKeyIdString",
+              @"sharedKeyIdSalt" : @"sharedKeyIdSaltString"              };
 }
 
 

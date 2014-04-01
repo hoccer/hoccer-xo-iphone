@@ -28,6 +28,7 @@ typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^GroupsHandler)(NSArray*);
 typedef void (^MembershipsHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
+typedef void (^GroupMembersOutdatedHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);

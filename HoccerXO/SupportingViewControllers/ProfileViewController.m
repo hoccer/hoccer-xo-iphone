@@ -18,7 +18,6 @@
 #import "ContactListViewController.h"
 #import "Contact.h"
 #import "CCRSA.h"
-#import "EC.h"
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
 #import "ChatViewController.h"
@@ -1299,12 +1298,8 @@ typedef enum ActionSheetTags {
 }
 
 - (void)performKeypairRenewal {
-    if ([HXOBackend use_elliptic_curves]) {
-        [[EC sharedInstance] cleanKeyChain];
-    } else {
-        [[CCRSA sharedInstance] cloneKeyPairKeys];
-        [[CCRSA sharedInstance] cleanKeyPairKeys];
-    }
+    [[CCRSA sharedInstance] cloneKeyPairKeys];
+    [[CCRSA sharedInstance] cleanKeyPairKeys];
 }
 
 - (void) renewKeypairPressed: (id) sender {

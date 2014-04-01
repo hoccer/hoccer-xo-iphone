@@ -16,9 +16,17 @@
 
 @property (nonatomic, retain) NSData   * groupKey;
 @property (nonatomic, retain) NSString * groupTag;
+@property (nonatomic, retain) NSString * groupType;
+@property (nonatomic, retain) NSString * keySupplier;
 @property (nonatomic, retain) NSString * groupState;
 @property (nonatomic, retain) NSDate * lastChanged;
 @property (nonatomic, retain) NSSet    * members;
+
+@property (nonatomic, retain) NSData   * sharedKeyId;
+@property (nonatomic, retain) NSData   * sharedKeyIdSalt;
+
+@property (nonatomic, retain) NSString   * sharedKeyIdString;
+@property (nonatomic, retain) NSString   * sharedKeyIdSaltString;
 
 @property (nonatomic, retain) NSDate    * lastChangedMillis;
 

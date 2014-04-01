@@ -28,6 +28,9 @@
 @property (nonatomic, retain) NSString * distributedCipheredGroupKeyString;
 @property (nonatomic, retain) NSString * memberKeyId;
 
+@property (nonatomic, retain) NSData   * sharedKeyId;
+@property (nonatomic, retain) NSData   * sharedKeyIdSalt;
+
 @property (nonatomic) BOOL keySettingInProgress;
 
 - (NSData *) calcCipheredGroupKey;
