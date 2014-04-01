@@ -25,13 +25,14 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     self = [super init];
     if (self) {
         [self commonInit];
+        self.root = [DatasheetSection datasheetSectionWithIdentifier: @"root"];
+        self.root.items = [self buildSections];
         [self updateCurrentItems];
     }
     return self;
 }
 
 - (void) commonInit {
-    self.root = [DatasheetSection datasheetSectionWithIdentifier: @"root"];
     _mode = DatasheetModeView;
 }
 
@@ -39,6 +40,10 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     if (_inspectedObject) {
         [self removeObjectObservers: _inspectedObject];
     }
+}
+
+- (NSArray*) buildSections {
+    return @[];
 }
 
 - (void) visitItems: (DatasheetSection*) root usingBlock: (DatasheetItemVisitorBlock) itemBlock sectionBlock: (DatasheetSectionVisitorBlock) sectionBlock {
@@ -122,6 +127,21 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return result;
 }
 
+- (NSArray*) findItems: (id) root withKeyPath: (NSString*) keyPath equalTo: (id) value {
+    __block NSMutableArray * result = [NSMutableArray array];
+    [self visitItems: root usingBlock:^BOOL(DatasheetItem * item) {
+        id v = [item valueForKeyPath: keyPath];
+        if ([value isEqual: v] ||
+            ([value respondsToSelector:@selector(isEqualToString:)] && [value isEqualToString: v]) ||
+            ([value respondsToSelector:@selector(isEqualToData:)] && [value isEqualToData: v]))
+        {
+            [result addObject: item];
+        }
+        return NO;
+    } sectionBlock: nil];
+    return result;
+}
+
 - (DatasheetSection*) findSection: (id) root withIdentifier: (NSString*) identifier {
     __block DatasheetSection * result = nil;
     [self visitItems: root usingBlock: nil sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
@@ -174,8 +194,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([object isEqual: _inspectedObject]) {
 
-        DatasheetItem * item = [self findItem: self.root withKeyPath: @"valuePath" equalTo: keyPath];
-        if (item) {
+        NSArray * items = [self findItems: self.root withKeyPath: @"valuePath" equalTo: keyPath];
+        for (DatasheetItem * item in items) {
             NSIndexPath * indexPath = [self indexPathForItem: item];
             DatasheetItem * currentItem = [self findItem: self.currentRoot withKeyPath: @"valuePath" equalTo: keyPath];
             if (currentItem && indexPath) {
@@ -194,7 +214,6 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (DatasheetItem*) itemWithIdentifier: (NSString*) identifier cellIdentifier: (NSString*) cellIdentifier {
     DatasheetItem * item = [DatasheetItem datasheetItem];
     item.identifier = identifier;
-    item.title = NSLocalizedString(identifier, nil);
     item.cellIdentifier = cellIdentifier;
     item.visibilityMask = DatasheetModeView | DatasheetModeEdit;
     item.enabledMask = DatasheetModeView | DatasheetModeEdit;
@@ -414,6 +433,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (void) inspectedObjectChanged {
+    [self updateCurrentItems];
     if ([self.delegate respondsToSelector:@selector(controllerDidChangeObject:)]) {
         [self.delegate controllerDidChangeObject: self];
     }
@@ -459,6 +479,89 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (BOOL) isValid {
     return self.validator ? self.validator(self) : YES;
 }
+
+- (NSString*) title {
+    if (_title) {
+        return _title;
+    }
+    if ([self.delegate respondsToSelector: @selector(titleForItem:)]) {
+        return [self.delegate titleForItem: self];
+    }
+    return self.identifier;
+}
+
+
+- (UIColor*) titleTextColor {
+    if (_titleTextColor) {
+        return _titleTextColor;
+    }
+    if ([self.delegate respondsToSelector: @selector(titleTextColorForItem:)]) {
+        return [self.delegate titleTextColorForItem: self];
+    }
+    return nil;
+}
+
+- (DatasheetAccessoryStyle) accessoryStyle {
+    if (_accessoryStyle != DatasheetAccessoryNone) {
+        return _accessoryStyle;
+    }
+    if ([self.delegate respondsToSelector: @selector(accessoryStyleForItem:)]) {
+        return [self.delegate accessoryStyleForItem: self];
+    }
+    return DatasheetAccessoryNone;
+}
+
+- (NSString*) valueFormatString {
+    if (_valueFormatString) {
+        return _valueFormatString;
+    }
+    if ([self.delegate respondsToSelector: @selector(valueFormatStringForItem:)]) {
+        return [self.delegate valueFormatStringForItem: self];
+    }
+    return nil;
+}
+
+- (NSString*) valuePlaceholder {
+    if (_valuePlaceholder) {
+        return _valuePlaceholder;
+    }
+    if ([self.delegate respondsToSelector: @selector(valuePlaceholderForItem:)]) {
+        return [self.delegate valuePlaceholderForItem: self];
+    }
+    return nil;
+}
+
+
+- (NSString*) segueIdentifier {
+    if (_segueIdentifier) {
+        return _segueIdentifier;
+    }
+    if ([self.delegate respondsToSelector: @selector(segueIdentifierForItem:)]) {
+        return [self.delegate segueIdentifierForItem: self];
+    }
+    return nil;
+}
+
+- (id) target {
+    if (_target) {
+        return _target;
+    }
+    if ([self.delegate respondsToSelector: @selector(targetForItem:)]) {
+        return [self.delegate targetForItem: self];
+    }
+    return nil;
+}
+
+- (SEL) action {
+    if (_action) {
+        return _action;
+    }
+    if ([self.delegate respondsToSelector: @selector(actionForItem:)]) {
+        return [self.delegate actionForItem: self];
+    }
+    return nil;
+}
+
 
 @end
 

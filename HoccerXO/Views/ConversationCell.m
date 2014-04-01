@@ -14,13 +14,6 @@
 #import "DisclosureArrow.h"
 #import "HXOLayout.h"
 
-@interface ConversationCell ()
-
-@property (nonatomic,strong) UIView  * actualAccessoryView;
-
-@end
-
-
 @implementation ConversationCell
 
 - (void) commonInit {
@@ -37,19 +30,10 @@
     [super commonInit];
     
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.nickName attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
-    
-    VectorArtView * accessoryView = [[VectorArtView alloc] initWithVectorArt: [[DisclosureArrow alloc] init]];
-    self.accessoryView = [[UIView alloc] initWithFrame: accessoryView.frame];
-    CGRect frame = accessoryView.frame;
-    frame.origin.x = self.frame.size.width - (frame.size.width + kHXOGridSpacing);
-    frame.origin.y = kHXOCellPadding;
-    accessoryView.frame = frame;
-    self.actualAccessoryView = accessoryView;
-    self.actualAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-    //self.actualAccessoryView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
-    
-    [self addSubview: self.actualAccessoryView];
-    
+
+    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[DisclosureArrow alloc] init]];
+    self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentTop;
+
     self.subtitleLabel.numberOfLines = 2;
     self.subtitleLabel.text = @"Lorem\nIpsum";
     //self.subtitleLabel.backgroundColor = [UIColor orangeColor];

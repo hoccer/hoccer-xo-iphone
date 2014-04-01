@@ -28,8 +28,8 @@
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 
     _titleLabel = [[UILabel alloc] initWithFrame: CGRectZero];
-    self.titleLabel.autoresizingMask = UIViewAutoresizingNone;
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.titleLabel.autoresizingMask = UIViewAutoresizingNone;
     //self.titleLabel.textColor = [HXOTheme theme].lightTextColor;
     //self.titleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.titleLabel];

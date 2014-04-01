@@ -15,6 +15,8 @@
 #import "HXOHyperLabel.h"
 #import "HXOTheme.h"
 #import "HXOLayout.h" // needed for header height hack
+#import "DisclosureArrow.h"
+#import "VectorArtView.h"
 
 @interface DatasheetViewController ()
 
@@ -57,7 +59,9 @@
 }
 
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
-    cell.titleLabel.text = item.title;
+    NSString * title = NSLocalizedString(item.title, nil);
+    title = [cell respondsToSelector: @selector(valueView)] ? [title stringByAppendingString:@":"] : title;
+    cell.titleLabel.text = title;
 
     UIColor * titleColor = item.titleTextColor;
     if ( ! titleColor) {
@@ -73,9 +77,13 @@
     cell.delegate = self;
     if ([cell respondsToSelector: @selector(valueView)]) {
         id valueView = [(id)cell valueView];
-        [valueView setText: item.currentValue];
+        id currentValue = [item.currentValue isKindOfClass: [NSString class]] ? item.currentValue : [item.currentValue stringValue];
+        if (item.valueFormatString) {
+            currentValue = [NSString stringWithFormat: NSLocalizedString(item.valueFormatString, nil), currentValue];
+        }
+        [valueView setText: currentValue];
         if ([valueView respondsToSelector:@selector(setPlaceholder:)]) {
-            [valueView setPlaceholder: item.placeholder];
+            [valueView setPlaceholder: item.valuePlaceholder];
         }
         if ([valueView respondsToSelector:@selector(setEnabled:)]) {
             [valueView setEnabled: item.isEnabled];
