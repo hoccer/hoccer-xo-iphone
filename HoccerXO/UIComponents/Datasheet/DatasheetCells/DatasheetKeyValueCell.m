@@ -18,6 +18,8 @@
     self.valueView.autoresizingMask = UIViewAutoresizingNone;
     self.valueView.translatesAutoresizingMaskIntoConstraints = NO;
     self.valueView.font = self.titleLabel.font;
+    self.valueView.numberOfLines = 1;
+
     //self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.valueView];
     NSDictionary * views = @{@"title": self.titleLabel, @"value": self.valueView};

@@ -79,6 +79,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic, strong) NSString              * valuePath;
 @property (nonatomic, strong) NSString              * valueFormatString;
 @property (nonatomic, strong) NSString              * valuePlaceholder;
+@property (nonatomic, strong) NSArray               * dependencyPaths;
+
 
 @property (nonatomic,strong) NSString               * segueIdentifier;
 @property (nonatomic,weak)   id                       target;
@@ -143,5 +145,6 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (UIImage*) updateBackgroundImage;
 - (void) backgroundImageChanged;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue withItem: (DatasheetItem*) item sender:(id)sender;
+- (void) didChangeValueForItem: (DatasheetItem*) item;
 
 @end

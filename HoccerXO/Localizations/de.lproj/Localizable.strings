@@ -184,7 +184,7 @@
 
 "navigation_title_contact" = "Kontakt";
 
-"profile_fingerprint_label" = "Schlüssel:";
+"profile_fingerprint_label" = "Schlüssel";
 "profile_fingerprint_info" = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
 
 "contact_unblock" = "%@ entblockieren";
@@ -195,6 +195,14 @@
 
 "message_count_format_singular" = "%@ Nachricht";
 "message_count_format_plural"   = "%@ Nachrichten";
+
+"unverified_key_title" = "Nicht verifiziert";
+"verified_key_title"   = "Verifiziert";
+"untrusted_key_title"  = "Misstraut";
+
+"fingerprint_item" = "Id";
+"key_length_item" = "Schlüssellänge";
+"key_length_unit" = "%@ Bit";
 
 "chat_with_contact" = "Chat";
 

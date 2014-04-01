@@ -60,7 +60,7 @@
 
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
     NSString * title = NSLocalizedString(item.title, nil);
-    title = [cell respondsToSelector: @selector(valueView)] ? [title stringByAppendingString:@":"] : title;
+    title = title && ! [title isEqualToString: @""] && [cell respondsToSelector: @selector(valueView)] ? [title stringByAppendingString:@":"] : title;
     cell.titleLabel.text = title;
 
     UIColor * titleColor = item.titleTextColor;

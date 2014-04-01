@@ -10,4 +10,6 @@
 
 @interface KeySheetController : DatasheetController
 
+@property (nonatomic,assign) BOOL isOwnKey;
+
 @end

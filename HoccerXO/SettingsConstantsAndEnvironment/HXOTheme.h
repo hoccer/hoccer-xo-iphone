@@ -23,6 +23,7 @@
 
 @property (nonatomic,readonly) UIColor * defaultAvatarColor;
 @property (nonatomic,readonly) UIColor * defaultAvatarBackgroundColor;
+@property (nonatomic,readonly) UIColor * blockSignColor;
 
 
 @property (nonatomic,readonly) UIFont *  messageFont;

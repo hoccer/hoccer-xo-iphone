@@ -11,18 +11,13 @@
 #import "HXOUserDefaults.h"
 #import "ProfileAvatarView.h"
 #import "DatasheetViewController.h"
-
 #import "AvatarContact.h"
-
+#import "GhostBustersSign.h"
 #import "UIImage+ImageEffects.h"
 
 static const NSUInteger kHXOMaxNameLength = 25;
 
 @interface ContactSheetBase ()
-
-@property (nonatomic, strong)   DatasheetItem *     keyItem;
-@property (nonatomic, readonly) ProfileAvatarView * avatarView;
-@property (nonatomic, readonly) DatasheetItem *     avatarItem;
 
 @end
 
@@ -36,11 +31,15 @@ static const NSUInteger kHXOMaxNameLength = 25;
 @synthesize destructiveSection = _destructiveSection;
 @synthesize destructiveButton = _destructiveButton;
 
-- (NSArray*) buildSections {
+- (void) commonInit {
+    [super commonInit];
+    
     _avatarItem = [self itemWithIdentifier: @"avatar_item" cellIdentifier: nil];
     self.avatarItem.visibilityMask = DatasheetModeNone;
     self.avatarItem.valuePath = @"avatarImage";
+}
 
+- (NSArray*) buildSections {
     NSMutableArray * sections = [NSMutableArray array];
 
     [sections addObject: self.avatarItem];
@@ -67,6 +66,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 - (DatasheetItem*) keyItem {
     if (! _keyItem) {
         _keyItem = [self itemWithIdentifier: @"Key" cellIdentifier: @"DatasheetKeyValueCell"];
+        _keyItem.title = @"profile_fingerprint_label";
         _keyItem.segueIdentifier = @"showKey";
         _keyItem.accessoryStyle = DatasheetAccessoryDisclosure;
     }
@@ -113,30 +113,17 @@ static const NSUInteger kHXOMaxNameLength = 25;
 - (void) addUtilitySections: (NSMutableArray*) sections {
 }
 
-- (void) bongoPressed: (UIViewController*) sender {
-    NSLog(@"bongo bongo");
-}
-
-- (id) valueForItem:(DatasheetItem *)item {
-    if ([item isEqual: _keyItem]) {
-        return @"Verified";
-    }
-    return [super valueForItem: item];
-}
-
-- (void) didUpdateInspectedObject {
-    NSLog(@"name: %@", [self.inspectedObject valueForKeyPath: kHXONickName]);
-}
-
 - (ProfileAvatarView*) avatarView {
     if (! _avatarView) {
         _avatarView = [[ProfileAvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
         _avatarView.defaultIcon = [[AvatarContact alloc] init];
+        _avatarView.blockedSign = [[GhostBustersSign alloc] init];
     }
     return _avatarView;
 }
 
 - (void) didChangeValueForItem: (DatasheetItem*) item {
+    [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.image = item.currentValue;
         [self backgroundImageChanged];

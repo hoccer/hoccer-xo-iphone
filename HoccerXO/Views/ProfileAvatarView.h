@@ -12,7 +12,9 @@
 
 @interface ProfileAvatarView : UIControl
 
-@property (nonatomic,strong) UIImage * image;
+@property (nonatomic,strong) UIImage   * image;
 @property (nonatomic,strong) VectorArt * defaultIcon;
+@property (nonatomic,strong) VectorArt * blockedSign;
+@property (nonatomic,assign) BOOL        isBlocked;
 
 @end

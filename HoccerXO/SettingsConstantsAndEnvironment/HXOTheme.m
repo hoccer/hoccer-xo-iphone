@@ -57,6 +57,11 @@ static HXOTheme * _currentTheme;
 - (UIColor*) defaultAvatarBackgroundColor {
     return [UIColor colorWithHexString: @"#DADDE6"];
 }
+
+- (UIColor*) blockSignColor {
+    return [UIColor colorWithHexString: @"#ffffffb0"];
+}
+
 #pragma mark - Message Color Schemes
 
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {

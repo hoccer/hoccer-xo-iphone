@@ -90,21 +90,33 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (void) removeObjectObservers: (id) object {
-    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem * item) {
-        if ( item.valuePath && ! [@"" isEqualToString: item.valuePath]) {
-            [object removeObserver: self forKeyPath: item.valuePath];
-        }
-        return NO;
-    } sectionBlock: nil];
+    NSArray * paths = [self collectAllObservedPaths];
+    for (NSString * path in paths) {
+        [object removeObserver: self forKeyPath: path];
+    }
 }
 
 - (void) addObjectObservers: (id) object {
-    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem * item) {
-        if (item.valuePath && ! [item.valuePath isEqualToString: @""]) {
-            [object addObserver: self forKeyPath: item.valuePath options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context: NULL];
+    NSArray * paths = [self collectAllObservedPaths];
+    for (NSString * path in paths) {
+        [object addObserver: self forKeyPath: path options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context: NULL];
+    }
+}
+
+- (NSArray*) collectAllObservedPaths {
+    NSMutableSet * paths = [NSMutableSet set];
+    [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
+        if ( item.valuePath && ! [paths containsObject: item.valuePath]) {
+            [paths addObject: item.valuePath];
+        }
+        for (NSString * path in item.dependencyPaths) {
+            if ( ! [paths containsObject: path]) {
+                [paths addObject: path];
+            }
         }
         return NO;
     } sectionBlock: nil];
+    return [paths allObjects];
 }
 
 - (id) valueForItem: (DatasheetItem*) item {
@@ -121,21 +133,6 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         {
             result = item;
             return YES;
-        }
-        return NO;
-    } sectionBlock: nil];
-    return result;
-}
-
-- (NSArray*) findItems: (id) root withKeyPath: (NSString*) keyPath equalTo: (id) value {
-    __block NSMutableArray * result = [NSMutableArray array];
-    [self visitItems: root usingBlock:^BOOL(DatasheetItem * item) {
-        id v = [item valueForKeyPath: keyPath];
-        if ([value isEqual: v] ||
-            ([value respondsToSelector:@selector(isEqualToString:)] && [value isEqualToString: v]) ||
-            ([value respondsToSelector:@selector(isEqualToData:)] && [value isEqualToData: v]))
-        {
-            [result addObject: item];
         }
         return NO;
     } sectionBlock: nil];
@@ -182,6 +179,10 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         }
         return NO;
     }];
+    if (path.count == 0) {
+        return nil;
+    }
+    
     NSMutableData * indexData = [NSMutableData dataWithLength: sizeof(NSUInteger) * path.count];
     NSUInteger * indices = indexData.mutableBytes;
     for (NSNumber * index in path) {
@@ -191,20 +192,29 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return p;
 }
 
+- (NSArray *) findItems: (DatasheetSection*) root interestedIn: (NSString*) keyPath {
+    __block NSMutableArray * result = [NSMutableArray array];
+    [self visitItems: root usingBlock:^BOOL(DatasheetItem * item) {
+        if ([item.valuePath isEqualToString: keyPath] || [item.dependencyPaths containsObject: keyPath]) {
+            [result addObject: item];
+        }
+        return NO;
+    } sectionBlock: nil];
+    return result;
+
+}
+
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([object isEqual: _inspectedObject]) {
-
-        NSArray * items = [self findItems: self.root withKeyPath: @"valuePath" equalTo: keyPath];
+        NSArray * items = [self findItems: self.root interestedIn: keyPath];
+        [self.delegate controllerWillChangeContent: self];
         for (DatasheetItem * item in items) {
-            NSIndexPath * indexPath = [self indexPathForItem: item];
-            DatasheetItem * currentItem = [self findItem: self.currentRoot withKeyPath: @"valuePath" equalTo: keyPath];
-            if (currentItem && indexPath) {
-                [self.delegate controllerWillChangeContent: self];
-                [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
-                [self.delegate controllerDidChangeContent: self];
+            if ([self indexPathForItem: item]) {
+                [self.delegate controller: self didChangeObject: [self indexPathForItem: item] forChangeType: DatasheetChangeUpdate newIndexPath: nil];
             }
             [self didChangeValueForItem: item];
         }
+        [self.delegate controllerDidChangeContent: self];
     }
 }
 
@@ -481,34 +491,29 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (NSString*) title {
-    if (_title) {
-        return _title;
+    NSString * title = _title;
+    if ( ! title && [self.delegate respondsToSelector: @selector(titleForItem:)]) {
+        title = [self.delegate titleForItem: self];
     }
-    if ([self.delegate respondsToSelector: @selector(titleForItem:)]) {
-        return [self.delegate titleForItem: self];
-    }
-    return self.identifier;
+    title = title ? title : self.identifier;
+    return title;
 }
 
 
 - (UIColor*) titleTextColor {
-    if (_titleTextColor) {
-        return _titleTextColor;
+    UIColor * color = _titleTextColor;
+    if ( ! color && [self.delegate respondsToSelector: @selector(titleTextColorForItem:)]) {
+        color = [self.delegate titleTextColorForItem: self];
     }
-    if ([self.delegate respondsToSelector: @selector(titleTextColorForItem:)]) {
-        return [self.delegate titleTextColorForItem: self];
-    }
-    return nil;
+    return color;
 }
 
 - (DatasheetAccessoryStyle) accessoryStyle {
-    if (_accessoryStyle != DatasheetAccessoryNone) {
-        return _accessoryStyle;
+    DatasheetAccessoryStyle style = _accessoryStyle;
+    if (style == DatasheetAccessoryNone && [self.delegate respondsToSelector: @selector(accessoryStyleForItem:)]) {
+        style = [self.delegate accessoryStyleForItem: self];
     }
-    if ([self.delegate respondsToSelector: @selector(accessoryStyleForItem:)]) {
-        return [self.delegate accessoryStyleForItem: self];
-    }
-    return DatasheetAccessoryNone;
+    return style;
 }
 
 - (NSString*) valueFormatString {

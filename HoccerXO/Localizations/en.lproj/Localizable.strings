@@ -175,7 +175,7 @@
 
 "navigation_title_contact" = "Contact";
 
-"profile_fingerprint_label" = "Key:";
+"profile_fingerprint_label" = "Key";
 "profile_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
 
 "contact_unblock" = "Unblock %@";
@@ -187,6 +187,13 @@
 "message_count_format_singular" = "%@ message";
 "message_count_format_plural"   = "%@ messages";
 
+"unverified_key_title" = "Not verified";
+"verified_key_title"   = "Verfied";
+"untrusted_key_title"  = "Untrusted";
+
+"fingerprint_item" = "Id";
+"key_length_item" = "Key Length";
+"key_length_unit" = "%@ bit";
 
 "chat_with_contact" = "Chat";
 

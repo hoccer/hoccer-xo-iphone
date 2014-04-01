@@ -17,6 +17,7 @@
 
 @property (nonatomic,strong) CALayer * avatarLayer;
 @property (nonatomic,strong) CAShapeLayer * defaultAvatarLayer;
+@property (nonatomic,strong) CAShapeLayer * blockedSignLayer;
 
 @end
 
@@ -32,22 +33,27 @@
         CGFloat size = frame.size.height - 6 * kHXOGridSpacing;
         self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
         self.avatarLayer.position = self.center;
-
-        CAShapeLayer * mask = [CAShapeLayer layer];
-        mask.path = [UIBezierPath bezierPathWithOvalInRect: self.avatarLayer.bounds].CGPath;
-        self.avatarLayer.mask = mask;
-
+        self.avatarLayer.mask = [self maskLayer];
         [self.layer addSublayer: self.avatarLayer];
 
         self.defaultAvatarLayer = [CAShapeLayer layer];
-        _defaultAvatarLayer.bounds = self.avatarLayer.bounds;
-        mask = [CAShapeLayer layer];
-        mask.path = [UIBezierPath bezierPathWithOvalInRect: self.avatarLayer.bounds].CGPath;
-        _defaultAvatarLayer.mask = mask;
-
+        self.defaultAvatarLayer.bounds = self.avatarLayer.bounds;
+        self.defaultAvatarLayer.mask = [self maskLayer];
         [self.layer addSublayer: self.defaultAvatarLayer];
+
+        self.blockedSignLayer = [CAShapeLayer layer];
+        CGFloat blockSignSize = size - 3 * kHXOGridSpacing;
+        self.blockedSignLayer.bounds = CGRectMake(0, 0, blockSignSize, blockSignSize);
+        [self.layer addSublayer: self.blockedSignLayer];
+        self.blockedSignLayer.opacity = 0;
     }
     return self;
+}
+
+- (CAShapeLayer*) maskLayer {
+    CAShapeLayer * mask = [CAShapeLayer layer];
+    mask.path = [UIBezierPath bezierPathWithOvalInRect: self.avatarLayer.bounds].CGPath;
+    return mask;
 }
 
 - (void) setImage:(UIImage *)image {
@@ -61,14 +67,26 @@
     [super layoutSubviews];
     self.avatarLayer.position = self.center;
     self.defaultAvatarLayer.position = self.center;
+    self.blockedSignLayer.position = self.center;
 }
 
 - (void) setDefaultIcon:(VectorArt *)defaultIcon {
     _defaultIcon = defaultIcon;
-
     _defaultAvatarLayer.path = [defaultIcon pathScaledToSize: _defaultAvatarLayer.bounds.size].CGPath;
     _defaultAvatarLayer.fillColor = defaultIcon.fillColor.CGColor;
     _defaultAvatarLayer.strokeColor = defaultIcon.strokeColor.CGColor;
-    //_defaultAvatarLayer.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 0.2].CGColor;
 }
+
+- (void) setBlockedSign:(VectorArt *)blockedSign {
+    _blockedSign = blockedSign;
+    _blockedSignLayer.path = [blockedSign pathScaledToSize: _blockedSignLayer.bounds.size].CGPath;
+    _blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
+    _blockedSignLayer.strokeColor = blockedSign.strokeColor.CGColor;
+}
+
+- (void) setIsBlocked:(BOOL)isBlocked {
+    _isBlocked = isBlocked;
+    _blockedSignLayer.opacity = isBlocked ? 1 : 0;
+}
+
 @end

@@ -359,7 +359,7 @@ typedef enum ActionSheetTags {
                 [fingerprint appendString: @":"];
             }
         }
-        int keySize =[ CCRSA getPublicKeySize:theKey];
+        int keySize = [CCRSA getPublicKeySize:theKey];
         [fingerprint appendString: [NSString stringWithFormat:@"-%d", keySize]];
         
         //NSLog(@"self.contact = %@", self.contact);
