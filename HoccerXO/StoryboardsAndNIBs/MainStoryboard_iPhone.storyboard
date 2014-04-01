@@ -65,7 +65,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bH0-PD-peR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1690" y="-2386"/>
+            <point key="canvasLocation" x="1326" y="-2733"/>
         </scene>
         <!--Contact Sheet Controller-->
         <scene sceneID="miZ-b5-x0F">
@@ -84,6 +84,7 @@
                     <connections>
                         <outlet property="dataSheetController" destination="ct6-Sp-MIE" id="0ej-vS-uwK"/>
                         <segue destination="5Ky-Yp-WG8" kind="push" identifier="showKey" id="rav-wy-jJw"/>
+                        <segue destination="21" kind="push" identifier="showChat" id="k8Y-EQ-OHi"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E2G-hI-lkN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1134,4 +1135,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="k8Y-EQ-OHi"/>
+    </inferredMetricsTieBreakers>
 </document>

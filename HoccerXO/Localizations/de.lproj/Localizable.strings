@@ -193,8 +193,10 @@
 
 "contact_remove" = "%@ entfernen";
 
+"message_count_format_singular" = "%@ Nachricht";
+"message_count_format_plural"   = "%@ Nachrichten";
 
-"chat_with_contact" = "Mit %@ chatten";
+"chat_with_contact" = "Chat";
 
 "delete_credentials_alert_title" = "Hoccer XO war schon einmal installiert";
 

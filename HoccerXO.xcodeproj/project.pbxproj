@@ -26,7 +26,7 @@
 		6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		630CAA0E18DB5DC300782507 /* HXOThemedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */; };
 		630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAA5418DCC8AE00782507 /* DatasheetViewController.m */; };
-		630CAB7818E0F6C400782507 /* ContactSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7718E0F6C400782507 /* ContactSheetController.m */; };
+		630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7718E0F6C400782507 /* ContactSheetBase.m */; };
 		630CAB7B18E0F78500782507 /* DatasheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB7A18E0F78500782507 /* DatasheetController.m */; };
 		630CAB8218E1E00C00782507 /* DatasheetTextInputCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8118E1E00C00782507 /* DatasheetTextInputCell.m */; };
 		630CAB8518E1E31600782507 /* DatasheetActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8418E1E31600782507 /* DatasheetActionCell.m */; };
@@ -152,6 +152,7 @@
 		63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178C181FDFAB00C057D9 /* LabelWithLED.m */; };
 		63B76F5018E8F7F800E014E6 /* KeySheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F4F18E8F7F800E014E6 /* KeySheetController.m */; };
 		63B76F6118E9BD8D00E014E6 /* HXOLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F6018E9BD8D00E014E6 /* HXOLayout.m */; };
+		63B76F6418E9EA3300E014E6 /* ContactSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F6318E9EA3300E014E6 /* ContactSheetController.m */; };
 		63B78FFA18D4D6C1003A9125 /* IconChats.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FF918D4D6C1003A9125 /* IconChats.m */; };
 		63B78FFD18D4E517003A9125 /* IconContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FFC18D4E517003A9125 /* IconContacts.m */; };
 		63B7900018D4E52D003A9125 /* IconProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FFF18D4E52D003A9125 /* IconProfile.m */; };
@@ -421,8 +422,8 @@
 		630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
 		630CAA5318DCC8AE00782507 /* DatasheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetViewController.h; sourceTree = "<group>"; };
 		630CAA5418DCC8AE00782507 /* DatasheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetViewController.m; sourceTree = "<group>"; };
-		630CAB7618E0F6C400782507 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetController.h; sourceTree = "<group>"; };
-		630CAB7718E0F6C400782507 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetController.m; sourceTree = "<group>"; };
+		630CAB7618E0F6C400782507 /* ContactSheetBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetBase.h; sourceTree = "<group>"; };
+		630CAB7718E0F6C400782507 /* ContactSheetBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetBase.m; sourceTree = "<group>"; };
 		630CAB7918E0F78500782507 /* DatasheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatasheetController.h; path = HoccerXO/UIComponents/Datasheet/DatasheetController.h; sourceTree = SOURCE_ROOT; };
 		630CAB7A18E0F78500782507 /* DatasheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DatasheetController.m; path = HoccerXO/UIComponents/Datasheet/DatasheetController.m; sourceTree = SOURCE_ROOT; };
 		630CAB8018E1E00C00782507 /* DatasheetTextInputCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetTextInputCell.h; sourceTree = "<group>"; };
@@ -646,6 +647,8 @@
 		63B76F4F18E8F7F800E014E6 /* KeySheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeySheetController.m; sourceTree = "<group>"; };
 		63B76F5F18E9BD8D00E014E6 /* HXOLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLayout.h; sourceTree = "<group>"; };
 		63B76F6018E9BD8D00E014E6 /* HXOLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLayout.m; sourceTree = "<group>"; };
+		63B76F6218E9EA3300E014E6 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetController.h; sourceTree = "<group>"; };
+		63B76F6318E9EA3300E014E6 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetController.m; sourceTree = "<group>"; };
 		63B78FF818D4D6C1003A9125 /* IconChats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconChats.h; sourceTree = "<group>"; };
 		63B78FF918D4D6C1003A9125 /* IconChats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconChats.m; sourceTree = "<group>"; };
 		63B78FFB18D4E517003A9125 /* IconContacts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconContacts.h; sourceTree = "<group>"; };
@@ -1007,10 +1010,12 @@
 			isa = PBXGroup;
 			children = (
 				6365EC8218E773F000B41054 /* Datasheet */,
-				630CAB7618E0F6C400782507 /* ContactSheetController.h */,
-				630CAB7718E0F6C400782507 /* ContactSheetController.m */,
+				630CAB7618E0F6C400782507 /* ContactSheetBase.h */,
+				630CAB7718E0F6C400782507 /* ContactSheetBase.m */,
 				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
 				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
+				63B76F6218E9EA3300E014E6 /* ContactSheetController.h */,
+				63B76F6318E9EA3300E014E6 /* ContactSheetController.m */,
 			);
 			name = "UI Components";
 			path = UIComponents;
@@ -2407,6 +2412,7 @@
 				E9E92F6C18733D01007B8042 /* DDNumber.m in Sources */,
 				E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */,
 				E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */,
+				63B76F6418E9EA3300E014E6 /* ContactSheetController.m in Sources */,
 				E99886C71725CB3F0089A510 /* ACAddressBookPerson.m in Sources */,
 				E99886C81725CB3F0089A510 /* VcardParser.m in Sources */,
 				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
@@ -2455,7 +2461,7 @@
 				E9E92F7518733D01007B8042 /* HTTPAsyncFileResponse.m in Sources */,
 				6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
-				630CAB7818E0F6C400782507 /* ContactSheetController.m in Sources */,
+				630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */,
 				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
