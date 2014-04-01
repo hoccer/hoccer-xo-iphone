@@ -74,6 +74,18 @@
     }
     cell.titleLabel.textColor = titleColor;
 
+    UIView * accessoryView = nil;
+    switch (item.accessoryStyle) {
+        case DatasheetAccessoryDisclosure:
+            accessoryView = [[VectorArtView alloc] initWithVectorArt: [[DisclosureArrow alloc] init]];
+            break;
+        case DatasheetAccessoryNone:
+            accessoryView = nil;
+            break;
+    }
+
+    cell.hxoAccessoryView = accessoryView;
+    
     cell.delegate = self;
     if ([cell respondsToSelector: @selector(valueView)]) {
         id valueView = [(id)cell valueView];

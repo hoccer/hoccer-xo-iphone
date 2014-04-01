@@ -8,8 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum HXOCellAccessoryAlignments {
+    HXOCellAccessoryAlignmentTop,
+    HXOCellAccessoryAlignmentCenter
+} HXOCellAccessoryAlignment;
+
 @interface HXOTableViewCell : UITableViewCell
 
 + (NSString*) reuseIdentifier;
+
+@property (nonatomic,strong) UIView * hxoAccessoryView;
+@property (nonatomic,assign) HXOCellAccessoryAlignment hxoAccessoryAlignment;
 
 @end
