@@ -10,9 +10,9 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "VectorArtView.h"
-#import "HXOTheme.h"
+#import "HXOUI.h"
 #import "DisclosureArrow.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 @implementation ConversationCell
 
@@ -22,7 +22,7 @@
     _dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _dateLabel.autoresizingMask = UIViewAutoresizingNone;
     _dateLabel.numberOfLines = 1;
-    _dateLabel.textColor = [[HXOTheme theme] smallBoldTextColor];
+    _dateLabel.textColor = [[HXOUI theme] smallBoldTextColor];
     _dateLabel.text = @"jetze";
     //_dateLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _dateLabel];
@@ -41,7 +41,7 @@
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
-    self.dateLabel.font = [[HXOTheme theme] smallBoldTextFont];
+    self.dateLabel.font = [[HXOUI theme] smallBoldTextFont];
     NSMutableDictionary * v = [NSMutableDictionary dictionaryWithDictionary: views];
     v[@"date"] = self.dateLabel;
     NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", kHXOCellPadding, kHXOListAvatarSize, kHXOCellPadding, kHXOCellPadding];
@@ -58,7 +58,7 @@
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     [super preferredContentSizeChanged: notification];
     
-    self.dateLabel.font = [HXOTheme theme].smallBoldTextFont;
+    self.dateLabel.font = [HXOUI theme].smallBoldTextFont;
 }
 
 @end

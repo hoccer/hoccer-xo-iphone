@@ -11,7 +11,7 @@
 #import "ImageAttachmentSection.h"
 #import "TextSection.h"
 
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 @implementation ImageAttachmentWithTextMessageCell
 

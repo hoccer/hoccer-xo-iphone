@@ -11,6 +11,9 @@
 #import "HXOBackend.h"
 #import "Contact.h"
 #import "CCRSA.h"
+#import "EC.h"
+#import "HXOUI.h"
+#import "UserProfile.h"
 
 @interface KeySheetController ()
 
@@ -18,6 +21,13 @@
 @property (nonatomic, readonly) DatasheetItem * fingerprintItem;
 @property (nonatomic, readonly) DatasheetItem * keyLengthItem;
 @property (nonatomic, readonly) DatasheetItem * verificationItem;
+
+@property (nonatomic, readonly) DatasheetSection * renewKeypairSection;
+@property (nonatomic, readonly) DatasheetItem * renewKeypairItem;
+
+@property (nonatomic, readonly) id<HXOClientProtocol> client;
+@property (nonatomic, readonly) Contact * contact;
+@property (nonatomic, readonly) UserProfile * userProfile;
 
 @end
 
@@ -27,15 +37,44 @@
 @synthesize fingerprintItem = _fingerprintItem;
 @synthesize keyLengthItem = _keyLengthItem;
 @synthesize verificationItem = _verificationItem;
+@synthesize renewKeypairItem = _renewKeypairItem;
+@synthesize renewKeypairSection = _renewKeypairSection;
+
+
+- (void) commonInit {
+    [super commonInit];
+    self.isCancelable = NO;
+}
+
+- (id<HXOClientProtocol>) client {
+    if ([self.inspectedObject conformsToProtocol: @protocol(HXOClientProtocol)]) {
+        return self.inspectedObject;
+    }
+    return nil;
+}
 
 - (Contact*) contact {
-    return self.inspectedObject;
+    if ([self.inspectedObject isKindOfClass:[Contact class]]) {
+        return self.inspectedObject;
+    }
+    return nil;
+}
+
+- (UserProfile*) userProfile {
+    if ([self.inspectedObject isKindOfClass:[UserProfile class]]) {
+        return self.inspectedObject;
+    }
+    return nil;
+}
+
+- (BOOL) isEditable {
+    return [self.inspectedObject isKindOfClass: [UserProfile class]];
 }
 
 - (DatasheetSection*) fingerprintSection {
     if ( ! _fingerprintSection) {
         _fingerprintSection = [DatasheetSection datasheetSectionWithIdentifier: @"fingerprint_section"];
-        _fingerprintSection.items = @[self.fingerprintItem, self.keyLengthItem, self.verificationItem];
+        _fingerprintSection.items = @[self.fingerprintItem, self.keyLengthItem];
         _fingerprintSection.footerText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"profile_fingerprint_info", nil) attributes: nil];
     }
     return _fingerprintSection;
@@ -44,6 +83,7 @@
 - (DatasheetItem*) fingerprintItem {
     if ( ! _fingerprintItem) {
         _fingerprintItem = [self itemWithIdentifier: @"fingerprint_item" cellIdentifier: @"DatasheetKeyValueCell"];
+        _fingerprintItem.dependencyPaths = @[@"publicKeyId"];
     }
     return _fingerprintItem;
 }
@@ -56,18 +96,14 @@
     return _keyLengthItem;
 }
 
-- (DatasheetItem*) verificationItem {
-    if ( ! _verificationItem) {
-        _verificationItem = [self itemWithIdentifier: @"key_verification_item" cellIdentifier: @"DatasheetActionCell"];
-        _verificationItem.target = self;
-        _verificationItem.action = @selector(verificationToggled:);
-        _verificationItem.dependencyPaths = @[@"verifiedKey"];
-    }
-    return _verificationItem;
+- (NSArray*) buildSections {
+    return @[self.fingerprintSection, self.renewKeypairSection];
 }
 
-- (NSArray*) buildSections {
-    return @[self.fingerprintSection];
+- (void) inspectedObjectChanged {
+    NSArray * common = @[self.fingerprintItem, self.keyLengthItem];
+    self.fingerprintSection.items = self.contact ? [common arrayByAddingObject: self.verificationItem] : common;
+    [super inspectedObjectChanged];
 }
 
 - (id) valueForItem:(DatasheetItem *)item {
@@ -79,6 +115,13 @@
     return [super valueForItem: item];
 }
 
+- (BOOL) isItemVisible:(DatasheetItem *)item {
+    if ([item isEqual: self.verificationItem]) {
+        return self.contact && [super isItemVisible: item];
+    }
+    return [super isItemVisible: item];
+}
+
 - (NSString*) titleForItem:(DatasheetItem *)item {
     if ([item isEqual: self.verificationItem]) {
         return [self verificationItemTitle];
@@ -86,25 +129,26 @@
     return nil;
 }
 
-- (NSString*) fingerprint {
-    NSMutableArray * fingerprint = [NSMutableArray array];
-    NSString * keyId = self.keyId;
-    for (int i = 0; i < keyId.length; i += 2) {
-        [fingerprint addObject: [keyId substringWithRange: NSMakeRange(i, 2)]];
-    }
-    return [fingerprint componentsJoinedByString:@":"];
-}
-
-- (NSString*) keyId {
-    return self.isOwnKey ? [HXOBackend ownPublicKeyIdString] : self.contact.publicKeyId;
-}
-
-- (NSData*) publicKey {
-    return self.isOwnKey ? [HXOBackend ownPublicKey] : self.contact.publicKey;
-}
+#pragma mark - Key Attributes
 
 - (NSUInteger) keyLength {
-    return [CCRSA getPublicKeySize: self.publicKey];
+    return [CCRSA getPublicKeySize: self.client.publicKey];
+}
+
+- (NSString*) fingerprint {
+    return [HXOUI formatKeyFingerprint: self.client.publicKeyId];
+}
+
+#pragma mark - Key Verification
+
+- (DatasheetItem*) verificationItem {
+    if ( ! _verificationItem) {
+        _verificationItem = [self itemWithIdentifier: @"key_verification_item" cellIdentifier: @"DatasheetActionCell"];
+        _verificationItem.target = self;
+        _verificationItem.action = @selector(verificationToggled:);
+        _verificationItem.dependencyPaths = @[@"verifiedKey"];
+    }
+    return _verificationItem;
 }
 
 - (BOOL) keyIsVerified {
@@ -120,11 +164,43 @@
 }
 
 - (void) verificationToggled: (id) sender {
-    NSLog(@"verificationToggled");
     if ([self keyIsVerified]) {
         self.contact.verifiedKey = nil;
     } else {
         self.contact.verifiedKey = self.contact.publicKey;
+    }
+}
+
+#pragma mark - RSA Keypair Renewal
+
+- (DatasheetSection*) renewKeypairSection {
+    if ( ! _renewKeypairSection) {
+        _renewKeypairSection = [DatasheetSection datasheetSectionWithIdentifier: @"renew_keypair_section"];
+        _renewKeypairSection.items = @[self.renewKeypairItem];
+        _renewKeypairSection.footerText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"profile_renew_keypair_info", nil) attributes: nil];
+    }
+    return _renewKeypairSection;
+}
+
+- (DatasheetItem*) renewKeypairItem {
+    if (! _renewKeypairItem) {
+        _renewKeypairItem = [self itemWithIdentifier: @"" cellIdentifier: @"DatasheetActionCell"];
+        _renewKeypairItem.title = @"profile_renew_keypair";
+        _renewKeypairItem.visibilityMask = DatasheetModeEdit;
+        _renewKeypairItem.target = self;
+        _renewKeypairItem.action = @selector(renewKeypairPressed:);
+    }
+    return _renewKeypairItem;
+}
+
+- (void) renewKeypairPressed: (id) sender {
+    if ( ! self.renewKeypairItem.isBusy) {
+        self.renewKeypairItem.isBusy = YES;
+        [self updateItem: self.renewKeypairItem];
+        [self.userProfile renewKeypairWithCompletion:^{
+            self.renewKeypairItem.isBusy = NO;
+            [self updateItem: self.renewKeypairItem];
+        }];
     }
 }
 

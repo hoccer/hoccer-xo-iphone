@@ -33,6 +33,8 @@
 #import "GCNetworkRequest.h"
 #import "Contact.h"
 
+#import "HXOUI.h"
+
 #import "NSData+Base64.h"
 
 #import "NSString+StringWithData.h"
@@ -1943,7 +1945,7 @@ NSArray * TransferStateName = @[@"detached",
                         // NSLog(@"Saved image to Library");
                     } else {
                         NSLog(@"trySaveToAlbum: Error saving image in Library, error = %@", error);
-                        [AppDelegate showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not save image in Album"];
+                        [HXOUI showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not save image in Album"];
                     }
                 };
                 ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
@@ -1951,7 +1953,7 @@ NSArray * TransferStateName = @[@"detached",
                                           orientation:(ALAssetOrientation)[image imageOrientation]
                                       completionBlock:completeBlock];
             } else {
-                [AppDelegate showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not load image to save it in Album"];
+                [HXOUI showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not load image to save it in Album"];
                 NSLog(@"trySaveToAlbum: Failed to get image: %@", error);
             }
         }];
@@ -1965,7 +1967,7 @@ NSArray * TransferStateName = @[@"detached",
             NSLog(@"trySaveToAlbum: saved video in album at path = %@",myVideoFilePath);
         } else {
             NSLog(@"trySaveToAlbum: failed to save video in album at path = %@",myVideoFilePath);
-            [AppDelegate showErrorAlertWithMessage:@"Video not compatible with album" withTitle:@"Can not save video in Album"];
+            [HXOUI showErrorAlertWithMessage:@"Video not compatible with album" withTitle:@"Can not save video in Album"];
         }
     }
 }

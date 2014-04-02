@@ -227,7 +227,7 @@
 "import_credentials"="Zugangsdaten importieren";
 "delete_credentials"="Zugangsdaten löschen";
 
-"delete_credentials_file"="Exportierte Zugangsdaten löschen";
+"delete_credentials_file"="Exportierte Daten löschen";
 
 "delete_credentials_file_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
 "delete_credentials_file_confirm"="Löschen";

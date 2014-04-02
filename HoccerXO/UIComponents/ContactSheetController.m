@@ -14,6 +14,7 @@
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "ProfileAvatarView.h"
+#import "HXOUI.h"
 
 static const BOOL RELATIONSHIP_DEBUG = NO;
 
@@ -34,7 +35,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @synthesize blockContactItem = _blockContactItem;
 @synthesize chatBackend = _chatBackend;
 
-
 - (void) commonInit {
     [super commonInit];
 
@@ -47,25 +47,25 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     self.destructiveButton.visibilityMask = DatasheetModeEdit;
     self.destructiveButton.title = @"delete_contact";
+    self.destructiveButton.target = self;
+    self.destructiveButton.action = @selector(deleteContactPressed:);
+
+    self.destructiveSection.items = [@[self.blockContactItem] arrayByAddingObjectsFromArray: self.destructiveSection.items];
 
     self.isEditable = YES;
 }
 
 - (Contact*) contact {
-    return self.inspectedObject;
+    if ([self.inspectedObject isKindOfClass: [Contact class]]) {
+        return self.inspectedObject;
+    }
+    return nil;
 }
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
     section.items = @[self.nicknameItem, self.chatItem, self.keyItem];
     return section;
-}
-
-- (void) addUtilitySections: (NSMutableArray*) sections {
-
-    DatasheetSection * utilitySection = [DatasheetSection datasheetSectionWithIdentifier: @"utility_section"];
-    utilitySection.items = @[self.blockContactItem];
-    [sections addObject: utilitySection];
 }
 
 - (DatasheetItem*) chatItem {
@@ -131,18 +131,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 }
 
-#pragma mark - ALL the titles
-
-- (NSString*) blockItemTitle {
-    NSString * state = self.contact.relationshipState;
-    NSString * formatKey = nil;
-    if ([state isEqualToString: @"friend"]) {
-        formatKey = @"contact_block";
-    } else if ([state isEqualToString: @"blocked"]) {
-        formatKey = @"contact_unblock";
-    }
-    return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
-}
 
 - (NSString*) keyItemTitle {
     NSString * titleKey;
@@ -156,18 +144,31 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return NSLocalizedString(titleKey, nil);
 }
 
+
 #pragma mark - UI Actions
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     if ([item isEqual: self.chatItem]) {
         ChatViewController * chatView = segue.destinationViewController;
         chatView.inspectedObject = self.contact;
-    } else if ([item isEqual: self.keyItem]) {
-        DatasheetController * keyViewController = segue.destinationViewController;
-        keyViewController.inspectedObject = self.contact;
-    } else {
-        NSLog(@"Unhandled segue %@", segue.identifier);
+    } else  {
+        [super prepareForSegue: segue withItem: item sender: sender];
     }
+}
+
+
+#pragma mark - Block Contact
+
+
+- (NSString*) blockItemTitle {
+    NSString * state = self.contact.relationshipState;
+    NSString * formatKey = nil;
+    if ([state isEqualToString: @"friend"]) {
+        formatKey = @"contact_block";
+    } else if ([state isEqualToString: @"blocked"]) {
+        formatKey = @"contact_unblock";
+    }
+    return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
 }
 
 - (void) blockToggled: (id) sender {
@@ -185,6 +186,37 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         NSLog(@"ContactSheetController toggleBlockedPressed: unhandled status %@", self.contact.status);
     }
 }
+
+#pragma mark - Delete Contact
+
+- (void) deleteContactPressed: (UIViewController*) sender {
+    HXOActionSheetCompletionBlock handleAnswer = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self deleteContact: self.contact];
+        }
+    };
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
+                                                 completionBlock: handleAnswer
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
+                                               otherButtonTitles: nil];
+    [sheet showInView: sender.view];
+}
+
+- (void) deleteContact: (Contact*) contact {
+    //[self.delegate controllerDidFinish: self];
+    NSLog(@"deleting contact with relationshipState %@", contact.relationshipState);
+    if ([contact.relationshipState isEqualToString:@"groupfriend"] || [contact.relationshipState isEqualToString:@"kept"]) {
+        [self.chatBackend handleDeletionOfContact:contact];
+    } else {
+        [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
+        }];
+    }
+    [self.delegate controllerDidFinish: self];
+}
+
+#pragma mark - Attic
 
 - (HXOBackend*) chatBackend {
     if (_chatBackend == nil) {

@@ -19,7 +19,7 @@
 #import "TextSection.h"
 #import "GenericAttachmentSection.h"
 #import "HXOUserDefaults.h"
-#import "HXOTheme.h"
+#import "HXOUI.h"
 
 @interface TestingGroundViewController ()
 
@@ -347,7 +347,7 @@
 }
 
 - (void) configureTextSection: (TextSection*) section item: (BubbleItem*) item {
-    section.label.font = [HXOTheme theme].messageFont;
+    section.label.font = [HXOUI theme].messageFont;
     section.label.attributedText = item.text;
 }
 

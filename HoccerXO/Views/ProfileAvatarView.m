@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "VectorArt.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 @interface ProfileAvatarView ()
 
@@ -28,7 +28,7 @@
     if (self != nil) {
         self.opaque = NO;
         self.avatarLayer = [CALayer layer];
-        self.avatarLayer.backgroundColor = [HXOTheme theme].defaultAvatarBackgroundColor.CGColor;
+        self.avatarLayer.backgroundColor = [HXOUI theme].defaultAvatarBackgroundColor.CGColor;
 
         CGFloat size = frame.size.height - 6 * kHXOGridSpacing;
         self.avatarLayer.bounds = CGRectMake(0, 0, size, size);

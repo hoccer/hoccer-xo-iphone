@@ -10,8 +10,8 @@
 
 #import "MessageCell.h"
 #import "HXOUpDownLoadControl.h"
-#import "HXOTheme.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
+#import "HXOUI.h"
 
 @interface ImageAttachmentSection ()
 
@@ -95,7 +95,7 @@
 
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
-    self.imageLayer.backgroundColor = [[HXOTheme theme] messageBackgroundColorForScheme: self.cell.colorScheme].CGColor;
+    self.imageLayer.backgroundColor = [[HXOUI theme] messageBackgroundColorForScheme: self.cell.colorScheme].CGColor;
 }
 
 - (void) messageDirectionDidChange {

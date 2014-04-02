@@ -8,8 +8,8 @@
 
 #import "MessageSection.h"
 #import "MessageCell.h"
-#import "HXOTheme.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
+#import "HXOUI.h"
 
 @implementation MessageSection
 
@@ -97,7 +97,7 @@
 }
 
 - (void) colorSchemeDidChange {
-    self.bubbleLayer.fillColor = [[HXOTheme theme] messageBackgroundColorForScheme: self.cell.colorScheme].CGColor;
+    self.bubbleLayer.fillColor = [[HXOUI theme] messageBackgroundColorForScheme: self.cell.colorScheme].CGColor;
 }
 
 - (void) messageDirectionDidChange {

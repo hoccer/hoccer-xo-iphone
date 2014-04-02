@@ -9,7 +9,7 @@
 #import "UserDefaultsCells.h"
 #import "ProfileAvatarView.h"
 
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 static const CGFloat kEditAnimationDuration = 0.5;
 

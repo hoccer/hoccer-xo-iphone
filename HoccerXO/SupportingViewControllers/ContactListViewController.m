@@ -16,10 +16,10 @@
 #import "HXOBackend.h"
 #import "ProfileViewController.h"
 #import "InvitationController.h"
-#import "HXOTheme.h"
+#import "HXOUI.h"
 #import "Group.h"
 #import "GroupMembership.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 #define HIDE_SEPARATORS
 
@@ -70,7 +70,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     self.tableView.rowHeight = [self calculateRowHeight];
     // Apple bug: Order matters. Setting the inset before the color leaves the "no cell separators" in the wrong color.
-    self.tableView.separatorColor = [[HXOTheme theme] tableSeparatorColor];
+    self.tableView.separatorColor = [[HXOUI theme] tableSeparatorColor];
     self.tableView.separatorInset = self.contactCellPrototype.separatorInset;
 #ifdef HIDE_SEPARATORS
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];

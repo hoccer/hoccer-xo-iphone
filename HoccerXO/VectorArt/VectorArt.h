@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "HXOTheme.h"
+#import "HXOUI.h"
 
 @interface VectorArt : NSObject
 

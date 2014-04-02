@@ -6,15 +6,24 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "HXOTheme.h"
+#import "HXOUI.h"
 #import "UIColor+HSBUtilities.h"
 #import "UIColor+HexUtilities.h"
 #import "HXOThemedNavigationController.h"
 #import "LabelWithLED.h"
+#import "UIAlertView+BlockExtensions.h"
 
-static HXOTheme * _currentTheme;
+const CGFloat kHXOGridSpacing = 8;
+const CGFloat kHXOCellPadding = 2 * kHXOGridSpacing;
 
-@implementation HXOTheme
+const CGFloat kHXOChatAvatarSize = 5 * kHXOGridSpacing;
+const CGFloat kHXOListAvatarSize = 6 * kHXOGridSpacing;
+const CGFloat kHXOProfileAvatarSize = 6 * kHXOGridSpacing;
+
+
+static HXOUI * _currentTheme;
+
+@implementation HXOUI
 
 #pragma mark - Applicationwide Colors
 
@@ -197,10 +206,10 @@ static HXOTheme * _currentTheme;
 
 
 + (void) initialize {
-    _currentTheme = [[HXOTheme alloc] init];
+    _currentTheme = [[HXOUI alloc] init];
 }
 
-+ (HXOTheme*) theme {
++ (HXOUI*) theme {
     return _currentTheme;
 }
 
@@ -214,6 +223,97 @@ static HXOTheme * _currentTheme;
     [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
     
     [[LabelWithLED appearance] setLedColor: self.ledColor];
+}
+
+#pragma mark - Value Formatters
+
++ (NSString*) formatKeyFingerprint: (NSString*) rawKeyIdString {
+    NSMutableArray * fingerprint = [NSMutableArray array];
+    for (int i = 0; i < rawKeyIdString.length; i += 2) {
+        [fingerprint addObject: [rawKeyIdString substringWithRange: NSMakeRange(i, 2)]];
+    }
+    return [fingerprint componentsJoinedByString:@":"];
+}
+
+#pragma mark - Standard Dialogs :-/
+
++ (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title {
+
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
+                                                     message: NSLocalizedString(message, nil)
+                                                    delegate: nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
++ (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [HXOUI showErrorAlertWithMessage:message withTitle:title];
+    });
+}
+
++ (void) showAlertWithMessage: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
+
+    NSString * localizedMessage = NSLocalizedString(message, "");
+    NSString * fullMessage = [NSString stringWithFormat:localizedMessage, argument];
+
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
+                                                     message: NSLocalizedString(fullMessage, nil)
+                                                    delegate: nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
++ (void) showAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [HXOUI showAlertWithMessage:message withTitle:title withArgument:argument];
+    });
+}
+
++ (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(HXOStringEntryCompletion)completionBlock {
+    HXOAlertViewCompletionBlock completion = ^(NSUInteger buttonIndex, UIAlertView* alertView) {
+        NSString * enteredText;
+        switch (buttonIndex) {
+            case 0:
+                NSLog(@"enterStringAlert: cancel pressed");
+                completionBlock(nil);
+                break;
+            case 1:
+                enteredText = [[alertView textFieldAtIndex:0] text];
+                NSLog(@"enterStringAlert: enteredText = %@", enteredText);
+                if (enteredText.length>0) {
+                    NSLog(@"enterStringAlert: calling completionblock with text = %@", enteredText);
+                    completionBlock(enteredText);
+                } else {
+                    NSLog(@"enterStringAlert: calling completionblock with nil");
+                    completionBlock(nil);
+                }
+                break;
+        }
+    };
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                                    message: message
+                                            completionBlock: completion
+                                          cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
+                                          otherButtonTitles:NSLocalizedString(@"OK",nil),nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField * alertTextField = [alert textFieldAtIndex:0];
+    alertTextField.keyboardType = UIKeyboardTypeDefault;
+    alertTextField.placeholder = placeholder;
+    [alert show];
+}
+
++ (UIActionSheet*) actionSheetWithTitle:(NSString *)title completionBlock:(HXOActionSheetCompletionBlock)completion cancelButtonTitle:(NSString *)cancelTitle destructiveButtonTitle:(NSString *)destructiveTitle {
+
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: title
+                                                 completionBlock: completion
+                                               cancelButtonTitle: cancelTitle
+                                          destructiveButtonTitle: destructiveTitle
+                                               otherButtonTitles: nil];
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    return sheet;
 }
 
 @end

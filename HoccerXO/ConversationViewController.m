@@ -20,7 +20,7 @@
 #import "InvitationController.h"
 #import "Attachment.h"
 #import "Environment.h"
-#import "HXOTheme.h"
+#import "HXOUI.h"
 
 //#define HIDE_SEPARATORS
 

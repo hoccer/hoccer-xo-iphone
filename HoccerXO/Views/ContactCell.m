@@ -7,9 +7,9 @@
 //
 
 #import "ContactCell.h"
-#import "HXOTheme.h"
+#import "HXOUI.h"
 #import "HXOLabel.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 @interface ContactCell ()
 
@@ -45,7 +45,7 @@
     _subtitleLabel.numberOfLines = 1;
     _subtitleLabel.text = @"Lorem ipsum";
     _subtitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    _subtitleLabel.textColor = [[HXOTheme theme] lightTextColor];
+    _subtitleLabel.textColor = [[HXOUI theme] lightTextColor];
     //_subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _subtitleLabel];
     
@@ -82,8 +82,8 @@
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
-    self.nickName.font = [HXOTheme theme].titleFont;
-    self.subtitleLabel.font = [HXOTheme theme].smallTextFont;
+    self.nickName.font = [HXOUI theme].titleFont;
+    self.subtitleLabel.font = [HXOUI theme].smallTextFont;
     
     if (self.verticalConstraints) {
         [self.contentView removeConstraints: self.verticalConstraints];

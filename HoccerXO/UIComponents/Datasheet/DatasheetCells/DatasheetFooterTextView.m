@@ -9,8 +9,8 @@
 #import "DatasheetFooterTextView.h"
 
 #import "HXOHyperLabel.h"
-#import "HXOTheme.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
+#import "HXOUI.h"
 
 @implementation DatasheetFooterTextView
 
@@ -30,15 +30,15 @@
 
 
     self.label = [[HXOHyperLabel alloc] initWithFrame: self.bounds];
-    self.label.font = [HXOTheme theme].smallTextFont;
+    self.label.font = [HXOUI theme].smallTextFont;
     self.label.autoresizingMask = UIViewAutoresizingNone;
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
-    self.label.textColor = [HXOTheme theme].smallBoldTextColor;
+    self.label.textColor = [HXOUI theme].smallBoldTextColor;
     //self.label.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.label];
 
     NSDictionary * views = @{@"label": self.label};
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-(>=%f)-|", kHXOCellPadding, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
     format = [NSString stringWithFormat: @"V:|-%f-[label]-%f-|", kHXOGridSpacing, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];

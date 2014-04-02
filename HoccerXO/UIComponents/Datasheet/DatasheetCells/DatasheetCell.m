@@ -8,9 +8,9 @@
 
 #import "DatasheetCell.h"
 
-#import "HXOTheme.h"
+#import "HXOUI.h"
 #import "HXOLabel.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 
 @implementation DatasheetCell

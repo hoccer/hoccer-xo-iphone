@@ -14,6 +14,7 @@
 #import "AvatarContact.h"
 #import "GhostBustersSign.h"
 #import "UIImage+ImageEffects.h"
+#import "HXOUI.h"
 
 static const NSUInteger kHXOMaxNameLength = 25;
 
@@ -30,6 +31,13 @@ static const NSUInteger kHXOMaxNameLength = 25;
 @synthesize keyItem = _keyItem;
 @synthesize destructiveSection = _destructiveSection;
 @synthesize destructiveButton = _destructiveButton;
+
+- (id<HXOClientProtocol>) client {
+    if ([self.inspectedObject conformsToProtocol: @protocol(HXOClientProtocol)]) {
+        return self.inspectedObject;
+    }
+    return nil;
+}
 
 - (void) commonInit {
     [super commonInit];
@@ -104,13 +112,20 @@ static const NSUInteger kHXOMaxNameLength = 25;
 - (DatasheetItem*) destructiveButton {
     if ( ! _destructiveButton) {
         _destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DatasheetActionCell"];
-        _destructiveButton.titleTextColor = [HXOTheme theme].destructiveTextColor;
+        _destructiveButton.titleTextColor = [HXOUI theme].destructiveTextColor;
         _destructiveButton.visibilityMask = DatasheetModeNone;
     }
     return _destructiveButton;
 }
 
 - (void) addUtilitySections: (NSMutableArray*) sections {
+}
+
+- (id) valueForItem:(DatasheetItem *)item {
+    if ([item isEqual: self.keyItem]) {
+        return [HXOUI formatKeyFingerprint: self.client.publicKeyId];
+    }
+    return [super valueForItem: item];
 }
 
 - (ProfileAvatarView*) avatarView {
@@ -141,10 +156,12 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     if ([item isEqual: self.keyItem]) {
-        DatasheetViewController * viewController = segue.destinationViewController;
-        viewController.inspectedObject = @{@"size": @1024};
-        
+        DatasheetController * keyViewController = segue.destinationViewController;
+        keyViewController.inspectedObject = self.client;
+    } else {
+        NSLog(@"Unhandled segue %@", segue.identifier);
     }
+
 }
 
 @end

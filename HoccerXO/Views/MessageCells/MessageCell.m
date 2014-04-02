@@ -7,8 +7,8 @@
 //
 
 #import "MessageCell.h"
-#import "HXOTheme.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
+#import "HXOUI.h"
 
 @implementation MessageCell
 
@@ -150,7 +150,7 @@
     for (MessageSection * section in self.sections) {
         [section colorSchemeDidChange];
     }
-    self.subtitle.textColor = [[HXOTheme theme] messageFooterTextColorForScheme: self.colorScheme];
+    self.subtitle.textColor = [[HXOUI theme] messageFooterTextColorForScheme: self.colorScheme];
     [self setNeedsDisplay];
 }
 

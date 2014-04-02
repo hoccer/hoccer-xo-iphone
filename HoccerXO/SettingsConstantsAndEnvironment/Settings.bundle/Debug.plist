@@ -60,6 +60,14 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string>ProfileTesting</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Key</key>
+			<string>profileTesting</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>Datasheet Testing</string>
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>

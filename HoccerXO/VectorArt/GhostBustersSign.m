@@ -8,7 +8,7 @@
 
 #import "GhostBustersSign.h"
 
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 @implementation GhostBustersSign
 
@@ -18,9 +18,7 @@
     CGPoint center = CGPointMake(radius, radius);
     UIBezierPath* bezierPath = self.path;
     CGPoint p = CGPointMake(2 * radius, radius);
-
-    CGFloat angle = 0.25 * M_PI;
-
+    
     [bezierPath moveToPoint: p];
     [bezierPath addArcWithCenter: center radius: radius startAngle: 0 endAngle: 2 * M_PI clockwise: NO];
     [bezierPath addLineToPoint: p];
@@ -42,7 +40,7 @@
 
     bezierPath.usesEvenOddFillRule = YES;
 
-    self.fillColor = [HXOTheme theme].blockSignColor;
+    self.fillColor = [HXOUI theme].blockSignColor;
 }
 
 @end

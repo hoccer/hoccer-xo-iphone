@@ -28,17 +28,18 @@
 #import "NSString+URLHelper.h"
 #import "NSDictionary+CSURLParams.h"
 #import "UserProfile.h"
-#import "SoundEffectPlayer.h"
+#import "SoundEffectPlayer.h" // XXX
 #import "SocketRocket/SRWebSocket.h"
 #import "Group.h"
 #import "Crypto.h"
 #import "UserProfile.h"
 #import "GCHTTPRequestOperation.h"
 #import "GCNetworkRequest.h"
-#import "UIAlertView+BlockExtensions.h"
+#import "UIAlertView+BlockExtensions.h" // XXX
 #import "GCNetworkQueue.h"
 #import "NSMutableArray+QueueAdditions.h"
 #import "HXOEnvironment.h"
+#import "HXOUI.h" // XXX
 
 #import <sys/utsname.h>
 
@@ -573,7 +574,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
     SecKeyRef myPrivateKeyRef = [[CCRSA sharedInstance] getPrivateKeyRefForPublicKeyIdString:deliveryDictionary[@"keyId"]];
     if (myPrivateKeyRef == NULL) {
-        NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[HXOBackend ownPublicKeyIdString]);
+        NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[[UserProfile sharedProfile] publicKeyId]);
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
         return;
     }
@@ -1360,7 +1361,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     [theContact.publicKey isEqualToData: theContact.verifiedKey])
                 {
                     // a verified key has been changed, warn about it
-                    [AppDelegate showAlertWithMessageAsync:@"Verified key of contact %@ has changed" withTitle: @"Verified Key Changed" withArgument: theContact.nickName];
+                    [HXOUI showAlertWithMessageAsync:@"Verified key of contact %@ has changed" withTitle: @"Verified Key Changed" withArgument: theContact.nickName];
                 }
                 theContact.publicKeyString = keyRecord[@"key"];
                 theContact.publicKeyId = keyRecord[@"keyId"];
@@ -2282,7 +2283,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([group iJoined] && !myMember.keySettingInProgress) {
         // check if our own key on the server is ok
         if ([HXOBackend isInvalid:myMember.cipheredGroupKey] ||
-             ![[HXOBackend ownPublicKeyIdString] isEqualToString:myMember.memberKeyId] ||
+             ![[[UserProfile sharedProfile] publicKeyId] isEqualToString:myMember.memberKeyId] ||
              ([group iAmAdmin] && ![myMember.distributedGroupKey isEqualToData:group.groupKey]))
         {
             if (GROUPKEY_DEBUG) {NSLog(@"myMember.group.groupKey=%@, group.groupKey=%@", myMember.group.groupKey,group.groupKey);}
@@ -2308,7 +2309,7 @@ static NSTimer * _stateNotificationDelayTimer;
             
             NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
             myMember.keySettingInProgress = YES;
-            [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyIdString],myCryptedGroupKeyString]
+            [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[[UserProfile sharedProfile] publicKeyId],myCryptedGroupKeyString]
                            onResponse: ^(id responseOrError, BOOL success)
              {
                  myMember.keySettingInProgress = NO;
@@ -3216,14 +3217,15 @@ static NSTimer * _stateNotificationDelayTimer;
     if (myAvatarURL == nil) {
         myAvatarURL = @"";
     }
-    NSString * myNickName = [UserProfile sharedProfile].nickName;
-   // NSString * myStatus = [UserProfile sharedProfile].status;
+    UserProfile * myProfile = [UserProfile sharedProfile];
+    NSString * myNickName = myProfile.nickName;
+   // NSString * myStatus = myProfile.status;
     NSString * myStatus = @"I am.";
     
     if (myNickName == nil) {
         myNickName = @"";
     }
-    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: [HXOBackend ownPublicKeyId] handler:handler];
+    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: myProfile.publicKeyIdData handler:handler];
 }
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
@@ -3238,31 +3240,6 @@ static NSTimer * _stateNotificationDelayTimer;
                 }];
             }
         }];
-    }
-}
-
-+ (NSString *) ownPublicKeyIdString {
-    return [self keyIdString:[self ownPublicKeyId]];
-}
-
-+ (NSData *) ownPublicKeyId {
-    NSData * myKeyBits = [self ownPublicKey];
-    return [HXOBackend calcKeyId:myKeyBits];
-}
-
-+ (NSData *) ownPublicKeyRSA {
-    return[[CCRSA sharedInstance] getPublicKeyBits];
-}
-
-+ (NSData *) ownPublicKeyEC {
-    return[[EC sharedInstance] getPublicKeyBits];
-}
-
-+ (NSData *) ownPublicKey {
-    if ([HXOBackend use_elliptic_curves]) {
-        return [HXOBackend ownPublicKeyEC];
-    } else {
-        return [HXOBackend ownPublicKeyRSA];
     }
 }
 
@@ -3295,7 +3272,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler {
-    NSData * myKeyBits = [HXOBackend ownPublicKey];
+    NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
     [self updateKey:myKeyBits handler:handler];
 }
 

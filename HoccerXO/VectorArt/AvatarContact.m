@@ -8,7 +8,7 @@
 
 #import "AvatarContact.h"
 
-#import "HXOTheme.h"
+#import "HXOUI.h"
 
 @implementation AvatarContact
 
@@ -28,6 +28,6 @@
     [dudePath addCurveToPoint: CGPointMake(16, 99) controlPoint1: CGPointMake(85.41, 98.96) controlPoint2: CGPointMake(16.36, 99.15)];
     [dudePath closePath];
 
-    self.fillColor = [HXOTheme theme].defaultAvatarColor;
+    self.fillColor = [HXOUI theme].defaultAvatarColor;
 }
 @end

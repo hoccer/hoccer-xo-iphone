@@ -10,8 +10,8 @@
 
 #import "MessageCell.h"
 #import "HXOUpDownLoadControl.h"
-#import "HXOTheme.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
+#import "HXOUI.h"
 
 @implementation GenericAttachmentSection
 
@@ -40,9 +40,9 @@
 
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
-    self.title.textColor = [[HXOTheme theme] messageAttachmentTitleColorForScheme: self.cell.colorScheme];
-    self.subtitle.textColor = [[HXOTheme theme] messageAttachmentSubtitleColorForScheme: self.cell.colorScheme];
-    self.icon.tintColor = [[HXOTheme theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
+    self.title.textColor = [[HXOUI theme] messageAttachmentTitleColorForScheme: self.cell.colorScheme];
+    self.subtitle.textColor = [[HXOUI theme] messageAttachmentSubtitleColorForScheme: self.cell.colorScheme];
+    self.icon.tintColor = [[HXOUI theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
 }
 
 - (CGRect) attachmentControlFrame {

@@ -10,7 +10,8 @@
 
 #import "IASKSpecifierValuesViewController.h"
 
-#import "UserDefaultsCells.h"
+#import "UserProfile.h"
+#import "DatasheetViewController.h"
 
 @implementation SettingsViewController
 
@@ -41,6 +42,8 @@
         storyboardId = @"testingGround";
     } else if ([specifier.key isEqualToString: @"datasheetTesting"]) {
         storyboardId = @"datasheetTesting";
+    } else if ([specifier.key isEqualToString: @"profileTesting"]) {
+        storyboardId = @"profileTesting";
     } else if ([specifier.key isEqualToString: @"webServer"]) {
 #ifdef WITH_WEBSERVER
         storyboardId = @"serverViewController";
@@ -64,6 +67,9 @@
         vc = vc.parentViewController;
     }
     vc = [vc.storyboard instantiateViewControllerWithIdentifier: storyboardId];
+    if ([storyboardId isEqualToString: @"profileTesting"]) {
+        [(id)vc setInspectedObject: [UserProfile sharedProfile]];
+    }
     [self.navigationController pushViewController: vc animated: YES];
 }
 

@@ -13,8 +13,8 @@
 #import "DatasheetActionCell.h"
 #import "DatasheetFooterTextView.h"
 #import "HXOHyperLabel.h"
-#import "HXOTheme.h"
-#import "HXOLayout.h" // needed for header height hack
+#import "HXOUI.h"
+#import "HXOUI.h" // needed for header height hack
 #import "DisclosureArrow.h"
 #import "VectorArtView.h"
 
@@ -59,6 +59,9 @@
 }
 
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
+
+    cell.delegate = self;
+
     NSString * title = NSLocalizedString(item.title, nil);
     title = title && ! [title isEqualToString: @""] && [cell respondsToSelector: @selector(valueView)] ? [title stringByAppendingString:@":"] : title;
     cell.titleLabel.text = title;
@@ -69,7 +72,7 @@
             //titleColor = self.view.tintColor;
             titleColor = [UIColor blackColor];
         } else {
-            titleColor = [HXOTheme theme].lightTextColor;
+            titleColor = [HXOUI theme].lightTextColor;
         }
     }
     cell.titleLabel.textColor = titleColor;
@@ -86,7 +89,6 @@
 
     cell.hxoAccessoryView = accessoryView;
     
-    cell.delegate = self;
     if ([cell respondsToSelector: @selector(valueView)]) {
         id valueView = [(id)cell valueView];
         id currentValue = [item.currentValue isKindOfClass: [NSString class]] ? item.currentValue : [item.currentValue stringValue];
@@ -99,6 +101,17 @@
         }
         if ([valueView respondsToSelector:@selector(setEnabled:)]) {
             [valueView setEnabled: item.isEnabled];
+        }
+    }
+
+    if ([cell respondsToSelector: @selector(busyIndicator)]) {
+        UIActivityIndicatorView * busyIndicator = [(id)cell busyIndicator];
+        if (busyIndicator.isAnimating != item.isBusy) {
+            if (item.isBusy) {
+                [busyIndicator startAnimating];
+            } else {
+                [busyIndicator stopAnimating];
+            }
         }
     }
 }
@@ -140,6 +153,9 @@
 - (void) tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell respondsToSelector: @selector(setDelegate:)]) {
         [(id)cell setDelegate: nil];
+    }
+    if ([cell respondsToSelector: @selector(busyIndicator)]) {
+        [[(id)cell busyIndicator] stopAnimating];
     }
 }
 
@@ -216,7 +232,9 @@
             rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action:@selector(rightButtonPressed:)];
             rightButton.enabled = [self.dataSheetController allItemsValid];
 
-            leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action: @selector(leftButtonPressed:)];
+            if (self.dataSheetController.isCancelable) {
+                leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action: @selector(leftButtonPressed:)];
+            }
         } else {
             rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit target: self action:@selector(rightButtonPressed:)];
         }
@@ -276,7 +294,6 @@
         default:
             break;
     }
-
 }
 
 - (void) controllerDidChangeContent: (DatasheetController*) controller {
@@ -285,6 +302,10 @@
 
 - (void) controller:(DatasheetController *)controller didChangeBackgroundImage:(UIImage *)image {
     self.backgroundImageView.image = image;
+}
+
+- (void) controllerDidFinish:(DatasheetController *)controller {
+    [self.navigationController popViewControllerAnimated: YES];
 }
 
 #pragma mark - Datasheet Cell Delegate

@@ -34,6 +34,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (void) commonInit {
     _mode = DatasheetModeView;
+    _isCancelable = YES;
 }
 
 - (void) dealloc {
@@ -215,10 +216,20 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
             [self didChangeValueForItem: item];
         }
         [self.delegate controllerDidChangeContent: self];
+
+        // XXX Not sure yet...
+        [self updateCurrentItems];
     }
 }
 
 - (void) didChangeValueForItem: (DatasheetItem*) item {
+}
+
+- (void) updateItem: (DatasheetItem*) item {
+    [self.delegate controllerWillChangeContent: self];
+    [self.delegate controller: self didChangeObject: [self indexPathForItem: item] forChangeType: DatasheetChangeUpdate newIndexPath: nil];
+    [self didChangeValueForItem: item];
+    [self.delegate controllerDidChangeContent: self];
 }
 
 - (DatasheetItem*) itemWithIdentifier: (NSString*) identifier cellIdentifier: (NSString*) cellIdentifier {

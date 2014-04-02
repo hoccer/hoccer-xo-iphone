@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HXOConfig.h"
 #import "ProfileViewController.h"
 #import "HXOUserDefaults.h"
 #import "UserDefaultsCells.h"
@@ -32,6 +31,7 @@
 #import "ImageViewController.h"
 #import "UIImage+ImageEffects.h"
 #import "UserDefaultsCells.h"
+#import "HXOUI.h"
 
 #import "NSData+Base64.h"
 
@@ -251,8 +251,8 @@ typedef enum ActionSheetTags {
         keyId = _contact.publicKeyId;
         key = _contact.publicKey;
     } else {
-        keyId = [HXOBackend ownPublicKeyIdString];
-        key = [HXOBackend ownPublicKey];
+        keyId = [[UserProfile sharedProfile] publicKeyId];
+        key = [[UserProfile sharedProfile] publicKey];
     }
     if (self.contact.verifiedKey == nil || ![self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
         _verifyPublicKeyItem.currentValue = NSLocalizedString((@"verify_publickey"), nil);
@@ -280,7 +280,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    NSLog(@"observeValueForKeyPath: keyPath %@ ofObject %@",keyPath, object);
+    //NSLog(@"observeValueForKeyPath: keyPath %@ ofObject %@",keyPath, object);
     if ([object isKindOfClass: [ProfileItem class]] && [keyPath isEqualToString: @"valid"]) {
             [self validateItems];
     } else if ([keyPath isEqualToString: @"relationshipState"]) {
@@ -451,7 +451,7 @@ typedef enum ActionSheetTags {
     } else if (actionSheet.tag == kActionSheetDeleteCredentialsFile) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             if ([[UserProfile sharedProfile] deleteCredentialsFile]) {
-                [AppDelegate showErrorAlertWithMessageAsync: @"The exported credentials have been deleted." withTitle:@"Credentials File Deleted"];
+                [HXOUI showErrorAlertWithMessageAsync: @"The exported credentials have been deleted." withTitle:@"Credentials File Deleted"];
             }
             // TODO: show error message if it has not been deleted
             _canceled = YES;
@@ -479,7 +479,7 @@ typedef enum ActionSheetTags {
 
 
 + (void)importCredentials {
-    [AppDelegate enterStringAlert:nil withTitle:NSLocalizedString(@"Enter decryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+    [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"Enter decryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
                      onCompletion:^(NSString *entry) {
                          if (entry != nil) {
                              int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:entry];
@@ -488,11 +488,11 @@ typedef enum ActionSheetTags {
                                  return;
                              }
                              if (result == -1) {
-                                 [AppDelegate showErrorAlertWithMessageAsync:@"Wrong decryption passphrase or credentials file damaged. Try again." withTitle:@"Credentials Import Failed"];
+                                 [HXOUI showErrorAlertWithMessageAsync:@"Wrong decryption passphrase or credentials file damaged. Try again." withTitle:@"Credentials Import Failed"];
                                  return;
                              }
                              if (result == 0) {
-                                 [AppDelegate showErrorAlertWithMessageAsync:@"Imported credentials are the same as the active ones." withTitle:@"Same credentials"];
+                                 [HXOUI showErrorAlertWithMessageAsync:@"Imported credentials are the same as the active ones." withTitle:@"Same credentials"];
                                  return;
                              }
                          }
@@ -1094,11 +1094,11 @@ typedef enum ActionSheetTags {
 }
 
 + (void) exportCredentials {
-    [AppDelegate enterStringAlert:nil withTitle:NSLocalizedString(@"Enter encryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+    [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"Enter encryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
                      onCompletion:^(NSString *entry) {
                          if (entry != nil) {
                              [[UserProfile sharedProfile] exportCredentialsWithPassphrase:entry];
-                             [AppDelegate showErrorAlertWithMessageAsync: nil withTitle:@"credentials_exported"];
+                             [HXOUI showErrorAlertWithMessageAsync: nil withTitle:@"credentials_exported"];
                          }
                      }];
 }
@@ -1148,11 +1148,11 @@ typedef enum ActionSheetTags {
         [[UIPasteboard generalPasteboard] setString:exportStuff];
         //[exportStuff writeToURL:myUrl atomically:NO encoding:NSUTF8StringEncoding error:&myError];
         if (myError== nil) {
-            [AppDelegate showErrorAlertWithMessage:@"key_export_success" withTitle:@"key_export_success_title"];
+            [HXOUI showErrorAlertWithMessage:@"key_export_success" withTitle:@"key_export_success_title"];
             return;
         }
     }
-    [AppDelegate showErrorAlertWithMessage:@"key_export_failed" withTitle:@"key_export_failed_title"];
+    [HXOUI showErrorAlertWithMessage:@"key_export_failed" withTitle:@"key_export_failed_title"];
 }
 
 - (void) exportPrivateKeyPressed: (id) sender {
@@ -1179,11 +1179,11 @@ typedef enum ActionSheetTags {
         [[UIPasteboard generalPasteboard] setString:exportStuff];
         //[exportStuff writeToURL:myUrl atomically:NO encoding:NSUTF8StringEncoding error:&myError];
         if (myError== nil) {
-            [AppDelegate showErrorAlertWithMessage:@"key_export_success" withTitle:@"key_export_success_title"];
+            [HXOUI showErrorAlertWithMessage:@"key_export_success" withTitle:@"key_export_success_title"];
             return;
         }
     }
-    [AppDelegate showErrorAlertWithMessage:@"key_export_failed" withTitle:@"key_export_failed_title"];
+    [HXOUI showErrorAlertWithMessage:@"key_export_failed" withTitle:@"key_export_failed_title"];
 }
 
 - (void) doImportPublicKey {
@@ -1194,17 +1194,17 @@ typedef enum ActionSheetTags {
             // set public key of some peer
             if ([[CCRSA sharedInstance] addPublicKeyBits:myKeyBits withTag:[[CCRSA sharedInstance] publicTagForPeer:self.contact.clientId]]) {
                 self.contact.publicKeyString = [myKeyBits asBase64EncodedString];
-                [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
+                [HXOUI showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
                 return;
             }
         } else {
             if ([[CCRSA sharedInstance] addPublicKeyBits:myKeyBits]) {
-                [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
+                [HXOUI showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
                 return;
             }
         }
     }
-    [AppDelegate showErrorAlertWithMessage:@"key_import_failed" withTitle:@"key_import_failed_title"];
+    [HXOUI showErrorAlertWithMessage:@"key_import_failed" withTitle:@"key_import_failed_title"];
 }
 
 - (void) doImportPrivateKey {
@@ -1212,11 +1212,11 @@ typedef enum ActionSheetTags {
     NSData * myKeyBits = [CCRSA extractPrivateKeyBitsFromPEM:myKeyText];
     if (myKeyBits != nil) {
         if ([[CCRSA sharedInstance] addPrivateKeyBits:myKeyBits]) {
-            [AppDelegate showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
+            [HXOUI showErrorAlertWithMessage:@"key_import_success" withTitle:@"key_import_success_title"];
             return;
         }
     }
-    [AppDelegate showErrorAlertWithMessage:@"key_import_failed" withTitle:@"key_import_failed_title"];
+    [HXOUI showErrorAlertWithMessage:@"key_import_failed" withTitle:@"key_import_failed_title"];
 }
 
 

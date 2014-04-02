@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 
 #import "HXOModel.h"
+#import "HXOClientProtocol.h"
 
 @class GroupMembership;
 
@@ -17,7 +18,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateNone;
 FOUNDATION_EXPORT NSString * const kRelationStateFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 
-@interface Contact : HXOModel
+@interface Contact : HXOModel <HXOClientProtocol>
 
 @property (nonatomic, strong) NSString*      type;
 @property (nonatomic, strong) NSData*        avatar;

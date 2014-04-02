@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 
 #import "DatasheetController.h"
+#import "HXOClientProtocol.h"
 
 @class ProfileAvatarView;
 
 @interface ContactSheetBase : DatasheetController
+
+@property (nonatomic,readonly) id<HXOClientProtocol> client;
 
 @property (nonatomic, readonly) DatasheetSection * commonSection;
 @property (nonatomic, readonly) DatasheetItem    * nicknameItem;

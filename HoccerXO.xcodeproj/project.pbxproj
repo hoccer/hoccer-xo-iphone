@@ -33,7 +33,7 @@
 		630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8718E1E84400782507 /* DatasheetCell.m */; };
 		630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8A18E22EBC00782507 /* HXOLabel.m */; };
 		630CAB8E18E2333E00782507 /* DatasheetKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */; };
-		630FD45218BCCCA7000D8C55 /* HXOTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOTheme.m */; };
+		630FD45218BCCCA7000D8C55 /* HXOUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOUI.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63126C2F170E46F800A6804A /* MessageUI.framework */; };
@@ -151,7 +151,6 @@
 		63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B21789181EDA4C00C057D9 /* BezeledLabel.m */; };
 		63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178C181FDFAB00C057D9 /* LabelWithLED.m */; };
 		63B76F5018E8F7F800E014E6 /* KeySheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F4F18E8F7F800E014E6 /* KeySheetController.m */; };
-		63B76F6118E9BD8D00E014E6 /* HXOLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F6018E9BD8D00E014E6 /* HXOLayout.m */; };
 		63B76F6418E9EA3300E014E6 /* ContactSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F6318E9EA3300E014E6 /* ContactSheetController.m */; };
 		63B78FFA18D4D6C1003A9125 /* IconChats.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FF918D4D6C1003A9125 /* IconChats.m */; };
 		63B78FFD18D4E517003A9125 /* IconContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B78FFC18D4E517003A9125 /* IconContacts.m */; };
@@ -167,6 +166,7 @@
 		63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */; };
 		63C178C618BF79A100F29BC4 /* UIColor+HexUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C518BF79A100F29BC4 /* UIColor+HexUtilities.m */; };
 		63C1E87B18EA79D70066D5C6 /* GhostBustersSign.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1E87A18EA79D70066D5C6 /* GhostBustersSign.m */; };
+		63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
 		63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B816E8FD15004E1F6D /* Security.framework */; };
@@ -437,8 +437,8 @@
 		630CAB8A18E22EBC00782507 /* HXOLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLabel.m; sourceTree = "<group>"; };
 		630CAB8C18E2333E00782507 /* DatasheetKeyValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetKeyValueCell.h; sourceTree = "<group>"; };
 		630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetKeyValueCell.m; sourceTree = "<group>"; };
-		630FD45018BCCCA7000D8C55 /* HXOTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTheme.h; sourceTree = "<group>"; };
-		630FD45118BCCCA7000D8C55 /* HXOTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTheme.m; sourceTree = "<group>"; };
+		630FD45018BCCCA7000D8C55 /* HXOUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOUI.h; sourceTree = "<group>"; };
+		630FD45118BCCCA7000D8C55 /* HXOUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUI.m; sourceTree = "<group>"; };
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
 		631254C816EC198E009A6584 /* JsonRpcWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonRpcWebSocket.h; sourceTree = "<group>"; };
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
@@ -468,7 +468,6 @@
 		6327EAEA171883C200AF75E1 /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
 		6327EAEB171883C300AF75E1 /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
 		6327EB6E171D55DA00AF75E1 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../ObjCSRP/3rdParty/openssl-xcode/build/Release-iphoneos/libcrypto.a"; sourceTree = "<group>"; };
-		6327EB72171D61A200AF75E1 /* HXOConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOConfig.h; sourceTree = "<group>"; };
 		6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		6327F37318B8C390007D79E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -646,8 +645,6 @@
 		63B2178C181FDFAB00C057D9 /* LabelWithLED.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelWithLED.m; sourceTree = "<group>"; };
 		63B76F4E18E8F7F800E014E6 /* KeySheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeySheetController.h; sourceTree = "<group>"; };
 		63B76F4F18E8F7F800E014E6 /* KeySheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeySheetController.m; sourceTree = "<group>"; };
-		63B76F5F18E9BD8D00E014E6 /* HXOLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLayout.h; sourceTree = "<group>"; };
-		63B76F6018E9BD8D00E014E6 /* HXOLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLayout.m; sourceTree = "<group>"; };
 		63B76F6218E9EA3300E014E6 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetController.h; sourceTree = "<group>"; };
 		63B76F6318E9EA3300E014E6 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetController.m; sourceTree = "<group>"; };
 		63B78FF818D4D6C1003A9125 /* IconChats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconChats.h; sourceTree = "<group>"; };
@@ -676,6 +673,9 @@
 		63C178C518BF79A100F29BC4 /* UIColor+HexUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexUtilities.m"; sourceTree = "<group>"; };
 		63C1E87918EA79D70066D5C6 /* GhostBustersSign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GhostBustersSign.h; sourceTree = "<group>"; };
 		63C1E87A18EA79D70066D5C6 /* GhostBustersSign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GhostBustersSign.m; sourceTree = "<group>"; };
+		63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileSheetController.h; sourceTree = "<group>"; };
+		63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileSheetController.m; sourceTree = "<group>"; };
+		63C1E88D18EB2ED00066D5C6 /* HXOClientProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOClientProtocol.h; sourceTree = "<group>"; };
 		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -1012,13 +1012,15 @@
 		630CAB7518E0F67200782507 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				6365EC8218E773F000B41054 /* Datasheet */,
 				630CAB7618E0F6C400782507 /* ContactSheetBase.h */,
 				630CAB7718E0F6C400782507 /* ContactSheetBase.m */,
-				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
-				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
 				63B76F6218E9EA3300E014E6 /* ContactSheetController.h */,
 				63B76F6318E9EA3300E014E6 /* ContactSheetController.m */,
+				6365EC8218E773F000B41054 /* Datasheet */,
+				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
+				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
+				63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */,
+				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
 			);
 			name = "UI Components";
 			path = UIComponents;
@@ -1269,11 +1271,8 @@
 				636D400117106EC000304EDF /* Environment.h */,
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
-				6327EB72171D61A200AF75E1 /* HXOConfig.h */,
-				63B76F5F18E9BD8D00E014E6 /* HXOLayout.h */,
-				63B76F6018E9BD8D00E014E6 /* HXOLayout.m */,
-				630FD45018BCCCA7000D8C55 /* HXOTheme.h */,
-				630FD45118BCCCA7000D8C55 /* HXOTheme.m */,
+				630FD45018BCCCA7000D8C55 /* HXOUI.h */,
+				630FD45118BCCCA7000D8C55 /* HXOUI.m */,
 				636D4005171072CD00304EDF /* HXOUserDefaults.h */,
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
 				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
@@ -1619,6 +1618,7 @@
 				63D8EE121722EB89000F9E53 /* UserProfile.m */,
 				E951759718DE420200EFD1C6 /* HXOEnvironment.h */,
 				E951759818DE420200EFD1C6 /* HXOEnvironment.m */,
+				63C1E88D18EB2ED00066D5C6 /* HXOClientProtocol.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2324,7 +2324,6 @@
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
 				63AEE2FC16CA4D0300522F92 /* ConversationViewController.m in Sources */,
-				63B76F6118E9BD8D00E014E6 /* HXOLayout.m in Sources */,
 				63C178C618BF79A100F29BC4 /* UIColor+HexUtilities.m in Sources */,
 				63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */,
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
@@ -2452,12 +2451,13 @@
 				E9E92F3918733B7A007B8042 /* GCDAsyncSocket.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
+				63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */,
 				63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */,
 				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,
 				63CA315518D272E70069A0C2 /* CodeScanViewController.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				E9E92F7118733D01007B8042 /* HTTPServer.m in Sources */,
-				630FD45218BCCCA7000D8C55 /* HXOTheme.m in Sources */,
+				630FD45218BCCCA7000D8C55 /* HXOUI.m in Sources */,
 				63B78FFD18D4E517003A9125 /* IconContacts.m in Sources */,
 				E9E92F7918733D01007B8042 /* HTTPFileResponse.m in Sources */,
 				63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */,

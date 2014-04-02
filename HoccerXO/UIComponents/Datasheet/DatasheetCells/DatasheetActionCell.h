@@ -10,4 +10,6 @@
 
 @interface DatasheetActionCell : DatasheetCell
 
+@property (nonatomic, strong) UIActivityIndicatorView * busyIndicator;
+
 @end

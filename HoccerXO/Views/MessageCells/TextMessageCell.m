@@ -9,7 +9,7 @@
 #import "TextMessageCell.h"
 
 #import "TextSection.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 @interface TextMessageCell ()
 

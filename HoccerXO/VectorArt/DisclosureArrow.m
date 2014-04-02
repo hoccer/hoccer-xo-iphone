@@ -22,7 +22,7 @@
     self.path.miterLimit = 4;
     
     self.strokeColor = nil;
-    self.fillColor = [[HXOTheme theme] cellAccessoryColor];
+    self.fillColor = [[HXOUI theme] cellAccessoryColor];
 }
 
 @end

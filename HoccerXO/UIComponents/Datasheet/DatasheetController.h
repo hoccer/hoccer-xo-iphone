@@ -44,6 +44,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 - (void) controller: (DatasheetController*) controller didChangeBackgroundImage: (UIImage*) image;
 
+- (void) controllerDidFinish:(DatasheetController *)controller;
+
 @end
 
 @protocol DatasheetItemDelegate <NSObject>
@@ -85,6 +87,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic,strong) NSString               * segueIdentifier;
 @property (nonatomic,weak)   id                       target;
 @property (nonatomic,assign) SEL                      action;
+@property (nonatomic,assign) BOOL                     isBusy;
 
 @property (nonatomic, assign) NSUInteger              visibilityMask;
 @property (nonatomic, assign) NSUInteger              enabledMask;
@@ -105,11 +108,11 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @interface DatasheetSection : NSObject <NSCopying>
 
-@property (nonatomic, strong) NSString * identifier;
-@property (nonatomic,strong) NSArray * items;
-@property (nonatomic,strong) NSAttributedString * footerText;
-@property (nonatomic, strong) NSString * headerViewIdentifier;
-@property (nonatomic, strong) NSString * footerViewIdentifier;
+@property (nonatomic, strong) NSString           * identifier;
+@property (nonatomic, strong) NSArray            * items;
+@property (nonatomic, strong) NSAttributedString * footerText;
+@property (nonatomic, strong) NSString           * headerViewIdentifier;
+@property (nonatomic, strong) NSString           * footerViewIdentifier;
 
 + (id) datasheetSectionWithIdentifier: (NSString*) identifier;
 
@@ -119,13 +122,15 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic,strong) id inspectedObject;
 
-@property (nonatomic,weak) id<DatasheetControllerDelegate> delegate;
-@property (nonatomic,strong) NSArray * items;
-@property (nonatomic,readonly) NSArray * currentItems;
-@property (nonatomic,assign) BOOL isEditable;
-@property (nonatomic,readonly) DatasheetMode mode;
-@property (nonatomic,readonly) BOOL isEditing;
-@property (nonatomic,readonly) BOOL allItemsValid;
+@property (nonatomic, strong)   NSArray     * items;
+@property (nonatomic, readonly) NSArray     * currentItems;
+@property (nonatomic, assign)   BOOL          isEditable;
+@property (nonatomic, assign)   BOOL          isCancelable;
+@property (nonatomic, readonly) DatasheetMode mode;
+@property (nonatomic, readonly) BOOL          isEditing;
+@property (nonatomic, readonly) BOOL          allItemsValid;
+
+@property (nonatomic, weak)     id<DatasheetControllerDelegate> delegate;
 
 - (BOOL) isItemVisible: (DatasheetItem*) item;
 - (BOOL) isItemEnabled: (DatasheetItem*) item;
@@ -146,5 +151,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) backgroundImageChanged;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue withItem: (DatasheetItem*) item sender:(id)sender;
 - (void) didChangeValueForItem: (DatasheetItem*) item;
+- (void) inspectedObjectChanged;
+- (void) updateItem: (DatasheetItem*) item;
+- (void) updateCurrentItems;
 
 @end

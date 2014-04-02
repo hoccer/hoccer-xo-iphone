@@ -8,8 +8,6 @@
 
 #import "AppDelegate.h"
 
-#import "HXOConfig.h"
-
 #import "ConversationViewController.h"
 #import "Contact.h"
 #import "Attachment.h"
@@ -23,7 +21,7 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
 #import "TestFlight.h"
-#import "HXOTheme.h"
+#import "HXOUI.h"
 #import "ChatViewController.h"
 #import "IconChats.h"
 #import "IconContacts.h"
@@ -55,8 +53,6 @@
 #define MIGRATION_DEBUG NO
 #define AUDIOSESSION_DEBUG NO
 #define TRACE_DATABASE_SAVE NO
-
-typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
 
 //static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 //static const NSInteger kDatabaseDeleteAlertTag = 200;
@@ -279,7 +275,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
     }
 
-    [[HXOTheme theme] setupTheming];
+    [[HXOUI theme] setupTheming];
     [self localizeTabBar];
 
 
@@ -1213,73 +1209,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [NSTimer scheduledTimerWithTimeInterval: 1.0 target: alert selector: @selector(show) userInfo: nil repeats: NO];
 }
 
-+ (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title {
-
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
-                                                     message: NSLocalizedString(message, nil)
-                                                    delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
-                                           otherButtonTitles: nil];
-    [alert show];
-}
-    
-+ (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [AppDelegate showErrorAlertWithMessage:message withTitle:title];
-    });
-}
-
-+ (void) showAlertWithMessage: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
-    
-    NSString * localizedMessage = NSLocalizedString(message, "");
-    NSString * fullMessage = [NSString stringWithFormat:localizedMessage, argument];
-    
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
-                                                     message: NSLocalizedString(fullMessage, nil)
-                                                    delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
-                                           otherButtonTitles: nil];
-    [alert show];
-}
-
-+ (void) showAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [AppDelegate showAlertWithMessage:message withTitle:title withArgument:argument];
-    });
-}
-
-+ (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
-                                       message: message
-                               completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) {
-                                   NSString * enteredText;
-                                   switch (buttonIndex) {
-                                       case 0:
-                                           NSLog(@"enterStringAlert: cancel pressed");
-                                           completionBlock(nil);
-                                           break;
-                                       case 1:
-                                           enteredText = [[alertView textFieldAtIndex:0] text];
-                                           NSLog(@"enterStringAlert: enteredText = %@", enteredText);
-                                           if (enteredText.length>0) {
-                                               NSLog(@"enterStringAlert: calling completionblock with text = %@", enteredText);
-                                               completionBlock(enteredText);
-                                           } else {
-                                               NSLog(@"enterStringAlert: calling completionblock with nil");
-                                              completionBlock(nil);
-                                           }
-                                           break;
-                                   }
-                               }
-                             cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
-                             otherButtonTitles:NSLocalizedString(@"OK",nil),nil];
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    UITextField * alertTextField = [alert textFieldAtIndex:0];
-    alertTextField.keyboardType = UIKeyboardTypeDefault;
-    alertTextField.placeholder = placeholder;
-    [alert show];
-
-}
 
 - (void) showFatalErrorAlertWithMessage:  (NSString *) message withTitle:(NSString *) title {
     if (title == nil) {

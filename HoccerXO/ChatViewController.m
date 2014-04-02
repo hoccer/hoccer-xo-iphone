@@ -46,7 +46,7 @@
 #import "HXOHyperLabel.h"
 #import "PaperDart.h"
 #import "PaperClip.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -143,7 +143,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.messageField.backgroundColor = [UIColor whiteColor];
     self.messageField.layer.cornerRadius = kHXOGridSpacing / 2;
     self.messageField.layer.borderWidth = 1.0;
-    self.messageField.layer.borderColor = [HXOTheme theme].messageFieldBorderColor.CGColor;
+    self.messageField.layer.borderColor = [HXOUI theme].messageFieldBorderColor.CGColor;
     self.messageField.font = font;
     self.messageField.textContainerInset = UIEdgeInsetsMake(6, 0, 2, 0);
     self.messageField.text = @"k";
@@ -1940,7 +1940,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     
     if ([message.isOutgoing isEqualToNumber: @NO]) {
         if ([message.contact.type isEqualToString:[Group entityName]]) {
-            profileViewController.contact = [message.deliveries.anyObject sender];
+            profileViewController.contact = [(Delivery*)message.deliveries.anyObject sender];
         } else {
             profileViewController.contact = message.contact;
         }

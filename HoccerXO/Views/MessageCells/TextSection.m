@@ -10,8 +10,8 @@
 
 #import "HXOHyperLabel.h"
 #import "MessageCell.h"
-#import "HXOTheme.h"
-#import "HXOLayout.h"
+#import "HXOUI.h"
+#import "HXOUI.h"
 
 // TODO: remove this
 #import "HXOUserDefaults.h"
@@ -25,7 +25,7 @@
     _label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _label.backgroundColor = [UIColor clearColor];
     // TODO move font assignment to the view controller
-    _label.font = [HXOTheme theme].messageFont;
+    _label.font = [HXOUI theme].messageFont;
     _label.lineBreakMode = NSLineBreakByWordWrapping;
     [self addSubview: _label];
 
@@ -55,12 +55,12 @@
 
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
-    self.label.textColor = [[HXOTheme theme] messageTextColorForScheme: self.cell.colorScheme];
-    self.label.linkColor = [[HXOTheme theme] messageLinkColorForScheme: self.cell.colorScheme];
+    self.label.textColor = [[HXOUI theme] messageTextColorForScheme: self.cell.colorScheme];
+    self.label.linkColor = [[HXOUI theme] messageLinkColorForScheme: self.cell.colorScheme];
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
-    self.label.font = [[HXOTheme theme] messageFont];
+    self.label.font = [[HXOUI theme] messageFont];
     [self setNeedsLayout];
 }
 
