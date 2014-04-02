@@ -50,6 +50,9 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) visitItems: (DatasheetSection*) root usingBlock: (DatasheetItemVisitorBlock) itemBlock sectionBlock: (DatasheetSectionVisitorBlock) sectionBlock {
     NSMutableArray * stack = [NSMutableArray array];
     NSMutableArray * marks = [NSMutableArray array];
+    if (! root) {
+        return;
+    }
     [stack addObject: root];
     while (stack.count > 0) {
         id current = stack.lastObject;
@@ -277,10 +280,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) updateInspectedObject {
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
         if (item.valuePath) {
-            id objectValue = [self.inspectedObject valueForKeyPath: item.valuePath];
-            id ourValue = item.currentValue;
             if (item.currentValueIsModified) {
-                [self.inspectedObject setValue: ourValue forKeyPath: item.valuePath];
+                [self.inspectedObject setValue: item.currentValue forKeyPath: item.valuePath];
             }
         }
         return NO;

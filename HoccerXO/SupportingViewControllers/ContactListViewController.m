@@ -14,7 +14,7 @@
 #import "AppDelegate.h"
 #import "InviteCodeViewController.h"
 #import "HXOBackend.h"
-#import "ProfileViewController.h"
+#import "DatasheetViewController.h"
 #import "InvitationController.h"
 #import "HXOUI.h"
 #import "Group.h"
@@ -185,8 +185,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
     if ([[segue identifier] isEqualToString:@"showContact"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        ProfileViewController* profileView = (ProfileViewController*)[segue destinationViewController];
-        profileView.contact = contact;
+        DatasheetViewController * profileView = [segue destinationViewController];
+        profileView.inspectedObject = contact;
     }
 }
 

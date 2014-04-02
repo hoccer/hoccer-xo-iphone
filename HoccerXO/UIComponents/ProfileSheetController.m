@@ -49,6 +49,10 @@
     self.isEditable = YES;
 }
 
+- (void) awakeFromNib {
+    self.inspectedObject = [UserProfile sharedProfile];
+}
+
 - (UserProfile*) userProfile {
     return [self.inspectedObject isKindOfClass: [UserProfile class]] ? self.inspectedObject : nil;
 }
