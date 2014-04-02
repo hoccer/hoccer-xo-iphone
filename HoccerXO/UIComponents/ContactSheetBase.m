@@ -12,6 +12,7 @@
 #import "ProfileAvatarView.h"
 #import "DatasheetViewController.h"
 #import "AvatarContact.h"
+#import "AvatarGroup.h"
 #import "GhostBustersSign.h"
 #import "HXOUI.h"
 #import "ImageViewController.h"
@@ -190,7 +191,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 - (IBAction)avatarPressed:(id)sender {
     if (self.mode == DatasheetModeEdit) {
         [self.imagePicker showInView: [(id)self.delegate view]]; // XXX
-    } else {
+    } else if (self.avatarItem.currentValue) {
         [(id)self.delegate performSegueWithIdentifier: self.avatarItem.segueIdentifier sender: self]; // XXX
     }
 }

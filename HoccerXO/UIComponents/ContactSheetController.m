@@ -128,7 +128,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.isBlocked = [self.contact.relationshipState isEqualToString: @"blocked"];
     }
-
 }
 
 

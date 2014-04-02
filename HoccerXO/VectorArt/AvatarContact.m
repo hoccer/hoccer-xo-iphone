@@ -13,20 +13,20 @@
 @implementation AvatarContact
 
 - (void) initPath {
-    UIBezierPath* dudePath = self.path;
-    [dudePath moveToPoint: CGPointMake(65.7, 61.26)];
-    [dudePath addCurveToPoint: CGPointMake(65.7, 28.74) controlPoint1: CGPointMake(74.1, 52.28) controlPoint2: CGPointMake(74.1, 37.72)];
-    [dudePath addCurveToPoint: CGPointMake(33.3, 28.74) controlPoint1: CGPointMake(57.31, 19.75) controlPoint2: CGPointMake(41.69, 19.75)];
-    [dudePath addCurveToPoint: CGPointMake(33.3, 61.26) controlPoint1: CGPointMake(24.9, 37.72) controlPoint2: CGPointMake(24.9, 52.28)];
-    [dudePath addCurveToPoint: CGPointMake(65.7, 61.26) controlPoint1: CGPointMake(41.69, 70.25) controlPoint2: CGPointMake(57.31, 70.25)];
-    [dudePath closePath];
-    [dudePath moveToPoint: CGPointMake(16, 99)];
-    [dudePath addCurveToPoint: CGPointMake(36, 71) controlPoint1: CGPointMake(17.16, 85.66) controlPoint2: CGPointMake(28.01, 71.21)];
-    [dudePath addCurveToPoint: CGPointMake(50, 74) controlPoint1: CGPointMake(37.25, 71.33) controlPoint2: CGPointMake(43.65, 74.17)];
-    [dudePath addCurveToPoint: CGPointMake(63, 71) controlPoint1: CGPointMake(56.35, 73.83) controlPoint2: CGPointMake(63, 71)];
-    [dudePath addCurveToPoint: CGPointMake(85, 99) controlPoint1: CGPointMake(69.95, 70.43) controlPoint2: CGPointMake(80.23, 83.45)];
-    [dudePath addCurveToPoint: CGPointMake(16, 99) controlPoint1: CGPointMake(85.41, 98.96) controlPoint2: CGPointMake(16.36, 99.15)];
-    [dudePath closePath];
+    UIBezierPath* bezierPath = self.path;
+    [bezierPath moveToPoint: CGPointMake(16, 100)];
+    [bezierPath addCurveToPoint: CGPointMake(36.1, 71.33) controlPoint1: CGPointMake(16.21, 86.09) controlPoint2: CGPointMake(24.58, 74.49)];
+    [bezierPath addCurveToPoint: CGPointMake(49.5, 74.7) controlPoint1: CGPointMake(40.08, 73.44) controlPoint2: CGPointMake(44.68, 74.7)];
+    [bezierPath addCurveToPoint: CGPointMake(62.9, 71.33) controlPoint1: CGPointMake(54.32, 74.7) controlPoint2: CGPointMake(58.92, 73.44)];
+    [bezierPath addCurveToPoint: CGPointMake(83, 100) controlPoint1: CGPointMake(74.21, 74.49) controlPoint2: CGPointMake(82.79, 86.09)];
+    [bezierPath addLineToPoint: CGPointMake(16, 100)];
+    [bezierPath closePath];
+    [bezierPath moveToPoint: CGPointMake(49.5, 68.38)];
+    [bezierPath addCurveToPoint: CGPointMake(26.47, 45.19) controlPoint1: CGPointMake(36.73, 68.38) controlPoint2: CGPointMake(26.47, 58.05)];
+    [bezierPath addCurveToPoint: CGPointMake(49.5, 22) controlPoint1: CGPointMake(26.47, 32.33) controlPoint2: CGPointMake(36.73, 22)];
+    [bezierPath addCurveToPoint: CGPointMake(72.53, 45.19) controlPoint1: CGPointMake(62.27, 22) controlPoint2: CGPointMake(72.53, 32.33)];
+    [bezierPath addCurveToPoint: CGPointMake(49.5, 68.38) controlPoint1: CGPointMake(72.53, 58.05) controlPoint2: CGPointMake(62.27, 68.38)];
+    [bezierPath closePath];
 
     self.fillColor = [HXOUI theme].defaultAvatarColor;
 }
