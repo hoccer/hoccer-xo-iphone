@@ -22,7 +22,8 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 @interface ContactSheetBase ()
 
-@property (strong, readonly) AttachmentPickerController* imagePicker;
+@property (nonatomic, readonly) AttachmentPickerController* imagePicker;
+@property (nonatomic, assign)   BOOL                        avatarModified;
 
 @end
 
@@ -143,6 +144,15 @@ static const NSUInteger kHXOMaxNameLength = 25;
     }
 }
 
+- (void) didUpdateInspectedObject {
+    if (self.avatarModified) {
+        // XXX not sure what this is good for ... do we need it?
+        self.client.avatarURL = nil;
+        self.client.avatarUploadURL = nil;
+        self.avatarModified = NO;
+    }
+}
+
 - (UIView*) tableHeaderView {
     return self.avatarView;
 }
@@ -185,9 +195,6 @@ static const NSUInteger kHXOMaxNameLength = 25;
     }
 }
 
-
-#pragma mark - Attachment Picker Controller
-
 - (AttachmentPickerController*) imagePicker {
     if (_imagePicker == nil) {
         _imagePicker = [[AttachmentPickerController alloc] initWithViewController: (id)self.delegate delegate: self];
@@ -215,6 +222,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
         self.avatarItem.currentValue = scaledAvatar;
         [self didChangeValueForItem: self.avatarItem];
+        self.avatarModified = YES;
     }
 }
 
@@ -244,9 +252,9 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (void) additionalButtonPressed:(NSUInteger)buttonIndex {
     // delete avatarImage
-    // XXX TODO: does not work properly
     self.avatarItem.currentValue = nil;
     [self didChangeValueForItem: self.avatarItem];
+    self.avatarModified = YES;
 }
 
 @end

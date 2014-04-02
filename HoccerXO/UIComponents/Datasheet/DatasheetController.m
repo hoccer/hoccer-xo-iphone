@@ -269,7 +269,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (void) clearCurrentValues {
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
-        item.currentValue = nil;
+        [item clearCurrentValue];
         return NO;
     } sectionBlock: nil];
 }
@@ -279,12 +279,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         if (item.valuePath) {
             id objectValue = [self.inspectedObject valueForKeyPath: item.valuePath];
             id ourValue = item.currentValue;
-            if (([objectValue respondsToSelector: @selector(isEqualToString:)] && ! [objectValue isEqualToString: ourValue]) ||
-                ! [objectValue isEqual: ourValue])
-            {
-                if ([ourValue isEqual: [NSNull null]]) {
-                    ourValue = nil;
-                }
+            if (item.currentValueIsModified) {
                 [self.inspectedObject setValue: ourValue forKeyPath: item.valuePath];
             }
         }
@@ -482,6 +477,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 @implementation DatasheetItem
 
+@synthesize currentValue = _currentValue;
+
 - (BOOL) isVisible {
     return [self.delegate isItemVisible: self];
 }
@@ -491,10 +488,19 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (id) currentValue {
-    if (_currentValue) {
+    if (_currentValueIsModified) {
         return _currentValue;
     }
     return [self.delegate valueForItem: self];
+}
+
+- (void) setCurrentValue:(id)currentValue {
+    _currentValue = currentValue;
+    _currentValueIsModified = YES;
+}
+
+- (void) clearCurrentValue {
+    _currentValueIsModified = NO;
 }
 
 + (id) datasheetItem {

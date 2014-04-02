@@ -54,7 +54,19 @@
 }
 
 - (void) didUpdateInspectedObject {
+    [super didUpdateInspectedObject];
+
     [self.userProfile saveProfile];
+
+    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+
+    /* TODO
+    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
+        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+        [self dismissViewControllerAnimated: YES completion: nil];
+    }
+     */
 }
 
 - (DatasheetSection*) commonSection {

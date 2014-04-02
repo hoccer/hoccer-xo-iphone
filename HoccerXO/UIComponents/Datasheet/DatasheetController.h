@@ -99,10 +99,13 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic,copy) ChangeValidatorBlock       changeValidator;
 
 @property (nonatomic,strong) id                       currentValue;
+@property (nonatomic,readonly) BOOL                   currentValueIsModified;
 
 @property (nonatomic, weak) id<DatasheetItemDelegate> delegate;
 
 + (id) datasheetItem;
+
+- (void) clearCurrentValue;
 
 @end
 
