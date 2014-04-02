@@ -75,7 +75,7 @@
     if ( ! _fingerprintSection) {
         _fingerprintSection = [DatasheetSection datasheetSectionWithIdentifier: @"fingerprint_section"];
         _fingerprintSection.items = @[self.fingerprintItem, self.keyLengthItem];
-        _fingerprintSection.footerText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"profile_fingerprint_info", nil) attributes: nil];
+        _fingerprintSection.footerText = HXOLocalizedStringWithLinks(@"profile_fingerprint_info", nil);
     }
     return _fingerprintSection;
 }
@@ -179,7 +179,7 @@
     if ( ! _renewKeypairSection) {
         _renewKeypairSection = [DatasheetSection datasheetSectionWithIdentifier: @"renew_keypair_section"];
         _renewKeypairSection.items = @[self.renewKeypairItem];
-        _renewKeypairSection.footerText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"profile_renew_keypair_info", nil) attributes: nil];
+        _renewKeypairSection.footerText = HXOLocalizedStringWithLinks(@"profile_renew_keypair_info", nil);
     }
     return _renewKeypairSection;
 }

@@ -22,6 +22,8 @@ typedef void(^HXOActionSheetCompletionBlock)(NSUInteger buttonIndex, UIActionShe
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger buttonIndex, UIAlertView * alertView);
 typedef void(^HXOStringEntryCompletion)(NSString* entry);
 
+NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment);
+
 @interface HXOUI : NSObject
 
 + (HXOUI*) theme;

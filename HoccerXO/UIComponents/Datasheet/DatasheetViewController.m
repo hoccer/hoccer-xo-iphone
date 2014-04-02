@@ -17,16 +17,19 @@
 #import "HXOUI.h" // needed for header height hack
 #import "DisclosureArrow.h"
 #import "VectorArtView.h"
+#import "WebViewController.h"
 
 @interface DatasheetViewController ()
 
 @property (nonatomic,readonly) UIImageView * backgroundImageView;
+@property (nonatomic,readonly) WebViewController * webViewController;
 
 @end
 
 @implementation DatasheetViewController
 
 @synthesize backgroundImageView = _backgroundImageView;
+@synthesize webViewController = _webViewController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -218,9 +221,31 @@
 - (void) configureFooter: (id) footer forSection: (DatasheetSection*) section {
     if ([footer respondsToSelector: @selector(label)]) {
         [[footer label] setAttributedText:  section.footerText];
+        if ([[footer label] isKindOfClass: [HXOHyperLabel class]]) {
+            [[footer label] setDelegate: self];
+        }
     }
 }
 
+- (void) tableView:(UITableView *)tableView didEndDisplayingFooterView:(id) footer forSection:(NSInteger)section {
+    if ([footer respondsToSelector: @selector(label)]) {
+        if ([[footer label] isKindOfClass: [HXOHyperLabel class]]) {
+            [[footer label] setDelegate: nil];
+        }
+    }
+}
+
+- (void) hyperLabel: (HXOHyperLabel*) label didPressLink: (id) link long: (BOOL) longPress {
+    self.webViewController.homeUrl = link;
+    [self.navigationController pushViewController: self.webViewController animated: YES];
+}
+
+- (WebViewController*) webViewController {
+    if ( ! _webViewController) {
+        _webViewController = [self.storyboard instantiateViewControllerWithIdentifier: @"webViewController"];
+    }
+    return _webViewController;
+}
 
 #pragma mark - Navigation Buttons
 

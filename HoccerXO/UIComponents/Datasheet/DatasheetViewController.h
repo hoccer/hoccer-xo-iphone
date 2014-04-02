@@ -12,8 +12,9 @@
 
 #import "DatasheetController.h"
 #import "DatasheetCell.h"
+#import "HXOHyperLabel.h"
 
-@interface DatasheetViewController : HXOTableViewController <DatasheetControllerDelegate, DatasheetCellDelegate>
+@interface DatasheetViewController : HXOTableViewController <DatasheetControllerDelegate, DatasheetCellDelegate, HXOHyperLabelDelegate>
 
 @property (nonatomic,strong) IBOutlet DatasheetController * dataSheetController;
 @property (nonatomic,strong) id                             inspectedObject;

@@ -166,7 +166,7 @@
 
 "profile_renew_keypair" = "RSA-Schlüssel erneuern";
 
-"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen Händen war kannst Du hier Deine Schlüssel erneuern.";
+"profile_renew_keypair_info" = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
 
 "contact_group_friends" = "Freunde";
 
