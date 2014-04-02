@@ -13,17 +13,23 @@
 #import "DatasheetViewController.h"
 #import "AvatarContact.h"
 #import "GhostBustersSign.h"
-#import "UIImage+ImageEffects.h"
 #import "HXOUI.h"
+#import "ImageViewController.h"
+#import "UIImage+ScaleAndCrop.h"
+#import "UIImage+ImageEffects.h"
 
 static const NSUInteger kHXOMaxNameLength = 25;
 
 @interface ContactSheetBase ()
 
+@property (strong, readonly) AttachmentPickerController* imagePicker;
+
 @end
 
 
 @implementation ContactSheetBase
+
+@synthesize imagePicker = _imagePicker;
 
 @synthesize avatarView = _avatarView;
 @synthesize commonSection = _commonSection;
@@ -45,6 +51,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
     _avatarItem = [self itemWithIdentifier: @"avatar_item" cellIdentifier: nil];
     self.avatarItem.visibilityMask = DatasheetModeNone;
     self.avatarItem.valuePath = @"avatarImage";
+    self.avatarItem.segueIdentifier = @"showAvatar";
 }
 
 - (NSArray*) buildSections {
@@ -128,15 +135,6 @@ static const NSUInteger kHXOMaxNameLength = 25;
     return [super valueForItem: item];
 }
 
-- (ProfileAvatarView*) avatarView {
-    if (! _avatarView) {
-        _avatarView = [[ProfileAvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
-        _avatarView.defaultIcon = [[AvatarContact alloc] init];
-        _avatarView.blockedSign = [[GhostBustersSign alloc] init];
-    }
-    return _avatarView;
-}
-
 - (void) didChangeValueForItem: (DatasheetItem*) item {
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
@@ -150,18 +148,105 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (UIImage*) updateBackgroundImage {
-    UIColor * tintColor = [UIColor colorWithWhite: 1.0 alpha: 0.0];
-    return [self.avatarItem.currentValue applyBlurWithRadius: 20.0 tintColor: tintColor saturationDeltaFactor: 1.5 maskImage: nil];
+    UIColor * tintColor = [UIColor colorWithWhite: 0.0 alpha: self.mode == DatasheetModeEdit ? 0.5 : 0.0];
+    return [self.avatarItem.currentValue applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: tintColor saturationDeltaFactor: 1.8 maskImage: nil];
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     if ([item isEqual: self.keyItem]) {
         DatasheetController * keyViewController = segue.destinationViewController;
         keyViewController.inspectedObject = self.client;
+    } else if ([segue.identifier isEqualToString: @"showAvatar"]) {
+        ImageViewController * imageViewController = segue.destinationViewController;
+        imageViewController.image = self.avatarItem.currentValue;
     } else {
         NSLog(@"Unhandled segue %@", segue.identifier);
     }
 
+}
+
+#pragma mark - Avatar Handling
+
+- (ProfileAvatarView*) avatarView {
+    if (! _avatarView) {
+        _avatarView = [[ProfileAvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+        _avatarView.defaultIcon = [[AvatarContact alloc] init];
+        _avatarView.blockedSign = [[GhostBustersSign alloc] init];
+        [_avatarView addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
+    }
+    return _avatarView;
+}
+
+- (IBAction)avatarPressed:(id)sender {
+    if (self.mode == DatasheetModeEdit) {
+        [self.imagePicker showInView: [(id)self.delegate view]]; // XXX
+    } else {
+        [(id)self.delegate performSegueWithIdentifier: self.avatarItem.segueIdentifier sender: self]; // XXX
+    }
+}
+
+
+#pragma mark - Attachment Picker Controller
+
+- (AttachmentPickerController*) imagePicker {
+    if (_imagePicker == nil) {
+        _imagePicker = [[AttachmentPickerController alloc] initWithViewController: (id)self.delegate delegate: self];
+    }
+    return _imagePicker;
+}
+
+- (BOOL) allowsEditing {
+    return YES;
+}
+
+- (void) didPickAttachment:(id)attachmentInfo {
+    if (attachmentInfo != nil) {
+        UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
+
+        // TODO: proper size handling
+        CGFloat scale;
+        if (image.size.height > image.size.width) {
+            scale = 128.0 / image.size.width;
+        } else {
+            scale = 128.0 / image.size.height;
+        }
+        CGSize size = CGSizeMake(image.size.width * scale, image.size.height * scale);
+        UIImage * scaledAvatar = [image imageScaledToSize: size];
+
+        self.avatarItem.currentValue = scaledAvatar;
+        [self didChangeValueForItem: self.avatarItem];
+    }
+}
+
+- (BOOL) wantsAttachmentsOfType:(AttachmentPickerType)type {
+    switch (type) {
+        case AttachmentPickerTypePhotoFromCamera:
+        case AttachmentPickerTypePhotoFromLibrary:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
+- (BOOL) shouldSaveImagesToAlbum {
+    return YES;
+}
+
+- (NSString*) attachmentPickerActionSheetTitle {
+    return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
+}
+
+- (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
+    if (_avatarItem.currentValue != nil) {
+        actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_delete_avatar_button_title", nil)];
+    }
+}
+
+- (void) additionalButtonPressed:(NSUInteger)buttonIndex {
+    // delete avatarImage
+    // XXX TODO: does not work properly
+    self.avatarItem.currentValue = nil;
+    [self didChangeValueForItem: self.avatarItem];
 }
 
 @end

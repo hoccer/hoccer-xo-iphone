@@ -10,10 +10,11 @@
 
 #import "DatasheetController.h"
 #import "HXOClientProtocol.h"
+#import "AttachmentPickerController.h"
 
 @class ProfileAvatarView;
 
-@interface ContactSheetBase : DatasheetController
+@interface ContactSheetBase : DatasheetController <AttachmentPickerControllerDelegate>
 
 @property (nonatomic,readonly) id<HXOClientProtocol> client;
 

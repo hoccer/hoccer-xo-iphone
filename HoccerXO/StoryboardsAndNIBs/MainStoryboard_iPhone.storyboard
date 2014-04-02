@@ -83,6 +83,7 @@
                     <connections>
                         <outlet property="dataSheetController" destination="sp7-2I-Vr9" id="QLQ-vd-pPy"/>
                         <segue destination="5Ky-Yp-WG8" kind="push" identifier="showKey" id="3XQ-ea-QwO"/>
+                        <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="KXG-tu-Cv6"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdN-gv-zxy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -108,6 +109,7 @@
                         <outlet property="dataSheetController" destination="ct6-Sp-MIE" id="0ej-vS-uwK"/>
                         <segue destination="5Ky-Yp-WG8" kind="push" identifier="showKey" id="rav-wy-jJw"/>
                         <segue destination="21" kind="push" identifier="showChat" id="k8Y-EQ-OHi"/>
+                        <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="sc8-Bm-80f"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E2G-hI-lkN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -622,6 +624,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Xiz-gL-iRR"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="imageView" destination="iD2-h4-j9B" id="9wT-Qd-nD6"/>
@@ -630,7 +633,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3048" y="1349"/>
+            <point key="canvasLocation" x="2638" y="-1305"/>
         </scene>
         <!--Server View Controller - ServerViewController-->
         <scene sceneID="wA0-Za-oFP">
@@ -1159,7 +1162,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="3XQ-ea-QwO"/>
+        <segue reference="rav-wy-jJw"/>
         <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="sc8-Bm-80f"/>
     </inferredMetricsTieBreakers>
 </document>

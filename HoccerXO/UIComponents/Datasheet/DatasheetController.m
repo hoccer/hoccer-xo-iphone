@@ -39,7 +39,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (void) dealloc {
     if (_inspectedObject) {
-        [self removeObjectObservers: _inspectedObject];
+        [self removeObjectObservers];
     }
 }
 
@@ -81,26 +81,26 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (void) setInspectedObject:(id)inspectedObject {
     if (_inspectedObject) {
-        [self removeObjectObservers: _inspectedObject];
+        [self removeObjectObservers];
     }
     _inspectedObject = inspectedObject;
     if (_inspectedObject) {
-        [self addObjectObservers: _inspectedObject];
+        [self addObjectObservers];
     }
     [self inspectedObjectChanged];
 }
 
-- (void) removeObjectObservers: (id) object {
+- (void) removeObjectObservers {
     NSArray * paths = [self collectAllObservedPaths];
     for (NSString * path in paths) {
-        [object removeObserver: self forKeyPath: path];
+        [_inspectedObject removeObserver: self forKeyPath: path];
     }
 }
 
-- (void) addObjectObservers: (id) object {
+- (void) addObjectObservers {
     NSArray * paths = [self collectAllObservedPaths];
     for (NSString * path in paths) {
-        [object addObserver: self forKeyPath: path options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context: NULL];
+        [_inspectedObject addObserver: self forKeyPath: path options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context: NULL];
     }
 }
 
@@ -258,6 +258,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     }
     _mode = _mode == DatasheetModeEdit ? DatasheetModeView : DatasheetModeEdit;
     [self updateCurrentItems];
+    [self backgroundImageChanged];
 }
 
 - (void) cancelEditing:(id)sender {
@@ -281,6 +282,9 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
             if (([objectValue respondsToSelector: @selector(isEqualToString:)] && ! [objectValue isEqualToString: ourValue]) ||
                 ! [objectValue isEqual: ourValue])
             {
+                if ([ourValue isEqual: [NSNull null]]) {
+                    ourValue = nil;
+                }
                 [self.inspectedObject setValue: ourValue forKeyPath: item.valuePath];
             }
         }

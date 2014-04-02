@@ -161,7 +161,7 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
-    if (item.target && [item.target respondsToSelector: item.action]) {
+    if (item.isEnabled && item.target && [item.target respondsToSelector: item.action]) {
         IMP imp = [item.target methodForSelector: item.action];
         void (*func)(id, SEL, id) = (void *)imp;
         func(item.target, item.action, self);

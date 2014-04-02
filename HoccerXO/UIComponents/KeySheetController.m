@@ -102,7 +102,9 @@
 
 - (void) inspectedObjectChanged {
     NSArray * common = @[self.fingerprintItem, self.keyLengthItem];
+    [self removeObjectObservers];
     self.fingerprintSection.items = self.contact ? [common arrayByAddingObject: self.verificationItem] : common;
+    [self addObjectObservers];
     [super inspectedObjectChanged];
 }
 
@@ -152,7 +154,7 @@
 }
 
 - (BOOL) keyIsVerified {
-    return self.contact.verifiedKey && [self.contact.verifiedKey isEqualToData:self.contact.publicKey];
+    return self.contact.verifiedKey && [self.contact.verifiedKey isEqualToData: self.contact.publicKey];
 }
 
 - (NSString*) verificationItemTitle {

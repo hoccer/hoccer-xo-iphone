@@ -53,6 +53,10 @@
     return [self.inspectedObject isKindOfClass: [UserProfile class]] ? self.inspectedObject : nil;
 }
 
+- (void) didUpdateInspectedObject {
+    [self.userProfile saveProfile];
+}
+
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
     section.items = @[self.nicknameItem, self.keyItem];
@@ -160,6 +164,8 @@
                                           destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)];
     [sheet showInView: sender.view];
 }
+
+#pragma mark - Delete Credentials File
 
 - (DatasheetItem*) deleteCredentialsFileItem {
     if ( ! _deleteCredentialsFileItem) {

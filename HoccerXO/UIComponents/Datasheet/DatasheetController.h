@@ -155,4 +155,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) updateItem: (DatasheetItem*) item;
 - (void) updateCurrentItems;
 
+- (void) removeObjectObservers;
+- (void) addObjectObservers;
+
 @end
