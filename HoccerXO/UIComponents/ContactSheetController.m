@@ -13,7 +13,7 @@
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
-#import "ProfileAvatarView.h"
+#import "AvatarView.h"
 #import "HXOUI.h"
 
 static const BOOL RELATIONSHIP_DEBUG = NO;
@@ -37,6 +37,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) commonInit {
     [super commonInit];
+
+    self.title = @"navigation_title_contact";
 
     self.avatarItem.dependencyPaths = @[@"relationshipState"];
 

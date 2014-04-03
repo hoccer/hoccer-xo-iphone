@@ -8,7 +8,7 @@
 
 #import "MessageCell.h"
 #import "HXOUI.h"
-#import "HXOUI.h"
+#import "AvatarView.h"
 
 @implementation MessageCell
 
@@ -55,7 +55,7 @@
     self.messageDirection = HXOMessageDirectionOutgoing;
 
     CGFloat y = self.contentView.frame.size.height - (kHXOChatAvatarSize + 2 * kHXOGridSpacing);
-    _avatar = [[HXOAvatarButton alloc] initWithFrame:CGRectMake(kHXOGridSpacing, y, kHXOChatAvatarSize, kHXOChatAvatarSize)];
+    _avatar = [[AvatarView alloc] initWithFrame:CGRectMake(kHXOGridSpacing, y, kHXOChatAvatarSize, kHXOChatAvatarSize)];
     _avatar.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
     [self.contentView addSubview: _avatar];
     [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];

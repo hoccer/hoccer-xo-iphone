@@ -45,6 +45,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) controller: (DatasheetController*) controller didChangeBackgroundImage: (UIImage*) image;
 
 - (void) controllerDidFinish:(DatasheetController *)controller;
+- (void) controllerDidChangeTitle: (DatasheetController*) controller;
 
 @end
 
@@ -125,6 +126,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic,strong) id inspectedObject;
 
+@property (nonatomic, strong)   NSString    * title;
 @property (nonatomic, strong)   NSArray     * items;
 @property (nonatomic, readonly) NSArray     * currentItems;
 @property (nonatomic, assign)   BOOL          isEditable;

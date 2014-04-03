@@ -13,11 +13,11 @@
 
 @interface ProfileSheetController ()
 
-@property (nonatomic, readonly) UserProfile      * userProfile;
+@property (nonatomic, readonly) UserProfile   * userProfile;
 
-@property (nonatomic, readonly) DatasheetItem    * exportCredentialsItem;
-@property (nonatomic, readonly) DatasheetItem    * importCredentialsItem;
-@property (nonatomic, readonly) DatasheetItem    * deleteCredentialsFileItem;
+@property (nonatomic, readonly) DatasheetItem * exportCredentialsItem;
+@property (nonatomic, readonly) DatasheetItem * importCredentialsItem;
+@property (nonatomic, readonly) DatasheetItem * deleteCredentialsFileItem;
 
 
 @end
@@ -30,6 +30,8 @@
 
 - (void) commonInit {
     [super commonInit];
+
+    self.title = @"navigation_title_profile";
 
     self.nicknameItem.enabledMask = DatasheetModeEdit;
 

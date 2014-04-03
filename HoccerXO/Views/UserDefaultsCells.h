@@ -63,7 +63,7 @@
 
 @end
 
-@class ProfileAvatarView;
+@class AvatarView;
 
 @interface UserDefaultsCell : HXOTableViewCell
 

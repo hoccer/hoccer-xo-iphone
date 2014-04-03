@@ -333,6 +333,10 @@
     [self.navigationController popViewControllerAnimated: YES];
 }
 
+- (void) controllerDidChangeTitle: (DatasheetController*) controller {
+    self.navigationItem.title = NSLocalizedString(controller.title, nil);
+}
+
 #pragma mark - Datasheet Cell Delegate
 
 - (void) datasheetCell:(DatasheetCell *)cell didChangeValueForView:(id)valueView {

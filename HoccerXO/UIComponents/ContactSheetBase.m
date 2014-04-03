@@ -9,7 +9,7 @@
 #import "ContactSheetBase.h"
 
 #import "HXOUserDefaults.h"
-#import "ProfileAvatarView.h"
+#import "AvatarView.h"
 #import "DatasheetViewController.h"
 #import "AvatarContact.h"
 #import "AvatarGroup.h"
@@ -178,11 +178,12 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 #pragma mark - Avatar Handling
 
-- (ProfileAvatarView*) avatarView {
+- (AvatarView*) avatarView {
     if (! _avatarView) {
-        _avatarView = [[ProfileAvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+        _avatarView = [[AvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
         _avatarView.defaultIcon = [[AvatarContact alloc] init];
         _avatarView.blockedSign = [[GhostBustersSign alloc] init];
+        _avatarView.padding = 6 * kHXOGridSpacing;
         [_avatarView addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
     }
     return _avatarView;

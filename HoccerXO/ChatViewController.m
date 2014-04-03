@@ -47,6 +47,8 @@
 #import "PaperDart.h"
 #import "PaperClip.h"
 #import "HXOUI.h"
+#import "AvatarView.h"
+#import "AvatarContact.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -1401,9 +1403,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     cell.colorScheme = [self colorSchemeForMessage: message];
     cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
     id author = [self getAuthor: message];
-    UIImage * avatar = [author avatarImage] != nil ? [author avatarImage] : [UIImage imageNamed: @"avatar_default_contact"];
-    [cell.avatar setImage: avatar forState: UIControlStateNormal];
-    cell.avatar.showLed = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && [[(Contact*)[message.deliveries.anyObject sender] connectionStatus] isEqualToString: @"online"];
+    cell.avatar.image = [author avatarImage];
+    cell.avatar.defaultIcon = [[AvatarContact alloc] init];
+    // XXX TODO cell.avatar.showLed = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && [[(Contact*)[message.deliveries.anyObject sender] connectionStatus] isEqualToString: @"online"];
 
     cell.subtitle.text = [self subtitleForMessage: message];
 

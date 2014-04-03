@@ -84,7 +84,7 @@
                             <outlet property="delegate" destination="Ewa-nI-cAA" id="agg-fF-vg5"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Datasheet" id="jAW-1q-Ob2"/>
+                    <navigationItem key="navigationItem" title="Contact" id="jAW-1q-Ob2"/>
                     <connections>
                         <outlet property="dataSheetController" destination="ct6-Sp-MIE" id="0ej-vS-uwK"/>
                         <segue destination="5Ky-Yp-WG8" kind="push" identifier="showKey" id="rav-wy-jJw"/>
@@ -1176,8 +1176,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="KXG-tu-Cv6"/>
-        <segue reference="3XQ-ea-QwO"/>
-        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="sc8-Bm-80f"/>
+        <segue reference="rav-wy-jJw"/>
+        <segue reference="k8Y-EQ-OHi"/>
     </inferredMetricsTieBreakers>
 </document>

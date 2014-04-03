@@ -20,6 +20,7 @@
 #import "GenericAttachmentSection.h"
 #import "HXOUserDefaults.h"
 #import "HXOUI.h"
+#import "AvatarView.h"
 
 @interface TestingGroundViewController ()
 
@@ -328,7 +329,7 @@
     MessageCell * cell = (MessageCell*)[self.tableView dequeueReusableCellWithIdentifier: [item cellIdentifier] forIndexPath: indexPath];
     cell.colorScheme = item.colorScheme;
     cell.messageDirection = item.pointDirection;
-    [cell.avatar setImage:[UIImage imageNamed: @"cupcakes.jpg"] forState: UIControlStateNormal];
+    cell.avatar.image = [UIImage imageNamed: @"cupcakes.jpg"];
     cell.subtitle.text = @"Someone";
     [self configureCell: cell item: item];
     return cell;

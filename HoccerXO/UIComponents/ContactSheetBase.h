@@ -12,7 +12,7 @@
 #import "HXOClientProtocol.h"
 #import "AttachmentPickerController.h"
 
-@class ProfileAvatarView;
+@class AvatarView;
 
 @interface ContactSheetBase : DatasheetController <AttachmentPickerControllerDelegate>
 
@@ -22,7 +22,7 @@
 @property (nonatomic, readonly) DatasheetItem    * nicknameItem;
 @property (nonatomic, readonly) DatasheetItem    * keyItem;
 
-@property (nonatomic, readonly) ProfileAvatarView * avatarView;
+@property (nonatomic, readonly) AvatarView * avatarView;
 @property (nonatomic, readonly) DatasheetItem *     avatarItem;
 
 

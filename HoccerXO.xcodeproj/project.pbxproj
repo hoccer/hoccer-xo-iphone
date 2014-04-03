@@ -75,7 +75,7 @@
 		634BE1BE185C9B2B00B2DF05 /* HXOUpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* HXOUpDownLoadControl.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		63638F8E18EC8210008DA997 /* AvatarGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 63638F8D18EC8210008DA997 /* AvatarGroup.m */; };
-		636492D71711E97900E35514 /* ProfileAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* ProfileAvatarView.m */; };
+		636492D71711E97900E35514 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* AvatarView.m */; };
 		636492DA1711F4B000E35514 /* UserDefaultsCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D91711F4B000E35514 /* UserDefaultsCells.m */; };
 		6365EB2C18E4D96D00B41054 /* DatasheetFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */; };
 		6365EC8518E7976600B41054 /* AvatarContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EC8418E7976600B41054 /* AvatarContact.m */; };
@@ -503,8 +503,8 @@
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
 		63638F8C18EC8210008DA997 /* AvatarGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarGroup.h; sourceTree = "<group>"; };
 		63638F8D18EC8210008DA997 /* AvatarGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvatarGroup.m; sourceTree = "<group>"; };
-		636492D51711E97900E35514 /* ProfileAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileAvatarView.h; sourceTree = "<group>"; };
-		636492D61711E97900E35514 /* ProfileAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileAvatarView.m; sourceTree = "<group>"; };
+		636492D51711E97900E35514 /* AvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarView.h; sourceTree = "<group>"; };
+		636492D61711E97900E35514 /* AvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvatarView.m; sourceTree = "<group>"; };
 		636492D81711F4B000E35514 /* UserDefaultsCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsCells.h; sourceTree = "<group>"; };
 		636492D91711F4B000E35514 /* UserDefaultsCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsCells.m; sourceTree = "<group>"; };
 		6365EB2A18E4D96D00B41054 /* DatasheetFooterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetFooterTextView.h; sourceTree = "<group>"; };
@@ -1696,8 +1696,8 @@
 				63808A1A1857607F0001AC96 /* MessageCells */,
 				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
 				63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */,
-				636492D51711E97900E35514 /* ProfileAvatarView.h */,
-				636492D61711E97900E35514 /* ProfileAvatarView.m */,
+				636492D51711E97900E35514 /* AvatarView.h */,
+				636492D61711E97900E35514 /* AvatarView.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
 				630CAB8918E22EBC00782507 /* HXOLabel.h */,
@@ -2376,7 +2376,7 @@
 				636D400317106EC000304EDF /* Environment.m in Sources */,
 				E9E92F93187503F7007B8042 /* NSString+HTML.m in Sources */,
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,
-				636492D71711E97900E35514 /* ProfileAvatarView.m in Sources */,
+				636492D71711E97900E35514 /* AvatarView.m in Sources */,
 				636492DA1711F4B000E35514 /* UserDefaultsCells.m in Sources */,
 				63DC01511713976B00609513 /* ImageViewController.m in Sources */,
 				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,

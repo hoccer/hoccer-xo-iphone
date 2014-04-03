@@ -7,7 +7,7 @@
 //
 
 #import "UserDefaultsCells.h"
-#import "ProfileAvatarView.h"
+#import "AvatarView.h"
 
 #import "HXOUI.h"
 

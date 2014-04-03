@@ -26,7 +26,9 @@
 
     //self.contentView.backgroundColor = [UIColor orangeColor];
 
-    self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
+    self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    //self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
+
 
 
     self.label = [[HXOHyperLabel alloc] initWithFrame: self.bounds];

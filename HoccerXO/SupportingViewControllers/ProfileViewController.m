@@ -9,7 +9,7 @@
 #import "ProfileViewController.h"
 #import "HXOUserDefaults.h"
 #import "UserDefaultsCells.h"
-#import "ProfileAvatarView.h"
+#import "AvatarView.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "HXOTableViewController.h"
 #import "NSString+UUID.h"
@@ -65,7 +65,7 @@ typedef enum ActionSheetTags {
 
 @property (readonly, strong, nonatomic) ImageViewController * imageViewController;
 
-@property (nonatomic,strong) ProfileAvatarView * avatarView;
+@property (nonatomic,strong) AvatarView * avatarView;
 @property (nonatomic,strong) UIImageView * avatarBackgroundView;
 
 @end
@@ -89,7 +89,7 @@ typedef enum ActionSheetTags {
 
 - (void) awakeFromNib {
     CGRect frame = CGRectMake(0, 0, self.tableView.frame.size.width, kAvatarSectionHeight);
-    self.avatarView = [[ProfileAvatarView alloc] initWithFrame: frame];
+    self.avatarView = [[AvatarView alloc] initWithFrame: frame];
     [self.avatarView addTarget: self action: @selector(avatarTapped:) forControlEvents: UIControlEventTouchUpInside];
     self.tableView.tableHeaderView = self.avatarView;
     self.avatarBackgroundView = [[UIImageView alloc] initWithFrame: frame];

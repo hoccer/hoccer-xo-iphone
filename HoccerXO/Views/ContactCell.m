@@ -10,6 +10,8 @@
 #import "HXOUI.h"
 #import "HXOLabel.h"
 #import "HXOUI.h"
+#import "AvatarView.h"
+#import "LabelWithLED.h"
 
 @interface ContactCell ()
 
@@ -49,11 +51,10 @@
     //_subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _subtitleLabel];
     
-    _avatar = [[HXOAvatarButton alloc] initWithFrame: CGRectMake(0, 0, 5 * 8, 5 * 8)];
+    _avatar = [[AvatarView alloc] initWithFrame: CGRectMake(0, 0, 5 * 8, 5 * 8)];
     _subtitleLabel.autoresizingMask = UIViewAutoresizingNone;
     _avatar.translatesAutoresizingMaskIntoConstraints = NO;
-    _avatar.backgroundColor = [UIColor lightGrayColor];
-    _avatar.layer.cornerRadius = kHXOListAvatarSize * 0.5;
+    //_avatar.layer.cornerRadius = kHXOListAvatarSize * 0.5;
     [self.contentView addSubview: _avatar];
 
     UIView * title = _nickName;

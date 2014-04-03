@@ -178,7 +178,7 @@
     ConversationCell * cell = (ConversationCell*)aCell;
     Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
 
-    cell.avatar.showLed = NO;
+    // XXX TODO: cell.avatar.showLed = NO;
     
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){
@@ -236,7 +236,7 @@
     cell.unreadMessageCountLabel.frame = frame;
  */
 
-    [cell setNeedsLayout];
+    //[cell setNeedsLayout];
 }
 
 

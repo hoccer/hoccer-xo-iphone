@@ -20,6 +20,11 @@
 #import "Group.h"
 #import "GroupMembership.h"
 #import "HXOUI.h"
+#import "LabelWithLED.h"
+#import "AvatarContact.h"
+#import "AvatarGroup.h"
+#import "AvatarView.h"
+
 
 #define HIDE_SEPARATORS
 
@@ -354,12 +359,17 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     
     UIImage * avatar = contact.avatarImage;
+    /*
     if (avatar == nil) {
         NSString * avatarName = [contact.type isEqualToString: @"Group"] ?  @"avatar_default_group" : @"avatar_default_contact";
         avatar = [UIImage imageNamed: avatarName];
     }
-    [cell.avatar setImage: avatar forState: UIControlStateNormal];
-    
+     */
+    //[cell.avatar setImage: avatar forState: UIControlStateNormal];
+    cell.avatar.image = avatar;
+    cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [[AvatarGroup alloc] init] : [[AvatarContact alloc] init];
+
+
     cell.subtitleLabel.text = [self statusStringForContact: contact];
 }
 

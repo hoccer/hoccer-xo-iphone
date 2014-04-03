@@ -10,11 +10,13 @@
 
 @class VectorArt;
 
-@interface ProfileAvatarView : UIControl
+@interface AvatarView : UIControl
 
 @property (nonatomic,strong) UIImage   * image;
 @property (nonatomic,strong) VectorArt * defaultIcon;
 @property (nonatomic,strong) VectorArt * blockedSign;
 @property (nonatomic,assign) BOOL        isBlocked;
+
+@property (nonatomic,assign) CGFloat     padding;
 
 @end
