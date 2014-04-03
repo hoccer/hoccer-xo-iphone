@@ -19,6 +19,8 @@
 #import "VectorArtView.h"
 #import "WebViewController.h"
 
+static CGFloat kHeaderHeight;
+
 @interface DatasheetViewController ()
 
 @property (nonatomic,readonly) UIImageView * backgroundImageView;
@@ -30,6 +32,10 @@
 
 @synthesize backgroundImageView = _backgroundImageView;
 @synthesize webViewController = _webViewController;
+
++ (void) initialize {
+    kHeaderHeight = 3 * kHXOGridSpacing;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -180,61 +186,82 @@
     [self.dataSheetController prepareForSegue: segue withItem: item sender: sender];
 }
 
-#pragma mark - Section Headers and Footers
+#pragma mark - Table Section Headers and Footers
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)sectionIndex {
-    if (sectionIndex == 0) {
-        return FLT_MIN;
-    }
+    CGFloat height = kHeaderHeight;
     DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
-    if (section.headerViewIdentifier) {
+    if (sectionIndex == 0) {
+        height = FLT_MIN;
+    } else if (section.headerViewIdentifier) {
         id view = self.headerFooterPrototypes[section.headerViewIdentifier];
-        [self configureHeaderFooter: view withText: section.title];
-        CGFloat height = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-        return height;
+        [self configureHeaderFooter: view withText: section.title labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self headerFont] alignment:NSTextAlignmentCenter];
+        height = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
     }
-    return 3 * kHXOGridSpacing;
+    return height;
 }
 
 - (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)sectionIndex {
-    if (sectionIndex == 0 && ! self.tableView.tableHeaderView) {
-        return nil;
-    }
     DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
-    if (section.headerViewIdentifier) {
-        UIView * view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.headerViewIdentifier];
-        [self configureHeaderFooter: view withText: section.title];
-        return view;
+    UIView * view = nil;
+    if (sectionIndex == 0 && ! self.tableView.tableHeaderView) {
+        view = nil;
+    } else if (section.headerViewIdentifier) {
+        view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.headerViewIdentifier];
+        if ([[(id)view label] isKindOfClass: [HXOHyperLabel class]]) {
+            HXOHyperLabel * label = [(id)view label];
+        }
+        [self configureHeaderFooter: view withText: section.title labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self headerFont] alignment:NSTextAlignmentCenter];
     }
-    return nil;
+    return view;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)sectionIndex {
     DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    CGFloat height = 0;
     if (section.footerViewIdentifier) {
         id view = self.headerFooterPrototypes[section.footerViewIdentifier];
-        [self configureHeaderFooter: view withText: section.footerText];
-        CGFloat height = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-        return height;
+        [self configureHeaderFooter: view withText: section.footerText labelPadding: UIEdgeInsetsMake( kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self footerFont] alignment:NSTextAlignmentLeft];
+        height = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
     }
-    return 0;
+    return height;
 }
 
 - (UIView*) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)sectionIndex {
     DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    UIView * view = nil;
     if (section.footerViewIdentifier) {
-        UIView * view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.footerViewIdentifier];
-        [self configureHeaderFooter: view withText: section.footerText];
-        return view;
+        view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.footerViewIdentifier];
+
+        [self configureHeaderFooter: view withText: section.footerText labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self footerFont] alignment:NSTextAlignmentLeft];
     }
-    return nil;
+    return view;
 }
 
-- (void) configureHeaderFooter: (id) view withText: (NSAttributedString*) text {
+- (UIFont*) footerFont {
+    return [HXOUI theme].smallTextFont;
+}
+
+- (UIFont*) headerFont {
+    return [HXOUI theme].smallTextFont;
+}
+
+- (void) configureHeaderFooter: (id) view withText: (NSAttributedString*) text labelPadding: (UIEdgeInsets) padding font: (UIFont*) font alignment: (NSTextAlignment) alignment {
     if ([view respondsToSelector: @selector(label)]) {
+
         [[view label] setAttributedText:  text];
+
+        if ([view respondsToSelector: @selector(setLabelPadding:)]) {
+            [view setLabelPadding: padding];
+        }
+
         if ([[view label] isKindOfClass: [HXOHyperLabel class]]) {
-            [[view label] setDelegate: self];
+            HXOHyperLabel * label = [(id)view label];
+            label.delegate = self;
+            label.textAlignment = alignment;
+            label.font = font;
+            label.textColor = [HXOUI theme].smallBoldTextColor;
+            label.linkColor = [HXOUI theme].footerTextLinkColor;
         }
     }
 }
@@ -248,10 +275,8 @@
 }
 
 - (void) clearHeaderFooterDelegate: (id) view {
-    if ([view respondsToSelector: @selector(label)]) {
-        if ([[view label] isKindOfClass: [HXOHyperLabel class]]) {
-            [[view label] setDelegate: nil];
-        }
+    if ([view respondsToSelector: @selector(label)] && [[view label] isKindOfClass: [HXOHyperLabel class]]) {
+        [[view label] setDelegate: nil];
     }
 }
 
@@ -356,6 +381,9 @@
 
 - (void) controllerDidChangeTitle: (DatasheetController*) controller {
     self.navigationItem.title = NSLocalizedString(controller.title, nil);
+    if (self.dataSheetController.backButtonTitle) {
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: self.dataSheetController.backButtonTitle style: UIBarButtonItemStylePlain target:nil action:nil];
+    }
 }
 
 #pragma mark - Datasheet Cell Delegate

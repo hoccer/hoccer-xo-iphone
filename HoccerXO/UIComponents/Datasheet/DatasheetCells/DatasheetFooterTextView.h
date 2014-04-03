@@ -13,5 +13,6 @@
 @interface DatasheetFooterTextView : UITableViewHeaderFooterView
 
 @property (nonatomic,strong) HXOHyperLabel * label;
+@property (nonatomic,assign) UIEdgeInsets    labelPadding;
 
 @end

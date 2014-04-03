@@ -80,6 +80,8 @@
 - (DatasheetSection*) credentialsSection {
     if ( ! _credentialsSection) {
         _credentialsSection = [DatasheetSection datasheetSectionWithIdentifier: @"credentials_section"];
+        _credentialsSection.title = [[NSAttributedString alloc] initWithString: @"Obst & Gemüse"];
+        _credentialsSection.headerViewIdentifier = @"DatasheetFooterTextView";
         _credentialsSection.items = @[self.exportCredentialsItem,
                                       self.importCredentialsItem,
                                       self.deleteCredentialsFileItem];
