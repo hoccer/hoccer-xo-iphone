@@ -182,17 +182,29 @@
 
 #pragma mark - Section Headers and Footers
 
-- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)sectionIndex {
+    if (sectionIndex == 0) {
         return FLT_MIN;
     }
-    // TODO: ...
+    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    if (section.headerViewIdentifier) {
+        id view = self.headerFooterPrototypes[section.headerViewIdentifier];
+        [self configureHeaderFooter: view withText: section.title];
+        CGFloat height = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        return height;
+    }
     return 3 * kHXOGridSpacing;
 }
 
-- (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == 0 && ! self.tableView.tableHeaderView) {
+- (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)sectionIndex {
+    if (sectionIndex == 0 && ! self.tableView.tableHeaderView) {
         return nil;
+    }
+    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    if (section.headerViewIdentifier) {
+        UIView * view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.headerViewIdentifier];
+        [self configureHeaderFooter: view withText: section.title];
+        return view;
     }
     return nil;
 }
@@ -200,9 +212,9 @@
 - (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)sectionIndex {
     DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
     if (section.footerViewIdentifier) {
-        id footer = self.headerFooterPrototypes[section.footerViewIdentifier];
-        [self configureFooter: footer forSection: section];
-        CGFloat height = [footer systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        id view = self.headerFooterPrototypes[section.footerViewIdentifier];
+        [self configureHeaderFooter: view withText: section.footerText];
+        CGFloat height = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
         return height;
     }
     return 0;
@@ -211,29 +223,38 @@
 - (UIView*) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)sectionIndex {
     DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
     if (section.footerViewIdentifier) {
-        UIView * footerView = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.footerViewIdentifier];
-        [self configureFooter: footerView forSection: section];
-        return footerView;
+        UIView * view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.footerViewIdentifier];
+        [self configureHeaderFooter: view withText: section.footerText];
+        return view;
     }
     return nil;
 }
 
-- (void) configureFooter: (id) footer forSection: (DatasheetSection*) section {
-    if ([footer respondsToSelector: @selector(label)]) {
-        [[footer label] setAttributedText:  section.footerText];
-        if ([[footer label] isKindOfClass: [HXOHyperLabel class]]) {
-            [[footer label] setDelegate: self];
+- (void) configureHeaderFooter: (id) view withText: (NSAttributedString*) text {
+    if ([view respondsToSelector: @selector(label)]) {
+        [[view label] setAttributedText:  text];
+        if ([[view label] isKindOfClass: [HXOHyperLabel class]]) {
+            [[view label] setDelegate: self];
         }
     }
 }
 
+- (void) tableView:(UITableView *)tableView didEndDisplayingHeaderView:(id) header forSection:(NSInteger)section {
+    [self clearHeaderFooterDelegate: header];
+}
+
 - (void) tableView:(UITableView *)tableView didEndDisplayingFooterView:(id) footer forSection:(NSInteger)section {
-    if ([footer respondsToSelector: @selector(label)]) {
-        if ([[footer label] isKindOfClass: [HXOHyperLabel class]]) {
-            [[footer label] setDelegate: nil];
+    [self clearHeaderFooterDelegate: footer];
+}
+
+- (void) clearHeaderFooterDelegate: (id) view {
+    if ([view respondsToSelector: @selector(label)]) {
+        if ([[view label] isKindOfClass: [HXOHyperLabel class]]) {
+            [[view label] setDelegate: nil];
         }
     }
 }
+
 
 - (void) hyperLabel: (HXOHyperLabel*) label didPressLink: (id) link long: (BOOL) longPress {
     self.webViewController.homeUrl = link;

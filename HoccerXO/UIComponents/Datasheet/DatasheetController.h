@@ -114,6 +114,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic, strong) NSString           * identifier;
 @property (nonatomic, strong) NSArray            * items;
+@property (nonatomic, strong) NSAttributedString * title;
 @property (nonatomic, strong) NSAttributedString * footerText;
 @property (nonatomic, strong) NSString           * headerViewIdentifier;
 @property (nonatomic, strong) NSString           * footerViewIdentifier;
