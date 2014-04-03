@@ -71,6 +71,10 @@
     return [self.inspectedObject isKindOfClass: [UserProfile class]];
 }
 
+- (NSString*) title {
+    return NSLocalizedString(self.userProfile ? @"key_view_title_you" : @"key_view_title_other", nil);
+}
+
 - (DatasheetSection*) fingerprintSection {
     if ( ! _fingerprintSection) {
         _fingerprintSection = [DatasheetSection datasheetSectionWithIdentifier: @"fingerprint_section"];

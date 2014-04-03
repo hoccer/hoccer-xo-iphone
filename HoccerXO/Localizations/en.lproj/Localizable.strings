@@ -195,6 +195,9 @@
 "key_length_item" = "Key Length";
 "key_length_unit" = "%@ bit";
 
+"key_view_title_you"   = "Your Key";
+"key_view_title_other" = "Key";
+
 "chat_with_contact" = "Chat";
 
 "delete_credentials_alert_title" = "Hoccer XO was installed before";
