@@ -13,17 +13,18 @@
 
 @interface ProfileSheetController ()
 
-@property (nonatomic, readonly) UserProfile   * userProfile;
+@property (nonatomic, readonly) UserProfile      * userProfile;
 
-@property (nonatomic, readonly) DatasheetItem * exportCredentialsItem;
-@property (nonatomic, readonly) DatasheetItem * importCredentialsItem;
-@property (nonatomic, readonly) DatasheetItem * deleteCredentialsFileItem;
-
+@property (nonatomic, readonly) DatasheetSection * credentialsSection;
+@property (nonatomic, readonly) DatasheetItem    * exportCredentialsItem;
+@property (nonatomic, readonly) DatasheetItem    * importCredentialsItem;
+@property (nonatomic, readonly) DatasheetItem    * deleteCredentialsFileItem;
 
 @end
 
 @implementation ProfileSheetController
 
+@synthesize credentialsSection = _credentialsSection;
 @synthesize exportCredentialsItem = _exportCredentialsItem;
 @synthesize importCredentialsItem = _importCredentialsItem;
 @synthesize deleteCredentialsFileItem = _deleteCredentialsFileItem;
@@ -42,11 +43,6 @@
     self.destructiveButton.visibilityMask = DatasheetModeEdit;
     self.destructiveButton.target = self;
     self.destructiveButton.action = @selector(deleteCredentialsPressed:);
-
-    self.destructiveSection.items = @[self.exportCredentialsItem,
-                                      self.importCredentialsItem,
-                                      self.deleteCredentialsFileItem,
-                                      self.destructiveButton];
 
     self.isEditable = YES;
 }
@@ -79,6 +75,21 @@
     DatasheetSection * section = [super commonSection];
     section.items = @[self.nicknameItem, self.keyItem];
     return section;
+}
+
+- (DatasheetSection*) credentialsSection {
+    if ( ! _credentialsSection) {
+        _credentialsSection = [DatasheetSection datasheetSectionWithIdentifier: @"credentials_section"];
+        _credentialsSection.items = @[self.exportCredentialsItem,
+                                      self.importCredentialsItem,
+                                      self.deleteCredentialsFileItem];
+    }
+    return _credentialsSection;
+}
+
+- (void) addUtilitySections:(NSMutableArray *)sections {
+    [super addUtilitySections: sections];
+    [sections addObject: self.credentialsSection];
 }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
