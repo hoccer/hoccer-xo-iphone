@@ -836,25 +836,6 @@
             </objects>
             <point key="canvasLocation" x="4706" y="1376"/>
         </scene>
-        <!--Profile View Controller-->
-        <scene sceneID="L5y-vL-b7R">
-            <objects>
-                <tableViewController id="7FR-M2-jdW" customClass="ProfileViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="0xJ-wE-W08">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <connections>
-                            <outlet property="dataSource" destination="7FR-M2-jdW" id="LMh-5D-F5Y"/>
-                            <outlet property="delegate" destination="7FR-M2-jdW" id="7Co-Pa-NZ3"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="JPg-6n-ZDb"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gLn-qK-sTg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5547" y="-2335"/>
-        </scene>
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
             <objects>
