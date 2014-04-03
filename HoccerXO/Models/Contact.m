@@ -196,8 +196,8 @@ NSString * const kRelationStateBlocked = @"blocked";
     if ([self.relationshipState isEqualToString: @"kept"]) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
     }
-    if ([self.relationshipState isEqualToString: @"blocked"]) {
-        return [NSString stringWithFormat:@"%@ 🚫", self.nickName];
+    if (self.isBlocked) {
+        return self.nickName;
     }
     if ([self.type isEqualToString:@"Group"] && [self.myGroupMembership.group.groupState isEqualToString: @"kept"]) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
@@ -209,16 +209,19 @@ NSString * const kRelationStateBlocked = @"blocked";
     if ([self.relationshipState isEqualToString: @"groupfriend"]) {
         name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
     }    
-    if (self.connectionStatus == nil) {
-        return name;
-    } else if ([self.connectionStatus isEqualToString:@"online"]) {
-        //return [NSString stringWithFormat:@"%@ ⇄", name];
-        return name;
-    } else if ([self.connectionStatus isEqualToString:@"offline"]) {
+    if ( ! self.connectionStatus || [self.connectionStatus isEqualToString:@"online"] || [self.connectionStatus isEqualToString:@"offline"]) {
         return name;
     } else {
         return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
     }
+}
+
+- (BOOL) isBlocked {
+    return [self.relationshipState isEqualToString: kRelationStateBlocked];
+}
+
+- (BOOL) isFriend {
+    return [self.relationshipState isEqualToString: kRelationStateFriend];
 }
 
 - (NSString*) groupMembershipList {

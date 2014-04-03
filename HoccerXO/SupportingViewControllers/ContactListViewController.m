@@ -359,16 +359,9 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     
     UIImage * avatar = contact.avatarImage;
-    /*
-    if (avatar == nil) {
-        NSString * avatarName = [contact.type isEqualToString: @"Group"] ?  @"avatar_default_group" : @"avatar_default_contact";
-        avatar = [UIImage imageNamed: avatarName];
-    }
-     */
-    //[cell.avatar setImage: avatar forState: UIControlStateNormal];
     cell.avatar.image = avatar;
     cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [[AvatarGroup alloc] init] : [[AvatarContact alloc] init];
-
+    cell.avatar.isBlocked = [contact isBlocked];
 
     cell.subtitleLabel.text = [self statusStringForContact: contact];
 }

@@ -198,9 +198,9 @@ typedef enum ActionSheetTags {
 }
 
 - (NSString*) blockFormatForRelationshipState: (NSString*) state {
-    if ([state isEqualToString: @"friend"]) {
+    if ([state isEqualToString: kRelationStateFriend]) {
         return NSLocalizedString(@"contact_block", nil);
-    } else if ([state isEqualToString: @"blocked"]) {
+    } else if ([state isEqualToString: kRelationStateBlocked]) {
         return NSLocalizedString(@"contact_unblock", nil);
     } else if ([state isEqualToString: @"kept"]) {
     } else if ([state isEqualToString: @"groupfriend"]) {
