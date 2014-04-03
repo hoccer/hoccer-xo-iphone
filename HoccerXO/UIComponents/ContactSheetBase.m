@@ -13,7 +13,6 @@
 #import "DatasheetViewController.h"
 #import "AvatarContact.h"
 #import "AvatarGroup.h"
-#import "GhostBustersSign.h"
 #import "HXOUI.h"
 #import "ImageViewController.h"
 #import "UIImage+ScaleAndCrop.h"
@@ -182,7 +181,6 @@ static const NSUInteger kHXOMaxNameLength = 25;
     if (! _avatarView) {
         _avatarView = [[AvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
         _avatarView.defaultIcon = [[AvatarContact alloc] init];
-        _avatarView.blockedSign = [[GhostBustersSign alloc] init];
         _avatarView.padding = 6 * kHXOGridSpacing;
         [_avatarView addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
     }

@@ -14,7 +14,7 @@
 
 - (void) initPath {
     CGFloat radius = 80;
-    CGFloat lineWidth  = 3 * kHXOGridSpacing;
+    CGFloat lineWidth  = 2.5 * kHXOGridSpacing;
     CGPoint center = CGPointMake(radius, radius);
     UIBezierPath* bezierPath = self.path;
     CGPoint p = CGPointMake(2 * radius, radius);
@@ -40,7 +40,15 @@
 
     bezierPath.usesEvenOddFillRule = YES;
 
+    CGAffineTransform rotation = CGAffineTransformIdentity;
+    rotation = CGAffineTransformTranslate(rotation, radius, radius);
+    rotation = CGAffineTransformRotate(rotation, M_PI / 4);
+    rotation = CGAffineTransformTranslate(rotation, -radius, -radius);
+
+    [bezierPath applyTransform: rotation];
+
     self.fillColor = [HXOUI theme].blockSignColor;
+    self.strokeColor = nil;
 }
 
 @end

@@ -9,12 +9,16 @@
 #import "ContactSheetController.h"
 
 #import "Contact.h"
+#import "Group.h"
 #import "ChatViewController.h"
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "AvatarView.h"
 #import "HXOUI.h"
+#import "AvatarContact.h"
+#import "AvatarGroup.h"
+#import "GroupMembership.h"
 
 static const BOOL RELATIONSHIP_DEBUG = NO;
 
@@ -23,6 +27,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @property (nonatomic,readonly) DatasheetItem * chatItem;
 @property (nonatomic,readonly) DatasheetItem * blockContactItem;
 @property (nonatomic,readonly) Contact       * contact;
+@property (nonatomic,readonly) Group         * group;
 
 @property (nonatomic,readonly) HXOBackend    * chatBackend;
 @property (nonatomic,readonly) AppDelegate   * appDelegate;
@@ -38,8 +43,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) commonInit {
     [super commonInit];
 
-    self.title = @"navigation_title_contact";
-
     self.avatarItem.dependencyPaths = @[@"relationshipState"];
 
     self.nicknameItem.enabledMask = DatasheetModeNone;
@@ -48,7 +51,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     self.keyItem.dependencyPaths = @[@"verifiedKey"];
 
     self.destructiveButton.visibilityMask = DatasheetModeEdit;
-    self.destructiveButton.title = @"delete_contact";
     self.destructiveButton.target = self;
     self.destructiveButton.action = @selector(deleteContactPressed:);
 
@@ -62,6 +64,17 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return self.inspectedObject;
     }
     return nil;
+}
+
+- (Group*) group {
+    if([self.inspectedObject isKindOfClass: [Group class]]) {
+        return self.inspectedObject;
+    }
+    return nil;
+}
+
+- (NSString*) title {
+    return self.group ? @"navigation_title_group" :  @"navigation_title_contact";
 }
 
 - (DatasheetSection*) commonSection {
@@ -101,19 +114,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return [super valueForItem: item];
 }
 
-- (NSString*) titleForItem:(DatasheetItem *)item {
-    if ([item isEqual: self.blockContactItem]) {
-        return [self blockItemTitle];
-    }
-    return nil;
-}
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
         return self.contact.messages.count > 0 && [super isItemVisible: item];
     } else if ([item isEqual: self.blockContactItem]) {
-        NSString * state = self.contact.relationshipState;
-        return ([state isEqualToString: @"blocked"] || [state isEqualToString: @"friend"]) && [super isItemVisible:item];
+        return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
+    } else if ([item isEqual: self.keyItem]) {
+        return ! self.group && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
@@ -128,10 +136,18 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) didChangeValueForItem: (DatasheetItem*) item {
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
-        self.avatarView.isBlocked = [self.contact.relationshipState isEqualToString: @"blocked"];
+        self.avatarView.isBlocked = self.contact.isBlocked;
     }
 }
 
+- (NSString*) titleForItem:(DatasheetItem *)item {
+    if ([item isEqual: self.blockContactItem]) {
+        return [self blockItemTitle];
+    } else if ([item isEqual: self.destructiveButton]) {
+        return [self destructiveButtonTitle];
+    }
+    return nil;
+}
 
 - (NSString*) keyItemTitle {
     NSString * titleKey;
@@ -143,6 +159,30 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         titleKey = @"untrusted_key_title";
     }
     return NSLocalizedString(titleKey, nil);
+}
+
+- (NSString*) destructiveButtonTitle {
+    if (self.group) {
+        if ([self.group.groupState isEqualToString:@"kept"]) {
+            return NSLocalizedString(@"group_delete_data", nil);
+        }
+        if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
+            return NSLocalizedString(@"group_decline_invitation", nil);
+        } else {
+            if (self.group.iAmAdmin) {
+                return NSLocalizedString(@"group_close", nil);
+            } else {
+                return NSLocalizedString(@"group_leave", nil);
+            }
+        }
+    } else {
+        return @"delete_contact";
+    }
+}
+
+- (void) inspectedObjectChanged {
+    [super inspectedObjectChanged];
+    self.avatarView.defaultIcon = self.group ? [[AvatarGroup alloc] init] : [[AvatarContact alloc] init];
 }
 
 
@@ -162,23 +202,22 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 
 - (NSString*) blockItemTitle {
-    NSString * state = self.contact.relationshipState;
     NSString * formatKey = nil;
-    if ([state isEqualToString: @"friend"]) {
+    if (self.contact.isFriend) {
         formatKey = @"contact_block";
-    } else if ([state isEqualToString: @"blocked"]) {
+    } else if (self.contact.isBlocked) {
         formatKey = @"contact_unblock";
     }
     return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
 }
 
 - (void) blockToggled: (id) sender {
-    if ([self.contact.relationshipState isEqualToString: @"friend"]) {
+    if (self.contact.isFriend) {
         // NSLog(@"friend -> blocked");
         [self.chatBackend blockClient: self.contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"blockClient: %@", success ? @"success" : @"failed");
         }];
-    } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
+    } else if (self.contact.isBlocked) {
         // NSLog(@"blocked -> friend");
         [self.chatBackend unblockClient: self.contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"unblockClient: %@", success ? @"success" : @"failed");

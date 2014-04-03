@@ -11,7 +11,12 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "VectorArt.h"
+#import "GhostBustersSign.h"
 #import "HXOUI.h"
+
+static const CGFloat kBlockedSignPaddingOffset = 7.0 / 19;
+static const CGFloat kBlockedSignPaddingFactor = 1.0 / 67;
+
 
 @interface AvatarView ()
 
@@ -43,10 +48,12 @@
         [self.layer addSublayer: self.defaultAvatarLayer];
 
         self.blockedSignLayer = [CAShapeLayer layer];
-        CGFloat blockSignSize = size - 4 * kHXOGridSpacing;
+        CGFloat blockSignSize = size - [self blockedSignPadding];
         self.blockedSignLayer.bounds = CGRectMake(0, 0, blockSignSize, blockSignSize);
         [self.layer addSublayer: self.blockedSignLayer];
         self.blockedSignLayer.opacity = 0;
+
+        self.blockedSign = [[GhostBustersSign alloc] init];
 
         [self setNeedsLayout];
     }
@@ -79,13 +86,17 @@
     self.defaultAvatarLayer.mask = [self maskLayer];
     self.defaultAvatarLayer.position = center;
 
-    size = size - 4 * kHXOGridSpacing; // XXX
+    size = size - [self blockedSignPadding];
     self.blockedSignLayer.bounds = CGRectMake(0, 0, size, size);
     self.blockedSignLayer.position = center;
 
     // XXX there has to be a better way to do this ...
     self.defaultAvatarLayer.path = [self.defaultIcon pathScaledToSize: self.defaultAvatarLayer.bounds.size].CGPath;
     self.blockedSignLayer.path = [self.blockedSign pathScaledToSize: self.blockedSignLayer.bounds.size].CGPath;
+}
+
+- (CGFloat) blockedSignPadding {
+    return ceilf(kHXOGridSpacing * (kBlockedSignPaddingFactor * self.avatarLayer.bounds.size.width + kBlockedSignPaddingOffset));
 }
 
 - (void) setPadding:(CGFloat)padding {
@@ -102,8 +113,8 @@
 
 - (void) setBlockedSign:(VectorArt *)blockedSign {
     _blockedSign = blockedSign;
-    _blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
-    _blockedSignLayer.strokeColor = blockedSign.strokeColor.CGColor;
+    self.blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
+    self.blockedSignLayer.strokeColor = blockedSign.strokeColor.CGColor;
 }
 
 - (void) setIsBlocked:(BOOL)isBlocked {
