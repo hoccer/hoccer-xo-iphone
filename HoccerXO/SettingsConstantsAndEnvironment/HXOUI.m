@@ -180,6 +180,9 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString:@"#9FA3AC"];
 }
 
+- (UIColor*) footerTextLinkColor {
+    return [self.smallBoldTextColor darken];
+}
 - (UIColor*) destructiveTextColor {
     return [UIColor colorWithHexString: @"#f00"];
 }

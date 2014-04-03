@@ -36,6 +36,7 @@
     self.label.autoresizingMask = UIViewAutoresizingNone;
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
     self.label.textColor = [HXOUI theme].smallBoldTextColor;
+    self.label.linkColor = [HXOUI theme].footerTextLinkColor;
     //self.label.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.label];
 
