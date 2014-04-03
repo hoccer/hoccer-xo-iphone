@@ -183,6 +183,7 @@
 "navigation_title_profile" = "Profil";
 
 "navigation_title_contact" = "Kontakt";
+"navigation_title_contacts" = "Kontakte";
 
 "profile_fingerprint_label" = "Schlüssel";
 "profile_fingerprint_info" = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
@@ -486,8 +487,6 @@
 "location_default_title" = "Ort";
 
 "chat_view_message_placeholder" = "Nachricht";
-
-"back_button_title" = "Zurück";
 
 "microphone_access_denied_title"="Mikrofonzugriff ist abgeschaltet";
 "microphone_access_denied_message"="Erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff um Sprache aufzunehmen.";

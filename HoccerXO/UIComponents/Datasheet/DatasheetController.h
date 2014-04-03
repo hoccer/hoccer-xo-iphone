@@ -128,6 +128,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic,strong) id inspectedObject;
 
 @property (nonatomic, strong)   NSString    * title;
+@property (nonatomic, strong)   NSString    * backButtonTitle;
 @property (nonatomic, strong)   NSArray     * items;
 @property (nonatomic, readonly) NSArray     * currentItems;
 @property (nonatomic, assign)   BOOL          isEditable;
@@ -163,5 +164,6 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 - (void) removeObjectObservers;
 - (void) addObjectObservers;
+- (void) titleChanged;
 
 @end

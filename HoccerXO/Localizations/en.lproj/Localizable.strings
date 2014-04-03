@@ -173,7 +173,8 @@
 
 "navigation_title_profile" = "Profile";
 
-"navigation_title_contact" = "Contact";
+"navigation_title_contact"  = "Contact";
+"navigation_title_contacts" = "Contacts";
 
 "profile_fingerprint_label" = "Key";
 "profile_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
@@ -481,8 +482,6 @@
 "location_default_title" = "Location";
 
 "chat_view_message_placeholder" = "Message";
-
-"back_button_title" = "Back";
 
 "microphone_access_denied_title"="Microphone Access Denied";
 "microphone_access_denied_message"="Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";

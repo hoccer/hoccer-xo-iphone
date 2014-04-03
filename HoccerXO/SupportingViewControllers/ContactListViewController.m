@@ -32,15 +32,15 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()
 
-@property (nonatomic,strong) UISegmentedControl *                    groupContactsToggle;
+@property (nonatomic,strong)    UISegmentedControl          * groupContactsToggle;
 
-@property (nonatomic, strong) NSFetchedResultsController *           searchFetchedResultsController;
-@property (strong, nonatomic, readonly) NSFetchedResultsController * fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *               managedObjectContext;
+@property (nonatomic, strong)   NSFetchedResultsController  * searchFetchedResultsController;
+@property (nonatomic, readonly) NSFetchedResultsController  * fetchedResultsController;
+@property (nonatomic, strong)   NSManagedObjectContext      * managedObjectContext;
 
-@property (nonatomic, readonly) ContactCell *                        contactCellPrototype;
-@property id keyboardHidingObserver;
-@property (strong, nonatomic) id connectionInfoObserver;
+@property (nonatomic, readonly) ContactCell                 * contactCellPrototype;
+@property                       id                            keyboardHidingObserver;
+@property (strong, nonatomic)   id                            connectionInfoObserver;
 
 @end
 
@@ -57,8 +57,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
         UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd target: self action: @selector(addButtonPressed:)];
         self.navigationItem.rightBarButtonItem = addButton;
     }
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = backButton;
 
     [self setupTitle];
 
@@ -93,6 +91,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
         self.navigationItem.titleView = self.groupContactsToggle;
     }
+    self.navigationItem.title = NSLocalizedString(@"navigation_title_contacts", nil);
 }
 
 - (CGFloat) calculateRowHeight {

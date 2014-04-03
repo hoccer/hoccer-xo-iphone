@@ -154,7 +154,7 @@
             </objects>
             <point key="canvasLocation" x="5081" y="-2350"/>
         </scene>
-        <!--Contact List View Controller-->
+        <!--Contact List View Controller - Contacts-->
         <scene sceneID="y7h-Kn-V4S">
             <objects>
                 <tableViewController storyboardIdentifier="contactsViewController" id="Aez-fu-qAl" customClass="ContactListViewController" sceneMemberID="viewController">
@@ -167,7 +167,7 @@
                             <outlet property="delegate" destination="Aez-fu-qAl" id="pOc-oD-Lqi"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Gmw-2Z-d1Y"/>
+                    <navigationItem key="navigationItem" title="Contacts" id="Gmw-2Z-d1Y"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="hasAddButton" value="YES"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="hasGroupContactToggle" value="YES"/>

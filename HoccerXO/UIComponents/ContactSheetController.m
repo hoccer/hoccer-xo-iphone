@@ -183,6 +183,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) inspectedObjectChanged {
     [super inspectedObjectChanged];
     self.avatarView.defaultIcon = self.group ? [[AvatarGroup alloc] init] : [[AvatarContact alloc] init];
+    self.backButtonTitle = self.contact.nickName;
 }
 
 

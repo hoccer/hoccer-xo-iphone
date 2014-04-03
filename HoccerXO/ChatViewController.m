@@ -125,9 +125,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
 
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"back_button_title", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.backBarButtonItem = backButton;
-
     [self configureView];
 }
 
@@ -1405,7 +1402,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     id author = [self getAuthor: message];
     cell.avatar.image = [author avatarImage];
     cell.avatar.defaultIcon = [[AvatarContact alloc] init];
-    cell.avatar.isBlocked = [author isBlocked];
+    cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
     // XXX TODO cell.avatar.showLed = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && [[(Contact*)[message.deliveries.anyObject sender] connectionStatus] isEqualToString: @"online"];
 
     cell.subtitle.text = [self subtitleForMessage: message];
