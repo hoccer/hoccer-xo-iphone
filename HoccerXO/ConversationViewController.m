@@ -21,6 +21,7 @@
 #import "Attachment.h"
 #import "Environment.h"
 #import "HXOUI.h"
+#import "AvatarView.h"
 
 //#define HIDE_SEPARATORS
 
@@ -116,7 +117,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ContactCell * cell = (ContactCell*)[self dequeueReusableCellOfClass: [ConversationCell class] forIndexPath: indexPath];
-    [self fetchedResultsController: self.currentFetchedResultsController configureCell: cell atIndexPath:indexPath];
+    [self configureCell: cell atIndexPath:indexPath];
     return cell;
 }
 
@@ -164,15 +165,11 @@
     [predicates addObject: [NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
 }
 
-- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
-                   configureCell:(ContactCell *)aCell
-                     atIndexPath:(NSIndexPath *)indexPath
-{
-    [super fetchedResultsController: fetchedResultsController configureCell: aCell atIndexPath: indexPath];
+- (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    [super configureCell: cell atIndexPath: indexPath];
+    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
 
-    //NSLog(@"Conv configureCell atIndexPath=%@",indexPath);
-    ConversationCell * cell = (ConversationCell*)aCell;
-    Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
+    cell.avatar.badgeText = [self messageCountBadgeText: contact.unreadMessages.count];
 
     // XXX TODO: cell.avatar.showLed = NO;
     
@@ -217,23 +214,12 @@
         cell.dateLabel.text = @"";
     }
 
-    NSUInteger unreadCount = contact.unreadMessages.count;
-    // NSLog(@"Conv unreadCount=%d",unreadCount);
-    cell.hasNewMessages = unreadCount > 0;
-/*
-    cell.unreadMessageCountLabel.hidden = unreadCount == 0;
-    cell.unreadMessageCountLabel.text = unreadCount > 99 ? @">99" : [@(unreadCount) stringValue];
-    CGRect frame = cell.unreadMessageCountLabel.bounds;
-    CGFloat oldWidth = frame.size.width;
-    [cell.unreadMessageCountLabel sizeToFit];
-    CGFloat dx = oldWidth - cell.unreadMessageCountLabel.frame.size.width;
-    frame = cell.unreadMessageCountLabel.frame;
-    frame.origin.x += dx;
-    cell.unreadMessageCountLabel.frame = frame;
- */
 
     //[cell setNeedsLayout];
 }
 
+- (NSString*) messageCountBadgeText: (NSUInteger) count {
+    return count == 0 ? nil : count > 99 ? @">99" : @(count).stringValue;
+}
 
 @end

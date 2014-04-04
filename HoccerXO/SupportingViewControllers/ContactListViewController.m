@@ -171,8 +171,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
 
     // TODO: do this right ...
-    [self fetchedResultsController: self.currentFetchedResultsController
-                     configureCell: cell atIndexPath: indexPath];
+    [self configureCell: cell atIndexPath: indexPath];
     return cell;
 }
 
@@ -332,7 +331,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
              * and
              * http://developer.apple.com/library/ios/#releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/
              */
-            [self fetchedResultsController: controller configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath]
+            [self configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath]
                                atIndexPath: newIndexPath ? newIndexPath : indexPath];
             break;
 
@@ -348,11 +347,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 
-- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
-                   configureCell:(ContactCell *)cell
-                     atIndexPath:(NSIndexPath *)indexPath
-{
-    Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
+- (void)configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickNameWithStatus;
     cell.nickName.ledOn = [contact.connectionStatus isEqualToString: @"online"];
 

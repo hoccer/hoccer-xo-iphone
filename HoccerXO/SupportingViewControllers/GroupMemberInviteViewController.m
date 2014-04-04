@@ -44,12 +44,11 @@
     [self clearFetchedResultsControllers];
 }
 
-- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
-                   configureCell:(ContactCell *)cell
+- (void)configureCell:(ContactCell *)cell
                      atIndexPath:(NSIndexPath *)indexPath
 {
-    [super fetchedResultsController: fetchedResultsController configureCell:cell atIndexPath: indexPath];
-    Contact * contact = (Contact*)[fetchedResultsController objectAtIndexPath:indexPath];
+    [super configureCell:cell atIndexPath: indexPath];
+    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
     if ([self isContactMemberOfGroup: contact]) {
         cell.accessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed: @"group_member_remove"]];
     } else {

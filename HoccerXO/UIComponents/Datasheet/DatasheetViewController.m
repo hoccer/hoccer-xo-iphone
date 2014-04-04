@@ -208,9 +208,6 @@ static CGFloat kHeaderHeight;
         view = nil;
     } else if (section.headerViewIdentifier) {
         view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.headerViewIdentifier];
-        if ([[(id)view label] isKindOfClass: [HXOHyperLabel class]]) {
-            HXOHyperLabel * label = [(id)view label];
-        }
         [self configureHeaderFooter: view withText: section.title labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self headerFont] alignment:NSTextAlignmentCenter];
     }
     return view;

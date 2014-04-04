@@ -182,6 +182,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
         _avatarView = [[AvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
         _avatarView.defaultIcon = [[AvatarContact alloc] init];
         _avatarView.padding = 6 * kHXOGridSpacing;
+        _avatarView.badgeText = @"3";
         [_avatarView addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
     }
     return _avatarView;

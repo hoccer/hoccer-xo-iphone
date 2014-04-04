@@ -14,6 +14,4 @@
 
 @property (nonatomic,readonly) UILabel * dateLabel;
 
-@property (nonatomic,assign) BOOL hasNewMessages;
-
 @end

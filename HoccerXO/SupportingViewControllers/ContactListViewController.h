@@ -13,15 +13,13 @@
 
 @interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
-@property (nonatomic, strong) IBOutlet UISearchBar *                searchBar;
+@property (nonatomic, strong) IBOutlet UISearchBar         * searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
 @property (nonatomic, assign)   BOOL                         hasAddButton;
 @property (nonatomic, assign)   BOOL                         hasGroupContactToggle;
 
 - (void) clearFetchedResultsControllers;
-- (void)fetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
-                   configureCell:(ContactCell *)cell
-                     atIndexPath:(NSIndexPath *)indexPath;
+- (void) configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 - (id) entityName;
 - (NSArray*) sortDescriptors;
