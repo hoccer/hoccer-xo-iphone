@@ -209,7 +209,7 @@ NSString * const kRelationStateBlocked = @"blocked";
     if ([self.relationshipState isEqualToString: @"groupfriend"]) {
         name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
     }    
-    if ( ! self.connectionStatus || [self.connectionStatus isEqualToString:@"online"] || [self.connectionStatus isEqualToString:@"offline"]) {
+    if ( ! self.connectionStatus || self.isOnline || [self.connectionStatus isEqualToString:@"offline"]) {
         return name;
     } else {
         return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
@@ -222,6 +222,10 @@ NSString * const kRelationStateBlocked = @"blocked";
 
 - (BOOL) isFriend {
     return [self.relationshipState isEqualToString: kRelationStateFriend];
+}
+
+- (BOOL) isOnline {
+    return [self.connectionStatus isEqualToString: @"online"];
 }
 
 - (NSString*) groupMembershipList {

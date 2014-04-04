@@ -17,6 +17,7 @@ FOUNDATION_EXPORT const CGFloat kHXOCellPadding;
 FOUNDATION_EXPORT const CGFloat kHXOListAvatarSize;
 FOUNDATION_EXPORT const CGFloat kHXOChatAvatarSize;
 FOUNDATION_EXPORT const CGFloat kHXOProfileAvatarSize;
+FOUNDATION_EXPORT const CGFloat kHXOProfileAvatarPadding;
 
 typedef void(^HXOActionSheetCompletionBlock)(NSUInteger buttonIndex, UIActionSheet * actionSheet);
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger buttonIndex, UIAlertView * alertView);
@@ -39,6 +40,9 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 @property (nonatomic, readonly) UIColor * defaultAvatarColor;
 @property (nonatomic, readonly) UIColor * defaultAvatarBackgroundColor;
 @property (nonatomic, readonly) UIColor * blockSignColor;
+@property (nonatomic, readonly) UIColor * avatarBadgeColor;
+@property (nonatomic, readonly) UIColor * avatarBadgeBorderColor;
+@property (nonatomic, readonly) UIColor * avatarOnlineLedColor;
 
 
 @property (nonatomic, readonly) UIFont  * messageFont;

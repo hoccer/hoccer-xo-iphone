@@ -284,7 +284,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) configureTitle {
     self.titleLabel.text = self.partner.nickNameWithStatus;
-    self.titleLabel.ledOn = [self.partner.connectionStatus isEqualToString: @"online"];
+    self.titleLabel.ledOn = self.partner.isOnline;
     [self.titleLabel sizeToFit];
 }
 
@@ -1403,7 +1403,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     cell.avatar.image = [author avatarImage];
     cell.avatar.defaultIcon = [[AvatarContact alloc] init];
     cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
-    // XXX TODO cell.avatar.showLed = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && [[(Contact*)[message.deliveries.anyObject sender] connectionStatus] isEqualToString: @"online"];
+    cell.avatar.isOnline = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isOnline;
 
     cell.subtitle.text = [self subtitleForMessage: message];
 

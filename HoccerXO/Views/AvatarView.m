@@ -15,14 +15,20 @@
 #import "GhostBustersSign.h"
 #import "HXOUI.h"
 
-static const CGFloat kBlockedSignPaddingOffset = 7.0 / 19;
-static const CGFloat kBlockedSignPaddingFactor = 1.0 / 67;
+static const CGFloat kBlockedSignPaddingOffset = -0.541667;
+static const CGFloat kBlockedSignPaddingFactor = 0.0260417;
 
-static const CGFloat kBadgeFontSizeOffset = 84.0 / 19;
-static const CGFloat kBadgeFontSizeFactor = 3.0 / 19;
+static const CGFloat kBadgeFontSizeOffset = 49.0 / 6.0;
+static const CGFloat kBadgeFontSizeFactor = 7.0 / 48;
 
 static const CGFloat kBadgePaddingOffset = 15.0 / 19;
 static const CGFloat kBadgePaddingFactor =  7.0 / 152;
+
+static const CGFloat kBadgeXAnchorOffset = 0.475;
+static const CGFloat kBadgeXAnchorFactor = 0.003125;
+
+static const CGFloat kLedSizeOffset = 7.0 / 12;
+static const CGFloat kLedSizeFactor = 1.0 / 96;
 
 @interface AvatarView ()
 
@@ -30,6 +36,16 @@ static const CGFloat kBadgePaddingFactor =  7.0 / 152;
 @property (nonatomic, strong) CAShapeLayer * defaultAvatarLayer;
 @property (nonatomic, strong) CAShapeLayer * blockedSignLayer;
 @property (nonatomic, strong) CATextLayer  * badgeLayer;
+@property (nonatomic, strong) CALayer      * ledLayer;
+@property (nonatomic, strong) CAShapeLayer * circleMask;
+
+@end
+
+
+@interface AvatarMaskLayerDelegate : NSObject
+
+@property (nonatomic, strong) CALayer * avatarLayer;
+@property (nonatomic, strong) CALayer * badgeLayer;
 
 @end
 
@@ -38,48 +54,145 @@ static const CGFloat kBadgePaddingFactor =  7.0 / 152;
 - (id) initWithFrame:(CGRect)frame {
     self = [super initWithFrame: frame];
     if (self != nil) {
-        self.opaque = NO;
-
-        CGFloat size = MIN(frame.size.width, frame.size.height);
-
-        self.avatarLayer = [CALayer layer];
-        self.avatarLayer.backgroundColor = [HXOUI theme].defaultAvatarBackgroundColor.CGColor;
-        self.avatarLayer.position = self.center;
-        self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
-        self.avatarLayer.mask = [self maskLayer];
-        [self.layer addSublayer: self.avatarLayer];
-
-        self.defaultAvatarLayer = [CAShapeLayer layer];
-        self.defaultAvatarLayer.bounds = self.avatarLayer.bounds;
-        self.defaultAvatarLayer.mask = [self maskLayer];
-        [self.layer addSublayer: self.defaultAvatarLayer];
-
-        self.blockedSignLayer = [CAShapeLayer layer];
-        CGFloat blockSignSize = size - [self blockedSignPadding];
-        self.blockedSignLayer.bounds = CGRectMake(0, 0, blockSignSize, blockSignSize);
-        [self.layer addSublayer: self.blockedSignLayer];
-        self.blockedSignLayer.opacity = 0;
-
-        self.blockedSign = [[GhostBustersSign alloc] init];
-
-        self.badgeLayer = [CATextLayer layer];
-        self.badgeLayer.bounds = CGRectMake(0,0,20,20);
-        self.badgeLayer.backgroundColor = [UIColor redColor].CGColor;
-        self.badgeLayer.contentsScale = [UIScreen mainScreen].scale;
-        self.badgeLayer.alignmentMode = kCAAlignmentCenter;
-        self.badgeLayer.anchorPoint = CGPointMake(1,0);
-        self.badgeLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.bounds), self.padding);
-        [self.layer addSublayer: self.badgeLayer];
-        //[self setNeedsLayout];
+        [self commonInit];
     }
     return self;
+}
+
+- (void) commonInit {
+    //self.layer.backgroundColor = [UIColor lightGrayColor].CGColor;
+
+    CGFloat size = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    self.layer.contentsGravity = kCAGravityResizeAspect;
+
+    self.avatarLayer = [CALayer layer];
+    self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
+    self.avatarLayer.position = self.center;
+    self.avatarLayer.contentsGravity = kCAGravityResizeAspectFill;
+    self.avatarLayer.backgroundColor = [HXOUI theme].defaultAvatarBackgroundColor.CGColor;
+    [self.layer addSublayer: self.avatarLayer];
+
+    CGPoint avatarCenter = CGPointMake(self.avatarLayer.bounds.size.width / 2, self.avatarLayer.bounds.size.height / 2);
+    self.defaultAvatarLayer = [CAShapeLayer layer];
+    self.defaultAvatarLayer.bounds = self.avatarLayer.bounds;
+    self.defaultAvatarLayer.position = avatarCenter;
+    self.defaultAvatarLayer.contentsGravity = kCAGravityResizeAspect;
+    [self.avatarLayer addSublayer: self.defaultAvatarLayer];
+
+    self.blockedSignLayer = [CAShapeLayer layer];
+    CGFloat blockSignSize = size - [self blockedSignPadding];
+    self.blockedSignLayer.bounds = CGRectMake(0, 0, blockSignSize, blockSignSize);
+    self.blockedSignLayer.position = avatarCenter;
+    self.blockedSignLayer.contentsGravity = kCAGravityResizeAspect;
+    self.blockedSignLayer.opacity = 1;
+    VectorArt * blockedSign = [[GhostBustersSign alloc] init];
+    self.blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
+    self.blockedSignLayer.strokeColor = blockedSign.strokeColor.CGColor;
+    _blockedSignLayer.path = [blockedSign pathScaledToSize: self.blockedSignLayer.bounds.size].CGPath;
+    [self.avatarLayer addSublayer: self.blockedSignLayer];
+    //self.blockedSignLayer.backgroundColor = [UIColor orangeColor].CGColor;
+
+    self.badgeLayer = [CATextLayer layer];
+    self.badgeLayer.bounds = CGRectMake(0,0,20,20);
+    self.badgeLayer.contentsScale = [UIScreen mainScreen].scale;
+    self.badgeLayer.alignmentMode = kCAAlignmentCenter;
+    self.badgeLayer.anchorPoint = CGPointMake([self badgeXAnchor], 0);
+    self.badgeLayer.backgroundColor = [HXOUI theme].avatarBadgeColor.CGColor;
+    self.badgeLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.bounds), 0);
+    self.badgeLayer.opacity = 0;
+    [self.layer addSublayer: self.badgeLayer];
+
+    CGFloat t = 0.5 * self.avatarLayer.frame.size.height;
+    CGFloat ledX = t - (t / sqrt(2));
+    self.ledLayer = [CALayer layer];
+    self.ledLayer.bounds = CGRectMake(0, 0, [self ledSize], [self ledSize]);
+    self.ledLayer.backgroundColor = [HXOUI theme].avatarOnlineLedColor.CGColor;
+    self.ledLayer.cornerRadius = self.ledLayer.bounds.size.height / 2;
+    self.ledLayer.position = CGPointMake(ledX, self.avatarLayer.frame.size.height - ledX);
+    [self.layer addSublayer: self.ledLayer];
+
+
+    self.circleMask = [CAShapeLayer layer];
+    self.circleMask.bounds = self.avatarLayer.bounds;
+    self.circleMask.position = avatarCenter;
+    self.circleMask.path = [UIBezierPath bezierPathWithOvalInRect: self.circleMask.bounds].CGPath;
+
+    self.avatarLayer.mask = self.circleMask;
+
+    self.badgeText = nil;
+
+    [self setNeedsLayout];
+}
+
+- (void) layoutSublayersOfLayer:(CALayer *)layer {
+    [super layoutSublayersOfLayer: layer];
+    if ([layer isEqual: self.layer]) {
+
+        self.avatarLayer.position = CGPointMake(0.5 * layer.bounds.size.width, 0.5 * layer.bounds.size.height);
+        CGFloat size = MIN(layer.bounds.size.width, layer.bounds.size.height);
+        CGFloat scale = size / self.avatarLayer.frame.size.width;
+        self.avatarLayer.transform = CATransform3DScale(self.avatarLayer.transform, scale, scale, scale);
+
+        self.badgeLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.frame), CGRectGetMinY(self.avatarLayer.frame));
+
+
+        CGFloat t = 0.5 * self.avatarLayer.frame.size.height;
+        CGFloat ledX = t - (t / sqrt(2));
+        self.ledLayer.position = CGPointMake(ledX, self.avatarLayer.frame.size.height - ledX);
+    }
+}
+
+- (void) setImage:(UIImage *)image {
+    _image = image;
+    self.avatarLayer.contents = (id)image.CGImage;
+    self.defaultAvatarLayer.opacity = image ? 0 : 1;
+}
+
+
+- (void) setDefaultIcon:(VectorArt *)defaultIcon {
+    _defaultIcon = defaultIcon;
+    _defaultAvatarLayer.fillColor = defaultIcon.fillColor.CGColor;
+    _defaultAvatarLayer.strokeColor = defaultIcon.strokeColor.CGColor;
+    _defaultAvatarLayer.path = [defaultIcon pathScaledToSize: _defaultAvatarLayer.bounds.size].CGPath;
 }
 
 - (void) setBadgeText:(NSString *)badgeText {
     _badgeText = badgeText;
     [self updateBadge: badgeText];
     self.badgeLayer.string = badgeText;
+    [self setNeedsLayout];
 }
+
+- (void) setIsBlocked:(BOOL)isBlocked {
+    _isBlocked = isBlocked;
+    self.blockedSignLayer.opacity = isBlocked ? 1 : 0;
+}
+
+- (void) setIsOnline:(BOOL)isOnline {
+    _isOnline = isOnline;
+    self.ledLayer.opacity = isOnline ? 1 : 0;
+}
+
+- (CGFloat) blockedSignPadding {
+    return ceilf(kHXOGridSpacing * (kBlockedSignPaddingFactor * self.avatarLayer.bounds.size.width + kBlockedSignPaddingOffset));
+}
+
+- (CGFloat) badgeXAnchor {
+    return kBadgeXAnchorFactor * self.avatarLayer.bounds.size.width + kBadgeXAnchorOffset;
+}
+
+- (CGFloat) fontSize {
+    return  kBadgeFontSizeFactor * self.avatarLayer.bounds.size.width + kBadgeFontSizeOffset;
+}
+
+- (CGFloat) badgePadding {
+    return kBadgePaddingFactor * self.avatarLayer.bounds.size.width + kBadgePaddingOffset;
+}
+
+- (CGFloat) ledSize {
+    return ceilf(kHXOGridSpacing * (kLedSizeFactor * self.avatarLayer.bounds.size.width + kLedSizeOffset));
+}
+
 
 - (void) updateBadge: (NSString*) text {
     if (text) {
@@ -109,80 +222,6 @@ static const CGFloat kBadgePaddingFactor =  7.0 / 152;
     } else {
         self.badgeLayer.opacity = 0;
     }
-}
-
-- (CAShapeLayer*) maskLayer {
-    CAShapeLayer * mask = [CAShapeLayer layer];
-    mask.path = [UIBezierPath bezierPathWithOvalInRect: self.avatarLayer.bounds].CGPath;
-    return mask;
-}
-
-- (void) setImage:(UIImage *)image {
-    _image = image;
-    self.avatarLayer.contents = (id)image.CGImage;
-    self.defaultAvatarLayer.opacity = image ? 0 : 1;
-    [self setNeedsDisplay];
-}
-
-- (void) layoutSubviews {
-    [super layoutSubviews];
-    CGFloat size = MIN(self.bounds.size.width, self.bounds.size.height) - self.padding;
-    CGRect bounds = CGRectMake(0, 0, size, size);
-    CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-    self.avatarLayer.bounds = bounds;
-    self.avatarLayer.mask = [self maskLayer];
-    self.avatarLayer.position = center;
-
-    self.defaultAvatarLayer.bounds = bounds;
-    self.defaultAvatarLayer.mask = [self maskLayer];
-    self.defaultAvatarLayer.position = center;
-
-    size = size - [self blockedSignPadding];
-    self.blockedSignLayer.bounds = CGRectMake(0, 0, size, size);
-    self.blockedSignLayer.position = center;
-
-    // XXX there has to be a better way to do this ...
-    self.defaultAvatarLayer.path = [self.defaultIcon pathScaledToSize: self.defaultAvatarLayer.bounds.size].CGPath;
-    self.blockedSignLayer.path = [self.blockedSign pathScaledToSize: self.blockedSignLayer.bounds.size].CGPath;
-
-    self.badgeLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.frame), self.padding / 2);
-    [self updateBadge: self.badgeText];
-
-}
-
-- (CGFloat) blockedSignPadding {
-    return ceilf(kHXOGridSpacing * (kBlockedSignPaddingFactor * self.avatarLayer.bounds.size.width + kBlockedSignPaddingOffset));
-}
-
-- (CGFloat) fontSize {
-    return  kBadgeFontSizeFactor * self.avatarLayer.bounds.size.width + kBadgeFontSizeOffset;
-}
-
-- (CGFloat) badgePadding {
-    return kBadgePaddingFactor * self.avatarLayer.bounds.size.width + kBadgePaddingOffset;
-}
-
-- (void) setPadding:(CGFloat)padding {
-    _padding = padding;
-    [self setNeedsLayout];
-}
-
-- (void) setDefaultIcon:(VectorArt *)defaultIcon {
-    _defaultIcon = defaultIcon;
-    _defaultAvatarLayer.fillColor = defaultIcon.fillColor.CGColor;
-    _defaultAvatarLayer.strokeColor = defaultIcon.strokeColor.CGColor;
-    //[self setNeedsLayout];
-}
-
-- (void) setBlockedSign:(VectorArt *)blockedSign {
-    _blockedSign = blockedSign;
-    self.blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
-    self.blockedSignLayer.strokeColor = blockedSign.strokeColor.CGColor;
-}
-
-- (void) setIsBlocked:(BOOL)isBlocked {
-    _isBlocked = isBlocked;
-    _blockedSignLayer.opacity = isBlocked ? 1 : 0;
 }
 
 @end

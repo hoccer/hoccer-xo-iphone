@@ -43,7 +43,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) commonInit {
     [super commonInit];
 
-    self.avatarItem.dependencyPaths = @[@"relationshipState"];
+    self.avatarItem.dependencyPaths = @[@"relationshipState", @"connectionStatus"];
 
     self.nicknameItem.enabledMask = DatasheetModeNone;
 
@@ -137,6 +137,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.isBlocked = self.contact.isBlocked;
+        self.avatarView.isOnline = self.contact.isOnline;
     }
 }
 

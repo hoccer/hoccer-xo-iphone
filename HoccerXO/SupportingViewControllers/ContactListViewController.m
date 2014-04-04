@@ -350,13 +350,14 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void)configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickNameWithStatus;
-    cell.nickName.ledOn = [contact.connectionStatus isEqualToString: @"online"];
+    //cell.nickName.ledOn = contact.isOnline;
 
     
     UIImage * avatar = contact.avatarImage;
     cell.avatar.image = avatar;
     cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [[AvatarGroup alloc] init] : [[AvatarContact alloc] init];
     cell.avatar.isBlocked = [contact isBlocked];
+    cell.avatar.isOnline  = contact.isOnline;
 
     cell.subtitleLabel.text = [self statusStringForContact: contact];
 }

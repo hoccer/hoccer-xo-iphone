@@ -12,11 +12,11 @@
 
 @interface AvatarView : UIControl
 
-@property (nonatomic,strong) UIImage   * image;
-@property (nonatomic,strong) VectorArt * defaultIcon;
-@property (nonatomic,strong) VectorArt * blockedSign;
-@property (nonatomic,assign) BOOL        isBlocked;
-@property (nonatomic,strong) NSString  * badgeText;
-@property (nonatomic,strong) UIFont    * badgeFont;
-@property (nonatomic,assign) CGFloat     padding;
+@property (nonatomic, strong) UIImage   * image;
+@property (nonatomic, strong) VectorArt * defaultIcon;
+@property (nonatomic, assign) BOOL        isBlocked;
+@property (nonatomic, assign) BOOL        isOnline;
+@property (nonatomic, strong) NSString  * badgeText;
+@property (nonatomic, strong) UIFont    * badgeFont;
+
 @end

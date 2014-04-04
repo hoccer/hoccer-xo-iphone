@@ -19,7 +19,8 @@ const CGFloat kHXOCellPadding = 2 * kHXOGridSpacing;
 
 const CGFloat kHXOChatAvatarSize = 5 * kHXOGridSpacing;
 const CGFloat kHXOListAvatarSize = 6 * kHXOGridSpacing;
-const CGFloat kHXOProfileAvatarSize = 6 * kHXOGridSpacing;
+const CGFloat kHXOProfileAvatarSize = 17 * kHXOGridSpacing;
+const CGFloat kHXOProfileAvatarPadding = 3 * kHXOGridSpacing;
 
 
 static HXOUI * _currentTheme;
@@ -70,6 +71,18 @@ static HXOUI * _currentTheme;
 
 - (UIColor*) blockSignColor {
     return [UIColor colorWithHexString: @"#ffffffb0"];
+}
+
+-(UIColor*) avatarBadgeColor {
+    return [UIColor colorWithHexString:@"#f00"];
+}
+
+-(UIColor*) avatarBadgeBorderColor {
+    return [UIColor colorWithHexString:@"#f"];
+}
+
+- (UIColor*) avatarOnlineLedColor {
+    return [UIColor colorWithHexString: @"#8EC12C"];
 }
 
 #pragma mark - Message Color Schemes

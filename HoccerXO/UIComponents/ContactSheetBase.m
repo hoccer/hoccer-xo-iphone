@@ -27,7 +27,6 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 @end
 
-
 @implementation ContactSheetBase
 
 @synthesize imagePicker = _imagePicker;
@@ -140,6 +139,9 @@ static const NSUInteger kHXOMaxNameLength = 25;
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.image = item.currentValue;
+        self.avatarView.isOnline = NO;
+        self.avatarView.isBlocked = NO;
+        self.avatarView.badgeText = nil;
         [self backgroundImageChanged];
     }
 }
@@ -154,7 +156,12 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (UIView*) tableHeaderView {
-    return self.avatarView;
+    UIView * avatar =  self.avatarView;
+    UIView * spacer = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, avatar.bounds.size.height + 2 * kHXOProfileAvatarPadding)];
+    spacer.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [spacer addSubview: avatar];
+    avatar.center = spacer.center;
+    return spacer;
 }
 
 - (UIImage*) updateBackgroundImage {
@@ -179,9 +186,9 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (AvatarView*) avatarView {
     if (! _avatarView) {
-        _avatarView = [[AvatarView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+        _avatarView = [[AvatarView alloc] initWithFrame:CGRectMake(0, 0, kHXOProfileAvatarSize, kHXOProfileAvatarSize)];
         _avatarView.defaultIcon = [[AvatarContact alloc] init];
-        _avatarView.padding = 6 * kHXOGridSpacing;
+        _avatarView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         _avatarView.badgeText = @"3";
         [_avatarView addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
     }
