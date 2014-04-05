@@ -64,7 +64,7 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 
 - (void) setupTheming;
 
-+ (UIActionSheet*) actionSheetWithTitle: (NSString*) title completionBlock: (HXOActionSheetCompletionBlock) completion cancelButtonTitle: (NSString*) cancelTitle destructiveButtonTitle: (NSString*) destructiveTitle; // TODO: add other button argument
++ (UIActionSheet*) actionSheetWithTitle: (NSString*) title completionBlock: (HXOActionSheetCompletionBlock) completion cancelButtonTitle: (NSString*) cancelTitle destructiveButtonTitle: (NSString*) destructiveTitle otherButtonTitles: (NSString*) otherTitles, ... ;
 
 
 + (NSString*) formatKeyFingerprint: (NSString*) rawKeyIdString;

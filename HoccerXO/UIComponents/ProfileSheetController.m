@@ -174,7 +174,8 @@
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"import_credentials_confirm", nil)];
+                                 destructiveButtonTitle: NSLocalizedString(@"import_credentials_confirm", nil)
+                                      otherButtonTitles: nil];
     [sheet showInView: sender.view];
 }
 
@@ -192,7 +193,8 @@
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_credentials_safety_question", nil)
                                                         completionBlock: completion
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)];
+                                          destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
+                                               otherButtonTitles: nil];
     [sheet showInView: sender.view];
 }
 
@@ -222,7 +224,8 @@
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_credentials_file_safety_question", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"delete_credentials_file_confirm", nil)];
+                                 destructiveButtonTitle: NSLocalizedString(@"delete_credentials_file_confirm", nil)
+                                      otherButtonTitles: nil];
     [sheet showInView: sender.view];
 }
 

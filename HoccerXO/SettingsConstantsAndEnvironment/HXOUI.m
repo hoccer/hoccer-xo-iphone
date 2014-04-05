@@ -323,14 +323,40 @@ static HXOUI * _currentTheme;
     [alert show];
 }
 
-+ (UIActionSheet*) actionSheetWithTitle:(NSString *)title completionBlock:(HXOActionSheetCompletionBlock)completion cancelButtonTitle:(NSString *)cancelTitle destructiveButtonTitle:(NSString *)destructiveTitle {
-
++ (UIActionSheet*) actionSheetWithTitle:(NSString *)title completionBlock:(HXOActionSheetCompletionBlock)completion cancelButtonTitle:(NSString *)cancelTitle destructiveButtonTitle:(NSString *)destructiveTitle otherButtonTitles: (NSString*) otherTitles, ... {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: title
                                                  completionBlock: completion
-                                               cancelButtonTitle: cancelTitle
-                                          destructiveButtonTitle: destructiveTitle
+                                               cancelButtonTitle: nil
+                                          destructiveButtonTitle: nil
                                                otherButtonTitles: nil];
+
+
+
+
+	if (sheet) {
+		if (destructiveTitle) {
+			sheet.destructiveButtonIndex = [sheet addButtonWithTitle: destructiveTitle];
+		}
+
+		id eachObject;
+		va_list argumentList;
+		if (otherTitles) {
+			[sheet addButtonWithTitle: otherTitles];
+			va_start(argumentList, otherTitles);
+			while ((eachObject = va_arg(argumentList, id))) {
+				[sheet addButtonWithTitle:eachObject];
+			}
+			va_end(argumentList);
+		}
+
+		if (cancelTitle) {
+			sheet.cancelButtonIndex = [sheet addButtonWithTitle: cancelTitle];
+		}
+	}
+
+    // Apply xo settings
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+
     return sheet;
 }
 
