@@ -273,8 +273,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
     _messageItems = nil;
+    resultsControllers = nil;
 }
 
 - (void)configureView
