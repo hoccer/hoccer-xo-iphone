@@ -16,6 +16,7 @@
 @class HXOBackend;
 @class AVAssetExportSession;
 @class ChatBar;
+@class AttachmentButton;
 
 @interface ChatViewController : UIViewController <UISplitViewControllerDelegate, AttachmentPickerControllerDelegate, UIActionSheetDelegate, UITextViewDelegate, NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOHyperLabelDelegate, TransferProgressIndication, UIDocumentInteractionControllerDelegate>
 {
@@ -27,7 +28,8 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint     * keyboardHeight;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint     * chatbarHeight;
 @property (nonatomic, strong) UITextView                      * messageField;
-@property (nonatomic, strong) UIControl                       * attachmentButton;
+@property (nonatomic, strong) AttachmentButton                * attachmentButton;
+@property (nonatomic, strong) UIButton                        * sendButton;
 
 @property (nonatomic, strong) Contact                         * partner;
 @property (nonatomic, strong) Contact                         * inspectedObject;
@@ -50,7 +52,6 @@
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottomAnimated: (BOOL) animated;
 - (IBAction)sendPressed:(id)sender;
-- (IBAction) addAttachmentPressed:(id)sender;
 - (void) decorateAttachmentButton:(UIImage *) theImage;
 - (void) trashCurrentAttachment;
 

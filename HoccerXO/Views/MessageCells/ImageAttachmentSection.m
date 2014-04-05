@@ -9,7 +9,7 @@
 #import "ImageAttachmentSection.h"
 
 #import "MessageCell.h"
-#import "HXOUpDownLoadControl.h"
+#import "UpDownLoadControl.h"
 #import "HXOUI.h"
 #import "HXOUI.h"
 

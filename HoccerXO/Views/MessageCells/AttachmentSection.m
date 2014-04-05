@@ -7,7 +7,7 @@
 //
 
 #import "AttachmentSection.h"
-#import "HXOUpDownLoadControl.h"
+#import "UpDownLoadControl.h"
 #import "MessageCell.h"
 
 @implementation AttachmentSection
@@ -20,7 +20,7 @@
     self.subtitle.lineBreakMode = NSLineBreakByTruncatingMiddle;
     [self addSubview: self.subtitle];
 
-    _upDownLoadControl = [[HXOUpDownLoadControl alloc] initWithFrame: [self attachmentControlFrame]];
+    _upDownLoadControl = [[UpDownLoadControl alloc] initWithFrame: [self attachmentControlFrame]];
     self.upDownLoadControl.frame = [self attachmentControlFrame];
     [self addSubview: self.upDownLoadControl];
 }

@@ -6,14 +6,14 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "HXOUpDownLoadControl.h"
+#import "UpDownLoadControl.h"
 
 
 static const CGFloat kHXOSpinningEnd = 0.95;
 
 NSString * kSpinnerAnim = @"spinner";
 
-@interface HXOUpDownLoadControl ()
+@interface UpDownLoadControl ()
 
 @property (nonatomic,strong) CAShapeLayer * iconLayer;
 @property (nonatomic,strong) CAShapeLayer * circleLayer;
@@ -21,7 +21,7 @@ NSString * kSpinnerAnim = @"spinner";
 
 @end
 
-@implementation HXOUpDownLoadControl
+@implementation UpDownLoadControl
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -107,43 +107,6 @@ NSString * kSpinnerAnim = @"spinner";
         spinner.repeatCount = HUGE_VALF;
         [self.progressLayer addAnimation: spinner forKey: kSpinnerAnim];
     }
-}
-
-/*
-- (void) drawRect:(CGRect)rect {
-    UIBezierPath * circle = [UIBezierPath bezierPathWithOvalInRect: [self circleFrame]];
-    circle.lineWidth = self.lineWidth;
-    //[self.tintColor setStroke];
-    [[UIColor whiteColor] setStroke];
-    [circle stroke];
-
-    CGPoint center = CGPointMake(CGRectGetMidX(circle.bounds), CGRectGetMidY(circle.bounds));
-    CGFloat radius = 0.5 * CGRectGetWidth(circle.bounds);
-    CGFloat endAngle = -0.5 * M_PI + self.progress * 2 * M_PI;
-    circle = [UIBezierPath bezierPathWithArcCenter: center radius: radius startAngle: -0.5 * M_PI endAngle: endAngle clockwise: YES];
-    [self.tintColor setStroke];
-    [circle stroke];
-
-    if (self.selected) {
-        [self drawStopButton];
-    } else {
-        [self drawArrow];
-    }
-}
-*/
-- (void) drawStopButton {
-    CGRect buttonFrame = [self buttonFrame];
-    CGFloat d = 0.25 * buttonFrame.size.width;
-    UIBezierPath * path = [UIBezierPath bezierPathWithRect: CGRectInset(buttonFrame, d, d)];
-    [self.tintColor setFill];
-    [path fill];
-}
-
-- (void) drawArrow {
-    UIBezierPath * path = [self arrowPath: [self buttonFrame]];
-    [self.tintColor setStroke];
-    path.lineWidth = self.lineWidth;
-    [path stroke];
 }
 
 - (UIBezierPath*) arrowPath: (CGRect) frame {

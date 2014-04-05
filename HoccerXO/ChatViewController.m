@@ -40,7 +40,7 @@
 #import "GenericAttachmentSection.h"
 #import "ProfileViewController.h"
 #import "LabelWithLED.h"
-#import "HXOUpDownLoadControl.h"
+#import "UpDownLoadControl.h"
 #import "DateSectionHeaderView.h"
 #import "MessageItems.h"
 #import "HXOHyperLabel.h"
@@ -49,6 +49,7 @@
 #import "HXOUI.h"
 #import "AvatarView.h"
 #import "AvatarContact.h"
+#import "AttachmentButton.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -62,7 +63,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property (nonatomic, strong)   UIPopoverController *masterPopoverController;
 @property (nonatomic, readonly) AttachmentPickerController    * attachmentPicker;
-@property (nonatomic, strong)   UIView                        * attachmentPreview;
+//@property (nonatomic, strong)   UIView                        * attachmentPreview;
 @property (nonatomic, strong)   NSIndexPath                   * firstNewMessage;
 @property (nonatomic, strong)   NSMutableDictionary           * cellPrototypes;
 @property (nonatomic, strong)   MPMoviePlayerViewController   *  moviePlayerViewController;
@@ -108,7 +109,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self setupChatbar];
 
-    [self hideAttachmentSpinner];
     [HXOBackend registerConnectionInfoObserverFor:self];
     
     UILongPressGestureRecognizer *gr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
@@ -141,13 +141,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     CGFloat s = 50; // magic toolbar size
 
     UIImage * icon = [[PaperClip alloc] init].image;
-    UIButton * attachmentButton = [UIButton buttonWithType: UIButtonTypeSystem];
-    attachmentButton.frame = CGRectMake(0, 0, 50, s);
-    attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    self.attachmentButton = [[AttachmentButton alloc] initWithFrame: CGRectMake(0, 0, s, s)];
+    self.attachmentButton.frame = CGRectMake(0, 0, 50, s);
+    self.attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     //attachmentButton.backgroundColor = [UIColor orangeColor];
-    [attachmentButton setImage: icon forState: UIControlStateNormal];
-    [attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
-    [self.chatbar addSubview:attachmentButton];
+    //[attachmentButton setImage: icon forState: UIControlStateNormal];
+    [self.attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
+    //attachmentButton.enabled = NO;
+    [self.chatbar addSubview: self.attachmentButton];
 
     CGFloat height = MIN(150, MAX( s - 2 * kHXOGridSpacing, 0));
     self.messageField = [[UITextView alloc] initWithFrame: CGRectMake(s, kHXOGridSpacing, self.chatbar.bounds.size.width - 2 * s, height)];
@@ -175,13 +176,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self.chatbar addSubview: self.messageFieldPlaceholder];
 
     icon = [[PaperDart alloc] init].image;
-    UIButton * sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
-    sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
-    sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    self.sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
+    self.sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
+    self.sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     //sendButton.backgroundColor = [UIColor orangeColor];
-    [sendButton setImage: icon forState: UIControlStateNormal];
-    [sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
-    [self.chatbar addSubview: sendButton];
+    [self.sendButton setImage: icon forState: UIControlStateNormal];
+    [self.sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
+    //sendButton.enabled = NO;
+    [self.chatbar addSubview: self.sendButton];
 }
 
 - (UIMenuController *)setupLongPressMenu {
@@ -414,7 +416,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         
     }
 
-    if (self.messageField.text.length > 0 || self.attachmentPreview != nil) {
+    // TODO: find a better way to detect that we have an attachment... :-/
+    BOOL hasAttachmentPreview = self.attachmentButton.icon != nil || self.attachmentButton.previewImage != nil;
+    if (self.messageField.text.length > 0 || hasAttachmentPreview) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
             if ([self.messageField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
                 NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"message_too_long_text", nil), kMaxMessageBytes];
@@ -469,21 +473,27 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self trashCurrentAttachment];
 }
 
+/*
 - (IBAction)addAttachmentPressed:(id)sender {
     // NSLog(@"addAttachmentPressed");
     [self.messageField resignFirstResponder];
     [self.attachmentPicker showInView: self.view];
 }
+*/
 
 - (IBAction)attachmentPressed: (id)sender {
     // NSLog(@"attachmentPressed");
-    [self.messageField resignFirstResponder];
-    [self showAttachmentOptions];
+    //    [self.messageField resignFirstResponder];
+    if (_currentPickInfo || _currentAttachment) {
+        [self showAttachmentOptions];
+    } else {
+        [self.attachmentPicker showInView: self.view];
+    }
 }
 
 - (IBAction)cancelAttachmentProcessingPressed: (id)sender {
     // NSLog(@"cancelPressed");
-    [self.messageField resignFirstResponder];
+    //[self.messageField resignFirstResponder];
     [self showAttachmentOptions];
 }
 
@@ -870,61 +880,27 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     
 
 - (void) decorateAttachmentButton:(UIImage *) theImage {
-    
     if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton with %@", theImage);
-    if (theImage != nil) {
-        if (self.attachmentPreview != nil) {
-            if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeFromSuperview");
-            [self.attachmentPreview removeFromSuperview];
-        }
-        // TODO:
-        /*
-        UIButton* preview = [[UIButton alloc] init];
-        self.attachmentPreview = preview;
-        preview.imageView.contentMode = UIViewContentModeScaleAspectFill;
-
-        preview.frame = _attachmentButton.frame;
-        [preview setImage:theImage forState:UIControlStateNormal];
-        preview.autoresizingMask = _attachmentButton.autoresizingMask;
-        [preview addTarget: self action: @selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.chatbar addSubview: preview];
-        _attachmentButton.hidden = YES;
-         */
-    } else {
-        if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"decorateAttachmentButton: removeAttachmentPreview");
-        [self removeAttachmentPreview];
-    }
-}
-
-- (void) removeAttachmentPreview {
-    // TODO:
-    /*
-    if (self.attachmentPreview != nil) {
-        [self.attachmentPreview removeFromSuperview];
-        self.attachmentPreview = nil;
-        self.attachmentButton.hidden = NO;
-    }
-     */
+    self.attachmentButton.previewImage = theImage;
 }
 
 - (void) startPickedAttachmentProcessingForObject:(id)info {
+    // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
     if (_currentAttachment != nil) {
         [self trashCurrentAttachment];
     }
     _currentPickInfo = info;
-    // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
-    [self showAttachmentSpinner];
-
-    // TODO:
-    //_attachmentButton.hidden = YES;
-    //_sendButton.enabled = NO; // wait for attachment ready
+    [self.attachmentButton startSpinning];
+    self.sendButton.enabled = NO; // wait for attachment ready
 }
 
 - (void) finishPickedAttachmentProcessingWithImage:(UIImage*) theImage withError:(NSError*) theError {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage:%@ previewIcon:%@ withError:%@",theImage, self.currentAttachment.previewIcon, theError);
         _currentPickInfo = nil;
-        [self hideAttachmentSpinner];
+
+        [self.attachmentButton stopSpinning];
+
         if (theError == nil && theImage != nil) {
             if (theImage.size.height == 0) {
                 if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: decorateAttachmentButton with currentAttachment.previewIcon");
@@ -933,30 +909,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 if (DEBUG_ATTACHMENT_BUTTONS)NSLog(@"finishPickedAttachmentProcessingWithImage: decorateAttachmentButton with theImage");
                 [self decorateAttachmentButton:theImage];
             }
-            // TODO:
-
-//            _sendButton.enabled = YES;
+            self.sendButton.enabled = YES;
         } else {
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: trashCurrentAttachment");
             [self trashCurrentAttachment];
         }
     });
 }
-
-- (void) showAttachmentSpinner {
-    if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"showAttachmentSpinner");
-    // TODO:
-    //_attachmentSpinner.hidden = NO;
-    //[_attachmentSpinner startAnimating];
-}
-
-- (void) hideAttachmentSpinner {
-    if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"hideAttachmentSpinner");
-    // TODO:
-    //[_attachmentSpinner stopAnimating];
-    //_attachmentSpinner.hidden = YES;
-}
-
 
 - (void) trashCurrentAttachment {
     if (self.currentAttachment != nil) {
@@ -1438,7 +1397,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 }
 
-- (void) configureUpDownLoadControl: (HXOUpDownLoadControl*) upDownLoadControl attachment: (Attachment*) attachment{
+- (void) configureUpDownLoadControl: (UpDownLoadControl*) upDownLoadControl attachment: (Attachment*) attachment{
     upDownLoadControl.hidden = attachment.available && attachment.state == kAttachmentTransfered;
     BOOL isActive = [self attachmentIsActive: attachment];
     upDownLoadControl.selected = isActive;

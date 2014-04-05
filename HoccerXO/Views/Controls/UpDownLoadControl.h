@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HXOUpDownLoadControl : UIControl
+@interface UpDownLoadControl : UIControl
 
 typedef enum HXOTransferDirections {
     HXOTranserDirectionSending,

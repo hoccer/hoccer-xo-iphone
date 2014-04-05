@@ -8,12 +8,12 @@
 
 #import "MessageSection.h"
 
-@class HXOUpDownLoadControl;
+@class UpDownLoadControl;
 
 @interface AttachmentSection : MessageSection
 
 @property (nonatomic,readonly) UILabel * subtitle;
-@property (nonatomic,readonly) HXOUpDownLoadControl * upDownLoadControl;
+@property (nonatomic,readonly) UpDownLoadControl * upDownLoadControl;
 
 - (CGRect) attachmentControlFrame;
 
