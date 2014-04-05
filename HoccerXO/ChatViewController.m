@@ -60,25 +60,26 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @interface ChatViewController ()
 
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
-@property (strong, readonly)  AttachmentPickerController* attachmentPicker;
-@property (strong, nonatomic) UIView* attachmentPreview;
-@property (nonatomic,strong) NSIndexPath * firstNewMessage;
-@property (nonatomic,strong) NSMutableDictionary * cellPrototypes;
-@property (strong, nonatomic) MPMoviePlayerViewController *  moviePlayerViewController;
-@property (readonly, strong, nonatomic) ImageViewController * imageViewController;
-@property (readonly, strong, nonatomic) ABUnknownPersonViewController * vcardViewController;
-@property (nonatomic,strong) LabelWithLED * titleLabel;
+@property (nonatomic, strong)   UIPopoverController *masterPopoverController;
+@property (nonatomic, readonly) AttachmentPickerController    * attachmentPicker;
+@property (nonatomic, strong)   UIView                        * attachmentPreview;
+@property (nonatomic, strong)   NSIndexPath                   * firstNewMessage;
+@property (nonatomic, strong)   NSMutableDictionary           * cellPrototypes;
+@property (nonatomic, strong)   MPMoviePlayerViewController   *  moviePlayerViewController;
+@property (nonatomic, readonly) ImageViewController           * imageViewController;
+@property (nonatomic, readonly) ABUnknownPersonViewController * vcardViewController;
+@property (nonatomic, strong)   LabelWithLED                  * titleLabel;
 
-@property (strong, nonatomic) HXOMessage * messageToForward;
+@property (strong, nonatomic)   HXOMessage                    * messageToForward;
 
-@property (nonatomic, readonly) NSMutableDictionary * messageItems;
-@property (nonatomic, readonly) NSDateFormatter * dateFormatter;
-@property (nonatomic, readonly) NSByteCountFormatter * byteCountFormatter;
+@property (nonatomic, readonly) NSMutableDictionary           * messageItems;
+@property (nonatomic, readonly) NSDateFormatter               * dateFormatter;
+@property (nonatomic, readonly) NSByteCountFormatter          * byteCountFormatter;
 
-@property (nonatomic) BOOL keyBoardShown;
+@property (nonatomic, assign)   BOOL                            keyBoardShown;
 
-@property (nonatomic,strong) UITextField * autoCorrectTriggerHelper;
+@property (nonatomic, strong)   UITextField                   * autoCorrectTriggerHelper;
+@property (nonatomic, strong)   UILabel                       * messageFieldPlaceholder;
 
 @end
 
@@ -149,6 +150,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     CGFloat height = MIN(150, MAX( s - 2 * kHXOGridSpacing, 0));
     self.messageField = [[UITextView alloc] initWithFrame: CGRectMake(s, kHXOGridSpacing, self.chatbar.bounds.size.width - 2 * s, height)];
     self.messageField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.messageField.delegate = self;
     self.messageField.backgroundColor = [UIColor whiteColor];
     self.messageField.layer.cornerRadius = kHXOGridSpacing / 2;
     self.messageField.layer.borderWidth = 1.0;
@@ -162,6 +164,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self.chatbar addSubview: self.messageField];
     self.messageField.text = @"";
 
+    CGRect frame = CGRectInset(self.messageField.frame, 5, 1); // experimentally found... :-/
+    self.messageFieldPlaceholder = [[UILabel alloc] initWithFrame: frame];
+    self.messageFieldPlaceholder.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    self.messageFieldPlaceholder.font = self.messageField.font;
+    self.messageFieldPlaceholder.textColor = [HXOUI theme].lightTextColor;
+    self.messageFieldPlaceholder.text = NSLocalizedString(@"chat_view_message_placeholder", nil);
+    [self.chatbar addSubview: self.messageFieldPlaceholder];
+
     icon = [[PaperDart alloc] init].image;
     UIButton * sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
     sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
@@ -172,29 +182,20 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self.chatbar addSubview: sendButton];
 }
 
-- (UIView*) chatbarAlignmentWrapper: (UIView*) item {
-    CGRect frame = item.frame;
-    frame.size.height = self.chatbar.bounds.size.height;
-    UIView * wrapper = [[UIView alloc] initWithFrame: frame];
-
-    item.autoresizingMask |= UIViewAutoresizingFlexibleTopMargin;
-    [wrapper addSubview: item];
-    //wrapper.backgroundColor = [UIColor orangeColor];
-    wrapper.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    return wrapper;
-}
-
 - (UIMenuController *)setupLongPressMenu {
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
     UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Resend", nil) action:@selector(resendMessage:)];
-    //UIMenuItem *myForwardMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Forward", nil) action:@selector(forwardMessage:)];
     UIMenuItem *myOpenWithMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Open with...", nil) action:@selector(openWithMessage:)];
     UIMenuItem *myShareMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Share", nil) action:@selector(shareMessage:)];
     [menuController setMenuItems:@[myShareMessageMenuItem,myOpenWithMessageMenuItem,myDeleteMessageMenuItem,myResendMessageMenuItem/*, myForwardMessageMenuItem*/,mySaveMenuItem]];
     [menuController update];
     return menuController;
+}
+
+- (void) textViewDidChange:(UITextView *)textView {
+    self.messageFieldPlaceholder.alpha = [textView isEqual: self.messageField] && textView.text && ! [textView.text isEqualToString:@""] ? 0 : 1;
 }
 
 -(void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -308,6 +309,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }
     }
     self.messageField.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    self.messageFieldPlaceholder.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     [self updateVisibleCells];
     [self.tableView reloadData];
 }

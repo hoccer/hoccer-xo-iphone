@@ -22,27 +22,28 @@
     NSMutableDictionary        *resultsControllers;
 }
 
-@property (strong, nonatomic)   Contact *                      partner;
-@property (strong, nonatomic)   Contact *                      inspectedObject;
-@property (readonly, nonatomic) HXOBackend *  chatBackend;
-@property (strong, nonatomic)   IBOutlet UIToolbar * chatbar;
-@property (strong, nonatomic)   UITextView *  messageField;
-@property (strong, nonatomic)   UIControl *   attachmentButton;
-@property (strong, nonatomic) IBOutlet UITableView *         tableView;
-@property (nonatomic,strong) IBOutlet NSLayoutConstraint * keyboardHeight;
-@property (nonatomic,strong) IBOutlet NSLayoutConstraint * chatbarHeight;
+@property (nonatomic, strong) IBOutlet UIToolbar              * chatbar;
+@property (nonatomic, strong) IBOutlet UITableView            * tableView;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint     * keyboardHeight;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint     * chatbarHeight;
+@property (nonatomic, strong) UITextView                      * messageField;
+@property (nonatomic, strong) UIControl                       * attachmentButton;
 
-@property (strong, nonatomic) NSFetchedResultsController *   fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *       managedObjectContext;
-@property (strong, nonatomic) NSManagedObjectModel *         managedObjectModel;
+@property (nonatomic, strong) Contact                         * partner;
+@property (nonatomic, strong) Contact                         * inspectedObject;
+@property (nonatomic, strong) HXOBackend                      * chatBackend;
 
-@property (strong, nonatomic) Attachment * currentAttachment;
-@property (strong, nonatomic) AVAssetExportSession * currentExportSession;
-@property (strong, nonatomic) id currentPickInfo;
+@property (nonatomic, strong) NSFetchedResultsController      * fetchedResultsController;
+@property (nonatomic, strong) NSManagedObjectContext          * managedObjectContext;
+@property (nonatomic, strong) NSManagedObjectModel            * managedObjectModel;
 
-@property (strong, nonatomic) id connectionInfoObserver;
+@property (nonatomic, strong) Attachment                      * currentAttachment;
+@property (nonatomic, strong) AVAssetExportSession            * currentExportSession;
+@property (nonatomic, strong) id                                currentPickInfo;
 
-@property (strong, nonatomic) UIDocumentInteractionController *interactionController;
+@property (nonatomic, strong) id                                connectionInfoObserver;
+
+@property (nonatomic, strong) UIDocumentInteractionController * interactionController;
 
 // @property UIInterfaceOrientation interfaceOrientation;
 
