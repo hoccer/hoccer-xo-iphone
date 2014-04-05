@@ -238,9 +238,10 @@ static HXOUI * _currentTheme;
     [navigationBarAppearance setBarStyle:     UIBarStyleBlackTranslucent];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
     [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
-    
+
     [[LabelWithLED appearance] setLedColor: self.ledColor];
 }
+
 
 #pragma mark - Value Formatters
 

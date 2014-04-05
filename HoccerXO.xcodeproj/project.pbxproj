@@ -140,7 +140,6 @@
 		63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B1C9DC1843E4FD00B75CD8 /* cnt-video@2x.png */; };
 		63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B1C9E91843FA3800B75CD8 /* cnt-contact.png */; };
 		63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B1C9EA1843FA3800B75CD8 /* cnt-contact@2x.png */; };
-		63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B21789181EDA4C00C057D9 /* BezeledLabel.m */; };
 		63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B2178C181FDFAB00C057D9 /* LabelWithLED.m */; };
 		63B76F5018E8F7F800E014E6 /* KeySheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F4F18E8F7F800E014E6 /* KeySheetController.m */; };
 		63B76F6418E9EA3300E014E6 /* ContactSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B76F6318E9EA3300E014E6 /* ContactSheetController.m */; };
@@ -619,8 +618,6 @@
 		63B1C9DC1843E4FD00B75CD8 /* cnt-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-video@2x.png"; sourceTree = "<group>"; };
 		63B1C9E91843FA3800B75CD8 /* cnt-contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-contact.png"; sourceTree = "<group>"; };
 		63B1C9EA1843FA3800B75CD8 /* cnt-contact@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-contact@2x.png"; sourceTree = "<group>"; };
-		63B21788181EDA4C00C057D9 /* BezeledLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BezeledLabel.h; sourceTree = "<group>"; };
-		63B21789181EDA4C00C057D9 /* BezeledLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezeledLabel.m; sourceTree = "<group>"; };
 		63B2178B181FDFAA00C057D9 /* LabelWithLED.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelWithLED.h; sourceTree = "<group>"; };
 		63B2178C181FDFAB00C057D9 /* LabelWithLED.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelWithLED.m; sourceTree = "<group>"; };
 		63B76F4E18E8F7F800E014E6 /* KeySheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeySheetController.h; sourceTree = "<group>"; };
@@ -1615,8 +1612,6 @@
 		63D4916716CAA17D00FD395F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				63B21788181EDA4C00C057D9 /* BezeledLabel.h */,
-				63B21789181EDA4C00C057D9 /* BezeledLabel.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 				633A9B18177B21A700E066EF /* Controls */,
@@ -2271,7 +2266,6 @@
 				E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */,
 				6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */,
 				63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */,
-				63B2178A181EDA4C00C057D9 /* BezeledLabel.m in Sources */,
 				6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */,
 				E9E92F8C18748F21007B8042 /* ServerViewController.m in Sources */,
 				E9E92F6D18733D01007B8042 /* DDRange.m in Sources */,

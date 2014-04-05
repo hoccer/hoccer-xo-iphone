@@ -125,6 +125,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.navigationItem.titleView = self.titleLabel;
     self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    // XXX do this in a more general way...
+    self.titleLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
 
     [self configureView];
 }
@@ -266,7 +268,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
-    // NSLog(@"ChatViewController:viewWillDisappear");
     [self rememberLastVisibleCell];
 }
 
@@ -277,11 +278,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     resultsControllers = nil;
 }
 
-- (void)configureView
-{
-    // NSLog(@"ChatViewController:configureView");
-    // Update the user interface for the detail item.
-
+- (void)configureView {
     if (self.partner) {
         [self configureTitle];
     }
@@ -299,7 +296,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
     return _chatBackend;
 }
-
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     for (id key in _cellPrototypes) {
