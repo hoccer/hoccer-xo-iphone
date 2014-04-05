@@ -135,9 +135,19 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     UIFont * font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
 
-    CGFloat s = 50;
+    CGFloat s = 50; // magic toolbar size
+
+    UIImage * icon = [[PaperClip alloc] init].image;
+    UIButton * attachmentButton = [UIButton buttonWithType: UIButtonTypeSystem];
+    attachmentButton.frame = CGRectMake(0, 0, 50, s);
+    attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    //attachmentButton.backgroundColor = [UIColor orangeColor];
+    [attachmentButton setImage: icon forState: UIControlStateNormal];
+    [attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
+    [self.chatbar addSubview:attachmentButton];
+
     CGFloat height = MIN(150, MAX( s - 2 * kHXOGridSpacing, 0));
-    self.messageField = [[UITextView alloc] initWithFrame: CGRectMake(0, kHXOGridSpacing, self.chatbar.bounds.size.width - (2 * s + 10), height)];
+    self.messageField = [[UITextView alloc] initWithFrame: CGRectMake(s, kHXOGridSpacing, self.chatbar.bounds.size.width - 2 * s, height)];
     self.messageField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.messageField.backgroundColor = [UIColor whiteColor];
     self.messageField.layer.cornerRadius = kHXOGridSpacing / 2;
@@ -145,27 +155,21 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.messageField.layer.borderColor = [HXOUI theme].messageFieldBorderColor.CGColor;
     self.messageField.font = font;
     self.messageField.textContainerInset = UIEdgeInsetsMake(6, 0, 2, 0);
+    // This is important to keep the message field from erratic resizing:
+    // set text to something before adding the field to the view hirarchy
     self.messageField.text = @"k";
     [self.messageField addObserver: self forKeyPath: @"contentSize" options: 0 context: nil];
+    [self.chatbar addSubview: self.messageField];
+    self.messageField.text = @"";
 
-    UIBarButtonItem * messageFieldItem = [[UIBarButtonItem alloc] initWithCustomView: self.messageField];
-
-    UIImage * icon = [[PaperDart alloc] init].image;
+    icon = [[PaperDart alloc] init].image;
     UIButton * sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
-    sendButton.frame = CGRectMake(0, 0, 30, s);
+    sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
+    sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    //sendButton.backgroundColor = [UIColor orangeColor];
     [sendButton setImage: icon forState: UIControlStateNormal];
     [sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
-    UIBarButtonItem * sendButtonItem = [[UIBarButtonItem alloc] initWithCustomView: [self chatbarAlignmentWrapper: sendButton]];
-    icon = [[PaperClip alloc] init].image;
-
-    UIButton * attachmentButton = [UIButton buttonWithType: UIButtonTypeSystem];
-    attachmentButton.frame = CGRectMake(0, 0, 30, s);
-    [attachmentButton setImage: icon forState: UIControlStateNormal];
-    [attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
-    UIBarButtonItem * attachmentButtonItem = [[UIBarButtonItem alloc] initWithCustomView: [self chatbarAlignmentWrapper: attachmentButton]];
-
-    self.chatbar.items = @[attachmentButtonItem, messageFieldItem, sendButtonItem];
-    self.messageField.text = @"";
+    [self.chatbar addSubview: sendButton];
 }
 
 - (UIView*) chatbarAlignmentWrapper: (UIView*) item {

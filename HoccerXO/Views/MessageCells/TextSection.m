@@ -41,12 +41,12 @@
 - (CGSize) sizeThatFits:(CGSize)size {
     CGSize labelSize = size;
     labelSize.width -= 4 * kHXOGridSpacing;
-    //labelSize.height -= 2 * kHXOGridSpacing;
     labelSize.height = 0;
 
     labelSize = [_label sizeThatFits: labelSize];
 
     labelSize.width = size.width;
+    //labelSize.width += 4 * kHXOGridSpacing;
     labelSize.height = kHXOGridSpacing * ceil(labelSize.height / kHXOGridSpacing);
     labelSize.height += 2 * kHXOGridSpacing;
     labelSize.height = MAX(labelSize.height, 5 * kHXOGridSpacing);

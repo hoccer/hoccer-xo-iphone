@@ -8,8 +8,8 @@
 
 #import "LabelWithLED.h"
 
-static const CGFloat kLEDPadding = 4.0;
-static const CGFloat kLEDSize = 5.0;
+static const CGFloat kLEDPadding = 6.0;
+static const CGFloat kLEDSize = 8.0;
 
 @interface LabelWithLED ()
 
@@ -52,6 +52,9 @@ static const CGFloat kLEDSize = 5.0;
     self.ledLayer.bounds = CGRectMake(0,0,kLEDSize,kLEDSize);
     self.ledLayer.backgroundColor = _ledColor.CGColor;
     self.ledLayer.opacity = 0;
+    self.ledLayer.borderWidth = 1;
+    self.ledLayer.borderColor = [UIColor whiteColor].CGColor
+    ;
     [self.layer addSublayer: self.ledLayer];
 }
 

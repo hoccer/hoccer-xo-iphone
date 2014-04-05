@@ -46,7 +46,7 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) ledColor {
-    return [UIColor redColor];
+    return [UIColor colorWithHexString: @"#8EC12C"];
 }
 
 - (UIColor*) cellAccessoryColor {
