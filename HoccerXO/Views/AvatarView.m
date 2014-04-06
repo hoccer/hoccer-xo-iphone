@@ -21,8 +21,11 @@ static const CGFloat kBlockedSignPaddingFactor = 0.0260417;
 static const CGFloat kBadgeFontSizeOffset = 49.0 / 6.0;
 static const CGFloat kBadgeFontSizeFactor = 7.0 / 48;
 
-static const CGFloat kBadgePaddingOffset = 15.0 / 19;
-static const CGFloat kBadgePaddingFactor =  7.0 / 152;
+static const CGFloat kBadgePaddingOffset = 7.0 / 4;
+static const CGFloat kBadgePaddingFactor =  1.0 / 32;
+
+static const CGFloat kBadgeBorderWidthOffset = 19.0 / 12;
+static const CGFloat kBadgeBorderWidthFactor =  1.0 / 96;
 
 static const CGFloat kBadgeXAnchorOffset = 0.475;
 static const CGFloat kBadgeXAnchorFactor = 0.003125;
@@ -30,13 +33,18 @@ static const CGFloat kBadgeXAnchorFactor = 0.003125;
 static const CGFloat kLedSizeOffset = 7.0 / 12;
 static const CGFloat kLedSizeFactor = 1.0 / 96;
 
+static const CGFloat kLedBorderWidthOffset = 7.0 / 12;
+static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
+
+
 @interface AvatarView ()
 
 @property (nonatomic, strong) CALayer      * avatarLayer;
 @property (nonatomic, strong) CAShapeLayer * defaultAvatarLayer;
 @property (nonatomic, strong) CAShapeLayer * blockedSignLayer;
-@property (nonatomic, strong) CATextLayer  * badgeLayer;
-@property (nonatomic, strong) CALayer      * ledLayer;
+@property (nonatomic, strong) CATextLayer  * badgeTextLayer;
+@property (nonatomic, strong) CAShapeLayer * badgeBackgroundLayer;
+@property (nonatomic, strong) CAShapeLayer * ledLayer;
 @property (nonatomic, strong) CAShapeLayer * circleMask;
 
 @end
@@ -92,25 +100,39 @@ static const CGFloat kLedSizeFactor = 1.0 / 96;
     [self.avatarLayer addSublayer: self.blockedSignLayer];
     //self.blockedSignLayer.backgroundColor = [UIColor orangeColor].CGColor;
 
-    self.badgeLayer = [CATextLayer layer];
-    self.badgeLayer.bounds = CGRectMake(0,0,20,20);
-    self.badgeLayer.contentsScale = [UIScreen mainScreen].scale;
-    self.badgeLayer.alignmentMode = kCAAlignmentCenter;
-    self.badgeLayer.anchorPoint = CGPointMake([self badgeXAnchor], 0);
-    self.badgeLayer.backgroundColor = [HXOUI theme].avatarBadgeColor.CGColor;
-    self.badgeLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.bounds), 0);
-    self.badgeLayer.opacity = 0;
-    [self.layer addSublayer: self.badgeLayer];
+    self.badgeTextLayer = [CATextLayer layer];
+    self.badgeTextLayer.bounds = CGRectMake(0,0,20,20);
+    self.badgeTextLayer.contentsScale = [UIScreen mainScreen].scale;
+    self.badgeTextLayer.alignmentMode = kCAAlignmentCenter;
+    self.badgeTextLayer.anchorPoint = CGPointMake([self badgeXAnchor], 0);
+    //self.badgeTextLayer.backgroundColor = [HXOUI theme].avatarBadgeColor.CGColor;
+    self.badgeTextLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.bounds), 0);
+    self.badgeTextLayer.opacity = 0;
+    self.badgeBackgroundLayer = [CAShapeLayer layer];
+    self.badgeBackgroundLayer.anchorPoint = self.badgeTextLayer.anchorPoint;
+    self.badgeBackgroundLayer.bounds = self.badgeTextLayer.bounds;
+    self.badgeBackgroundLayer.position = self.badgeTextLayer.position;
+    self.badgeBackgroundLayer.path = [UIBezierPath bezierPathWithRoundedRect: self.badgeBackgroundLayer.bounds cornerRadius: 0.5 * self.badgeBackgroundLayer.bounds.size.height].CGPath;
+    self.badgeBackgroundLayer.fillColor = [HXOUI theme].avatarBadgeColor.CGColor;
+    self.badgeBackgroundLayer.strokeColor = [UIColor whiteColor].CGColor;
+    self.badgeBackgroundLayer.lineWidth = [self badgeBorderWidth];
+    [self.layer addSublayer: self.badgeBackgroundLayer];
+    [self.layer addSublayer: self.badgeTextLayer];
+    self.badgeBackgroundLayer.frame = self.badgeTextLayer.frame;
+
+
 
     CGFloat t = 0.5 * self.avatarLayer.frame.size.height;
     CGFloat ledX = t - (t / sqrt(2));
-    self.ledLayer = [CALayer layer];
+    self.ledLayer = [CAShapeLayer layer];
     self.ledLayer.bounds = CGRectMake(0, 0, [self ledSize], [self ledSize]);
-    self.ledLayer.backgroundColor = [HXOUI theme].avatarOnlineLedColor.CGColor;
-    self.ledLayer.cornerRadius = self.ledLayer.bounds.size.height / 2;
+    self.ledLayer.path = [UIBezierPath bezierPathWithOvalInRect: CGRectInset(self.ledLayer.bounds, 0.5, 0.5)].CGPath;
+    self.ledLayer.fillColor = [HXOUI theme].avatarOnlineLedColor.CGColor;
+    self.ledLayer.strokeColor = [UIColor whiteColor].CGColor;
+    self.ledLayer.lineWidth = [self ledBorderWidth];
+//    self.ledLayer.backgroundColor = [HXOUI theme].avatarOnlineLedColor.CGColor;
+//    self.ledLayer.cornerRadius = self.ledLayer.bounds.size.height / 2;
     self.ledLayer.position = CGPointMake(ledX, self.avatarLayer.frame.size.height - ledX);
-    self.ledLayer.borderColor = [UIColor whiteColor].CGColor;
-    self.ledLayer.borderWidth = 1.0;
     [self.layer addSublayer: self.ledLayer];
 
 
@@ -135,12 +157,13 @@ static const CGFloat kLedSizeFactor = 1.0 / 96;
         CGFloat scale = size / self.avatarLayer.frame.size.width;
         self.avatarLayer.transform = CATransform3DScale(self.avatarLayer.transform, scale, scale, scale);
 
-        self.badgeLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.frame), CGRectGetMinY(self.avatarLayer.frame));
+        self.badgeTextLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.frame), CGRectGetMinY(self.avatarLayer.frame));
+        self.badgeBackgroundLayer.position = self.badgeTextLayer.position;
 
 
         CGFloat t = 0.5 * self.avatarLayer.frame.size.height;
         CGFloat ledX = t - (t / sqrt(2));
-        self.ledLayer.position = CGPointMake(ledX, self.avatarLayer.frame.size.height - ledX);
+        self.ledLayer.position = CGPointMake(roundf(ledX) + .5, roundf(self.avatarLayer.frame.size.height - ledX) + .5);
     }
 }
 
@@ -161,7 +184,7 @@ static const CGFloat kLedSizeFactor = 1.0 / 96;
 - (void) setBadgeText:(NSString *)badgeText {
     _badgeText = badgeText;
     [self updateBadge: badgeText];
-    self.badgeLayer.string = badgeText;
+    self.badgeTextLayer.string = badgeText;
     [self setNeedsLayout];
 }
 
@@ -179,34 +202,43 @@ static const CGFloat kLedSizeFactor = 1.0 / 96;
     return ceilf(kHXOGridSpacing * (kBlockedSignPaddingFactor * self.avatarLayer.bounds.size.width + kBlockedSignPaddingOffset));
 }
 
-- (CGFloat) badgeXAnchor {
-    return kBadgeXAnchorFactor * self.avatarLayer.bounds.size.width + kBadgeXAnchorOffset;
-}
-
-- (CGFloat) fontSize {
+- (CGFloat) badgeFontSize {
     return  kBadgeFontSizeFactor * self.avatarLayer.bounds.size.width + kBadgeFontSizeOffset;
 }
 
+- (CGFloat) badgeXAnchor {
+    return kBadgeXAnchorFactor * self.avatarLayer.bounds.size.width + kBadgeXAnchorOffset;
+}
 - (CGFloat) badgePadding {
     return kBadgePaddingFactor * self.avatarLayer.bounds.size.width + kBadgePaddingOffset;
 }
 
-- (CGFloat) ledSize {
-    return ceilf(kHXOGridSpacing * (kLedSizeFactor * self.avatarLayer.bounds.size.width + kLedSizeOffset));
+- (CGFloat) badgeBorderWidth {
+    return kBadgeBorderWidthFactor * self.avatarLayer.bounds.size.width + kBadgeBorderWidthOffset;
 }
+
+- (CGFloat) ledSize {
+    return roundf(kHXOGridSpacing * (kLedSizeFactor * self.avatarLayer.bounds.size.width + kLedSizeOffset));
+}
+
+- (CGFloat) ledBorderWidth {
+    return kLedBorderWidthFactor * self.avatarLayer.bounds.size.width + kLedBorderWidthOffset;
+}
+
 
 
 - (void) updateBadge: (NSString*) text {
     if (text) {
-        self.badgeLayer.opacity = 1;
-        self.badgeLayer.fontSize = [self fontSize];
+        self.badgeTextLayer.opacity = 1;
+        self.badgeBackgroundLayer.opacity = 1;
+        self.badgeTextLayer.fontSize = [self badgeFontSize];
 
         CTTextAlignment alignment = kCTCenterTextAlignment;
         CTParagraphStyleSetting settings[] = {kCTParagraphStyleSpecifierAlignment, sizeof(alignment), &alignment};
         CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
 
 
-        NSDictionary * attributes = @{(id)kCTFontAttributeName: (__bridge id)CTFontCreateWithName((CFStringRef)@"Helvetica", self.badgeLayer.fontSize, NULL),
+        NSDictionary * attributes = @{(id)kCTFontAttributeName: (__bridge id)CTFontCreateWithName((CFStringRef)@"Helvetica", self.badgeTextLayer.fontSize, NULL),
                                       (id)kCTParagraphStyleAttributeName: (__bridge id)paragraphStyle};
 
         NSAttributedString * attributedText = [[NSAttributedString alloc] initWithString: text attributes: attributes];
@@ -218,11 +250,12 @@ static const CGFloat kLedSizeFactor = 1.0 / 96;
         CFRelease(framesetter);
 
         bounds.size.width = MAX(bounds.size.width + 2 * [self badgePadding], bounds.size.height);
-
-        self.badgeLayer.bounds = bounds;
-        self.badgeLayer.cornerRadius = bounds.size.height / 2;
+        self.badgeTextLayer.bounds = bounds;
+        self.badgeBackgroundLayer.frame = self.badgeTextLayer.frame;
+        self.badgeBackgroundLayer.path = [UIBezierPath bezierPathWithRoundedRect: self.badgeBackgroundLayer.bounds cornerRadius: 0.5 * self.badgeBackgroundLayer.bounds.size.height].CGPath;
     } else {
-        self.badgeLayer.opacity = 0;
+        self.badgeTextLayer.opacity = 0;
+        self.badgeBackgroundLayer.opacity = 0;
     }
 }
 

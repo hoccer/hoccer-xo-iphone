@@ -399,4 +399,8 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
     return result;
 }
 
++ (NSString*) messageCountBadgeText: (NSUInteger) count {
+    return count == 0 ? nil : count > 99 ? @">99" : @(count).stringValue;
+}
+
 @end

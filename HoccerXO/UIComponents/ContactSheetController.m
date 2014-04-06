@@ -20,6 +20,9 @@
 #import "AvatarGroup.h"
 #import "GroupMembership.h"
 
+//#define SHOW_CONNECTION_STATUS
+//#define SHOW_UNREAD_MESSAGE_COUNT
+
 static const BOOL RELATIONSHIP_DEBUG = NO;
 
 @interface ContactSheetController ()
@@ -43,7 +46,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) commonInit {
     [super commonInit];
 
-    self.avatarItem.dependencyPaths = @[@"relationshipState", @"connectionStatus"];
+    self.avatarItem.dependencyPaths = @[@"relationshipState"
+#ifdef SHOW_CONNECTION_STATUS
+                                        , @"connectionStatus"
+#endif
+#ifdef SHOW_UNREAD_MESSAGE_COUNT
+                                        , @"unreadMessages.@count"
+#endif
+                                        ];
 
     self.nicknameItem.enabledMask = DatasheetModeNone;
 
@@ -137,7 +147,12 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.isBlocked = self.contact.isBlocked;
+#ifdef SHOW_CONNECTION_STATUS
         self.avatarView.isOnline = self.contact.isOnline;
+#endif
+#ifdef SHOW_UNREAD_MESSAGE_COUNT
+        self.avatarView.badgeText = [HXOUI messageCountBadgeText: self.contact.unreadMessages.count];
+#endif
     }
 }
 

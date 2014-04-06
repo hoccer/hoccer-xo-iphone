@@ -44,7 +44,6 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 @property (nonatomic, readonly) UIColor * avatarBadgeBorderColor;
 @property (nonatomic, readonly) UIColor * avatarOnlineLedColor;
 
-
 @property (nonatomic, readonly) UIFont  * messageFont;
 @property (nonatomic, readonly) UIFont  * titleFont;
 @property (nonatomic, readonly) UIFont  * smallTextFont;
@@ -75,5 +74,7 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 + (void) showAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument;
 
 + (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(HXOStringEntryCompletion)completionBlock;
+
++ (NSString*) messageCountBadgeText: (NSUInteger) count;
 
 @end

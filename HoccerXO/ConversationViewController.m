@@ -169,7 +169,7 @@
     [super configureCell: cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
 
-    cell.avatar.badgeText = [self messageCountBadgeText: contact.unreadMessages.count];
+    cell.avatar.badgeText = [HXOUI messageCountBadgeText: contact.unreadMessages.count];
 
     // XXX TODO: cell.avatar.showLed = NO;
     
@@ -216,10 +216,6 @@
 
 
     //[cell setNeedsLayout];
-}
-
-- (NSString*) messageCountBadgeText: (NSUInteger) count {
-    return count == 0 ? nil : count > 99 ? @">99" : @(count).stringValue;
 }
 
 @end
