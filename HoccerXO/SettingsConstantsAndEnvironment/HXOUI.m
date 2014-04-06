@@ -295,17 +295,13 @@ static HXOUI * _currentTheme;
         NSString * enteredText;
         switch (buttonIndex) {
             case 0:
-                NSLog(@"enterStringAlert: cancel pressed");
                 completionBlock(nil);
                 break;
             case 1:
                 enteredText = [[alertView textFieldAtIndex:0] text];
-                NSLog(@"enterStringAlert: enteredText = %@", enteredText);
-                if (enteredText.length>0) {
-                    NSLog(@"enterStringAlert: calling completionblock with text = %@", enteredText);
+                if (enteredText.length > 0) {
                     completionBlock(enteredText);
                 } else {
-                    NSLog(@"enterStringAlert: calling completionblock with nil");
                     completionBlock(nil);
                 }
                 break;

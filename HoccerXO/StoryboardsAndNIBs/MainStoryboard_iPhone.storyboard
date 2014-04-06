@@ -821,14 +821,14 @@
         <!--Code Scan View Controller-->
         <scene sceneID="eWu-7T-N4a">
             <objects>
-                <viewController storyboardIdentifier="nativeQRScanner" id="RTv-PU-Cyy" customClass="CodeScanViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="nativeQRScanner" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="RTv-PU-Cyy" customClass="CodeScanViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="1KR-CJ-bcn"/>
-                        <viewControllerLayoutGuide type="bottom" id="f9Z-G6-IDA"/>
+                        <viewControllerLayoutGuide type="top" id="9W2-FJ-Rjn"/>
+                        <viewControllerLayoutGuide type="bottom" id="tMF-39-vsf"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="H8v-Ye-AJX">
+                    <view key="view" contentMode="scaleToFill" id="hQN-yF-l5Y">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>

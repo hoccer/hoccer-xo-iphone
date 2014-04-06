@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 
-@interface CodeScanViewController : UIViewController<AVCaptureMetadataOutputObjectsDelegate>
+@interface CodeScanViewController : UIViewController <AVCaptureMetadataOutputObjectsDelegate, UIScrollViewDelegate>
+
 
 @end
