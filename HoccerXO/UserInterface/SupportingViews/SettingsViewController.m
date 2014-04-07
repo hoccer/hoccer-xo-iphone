@@ -17,18 +17,11 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-
     self.navigationItem.title = self.parentViewController.tabBarItem.title;
     self.delegate = self;
 }
 
-- (void) viewWillAppear:(BOOL)animated  {
-    [super viewWillAppear: animated];
-}
-
-- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
-    
-}
+- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {}
 
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
     NSString * segueIdentifier = specifier.key;
