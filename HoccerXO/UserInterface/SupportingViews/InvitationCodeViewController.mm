@@ -20,7 +20,7 @@
 @property (nonatomic, strong)   NSMutableDictionary        * codes;
 @property (nonatomic, strong)   NSArray                    * codesInView;
 
-@property (nonatomic, strong)   UIScrollView               * scrollView;
+@property (nonatomic, strong)   UIScrollView               * drawerScrollView;
 @property (nonatomic, strong)   UIView                     * codeDrawerView;
 @property (nonatomic, strong)   UIView                     * drawerHandleView;
 @property (nonatomic, strong)   UIView                     * headerView;
@@ -105,23 +105,23 @@
 
     CGFloat codeViewHeight = y + headerHeight;
 
-    self.scrollView = [[PullUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, codeViewHeight)];
-    self.scrollView.delegate = self;
-    self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    self.scrollView.bounces = NO;
-    self.scrollView.pagingEnabled = YES;
-    self.scrollView.showsVerticalScrollIndicator = NO;
-    self.scrollView.layer.masksToBounds = NO;
-    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, 2 * self.scrollView.bounds.size.height);
-    self.scrollView.contentOffset = CGPointMake(0, self.scrollView.bounds.size.height);
-    //self.scrollView.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview: self.scrollView];
-    //[self.view sendSubviewToBack: self.scrollView];
+    self.drawerScrollView = [[PullUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, codeViewHeight)];
+    self.drawerScrollView.delegate = self;
+    self.drawerScrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    self.drawerScrollView.bounces = NO;
+    self.drawerScrollView.pagingEnabled = YES;
+    self.drawerScrollView.showsVerticalScrollIndicator = NO;
+    self.drawerScrollView.layer.masksToBounds = NO;
+    self.drawerScrollView.contentSize = CGSizeMake(self.view.bounds.size.width, 2 * self.drawerScrollView.bounds.size.height);
+    self.drawerScrollView.contentOffset = CGPointMake(0, self.drawerScrollView.bounds.size.height);
+    //self.drawerScrollView.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview: self.drawerScrollView];
+    //[self.view sendSubviewToBack: self.drawerScrollView];
     [self.view bringSubviewToFront: self.headerView];
 
     self.codeDrawerView = [[UIToolbar alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, codeViewHeight)];
     self.codeDrawerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.scrollView addSubview: self.codeDrawerView];
+    [self.drawerScrollView addSubview: self.codeDrawerView];
     [self.codeDrawerView addSubview: self.codeDrawerTitle];
     [self.codeDrawerView addSubview: self.qrCodeView];
     [self.codeDrawerView addSubview: self.codeLabel];
@@ -150,11 +150,11 @@
     self.drawerHandleView = [[UIView alloc] initWithFrame: CGRectMake(0.5 * (self.view.bounds.size.width - handleWidth), self.codeDrawerView.frame.origin.y + self.codeDrawerView.frame.size.height + headerHeight + kHXOGridSpacing, handleWidth, kHXOGridSpacing)];
     self.drawerHandleView.backgroundColor = [UIColor colorWithWhite: 1.0 alpha: 0.5];
     self.drawerHandleView.layer.cornerRadius = 0.5 * self.drawerHandleView.bounds.size.height;
-    [self.scrollView addSubview: self.drawerHandleView];
+    [self.drawerScrollView addSubview: self.drawerHandleView];
 }
 
 - (void) dealloc {
-    self.scrollView.delegate = nil;
+    self.drawerScrollView.delegate = nil;
     self.codeOutlineLayer.delegate = nil;
 }
 
@@ -168,18 +168,18 @@
 
     [self setupCaptureSession];
 
-    self.scrollView.layer.masksToBounds = YES;
+    self.drawerScrollView.layer.masksToBounds = YES;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
     
-    self.scrollView.layer.masksToBounds = NO;
+    self.drawerScrollView.layer.masksToBounds = NO;
 }
 
 - (void) viewWillDisappear: (BOOL) animated {
     [super viewWillDisappear: animated];
-    self.scrollView.layer.masksToBounds = YES;
+    self.drawerScrollView.layer.masksToBounds = YES;
 }
 
 - (void) viewDidDisappear: (BOOL) animated {
@@ -321,7 +321,7 @@
     self.codeLabel.text = nil;
     self.qrCodeView.image = nil;
     self.codeDrawerTitle.text = NSLocalizedString(@"Invite Code", nil);
-    self.scrollView.contentOffset = CGPointMake(0, self.scrollView.bounds.size.height);
+    self.drawerScrollView.contentOffset = CGPointMake(0, self.drawerScrollView.bounds.size.height);
 }
 
 - (CGFloat) handlePosition: (CGFloat) t {
