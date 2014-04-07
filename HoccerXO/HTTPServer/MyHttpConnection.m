@@ -265,7 +265,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
                     myMessageDict[@"author"] = [[[UserProfile sharedProfile] clientId] copy];
                     myMessageDict[@"authorNick"] = [[[UserProfile sharedProfile] nickName] copy];
                 } else if ([partner isKindOfClass: [Group class]]) {
-                    Contact * author = [message.deliveries.anyObject sender];
+                    Contact * author = [(Delivery*)message.deliveries.anyObject sender];
                     if (author != nil) {
                         myMessageDict[@"author"] = [author.clientId copy];
                         myMessageDict[@"authorNick"] = [author.nickName copy];
