@@ -11,7 +11,7 @@
 #import "HXOUserDefaults.h"
 #import "AvatarView.h"
 #import "DatasheetViewController.h"
-#import "AvatarContact.h"
+#import "avatar_contact.h"
 #import "AvatarGroup.h"
 #import "HXOUI.h"
 #import "ImageViewController.h"
@@ -200,7 +200,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 - (AvatarView*) avatarView {
     if (! _avatarView) {
         _avatarView = [[AvatarView alloc] initWithFrame:CGRectMake(0, 0, kHXOProfileAvatarSize, kHXOProfileAvatarSize)];
-        _avatarView.defaultIcon = [[AvatarContact alloc] init];
+        _avatarView.defaultIcon = [[avatar_contact alloc] init];
         _avatarView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         _avatarView.badgeText = @"3";
         [_avatarView addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];

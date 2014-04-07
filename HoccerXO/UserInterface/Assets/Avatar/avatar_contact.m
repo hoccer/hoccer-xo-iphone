@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "AvatarContact.h"
+#import "avatar_contact.h"
 
 #import "HXOUI.h"
 
-@implementation AvatarContact
+@implementation avatar_contact
 
 - (void) initPath {
     UIBezierPath* bezierPath = self.path;

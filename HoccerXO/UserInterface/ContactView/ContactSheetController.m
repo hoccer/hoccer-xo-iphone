@@ -16,7 +16,7 @@
 #import "AppDelegate.h"
 #import "AvatarView.h"
 #import "HXOUI.h"
-#import "AvatarContact.h"
+#import "avatar_contact.h"
 #import "AvatarGroup.h"
 #import "GroupMembership.h"
 
@@ -198,7 +198,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) inspectedObjectChanged {
     [super inspectedObjectChanged];
-    self.avatarView.defaultIcon = self.group ? [[AvatarGroup alloc] init] : [[AvatarContact alloc] init];
+    self.avatarView.defaultIcon = self.group ? [[AvatarGroup alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
 }
 

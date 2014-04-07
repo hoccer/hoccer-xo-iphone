@@ -48,7 +48,7 @@
 #import "PaperClip.h"
 #import "HXOUI.h"
 #import "AvatarView.h"
-#import "AvatarContact.h"
+#import "avatar_contact.h"
 #import "AttachmentButton.h"
 
 #define ACTION_MENU_DEBUG YES
@@ -1362,7 +1362,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
     id author = [self getAuthor: message];
     cell.avatar.image = [author avatarImage];
-    cell.avatar.defaultIcon = [[AvatarContact alloc] init];
+    cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
     cell.avatar.isOnline = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isOnline;
 

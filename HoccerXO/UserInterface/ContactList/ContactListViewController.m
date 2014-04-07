@@ -19,7 +19,7 @@
 #import "GroupMembership.h"
 #import "HXOUI.h"
 #import "LabelWithLED.h"
-#import "AvatarContact.h"
+#import "avatar_contact.h"
 #import "AvatarGroup.h"
 #import "AvatarView.h"
 #import "HXOUserDefaults.h"
@@ -357,7 +357,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     
     UIImage * avatar = contact.avatarImage;
     cell.avatar.image = avatar;
-    cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [[AvatarGroup alloc] init] : [[AvatarContact alloc] init];
+    cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [[AvatarGroup alloc] init] : [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [contact isBlocked];
     cell.avatar.isOnline  = contact.isOnline;
 

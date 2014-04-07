@@ -8,6 +8,6 @@
 
 #import "VectorArt.h"
 
-@interface AvatarContact : VectorArt
+@interface avatar_contact : VectorArt
 
 @end
