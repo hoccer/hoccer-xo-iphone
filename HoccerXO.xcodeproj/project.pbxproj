@@ -957,15 +957,7 @@
 		630CAB7518E0F67200782507 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				630CAB7618E0F6C400782507 /* ContactSheetBase.h */,
-				630CAB7718E0F6C400782507 /* ContactSheetBase.m */,
-				63B76F6218E9EA3300E014E6 /* ContactSheetController.h */,
-				63B76F6318E9EA3300E014E6 /* ContactSheetController.m */,
 				6365EC8218E773F000B41054 /* Datasheet */,
-				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
-				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
-				63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */,
-				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
 			);
 			name = "UI Components";
 			path = UIComponents;
@@ -1291,6 +1283,8 @@
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				63CA315318D272E70069A0C2 /* InvitationCodeViewController.h */,
 				63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */,
+				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
+				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
 				63825499175F746B000347CD /* ProfileDataSource.h */,
 				6382549A175F746B000347CD /* ProfileDataSource.m */,
 				633049281701B3390045E64E /* ProfileViewController.h */,
@@ -1404,6 +1398,12 @@
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
+				630CAB7618E0F6C400782507 /* ContactSheetBase.h */,
+				630CAB7718E0F6C400782507 /* ContactSheetBase.m */,
+				63B76F6218E9EA3300E014E6 /* ContactSheetController.h */,
+				63B76F6318E9EA3300E014E6 /* ContactSheetController.m */,
+				63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */,
+				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
 				E96CB01D1714572C005F8FFA /* Crypto */,
 				6A568B8A18BA8F0400584A04 /* Images.xcassets */,
 				632502A51866340A00543D80 /* MessageItems.h */,
