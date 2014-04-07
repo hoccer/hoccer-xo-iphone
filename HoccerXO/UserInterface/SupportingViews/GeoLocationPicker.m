@@ -30,7 +30,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
 
     self.title = NSLocalizedString(@"location_picker_title", nil);
     self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"Cancel", nil);
-    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"location_picker_done_button_title", nil);
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"done_button_title", nil);
 }
 
 - (void) viewWillAppear:(BOOL)animated {

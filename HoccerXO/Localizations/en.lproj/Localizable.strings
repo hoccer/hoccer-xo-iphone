@@ -90,27 +90,10 @@
 /* Invite Actionsheet Button Title */
 "Mail" = "Invite via E-Mail";
 
-/* Invite Actionsheet Button Title */
-"Show Invite Code"="Invite via Code";
-
-/* Invite Actionsheet Button Title */
-"Scan or Enter Code"="Scan or Enter Code";
+"invite_by_code_button_title" = "Invite by Code";
 
 /* Invite Alert Title */
 "Invite failed" = "Invite failed";
-
-/* Invite Alert Title */
-/* "Invite successful" = "Invite successful";*/
-
-
-/* Invite Token View Controller */
-"or" = "or";
-
-"invite_get_new_code_button" = "Get Invite Code";
-"invite_code_field_placeholder" = "Enter Invite Code";
-
-/* Invite Code Copy/Paste Button */
-"Paste" = "Paste";
 
 /* Navigation Menu Item */
 "Profile" = "Profile";
@@ -292,35 +275,26 @@
 
 "about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer XO is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer XO is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
 
-"invite_friends_button_title" = "Invite Friends\nAccept Invite Codes";
-
 "message_too_long_title" = "Message too long";
 
 "message_too_long_text" = "Message is longer than %d bytes. Please keep it brief.";
 
 "ok_button_title" = "Ok";
 
+"done_button_title" = "Done";
+
+"enter_button_title" = "Enter";
+
 "Resend" = "Send";
 
 "delete_contact" = "Delete contact";
 
-"invite_code_view_controller_title" = "Invite by Code";
-
-"invite_qr_code_already_scanned_title" = "Code already scanned";
-
-"invite_qr_code_already_scanned_message" = "You have already scanned this code";
-
+"invite_code_sheet_title" = "Invite Code";
+"invite_code_enter_dialog_title" = "Enter an xo invite code";
+"invite_code_enter_placeholder" = "Invite Code";
+"invite_code_fetch_failed" = "Failed to get code";
 "invite_not_a_hoccer_xo_qr_code_title" = "Not a Hoccer XO code";
-
-"invite_not_a_hoccer_xo_qr_code_message" = "This QR Code is not a Hoccer XO invite code";
-
-
-"Enter_an_invite_token_here" = "Enter an invite token here:";
-"or_scan_an_invite_code"="or scan an invite QR code:";
-
-"Give_this_token_to_a_friend"="Give this token to a friend:";
-"let_a_friend_scan_this_code" = "or let'em scan this code";
-
+"invite_scanner_prompt" = "Looking for xo QR codes...";
 
 "delete_contact_safety_question" = "Delete contact, chat and attachments?";
 

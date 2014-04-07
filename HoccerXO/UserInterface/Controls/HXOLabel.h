@@ -10,4 +10,5 @@
 
 @interface HXOLabel : UILabel
 
+@property (nonatomic,assign) UIEdgeInsets textInsets;
 @end

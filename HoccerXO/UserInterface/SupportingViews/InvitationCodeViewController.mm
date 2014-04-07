@@ -13,6 +13,8 @@
 #import "AppDelegate.h"
 #import "CopyableLabel.h"
 #import "QREncoder.h"
+#import "HXOLabel.h"
+#import "UIAlertView+BlockExtensions.h"
 
 @interface InvitationCodeViewController ()
 
@@ -28,9 +30,9 @@
 @property (nonatomic, strong)   CopyableLabel              * codeLabel;
 @property (nonatomic, strong)   UILabel                    * codeDrawerTitle;
 @property (nonatomic, strong)   AVCaptureVideoPreviewLayer * videoLayer;
-@property (nonatomic, strong)   CALayer                    * codeOutlineLayer;
-
+@property (nonatomic, strong)   HXOLabel                   * statusText;
 @property (nonatomic, readonly) HXOBackend                 * chatBackend;
+@property (nonatomic, assign)   BOOL                         isDrawerExtended;
 
 @end
 
@@ -47,11 +49,6 @@
 
     self.view.backgroundColor = [UIColor lightGrayColor];
 
-    self.codeOutlineLayer = [CALayer layer];
-    self.codeOutlineLayer.frame = self.view.layer.bounds;
-    self.codeOutlineLayer.delegate = self;
-    [self.view.layer addSublayer: self.codeOutlineLayer];
-
     CGFloat headerHeight = 4 * kHXOGridSpacing;
     self.headerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, headerHeight)];
     self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -60,7 +57,7 @@
 
     CGFloat contentWidth = self.view.bounds.size.width - 2 * kHXOCellPadding;
     self.codeDrawerTitle = [[UILabel alloc] initWithFrame: CGRectZero];
-    self.codeDrawerTitle.text = NSLocalizedString(@"Invite Code", nil);
+    self.codeDrawerTitle.text = NSLocalizedString(@"invite_code_sheet_title", nil);
     self.codeDrawerTitle.textAlignment = NSTextAlignmentCenter;
     self.codeDrawerTitle.font = [UIFont systemFontOfSize: 18];
     //self.codeDrawerTitle.textColor = [HXOUI theme].smallBoldTextColor;
@@ -126,9 +123,8 @@
     [self.codeDrawerView addSubview: self.qrCodeView];
     [self.codeDrawerView addSubview: self.codeLabel];
 
-
     UIButton * doneButton = [UIButton buttonWithType: UIButtonTypeCustom];
-    [doneButton setTitle: NSLocalizedString(@"Done", nil) forState: UIControlStateNormal];
+    [doneButton setTitle: NSLocalizedString(@"done_button_title", nil) forState: UIControlStateNormal];
     [doneButton sizeToFit];
     frame = doneButton.frame;
     frame.origin.x = kHXOCellPadding;
@@ -138,7 +134,7 @@
     
     UIButton * enterButton = [UIButton buttonWithType: UIButtonTypeCustom];
     enterButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [enterButton setTitle: NSLocalizedString(@"Enter", nil) forState: UIControlStateNormal];
+    [enterButton setTitle: NSLocalizedString(@"enter_button_title", nil) forState: UIControlStateNormal];
     [enterButton sizeToFit];
     frame = enterButton.frame;
     frame.origin.x = self.view.bounds.size.width - (frame.size.width + kHXOCellPadding);
@@ -151,11 +147,39 @@
     self.drawerHandleView.backgroundColor = [UIColor colorWithWhite: 1.0 alpha: 0.5];
     self.drawerHandleView.layer.cornerRadius = 0.5 * self.drawerHandleView.bounds.size.height;
     [self.drawerScrollView addSubview: self.drawerHandleView];
+
+
+    self.statusText = [[HXOLabel alloc] initWithFrame: CGRectZero];
+    self.statusText.translatesAutoresizingMaskIntoConstraints = NO;
+    self.statusText.autoresizingMask = UIViewAutoresizingNone;
+    self.statusText.font = [HXOUI theme].smallTextFont;
+    self.statusText.text = NSLocalizedString(@"invite_scanner_prompt", nil);
+    self.statusText.textInsets = UIEdgeInsetsMake(0, kHXOGridSpacing, 0, kHXOGridSpacing);
+    [self.statusText sizeToFit];
+    self.statusText.textColor = [UIColor whiteColor];
+    self.statusText.backgroundColor = self.headerView.backgroundColor;
+    self.statusText.layer.cornerRadius = 0.5 * self.statusText.bounds.size.height;
+    self.statusText.layer.masksToBounds = YES;
+    [self.view addSubview: self.statusText];
+    [self.view sendSubviewToBack: self.statusText];
+
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.statusText
+                                                           attribute:NSLayoutAttributeCenterX
+                                                           relatedBy:NSLayoutRelationEqual
+                                                              toItem:self.view
+                                                           attribute:NSLayoutAttributeCenterX
+                                                          multiplier:1.f constant:0.f]];
+
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.statusText
+                                                           attribute:NSLayoutAttributeBottom
+                                                           relatedBy:NSLayoutRelationEqual
+                                                              toItem:self.view
+                                                           attribute:NSLayoutAttributeBottom
+                                                          multiplier:1.f constant: -50.f]];
 }
 
 - (void) dealloc {
     self.drawerScrollView.delegate = nil;
-    self.codeOutlineLayer.delegate = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -227,8 +251,12 @@
 }
 
 - (void) tearDownCaptureSession {
-    [self.captureSession removeInput: self.captureSession.inputs[0]];
-    [self.captureSession removeOutput: self.captureSession.outputs[0]];
+    while (self.captureSession.inputs.count > 0) {
+        [self.captureSession removeInput: [self.captureSession.inputs lastObject]];
+    }
+    while (self.captureSession.outputs.count > 0) {
+        [self.captureSession removeOutput: [self.captureSession.outputs lastObject]];
+    }
     [self.captureSession stopRunning];
 }
 
@@ -243,19 +271,30 @@
             NSURL * url = [NSURL URLWithString: readableObject.stringValue];
             if ([url.scheme isEqualToString: @"hxo"]) {
                 [self.chatBackend pairByToken: url.host];
+                [self addFlash: readableObject];
             } else {
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invite_not_a_hoccer_xo_qr_code_title", nil)
-                                                                 message:NSLocalizedString(@"invite_not_a_hoccer_xo_qr_code_message", nil)
-                                                                delegate: self
-                                                       cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                                                 message: readableObject.stringValue
+                                                         completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alert) {
+                                                             if (buttonIndex != alert.cancelButtonIndex) {
+                                                                 [[UIApplication sharedApplication] openURL: url];
+                                                             }
+                                                             [self.codes removeObjectForKey: readableObject.stringValue];
+                                                         }
+                                                       cancelButtonTitle: nil
                                                        otherButtonTitles: nil];
+                if ([url.scheme isEqualToString: @"http"] || [url.scheme isEqualToString: @"https"]) {
+                    alert.cancelButtonIndex = [alert addButtonWithTitle: NSLocalizedString(@"Cancel", nil)];
+                    [alert addButtonWithTitle: NSLocalizedString(@"Open", nil)];
+                } else {
+                    alert.cancelButtonIndex = [alert addButtonWithTitle: NSLocalizedString(@"ok_button_title", nil)];
+                }
                 [alert show];
             }
+            self.codes[readableObject.stringValue] = readableObject;
         }
-        self.codes[readableObject.stringValue] = readableObject;
     }
     self.codesInView = metadataObjects;
-    [self.codeOutlineLayer setNeedsDisplay];
 }
 
 #pragma mark - UI Actions
@@ -265,7 +304,7 @@
 }
 
 - (void) enterPressed: (id) sender {
-    [HXOUI enterStringAlert: nil withTitle: NSLocalizedString(@"Enter xo invite code", nil) withPlaceHolder: NSLocalizedString(@"Invite Code", nil) onCompletion:^(NSString *entry) {
+    [HXOUI enterStringAlert: nil withTitle: NSLocalizedString(@"invite_code_enter_dialog_title", nil) withPlaceHolder: NSLocalizedString(@"invite_code_enter_placeholder", nil) onCompletion:^(NSString *entry) {
         if (entry) {
             [self.chatBackend pairByToken: entry];
         }
@@ -297,30 +336,34 @@
 
 - (void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (fabs(scrollView.contentOffset.y) < 0.00001) {
-        [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
-            if (token == nil || ! [token isKindOfClass:[NSString class]]) {
-                self.codeDrawerTitle.text = @"Failed to get token.";
-                return;
-            }
-            self.codeLabel.text = token;
-            NSString * hxoURL = [NSString stringWithFormat: @"hxo://%@", token];
-            DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
-            [UIView transitionWithView: self.qrCodeView
-                              duration: 0.3f
-                               options: UIViewAnimationOptionTransitionCrossDissolve
-                            animations: ^{
-                                self.qrCodeView.image = [QREncoder renderTransparentDataMatrix: qrMatrix imageDimension: self.qrCodeView.bounds.size.width];
-                            } completion:nil];
-        }];
+        if ( ! self.isDrawerExtended) {
+            [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
+                if (token == nil || ! [token isKindOfClass:[NSString class]]) {
+                    self.codeDrawerTitle.text = NSLocalizedString(@"invite_code_fetch_failed", nil);
+                    return;
+                }
+                self.codeLabel.text = token;
+                NSString * hxoURL = [NSString stringWithFormat: @"hxo://%@", token];
+                DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
+                [UIView transitionWithView: self.qrCodeView
+                                  duration: 0.3f
+                                   options: UIViewAnimationOptionTransitionCrossDissolve
+                                animations: ^{
+                                    self.qrCodeView.image = [QREncoder renderTransparentDataMatrix: qrMatrix imageDimension: self.qrCodeView.bounds.size.width];
+                                } completion:nil];
+            }];
+        }
+        self.isDrawerExtended = YES;
     } else {
         [self clearCodeView];
+        self.isDrawerExtended = NO;
     }
 }
 
 - (void) clearCodeView {
     self.codeLabel.text = nil;
     self.qrCodeView.image = nil;
-    self.codeDrawerTitle.text = NSLocalizedString(@"Invite Code", nil);
+    self.codeDrawerTitle.text = NSLocalizedString(@"invite_code_sheet_title", nil);
     self.drawerScrollView.contentOffset = CGPointMake(0, self.drawerScrollView.bounds.size.height);
 }
 
@@ -331,17 +374,24 @@
     return min + t * (max - min);
 }
 
-#pragma mark - Outline Rendering
+#pragma mark - Outline Rendering & Flashes
 
-- (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
-    if ([layer isEqual: self.codeOutlineLayer]) {
-        for (AVMetadataMachineReadableCodeObject * code in self.codesInView) {
-            CGRect bounds = [self.videoLayer rectForMetadataOutputRectOfInterest: code.bounds];
-            CGColorRef color = [UIColor yellowColor].CGColor;
-            CGContextSetStrokeColorWithColor(ctx, color);
-            CGContextStrokeRect(ctx, bounds);
-        }
-    }
+- (void) addFlash: (AVMetadataMachineReadableCodeObject*) code {
+    CALayer * flash = [CALayer layer];
+    [CATransaction begin]; {
+        flash.frame = [self.videoLayer rectForMetadataOutputRectOfInterest: code.bounds];
+        flash.borderColor = [UIColor whiteColor].CGColor;
+        flash.borderWidth = 4;
+        [self.view.layer insertSublayer: flash above: self.videoLayer];
+    } [CATransaction commit];
+
+    [CATransaction begin]; {
+        [CATransaction setCompletionBlock:^{
+            [flash removeFromSuperlayer];
+        }];
+        [CATransaction setAnimationDuration: 1];
+        flash.opacity = 0.0;
+    } [CATransaction commit];
 }
 
 - (AVCaptureVideoPreviewLayer*) videoLayer {

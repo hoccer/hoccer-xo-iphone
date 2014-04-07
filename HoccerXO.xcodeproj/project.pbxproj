@@ -1021,7 +1021,6 @@
 		6318AC5618F303F600CD91A4 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				633A9B18177B21A700E066EF /* Controls */,
 				63540A9316E61B420087D24E /* Assets */,
 				6378482716F37E9500DE03C2 /* AttachmentPickerController.h */,
 				6378482816F37E9500DE03C2 /* AttachmentPickerController.m */,
@@ -1029,6 +1028,7 @@
 				630CAB7518E0F67200782507 /* Components & Base Classes */,
 				6318AC5A18F3092400CD91A4 /* Contact List */,
 				6318AC5818F3065A00CD91A4 /* Contact View */,
+				633A9B18177B21A700E066EF /* Controls */,
 				6318AC5918F3089E00CD91A4 /* Conversation View */,
 				6318AC5B18F3095600CD91A4 /* Profile View */,
 				E99886DB1728135C0089A510 /* SoundEffects */,

@@ -93,6 +93,8 @@
 /* Invite Actionsheet Button Title */
 "Mail" = "Einladen per Mail";
 
+"invite_by_code_button_title" = "Einladen per Code";
+
 /* Invite Actionsheet Button Title */
 "Show Invite Code"="Einladen per Code";
 
@@ -101,19 +103,6 @@
 
 /* Invite Alert Title */
 "Invite failed" = "Einladung fehlgeschlagen";
-
-/* Invite Alert Title */
-/*"Invite successful" = "Einladung erfolgreich";*/
-
-
-/* Invite Token View Controller */
-"or" = "oder";
-
-"invite_get_new_code_button" = "Code anfordern";
-"invite_code_field_placeholder" = "Code eingeben";
-
-/* Invite Code Copy/Paste Button */
-"Paste" = "Einfügen";
 
 /* Navigation Menu Item */
 "Profile" = "Profil";
@@ -301,33 +290,26 @@
 
 "about_prosa" = "Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden.";
 
-"invite_friends_button_title" = "Freunde einladen\nEinladungen annehmen";
-
 "message_too_long_title" = "Nachricht zu lang";
 
 "message_too_long_text" = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
 
 "ok_button_title" = "Ok";
 
+"done_button_title" = "Fertig";
+
+"enter_button_title" = "Eingeben";
+
 "Resend" = "Senden";
 
 "delete_contact" = "Kontakt löschen";
 
-"invite_code_view_controller_title" = "Einladungscode";
-
-"invite_qr_code_already_scanned_title" = "Code bereits gescannt";
-"invite_qr_code_already_scanned_message" = "Du hast diesen Code bereits gescannt";
-
+"invite_code_sheet_title" = "Einladungs Code";
+"invite_code_enter_dialog_title" = "Einladungscode eingeben";
+"invite_code_enter_placeholder" = "Einladungs Code";
+"invite_code_fetch_failed" = "Codeabruf fehlgeschlagen";
 "invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Code";
-"invite_not_a_hoccer_xo_qr_code_message" = "Dieser QR Code ist kein Hoccer XO Einladungskode";
-
-
-"Enter_an_invite_token_here" = "Gib einen Einladungskode ein:";
-"or_scan_an_invite_code" = "oder scanne einen QR-Code:";
-
-"Give_this_token_to_a_friend"="Gib diesen Code einem Freund:";
-"let_a_friend_scan_this_code" = "oder lasse diesen Code scannen:";
-
+"invite_scanner_prompt" = "Suche nach xo QR Codes...";
 
 "delete_contact_safety_question" = "Kontakt, Chat und Attachments löschen?";
 
@@ -518,6 +500,5 @@
 "recorder_status_stopped"   = "Stop";
 
 "location_picker_title" = "Pin verschieben";
-"location_picker_done_button_title" = "Fertig";
 
 
