@@ -93,7 +93,6 @@
 		6382549B175F746C000347CD /* ProfileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6382549A175F746B000347CD /* ProfileDataSource.m */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
-		638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
@@ -527,8 +526,6 @@
 		6382549A175F746B000347CD /* ProfileDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileDataSource.m; sourceTree = "<group>"; };
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingGroundViewController.h; sourceTree = "<group>"; };
-		638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingGroundViewController.m; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
@@ -1041,17 +1038,17 @@
 		6318AC5718F3050500CD91A4 /* Chat View */ = {
 			isa = PBXGroup;
 			children = (
-				63808A1A1857607F0001AC96 /* MessageCells */,
-				634BE1BC185C9B2B00B2DF05 /* UpDownLoadControl.h */,
-				634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */,
 				63FE105218EFA726008630DE /* AttachmentButton.h */,
 				63FE105318EFA726008630DE /* AttachmentButton.m */,
 				63AEE2FD16CA4D0300522F92 /* ChatViewController.h */,
 				63AEE2FE16CA4D0300522F92 /* ChatViewController.m */,
+				63808A1A1857607F0001AC96 /* MessageCells */,
 				632502A51866340A00543D80 /* MessageItems.h */,
 				632502A61866340A00543D80 /* MessageItems.m */,
 				63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */,
 				63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */,
+				634BE1BC185C9B2B00B2DF05 /* UpDownLoadControl.h */,
+				634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */,
 			);
 			name = "Chat View";
 			path = ChatView;
@@ -1415,8 +1412,6 @@
 				E9E92F8B18748F21007B8042 /* ServerViewController.m */,
 				63AE4542170493140099F0CB /* SettingsViewController.h */,
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
-				638EBE3A1787154000F1B9AD /* TestingGroundViewController.h */,
-				638EBE3B1787154000F1B9AD /* TestingGroundViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
 			);
@@ -2405,7 +2400,6 @@
 				E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */,
 				6302A98D18DA870400B2D04F /* SRPServer.m in Sources */,
 				632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */,
-				638EBE3C1787154000F1B9AD /* TestingGroundViewController.m in Sources */,
 				E9E92F6B18733D01007B8042 /* DDData.m in Sources */,
 				6302A98618DA870400B2D04F /* BigInteger.m in Sources */,
 				63E9B00218F314AB00EFF829 /* GhostBustersSign.m in Sources */,

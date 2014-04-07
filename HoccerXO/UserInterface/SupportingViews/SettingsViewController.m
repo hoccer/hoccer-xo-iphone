@@ -31,47 +31,8 @@
 }
 
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
-    NSString * storyboardId;
-    if ([specifier.key isEqualToString: @"tutorial"]) {
-        storyboardId = @"tutorialViewController";
-    } else if ([specifier.key isEqualToString: @"faq"]) {
-        storyboardId = @"faqViewController";
-    } else if ([specifier.key isEqualToString: @"about"]) {
-        storyboardId = @"aboutViewController";
-    } else if ([specifier.key isEqualToString: @"testingGround"]) {
-        storyboardId = @"testingGround";
-    } else if ([specifier.key isEqualToString: @"datasheetTesting"]) {
-        storyboardId = @"datasheetTesting";
-    } else if ([specifier.key isEqualToString: @"profileTesting"]) {
-        storyboardId = @"profileTesting";
-    } else if ([specifier.key isEqualToString: @"webServer"]) {
-#ifdef WITH_WEBSERVER
-        storyboardId = @"serverViewController";
-#else
-        NSLog(@"Web server is not enabled in this build");
-#endif
-    } else if ([specifier.key isEqualToString: @"qrScanner"]) {
-        storyboardId = @"nativeQRScanner";
-    } else {
-        NSLog(@"unhandled button in settings plist (key:%@)", specifier.key);
-    }
-
-    if ( ! storyboardId) {
-        return;
-    }
-
-    // InAppSettingsKit ViewControllers don't come from a storyboard.
-    // Search the view controller stack until we find one of ours.
-    UIViewController * vc = self;
-    while (vc.storyboard == nil) {
-        vc = vc.parentViewController;
-    }
-    vc = [vc.storyboard instantiateViewControllerWithIdentifier: storyboardId];
-    if ([storyboardId isEqualToString: @"profileTesting"]) {
-        [(id)vc setInspectedObject: [UserProfile sharedProfile]];
-    }
-    //[self.navigationController pushViewController: vc animated: YES];
-    [self presentViewController: vc animated: YES completion: nil];
+    NSString * segueIdentifier = specifier.key;
+    [self performSegueWithIdentifier: segueIdentifier sender: self];
 }
 
 @end

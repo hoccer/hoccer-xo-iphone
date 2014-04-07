@@ -404,7 +404,7 @@
 			<key>Title</key>
 			<string>tutorial_button_title</string>
 			<key>Key</key>
-			<string>tutorial</string>
+			<string>showTutorial</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -412,7 +412,7 @@
 			<key>Title</key>
 			<string>faq_button_title</string>
 			<key>Key</key>
-			<string>faq</string>
+			<string>showFaq</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -420,7 +420,7 @@
 			<key>Title</key>
 			<string>about_button_title</string>
 			<key>Key</key>
-			<string>about</string>
+			<string>showAbout</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>

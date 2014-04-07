@@ -118,7 +118,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mZs-Jr-ULf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="STd-pg-7UE" customClass="KeySheetController"/>
             </objects>
-            <point key="canvasLocation" x="2078" y="634"/>
+            <point key="canvasLocation" x="1733" y="-49"/>
         </scene>
         <!--Modal View with Navigation Bar Helper-->
         <scene sceneID="FUT-t7-A6G">
@@ -220,6 +220,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Mqi-7r-GTr"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="homeUrl" value="http://hoccer.com/hoccer-xo-tutorial/" localized="YES"/>
                     </userDefinedRuntimeAttributes>
@@ -353,6 +354,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="XZs-sb-T8m"/>
                     <connections>
                         <outlet property="aboutProsa" destination="oVL-BB-4SV" id="gK1-cK-YC1"/>
                         <outlet property="appIcon" destination="vKk-OD-vrN" id="2z3-AE-uh0"/>
@@ -373,45 +375,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ev7-f7-ZXP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1913" y="1349"/>
-        </scene>
-        <!--Testing Ground View Controller-->
-        <scene sceneID="hHM-9N-fqL">
-            <objects>
-                <viewController storyboardIdentifier="testingGround" id="auO-Jz-Dlt" userLabel="Testing Ground View Controller" customClass="TestingGroundViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="lof-hd-30h"/>
-                        <viewControllerLayoutGuide type="bottom" id="i6e-49-Y2J"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="0Cr-iC-Nt8">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GlV-BX-SM5">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="438"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="auO-Jz-Dlt" id="wQN-xp-K8V"/>
-                                    <outlet property="delegate" destination="auO-Jz-Dlt" id="Xgx-qy-GQi"/>
-                                </connections>
-                            </tableView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tgo-L5-gxT" customClass="HXOHyperLabel">
-                                <rect key="frame" x="0.0" y="446" width="320" height="122"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <connections>
-                        <outlet property="label" destination="Tgo-L5-gxT" id="75W-Tz-9yO"/>
-                        <outlet property="tableView" destination="GlV-BX-SM5" id="EM7-cb-fRv"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Y5O-8T-bVz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3837" y="1349"/>
+            <point key="canvasLocation" x="1118" y="2789"/>
         </scene>
         <!--Invite Code View Controller-->
         <scene sceneID="ksw-ZB-GKb">
@@ -615,7 +579,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2062" y="-65"/>
+            <point key="canvasLocation" x="2310" y="-5"/>
         </scene>
         <!--Server View Controller - ServerViewController-->
         <scene sceneID="wA0-Za-oFP">
@@ -714,6 +678,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="xgT-cW-zja"/>
                     <connections>
                         <outlet property="passwordLabel" destination="RSm-9y-flc" id="8TT-ok-mHA"/>
                         <outlet property="passwordTextField" destination="Qvx-eo-oWX" id="nP2-II-UAp"/>
@@ -727,7 +692,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dL5-qg-Q59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3444" y="1349"/>
+            <point key="canvasLocation" x="1172" y="3773"/>
         </scene>
         <!--Record View Controller-->
         <scene sceneID="FjZ-uO-Mut">
@@ -818,7 +783,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T3Q-pl-QhR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4280" y="1349"/>
+            <point key="canvasLocation" x="2760" y="1349"/>
         </scene>
         <!--Invitation Code View Controller-->
         <scene sceneID="eWu-7T-N4a">
@@ -961,7 +926,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JeW-d7-8we" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="17" y="1349"/>
+            <point key="canvasLocation" x="-79" y="1465"/>
         </scene>
         <!--Themed Navigation Controller - Modal Map View Helper-->
         <scene sceneID="qHY-n4-1jX">
@@ -1023,6 +988,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="iiA-Xe-WnH"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="homeUrl" value="http://hoccer.com/hoccer-xo-faq/" localized="YES"/>
                     </userDefinedRuntimeAttributes>
@@ -1036,7 +1002,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wql-mF-ck7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1521" y="1349"/>
+            <point key="canvasLocation" x="1118" y="2039"/>
         </scene>
         <!--Modal Group Helper-->
         <scene sceneID="85O-7J-0bj">
@@ -1128,10 +1094,16 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="uNh-uY-Mtx"/>
+                    <connections>
+                        <segue destination="waQ-4e-c5u" kind="push" identifier="showTutorial" id="I4F-69-hLk"/>
+                        <segue destination="1be-9z-Lfo" kind="push" identifier="showFaq" id="omd-f4-Vb6"/>
+                        <segue destination="5iI-Wc-d3H" kind="push" identifier="showAbout" id="QFk-sU-OTG"/>
+                        <segue destination="Gpg-VL-M5m" kind="push" identifier="showWebServer" id="nuc-I8-T5a"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xnq-vz-dI8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="535" y="1349"/>
+            <point key="canvasLocation" x="439" y="1465"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="nka-HN-GTp">
