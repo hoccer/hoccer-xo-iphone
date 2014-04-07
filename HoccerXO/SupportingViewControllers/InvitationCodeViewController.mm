@@ -45,12 +45,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self setupCaptureSession];
-
-    self.videoLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession: self.captureSession];
-    self.videoLayer.frame = self.view.layer.bounds;
-    self.videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer: self.videoLayer];
     self.view.backgroundColor = [UIColor lightGrayColor];
 
     self.codeOutlineLayer = [CALayer layer];
@@ -159,6 +153,11 @@
     [self.scrollView addSubview: self.drawerHandleView];
 }
 
+- (void) dealloc {
+    self.scrollView.delegate = nil;
+    self.codeOutlineLayer.delegate = nil;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     self.codes = nil;
@@ -167,7 +166,7 @@
 - (void) viewWillAppear: (BOOL) animated {
     [super viewWillAppear: animated];
 
-    [self.captureSession startRunning];
+    [self setupCaptureSession];
 
     self.scrollView.layer.masksToBounds = YES;
 }
@@ -185,7 +184,7 @@
 
 - (void) viewDidDisappear: (BOOL) animated {
     [super viewDidDisappear: animated];
-    [self.captureSession stopRunning];
+    [self tearDownCaptureSession];
     [self clearCodeView];
 }
 
@@ -217,11 +216,20 @@
         [self.captureSession addOutput:metadataOutput];
 
         [metadataOutput setMetadataObjectsDelegate: self queue: dispatch_get_main_queue()];
-        NSLog(@"Machine readable code types: %@", [[metadataOutput availableMetadataObjectTypes] componentsJoinedByString:@", "]);
+        //NSLog(@"Machine readable code types: %@", [[metadataOutput availableMetadataObjectTypes] componentsJoinedByString:@", "]);
         [metadataOutput setMetadataObjectTypes: [metadataOutput availableMetadataObjectTypes]];
     } else {
         NSLog(@"Could not add metadata output.");
     }
+    [self.captureSession startRunning];
+
+    self.videoLayer.session = self.captureSession;
+}
+
+- (void) tearDownCaptureSession {
+    [self.captureSession removeInput: self.captureSession.inputs[0]];
+    [self.captureSession removeOutput: self.captureSession.outputs[0]];
+    [self.captureSession stopRunning];
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
@@ -232,7 +240,6 @@
         AVMetadataMachineReadableCodeObject *readableObject = (AVMetadataMachineReadableCodeObject *)metadataObject;
 
         if ( ! self.codes[readableObject.stringValue]) {
-            NSLog(@"%@", readableObject.stringValue);
             NSURL * url = [NSURL URLWithString: readableObject.stringValue];
             if ([url.scheme isEqualToString: @"hxo"]) {
                 [self.chatBackend pairByToken: url.host];
@@ -280,7 +287,6 @@
 
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat pagingPosition = scrollView.contentOffset.y / scrollView.bounds.size.height;
-    //NSLog(@"contentOffset = %@ t = %f", NSStringFromCGPoint(scrollView.contentOffset), pagingPosition);
     CGRect frame = self.drawerHandleView.frame;
     frame.origin.y = [self handlePosition: pagingPosition];
     self.drawerHandleView.frame = frame;
@@ -315,6 +321,7 @@
     self.codeLabel.text = nil;
     self.qrCodeView.image = nil;
     self.codeDrawerTitle.text = NSLocalizedString(@"Invite Code", nil);
+    self.scrollView.contentOffset = CGPointMake(0, self.scrollView.bounds.size.height);
 }
 
 - (CGFloat) handlePosition: (CGFloat) t {
@@ -337,6 +344,16 @@
     }
 }
 
+- (AVCaptureVideoPreviewLayer*) videoLayer {
+    if (! _videoLayer) {
+        _videoLayer = [AVCaptureVideoPreviewLayer layerWithSession: nil];
+        _videoLayer.frame = self.view.layer.bounds;
+        _videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        [self.view.layer insertSublayer: _videoLayer atIndex: 0];
+    }
+    return _videoLayer;
+}
+
 #pragma mark - Attic
 
 - (HXOBackend*) chatBackend {
@@ -351,7 +368,6 @@
 @implementation PullUpView
 
 - (UIView*) hitTest: (CGPoint) point withEvent: (UIEvent*) event {
-    //NSLog(@"%@", NSStringFromCGPoint(point));
     if (point.y > self.bounds.size.height + 80) { // XXX
         return nil;
     }
