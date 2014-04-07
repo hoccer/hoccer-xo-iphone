@@ -17,7 +17,6 @@
 #import "AppDelegate.h"
 #import "HXOUserDefaults.h"
 #import "ProfileViewController.h"
-#import "InvitationController.h"
 #import "Attachment.h"
 #import "Environment.h"
 #import "HXOUI.h"

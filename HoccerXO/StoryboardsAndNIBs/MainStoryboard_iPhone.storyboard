@@ -23,7 +23,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-25" y="-2054"/>
+            <point key="canvasLocation" x="-61" y="-2494"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="l7g-Ph-Tm8">
@@ -174,6 +174,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="Kn0-3b-fVd"/>
+                        <segue destination="RTv-PU-Cyy" kind="modal" identifier="showInviteCodeViewController" id="2U5-We-Ovb"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -517,11 +518,12 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="21" kind="push" identifier="showChat" id="4Tx-uH-B8w"/>
+                        <segue destination="RTv-PU-Cyy" kind="modal" identifier="showInviteCodeViewController" id="BtW-Nz-U6U"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="727" y="-2062"/>
+            <point key="canvasLocation" x="579" y="-2458"/>
         </scene>
         <!--Chat View Controller - Chat-->
         <scene sceneID="24">
@@ -574,7 +576,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1612" y="-2044"/>
+            <point key="canvasLocation" x="2072" y="-2476"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="Cde-1N-k7V">
@@ -818,10 +820,10 @@
             </objects>
             <point key="canvasLocation" x="4280" y="1349"/>
         </scene>
-        <!--Code Scan View Controller-->
+        <!--Invitation Code View Controller-->
         <scene sceneID="eWu-7T-N4a">
             <objects>
-                <viewController storyboardIdentifier="nativeQRScanner" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="RTv-PU-Cyy" customClass="CodeScanViewController" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="RTv-PU-Cyy" customClass="InvitationCodeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9W2-FJ-Rjn"/>
                         <viewControllerLayoutGuide type="bottom" id="tMF-39-vsf"/>
@@ -834,7 +836,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DiA-No-hK7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4706" y="1376"/>
+            <point key="canvasLocation" x="1264" y="-1666"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
@@ -1157,8 +1159,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="sc8-Bm-80f"/>
+        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="2U5-We-Ovb"/>
         <segue reference="rav-wy-jJw"/>
-        <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="sc8-Bm-80f"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -12,10 +12,8 @@
 #import "Group.h"
 #import "ContactCell.h"
 #import "AppDelegate.h"
-#import "InviteCodeViewController.h"
 #import "HXOBackend.h"
 #import "DatasheetViewController.h"
-#import "InvitationController.h"
 #import "HXOUI.h"
 #import "Group.h"
 #import "GroupMembership.h"
@@ -24,6 +22,8 @@
 #import "AvatarContact.h"
 #import "AvatarGroup.h"
 #import "AvatarView.h"
+#import "HXOUserDefaults.h"
+#import "InvitationCodeViewController.h"
 
 
 #define HIDE_SEPARATORS
@@ -41,6 +41,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (nonatomic, readonly) ContactCell                 * contactCellPrototype;
 @property                       id                            keyboardHidingObserver;
 @property (strong, nonatomic)   id                            connectionInfoObserver;
+@property (nonatomic, readonly) HXOBackend                  * chatBackend;
 
 @end
 
@@ -68,7 +69,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
     self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
-    [HXOBackend registerConnectionInfoObserverFor:self];
     self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
 
     self.tableView.rowHeight = [self calculateRowHeight];
@@ -131,13 +131,15 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void) addButtonPressed: (id) sender {
     if (self.groupContactsToggle) {
         if (self.groupContactsToggle.selectedSegmentIndex == 0) {
-            [[InvitationController sharedInvitationController] presentWithViewController: self];
+            [self invitePeople];
+            //[[InvitationController sharedInvitationController] presentWithViewController: self];
         } else {
             UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupNavigationController"];
             [self presentViewController: modalGroupView animated: YES completion:nil];
         }
     } else {
-        [[InvitationController sharedInvitationController] presentWithViewController: self];
+        [self invitePeople];
+  //      [[InvitationController sharedInvitationController] presentWithViewController: self];
     }
 }
 
@@ -406,5 +408,138 @@ static const CGFloat kMagicSearchBarHeight = 44;
         return NSLocalizedString(contact.relationshipState, nil);
     }
 }
+
+#pragma mark - Invitations
+
+- (void) invitePeople {
+    NSMutableArray * actions = [NSMutableArray array];
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex != actionSheet.cancelButtonIndex) {
+            ((void(^)())actions[buttonIndex])(); // uhm, ok ... just call the damn thing, alright?
+        }
+    };
+
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
+                                        completionBlock: completion
+                                      cancelButtonTitle: nil
+                                 destructiveButtonTitle: nil
+                                      otherButtonTitles: nil];
+
+
+    if ([MFMessageComposeViewController canSendText]) {
+        [sheet addButtonWithTitle: NSLocalizedString(@"SMS",@"Invite Actionsheet Button Title")];
+        [actions addObject: ^() { [self inviteBySMS]; }];
+    }
+    if ([MFMailComposeViewController canSendMail]) {
+        [sheet addButtonWithTitle: NSLocalizedString(@"Mail",@"Invite Actionsheet Button Title")];
+        [actions addObject: ^() { [self inviteByMail]; }];
+    }
+    [sheet addButtonWithTitle: NSLocalizedString(@"Invite Code",@"Invite Actionsheet Button Title")];
+    [actions addObject: ^() { [self inviteByCode]; }];
+
+    sheet.cancelButtonIndex = [sheet addButtonWithTitle: NSLocalizedString(@"Cancel", nil)];
+
+    [sheet showInView: self.view];
+}
+
+- (void) inviteByMail {
+    [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
+        if (token == nil) {
+            return;
+        }
+        MFMailComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).mailPicker = [[MFMailComposeViewController alloc] init];
+        picker.mailComposeDelegate = self;
+
+        [picker setSubject: NSLocalizedString(@"invitation_mail_subject", @"Mail Invitation Subject")];
+
+        NSString * body = NSLocalizedString(@"invitation_mail_body", @"Mail Invitation Body");
+        NSString * inviteLink = [self inviteURL: token];
+        NSString * appStoreLink = [self appStoreURL];
+        //NSString * androidLink = [self androidURL];
+        body = [NSString stringWithFormat: body, appStoreLink, /*androidLink,*/ inviteLink/*, token*/];
+        [picker setMessageBody:body isHTML:NO];
+
+        [self presentViewController: picker animated: YES completion: nil];
+    }];
+}
+
+- (void) inviteBySMS {
+    [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
+        if (token == nil) {
+            return;
+        }
+        MFMessageComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).smsPicker = [[MFMessageComposeViewController alloc] init];
+        picker.messageComposeDelegate = self;
+
+        NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
+        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
+
+        [self presentViewController: picker animated: YES completion: nil];
+
+    }];
+}
+
+- (void) inviteByCode {
+    //[self presentInviteByCodeWithPresentMode:YES];
+    [self performSegueWithIdentifier: @"showInviteCodeViewController" sender: self];
+}
+
+- (NSString*) inviteURL: (NSString*) token {
+    return [NSString stringWithFormat: @"hxo://%@", token];
+}
+
+- (NSString*) appStoreURL {
+    return @"itms-apps://itunes.com/apps/hoccerxo";
+}
+
+- (NSString*) androidURL {
+    return @"http://google.com";
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+          didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+
+	switch (result) {
+		case MFMailComposeResultCancelled:
+			break;
+		case MFMailComposeResultSaved:
+			break;
+		case MFMailComposeResultSent:
+			break;
+		case MFMailComposeResultFailed:
+            NSLog(@"mailComposeControllerr:didFinishWithResult MFMailComposeResultFailed");
+			break;
+		default:
+			break;
+	}
+    [self dismissViewControllerAnimated: NO completion: nil];
+}
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result {
+
+	switch (result) {
+		case MessageComposeResultCancelled:
+			break;
+		case MessageComposeResultSent:
+			break;
+		case MessageComposeResultFailed:
+            NSLog(@"messageComposeViewController:didFinishWithResult MessageComposeResultFailed");
+			break;
+		default:
+			break;
+	}
+    [self dismissViewControllerAnimated: NO completion: nil];
+}
+
+
+@synthesize chatBackend = _chatBackend;
+- (HXOBackend*) chatBackend {
+    if ( ! _chatBackend) {
+        _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
+    }
+    return _chatBackend;
+}
+
 
 @end

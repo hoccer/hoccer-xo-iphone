@@ -14,7 +14,6 @@
 #import "HXOMessage.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
-#import "InviteCodeViewController.h"
 #import "HXOUserDefaults.h"
 #import "Environment.h"
 #import "UserProfile.h"

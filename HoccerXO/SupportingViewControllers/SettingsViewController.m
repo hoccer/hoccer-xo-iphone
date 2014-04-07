@@ -70,7 +70,8 @@
     if ([storyboardId isEqualToString: @"profileTesting"]) {
         [(id)vc setInspectedObject: [UserProfile sharedProfile]];
     }
-    [self.navigationController pushViewController: vc animated: YES];
+    //[self.navigationController pushViewController: vc animated: YES];
+    [self presentViewController: vc animated: YES completion: nil];
 }
 
 @end
