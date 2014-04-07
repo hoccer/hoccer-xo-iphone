@@ -16,18 +16,22 @@
 
 @interface InvitationCodeViewController ()
 
-@property (nonatomic,strong) AVCaptureSession *    captureSession;
-@property (nonatomic,strong) NSMutableDictionary * codes;
+@property (nonatomic, strong)   AVCaptureSession           * captureSession;
+@property (nonatomic, strong)   NSMutableDictionary        * codes;
+@property (nonatomic, strong)   NSArray                    * codesInView;
 
-@property (nonatomic, strong)   UIScrollView  * scrollView;
-@property (nonatomic, strong)   UIView        * codeDrawerView;
-@property (nonatomic, strong)   UIView        * drawerHandleView;
-@property (nonatomic, strong)   UIView        * headerView;
-@property (nonatomic, strong)   UIImageView   * qrCodeView;
-@property (nonatomic, strong)   CopyableLabel * codeLabel;
-@property (nonatomic, strong)   UILabel       * codeDrawerTitle;
+@property (nonatomic, strong)   UIScrollView               * scrollView;
+@property (nonatomic, strong)   UIView                     * codeDrawerView;
+@property (nonatomic, strong)   UIView                     * drawerHandleView;
+@property (nonatomic, strong)   UIView                     * headerView;
+@property (nonatomic, strong)   UIImageView                * qrCodeView;
+@property (nonatomic, strong)   CopyableLabel              * codeLabel;
+@property (nonatomic, strong)   UILabel                    * codeDrawerTitle;
+@property (nonatomic, strong)   AVCaptureVideoPreviewLayer * videoLayer;
+@property (nonatomic, strong)   CALayer                    * codeOutlineLayer;
 
-@property (nonatomic, readonly) HXOBackend   * chatBackend;
+@property (nonatomic, readonly) HXOBackend                 * chatBackend;
+
 @end
 
 @interface PullUpView : UIScrollView
@@ -38,22 +42,21 @@
 
 @synthesize chatBackend = _chatBackend;
 
-/*
-- (void) loadView {
-    self.view = [[UIView alloc] init];
-}
-*/
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     [self setupCaptureSession];
 
-    // add video preview layer to root view
-    AVCaptureVideoPreviewLayer *previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession: self.captureSession];
-    previewLayer.frame = self.view.layer.bounds;
-    previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer: previewLayer];
+    self.videoLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession: self.captureSession];
+    self.videoLayer.frame = self.view.layer.bounds;
+    self.videoLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    [self.view.layer addSublayer: self.videoLayer];
     self.view.backgroundColor = [UIColor lightGrayColor];
+
+    self.codeOutlineLayer = [CALayer layer];
+    self.codeOutlineLayer.frame = self.view.layer.bounds;
+    self.codeOutlineLayer.delegate = self;
+    [self.view.layer addSublayer: self.codeOutlineLayer];
 
     CGFloat headerHeight = 4 * kHXOGridSpacing;
     self.headerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, headerHeight)];
@@ -154,8 +157,6 @@
     self.drawerHandleView.backgroundColor = [UIColor colorWithWhite: 1.0 alpha: 0.5];
     self.drawerHandleView.layer.cornerRadius = 0.5 * self.drawerHandleView.bounds.size.height;
     [self.scrollView addSubview: self.drawerHandleView];
-
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -246,6 +247,8 @@
         }
         self.codes[readableObject.stringValue] = readableObject;
     }
+    self.codesInView = metadataObjects;
+    [self.codeOutlineLayer setNeedsDisplay];
 }
 
 #pragma mark - UI Actions
@@ -319,6 +322,19 @@
     CGFloat min = drawerBottom - (self.drawerHandleView.bounds.size.height + kHXOGridSpacing);
     CGFloat max = drawerBottom + self.headerView.bounds.size.height + kHXOGridSpacing;
     return min + t * (max - min);
+}
+
+#pragma mark - Outline Rendering
+
+- (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
+    if ([layer isEqual: self.codeOutlineLayer]) {
+        for (AVMetadataMachineReadableCodeObject * code in self.codesInView) {
+            CGRect bounds = [self.videoLayer rectForMetadataOutputRectOfInterest: code.bounds];
+            CGColorRef color = [UIColor yellowColor].CGColor;
+            CGContextSetStrokeColorWithColor(ctx, color);
+            CGContextStrokeRect(ctx, bounds);
+        }
+    }
 }
 
 #pragma mark - Attic

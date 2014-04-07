@@ -1277,8 +1277,6 @@
 			children = (
 				63AE4548170494AF0099F0CB /* AboutViewController.h */,
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
-				63CA315318D272E70069A0C2 /* InvitationCodeViewController.h */,
-				63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
 				6327EAD6171841F200AF75E1 /* ContactListViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
@@ -1293,6 +1291,8 @@
 				630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
+				63CA315318D272E70069A0C2 /* InvitationCodeViewController.h */,
+				63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */,
 				63825499175F746B000347CD /* ProfileDataSource.h */,
 				6382549A175F746B000347CD /* ProfileDataSource.m */,
 				633049281701B3390045E64E /* ProfileViewController.h */,
