@@ -149,6 +149,10 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     [self setNeedsLayout];
 }
 
+- (CGSize) intrinsicContentSize {
+    return self.bounds.size;
+}
+
 - (void) layoutSublayersOfLayer:(CALayer *)layer {
     [super layoutSublayersOfLayer: layer];
     if ([layer isEqual: self.layer]) {
