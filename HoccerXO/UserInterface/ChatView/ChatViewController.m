@@ -497,6 +497,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self showAttachmentOptions];
 }
 
+- (IBAction) unwindToChatView: (UIStoryboardSegue*) unwindSegue {
+
+}
+
 #pragma mark - Attachments
 
 - (AttachmentPickerController*) attachmentPicker {
@@ -1895,23 +1899,40 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) messageCellDidPressAvatar:(MessageCell *)cell {
-    ProfileViewController * profileViewController = [self.storyboard instantiateViewControllerWithIdentifier: @"profileViewController"];
-
-    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell: cell]];
-    
-    if ([message.isOutgoing isEqualToNumber: @NO]) {
-        if ([message.contact.type isEqualToString:[Group entityName]]) {
-            profileViewController.contact = [(Delivery*)message.deliveries.anyObject sender];
-        } else {
-            profileViewController.contact = message.contact;
-        }
-    } else {
-        profileViewController.contact = nil;
+    id contact;
+    if (cell.messageDirection == HXOMessageDirectionIncoming) {
+        HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell: cell]];
+        contact = [(Delivery*)message.deliveries.anyObject sender];
     }
 
-    [self.navigationController pushViewController: profileViewController animated: YES];
+    UIViewController * parent = self.navigationController.viewControllers.count > 1 ? self.navigationController.viewControllers[self.navigationController.viewControllers.count - 2] : nil;
+    NSString * segueIdentifier;
+    if ([parent respondsToSelector: @selector(unwindToSheetView:)] &&
+        [[(id)parent inspectedObject] isEqual: contact])
+    {
+        // TODO: maybe use unwind segues
+        //    [self.navigationController popViewControllerAnimated: YES];
+        segueIdentifier = @"unwindToContact";
+    } else {
+        segueIdentifier = cell.messageDirection == HXOMessageDirectionIncoming ? @"showContact" : @"showProfile";
+    }
+    if (segueIdentifier) {
+        [self performSegueWithIdentifier: segueIdentifier sender: cell];
+    }
 }
 
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender: (MessageCell*) sender {
+    id contactOrProfile;
+    if ([segue.identifier isEqualToString: @"showProfile"]) {
+        contactOrProfile = [UserProfile sharedProfile];
+    } else if ([segue.identifier isEqualToString: @"showContact"]) {
+        HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell: sender]];
+        contactOrProfile = [(Delivery*)message.deliveries.anyObject sender];
+    }
+    if (contactOrProfile && [segue.destinationViewController respondsToSelector: @selector(setInspectedObject:)]) {
+        [segue.destinationViewController setInspectedObject: contactOrProfile];
+    }
+}
 
 - (void) presentViewForAttachment:(Attachment *) myAttachment {
     if ([myAttachment.mediaType isEqual: @"data"]

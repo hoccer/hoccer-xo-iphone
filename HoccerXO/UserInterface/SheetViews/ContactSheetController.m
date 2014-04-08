@@ -19,7 +19,7 @@
 #import "avatar_contact.h"
 #import "AvatarGroup.h"
 #import "GroupMembership.h"
-#import "ContactCell.h"
+#import "GroupMemberCell.h"
 #import "DatasheetViewController.h"
 
 //#define SHOW_CONNECTION_STATUS
@@ -35,7 +35,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @property (nonatomic, readonly) Group            * group;
 
 @property (nonatomic, readonly) DatasheetSection * groupMemberSection;
-@property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
+@property (nonatomic, strong)   NSMutableArray   * groupMemberItems;
 
 @property (nonatomic, readonly) HXOBackend       * chatBackend;
 @property (nonatomic, readonly) AppDelegate      * appDelegate;
@@ -80,7 +80,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
     [super registerCellClasses: viewController];
-    [viewController registerCellClass: [ContactCell class]];
+    [viewController registerCellClass: [GroupMemberCell class]];
 }
 
 - (void) addUtilitySections:(NSMutableArray *)sections {
@@ -116,7 +116,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if ( ! _chatItem) {
         _chatItem = [self itemWithIdentifier: @"chat_with_contact" cellIdentifier: @"DatasheetKeyValueCell"];
         _chatItem.dependencyPaths = @[@"messages.@count"];
-        _chatItem.segueIdentifier = @"showChat";
         _chatItem.visibilityMask = DatasheetModeView;
         _chatItem.accessoryStyle = DatasheetAccessoryDisclosure;
     }
@@ -190,6 +189,13 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return nil;
 }
 
+- (NSString*) segueIdentifierForItem:(DatasheetItem *)item {
+    if ([item isEqual: self.chatItem]) {
+        return [self chatItemSegueIdentifier];
+    }
+    return nil;
+}
+
 - (NSString*) keyItemTitle {
     NSString * titleKey;
     if (self.contact.verifiedKey == nil) {
@@ -218,6 +224,19 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         }
     } else {
         return @"delete_contact";
+    }
+}
+
+- (NSString*) chatItemSegueIdentifier {
+    DatasheetViewController * vc = (DatasheetViewController*)self.delegate; // XXX hack
+
+    UIViewController * parent = vc.navigationController.viewControllers.count > 1 ? vc.navigationController.viewControllers[vc.navigationController.viewControllers.count - 2] : nil;
+    if ([parent respondsToSelector: @selector(unwindToChatView:)] &&
+        [[(id)parent inspectedObject] isEqual: self.contact])
+    {
+        return @"unwindToChat";
+    } else {
+        return @"showChat";
     }
 }
 
@@ -318,7 +337,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (DatasheetItem*) section:(DatasheetSection *)section itemAtIndex:(NSUInteger)index {
     if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
         if (self.groupMemberItems.count == 0) {
-            [self.groupMemberItems addObject: [self itemWithIdentifier: [NSString stringWithFormat: @"group_member_%d", self.groupMemberItems.count] cellIdentifier: [ContactCell reuseIdentifier]]];
+            [self.groupMemberItems addObject: [self itemWithIdentifier: [NSString stringWithFormat: @"group_member_%d", self.groupMemberItems.count] cellIdentifier: [GroupMemberCell reuseIdentifier]]];
         }
         return self.groupMemberItems[index];
     }
@@ -332,8 +351,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return nil;
 }
 
-- (BOOL) configureCell: (ContactCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
-    if ([[cell reuseIdentifier] isEqualToString: @"ContactCell"]) {
+- (BOOL) configureCell: (GroupMemberCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    if ([[cell reuseIdentifier] isEqualToString: @"GroupMemberCell"]) {
         cell.nickName.text = @"Icke";
         cell.subtitleLabel.text = @"vergnurbelt\nso...";
         cell.avatar.image = nil;

@@ -69,6 +69,10 @@ static CGFloat kHeaderHeight;
     [super didReceiveMemoryWarning];
 }
 
+- (IBAction) unwindToSheetView: (UIStoryboardSegue*) unwindSegue {
+}
+
+
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
 
     if ([self.dataSheetController configureCell: cell withItem: item atIndexPath: indexPath]) {

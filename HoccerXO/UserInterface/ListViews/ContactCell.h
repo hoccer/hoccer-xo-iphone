@@ -23,5 +23,8 @@
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views;
 
+- (CGFloat) avatarSize;
+- (CGFloat) verticalPadding;
+
 
 @end

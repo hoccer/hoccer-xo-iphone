@@ -19,4 +19,6 @@
 @property (nonatomic,strong) IBOutlet DatasheetController * dataSheetController;
 @property (nonatomic,strong) id                             inspectedObject;
 
+- (IBAction) unwindToSheetView: (UIStoryboardSegue*) unwindSegue;
+
 @end

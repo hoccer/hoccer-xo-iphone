@@ -31,7 +31,7 @@
 
 - (void) commonInit {
     self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
-    self.separatorInset = UIEdgeInsetsMake(0, kHXOCellPadding + kHXOListAvatarSize + kHXOCellPadding, 0, 0);
+    self.separatorInset = UIEdgeInsetsMake(0, kHXOCellPadding + [self avatarSize] + kHXOCellPadding, 0, 0);
 
     _nickName = [[UILabel alloc] initWithFrame: CGRectZero];
     _nickName.translatesAutoresizingMaskIntoConstraints = NO;
@@ -51,8 +51,8 @@
     _subtitleLabel.textColor = [[HXOUI theme] lightTextColor];
     //_subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _subtitleLabel];
-    
-    _avatar = [[AvatarView alloc] initWithFrame: CGRectMake(0, 0, kHXOListAvatarSize, kHXOListAvatarSize)];
+
+    _avatar = [[AvatarView alloc] initWithFrame: CGRectMake(0, 0, [self avatarSize], [self avatarSize])];
     _avatar.autoresizingMask = UIViewAutoresizingNone;
     _avatar.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview: _avatar];
@@ -64,13 +64,21 @@
     
     [self addFirstRowHorizontalConstraints: views];
     
-    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image]-(>=%f)-|", kHXOCellPadding, kHXOCellPadding];
+    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image]-(>=%f)-|", [self verticalPadding], [self verticalPadding]];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     
     [self preferredContentSizeChanged: nil];
+}
+
+- (CGFloat) avatarSize {
+    return kHXOListAvatarSize;
+}
+
+- (CGFloat) verticalPadding {
+    return kHXOCellPadding;
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
@@ -84,7 +92,7 @@
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     self.nickName.font = [HXOUI theme].titleFont;
-    NSLog(@"nickname size %@", NSStringFromCGSize( self.nickName.intrinsicContentSize));
+    //NSLog(@"nickname size %@", NSStringFromCGSize( self.nickName.intrinsicContentSize));
     self.subtitleLabel.font = [HXOUI theme].smallTextFont;
     
     if (self.verticalConstraints) {
@@ -93,8 +101,8 @@
     UIView * title = self.nickName;
     UIView * subtitle = self.subtitleLabel;
     NSDictionary * views = NSDictionaryOfVariableBindings(title, subtitle);
-    CGFloat y = kHXOCellPadding - (self.nickName.font.ascender - self.nickName.font.capHeight);
-    NSString * format = [NSString stringWithFormat: @"V:|-%f-[title]-%f-[subtitle]-(>=%f)-|", y, 0.5 * kHXOGridSpacing, kHXOCellPadding];
+    CGFloat y = [self verticalPadding] - (self.nickName.font.ascender - self.nickName.font.capHeight);
+    NSString * format = [NSString stringWithFormat: @"V:|-%f-[title]-%f-[subtitle]-(>=%f)-|", y, 0.5 * kHXOGridSpacing, [self verticalPadding]];
     self.verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                        options: 0 metrics: nil views: views];
     [self.contentView addConstraints: self.verticalConstraints];
