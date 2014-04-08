@@ -39,16 +39,10 @@
     }
     [super awakeFromNib];
 }
-/*
-- (ConversationCell*) conversationCell {
-    return (ConversationCell*)[self prototypeCellOfClass: [ConversationCell class]];
-}
-*/
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    //[self registerCellClass: [ConversationCell class]];
-    
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
@@ -97,37 +91,6 @@
 
 #pragma mark - Table View
 
-/*
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
-        return 0;
-    }
-    return [[self.currentFetchedResultsController sections] count];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
-        return 0;
-    }
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.currentFetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ContactCell * cell = (ContactCell*)[self dequeueReusableCellOfClass: [ConversationCell class] forIndexPath: indexPath];
-    [self configureCell: cell atIndexPath:indexPath];
-    return cell;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
-}
- */
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self performSegueWithIdentifier: @"showChat" sender: self];
 }
@@ -150,7 +113,6 @@
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {
-    // TODO: This looks suspiciously similar to the predicate used in ContactListViewController. Review!
     [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
 }
 

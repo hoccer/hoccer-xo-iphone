@@ -49,15 +49,12 @@
     _subtitleLabel.text = @"Lorem ipsum";
     _subtitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     _subtitleLabel.textColor = [[HXOUI theme] lightTextColor];
-    _subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    //_subtitleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: _subtitleLabel];
     
     _avatar = [[AvatarView alloc] initWithFrame: CGRectMake(0, 0, kHXOListAvatarSize, kHXOListAvatarSize)];
     _avatar.autoresizingMask = UIViewAutoresizingNone;
     _avatar.translatesAutoresizingMaskIntoConstraints = NO;
-    _avatar.defaultIcon = [[avatar_contact alloc] init];
-    _avatar.image = nil;
-    //_avatar.layer.cornerRadius = kHXOListAvatarSize * 0.5;
     [self.contentView addSubview: _avatar];
 
     UIView * title = _nickName;
@@ -67,7 +64,7 @@
     
     [self addFirstRowHorizontalConstraints: views];
     
-    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(%f)]-(>=%f@750)-|", kHXOCellPadding, kHXOListAvatarSize, kHXOCellPadding];
+    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image]", kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
 
@@ -77,7 +74,7 @@
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title(>=0)]->=%f-|", kHXOCellPadding, kHXOListAvatarSize, kHXOCellPadding, kHXOGridSpacing];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image]-%f-[title(>=0)]->=%f-|", kHXOCellPadding, kHXOCellPadding, kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
     format = [NSString stringWithFormat:  @"H:[image]-%f-[subtitle]->=%f-|", kHXOCellPadding, kHXOGridSpacing];
@@ -87,6 +84,7 @@
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     self.nickName.font = [HXOUI theme].titleFont;
+    NSLog(@"nickname size %@", NSStringFromCGSize( self.nickName.intrinsicContentSize));
     self.subtitleLabel.font = [HXOUI theme].smallTextFont;
     
     if (self.verticalConstraints) {

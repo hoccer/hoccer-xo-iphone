@@ -38,7 +38,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (nonatomic, readonly) NSFetchedResultsController  * fetchedResultsController;
 @property (nonatomic, strong)   NSManagedObjectContext      * managedObjectContext;
 
-//@property (nonatomic, readonly) ContactCell                 * contactCellPrototype;
 @property                       id                            keyboardHidingObserver;
 @property (strong, nonatomic)   id                            connectionInfoObserver;
 @property (nonatomic, readonly) HXOBackend                  * chatBackend;
@@ -129,7 +128,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -137,17 +135,11 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) addButtonPressed: (id) sender {
-    if (self.groupContactsToggle) {
-        if (self.groupContactsToggle.selectedSegmentIndex == 0) {
-            [self invitePeople];
-            //[[InvitationController sharedInvitationController] presentWithViewController: self];
-        } else {
-            UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupNavigationController"];
-            [self presentViewController: modalGroupView animated: YES completion:nil];
-        }
+    if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 1) {
+        UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupNavigationController"];
+        [self presentViewController: modalGroupView animated: YES completion:nil];
     } else {
         [self invitePeople];
-  //      [[InvitationController sharedInvitationController] presentWithViewController: self];
     }
 }
 
@@ -245,11 +237,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     NSError *error = nil;
     if (![aFetchedResultsController performFetch:&error]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-         */
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
@@ -484,7 +471,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) inviteByCode {
-    //[self presentInviteByCodeWithPresentMode:YES];
     [self performSegueWithIdentifier: @"showInviteCodeViewController" sender: self];
 }
 
