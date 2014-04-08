@@ -120,8 +120,6 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     [self.layer addSublayer: self.badgeTextLayer];
     self.badgeBackgroundLayer.frame = self.badgeTextLayer.frame;
 
-
-
     CGFloat t = 0.5 * self.avatarLayer.frame.size.height;
     CGFloat ledX = t - (t / sqrt(2));
     self.ledLayer = [CAShapeLayer layer];
@@ -133,7 +131,6 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     self.ledLayer.opacity = 0;
     self.ledLayer.position = CGPointMake(ledX, self.avatarLayer.frame.size.height - ledX);
     [self.layer addSublayer: self.ledLayer];
-
 
     self.circleMask = [CAShapeLayer layer];
     self.circleMask.bounds = self.avatarLayer.bounds;
