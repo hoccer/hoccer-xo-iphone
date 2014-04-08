@@ -10,7 +10,7 @@
 
 @class HXOHyperLabel;
 
-@interface DatasheetFooterTextView : UITableViewHeaderFooterView
+@interface DatasheetHeaderFooterTextView : UITableViewHeaderFooterView
 
 @property (nonatomic,strong) HXOHyperLabel * label;
 @property (nonatomic,assign) UIEdgeInsets    labelPadding;

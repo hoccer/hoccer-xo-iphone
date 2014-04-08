@@ -38,7 +38,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (nonatomic, readonly) NSFetchedResultsController  * fetchedResultsController;
 @property (nonatomic, strong)   NSManagedObjectContext      * managedObjectContext;
 
-@property (nonatomic, readonly) ContactCell                 * contactCellPrototype;
+//@property (nonatomic, readonly) ContactCell                 * contactCellPrototype;
 @property                       id                            keyboardHidingObserver;
 @property (strong, nonatomic)   id                            connectionInfoObserver;
 @property (nonatomic, readonly) HXOBackend                  * chatBackend;
@@ -52,7 +52,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self registerCellClass: [ContactCell class]];
+    [self registerCellClass: [self cellClass]];
     
     if (self.hasAddButton) {
         UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd target: self action: @selector(addButtonPressed:)];
@@ -74,7 +74,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     self.tableView.rowHeight = [self calculateRowHeight];
     // Apple bug: Order matters. Setting the inset before the color leaves the "no cell separators" in the wrong color.
     self.tableView.separatorColor = [[HXOUI theme] tableSeparatorColor];
-    self.tableView.separatorInset = self.contactCellPrototype.separatorInset;
+    self.tableView.separatorInset = self.cellPrototype.separatorInset;
 #ifdef HIDE_SEPARATORS
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 #endif
@@ -82,6 +82,10 @@ static const CGFloat kMagicSearchBarHeight = 44;
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+}
+
+- (id) cellClass {
+    return [ContactCell class];
 }
 
 - (void) setupTitle {
@@ -95,11 +99,15 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (CGFloat) calculateRowHeight {
-    return ceilf([self.contactCellPrototype.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height / kHXOGridSpacing) * kHXOGridSpacing;
+    // XXX Note: The +1 magically fixes the layout. Without it the multiline
+    // label in the conversation view is one pixel short and only fits one line
+    // of text. I'm not sure if i'm compensating the separator (thus an apple
+    // bug) or if it it is my fault.
+    return ceilf([self.cellPrototype systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height) + 1;
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
-    [self.contactCellPrototype preferredContentSizeChanged: notification];
+    [(ContactCell*)self.cellPrototype preferredContentSizeChanged: notification];
     self.tableView.rowHeight = [self calculateRowHeight];
     [self.tableView reloadData];
 }
@@ -143,8 +151,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
     }
 }
 
-- (ContactCell*) contactCellPrototype {
-     return (ContactCell*)[self prototypeCellOfClass: [ContactCell class]];
+- (UITableViewCell*) cellPrototype {
+     return [self prototypeCellOfClass: [self cellClass]];
 }
 
 - (NSFetchedResultsController *)currentFetchedResultsController {
@@ -170,9 +178,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ContactCell *cell = [tableView dequeueReusableCellWithIdentifier: [ContactCell reuseIdentifier] forIndexPath:indexPath];
-
-    // TODO: do this right ...
+    id cell = [tableView dequeueReusableCellWithIdentifier: [[self cellClass] reuseIdentifier] forIndexPath:indexPath];
     [self configureCell: cell atIndexPath: indexPath];
     return cell;
 }
@@ -287,8 +293,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (NSFetchedResultsController *)searchFetchedResultsController {
-    if (_searchFetchedResultsController != nil)
-    {
+    if (_searchFetchedResultsController != nil) {
         return _searchFetchedResultsController;
     }
     _searchFetchedResultsController = [self newFetchedResultsControllerWithSearch: self.searchBar.text];
@@ -333,7 +338,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
              * and
              * http://developer.apple.com/library/ios/#releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/
              */
-            [self configureCell: (ContactCell*)[self.tableView cellForRowAtIndexPath:indexPath]
+            [self configureCell: [self.tableView cellForRowAtIndexPath:indexPath]
                                atIndexPath: newIndexPath ? newIndexPath : indexPath];
             break;
 
@@ -348,8 +353,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [self.tableView endUpdates];
 }
 
-
-- (void)configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell: (ContactCell*) cell atIndexPath:(NSIndexPath *)indexPath {
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
     cell.nickName.text = contact.nickNameWithStatus;
     //cell.nickName.ledOn = contact.isOnline;

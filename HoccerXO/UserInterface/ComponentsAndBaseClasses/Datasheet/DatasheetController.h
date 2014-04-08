@@ -11,6 +11,8 @@
 
 @class DatasheetController;
 @class DatasheetItem;
+@class DatasheetSection;
+@class DatasheetViewController;
 
 typedef enum DatasheetChangeTypes {
     DatasheetChangeInsert,
@@ -71,6 +73,15 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @end
 
+@protocol DatasheetSectionDelegate <NSObject>
+
+- (NSUInteger) numberOfItemsInSection: (DatasheetSection*) section;
+- (DatasheetItem*) section: (DatasheetSection*) section itemAtIndex: (NSUInteger) index;
+
+- (NSAttributedString*) titleForSection: (DatasheetSection*) section;
+
+@end
+
 @interface DatasheetItem : NSObject
 
 @property (nonatomic, strong) NSString              * identifier;
@@ -111,15 +122,24 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @end
 
 @interface DatasheetSection : NSObject <NSCopying>
+{
+    NSArray * _items;
+}
 
 @property (nonatomic, strong) NSString           * identifier;
-@property (nonatomic, strong) NSArray            * items;
+//@property (nonatomic, strong) NSArray            * items;
 @property (nonatomic, strong) NSAttributedString * title;
 @property (nonatomic, strong) NSAttributedString * footerText;
 @property (nonatomic, strong) NSString           * headerViewIdentifier;
 @property (nonatomic, strong) NSString           * footerViewIdentifier;
+@property (nonatomic, readonly) NSUInteger         count;
+
+@property (nonatomic, weak) id<DatasheetSectionDelegate> delegate;
 
 + (id) datasheetSectionWithIdentifier: (NSString*) identifier;
+
+- (void) setItems: (NSArray*) items;
+- (id) objectAtIndexedSubscript: (NSUInteger) index;
 
 @end
 
@@ -129,8 +149,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic, strong)   NSString    * title;
 @property (nonatomic, strong)   NSString    * backButtonTitle;
-@property (nonatomic, strong)   NSArray     * items;
-@property (nonatomic, readonly) NSArray     * currentItems;
+@property (nonatomic, strong)   DatasheetSection     * items;
+@property (nonatomic, readonly) DatasheetSection     * currentItems;
 @property (nonatomic, assign)   BOOL          isEditable;
 @property (nonatomic, assign)   BOOL          isCancelable;
 @property (nonatomic, readonly) DatasheetMode mode;
@@ -165,5 +185,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) removeObjectObservers;
 - (void) addObjectObservers;
 - (void) titleChanged;
+
+- (void) registerCellClasses: (DatasheetViewController*) viewController;
+- (BOOL) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath;
 
 @end

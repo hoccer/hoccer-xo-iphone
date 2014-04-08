@@ -13,7 +13,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 @interface DatasheetController ()
 
-@property (nonatomic,strong) NSArray * currentItems;
+@property (nonatomic,strong) DatasheetSection * currentItems;
 @property (nonatomic,strong) DatasheetSection * root;
 @property (nonatomic,strong) DatasheetSection * currentRoot;
 
@@ -57,7 +57,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     while (stack.count > 0) {
         id current = stack.lastObject;
         [stack removeLastObject];
-        if ([current respondsToSelector:@selector(items)]) {
+        if ([current respondsToSelector:@selector(objectAtIndexedSubscript:)]) {
             NSNumber * mark = [marks lastObject];
             if (mark && [mark unsignedIntegerValue] == stack.count) {
                 [marks removeLastObject];
@@ -70,8 +70,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
                 }
                 [marks addObject: @(stack.count)];
                 [stack addObject: current];
-                for (id child in [[current items] reverseObjectEnumerator]) {
-                    [stack addObject: child];
+                for (int i = [current count] - 1; i >= 0; --i) {
+                    [stack addObject: current[i]];
                 }
             }
         } else {
@@ -249,7 +249,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     id current = self.currentRoot;
     for (unsigned i = 0; i < indexPath.length; ++i) {
         NSUInteger index = [indexPath indexAtPosition: i];
-        current = [current items][index];
+        current = current[index];
     }
     return current;
 }
@@ -415,12 +415,12 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     self.root.items = items;
 }
 
-- (NSArray*) items {
-    return self.root.items;
+- (DatasheetSection*) items {
+    return self.root;
 }
 
-- (NSArray*) currentItems {
-    return self.currentRoot.items;
+- (DatasheetSection*) currentItems {
+    return self.currentRoot;
 }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
@@ -480,7 +480,15 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void)prepareForSegue:(UIStoryboardSegue *)segue withItem: (DatasheetItem*) item sender:(id)sender {
 }
 
+- (void) registerCellClasses: (DatasheetViewController*) tableView {
+}
+
+- (BOOL) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    return NO;
+}
 @end
+
+//==============================================================================
 
 
 @implementation DatasheetItem
@@ -599,6 +607,9 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 @end
 
+
+//==============================================================================
+
 @implementation DatasheetSection
 
 + (id) dataSheetSection {
@@ -612,8 +623,15 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (NSString*) footerViewIdentifier {
-    if (! _footerViewIdentifier && _footerText) {
-        return @"DatasheetFooterTextView";
+    if (! _footerViewIdentifier && self.footerText) {
+        return @"DatasheetHeaderFooterTextView";
+    }
+    return _footerViewIdentifier;
+}
+
+- (NSString*) headerViewIdentifier {
+    if (! _headerViewIdentifier && self.title) {
+        return @"DatasheetHeaderFooterTextView";
     }
     return _footerViewIdentifier;
 }
@@ -626,9 +644,37 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     copy.headerViewIdentifier = _headerViewIdentifier;
     copy.title = _title;
     copy.footerText = _footerText;
+    copy.delegate = _delegate;
     copy.items = _items;
     return copy;
 }
 
+- (void) setItems: (NSArray*) items {
+    _items = items;
+}
 
+- (NSUInteger) count {
+    if ([self.delegate respondsToSelector: @selector(numberOfItemsInSection:)]) {
+        return [self.delegate numberOfItemsInSection: self];
+    }
+    return _items.count;
+}
+
+- (id) objectAtIndexedSubscript: (NSUInteger) index {
+    if ([self.delegate respondsToSelector: @selector(section:itemAtIndex:)]) {
+        return [self.delegate section: self itemAtIndex: index];
+    }
+    return _items[index];
+}
+
+- (id) reverseObjectEnumerator {
+    return _items.reverseObjectEnumerator;
+}
+
+- (NSAttributedString*) title {
+    if ([self.delegate respondsToSelector: @selector(titleForSection:)]) {
+        return [self.delegate titleForSection: self];
+    }
+    return _title;
+}
 @end

@@ -26,7 +26,7 @@
 
 @interface ConversationViewController ()
 
-@property (nonatomic,readonly) ConversationCell * conversationCell;
+//@property (nonatomic,readonly) ConversationCell * conversationCell;
 
 @end
 
@@ -39,24 +39,23 @@
     }
     [super awakeFromNib];
 }
-
+/*
 - (ConversationCell*) conversationCell {
     return (ConversationCell*)[self prototypeCellOfClass: [ConversationCell class]];
 }
-
+*/
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self registerCellClass: [ConversationCell class]];
+    //[self registerCellClass: [ConversationCell class]];
     
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
 }
 
-
-- (UITableViewCell*) prototypeCell {
-    return [self prototypeCellOfClass: [ConversationCell class]];
+- (id) cellClass {
+    return [ConversationCell class];
 }
 
 - (void) setupTitle {
@@ -98,7 +97,7 @@
 
 #pragma mark - Table View
 
-
+/*
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         return 0;
@@ -127,13 +126,9 @@
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     return NO;
 }
+ */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        self.chatViewController.partner = contact;
-    }
-    
     [self performSegueWithIdentifier: @"showChat" sender: self];
 }
 
@@ -180,7 +175,7 @@
         if (message.body.length > 0) {
             cell.subtitleLabel.text = message.body;
             // TODO: do not mess with the fonts
-            cell.subtitleLabel.font = [UIFont systemFontOfSize: cell.subtitleLabel.font.pointSize];
+            //cell.subtitleLabel.font = [UIFont systemFontOfSize: cell.subtitleLabel.font.pointSize];
         } else {
             if (message.attachment != nil) {
                 cell.subtitleLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(message.attachment.mediaType,nil)];
@@ -188,7 +183,7 @@
                 cell.subtitleLabel.text = @"<>"; // should never happen
             }
             // TODO: do not mess with the fonts
-            cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
+            //cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
         }
         latestMessageTime = message.timeAccepted;
     }

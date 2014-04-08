@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "DatasheetFooterTextView.h"
+#import "DatasheetHeaderFooterTextView.h"
 
 #import "HXOHyperLabel.h"
 #import "HXOUI.h"
 
 
-@interface DatasheetFooterTextView ()
+@interface DatasheetHeaderFooterTextView ()
 
 @property (nonatomic,strong) NSLayoutConstraint * topPadding;
 @property (nonatomic,strong) NSLayoutConstraint * bottomPadding;
@@ -20,7 +20,7 @@
 @end
 
 
-@implementation DatasheetFooterTextView
+@implementation DatasheetHeaderFooterTextView
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

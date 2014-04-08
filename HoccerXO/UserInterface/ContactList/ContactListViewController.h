@@ -20,11 +20,13 @@
 @property (nonatomic, assign)   BOOL                         hasGroupContactToggle;
 
 - (void) clearFetchedResultsControllers;
-- (void) configureCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void) configureCell: (id) cell atIndexPath:(NSIndexPath *)indexPath;
 
 - (id) entityName;
 - (NSArray*) sortDescriptors;
 - (void) addPredicates: (NSMutableArray*) predicates;
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString;
+
+- (id) cellClass;
 
 @end

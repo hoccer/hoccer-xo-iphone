@@ -66,7 +66,7 @@
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		63638F8E18EC8210008DA997 /* AvatarGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 63638F8D18EC8210008DA997 /* AvatarGroup.m */; };
 		636492D71711E97900E35514 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* AvatarView.m */; };
-		6365EB2C18E4D96D00B41054 /* DatasheetFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */; };
+		6365EB2C18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m */; };
 		6365EC8518E7976600B41054 /* avatar_contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EC8418E7976600B41054 /* avatar_contact.m */; };
 		636D400317106EC000304EDF /* Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D400217106EC000304EDF /* Environment.m */; };
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
@@ -478,8 +478,8 @@
 		636492D61711E97900E35514 /* AvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvatarView.m; sourceTree = "<group>"; };
 		636492D81711F4B000E35514 /* UserDefaultsCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsCells.h; sourceTree = "<group>"; };
 		636492D91711F4B000E35514 /* UserDefaultsCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsCells.m; sourceTree = "<group>"; };
-		6365EB2A18E4D96D00B41054 /* DatasheetFooterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetFooterTextView.h; sourceTree = "<group>"; };
-		6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetFooterTextView.m; sourceTree = "<group>"; };
+		6365EB2A18E4D96D00B41054 /* DatasheetHeaderFooterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetHeaderFooterTextView.h; sourceTree = "<group>"; };
+		6365EB2B18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetHeaderFooterTextView.m; sourceTree = "<group>"; };
 		6365EC8318E7976600B41054 /* avatar_contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avatar_contact.h; sourceTree = "<group>"; };
 		6365EC8418E7976600B41054 /* avatar_contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = avatar_contact.m; sourceTree = "<group>"; };
 		636D400117106EC000304EDF /* Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Environment.h; sourceTree = "<group>"; };
@@ -994,8 +994,8 @@
 				630CAB8418E1E31600782507 /* DatasheetActionCell.m */,
 				630CAB8618E1E84400782507 /* DatasheetCell.h */,
 				630CAB8718E1E84400782507 /* DatasheetCell.m */,
-				6365EB2A18E4D96D00B41054 /* DatasheetFooterTextView.h */,
-				6365EB2B18E4D96D00B41054 /* DatasheetFooterTextView.m */,
+				6365EB2A18E4D96D00B41054 /* DatasheetHeaderFooterTextView.h */,
+				6365EB2B18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m */,
 				630CAB8C18E2333E00782507 /* DatasheetKeyValueCell.h */,
 				630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */,
 				630CAB8018E1E00C00782507 /* DatasheetTextInputCell.h */,
@@ -1208,10 +1208,6 @@
 		633A9B18177B21A700E066EF /* Controls */ = {
 			isa = PBXGroup;
 			children = (
-				63B2178B181FDFAA00C057D9 /* LabelWithLED.h */,
-				63B2178C181FDFAB00C057D9 /* LabelWithLED.m */,
-				630CAB8918E22EBC00782507 /* HXOLabel.h */,
-				630CAB8A18E22EBC00782507 /* HXOLabel.m */,
 				636492D51711E97900E35514 /* AvatarView.h */,
 				636492D61711E97900E35514 /* AvatarView.m */,
 				63EB5DA018F1FFEB00E9A4E1 /* CopyableLabel.h */,
@@ -1220,6 +1216,10 @@
 				E9A619DD17DF6E3700D4CFC3 /* CopyableUITextField.m */,
 				632502AB1866500800543D80 /* HXOHyperLabel.h */,
 				632502AC1866500800543D80 /* HXOHyperLabel.m */,
+				630CAB8918E22EBC00782507 /* HXOLabel.h */,
+				630CAB8A18E22EBC00782507 /* HXOLabel.m */,
+				63B2178B181FDFAA00C057D9 /* LabelWithLED.h */,
+				63B2178C181FDFAB00C057D9 /* LabelWithLED.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -2288,7 +2288,7 @@
 				63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */,
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
-				6365EB2C18E4D96D00B41054 /* DatasheetFooterTextView.m in Sources */,
+				6365EB2C18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m in Sources */,
 				63B7900018D4E52D003A9125 /* IconProfile.m in Sources */,
 				636D400317106EC000304EDF /* Environment.m in Sources */,
 				E9E92F93187503F7007B8042 /* NSString+HTML.m in Sources */,

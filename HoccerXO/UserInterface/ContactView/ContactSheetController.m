@@ -19,6 +19,8 @@
 #import "avatar_contact.h"
 #import "AvatarGroup.h"
 #import "GroupMembership.h"
+#import "ContactCell.h"
+#import "DatasheetViewController.h"
 
 //#define SHOW_CONNECTION_STATUS
 //#define SHOW_UNREAD_MESSAGE_COUNT
@@ -27,13 +29,16 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 @interface ContactSheetController ()
 
-@property (nonatomic,readonly) DatasheetItem * chatItem;
-@property (nonatomic,readonly) DatasheetItem * blockContactItem;
-@property (nonatomic,readonly) Contact       * contact;
-@property (nonatomic,readonly) Group         * group;
+@property (nonatomic, readonly) DatasheetItem    * chatItem;
+@property (nonatomic, readonly) DatasheetItem    * blockContactItem;
+@property (nonatomic, readonly) Contact          * contact;
+@property (nonatomic, readonly) Group            * group;
 
-@property (nonatomic,readonly) HXOBackend    * chatBackend;
-@property (nonatomic,readonly) AppDelegate   * appDelegate;
+@property (nonatomic, readonly) DatasheetSection * groupMemberSection;
+@property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
+
+@property (nonatomic, readonly) HXOBackend       * chatBackend;
+@property (nonatomic, readonly) AppDelegate      * appDelegate;
 
 @end
 
@@ -42,9 +47,12 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @synthesize chatItem = _chatItem;
 @synthesize blockContactItem = _blockContactItem;
 @synthesize chatBackend = _chatBackend;
+@synthesize groupMemberSection = _groupMemberSection;
 
 - (void) commonInit {
     [super commonInit];
+
+    self.groupMemberItems = [NSMutableArray array];
 
     self.avatarItem.dependencyPaths = @[@"relationshipState"
 #ifdef SHOW_CONNECTION_STATUS
@@ -64,9 +72,20 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     self.destructiveButton.target = self;
     self.destructiveButton.action = @selector(deleteContactPressed:);
 
-    self.destructiveSection.items = [@[self.blockContactItem] arrayByAddingObjectsFromArray: self.destructiveSection.items];
+    //self.destructiveSection.items = [@[self.blockContactItem] arrayByAddingObjectsFromArray: self.destructiveSection.items];
+    self.destructiveSection.items = @[self.blockContactItem, self.destructiveButton];
 
     self.isEditable = YES;
+}
+
+- (void) registerCellClasses: (DatasheetViewController*) viewController {
+    [super registerCellClasses: viewController];
+    [viewController registerCellClass: [ContactCell class]];
+}
+
+- (void) addUtilitySections:(NSMutableArray *)sections {
+    [super addUtilitySections: sections];
+    [sections addObject: self.groupMemberSection];
 }
 
 - (Contact*) contact {
@@ -116,7 +135,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (id) valueForItem: (DatasheetItem*) item {
-    if ([item isEqual: self.chatItem]) {
+    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
+    if (groupMemeberIndex != NSNotFound) {
+        return @"vergnurbelt"; //[self groupMemeberStatus: groupMemeberIndex];
+    } else if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
     } else if ([item isEqual: self.keyItem]) {
         return [self keyItemTitle];
@@ -157,7 +179,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (NSString*) titleForItem:(DatasheetItem *)item {
-    if ([item isEqual: self.blockContactItem]) {
+    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
+    if (groupMemeberIndex != NSNotFound) {
+        return @"Icke";
+    } else if ([item isEqual: self.blockContactItem]) {
         return [self blockItemTitle];
     } else if ([item isEqual: self.destructiveButton]) {
         return [self destructiveButtonTitle];
@@ -271,6 +296,51 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         }];
     }
     [self.delegate controllerDidFinish: self];
+}
+
+#pragma mark - Group Member Section
+
+- (DatasheetSection*) groupMemberSection {
+    if ( ! _groupMemberSection) {
+        _groupMemberSection = [DatasheetSection datasheetSectionWithIdentifier: @"group_member_section"];
+        _groupMemberSection.delegate = self;
+    }
+    return _groupMemberSection;
+}
+
+- (NSUInteger) numberOfItemsInSection:(DatasheetSection *)section {
+    if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
+        return 1;
+    }
+    return 0;
+}
+
+- (DatasheetItem*) section:(DatasheetSection *)section itemAtIndex:(NSUInteger)index {
+    if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
+        if (self.groupMemberItems.count == 0) {
+            [self.groupMemberItems addObject: [self itemWithIdentifier: [NSString stringWithFormat: @"group_member_%d", self.groupMemberItems.count] cellIdentifier: [ContactCell reuseIdentifier]]];
+        }
+        return self.groupMemberItems[index];
+    }
+    return  nil;
+}
+
+- (NSAttributedString*) titleForSection:(DatasheetSection *)section {
+    if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
+        return [[NSAttributedString alloc] initWithString: @"Admin" attributes: nil]; //[self groupMemberSectionTitle];
+    }
+    return nil;
+}
+
+- (BOOL) configureCell: (ContactCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    if ([[cell reuseIdentifier] isEqualToString: @"ContactCell"]) {
+        cell.nickName.text = @"Icke";
+        cell.subtitleLabel.text = @"vergnurbelt\nso...";
+        cell.avatar.image = nil;
+        cell.avatar.defaultIcon = [[avatar_contact alloc] init];
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - Attic

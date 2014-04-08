@@ -11,7 +11,7 @@
 #import "DatasheetTextInputCell.h"
 #import "DatasheetKeyValueCell.h"
 #import "DatasheetActionCell.h"
-#import "DatasheetFooterTextView.h"
+#import "DatasheetHeaderFooterTextView.h"
 #import "HXOHyperLabel.h"
 #import "HXOUI.h"
 #import "HXOUI.h" // needed for header height hack
@@ -48,7 +48,9 @@ static CGFloat kHeaderHeight;
     [self registerCellClass: [DatasheetKeyValueCell class]];
     [self registerCellClass: [DatasheetActionCell class]];
 
-    [self registerHeaderFooterViewClass: [DatasheetFooterTextView class]];
+    [self registerHeaderFooterViewClass: [DatasheetHeaderFooterTextView class]];
+
+    [self.dataSheetController registerCellClasses: self];
 
     // TableView changes its behaviour when writing to tableHeaderView :-/
     if (self.dataSheetController.tableHeaderView) {
@@ -69,7 +71,9 @@ static CGFloat kHeaderHeight;
 
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
 
-    cell.delegate = self;
+    if ([self.dataSheetController configureCell: cell withItem: item atIndexPath: indexPath]) {
+        return;
+    }
 
     NSString * title = NSLocalizedString(item.title, nil);
     title = title && ! [title isEqualToString: @""] && [cell respondsToSelector: @selector(valueView)] ? [title stringByAppendingString:@":"] : title;
@@ -142,7 +146,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[self.dataSheetController.currentItems[section] items] count];
+    return [self.dataSheetController.currentItems[section] count];
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

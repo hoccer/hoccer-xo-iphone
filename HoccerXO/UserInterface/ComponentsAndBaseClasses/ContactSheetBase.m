@@ -22,8 +22,8 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 @interface ContactSheetBase ()
 
-@property (nonatomic, readonly) AttachmentPickerController* imagePicker;
-@property (nonatomic, assign)   BOOL                        avatarModified;
+@property (nonatomic, readonly) AttachmentPickerController * imagePicker;
+@property (nonatomic, assign)   BOOL                         avatarModified;
 
 @end
 

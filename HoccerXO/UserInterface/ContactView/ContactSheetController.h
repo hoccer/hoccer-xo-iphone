@@ -8,6 +8,6 @@
 
 #import "ContactSheetBase.h"
 
-@interface ContactSheetController : ContactSheetBase
+@interface ContactSheetController : ContactSheetBase <DatasheetSectionDelegate>
 
 @end

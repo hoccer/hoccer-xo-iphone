@@ -10,14 +10,13 @@
 
 #import "HXOTableViewCell.h"
 
-@class LabelWithLED;
 @class AvatarView;
 
 @interface ContactCell : HXOTableViewCell
 
-@property (nonatomic,readonly) LabelWithLED * nickName;
-@property (nonatomic,readonly) UILabel      * subtitleLabel;
-@property (nonatomic,readonly) AvatarView   * avatar;
+@property (nonatomic,readonly) UILabel    * nickName;
+@property (nonatomic,readonly) UILabel    * subtitleLabel;
+@property (nonatomic,readonly) AvatarView * avatar;
 
 - (void) commonInit;
 - (void) preferredContentSizeChanged: (NSNotification*) notification;
