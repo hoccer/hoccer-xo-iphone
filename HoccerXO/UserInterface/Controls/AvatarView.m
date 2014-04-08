@@ -131,8 +131,6 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     self.ledLayer.strokeColor = [UIColor whiteColor].CGColor;
     self.ledLayer.lineWidth = [self ledBorderWidth];
     self.ledLayer.opacity = 0;
-//    self.ledLayer.backgroundColor = [HXOUI theme].avatarOnlineLedColor.CGColor;
-//    self.ledLayer.cornerRadius = self.ledLayer.bounds.size.height / 2;
     self.ledLayer.position = CGPointMake(ledX, self.avatarLayer.frame.size.height - ledX);
     [self.layer addSublayer: self.ledLayer];
 

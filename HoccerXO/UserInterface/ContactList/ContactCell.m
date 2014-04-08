@@ -64,7 +64,7 @@
     
     [self addFirstRowHorizontalConstraints: views];
     
-    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image]", kHXOCellPadding];
+    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image]-(>=%f)-|", kHXOCellPadding, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
 
