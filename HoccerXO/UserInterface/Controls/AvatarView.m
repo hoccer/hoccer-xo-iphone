@@ -160,7 +160,6 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
         self.badgeTextLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.frame), CGRectGetMinY(self.avatarLayer.frame));
         self.badgeBackgroundLayer.position = self.badgeTextLayer.position;
 
-
         CGFloat t = 0.5 * self.avatarLayer.frame.size.height;
         CGFloat ledX = t - (t / sqrt(2));
         self.ledLayer.position = CGPointMake(roundf(ledX) + .5, roundf(self.avatarLayer.frame.size.height - ledX) + .5);

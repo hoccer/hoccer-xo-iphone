@@ -408,8 +408,8 @@
 		630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOThemedNavigationController.m; sourceTree = "<group>"; };
 		630CAA5318DCC8AE00782507 /* DatasheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetViewController.h; sourceTree = "<group>"; };
 		630CAA5418DCC8AE00782507 /* DatasheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetViewController.m; sourceTree = "<group>"; };
-		630CAB7618E0F6C400782507 /* ContactSheetBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactSheetBase.h; path = SheetViews/ContactSheetBase.h; sourceTree = "<group>"; };
-		630CAB7718E0F6C400782507 /* ContactSheetBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactSheetBase.m; path = SheetViews/ContactSheetBase.m; sourceTree = "<group>"; };
+		630CAB7618E0F6C400782507 /* ContactSheetBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetBase.h; sourceTree = "<group>"; };
+		630CAB7718E0F6C400782507 /* ContactSheetBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetBase.m; sourceTree = "<group>"; };
 		630CAB7918E0F78500782507 /* DatasheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetController.h; sourceTree = "<group>"; };
 		630CAB7A18E0F78500782507 /* DatasheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetController.m; sourceTree = "<group>"; };
 		630CAB8018E1E00C00782507 /* DatasheetTextInputCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetTextInputCell.h; sourceTree = "<group>"; };
@@ -446,10 +446,10 @@
 		632502AC1866500800543D80 /* HXOHyperLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOHyperLabel.m; sourceTree = "<group>"; };
 		6327EAC71717567400AF75E1 /* bg-noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-noise.png"; sourceTree = "<group>"; };
 		6327EAC81717567400AF75E1 /* bg-noise@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-noise@2x.png"; sourceTree = "<group>"; };
-		6327EAD5171841F200AF75E1 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactListViewController.h; path = ListViews/ContactListViewController.h; sourceTree = "<group>"; };
-		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ContactListViewController.m; path = ListViews/ContactListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		6327EAEA171883C200AF75E1 /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactCell.h; path = ListViews/ContactCell.h; sourceTree = "<group>"; };
-		6327EAEB171883C300AF75E1 /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactCell.m; path = ListViews/ContactCell.m; sourceTree = "<group>"; };
+		6327EAD5171841F200AF75E1 /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactListViewController.h; sourceTree = "<group>"; };
+		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		6327EAEA171883C200AF75E1 /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
+		6327EAEB171883C300AF75E1 /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
 		6327EB6E171D55DA00AF75E1 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../ObjCSRP/3rdParty/openssl-xcode/build/Release-iphoneos/libcrypto.a"; sourceTree = "<group>"; };
 		6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
@@ -560,8 +560,8 @@
 		63AEE2E716CA4D0200522F92 /* HoccerXO-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerXO-Prefix.pch"; sourceTree = "<group>"; };
 		63AEE2E816CA4D0200522F92 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		63AEE2E916CA4D0200522F92 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ConversationViewController.h; path = ListViews/ConversationViewController.h; sourceTree = "<group>"; };
-		63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ConversationViewController.m; path = ListViews/ConversationViewController.m; sourceTree = "<group>"; };
+		63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationViewController.h; sourceTree = "<group>"; };
+		63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationViewController.m; sourceTree = "<group>"; };
 		63AEE2FD16CA4D0300522F92 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
 		63AEE2FE16CA4D0300522F92 /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		63AEE30616CA566B00522F92 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
@@ -586,10 +586,10 @@
 		63B1C9EA1843FA3800B75CD8 /* cnt-contact@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-contact@2x.png"; sourceTree = "<group>"; };
 		63B2178B181FDFAA00C057D9 /* LabelWithLED.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelWithLED.h; sourceTree = "<group>"; };
 		63B2178C181FDFAB00C057D9 /* LabelWithLED.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelWithLED.m; sourceTree = "<group>"; };
-		63B76F4E18E8F7F800E014E6 /* KeySheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeySheetController.h; path = SheetViews/KeySheetController.h; sourceTree = "<group>"; };
-		63B76F4F18E8F7F800E014E6 /* KeySheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeySheetController.m; path = SheetViews/KeySheetController.m; sourceTree = "<group>"; };
-		63B76F6218E9EA3300E014E6 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactSheetController.h; path = SheetViews/ContactSheetController.h; sourceTree = "<group>"; };
-		63B76F6318E9EA3300E014E6 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactSheetController.m; path = SheetViews/ContactSheetController.m; sourceTree = "<group>"; };
+		63B76F4E18E8F7F800E014E6 /* KeySheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeySheetController.h; sourceTree = "<group>"; };
+		63B76F4F18E8F7F800E014E6 /* KeySheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeySheetController.m; sourceTree = "<group>"; };
+		63B76F6218E9EA3300E014E6 /* ContactSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactSheetController.h; sourceTree = "<group>"; };
+		63B76F6318E9EA3300E014E6 /* ContactSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactSheetController.m; sourceTree = "<group>"; };
 		63B78FF818D4D6C1003A9125 /* IconChats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconChats.h; sourceTree = "<group>"; };
 		63B78FF918D4D6C1003A9125 /* IconChats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconChats.m; sourceTree = "<group>"; };
 		63B78FFB18D4E517003A9125 /* IconContacts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconContacts.h; sourceTree = "<group>"; };
@@ -612,15 +612,15 @@
 		63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HSBUtilities.m"; sourceTree = "<group>"; };
 		63C178C418BF79A100F29BC4 /* UIColor+HexUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexUtilities.h"; sourceTree = "<group>"; };
 		63C178C518BF79A100F29BC4 /* UIColor+HexUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexUtilities.m"; sourceTree = "<group>"; };
-		63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileSheetController.h; path = SheetViews/ProfileSheetController.h; sourceTree = "<group>"; };
-		63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileSheetController.m; path = SheetViews/ProfileSheetController.m; sourceTree = "<group>"; };
+		63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileSheetController.h; sourceTree = "<group>"; };
+		63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileSheetController.m; sourceTree = "<group>"; };
 		63C1E88D18EB2ED00066D5C6 /* HXOClientProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOClientProtocol.h; sourceTree = "<group>"; };
 		63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		63C413B416E8FD02004E1F6D /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		63C413B616E8FD0D004E1F6D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		63C413B816E8FD15004E1F6D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		63C413BA16E94735004E1F6D /* ConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversationCell.h; path = ListViews/ConversationCell.h; sourceTree = "<group>"; };
-		63C413BB16E94735004E1F6D /* ConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversationCell.m; path = ListViews/ConversationCell.m; sourceTree = "<group>"; };
+		63C413BA16E94735004E1F6D /* ConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationCell.h; sourceTree = "<group>"; };
+		63C413BB16E94735004E1F6D /* ConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationCell.m; sourceTree = "<group>"; };
 		63CA315318D272E70069A0C2 /* InvitationCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitationCodeViewController.h; sourceTree = "<group>"; };
 		63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InvitationCodeViewController.mm; sourceTree = "<group>"; };
 		63CB3E8718D4A909006BB511 /* VectorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorArt.h; sourceTree = "<group>"; };
@@ -1319,6 +1319,7 @@
 				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
 			);
 			name = "Sheet Views";
+			path = SheetViews;
 			sourceTree = "<group>";
 		};
 		63848A9218F46F2D00C253A4 /* List Views */ = {
@@ -1334,6 +1335,7 @@
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 			);
 			name = "List Views";
+			path = ListViews;
 			sourceTree = "<group>";
 		};
 		6390949D1738751800DF889B /* Certificates */ = {
