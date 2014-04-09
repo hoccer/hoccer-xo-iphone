@@ -34,7 +34,9 @@ static CGFloat kHeaderHeight;
 @synthesize webViewController = _webViewController;
 
 + (void) initialize {
-    kHeaderHeight = 3 * kHXOGridSpacing;
+    if (self == [DatasheetViewController class]) {
+        kHeaderHeight = 3 * kHXOGridSpacing;
+    }
 }
 
 - (void)viewDidLoad {

@@ -18,7 +18,9 @@ NSString * const kValidEnvironments = @"_validEnvironments";
 @implementation Environment
 
 + (void) initialize {
-    sharedEnvironment = [[Environment alloc] init];
+    if (self == [Environment class]) {
+        sharedEnvironment = [[Environment alloc] init];
+    }
 }
 
 + (Environment*) sharedEnvironment {

@@ -223,7 +223,9 @@ static HXOUI * _currentTheme;
 
 
 + (void) initialize {
-    _currentTheme = [[HXOUI alloc] init];
+    if (self == [HXOUI class]) {
+        _currentTheme = [[HXOUI alloc] init];
+    }
 }
 
 + (HXOUI*) theme {

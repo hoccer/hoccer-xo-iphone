@@ -53,7 +53,9 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 + (void) initialize {
-    profileInstance = [[UserProfile alloc] init];
+    if (self == [UserProfile class]) {
+        profileInstance = [[UserProfile alloc] init];
+    }
 }
 
 + (UserProfile*) sharedProfile {
