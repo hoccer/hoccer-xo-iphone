@@ -490,6 +490,13 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 - (void) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
 }
+
+- (void) editInsertItem:(DatasheetItem *)item {
+}
+
+- (void) editRemoveItem:(DatasheetItem *)item {
+}
+
 @end
 
 //==============================================================================
@@ -615,7 +622,15 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return NO;
 }
 
-
+- (NSString*) deleteButtonTitle {
+    if (_deleteButtonTitle) {
+        return _deleteButtonTitle;
+    }
+    if ([self.delegate respondsToSelector: @selector(deleteButtonTitleForItem:)]) {
+        return [self.delegate deleteButtonTitleForItem: self];
+    }
+    return nil;
+}
 @end
 
 

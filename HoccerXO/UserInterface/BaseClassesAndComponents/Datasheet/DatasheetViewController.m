@@ -204,6 +204,21 @@ static CGFloat kHeaderHeight;
     DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
     return item.isDeletable;
 }
+
+- (NSString*) tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
+    return item.deleteButtonTitle;
+}
+
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.dataSheetController editRemoveItem: item];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        [self.dataSheetController editInsertItem: item];
+    }
+}
+
 #pragma mark - Table Section Headers and Footers
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)sectionIndex {

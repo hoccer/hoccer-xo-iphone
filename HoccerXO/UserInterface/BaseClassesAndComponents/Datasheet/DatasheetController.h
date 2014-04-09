@@ -72,6 +72,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (SEL) actionForItem: (DatasheetItem*) item;
 - (BOOL) isItemDeletable: (DatasheetItem*) item;
 
+- (NSString*) deleteButtonTitleForItem: (DatasheetItem*) item;
+
 @end
 
 @protocol DatasheetSectionDelegate <NSObject>
@@ -106,7 +108,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic, readonly) BOOL                    isVisible;
 @property (nonatomic, readonly) BOOL                    isEnabled;
-@property (nonatomic, readonly) BOOL                    isDeletable;
+@property (nonatomic, assign)   BOOL                    isDeletable;
+@property (nonatomic, strong)   NSString              * deleteButtonTitle;
 @property (nonatomic, readonly) BOOL                    isValid;
 @property (nonatomic, copy)     ValidatorBlock          validator;
 @property (nonatomic, copy)     ChangeValidatorBlock    changeValidator;
@@ -190,5 +193,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController;
 - (void) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath;
+
+- (void) editRemoveItem: (DatasheetItem*) item;
+- (void) editInsertItem: (DatasheetItem*) item;
 
 @end

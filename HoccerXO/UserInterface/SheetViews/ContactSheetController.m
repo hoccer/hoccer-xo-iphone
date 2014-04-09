@@ -197,10 +197,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (NSString*) titleForItem:(DatasheetItem *)item {
-    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
-    if (groupMemeberIndex != NSNotFound) {
-        return @"Icke";
-    } else if ([item isEqual: self.blockContactItem]) {
+    if ([item isEqual: self.blockContactItem]) {
         return [self blockItemTitle];
     } else if ([item isEqual: self.destructiveButton]) {
         return [self destructiveButtonTitle];
@@ -213,6 +210,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return [self chatItemSegueIdentifier];
     }
     return nil;
+}
+
+- (NSString*) deleteButtonTitleForItem:(DatasheetItem *)item {
+    return [self.groupMemberItems indexOfObject: item] != NSNotFound ? NSLocalizedString(@"group_kick_member_confirm", nil) : nil;
 }
 
 - (NSString*) keyItemTitle {
