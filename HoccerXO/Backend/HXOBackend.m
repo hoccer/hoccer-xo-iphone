@@ -3220,7 +3220,7 @@ static NSTimer * _stateNotificationDelayTimer;
     UserProfile * myProfile = [UserProfile sharedProfile];
     NSString * myNickName = myProfile.nickName;
    // NSString * myStatus = myProfile.status;
-    NSString * myStatus = @"I am.";
+    NSString * myStatus = @"";
     
     if (myNickName == nil) {
         myNickName = @"";
