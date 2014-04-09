@@ -23,11 +23,13 @@ const double minAlertSoundInterval = 2.0;
 @implementation SoundEffectPlayer
 
 +  (void)initialize {
-	[self createSoundWithName: @"new_message"        ofType: @"aif" withId: &messageArrivedId];
-    [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &messageDeliveredId];
-    [self createSoundWithName: @"sweep_out_sound"    ofType: @"wav" withId: &messageSentId];
-    lastAlertSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
-    lastEffectSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
+    if (self == [SoundEffectPlayer class]) {
+        [self createSoundWithName: @"new_message"        ofType: @"aif" withId: &messageArrivedId];
+        [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &messageDeliveredId];
+        [self createSoundWithName: @"sweep_out_sound"    ofType: @"wav" withId: &messageSentId];
+        lastAlertSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
+        lastEffectSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
+    }
 }
 
 + (void) createSoundWithName: (NSString*) name ofType: (NSString*) type withId: (SystemSoundID*) theId {
