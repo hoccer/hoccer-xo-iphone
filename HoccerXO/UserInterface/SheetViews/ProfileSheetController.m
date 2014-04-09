@@ -45,6 +45,7 @@
     self.destructiveButton.action = @selector(deleteCredentialsPressed:);
 
     self.isEditable = YES;
+
 }
 
 - (void) awakeFromNib {
@@ -59,9 +60,6 @@
     [super didUpdateInspectedObject];
 
     [self.userProfile saveProfile];
-
-    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
 
     /* TODO
     if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {

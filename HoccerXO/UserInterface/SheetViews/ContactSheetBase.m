@@ -147,6 +147,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (void) didUpdateInspectedObject {
+    [super didUpdateInspectedObject];
     if (self.avatarModified) {
         // XXX not sure what this is good for ... do we need it?
         self.client.avatarURL = nil;

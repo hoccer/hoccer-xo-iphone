@@ -246,7 +246,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return item;
 }
 
-- (id) itemForIndexPath: (NSIndexPath*) indexPath {
+- (id) itemAtIndexPath: (NSIndexPath*) indexPath {
     id current = self.currentRoot;
     for (unsigned i = 0; i < indexPath.length; ++i) {
         NSUInteger index = [indexPath indexAtPosition: i];
@@ -488,8 +488,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) registerCellClasses: (DatasheetViewController*) tableView {
 }
 
-- (BOOL) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
-    return NO;
+- (void) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
 }
 @end
 
@@ -607,6 +606,13 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         return [self.delegate actionForItem: self];
     }
     return nil;
+}
+
+- (BOOL) isDeletable {
+    if ([self.delegate respondsToSelector: @selector(isItemDeletable:)]) {
+        return [self.delegate isItemDeletable: self];
+    }
+    return NO;
 }
 
 

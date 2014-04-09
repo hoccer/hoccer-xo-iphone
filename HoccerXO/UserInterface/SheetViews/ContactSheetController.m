@@ -45,6 +45,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @property (nonatomic, strong)   NSFetchedResultsController * fetchedResultsController;
 @property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
 
+@property (nonatomic, strong)   id                           profileObserver;
+
 @end
 
 @implementation ContactSheetController
@@ -68,7 +70,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 #endif
                                         ];
 
-    self.nicknameItem.enabledMask = DatasheetModeNone;
+    //self.nicknameItem.enabledMask = DatasheetModeNone;
 
     self.keyItem.visibilityMask = DatasheetModeView;
     self.keyItem.dependencyPaths = @[@"verifiedKey"];
@@ -79,8 +81,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     //self.destructiveSection.items = [@[self.blockContactItem] arrayByAddingObjectsFromArray: self.destructiveSection.items];
     self.destructiveSection.items = @[self.blockContactItem, self.destructiveButton];
+}
 
-    self.isEditable = YES;
+- (BOOL) isEditable {
+    return ! self.group || ! [self.group.myGroupMembership.state isEqualToString: @"invited"];
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -158,6 +162,19 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return ! self.group && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
+}
+
+- (BOOL) isItemEnabled:(DatasheetItem *)item {
+    if ([item isEqual: self.nicknameItem]) {
+        return self.group.iAmAdmin && [super isItemEnabled: item];
+    }
+    return [super isItemEnabled: item];
+}
+
+- (BOOL) isItemDeletable:(DatasheetItem *)item {
+    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
+    if (groupMemeberIndex != NSNotFound) {
+    }
 }
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
@@ -245,11 +262,12 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) inspectedObjectWillChange {
     [super inspectedObjectWillChange];
+    [self removeProfileObservers];
     if (self.fetchedResultsController) {
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
-        [self.groupMemberItems removeAllObjects];
     }
+    [self.groupMemberItems removeAllObjects];
 }
 
 - (void) inspectedObjectDidChange {
@@ -259,6 +277,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             [self.groupMemberItems addObject: [self groupMemberItem: i]];
         }
     }
+    [self addProfileObservers];
 
     self.avatarView.defaultIcon = self.group ? [[AvatarGroup alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
@@ -338,6 +357,27 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 #pragma mark - Group Member Section
 
+- (GroupMembership*) membershipForItem: (DatasheetItem*) groupMemberItem {
+    NSInteger index = [self.groupMemberItems indexOfObject: groupMemberItem];
+    if (index != NSNotFound) {
+        return [self membershipAtIndex: index];
+    }
+    return nil;
+}
+
+- (GroupMembership*) membershipAtIndex: (NSUInteger) index {
+    NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
+    return [self.fetchedResultsController objectAtIndexPath: indexPath];
+}
+
+- (DatasheetItem*) myMembershipItem {
+    if (self.group) {
+        NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: self.group.myGroupMembership];
+        return self.groupMemberItems[indexPath.row];
+    }
+    return nil;
+}
+
 - (NSAttributedString*) groupMemberSectionTitle {
     NSMutableArray * admins = [[NSMutableArray alloc] init];
     if (self.group.iAmAdmin) {
@@ -392,24 +432,15 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return nil;
 }
 
-- (BOOL) configureCell: (GroupMemberCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
+- (void) configureCell: (GroupMemberCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
     if ([[cell reuseIdentifier] isEqualToString: @"GroupMemberCell"]) {
-        if (indexPath.length != 2) {
-            NSLog(@"Kaputt");
-            return NO;
-        }
-        NSUInteger row = [self.groupMemberItems indexOfObject: item];
-        NSIndexPath * frcPath = [NSIndexPath indexPathForItem: row inSection: 0];
-        GroupMembership * membership = [self.fetchedResultsController objectAtIndexPath: frcPath];
-        
+        GroupMembership * membership = [self membershipForItem: item];
         cell.titleLabel.text = membership.contact == self.group ? [UserProfile sharedProfile].nickName : membership.contact.nickName;
         cell.titleLabel.textColor = [UIColor blackColor];
         cell.statusLabel.text = @"vergnurbelt";//[membership.state isEqualToString: @"invited"] ? NSLocalizedString(@"membership_state_invited", nil) : nil;
         cell.avatar.image = membership.contact == self.group ? [UserProfile sharedProfile].avatarImage : membership.contact.avatarImage;
         cell.avatar.defaultIcon = [[avatar_contact alloc] init];
-        return YES;
     }
-    return NO;
 }
 
 - (NSFetchedResultsController*) createFetchedResutsController {
@@ -418,7 +449,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (DatasheetItem*) groupMemberItem: (NSUInteger) index {
-    GroupMembership * membership = [self.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: index inSection: 0]];
+    GroupMembership * membership = [self membershipAtIndex: index];
     NSString * identifier = [NSString stringWithFormat: @"%@", membership.objectID];
     DatasheetItem * result = [self itemWithIdentifier: identifier cellIdentifier: [GroupMemberCell reuseIdentifier]];
     result.accessoryStyle = DatasheetAccessoryDisclosure;
@@ -487,6 +518,26 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+}
+
+
+// Thing is: If we are displaying a group our own membership cell needs a little
+// kick if we edit our profile...
+- (void) addProfileObservers {
+    if ([self myMembershipItem]) {
+        self.profileObserver = [[NSNotificationCenter defaultCenter] addObserverForName: @"profileUpdatedByUser"
+                                                                                 object: nil
+                                                                                  queue: [NSOperationQueue mainQueue]
+                                                                             usingBlock: ^(NSNotification *note) {
+                                                                                 [self updateItem: [self myMembershipItem]];
+                                                                             }];
+    }
+}
+
+- (void) removeProfileObservers {
+    if (self.profileObserver) {
+        [[NSNotificationCenter defaultCenter] removeObserver: self.profileObserver];
+    }
 }
 
 #pragma mark - Attic

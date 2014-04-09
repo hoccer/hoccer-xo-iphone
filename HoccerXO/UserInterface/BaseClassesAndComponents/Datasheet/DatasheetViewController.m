@@ -78,8 +78,12 @@ static CGFloat kHeaderHeight;
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
 
     NSString * title = NSLocalizedString(item.title, nil);
-    title = title && ! [title isEqualToString: @""] && [cell respondsToSelector: @selector(valueView)] ? [title stringByAppendingString:@":"] : title;
+    title = title;
     cell.titleLabel.text = title;
+
+    if ([cell respondsToSelector: @selector(setDelegate:)]) {
+        [(id)cell setDelegate: self];
+    }
 
     UIColor * titleColor = item.titleTextColor;
     if ( ! titleColor) {
@@ -156,14 +160,14 @@ static CGFloat kHeaderHeight;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
     DatasheetCell * cell = [self.tableView dequeueReusableCellWithIdentifier: item.cellIdentifier];
     [self configureCell: cell withItem: item forRowAtIndexPath: indexPath];
     return cell;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
     DatasheetCell * prototype = (DatasheetCell*)[self prototypeCellForIdentifier: item.cellIdentifier];
     [self configureCell: prototype withItem: item forRowAtIndexPath: indexPath];
     return [prototype.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
@@ -179,7 +183,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
     if (item.isEnabled && item.target && [item.target respondsToSelector: item.action]) {
         IMP imp = [item.target methodForSelector: item.action];
         void (*func)(id, SEL, id) = (void *)imp;
@@ -192,15 +196,19 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    DatasheetItem * item = [self.dataSheetController itemForIndexPath: [self.tableView indexPathForSelectedRow]];
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: [self.tableView indexPathForSelectedRow]];
     [self.dataSheetController prepareForSegue: segue withItem: item sender: sender];
 }
 
+- (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
+    return item.isDeletable;
+}
 #pragma mark - Table Section Headers and Footers
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)sectionIndex {
     CGFloat height = kHeaderHeight;
-    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    DatasheetSection * section = [self.dataSheetController itemAtIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
     if (sectionIndex == 0) {
         height = FLT_MIN;
     } else if (section.headerViewIdentifier) {
@@ -212,7 +220,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)sectionIndex {
-    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    DatasheetSection * section = [self.dataSheetController itemAtIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
     UIView * view = nil;
     if (sectionIndex == 0 && ! self.tableView.tableHeaderView) {
         view = nil;
@@ -224,7 +232,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)sectionIndex {
-    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    DatasheetSection * section = [self.dataSheetController itemAtIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
     CGFloat height = 0;
     if (section.footerViewIdentifier) {
         id view = self.headerFooterPrototypes[section.footerViewIdentifier];
@@ -235,7 +243,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (UIView*) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)sectionIndex {
-    DatasheetSection * section = [self.dataSheetController itemForIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
+    DatasheetSection * section = [self.dataSheetController itemAtIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
     UIView * view = nil;
     if (section.footerViewIdentifier) {
         view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.footerViewIdentifier];
@@ -323,6 +331,7 @@ static CGFloat kHeaderHeight;
 
 - (void) rightButtonPressed: (id) sender {
     [self.dataSheetController editModeChanged: sender];
+    [self setEditing: self.dataSheetController.isEditing animated: YES];
     [self updateNavigationButtons];
 }
 
@@ -353,7 +362,7 @@ static CGFloat kHeaderHeight;
             break;
 
         case DatasheetChangeUpdate:
-            [self configureCell: (DatasheetCell*)[self.tableView cellForRowAtIndexPath:indexPath] withItem: [controller itemForIndexPath: indexPath] forRowAtIndexPath: indexPath];
+            [self configureCell: (DatasheetCell*)[self.tableView cellForRowAtIndexPath:indexPath] withItem: [controller itemAtIndexPath: indexPath] forRowAtIndexPath: indexPath];
             break;
         default:
             break;
@@ -397,13 +406,13 @@ static CGFloat kHeaderHeight;
 
 - (void) datasheetCell:(DatasheetCell *)cell didChangeValueForView:(id)valueView {
     NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
-    DatasheetItem * item = [self.dataSheetController itemForIndexPath: indexPath];
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
     item.currentValue = [valueView text];
     self.navigationItem.rightBarButtonItem.enabled = [self.dataSheetController allItemsValid];
 }
 
 - (BOOL) datasheetCell: (DatasheetCell*) cell shouldChangeValue: (id) oldValue toNewValue: (id) newValue {
-    DatasheetItem * item = [self.dataSheetController itemForIndexPath: [self.tableView indexPathForCell: cell]];
+    DatasheetItem * item = [self.dataSheetController itemAtIndexPath: [self.tableView indexPathForCell: cell]];
     if (item.changeValidator) {
         return item.changeValidator(oldValue, newValue);
     }

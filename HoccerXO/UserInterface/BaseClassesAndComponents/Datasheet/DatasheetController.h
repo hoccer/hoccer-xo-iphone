@@ -70,6 +70,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (NSString*) segueIdentifierForItem: (DatasheetItem*) item;
 - (id) targetForItem: (DatasheetItem*) item;
 - (SEL) actionForItem: (DatasheetItem*) item;
+- (BOOL) isItemDeletable: (DatasheetItem*) item;
 
 @end
 
@@ -84,36 +85,36 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @interface DatasheetItem : NSObject
 
-@property (nonatomic, strong) NSString              * identifier;
-@property (nonatomic, strong) NSString              * cellIdentifier;
-@property (nonatomic, strong) NSString              * title;
-@property (nonatomic, strong) UIColor               * titleTextColor;
-@property (nonatomic, assign) DatasheetAccessoryStyle accessoryStyle;
+@property (nonatomic, strong)   NSString              * identifier;
+@property (nonatomic, strong)   NSString              * cellIdentifier;
+@property (nonatomic, strong)   NSString              * title;
+@property (nonatomic, strong)   UIColor               * titleTextColor;
+@property (nonatomic, assign)   DatasheetAccessoryStyle accessoryStyle;
 
-@property (nonatomic, strong) NSString              * valuePath;
-@property (nonatomic, strong) NSString              * valueFormatString;
-@property (nonatomic, strong) NSString              * valuePlaceholder;
-@property (nonatomic, strong) NSArray               * dependencyPaths;
+@property (nonatomic, strong)   NSString              * valuePath;
+@property (nonatomic, strong)   NSString              * valueFormatString;
+@property (nonatomic, strong)   NSString              * valuePlaceholder;
+@property (nonatomic, strong)   NSArray               * dependencyPaths;
 
+@property (nonatomic, strong)   NSString              * segueIdentifier;
+@property (nonatomic, weak)     id                      target;
+@property (nonatomic, assign)   SEL                     action;
+@property (nonatomic, assign)   BOOL                    isBusy;
 
-@property (nonatomic,strong) NSString               * segueIdentifier;
-@property (nonatomic,weak)   id                       target;
-@property (nonatomic,assign) SEL                      action;
-@property (nonatomic,assign) BOOL                     isBusy;
+@property (nonatomic, assign)   NSUInteger              visibilityMask;
+@property (nonatomic, assign)   NSUInteger              enabledMask;
 
-@property (nonatomic, assign) NSUInteger              visibilityMask;
-@property (nonatomic, assign) NSUInteger              enabledMask;
+@property (nonatomic, readonly) BOOL                    isVisible;
+@property (nonatomic, readonly) BOOL                    isEnabled;
+@property (nonatomic, readonly) BOOL                    isDeletable;
+@property (nonatomic, readonly) BOOL                    isValid;
+@property (nonatomic, copy)     ValidatorBlock          validator;
+@property (nonatomic, copy)     ChangeValidatorBlock    changeValidator;
 
-@property (nonatomic,readonly) BOOL                   isVisible;
-@property (nonatomic,readonly) BOOL                   isEnabled;
-@property (nonatomic,readonly) BOOL                   isValid;
-@property (nonatomic,copy) ValidatorBlock             validator;
-@property (nonatomic,copy) ChangeValidatorBlock       changeValidator;
+@property (nonatomic, strong) id                        currentValue;
+@property (nonatomic, readonly) BOOL                    currentValueIsModified;
 
-@property (nonatomic,strong) id                       currentValue;
-@property (nonatomic,readonly) BOOL                   currentValueIsModified;
-
-@property (nonatomic, weak) id<DatasheetItemDelegate> delegate;
+@property (nonatomic, weak) id<DatasheetItemDelegate>   delegate;
 
 + (id) datasheetItem;
 
@@ -165,7 +166,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (id) valueForItem: (DatasheetItem*) item;
 
 - (DatasheetItem*) itemWithIdentifier: (NSString*) titleKey cellIdentifier: (NSString*) cellIdentifier;
-- (id) itemForIndexPath: (NSIndexPath*) indexPath;
+- (id) itemAtIndexPath: (NSIndexPath*) indexPath;
 
 - (NSArray*) buildSections;
 - (void) editModeChanged: (id) sender;
@@ -188,6 +189,6 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) titleChanged;
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController;
-- (BOOL) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath;
+- (void) configureCell: (id) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath;
 
 @end

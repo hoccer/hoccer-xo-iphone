@@ -13,7 +13,6 @@
 
 @implementation GroupMemberCell
 
-
 - (void) commonInit {
     [super commonInit];
 
@@ -38,4 +37,5 @@
     format = [NSString stringWithFormat: @"V:|-%f-[avatar]-%f-|", kHXOGridSpacing, kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 }
+
 @end
