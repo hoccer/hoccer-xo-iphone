@@ -18,7 +18,13 @@
 @class ChatBar;
 @class AttachmentButton;
 
-@interface ChatViewController : UIViewController <UISplitViewControllerDelegate, AttachmentPickerControllerDelegate, UIActionSheetDelegate, UITextViewDelegate, NSFetchedResultsControllerDelegate, MessageViewControllerDelegate, ABUnknownPersonViewControllerDelegate, HXOHyperLabelDelegate, TransferProgressIndication, UIDocumentInteractionControllerDelegate>
+@interface ChatViewController : UIViewController
+<
+UISplitViewControllerDelegate, AttachmentPickerControllerDelegate, UIActionSheetDelegate,
+UITextViewDelegate, NSFetchedResultsControllerDelegate, MessageViewControllerDelegate,
+ABUnknownPersonViewControllerDelegate, HXOHyperLabelDelegate, TransferProgressIndication,
+UIDocumentInteractionControllerDelegate
+>
 {
     NSMutableDictionary        *resultsControllers;
 }

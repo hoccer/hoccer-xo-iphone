@@ -21,6 +21,8 @@
 #import "GroupMembership.h"
 #import "GroupMemberCell.h"
 #import "DatasheetViewController.h"
+#import "UserProfile.h"
+
 
 //#define SHOW_CONNECTION_STATUS
 //#define SHOW_UNREAD_MESSAGE_COUNT
@@ -29,16 +31,19 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 @interface ContactSheetController ()
 
-@property (nonatomic, readonly) DatasheetItem    * chatItem;
-@property (nonatomic, readonly) DatasheetItem    * blockContactItem;
-@property (nonatomic, readonly) Contact          * contact;
-@property (nonatomic, readonly) Group            * group;
+@property (nonatomic, readonly) DatasheetItem              * chatItem;
+@property (nonatomic, readonly) DatasheetItem              * blockContactItem;
+@property (nonatomic, readonly) Contact                    * contact;
+@property (nonatomic, readonly) Group                      * group;
 
-@property (nonatomic, readonly) DatasheetSection * groupMemberSection;
-@property (nonatomic, strong)   NSMutableArray   * groupMemberItems;
+@property (nonatomic, readonly) DatasheetSection           * groupMemberSection;
+@property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
 
-@property (nonatomic, readonly) HXOBackend       * chatBackend;
-@property (nonatomic, readonly) AppDelegate      * appDelegate;
+@property (nonatomic, readonly) HXOBackend                 * chatBackend;
+@property (nonatomic, readonly) AppDelegate                * appDelegate;
+
+@property (nonatomic, strong)   NSFetchedResultsController * fetchedResultsController;
+@property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
 
 @end
 
@@ -147,9 +152,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.chatItem]) {
-        return self.contact.messages.count > 0 && [super isItemVisible: item];
-    } else if ([item isEqual: self.blockContactItem]) {
+    if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
     } else if ([item isEqual: self.keyItem]) {
         return ! self.group && [super isItemVisible: item];
@@ -240,10 +243,26 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     }
 }
 
-- (void) inspectedObjectChanged {
-    [super inspectedObjectChanged];
+- (void) inspectedObjectWillChange {
+    [super inspectedObjectWillChange];
+    if (self.fetchedResultsController) {
+        self.fetchedResultsController.delegate = nil;
+        self.fetchedResultsController = nil;
+        [self.groupMemberItems removeAllObjects];
+    }
+}
+
+- (void) inspectedObjectDidChange {
+    self.fetchedResultsController = [self createFetchedResutsController];
+    if (self.fetchedResultsController) {
+        for (int i = 0; i < [self.fetchedResultsController.sections[0] numberOfObjects]; ++i) {
+            [self.groupMemberItems addObject: [self groupMemberItem: i]];
+        }
+    }
+
     self.avatarView.defaultIcon = self.group ? [[AvatarGroup alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
+    [super inspectedObjectDidChange];
 }
 
 
@@ -319,6 +338,31 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 #pragma mark - Group Member Section
 
+- (NSAttributedString*) groupMemberSectionTitle {
+    NSMutableArray * admins = [[NSMutableArray alloc] init];
+    if (self.group.iAmAdmin) {
+        [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
+    }
+    [self.group.members enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
+        if ([member.role isEqualToString: @"admin"] && ! [member.contact isEqual: self.group]) {
+            if (member.contact.nickName != nil) {
+                [admins addObject: member.contact.nickName];
+            } else {
+                [admins addObject: @"?"];
+            }
+        }
+    }];
+    NSString * title;
+    if (admins.count == 0) {
+        title = NSLocalizedString(@"group_no_admin", nil);
+    } else {
+        NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_plural" : @"group_admin_label_singular", nil);
+        title = [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
+    }
+    return [[NSAttributedString alloc] initWithString: title attributes: nil];
+}
+
+
 - (DatasheetSection*) groupMemberSection {
     if ( ! _groupMemberSection) {
         _groupMemberSection = [DatasheetSection datasheetSectionWithIdentifier: @"group_member_section"];
@@ -329,16 +373,13 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSUInteger) numberOfItemsInSection:(DatasheetSection *)section {
     if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
-        return 1;
+        return self.groupMemberItems.count;
     }
     return 0;
 }
 
 - (DatasheetItem*) section:(DatasheetSection *)section itemAtIndex:(NSUInteger)index {
     if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
-        if (self.groupMemberItems.count == 0) {
-            [self.groupMemberItems addObject: [self itemWithIdentifier: [NSString stringWithFormat: @"group_member_%d", self.groupMemberItems.count] cellIdentifier: [GroupMemberCell reuseIdentifier]]];
-        }
         return self.groupMemberItems[index];
     }
     return  nil;
@@ -346,20 +387,106 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSAttributedString*) titleForSection:(DatasheetSection *)section {
     if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
-        return [[NSAttributedString alloc] initWithString: @"Admin" attributes: nil]; //[self groupMemberSectionTitle];
+        return [self groupMemberSectionTitle];
     }
     return nil;
 }
 
 - (BOOL) configureCell: (GroupMemberCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
     if ([[cell reuseIdentifier] isEqualToString: @"GroupMemberCell"]) {
-        cell.nickName.text = @"Icke";
-        cell.subtitleLabel.text = @"vergnurbelt\nso...";
-        cell.avatar.image = nil;
+        if (indexPath.length != 2) {
+            NSLog(@"Kaputt");
+            return NO;
+        }
+        NSUInteger row = [self.groupMemberItems indexOfObject: item];
+        NSIndexPath * frcPath = [NSIndexPath indexPathForItem: row inSection: 0];
+        GroupMembership * membership = [self.fetchedResultsController objectAtIndexPath: frcPath];
+        
+        cell.titleLabel.text = membership.contact == self.group ? [UserProfile sharedProfile].nickName : membership.contact.nickName;
+        cell.titleLabel.textColor = [UIColor blackColor];
+        cell.statusLabel.text = @"vergnurbelt";//[membership.state isEqualToString: @"invited"] ? NSLocalizedString(@"membership_state_invited", nil) : nil;
+        cell.avatar.image = membership.contact == self.group ? [UserProfile sharedProfile].avatarImage : membership.contact.avatarImage;
         cell.avatar.defaultIcon = [[avatar_contact alloc] init];
         return YES;
     }
     return NO;
+}
+
+- (NSFetchedResultsController*) createFetchedResutsController {
+    NSFetchedResultsController * frc = self.group ? [self createFetchedResutsControllerWithRequest: [self groupMembersFetchRequest: self.group]] : nil;
+    return frc;
+}
+
+- (DatasheetItem*) groupMemberItem: (NSUInteger) index {
+    GroupMembership * membership = [self.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: index inSection: 0]];
+    NSString * identifier = [NSString stringWithFormat: @"%@", membership.objectID];
+    DatasheetItem * result = [self itemWithIdentifier: identifier cellIdentifier: [GroupMemberCell reuseIdentifier]];
+    result.accessoryStyle = DatasheetAccessoryDisclosure;
+    return result;
+}
+
+- (NSFetchedResultsController*) createFetchedResutsControllerWithRequest: (NSFetchRequest*) fetchRequest {
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
+                                                                                                managedObjectContext: self.managedObjectContext
+                                                                                                  sectionNameKeyPath: nil
+                                                                                                           cacheName: nil];
+    if (aFetchedResultsController) {
+        aFetchedResultsController.delegate = self;
+
+        NSError *error = nil;
+        if (![aFetchedResultsController performFetch:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }
+    return aFetchedResultsController;
+}
+
+- (NSFetchRequest*) groupMembersFetchRequest: (Group*) group {
+    if ( ! group) {
+        return nil;
+    }
+    NSDictionary * vars = @{ @"group" : self.group };
+    NSFetchRequest * fetchRequest =  [self.appDelegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupMembershipsByGroup" substitutionVariables: vars];
+    [fetchRequest setSortDescriptors: @[[[NSSortDescriptor alloc] initWithKey:@"contact.nickName" ascending: YES]]];
+    return fetchRequest;
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+        {
+            NSUInteger idx = newIndexPath.row;
+            GroupMembership * membership = [self.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: idx inSection: 0]];
+            DatasheetItem * item = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", membership.objectID] cellIdentifier: [GroupMemberCell reuseIdentifier]];
+            [self.groupMemberItems insertObject: item atIndex: idx];
+            break;
+        }
+        case NSFetchedResultsChangeDelete:
+            [self.groupMemberItems removeObjectAtIndex: indexPath.row];
+            break;
+
+        case NSFetchedResultsChangeUpdate:
+        case NSFetchedResultsChangeMove:
+            break;
+    }
+    [self updateCurrentItems];
+}
+
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+{
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
 }
 
 #pragma mark - Attic
@@ -377,6 +504,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         _appDelegate = ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
     }
     return _appDelegate;
+}
+
+@synthesize managedObjectContext = _managedObjectContext;
+- (NSManagedObjectContext*) managedObjectContext {
+    if ( ! _managedObjectContext) {
+        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
+    }
+    return _managedObjectContext;
 }
 
 @end

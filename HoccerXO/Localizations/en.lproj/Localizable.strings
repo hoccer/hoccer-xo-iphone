@@ -359,6 +359,8 @@
 "group_close_group_button_title" = "Close";
 "group_delete_data"="Delete Group Data";
 
+"group_no_admin" = "No Admin";
+
 "group_no_other_joined_partners_text"="You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
 "group_no_other_partner_text"="You can not send a message to this group because there are no members except you. Please invite friends to this group.";
 "group_no_other_partners_title"="No other group members";

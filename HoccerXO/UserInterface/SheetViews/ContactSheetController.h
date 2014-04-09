@@ -8,6 +8,8 @@
 
 #import "ContactSheetBase.h"
 
-@interface ContactSheetController : ContactSheetBase <DatasheetSectionDelegate>
+@interface ContactSheetController : ContactSheetBase
+
+<DatasheetSectionDelegate, NSFetchedResultsControllerDelegate>
 
 @end

@@ -178,7 +178,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) backgroundImageChanged;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue withItem: (DatasheetItem*) item sender:(id)sender;
 - (void) didChangeValueForItem: (DatasheetItem*) item;
-- (void) inspectedObjectChanged;
+- (void) inspectedObjectWillChange;
+- (void) inspectedObjectDidChange;
 - (void) updateItem: (DatasheetItem*) item;
 - (void) updateCurrentItems;
 

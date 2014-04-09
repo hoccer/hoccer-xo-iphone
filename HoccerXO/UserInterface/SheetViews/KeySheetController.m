@@ -104,12 +104,12 @@
     return @[self.fingerprintSection, self.renewKeypairSection];
 }
 
-- (void) inspectedObjectChanged {
+- (void) inspectedObjectDidChange {
     NSArray * common = @[self.fingerprintItem, self.keyLengthItem];
     [self removeObjectObservers];
     self.fingerprintSection.items = self.contact ? [common arrayByAddingObject: self.verificationItem] : common;
     [self addObjectObservers];
-    [super inspectedObjectChanged];
+    [super inspectedObjectDidChange];
 }
 
 - (id) valueForItem:(DatasheetItem *)item {

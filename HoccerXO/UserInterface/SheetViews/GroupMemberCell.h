@@ -6,8 +6,13 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactCell.h"
+#import "DatasheetCell.h"
 
-@interface GroupMemberCell : ContactCell
+@class AvatarView;
+
+@interface GroupMemberCell : DatasheetCell
+
+@property (nonatomic, readonly) AvatarView * avatar;
+@property (nonatomic, readonly) UILabel    * statusLabel;
 
 @end

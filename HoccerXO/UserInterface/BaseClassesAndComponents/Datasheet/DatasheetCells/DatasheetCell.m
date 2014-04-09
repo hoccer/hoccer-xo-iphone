@@ -27,11 +27,12 @@
 - (void) commonInit {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 
+    self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentCenter;
+
     _titleLabel = [[UILabel alloc] initWithFrame: CGRectZero];
     self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.titleLabel.autoresizingMask = UIViewAutoresizingNone;
     self.titleLabel.numberOfLines = 1;
-    //self.titleLabel.textColor = [HXOTheme theme].lightTextColor;
     //self.titleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.titleLabel];
 

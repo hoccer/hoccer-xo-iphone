@@ -75,10 +75,6 @@ static CGFloat kHeaderHeight;
 
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
 
-    if ([self.dataSheetController configureCell: cell withItem: item atIndexPath: indexPath]) {
-        return;
-    }
-
     NSString * title = NSLocalizedString(item.title, nil);
     title = title && ! [title isEqualToString: @""] && [cell respondsToSelector: @selector(valueView)] ? [title stringByAppendingString:@":"] : title;
     cell.titleLabel.text = title;
@@ -105,6 +101,7 @@ static CGFloat kHeaderHeight;
     }
 
     cell.hxoAccessoryView = accessoryView;
+    cell.hxoAccessoryAlignment = HXOCellAccessoryAlignmentCenter;
     
     if ([cell respondsToSelector: @selector(valueView)]) {
         id valueView = [(id)cell valueView];
@@ -131,6 +128,9 @@ static CGFloat kHeaderHeight;
             }
         }
     }
+
+    [self.dataSheetController configureCell: cell withItem: item atIndexPath: indexPath];
+
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
@@ -421,7 +421,7 @@ static CGFloat kHeaderHeight;
 #pragma mark - Background Image Handling
 
 - (UIImageView*) backgroundImageView {
-    if (! _backgroundImageView) {
+    if (! _backgroundImageView && self.tableView) {
         _backgroundImageView = [[UIImageView alloc] initWithFrame: self.tableView.tableHeaderView.bounds];
         _backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
         _backgroundImageView.layer.masksToBounds = YES;

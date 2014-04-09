@@ -203,13 +203,10 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 #pragma mark - Fetched results controller
 
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
+- (NSManagedObjectContext *)managedObjectContext {
+    if ( ! _managedObjectContext) {
+        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     }
-
-    _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     return _managedObjectContext;
 }
 
