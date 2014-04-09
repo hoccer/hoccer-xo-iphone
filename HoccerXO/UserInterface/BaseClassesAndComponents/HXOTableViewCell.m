@@ -19,56 +19,50 @@
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
     if (self) {
-        _hxoAccessoryPadding = kHXOCellPadding;
+        _hxoAccessoryXOffset = -1;
     }
     return self;
 }
 
 - (void) setHxoAccessoryView:(UIView *)hxoAccessoryView {
     if (_hxoAccessoryView) {
-        [_hxoAccessoryView removeFromSuperview];
+        [self.accessoryView removeObserver: self forKeyPath: @"frame"];
+        self.accessoryView = nil;
     }
     _hxoAccessoryView = hxoAccessoryView;
     if (_hxoAccessoryView) {
-        self.accessoryView = [[UIView alloc] initWithFrame: _hxoAccessoryView.frame];
-        //CGRect frame = _hxoAccessoryView.frame;
-        //frame.origin.x = self.frame.size.width - (frame.size.width + kHXOGridSpacing);
-        //_hxoAccessoryView.frame = frame;
-        [self addSubview: _hxoAccessoryView];
-        [self accessoryAlignmentChanged];
-        [self setHxoAccessoryPadding: _hxoAccessoryPadding];
-    } else {
-        self.accessoryView = nil;
+        self.accessoryView = [[UIView alloc] initWithFrame: _hxoAccessoryView.bounds];
+        //self.accessoryView.backgroundColor = [UIColor orangeColor];
+        [self.accessoryView addObserver: self forKeyPath: @"frame" options: NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context: nil];
+        [self.accessoryView addSubview: _hxoAccessoryView];
     }
 }
 
-- (void) accessoryAlignmentChanged {
-    if (_hxoAccessoryView) {
-        CGRect frame = _hxoAccessoryView.frame;
-        UIViewAutoresizing mask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-        switch (_hxoAccessoryAlignment) {
-            case HXOCellAccessoryAlignmentCenter:
-                frame.origin.y = (self.frame.size.height - _hxoAccessoryView.frame.size.height) / 2;
-                mask |= UIViewAutoresizingFlexibleTopMargin;
-                break;
-            case HXOCellAccessoryAlignmentTop:
-                frame.origin.y = kHXOCellPadding;
-                break;
-        }
-        _hxoAccessoryView.autoresizingMask = mask;
-        _hxoAccessoryView.frame = frame;
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([object isEqual: self.accessoryView] && [keyPath isEqualToString: @"frame"]) {
+        [self updateAccessoryFrame];
     }
 }
+
+- (void) updateAccessoryFrame {
+    CGRect frame = self.accessoryView.bounds;
+    if (self.hxoAccessoryAlignment == HXOCellAccessoryAlignmentTop) {
+        frame = [self convertRect: frame fromView: self.accessoryView];
+        frame.origin.y = kHXOCellPadding;
+        frame = [self convertRect: frame toView: self.accessoryView];
+    }
+    frame.origin.x += self.hxoAccessoryXOffset;
+    self.hxoAccessoryView.frame = frame;
+}
+
 
 - (void) setHxoAccessoryAlignment:(HXOCellAccessoryAlignment)accessoryAlignment {
     _hxoAccessoryAlignment = accessoryAlignment;
-    [self accessoryAlignmentChanged];
+    [self updateAccessoryFrame];
 }
 
 - (void) setHxoAccessoryPadding:(CGFloat)padding {
-    _hxoAccessoryPadding = padding;
-    CGRect frame = self.hxoAccessoryView.frame;
-    frame.origin.x = self.bounds.size.width - (frame.size.width + padding);
-    self.hxoAccessoryView.frame = frame;
+    _hxoAccessoryXOffset = padding;
+    [self updateAccessoryFrame];
 }
 @end

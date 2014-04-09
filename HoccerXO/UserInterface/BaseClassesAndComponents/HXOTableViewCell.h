@@ -19,6 +19,6 @@ typedef enum HXOCellAccessoryAlignments {
 
 @property (nonatomic,strong) UIView * hxoAccessoryView;
 @property (nonatomic,assign) HXOCellAccessoryAlignment hxoAccessoryAlignment;
-@property (nonatomic,assign) CGFloat hxoAccessoryPadding;
+@property (nonatomic,assign) CGFloat hxoAccessoryXOffset;
 
 @end

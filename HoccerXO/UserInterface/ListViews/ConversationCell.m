@@ -18,7 +18,7 @@
 
 - (void) commonInit {
 
-    self.hxoAccessoryPadding = kHXOGridSpacing;
+    self.hxoAccessoryXOffset = kHXOGridSpacing - 1;
     
     _dateLabel = [[UILabel alloc] initWithFrame: CGRectZero];
     _dateLabel.translatesAutoresizingMaskIntoConstraints = NO;

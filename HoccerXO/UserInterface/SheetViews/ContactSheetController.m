@@ -172,9 +172,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (BOOL) isItemDeletable:(DatasheetItem *)item {
-    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
-    if (groupMemeberIndex != NSNotFound) {
-    }
+    int index = [self.groupMemberItems indexOfObject: item];
+    return index != NSNotFound; // XXX && ! [[self membershipAtIndex: index] isEqual: self.group.myGroupMembership];
 }
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
