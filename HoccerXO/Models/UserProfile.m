@@ -104,6 +104,9 @@ static const NSUInteger kHXOPasswordLength    = 23;
     [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
     [[HXOUserDefaults standardUserDefaults] setValue: self.status         forKey: kHXOUserStatus];
     [[HXOUserDefaults standardUserDefaults] synchronize];
+
+    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 - (NSString*) clientId {
