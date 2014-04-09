@@ -971,9 +971,9 @@
 		630CAB7518E0F67200782507 /* Base Classes & Components */ = {
 			isa = PBXGroup;
 			children = (
+				6365EC8218E773F000B41054 /* Datasheet */,
 				63DC015917147B1600609513 /* HXOTableViewCell.h */,
 				63DC015A17147B1600609513 /* HXOTableViewCell.m */,
-				6365EC8218E773F000B41054 /* Datasheet */,
 				63C1356617160E2E00969B0B /* HXOTableViewController.h */,
 				63C1356717160E2E00969B0B /* HXOTableViewController.m */,
 				630CAA0C18DB5DC300782507 /* HXOThemedNavigationController.h */,
@@ -1316,12 +1316,12 @@
 				630CAB7718E0F6C400782507 /* ContactSheetBase.m */,
 				63B76F6218E9EA3300E014E6 /* ContactSheetController.h */,
 				63B76F6318E9EA3300E014E6 /* ContactSheetController.m */,
+				63848A9318F473AC00C253A4 /* GroupMemberCell.h */,
+				63848A9418F473AC00C253A4 /* GroupMemberCell.m */,
 				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
 				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
 				63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */,
 				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
-				63848A9318F473AC00C253A4 /* GroupMemberCell.h */,
-				63848A9418F473AC00C253A4 /* GroupMemberCell.m */,
 			);
 			name = "Sheet Views";
 			path = SheetViews;

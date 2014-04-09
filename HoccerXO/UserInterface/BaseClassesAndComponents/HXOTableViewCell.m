@@ -16,6 +16,14 @@
     return NSStringFromClass([self class]);
 }
 
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle: style reuseIdentifier: reuseIdentifier];
+    if (self) {
+        _hxoAccessoryPadding = kHXOCellPadding;
+    }
+    return self;
+}
+
 - (void) setHxoAccessoryView:(UIView *)hxoAccessoryView {
     if (_hxoAccessoryView) {
         [_hxoAccessoryView removeFromSuperview];
@@ -23,11 +31,12 @@
     _hxoAccessoryView = hxoAccessoryView;
     if (_hxoAccessoryView) {
         self.accessoryView = [[UIView alloc] initWithFrame: _hxoAccessoryView.frame];
-        CGRect frame = _hxoAccessoryView.frame;
-        frame.origin.x = self.frame.size.width - (frame.size.width + kHXOGridSpacing);
-        _hxoAccessoryView.frame = frame;
+        //CGRect frame = _hxoAccessoryView.frame;
+        //frame.origin.x = self.frame.size.width - (frame.size.width + kHXOGridSpacing);
+        //_hxoAccessoryView.frame = frame;
         [self addSubview: _hxoAccessoryView];
         [self accessoryAlignmentChanged];
+        [self setHxoAccessoryPadding: _hxoAccessoryPadding];
     } else {
         self.accessoryView = nil;
     }
@@ -54,5 +63,12 @@
 - (void) setHxoAccessoryAlignment:(HXOCellAccessoryAlignment)accessoryAlignment {
     _hxoAccessoryAlignment = accessoryAlignment;
     [self accessoryAlignmentChanged];
+}
+
+- (void) setHxoAccessoryPadding:(CGFloat)padding {
+    _hxoAccessoryPadding = padding;
+    CGRect frame = self.hxoAccessoryView.frame;
+    frame.origin.x = self.bounds.size.width - (frame.size.width + padding);
+    self.hxoAccessoryView.frame = frame;
 }
 @end

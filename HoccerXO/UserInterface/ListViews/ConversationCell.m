@@ -17,6 +17,8 @@
 @implementation ConversationCell
 
 - (void) commonInit {
+
+    self.hxoAccessoryPadding = kHXOGridSpacing;
     
     _dateLabel = [[UILabel alloc] initWithFrame: CGRectZero];
     _dateLabel.translatesAutoresizingMaskIntoConstraints = NO;

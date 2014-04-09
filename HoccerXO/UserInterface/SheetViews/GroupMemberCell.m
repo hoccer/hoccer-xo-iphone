@@ -28,7 +28,7 @@
     [self.contentView addSubview: _statusLabel];
 
     NSDictionary * views = @{@"avatar": self.avatar, @"title": self.titleLabel, @"status": self.statusLabel};
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[avatar(>=23)]-%f-[title]-(>=%f)-[status]-%f-|", kHXOCellPadding, kHXOCellPadding, kHXOGridSpacing, kHXOCellPadding];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[avatar(>=23)]-%f-[title]-(>=%f)-[status]-%f-|", kHXOCellPadding, kHXOCellPadding, kHXOGridSpacing, kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.statusLabel attribute: NSLayoutAttributeBaseline relatedBy: NSLayoutRelationEqual toItem: self.titleLabel attribute: NSLayoutAttributeBaseline multiplier: 1 constant: 0]];
