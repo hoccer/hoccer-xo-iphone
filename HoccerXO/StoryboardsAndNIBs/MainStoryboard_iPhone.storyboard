@@ -494,19 +494,8 @@
         <scene sceneID="Cde-1N-k7V">
             <objects>
                 <viewController storyboardIdentifier="ImageViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="jBj-li-dGc" userLabel="Image View Controller" customClass="ImageViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="2oJ-KA-xdB"/>
-                        <viewControllerLayoutGuide type="bottom" id="HmD-4N-KbB"/>
-                    </layoutGuides>
-                    <scrollView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" indicatorStyle="white" id="y1e-na-WVb">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </scrollView>
                     <navigationItem key="navigationItem" id="Xiz-gL-iRR"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <connections>
-                        <outlet property="scrollView" destination="y1e-na-WVb" id="xEf-NY-aFG"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

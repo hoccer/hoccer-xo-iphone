@@ -10,30 +10,31 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-static const CGFloat kImageViewerOversize = 1.0;
-
 @interface ImageViewController ()
 
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (strong, nonatomic) IBOutlet UIImageView *imageView;
-@property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem * doneButton;
+@property (readonly, nonatomic) UIScrollView * scrollView;
+@property (strong, nonatomic)   UIImageView  * imageView;
 
 @end
 
 @implementation ImageViewController
 
+- (void) loadView {
+    // giving the view an initial frame avoids CG singular matrix errors
+    self.view = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 23, 23)];
+}
+
+- (UIScrollView*) scrollView {
+    return (UIScrollView*) self.view;
+}
+
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.scrollView.delegate = self;
+    self.scrollView.backgroundColor = [UIColor blackColor];
 
     self.imageView = [[UIImageView alloc] initWithImage: nil];
     [self.scrollView addSubview: self.imageView];
-
-    self.imageView.backgroundColor = [UIColor orangeColor];
-    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.navigationBar.translucent = YES;
-    [self.navigationBar setBackgroundImage: nil forBarMetrics: UIBarMetricsDefault];
 
     UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewDoubleTapped:)];
     doubleTapRecognizer.numberOfTapsRequired = 2;
@@ -44,7 +45,6 @@ static const CGFloat kImageViewerOversize = 1.0;
     twoFingerTapRecognizer.numberOfTapsRequired = 1;
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
-    
 
     UITapGestureRecognizer *singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped:)];
     singleTapRecognizer.numberOfTapsRequired = 1;
@@ -54,30 +54,24 @@ static const CGFloat kImageViewerOversize = 1.0;
 
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical   = YES;
-    self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"bg-noise"]];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
-
     [super viewWillAppear: animated];
+
+    [self.navigationController setNavigationBarHidden: YES animated: YES];
 
     if (self.image) {
         [self updateZoomScale];
     }
-
-}
-
-- (void) viewDidAppear:(BOOL)animated {
-    [self.navigationController setNavigationBarHidden: YES animated: YES];
 }
 
 - (void)updateZoomScale {
-
     // reset the zoom to one - avoids problems with interface orientation changes
     // and frame changes when updating the picture
     self.scrollView.zoomScale = 1;
 
-    self.scrollView.contentSize = CGSizeMake(_image.size.width * kImageViewerOversize, _image.size.height * kImageViewerOversize);
+    self.scrollView.contentSize = CGSizeMake(_image.size.width, _image.size.height);
 
     self.imageView.frame = CGRectMake(0, 0, _image.size.width, _image.size.height);
     self.imageView.image = _image;
@@ -86,7 +80,7 @@ static const CGFloat kImageViewerOversize = 1.0;
     CGRect scrollViewFrame = self.scrollView.frame;
     CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
     CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
-    CGFloat minScale = MIN(scaleWidth, scaleHeight) / kImageViewerOversize;
+    CGFloat minScale = MIN(MIN(scaleWidth, scaleHeight),1);
     self.scrollView.minimumZoomScale = minScale;
 
     self.scrollView.maximumZoomScale = 1.5;
@@ -158,13 +152,11 @@ static const CGFloat kImageViewerOversize = 1.0;
 }
 
 -(void)didRotateFromInterfaceOrientation: (UIInterfaceOrientation)toInterfaceOrientation {
-    // NSLog(@"didRotate");
     [self updateZoomScale];
 }
 
 - (void) setImage:(UIImage *)image {
     _image = image;
-    // view might not be fully realized yet
     if (self.view && _image) {
         [self updateZoomScale];
     }
