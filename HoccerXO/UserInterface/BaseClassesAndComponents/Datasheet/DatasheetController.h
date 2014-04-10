@@ -197,4 +197,9 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) editRemoveItem: (DatasheetItem*) item;
 - (void) editInsertItem: (DatasheetItem*) item;
 
+//- (void) didInsertItem: (DatasheetItem*) item inSection: (DatasheetSection*) section;
+//- (void) didRemoveItem: (DatasheetItem*) item inSection: (DatasheetSection*) section;
+
+- (NSIndexPath*) indexPathForItem: (id) aItem;
+
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "ContactPickerViewController.h"
+#import "ContactPicker.h"
 #import "Contact.h"
 #import "ContactCell.h"
 
@@ -14,14 +14,20 @@
 
 #import "HXOThemedNavigationController.h"
 
-@implementation ContactPickerViewController
+@interface ContactPicker ()
+
+@property (nonatomic, strong) NSMutableArray * pickedContacts;
+
+@end
+
+@implementation ContactPicker
 
 + (id) contactPickerWithTitle:(NSString *)title types:(NSUInteger)typeMask style:(ContactPickerStyle)style completion:(ContactPickerCompletion)completion {
 
-    ContactPickerViewController * picker = [[ContactPickerViewController alloc] init];
-    picker.navigationItem.prompt = title;
+    ContactPicker * picker = [[ContactPicker alloc] init];
     picker.pickerStyle = style;
     picker.completion = completion;
+    picker.title = title;
 
     UINavigationController * modalPresentationHelper = [[HXOThemedNavigationController alloc] initWithRootViewController: picker];
 
@@ -38,7 +44,10 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.title = nil;
+    self.pickedContacts = [NSMutableArray array];
+
+    self.navigationItem.title = self.title;
+
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action: @selector(done:)];
 
     if (self.pickerStyle == ContactPickerStyleMulti) {
@@ -48,13 +57,15 @@
 
 - (void) done: (id) sender {
     id result = nil;
-    if ( ! [sender isEqual: self.navigationItem.leftBarButtonItem]) {
+    if ( ! [sender isEqual: self.navigationItem.leftBarButtonItem]) { // not cacneled
         if (self.pickerStyle == ContactPickerStyleMulti) {
+            result = [self.pickedContacts copy];
 
         } else {
-            result = [self.currentFetchedResultsController objectAtIndexPath: sender];
+            result = [self.pickedContacts firstObject];
         }
     }
+    [self.pickedContacts removeAllObjects];
     if (self.completion) {
         self.completion(result);
     }
@@ -62,10 +73,22 @@
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.pickerStyle == ContactPickerStyleMulti) {
+    Contact * contact = [self.currentFetchedResultsController objectAtIndexPath: indexPath];
+    if ([self.pickedContacts indexOfObject: contact] == NSNotFound) {
+        [self.pickedContacts addObject: contact];
     } else {
-        [self done: indexPath];
+        [self.pickedContacts removeObject: contact];
     }
+    [self configureCell: [self.tableView cellForRowAtIndexPath:indexPath] atIndexPath: indexPath];
+    if (self.pickerStyle == ContactPickerStyleSingle && self.pickedContacts.count == 1) {
+        [self done: self];
+    }
+}
+
+- (void) configureCell:(UITableViewCell<ContactCell>*)cell atIndexPath:(NSIndexPath *)indexPath {
+    [super configureCell: cell atIndexPath: indexPath];
+    cell.subtitleLabel.text = nil;
+    cell.accessoryType = [self.pickedContacts indexOfObject: [self.currentFetchedResultsController objectAtIndexPath: indexPath]] == NSNotFound ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;
 }
 
 - (id) cellClass {

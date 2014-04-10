@@ -52,6 +52,8 @@ static CGFloat kHeaderHeight;
 
     [self registerHeaderFooterViewClass: [DatasheetHeaderFooterTextView class]];
 
+    self.tableView.allowsSelectionDuringEditing = YES;
+
     [self.dataSheetController registerCellClasses: self];
 
     // TableView changes its behaviour when writing to tableHeaderView :-/
@@ -63,7 +65,7 @@ static CGFloat kHeaderHeight;
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
-- (void) viewDidUnload {
+- (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
@@ -188,7 +190,6 @@ static CGFloat kHeaderHeight;
         IMP imp = [item.target methodForSelector: item.action];
         void (*func)(id, SEL, id) = (void *)imp;
         func(item.target, item.action, self);
-        //[item.target performSelector: item.action withObject: self];
     }
     if (item.segueIdentifier && ! [item.segueIdentifier isEqualToString:@""]) {
         [self performSegueWithIdentifier: item.segueIdentifier sender: self];

@@ -828,40 +828,6 @@
             </objects>
             <point key="canvasLocation" x="3624" y="-677"/>
         </scene>
-        <!--Contact Picker View Controller - Contact Picker-->
-        <scene sceneID="4JD-qG-IBJ">
-            <objects>
-                <tableViewController id="sga-k2-MEe" customClass="ContactPickerViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="VlU-Cu-oCM">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="sga-k2-MEe" id="pcD-4d-uo6"/>
-                            <outlet property="delegate" destination="sga-k2-MEe" id="11u-gr-smS"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Contact Picker" id="Zkz-jj-eYp"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LQ1-UK-0le" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3706" y="13"/>
-        </scene>
-        <!--Themed Navigation Controller-->
-        <scene sceneID="sbB-R1-t71">
-            <objects>
-                <navigationController storyboardIdentifier="modalContactPicker" definesPresentationContext="YES" id="kSD-hX-Ojr" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1U2-A7-ecO">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="sga-k2-MEe" kind="relationship" relationship="rootViewController" id="BNZ-VH-XAx"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5l0-mw-Ome" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3174" y="13"/>
-        </scene>
         <!--Themed Navigation Controller - Contacts-->
         <scene sceneID="YWf-kL-LN8">
             <objects>

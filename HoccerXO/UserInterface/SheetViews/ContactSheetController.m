@@ -22,7 +22,7 @@
 #import "SmallContactCell.h"
 #import "DatasheetViewController.h"
 #import "UserProfile.h"
-#import "ContactPickerViewController.h"
+#import "ContactPicker.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -146,10 +146,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (id) valueForItem: (DatasheetItem*) item {
-    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
-    if (groupMemeberIndex != NSNotFound) {
-        return @"vergnurbelt"; //[self groupMemeberStatus: groupMemeberIndex];
-    } else if ([item isEqual: self.chatItem]) {
+    if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
     } else if ([item isEqual: self.keyItem]) {
         return [self keyItemTitle];
@@ -178,7 +175,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (BOOL) isItemDeletable:(DatasheetItem *)item {
     int index = [self.groupMemberItems indexOfObject: item];
-    return index != NSNotFound; // XXX && ! [[self membershipAtIndex: index] isEqual: self.group.myGroupMembership];
+    return index != NSNotFound && ! [[self contactAtIndex: index] isEqual: self.group];
 }
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
@@ -448,9 +445,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) configureCell: (SmallContactCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
     if ([[cell reuseIdentifier] isEqualToString: @"SmallContactCell"]) {
         Contact * contact = [self contactForItem: item];
+        GroupMembership * membership = [self membershipOfContact: contact];
         cell.titleLabel.text = contact == self.group ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.textColor = [UIColor blackColor];
-        cell.subtitleLabel.text = @"vergnurbelt";//[membership.state isEqualToString: @"invited"] ? NSLocalizedString(@"membership_state_invited", nil) : nil;
+        cell.subtitleLabel.text = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
         cell.avatar.image = contact == self.group ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     }
@@ -514,29 +512,34 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-
+    NSIndexPath * p = [self indexPathForItem: self.groupMemberSection];
+    NSUInteger sectionIndex = [self indexPathForItem: self.groupMemberSection].section;
     switch(type) {
         case NSFetchedResultsChangeInsert:
         {
-            NSUInteger idx = newIndexPath.row;
-            Contact * contact = [self.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: idx inSection: 0]];
-            DatasheetItem * item = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: [SmallContactCell reuseIdentifier]];
-            [self.groupMemberItems insertObject: item atIndex: idx];
+            Contact * contact = [self.fetchedResultsController objectAtIndexPath: newIndexPath];
+            DatasheetItem * item = [self groupMemberItem: newIndexPath.row];
+            [self.groupMemberItems insertObject: item atIndex: newIndexPath.row];
+
+            [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: [NSIndexPath indexPathForRow: newIndexPath.row inSection: sectionIndex]];
             break;
         }
         case NSFetchedResultsChangeDelete:
             [self.groupMemberItems removeObjectAtIndex: indexPath.row];
+            [self.delegate controller: self didChangeObject: [NSIndexPath indexPathForRow: indexPath.row inSection: sectionIndex] forChangeType: DatasheetChangeDelete newIndexPath: nil];
             break;
 
         case NSFetchedResultsChangeUpdate:
+            [self.delegate controller: self didChangeObject: [NSIndexPath indexPathForRow: indexPath.row inSection: sectionIndex] forChangeType: DatasheetChangeUpdate newIndexPath: nil];
+            break;
         case NSFetchedResultsChangeMove:
             break;
     }
-    [self updateCurrentItems];
 }
 
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    [self.delegate controllerWillChangeContent: self];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
@@ -545,6 +548,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [self.delegate controllerDidChangeContent: self];
+    //[self updateCurrentItems];
 }
 
 
@@ -578,18 +583,49 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (void) inviteMembersPressed: (id) sender {
-    id picker = [ContactPickerViewController contactPickerWithTitle: NSLocalizedString(@"Choose Contacts:", nil)
+    ContactPickerCompletion completion = ^(NSArray * result) {
+        for (Contact * contact in result) {
+            [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
+                // yeah, baby
+            }];
+        }
+    };
+    id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
                                                               types: 0
                                                               style: ContactPickerStyleMulti
-                                                         completion:^(id result) {
-
-                                                         }];
+                                                         completion: completion];
+    
     [(UIViewController*)self.delegate presentViewController: picker animated: YES completion: nil];
 }
 
 - (NSString*) groupMemberSegueIdentifier: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
     return [contact isEqual: self.group] ? @"showProfile" : @"showGroup";
+}
+
+- (void) editRemoveItem:(DatasheetItem *)item {
+    Contact * contact = [self contactForItem: item];
+    [self.chatBackend removeGroupMember: [self membershipOfContact: contact] onDeletion:^(GroupMembership *member) {
+        // yeah... absolutely
+    }];
+}
+
+- (GroupMembership*) membershipOfContact: (Contact*) contact {
+    NSSet * matching = [self.group.members objectsPassingTest:^BOOL(id obj, BOOL *stop) {
+        if ([[obj contact] isEqual: contact]) {
+            *stop = YES;
+            return YES;
+        }
+        return NO;
+    }];
+    if (matching.count == 0) {
+        return nil;
+    }
+    if (matching.count != 1) {
+        NSLog(@"ERROR: multiple membership for contact %@", contact);
+        return nil;
+    }
+    return matching.anyObject;
 }
 
 #pragma mark - Attic

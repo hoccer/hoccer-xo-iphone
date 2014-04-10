@@ -21,7 +21,7 @@ typedef enum ContactPickerTypes {
 
 typedef void(^ContactPickerCompletion)(id result);
 
-@interface ContactPickerViewController : ContactListViewController
+@interface ContactPicker : ContactListViewController
 
 + (id) contactPickerWithTitle: (NSString*)               title
                         types: (NSUInteger)              typeMask

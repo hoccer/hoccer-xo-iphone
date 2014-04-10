@@ -177,7 +177,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
                 [path addObject: index];
             }
         } else {
-            if ([section isEqual: aItem]) {
+            if ([section.identifier isEqualToString: [aItem identifier]]) {
                 return YES;
             }
             [path addObject: @(0)];

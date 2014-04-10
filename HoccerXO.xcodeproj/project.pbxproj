@@ -74,7 +74,7 @@
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
 		63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */; };
 		63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */; };
-		63756A9018F6434C003F7555 /* ContactPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63756A8F18F6434C003F7555 /* ContactPickerViewController.m */; };
+		63756A9018F6434C003F7555 /* ContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63756A8F18F6434C003F7555 /* ContactPicker.m */; };
 		6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378482816F37E9500DE03C2 /* AttachmentPickerController.m */; };
 		6378482B16F3AE9100DE03C2 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */; };
 		6378484616F4000500DE03C2 /* Delivery.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484516F4000500DE03C2 /* Delivery.m */; };
@@ -494,8 +494,8 @@
 		63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		63716BBB185CCEE60094987D /* GenericAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
 		63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
-		63756A8E18F6434C003F7555 /* ContactPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactPickerViewController.h; sourceTree = "<group>"; };
-		63756A8F18F6434C003F7555 /* ContactPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactPickerViewController.m; sourceTree = "<group>"; };
+		63756A8E18F6434C003F7555 /* ContactPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactPicker.h; sourceTree = "<group>"; };
+		63756A8F18F6434C003F7555 /* ContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactPicker.m; sourceTree = "<group>"; };
 		63756A9F18F669DC003F7555 /* ContactCellProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactCellProtocol.h; sourceTree = "<group>"; };
 		6378482716F37E9500DE03C2 /* AttachmentPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentPickerController.h; sourceTree = "<group>"; };
 		6378482816F37E9500DE03C2 /* AttachmentPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentPickerController.m; sourceTree = "<group>"; };
@@ -1320,12 +1320,12 @@
 				630CAB7718E0F6C400782507 /* ContactSheetBase.m */,
 				63B76F6218E9EA3300E014E6 /* ContactSheetController.h */,
 				63B76F6318E9EA3300E014E6 /* ContactSheetController.m */,
-				63848A9318F473AC00C253A4 /* SmallContactCell.h */,
-				63848A9418F473AC00C253A4 /* SmallContactCell.m */,
 				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
 				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
 				63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */,
 				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
+				63848A9318F473AC00C253A4 /* SmallContactCell.h */,
+				63848A9418F473AC00C253A4 /* SmallContactCell.m */,
 			);
 			name = "Sheet Views";
 			path = SheetViews;
@@ -1384,8 +1384,8 @@
 			children = (
 				63AE4548170494AF0099F0CB /* AboutViewController.h */,
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
-				63756A8E18F6434C003F7555 /* ContactPickerViewController.h */,
-				63756A8F18F6434C003F7555 /* ContactPickerViewController.m */,
+				63756A8E18F6434C003F7555 /* ContactPicker.h */,
+				63756A8F18F6434C003F7555 /* ContactPicker.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
@@ -2383,7 +2383,7 @@
 				63B76F5018E8F7F800E014E6 /* KeySheetController.m in Sources */,
 				E9E92F7518733D01007B8042 /* HTTPAsyncFileResponse.m in Sources */,
 				6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */,
-				63756A9018F6434C003F7555 /* ContactPickerViewController.m in Sources */,
+				63756A9018F6434C003F7555 /* ContactPicker.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
 				630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */,
 				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,
