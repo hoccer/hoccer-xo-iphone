@@ -22,6 +22,7 @@
 #import "GroupMemberCell.h"
 #import "DatasheetViewController.h"
 #import "UserProfile.h"
+#import "ContactPickerViewController.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -40,7 +41,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
 
 @property (nonatomic, readonly) DatasheetItem              * inviteMembersItem;
-@property (nonatomic, assign)   BOOL                         inviteGroupMembers;
 
 @property (nonatomic, readonly) HXOBackend                 * chatBackend;
 @property (nonatomic, readonly) AppDelegate                * appDelegate;
@@ -207,7 +207,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     } else if ([item isEqual: self.destructiveButton]) {
         return [self destructiveButtonTitle];
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return self.inviteGroupMembers ? NSLocalizedString(@"done_button_title", nil) : NSLocalizedString(@"group_invite_members_title", nil);
+        return NSLocalizedString(@"group_invite_members_title", nil);
     }
     return nil;
 }
@@ -572,14 +572,16 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if ( ! _inviteMembersItem) {
         _inviteMembersItem = [self itemWithIdentifier: @"group_invite_friends" cellIdentifier: @"DatasheetActionCell"];
         _inviteMembersItem.target = self;
-        _inviteMembersItem.action = @selector(toggleInviteMode:);
+        _inviteMembersItem.action = @selector(inviteMembersPressed:);
     }
     return _inviteMembersItem;
 }
 
-- (void) toggleInviteMode: (id) sender {
-    self.inviteGroupMembers = ! self.inviteGroupMembers;
-    [self updateItem: self.inviteMembersItem];
+- (void) inviteMembersPressed: (id) sender {
+    id picker = [ContactPickerViewController contactPickerForTypes: 0 style: 0 completion:^(id result) {
+
+    }];
+    [(UIViewController*)self.delegate presentViewController: picker animated: YES completion: nil];
 }
 
 - (NSString*) groupMemberSegueIdentifier: (NSUInteger) index {

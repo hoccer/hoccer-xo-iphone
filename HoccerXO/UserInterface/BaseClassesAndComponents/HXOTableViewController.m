@@ -23,6 +23,14 @@
     return self;
 }
 
+- (id) initWithStyle:(UITableViewStyle)style {
+    self = [super initWithStyle: style];
+    if (self != nil) {
+        [self commonInit];
+    }
+    return self;
+}
+
 - (void) commonInit {
     _prototypes = [NSMutableDictionary dictionary];
     _headerFooterPrototypes = [NSMutableDictionary dictionary];

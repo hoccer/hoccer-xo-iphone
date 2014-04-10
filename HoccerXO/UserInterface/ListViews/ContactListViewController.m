@@ -42,6 +42,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (strong, nonatomic)   id                            connectionInfoObserver;
 @property (nonatomic, readonly) HXOBackend                  * chatBackend;
 
+@property (nonatomic, readonly) UITableViewCell             * cellPrototype;
+
 @end
 
 @implementation ContactListViewController
