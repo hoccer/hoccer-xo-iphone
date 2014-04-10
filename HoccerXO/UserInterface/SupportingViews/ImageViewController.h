@@ -10,6 +10,6 @@
 
 @interface ImageViewController : UIViewController <UIScrollViewDelegate>
 
-@property (strong, nonatomic) IBOutlet UIImage *image;
+@property (strong, nonatomic) UIImage *image;
 
 @end

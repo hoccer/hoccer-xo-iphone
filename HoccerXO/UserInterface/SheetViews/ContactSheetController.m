@@ -64,6 +64,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     self.groupMemberItems = [NSMutableArray array];
 
+    self.nicknameItem.valuePlaceholder = nil;
+
     self.avatarItem.dependencyPaths = @[@"relationshipState"
 #ifdef SHOW_CONNECTION_STATUS
                                         , @"connectionStatus"
@@ -73,8 +75,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 #endif
                                         ];
 
-    //self.nicknameItem.enabledMask = DatasheetModeNone;
-
     self.keyItem.visibilityMask = DatasheetModeView;
     self.keyItem.dependencyPaths = @[@"verifiedKey"];
 
@@ -82,7 +82,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     self.destructiveButton.target = self;
     self.destructiveButton.action = @selector(deleteContactPressed:);
 
-    //self.destructiveSection.items = [@[self.blockContactItem] arrayByAddingObjectsFromArray: self.destructiveSection.items];
     self.destructiveSection.items = @[self.blockContactItem, self.destructiveButton];
 }
 
@@ -128,7 +127,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if ( ! _chatItem) {
         _chatItem = [self itemWithIdentifier: @"chat_with_contact" cellIdentifier: @"DatasheetKeyValueCell"];
         _chatItem.dependencyPaths = @[@"messages.@count"];
-        _chatItem.visibilityMask = DatasheetModeView;
+        //_chatItem.visibilityMask = DatasheetModeView;
         _chatItem.accessoryStyle = DatasheetAccessoryDisclosure;
     }
     return _chatItem;
@@ -169,13 +168,16 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (BOOL) isItemEnabled:(DatasheetItem *)item {
     if ([item isEqual: self.nicknameItem]) {
         return self.group.iAmAdmin && [super isItemEnabled: item];
+    } else if ([item isEqual: self.avatarItem]) {
+        return self.group.iAmAdmin;
     }
+
     return [super isItemEnabled: item];
 }
 
 - (BOOL) isItemDeletable:(DatasheetItem *)item {
     int index = [self.groupMemberItems indexOfObject: item];
-    return index != NSNotFound && ! [[self contactAtIndex: index] isEqual: self.group];
+    return self.group.iAmAdmin && index != NSNotFound && ! [[self contactAtIndex: index] isEqual: self.group];
 }
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
@@ -189,12 +191,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.isBlocked = self.contact.isBlocked;
-#ifdef SHOW_CONNECTION_STATUS
-        self.avatarView.isOnline = self.contact.isOnline;
-#endif
-#ifdef SHOW_UNREAD_MESSAGE_COUNT
-        self.avatarView.badgeText = [HXOUI messageCountBadgeText: self.contact.unreadMessages.count];
-#endif
+        if ( ! self.contact.avatarImage) {
+            // a liitle extra somethin for those without avatars ;)
+            self.avatarView.isOnline = self.contact.isOnline;
+            self.avatarView.badgeText = [HXOUI messageCountBadgeText: self.contact.unreadMessages.count];
+        } else {
+            self.avatarView.isOnline = NO;
+            self.avatarView.badgeText = nil;
+        }
     }
 }
 
@@ -207,6 +211,13 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return NSLocalizedString(@"group_invite_members_title", nil);
     }
     return nil;
+}
+
+- (NSString*) valuePlaceholderForItem:(DatasheetItem *)item {
+    if ([item isEqual: self.nicknameItem]) {
+        return  NSLocalizedString( self.group ? @"group_name_placeholder" : @"profile_name_placeholder", nil);
+    }
+    return [super valuePlaceholderForItem: item];
 }
 
 - (NSString*) segueIdentifierForItem:(DatasheetItem *)item {
@@ -295,14 +306,13 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 #pragma mark - UI Actions
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
+    [super prepareForSegue: segue withItem: item sender: sender];
     if ([segue.identifier isEqualToString: @"showContact"]) {
         DatasheetViewController * contactView = segue.destinationViewController;
         contactView.inspectedObject = [self contactForItem: item];
     } else if ([segue.identifier isEqualToString: @"showChat"]) {
         ChatViewController * chatView = segue.destinationViewController;
         chatView.inspectedObject = self.contact;
-    } else  {
-        [super prepareForSegue: segue withItem: item sender: sender];
     }
 }
 
@@ -451,6 +461,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         cell.subtitleLabel.text = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
         cell.avatar.image = contact == self.group ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon = [[avatar_contact alloc] init];
+        cell.closingSeparator = indexPath.row == self.groupMemberItems.count - 1;
     }
 }
 
@@ -601,7 +612,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSString*) groupMemberSegueIdentifier: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
-    return [contact isEqual: self.group] ? @"showProfile" : @"showGroup";
+    return [contact isEqual: self.group] ? @"showProfile" : @"showContact";
 }
 
 - (void) editRemoveItem:(DatasheetItem *)item {

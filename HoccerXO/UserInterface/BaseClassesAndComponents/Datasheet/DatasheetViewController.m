@@ -172,7 +172,7 @@ static CGFloat kHeaderHeight;
     DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
     DatasheetCell * prototype = (DatasheetCell*)[self prototypeCellForIdentifier: item.cellIdentifier];
     [self configureCell: prototype withItem: item forRowAtIndexPath: indexPath];
-    return [prototype.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    return ceilf([prototype.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height) + 1;
 }
 
 - (void) tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {

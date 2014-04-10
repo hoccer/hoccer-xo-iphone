@@ -493,36 +493,19 @@
         <!--Image View Controller-->
         <scene sceneID="Cde-1N-k7V">
             <objects>
-                <viewController storyboardIdentifier="ImageViewController" id="jBj-li-dGc" userLabel="Image View Controller" customClass="ImageViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImageViewController" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="jBj-li-dGc" userLabel="Image View Controller" customClass="ImageViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="r5S-9G-LMw"/>
-                        <viewControllerLayoutGuide type="bottom" id="t3K-zC-7Dx"/>
+                        <viewControllerLayoutGuide type="top" id="2oJ-KA-xdB"/>
+                        <viewControllerLayoutGuide type="bottom" id="HmD-4N-KbB"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ipC-17-f0a">
+                    <scrollView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" indicatorStyle="white" id="y1e-na-WVb">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CPs-zP-mUM">
-                                <rect key="frame" x="0.0" y="-20" width="320" height="588"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iD2-h4-j9B">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="588"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    </imageView>
-                                </subviews>
-                                <connections>
-                                    <outlet property="delegate" destination="jBj-li-dGc" id="llG-4K-9YB"/>
-                                </connections>
-                            </scrollView>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </scrollView>
                     <navigationItem key="navigationItem" id="Xiz-gL-iRR"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
-                        <outlet property="imageView" destination="iD2-h4-j9B" id="9wT-Qd-nD6"/>
-                        <outlet property="scrollView" destination="CPs-zP-mUM" id="0hs-0N-tuW"/>
+                        <outlet property="scrollView" destination="y1e-na-WVb" id="xEf-NY-aFG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>

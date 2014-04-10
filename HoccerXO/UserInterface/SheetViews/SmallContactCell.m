@@ -43,4 +43,11 @@
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 }
 
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    UIEdgeInsets insets = self.separatorInset;
+    insets.left = self.closingSeparator ? 0 : self.titleLabel.frame.origin.x;
+    self.separatorInset = insets;
+}
+
 @end

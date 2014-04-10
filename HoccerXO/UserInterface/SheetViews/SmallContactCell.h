@@ -17,4 +17,6 @@
 @property (nonatomic, readonly) AvatarView * avatar;
 @property (nonatomic, readonly) UILabel    * subtitleLabel;
 
+@property (nonatomic, assign)   BOOL         closingSeparator;
+
 @end

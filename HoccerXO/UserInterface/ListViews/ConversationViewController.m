@@ -95,8 +95,7 @@
     [self performSegueWithIdentifier: @"showChat" sender: self];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showChat"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];

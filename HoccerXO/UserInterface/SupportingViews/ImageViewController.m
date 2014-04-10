@@ -25,6 +25,13 @@ static const CGFloat kImageViewerOversize = 1.0;
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+    self.scrollView.delegate = self;
+
+    self.imageView = [[UIImageView alloc] initWithImage: nil];
+    [self.scrollView addSubview: self.imageView];
+
+    self.imageView.backgroundColor = [UIColor orangeColor];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.navigationBar.translucent = YES;
     [self.navigationBar setBackgroundImage: nil forBarMetrics: UIBarMetricsDefault];
 
@@ -45,7 +52,6 @@ static const CGFloat kImageViewerOversize = 1.0;
     [singleTapRecognizer requireGestureRecognizerToFail: doubleTapRecognizer];
     [self.scrollView addGestureRecognizer:singleTapRecognizer];
 
-
     self.scrollView.alwaysBounceHorizontal = YES;
     self.scrollView.alwaysBounceVertical   = YES;
     self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed: @"bg-noise"]];
@@ -55,9 +61,9 @@ static const CGFloat kImageViewerOversize = 1.0;
 
     [super viewWillAppear: animated];
 
-    self.imageView.image = self.image;
-
-    [self updateZoomScale];
+    if (self.image) {
+        [self updateZoomScale];
+    }
 
 }
 
@@ -66,13 +72,16 @@ static const CGFloat kImageViewerOversize = 1.0;
 }
 
 - (void)updateZoomScale {
+
     // reset the zoom to one - avoids problems with interface orientation changes
     // and frame changes when updating the picture
-    self.scrollView.zoomScale = 1.0;
+    self.scrollView.zoomScale = 1;
 
-    self.imageView.frame = CGRectMake(0.0f, 0.0f, self.image.size.width, self.image.size.height);
+    self.scrollView.contentSize = CGSizeMake(_image.size.width * kImageViewerOversize, _image.size.height * kImageViewerOversize);
 
-    self.scrollView.contentSize = CGSizeMake(self.image.size.width * kImageViewerOversize, self.image.size.height * kImageViewerOversize);
+    self.imageView.frame = CGRectMake(0, 0, _image.size.width, _image.size.height);
+    self.imageView.image = _image;
+
 
     CGRect scrollViewFrame = self.scrollView.frame;
     CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
@@ -80,7 +89,7 @@ static const CGFloat kImageViewerOversize = 1.0;
     CGFloat minScale = MIN(scaleWidth, scaleHeight) / kImageViewerOversize;
     self.scrollView.minimumZoomScale = minScale;
 
-    self.scrollView.maximumZoomScale = 2.0f;
+    self.scrollView.maximumZoomScale = 1.5;
     self.scrollView.zoomScale = minScale;
 
     [self centerScrollViewContents];
@@ -91,13 +100,13 @@ static const CGFloat kImageViewerOversize = 1.0;
     CGRect contentsFrame = self.imageView.frame;
 
     if (contentsFrame.size.width < boundsSize.width) {
-        contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0f;
+        contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2;
     } else {
         contentsFrame.origin.x = 0.0f;
     }
 
     if (contentsFrame.size.height < boundsSize.height) {
-        contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2.0f;
+        contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2;
     } else {
         contentsFrame.origin.y = 0.0f;
     }
@@ -156,16 +165,9 @@ static const CGFloat kImageViewerOversize = 1.0;
 - (void) setImage:(UIImage *)image {
     _image = image;
     // view might not be fully realized yet
-    if (self.imageView != nil) {
-        self.imageView.image = self.image;
+    if (self.view && _image) {
         [self updateZoomScale];
     }
 }
 
-- (void)viewDidUnload {
-    [self setScrollView:nil];
-    [self setImageView:nil];
-    [self setNavigationBar:nil];
-    [super viewDidUnload];
-}
 @end

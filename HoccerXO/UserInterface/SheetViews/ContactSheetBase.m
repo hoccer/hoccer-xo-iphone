@@ -184,16 +184,14 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
+    [super prepareForSegue: segue withItem: item sender: sender];
     if ([item isEqual: self.keyItem]) {
         DatasheetController * keyViewController = segue.destinationViewController;
         keyViewController.inspectedObject = self.client;
     } else if ([segue.identifier isEqualToString: @"showAvatar"]) {
         ImageViewController * imageViewController = segue.destinationViewController;
         imageViewController.image = self.avatarItem.currentValue;
-    } else {
-        NSLog(@"Unhandled segue %@", segue.identifier);
     }
-
 }
 
 #pragma mark - Avatar Handling
@@ -203,14 +201,13 @@ static const NSUInteger kHXOMaxNameLength = 25;
         _avatarView = [[AvatarView alloc] initWithFrame:CGRectMake(0, 0, kHXOProfileAvatarSize, kHXOProfileAvatarSize)];
         _avatarView.defaultIcon = [[avatar_contact alloc] init];
         _avatarView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        _avatarView.badgeText = @"3";
         [_avatarView addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
     }
     return _avatarView;
 }
 
 - (IBAction)avatarPressed:(id)sender {
-    if (self.mode == DatasheetModeEdit) {
+    if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.avatarItem]) {
         [self.imagePicker showInView: [(id)self.delegate view]]; // XXX
     } else if (self.avatarItem.currentValue) {
         [(id)self.delegate performSegueWithIdentifier: self.avatarItem.segueIdentifier sender: self]; // XXX
@@ -219,7 +216,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (AttachmentPickerController*) imagePicker {
     if (_imagePicker == nil) {
-        _imagePicker = [[AttachmentPickerController alloc] initWithViewController: (id)self.delegate delegate: self];
+        _imagePicker = [[AttachmentPickerController alloc] initWithViewController: (id)self.delegate delegate: self]; // XXX
     }
     return _imagePicker;
 }
