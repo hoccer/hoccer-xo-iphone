@@ -59,7 +59,7 @@
                             <outlet property="delegate" destination="gLM-u6-CgJ" id="95g-3p-vzP"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="DbD-6H-viL"/>
+                    <navigationItem key="navigationItem" title="Profile" id="DbD-6H-viL"/>
                     <connections>
                         <outlet property="dataSheetController" destination="sp7-2I-Vr9" id="QLQ-vd-pPy"/>
                         <segue destination="5Ky-Yp-WG8" kind="push" identifier="showKey" id="3XQ-ea-QwO"/>
@@ -69,7 +69,33 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdN-gv-zxy" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="sp7-2I-Vr9" customClass="ProfileSheetController"/>
             </objects>
-            <point key="canvasLocation" x="130" y="-327"/>
+            <point key="canvasLocation" x="59" y="-327"/>
+        </scene>
+        <!--Group Sheet Controller-->
+        <scene sceneID="0sW-Zo-APz">
+            <objects>
+                <tableViewController id="VTA-Oa-XCk" userLabel="Group Sheet Controller" customClass="DatasheetViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="qvp-65-AzC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <connections>
+                            <outlet property="dataSource" destination="VTA-Oa-XCk" id="5Aw-85-KcT"/>
+                            <outlet property="delegate" destination="VTA-Oa-XCk" id="ehA-Sv-PEd"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Group" id="QUt-e2-No4"/>
+                    <connections>
+                        <outlet property="dataSheetController" destination="bAW-nv-Hg8" id="BmL-Rs-Vj6"/>
+                        <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="CES-Ic-Rhf"/>
+                        <segue destination="gLM-u6-CgJ" kind="push" identifier="showProfile" id="6i4-qU-VgJ"/>
+                        <segue destination="21" kind="push" identifier="showChat" id="iwW-8u-tft"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kaL-dN-SRW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="bAW-nv-Hg8" customClass="ContactSheetController"/>
+            </objects>
+            <point key="canvasLocation" x="590" y="-695"/>
         </scene>
         <!--Contact Sheet Controller-->
         <scene sceneID="miZ-b5-x0F">
@@ -97,7 +123,7 @@
                 <exit id="0GB-ZL-UwX" userLabel="Exit" sceneMemberID="exit"/>
                 <customObject id="ct6-Sp-MIE" customClass="ContactSheetController"/>
             </objects>
-            <point key="canvasLocation" x="1208" y="-1131"/>
+            <point key="canvasLocation" x="1128" y="-1123"/>
         </scene>
         <!--Key View Controller-->
         <scene sceneID="Yn8-nt-cME">
@@ -112,7 +138,7 @@
                             <outlet property="delegate" destination="5Ky-Yp-WG8" id="WcV-MT-J3A"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="HnC-Qh-A6n"/>
+                    <navigationItem key="navigationItem" title="Key" id="HnC-Qh-A6n"/>
                     <connections>
                         <outlet property="dataSheetController" destination="STd-pg-7UE" id="PKT-hh-xT2"/>
                     </connections>
@@ -120,7 +146,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mZs-Jr-ULf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="STd-pg-7UE" customClass="KeySheetController"/>
             </objects>
-            <point key="canvasLocation" x="1746" y="-1131"/>
+            <point key="canvasLocation" x="1662" y="-1095"/>
         </scene>
         <!--Modal View with Navigation Bar Helper-->
         <scene sceneID="FUT-t7-A6G">
@@ -177,6 +203,7 @@
                     <connections>
                         <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="Kn0-3b-fVd"/>
                         <segue destination="RTv-PU-Cyy" kind="modal" identifier="showInviteCodeViewController" id="2U5-We-Ovb"/>
+                        <segue destination="VTA-Oa-XCk" kind="push" identifier="showGroup" id="5v1-4P-ajP"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -393,7 +420,7 @@
                             <outlet property="delegate" destination="12" id="15"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="36"/>
+                    <navigationItem key="navigationItem" title="Conversations" id="36"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="hasAddButton" value="YES"/>
                     </userDefinedRuntimeAttributes>
@@ -447,7 +474,7 @@
                             <constraint firstAttribute="trailing" secondItem="V1G-wu-Gd1" secondAttribute="trailing" id="rEx-a1-qhe"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Mr. Mister" id="26"/>
+                    <navigationItem key="navigationItem" title="Chat" id="26"/>
                     <connections>
                         <outlet property="chatbar" destination="wHQ-hg-Cb3" id="qJN-Kd-L0N"/>
                         <outlet property="chatbarHeight" destination="bL9-Pk-LBg" id="6Wa-48-1cM"/>
@@ -461,7 +488,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>
                 <exit id="yCh-Sb-rCK" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1208" y="-1926"/>
+            <point key="canvasLocation" x="1128" y="-1914"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="Cde-1N-k7V">
@@ -500,7 +527,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1746" y="-333"/>
+            <point key="canvasLocation" x="1662" y="-313"/>
         </scene>
         <!--Server View Controller - ServerViewController-->
         <scene sceneID="wA0-Za-oFP">
@@ -639,14 +666,14 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" ambiguous="YES" text="00:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EIb-8o-yK0">
-                                        <rect key="frame" x="145" y="6" width="162" height="21"/>
+                                        <rect key="frame" x="-1135" y="6" width="162" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="zfI-0S-il5">
-                                        <rect key="frame" x="226" y="71" width="81" height="30"/>
+                                        <rect key="frame" x="3" y="71" width="81" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.1633966619318184" green="0.40835657492878713" blue="0.798828125" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -722,7 +749,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DiA-No-hK7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="690" y="-1558"/>
+            <point key="canvasLocation" x="602" y="-1542"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
@@ -1014,7 +1041,7 @@
                             <outlet property="delegate" destination="LTe-T7-WyK" id="UNF-IC-dqI"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="uNh-uY-Mtx"/>
+                    <navigationItem key="navigationItem" title="Settings" id="uNh-uY-Mtx"/>
                     <connections>
                         <segue destination="waQ-4e-c5u" kind="push" identifier="showTutorial" id="I4F-69-hLk"/>
                         <segue destination="1be-9z-Lfo" kind="push" identifier="showFaq" id="omd-f4-Vb6"/>
@@ -1052,11 +1079,11 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="BtW-Nz-U6U"/>
-        <segue reference="nwS-55-3Qg"/>
-        <segue reference="k8Y-EQ-OHi"/>
-        <segue reference="bP2-nJ-GWg"/>
-        <segue reference="sc8-Bm-80f"/>
+        <segue reference="Kn0-3b-fVd"/>
         <segue reference="rav-wy-jJw"/>
+        <segue reference="sc8-Bm-80f"/>
+        <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="nwS-55-3Qg"/>
+        <segue reference="BtW-Nz-U6U"/>
     </inferredMetricsTieBreakers>
 </document>

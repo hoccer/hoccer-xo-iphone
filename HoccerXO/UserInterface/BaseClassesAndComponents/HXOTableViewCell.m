@@ -38,6 +38,12 @@
     }
 }
 
+- (void) dealloc {
+    if (self.accessoryView) {
+        [self.accessoryView removeObserver: self forKeyPath: @"frame"];
+    }
+}
+
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([object isEqual: self.accessoryView] && [keyPath isEqualToString: @"frame"]) {
         [self updateAccessoryFrame];

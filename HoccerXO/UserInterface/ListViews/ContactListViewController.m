@@ -181,15 +181,17 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier: @"showContact" sender: self];
+    Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
+    [self performSegueWithIdentifier: [contact.type isEqualToString: [Group entityName]] ? @"showGroup" : @"showContact" sender: self];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"showContact"]) {
+    NSString * sid = [segue identifier];
+    if ([sid isEqualToString:@"showContact"] || [sid isEqualToString: @"showGroup"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        DatasheetViewController * profileView = [segue destinationViewController];
-        profileView.inspectedObject = contact;
+        DatasheetViewController * vc = [segue destinationViewController];
+        vc.inspectedObject = contact;
     }
 }
 

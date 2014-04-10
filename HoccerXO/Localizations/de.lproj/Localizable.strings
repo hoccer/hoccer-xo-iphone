@@ -378,6 +378,9 @@
 
 "group_kick_member_confirm" = "Ausladen";
 
+"group_invite_members_title" = "Einladen";
+
+
 "group_no_other_joined_partners_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
 "group_no_other_partner_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
 "group_no_other_partners_title"="Keine Gruppenmitglieder";

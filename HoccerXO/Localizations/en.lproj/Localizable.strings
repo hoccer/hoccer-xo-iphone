@@ -342,6 +342,8 @@
 "group_name_placeholder" = "Group Name";
 "group_invite_button" = "Invite or kick Member";
 
+"group_invite_members_title" = "Invite more";
+
 "group_invite_title" = "Invite '%@' to group '%@'?";
 "group_kick_title" = "Kick '%@' from group '%@'?";
 "group_join_button" = "Join Group";

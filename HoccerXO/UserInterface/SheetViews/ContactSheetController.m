@@ -39,6 +39,9 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @property (nonatomic, readonly) DatasheetSection           * groupMemberSection;
 @property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
 
+@property (nonatomic, readonly) DatasheetItem              * inviteMembersItem;
+@property (nonatomic, assign)   BOOL                         inviteGroupMembers;
+
 @property (nonatomic, readonly) HXOBackend                 * chatBackend;
 @property (nonatomic, readonly) AppDelegate                * appDelegate;
 
@@ -160,6 +163,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
     } else if ([item isEqual: self.keyItem]) {
         return ! self.group && [super isItemVisible: item];
+    } else if ([item isEqual: self.inviteMembersItem]) {
+        return self.group.iAmAdmin && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
@@ -201,12 +206,17 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return [self blockItemTitle];
     } else if ([item isEqual: self.destructiveButton]) {
         return [self destructiveButtonTitle];
+    } else if ([item isEqual: self.inviteMembersItem]) {
+        return self.inviteGroupMembers ? NSLocalizedString(@"done_button_title", nil) : NSLocalizedString(@"group_invite_members_title", nil);
     }
     return nil;
 }
 
 - (NSString*) segueIdentifierForItem:(DatasheetItem *)item {
-    if ([item isEqual: self.chatItem]) {
+    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
+    if (groupMemeberIndex != NSNotFound) {
+        return [self groupMemberSegueIdentifier: groupMemeberIndex];
+    } else if ([item isEqual: self.chatItem]) {
         return [self chatItemSegueIdentifier];
     }
     return nil;
@@ -288,7 +298,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 #pragma mark - UI Actions
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
-    if ([item isEqual: self.chatItem]) {
+    if ([segue.identifier isEqualToString: @"showContact"]) {
+        DatasheetViewController * contactView = segue.destinationViewController;
+        contactView.inspectedObject = [self contactForItem: item];
+    } else if ([segue.identifier isEqualToString: @"showChat"]) {
         ChatViewController * chatView = segue.destinationViewController;
         chatView.inspectedObject = self.contact;
     } else  {
@@ -357,22 +370,22 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 #pragma mark - Group Member Section
 
-- (GroupMembership*) membershipForItem: (DatasheetItem*) groupMemberItem {
+- (Contact*) contactForItem: (DatasheetItem*) groupMemberItem {
     NSInteger index = [self.groupMemberItems indexOfObject: groupMemberItem];
     if (index != NSNotFound) {
-        return [self membershipAtIndex: index];
+        return [self contactAtIndex: index];
     }
     return nil;
 }
 
-- (GroupMembership*) membershipAtIndex: (NSUInteger) index {
+- (Contact*) contactAtIndex: (NSUInteger) index {
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
     return [self.fetchedResultsController objectAtIndexPath: indexPath];
 }
 
 - (DatasheetItem*) myMembershipItem {
     if (self.group) {
-        NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: self.group.myGroupMembership];
+        NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: self.group];
         return self.groupMemberItems[indexPath.row];
     }
     return nil;
@@ -413,14 +426,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSUInteger) numberOfItemsInSection:(DatasheetSection *)section {
     if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
-        return self.groupMemberItems.count;
+        return self.groupMemberItems.count + (self.group.iAmAdmin ? 1 : 0);
     }
     return 0;
 }
 
 - (DatasheetItem*) section:(DatasheetSection *)section itemAtIndex:(NSUInteger)index {
     if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
-        return self.groupMemberItems[index];
+        return index < self.groupMemberItems.count ? self.groupMemberItems[index] : self.inviteMembersItem;
     }
     return  nil;
 }
@@ -434,11 +447,11 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) configureCell: (GroupMemberCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
     if ([[cell reuseIdentifier] isEqualToString: @"GroupMemberCell"]) {
-        GroupMembership * membership = [self membershipForItem: item];
-        cell.titleLabel.text = membership.contact == self.group ? [UserProfile sharedProfile].nickName : membership.contact.nickName;
+        Contact * contact = [self contactForItem: item];
+        cell.titleLabel.text = contact == self.group ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.textColor = [UIColor blackColor];
         cell.statusLabel.text = @"vergnurbelt";//[membership.state isEqualToString: @"invited"] ? NSLocalizedString(@"membership_state_invited", nil) : nil;
-        cell.avatar.image = membership.contact == self.group ? [UserProfile sharedProfile].avatarImage : membership.contact.avatarImage;
+        cell.avatar.image = contact == self.group ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     }
 }
@@ -449,8 +462,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (DatasheetItem*) groupMemberItem: (NSUInteger) index {
-    GroupMembership * membership = [self membershipAtIndex: index];
-    NSString * identifier = [NSString stringWithFormat: @"%@", membership.objectID];
+    Contact * contact = [self contactAtIndex: index];
+    NSString * identifier = [NSString stringWithFormat: @"%@", contact.objectID];
     DatasheetItem * result = [self itemWithIdentifier: identifier cellIdentifier: [GroupMemberCell reuseIdentifier]];
     result.accessoryStyle = DatasheetAccessoryDisclosure;
     return result;
@@ -477,9 +490,23 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if ( ! group) {
         return nil;
     }
-    NSDictionary * vars = @{ @"group" : self.group };
-    NSFetchRequest * fetchRequest =  [self.appDelegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupMembershipsByGroup" substitutionVariables: vars];
-    [fetchRequest setSortDescriptors: @[[[NSSortDescriptor alloc] initWithKey:@"contact.nickName" ascending: YES]]];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: [Contact entityName] inManagedObjectContext: self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setSortDescriptors: @[[[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES]]];
+
+    NSMutableArray *predicates = [NSMutableArray array];
+
+    [predicates addObject: [NSPredicate predicateWithFormat:@"ANY groupMemberships.group == %@", self.group]];
+/*
+    if(searchString.length) {
+        [self addSearchPredicates: predicateArray searchString: searchString];
+    }
+ */
+    NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates: predicates];
+    [fetchRequest setPredicate:filterPredicate];
+
+    [fetchRequest setFetchBatchSize:20];
     return fetchRequest;
 }
 
@@ -492,8 +519,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         case NSFetchedResultsChangeInsert:
         {
             NSUInteger idx = newIndexPath.row;
-            GroupMembership * membership = [self.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: idx inSection: 0]];
-            DatasheetItem * item = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", membership.objectID] cellIdentifier: [GroupMemberCell reuseIdentifier]];
+            Contact * contact = [self.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: idx inSection: 0]];
+            DatasheetItem * item = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: [GroupMemberCell reuseIdentifier]];
             [self.groupMemberItems insertObject: item atIndex: idx];
             break;
         }
@@ -522,7 +549,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 
 // Thing is: If we are displaying a group our own membership cell needs a little
-// kick if we edit our profile...
+// kick if we edit our own profile...
 - (void) addProfileObservers {
     if ([self myMembershipItem]) {
         self.profileObserver = [[NSNotificationCenter defaultCenter] addObserverForName: @"profileUpdatedByUser"
@@ -538,6 +565,26 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if (self.profileObserver) {
         [[NSNotificationCenter defaultCenter] removeObserver: self.profileObserver];
     }
+}
+
+@synthesize inviteMembersItem = _inviteMembersItem;
+- (DatasheetItem*) inviteMembersItem {
+    if ( ! _inviteMembersItem) {
+        _inviteMembersItem = [self itemWithIdentifier: @"group_invite_friends" cellIdentifier: @"DatasheetActionCell"];
+        _inviteMembersItem.target = self;
+        _inviteMembersItem.action = @selector(toggleInviteMode:);
+    }
+    return _inviteMembersItem;
+}
+
+- (void) toggleInviteMode: (id) sender {
+    self.inviteGroupMembers = ! self.inviteGroupMembers;
+    [self updateItem: self.inviteMembersItem];
+}
+
+- (NSString*) groupMemberSegueIdentifier: (NSUInteger) index {
+    Contact * contact = [self contactAtIndex: index];
+    return [contact isEqual: self.group] ? @"showProfile" : @"showGroup";
 }
 
 #pragma mark - Attic
