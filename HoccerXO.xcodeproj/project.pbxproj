@@ -93,7 +93,7 @@
 		6382545117503531000347CD /* server_production.der in Resources */ = {isa = PBXBuildFile; fileRef = 6382545017503531000347CD /* server_production.der */; };
 		6382549B175F746C000347CD /* ProfileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6382549A175F746B000347CD /* ProfileDataSource.m */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
-		63848A9518F473AC00C253A4 /* GroupMemberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63848A9418F473AC00C253A4 /* GroupMemberCell.m */; };
+		63848A9518F473AC00C253A4 /* SmallContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63848A9418F473AC00C253A4 /* SmallContactCell.m */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
@@ -496,6 +496,7 @@
 		63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		63756A8E18F6434C003F7555 /* ContactPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactPickerViewController.h; sourceTree = "<group>"; };
 		63756A8F18F6434C003F7555 /* ContactPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactPickerViewController.m; sourceTree = "<group>"; };
+		63756A9F18F669DC003F7555 /* ContactCellProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactCellProtocol.h; sourceTree = "<group>"; };
 		6378482716F37E9500DE03C2 /* AttachmentPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentPickerController.h; sourceTree = "<group>"; };
 		6378482816F37E9500DE03C2 /* AttachmentPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentPickerController.m; sourceTree = "<group>"; };
 		6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -529,8 +530,8 @@
 		63825499175F746B000347CD /* ProfileDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileDataSource.h; sourceTree = "<group>"; };
 		6382549A175F746B000347CD /* ProfileDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileDataSource.m; sourceTree = "<group>"; };
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		63848A9318F473AC00C253A4 /* GroupMemberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMemberCell.h; sourceTree = "<group>"; };
-		63848A9418F473AC00C253A4 /* GroupMemberCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMemberCell.m; sourceTree = "<group>"; };
+		63848A9318F473AC00C253A4 /* SmallContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallContactCell.h; sourceTree = "<group>"; };
+		63848A9418F473AC00C253A4 /* SmallContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallContactCell.m; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
@@ -1319,8 +1320,8 @@
 				630CAB7718E0F6C400782507 /* ContactSheetBase.m */,
 				63B76F6218E9EA3300E014E6 /* ContactSheetController.h */,
 				63B76F6318E9EA3300E014E6 /* ContactSheetController.m */,
-				63848A9318F473AC00C253A4 /* GroupMemberCell.h */,
-				63848A9418F473AC00C253A4 /* GroupMemberCell.m */,
+				63848A9318F473AC00C253A4 /* SmallContactCell.h */,
+				63848A9418F473AC00C253A4 /* SmallContactCell.m */,
 				63B76F4E18E8F7F800E014E6 /* KeySheetController.h */,
 				63B76F4F18E8F7F800E014E6 /* KeySheetController.m */,
 				63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */,
@@ -1341,6 +1342,7 @@
 				63C413BB16E94735004E1F6D /* ConversationCell.m */,
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
+				63756A9F18F669DC003F7555 /* ContactCellProtocol.h */,
 			);
 			name = "List Views";
 			path = ListViews;
@@ -2239,7 +2241,7 @@
 				630CAB8E18E2333E00782507 /* DatasheetKeyValueCell.m in Sources */,
 				6302A98A18DA870400B2D04F /* SRP.m in Sources */,
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
-				63848A9518F473AC00C253A4 /* GroupMemberCell.m in Sources */,
+				63848A9518F473AC00C253A4 /* SmallContactCell.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
 				63AEE2FC16CA4D0300522F92 /* ConversationViewController.m in Sources */,
 				63C178C618BF79A100F29BC4 /* UIColor+HexUtilities.m in Sources */,

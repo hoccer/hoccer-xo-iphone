@@ -23,11 +23,12 @@ typedef void(^ContactPickerCompletion)(id result);
 
 @interface ContactPickerViewController : ContactListViewController
 
-+ (id) contactPickerForTypes: (NSUInteger)              typeMask
-                       style: (ContactPickerStyle)      style
-                  completion: (ContactPickerCompletion) completion;
++ (id) contactPickerWithTitle: (NSString*)               title
+                        types: (NSUInteger)              typeMask
+                        style: (ContactPickerStyle)      style
+                   completion: (ContactPickerCompletion) completion;
 
-@property (nonatomic, assign) ContactPickerStyle        pickerStyle;
-@property (nonatomic, copy)   ContactPickerCompletion   completion;
+@property (nonatomic, assign) ContactPickerStyle      pickerStyle;
+@property (nonatomic, copy)   ContactPickerCompletion completion;
 
 @end

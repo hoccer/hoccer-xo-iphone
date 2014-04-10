@@ -19,7 +19,7 @@
 #import "avatar_contact.h"
 #import "AvatarGroup.h"
 #import "GroupMembership.h"
-#import "GroupMemberCell.h"
+#import "SmallContactCell.h"
 #import "DatasheetViewController.h"
 #import "UserProfile.h"
 #import "ContactPickerViewController.h"
@@ -92,7 +92,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
     [super registerCellClasses: viewController];
-    [viewController registerCellClass: [GroupMemberCell class]];
+    [viewController registerCellClass: [SmallContactCell class]];
 }
 
 - (void) addUtilitySections:(NSMutableArray *)sections {
@@ -445,12 +445,12 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return nil;
 }
 
-- (void) configureCell: (GroupMemberCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
-    if ([[cell reuseIdentifier] isEqualToString: @"GroupMemberCell"]) {
+- (void) configureCell: (SmallContactCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    if ([[cell reuseIdentifier] isEqualToString: @"SmallContactCell"]) {
         Contact * contact = [self contactForItem: item];
         cell.titleLabel.text = contact == self.group ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.textColor = [UIColor blackColor];
-        cell.statusLabel.text = @"vergnurbelt";//[membership.state isEqualToString: @"invited"] ? NSLocalizedString(@"membership_state_invited", nil) : nil;
+        cell.subtitleLabel.text = @"vergnurbelt";//[membership.state isEqualToString: @"invited"] ? NSLocalizedString(@"membership_state_invited", nil) : nil;
         cell.avatar.image = contact == self.group ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     }
@@ -464,7 +464,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (DatasheetItem*) groupMemberItem: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
     NSString * identifier = [NSString stringWithFormat: @"%@", contact.objectID];
-    DatasheetItem * result = [self itemWithIdentifier: identifier cellIdentifier: [GroupMemberCell reuseIdentifier]];
+    DatasheetItem * result = [self itemWithIdentifier: identifier cellIdentifier: [SmallContactCell reuseIdentifier]];
     result.accessoryStyle = DatasheetAccessoryDisclosure;
     return result;
 }
@@ -520,7 +520,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         {
             NSUInteger idx = newIndexPath.row;
             Contact * contact = [self.fetchedResultsController objectAtIndexPath: [NSIndexPath indexPathForItem: idx inSection: 0]];
-            DatasheetItem * item = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: [GroupMemberCell reuseIdentifier]];
+            DatasheetItem * item = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: [SmallContactCell reuseIdentifier]];
             [self.groupMemberItems insertObject: item atIndex: idx];
             break;
         }
@@ -578,9 +578,12 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (void) inviteMembersPressed: (id) sender {
-    id picker = [ContactPickerViewController contactPickerForTypes: 0 style: 0 completion:^(id result) {
+    id picker = [ContactPickerViewController contactPickerWithTitle: NSLocalizedString(@"Choose Contacts:", nil)
+                                                              types: 0
+                                                              style: ContactPickerStyleMulti
+                                                         completion:^(id result) {
 
-    }];
+                                                         }];
     [(UIViewController*)self.delegate presentViewController: picker animated: YES completion: nil];
 }
 

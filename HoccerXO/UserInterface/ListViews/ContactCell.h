@@ -14,7 +14,7 @@
 
 @interface ContactCell : HXOTableViewCell
 
-@property (nonatomic,readonly) UILabel    * nickName;
+@property (nonatomic,readonly) UILabel    * titleLabel;
 @property (nonatomic,readonly) UILabel    * subtitleLabel;
 @property (nonatomic,readonly) AvatarView * avatar;
 

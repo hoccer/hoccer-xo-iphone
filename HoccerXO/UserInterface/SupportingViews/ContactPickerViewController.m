@@ -7,20 +7,32 @@
 //
 
 #import "ContactPickerViewController.h"
+#import "Contact.h"
+#import "ContactCell.h"
+
+#import "SmallContactCell.h"
 
 #import "HXOThemedNavigationController.h"
 
 @implementation ContactPickerViewController
 
-+ (id) contactPickerForTypes: (NSUInteger) typeMask style: (ContactPickerStyle) style completion: (ContactPickerCompletion) completion {
++ (id) contactPickerWithTitle:(NSString *)title types:(NSUInteger)typeMask style:(ContactPickerStyle)style completion:(ContactPickerCompletion)completion {
 
-    ContactPickerViewController * picker = [[ContactPickerViewController alloc] initWithStyle: UITableViewStylePlain];
+    ContactPickerViewController * picker = [[ContactPickerViewController alloc] init];
+    picker.navigationItem.prompt = title;
     picker.pickerStyle = style;
     picker.completion = completion;
 
     UINavigationController * modalPresentationHelper = [[HXOThemedNavigationController alloc] initWithRootViewController: picker];
 
     return modalPresentationHelper;
+}
+
+- (id) init {
+    self = [super initWithStyle: UITableViewStylePlain];
+    if (self) {
+    }
+    return self;
 }
 
 - (void) viewDidLoad {
@@ -37,10 +49,27 @@
 - (void) done: (id) sender {
     id result = nil;
     if ( ! [sender isEqual: self.navigationItem.leftBarButtonItem]) {
+        if (self.pickerStyle == ContactPickerStyleMulti) {
+
+        } else {
+            result = [self.currentFetchedResultsController objectAtIndexPath: sender];
+        }
     }
     if (self.completion) {
         self.completion(result);
     }
+    [self dismissViewControllerAnimated: YES completion: nil];
+}
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.pickerStyle == ContactPickerStyleMulti) {
+    } else {
+        [self done: indexPath];
+    }
+}
+
+- (id) cellClass {
+    return [SmallContactCell class];
 }
 
 @end

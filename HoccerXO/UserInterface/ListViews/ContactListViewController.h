@@ -10,8 +10,6 @@
 #import "HXOTableViewController.h"
 #import <MessageUI/MessageUI.h>
 
-@class ContactCell;
-
 @interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet UISearchBar         * searchBar;

@@ -31,7 +31,7 @@
 
     [super commonInit];
     
-    [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.nickName attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
+    [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.titleLabel attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
 
     self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[DisclosureArrow alloc] init]];
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentTop;

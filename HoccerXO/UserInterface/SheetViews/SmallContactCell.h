@@ -8,11 +8,13 @@
 
 #import "DatasheetCell.h"
 
+#import "ContactCellProtocol.h"
+
 @class AvatarView;
 
-@interface GroupMemberCell : DatasheetCell
+@interface SmallContactCell : DatasheetCell <ContactCell>
 
 @property (nonatomic, readonly) AvatarView * avatar;
-@property (nonatomic, readonly) UILabel    * statusLabel;
+@property (nonatomic, readonly) UILabel    * subtitleLabel;
 
 @end

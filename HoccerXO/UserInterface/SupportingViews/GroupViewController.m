@@ -589,11 +589,11 @@
     GroupMembership * membership = _profileDataSource[indexPath.section][indexPath.row];
     id contact = [self getContact: membership];
     // TODO: move to a configure method...
-    cell.nickName.text = [contact nickName];
+    cell.titleLabel.text = [contact nickName];
     if ([membership.state isEqualToString: @"invited"]) {
-        cell.nickName.alpha = 0.5;
+        cell.titleLabel.alpha = 0.5;
     } else {
-        cell.nickName.alpha = 1.0;
+        cell.titleLabel.alpha = 1.0;
     }
     NSString * membershipStateKey = [NSString stringWithFormat: @"membership_state_%@", membership.state];
     NSString * membershipRoleKey = [NSString stringWithFormat: @"membership_role_%@", membership.role];

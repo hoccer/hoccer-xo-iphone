@@ -24,7 +24,7 @@
 #import "AvatarView.h"
 #import "HXOUserDefaults.h"
 #import "InvitationCodeViewController.h"
-
+#import "ContactCellProtocol.h"
 
 #define HIDE_SEPARATORS
 
@@ -108,7 +108,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
-    [(ContactCell*)self.cellPrototype preferredContentSizeChanged: notification];
+    [(id<ContactCell>)self.cellPrototype preferredContentSizeChanged: notification];
     self.tableView.rowHeight = [self calculateRowHeight];
     [self.tableView reloadData];
 }
@@ -341,11 +341,10 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [self.tableView endUpdates];
 }
 
-- (void)configureCell: (ContactCell*) cell atIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell: (id<ContactCell>) cell atIndexPath:(NSIndexPath *)indexPath {
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    cell.nickName.text = contact.nickNameWithStatus;
-    //cell.nickName.ledOn = contact.isOnline;
 
+    cell.titleLabel.text = contact.nickNameWithStatus;
     
     UIImage * avatar = contact.avatarImage;
     cell.avatar.image = avatar;
