@@ -18,6 +18,7 @@
 
     self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
 
+    self.titleLabel.text = @"Lorem";
 
     _avatar = [[AvatarView alloc] initWithFrame: CGRectMake(0, 0, 10, 10)];
     _avatar.translatesAutoresizingMaskIntoConstraints = NO;
