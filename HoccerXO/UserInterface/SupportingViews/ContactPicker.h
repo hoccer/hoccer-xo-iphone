@@ -26,9 +26,11 @@ typedef void(^ContactPickerCompletion)(id result);
 + (id) contactPickerWithTitle: (NSString*)               title
                         types: (NSUInteger)              typeMask
                         style: (ContactPickerStyle)      style
+                    predicate: (NSPredicate*)            predicate
                    completion: (ContactPickerCompletion) completion;
 
-@property (nonatomic, assign) ContactPickerStyle      pickerStyle;
-@property (nonatomic, copy)   ContactPickerCompletion completion;
+@property (nonatomic, assign) ContactPickerStyle        pickerStyle;
+@property (nonatomic, copy)   ContactPickerCompletion   completion;
+@property (nonatomic, strong) NSPredicate             * predicate;
 
 @end

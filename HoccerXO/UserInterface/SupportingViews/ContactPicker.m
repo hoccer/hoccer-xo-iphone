@@ -22,12 +22,18 @@
 
 @implementation ContactPicker
 
-+ (id) contactPickerWithTitle:(NSString *)title types:(NSUInteger)typeMask style:(ContactPickerStyle)style completion:(ContactPickerCompletion)completion {
++ (id) contactPickerWithTitle: (NSString*)               title
+                        types: (NSUInteger)              typeMask
+                        style: (ContactPickerStyle)      style
+                    predicate: (NSPredicate *)           predicate
+                   completion: (ContactPickerCompletion) completion
+{
 
     ContactPicker * picker = [[ContactPicker alloc] init];
     picker.pickerStyle = style;
     picker.completion = completion;
     picker.title = title;
+    picker.predicate = predicate;
 
     UINavigationController * modalPresentationHelper = [[HXOThemedNavigationController alloc] initWithRootViewController: picker];
 
@@ -70,6 +76,12 @@
         self.completion(result);
     }
     [self dismissViewControllerAnimated: YES completion: nil];
+}
+
+- (void) addPredicates:(NSMutableArray *)predicates {
+    if (self.predicate) {
+        [predicates addObject: self.predicate];
+    }
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

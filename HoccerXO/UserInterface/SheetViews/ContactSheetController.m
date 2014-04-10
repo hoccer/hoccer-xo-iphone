@@ -447,7 +447,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
         cell.titleLabel.text = contact == self.group ? [UserProfile sharedProfile].nickName : contact.nickName;
-        cell.titleLabel.textColor = [UIColor blackColor];
+        cell.titleLabel.textColor = [membership.state isEqualToString: @"invited"] ? [HXOUI theme].lightTextColor : [UIColor blackColor];
         cell.subtitleLabel.text = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
         cell.avatar.image = contact == self.group ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon = [[avatar_contact alloc] init];
@@ -512,16 +512,16 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    NSIndexPath * p = [self indexPathForItem: self.groupMemberSection];
     NSUInteger sectionIndex = [self indexPathForItem: self.groupMemberSection].section;
     switch(type) {
         case NSFetchedResultsChangeInsert:
         {
-            Contact * contact = [self.fetchedResultsController objectAtIndexPath: newIndexPath];
             DatasheetItem * item = [self groupMemberItem: newIndexPath.row];
             [self.groupMemberItems insertObject: item atIndex: newIndexPath.row];
-
-            [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: [NSIndexPath indexPathForRow: newIndexPath.row inSection: sectionIndex]];
+            [self.delegate controller: self
+                      didChangeObject: nil
+                        forChangeType: DatasheetChangeInsert
+                         newIndexPath: [NSIndexPath indexPathForRow: newIndexPath.row inSection: sectionIndex]];
             break;
         }
         case NSFetchedResultsChangeDelete:
@@ -591,10 +591,11 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         }
     };
     id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
-                                                              types: 0
-                                                              style: ContactPickerStyleMulti
-                                                         completion: completion];
-    
+                                                types: 0
+                                                style: ContactPickerStyleMulti
+                                            predicate: [NSPredicate predicateWithFormat: @"type == %@ AND NONE groupMemberships.group == %@", [Contact entityName], self.group]
+                                           completion: completion];
+
     [(UIViewController*)self.delegate presentViewController: picker animated: YES completion: nil];
 }
 
