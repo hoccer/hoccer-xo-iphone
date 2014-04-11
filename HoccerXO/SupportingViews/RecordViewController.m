@@ -153,7 +153,7 @@ static const CGFloat kRingWidth = 6.0;
     if (_audioPlayer.playing) {
         seconds = _audioPlayer.currentTime;
     }
-    NSString * myTime = [NSString stringWithFormat:@"%02d:%02d:%02d", (int)seconds / 60, (int)seconds % 60, (int)(100 * (seconds - floor(seconds)))];
+    NSString * myTime = [NSString stringWithFormat:@"%02d:%02d.%02d", (int)seconds / 60, (int)seconds % 60, (int)(100 * (seconds - floor(seconds)))];
     self.timeLabel.text = myTime;
 }
 
