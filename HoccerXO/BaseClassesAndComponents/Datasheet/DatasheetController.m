@@ -659,7 +659,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     if (! _headerViewIdentifier && self.title) {
         return @"DatasheetHeaderFooterTextView";
     }
-    return _footerViewIdentifier;
+    return _headerViewIdentifier;
 }
 
 -(id)copyWithZone:(NSZone *)zone {
@@ -698,9 +698,12 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (NSAttributedString*) title {
+    if (_title) {
+        return _title;
+    }
     if ([self.delegate respondsToSelector: @selector(titleForSection:)]) {
         return [self.delegate titleForSection: self];
     }
-    return _title;
+    return nil;
 }
 @end

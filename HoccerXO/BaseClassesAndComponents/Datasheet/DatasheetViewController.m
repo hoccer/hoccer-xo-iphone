@@ -189,7 +189,7 @@ static CGFloat kHeaderHeight;
     if (item.isEnabled && item.target && [item.target respondsToSelector: item.action]) {
         IMP imp = [item.target methodForSelector: item.action];
         void (*func)(id, SEL, id) = (void *)imp;
-        func(item.target, item.action, self);
+        func(item.target, item.action, item);
     }
     if (item.segueIdentifier && ! [item.segueIdentifier isEqualToString:@""]) {
         [self performSegueWithIdentifier: item.segueIdentifier sender: self];

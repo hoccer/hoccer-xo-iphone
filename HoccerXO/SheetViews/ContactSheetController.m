@@ -28,6 +28,7 @@
 //#define SHOW_CONNECTION_STATUS
 //#define SHOW_UNREAD_MESSAGE_COUNT
 
+static const BOOL GROUPVIEW_DEBUG    = NO;
 static const BOOL RELATIONSHIP_DEBUG = NO;
 
 @interface ContactSheetController ()
@@ -36,6 +37,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
 @property (nonatomic, readonly) Contact                    * contact;
 @property (nonatomic, readonly) Group                      * group;
+
+@property (nonatomic, readonly) DatasheetSection           * invitationResponseSection;
+@property (nonatomic, readonly) DatasheetItem              * joinGroupItem;
+@property (nonatomic, readonly) DatasheetItem              * invitationDeclineItem;
 
 @property (nonatomic, readonly) DatasheetSection           * groupMemberSection;
 @property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
@@ -96,6 +101,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) addUtilitySections:(NSMutableArray *)sections {
     [super addUtilitySections: sections];
+    [sections addObject: self.invitationResponseSection];
     [sections addObject: self.groupMemberSection];
 }
 
@@ -161,6 +167,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return ! self.group && [super isItemVisible: item];
     } else if ([item isEqual: self.inviteMembersItem]) {
         return self.group.iAmAdmin && [super isItemVisible: item];
+    } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
+        return [self.group.myGroupMembership.state isEqualToString: @"invited"];
     }
     return [super isItemVisible: item];
 }
@@ -346,33 +354,141 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     }
 }
 
-#pragma mark - Delete Contact
+#pragma mark - Destructive Button
 
-- (void) deleteContactPressed: (UIViewController*) sender {
-    HXOActionSheetCompletionBlock handleAnswer = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+- (void) destructiveButtonPressed: (UIViewController*) sender {
+    NSString * title = nil;
+    NSString * destructiveButtonTitle = nil;
+    SEL        destructor;
+
+    if ([self.group.groupState isEqualToString:@"kept"]) {
+        title = NSLocalizedString(@"group_delete_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"group_delete_button_title", nil);
+        destructor = @selector(deleteGroupData);
+    } else if (self.group.iAmAdmin) {
+        title = NSLocalizedString(@"group_close_group_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"group_close_group_button_title", nil);
+        destructor = @selector(deleteGroup);
+    } else if (self.group) {
+        title = NSLocalizedString(@"group_leave_group_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
+        destructor = @selector(leaveGroup);
+    } else {
+        title = NSLocalizedString(@"delete_contact_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"Delete", nil);
+        destructor = @selector(deleteContact);
+    }
+
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            [self deleteContact: self.contact];
+            IMP imp = [self methodForSelector: destructor];
+            void (*func)(id, SEL, id) = (void *)imp;
+            func(self, destructor, self);
         }
     };
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
-                                                 completionBlock: handleAnswer
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
-                                               otherButtonTitles: nil];
-    [sheet showInView: sender.view];
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: [(id)self.delegate view]];
 }
 
-- (void) deleteContact: (Contact*) contact {
-    //[self.delegate controllerDidFinish: self];
-    NSLog(@"deleting contact with relationshipState %@", contact.relationshipState);
-    if ([contact.relationshipState isEqualToString:@"groupfriend"] || [contact.relationshipState isEqualToString:@"kept"]) {
-        [self.chatBackend handleDeletionOfContact:contact];
+- (void) deleteGroupData {
+    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: self.group];
+    NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
+    [moc deleteObject: self.group];
+    [self.appDelegate saveDatabase];
+}
+
+- (void) deleteGroup {
+    [self.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
+        if (group != nil) {
+            if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
+        } else {
+            NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
+            [self.chatBackend getGroupsForceAll: YES];
+        }
+    }];
+}
+
+- (void) leaveGroup {
+    [self.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
+        if (group != nil) {
+            if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
+        } else {
+            NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
+            [self.chatBackend getGroupsForceAll:YES];
+        }
+    }];
+}
+
+- (void) deleteContact {
+    NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
+    if ([self.contact.relationshipState isEqualToString:@"groupfriend"] || [self.contact.relationshipState isEqualToString:@"kept"]) {
+        [self.chatBackend handleDeletionOfContact: self.contact];
     } else {
-        [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
+        [self.chatBackend depairClient: self.contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
         }];
     }
-    [self.delegate controllerDidFinish: self];
+}
+
+#pragma mark - Invitation Response Section
+
+@synthesize invitationResponseSection = _invitationResponseSection;
+- (DatasheetSection*) invitationResponseSection {
+    if ( ! _invitationResponseSection) {
+        _invitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"invitation_response_section"];
+        _invitationResponseSection.title = [[NSAttributedString alloc] initWithString: @"Du bist eingeladen der gruppe beizutreten" attributes: nil];
+        [_invitationResponseSection setItems: @[self.joinGroupItem, self.invitationDeclineItem]];
+    }
+    return _invitationResponseSection;
+}
+
+@synthesize joinGroupItem = _joinGroupItem;
+- (DatasheetItem*) joinGroupItem {
+    if ( ! _joinGroupItem) {
+        _joinGroupItem = [self itemWithIdentifier: @"invitation_accept" cellIdentifier: @"DatasheetActionCell"];
+        _joinGroupItem.title = NSLocalizedString(@"group_join_button", nil);
+        _joinGroupItem.target = self;
+        _joinGroupItem.action = @selector(joinGroupTapped:);
+    }
+    return _joinGroupItem;
+}
+
+@synthesize invitationDeclineItem = _invitationDeclineItem;
+- (DatasheetItem*) invitationDeclineItem {
+    if ( ! _invitationDeclineItem) {
+        _invitationDeclineItem = [self itemWithIdentifier: @"" cellIdentifier: @"DatasheetActionCell"];
+        _invitationDeclineItem.title = NSLocalizedString( @"group_decline_invitation", nil);
+        _invitationDeclineItem.target = self;
+        _invitationDeclineItem.action = @selector(declineInvitationTapped:);
+    }
+    return _invitationDeclineItem;
+}
+
+- (void) joinGroupTapped: (id) sender {
+    [self.chatBackend joinGroup: self.group onJoined:^(Group *group) {
+        if (GROUPVIEW_DEBUG) NSLog(@"Joined group %@", group);
+    }];
+}
+
+- (void) declineInvitationTapped: (id) sender {
+    NSString * title = NSLocalizedString(@"group_decline_invitation_title", nil);
+    NSString * destructiveButtonTitle = NSLocalizedString(@"group_decline_button_title", nil);
+
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self leaveGroup];
+        }
+    };
+    UIActionSheet * actionSheet = [HXOUI actionSheetWithTitle: title
+                                              completionBlock: completion
+                                            cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                       destructiveButtonTitle: destructiveButtonTitle
+                                            otherButtonTitles: nil];
+    [actionSheet showInView: [(id)self.delegate view]];
 }
 
 #pragma mark - Group Member Section
@@ -604,7 +720,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
                                                 types: 0
                                                 style: ContactPickerStyleMulti
-                                            predicate: [NSPredicate predicateWithFormat: @"type == %@ AND NONE groupMemberships.group == %@", [Contact entityName], self.group]
+                                            predicate: [NSPredicate predicateWithFormat: @"(type == %@) AND (NONE groupMemberships.group == %@)", [Contact entityName], self.group]
                                            completion: completion];
 
     [(UIViewController*)self.delegate presentViewController: picker animated: YES completion: nil];

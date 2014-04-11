@@ -1026,11 +1026,12 @@
 			path = ChatView;
 			sourceTree = "<group>";
 		};
-		631A96F818AB9D24003363F5 /* BuildUtilities */ = {
+		631A96F818AB9D24003363F5 /* Build Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				631A96F918AB9D82003363F5 /* injectSettingsPane */,
 			);
+			name = "Build Utilities";
 			path = BuildUtilities;
 			sourceTree = "<group>";
 		};
@@ -1446,7 +1447,7 @@
 				6378482816F37E9500DE03C2 /* AttachmentPickerController.m */,
 				631254C716EC190E009A6584 /* Backend */,
 				630CAB7518E0F67200782507 /* Base Classes & Components */,
-				631A96F818AB9D24003363F5 /* BuildUtilities */,
+				631A96F818AB9D24003363F5 /* Build Utilities */,
 				6318AC5718F3050500CD91A4 /* Chat View */,
 				633A9B18177B21A700E066EF /* Controls */,
 				E96CB01D1714572C005F8FFA /* Crypto */,
