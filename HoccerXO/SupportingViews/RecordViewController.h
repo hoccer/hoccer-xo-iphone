@@ -18,19 +18,14 @@
 @property (strong, nonatomic) AVAudioRecorder *audioRecorder;
 @property (strong, nonatomic) AVAudioPlayer *audioPlayer;
 
-
-@property (strong, nonatomic) IBOutlet UIView *view;
 @property (strong, nonatomic) IBOutlet UIView *sheetView;
-@property (strong, nonatomic) IBOutlet UIView *dimView;
 
 @property (strong, nonatomic) IBOutlet UIButton *recordStopButton;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
-//@property (strong, nonatomic) IBOutlet UIButton *stopButton;
 
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *useButton;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
+@property (strong, nonatomic) IBOutlet UIButton *useButton;
+@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 
-@property (strong, nonatomic) IBOutlet UILabel *statusLabel;
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
 
 @property (weak) id<AudioRecorderDelegate> delegate;

@@ -11,12 +11,17 @@
 
 #import "TDSemiModal.h"
 #import "AppDelegate.h"
+#import "HXOUI.h"
 
 #define ENABLE_METERING NO
 
+static const CGFloat kRingWidth = 6.0;
+
 @interface RecordViewController ()
 
-@property (nonatomic,assign) BOOL hasRecording;
+@property (nonatomic, assign) BOOL           hasRecording;
+@property (nonatomic, strong) CAShapeLayer * recordRingLayer;
+@property (nonatomic, strong) CAShapeLayer * recordSymbolLayer;
 
 @end
 
@@ -28,11 +33,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    disabledAlpha = 0.1;
-
-    self.useButton.style = UIBarButtonItemStyleDone;
-    self.useButton.title = NSLocalizedString(@"recorder_use_button_title", nil);
-    
     NSDictionary *recordSettings = @{AVEncoderAudioQualityKey : @(AVAudioQualityMin),
                                      AVEncoderBitRateKey : @(16),
                                      AVNumberOfChannelsKey : @(2),
@@ -42,25 +42,59 @@
     
     NSError *error = nil;
     
-    _audioRecorder = [[AVAudioRecorder alloc]
-                      initWithURL:[self ensureAudioURL]
-                      settings:recordSettings
-                      error:&error];
+    _audioRecorder = [[AVAudioRecorder alloc] initWithURL: [self ensureAudioURL]
+                                                 settings: recordSettings
+                                                    error: &error];
     
     if (error) {
         NSLog(@"error: %@", [error localizedDescription]);
-    } else {
-        _audioRecorder.delegate = self;
-        [_audioRecorder prepareToRecord];
+        return;
     }
-    // NSLog(@"Audiorecorder prepared, URL: %@", self.audioFileURL);
-    [self updateStatusDisplay];
-    [self updateTimeDisplay:nil];
-    
-    self.useButton.enabled = NO;
+    _audioRecorder.delegate = self;
+    [_audioRecorder prepareToRecord];
+
     [AppDelegate requestRecordPermission];
 
+    self.view.tintColor = [UIColor whiteColor];
+
+    [self.useButton setTitle: NSLocalizedString(@"recorder_use_button_title", nil) forState: UIControlStateNormal];
+    [self.playButton setTitle: NSLocalizedString(@"recorder_play_button_title", nil) forState: UIControlStateNormal];
+
+    self.sheetView.layer.borderWidth = 1;
+    self.sheetView.layer.borderColor = [UIColor colorWithWhite: 0.38 alpha: 1.0].CGColor;
+    [self setupRecordButton];
+
+    [self updateTimeDisplay:nil];
     [self updateButtons];
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (void) setupRecordButton {
+    UIColor * recordRed = self.recordStopButton.backgroundColor;
+    self.recordStopButton.backgroundColor = [UIColor clearColor];
+
+    CGRect bounds = self.recordStopButton.bounds;
+    CGFloat radius = 0.5 * bounds.size.width;
+    CGPoint center = CGPointMake(radius, radius);
+
+    self.recordRingLayer = [CAShapeLayer layer];
+    self.recordRingLayer.frame = bounds;
+    self.recordRingLayer.fillColor = [UIColor whiteColor].CGColor;
+    UIBezierPath * path = [UIBezierPath bezierPathWithArcCenter: center radius: radius startAngle: 0 endAngle: 2 * M_PI clockwise: NO];
+    [path closePath];
+    [path appendPath: [UIBezierPath bezierPathWithArcCenter: center radius: radius - kRingWidth startAngle: 0 endAngle: 2 * M_PI clockwise: YES]];
+    [path closePath];
+    self.recordRingLayer.path = path.CGPath;
+    [self.recordStopButton.layer addSublayer: self.recordRingLayer];
+
+    self.recordSymbolLayer = [CAShapeLayer layer];
+    self.recordSymbolLayer.frame = bounds;
+    self.recordSymbolLayer.fillColor = recordRed.CGColor;
+    self.recordSymbolLayer.path = [UIBezierPath bezierPathWithArcCenter: center radius: radius - (kRingWidth + 1) startAngle: 0 endAngle: 2 * M_PI clockwise: NO].CGPath;
+    [self.recordStopButton.layer addSublayer: self.recordSymbolLayer];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -83,21 +117,9 @@
 
 #pragma mark -- Action methods
 
--(void) updateStatusDisplay {
-    NSString * statusKey;
-    if (_audioRecorder.recording) {
-        statusKey = @"recorder_status_recording";
-    } else if (_audioPlayer.playing) {
-        statusKey = @"recorder_status_playing";
-    } else {
-        statusKey = @"recorder_status_stopped";
-    }
-    self.statusLabel.text = NSLocalizedString(statusKey, nil);
-}
-
 - (void) startTimer {
     // NSLog(@"startTimer:");
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(updateTimeDisplay:) userInfo:nil repeats:YES];
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.13 target:self selector:@selector(updateTimeDisplay:) userInfo:nil repeats:YES];
 }
 
 - (void) stopTimer {
@@ -107,19 +129,20 @@
 }
 
 - (void) updateButtons {
-    NSString * recordStopKey;
-    if (_audioRecorder.isRecording || _audioPlayer.isPlaying) {
-        recordStopKey = @"recorder_stop_button_title";
-    } else {
-        recordStopKey = @"recorder_record_button_title";
-    }
-    [self.playButton setTitle: NSLocalizedString(@"recorder_play_button_title", nil) forState: UIControlStateNormal];
-    [self.recordStopButton setTitle: NSLocalizedString(recordStopKey, nil) forState: UIControlStateNormal];
-
     self.useButton.enabled = self.hasRecording;
-    BOOL playButtonEnabled = self.hasRecording && ! (_audioRecorder.isRecording || _audioPlayer.isPlaying);
-    self.playButton.enabled = playButtonEnabled;
-    self.playButton.alpha = playButtonEnabled ? 1.0 : 0.5;
+    self.playButton.enabled = self.hasRecording;
+    BOOL isActive = self.audioRecorder.isRecording || self.audioPlayer.isPlaying;
+    self.recordSymbolLayer.path = (isActive ? [self stopSymbol] : [self recordSymbol]).CGPath;
+}
+
+- (UIBezierPath*) recordSymbol {
+    return [UIBezierPath bezierPathWithOvalInRect: CGRectInset(self.recordStopButton.bounds, kRingWidth + 1,  kRingWidth + 1)];
+}
+
+- (UIBezierPath*) stopSymbol {
+    CGRect bounds = self.recordStopButton.bounds;
+    CGFloat inset = 0.3 * bounds.size.width;
+    return [UIBezierPath bezierPathWithRoundedRect: CGRectInset(bounds, inset, inset) cornerRadius: 4];
 }
 
 - (void) updateTimeDisplay:(NSTimer *)theTimer {
@@ -134,8 +157,7 @@
     if (_audioPlayer.playing) {
         seconds = _audioPlayer.currentTime;
     }
-    NSString * myTime = [NSString stringWithFormat:@"%02d:%02d", (int)seconds/60, (int)seconds%60];
-    // NSLog(@"myTime %@", myTime);
+    NSString * myTime = [NSString stringWithFormat:@"%02d:%02d:%02d", (int)seconds / 60, (int)seconds % 60, (int)(100 * (seconds - floor(seconds)))];
     self.timeLabel.text = myTime;
 }
 
@@ -162,7 +184,6 @@
         [self startTimer];
     }
     [self updateButtons];
-    [self updateStatusDisplay];
 }
 
 - (IBAction)recordOrStop:(id)sender {
@@ -184,7 +205,6 @@
         [self startTimer];
         // NSLog(@"Audiorecorder record: %d", _audioRecorder.recording);
     }
-    [self updateStatusDisplay];
     [self updateButtons];
 }
 
@@ -219,7 +239,6 @@
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
     [self updateButtons];
-    [self updateStatusDisplay];
     [self stopTimer];
 }
 
@@ -233,7 +252,6 @@
     NSLog(@"audioRecorderDidFinishRecording, successfully=%d", flag);
     self.hasRecording = flag;
     [self updateButtons];
-    [self updateStatusDisplay];
 }
 
 -(void)audioRecorderEncodeErrorDidOccur: (AVAudioRecorder *)recorder error:(NSError *)error {
