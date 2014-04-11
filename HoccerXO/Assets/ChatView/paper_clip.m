@@ -1,14 +1,14 @@
 //
-//  PaperClip.m
+//  paper_clip.m
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "PaperClip.h"
+#import "paper_clip.h"
 
-@implementation PaperClip
+@implementation paper_clip
 
 static const CGFloat kStartX = 18.5;
 static const CGFloat kBigRadius = 6;

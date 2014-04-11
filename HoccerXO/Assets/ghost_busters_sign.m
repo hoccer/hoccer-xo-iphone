@@ -1,16 +1,16 @@
 //
-//  GhostBustersSign.m
+//  ghost_busters_sign.m
 //  HoccerXO
 //
 //  Created by David Siegel on 01.04.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "GhostBustersSign.h"
+#import "ghost_busters_sign.h"
 
 #import "HXOUI.h"
 
-@implementation GhostBustersSign
+@implementation ghost_busters_sign
 
 - (void) initPath {
     CGFloat radius = 80;

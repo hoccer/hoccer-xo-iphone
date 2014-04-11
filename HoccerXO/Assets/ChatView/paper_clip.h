@@ -1,5 +1,5 @@
 //
-//  DisclosureArrow.h
+//  paper_clip.h
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
@@ -8,6 +8,6 @@
 
 #import "VectorArt.h"
 
-@interface DisclosureArrow : VectorArt
+@interface paper_clip : VectorArt
 
 @end

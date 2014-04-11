@@ -12,7 +12,7 @@
 #import "AvatarView.h"
 #import "DatasheetViewController.h"
 #import "avatar_contact.h"
-#import "AvatarGroup.h"
+#import "avatar_group.h"
 #import "HXOUI.h"
 #import "ImageViewController.h"
 #import "UIImage+ScaleAndCrop.h"

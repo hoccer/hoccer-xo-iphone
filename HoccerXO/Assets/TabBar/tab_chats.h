@@ -1,5 +1,5 @@
 //
-//  IconProfile.h
+//  tab_chats.h
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
@@ -8,6 +8,6 @@
 
 #import "VectorArt.h"
 
-@interface IconProfile : VectorArt
+@interface tab_chats : VectorArt
 
 @end

@@ -22,10 +22,10 @@
 #import "TestFlight.h"
 #import "HXOUI.h"
 #import "ChatViewController.h"
-#import "IconChats.h"
-#import "IconContacts.h"
-#import "IconProfile.h"
-#import "IconSettings.h"
+#import "tab_chats.h"
+#import "tab_contacts.h"
+#import "tab_profile.h"
+#import "tab_settings.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
@@ -326,13 +326,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
     for (UITabBarItem * item in tabBarController.tabBar.items) {
         if ([item.title isEqualToString: @"Chats"]) {
-            item.image = [[[IconChats alloc] init] image];
+            item.image = [[[tab_chats alloc] init] image];
         } else if ([item.title isEqualToString: @"Contacts"]) {
-            item.image = [[[IconContacts alloc] init] image];
+            item.image = [[[tab_contacts alloc] init] image];
         } else if ([item.title isEqualToString: @"Profile"]) {
-            item.image = [[[IconProfile alloc] init] image];
+            item.image = [[[tab_profile alloc] init] image];
         } else if ([item.title isEqualToString: @"Settings"]) {
-            item.image = [[[IconSettings alloc] init] image];
+            item.image = [[[tab_settings alloc] init] image];
         }
         item.title = NSLocalizedString(item.title, nil);
     }

@@ -1,14 +1,14 @@
 //
-//  AvatarGroup.m
+//  avatar_group.m
 //  HoccerXO
 //
 //  Created by David Siegel on 02.04.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "AvatarGroup.h"
+#import "avatar_group.h"
 
-@implementation AvatarGroup
+@implementation avatar_group
 
 - (void) initPath {
     UIBezierPath * bezierPath = self.path;

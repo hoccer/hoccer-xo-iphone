@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "VectorArtView.h"
 #import "HXOUI.h"
-#import "DisclosureArrow.h"
+#import "disclosure_arrow.h"
 #import "HXOUI.h"
 
 @implementation ConversationCell
@@ -33,7 +33,7 @@
     
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.titleLabel attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
 
-    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[DisclosureArrow alloc] init]];
+    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[disclosure_arrow alloc] init]];
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentTop;
 
     self.subtitleLabel.numberOfLines = 2;

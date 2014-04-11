@@ -1,5 +1,5 @@
 //
-//  PaperClip.h
+//  tab_contacts.h
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
@@ -8,6 +8,6 @@
 
 #import "VectorArt.h"
 
-@interface PaperClip : VectorArt
+@interface tab_contacts : VectorArt
 
 @end

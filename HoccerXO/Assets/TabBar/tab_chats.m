@@ -1,14 +1,14 @@
 //
-//  IconChats.m
+//  tab_chats.m
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "IconChats.h"
+#import "tab_chats.h"
 
-@implementation IconChats
+@implementation tab_chats
 
 - (void) initPath {
     UIBezierPath * bezierPath = self.path;

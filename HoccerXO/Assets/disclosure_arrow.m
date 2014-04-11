@@ -1,14 +1,14 @@
 //
-//  DisclosureArrow.m
+//  disclosure_arrow.m
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "DisclosureArrow.h"
+#import "disclosure_arrow.h"
 
-@implementation DisclosureArrow
+@implementation disclosure_arrow
 
 - (void) initPath {
     [self.path moveToPoint: CGPointMake(8.7, 7)];

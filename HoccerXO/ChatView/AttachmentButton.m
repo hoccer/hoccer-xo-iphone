@@ -8,7 +8,7 @@
 
 #import "AttachmentButton.h"
 
-#import "PaperClip.h"
+#import "paper_clip.h"
 
 static const CGFloat kDisabledAlpha = 0.25;
 
@@ -35,7 +35,7 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
 
 - (void) commonInit {
     self.iconLayer = [CAShapeLayer layer];
-    VectorArt * paperClip = [[PaperClip alloc] init];
+    VectorArt * paperClip = [[paper_clip alloc] init];
     self.iconLayer.bounds = paperClip.path.bounds;
     self.iconLayer.position = self.center;
     self.iconLayer.path = paperClip.path.CGPath;

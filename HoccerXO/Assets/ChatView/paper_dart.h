@@ -1,5 +1,5 @@
 //
-//  IconContacts.h
+//  paper_dart.h
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
@@ -8,6 +8,6 @@
 
 #import "VectorArt.h"
 
-@interface IconContacts : VectorArt
+@interface paper_dart : VectorArt
 
 @end

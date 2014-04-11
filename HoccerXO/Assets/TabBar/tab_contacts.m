@@ -1,14 +1,14 @@
 //
-//  IconContacts.m
+//  tab_contacts.m
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "IconContacts.h"
+#import "tab_contacts.h"
 
-@implementation IconContacts
+@implementation tab_contacts
 
 - (void) initPath {
     UIBezierPath * bezierPath = self.path;

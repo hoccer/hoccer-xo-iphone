@@ -1,14 +1,14 @@
 //
-//  IconSettings.m
+//  tab_settings.m
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "IconSettings.h"
+#import "tab_settings.h"
 
-@implementation IconSettings
+@implementation tab_settings
 
 - (void) initPath {
     UIBezierPath * bezierPath = self.path;

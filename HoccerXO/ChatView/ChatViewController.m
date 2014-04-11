@@ -44,8 +44,8 @@
 #import "DateSectionHeaderView.h"
 #import "MessageItems.h"
 #import "HXOHyperLabel.h"
-#import "PaperDart.h"
-#import "PaperClip.h"
+#import "paper_dart.h"
+#import "paper_clip.h"
 #import "HXOUI.h"
 #import "AvatarView.h"
 #import "avatar_contact.h"
@@ -140,7 +140,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     CGFloat s = 50; // magic toolbar size
 
-    UIImage * icon = [[PaperClip alloc] init].image;
+    UIImage * icon = [[paper_clip alloc] init].image;
     self.attachmentButton = [[AttachmentButton alloc] initWithFrame: CGRectMake(0, 0, s, s)];
     self.attachmentButton.frame = CGRectMake(0, 0, 50, s);
     self.attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
@@ -175,7 +175,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.messageFieldPlaceholder.text = NSLocalizedString(@"chat_view_message_placeholder", nil);
     [self.chatbar addSubview: self.messageFieldPlaceholder];
 
-    icon = [[PaperDart alloc] init].image;
+    icon = [[paper_dart alloc] init].image;
     self.sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
     self.sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
     self.sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;

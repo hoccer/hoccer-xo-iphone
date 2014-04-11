@@ -1,5 +1,5 @@
 //
-//  IconSettings.h
+//  tab_settings.h
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
@@ -8,6 +8,6 @@
 
 #import "VectorArt.h"
 
-@interface IconSettings : VectorArt
+@interface tab_settings : VectorArt
 
 @end

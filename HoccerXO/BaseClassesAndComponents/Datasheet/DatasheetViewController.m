@@ -15,7 +15,7 @@
 #import "HXOHyperLabel.h"
 #import "HXOUI.h"
 #import "HXOUI.h" // needed for header height hack
-#import "DisclosureArrow.h"
+#import "disclosure_arrow.h"
 #import "VectorArtView.h"
 #import "WebViewController.h"
 
@@ -101,7 +101,7 @@ static CGFloat kHeaderHeight;
     UIView * accessoryView = nil;
     switch (item.accessoryStyle) {
         case DatasheetAccessoryDisclosure:
-            accessoryView = [[VectorArtView alloc] initWithVectorArt: [[DisclosureArrow alloc] init]];
+            accessoryView = [[VectorArtView alloc] initWithVectorArt: [[disclosure_arrow alloc] init]];
             break;
         case DatasheetAccessoryNone:
             accessoryView = nil;

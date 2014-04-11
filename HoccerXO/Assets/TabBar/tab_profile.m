@@ -1,14 +1,14 @@
 //
-//  IconProfile.m
+//  tab_profile.m
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "IconProfile.h"
+#import "tab_profile.h"
 
-@implementation IconProfile
+@implementation tab_profile
 
 - (void) initPath {
     UIBezierPath * bezierPath = self.path;

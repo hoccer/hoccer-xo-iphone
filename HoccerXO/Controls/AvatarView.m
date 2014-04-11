@@ -12,7 +12,7 @@
 #import <CoreText/CoreText.h>
 
 #import "VectorArt.h"
-#import "GhostBustersSign.h"
+#import "ghost_busters_sign.h"
 #import "HXOUI.h"
 
 static const CGFloat kBlockedSignPaddingOffset = -0.541667;
@@ -93,7 +93,7 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     self.blockedSignLayer.position = avatarCenter;
     self.blockedSignLayer.contentsGravity = kCAGravityResizeAspect;
     self.blockedSignLayer.opacity = 0;
-    VectorArt * blockedSign = [[GhostBustersSign alloc] init];
+    VectorArt * blockedSign = [[ghost_busters_sign alloc] init];
     self.blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
     self.blockedSignLayer.strokeColor = blockedSign.strokeColor.CGColor;
     _blockedSignLayer.path = [blockedSign pathScaledToSize: self.blockedSignLayer.bounds.size].CGPath;

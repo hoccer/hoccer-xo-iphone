@@ -17,7 +17,7 @@
 #import "AvatarView.h"
 #import "HXOUI.h"
 #import "avatar_contact.h"
-#import "AvatarGroup.h"
+#import "avatar_group.h"
 #import "GroupMembership.h"
 #import "SmallContactCell.h"
 #import "DatasheetViewController.h"
@@ -297,7 +297,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     }
     [self addProfileObservers];
 
-    self.avatarView.defaultIcon = self.group ? [[AvatarGroup alloc] init] : [[avatar_contact alloc] init];
+    self.avatarView.defaultIcon = self.group ? [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
     [super inspectedObjectDidChange];
 }

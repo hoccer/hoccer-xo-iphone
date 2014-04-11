@@ -1,5 +1,5 @@
 //
-//  PaperDart.h
+//  tab_profile.h
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
@@ -8,6 +8,6 @@
 
 #import "VectorArt.h"
 
-@interface PaperDart : VectorArt
+@interface tab_profile : VectorArt
 
 @end

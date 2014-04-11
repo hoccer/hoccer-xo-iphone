@@ -1,14 +1,14 @@
 //
-//  PaperDart.m
+//  paper_dart.m
 //  HoccerXO
 //
 //  Created by David Siegel on 15.03.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "PaperDart.h"
+#import "paper_dart.h"
 
-@implementation PaperDart
+@implementation paper_dart
 
 - (void) initPath {
     UIBezierPath * bezierPath = self.path;
