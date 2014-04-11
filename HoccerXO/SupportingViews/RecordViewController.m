@@ -68,10 +68,6 @@ static const CGFloat kRingWidth = 6.0;
     [self updateButtons];
 }
 
-- (BOOL) shouldAutorotate {
-    return NO;
-}
-
 - (void) setupRecordButton {
     UIColor * recordRed = self.recordStopButton.backgroundColor;
     self.recordStopButton.backgroundColor = [UIColor clearColor];
@@ -119,7 +115,7 @@ static const CGFloat kRingWidth = 6.0;
 
 - (void) startTimer {
     // NSLog(@"startTimer:");
-    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.13 target:self selector:@selector(updateTimeDisplay:) userInfo:nil repeats:YES];
+    self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.07 target:self selector:@selector(updateTimeDisplay:) userInfo:nil repeats:YES];
 }
 
 - (void) stopTimer {
