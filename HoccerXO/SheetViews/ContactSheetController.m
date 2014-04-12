@@ -239,9 +239,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
-                [self.groupMemberItems removeObjectAtIndex: 0];
-                for (id item in self.groupMemberItems) {
-                    [self.chatBackend inviteGroupMember: [item currentValue] toGroup: newGroup onDone:^(BOOL success) {
+                for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
+                    [self.chatBackend inviteGroupMember: self.groupInStatuNascendi.members[i] toGroup: newGroup onDone:^(BOOL success) {
                         // yeah, baby
                     }];
                 }
@@ -341,8 +340,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     for (DatasheetItem * item in self.groupMemberItems) {
         [self.delegate controller: self didChangeObject: [self indexPathForItem: item] forChangeType: DatasheetChangeDelete newIndexPath: nil];
     }
-    [self.delegate controllerDidChangeContent: self];
     [self.groupMemberItems removeAllObjects];
+    [self.delegate controllerDidChangeContent: self];
 }
 
 - (void) inspectedObjectDidChange {
@@ -350,7 +349,10 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         if (self.groupMemberItems.count == 0) {
             DatasheetItem * me = [self itemWithIdentifier: [NSString stringWithFormat: @"%p", self.groupInStatuNascendi] cellIdentifier: @"SmallContactCell"];
             me.currentValue = self.groupInStatuNascendi;
+            [self.delegate controllerWillChangeContent: self];
             [self.groupMemberItems addObject: me];
+            [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: [self indexPathForItem: me]];
+            [self.delegate controllerDidChangeContent: self];
         }
         if ( ! self.isEditing) {
             [self editModeChanged: nil];
@@ -360,9 +362,13 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     self.fetchedResultsController = [self createFetchedResutsController];
     if (self.fetchedResultsController) {
+        [self.delegate controllerWillChangeContent: self];
         for (int i = 0; i < [self.fetchedResultsController.sections[0] numberOfObjects]; ++i) {
-            [self.groupMemberItems addObject: [self groupMemberItem: i]];
+            DatasheetItem * item = [self groupMemberItem: i];
+            [self.groupMemberItems addObject: item];
+            [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: [self indexPathForItem: item]];
         }
+        [self.delegate controllerDidChangeContent: self];
     }
 
 
@@ -799,10 +805,19 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             }
         }
     };
+
+    NSPredicate * predicate;
+    if (self.groupInStatuNascendi) {
+        predicate = [NSPredicate predicateWithFormat: @"(type == %@)", [Contact entityName]];
+    } else {
+        predicate = [NSPredicate predicateWithFormat:@"(type == %@) AND SUBQUERY(groupMemberships, $g, $g.group == %@).@count = 0", [Contact entityName], self.group];
+    }
+
+
     id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
                                                 types: 0
                                                 style: ContactPickerStyleMulti
-                                            predicate: [NSPredicate predicateWithFormat: @"((type == %@) AND NOT (ANY groupMemberships.group == %@))", [Contact entityName], self.group]
+                                            predicate: predicate
                                            completion: completion];
 
     [(UIViewController*)self.delegate presentViewController: picker animated: YES completion: nil];

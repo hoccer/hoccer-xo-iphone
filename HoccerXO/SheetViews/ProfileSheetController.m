@@ -36,7 +36,7 @@
 
     self.nicknameItem.enabledMask = DatasheetModeEdit;
 
-    self.keyItem.visibilityMask = DatasheetModeView;
+    //self.keyItem.visibilityMask = DatasheetModeView;
     self.keyItem.cellIdentifier = @"DatasheetActionCell";
 
     self.destructiveButton.title = @"delete_credentials";

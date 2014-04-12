@@ -39,6 +39,11 @@ static CGFloat kHeaderHeight;
     }
 }
 
+- (void) setDataSheetController:(DatasheetController *)dataSheetController {
+    _dataSheetController = dataSheetController;
+    dataSheetController.delegate = self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -60,7 +65,7 @@ static CGFloat kHeaderHeight;
     if (self.dataSheetController.tableHeaderView) {
         self.tableView.tableHeaderView = self.dataSheetController.tableHeaderView;
     }
-    self.dataSheetController.delegate = self;
+    //self.dataSheetController.delegate = self;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }

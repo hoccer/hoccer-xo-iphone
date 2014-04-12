@@ -454,11 +454,11 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (void) setDelegate:(id<DatasheetControllerDelegate>)delegate {
-    [self inspectedObjectWillChange];
+//    [self inspectedObjectWillChange];
     _delegate = delegate;
-    [self inspectedObjectDidChange];
-    [self backgroundImageChanged];
-    [self titleChanged];
+//    [self inspectedObjectDidChange];
+//    [self backgroundImageChanged];
+//    [self titleChanged];
 }
 
 - (void) inspectedObjectWillChange {
