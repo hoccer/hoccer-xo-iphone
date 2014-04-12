@@ -207,7 +207,6 @@ static const CGFloat kRingWidth = 6.0;
 - (void) stopAll {
     [_audioPlayer stop];
     [_audioRecorder stop];
-
 }
 
 #pragma mark -- Navigation action methods

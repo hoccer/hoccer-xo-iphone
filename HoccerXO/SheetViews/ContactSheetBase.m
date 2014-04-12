@@ -166,21 +166,20 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (UIImage*) updateBackgroundImage {
-    UIColor * tintColor = [UIColor colorWithWhite: 0.0 alpha: self.mode == DatasheetModeEdit ? 0.5 : 0.0];
+    BOOL darken = self.isEditing && [self isItemEnabled: self.avatarItem];
+    UIColor * tintColor = [UIColor colorWithWhite: 0.0 alpha: darken ? 0.5 : 0.0];
     //UIImage * image = self.avatarItem.currentValue ? self.avatarItem.currentValue : [self imageFromDefaultAvatar];
     UIImage * image = self.avatarItem.currentValue ? self.avatarItem.currentValue : nil;
     return [image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: tintColor saturationDeltaFactor: 1.8 maskImage: nil];
 }
 
 - (UIImage*) imageFromDefaultAvatar {
-    CGRect frame = CGRectMake(0, 0, 256, 256);
+    CGRect frame = CGRectMake(0, 0, 128, 128);
     VectorArt * va = [[VectorArt alloc] init];
     va.path = [self.avatarView.defaultIcon pathScaledToSize: frame.size];
     va.fillColor = self.avatarView.defaultIcon.fillColor;
     va.strokeColor = self.avatarView.defaultIcon.strokeColor;
     return [va imageWithFrame: frame];
-
-//    return self.avatarView.defaultIcon.image;
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {

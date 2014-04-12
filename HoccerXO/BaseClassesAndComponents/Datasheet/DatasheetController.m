@@ -279,6 +279,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (void) updateInspectedObject {
+    [self willUpdateInspectedObject];
+    
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
         if (item.valuePath) {
             if (item.currentValueIsModified) {
@@ -292,6 +294,9 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (void) didUpdateInspectedObject {
+}
+
+- (void) willUpdateInspectedObject {
 }
 
 - (BOOL) isEditing {

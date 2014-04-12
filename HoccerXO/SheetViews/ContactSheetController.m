@@ -23,6 +23,7 @@
 #import "DatasheetViewController.h"
 #import "UserProfile.h"
 #import "ContactPicker.h"
+#import "GroupInStatuNascendi.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -37,6 +38,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
 @property (nonatomic, readonly) Contact                    * contact;
 @property (nonatomic, readonly) Group                      * group;
+@property (nonatomic, readonly) GroupInStatuNascendi       * groupInStatuNascendi;
 
 @property (nonatomic, readonly) DatasheetSection           * invitationResponseSection;
 @property (nonatomic, readonly) DatasheetItem              * joinGroupItem;
@@ -85,7 +87,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     self.destructiveButton.visibilityMask = DatasheetModeEdit;
     self.destructiveButton.target = self;
-    self.destructiveButton.action = @selector(deleteContactPressed:);
+    self.destructiveButton.action = @selector(destructiveButtonPressed:);
 
     self.destructiveSection.items = @[self.blockContactItem, self.destructiveButton];
 }
@@ -105,6 +107,13 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     [sections addObject: self.groupMemberSection];
 }
 
+- (void) cancelEditing:(id)sender {
+    [super cancelEditing: sender];
+    if (self.groupInStatuNascendi) {
+        [self.delegate controllerDidFinish: self];
+    }
+}
+
 - (Contact*) contact {
     if ([self.inspectedObject isKindOfClass: [Contact class]]) {
         return self.inspectedObject;
@@ -119,8 +128,15 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return nil;
 }
 
+- (GroupInStatuNascendi*) groupInStatuNascendi {
+    if ([self.inspectedObject isKindOfClass: [GroupInStatuNascendi class]]) {
+        return self.inspectedObject;
+    }
+    return nil;
+}
+
 - (NSString*) title {
-    return self.group ? @"navigation_title_group" :  @"navigation_title_contact";
+    return self.groupInStatuNascendi ? @"navigation_title_new_group" : self.group ? @"navigation_title_group" :  @"navigation_title_contact";
 }
 
 - (DatasheetSection*) commonSection {
@@ -161,23 +177,27 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.blockContactItem]) {
+    if ([item isEqual: self.chatItem]) {
+        return ! self.groupInStatuNascendi && [super isItemVisible: item];
+    } else if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
     } else if ([item isEqual: self.keyItem]) {
-        return ! self.group && [super isItemVisible: item];
+        return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return self.group.iAmAdmin && [super isItemVisible: item];
+        return (self.group.iAmAdmin || self.groupInStatuNascendi) && [super isItemVisible: item];
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
         return [self.group.myGroupMembership.state isEqualToString: @"invited"];
+    } else if ([item isEqual: self.destructiveButton]) {
+        return ! self.groupInStatuNascendi && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
 
 - (BOOL) isItemEnabled:(DatasheetItem *)item {
     if ([item isEqual: self.nicknameItem]) {
-        return self.group.iAmAdmin && [super isItemEnabled: item];
+        return (self.groupInStatuNascendi || self.group.iAmAdmin) && [super isItemEnabled: item];
     } else if ([item isEqual: self.avatarItem]) {
-        return self.group.iAmAdmin;
+        return self.groupInStatuNascendi || self.group.iAmAdmin;
     }
 
     return [super isItemEnabled: item];
@@ -185,7 +205,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (BOOL) isItemDeletable:(DatasheetItem *)item {
     int index = [self.groupMemberItems indexOfObject: item];
-    return self.group.iAmAdmin && index != NSNotFound && ! [[self contactAtIndex: index] isEqual: self.group];
+    return (self.group.iAmAdmin || self.groupInStatuNascendi) && index != NSNotFound && ! [item isEqual: [self myMembershipItem]];
 }
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
@@ -207,6 +227,29 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             self.avatarView.isOnline = NO;
             self.avatarView.badgeText = nil;
         }
+    } else if ([item isEqual: self.inviteMembersItem]) {
+    }
+}
+
+- (void) didUpdateInspectedObject {
+    [super didUpdateInspectedObject];
+
+    if (self.groupInStatuNascendi) {
+        [self.chatBackend createGroupWithHandler:^(Group * newGroup) {
+            if (newGroup) {
+                newGroup.nickName = self.groupInStatuNascendi.nickName;
+                newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
+                [self.groupMemberItems removeObjectAtIndex: 0];
+                for (id item in self.groupMemberItems) {
+                    [self.chatBackend inviteGroupMember: [item currentValue] toGroup: newGroup onDone:^(BOOL success) {
+                        // yeah, baby
+                    }];
+                }
+                
+                self.inspectedObject = newGroup;
+            }
+        }];
+
     }
 }
 
@@ -223,7 +266,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSString*) valuePlaceholderForItem:(DatasheetItem *)item {
     if ([item isEqual: self.nicknameItem]) {
-        return  NSLocalizedString( self.group ? @"group_name_placeholder" : @"profile_name_placeholder", nil);
+        return  NSLocalizedString( self.group || self.groupInStatuNascendi ? @"group_name_placeholder" : @"profile_name_placeholder", nil);
     }
     return [super valuePlaceholderForItem: item];
 }
@@ -293,19 +336,39 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
     }
+
+    [self.delegate controllerWillChangeContent: self];
+    for (DatasheetItem * item in self.groupMemberItems) {
+        [self.delegate controller: self didChangeObject: [self indexPathForItem: item] forChangeType: DatasheetChangeDelete newIndexPath: nil];
+    }
+    [self.delegate controllerDidChangeContent: self];
     [self.groupMemberItems removeAllObjects];
 }
 
 - (void) inspectedObjectDidChange {
+    if (self.groupInStatuNascendi) {
+        if (self.groupMemberItems.count == 0) {
+            DatasheetItem * me = [self itemWithIdentifier: [NSString stringWithFormat: @"%p", self.groupInStatuNascendi] cellIdentifier: @"SmallContactCell"];
+            me.currentValue = self.groupInStatuNascendi;
+            [self.groupMemberItems addObject: me];
+        }
+        if ( ! self.isEditing) {
+            [self editModeChanged: nil];
+        }
+    }
+
+
     self.fetchedResultsController = [self createFetchedResutsController];
     if (self.fetchedResultsController) {
         for (int i = 0; i < [self.fetchedResultsController.sections[0] numberOfObjects]; ++i) {
             [self.groupMemberItems addObject: [self groupMemberItem: i]];
         }
     }
+
+
     [self addProfileObservers];
 
-    self.avatarView.defaultIcon = self.group ? [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
     [super inspectedObjectDidChange];
 }
@@ -384,12 +447,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             IMP imp = [self methodForSelector: destructor];
             void (*func)(id, SEL, id) = (void *)imp;
             func(self, destructor, self);
+
+            [self.delegate controllerDidFinish: self];
         }
     };
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(title, nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
+                                 destructiveButtonTitle: NSLocalizedString(destructiveButtonTitle, nil)
                                       otherButtonTitles: nil];
     [sheet showInView: [(id)self.delegate view]];
 }
@@ -502,14 +567,21 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (Contact*) contactAtIndex: (NSUInteger) index {
+    if (self.groupInStatuNascendi) {
+        return self.groupInStatuNascendi.members[index];
+    }
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
-    return [self.fetchedResultsController objectAtIndexPath: indexPath];
+    return [[self.fetchedResultsController objectAtIndexPath: indexPath] contact];
 }
 
 - (DatasheetItem*) myMembershipItem {
-    if (self.group) {
-        NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: self.group];
-        return self.groupMemberItems[indexPath.row];
+    if (self.groupInStatuNascendi) {
+        return self.groupMemberItems[0];
+    } else if (self.group) {
+        NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: self.group.myGroupMembership];
+        if (indexPath.row < self.groupMemberItems.count) {
+            return self.groupMemberItems[indexPath.row];
+        }
     }
     return nil;
 }
@@ -549,7 +621,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSUInteger) numberOfItemsInSection:(DatasheetSection *)section {
     if ([section.identifier isEqualToString: self.groupMemberSection.identifier]) {
-        return self.groupMemberItems.count + (self.group.iAmAdmin ? 1 : 0);
+        return self.groupMemberItems.count + 1; // +1 is for the invite item ...
     }
     return 0;
 }
@@ -570,14 +642,15 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) configureCell: (SmallContactCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
     if ([[cell reuseIdentifier] isEqualToString: @"SmallContactCell"]) {
+        BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
-        cell.titleLabel.text = contact == self.group ? [UserProfile sharedProfile].nickName : contact.nickName;
+        cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.textColor = [membership.state isEqualToString: @"invited"] ? [HXOUI theme].lightTextColor : [UIColor blackColor];
-        cell.subtitleLabel.text = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
-        cell.avatar.image = contact == self.group ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
-        cell.avatar.defaultIcon = [[avatar_contact alloc] init];
-        cell.closingSeparator = indexPath.row == self.groupMemberItems.count - 1;
+        cell.subtitleLabel.text   = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
+        cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
+        cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
+        cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     }
 }
 
@@ -616,18 +689,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         return nil;
     }
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName: [Contact entityName] inManagedObjectContext: self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: [GroupMembership entityName] inManagedObjectContext: self.managedObjectContext];
     [fetchRequest setEntity:entity];
-    [fetchRequest setSortDescriptors: @[[[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES]]];
+    [fetchRequest setSortDescriptors: @[[[NSSortDescriptor alloc] initWithKey:@"contact.nickName" ascending: YES]]];
 
     NSMutableArray *predicates = [NSMutableArray array];
 
-    [predicates addObject: [NSPredicate predicateWithFormat:@"ANY groupMemberships.group == %@", self.group]];
-/*
-    if(searchString.length) {
-        [self addSearchPredicates: predicateArray searchString: searchString];
-    }
- */
+    [predicates addObject: [NSPredicate predicateWithFormat:@"group == %@", self.group]];
+
     NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates: predicates];
     [fetchRequest setPredicate:filterPredicate];
 
@@ -676,7 +745,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.delegate controllerDidChangeContent: self];
-    //[self updateCurrentItems];
 }
 
 
@@ -703,6 +771,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (DatasheetItem*) inviteMembersItem {
     if ( ! _inviteMembersItem) {
         _inviteMembersItem = [self itemWithIdentifier: @"group_invite_friends" cellIdentifier: @"DatasheetActionCell"];
+//        _inviteMembersItem.dependencyPaths = @[@"iAmAdmin"];
         _inviteMembersItem.target = self;
         _inviteMembersItem.action = @selector(inviteMembersPressed:);
     }
@@ -711,16 +780,29 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) inviteMembersPressed: (id) sender {
     ContactPickerCompletion completion = ^(NSArray * result) {
-        for (Contact * contact in result) {
-            [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
-                // yeah, baby
-            }];
+        if (self.groupInStatuNascendi) {
+            [self.delegate controllerWillChangeContent: self];
+            for (Contact * contact in result) {
+                DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
+                NSUInteger sectionIndex = [self indexPathForItem: self.groupMemberSection].section;
+                NSIndexPath * indexPath = [NSIndexPath indexPathForRow: self.groupMemberItems.count inSection: sectionIndex];
+                [self.groupMemberItems addObject: contactItem];
+                [self.groupInStatuNascendi.members addObject: contact];
+                [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: indexPath];
+            }
+            [self.delegate controllerDidChangeContent: self];
+        } else {
+            for (Contact * contact in result) {
+                [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
+                    // yeah, baby
+                }];
+            }
         }
     };
     id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
                                                 types: 0
                                                 style: ContactPickerStyleMulti
-                                            predicate: [NSPredicate predicateWithFormat: @"(type == %@) AND (NONE groupMemberships.group == %@)", [Contact entityName], self.group]
+                                            predicate: [NSPredicate predicateWithFormat: @"((type == %@) AND NOT (ANY groupMemberships.group == %@))", [Contact entityName], self.group]
                                            completion: completion];
 
     [(UIViewController*)self.delegate presentViewController: picker animated: YES completion: nil];
@@ -755,6 +837,9 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     }
     return matching.anyObject;
 }
+
+#pragma mark - Group Creation
+
 
 #pragma mark - Attic
 

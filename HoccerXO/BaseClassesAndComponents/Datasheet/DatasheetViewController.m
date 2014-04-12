@@ -65,6 +65,14 @@ static CGFloat kHeaderHeight;
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+
+    if (self.dataSheetController.isEditing != self.isEditing) {
+        [self setEditing: self.dataSheetController.isEditing animated: animated];
+    }
+}
+
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
@@ -352,8 +360,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) leftButtonPressed: (id) sender {
-    [self.dataSheetController cancelEditing: sender];
-    //[self.dataSheetController editModeChanged: sender];
+    [self.dataSheetController cancelEditing: nil];
     [self updateNavigationButtons];
 }
 
@@ -361,6 +368,10 @@ static CGFloat kHeaderHeight;
 
 - (void) controllerDidChangeObject:(DatasheetController *)controller {
     [self updateNavigationButtons];
+    if (self.dataSheetController.isEditing != self.isEditing) {
+        [self setEditing: self.dataSheetController.isEditing animated: YES];
+    }
+    self.navigationItem.title = NSLocalizedString(controller.title, nil);
 }
 
 - (void) controllerWillChangeContent: (DatasheetController*) controller {

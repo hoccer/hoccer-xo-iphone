@@ -157,6 +157,7 @@
 		63C413BC16E94735004E1F6D /* ConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C413BB16E94735004E1F6D /* ConversationCell.m */; };
 		63CA315518D272E70069A0C2 /* InvitationCodeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */; };
 		63CB3E8918D4A909006BB511 /* VectorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CB3E8818D4A909006BB511 /* VectorArt.m */; };
+		63CED3CE18F8A45D0095110B /* GroupInStatuNascendi.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CED3CD18F8A45D0095110B /* GroupInStatuNascendi.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 		63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE121722EB89000F9E53 /* UserProfile.m */; };
 		63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
@@ -623,6 +624,8 @@
 		63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InvitationCodeViewController.mm; sourceTree = "<group>"; };
 		63CB3E8718D4A909006BB511 /* VectorArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorArt.h; sourceTree = "<group>"; };
 		63CB3E8818D4A909006BB511 /* VectorArt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorArt.m; sourceTree = "<group>"; };
+		63CED3CC18F8A45D0095110B /* GroupInStatuNascendi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupInStatuNascendi.h; sourceTree = "<group>"; };
+		63CED3CD18F8A45D0095110B /* GroupInStatuNascendi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupInStatuNascendi.m; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		63D8EE111722EB89000F9E53 /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
 		63D8EE121722EB89000F9E53 /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
@@ -1274,6 +1277,8 @@
 				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
 				63848A9318F473AC00C253A4 /* SmallContactCell.h */,
 				63848A9418F473AC00C253A4 /* SmallContactCell.m */,
+				63CED3CC18F8A45D0095110B /* GroupInStatuNascendi.h */,
+				63CED3CD18F8A45D0095110B /* GroupInStatuNascendi.m */,
 			);
 			name = "Sheet Views";
 			path = SheetViews;
@@ -2271,6 +2276,7 @@
 				6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */,
 				E9E92F901874E7A3007B8042 /* MyHttpConnection.m in Sources */,
 				6327EAEC171883C400AF75E1 /* ContactCell.m in Sources */,
+				63CED3CE18F8A45D0095110B /* GroupInStatuNascendi.m in Sources */,
 				E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */,
 				E9E92F7618733D01007B8042 /* HTTPDataResponse.m in Sources */,
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,

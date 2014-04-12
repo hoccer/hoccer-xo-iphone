@@ -25,6 +25,7 @@
 #import "HXOUserDefaults.h"
 #import "InvitationCodeViewController.h"
 #import "ContactCellProtocol.h"
+#import "GroupInStatuNascendi.h"
 
 #define HIDE_SEPARATORS
 
@@ -138,8 +139,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (void) addButtonPressed: (id) sender {
     if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 1) {
-        UINavigationController * modalGroupView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalGroupNavigationController"];
-        [self presentViewController: modalGroupView animated: YES completion:nil];
+        [self performSegueWithIdentifier: @"showGroup" sender: sender];
     } else {
         [self invitePeople];
     }
@@ -184,14 +184,16 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    [self performSegueWithIdentifier: [contact.type isEqualToString: [Group entityName]] ? @"showGroup" : @"showContact" sender: self];
+    [self performSegueWithIdentifier: [contact.type isEqualToString: [Group entityName]] ? @"showGroup" : @"showContact" sender: indexPath];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString * sid = [segue identifier];
-    if ([sid isEqualToString:@"showContact"] || [sid isEqualToString: @"showGroup"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
+    if ([sid isEqualToString: @"showGroup"] && [sender isEqual: self.navigationItem.rightBarButtonItem]) {
+        DatasheetViewController * vc = [segue destinationViewController];
+        vc.inspectedObject = [[GroupInStatuNascendi alloc] init];
+    } else if ([sid isEqualToString:@"showContact"] || [sid isEqualToString: @"showGroup"]) {
+        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath: sender];
         DatasheetViewController * vc = [segue destinationViewController];
         vc.inspectedObject = contact;
     }
