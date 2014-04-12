@@ -85,6 +85,19 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString: @"#8EC12C"];
 }
 
+- (UIColor*) verifiedKeyColor {
+    return [UIColor colorWithHexString: @"#3ABB7D"];
+}
+
+- (UIColor*) unverifiedKeyColor {
+    return [UIColor yellowColor];
+}
+
+- (UIColor*) mistrustedKeyColor {
+    return [UIColor redColor];
+}
+
+
 #pragma mark - Message Color Schemes
 
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {

@@ -24,6 +24,7 @@
 #import "UserProfile.h"
 #import "ContactPicker.h"
 #import "GroupInStatuNascendi.h"
+#import "KeyStatusCell.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -84,6 +85,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     self.keyItem.visibilityMask = DatasheetModeView;
     self.keyItem.dependencyPaths = @[@"verifiedKey"];
+    self.keyItem.cellIdentifier  = @"KeyStatusCell";
 
     self.destructiveButton.visibilityMask = DatasheetModeEdit;
     self.destructiveButton.target = self;
@@ -99,6 +101,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
     [super registerCellClasses: viewController];
     [viewController registerCellClass: [SmallContactCell class]];
+    [viewController registerCellClass: [KeyStatusCell class]];
 }
 
 - (void) addUtilitySections:(NSMutableArray *)sections {
@@ -291,7 +294,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
         titleKey = @"verified_key_title";
     } else {
-        titleKey = @"untrusted_key_title";
+        titleKey = @"mistrusted_key_title";
     }
     return NSLocalizedString(titleKey, nil);
 }
@@ -646,17 +649,30 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return nil;
 }
 
-- (void) configureCell: (SmallContactCell*) cell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
-    if ([[cell reuseIdentifier] isEqualToString: @"SmallContactCell"]) {
+- (void) configureCell: (DatasheetCell*) aCell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
+    if ([aCell.reuseIdentifier isEqualToString: @"SmallContactCell"]) {
         BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
+        SmallContactCell * cell = (SmallContactCell*)aCell;
         cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.textColor = [membership.state isEqualToString: @"invited"] ? [HXOUI theme].lightTextColor : [UIColor blackColor];
         cell.subtitleLabel.text   = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
+    } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
+        ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];
+    }
+}
+
+- (UIColor*) keyItemStatusColor {
+    if (self.contact.verifiedKey == nil) {
+        return [HXOUI theme].unverifiedKeyColor;
+    } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
+        return [HXOUI theme].verifiedKeyColor;
+    } else {
+        return [HXOUI theme].mistrustedKeyColor;
     }
 }
 

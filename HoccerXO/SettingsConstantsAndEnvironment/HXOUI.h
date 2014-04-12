@@ -53,6 +53,10 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 @property (nonatomic, readonly) UIColor * footerTextLinkColor;
 @property (nonatomic, readonly) UIColor * destructiveTextColor;
 
+@property (nonatomic, readonly) UIColor * verifiedKeyColor;
+@property (nonatomic, readonly) UIColor * unverifiedKeyColor;
+@property (nonatomic, readonly) UIColor * mistrustedKeyColor;
+
 - (UIColor*) messageBackgroundColorForScheme:         (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageTextColorForScheme:               (HXOBubbleColorScheme) scheme;
 - (UIColor*) messageFooterTextColorForScheme:         (HXOBubbleColorScheme) scheme;

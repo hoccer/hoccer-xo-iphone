@@ -188,7 +188,7 @@
 
 "unverified_key_title" = "Nicht verifiziert";
 "verified_key_title"   = "Verifiziert";
-"untrusted_key_title"  = "Misstraut";
+"mistrusted_key_title"  = "Misstraut";
 
 "fingerprint_item" = "Id";
 "key_length_item" = "Schlüssellänge";

@@ -173,7 +173,7 @@
 
 "unverified_key_title" = "Not verified";
 "verified_key_title"   = "Verfied";
-"untrusted_key_title"  = "Untrusted";
+"mistrusted_key_title"  = "Mistrusted";
 
 "fingerprint_item" = "Id";
 "key_length_item" = "Key Length";
