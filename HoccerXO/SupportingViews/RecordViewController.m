@@ -20,7 +20,6 @@ static const CGFloat kRingWidth = 6.0;
 @interface RecordViewController ()
 
 @property (nonatomic, assign) BOOL           hasRecording;
-@property (nonatomic, strong) CAShapeLayer * recordRingLayer;
 @property (nonatomic, strong) CAShapeLayer * recordSymbolLayer;
 
 @end
@@ -76,15 +75,15 @@ static const CGFloat kRingWidth = 6.0;
     CGFloat radius = 0.5 * bounds.size.width;
     CGPoint center = CGPointMake(radius, radius);
 
-    self.recordRingLayer = [CAShapeLayer layer];
-    self.recordRingLayer.frame = bounds;
-    self.recordRingLayer.fillColor = [UIColor whiteColor].CGColor;
+    CAShapeLayer * recordRingLayer = [CAShapeLayer layer];
+    recordRingLayer.frame = bounds;
+    recordRingLayer.fillColor = [UIColor whiteColor].CGColor;
     UIBezierPath * path = [UIBezierPath bezierPathWithArcCenter: center radius: radius startAngle: 0 endAngle: 2 * M_PI clockwise: NO];
     [path closePath];
     [path appendPath: [UIBezierPath bezierPathWithArcCenter: center radius: radius - kRingWidth startAngle: 0 endAngle: 2 * M_PI clockwise: YES]];
     [path closePath];
-    self.recordRingLayer.path = path.CGPath;
-    [self.recordStopButton.layer addSublayer: self.recordRingLayer];
+    recordRingLayer.path = path.CGPath;
+    [self.recordStopButton.layer addSublayer: recordRingLayer];
 
     self.recordSymbolLayer = [CAShapeLayer layer];
     self.recordSymbolLayer.frame = bounds;
