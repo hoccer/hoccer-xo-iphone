@@ -33,7 +33,6 @@
 		630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8718E1E84400782507 /* DatasheetCell.m */; };
 		630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8A18E22EBC00782507 /* HXOLabel.m */; };
 		630CAB8E18E2333E00782507 /* DatasheetKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */; };
-		630E484118EDCF8300EC405A /* UserDefaultsCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D91711F4B000E35514 /* UserDefaultsCells.m */; };
 		630FD45218BCCCA7000D8C55 /* HXOUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOUI.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
@@ -51,14 +50,12 @@
 		6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */; };
 		6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327F37318B8C390007D79E3 /* Accelerate.framework */; };
 		6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F37618B8D018007D79E3 /* SegmentedViewController.m */; };
-		6330492A1701B3390045E64E /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633049291701B3390045E64E /* ProfileViewController.m */; };
 		6339CDDE18A993F600DA2729 /* libInAppSettingsKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDC318A9918500DA2729 /* libInAppSettingsKit.a */; };
 		6339CDDF18A9940D00DA2729 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDCB18A991A700DA2729 /* libqrencoder.a */; };
 		6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDD518A991C200DA2729 /* libSocketRocket.a */; };
 		6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDB718A9911800DA2729 /* libZipArchive-ios.a */; };
 		633AA86918C4DCF6009403CB /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		633AA8E718C66DCE009403CB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633AA8E118C66DCE009403CB /* libTestFlight.a */; };
-		633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
@@ -89,7 +86,6 @@
 		63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A31185A25B10001AC96 /* GenericAttachmentSection.m */; };
 		63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A34185A27730001AC96 /* GenericAttachmentMessageCell.m */; };
 		6382545117503531000347CD /* server_production.der in Resources */ = {isa = PBXBuildFile; fileRef = 6382545017503531000347CD /* server_production.der */; };
-		6382549B175F746C000347CD /* ProfileDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6382549A175F746B000347CD /* ProfileDataSource.m */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		63848A9518F473AC00C253A4 /* SmallContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63848A9418F473AC00C253A4 /* SmallContactCell.m */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
@@ -121,7 +117,6 @@
 		63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE2FE16CA4D0300522F92 /* ChatViewController.m */; };
 		63AEE30816CA566B00522F92 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30716CA566B00522F92 /* Contact.m */; };
 		63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AEE30A16CA6B1900522F92 /* HXOMessage.m */; };
-		63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AF81911746AA1E00D007E3 /* GroupViewController.m */; };
 		63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B1C9D11843E4FD00B75CD8 /* cnt-download.png */; };
 		63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B1C9D21843E4FD00B75CD8 /* cnt-download@2x.png */; };
 		63B1C9DF1843E4FD00B75CD8 /* cnt-location.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B1C9D31843E4FD00B75CD8 /* cnt-location.png */; };
@@ -1341,18 +1336,10 @@
 				63756A8F18F6434C003F7555 /* ContactPicker.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
-				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
-				633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */,
-				63AF81901746AA1E00D007E3 /* GroupViewController.h */,
-				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				63CA315318D272E70069A0C2 /* InvitationCodeViewController.h */,
 				63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */,
-				63825499175F746B000347CD /* ProfileDataSource.h */,
-				6382549A175F746B000347CD /* ProfileDataSource.m */,
-				633049281701B3390045E64E /* ProfileViewController.h */,
-				633049291701B3390045E64E /* ProfileViewController.m */,
 				E9B7BAB7172EA15E00212420 /* RecordViewController.h */,
 				E9B7BAB8172EA15E00212420 /* RecordViewController.m */,
 				E9E92F8A18748F21007B8042 /* ServerViewController.h */,
@@ -1456,6 +1443,7 @@
 				6318AC5718F3050500CD91A4 /* Chat View */,
 				633A9B18177B21A700E066EF /* Controls */,
 				E96CB01D1714572C005F8FFA /* Crypto */,
+				63CED3DD18F991D90095110B /* Deprecated */,
 				E9E92F8D1874E6DD007B8042 /* HTTP Server */,
 				6A568B8A18BA8F0400584A04 /* Images.xcassets */,
 				63848A9218F46F2D00C253A4 /* List Views */,
@@ -1467,7 +1455,6 @@
 				63AEE2E016CA4D0200522F92 /* Supporting Files */,
 				63AE4541170490B50099F0CB /* Supporting Views */,
 				631F6CDA170654A600FB28D5 /* UtilityCategories */,
-				63D4916716CAA17D00FD395F /* Views */,
 			);
 			path = HoccerXO;
 			sourceTree = "<group>";
@@ -1544,13 +1531,21 @@
 			path = VectorArt;
 			sourceTree = "<group>";
 		};
-		63D4916716CAA17D00FD395F /* Views */ = {
+		63CED3DD18F991D90095110B /* Deprecated */ = {
 			isa = PBXGroup;
 			children = (
+				633F25DF174D599F00D735D8 /* GroupMemberInviteViewController.h */,
+				633F25E0174D599F00D735D8 /* GroupMemberInviteViewController.m */,
+				63AF81901746AA1E00D007E3 /* GroupViewController.h */,
+				63AF81911746AA1E00D007E3 /* GroupViewController.m */,
+				63825499175F746B000347CD /* ProfileDataSource.h */,
+				6382549A175F746B000347CD /* ProfileDataSource.m */,
+				633049281701B3390045E64E /* ProfileViewController.h */,
+				633049291701B3390045E64E /* ProfileViewController.m */,
 				636492D81711F4B000E35514 /* UserDefaultsCells.h */,
 				636492D91711F4B000E35514 /* UserDefaultsCells.m */,
 			);
-			path = Views;
+			path = Deprecated;
 			sourceTree = "<group>";
 		};
 		63E9AFF218F3137E00EFF829 /* Avatar */ = {
@@ -2229,7 +2224,6 @@
 				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
 				630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
-				6330492A1701B3390045E64E /* ProfileViewController.m in Sources */,
 				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
@@ -2286,7 +2280,6 @@
 				E9E92F7018733D01007B8042 /* HTTPMessage.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
-				630E484118EDCF8300EC405A /* UserDefaultsCells.m in Sources */,
 				6365EC8518E7976600B41054 /* avatar_contact.m in Sources */,
 				E9E92F6C18733D01007B8042 /* DDNumber.m in Sources */,
 				E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */,
@@ -2333,7 +2326,6 @@
 				630FD45218BCCCA7000D8C55 /* HXOUI.m in Sources */,
 				63B78FFD18D4E517003A9125 /* tab_contacts.m in Sources */,
 				E9E92F7918733D01007B8042 /* HTTPFileResponse.m in Sources */,
-				63AF81921746AA1E00D007E3 /* GroupViewController.m in Sources */,
 				63808A2C185942D20001AC96 /* ImageAttachmentSection.m in Sources */,
 				63B7900618D4F581003A9125 /* paper_clip.m in Sources */,
 				63B76F5018E8F7F800E014E6 /* KeySheetController.m in Sources */,
@@ -2342,11 +2334,9 @@
 				63756A9018F6434C003F7555 /* ContactPicker.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
 				630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */,
-				633F25E1174D59A000D735D8 /* GroupMemberInviteViewController.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,
-				6382549B175F746C000347CD /* ProfileDataSource.m in Sources */,
 				E9E92F3C18733B7A007B8042 /* DDASLLogger.m in Sources */,
 				6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */,
 				E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */,
