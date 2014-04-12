@@ -656,7 +656,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         GroupMembership * membership = [self membershipOfContact: contact];
         SmallContactCell * cell = (SmallContactCell*)aCell;
         cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
-        cell.titleLabel.textColor = [membership.state isEqualToString: @"invited"] ? [HXOUI theme].lightTextColor : [UIColor blackColor];
+        cell.titleLabel.alpha     = [membership.state isEqualToString: @"invited"] ? 0.5 : 1;
+        cell.titleLabel.textColor = [UIColor blackColor];
         cell.subtitleLabel.text   = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
@@ -824,7 +825,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     NSPredicate * predicate;
     if (self.groupInStatuNascendi) {
-        predicate = [NSPredicate predicateWithFormat: @"(type == %@)", [Contact entityName]];
+        predicate = [NSPredicate predicateWithFormat: @"(type == %@) AND NOT (self IN (%@))", [Contact entityName], self.groupInStatuNascendi.members];
     } else {
         predicate = [NSPredicate predicateWithFormat:@"(type == %@) AND SUBQUERY(groupMemberships, $g, $g.group == %@).@count = 0", [Contact entityName], self.group];
     }
@@ -841,14 +842,30 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSString*) groupMemberSegueIdentifier: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
-    return [contact isEqual: self.group] ? @"showProfile" : @"showContact";
+    return [contact isEqual: self.group] || [contact isEqual: self.groupInStatuNascendi] ? @"showProfile" : @"showContact";
 }
 
 - (void) editRemoveItem:(DatasheetItem *)item {
     Contact * contact = [self contactForItem: item];
-    [self.chatBackend removeGroupMember: [self membershipOfContact: contact] onDeletion:^(GroupMembership *member) {
-        // yeah... absolutely
-    }];
+    if (self.groupInStatuNascendi) {
+        [self.delegate controllerWillChangeContent: self];
+        NSUInteger index = [self.groupMemberItems indexOfObject: item];
+        if (index == NSNotFound) {
+            NSLog(@"ERROR: item not found");
+        } else {
+            NSIndexPath * indexPath = [self indexPathForItem: item];
+            [self.groupMemberItems removeObjectAtIndex: index];
+            [self.groupInStatuNascendi.members removeObjectAtIndex: index];
+            [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeDelete newIndexPath: nil];
+        }
+
+        [self.delegate controllerDidChangeContent: self];
+
+    } else {
+        [self.chatBackend removeGroupMember: [self membershipOfContact: contact] onDeletion:^(GroupMembership *member) {
+            // yeah... absolutely
+        }];
+    }
 }
 
 - (GroupMembership*) membershipOfContact: (Contact*) contact {
