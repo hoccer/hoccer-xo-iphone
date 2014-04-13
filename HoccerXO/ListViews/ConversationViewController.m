@@ -73,14 +73,12 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
-
-    // TODO: find a way to move this to the app delegate
+    /*
     if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
         UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileNavigationController"];
         [self.navigationController presentViewController: profileView animated: YES completion: nil];
     }
-    // [AppDelegate setDefaultAudioSession]; // should be removed when a better AudioPlayer is in Place; right now we set the default mode here in case an Audio has been played and the MusicSession has been enabled
-    //self.view.userInteractionEnabled = YES;
+     */
 }
 
 - (void)didReceiveMemoryWarning

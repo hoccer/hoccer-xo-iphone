@@ -16,9 +16,9 @@
 @property (nonatomic, readonly) UserProfile      * userProfile;
 
 @property (nonatomic, readonly) DatasheetSection * credentialsSection;
-@property (nonatomic, readonly) DatasheetItem    * exportCredentialsItem;
-@property (nonatomic, readonly) DatasheetItem    * importCredentialsItem;
-@property (nonatomic, readonly) DatasheetItem    * deleteCredentialsFileItem;
+//@property (nonatomic, readonly) DatasheetItem    * exportCredentialsItem;
+//@property (nonatomic, readonly) DatasheetItem    * importCredentialsItem;
+//@property (nonatomic, readonly) DatasheetItem    * deleteCredentialsFileItem;
 
 @end
 
@@ -60,13 +60,6 @@
     [super didUpdateInspectedObject];
 
     [self.userProfile saveProfile];
-
-    /* TODO
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
-        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
-        [self dismissViewControllerAnimated: YES completion: nil];
-    }
-     */
 }
 
 - (DatasheetSection*) commonSection {

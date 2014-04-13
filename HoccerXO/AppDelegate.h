@@ -97,8 +97,6 @@
 - (NSString *)ownIPAddress:(BOOL)preferIPv4;
 - (NSDictionary *)ownIPAddresses;
 
-- (void) jumpToChat: (Contact*) contact;
-
 + (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern;
 
 + (AppDelegate*)instance;

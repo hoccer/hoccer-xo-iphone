@@ -154,6 +154,7 @@
 		63CB3E8918D4A909006BB511 /* VectorArt.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CB3E8818D4A909006BB511 /* VectorArt.m */; };
 		63CED3CE18F8A45D0095110B /* GroupInStatuNascendi.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CED3CD18F8A45D0095110B /* GroupInStatuNascendi.m */; };
 		63CED3E018F9A24F0095110B /* KeyStatusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CED3DF18F9A24F0095110B /* KeyStatusCell.m */; };
+		63CED3E318F9D86E0095110B /* SetupViewControllers.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CED3E218F9D86E0095110B /* SetupViewControllers.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
 		63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE121722EB89000F9E53 /* UserProfile.m */; };
 		63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
@@ -624,6 +625,8 @@
 		63CED3CD18F8A45D0095110B /* GroupInStatuNascendi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupInStatuNascendi.m; sourceTree = "<group>"; };
 		63CED3DE18F9A24F0095110B /* KeyStatusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyStatusCell.h; sourceTree = "<group>"; };
 		63CED3DF18F9A24F0095110B /* KeyStatusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyStatusCell.m; sourceTree = "<group>"; };
+		63CED3E118F9D86E0095110B /* SetupViewControllers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewControllers.h; sourceTree = "<group>"; };
+		63CED3E218F9D86E0095110B /* SetupViewControllers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewControllers.m; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		63D8EE111722EB89000F9E53 /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
 		63D8EE121722EB89000F9E53 /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
@@ -1351,6 +1354,8 @@
 				E9E92F8B18748F21007B8042 /* ServerViewController.m */,
 				63AE4542170493140099F0CB /* SettingsViewController.h */,
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
+				63CED3E118F9D86E0095110B /* SetupViewControllers.h */,
+				63CED3E218F9D86E0095110B /* SetupViewControllers.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
 			);
@@ -2352,6 +2357,7 @@
 				6302A98618DA870400B2D04F /* BigInteger.m in Sources */,
 				63E9B00218F314AB00EFF829 /* ghost_busters_sign.m in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
+				63CED3E318F9D86E0095110B /* SetupViewControllers.m in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
 				E9E92F4118733B7A007B8042 /* DispatchQueueLogFormatter.m in Sources */,

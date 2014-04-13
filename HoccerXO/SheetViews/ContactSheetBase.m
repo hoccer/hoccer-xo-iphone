@@ -166,11 +166,21 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (UIImage*) updateBackgroundImage {
+    UIImage * image = self.avatarItem.currentValue ? self.avatarItem.currentValue : nil;
     BOOL darken = self.isEditing && [self isItemEnabled: self.avatarItem];
     UIColor * tintColor = [UIColor colorWithWhite: 0.0 alpha: darken ? 0.5 : 0.0];
-    //UIImage * image = self.avatarItem.currentValue ? self.avatarItem.currentValue : [self imageFromDefaultAvatar];
-    UIImage * image = self.avatarItem.currentValue ? self.avatarItem.currentValue : nil;
-    return [image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: tintColor saturationDeltaFactor: 1.8 maskImage: nil];
+    if (image) {
+        return [image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: tintColor saturationDeltaFactor: 1.8 maskImage: nil];
+    } else if (self.isEditing) {
+        CGRect r = CGRectMake(0, 0, 1, 1);
+        UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
+        [tintColor setFill];
+        UIRectFill(r);
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return image;
+    }
+    return nil;
 }
 
 - (UIImage*) imageFromDefaultAvatar {

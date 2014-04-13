@@ -184,26 +184,6 @@
 
 "chat_with_contact" = "Chat";
 
-"delete_credentials_alert_title" = "Hoccer XO was installed before";
-
-"delete_credentials_alert_text" = "Do you want to delete the old credentials loosing all contacts?";
-
-"delete_credentials_keep_title" = "Keep";
-
-"delete_credentials_delete_title" = "Delete";
-
-"delete_credentials_saftey_question" = "Old Credentials";
-
-"delete_credentials_confirm" = "Delete Credentials";
-
-"import_credentials_alert_title"="Import Credentials?";
-"import_credentials_alert_text"="An exported login has been found. You must use this login on one device only! Do you want to import the login?";
-"import_credentials_button_title"="Import";
-"import_credentials_not_button_title"="New Login";
-
-"export_credentials"="Export Login Credentials";
-"import_credentials"="Import Login Credentials";
-"delete_credentials"="Delete Login Credentials";
 
 "delete_credentials_file"="Delete exported credentials";
 
@@ -483,13 +463,27 @@
 "Video not compatible with Album"="Video not compatible with Album";
 
 "recorder_play_button_title"   = "Play";
-"recorder_stop_button_title"   = "Stop";
-"recorder_record_button_title" = "Record";
-"recorder_use_button_title"    = "Use"; 
-
-"recorder_status_recording" = "Recording";
-"recorder_status_playing"   = "Playing";
-"recorder_status_stopped"   = "Stopped";
+"recorder_use_button_title"    = "Use";
 
 "location_picker_title" = "Drag the Pin";
 "location_picker_done_button_title" = "Done";
+
+"credentials_setup_nav_title"        = "Account";
+"credentials_setup_found_old_text"   = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
+"credentials_setup_found_file_text"  = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
+"credentials_setup_keep_btn_title"   = "Reactivate account";
+"credentials_setup_import_btn_title" = "Import";
+"credentials_setup_create_btn_title" = "New Account";
+
+"delete_credentials_delete_title" = "Delete";
+"delete_credentials_saftey_question" = "Old Credentials";
+"delete_credentials"="Delete Login Credentials";
+
+"delete_credentials_confirm" = "Delete Credentials";
+"import_credentials_alert_title"="Import Credentials?";
+"import_credentials_not_button_title"="New Login";
+
+"export_credentials"="Export Login Credentials";
+"import_credentials"="Import Login Credentials";
+
+

@@ -380,7 +380,7 @@ typedef enum ActionSheetTags {
 - (void) showOldCredentialsAlert {
     NSString * title = NSLocalizedString(@"delete_credentials_alert_title", nil);
     NSString * message = NSLocalizedString(@"delete_credentials_alert_text", nil);
-    NSString * keep = NSLocalizedString(@"delete_credentials_keep_title", nil);
+    NSString * keep = NSLocalizedString(@"credentials_setup_keep_btn_title", nil);
     NSString * delete = NSLocalizedString(@"delete_credentials_delete_title", nil);
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title message: message delegate: self cancelButtonTitle: delete otherButtonTitles: keep, nil];
     [alert show];
@@ -406,7 +406,7 @@ typedef enum ActionSheetTags {
                                                  }
                                              }
                                            cancelButtonTitle: NSLocalizedString(@"import_credentials_not_button_title", nil)
-                                           otherButtonTitles: NSLocalizedString(@"import_credentials_button_title",nil),nil];
+                                           otherButtonTitles: NSLocalizedString(@"credentials_setup_import_btn_title",nil),nil];
     [alert show];
 }
 

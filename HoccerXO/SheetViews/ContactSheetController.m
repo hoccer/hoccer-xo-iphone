@@ -651,14 +651,16 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) configureCell: (DatasheetCell*) aCell withItem: (DatasheetItem*) item atIndexPath: (NSIndexPath*) indexPath {
     if ([aCell.reuseIdentifier isEqualToString: @"SmallContactCell"]) {
-        BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
+        BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
+        BOOL isInvited = [membership.state isEqualToString: @"invited"];
         SmallContactCell * cell = (SmallContactCell*)aCell;
         cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
-        cell.titleLabel.alpha     = [membership.state isEqualToString: @"invited"] ? 0.5 : 1;
+        cell.titleLabel.alpha     = isInvited ? 0.5 : 1;
         cell.titleLabel.textColor = [UIColor blackColor];
-        cell.subtitleLabel.text   = [membership.state isEqualToString: @"invited"] ? NSLocalizedString(membership.state, nil) : nil;
+        cell.subtitleLabel.text   = isInvited ? NSLocalizedString(membership.state, nil) : nil;
+        cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;

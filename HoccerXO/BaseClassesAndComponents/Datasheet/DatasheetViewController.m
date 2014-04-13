@@ -42,6 +42,7 @@ static CGFloat kHeaderHeight;
 - (void) setDataSheetController:(DatasheetController *)dataSheetController {
     _dataSheetController = dataSheetController;
     dataSheetController.delegate = self;
+    self.navigationItem.title = NSLocalizedString(dataSheetController.title, nil);
 }
 
 - (void)viewDidLoad {
@@ -207,6 +208,10 @@ static CGFloat kHeaderHeight;
     if (item.segueIdentifier && ! [item.segueIdentifier isEqualToString:@""]) {
         [self performSegueWithIdentifier: item.segueIdentifier sender: self];
     }
+
+    // Attempt to work around dissapearing separators
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -238,12 +243,12 @@ static CGFloat kHeaderHeight;
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)sectionIndex {
     CGFloat height = kHeaderHeight;
     DatasheetSection * section = [self.dataSheetController itemAtIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
-    if (sectionIndex == 0) {
-        height = FLT_MIN;
-    } else if (section.headerViewIdentifier) {
+    if (section.headerViewIdentifier) {
         id view = self.headerFooterPrototypes[section.headerViewIdentifier];
-        [self configureHeaderFooter: view withText: section.title labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self headerFont] alignment:NSTextAlignmentCenter];
+        [self configureHeaderFooter: view withText: section.title labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self headerFont] alignment: section.titleTextAlignment];
         height = [view systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    } else if (sectionIndex == 0) {
+        height = FLT_MIN;
     }
     return height;
 }
@@ -251,11 +256,9 @@ static CGFloat kHeaderHeight;
 - (UIView*) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)sectionIndex {
     DatasheetSection * section = [self.dataSheetController itemAtIndexPath: [NSIndexPath indexPathWithIndex: sectionIndex]];
     UIView * view = nil;
-    if (sectionIndex == 0 && ! self.tableView.tableHeaderView) {
-        view = nil;
-    } else if (section.headerViewIdentifier) {
+    if (section.headerViewIdentifier) {
         view = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier: section.headerViewIdentifier];
-        [self configureHeaderFooter: view withText: section.title labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self headerFont] alignment:NSTextAlignmentCenter];
+        [self configureHeaderFooter: view withText: section.title labelPadding: UIEdgeInsetsMake(kHXOGridSpacing, 0, kHXOGridSpacing, 0) font: [self headerFont] alignment: section.titleTextAlignment];
     }
     return view;
 }
@@ -431,6 +434,13 @@ static CGFloat kHeaderHeight;
     self.navigationItem.title = NSLocalizedString(controller.title, nil);
     if (self.dataSheetController.backButtonTitle) {
         self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: self.dataSheetController.backButtonTitle style: UIBarButtonItemStylePlain target:nil action:nil];
+    }
+}
+
+- (void) makeFirstResponder: (NSIndexPath*) indexPath {
+    id cell = [self.tableView cellForRowAtIndexPath: indexPath];
+    if ([cell respondsToSelector: @selector(valueView)]) {
+        [[cell valueView] becomeFirstResponder];
     }
 }
 

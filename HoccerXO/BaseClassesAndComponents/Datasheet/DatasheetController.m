@@ -643,6 +643,13 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
 @implementation DatasheetSection
 
+- (id) init {
+    self = [super init];
+    if (self) {
+    }
+    return self;
+}
+
 + (id) dataSheetSection {
     return [[DatasheetSection alloc] init];
 }

@@ -49,6 +49,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 - (void) controllerDidFinish:(DatasheetController *)controller;
 - (void) controllerDidChangeTitle: (DatasheetController*) controller;
 
+- (void) makeFirstResponder: (NSIndexPath*) indexPath;
+
 @end
 
 @protocol DatasheetItemDelegate <NSObject>
@@ -131,8 +133,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 }
 
 @property (nonatomic, strong) NSString           * identifier;
-//@property (nonatomic, strong) NSArray            * items;
 @property (nonatomic, strong) NSAttributedString * title;
+@property (nonatomic, assign) NSTextAlignment      titleTextAlignment;
 @property (nonatomic, strong) NSAttributedString * footerText;
 @property (nonatomic, strong) NSString           * headerViewIdentifier;
 @property (nonatomic, strong) NSString           * footerViewIdentifier;
