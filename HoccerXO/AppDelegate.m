@@ -1060,10 +1060,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
 
-    // Work around for an issue with the side menu. When opening an alert while the side menu is open or in
-    // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
-    // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
-    [NSTimer scheduledTimerWithTimeInterval: 1.0 target: alert selector: @selector(show) userInfo: nil repeats: NO];
+    [alert show];
 }
 
 

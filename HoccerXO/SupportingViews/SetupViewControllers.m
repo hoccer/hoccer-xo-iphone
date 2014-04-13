@@ -33,8 +33,6 @@
 
 @interface ProfileSetupSheet : ProfileSheetController
 
-@property (nonatomic, assign) BOOL performRegistration;
-
 @end
 
 @implementation SetupViewController
@@ -141,7 +139,6 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     if ([segue.identifier isEqualToString: @"showProfileSetup"]) {
         DatasheetViewController * vc = segue.destinationViewController;
-        ((ProfileSetupSheet*)vc.dataSheetController).performRegistration = [self.selectedItem isEqual: self.optionCreateNew];
         vc.inspectedObject = [UserProfile sharedProfile];
     }
 }
@@ -172,7 +169,7 @@
 
 - (void) didUpdateInspectedObject {
     [super didUpdateInspectedObject];
-    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: self.performRegistration];
+    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: [UserProfile sharedProfile].isRegistered];
     [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [((UIViewController*)self.delegate).navigationController dismissViewControllerAnimated: YES completion: nil];
 }
