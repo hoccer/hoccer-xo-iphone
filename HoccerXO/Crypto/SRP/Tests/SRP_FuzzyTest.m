@@ -24,8 +24,6 @@
     return array[rand() % array.count];
 }
 
-
-
 - (void)testRandomValids {
     NSArray * parameters = @[SRP.CONSTANTS_1024, SRP.CONSTANTS_2048, SRP.CONSTANTS_4096, SRP.CONSTANTS_8192];
     NSArray * digests = @[[DigestSHA1 digest], [DigestSHA224 digest], [DigestSHA256 digest], [DigestSHA384 digest], [DigestSHA512 digest]];

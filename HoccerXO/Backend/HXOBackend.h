@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "HXOConfig.h"
 
 #import "JsonRpcWebSocket.h"
 
@@ -147,9 +146,11 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 -(Contact *) getContactByClientId:(NSString *) theClientId;
 
+/*
 + (NSString *) ownPublicKeyIdString;
 + (NSData *) ownPublicKeyId;
 + (NSData *) ownPublicKey;
+ */
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;
 

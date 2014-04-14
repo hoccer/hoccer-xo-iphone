@@ -18,6 +18,9 @@
 #import "Attachment.h"
 #import "CCRSA.h"
 
+// TODO: a model accessing the theme? get rid of that...
+#import "HXOUI.h"
+
 #import <CommonCrypto/CommonHMAC.h>
 
 @implementation HXOMessage
@@ -65,7 +68,7 @@
 
 -(CGFloat) cachedCellHeight {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    double messageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+    double messageFontSize = [HXOUI theme].messageFont.pointSize;
 #ifdef USE_BUILD_NUMBER_CACHE
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
 #endif
@@ -89,7 +92,7 @@
 
 -(void) setCachedCellHeight:(CGFloat)height {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    self.cachedMessageFontSize = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMessageFontSize] doubleValue];
+    self.cachedMessageFontSize = [HXOUI theme].messageFont.pointSize;
     self.cachedBuildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
     
     if (orientation == UIInterfaceOrientationPortrait) {

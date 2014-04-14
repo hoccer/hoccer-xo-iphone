@@ -16,6 +16,16 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Sign Messages</string>
+			<key>Key</key>
+			<string>signMessages</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
 			<string>server_changed_instructions</string>
@@ -60,19 +70,11 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Chat Cell Testing</string>
-			<key>Type</key>
-			<string>IASKButtonSpecifier</string>
-			<key>Key</key>
-			<string>testingGround</string>
-		</dict>
-		<dict>
-			<key>Title</key>
 			<string>Web Server</string>
 			<key>Type</key>
 			<string>IASKButtonSpecifier</string>
 			<key>Key</key>
-			<string>webServer</string>
+			<string>showWebServer</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>

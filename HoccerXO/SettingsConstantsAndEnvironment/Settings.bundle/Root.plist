@@ -294,38 +294,6 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Appearance</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Message Font Size</string>
-			<key>Key</key>
-			<string>messageFontSize</string>
-			<key>DefaultValue</key>
-			<integer>13</integer>
-			<key>Titles</key>
-			<array>
-				<string>tiny</string>
-				<string>small</string>
-				<string>normal</string>
-				<string>large</string>
-				<string>huge</string>
-			</array>
-			<key>Values</key>
-			<array>
-				<integer>9</integer>
-				<integer>11</integer>
-				<integer>13</integer>
-				<integer>18</integer>
-				<integer>24</integer>
-			</array>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
 			<string>Security</string>
 		</dict>
 		<dict>
@@ -368,16 +336,6 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Sign Messages</string>
-			<key>Key</key>
-			<string>signMessages</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
 			<string>support_tag_explanation</string>
@@ -414,7 +372,7 @@
 			<key>Title</key>
 			<string>tutorial_button_title</string>
 			<key>Key</key>
-			<string>tutorial</string>
+			<string>showTutorial</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -422,7 +380,7 @@
 			<key>Title</key>
 			<string>faq_button_title</string>
 			<key>Key</key>
-			<string>faq</string>
+			<string>showFaq</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -430,7 +388,7 @@
 			<key>Title</key>
 			<string>about_button_title</string>
 			<key>Key</key>
-			<string>about</string>
+			<string>showAbout</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>

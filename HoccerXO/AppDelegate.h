@@ -14,7 +14,6 @@
 #import "HXOBackend.h"
 #import "GCNetworkReachability.h"
 
-typedef void(^StringEntryCompletion)(NSString* entry);
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
@@ -90,13 +89,6 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 + (void) setWhiteFontStatusbarForViewController:(UIViewController*)viewcontroller;
 
 
-+ (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title;
-+ (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title;
-
-+ (void) showAlertWithMessage: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument;
-+ (void) showAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument;
-
-+ (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock;
 
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
 + (NSString *)sanitizeFileNameString:(NSString *)fileName;
@@ -104,8 +96,6 @@ typedef void(^StringEntryCompletion)(NSString* entry);
 
 - (NSString *)ownIPAddress:(BOOL)preferIPv4;
 - (NSDictionary *)ownIPAddresses;
-
-- (void) jumpToChat: (Contact*) contact;
 
 + (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern;
 

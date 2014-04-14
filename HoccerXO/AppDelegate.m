@@ -8,23 +8,24 @@
 
 #import "AppDelegate.h"
 
-#import "HXOConfig.h"
-
 #import "ConversationViewController.h"
 #import "Contact.h"
 #import "Attachment.h"
 #import "HXOMessage.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
-#import "InviteCodeViewController.h"
 #import "HXOUserDefaults.h"
 #import "Environment.h"
 #import "UserProfile.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
 #import "TestFlight.h"
-#import "HXOTheme.h"
+#import "HXOUI.h"
 #import "ChatViewController.h"
+#import "tab_chats.h"
+#import "tab_contacts.h"
+#import "tab_profile.h"
+#import "tab_settings.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
@@ -50,8 +51,7 @@
 #define CONNECTION_TRACE NO
 #define MIGRATION_DEBUG NO
 #define AUDIOSESSION_DEBUG NO
-
-typedef void(^HXOAlertViewCompletionBlock)(NSUInteger, UIAlertView*);
+#define TRACE_DATABASE_SAVE NO
 
 //static const NSInteger kFatalDatabaseErrorAlertTag = 100;
 //static const NSInteger kDatabaseDeleteAlertTag = 200;
@@ -59,40 +59,6 @@ static NSInteger validationErrorCount = 0;
 
 #ifdef WITH_WEBSERVER
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#endif
-
-#ifdef DEBUG_RESPONDER
-
-#import <objc/runtime.h>
-
-@implementation UIResponder (MYHijack)
-+ (void)hijackSelector:(SEL)originalSelector withSelector:(SEL)newSelector
-    {
-        Class class = [UIResponder class];
-        Method originalMethod = class_getInstanceMethod(class, originalSelector);
-        Method categoryMethod = class_getInstanceMethod(class, newSelector);
-        method_exchangeImplementations(originalMethod, categoryMethod);
-    }
-    
-+ (void)hijack
-    {
-        [self hijackSelector:@selector(touchesBegan:withEvent:) withSelector:@selector(MYHijack_touchesBegan:withEvent:)];
-    }
-    
-- (void)MYHijack_touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-    {
-        NSLog(@"touchesBegan self=%@, touches=%@", self, touches);
-        for (UITouch * t in touches) {
-            NSLog(@"touch=%@",t);
-            NSLog(@"gestureRecognizers#=%d",t.gestureRecognizers.count);
-            for (UIGestureRecognizer * r in t.gestureRecognizers) {
-                NSLog(@"recognizer=%@",r);
-            }
-        }
-        NSLog(@"Responder Chain %@", NBResponderChain());
-        [self MYHijack_touchesBegan:touches withEvent:event]; // Calls the original version of this method
-    }
-@end
 #endif
 
 
@@ -122,115 +88,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return YES;
 }
 
-#ifdef WITH_WEBSERVER
-
--(HTTPServer*)httpServer {
-    if (_httpServer == nil) {
-        // Create server using our custom MyHTTPServer class
-        _httpServer = [[HTTPServer alloc] init];
-        [_httpServer setConnectionClass:[MyHTTPConnection class]];
-       
-        // Tell the server to broadcast its presence via Bonjour.
-        // This allows browsers such as Safari to automatically discover our service.
-        [_httpServer setType:@"_http._tcp."];
-
-        [_httpServer setPort:8899];
-        
-        // Normally there's no need to run our server on any specific port.
-        // Technologies like Bonjour allow clients to dynamically discover the server's port at runtime.
-        // However, for easy testing you may want force a certain port so you can just hit the refresh button.
-        // [httpServer setPort:12345];
-        
-        // Serve files from our embedded Web folder
-//        NSString *webPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Web"];
-        NSString *webPath = [self.applicationDocumentsDirectory path];
-        DDLogInfo(@"Setting document root: %@", webPath);
-        
-        [_httpServer setDocumentRoot:webPath];
-    }
-    return _httpServer;
-}
-
-- (void)startHttpServer
-{
-    // Start the server (and check for problems)
-	
-	NSError *error;
-	if([self.httpServer start:&error])
-	{
-		DDLogInfo(@"Started HTTP Server on port %hu", [self.httpServer listeningPort]);
-	}
-	else
-	{
-		DDLogError(@"Error starting HTTP Server: %@", error);
-	}
-}
-
-- (void)stopHttpServer {
-    if (_httpServer) {
-        [_httpServer stop];
-    }
-}
--(BOOL)httpServerIsRunning {
-    if (_httpServer) {
-        return _httpServer.isRunning;
-    }
-    return NO;
-}
-#endif
-
-#define IOS_CELLULAR    @"pdp_ip0"
-#define IOS_WIFI        @"en0"
-#define IP_ADDR_IPv4    @"ipv4"
-#define IP_ADDR_IPv6    @"ipv6"
-
-- (NSString *)ownIPAddress:(BOOL)preferIPv4
-{
-    NSArray *searchArray = preferIPv4 ?
-    @[ IOS_WIFI @"/" IP_ADDR_IPv4, IOS_WIFI @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6 ] :
-    @[ IOS_WIFI @"/" IP_ADDR_IPv6, IOS_WIFI @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4 ] ;
-    
-    NSDictionary *addresses = [self ownIPAddresses];
-    //NSLog(@"addresses: %@", addresses);
-    
-    __block NSString *address;
-    [searchArray enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop)
-     {
-         address = addresses[key];
-         if(address) *stop = YES;
-     } ];
-    return address ? address : @"0.0.0.0";
-}
-
-- (NSDictionary *)ownIPAddresses
-{
-    NSMutableDictionary *addresses = [NSMutableDictionary dictionaryWithCapacity:8];
-    
-    // retrieve the current interfaces - returns 0 on success
-    struct ifaddrs *interfaces;
-    if(!getifaddrs(&interfaces)) {
-        // Loop through linked list of interfaces
-        struct ifaddrs *interface;
-        for(interface=interfaces; interface; interface=interface->ifa_next) {
-            if(!(interface->ifa_flags & IFF_UP) || (interface->ifa_flags & IFF_LOOPBACK)) {
-                continue; // deeply nested code harder to read
-            }
-            const struct sockaddr_in *addr = (const struct sockaddr_in*)interface->ifa_addr;
-            if(addr && (addr->sin_family==AF_INET || addr->sin_family==AF_INET6)) {
-                NSString *name = [NSString stringWithUTF8String:interface->ifa_name];
-                char addrBuf[INET6_ADDRSTRLEN];
-                if(inet_ntop(addr->sin_family, &addr->sin_addr, addrBuf, sizeof(addrBuf))) {
-                    NSString *key = [NSString stringWithFormat:@"%@/%@", name, addr->sin_family == AF_INET ? IP_ADDR_IPv4 : IP_ADDR_IPv6];
-                    addresses[key] = [NSString stringWithUTF8String:addrBuf];
-                }
-            }
-        }
-        // Free memory
-        freeifaddrs(interfaces);
-    }
-    return [addresses count] ? addresses : nil;
-}
-
 
 - (void)registerForRemoteNotifications {
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -249,7 +106,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
-    
     // [self deleteDatabase];
  
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
@@ -269,20 +125,20 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self checkForCrash];
     self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
 
-    [[HXOTheme theme] setupAppearanceProxies];
+    NSString * storyboardName = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? @"MainStoryboard_iPad" : @"MainStoryboard_iPhone";
+    [UIStoryboard storyboardWithName: storyboardName bundle: [NSBundle mainBundle]];
 
-    UIStoryboard *storyboard = nil;
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:[NSBundle mainBundle]];
-    } else {
-        storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
-    }
-
+    [[HXOUI theme] setupTheming];
     [self localizeTabBar];
 
     // NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
+    BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
 
-    if ([[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
+    if (isFirstRun) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.window.rootViewController performSegueWithIdentifier: @"showSetup" sender: self];
+        });
+    } else {
         [self setupDone: NO];
     }
     
@@ -323,13 +179,21 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSData * myKey = [Crypto make256BitKeyFromPassword:@"myPassword" withSalt:mySalt];
     NSLog(@"myKey=%@", [myKey hexadecimalString]);
 #endif
-    
     return YES;
 }
 
 - (void) localizeTabBar {
     UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
     for (UITabBarItem * item in tabBarController.tabBar.items) {
+        if ([item.title isEqualToString: @"Chats"]) {
+            item.image = [[[tab_chats alloc] init] image];
+        } else if ([item.title isEqualToString: @"Contacts"]) {
+            item.image = [[[tab_contacts alloc] init] image];
+        } else if ([item.title isEqualToString: @"Profile"]) {
+            item.image = [[[tab_profile alloc] init] image];
+        } else if ([item.title isEqualToString: @"Settings"]) {
+            item.image = [[[tab_settings alloc] init] image];
+        }
         item.title = NSLocalizedString(item.title, nil);
     }
 }
@@ -526,10 +390,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (void)saveContext
 {
-#ifdef DEBUG
-    NSLog(@"Saving database");
-    NSDate * start = [[NSDate alloc] init];
-#endif
+    NSDate * start;
+    if (TRACE_DATABASE_SAVE) {
+        NSLog(@"Saving database");
+        start = [[NSDate alloc] init];
+    }
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
@@ -546,10 +411,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             // abort();
         }
     }
-#ifdef DEBUG
-    double elapsed = -[start timeIntervalSinceNow];
-    NSLog(@"Saving database took %f secs", elapsed);
-#endif
+    if (start && TRACE_DATABASE_SAVE) {
+        double elapsed = -[start timeIntervalSinceNow];
+        NSLog(@"Saving database took %f secs", elapsed);
+    }
 }
 
 - (void)displayValidationError:(NSError *)anError {
@@ -1197,79 +1062,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
 
-    // Work around for an issue with the side menu. When opening an alert while the side menu is open or in
-    // transition a matrix becomes singular and the side menus dissappear in numeric nirvana. We're going to
-    // make the side menu a plain menu anyway. No buttons or other user interaction. So, a workaround is ok for now.
-    [NSTimer scheduledTimerWithTimeInterval: 1.0 target: alert selector: @selector(show) userInfo: nil repeats: NO];
-}
-
-+ (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title {
-
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
-                                                     message: NSLocalizedString(message, nil)
-                                                    delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
-                                           otherButtonTitles: nil];
-    [alert show];
-}
-    
-+ (void) showErrorAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [AppDelegate showErrorAlertWithMessage:message withTitle:title];
-    });
-}
-
-+ (void) showAlertWithMessage: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
-    
-    NSString * localizedMessage = NSLocalizedString(message, "");
-    NSString * fullMessage = [NSString stringWithFormat:localizedMessage, argument];
-    
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
-                                                     message: NSLocalizedString(fullMessage, nil)
-                                                    delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
-                                           otherButtonTitles: nil];
     [alert show];
 }
 
-+ (void) showAlertWithMessageAsync: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [AppDelegate showAlertWithMessage:message withTitle:title withArgument:argument];
-    });
-}
-
-+ (void) enterStringAlert: (NSString *) message withTitle:(NSString *)title withPlaceHolder:(NSString *)placeholder onCompletion:(StringEntryCompletion)completionBlock {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
-                                       message: message
-                               completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) {
-                                   NSString * enteredText;
-                                   switch (buttonIndex) {
-                                       case 0:
-                                           NSLog(@"enterStringAlert: cancel pressed");
-                                           completionBlock(nil);
-                                           break;
-                                       case 1:
-                                           enteredText = [[alertView textFieldAtIndex:0] text];
-                                           NSLog(@"enterStringAlert: enteredText = %@", enteredText);
-                                           if (enteredText.length>0) {
-                                               NSLog(@"enterStringAlert: calling completionblock with text = %@", enteredText);
-                                               completionBlock(enteredText);
-                                           } else {
-                                               NSLog(@"enterStringAlert: calling completionblock with nil");
-                                              completionBlock(nil);
-                                           }
-                                           break;
-                                   }
-                               }
-                             cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
-                             otherButtonTitles:NSLocalizedString(@"OK",nil),nil];
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    UITextField * alertTextField = [alert textFieldAtIndex:0];
-    alertTextField.keyboardType = UIKeyboardTypeDefault;
-    alertTextField.placeholder = placeholder;
-    [alert show];
-
-}
 
 - (void) showFatalErrorAlertWithMessage:  (NSString *) message withTitle:(NSString *) title {
     if (title == nil) {
@@ -1439,15 +1234,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return myLocalURL;
 }
 
-- (void) jumpToChat: (Contact*) contact {
-    UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
-    tabBarController.selectedIndex = 0;
-    UINavigationController * navigationController = (UINavigationController*)tabBarController.selectedViewController;
-    ChatViewController * chatViewController = [navigationController.storyboard instantiateViewControllerWithIdentifier: @"chatViewController"];
-    chatViewController.partner = contact;
-    [navigationController setViewControllers: @[navigationController.topViewController, chatViewController]];
-}
-
 @synthesize peoplePicker = _peoplePicker;
 - (ABPeoplePickerNavigationController*) peoplePicker {
     if ( ! _peoplePicker) {
@@ -1479,5 +1265,150 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return didValidate;
 }
 
+#ifdef WITH_WEBSERVER
+
+-(HTTPServer*)httpServer {
+    if (_httpServer == nil) {
+        // Create server using our custom MyHTTPServer class
+        _httpServer = [[HTTPServer alloc] init];
+        [_httpServer setConnectionClass:[MyHTTPConnection class]];
+
+        // Tell the server to broadcast its presence via Bonjour.
+        // This allows browsers such as Safari to automatically discover our service.
+        [_httpServer setType:@"_http._tcp."];
+
+        [_httpServer setPort:8899];
+
+        // Normally there's no need to run our server on any specific port.
+        // Technologies like Bonjour allow clients to dynamically discover the server's port at runtime.
+        // However, for easy testing you may want force a certain port so you can just hit the refresh button.
+        // [httpServer setPort:12345];
+
+        // Serve files from our embedded Web folder
+        //        NSString *webPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Web"];
+        NSString *webPath = [self.applicationDocumentsDirectory path];
+        DDLogInfo(@"Setting document root: %@", webPath);
+
+        [_httpServer setDocumentRoot:webPath];
+    }
+    return _httpServer;
+}
+
+- (void)startHttpServer
+{
+    // Start the server (and check for problems)
+
+	NSError *error;
+	if([self.httpServer start:&error])
+	{
+		DDLogInfo(@"Started HTTP Server on port %hu", [self.httpServer listeningPort]);
+	}
+	else
+	{
+		DDLogError(@"Error starting HTTP Server: %@", error);
+	}
+}
+
+- (void)stopHttpServer {
+    if (_httpServer) {
+        [_httpServer stop];
+    }
+}
+-(BOOL)httpServerIsRunning {
+    if (_httpServer) {
+        return _httpServer.isRunning;
+    }
+    return NO;
+}
+#endif
+
+#define IOS_CELLULAR    @"pdp_ip0"
+#define IOS_WIFI        @"en0"
+#define IP_ADDR_IPv4    @"ipv4"
+#define IP_ADDR_IPv6    @"ipv6"
+
+- (NSString *)ownIPAddress:(BOOL)preferIPv4
+{
+    NSArray *searchArray = preferIPv4 ?
+    @[ IOS_WIFI @"/" IP_ADDR_IPv4, IOS_WIFI @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6 ] :
+    @[ IOS_WIFI @"/" IP_ADDR_IPv6, IOS_WIFI @"/" IP_ADDR_IPv4, IOS_CELLULAR @"/" IP_ADDR_IPv6, IOS_CELLULAR @"/" IP_ADDR_IPv4 ] ;
+
+    NSDictionary *addresses = [self ownIPAddresses];
+    //NSLog(@"addresses: %@", addresses);
+
+    __block NSString *address;
+    [searchArray enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop)
+     {
+         address = addresses[key];
+         if(address) *stop = YES;
+     } ];
+    return address ? address : @"0.0.0.0";
+}
+
+- (NSDictionary *)ownIPAddresses
+{
+    NSMutableDictionary *addresses = [NSMutableDictionary dictionaryWithCapacity:8];
+
+    // retrieve the current interfaces - returns 0 on success
+    struct ifaddrs *interfaces;
+    if(!getifaddrs(&interfaces)) {
+        // Loop through linked list of interfaces
+        struct ifaddrs *interface;
+        for(interface=interfaces; interface; interface=interface->ifa_next) {
+            if(!(interface->ifa_flags & IFF_UP) || (interface->ifa_flags & IFF_LOOPBACK)) {
+                continue; // deeply nested code harder to read
+            }
+            const struct sockaddr_in *addr = (const struct sockaddr_in*)interface->ifa_addr;
+            if(addr && (addr->sin_family==AF_INET || addr->sin_family==AF_INET6)) {
+                NSString *name = [NSString stringWithUTF8String:interface->ifa_name];
+                char addrBuf[INET6_ADDRSTRLEN];
+                if(inet_ntop(addr->sin_family, &addr->sin_addr, addrBuf, sizeof(addrBuf))) {
+                    NSString *key = [NSString stringWithFormat:@"%@/%@", name, addr->sin_family == AF_INET ? IP_ADDR_IPv4 : IP_ADDR_IPv6];
+                    addresses[key] = [NSString stringWithUTF8String:addrBuf];
+                }
+            }
+        }
+        // Free memory
+        freeifaddrs(interfaces);
+    }
+    return [addresses count] ? addresses : nil;
+}
+
 @end
+
+#ifdef DEBUG_RESPONDER
+
+#import <objc/runtime.h>
+
+@implementation UIResponder (MYHijack)
++ (void)hijackSelector:(SEL)originalSelector withSelector:(SEL)newSelector
+{
+    Class class = [UIResponder class];
+    Method originalMethod = class_getInstanceMethod(class, originalSelector);
+    Method categoryMethod = class_getInstanceMethod(class, newSelector);
+    method_exchangeImplementations(originalMethod, categoryMethod);
+}
+
++ (void)hijack
+{
+    [self hijackSelector:@selector(touchesBegan:withEvent:) withSelector:@selector(MYHijack_touchesBegan:withEvent:)];
+}
+
+- (void)MYHijack_touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"touchesBegan self=%@, touches=%@", self, touches);
+    for (UITouch * t in touches) {
+        NSLog(@"touch=%@",t);
+        NSLog(@"gestureRecognizers#=%d",t.gestureRecognizers.count);
+        for (UIGestureRecognizer * r in t.gestureRecognizers) {
+            NSLog(@"recognizer=%@",r);
+        }
+    }
+    NSLog(@"Responder Chain %@", NBResponderChain());
+    [self MYHijack_touchesBegan:touches withEvent:event]; // Calls the original version of this method
+}
+@end
+#endif
+
+
 

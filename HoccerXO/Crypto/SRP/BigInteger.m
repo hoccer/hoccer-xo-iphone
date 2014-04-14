@@ -17,7 +17,9 @@ static BN_CTX * ctx;
 @implementation BigInteger
 
 + (void) initialize {
-    ctx = BN_CTX_new();
+    if (self == [BigInteger class]) {
+        ctx = BN_CTX_new();
+    }
 }
 
 - (id) init {

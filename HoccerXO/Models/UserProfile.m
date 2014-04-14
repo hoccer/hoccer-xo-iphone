@@ -19,6 +19,8 @@
 #import "ProfileViewController.h"
 #import "SRPClient.h"
 #import "SRPVerifierGenerator.h"
+#import "CCRSA.h"
+#import "EC.h"
 
 static UserProfile * profileInstance;
 
@@ -51,7 +53,9 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 + (void) initialize {
-    profileInstance = [[UserProfile alloc] init];
+    if (self == [UserProfile class]) {
+        profileInstance = [[UserProfile alloc] init];
+    }
 }
 
 + (UserProfile*) sharedProfile {
@@ -100,6 +104,9 @@ static const NSUInteger kHXOPasswordLength    = 23;
     [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
     [[HXOUserDefaults standardUserDefaults] setValue: self.status         forKey: kHXOUserStatus];
     [[HXOUserDefaults standardUserDefaults] synchronize];
+
+    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 - (NSString*) clientId {
@@ -315,5 +322,80 @@ static const NSUInteger kHXOPasswordLength    = 23;
     NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
 }
 
+
+- (NSString *) publicKeyId {
+    return [HXOBackend keyIdString:[self publicKeyIdData]];
+}
+
+- (NSData *) publicKeyIdData {
+    NSData * myKeyBits = [self publicKey];
+    return [HXOBackend calcKeyId:myKeyBits];
+}
+
+- (NSData *) publicKeyRSA {
+    return[[CCRSA sharedInstance] getPublicKeyBits];
+}
+
+- (NSData *) publicKeyEC {
+    return[[EC sharedInstance] getPublicKeyBits];
+}
+
+- (NSData *) publicKey {
+    if ([HXOBackend use_elliptic_curves]) {
+        return [self publicKeyEC];
+    } else {
+        return [self publicKeyRSA];
+    }
+}
+
+- (void) renewKeypair {
+    [self willChangePublicKey];
+    [self renewKeypairInternal];
+    [self didChangePublicKey];
+}
+
+- (void) renewKeypairInternal {
+    if ([HXOBackend use_elliptic_curves]) {
+        [[EC sharedInstance] cleanKeyChain];
+    } else {
+        [[CCRSA sharedInstance] cloneKeyPairKeys];
+        [[CCRSA sharedInstance] cleanKeyPairKeys];
+    }
+}
+
+- (void) willChangePublicKey {
+    [self willChangeValueForKey: @"publicKey"];
+    [self willChangeValueForKey: @"publicKeyId"];
+    [self willChangeValueForKey: @"publicKeyData"];
+    if ([HXOBackend use_elliptic_curves]) {
+        [self willChangeValueForKey: @"publicKeyEC"];
+    } else {
+        [self willChangeValueForKey: @"publicKeyRSA"];
+    }
+}
+
+- (void) didChangePublicKey {
+    if ([HXOBackend use_elliptic_curves]) {
+        [self didChangeValueForKey: @"publicKeyEC"];
+    } else {
+        [self didChangeValueForKey: @"publicKeyRSA"];
+    }
+    [self didChangeValueForKey: @"publicKeyData"];
+    [self didChangeValueForKey: @"publicKeyId"];
+    [self didChangeValueForKey: @"publicKey"];
+}
+
+
+- (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion {
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{ [self willChangePublicKey]; });
+        [self renewKeypairInternal];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self didChangePublicKey];
+            completion();
+        });
+    });
+}
 
 @end

@@ -56,9 +56,11 @@ NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 @implementation HXOUserDefaults
 
 + (void) initialize {
-    NSString * path = [[NSBundle mainBundle] pathForResource: kHXODefaultsDefaultsFile ofType: @"plist"];
-    NSDictionary * defaultsDefaults = [NSDictionary dictionaryWithContentsOfFile: path];
-    [[NSUserDefaults standardUserDefaults] registerDefaults: defaultsDefaults];
+    if (self == [HXOUserDefaults class]) {
+        NSString * path = [[NSBundle mainBundle] pathForResource: kHXODefaultsDefaultsFile ofType: @"plist"];
+        NSDictionary * defaultsDefaults = [NSDictionary dictionaryWithContentsOfFile: path];
+        [[NSUserDefaults standardUserDefaults] registerDefaults: defaultsDefaults];
+    }
 }
 
 + (id) standardUserDefaults {

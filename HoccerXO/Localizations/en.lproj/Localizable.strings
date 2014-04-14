@@ -9,8 +9,6 @@
 /* Actionsheet Button Title */
 "Cancel" = "Cancel";
 
-
-
 /* Action Sheet Button Ttitle */
 "Choose Photo/Video" = "Album";
 
@@ -61,8 +59,6 @@
 "Opened data Attachment %@"="External (%@)";
 
 
-
-
 /* Profile View Avatar Chooser Action Sheet Title */
 "Pick an Avatar"="Get Avatar Image from:";
 
@@ -94,27 +90,10 @@
 /* Invite Actionsheet Button Title */
 "Mail" = "Invite via E-Mail";
 
-/* Invite Actionsheet Button Title */
-"Show Invite Code"="Invite via Code";
-
-/* Invite Actionsheet Button Title */
-"Scan or Enter Code"="Scan or Enter Code";
+"invite_by_code_button_title" = "Invite by Code";
 
 /* Invite Alert Title */
 "Invite failed" = "Invite failed";
-
-/* Invite Alert Title */
-/* "Invite successful" = "Invite successful";*/
-
-
-/* Invite Token View Controller */
-"or" = "or";
-
-"invite_get_new_code_button" = "Get Invite Code";
-"invite_code_field_placeholder" = "Enter Invite Code";
-
-/* Invite Code Copy/Paste Button */
-"Paste" = "Paste";
 
 /* Navigation Menu Item */
 "Profile" = "Profile";
@@ -177,9 +156,10 @@
 
 "navigation_title_profile" = "Profile";
 
-"navigation_title_contact" = "Contact";
+"navigation_title_contact"  = "Contact";
+"navigation_title_contacts" = "Contacts";
 
-"profile_fingerprint_label" = "Key:";
+"profile_fingerprint_label" = "Key";
 "profile_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
 
 "contact_unblock" = "Unblock %@";
@@ -188,29 +168,22 @@
 
 "contact_remove" = "Remove %@";
 
+"message_count_format_singular" = "%@ message";
+"message_count_format_plural"   = "%@ messages";
 
-"chat_with_contact" = "Chat with %@";
+"unverified_key_title" = "Not verified";
+"verified_key_title"   = "Verfied";
+"mistrusted_key_title"  = "Mistrusted";
 
-"delete_credentials_alert_title" = "Hoccer XO was installed before";
+"fingerprint_item" = "Id";
+"key_length_item" = "Key Length";
+"key_length_unit" = "%@ bit";
 
-"delete_credentials_alert_text" = "Do you want to delete the old credentials loosing all contacts?";
+"key_view_title_you"   = "Your Key";
+"key_view_title_other" = "Key";
 
-"delete_credentials_keep_title" = "Keep";
+"chat_with_contact" = "Chat";
 
-"delete_credentials_delete_title" = "Delete";
-
-"delete_credentials_saftey_question" = "Old Credentials";
-
-"delete_credentials_confirm" = "Delete Credentials";
-
-"import_credentials_alert_title"="Import Credentials?";
-"import_credentials_alert_text"="An exported login has been found. You must use this login on one device only! Do you want to import the login?";
-"import_credentials_button_title"="Import";
-"import_credentials_not_button_title"="New Login";
-
-"export_credentials"="Export Login Credentials";
-"import_credentials"="Import Login Credentials";
-"delete_credentials"="Delete Login Credentials";
 
 "delete_credentials_file"="Delete exported credentials";
 
@@ -282,35 +255,26 @@
 
 "about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer XO is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer XO is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
 
-"invite_friends_button_title" = "Invite Friends\nAccept Invite Codes";
-
 "message_too_long_title" = "Message too long";
 
 "message_too_long_text" = "Message is longer than %d bytes. Please keep it brief.";
 
 "ok_button_title" = "Ok";
 
+"done_button_title" = "Done";
+
+"enter_button_title" = "Enter";
+
 "Resend" = "Send";
 
 "delete_contact" = "Delete contact";
 
-"invite_code_view_controller_title" = "Invite by Code";
-
-"invite_qr_code_already_scanned_title" = "Code already scanned";
-
-"invite_qr_code_already_scanned_message" = "You have already scanned this code";
-
+"invite_code_sheet_title" = "Invite Code";
+"invite_code_enter_dialog_title" = "Enter an xo invite code";
+"invite_code_enter_placeholder" = "Invite Code";
+"invite_code_fetch_failed" = "Failed to get code";
 "invite_not_a_hoccer_xo_qr_code_title" = "Not a Hoccer XO code";
-
-"invite_not_a_hoccer_xo_qr_code_message" = "This QR Code is not a Hoccer XO invite code";
-
-
-"Enter_an_invite_token_here" = "Enter an invite token here:";
-"or_scan_an_invite_code"="or scan an invite QR code:";
-
-"Give_this_token_to_a_friend"="Give this token to a friend:";
-"let_a_friend_scan_this_code" = "or let'em scan this code";
-
+"invite_scanner_prompt" = "Looking for xo QR codes...";
 
 "delete_contact_safety_question" = "Delete contact, chat and attachments?";
 
@@ -346,9 +310,7 @@
 "http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
 "http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
 
-"groups_menu_item" = "Groups";
-
-"groups_empty_placeholder" = "Groups";
+"group_segment_title" = "Groups";
 
 "invalid_cert_title" = "Invalid Server Certificate";
 
@@ -359,6 +321,8 @@
 
 "group_name_placeholder" = "Group Name";
 "group_invite_button" = "Invite or kick Member";
+
+"group_invite_members_title" = "Invite more";
 
 "group_invite_title" = "Invite '%@' to group '%@'?";
 "group_kick_title" = "Kick '%@' from group '%@'?";
@@ -376,6 +340,10 @@
 "group_close_group_title" = "Do you really want to close the group for everybody and ever?";
 "group_close_group_button_title" = "Close";
 "group_delete_data"="Delete Group Data";
+
+"group_kick_member_confirm" = "Kick";
+
+"group_no_admin" = "No Admin";
 
 "group_no_other_joined_partners_text"="You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
 "group_no_other_partner_text"="You can not send a message to this group because there are no members except you. Please invite friends to this group.";
@@ -475,8 +443,6 @@
 
 "chat_view_message_placeholder" = "Message";
 
-"back_button_title" = "Back";
-
 "microphone_access_denied_title"="Microphone Access Denied";
 "microphone_access_denied_message"="Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
 
@@ -497,13 +463,27 @@
 "Video not compatible with Album"="Video not compatible with Album";
 
 "recorder_play_button_title"   = "Play";
-"recorder_stop_button_title"   = "Stop";
-"recorder_record_button_title" = "Record";
-"recorder_use_button_title"    = "Use"; 
-
-"recorder_status_recording" = "Recording";
-"recorder_status_playing"   = "Playing";
-"recorder_status_stopped"   = "Stopped";
+"recorder_use_button_title"    = "Use";
 
 "location_picker_title" = "Drag the Pin";
 "location_picker_done_button_title" = "Done";
+
+"credentials_setup_nav_title"        = "Account";
+"credentials_setup_found_old_text"   = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
+"credentials_setup_found_file_text"  = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
+"credentials_setup_keep_btn_title"   = "Reactivate account";
+"credentials_setup_import_btn_title" = "Import";
+"credentials_setup_create_btn_title" = "New Account";
+
+"delete_credentials_delete_title" = "Delete";
+"delete_credentials_saftey_question" = "Old Credentials";
+"delete_credentials"="Delete Login Credentials";
+
+"delete_credentials_confirm" = "Delete Credentials";
+"import_credentials_alert_title"="Import Credentials?";
+"import_credentials_not_button_title"="New Login";
+
+"export_credentials"="Export Login Credentials";
+"import_credentials"="Import Login Credentials";
+
+

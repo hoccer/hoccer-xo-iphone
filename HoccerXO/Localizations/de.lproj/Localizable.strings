@@ -93,6 +93,8 @@
 /* Invite Actionsheet Button Title */
 "Mail" = "Einladen per Mail";
 
+"invite_by_code_button_title" = "Einladen per Code";
+
 /* Invite Actionsheet Button Title */
 "Show Invite Code"="Einladen per Code";
 
@@ -101,19 +103,6 @@
 
 /* Invite Alert Title */
 "Invite failed" = "Einladung fehlgeschlagen";
-
-/* Invite Alert Title */
-/*"Invite successful" = "Einladung erfolgreich";*/
-
-
-/* Invite Token View Controller */
-"or" = "oder";
-
-"invite_get_new_code_button" = "Code anfordern";
-"invite_code_field_placeholder" = "Code eingeben";
-
-/* Invite Code Copy/Paste Button */
-"Paste" = "Einfügen";
 
 /* Navigation Menu Item */
 "Profile" = "Profil";
@@ -166,7 +155,7 @@
 
 "profile_renew_keypair" = "RSA-Schlüssel erneuern";
 
-"profile_renew_keypair_info" = "Hoccer XO schützt Deine Privatshäre durch ein asymmetrisches Kryptosystem. Wenn dein Gerät in falschen Händen war kannst Du hier Deine Schlüssel erneuern.";
+"profile_renew_keypair_info" = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
 
 "contact_group_friends" = "Freunde";
 
@@ -183,8 +172,9 @@
 "navigation_title_profile" = "Profil";
 
 "navigation_title_contact" = "Kontakt";
+"navigation_title_contacts" = "Kontakte";
 
-"profile_fingerprint_label" = "Schlüssel:";
+"profile_fingerprint_label" = "Schlüssel";
 "profile_fingerprint_info" = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
 
 "contact_unblock" = "%@ entblockieren";
@@ -193,34 +183,22 @@
 
 "contact_remove" = "%@ entfernen";
 
+"message_count_format_singular" = "%@ Nachricht";
+"message_count_format_plural"   = "%@ Nachrichten";
 
-"chat_with_contact" = "Mit %@ chatten";
+"unverified_key_title" = "Nicht verifiziert";
+"verified_key_title"   = "Verifiziert";
+"mistrusted_key_title"  = "Misstraut";
 
-"delete_credentials_alert_title" = "Hoccer XO war schon einmal installiert";
+"fingerprint_item" = "Id";
+"key_length_item" = "Schlüssellänge";
+"key_length_unit" = "%@ Bit";
 
-"delete_credentials_alert_text" = "Möchtest Du die alten Zugangsdaten und Kontakte löschen?";
+"key_view_title_you"   = "Dein Schlüssel";
+"key_view_title_other" = "Schlüssel";
 
-"delete_credentials_keep_title" = "Weiter Benutzen";
+"chat_with_contact" = "Chat";
 
-"delete_credentials_delete_title" = "Löschen";
-
-"delete_credentials_confirm" = "Zugangsdaten Löschen";
-
-"delete_credentials_saftey_question" = "Alte Zugangsdaten:";
-
-"import_credentials_alert_title"="Zugangsdaten importieren?";
-"import_credentials_alert_text"="Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
-"import_credentials_button_title"="Importieren";
-"import_credentials_not_button_title"="Neu anlegen";
-
-"export_credentials"="Zugangsdaten exportieren";
-"import_credentials"="Zugangsdaten importieren";
-"delete_credentials"="Zugangsdaten löschen";
-
-"delete_credentials_file"="Exportierte Zugangsdaten löschen";
-
-"delete_credentials_file_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
-"delete_credentials_file_confirm"="Löschen";
 
 "The exported credentials have been deleted."="Die exportierten Zugangsdaten wurden gelöscht.";
 "Credentials File Deleted"="Exportierte Zugangsdaten gelöscht";
@@ -287,33 +265,26 @@
 
 "about_prosa" = "Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden.";
 
-"invite_friends_button_title" = "Freunde einladen\nEinladungen annehmen";
-
 "message_too_long_title" = "Nachricht zu lang";
 
 "message_too_long_text" = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
 
 "ok_button_title" = "Ok";
 
+"done_button_title" = "Fertig";
+
+"enter_button_title" = "Eingeben";
+
 "Resend" = "Senden";
 
 "delete_contact" = "Kontakt löschen";
 
-"invite_code_view_controller_title" = "Einladungscode";
-
-"invite_qr_code_already_scanned_title" = "Code bereits gescannt";
-"invite_qr_code_already_scanned_message" = "Du hast diesen Code bereits gescannt";
-
+"invite_code_sheet_title" = "Einladungs Code";
+"invite_code_enter_dialog_title" = "Einladungscode eingeben";
+"invite_code_enter_placeholder" = "Einladungs Code";
+"invite_code_fetch_failed" = "Codeabruf fehlgeschlagen";
 "invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Code";
-"invite_not_a_hoccer_xo_qr_code_message" = "Dieser QR Code ist kein Hoccer XO Einladungskode";
-
-
-"Enter_an_invite_token_here" = "Gib einen Einladungskode ein:";
-"or_scan_an_invite_code" = "oder scanne einen QR-Code:";
-
-"Give_this_token_to_a_friend"="Gib diesen Code einem Freund:";
-"let_a_friend_scan_this_code" = "oder lasse diesen Code scannen:";
-
+"invite_scanner_prompt" = "Suche nach xo QR Codes...";
 
 "delete_contact_safety_question" = "Kontakt, Chat und Attachments löschen?";
 
@@ -349,9 +320,7 @@
 "http://hoccer.com/hoccer-xo-tutorial/"="http://hoccer.com/hoccer-xo-anleitung/";
 "http://hoccer.com/hoccer-xo-faq/"="http://hoccer.com/hoccer-xo-fragen-antworten/";
 
-"groups_menu_item" = "Gruppen";
-
-"groups_empty_placeholder" = "Gruppen";
+"group_segment_title" = "Gruppen";
 
 "invalid_cert_title" = "Ungültiges Server Zertifikat";
 
@@ -379,6 +348,13 @@
 "group_close_group_title" = "Möchtest Du die Gruppe wirklich für alle und immer schliessen?";
 "group_close_group_button_title" = "Schliessen";
 "group_delete_data"="Gruppendaten löschen";
+
+"group_no_admin" = "Kein Admin";
+
+"group_kick_member_confirm" = "Ausladen";
+
+"group_invite_members_title" = "Einladen";
+
 
 "group_no_other_joined_partners_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
 "group_no_other_partner_text"="Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
@@ -476,8 +452,6 @@
 
 "chat_view_message_placeholder" = "Nachricht";
 
-"back_button_title" = "Zurück";
-
 "microphone_access_denied_title"="Mikrofonzugriff ist abgeschaltet";
 "microphone_access_denied_message"="Erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff um Sprache aufzunehmen.";
 
@@ -497,17 +471,32 @@
 "Can not save video in Album"="Video konnte nicht im Album gespeichert werden";
 "Video not compatible with Album"="Videoformat ist inkompatibel mit dem Album";
 
-
 "recorder_play_button_title"   = "Anhören";
-"recorder_stop_button_title"   = "Stop";
-"recorder_record_button_title" = "Aufnahme";
 "recorder_use_button_title"    = "Benutzen";
 
-"recorder_status_recording" = "Aufnahme";
-"recorder_status_playing"   = "Wiedergabe";
-"recorder_status_stopped"   = "Stop";
-
 "location_picker_title" = "Pin verschieben";
-"location_picker_done_button_title" = "Fertig";
 
+"credentials_setup_nav_title"        = "Konto";
+"credentials_setup_found_old_text"   = "Hoccer XO war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
+"credentials_setup_found_file_text"  ="Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
+"credentials_setup_keep_btn_title"   = "Konto reaktivieren";
+"credentials_setup_import_btn_title" = "Importieren";
+"credentials_setup_create_btn_title" = "Neues Konto";
+
+
+"delete_credentials_delete_title" = "Löschen";
+"delete_credentials_confirm" = "Zugangsdaten Löschen";
+"delete_credentials_saftey_question" = "Alte Zugangsdaten:";
+
+"import_credentials_alert_title"="Zugangsdaten importieren?";
+"import_credentials_not_button_title"="Neu anlegen";
+
+"export_credentials"="Zugangsdaten exportieren";
+"import_credentials"="Zugangsdaten importieren";
+"delete_credentials"="Zugangsdaten löschen";
+
+"delete_credentials_file"="Exportierte Daten löschen";
+
+"delete_credentials_file_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
+"delete_credentials_file_confirm"="Löschen";
 

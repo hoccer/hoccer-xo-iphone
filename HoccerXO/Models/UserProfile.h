@@ -8,23 +8,32 @@
 
 #import <Foundation/Foundation.h>
 
+#import "HXOClientProtocol.h"
+
+
 // NOT a core data model, but a model nonetheless. 
 
-@interface UserProfile : NSObject
+typedef void(^HXOKeypairRenewalCompletion)();
 
-@property (nonatomic,strong) UIImage    * avatarImage;
-@property (nonatomic,readonly) NSData   * avatar;
-@property (nonatomic,strong) NSString   * avatarURL;
-@property (nonatomic,strong) NSString   * avatarUploadURL;
+@interface UserProfile : NSObject <HXOClientProtocol>
 
-@property (nonatomic,strong) NSString   * nickName;
-@property (nonatomic,strong) NSString   * status;
+@property (nonatomic,strong)   UIImage  * avatarImage;
+@property (nonatomic,strong)   NSData   * avatar;
+@property (nonatomic,strong)   NSString * avatarURL;
+@property (nonatomic,strong)   NSString * avatarUploadURL;
+
+@property (nonatomic,strong)   NSString * nickName;
+@property (nonatomic,strong)   NSString * status;
+
+@property (nonatomic, strong) NSData   * publicKey;       // public key of this contact
+@property (nonatomic, strong) NSString * publicKeyId;     // id of public key
+@property (nonatomic, strong) NSData   * publicKeyIdData; // public key of this contact
+@property (nonatomic, strong) NSString * publicKeyString; // b64-string
 
 @property (nonatomic,readonly) NSString * groupMembershipList;
 
-
 // credentials - stored in keychain
-@property (nonatomic,readonly) NSString * clientId;
+@property (nonatomic,strong)   NSString * clientId;
 @property (nonatomic,readonly) NSString * password;
 @property (nonatomic,readonly) NSString * salt;
 
@@ -50,5 +59,8 @@
 
 + (UserProfile*) sharedProfile;
 +(NSURL*)getKeyFileURLWithKeyTypeName:(NSString*)keyTypeName forUser:(NSString*)userName withKeyId:(NSString*)keyId;
+
+- (void) renewKeypair;
+- (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion;
 
 @end

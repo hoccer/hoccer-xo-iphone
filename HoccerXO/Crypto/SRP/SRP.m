@@ -20,12 +20,14 @@ static const unsigned kPrivateValueBits = 256; // RFC5054: SHOULD be at least 25
 @implementation SRP
 
 + (void) initialize {
-    NSMutableData* buffer = [NSMutableData dataWithLength: kSeedBufferSize];
-    int err = SecRandomCopyBytes(kSecRandomDefault, buffer.length, buffer.mutableBytes);
-    if (err != 0) {
-        NSLog(@"RandomBytes; RNG error = %d", errno);
+    if (self == [SRP class]) {
+        NSMutableData* buffer = [NSMutableData dataWithLength: kSeedBufferSize];
+        int err = SecRandomCopyBytes(kSecRandomDefault, buffer.length, buffer.mutableBytes);
+        if (err != 0) {
+            NSLog(@"RandomBytes; RNG error = %d", errno);
+        }
+        RAND_seed( buffer.bytes, (int)buffer.length);
     }
-    RAND_seed( buffer.bytes, (int)buffer.length);
 }
 
 - (id) initWithDigest: (id<SRPDigest>) digest N: (BigInteger*) N g: (BigInteger*) g {
