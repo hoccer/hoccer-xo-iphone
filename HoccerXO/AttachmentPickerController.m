@@ -78,12 +78,12 @@
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Choose Photo/Video", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"attachment_src_photo_album_btn_title", nil);
             item.type = AttachmentPickerTypePhotoVideoFromLibrary;
             [_supportedItems addObject: item];
         } else if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoFromLibrary]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Choose Photo", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"attachment_src_photo_album_btn_title", nil);
             item.type = AttachmentPickerTypePhotoFromLibrary;
             [_supportedItems addObject: item];
         }
@@ -91,37 +91,37 @@
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromCamera]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Take Photo/Video", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"attachment_src_camera_btn_title", nil);
             item.type = AttachmentPickerTypePhotoVideoFromCamera;
             [_supportedItems addObject: item];
         } else if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoFromCamera]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Take Photo", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"attachment_src_camera_btn_title",nil);
             item.type = AttachmentPickerTypePhotoFromCamera;
             [_supportedItems addObject: item];
         }
     }
     if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeMediaFromLibrary]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Choose Audio", @"Action Sheet Button Ttitle");
+        item.localizedButtonTitle = NSLocalizedString(@"attachment_src_music_library_btn_title", nil);
         item.type = AttachmentPickerTypeMediaFromLibrary;
         [_supportedItems addObject: item];
     }
     if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioRecorder]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Record Audio", @"Action Sheet Button Ttitle");
+        item.localizedButtonTitle = NSLocalizedString(@"attachment_src_recorder_btn_title", nil);
         item.type = AttachmentPickerTypeAudioRecorder;
         [_supportedItems addObject: item];
     }
     if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeAdressBookVcard]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Choose Adressbook Item", @"Action Sheet Button Ttitle");
+        item.localizedButtonTitle = NSLocalizedString(@"attachment_src_adressbook_btn_title", nil);
         item.type = AttachmentPickerTypeAdressBookVcard;
         [_supportedItems addObject: item];
     }
     if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeGeoLocation]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-        item.localizedButtonTitle = NSLocalizedString(@"Pick a Location", nil);
+        item.localizedButtonTitle = NSLocalizedString(@"attachment_src_map_btn_title", nil);
         item.type = AttachmentPickerTypeGeoLocation;
         [_supportedItems addObject: item];
     }
@@ -133,7 +133,7 @@
         if ([mediaType isEqualToString:@"image"] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypeImageAttachmentFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Paste Image Attachment", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"Paste Image Attachment", nil);
             item.type = AttachmentPickerTypeImageAttachmentFromPasteboard;
             [_supportedItems addObject: item];
             imageAttachmentinPasteboard = YES;
@@ -141,28 +141,28 @@
         if ([mediaType isEqualToString:@"video"] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypeVideoAttachmentFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Paste Video Attachment", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"Paste Video Attachment", nil);
             item.type = AttachmentPickerTypeVideoAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
         if ([mediaType isEqualToString:@"audio"] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Paste Audio Attachment", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"Paste Audio Attachment", nil);
             item.type = AttachmentPickerTypeAudioAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
         if ([mediaType isEqualToString:@"vcard"] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Paste vcard Attachment", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"Paste vcard Attachment", nil);
             item.type = AttachmentPickerTypeVcardAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
         if ([mediaType isEqualToString:@"geolocation"] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioAttachmentFromPasteboard]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"Paste geolocation Attachment", @"Action Sheet Button Ttitle");
+            item.localizedButtonTitle = NSLocalizedString(@"Paste geolocation Attachment", nil);
             item.type = AttachmentPickerTypeGeoLocationAttachmentFromPasteboard;
             [_supportedItems addObject: item];
         }
@@ -264,7 +264,7 @@
     if ([self.delegate respondsToSelector:@selector(attachmentPickerActionSheetTitle)]) {
         title = [self.delegate attachmentPickerActionSheetTitle];
     } else {
-        title = NSLocalizedString(@"Add Attachement", @"Attachment Actionsheet Title");
+        title = NSLocalizedString(@"attachment_add_sheet_title", nil);
     }
     UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: title
                                                                  delegate: self
@@ -283,7 +283,7 @@
     if ([self.delegate respondsToSelector:@selector(appendAdditionalActionButtons:)]) {
         [self.delegate appendAdditionalActionButtons: attachmentSheet];
     }
-    attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")];
+    attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"Cancel", nil)];
     
     [attachmentSheet showInView: view];
 }

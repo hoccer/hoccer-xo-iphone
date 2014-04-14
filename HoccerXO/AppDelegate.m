@@ -1053,8 +1053,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         // title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
         // message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
     } else {
-        title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
-        message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
+        title = NSLocalizedString(@"invite_error_alert_title", @"Invite Alert Title");
+        message = NSLocalizedString(@"invite_error_rejected_by_server", @"Invite Alert Message");
     }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message

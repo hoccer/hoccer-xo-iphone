@@ -269,7 +269,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (NSString*) attachmentPickerActionSheetTitle {
-    return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
+    return NSLocalizedString(@"avatar_option_sheet_title", "Profile View Avatar Chooser Action Sheet Title");
 }
 
 - (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {

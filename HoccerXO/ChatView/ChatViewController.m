@@ -942,13 +942,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) showAttachmentOptions {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", @"Actionsheet Title")
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"attachment_option_sheet_title", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
+                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                           destructiveButtonTitle: nil
-                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", @"Actionsheet Button Title"),
-                                                                  NSLocalizedString(@"Choose Attachment", @"Actionsheet Button Title"),
-                                                                  NSLocalizedString(@"View Attachment", @"Actionsheet Button Title"),
+                                               otherButtonTitles: NSLocalizedString(@"attachment_option_remove_btn_title", nil),
+                                                                  NSLocalizedString(@"attachment_option_choose_new_btn_title", nil),
+                                                                  NSLocalizedString(@"attachment_option_view_btn_title", nil),
                                                                   nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView: self.view];
@@ -961,7 +961,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
     switch (buttonIndex) {
         case 0:
-            // Remove Attachment pressed
+            // attachment_option_remove_btn_title pressed
             [self trashCurrentAttachment];
             break;
         case 1:

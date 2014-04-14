@@ -1,133 +1,62 @@
 "language_code"="en";
 
-/* Attachment Actionsheet Title */
-"Add Attachement" = "Add Attachement from:";
-
-/* Actionsheet Title */
-"Attachment" = "Attachment";
-
-/* Actionsheet Button Title */
 "Cancel" = "Cancel";
+"search" = "search";
+"Send" = "Send";
+"Copy" = "Copy";
 
-/* Action Sheet Button Ttitle */
-"Choose Photo/Video" = "Album";
-
-/* Action Sheet Button Ttitle */
-"Take Photo/Video" = "Camera";
-
-/* Action Sheet Button Ttitle */
-"Take Photo" = "Camera";
-
-/* Action Sheet Button Ttitle */
-"Choose Photo" = "Album";
+"Chats" = "Chats";
+"Contacts" = "Contacts";
+"Profile" = "Profile";
+"contacts_menu_item" = "Contacts";
+"Settings" = "Settings";
 
 
-/* Action Sheet Button Ttitle */
-"Choose Audio" = "Music Library";
 
-/* Action Sheet Button Ttitle */
-"Record Audio" = "Audio Recorder";
+"attachment_add_sheet_title"             = "Add Attachement from:";
+"attachment_src_photo_album_btn_title"   = "Album";
+"attachment_src_camera_btn_title"        = "Camera";
+"attachment_src_music_library_btn_title" = "Music Library";
+"attachment_src_recorder_btn_title"      = "Audio Recorder";
+"attachment_src_adressbook_btn_title"    = "Adressbook";
+"attachment_src_map_btn_title"           = "Map";
+
+"attachment_option_sheet_title" = "Attachment";
+"attachment_option_remove_btn_title" = "Remove Attachment";
+"attachment_option_choose_new_btn_title" = "Choose New Attachment";
+"attachment_option_view_btn_title" = "View Attachment";
 
 
-/* Action Sheet Button Ttitle */
-"Choose Adressbook Item" = "Adressbook";
-
-/* Action Sheet Button Ttitle */
-"Pick a Location"="Map";
-
-
-/* Action Sheet Button Ttitle */
 "Paste Image Attachment" = "Pasteboard (Image)";
-
-/* Action Sheet Button Ttitle */
 "Paste Video Attachment" = "Pasteboard (Video)";
-
-/* Action Sheet Button Ttitle */
 "Paste Audio Attachment" = "Pasteboard (Audio)";
-
-/* Action Sheet Button Ttitle */
 "Paste vcard Attachment" = "Pasteboard (vcard)";
-
-/* Action Sheet Button Ttitle */
 "Paste geolocation Attachment" = "Pasteboard (Location)";
-
-/* Action Sheet Button Ttitle */
 "Paste Image" = "Pasteboard (Image)";
-
 "Paste data Attachment"="Pasteboard (%@)";
-
 "Opened data Attachment %@"="External (%@)";
 
 
-/* Profile View Avatar Chooser Action Sheet Title */
-"Pick an Avatar"="Get Avatar Image from:";
+"avatar_option_sheet_title"="Get Avatar Image from:";
 
+"invite_mail_body" = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
 
-/* Navigation Menu Item */
-"Chats" = "Chats";
+"invite_mail_subject" = "Hoccer XO Invitation";
 
-/* Contacts Navigation Bar Title */
-"Contacts" = "Contacts";
+"invite_sms_text" = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
 
-/* Invite Code Copy/Paste Button */
-"Copy" = "Copy";
+"invite_option_sheet_title" = "Invite Friends";
 
-/* Mail Invitation Body */
-"invitation_mail_body" = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
+"invite_option_sms_btn_title" = "Invite via SMS";
 
-/* Mail Invitation Subject */
-"invitation_mail_subject" = "Hoccer XO Invitation";
-
-/* SMS Invitation Body */
-"invitation_sms_text" = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
-
-/* Actionsheet Title */
-"Invite by" = "Invite Friends";
-
-/* Invite Actionsheet Button Title */
-"SMS" = "Invite via SMS";
-
-/* Invite Actionsheet Button Title */
-"Mail" = "Invite via E-Mail";
+"invite_option_mail_btn_title" = "Invite via E-Mail";
 
 "invite_by_code_button_title" = "Invite by Code";
 
-/* Invite Alert Title */
-"Invite failed" = "Invite failed";
+"invite_error_alert_title" = "Invite failed";
 
-/* Navigation Menu Item */
-"Profile" = "Profile";
-
-"contacts_menu_item" = "Contacts";
-
-/* Actionsheet Button Title */
-"Remove Attachment" = "Remove Attachment";
-
-/* Actionsheet Button Title */
-"Choose Attachment" = "Choose New Attachment";
-
-/* Contact List Search Placeholder */
-"search" = "search";
-
-/* Chat Send Button Title */
-"Send" = "Send";
-
-/* Settings View Title */
-"Settings" = "Settings";
-
-/* Invite Alert Message */
-/* "The server accepted your code" = "The code has been accepted";*/
-
-/* Invite Alert Message */
-"The server rejected your invite code" = "The code has been rejected";
-
-/* Actionsheet Button Title */
-"View Attachment" = "View Attachment";
-
-/* APN new messages */
+"invite_error_rejected_by_server" = "The code has been rejected";
 "apn_new_messages" = "You have %@ new messages!";
-
-/* APN one new message */
 "apn_one_new_message" = "You have a new message!";
 
 "profile_name_label" = "Name:";

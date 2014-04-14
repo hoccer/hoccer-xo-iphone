@@ -413,7 +413,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         }
     };
 
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"Invite by", @"Actionsheet Title")
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"invite_option_sheet_title", @"Actionsheet Title")
                                         completionBlock: completion
                                       cancelButtonTitle: nil
                                  destructiveButtonTitle: nil
@@ -421,11 +421,11 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 
     if ([MFMessageComposeViewController canSendText]) {
-        [sheet addButtonWithTitle: NSLocalizedString(@"SMS",@"Invite Actionsheet Button Title")];
+        [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_sms_btn_title",@"Invite Actionsheet Button Title")];
         [actions addObject: ^() { [self inviteBySMS]; }];
     }
     if ([MFMailComposeViewController canSendMail]) {
-        [sheet addButtonWithTitle: NSLocalizedString(@"Mail",@"Invite Actionsheet Button Title")];
+        [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_mail_btn_title",@"Invite Actionsheet Button Title")];
         [actions addObject: ^() { [self inviteByMail]; }];
     }
     [sheet addButtonWithTitle: NSLocalizedString(@"invite_by_code_button_title",@"Invite Actionsheet Button Title")];
@@ -444,9 +444,9 @@ static const CGFloat kMagicSearchBarHeight = 44;
         MFMailComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).mailPicker = [[MFMailComposeViewController alloc] init];
         picker.mailComposeDelegate = self;
 
-        [picker setSubject: NSLocalizedString(@"invitation_mail_subject", @"Mail Invitation Subject")];
+        [picker setSubject: NSLocalizedString(@"invite_mail_subject", @"Mail Invitation Subject")];
 
-        NSString * body = NSLocalizedString(@"invitation_mail_body", @"Mail Invitation Body");
+        NSString * body = NSLocalizedString(@"invite_mail_body", @"Mail Invitation Body");
         NSString * inviteLink = [self inviteURL: token];
         NSString * appStoreLink = [self appStoreURL];
         //NSString * androidLink = [self androidURL];
@@ -465,7 +465,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         MFMessageComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).smsPicker = [[MFMessageComposeViewController alloc] init];
         picker.messageComposeDelegate = self;
 
-        NSString * smsText = NSLocalizedString(@"invitation_sms_text", @"SMS Invitation Body");
+        NSString * smsText = NSLocalizedString(@"invite_sms_text", @"SMS Invitation Body");
         picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
 
         [self presentViewController: picker animated: YES completion: nil];
