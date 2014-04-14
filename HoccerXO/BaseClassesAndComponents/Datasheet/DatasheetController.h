@@ -163,7 +163,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic, readonly) BOOL          isEditing;
 @property (nonatomic, readonly) BOOL          allItemsValid;
 
-@property (nonatomic, weak)     id<DatasheetControllerDelegate> delegate;
+@property (nonatomic, weak)     UIViewController<DatasheetControllerDelegate> * delegate;
 
 - (BOOL) isItemVisible: (DatasheetItem*) item;
 - (BOOL) isItemEnabled: (DatasheetItem*) item;
