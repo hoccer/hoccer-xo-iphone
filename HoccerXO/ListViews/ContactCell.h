@@ -25,6 +25,7 @@
 
 - (CGFloat) avatarSize;
 - (CGFloat) verticalPadding;
+- (CGFloat) labelSpacing;
 
 
 @end

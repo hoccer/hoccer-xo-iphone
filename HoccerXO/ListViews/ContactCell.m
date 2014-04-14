@@ -110,12 +110,16 @@
     UIView * subtitle = self.subtitleLabel;
     NSDictionary * views = NSDictionaryOfVariableBindings(title, subtitle);
     CGFloat y = [self verticalPadding] - (self.titleLabel.font.ascender - self.titleLabel.font.capHeight);
-    NSString * format = [NSString stringWithFormat: @"V:|-%f-[title]-%f-[subtitle]-(>=%f)-|", y, 0.5 * kHXOGridSpacing, [self verticalPadding]];
+    NSString * format = [NSString stringWithFormat: @"V:|-%f-[title]-%f-[subtitle]-(>=%f)-|", y, [self labelSpacing], [self verticalPadding]];
     self.verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                        options: 0 metrics: nil views: views];
     [self.contentView addConstraints: self.verticalConstraints];
     
     [self setNeedsLayout];
+}
+
+- (CGFloat) labelSpacing {
+    return 0.25 * kHXOGridSpacing;
 }
 
 - (void) layoutSubviews {

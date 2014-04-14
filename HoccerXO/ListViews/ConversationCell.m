@@ -43,6 +43,9 @@
     return kHXOCellPadding;
 }
 
+- (CGFloat) labelSpacing {
+    return 0.5 * kHXOGridSpacing;
+}
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
     self.dateLabel.font = [[HXOUI theme] smallBoldTextFont];

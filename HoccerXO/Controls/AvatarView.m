@@ -50,13 +50,6 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
 @end
 
 
-@interface AvatarMaskLayerDelegate : NSObject
-
-@property (nonatomic, strong) CALayer * avatarLayer;
-@property (nonatomic, strong) CALayer * badgeLayer;
-
-@end
-
 @implementation AvatarView
 
 - (id) initWithFrame:(CGRect)frame {
