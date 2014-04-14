@@ -2316,11 +2316,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) setGroupMemberKeyV2:(GroupMembership *)myMember {
     if (myMember.group.hasGroupKey) {
-        if (!myMember.hasLatestGroupKey) {
-            if (![myMember copyKeyFromGroup]) {
-                NSLog(@"setGroupMemberKeyV2: could not copy key from group");
-            }
-        }
+//        if (!myMember.hasLatestGroupKey) {
+//            if (![myMember copyKeyFromGroup]) {
+//                NSLog(@"setGroupMemberKeyV2: could not copy key from group");
+//            }
+//        }
 
         myMember.keySettingInProgress = YES;
         [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
