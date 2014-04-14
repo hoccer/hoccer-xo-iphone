@@ -34,6 +34,7 @@
 - (void) commonInit {
 
     self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[disclosure_arrow alloc] init]];
+    self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentCenter;
 
     self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
     //self.separatorInset = UIEdgeInsetsMake(0, kHXOCellPadding + [self avatarSize] + kHXOCellPadding, 0, 0);
@@ -86,7 +87,7 @@
 }
 
 - (CGFloat) verticalPadding {
-    return kHXOGridSpacing;
+    return 1.5 * kHXOGridSpacing;
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
@@ -119,7 +120,7 @@
 }
 
 - (CGFloat) labelSpacing {
-    return 0.25 * kHXOGridSpacing;
+    return 0;//0.25 * kHXOGridSpacing;
 }
 
 - (void) layoutSubviews {

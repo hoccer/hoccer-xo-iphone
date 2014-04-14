@@ -173,11 +173,11 @@ static HXOUI * _currentTheme;
                , UIContentSizeCategoryExtraExtraLarge:                   @(14)
                , UIContentSizeCategoryExtraExtraExtraLarge:              @(15)
 
-               , UIContentSizeCategoryAccessibilityMedium:               @(12)
-               , UIContentSizeCategoryAccessibilityLarge:                @(13)
-               , UIContentSizeCategoryAccessibilityExtraLarge:           @(14)
-               , UIContentSizeCategoryAccessibilityExtraExtraLarge:      @(16)
-               , UIContentSizeCategoryAccessibilityExtraExtraExtraLarge: @(18)
+               , UIContentSizeCategoryAccessibilityMedium:               @(16)
+               , UIContentSizeCategoryAccessibilityLarge:                @(17)
+               , UIContentSizeCategoryAccessibilityExtraLarge:           @(18)
+               , UIContentSizeCategoryAccessibilityExtraExtraLarge:      @(19)
+               , UIContentSizeCategoryAccessibilityExtraExtraExtraLarge: @(20)
                };
 }
 
@@ -190,11 +190,11 @@ static HXOUI * _currentTheme;
                , UIContentSizeCategoryExtraExtraLarge:                   @(13)
                , UIContentSizeCategoryExtraExtraExtraLarge:              @(14)
 
-               , UIContentSizeCategoryAccessibilityMedium:               @(12)
-               , UIContentSizeCategoryAccessibilityLarge:                @(13)
-               , UIContentSizeCategoryAccessibilityExtraLarge:           @(14)
-               , UIContentSizeCategoryAccessibilityExtraExtraLarge:      @(16)
-               , UIContentSizeCategoryAccessibilityExtraExtraExtraLarge: @(18)
+               , UIContentSizeCategoryAccessibilityMedium:               @(15)
+               , UIContentSizeCategoryAccessibilityLarge:                @(16)
+               , UIContentSizeCategoryAccessibilityExtraLarge:           @(17)
+               , UIContentSizeCategoryAccessibilityExtraExtraLarge:      @(18)
+               , UIContentSizeCategoryAccessibilityExtraExtraExtraLarge: @(19)
                };
 }
 

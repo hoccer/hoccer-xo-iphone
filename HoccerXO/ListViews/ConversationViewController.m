@@ -22,14 +22,6 @@
 #import "HXOUI.h"
 #import "AvatarView.h"
 
-//#define HIDE_SEPARATORS
-
-@interface ConversationViewController ()
-
-//@property (nonatomic,readonly) ConversationCell * conversationCell;
-
-@end
-
 @implementation ConversationViewController
 
 - (void)awakeFromNib {

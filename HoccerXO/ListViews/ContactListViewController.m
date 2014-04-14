@@ -111,6 +111,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     [(id<ContactCell>)self.cellPrototype preferredContentSizeChanged: notification];
     self.tableView.rowHeight = [self calculateRowHeight];
+    self.tableView.separatorInset = self.cellPrototype.separatorInset;
     [self.tableView reloadData];
 }
 
