@@ -43,6 +43,8 @@
     if (somethingWithCredentials) {
         DatasheetViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier: @"cleanup_credentials"];
         [self setViewControllers: @[vc]];
+    } else {
+        ((DatasheetViewController*)self.viewControllers[0]).inspectedObject = [UserProfile sharedProfile];
     }
 }
 
@@ -169,7 +171,7 @@
 
 - (void) didUpdateInspectedObject {
     [super didUpdateInspectedObject];
-    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: [UserProfile sharedProfile].isRegistered];
+    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: ! [UserProfile sharedProfile].isRegistered];
     [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [((UIViewController*)self.delegate).navigationController dismissViewControllerAnimated: YES completion: nil];
 }

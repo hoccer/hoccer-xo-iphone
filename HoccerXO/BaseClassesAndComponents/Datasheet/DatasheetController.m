@@ -453,7 +453,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return allValid;
 }
 
-- (void) setDelegate:(id<DatasheetControllerDelegate>)delegate {
+- (void) setDelegate:(UIViewController<DatasheetControllerDelegate>*)delegate {
 //    [self inspectedObjectWillChange];
     _delegate = delegate;
 //    [self inspectedObjectDidChange];
