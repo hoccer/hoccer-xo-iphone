@@ -56,9 +56,11 @@ static HXOEnvironment *instance;
 - (void)deactivateLocation{
     if (LOCATION_DEBUG) {NSLog(@"Environment: stopUpdatingLocation");}
     [_locationManager stopUpdatingLocation];
+    _lastLocationUpdate = nil;
 }
 - (void)activateLocation{
     if (LOCATION_DEBUG) {NSLog(@"Environment: startUpdatingLocation");}
+    _lastLocationUpdate = nil;
     [_locationManager startUpdatingLocation];
 }
 
