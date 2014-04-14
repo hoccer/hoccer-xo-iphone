@@ -9,9 +9,6 @@
 #import "ConversationCell.h"
 
 #import <QuartzCore/QuartzCore.h>
-#import "VectorArtView.h"
-#import "HXOUI.h"
-#import "disclosure_arrow.h"
 #import "HXOUI.h"
 
 @implementation ConversationCell
@@ -33,7 +30,6 @@
     
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.titleLabel attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
 
-    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[disclosure_arrow alloc] init]];
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentTop;
 
     self.subtitleLabel.numberOfLines = 2;
@@ -42,11 +38,17 @@
 
 }
 
+
+- (CGFloat) verticalPadding {
+    return kHXOCellPadding;
+}
+
+
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
     self.dateLabel.font = [[HXOUI theme] smallBoldTextFont];
     NSMutableDictionary * v = [NSMutableDictionary dictionaryWithDictionary: views];
     v[@"date"] = self.dateLabel;
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image(%f)]-%f-[title]->=%f-[date]|", kHXOCellPadding, kHXOListAvatarSize, kHXOCellPadding, kHXOCellPadding];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[image]-%f-[title]->=%f-[date]|", kHXOCellPadding/*, kHXOListAvatarSize*/, kHXOCellPadding, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: v]];
     

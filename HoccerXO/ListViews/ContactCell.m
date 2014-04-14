@@ -12,6 +12,8 @@
 #import "HXOUI.h"
 #import "AvatarView.h"
 #import "avatar_contact.h"
+#import "VectorArtView.h"
+#import "disclosure_arrow.h"
 
 @interface ContactCell ()
 
@@ -30,8 +32,11 @@
 }
 
 - (void) commonInit {
+
+    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[disclosure_arrow alloc] init]];
+
     self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
-    self.separatorInset = UIEdgeInsetsMake(0, kHXOCellPadding + [self avatarSize] + kHXOCellPadding, 0, 0);
+    //self.separatorInset = UIEdgeInsetsMake(0, kHXOCellPadding + [self avatarSize] + kHXOCellPadding, 0, 0);
 
     _titleLabel = [[UILabel alloc] initWithFrame: CGRectZero];
     _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -64,9 +69,12 @@
     
     [self addFirstRowHorizontalConstraints: views];
     
-    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image]-(>=%f)-|", [self verticalPadding], [self verticalPadding]];
+    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(>=10)]-%f-|", [self verticalPadding], [self verticalPadding]];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
+
+    [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.avatar attribute: NSLayoutAttributeWidth relatedBy: NSLayoutRelationEqual toItem: self.avatar attribute: NSLayoutAttributeHeight multiplier: 1 constant: 0]];
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     
@@ -74,11 +82,11 @@
 }
 
 - (CGFloat) avatarSize {
-    return kHXOListAvatarSize;
+    return 10;
 }
 
 - (CGFloat) verticalPadding {
-    return kHXOCellPadding;
+    return kHXOGridSpacing;
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
@@ -108,6 +116,13 @@
     [self.contentView addConstraints: self.verticalConstraints];
     
     [self setNeedsLayout];
+}
+
+- (void) layoutSubviews {
+    [super layoutSubviews];
+    UIEdgeInsets insets = self.separatorInset;
+    insets.left = self.titleLabel.frame.origin.x;
+    self.separatorInset = insets;
 }
 
 - (void) dealloc {

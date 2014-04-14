@@ -30,8 +30,8 @@ static const CGFloat kBadgeBorderWidthFactor =  1.0 / 96;
 static const CGFloat kBadgeXAnchorOffset = 0.475;
 static const CGFloat kBadgeXAnchorFactor = 0.003125;
 
-static const CGFloat kLedSizeOffset = 7.0 / 12;
-static const CGFloat kLedSizeFactor = 1.0 / 96;
+static const CGFloat kLedSizeOffset = 1;
+static const CGFloat kLedSizeFactor = 0.013;
 
 static const CGFloat kLedBorderWidthOffset = 7.0 / 12;
 static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
@@ -156,13 +156,19 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
         CGFloat size = MIN(layer.bounds.size.width, layer.bounds.size.height);
         CGFloat scale = size / self.avatarLayer.frame.size.width;
         self.avatarLayer.transform = CATransform3DScale(self.avatarLayer.transform, scale, scale, scale);
+        //self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
 
         self.badgeTextLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.frame), CGRectGetMinY(self.avatarLayer.frame));
         self.badgeBackgroundLayer.position = self.badgeTextLayer.position;
 
         CGFloat t = 0.5 * self.avatarLayer.frame.size.height;
         CGFloat ledX = t - (t / sqrt(2));
+
         self.ledLayer.position = CGPointMake(roundf(ledX) + .5, roundf(self.avatarLayer.frame.size.height - ledX) + .5);
+        //self.ledLayer.bounds = CGRectMake(0, 0, [self ledSize], [self ledSize]);
+
+        [self updateBadge: self.badgeText];
+
     }
 }
 
@@ -198,33 +204,38 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
 }
 
 - (CGFloat) blockedSignPadding {
-    return ceilf(kHXOGridSpacing * (kBlockedSignPaddingFactor * self.avatarLayer.bounds.size.width + kBlockedSignPaddingOffset));
+    CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    return ceilf(kHXOGridSpacing * (kBlockedSignPaddingFactor * t + kBlockedSignPaddingOffset));
 }
 
 - (CGFloat) badgeFontSize {
-    return  kBadgeFontSizeFactor * self.avatarLayer.bounds.size.width + kBadgeFontSizeOffset;
+    CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    return  kBadgeFontSizeFactor * t + kBadgeFontSizeOffset;
 }
 
 - (CGFloat) badgeXAnchor {
-    return kBadgeXAnchorFactor * self.avatarLayer.bounds.size.width + kBadgeXAnchorOffset;
+    CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    return kBadgeXAnchorFactor * t + kBadgeXAnchorOffset;
 }
 - (CGFloat) badgePadding {
-    return kBadgePaddingFactor * self.avatarLayer.bounds.size.width + kBadgePaddingOffset;
+    CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    return kBadgePaddingFactor * t + kBadgePaddingOffset;
 }
 
 - (CGFloat) badgeBorderWidth {
-    return kBadgeBorderWidthFactor * self.avatarLayer.bounds.size.width + kBadgeBorderWidthOffset;
+    CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    return kBadgeBorderWidthFactor * t + kBadgeBorderWidthOffset;
 }
 
 - (CGFloat) ledSize {
-    return roundf(kHXOGridSpacing * (kLedSizeFactor * self.avatarLayer.bounds.size.width + kLedSizeOffset));
+    CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    return roundf(kHXOGridSpacing * (kLedSizeFactor * t + kLedSizeOffset));
 }
 
 - (CGFloat) ledBorderWidth {
-    return kLedBorderWidthFactor * self.avatarLayer.bounds.size.width + kLedBorderWidthOffset;
+    CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    return kLedBorderWidthFactor * t + kLedBorderWidthOffset;
 }
-
-
 
 - (void) updateBadge: (NSString*) text {
     if (text) {
