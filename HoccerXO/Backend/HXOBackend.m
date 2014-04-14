@@ -2478,7 +2478,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership(2): group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey invalid=%d, memberKeyId=%@, hasGroupKey=%d\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress, [HXOBackend isInvalid:myMember.cipheredGroupKey],myMember.memberKeyId, group.hasGroupKey);}
     // now let's check if we need to update the key for our own group membership
-    if (![[HXOBackend ownPublicKeyIdString] isEqualToString:myMember.memberKeyId] ||
+    if (![[[UserProfile sharedProfile] publicKeyId] isEqualToString:myMember.memberKeyId] ||
         ![group.sharedKeyId isEqualToData:myMember.sharedKeyId] /*||
         ![group.groupKey isEqualToData:myMember.distributedGroupKey]*/)
     {
@@ -2640,7 +2640,7 @@ static NSTimer * _stateNotificationDelayTimer;
             // handle self contact update
             [clientIds addObject:[UserProfile sharedProfile].clientId];
             
-            NSString * myPublicKeyIdString = [HXOBackend ownPublicKeyIdString];
+            NSString * myPublicKeyIdString = [[UserProfile sharedProfile] publicKeyId];
             [publicKeyIds addObject:myPublicKeyIdString];
             
             CCRSA * rsa = [CCRSA sharedInstance];

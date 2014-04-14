@@ -11,7 +11,6 @@
 #import "HXOBackend.h"
 #import "Contact.h"
 #import "CCRSA.h"
-#import "EC.h"
 #import "HXOUI.h"
 #import "UserProfile.h"
 

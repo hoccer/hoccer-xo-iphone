@@ -20,7 +20,6 @@
 #import "SRPClient.h"
 #import "SRPVerifierGenerator.h"
 #import "CCRSA.h"
-#import "EC.h"
 
 static UserProfile * profileInstance;
 
@@ -332,20 +331,8 @@ static const NSUInteger kHXOPasswordLength    = 23;
     return [HXOBackend calcKeyId:myKeyBits];
 }
 
-- (NSData *) publicKeyRSA {
-    return[[CCRSA sharedInstance] getPublicKeyBits];
-}
-
-- (NSData *) publicKeyEC {
-    return[[EC sharedInstance] getPublicKeyBits];
-}
-
 - (NSData *) publicKey {
-    if ([HXOBackend use_elliptic_curves]) {
-        return [self publicKeyEC];
-    } else {
-        return [self publicKeyRSA];
-    }
+    return[[CCRSA sharedInstance] getPublicKeyBits];
 }
 
 - (void) renewKeypair {
@@ -355,31 +342,17 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 - (void) renewKeypairInternal {
-    if ([HXOBackend use_elliptic_curves]) {
-        [[EC sharedInstance] cleanKeyChain];
-    } else {
-        [[CCRSA sharedInstance] cloneKeyPairKeys];
-        [[CCRSA sharedInstance] cleanKeyPairKeys];
-    }
+    [[CCRSA sharedInstance] cloneKeyPairKeys];
+    [[CCRSA sharedInstance] cleanKeyPairKeys];
 }
 
 - (void) willChangePublicKey {
     [self willChangeValueForKey: @"publicKey"];
     [self willChangeValueForKey: @"publicKeyId"];
     [self willChangeValueForKey: @"publicKeyData"];
-    if ([HXOBackend use_elliptic_curves]) {
-        [self willChangeValueForKey: @"publicKeyEC"];
-    } else {
-        [self willChangeValueForKey: @"publicKeyRSA"];
-    }
 }
 
 - (void) didChangePublicKey {
-    if ([HXOBackend use_elliptic_curves]) {
-        [self didChangeValueForKey: @"publicKeyEC"];
-    } else {
-        [self didChangeValueForKey: @"publicKeyRSA"];
-    }
     [self didChangeValueForKey: @"publicKeyData"];
     [self didChangeValueForKey: @"publicKeyId"];
     [self didChangeValueForKey: @"publicKey"];
