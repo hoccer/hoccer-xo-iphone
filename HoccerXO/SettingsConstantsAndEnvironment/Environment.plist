@@ -27,7 +27,7 @@
 		<key>other</key>
 		<string>wss://217.115.15.73</string>
 		<key>development</key>
-		<string>wss://server.talk.hoccer.de</string>
+		<string>ws://10.1.8.51:8080/</string>
 		<key>production</key>
 		<string>wss://server.talk.hoccer.de</string>
 	</dict>

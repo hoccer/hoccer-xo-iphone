@@ -274,7 +274,7 @@ typedef enum ActionSheetTags {
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    NSLog(@"observeValueForKeyPath: keyPath %@ ofObject %@",keyPath, object);
+    // NSLog(@"observeValueForKeyPath: keyPath %@ ofObject %@",keyPath, object);
     if ([object isKindOfClass: [ProfileItem class]] && [keyPath isEqualToString: @"valid"]) {
             [self validateItems];
     } else if ([keyPath isEqualToString: @"relationshipState"]) {

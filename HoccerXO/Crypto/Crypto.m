@@ -73,6 +73,16 @@ NSData * randomBytes(size_t count) {
 }
 
 + (NSData *) calcSymmetricKeyId:(NSData *)myKeyBits withSalt:(NSData *)salt{
+    if (myKeyBits == nil) {
+        NSLog(@"ERROR: calculating key id from nil key");
+        NSLog(@"%@",[NSThread callStackSymbols]);
+        return nil;
+    }
+    if (salt == nil) {
+        NSLog(@"ERROR: calculating key id from nil salt");
+        NSLog(@"%@",[NSThread callStackSymbols]);
+        return nil;
+    }
     const int rounds = 10000;
     
     NSMutableData* keyIdData = [NSMutableData dataWithLength:32];

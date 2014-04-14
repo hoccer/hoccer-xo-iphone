@@ -174,7 +174,6 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 + (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler;
 + (HXOBackend*)instance;
-+ (BOOL) use_elliptic_curves;
 
 + (BOOL) isZeroData:(NSData*)theData;
 + (BOOL) isInvalid:(NSData*)theData;

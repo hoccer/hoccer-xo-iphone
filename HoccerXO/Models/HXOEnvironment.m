@@ -30,7 +30,7 @@ static NSString * LOCATION_TYPE_MANUAL = @"manual";   // location was set by use
 static NSString * LOCATION_TYPE_OTHER = @"other";
 static NSString * LOCATION_TYPE_NONE = @"none";       // indicates that location is invalid
 
-#define LOCATION_DEBUG YES
+#define LOCATION_DEBUG NO
 
 static HXOEnvironment *instance;
 

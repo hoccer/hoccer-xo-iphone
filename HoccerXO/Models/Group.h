@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString * groupTag;
 @property (nonatomic, retain) NSString * groupType;
 @property (nonatomic, retain) NSString * keySupplier;
+@property (nonatomic, retain) NSDate   * keyDate;
 @property (nonatomic, retain) NSString * groupState;
 @property (nonatomic, retain) NSDate * lastChanged;
 @property (nonatomic, retain) NSSet    * members;
@@ -25,10 +26,11 @@
 @property (nonatomic, retain) NSData   * sharedKeyId;
 @property (nonatomic, retain) NSData   * sharedKeyIdSalt;
 
-@property (nonatomic, retain) NSString   * sharedKeyIdString;
-@property (nonatomic, retain) NSString   * sharedKeyIdSaltString;
+@property (nonatomic, retain) NSString * sharedKeyIdString;
+@property (nonatomic, retain) NSString * sharedKeyIdSaltString;
 
-@property (nonatomic, retain) NSDate    * lastChangedMillis;
+@property (nonatomic, retain) NSNumber    * lastChangedMillis;
+@property (nonatomic, retain) NSNumber    * keyDateMillis;
 
 // @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
 
@@ -38,6 +40,12 @@
 - (NSSet*) otherInvitedMembers;
 
 - (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
+
+- (BOOL) hasGroupKey;
+- (void) generateNewGroupKey;
+- (BOOL) copyKeyFromMember:(GroupMembership*)member;
+- (BOOL) checkGroupKey;
+
 
 @end
 

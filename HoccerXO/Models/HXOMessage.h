@@ -32,6 +32,8 @@
 @property (nonatomic, strong) NSData* sourceMAC;
 @property (nonatomic, strong) NSData* destinationMAC;
 @property (nonatomic, strong) NSData* signature;
+@property (nonatomic, strong) NSData* sharedKeyId;
+@property (nonatomic, strong) NSData* sharedKeyIdSalt;
 
 @property (nonatomic, strong) Contact*  contact;
 @property (nonatomic, strong) Attachment * attachment;
@@ -43,6 +45,8 @@
 @property (nonatomic, strong) NSString* saltString;
 @property (nonatomic, strong) NSString* sourceMACString;
 @property (nonatomic, strong) NSString* signatureString;
+@property (nonatomic, strong) NSString* sharedKeyIdString;
+@property (nonatomic, strong) NSString* sharedKeyIdSaltString;
 
 @property (nonatomic) NSNumber *   timeSentMillis;
 @property (nonatomic) NSNumber *   timeAcceptedMillis;

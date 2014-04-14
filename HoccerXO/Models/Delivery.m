@@ -33,8 +33,6 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic keyCiphertext;
 @dynamic keyCiphertextString;
 @dynamic keyCleartext;
-@dynamic keyCleartextEC;
-@dynamic keyCleartextRSA;
 @dynamic receiverKeyId;
 @dynamic timeChanged;
 @dynamic timeChangedMillis;

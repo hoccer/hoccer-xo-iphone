@@ -118,6 +118,9 @@
             }
             joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d invited",nil), joinedStatus,invitedMemberCount];
         }
+        if (group.sharedKeyId != nil) {
+            joinedStatus = [[joinedStatus stringByAppendingString:@" "] stringByAppendingString:group.sharedKeyIdString];
+        }
     }
     
     // cell.statusLabel.text = [NSString stringWithFormat:@"%@:%@",group.groupState,joinedStatus];

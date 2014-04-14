@@ -37,8 +37,6 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 @property (nonatomic) NSString* keyCiphertextString; // encrypted message crypto key as b64-string
 
 @property (nonatomic) NSData* keyCleartext;
-@property (nonatomic) NSData* keyCleartextEC;
-@property (nonatomic) NSData* keyCleartextRSA;
 
 @property (nonatomic) NSString* receiverKeyId;
 

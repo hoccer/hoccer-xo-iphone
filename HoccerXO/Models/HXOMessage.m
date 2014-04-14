@@ -38,6 +38,8 @@
 @dynamic sourceMAC;
 @dynamic destinationMAC;
 @dynamic signature;
+@dynamic sharedKeyId;
+@dynamic sharedKeyIdSalt;
 
 @dynamic contact;
 @dynamic attachment;
@@ -45,6 +47,8 @@
 @dynamic saltString;
 @dynamic sourceMACString;
 @dynamic signatureString;
+@dynamic sharedKeyIdString;
+@dynamic sharedKeyIdSaltString;
 
 @dynamic cachedLandscapeCellHeight;
 @dynamic cachedPortraitCellHeight;
@@ -57,7 +61,7 @@
 @dynamic bodyCiphertext;
 
 
-#define KEY_DEBUG NO
+#define KEY_DEBUG YES
 
 -(CGFloat) cachedCellHeight {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
@@ -174,11 +178,14 @@
         if ([self.contact.type isEqualToString:@"Group"]) {
             self.salt =  [Crypto random256BitKey];
             Group * group = (Group*)self.contact;
+            NSLog(@"HXOMessage:setupOutgoingEncryption: using group key %@ with stored id %@ computed id %@",group.groupKey,group.sharedKeyId,[Crypto calcSymmetricKeyId:group.groupKey withSalt:group.sharedKeyIdSalt]);
             self.outgoingCryptoKey = [Crypto XOR:group.groupKey with:self.salt];
         } else {
             self.outgoingCryptoKey = [Crypto random256BitKey];
         }
-    }
+    } else {
+        NSLog(@"HXOMessage:setupOutgoingEncryption: (re)using key %@",self.outgoingCryptoKey);
+   }
     [self setCryptoKey:self.outgoingCryptoKey];
 }
 
@@ -222,6 +229,22 @@
 
 -(void) setSignatureString:(NSString*) theB64String {
     self.signature = [NSData dataWithBase64EncodedString:theB64String];
+}
+
+- (NSString*) sharedKeyIdString {
+    return [self.sharedKeyId asBase64EncodedString];
+}
+
+- (void) setSharedKeyIdString:(NSString*) theB64String {
+    self.sharedKeyId = [NSData dataWithBase64EncodedString:theB64String];
+}
+
+- (NSString*) sharedKeyIdSaltString {
+    return [self.sharedKeyIdSalt asBase64EncodedString];
+}
+
+- (void) setSharedKeyIdSaltString:(NSString*) theB64String {
+    self.sharedKeyIdSalt = [NSData dataWithBase64EncodedString:theB64String];
 }
 
 - (void) setTimeAccepted:(NSDate *)newTimeAccepted {
@@ -329,7 +352,9 @@
              @"timeSent": @"timeSentMillis", // our own time stamp
              @"attachmentFileId":@"attachmentFileId",
              @"hmac":@"sourceMACString",
-             @"signature":@"signatureString"
+             @"signature":@"signatureString",
+             @"sharedKeyId":@"sharedKeyIdString",
+             @"sharedKeyIdSalt":@"sharedKeyIdSaltString"
              };
 }
 

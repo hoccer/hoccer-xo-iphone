@@ -281,6 +281,7 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 - (BOOL) isRegistered {
+    // NSLog(@"isRegistered: clientId=%@, password=%@, salt=%@",self.clientId, self.password , self.salt);
     return ! [self.clientId isEqualToString: @""] && ! [self.password isEqualToString: @""] && ! [self.salt isEqualToString: @""];
 }
 
@@ -310,6 +311,8 @@ static const NSUInteger kHXOPasswordLength    = 23;
     [_accountItem resetKeychainItem];
     [_saltItem resetKeychainItem];
     [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+    NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
 }
 
 

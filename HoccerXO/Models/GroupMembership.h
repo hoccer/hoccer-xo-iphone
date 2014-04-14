@@ -31,10 +31,23 @@
 @property (nonatomic, retain) NSData   * sharedKeyId;
 @property (nonatomic, retain) NSData   * sharedKeyIdSalt;
 
+@property (nonatomic, retain) NSString   * sharedKeyIdString;
+@property (nonatomic, retain) NSString   * sharedKeyIdSaltString;
+
+@property (nonatomic, retain) NSString * keySupplier;
+@property (nonatomic, retain) NSDate * sharedKeyDate;
+@property (nonatomic, retain) NSDate * sharedKeyDateMillis;
+
 @property (nonatomic) BOOL keySettingInProgress;
 
 - (NSData *) calcCipheredGroupKey;
 - (NSData *) decryptedGroupKey;
+- (BOOL) hasCipheredGroupKey;
+- (BOOL) copyKeyFromGroup;
+- (BOOL) hasLatestGroupKey;
+
+-(void) checkGroupKey;
+-(BOOL) checkGroupKeyTransfer:(NSString*)cipheredGroupKeyString withKeyId:(NSString*)keyIdString withSharedKeyId:(NSString*)sharedKeyIdString withSharedKeyIdSalt:(NSString*)sharedKeyIdSaltString;
 
 
 @end
