@@ -186,7 +186,7 @@
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                           destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
                                                otherButtonTitles: nil];
-    [sheet showInView: sender.view];
+    [sheet showInView: self.delegate.view];
 }
 
 #pragma mark - Delete Credentials File
