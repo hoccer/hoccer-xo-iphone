@@ -15,7 +15,13 @@
 "Profile" = "Profil";
 "contacts_menu_item" = "Kontakte";
 "Settings" = "Einstellungen";
+"navigation_title_profile" = "Profil";
+"navigation_title_contact" = "Kontakt";
+"navigation_title_contacts" = "Kontakte";
 
+
+"apn_new_messages" = "Du hast %@ neue Nachrichten!";
+"apn_one_new_message" = "Du hast eine neue Nachricht!";
 
 
 "attachment_add_sheet_title"             = "Anhang hinzufügen aus:";
@@ -45,89 +51,79 @@
 
 
 
-"avatar_option_sheet_title" = "Wähle ein Avatarbild aus:";
 
-
-
-"invite_mail_body" = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
-
-"invite_mail_subject" = "Einladung zu Hoccer XO";
-
-"invite_sms_text" = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
 
 "invite_option_sheet_title" = "Einladung";
 "invite_option_sms_btn_title" = "Einladen per SMS";
 "invite_option_mail_btn_title" = "Einladen per Mail";
-"invite_by_code_button_title" = "Einladen per Code";
+"invite_option_code_btn_title" = "Einladen per Code";
 
 "invite_error_alert_title" = "Einladung fehlgeschlagen";
 "invite_error_rejected_by_server" = "Der Code wurde abgelehnt";
 
+"invite_mail_subject" = "Einladung zu Hoccer XO";
+"invite_mail_body" = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
+"invite_sms_text" = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
 
-"apn_new_messages" = "Du hast %@ neue Nachrichten!";
-"apn_one_new_message" = "Du hast eine neue Nachricht!";
-
-"profile_name_label" = "Name:";
-
-"profile_name_placeholder" = "Dein Name";
-
-"profile_delete_avatar_button_title" = "Avatar löschen";
-
-"profile_renew_keypair" = "RSA-Schlüssel erneuern";
-
-"profile_renew_keypair_info" = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
-
-"contact_group_friends" = "Freunde";
-
-"contact_group_groups" = "Gruppen";
-
-"setting_save_incoming_media" = "Eingehende Medien speichern";
-
-"no_messages_exchanged" = "Bisher keine Nachrichten.";
-
-"conversation_empty_placeholder" = "Chats";
-
-"contacts_empty_placeholder" = "Kontakte";
-
-"navigation_title_profile" = "Profil";
-
-"navigation_title_contact" = "Kontakt";
-"navigation_title_contacts" = "Kontakte";
-
-"profile_fingerprint_label" = "Schlüssel";
-"profile_fingerprint_info" = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
-
-"contact_unblock" = "%@ entblockieren";
-
-"contact_block" = "%@ blockieren";
-
-"contact_remove" = "%@ entfernen";
-
-"message_count_format_singular" = "%@ Nachricht";
-"message_count_format_plural"   = "%@ Nachrichten";
-
-"unverified_key_title" = "Nicht verifiziert";
-"verified_key_title"   = "Verifiziert";
-"mistrusted_key_title"  = "Misstraut";
-
-"fingerprint_item" = "Id";
-"key_length_item" = "Schlüssellänge";
-"key_length_unit" = "%@ Bit";
-
-"key_view_title_you"   = "Dein Schlüssel";
-"key_view_title_other" = "Schlüssel";
-
-"chat_with_contact" = "Chat";
+"invite_code_sheet_title"              = "Einladungs Code";
+"invite_code_enter_dialog_title"       = "Einladungscode eingeben";
+"invite_code_enter_placeholder"        = "Einladungs Code";
+"invite_code_fetch_failed"             = "Codeabruf fehlgeschlagen";
+"invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Code";
+"invite_scanner_prompt"                = "Suche nach xo QR Codes...";
 
 
-"The exported credentials have been deleted."="Die exportierten Zugangsdaten wurden gelöscht.";
-"Credentials File Deleted"="Exportierte Zugangsdaten gelöscht";
+
+"profile_avatar_option_sheet_title"      = "Wähle ein Avatarbild aus:";
+"profile_avatar_option_delete_btn_title" = "Avatar löschen";
+
+"profile_name_placeholder"               = "Dein Name";
+"profile_renew_keypair"                  = "RSA-Schlüssel erneuern";
+"profile_renew_keypair_info"             = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
+"profile_key_btn_title"                  = "Schlüssel";
 
 
-"import_credentials_safety_question"="Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
-"import_credentials_confirm"="Importieren";
 
-"delete_credentials_safety_question"="Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
+"contact_unblock_btn_title_format" = "%@ entblockieren";
+"contact_block_btn_title_format"   = "%@ blockieren";
+"contact_chat_title"               = "Chat";
+"contact_message_count_format_s"   = "%@ Nachricht";
+"contact_message_count_format_p"   = "%@ Nachrichten";
+
+
+
+"key_view_title_you"       = "Dein Schlüssel";
+"key_view_title_other"     = "Schlüssel";
+
+"key_fingerprint_title"    = "Id";
+"key_fingerprint_info"     = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
+"key_length_item"          = "Schlüssellänge";
+"key_length_unit_format"   = "%@ Bit";
+
+"key_state_unverified"     = "Nicht verifiziert";
+"key_state_verified"       = "Verifiziert";
+"key_state_mistrusted"     = "Misstraut";
+
+"key_export_success"       = "Schlüssel wurde erfolgreich in die Zwischenablage exportiert";
+"key_export_success_title" = "Schlüssel exportiert";
+"key_export_failed"        = "Der Schlüssel konnte nicht exportiert werden.";
+"key_export_failed_title"  = "Schlüsselexport fehlgeschlagen";
+
+"key_import_success"       = "Schlüssel wurde erfolgreich aus der Zwischenablage importiert.";
+"key_import_success_title" = "Schlüssel importiert";
+"key_import_failed"        = "Es konnte kein Schlüssel aus der Zwischenablage importiert werden.";
+"key_import_failed_title"  = "Schlüsselimport fehlgeschlagen";
+
+
+
+
+
+"credentials_file_deleted_alert"="Exportierte Zugangsdaten gelöscht";
+
+"credentials_import_safety_question"="Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
+"credentials_import_confirm_btn_title"="Importieren";
+
+"credentials_delete_safety_question"="Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
 "delete_credentials_confirm"="Zugangsdaten löschen";
 
 "credentials_exported"="Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
@@ -146,18 +142,6 @@
 "export_privatekey"="Priv. Schlüssel exportieren";
 "import_publickey"="Öffentl. Schlüssel importieren";
 "import_privatekey"="Priv. Schlüssel importieren";
-
-"key_export_success"="Schlüssel wurde erfolgreich in die Zwischenablage exportiert";
-"key_export_success_title"="Schlüssel exportiert";
-
-"key_export_failed"="Der Schlüssel konnte leider nicht exportiert werden.";
-"key_export_failed_title"="Schlüsselexport fehlgeschlagen";
-
-"key_import_success"="Schlüssel wurde erfolgreich aus der Zwischenablage importiert.";
-"key_import_success_title"="Schlüssel importiert";
-
-"key_import_failed"="Es konnte kein Schlüssel aus der Zwischenablage importiert werden.";
-"key_import_failed_title"="Schlüsselimport fehlgeschlagen";
 
 
 "verify_publickey"="Als verifiziert markieren";
@@ -198,13 +182,6 @@
 "Resend" = "Senden";
 
 "delete_contact" = "Kontakt löschen";
-
-"invite_code_sheet_title" = "Einladungs Code";
-"invite_code_enter_dialog_title" = "Einladungscode eingeben";
-"invite_code_enter_placeholder" = "Einladungs Code";
-"invite_code_fetch_failed" = "Codeabruf fehlgeschlagen";
-"invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Code";
-"invite_scanner_prompt" = "Suche nach xo QR Codes...";
 
 "delete_contact_safety_question" = "Kontakt, Chat und Attachments löschen?";
 
@@ -415,8 +392,8 @@
 "import_credentials"="Zugangsdaten importieren";
 "delete_credentials"="Zugangsdaten löschen";
 
-"delete_credentials_file"="Exportierte Daten löschen";
+"credentials_delete_file_btn_title="Exportierte Daten löschen";
 
-"delete_credentials_file_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
+"credentials_delete_file_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
 "delete_credentials_file_confirm"="Löschen";
 

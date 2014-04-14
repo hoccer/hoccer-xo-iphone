@@ -78,14 +78,14 @@
     if ( ! _fingerprintSection) {
         _fingerprintSection = [DatasheetSection datasheetSectionWithIdentifier: @"fingerprint_section"];
         _fingerprintSection.items = @[self.fingerprintItem, self.keyLengthItem];
-        _fingerprintSection.footerText = HXOLocalizedStringWithLinks(@"profile_fingerprint_info", nil);
+        _fingerprintSection.footerText = HXOLocalizedStringWithLinks(@"key_fingerprint_info", nil);
     }
     return _fingerprintSection;
 }
 
 - (DatasheetItem*) fingerprintItem {
     if ( ! _fingerprintItem) {
-        _fingerprintItem = [self itemWithIdentifier: @"fingerprint_item" cellIdentifier: @"DatasheetKeyValueCell"];
+        _fingerprintItem = [self itemWithIdentifier: @"key_fingerprint_title" cellIdentifier: @"DatasheetKeyValueCell"];
         _fingerprintItem.dependencyPaths = @[@"publicKeyId"];
     }
     return _fingerprintItem;
@@ -94,7 +94,7 @@
 - (DatasheetItem*) keyLengthItem {
     if ( ! _keyLengthItem) {
         _keyLengthItem = [self itemWithIdentifier: @"key_length_item" cellIdentifier: @"DatasheetKeyValueCell"];
-        _keyLengthItem.valueFormatString = @"key_length_unit";
+        _keyLengthItem.valueFormatString = @"key_length_unit_format";
     }
     return _keyLengthItem;
 }

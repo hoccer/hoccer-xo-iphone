@@ -1,15 +1,28 @@
 "language_code"="en";
 
+
+
 "Cancel" = "Cancel";
 "search" = "search";
 "Send" = "Send";
 "Copy" = "Copy";
+
+
 
 "Chats" = "Chats";
 "Contacts" = "Contacts";
 "Profile" = "Profile";
 "contacts_menu_item" = "Contacts";
 "Settings" = "Settings";
+"navigation_title_profile" = "Profile";
+"navigation_title_contact"  = "Contact";
+"navigation_title_contacts" = "Contacts";
+
+
+
+"apn_new_messages" = "You have %@ new messages!";
+"apn_one_new_message" = "You have a new message!";
+
 
 
 
@@ -37,96 +50,67 @@
 "Opened data Attachment %@"="External (%@)";
 
 
-"avatar_option_sheet_title"="Get Avatar Image from:";
-
-"invite_mail_body" = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
 
 "invite_mail_subject" = "Hoccer XO Invitation";
-
+"invite_mail_body" = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
 "invite_sms_text" = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
 
 "invite_option_sheet_title" = "Invite Friends";
-
 "invite_option_sms_btn_title" = "Invite via SMS";
-
 "invite_option_mail_btn_title" = "Invite via E-Mail";
-
-"invite_by_code_button_title" = "Invite by Code";
+"invite_option_code_btn_title" = "Invite by Code";
 
 "invite_error_alert_title" = "Invite failed";
-
 "invite_error_rejected_by_server" = "The code has been rejected";
-"apn_new_messages" = "You have %@ new messages!";
-"apn_one_new_message" = "You have a new message!";
+
+
+
+"profile_avatar_option_sheet_title"="Get Avatar Image from:";
+"profile_avatar_option_delete_btn_title" = "Delete Avatar";
 
 "profile_name_label" = "Name:";
-
 "profile_name_placeholder" = "Your Name";
-
-"profile_delete_avatar_button_title" = "Delete Avatar";
-
 "profile_renew_keypair" = "Renew RSA Keypair";
-
 "profile_renew_keypair_info" = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
 
-"contact_group_friends" = "Friends";
 
-"contact_group_groups" = "Groups";
+"profile_key_btn_title" = "Key";
+"key_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
 
-"setting_save_incoming_media" = "Save incoming Media";
+"contact_unblock_btn_title_format" = "Unblock %@";
 
-"setting_save_incoming_media_info" = "Automatically save images and videos in your photo album. Contacts are saved to your address book.";
+"contact_block_btn_title_format" = "Block %@";
 
-"no_messages_exchanged" = "No messages yet.";
 
-"conversation_empty_placeholder" = "Chats";
+"contact_message_count_format_s" = "%@ message";
+"contact_message_count_format_p"   = "%@ messages";
 
-"contacts_empty_placeholder" = "Contacts";
+"key_state_unverified" = "Not verified";
+"key_state_verified"   = "Verfied";
+"key_state_mistrusted"  = "Mistrusted";
 
-"navigation_title_profile" = "Profile";
-
-"navigation_title_contact"  = "Contact";
-"navigation_title_contacts" = "Contacts";
-
-"profile_fingerprint_label" = "Key";
-"profile_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
-
-"contact_unblock" = "Unblock %@";
-
-"contact_block" = "Block %@";
-
-"contact_remove" = "Remove %@";
-
-"message_count_format_singular" = "%@ message";
-"message_count_format_plural"   = "%@ messages";
-
-"unverified_key_title" = "Not verified";
-"verified_key_title"   = "Verfied";
-"mistrusted_key_title"  = "Mistrusted";
-
-"fingerprint_item" = "Id";
+"key_fingerprint_title" = "Id";
 "key_length_item" = "Key Length";
-"key_length_unit" = "%@ bit";
+"key_length_unit_format" = "%@ bit";
 
 "key_view_title_you"   = "Your Key";
 "key_view_title_other" = "Key";
 
-"chat_with_contact" = "Chat";
+"contact_chat_title" = "Chat";
 
 
-"delete_credentials_file"="Delete exported credentials";
+"credentials_delete_file_btn_title="Delete exported credentials";
 
-"delete_credentials_file_safety_question"="Really deleted exported credentials?";
+"credentials_delete_file_safety_question"="Really deleted exported credentials?";
 "delete_credentials_file_confirm"="Delete";
 
-"The exported credentials have been deleted."="The exported credentials have been deleted.";
-"Credentials File Deleted"="Credentials File Deleted";
+"credentials_file_deleted_alert"="Credentials File Deleted";
 
 
-"import_credentials_safety_question"="Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
-"import_credentials_confirm"="Import";
+"credentials_import_safety_question"="Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
+"credentials_import_confirm_btn_title"="Import";
 
-"delete_credentials_safety_question"="Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
+"credentials_delete_safety_question"="Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
 "delete_credentials_confirm"="Delete Credentials";
 
 "credentials_exported"="Login credentials have been exported to the document directory. If you transfer them to a another device, you must no longer use them here!";

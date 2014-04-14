@@ -162,10 +162,10 @@
         }
     };
 
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_import_safety_question", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"import_credentials_confirm", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"credentials_import_confirm_btn_title", nil)
                                       otherButtonTitles: nil];
     [sheet showInView: sender.view];
 }
@@ -181,7 +181,7 @@
         }
     };
     
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_credentials_safety_question", nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_delete_safety_question", nil)
                                                         completionBlock: completion
                                                cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                           destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
@@ -193,7 +193,7 @@
 
 - (DatasheetItem*) deleteCredentialsFileItem {
     if ( ! _deleteCredentialsFileItem) {
-        _deleteCredentialsFileItem = [self itemWithIdentifier: @"delete_credentials_file" cellIdentifier: @"DatasheetActionCell"];
+        _deleteCredentialsFileItem = [self itemWithIdentifier: @"credentials_delete_file_btn_title cellIdentifier: @"DatasheetActionCell"];
         _deleteCredentialsFileItem.visibilityMask = DatasheetModeEdit;
         _deleteCredentialsFileItem.target = self;
         _deleteCredentialsFileItem.action = @selector(deleteCredentialsFilePressed:);
@@ -205,14 +205,14 @@
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             if ([[UserProfile sharedProfile] deleteCredentialsFile]) {
-                [HXOUI showErrorAlertWithMessageAsync: @"The exported credentials have been deleted." withTitle:@"Credentials File Deleted"];
+                [HXOUI showErrorAlertWithMessageAsync: nil withTitle:@"credentials_file_deleted_alert"];
             }
             // TODO: show error message if it has not been deleted
             [self updateCurrentItems];
         }
     };
 
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_credentials_file_safety_question", nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_delete_file_safety_question", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
                                  destructiveButtonTitle: NSLocalizedString(@"delete_credentials_file_confirm", nil)

@@ -428,7 +428,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_mail_btn_title",@"Invite Actionsheet Button Title")];
         [actions addObject: ^() { [self inviteByMail]; }];
     }
-    [sheet addButtonWithTitle: NSLocalizedString(@"invite_by_code_button_title",@"Invite Actionsheet Button Title")];
+    [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_code_btn_title",@"Invite Actionsheet Button Title")];
     [actions addObject: ^() { [self inviteByCode]; }];
 
     sheet.cancelButtonIndex = [sheet addButtonWithTitle: NSLocalizedString(@"Cancel", nil)];

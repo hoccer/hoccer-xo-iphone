@@ -150,7 +150,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (DatasheetItem*) chatItem {
     if ( ! _chatItem) {
-        _chatItem = [self itemWithIdentifier: @"chat_with_contact" cellIdentifier: @"DatasheetKeyValueCell"];
+        _chatItem = [self itemWithIdentifier: @"contact_chat_title" cellIdentifier: @"DatasheetKeyValueCell"];
         _chatItem.dependencyPaths = @[@"messages.@count"];
         //_chatItem.visibilityMask = DatasheetModeView;
         _chatItem.accessoryStyle = DatasheetAccessoryDisclosure;
@@ -213,7 +213,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
-        return self.contact.messages.count == 1 ? @"message_count_format_singular" : @"message_count_format_plural";
+        return self.contact.messages.count == 1 ? @"contact_message_count_format_s" : @"contact_message_count_format_p";
     }
     return nil;
 }
@@ -290,11 +290,11 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (NSString*) keyItemTitle {
     NSString * titleKey;
     if (self.contact.verifiedKey == nil) {
-        titleKey = @"unverified_key_title";
+        titleKey = @"key_state_unverified";
     } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
-        titleKey = @"verified_key_title";
+        titleKey = @"key_state_verified";
     } else {
-        titleKey = @"mistrusted_key_title";
+        titleKey = @"key_state_mistrusted";
     }
     return NSLocalizedString(titleKey, nil);
 }
@@ -403,9 +403,9 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (NSString*) blockItemTitle {
     NSString * formatKey = nil;
     if (self.contact.isFriend) {
-        formatKey = @"contact_block";
+        formatKey = @"contact_block_btn_title_format";
     } else if (self.contact.isBlocked) {
-        formatKey = @"contact_unblock";
+        formatKey = @"contact_unblock_btn_title_format";
     }
     return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
 }
