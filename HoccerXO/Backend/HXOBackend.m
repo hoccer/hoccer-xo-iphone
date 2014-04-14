@@ -47,7 +47,7 @@
 #define SECTION_TRACE NO
 #define CONNECTION_TRACE NO
 #define GROUPKEY_DEBUG YES
-#define GROUP_DEBUG NO
+#define GROUP_DEBUG YES
 #define RELATIONSHIP_DEBUG NO
 #define TRANSFER_DEBUG NO
 #define CHECK_URL_TRACE NO
@@ -2658,6 +2658,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [clientIds addObject:m.contact.clientId];
             [publicKeyIds addObject:m.contact.publicKeyId];
             m.memberKeyId = m.contact.publicKeyId;
+            m.cipheredGroupKey = [m calcCipheredGroupKey];
             [cryptedSharedKeys addObject:m.cipheredGroupKeyString];
             m.sharedKeyId = group.sharedKeyId;
             m.sharedKeyIdSalt = group.sharedKeyIdSalt;
