@@ -206,7 +206,7 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         [HXOEnvironment.sharedInstance deactivateLocation];
         if (_state == kBackendReady && [HXOEnvironment sharedInstance].groupId != nil) {
-            [self destroyEnvironment:[HXOEnvironment sharedInstance] withHandler:^(BOOL ok) {
+            [self destroyEnvironmentWithHandler:^(BOOL ok) {
                 NSLog(@"Enviroment destroyed = %d",ok);
             }];
         }
@@ -1582,10 +1582,9 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 // void destroyEnvironment(String clientId, String groupId);
-- (void) destroyEnvironment:(HXOEnvironment *) environment withHandler:(GenericResultHandler)handler {
-    environment.clientId = [UserProfile sharedProfile].clientId;
+- (void) destroyEnvironmentWithHandler:(GenericResultHandler)handler {
     
-    [_serverConnection invoke: @"destroyEnvironment" withParams: @[environment.clientId, environment.groupId]
+    [_serverConnection invoke: @"destroyEnvironment" withParams: nil
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {

@@ -411,6 +411,11 @@ static const CGFloat kMagicSearchBarHeight = 44;
                 }
                 joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d invited",nil), joinedStatus,invitedMemberCount];
             }
+#ifdef DEBUG
+            if (group.sharedKeyId != nil) {
+                joinedStatus = [[joinedStatus stringByAppendingString:@" "] stringByAppendingString:group.sharedKeyIdString];
+            }
+#endif
         }
         return joinedStatus;
     } else {

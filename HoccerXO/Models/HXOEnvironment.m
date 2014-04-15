@@ -48,6 +48,7 @@ static HXOEnvironment *instance;
 		_locationManager = [[CLLocationManager alloc] init];
 		_locationManager.delegate = self;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.distanceFilter = 10.0;
     }
     
     return self;

@@ -240,14 +240,24 @@ static const NSTimeInterval kResponseTimeout = 30;
 
 - (void) notify: (NSString*) method withParams: (id) params {
     if ([[self verbosityLevel]isEqualToString:@"trace"]) {NSLog(@"JSON notify->: %@",method);}
-    NSDictionary * notification = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params};
+    NSDictionary * notification;
+    if (params != nil) {
+        notification = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params};
+    } else {
+        notification = @{ @"jsonrpc": @"2.0", @"method": method};
+    }
     [self sendJson: notification];
 }
 
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler {
     NSNumber * theId = [self nextId];
     if ([[self verbosityLevel]isEqualToString:@"trace"]) {NSLog(@"JSON invoke->: %@ id:%@",method, theId);}
-    NSDictionary * methodCall = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params, @"id": theId};
+    NSDictionary * methodCall;
+    if (params != nil) {
+        methodCall = @{ @"jsonrpc": @"2.0", @"method": method, @"params": params, @"id": theId};
+    } else {
+        methodCall = @{ @"jsonrpc": @"2.0", @"method": method, @"id": theId};
+    }
     // NSLog(@"jsonrpc method: %@", methodCall);
     _responseHandlers[theId] = @{ @"handler": [handler copy],
                                   @"timer": 
