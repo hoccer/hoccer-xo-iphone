@@ -273,7 +273,7 @@
                 [self.chatBackend pairByToken: url.host];
                 [self addFlash: readableObject];
             } else {
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invite_not_a_hoccer_xo_qr_code_title", nil)
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invite_no_xo_qr_code_title", nil)
                                                                  message: readableObject.stringValue
                                                          completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alert) {
                                                              if (buttonIndex != alert.cancelButtonIndex) {

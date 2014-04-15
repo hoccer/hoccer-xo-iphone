@@ -5,6 +5,7 @@
 "Copy" = "Kopieren";
 "search" = "suchen";
 "Send" = "Senden";
+"delete_btn_title" = "Löschen";
 
 
 
@@ -69,7 +70,7 @@
 "invite_code_enter_dialog_title"       = "Einladungscode eingeben";
 "invite_code_enter_placeholder"        = "Einladungs Code";
 "invite_code_fetch_failed"             = "Codeabruf fehlgeschlagen";
-"invite_not_a_hoccer_xo_qr_code_title" = "Kein Hoccer XO Code";
+"invite_no_xo_qr_code_title" = "Kein Hoccer XO Code";
 "invite_scanner_prompt"                = "Suche nach xo QR Codes...";
 
 
@@ -121,40 +122,39 @@
 "credentials_file_deleted_alert"="Exportierte Zugangsdaten gelöscht";
 
 "credentials_import_safety_question"="Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
-"credentials_import_confirm_btn_title"="Importieren";
+"credentials_key_import_confirm_btn_title_btn_title"="Importieren";
 
 "credentials_delete_safety_question"="Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
-"delete_credentials_confirm"="Zugangsdaten löschen";
 
-"credentials_exported"="Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
+"credentials_exported_alert"="Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
 
-"Enter decryption passphrase"="Enschlüsselungskennwort eingeben";
-"Enter encryption passphrase"="Verschlüsselungskennwort eingeben und merken";
-"Enter passphrase"="Kennwort eingeben";
+"credentials_file_enter_passphrase_alert"="Enschlüsselungskennwort eingeben";
+"credentials_file_choose_passphrase_alert"="Verschlüsselungskennwort eingeben und merken";
+"credentials_file_passphrase_placeholder"="Kennwort eingeben";
 
-"Wrong decryption passphrase or credentials file damaged. Try again."="Falsches Kennwort oder ungültige Zugangsdaten. Versuchen sie es noch einmal.";
-"Credentials Import Failed"="Zugangsdatenimport fehlgeschlagen";
+"credentials_file_decryption_failed_message"="Falsches Kennwort oder ungültige Zugangsdaten. Versuchen sie es noch einmal.";
+"credentials_file_import_failed_title"="Zugangsdatenimport fehlgeschlagen";
 
-"Imported credentials are the same as the active ones."="Importiere Zugangsdaten sind mit den geltenden identisch.";
-"Same credentials"="Identische Zugangsdaten";
+"credentials_file_equals_current_message"="Importiere Zugangsdaten sind mit den geltenden identisch.";
+"credentials_file_equals_current_title"="Identische Zugangsdaten";
 
-"export_publickey"="Öffentl. Schlüssel exportieren";
-"export_privatekey"="Priv. Schlüssel exportieren";
-"import_publickey"="Öffentl. Schlüssel importieren";
-"import_privatekey"="Priv. Schlüssel importieren";
+"key_export_public_btn_title"="Öffentl. Schlüssel exportieren";
+"key_export_private_btn_title"="Priv. Schlüssel exportieren";
+"key_import_public_btn_title"="Öffentl. Schlüssel importieren";
+"key_import_private_btn_title"="Priv. Schlüssel importieren";
 
 
-"verify_publickey"="Als verifiziert markieren";
-"unverify_publickey"="Verifikation aufheben";
+"key_verify_public_btn_title"="Als verifiziert markieren";
+"key_unverify_public_btn_title"="Verifikation aufheben";
 
-"Verified key of contact %@ has changed"="Der von ihnen verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
-"Verified Key Changed" = "Verifizierter Schlüssel wurde geändert.";
+"key_verified_public_key_changed_message_format"="Der von ihnen verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
+"key_verified_public_key_changed_title" = "Verifizierter Schlüssel wurde geändert.";
 
-"import_confirm"="Import";
-"import_key_safety_question"="Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest das nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
+"key_import_confirm_btn_title"="Import";
+"key_import_safety_question"="Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest das nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
 
-"export_confirm"="Exportieren";
-"export_private_key_safety_question"="Mit deinem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
+"key_export_confirm_btn_title"="Exportieren";
+"key_export_private_safety_question"="Mit deinem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
 
 
 "Save" = "Speichern";
@@ -169,9 +169,9 @@
 
 "about_prosa" = "Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden.";
 
-"message_too_long_title" = "Nachricht zu lang";
+"chat_message_too_long_title" = "Nachricht zu lang";
 
-"message_too_long_text" = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
+"chat_message_too_long_message" = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
 
 "ok_button_title" = "Ok";
 
@@ -181,11 +181,11 @@
 
 "Resend" = "Senden";
 
-"delete_contact" = "Kontakt löschen";
+"contact_delete_btn_title" = "Kontakt löschen";
 
-"delete_contact_safety_question" = "Kontakt, Chat und Attachments löschen?";
+"contact_delete_safety_question" = "Kontakt, Chat und Attachments löschen?";
 
-"delete_contact_confirm" = "Kontakt löschen";
+"contact_delete_confirm" = "Kontakt löschen";
 
 "attachment_download_failed_title" = "Download fehlgeschlagen";
 
@@ -209,9 +209,6 @@
 "vcard" = "Adresse";
 "geolocation" = "Ort";
 
-"Upload %@\n%1.2f MB"="%@ senden\n%1.2f MB";
-"Download %@\n%1.2f MB"="%@ empfangen\n%1.2f MB";
-
 "The Place"="Der Ort";
 
 "http://hoccer.com/hoccer-xo-tutorial/"="http://hoccer.com/hoccer-xo-anleitung/";
@@ -219,9 +216,9 @@
 
 "group_segment_title" = "Gruppen";
 
-"invalid_cert_title" = "Ungültiges Server Zertifikat";
+"certificate_invalid_title" = "Ungültiges Server Zertifikat";
 
-"invalid_cert_message" = "Hoccer XO konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
+"certificate_invalid_message" = "Hoccer XO konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
 
 "navigation_title_new_group" = "Neue Gruppe";
 "navigation_title_group" = "Gruppe";
@@ -380,20 +377,14 @@
 "credentials_setup_import_btn_title" = "Importieren";
 "credentials_setup_create_btn_title" = "Neues Konto";
 
+"credentials_import_safety_title"="Zugangsdaten importieren?";
+"credentials_import_btn_title_not_button_title"="Neu anlegen";
 
-"delete_credentials_delete_title" = "Löschen";
-"delete_credentials_confirm" = "Zugangsdaten Löschen";
-"delete_credentials_saftey_question" = "Alte Zugangsdaten:";
+"credentials_export_btn_title"="Zugangsdaten exportieren";
+"credentials_import_btn_title"="Zugangsdaten importieren";
+"credentials_delete_btn_title"="Zugangsdaten löschen";
 
-"import_credentials_alert_title"="Zugangsdaten importieren?";
-"import_credentials_not_button_title"="Neu anlegen";
+"credentials_file_delete_btn_title"="Exportierte Daten löschen";
 
-"export_credentials"="Zugangsdaten exportieren";
-"import_credentials"="Zugangsdaten importieren";
-"delete_credentials"="Zugangsdaten löschen";
-
-"credentials_delete_file_btn_title="Exportierte Daten löschen";
-
-"credentials_delete_file_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
-"delete_credentials_file_confirm"="Löschen";
+"credentials_file_delete_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
 

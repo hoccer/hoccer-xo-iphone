@@ -421,8 +421,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (self.messageField.text.length > 0 || hasAttachmentPreview) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
             if ([self.messageField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
-                NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"message_too_long_text", nil), kMaxMessageBytes];
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"message_too_long_title", nil)
+                NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_message_too_long_message", nil), kMaxMessageBytes];
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"chat_message_too_long_title", nil)
                                                                  message: messageText
                                                                 delegate: nil
                                                        cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)

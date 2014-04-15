@@ -1373,7 +1373,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     [theContact.publicKey isEqualToData: theContact.verifiedKey])
                 {
                     // a verified key has been changed, warn about it
-                    [HXOUI showAlertWithMessageAsync:@"Verified key of contact %@ has changed" withTitle: @"Verified Key Changed" withArgument: theContact.nickName];
+                    [HXOUI showAlertWithMessageAsync:@"key_verified_public_key_changed_message_format" withTitle: @"key_verified_public_key_changed_title" withArgument: theContact.nickName];
                 }
                 theContact.publicKeyString = keyRecord[@"key"];
                 theContact.publicKeyId = keyRecord[@"keyId"];

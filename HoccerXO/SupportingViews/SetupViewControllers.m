@@ -116,10 +116,10 @@
                         [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
                         break;
                     case -1:
-                        [HXOUI showErrorAlertWithMessageAsync:@"Wrong decryption passphrase or credentials file damaged. Try again." withTitle:@"Credentials Import Failed"];
+                        [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];
                         break;
                     case 0:
-                        [HXOUI showErrorAlertWithMessageAsync:@"Imported credentials are the same as the active ones." withTitle:@"Same credentials"];
+                        [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_equals_current_message" withTitle:@"credentials_file_equals_current_title"];
                         break;
                     default:
                         NSLog(@"importCredentialsPressed: unhandled result %d", result);
@@ -129,8 +129,8 @@
         };
 
         [HXOUI enterStringAlert: nil
-                      withTitle: NSLocalizedString(@"Enter decryption passphrase",nil)
-                withPlaceHolder: NSLocalizedString(@"Enter passphrase",nil)
+                      withTitle: NSLocalizedString(@"credentials_file_enter_passphrase_alert",nil)
+                withPlaceHolder: NSLocalizedString(@"credentials_file_passphrase_placeholder",nil)
                    onCompletion: passphraseCompletion];
 
     } else {

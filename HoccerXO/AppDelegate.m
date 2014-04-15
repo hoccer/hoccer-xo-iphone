@@ -1152,8 +1152,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 -(void) didFailWithInvalidCertificate:(DoneBlock)done {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invalid_cert_title", nil)
-                                                     message: NSLocalizedString(@"invalid_cert_message", nil)
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"certificate_invalid_title", nil)
+                                                     message: NSLocalizedString(@"certificate_invalid_message", nil)
                                              completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { done(); }
                                            cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
                                            otherButtonTitles: nil];

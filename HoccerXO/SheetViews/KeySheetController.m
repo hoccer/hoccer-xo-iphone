@@ -162,9 +162,9 @@
 
 - (NSString*) verificationItemTitle {
     if ([self keyIsVerified]) {
-        return NSLocalizedString((@"unverify_publickey"), nil);
+        return NSLocalizedString((@"key_unverify_public_btn_title"), nil);
     } else {
-        return  NSLocalizedString((@"verify_publickey"), nil);
+        return  NSLocalizedString((@"key_verify_public_btn_title"), nil);
     }
 }
 

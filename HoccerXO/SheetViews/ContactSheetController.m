@@ -314,7 +314,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             }
         }
     } else {
-        return @"delete_contact";
+        return @"contact_delete_btn_title";
     }
 }
 
@@ -446,7 +446,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
         destructor = @selector(leaveGroup);
     } else {
-        title = NSLocalizedString(@"delete_contact_title", nil);
+        title = NSLocalizedString(@"contact_delete_title", nil);
         destructiveButtonTitle = NSLocalizedString(@"Delete", nil);
         destructor = @selector(deleteContact);
     }
