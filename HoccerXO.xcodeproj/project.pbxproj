@@ -77,6 +77,7 @@
 		6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484C16F4210A00DE03C2 /* NSString+UUID.m */; };
 		63793C0C18D5024800BB6951 /* paper_dart.m in Sources */ = {isa = PBXBuildFile; fileRef = 63793C0B18D5024800BB6951 /* paper_dart.m */; };
 		637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DA53418D0BECF00B11AB9 /* VectorArtView.m */; };
+		637FD6BA18FDCDCD0057F854 /* ProfileViewTabItemHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 637FD6B918FDCDCD0057F854 /* ProfileViewTabItemHelper.m */; };
 		63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1C1857CF3F0001AC96 /* TextMessageCell.m */; };
 		63808A201858A6F90001AC96 /* MessageSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1F1858A6F90001AC96 /* MessageSection.m */; };
 		63808A231858A76E0001AC96 /* TextSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A221858A76E0001AC96 /* TextSection.m */; };
@@ -498,6 +499,8 @@
 		63793C0B18D5024800BB6951 /* paper_dart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = paper_dart.m; sourceTree = "<group>"; };
 		637DA53318D0BECF00B11AB9 /* VectorArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorArtView.h; sourceTree = "<group>"; };
 		637DA53418D0BECF00B11AB9 /* VectorArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorArtView.m; sourceTree = "<group>"; };
+		637FD6B818FDCDCD0057F854 /* ProfileViewTabItemHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewTabItemHelper.h; sourceTree = "<group>"; };
+		637FD6B918FDCDCD0057F854 /* ProfileViewTabItemHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewTabItemHelper.m; sourceTree = "<group>"; };
 		63808A1B1857CF3F0001AC96 /* TextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextMessageCell.h; sourceTree = "<group>"; };
 		63808A1C1857CF3F0001AC96 /* TextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextMessageCell.m; sourceTree = "<group>"; };
 		63808A1E1858A6F90001AC96 /* MessageSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSection.h; sourceTree = "<group>"; };
@@ -1283,6 +1286,8 @@
 				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
 				63848A9318F473AC00C253A4 /* SmallContactCell.h */,
 				63848A9418F473AC00C253A4 /* SmallContactCell.m */,
+				637FD6B818FDCDCD0057F854 /* ProfileViewTabItemHelper.h */,
+				637FD6B918FDCDCD0057F854 /* ProfileViewTabItemHelper.m */,
 			);
 			name = "Sheet Views";
 			path = SheetViews;
@@ -2208,6 +2213,7 @@
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
+				637FD6BA18FDCDCD0057F854 /* ProfileViewTabItemHelper.m in Sources */,
 				630CAB8518E1E31600782507 /* DatasheetActionCell.m in Sources */,
 				63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */,
 				63B7900318D4E546003A9125 /* tab_settings.m in Sources */,

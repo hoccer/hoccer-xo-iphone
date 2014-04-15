@@ -49,6 +49,8 @@
 }
 
 - (void) awakeFromNib {
+
+
     self.inspectedObject = [UserProfile sharedProfile];
 }
 

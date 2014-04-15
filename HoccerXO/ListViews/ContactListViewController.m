@@ -60,7 +60,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [super awakeFromNib];
 
     self.tabBarItem.image = [[[tab_contacts alloc] init] image];
-    self.tabBarItem.title = NSLocalizedString(@"contacts_tab_title", nil);
+    self.tabBarItem.title = NSLocalizedString(@"contact_list_nav_title", nil);
 }
 
 

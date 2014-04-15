@@ -5,11 +5,11 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
-        <!--Themed Navigation Controller - Chats-->
+        <!--Themed Navigation Controller-->
         <scene sceneID="11">
             <objects>
                 <navigationController id="3" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Chats" id="rtu-HQ-rkp"/>
+                    <tabBarItem key="tabBarItem" title="" id="rtu-HQ-rkp"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -50,7 +50,7 @@
         <!--Profile Sheet View Controller-->
         <scene sceneID="Pvk-PW-n2g">
             <objects>
-                <tableViewController id="gLM-u6-CgJ" userLabel="Profile Sheet View Controller" customClass="DatasheetViewController" sceneMemberID="viewController">
+                <tableViewController id="gLM-u6-CgJ" userLabel="Profile Sheet View Controller" customClass="ProfileViewTabItemHelper" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Cw2-Md-oEv">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -782,11 +782,11 @@
             </objects>
             <point key="canvasLocation" x="3044" y="723"/>
         </scene>
-        <!--Themed Navigation Controller - Contacts-->
+        <!--Themed Navigation Controller-->
         <scene sceneID="YWf-kL-LN8">
             <objects>
                 <navigationController definesPresentationContext="YES" id="ndO-Hb-TaY" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Contacts" id="93c-hp-8Jv"/>
+                    <tabBarItem key="tabBarItem" title="" id="93c-hp-8Jv"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5K-80-wga">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -798,11 +798,11 @@
             </objects>
             <point key="canvasLocation" x="-405" y="-1131"/>
         </scene>
-        <!--Themed Navigation Controller - Profile-->
+        <!--Themed Navigation Controller-->
         <scene sceneID="389-Am-i9Z">
             <objects>
                 <navigationController definesPresentationContext="YES" id="dNK-Pr-I05" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Profile" id="Yft-kE-KJs"/>
+                    <tabBarItem key="tabBarItem" title="" id="Yft-kE-KJs"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wrH-DR-hdJ">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1020,10 +1020,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="nwS-55-3Qg"/>
-        <segue reference="iwW-8u-tft"/>
         <segue reference="2U5-We-Ovb"/>
+        <segue reference="iwW-8u-tft"/>
         <segue reference="CES-Ic-Rhf"/>
+        <segue reference="Jku-Va-0fi"/>
         <segue reference="KXG-tu-Cv6"/>
         <segue reference="3XQ-ea-QwO"/>
         <segue reference="thl-MY-iCZ"/>

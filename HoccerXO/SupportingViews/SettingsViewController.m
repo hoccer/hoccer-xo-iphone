@@ -13,11 +13,18 @@
 #import "UserProfile.h"
 #import "DatasheetViewController.h"
 
+#import "tab_settings.h"
+
 @implementation SettingsViewController
+
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    self.title = NSLocalizedString(@"settings_nav_title", nil);
+    self.tabBarItem.image = [[tab_settings alloc] init].image;
+}
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = self.parentViewController.tabBarItem.title;
     self.delegate = self;
 }
 

@@ -22,10 +22,6 @@
 #import "TestFlight.h"
 #import "HXOUI.h"
 #import "ChatViewController.h"
-#import "tab_chats.h"
-#import "tab_contacts.h"
-#import "tab_profile.h"
-#import "tab_settings.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
@@ -106,7 +102,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
-    // [self deleteDatabase];
  
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
         [TestFlight takeOff:@"26645843-f312-456c-8954-444e435d4ad2"];
@@ -129,7 +124,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [UIStoryboard storyboardWithName: storyboardName bundle: [NSBundle mainBundle]];
 
     [[HXOUI theme] setupTheming];
-    [self localizeTabBar];
 
     // NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
@@ -180,22 +174,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSLog(@"myKey=%@", [myKey hexadecimalString]);
 #endif
     return YES;
-}
-
-- (void) localizeTabBar {
-    UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
-    for (UITabBarItem * item in tabBarController.tabBar.items) {
-        if ([item.title isEqualToString: @"chat_list_nav_title"]) {
-            //item.image = [[[tab_chats alloc] init] image];
-        } else if ([item.title isEqualToString: @"contact_list_nav_title"]) {
-            item.image = [[[tab_contacts alloc] init] image];
-        } else if ([item.title isEqualToString: @"profile_nav_title"]) {
-            item.image = [[[tab_profile alloc] init] image];
-        } else if ([item.title isEqualToString: @"settings_nav_title"]) {
-            item.image = [[[tab_settings alloc] init] image];
-        }
-        item.title = NSLocalizedString(item.title, nil);
-    }
 }
 
 - (void) checkForCrash {
