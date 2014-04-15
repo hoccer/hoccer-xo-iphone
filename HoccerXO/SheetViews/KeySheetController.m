@@ -182,7 +182,7 @@
     if ( ! _renewKeypairSection) {
         _renewKeypairSection = [DatasheetSection datasheetSectionWithIdentifier: @"renew_keypair_section"];
         _renewKeypairSection.items = @[self.renewKeypairItem];
-        _renewKeypairSection.footerText = HXOLocalizedStringWithLinks(@"profile_renew_keypair_info", nil);
+        _renewKeypairSection.footerText = HXOLocalizedStringWithLinks(@"key_renew_keypair_info", nil);
     }
     return _renewKeypairSection;
 }
@@ -190,7 +190,7 @@
 - (DatasheetItem*) renewKeypairItem {
     if (! _renewKeypairItem) {
         _renewKeypairItem = [self itemWithIdentifier: @"" cellIdentifier: @"DatasheetActionCell"];
-        _renewKeypairItem.title = @"profile_renew_keypair";
+        _renewKeypairItem.title = @"key_renew_keypair";
         _renewKeypairItem.visibilityMask = DatasheetModeEdit;
         _renewKeypairItem.target = self;
         _renewKeypairItem.action = @selector(renewKeypairPressed:);

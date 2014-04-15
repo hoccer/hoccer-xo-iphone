@@ -118,7 +118,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (DatasheetItem*) destructiveButton {
     if ( ! _destructiveButton) {
-        _destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DatasheetActionCell"];
+        _destructiveButton = [self itemWithIdentifier: @"delete" cellIdentifier: @"DatasheetActionCell"];
         _destructiveButton.titleTextColor = [HXOUI theme].destructiveTextColor;
         _destructiveButton.visibilityMask = DatasheetModeNone;
     }

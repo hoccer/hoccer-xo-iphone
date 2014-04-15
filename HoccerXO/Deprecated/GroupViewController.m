@@ -96,7 +96,7 @@
 - (void) cleanupGroup {
     if (GROUPVIEW_DEBUG) NSLog(@"GroupViewController: cleanupGroup)");
     if (_deleteGroupFlag || (_newGroupCreated && _canceled)) {
-        if ([self.group.groupState isEqualToString:@"kept"]) {
+        if ([self.group.groupState isEqualToString: kRelationStateKept]) {
             [self.backend deleteInDatabaseAllMembersAndContactsofGroup:self.group];
             NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
             [moc deleteObject: self.group];
@@ -164,10 +164,10 @@
 - (NSString*) navigationItemTitleKey {
     switch (_mode) {
         case ProfileViewModeNewGroup:
-            return @"navigation_title_new_group";
+            return @"group_new_nav_title";
         case ProfileViewModeEditGroup:
         case ProfileViewModeShowGroup:
-            return @"navigation_title_group";
+            return @"group_nav_title";
         default:
             return @"navigation_title_unhandled_mode";
     }
@@ -213,7 +213,7 @@
 - (void) declineOrLeaveOrDeletePressed: (id) sender {
     NSString * title = nil;
     NSString * destructiveButtonTitle = nil;
-    if ([self.group.groupState isEqualToString:@"kept"]) {
+    if ([self.group.groupState isEqualToString: kRelationStateKept]) {
         title = NSLocalizedString(@"group_delete_title", nil);
         destructiveButtonTitle = NSLocalizedString(@"group_delete_button_title", nil);
     } else {
@@ -234,7 +234,7 @@
     }
     UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle: title
                                                               delegate: self
-                                                     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                                     cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                                 destructiveButtonTitle: destructiveButtonTitle
                                                      otherButtonTitles: nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -311,7 +311,7 @@
 }
 
 - (NSString*) declineOrLeaveOrDeleteLabel {
-    if ([self.group.groupState isEqualToString:@"kept"]) {
+    if ([self.group.groupState isEqualToString: kRelationStateKept]) {
         return NSLocalizedString(@"group_delete_data", nil);
     }
     if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
@@ -347,7 +347,7 @@
     if (admins.count == 0) {
         return @"No Admin";
     }
-    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_plural" : @"group_admin_label_singular", nil);
+    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_p" : @"group_admin_label_s", nil);
     return [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
 }
 
@@ -376,7 +376,7 @@
     }
     
     _declineInviteOrLeaveOrDeleteGroupItem.currentValue = [self declineOrLeaveOrDeleteLabel];
-    if (![self.group.groupState isEqualToString:@"kept"]) {
+    if (![self.group.groupState isEqualToString: kRelationStateKept]) {
         if ( ! [self.group iAmAdmin]) {
             [utilities addObject: _declineInviteOrLeaveOrDeleteGroupItem];
         } else {

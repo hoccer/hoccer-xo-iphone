@@ -1,33 +1,24 @@
 "language_code"="en";
 
+"ok"     = "Ok";
+"cancel" = "Cancel";
+"done"   = "Done";
+"save"   = "Save";
+"delete" = "Delete";
+"enter"  = "Enter";
 
+"search_placeholder" = "search";
 
-"Cancel" = "Cancel";
-"search" = "search";
-"Send" = "Send";
-"Copy" = "Copy";
-"delete_btn_title" = "Delete";
-"Save" = "Save";
-"Delete" = "Delete";
-"ok_button_title" = "Ok";
-"done_button_title" = "Done";
-"enter_button_title" = "Enter";
-
-"Resend" = "Send";
-"Open with..."="Open with...";
-"Share"="Share";
-"Forward" = "Forward";
+"fatal_error_default_title"   = "Fatal Error";
+"fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
 
 
 
-"Chats" = "Chats";
-"Contacts" = "Contacts";
-"Profile" = "Profile";
-"contacts_menu_item" = "Contacts";
-"Settings" = "Settings";
-"navigation_title_profile" = "Profile";
-"navigation_title_contact"  = "Contact";
-"navigation_title_contacts" = "Contacts";
+
+
+
+"http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
+"http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
 
 //==============================================================================
 // About
@@ -64,6 +55,21 @@
 "attachment_upload_failed_title"         = "Upload failed";
 "attachment_upload_failed_message"       = "Failed to upload an attachment";
 
+"attachment_type_image"                  = "Image";
+"attachment_type_video"                  = "Video";
+"attachment_type_audio"                  = "Audio";
+"attachment_type_vcard"                  = "Adress";
+"attachment_type_geolocation"            = "Location";
+
+"attachment_overlimit_title"             = "Really send Message?";
+"attachment_overlimit_upload_question"   = "Attachment size is %@. Do you really want to send this message?";
+"attachment_overlimit_confirm"           = "Send";
+"attachment_on_hold_upload_question"     = "Upload %@?";
+"attachment_on_hold_download_question"   = "Download %@?";
+
+"attachment_save_to_album_failed_title"  = "Save in Album Failed";
+"attachment_incompatible_video_message"  = "Video is not compatible with Album";
+
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Pasteboard (Image)";
 "Paste Video Attachment" = "Pasteboard (Video)";
@@ -75,32 +81,88 @@
 "Opened data Attachment %@"="External (%@)";
 
 //==============================================================================
+// Backend
+//==============================================================================
+
+"backend_stopped"        = "not connected";
+"backend_connecting"     = "connecting...";
+"backend_registering"    = "registering...";
+"backend_authenticating" = "authenticating...";
+"backend_ready"          = "connected";
+"backend_stopping"       = "disconnecting...";
+"backend_no_internet"    = "no internet connection";
+
+//==============================================================================
 // Certificates
 //==============================================================================
 
-"certificate_invalid_title" = "Invalid Server Certificate";
+"certificate_invalid_title"   = "Invalid Server Certificate";
 "certificate_invalid_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
 //==============================================================================
 // Chat
 //==============================================================================
 
-"chat_message_too_long_title"   = "Message too long";
-"chat_message_too_long_message" = "Message is longer than %d bytes. Please keep it brief.";
+"chat_list_nav_title"        = "Chats";
+
+"chat_message_placeholder"          = "Message";
+"chat_call_phone_number_btn_title"  = "Call";
+
+"chat_cant_send_alert_title"        = "Can Not Send Message";
+"chat_contact_blocked_message"      = "Contact is blocked.";
+"chat_relationship_removed_message" = "Relationship with this contact does no longer exist.";
+"chat_message_too_long_message"     = "Message is longer than %d bytes. Please keep it brief.";
+"chat_wait_for_invitees_message"    = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
+"chat_group_you_are_alone_message"  = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
+"chat_no_groupkey_message"          = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
+
+"chat_message_pending"              = "pending";
+"chat_message_sent"                 = "sent";
+"chat_message_delivered"            = "delivered";
+"chat_message_read"                 = "read";
+"chat_message_failed"               = "failed";
+
+"chat_resend_menu_item"             = "Send";
+"chat_open_with_menu_item"          = "Open with...";
+"chat_share_menu_item"              = "Share";
 
 //==============================================================================
 // Contact - uses strings from profile
 //==============================================================================
 
-"contact_chat_title"               = "Chat";
-"contact_unblock_btn_title_format" = "Unblock %@";
-"contact_block_btn_title_format"   = "Block %@";
+"contact_list_nav_title" = "Contacts";
+"contact_nav_title"  = "Contact";
 
-"contact_message_count_format_s"   = "%@ message";
-"contact_message_count_format_p"   = "%@ messages";
+"contact_chat_title"                            = "Chat";
+"contact_unblock_btn_title_format"              = "Unblock %@";
+"contact_block_btn_title_format"                = "Block %@";
 
-"contact_delete_btn_title"         = "Delete contact";
-"contact_delete_safety_question"   = "Delete contact, chat and attachments?";
+"contact_message_count_format_s"                = "%@ message";
+"contact_message_count_format_p"                = "%@ messages";
+
+"contact_delete_btn_title"                      = "Delete contact";
+"contact_delete_safety_question"                = "Delete contact, chat and attachments?";
+
+"contact_delete_associated_data_question"       = "Relationship with contact '%@' no longer exists. Delete associated profile, chats and data?";
+"contact_deleted_title"                         = "Contact Releationship removed";
+"contact_keep_data_button"                      = "Keep Data";
+"contact_delete_data_button"                    = "Delete Data";
+
+"contact_new_friend_title"                      = "New Friend";
+"contact_new_friend_message"                    = "Contact '%@' is now your friend.";
+
+"contact_blocked_title"                         = "Contact Blocked";
+"contact_blocked_message"                       = "Exchange of messages with contact '%@' has been temporarily blocked.";
+
+"contact_relationship_removed_title"            = "Relationship removal";
+"contact_relationship_removed_message"          = "Relationship with contact '%@' has been removed.";
+"contact_kept_and_relationship_removed_message" = "No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
+
+"contact_relationship_none"                     = "None";
+"contact_relationship_friend"                   = "Friend";
+"contact_relationship_groupfriend"              = "Acquaintance by group";
+"contact_relationship_kept"                     = "No Relationship";
+"contact_relationship_blocked"                  = "Blocked";
 
 //==============================================================================
 // Credentials
@@ -135,6 +197,89 @@
 "credentials_delete_safety_question"         = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
 
 //==============================================================================
+// Database
+//==============================================================================
+
+"database_corrupt_not_deleted_title"   = "Database not deleted";
+"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
+"database_corrupt_deleted_title"       = "Database deleted";
+"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
+
+//==============================================================================
+// Geolocations
+//==============================================================================
+
+"geolocation_default_name" = "The Place";
+"geolocation_picker_title" = "Drag the Pin";
+
+//==============================================================================
+// Groups - uses strings from contact and thus profile...
+//==============================================================================
+
+"group_list_nav_title"   = "Groups";
+"group_nav_title"                       = "Group";
+"group_new_nav_title"                   = "New Group";
+
+"group_name_placeholder"                = "Group Name";
+
+"group_invite_members_title"            = "Invite more";
+"group_invite_message_format"           = "You have been invited to group '%@' administrated by '%@'. What do you want to do?";
+"group_invite_title"                    = "Group Invitation";
+"group_invite_decide_later_btn_title"   = "Decide later";
+"group_invite_join_group_btn_title"     = "Join Group";
+"group_invite_decline_btn_title"        = "Decline Invitation";
+"group_invite_dismissed_title"          = "Invitation dismissed";
+"group_invite_dismissed_message_format" = "'%@' is no longer invited to group '%@'";
+"group_invite_removed_title"            = "The invitation for group '%@' has been removed.";
+
+"group_join_button"                     = "Join Group";
+"group_admin_you"                       = "You";
+"group_admin_label_s"                   = "Admin: ";
+"group_admin_label_p"                   = "Admins: ";
+"group_decline_invitation"              = "Decline Invitation";
+"group_leave"                           = "Leave Group";
+"group_decline_invitation_title"        = "Decline Invitation?";
+"group_decline_button_title"            = "Decline";
+"group_leave_group_title"               = "Leave Group?";
+"group_leave_group_button_title"        = "Leave";
+"group_close"                           = "Close Group";
+"group_close_group_title"               = "Do you really want to close the group for everybody and ever?";
+"group_close_group_button_title"        = "Close";
+"group_delete_data"                     = "Delete Group Data";
+
+"group_kick_member_confirm"             = "Kick";
+"group_no_admin"                        = "No Admin";
+
+"group_joined_title"                    = "Group Joined";
+"group_joined_message_format"           = "%@ joined group %@ as a new member.";
+
+"group_left_title"                      = "Group Left";
+"group_left_message_format"             = "'%@' is no longer member of group '%@'.";
+
+"group_deleted_title"                   = "Group Membership Removed";
+"group_deleted_message_format"          = "Your membership in group '%@' no longer exists. Delete associated chats and data?";
+"group_keep_data_button"                = "Keep Data";
+"group_delete_data_button"              = "Delete Data";
+
+"group_delete_title"                    = "Delete group and all associated chats and data?";
+"group_delete_button_title"             = "Delete Group";
+
+"group_kicked_title"                    = "Your membership in group '%@' has been removed.";
+
+"group_state_kept"                      = "Group Deactivated";
+
+"group_membership_state_invited"        = "invited";
+"group_membership_state_joined"         = "joined";
+
+"group_membership_role_admin"           = "admin";
+"group_membership_role_member"          = "member";
+
+"group_member_count_n_joined"           = "%@%d joined";
+"group_member_count_one_joined"         = "%@one joined";
+"group_member_count_none_joined"        = "%@you are alone";
+"group_member_invited_count"            = "%@%d invited";
+
+//==============================================================================
 // Invitations
 //==============================================================================
 
@@ -161,6 +306,9 @@
 // Keys
 //==============================================================================
 
+"key_view_title_you"                             = "Your Key";
+"key_view_title_other"                           = "Key";
+
 "key_state_unverified"                           = "Not verified";
 "key_state_verified"                             = "Verfied";
 "key_state_mistrusted"                           = "Mistrusted";
@@ -170,8 +318,8 @@
 "key_length_item"                                = "Key Length";
 "key_length_unit_format"                         = "%@ bit";
 
-"key_view_title_you"                             = "Your Key";
-"key_view_title_other"                           = "Key";
+"key_renew_keypair"                              = "Renew RSA Keypair";
+"key_renew_keypair_info"                         = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
 
 "key_import_public_btn_title"                    = "Import Public Key";
 "key_import_private_btn_title"                   = "Import Private Key";
@@ -198,206 +346,38 @@
 "key_verified_public_key_changed_message_format" = "The key of contact '%@' has changed, and the old key had been verified. Verify the new key for additional security.";
 
 //==============================================================================
+// Permissions
+//==============================================================================
+
+"permission_denied_title"              = "Access Denied";
+"permission_denied_microphone_message" = "Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
+
+//==============================================================================
 // Profile
 //==============================================================================
 
-"profile_avatar_option_sheet_title"="Get Avatar Image from:";
+"profile_nav_title"                      = "Profile";
+
+"profile_avatar_option_sheet_title"      = "Get Avatar Image from:";
 "profile_avatar_option_delete_btn_title" = "Delete Avatar";
 
-"profile_name_label" = "Name:";
-"profile_name_placeholder" = "Your Name";
-"profile_renew_keypair" = "Renew RSA Keypair";
-"profile_renew_keypair_info" = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+"profile_name_label"                     = "Name:";
+"profile_name_placeholder"               = "Your Name";
 
-"profile_key_btn_title" = "Key";
+"profile_key_btn_title"                  = "Key";
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-"stopped"        = "not connected";
-"connecting"     = "connecting...";
-"registering"    = "registering...";
-"authenticating" = "authenticating...";
-"ready"          = "connected";
-"stopping"       = "disconnecting...";
-"no internet"    = "no internet connection";
-
-"image"       = "Image";
-"video"       = "Video";
-"audio"       = "Audio";
-"vcard"       = "Adress";
-"geolocation" = "Location";
-
-
-"The Place"="The Place";
-
-"http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
-"http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
-
-"group_segment_title" = "Groups";
-
-
-"navigation_title_new_group" = "New Group";
-"navigation_title_group" = "Group";
-
-"group_name_placeholder" = "Group Name";
-"group_invite_button" = "Invite or kick Member";
-
-"group_invite_members_title" = "Invite more";
-
-"group_invite_title" = "Invite '%@' to group '%@'?";
-"group_kick_title" = "Kick '%@' from group '%@'?";
-"group_join_button" = "Join Group";
-"group_admin_you" = "You";
-"group_admin_label_singular" = "Admin: ";
-"group_admin_label_plural" = "Admins: ";
-"group_decline_invitation" = "Decline Invitation";
-"group_leave" = "Leave Group";
-"group_decline_invitation_title" = "Decline Invitation?";
-"group_decline_button_title" = "Decline";
-"group_leave_group_title" = "Leave Group?";
-"group_leave_group_button_title" = "Leave";
-"group_close" = "Close Group";
-"group_close_group_title" = "Do you really want to close the group for everybody and ever?";
-"group_close_group_button_title" = "Close";
-"group_delete_data"="Delete Group Data";
-
-"group_kick_member_confirm" = "Kick";
-
-"group_no_admin" = "No Admin";
-
-"group_no_other_joined_partners_text"="You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
-"group_no_other_partner_text"="You can not send a message to this group because there are no members except you. Please invite friends to this group.";
-"group_no_other_partners_title"="No other group members";
-
-"'%@' has joined group '%@'"="'%@' has joined group '%@' as new member.";
-"group_joined_title"="Group Joined";
-
-"'%@' has left group '%@'"="'%@' is no longer member of group '%@'.";
-"group_left_title"="Group Left";
-
-"'%@' no longer invited to group '%@'"="'%@' is no longer invited to group '%@'";
-"group_disinvited_title"="Invitation dismissed";
-
-
-"Group '%@' no longer exists. Delete associated chats and data?"="Your membership in group '%@' no longer exists. Delete associated chats and data?";
-"group_deleted_title"="Group Membership Removed";
-"group_keep_data_button"="Keep Data";
-"group_delete_data_button"="Delete Data";
-
-"group_delete_title"="Delete group and all associated chats and data?";
-"group_delete_button_title"="Delete Group";
-
-"You have been invited to group '%@' administrated by '%@'"="You have been invited to group '%@' administrated by '%@'. What do you want to do?";
-"invitation_title"="Group Invitation";
-"invitation_decide_later_button_title"="Decide later";
-"invitation_join_group_button_title"="Join Group";
-"invitation_decline_button_title"="Decline Invitation";
-
-"You have been kicked from group '%@'"="Your membership in group '%@' has been removed.";
-"The invitation for group '%@' has been removed."="The invitation for group '%@' has been removed.";
-
-"Group Deactivated"="Group Deactivated";
-"invited"="invited";
-"Invitation not yet accepted"="Invitation not yet accepted";
-"Admin"="Admin";
-"%@%d joined"="%@%d joined";
-"%@one joined"="%@one joined";
-"%@you are alone"="%@you are alone";     
-"%@%d invited"="%@%d invited";
-
-"corrupt_database_not_deleted_title"   = "Database not deleted";
-"corrupt_database_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
-"corrupt_database_deleted_title"       = "Database deleted";
-"corrupt_database_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
-
-"fatal_error_default_title"   = "Fatal Error";
-"fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
-
-"new_friend_message"="Contact '%@' is now your friend.";
-"new_friend_title"="New Friend";
-
-"friend_blocked_message"="Exchange of messages with contact '%@' has been temporarily blocked.";
-"friend_blocked_title"="Contact Blocked";
-
-"relationship_removed_message"="Relationship with contact '%@' has been removed.";
-"relationship_removed_title"="Relationship removal";
- 
-"relationship_removed_but_contact_kept_message"="No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
-
-
-"contact_delete_associated_data_question"="Relationship with contact '%@' no longer exists. Delete associated profile, chats and data?";
-"contact_deleted_title"="Contact Releationship removed";
-"contact_keep_data_button"="Keep Data";
-"contact_delete_data_button"="Delete Data";
-
-"geolocation_picker_title"="Drag the Pin";
-
-"membership_state_invited" = "invited";
-"membership_state_joined" = "joined";
-
-"membership_role_admin" = "admin";
-"membership_role_member" = "member";
-
-"friend"="Friend";
-"groupfriend"="Acquaintance by group";
-
-"kept"="No Relationship";
-"blocked"="Blocked";
-
-"cant_send_contact_blocked"="Contact is blocked.";
-"cant_send_relationship_removed"="Relationship with this contact does no longer exist.";
-"cant_send_title"="Can Not Send Message";
-
-"overlimit_attachment_upload_question"="Attachment size is %@. Do you really want to send this message?";
-"overlimit_attachment_title"="Really send Message?";
-"message_do_not_send_button_title"="No";
-"message_send_button_title"="Send";
-
-"cant_send_no_groupkey_title"="No Group Key";
-"cant_send_no_groupkey"="Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
-
-"button_title_call" = "Call";
-
-"vcard_default_title" = "Contact";
-"location_default_title" = "Location";
-
-"chat_view_message_placeholder" = "Message";
-
-"microphone_access_denied_title"="Microphone Access Denied";
-"microphone_access_denied_message"="Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
-
-"Chats"="Chats";
-
-"message_pending"   = "pending";
-"message_sent"      = "sent";
-"message_delivered" = "delivered";
-"message_read"      = "read";
-"message_failed"    = "failed";
-
-"upload_question" = "Upload %@?";
-"download_question" = "Download %@?";
-
-"Can not save image in Album"="Can not save image in Album";
-"Can not load image to save it in Album"="Can not load image to save it in Album";
-"Can not save video in Album"="Can not save video in Album";
-"Video not compatible with Album"="Video not compatible with Album";
+//==============================================================================
+// Recorder
+//==============================================================================
 
 "recorder_play_button_title"   = "Play";
 "recorder_use_button_title"    = "Use";
 
-"location_picker_title" = "Drag the Pin";
-"location_picker_done_button_title" = "Done";
+//==============================================================================
+// Settings
+//==============================================================================
 
+"settings_nav_title" = "Settings";
 
-
+// See Settings.strings

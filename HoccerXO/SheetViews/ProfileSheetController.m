@@ -32,7 +32,7 @@
 - (void) commonInit {
     [super commonInit];
 
-    self.title = @"navigation_title_profile";
+    self.title = @"profile_nav_title";
 
     self.nicknameItem.enabledMask = DatasheetModeEdit;
 
@@ -164,7 +164,7 @@
 
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_import_safety_question", nil)
                                         completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                  destructiveButtonTitle: NSLocalizedString(@"credentials_key_import_confirm_btn_title_btn_title", nil)
                                       otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
@@ -183,8 +183,8 @@
 
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_delete_safety_question", nil)
                                         completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"delete_btn_title", nil)
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                       otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }
@@ -214,8 +214,8 @@
 
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_file_delete_safety_question", nil)
                                         completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"delete_btn_title", nil)
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                       otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }

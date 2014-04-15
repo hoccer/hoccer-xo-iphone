@@ -26,6 +26,7 @@
 #import "InvitationCodeViewController.h"
 #import "ContactCellProtocol.h"
 #import "GroupInStatuNascendi.h"
+#import "tab_contacts.h"
 
 #define HIDE_SEPARATORS
 
@@ -51,6 +52,18 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 
+- (void)awakeFromNib {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        self.clearsSelectionOnViewWillAppear = NO;
+        self.preferredContentSize = CGSizeMake(320.0, 600.0);
+    }
+    [super awakeFromNib];
+
+    self.tabBarItem.image = [[[tab_contacts alloc] init] image];
+    self.tabBarItem.title = NSLocalizedString(@"contacts_tab_title", nil);
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -68,7 +81,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         self.tableView.tableHeaderView = self.searchBar;
     }
     self.searchBar.delegate = self;
-    self.searchBar.placeholder = NSLocalizedString(@"search", @"Contact List Search Placeholder");
+    self.searchBar.placeholder = NSLocalizedString(@"search_placeholder", @"Contact List Search Placeholder");
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.bounds.size.height);
 
     self.keyboardHidingObserver = [AppDelegate registerKeyboardHidingOnSheetPresentationFor:self];
@@ -92,12 +105,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (void) setupTitle {
     if (self.hasGroupContactToggle) {
-        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"Contacts", nil), NSLocalizedString(@"group_segment_title", nil)]];
+        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"contact_list_nav_title", nil), NSLocalizedString(@"group_list_nav_title", nil)]];
         self.groupContactsToggle.selectedSegmentIndex = 0;
         [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
         self.navigationItem.titleView = self.groupContactsToggle;
     }
-    self.navigationItem.title = NSLocalizedString(@"navigation_title_contacts", nil);
+    self.navigationItem.title = NSLocalizedString(@"contact_list_nav_title", nil);
 }
 
 - (CGFloat) calculateRowHeight {
@@ -366,40 +379,41 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
         NSString * joinedStatus = @"";
 
-        if ([group.groupState isEqualToString:@"kept"]) {
-            joinedStatus = NSLocalizedString(@"Group Deactivated", nil);
+        if ([group.groupState isEqualToString: kRelationStateKept]) {
+            joinedStatus = NSLocalizedString(@"group_state_kept", nil);
         } else if ([group.myGroupMembership.state isEqualToString:@"invited"]){
-            joinedStatus = NSLocalizedString(@"Invitation not yet accepted", nil);
+            joinedStatus = NSLocalizedString(@"group_membership_state_invited", nil);
         } else {
             if (group.iAmAdmin) {
-                joinedStatus = NSLocalizedString(@"Admin", nil);
+                joinedStatus = NSLocalizedString(@"group_membership_role_admin", nil);
             }
             if (joinedMemberCount > 0) {
                 if (joinedStatus.length>0) {
                     joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
                 }
                 if (joinedMemberCount > 1) {
-                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d joined",nil), joinedStatus,joinedMemberCount];
+                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_count_n_joined",nil), joinedStatus,joinedMemberCount];
                 } else {
-                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@one joined",nil), joinedStatus];
+                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_count_one_joined",nil), joinedStatus];
                 }
             } else {
                 if (joinedStatus.length>0) {
                     joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
                 }
-                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@you are alone",nil), joinedStatus,joinedMemberCount];
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_count_none_joined",nil), joinedStatus,joinedMemberCount];
 
             }
             if (invitedMemberCount > 0) {
                 if (joinedStatus.length>0) {
                     joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
                 }
-                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d invited",nil), joinedStatus,invitedMemberCount];
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_invited_count",nil), joinedStatus,invitedMemberCount];
             }
         }
         return joinedStatus;
     } else {
-        return NSLocalizedString(contact.relationshipState, nil);
+        NSString * relationshipKey = [NSString stringWithFormat: @"contact_relationship_%@", contact.relationshipState];
+        return NSLocalizedString(relationshipKey, nil);
     }
 }
 
@@ -431,7 +445,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_code_btn_title",@"Invite Actionsheet Button Title")];
     [actions addObject: ^() { [self inviteByCode]; }];
 
-    sheet.cancelButtonIndex = [sheet addButtonWithTitle: NSLocalizedString(@"Cancel", nil)];
+    sheet.cancelButtonIndex = [sheet addButtonWithTitle: NSLocalizedString(@"cancel", nil)];
 
     [sheet showInView: self.view];
 }

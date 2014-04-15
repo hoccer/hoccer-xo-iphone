@@ -97,7 +97,7 @@
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
                                                      message: nil
                                                     delegate: self
-                                           cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                           cancelButtonTitle:NSLocalizedString(@"cancel", nil)
                                            otherButtonTitles:NSLocalizedString(@"Ok", nil), nil];
     [alert show];
 }

@@ -283,7 +283,7 @@
     if ([self.delegate respondsToSelector:@selector(appendAdditionalActionButtons:)]) {
         [self.delegate appendAdditionalActionButtons: attachmentSheet];
     }
-    attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"Cancel", nil)];
+    attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"cancel", nil)];
     
     [attachmentSheet showInView: view];
 }

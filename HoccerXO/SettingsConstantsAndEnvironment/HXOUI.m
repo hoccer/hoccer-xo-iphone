@@ -275,7 +275,7 @@ static HXOUI * _currentTheme;
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
                                                      message: NSLocalizedString(message, nil)
                                                     delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
@@ -294,7 +294,7 @@ static HXOUI * _currentTheme;
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
                                                      message: NSLocalizedString(fullMessage, nil)
                                                     delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
@@ -325,7 +325,7 @@ static HXOUI * _currentTheme;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
                                             completionBlock: completion
-                                          cancelButtonTitle:NSLocalizedString(@"Cancel",nil)
+                                          cancelButtonTitle:NSLocalizedString(@"cancel",nil)
                                           otherButtonTitles:NSLocalizedString(@"OK",nil),nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     UITextField * alertTextField = [alert textFieldAtIndex:0];

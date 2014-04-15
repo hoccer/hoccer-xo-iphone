@@ -185,13 +185,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void) localizeTabBar {
     UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
     for (UITabBarItem * item in tabBarController.tabBar.items) {
-        if ([item.title isEqualToString: @"Chats"]) {
-            item.image = [[[tab_chats alloc] init] image];
-        } else if ([item.title isEqualToString: @"Contacts"]) {
+        if ([item.title isEqualToString: @"chat_list_nav_title"]) {
+            //item.image = [[[tab_chats alloc] init] image];
+        } else if ([item.title isEqualToString: @"contact_list_nav_title"]) {
             item.image = [[[tab_contacts alloc] init] image];
-        } else if ([item.title isEqualToString: @"Profile"]) {
+        } else if ([item.title isEqualToString: @"profile_nav_title"]) {
             item.image = [[[tab_profile alloc] init] image];
-        } else if ([item.title isEqualToString: @"Settings"]) {
+        } else if ([item.title isEqualToString: @"settings_nav_title"]) {
             item.image = [[[tab_settings alloc] init] image];
         }
         item.title = NSLocalizedString(item.title, nil);
@@ -333,10 +333,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 + (void) showMicrophoneAcccessDeniedAlert {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"microphone_access_denied_title", nil)
-                                                     message: NSLocalizedString(@"microphone_access_denied_message", nil)
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
+                                                     message: NSLocalizedString(@"permission_denied_microphone_message", nil)
                                              completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { }
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
@@ -1093,13 +1093,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         NSString * message_tag;
         switch (buttonIndex) {
             case 0:
-                title_tag = @"corrupt_database_not_deleted_title";
-                message_tag = @"corrupt_database_not_deleted_message";
+                title_tag = @"database_corrupt_not_deleted_title";
+                message_tag = @"database_corrupt_not_deleted_message";
                 break;
             case 1:
                 [self deleteDatabase];
-                title_tag = @"corrupt_database_deleted_title";
-                message_tag = @"corrupt_database_deleted_message";
+                title_tag = @"database_corrupt_deleted_title";
+                message_tag = @"database_corrupt_deleted_message";
                 break;
         }
         [self showFatalErrorAlertWithMessage: NSLocalizedString(message_tag, nil) withTitle: NSLocalizedString(title_tag, nil)];
@@ -1155,7 +1155,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"certificate_invalid_title", nil)
                                                      message: NSLocalizedString(@"certificate_invalid_message", nil)
                                              completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { done(); }
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }

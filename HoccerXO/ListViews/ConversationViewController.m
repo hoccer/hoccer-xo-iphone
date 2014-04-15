@@ -21,15 +21,15 @@
 #import "Environment.h"
 #import "HXOUI.h"
 #import "AvatarView.h"
+#import "tab_chats.h"
 
 @implementation ConversationViewController
 
 - (void)awakeFromNib {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.clearsSelectionOnViewWillAppear = NO;
-        self.preferredContentSize = CGSizeMake(320.0, 600.0);
-    }
     [super awakeFromNib];
+
+    self.tabBarItem.image = [[[tab_chats alloc] init] image];
+    self.tabBarItem.title = NSLocalizedString(@"chat_list_nav_title", nil);
 }
 
 - (void)viewDidLoad {
@@ -45,7 +45,7 @@
 }
 
 - (void) setupTitle {
-    self.navigationItem.title = NSLocalizedString(@"Chats", nil);
+    self.navigationItem.title = NSLocalizedString(@"chat_list_nav_title", nil);
 }
 
 - (ChatViewController*) chatViewController {
@@ -129,7 +129,8 @@
             //cell.subtitleLabel.font = [UIFont systemFontOfSize: cell.subtitleLabel.font.pointSize];
         } else {
             if (message.attachment != nil) {
-                cell.subtitleLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(message.attachment.mediaType,nil)];
+                NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", message.attachment.mediaType];
+                cell.subtitleLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(attachment_type,nil)];
             } else {
                 cell.subtitleLabel.text = @"<>"; // should never happen
             }

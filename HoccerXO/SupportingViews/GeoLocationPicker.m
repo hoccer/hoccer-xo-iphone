@@ -28,9 +28,9 @@ static const CGFloat kGeoLocationCityZoom = 500;
     [super viewDidLoad];
     self.locationManager.delegate = self;
 
-    self.title = NSLocalizedString(@"location_picker_title", nil);
-    self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"Cancel", nil);
-    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"done_button_title", nil);
+    self.title = NSLocalizedString(@"geolocation_picker_title", nil);
+    self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"cancel", nil);
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"done", nil);
 }
 
 - (void) viewWillAppear:(BOOL)animated {

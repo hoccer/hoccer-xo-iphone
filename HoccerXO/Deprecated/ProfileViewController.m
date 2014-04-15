@@ -187,9 +187,9 @@ typedef enum ActionSheetTags {
     switch (_mode) {
         case ProfileViewModeMyProfile:
         case ProfileViewModeFirstRun:
-            return @"navigation_title_profile";
+            return @"profile_nav_title";
         case ProfileViewModeContactProfile:
-            return @"navigation_title_contact";
+            return @"contact_nav_title";
         default:
             NSLog(@"ProfileViewController navigationItemTitleKey: unhandled mode");
             return @"unhandled mode";
@@ -201,8 +201,8 @@ typedef enum ActionSheetTags {
         return NSLocalizedString(@"contact_block_btn_title_format", nil);
     } else if ([state isEqualToString: kRelationStateBlocked]) {
         return NSLocalizedString(@"contact_unblock_btn_title_format", nil);
-    } else if ([state isEqualToString: @"kept"]) {
-    } else if ([state isEqualToString: @"groupfriend"]) {
+    } else if ([state isEqualToString:kRelationStateKept]) {
+    } else if ([state isEqualToString: kRelationStateGroupFriend]) {
     } else if (state == nil) {
         //happens with groups
     } else {
@@ -380,7 +380,7 @@ typedef enum ActionSheetTags {
     NSString * title = NSLocalizedString(@"credentials_delete_btn_title_alert_title", nil);
     NSString * message = NSLocalizedString(@"credentials_delete_btn_title_alert_text", nil);
     NSString * keep = NSLocalizedString(@"credentials_setup_keep_btn_title", nil);
-    NSString * delete = NSLocalizedString(@"delete_btn_title", nil);
+    NSString * delete = NSLocalizedString(@"delete", nil);
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title message: message delegate: self cancelButtonTitle: delete otherButtonTitles: keep, nil];
     [alert show];
 }
@@ -413,8 +413,8 @@ typedef enum ActionSheetTags {
     if (buttonIndex == alertView.cancelButtonIndex) {
         UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_delete_btn_title_saftey_question", nil)
                                                             delegate: self
-                                                   cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                              destructiveButtonTitle: NSLocalizedString(@"delete_btn_title", nil)
+                                                   cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                              destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                                    otherButtonTitles: nil];
         sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
         sheet.tag = kActionSheetDeleteCredentials;
@@ -748,7 +748,7 @@ typedef enum ActionSheetTags {
 
     _renewKeyPairInfoItem = [[ProfileItem alloc] initWithName:@"RenewKeypairInfoItem"];
     _renewKeyPairInfoItem.cellClass = [UserDefaultsCellInfoText class];
-    _renewKeyPairInfoItem.currentValue = _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
+    _renewKeyPairInfoItem.currentValue = _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"key_renew_keypair_info", nil);
 
     _exportPublicKeyItem = [[ProfileItem alloc] initWithName:@"ExportPublicKeyItem"];
     _exportPublicKeyItem.currentValue = NSLocalizedString(@"key_export_public_btn_title", nil);
@@ -846,9 +846,9 @@ typedef enum ActionSheetTags {
 
 - (NSString*) renewKeypairButtonTitle {
     if (!_renewKeypairRequested) {
-        return NSLocalizedString(@"profile_renew_keypair", nil);
+        return NSLocalizedString(@"key_renew_keypair", nil);
     } else {
-        return [NSString stringWithFormat:@"%@ ✔",NSLocalizedString(@"profile_renew_keypair", nil)];
+        return [NSString stringWithFormat:@"%@ ✔",NSLocalizedString(@"key_renew_keypair", nil)];
     }    
 }
 
@@ -910,15 +910,15 @@ typedef enum ActionSheetTags {
             _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,nil];
         }
 
-        if ([self.contact.relationshipState isEqualToString: @"friend"]) {
+        if ([self.contact.relationshipState isEqualToString: kRelationStateFriend]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
+        } else if ([self.contact.relationshipState isEqualToString: kRelationStateBlocked]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: @"groupfriend"]) {
+        } else if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: @"kept"]) {
+        } else if ([self.contact.relationshipState isEqualToString: kRelationStateKept]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else {
             return @[_coreSection, _fingerprintSection];//, _profileItemsSection, _fingerprintSection];
@@ -1047,12 +1047,12 @@ typedef enum ActionSheetTags {
 - (void) toggleBlockedPressed: (id) sender {
     id item = _profileDataSource[[sender section]][[sender row]];
     id cell = [self.tableView cellForRowAtIndexPath: sender];
-    if ([_contact.relationshipState isEqualToString: @"friend"]) {
+    if ([_contact.relationshipState isEqualToString: kRelationStateFriend]) {
         // NSLog(@"friend -> blocked");
         [self.chatBackend blockClient: _contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"blockClient: %@", success ? @"success" : @"failed");
         }];
-    } else if ([_contact.relationshipState isEqualToString: @"blocked"]) {
+    } else if ([_contact.relationshipState isEqualToString: kRelationStateBlocked]) {
         // NSLog(@"blocked -> friend");
         [self.chatBackend unblockClient: _contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"unblockClient: %@", success ? @"success" : @"failed");
@@ -1069,7 +1069,7 @@ typedef enum ActionSheetTags {
 - (void) deleteContactPressed: (id) sender {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"contact_delete_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                           destructiveButtonTitle: NSLocalizedString(@"contact_delete_confirm", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -1080,7 +1080,7 @@ typedef enum ActionSheetTags {
 - (void) deleteContact: (Contact*) contact {
     [self.navigationController popViewControllerAnimated: YES];
     NSLog(@"deleting contact with relationshipState %@", contact.relationshipState);
-    if ([contact.relationshipState isEqualToString:@"groupfriend"] || [contact.relationshipState isEqualToString:@"kept"]) {
+    if ([contact.relationshipState isEqualToString: kRelationStateGroupFriend] || [contact.relationshipState isEqualToString: kRelationStateKept]) {
         [self.chatBackend handleDeletionOfContact:contact];
         return;
     }
@@ -1112,7 +1112,7 @@ typedef enum ActionSheetTags {
 - (void) importPublicKeyPressed: (id) sender {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"key_import_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                           destructiveButtonTitle: NSLocalizedString(@"key_import_confirm_btn_title", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -1123,7 +1123,7 @@ typedef enum ActionSheetTags {
 - (void) importPrivateKeyPressed: (id) sender {
      UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"key_import_safety_question", nil)
      delegate: self
-     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+     cancelButtonTitle: NSLocalizedString(@"cancel", nil)
      destructiveButtonTitle: NSLocalizedString(@"key_import_confirm_btn_title", nil)
      otherButtonTitles: nil];
      sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -1157,7 +1157,7 @@ typedef enum ActionSheetTags {
 - (void) exportPrivateKeyPressed: (id) sender {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"key_export_private_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                           destructiveButtonTitle: NSLocalizedString(@"key_export_confirm_btn_title", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -1223,7 +1223,7 @@ typedef enum ActionSheetTags {
 
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_import_safety_question", nil)
                                                     delegate: self
-                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                       destructiveButtonTitle: NSLocalizedString(@"credentials_key_import_confirm_btn_title_btn_title", nil)
                                            otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
@@ -1234,8 +1234,8 @@ typedef enum ActionSheetTags {
 - (void) deleteCredentialsFilePressed: (id) sender {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_file_delete_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"delete_btn_title", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetDeleteCredentialsFile;
@@ -1245,8 +1245,8 @@ typedef enum ActionSheetTags {
 - (void) deleteCredentialsPressed: (id) sender {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_delete_safety_question", nil)
                                                     delegate: self
-                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                      destructiveButtonTitle: NSLocalizedString(@"delete_btn_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                      destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                            otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetDeleteCredentialsLate;
