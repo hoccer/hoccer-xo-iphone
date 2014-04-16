@@ -47,7 +47,7 @@
 #define SECTION_TRACE NO
 #define CONNECTION_TRACE NO
 #define GROUPKEY_DEBUG YES
-#define GROUP_DEBUG NO
+#define GROUP_DEBUG YES
 #define RELATIONSHIP_DEBUG NO
 #define TRANSFER_DEBUG NO
 #define CHECK_URL_TRACE NO
@@ -206,7 +206,7 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         [HXOEnvironment.sharedInstance deactivateLocation];
         if (_state == kBackendReady && [HXOEnvironment sharedInstance].groupId != nil) {
-            [self destroyEnvironment:[HXOEnvironment sharedInstance] withHandler:^(BOOL ok) {
+            [self destroyEnvironmentWithHandler:^(BOOL ok) {
                 NSLog(@"Enviroment destroyed = %d",ok);
             }];
         }
@@ -1582,10 +1582,9 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 // void destroyEnvironment(String clientId, String groupId);
-- (void) destroyEnvironment:(HXOEnvironment *) environment withHandler:(GenericResultHandler)handler {
-    environment.clientId = [UserProfile sharedProfile].clientId;
+- (void) destroyEnvironmentWithHandler:(GenericResultHandler)handler {
     
-    [_serverConnection invoke: @"destroyEnvironment" withParams: @[environment.clientId, environment.groupId]
+    [_serverConnection invoke: @"destroyEnvironment" withParams: nil
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
@@ -2316,11 +2315,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) setGroupMemberKeyV2:(GroupMembership *)myMember {
     if (myMember.group.hasGroupKey) {
-        if (!myMember.hasLatestGroupKey) {
-            if (![myMember copyKeyFromGroup]) {
-                NSLog(@"setGroupMemberKeyV2: could not copy key from group");
-            }
-        }
+//        if (!myMember.hasLatestGroupKey) {
+//            if (![myMember copyKeyFromGroup]) {
+//                NSLog(@"setGroupMemberKeyV2: could not copy key from group");
+//            }
+//        }
 
         myMember.keySettingInProgress = YES;
         [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
@@ -2658,6 +2657,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [clientIds addObject:m.contact.clientId];
             [publicKeyIds addObject:m.contact.publicKeyId];
             m.memberKeyId = m.contact.publicKeyId;
+            m.cipheredGroupKey = [m calcCipheredGroupKey];
             [cryptedSharedKeys addObject:m.cipheredGroupKeyString];
             m.sharedKeyId = group.sharedKeyId;
             m.sharedKeyIdSalt = group.sharedKeyIdSalt;

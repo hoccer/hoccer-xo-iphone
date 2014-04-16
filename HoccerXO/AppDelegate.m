@@ -500,6 +500,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
 
     [self.nextDatabaseSaveTimer invalidate];
+    
+    [self.managedObjectContext processPendingChanges]; // will perform all UI changes
 
     const double minDatabaseSaveInterval = 5.0;
     const double nextDatabaseSaveInterval = 6.0;

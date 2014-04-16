@@ -28,6 +28,7 @@
 #import "GroupInStatuNascendi.h"
 
 #define HIDE_SEPARATORS
+#define FETCHED_RESULTS_DEBUG NO
 
 static const CGFloat kMagicSearchBarHeight = 44;
 
@@ -292,6 +293,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    //NSLog(@"controllerWillChangeContent: %@",[NSThread callStackSymbols]);
+    if (FETCHED_RESULTS_DEBUG) NSLog(@"controllerWillChangeContent: %@ fetchRequest %@",controller, [controller fetchRequest]);
     [self.tableView beginUpdates];
 }
 
@@ -313,7 +316,17 @@ static const CGFloat kMagicSearchBarHeight = 44;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-
+    if (FETCHED_RESULTS_DEBUG) {
+        NSDictionary * changeTypeName = @{@(NSFetchedResultsChangeInsert):@"NSFetchedResultsChangeInsert",
+                                          @(NSFetchedResultsChangeDelete):@"NSFetchedResultsChangeDelete",
+                                          @(NSFetchedResultsChangeUpdate):@"NSFetchedResultsChangeUpdate",
+                                          @(NSFetchedResultsChangeMove):@"NSFetchedResultsChangeMove"};
+        
+        
+        NSLog(@"ContactListViewController:NSFetchedResultsController: %@ fetchRequest %@ didChangeObject:class %@ ptr=%x path:%@ type:%@ newpath=%@",controller, [controller fetchRequest], [anObject class],(unsigned int)(__bridge void*)anObject,indexPath,changeTypeName[@(type)],newIndexPath);
+        //NSLog(@"ContactListViewController:NSFetchedResultsController:didChangeObject:%@ path:%@ type:%@ newpath=%@",anObject,indexPath,changeTypeName[@(type)],newIndexPath);
+        //NSLog(@"ContactListViewController:NSFetchedResultsController: %@",[NSThread callStackSymbols]);
+    }
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -341,6 +354,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    //NSLog(@"controllerDidChangeContent: %@",[NSThread callStackSymbols]);
+    if (FETCHED_RESULTS_DEBUG) NSLog(@"controllerDidChangeContent %@ fetchRequest %@",controller, [controller fetchRequest]);
     [self.tableView endUpdates];
 }
 
@@ -396,6 +411,11 @@ static const CGFloat kMagicSearchBarHeight = 44;
                 }
                 joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"%@%d invited",nil), joinedStatus,invitedMemberCount];
             }
+#ifdef DEBUG
+            if (group.sharedKeyId != nil) {
+                joinedStatus = [[joinedStatus stringByAppendingString:@" "] stringByAppendingString:group.sharedKeyIdString];
+            }
+#endif
         }
         return joinedStatus;
     } else {
