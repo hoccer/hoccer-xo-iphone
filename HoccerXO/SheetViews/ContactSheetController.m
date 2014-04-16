@@ -435,7 +435,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     if ([self.group.groupState isEqualToString: kRelationStateKept]) {
         title = NSLocalizedString(@"group_delete_title", nil);
-        destructiveButtonTitle = NSLocalizedString(@"group_delete_button_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"delete", nil);
         destructor = @selector(deleteGroupData);
     } else if (self.group.iAmAdmin) {
         title = NSLocalizedString(@"group_close_group_title", nil);
@@ -446,7 +446,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
         destructor = @selector(leaveGroup);
     } else {
-        title = NSLocalizedString(@"contact_delete_title", nil);
+        title = NSLocalizedString(@"delete", nil);
         destructiveButtonTitle = NSLocalizedString(@"delete", nil);
         destructor = @selector(deleteContact);
     }

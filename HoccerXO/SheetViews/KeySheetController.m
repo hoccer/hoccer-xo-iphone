@@ -71,7 +71,7 @@
 }
 
 - (NSString*) title {
-    return NSLocalizedString(self.userProfile ? @"key_view_title_you" : @"key_view_title_other", nil);
+    return NSLocalizedString(self.userProfile ? @"key_yours_nav_title" : @"key_others_nav_title", nil);
 }
 
 - (DatasheetSection*) fingerprintSection {

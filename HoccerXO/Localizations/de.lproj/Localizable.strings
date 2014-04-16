@@ -1,25 +1,36 @@
 "language_code"="de";
 
-
+"ok"     = "Ok";
 "cancel" = "Abbrechen";
-"search_placeholder" = "suchen";
+"done"   = "Fertig";
+"save"   = "Speichern";
 "delete" = "Löschen";
+"enter"  = "Eingeben";
 
+"search_placeholder" = "suchen";
 
+"fatal_error_default_title"   = "Unbehebbarer Fehlerzustand";
+"fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Bitte starte Hoccer XO neu.";
 
+"http://hoccer.com/hoccer-xo-tutorial/"="http://hoccer.com/hoccer-xo-anleitung/";
+"http://hoccer.com/hoccer-xo-faq/"="http://hoccer.com/hoccer-xo-fragen-antworten/";
 
+//==============================================================================
+// About
+//==============================================================================
 
-"chat_list_nav_title" = "Chats";
-"contact_list_nav_title" = "Kontakte";
-"profile_nav_title" = "Profil";
-"settings_nav_title" = "Einstellungen";
+"about_prosa" = "Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden.";
 
-"contact_nav_title" = "Kontakt";
+//==============================================================================
+// Apple Push Notifications
+//==============================================================================
 
-
-"apn_new_messages" = "Du hast %@ neue Nachrichten!";
+"apn_new_messages"    = "Du hast %@ neue Nachrichten!";
 "apn_one_new_message" = "Du hast eine neue Nachricht!";
 
+//==============================================================================
+// Attachments
+//==============================================================================
 
 "attachment_add_sheet_title"             = "Anhang hinzufügen aus:";
 "attachment_src_photo_album_btn_title"   = "Album";
@@ -34,8 +45,27 @@
 "attachment_option_choose_new_btn_title" = "Anhang neu auswählen";
 "attachment_option_view_btn_title"       = "Anhang anzeigen";
 
+"attachment_download_failed_title"       = "Download fehlgeschlagen";
+"attachment_download_failed_message"     = "Ein Anhang konnte nicht herunter geladen werden.";
+"attachment_upload_failed_title"         = "Upload fehlgeschlagen";
+"attachment_upload_failed_message"       = "Ein Anhang konnte nicht hochgeladen werden.";
 
+"attachment_type_image"                  = "Bild";
+"attachment_type_video"                  = "Video";
+"attachment_type_audio"                  = "Audio";
+"attachment_type_vcard"                  = "Adresse";
+"attachment_type_geolocation"            = "Ort";
 
+"attachment_overlimit_title"             = "Nachricht versenden?";
+"attachment_overlimit_upload_question"   = "Der Anhang ist %@ groß. Willst du die Nachricht wirklich versenden?";
+"attachment_overlimit_confirm"           = "Senden";
+"attachment_on_hold_upload_question"     = "%@ hochladen?";
+"attachment_on_hold_download_question"   = "%@ runterladen?";
+
+"attachment_save_to_album_failed_title"  = "Speichern fehlgeschlagen";
+"attachment_incompatible_video_message"  = "Videoformat ist inkompatibel mit dem Album";
+
+// Not cleaned up - these have to go...
 "Paste Image Attachment" = "Ablage (Bild)";
 "Paste Video Attachment" = "Ablage (Video)";
 "Paste Audio Attachment" = "Ablage (Audio)";
@@ -43,335 +73,317 @@
 "Paste geolocation Attachment" = "Ablage (Ort)";
 "Paste Image" = "Ablage (Bild)";
 "Paste data Attachment %@"="Ablage (%@)";
-
 "Opened data Attachment %@"="Extern (%@)";
 
+//==============================================================================
+// Backend
+//==============================================================================
 
-
-
-
-"invite_option_sheet_title" = "Einladung";
-"invite_option_sms_btn_title" = "Einladen per SMS";
-"invite_option_mail_btn_title" = "Einladen per Mail";
-"invite_option_code_btn_title" = "Einladen per Code";
-
-"invite_error_alert_title" = "Einladung fehlgeschlagen";
-"invite_error_rejected_by_server" = "Der Code wurde abgelehnt";
-
-"invite_mail_subject" = "Einladung zu Hoccer XO";
-"invite_mail_body" = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
-"invite_sms_text" = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
-
-"invite_code_sheet_title"              = "Einladungs Code";
-"invite_code_enter_dialog_title"       = "Einladungscode eingeben";
-"invite_code_enter_placeholder"        = "Einladungs Code";
-"invite_code_fetch_failed"             = "Codeabruf fehlgeschlagen";
-"invite_no_xo_qr_code_title" = "Kein Hoccer XO Code";
-"invite_scanner_prompt"                = "Suche nach xo QR Codes...";
-
-
-
-"profile_avatar_option_sheet_title"      = "Wähle ein Avatarbild aus:";
-"profile_avatar_option_delete_btn_title" = "Avatar löschen";
-
-"profile_name_placeholder"               = "Dein Name";
-"key_renew_keypair"                  = "RSA-Schlüssel erneuern";
-"key_renew_keypair_info"             = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
-"profile_key_btn_title"                  = "Schlüssel";
-
-
-
-"contact_unblock_btn_title_format" = "%@ entblockieren";
-"contact_block_btn_title_format"   = "%@ blockieren";
-"contact_chat_title"               = "Chat";
-"contact_message_count_format_s"   = "%@ Nachricht";
-"contact_message_count_format_p"   = "%@ Nachrichten";
-
-
-
-"key_view_title_you"       = "Dein Schlüssel";
-"key_view_title_other"     = "Schlüssel";
-
-"key_fingerprint_title"    = "Id";
-"key_fingerprint_info"     = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
-"key_length_item"          = "Schlüssellänge";
-"key_length_unit_format"   = "%@ Bit";
-
-"key_state_unverified"     = "Nicht verifiziert";
-"key_state_verified"       = "Verifiziert";
-"key_state_mistrusted"     = "Misstraut";
-
-"key_export_success"       = "Schlüssel wurde erfolgreich in die Zwischenablage exportiert";
-"key_export_success_title" = "Schlüssel exportiert";
-"key_export_failed"        = "Der Schlüssel konnte nicht exportiert werden.";
-"key_export_failed_title"  = "Schlüsselexport fehlgeschlagen";
-
-"key_import_success"       = "Schlüssel wurde erfolgreich aus der Zwischenablage importiert.";
-"key_import_success_title" = "Schlüssel importiert";
-"key_import_failed"        = "Es konnte kein Schlüssel aus der Zwischenablage importiert werden.";
-"key_import_failed_title"  = "Schlüsselimport fehlgeschlagen";
-
-
-
-
-
-"credentials_file_deleted_alert"="Exportierte Zugangsdaten gelöscht";
-
-"credentials_import_safety_question"="Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
-"credentials_key_import_confirm_btn_title_btn_title"="Importieren";
-
-"credentials_delete_safety_question"="Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
-
-"credentials_exported_alert"="Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
-
-"credentials_file_enter_passphrase_alert"="Enschlüsselungskennwort eingeben";
-"credentials_file_choose_passphrase_alert"="Verschlüsselungskennwort eingeben und merken";
-"credentials_file_passphrase_placeholder"="Kennwort eingeben";
-
-"credentials_file_decryption_failed_message"="Falsches Kennwort oder ungültige Zugangsdaten. Versuchen sie es noch einmal.";
-"credentials_file_import_failed_title"="Zugangsdatenimport fehlgeschlagen";
-
-"credentials_file_equals_current_message"="Importiere Zugangsdaten sind mit den geltenden identisch.";
-"credentials_file_equals_current_title"="Identische Zugangsdaten";
-
-"key_export_public_btn_title"="Öffentl. Schlüssel exportieren";
-"key_export_private_btn_title"="Priv. Schlüssel exportieren";
-"key_import_public_btn_title"="Öffentl. Schlüssel importieren";
-"key_import_private_btn_title"="Priv. Schlüssel importieren";
-
-
-"key_verify_public_btn_title"="Als verifiziert markieren";
-"key_unverify_public_btn_title"="Verifikation aufheben";
-
-"key_verified_public_key_changed_message_format"="Der von ihnen verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
-"key_verified_public_key_changed_title" = "Verifizierter Schlüssel wurde geändert.";
-
-"key_import_confirm_btn_title"="Import";
-"key_import_safety_question"="Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest das nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
-
-"key_export_confirm_btn_title"="Exportieren";
-"key_export_private_safety_question"="Mit deinem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
-
-
-"save" = "Speichern";
-
-
-"chat_open_with_menu_item"="Öffnen mit...";
-
-"chat_share_menu_item"="Teilen";
-
-"about_prosa" = "Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer XO ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer XO bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden.";
-
-"chat_message_too_long_title" = "Nachricht zu lang";
-
-"chat_message_too_long_message" = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
-
-"ok" = "Ok";
-
-"done" = "Fertig";
-
-"enter" = "Eingeben";
-
-"chat_resend_menu_item" = "Senden";
-
-"contact_delete_btn_title" = "Kontakt löschen";
-
-"contact_delete_safety_question" = "Kontakt, Chat und Attachments löschen?";
-
-"contact_delete_confirm" = "Kontakt löschen";
-
-"attachment_download_failed_title" = "Download fehlgeschlagen";
-
-"attachment_download_failed_message" = "Ein Anhang konnte nicht herunter geladen werden.";
-
-"attachment_upload_failed_title" = "Upload fehlgeschlagen";
-
-"attachment_upload_failed_message" = "Ein Anhang konnte nicht hochgeladen werden.";
-
-"backend_stopped" = "nicht verbunden";
-"backend_connecting" = "Verbindungsaufbau...";
-"backend_registering" = "Registrierung...";
+"backend_stopped"        = "nicht verbunden";
+"backend_connecting"     = "Verbindungsaufbau...";
+"backend_registering"    = "Registrierung...";
 "backend_authenticating" = "Anmeldung...";
-"backend_ready" = "verbunden";
-"backend_stopping" = "Verbindung wird beendet...";
-"backend_no_internet" = "Keine Internetverbindung";
+"backend_ready"          = "verbunden";
+"backend_stopping"       = "Verbindung wird beendet...";
+"backend_no_internet"    = "Keine Internetverbindung";
 
-"attachment_type_image" = "Bild";
-"attachment_type_video" = "Video";
-"attachment_type_audio" = "Audio";
-"attachment_type_vcard" = "Adresse";
-"attachment_type_geolocation" = "Ort";
+//==============================================================================
+// Certificates
+//==============================================================================
 
-"geolocation_default_name"="Der Ort";
-
-"http://hoccer.com/hoccer-xo-tutorial/"="http://hoccer.com/hoccer-xo-anleitung/";
-"http://hoccer.com/hoccer-xo-faq/"="http://hoccer.com/hoccer-xo-fragen-antworten/";
-
-"group_list_nav_title" = "Gruppen";
-
-"certificate_invalid_title" = "Ungültiges Server Zertifikat";
-
+"certificate_invalid_title"   = "Ungültiges Server Zertifikat";
 "certificate_invalid_message" = "Hoccer XO konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
 
-"group_new_nav_title" = "Neue Gruppe";
-"group_nav_title" = "Gruppe";
+//==============================================================================
+// Chat
+//==============================================================================
 
-"group_name_placeholder" = "Gruppenname";
-"group_invite_button"    = "Ein- und ausladen";
+"chat_list_nav_title"               = "Chats";
 
-"group_invite_title" = "'%@' in Gruppe '%@' einladen?";
-"group_kick_title" = "‘%@‘ aus Gruppe '%@' werfen?";
-"group_join_button" = "Gruppe beitreten";
-"group_admin_you" = "Du";
-"group_admin_label_s" = "Admin: ";
-"group_admin_label_p" = "Admins: ";
-"group_decline_invitation" = "Einladung ablehnen";
-"group_leave" = "Gruppe verlassen";
-"group_decline_invitation_title" = "Einladung ablehnen?";
-"group_decline_button_title" = "Ablehnen";
-"group_leave_group_title" = "Gruppe verlassen?";
-"group_leave_group_button_title" = "Verlassen";
-"group_close" = "Gruppe schliessen";
-"group_close_group_title" = "Möchtest Du die Gruppe wirklich für alle und immer schliessen?";
-"group_close_group_button_title" = "Schliessen";
-"group_delete_data"="Gruppendaten löschen";
+"chat_message_placeholder"          = "Nachricht";
+"chat_call_phone_number_btn_title"  = "Anrufen";
 
-"group_no_admin" = "Kein Admin";
+"chat_cant_send_alert_title"        = "Nachricht kann nicht gesendet werden";
+"chat_contact_blocked_message"      = "Der Kontakt ist geblockt.";
+"chat_relationship_removed_message" = "Es existiert keine Beziehung zu diesem Kontakt mehr.";
+"chat_message_too_long_message"     = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
+"chat_wait_for_invitees_message"    = "Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
+"chat_group_you_are_alone_message"  = "Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
+"chat_no_groupkey_message"          = "Leider kann die Nachricht nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
 
-"group_kick_member_confirm" = "Ausladen";
+"chat_message_pending"              = "ausgehend";
+"chat_message_sent"                 = "gesendet";
+"chat_message_delivered"            = "zugestellt";
+"chat_message_read"                 = "gelesen";
+"chat_message_failed"               = "kaputt";
 
-"group_invite_members_title" = "Einladen";
+"chat_resend_menu_item"             = "Senden";
+"chat_open_with_menu_item"          = "Öffnen mit...";
+"chat_share_menu_item"              = "Teilen";
+
+//==============================================================================
+// Contact - uses strings from profile
+//==============================================================================
+
+"contact_list_nav_title" = "Kontakte";
+"contact_nav_title" = "Kontakt";
+
+"contact_chat_title"                            = "Chat";
+"contact_unblock_btn_title_format"              = "%@ entblockieren";
+"contact_block_btn_title_format"                = "%@ blockieren";
+
+"contact_message_count_format_s"                = "%@ Nachricht";
+"contact_message_count_format_p"                = "%@ Nachrichten";
+
+"contact_delete_btn_title"                      = "Kontakt löschen";
+"contact_delete_safety_question"                = "Kontakt, Chat und Attachments löschen?";
+
+"contact_delete_associated_data_question"       = "Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
+"contact_deleted_title"                         = "Beziehung besteht nicht mehr";
+"contact_keep_data_button"                      = "Behalten";
+"contact_delete_data_button"                    = "Daten Löschen";
+
+"contact_new_friend_title"                      = "Neuer Freund";
+"contact_new_friend_message"                    = "Kontakt '%@' ist jetzt mit dir befreundet.";
+
+"contact_blocked_title"="Kontakt geblockt";
+"contact_blocked_message"                       = "Der Nachrichtenaustausch mit Kontakt '%@' ist vorübergehend geblockt.";
+
+"contact_relationship_removed_title"            = "Beziehung entfernen";
+"contact_relationship_removed_message"          = "Die Beziehung zu Kontakt '%@' wurde entfernt.";
+"contact_kept_and_relationship_removed_message" = "Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
 
 
-"chat_wait_for_invitees_message"="Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
-"chat_group_you_are_alone_message"="Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
+"contact_relationship_friend"                   = "Freund";
+"contact_relationship_groupfriend"              = "Gruppenbekanntschaft";
+"contact_relationship_kept"                     = "Keine Beziehung";
+"contact_relationship_blocked"                  = "Geblockt";
 
-"group_joined_message_format"="'%@' ist neues Mitlied der Gruppe '%@' geworden.";
-"group_joined_title"="Neues Gruppenmitglied";
+//==============================================================================
+// Credentials
+//==============================================================================
 
-"group_left_message_format"="'%@' ist nicht mehr Mitglied der Gruppe '%@'";
-"group_left_title"="Mitglied hat Gruppe verlassen";
+"credentials_setup_nav_title"                = "Konto";
+"credentials_setup_found_old_text"           = "Hoccer XO war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
+"credentials_setup_found_file_text"          = "Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
+"credentials_setup_keep_btn_title"           = "Konto reaktivieren";
+"credentials_setup_import_btn_title"         = "Importieren";
+"credentials_setup_create_btn_title"         = "Neues Konto";
 
+"credentials_file_delete_btn_title"          = "Exportierte Daten löschen";
+"credentials_file_delete_safety_question"    = "Exportierte Zugangsdaten wirklich löschen?";
+"credentials_file_deleted_alert"             = "Exportierte Zugangsdaten gelöscht";
+"credentials_file_enter_passphrase_alert"    = "Enschlüsselungskennwort eingeben";
+"credentials_file_choose_passphrase_alert"   = "Verschlüsselungskennwort eingeben und merken";
+"credentials_file_passphrase_placeholder"    = "Kennwort eingeben";
+"credentials_file_import_failed_title"       = "Zugangsdatenimport fehlgeschlagen";
+"credentials_file_decryption_failed_message" = "Falsches Kennwort oder ungültige Zugangsdaten. Versuchen sie es noch einmal.";
+"credentials_file_equals_current_title"      = "Identische Zugangsdaten";
+"credentials_file_equals_current_message"    = "Importiere Zugangsdaten sind mit den geltenden identisch.";
 
-"group_deleted_message_format"="Deine Mitgliedschaft in der Gruppe '%@' besteht nicht mehr. Gruppenchat und damit zusammenhängende Daten löschen?";
-"group_deleted_title"="Gruppenmitgliedschaft erloschen.";
-"group_keep_data_button"="Behalten";
-"group_delete_data_button"="Löschen";
+"credentials_export_btn_title"               = "Zugangsdaten exportieren";
+"credentials_exported_alert"                 = "Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
 
-"group_delete_title"="Die Gruppe und dazugehörige Chats und Daten löschen?";
-"group_delete_button_title"="Gruppe löschen";
+"credentials_import_btn_title"               = "Zugangsdaten importieren";
+"credentials_import_safety_question"         = "Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
+"credentials_key_import_confirm_btn_title"   = "Importieren";
 
-"group_invite_message_format"="Du wurdest in die Gruppe '%@' eingeladen, verwaltet von '%@'. Was möchtest du mit der Einladung machen?";
-"group_invite_title"="Gruppeneinladung";
-"group_invite_decide_later_btn_title"="Später entscheiden";
-"group_invite_join_group_btn_title"="Annehmen";
-"group_invite_decline_btn_title"="Ablehnen";
+"credentials_delete_safety_question"         = "Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
 
-"group_invite_removed_title" = "Die Einladung für die Gruppe '%@' wurde entfernt.";
-"group_invite_dismissed_message_format"="'%@' ist nicht mehr zu Gruppe '%@' eingeladen.";
-"group_invite_dismissed_title"="Einladung abgelehnt oder zurückgezogen";
+"credentials_delete_btn_title"               = "Zugangsdaten löschen";
 
-"group_kicked_title"         = "Deine Mitgliedschaft in der Gruppe '%@' wurde beendet.";
-
-"group_state_kept"="Gruppe deaktiviert";
-"invited"="eingeladen";
-"Invitation not yet accepted"="Einladung bisher nicht angenommen";
-"Admin"="Admin";
-"group_member_count_n_joined"="%@%d Mitglieder";
-"group_member_count_one_joined"="%@ein Mitglied";
-"group_member_count_none_joined"="%@du bist allein";
-"group_member_invited_count"="%@%d eingeladen";
+//==============================================================================
+// Database
+//==============================================================================
 
 "database_corrupt_not_deleted_title"   = "Datenbank nicht gelöscht";
 "database_corrupt_not_deleted_message" = "Veraltete oder korrupte Datenbank wurde nicht gelöscht. Hoccer XO wird nicht funktionieren.";
 "database_corrupt_deleted_title"       = "Datenbank gelöscht";
 "database_corrupt_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer XO neu.";
 
-"fatal_error_default_title"   = "Unbehebbarer Fehlerzustand";
-"fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Bitte starte Hoccer XO neu.";
+//==============================================================================
+// Geolocations
+//==============================================================================
 
-"contact_new_friend_message"="Kontakt '%@' ist jetzt mit dir befreundet.";
-"contact_new_friend_title"="Neuer Freund";
+"geolocation_default_name" = "Der Ort";
+"geolocation_picker_title" = "Pin verschieben";
 
-"contact_blocked_message"="Der Nachrichtenaustausch mit Kontakt '%@' ist vorübergehend geblockt.";
-"contact_blocked_title"="Kontakt geblockt";
+//==============================================================================
+// Groups - uses strings from contact and thus profile...
+//==============================================================================
 
-"contact_relationship_removed_message"="Die Beziehung zu Kontakt '%@' wurde entfernt.";
-"contact_relationship_removed_title"="Beziehung entfernen";
+"group_list_nav_title"                  = "Gruppen";
+"group_nav_title"                       = "Gruppe";
+"group_new_nav_title"                   = "Neue Gruppe";
 
-"contact_kept_and_relationship_removed_message"="Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
+"group_name_placeholder"                = "Gruppenname";
+
+"group_invite_members_title"            = "Einladen";
+"group_invite_message_format"           = "Du wurdest in die Gruppe '%@' eingeladen, verwaltet von '%@'. Was möchtest du mit der Einladung machen?";
+"group_invite_title"                    = "Gruppeneinladung";
+"group_invite_decide_later_btn_title"   = "Später entscheiden";
+"group_invite_join_group_btn_title"     = "Annehmen";
+"group_invite_decline_btn_title"        = "Ablehnen";
+"group_invite_dismissed_title"          = "Einladung abgelehnt oder zurückgezogen";
+"group_invite_dismissed_message_format" = "'%@' ist nicht mehr zu Gruppe '%@' eingeladen.";
+"group_invite_removed_title"            = "Die Einladung für die Gruppe '%@' wurde entfernt.";
+
+"group_join_button"                     = "Gruppe beitreten";
+"group_admin_you"                       = "Du";
+"group_admin_label_s"                   = "Admin: ";
+"group_admin_label_p"                   = "Admins: ";
+"group_decline_invitation"              = "Einladung ablehnen";
+"group_leave"                           = "Gruppe verlassen";
+"group_decline_invitation_title"        = "Einladung ablehnen?";
+"group_decline_button_title"            = "Ablehnen";
+"group_leave_group_title"               = "Gruppe verlassen?";
+"group_leave_group_button_title"        = "Verlassen";
+"group_close"                           = "Gruppe schliessen";
+"group_close_group_title"               = "Möchtest Du die Gruppe wirklich für alle und immer schliessen?";
+"group_close_group_button_title"        = "Schliessen";
+"group_delete_data"                     = "Gruppendaten löschen";
+
+"group_kick_member_confirm"             = "Ausladen";
+"group_no_admin"                        = "Kein Admin";
+
+"group_joined_title"                    = "Neues Gruppenmitglied";
+"group_joined_message_format"           = "'%@' ist neues Mitlied der Gruppe '%@' geworden.";
+
+"group_left_title"                      = "Mitglied hat Gruppe verlassen";
+"group_left_message_format"             = "'%@' ist nicht mehr Mitglied der Gruppe '%@'";
+
+"group_deleted_title"                   = "Gruppenmitgliedschaft erloschen.";
+"group_deleted_message_format"          = "Deine Mitgliedschaft in der Gruppe '%@' besteht nicht mehr. Gruppenchat und damit zusammenhängende Daten löschen?";
+"group_keep_data_button"                = "Behalten";
+"group_delete_data_button"              = "Löschen";
+
+"group_delete_title"                    = "Die Gruppe und dazugehörige Chats und Daten löschen?";
+"group_delete_button_title"             = "Gruppe löschen";
+
+"group_kicked_title"                    = "Deine Mitgliedschaft in der Gruppe '%@' wurde beendet.";
+
+"group_state_kept"                      = "Gruppe deaktiviert";
+
+"group_membership_state_invited"        = "eingeladen";
+"group_membership_state_joined"         = "beigetreten";
+
+"group_membership_role_admin"           = "Admin";
+"group_membership_role_member"          = "Mitglied";
+
+"group_member_count_n_joined"           = "%@%d Mitglieder";
+"group_member_count_one_joined"         = "%@ein Mitglied";
+"group_member_count_none_joined"        = "%@du bist allein";
+"group_member_invited_count"            = "%@%d eingeladen";
+
+//==============================================================================
+// Invitations
+//==============================================================================
+
+"invite_option_sheet_title"       = "Einladung";
+"invite_option_sms_btn_title"     = "Einladen per SMS";
+"invite_option_mail_btn_title"    = "Einladen per Mail";
+"invite_option_code_btn_title"    = "Einladen per Code";
+
+"invite_mail_subject"             = "Einladung zu Hoccer XO";
+"invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
+"invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
+
+"invite_error_alert_title"        = "Einladung fehlgeschlagen";
+"invite_error_rejected_by_server" = "Der Code wurde abgelehnt";
 
 
-"contact_delete_associated_data_question"="Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
-"contact_deleted_title"="Beziehung besteht nicht mehr";
-"contact_keep_data_button"="Behalten";
-"contact_delete_data_button"="Löschen";
+"invite_code_sheet_title"         = "Einladungs Code";
+"invite_code_enter_dialog_title"  = "Einladungscode eingeben";
+"invite_code_enter_placeholder"   = "Einladungs Code";
+"invite_code_fetch_failed"        = "Codeabruf fehlgeschlagen";
+"invite_no_xo_qr_code_title"      = "Kein Hoccer XO Code";
+"invite_scanner_prompt"           = "Suche nach xo QR Codes...";
 
-"geolocation_picker_title"="Pin verschieben";
+//==============================================================================
+// Keys
+//==============================================================================
 
-"group_membership_state_invited" = "eingeladen";
-"group_membership_state_joined"  = "beigetreten";
+"key_yours_nav_title"                            = "Dein Schlüssel";
+"key_others_nav_title"                           = "Schlüssel";
 
-"group_membership_role_admin"  = "Admin";
-"group_membership_role_member" = "Mitglied";
+"key_state_unverified"                           = "Nicht verifiziert";
+"key_state_verified"                             = "Verifiziert";
+"key_state_mistrusted"                           = "Misstraut";
 
-"contact_relationship_friend"="Freund";
-"contact_relationship_groupfriend"="Gruppenbekanntschaft";
-"contact_relationship_kept"="Keine Beziehung";
-"contact_relationship_blocked"="Geblockt";
+"key_fingerprint_title"                          = "Id";
+"key_fingerprint_info"                           = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
+"key_length_item"                                = "Schlüssellänge";
+"key_length_unit_format"                         = "%@ Bit";
 
-"chat_contact_blocked_message"="Der Kontakt ist geblockt.";
-"chat_relationship_removed_message"="Es existiert keine Beziehung zu diesem Kontakt mehr.";
-"chat_cant_send_alert_title"="Nachricht kann nicht gesendet werden";
+"key_renew_keypair"                              = "RSA-Schlüssel erneuern";
+"key_renew_keypair_info"                         = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
 
-"attachment_overlimit_upload_question"="Der Anhang ist %@ groß. Willst du die Nachricht wirklich versenden?";
-"attachment_overlimit_title"="Nachricht versenden?";
-"message_do_not_send_button_title"="Nein";
-"attachment_overlimit_confirm"="Senden";
+"key_import_public_btn_title"                    = "Öffentl. Schlüssel importieren";
+"key_import_private_btn_title"                   = "Priv. Schlüssel importieren";
+"key_import_success"                             = "Schlüssel wurde erfolgreich aus der Zwischenablage importiert.";
+"key_import_success_title"                       = "Schlüssel importiert";
+"key_import_failed"                              = "Es konnte kein Schlüssel aus der Zwischenablage importiert werden.";
+"key_import_failed_title"                        = "Schlüsselimport fehlgeschlagen";
+"key_import_confirm_btn_title"                   = "Import";
+"key_import_safety_question"                     = "Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest das nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
 
-"chat_no_groupkey_message_title"="Gruppenschlüssel fehlt";
-"chat_no_groupkey_message"="Leider kann die Nachricht nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
-
-"chat_call_phone_number_btn_title" = "Anrufen";
-
-
-"chat_message_placeholder" = "Nachricht";
-
-"permission_denied_title"="Zugriff verweigert";
-"permission_denied_microphone_message"="Um Sprache aufzunehmen erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
+"key_export_public_btn_title"                    = "Öffentl. Schlüssel exportieren";
+"key_export_private_btn_title"                   = "Priv. Schlüssel exportieren";
+"key_export_success"                             = "Schlüssel wurde erfolgreich in die Zwischenablage exportiert";
+"key_export_success_title"                       = "Schlüssel exportiert";
+"key_export_failed"                              = "Der Schlüssel konnte nicht exportiert werden.";
+"key_export_failed_title"                        = "Schlüsselexport fehlgeschlagen";
+"key_export_confirm_btn_title"                   = "Exportieren";
+"key_export_private_safety_question"             = "Mit deinem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
 
 
-"chat_message_pending"   = "ausgehend";
-"chat_message_sent"      = "gesendet";
-"chat_message_delivered" = "zugestellt";
-"chat_message_read"      = "gelesen";
-"chat_message_failed"    = "kaputt";
 
-"attachment_on_hold_upload_question"   = "%@ hochladen?";
-"attachment_on_hold_download_question" = "%@ runterladen?";
+"key_verify_public_btn_title"                    = "Als verifiziert markieren";
+"key_unverify_public_btn_title"                  = "Verifikation aufheben";
 
-"attachment_save_to_album_failed_title"="Speichern fehlgeschlagen";
-"attachment_incompatible_video_message"="Videoformat ist inkompatibel mit dem Album";
+"key_verified_public_key_changed_title"          = "Verifizierter Schlüssel wurde geändert.";
+"key_verified_public_key_changed_message_format" = "Der von ihnen verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
+
+//==============================================================================
+// Permissions
+//==============================================================================
+
+
+"permission_denied_title"             = "Zugriff verweigert";
+"permission_denied_microphone_message"= "Um Sprache aufzunehmen erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
+
+//==============================================================================
+// Profile
+//==============================================================================
+
+
+"profile_nav_title"                      = "Profil";
+
+"profile_avatar_option_sheet_title"      = "Wähle ein Avatarbild aus:";
+"profile_avatar_option_delete_btn_title" = "Avatar löschen";
+
+"profile_name_placeholder"               = "Dein Name";
+"profile_key_btn_title"                  = "Schlüssel";
+
+
+//==============================================================================
+// Recorder
+//==============================================================================
+
 
 "recorder_play_button_title"   = "Anhören";
 "recorder_use_button_title"    = "Benutzen";
 
+//==============================================================================
+// Settings
+//==============================================================================
 
-"credentials_setup_nav_title"        = "Konto";
-"credentials_setup_found_old_text"   = "Hoccer XO war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
-"credentials_setup_found_file_text"  ="Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
-"credentials_setup_keep_btn_title"   = "Konto reaktivieren";
-"credentials_setup_import_btn_title" = "Importieren";
-"credentials_setup_create_btn_title" = "Neues Konto";
+"settings_nav_title" = "Einstellungen";
 
-"credentials_import_safety_title"="Zugangsdaten importieren?";
-"credentials_import_btn_title_not_button_title"="Neu anlegen";
+// See Settings.strings
 
-"credentials_export_btn_title"="Zugangsdaten exportieren";
-"credentials_import_btn_title"="Zugangsdaten importieren";
-"credentials_delete_btn_title"="Zugangsdaten löschen";
 
-"credentials_file_delete_btn_title"="Exportierte Daten löschen";
 
-"credentials_file_delete_safety_question"="Exportierte Zugangsdaten wirklich löschen?";
+
+
 

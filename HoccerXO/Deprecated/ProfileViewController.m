@@ -1224,7 +1224,7 @@ typedef enum ActionSheetTags {
     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_import_safety_question", nil)
                                                     delegate: self
                                            cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                      destructiveButtonTitle: NSLocalizedString(@"credentials_key_import_confirm_btn_title_btn_title", nil)
+                                      destructiveButtonTitle: NSLocalizedString(@"credentials_key_import_confirm_btn_title", nil)
                                            otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetImportCredentials;
