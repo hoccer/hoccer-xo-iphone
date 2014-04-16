@@ -22,10 +22,6 @@
 #import "TestFlight.h"
 #import "HXOUI.h"
 #import "ChatViewController.h"
-#import "tab_chats.h"
-#import "tab_contacts.h"
-#import "tab_profile.h"
-#import "tab_settings.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
@@ -106,7 +102,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
-    // [self deleteDatabase];
  
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
         [TestFlight takeOff:@"26645843-f312-456c-8954-444e435d4ad2"];
@@ -129,7 +124,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [UIStoryboard storyboardWithName: storyboardName bundle: [NSBundle mainBundle]];
 
     [[HXOUI theme] setupTheming];
-    [self localizeTabBar];
 
     // NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
@@ -180,22 +174,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSLog(@"myKey=%@", [myKey hexadecimalString]);
 #endif
     return YES;
-}
-
-- (void) localizeTabBar {
-    UITabBarController * tabBarController = (UITabBarController*)[UIApplication sharedApplication].delegate.window.rootViewController;
-    for (UITabBarItem * item in tabBarController.tabBar.items) {
-        if ([item.title isEqualToString: @"Chats"]) {
-            item.image = [[[tab_chats alloc] init] image];
-        } else if ([item.title isEqualToString: @"Contacts"]) {
-            item.image = [[[tab_contacts alloc] init] image];
-        } else if ([item.title isEqualToString: @"Profile"]) {
-            item.image = [[[tab_profile alloc] init] image];
-        } else if ([item.title isEqualToString: @"Settings"]) {
-            item.image = [[[tab_settings alloc] init] image];
-        }
-        item.title = NSLocalizedString(item.title, nil);
-    }
 }
 
 - (void) checkForCrash {
@@ -333,10 +311,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 + (void) showMicrophoneAcccessDeniedAlert {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"microphone_access_denied_title", nil)
-                                                     message: NSLocalizedString(@"microphone_access_denied_message", nil)
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
+                                                     message: NSLocalizedString(@"permission_denied_microphone_message", nil)
                                              completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { }
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
@@ -1055,8 +1033,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         // title = NSLocalizedString(@"Invite successful", @"Invite Alert Title");
         // message = NSLocalizedString(@"The server accepted your code", @"Invite Alert Message");
     } else {
-        title = NSLocalizedString(@"Invite failed", @"Invite Alert Title");
-        message = NSLocalizedString(@"The server rejected your invite code", @"Invite Alert Message");
+        title = NSLocalizedString(@"invite_error_alert_title", @"Invite Alert Title");
+        message = NSLocalizedString(@"invite_error_rejected_by_server", @"Invite Alert Message");
     }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
@@ -1095,13 +1073,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         NSString * message_tag;
         switch (buttonIndex) {
             case 0:
-                title_tag = @"corrupt_database_not_deleted_title";
-                message_tag = @"corrupt_database_not_deleted_message";
+                title_tag = @"database_corrupt_not_deleted_title";
+                message_tag = @"database_corrupt_not_deleted_message";
                 break;
             case 1:
                 [self deleteDatabase];
-                title_tag = @"corrupt_database_deleted_title";
-                message_tag = @"corrupt_database_deleted_message";
+                title_tag = @"database_corrupt_deleted_title";
+                message_tag = @"database_corrupt_deleted_message";
                 break;
         }
         [self showFatalErrorAlertWithMessage: NSLocalizedString(message_tag, nil) withTitle: NSLocalizedString(title_tag, nil)];
@@ -1154,10 +1132,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 -(void) didFailWithInvalidCertificate:(DoneBlock)done {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invalid_cert_title", nil)
-                                                     message: NSLocalizedString(@"invalid_cert_message", nil)
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"certificate_invalid_title", nil)
+                                                     message: NSLocalizedString(@"certificate_invalid_message", nil)
                                              completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { done(); }
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }

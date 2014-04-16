@@ -172,7 +172,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.messageFieldPlaceholder.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.messageFieldPlaceholder.font = self.messageField.font;
     self.messageFieldPlaceholder.textColor = [HXOUI theme].lightTextColor;
-    self.messageFieldPlaceholder.text = NSLocalizedString(@"chat_view_message_placeholder", nil);
+    self.messageFieldPlaceholder.text = NSLocalizedString(@"chat_message_placeholder", nil);
     [self.chatbar addSubview: self.messageFieldPlaceholder];
 
     icon = [[paper_dart alloc] init].image;
@@ -188,11 +188,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (UIMenuController *)setupLongPressMenu {
     UIMenuController *menuController = [UIMenuController sharedMenuController];
-    UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) action:@selector(saveMessage:)];
-    UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteMessage:)];
-    UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Resend", nil) action:@selector(resendMessage:)];
-    UIMenuItem *myOpenWithMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Open with...", nil) action:@selector(openWithMessage:)];
-    UIMenuItem *myShareMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Share", nil) action:@selector(shareMessage:)];
+    UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"save", nil) action:@selector(saveMessage:)];
+    UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"delete", nil) action:@selector(deleteMessage:)];
+    UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"chat_resend_menu_item", nil) action:@selector(resendMessage:)];
+    UIMenuItem *myOpenWithMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"chat_open_with_menu_item", nil) action:@selector(openWithMessage:)];
+    UIMenuItem *myShareMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"chat_share_menu_item", nil) action:@selector(shareMessage:)];
     [menuController setMenuItems:@[myShareMessageMenuItem,myOpenWithMessageMenuItem,myDeleteMessageMenuItem,myResendMessageMenuItem/*, myForwardMessageMenuItem*/,mySaveMenuItem]];
     [menuController update];
     return menuController;
@@ -316,7 +316,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Contacts", @"Contacts Navigation Bar Title");
+    barButtonItem.title = NSLocalizedString(@"contact_list_nav_title", @"Contacts Navigation Bar Title");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }
@@ -369,6 +369,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 
 - (IBAction)sendPressed:(id)sender {
+    NSString * cantSendTitle = NSLocalizedString(@"chat_cant_send_alert_title", nil);
     if ([self.partner.type isEqualToString:[Group entityName]]) {
         // check if there are other members in the group
         Group * group = (Group*)self.partner;
@@ -376,40 +377,40 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             // cant send message, no other joined members
             NSString * messageText;
             if ([[group otherInvitedMembers] count] > 0) {
-                messageText = [NSString stringWithFormat: NSLocalizedString(@"group_no_other_joined_partners_text", nil)];
+                messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_wait_for_invitees_message", nil)];
             } else {
-                messageText = [NSString stringWithFormat: NSLocalizedString(@"group_no_other_partner_text", nil)];
+                messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
             }
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_no_other_partners_title", nil)
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
                                                              message: messageText
                                                             delegate: nil
-                                                   cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                                   cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                    otherButtonTitles: nil];
             [alert show];
             return;
         }
 
         if ([HXOBackend isInvalid:group.groupKey]) {
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"cant_send_no_groupkey_title", nil)
-                                                             message: NSLocalizedString(@"cant_send_no_groupkey", nil)
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
+                                                             message: NSLocalizedString(@"chat_no_groupkey_message", nil)
                                                             delegate: nil
-                                                   cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                                   cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                    otherButtonTitles: nil];
             [alert show];
             return;
             
         }
-    } else if (![self.partner.relationshipState isEqualToString:@"friend"]) {
+    } else if (![self.partner.relationshipState isEqualToString: kRelationStateFriend]) {
         NSString * messageText;
-        if ([self.partner.relationshipState isEqualToString:@"blocked"]) {
-            messageText = [NSString stringWithFormat: NSLocalizedString(@"cant_send_contact_blocked", nil)];
+        if ([self.partner.relationshipState isEqualToString: kRelationStateBlocked]) {
+            messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
         } else {
-            messageText = [NSString stringWithFormat: NSLocalizedString(@"cant_send_relationship_removed", nil)];
+            messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_relationship_removed_message", nil)];
         }
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"cant_send_title", nil)
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
                                                          message: messageText
                                                         delegate: nil
-                                               cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                otherButtonTitles: nil];
         [alert show];
         return;
@@ -421,19 +422,19 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (self.messageField.text.length > 0 || hasAttachmentPreview) {
         if (self.currentAttachment == nil || self.currentAttachment.contentSize > 0) {
             if ([self.messageField.text lengthOfBytesUsingEncoding: NSUTF8StringEncoding] > kMaxMessageBytes) {
-                NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"message_too_long_text", nil), kMaxMessageBytes];
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"message_too_long_title", nil)
+                NSString * messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_message_too_long_message", nil), kMaxMessageBytes];
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
                                                                  message: messageText
                                                                 delegate: nil
-                                                       cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                                       cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                        otherButtonTitles: nil];
                 [alert show];
                 return;
             }
             if (self.currentAttachment != nil && [self.currentAttachment overTransferLimit:YES]) {
                 NSString * attachmentSize = [NSString stringWithFormat:@"%1.03f MB",[self.currentAttachment.contentSize doubleValue]/1024/1024];
-                NSString * message = [NSString stringWithFormat: NSLocalizedString(@"overlimit_attachment_upload_question",nil), attachmentSize];
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"overlimit_attachment_title", nil)
+                NSString * message = [NSString stringWithFormat: NSLocalizedString(@"attachment_overlimit_upload_question",nil), attachmentSize];
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_overlimit_title", nil)
                                                                  message: message
                                                          completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                              switch (buttonIndex) {
@@ -445,8 +446,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                                                      break;
                                                              }
                                                          }
-                                                       cancelButtonTitle: NSLocalizedString(@"message_do_not_send_button_title", nil)
-                                                       otherButtonTitles: NSLocalizedString(@"message_send_button_title",nil),nil];
+                                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                                       otherButtonTitles: NSLocalizedString(@"attachment_overlimit_confirm",nil),nil];
                 [alert show];
 
             } else {
@@ -942,13 +943,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) showAttachmentOptions {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"Attachment", @"Actionsheet Title")
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"attachment_option_sheet_title", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", @"Actionsheet Button Title")
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                           destructiveButtonTitle: nil
-                                               otherButtonTitles: NSLocalizedString(@"Remove Attachment", @"Actionsheet Button Title"),
-                                                                  NSLocalizedString(@"Choose Attachment", @"Actionsheet Button Title"),
-                                                                  NSLocalizedString(@"View Attachment", @"Actionsheet Button Title"),
+                                               otherButtonTitles: NSLocalizedString(@"attachment_option_remove_btn_title", nil),
+                                                                  NSLocalizedString(@"attachment_option_choose_new_btn_title", nil),
+                                                                  NSLocalizedString(@"attachment_option_view_btn_title", nil),
                                                                   nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView: self.view];
@@ -961,7 +962,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
     switch (buttonIndex) {
         case 0:
-            // Remove Attachment pressed
+            // attachment_option_remove_btn_title pressed
             [self trashCurrentAttachment];
             break;
         case 1:
@@ -1563,17 +1564,17 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     for (Delivery * myDelivery in message.deliveries) {
         if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
-            return NSLocalizedString(@"message_pending", nil);
+            return NSLocalizedString(@"chat_message_pending", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering] ||
                    [myDelivery.state isEqualToString:kDeliveryStateDelivered])
         {
-            return NSLocalizedString(@"message_sent", nil);
+            return NSLocalizedString(@"chat_message_sent", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
-            return NSLocalizedString(@"message_delivered", nil);
+            return NSLocalizedString(@"chat_message_delivered", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-            return NSLocalizedString(@"message_failed", nil);
+            return NSLocalizedString(@"chat_message_failed", nil);
         /* TODO } else if () {
-             return NSLocalizedString(@"message_read", nil); */
+             return NSLocalizedString(@"chat_message_read", nil); */
         } else {
             NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
         }
@@ -1659,7 +1660,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
             title = item.vcardName;
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
-            title = NSLocalizedString(@"location_default_title", nil);
+            title = NSLocalizedString(@"attachment_type_geolocation", nil);
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
             NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
             if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
@@ -1701,7 +1702,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 
     if (attachment.state == kAttachmentTransferOnHold) {
-        NSString * question = attachment.message.isOutgoing.boolValue ? @"upload_question" : @"download_question";
+        NSString * question = attachment.message.isOutgoing.boolValue ? @"attachment_on_hold_upload_question" : @"attachment_on_hold_download_question";
         return [NSString stringWithFormat: NSLocalizedString(question, nil), fileSize];
     }
 
@@ -2004,7 +2005,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate
                                                                        addressDictionary:nil];
                         MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
-                        [mapItem setName:NSLocalizedString(@"The Place",@"placemark name")];
+                        [mapItem setName:NSLocalizedString(@"geolocation_default_name",@"placemark name")];
                         // Pass the map item to the Maps app
                         [mapItem openInMapsWithLaunchOptions:nil];
                     }
@@ -2207,8 +2208,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                                      [[UIApplication sharedApplication] openURL: url];
                                                  }
                                              }
-                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                           otherButtonTitles: NSLocalizedString(@"button_title_call", nil), nil];
+                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                           otherButtonTitles: NSLocalizedString(@"chat_call_phone_number_btn_title", nil), nil];
     [alert show];
 }
 

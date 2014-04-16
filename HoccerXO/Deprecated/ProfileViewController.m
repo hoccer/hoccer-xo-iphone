@@ -187,9 +187,9 @@ typedef enum ActionSheetTags {
     switch (_mode) {
         case ProfileViewModeMyProfile:
         case ProfileViewModeFirstRun:
-            return @"navigation_title_profile";
+            return @"profile_nav_title";
         case ProfileViewModeContactProfile:
-            return @"navigation_title_contact";
+            return @"contact_nav_title";
         default:
             NSLog(@"ProfileViewController navigationItemTitleKey: unhandled mode");
             return @"unhandled mode";
@@ -198,11 +198,11 @@ typedef enum ActionSheetTags {
 
 - (NSString*) blockFormatForRelationshipState: (NSString*) state {
     if ([state isEqualToString: kRelationStateFriend]) {
-        return NSLocalizedString(@"contact_block", nil);
+        return NSLocalizedString(@"contact_block_btn_title_format", nil);
     } else if ([state isEqualToString: kRelationStateBlocked]) {
-        return NSLocalizedString(@"contact_unblock", nil);
-    } else if ([state isEqualToString: @"kept"]) {
-    } else if ([state isEqualToString: @"groupfriend"]) {
+        return NSLocalizedString(@"contact_unblock_btn_title_format", nil);
+    } else if ([state isEqualToString:kRelationStateKept]) {
+    } else if ([state isEqualToString: kRelationStateGroupFriend]) {
     } else if (state == nil) {
         //happens with groups
     } else {
@@ -224,7 +224,7 @@ typedef enum ActionSheetTags {
 
     _blockContactItem.valueFormat = [self blockFormatForRelationshipState: _contact.relationshipState];
     _blockContactItem.currentValue = [modelObject nickName];
-    //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [modelObject nickName]];
+    //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"contact_chat_title", nil), [modelObject nickName]];
     _chatWithContactItem.currentValue = [modelObject nickName];
     
 
@@ -236,7 +236,7 @@ typedef enum ActionSheetTags {
 
     [self updateKeyFingerprint];
     // XXX hack to display _fingerprintInfoItem while editing...
-    _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"profile_fingerprint_info", nil);
+    _fingerprintInfoItem.currentValue = _fingerprintInfoItem.editLabel = NSLocalizedString(@"key_fingerprint_info", nil);
 }
 
 - (id) getModelObject {
@@ -254,9 +254,9 @@ typedef enum ActionSheetTags {
         key = [[UserProfile sharedProfile] publicKey];
     }
     if (self.contact.verifiedKey == nil || ![self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
-        _verifyPublicKeyItem.currentValue = NSLocalizedString((@"verify_publickey"), nil);
+        _verifyPublicKeyItem.currentValue = NSLocalizedString((@"key_verify_public_btn_title"), nil);
     } else {
-        _verifyPublicKeyItem.currentValue = NSLocalizedString((@"unverify_publickey"), nil);
+        _verifyPublicKeyItem.currentValue = NSLocalizedString((@"key_unverify_public_btn_title"), nil);
     }
     _verifyPublicKeyItem.editLabel = _verifyPublicKeyItem.currentValue;
 
@@ -309,7 +309,7 @@ typedef enum ActionSheetTags {
         } else {
             [item setCurrentValue: [object valueForKey: keyPath]];
             if ([keyPath isEqualToString: @"nickName"]) {
-                //_chatWithContactItem.currentValue = _chatWithContactItem.editLabel = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), [object nickName]];
+                //_chatWithContactItem.currentValue = _chatWithContactItem.editLabel = [NSString stringWithFormat: NSLocalizedString(@"contact_chat_title", nil), [object nickName]];
                 _chatWithContactItem.currentValue = _chatWithContactItem.editLabel = [object nickName];
                 _blockContactItem.currentValue = [object nickName];
                 _blockContactItem.valueFormat = [self blockFormatForRelationshipState: [object relationshipState]];
@@ -377,23 +377,23 @@ typedef enum ActionSheetTags {
 
 
 - (void) showOldCredentialsAlert {
-    NSString * title = NSLocalizedString(@"delete_credentials_alert_title", nil);
-    NSString * message = NSLocalizedString(@"delete_credentials_alert_text", nil);
+    NSString * title = NSLocalizedString(@"credentials_delete_btn_title_alert_title", nil);
+    NSString * message = NSLocalizedString(@"credentials_delete_btn_title_alert_text", nil);
     NSString * keep = NSLocalizedString(@"credentials_setup_keep_btn_title", nil);
-    NSString * delete = NSLocalizedString(@"delete_credentials_delete_title", nil);
+    NSString * delete = NSLocalizedString(@"delete", nil);
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title message: message delegate: self cancelButtonTitle: delete otherButtonTitles: keep, nil];
     [alert show];
 }
     
 - (void) showOldCredentialsDocumentAlert {
-    NSString * title = NSLocalizedString(@"import_credentials_alert_title", nil);
-    NSString * message = NSLocalizedString(@"import_credentials_alert_text", nil);
+    NSString * title = NSLocalizedString(@"credentials_import_safety_title", nil);
+    NSString * message = NSLocalizedString(@"credentials_import_btn_title_alert_text", nil);
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
                                                      message: message
                                              completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                  switch (buttonIndex) {
                                                      case 0:
-                                                     // import_credentials_not_button_title, perform new registration
+                                                     // credentials_import_btn_title_not_button_title, perform new registration
                                                      NSLog(@"Not Importing credentials, performing registration");
                                                      [self.appDelegate setupDone: YES];
                                                      break;
@@ -404,17 +404,17 @@ typedef enum ActionSheetTags {
                                                      break;
                                                  }
                                              }
-                                           cancelButtonTitle: NSLocalizedString(@"import_credentials_not_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"credentials_import_btn_title_not_button_title", nil)
                                            otherButtonTitles: NSLocalizedString(@"credentials_setup_import_btn_title",nil),nil];
     [alert show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == alertView.cancelButtonIndex) {
-        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_saftey_question", nil)
+        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_delete_btn_title_saftey_question", nil)
                                                             delegate: self
-                                                   cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                              destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
+                                                   cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                              destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                                    otherButtonTitles: nil];
         sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
         sheet.tag = kActionSheetDeleteCredentials;
@@ -450,7 +450,7 @@ typedef enum ActionSheetTags {
     } else if (actionSheet.tag == kActionSheetDeleteCredentialsFile) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             if ([[UserProfile sharedProfile] deleteCredentialsFile]) {
-                [HXOUI showErrorAlertWithMessageAsync: @"The exported credentials have been deleted." withTitle:@"Credentials File Deleted"];
+                [HXOUI showErrorAlertWithMessageAsync: @"The exported credentials have been deleted." withTitle:@"credentials_file_deleted_alert"];
             }
             // TODO: show error message if it has not been deleted
             _canceled = YES;
@@ -478,7 +478,7 @@ typedef enum ActionSheetTags {
 
 
 + (void)importCredentials {
-    [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"Enter decryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+    [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"credentials_file_enter_passphrase_alert",nil) withPlaceHolder:NSLocalizedString(@"credentials_file_passphrase_placeholder",nil)
                      onCompletion:^(NSString *entry) {
                          if (entry != nil) {
                              int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:entry];
@@ -487,11 +487,11 @@ typedef enum ActionSheetTags {
                                  return;
                              }
                              if (result == -1) {
-                                 [HXOUI showErrorAlertWithMessageAsync:@"Wrong decryption passphrase or credentials file damaged. Try again." withTitle:@"Credentials Import Failed"];
+                                 [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];
                                  return;
                              }
                              if (result == 0) {
-                                 [HXOUI showErrorAlertWithMessageAsync:@"Imported credentials are the same as the active ones." withTitle:@"Same credentials"];
+                                 [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_equals_current_message" withTitle:@"credentials_file_equals_current_title"];
                                  return;
                              }
                          }
@@ -701,9 +701,9 @@ typedef enum ActionSheetTags {
     }
     
     _chatWithContactItem = [[ProfileItem alloc] initWithName: @"ChatWithContactItem"];
-    //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"chat_with_contact", nil), _contact.nickName];
+    //_chatWithContactItem.currentValue = [NSString stringWithFormat: NSLocalizedString(@"contact_chat_title", nil), _contact.nickName];
     _chatWithContactItem.currentValue = _contact.nickName;
-    _chatWithContactItem.valueFormat = NSLocalizedString(@"chat_with_contact", nil);
+    _chatWithContactItem.valueFormat = NSLocalizedString(@"contact_chat_title", nil);
     _chatWithContactItem.textAlignment = NSTextAlignmentLeft;
     _chatWithContactItem.cellClass = [UserDefaultsCellDisclosure class];
     _chatWithContactItem.action = @selector(chatWithContactPressed:);
@@ -723,7 +723,7 @@ typedef enum ActionSheetTags {
     _fingerprintItem = [[ProfileItem alloc] initWithName: @"FingerprintItem"];
     _fingerprintItem.cellClass = [UserDefaultsCellTextInput class];
     _fingerprintItem.textAlignment = NSTextAlignmentLeft;
-    _fingerprintItem.editLabel = NSLocalizedString(@"profile_fingerprint_label",nil);
+    _fingerprintItem.editLabel = NSLocalizedString(@"profile_key_btn_title",nil);
     [self updateKeyFingerprint];
     //_fingerprintItem.icon = [UIImage imageNamed: [self fingerprintIconName]];
     // [_itemsByKeyPath setObject: _fingerprintItem forKey: _fingerprintItem.valueKey];
@@ -731,8 +731,8 @@ typedef enum ActionSheetTags {
     _fingerprintInfoItem.cellClass = [UserDefaultsCellInfoText class];
 
     _verifyPublicKeyItem = [[ProfileItem alloc] initWithName:@"VerifyPublicKeyItem"];
-    _verifyPublicKeyItem.currentValue = NSLocalizedString(@"verify_publickey", nil);
-    _verifyPublicKeyItem.editLabel = NSLocalizedString(@"verify_publickey", nil);
+    _verifyPublicKeyItem.currentValue = NSLocalizedString(@"key_verify_public_btn_title", nil);
+    _verifyPublicKeyItem.editLabel = NSLocalizedString(@"key_verify_public_btn_title", nil);
     _verifyPublicKeyItem.cellClass = [UserDefaultsCell class];
     _verifyPublicKeyItem.action = @selector(verifyPublicKeyPressed:);
     _verifyPublicKeyItem.target = self;
@@ -748,11 +748,11 @@ typedef enum ActionSheetTags {
 
     _renewKeyPairInfoItem = [[ProfileItem alloc] initWithName:@"RenewKeypairInfoItem"];
     _renewKeyPairInfoItem.cellClass = [UserDefaultsCellInfoText class];
-    _renewKeyPairInfoItem.currentValue = _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"profile_renew_keypair_info", nil);
+    _renewKeyPairInfoItem.currentValue = _renewKeyPairInfoItem.editLabel = NSLocalizedString(@"key_renew_keypair_info", nil);
 
     _exportPublicKeyItem = [[ProfileItem alloc] initWithName:@"ExportPublicKeyItem"];
-    _exportPublicKeyItem.currentValue = NSLocalizedString(@"export_publickey", nil);
-    _exportPublicKeyItem.editLabel = NSLocalizedString(@"export_publickey", nil);
+    _exportPublicKeyItem.currentValue = NSLocalizedString(@"key_export_public_btn_title", nil);
+    _exportPublicKeyItem.editLabel = NSLocalizedString(@"key_export_public_btn_title", nil);
     _exportPublicKeyItem.cellClass = [UserDefaultsCell class];
     _exportPublicKeyItem.action = @selector(exportPublicKeyPressed:);
     _exportPublicKeyItem.target = self;
@@ -760,8 +760,8 @@ typedef enum ActionSheetTags {
     //_exportPublicKeyItem.icon = [UIImage imageNamed: [self _exportPublicKeyItemIconName]];
     
     _importPublicKeyItem = [[ProfileItem alloc] initWithName:@"ImportPublicKeyItem"];
-    _importPublicKeyItem.currentValue = NSLocalizedString(@"import_publickey", nil);
-    _importPublicKeyItem.editLabel = NSLocalizedString(@"import_publickey", nil);
+    _importPublicKeyItem.currentValue = NSLocalizedString(@"key_import_public_btn_title", nil);
+    _importPublicKeyItem.editLabel = NSLocalizedString(@"key_import_public_btn_title", nil);
     _importPublicKeyItem.cellClass = [UserDefaultsCell class];
     _importPublicKeyItem.action = @selector(importPublicKeyPressed:);
     _importPublicKeyItem.target = self;
@@ -769,8 +769,8 @@ typedef enum ActionSheetTags {
     //_importPublicKeyItem.icon = [UIImage imageNamed: [self _importPublicKeyItemIconName]];
 
     _exportPrivateKeyItem = [[ProfileItem alloc] initWithName:@"ExportPrivateKeyItem"];
-    _exportPrivateKeyItem.currentValue = NSLocalizedString(@"export_privatekey", nil);
-    _exportPrivateKeyItem.editLabel = NSLocalizedString(@"export_privatekey", nil);
+    _exportPrivateKeyItem.currentValue = NSLocalizedString(@"key_export_private_btn_title", nil);
+    _exportPrivateKeyItem.editLabel = NSLocalizedString(@"key_export_private_btn_title", nil);
     _exportPrivateKeyItem.cellClass = [UserDefaultsCell class];
     _exportPrivateKeyItem.action = @selector(exportPrivateKeyPressed:);
     _exportPrivateKeyItem.target = self;
@@ -778,8 +778,8 @@ typedef enum ActionSheetTags {
     //_exportPrivateKeyItem.icon = [UIImage imageNamed: [self _exportPrivateKeyItemIconName]];
     
     _importPrivateKeyItem = [[ProfileItem alloc] initWithName:@"ImportPrivateKeyItem"];
-    _importPrivateKeyItem.currentValue = NSLocalizedString(@"import_privatekey", nil);
-    _importPrivateKeyItem.editLabel = NSLocalizedString(@"import_privatekey", nil);
+    _importPrivateKeyItem.currentValue = NSLocalizedString(@"key_import_private_btn_title", nil);
+    _importPrivateKeyItem.editLabel = NSLocalizedString(@"key_import_private_btn_title", nil);
     _importPrivateKeyItem.cellClass = [UserDefaultsCell class];
     _importPrivateKeyItem.action = @selector(importPrivateKeyPressed:);
     _importPrivateKeyItem.target = self;
@@ -792,8 +792,8 @@ typedef enum ActionSheetTags {
     }
 
     _deleteContactItem = [[ProfileItem alloc] initWithName:@"DeleteContactItem"];
-    _deleteContactItem.editLabel = NSLocalizedString(@"delete_contact", nil);
-    _deleteContactItem.currentValue = NSLocalizedString(@"delete_contact", nil);
+    _deleteContactItem.editLabel = NSLocalizedString(@"contact_delete_btn_title", nil);
+    _deleteContactItem.currentValue = NSLocalizedString(@"contact_delete_btn_title", nil);
     _deleteContactItem.cellClass = [UserDefaultsCell class];
     _deleteContactItem.action = @selector(deleteContactPressed:);
     _deleteContactItem.target = self;
@@ -802,8 +802,8 @@ typedef enum ActionSheetTags {
     _destructiveSection = [ProfileSection sectionWithName:@"DestructiveSection" items: _deleteContactItem];
 
     _exportCredentialsItem = [[ProfileItem alloc] initWithName:@"ExportCredentialsItem"];
-    _exportCredentialsItem.currentValue = NSLocalizedString(@"export_credentials", nil);
-    _exportCredentialsItem.editLabel = NSLocalizedString(@"export_credentials", nil);
+    _exportCredentialsItem.currentValue = NSLocalizedString(@"credentials_export_btn_title", nil);
+    _exportCredentialsItem.editLabel = NSLocalizedString(@"credentials_export_btn_title", nil);
     _exportCredentialsItem.cellClass = [UserDefaultsCell class];
     _exportCredentialsItem.action = @selector(exportCredentialsPressed:);
     _exportCredentialsItem.target = self;
@@ -811,8 +811,8 @@ typedef enum ActionSheetTags {
     //_exportCredentialsItem.icon = [UIImage imageNamed: [self exportCredentialsIconName]];
 
     _importCredentialsItem = [[ProfileItem alloc] initWithName:@"ImportCredentialsItem"];
-    _importCredentialsItem.currentValue = NSLocalizedString(@"import_credentials", nil);
-    _importCredentialsItem.editLabel = NSLocalizedString(@"import_credentials", nil);
+    _importCredentialsItem.currentValue = NSLocalizedString(@"credentials_import_btn_title", nil);
+    _importCredentialsItem.editLabel = NSLocalizedString(@"credentials_import_btn_title", nil);
     _importCredentialsItem.cellClass = [UserDefaultsCell class];
     _importCredentialsItem.action = @selector(importCredentialsPressed:);
     _importCredentialsItem.target = self;
@@ -820,16 +820,16 @@ typedef enum ActionSheetTags {
     //_importCredentialsItem.icon = [UIImage imageNamed: [self exportCredentialsIconName]];
 
     _deleteCredentialsItem = [[ProfileItem alloc] initWithName:@"DeleteCredentialsItem"];
-    _deleteCredentialsItem.currentValue = NSLocalizedString(@"delete_credentials", nil);
-    _deleteCredentialsItem.editLabel = NSLocalizedString(@"delete_credentials", nil);
+    _deleteCredentialsItem.currentValue = NSLocalizedString(@"credentials_delete_btn_title", nil);
+    _deleteCredentialsItem.editLabel = NSLocalizedString(@"credentials_delete_btn_title", nil);
     _deleteCredentialsItem.cellClass = [UserDefaultsCell class];
     _deleteCredentialsItem.action = @selector(deleteCredentialsPressed:);
     _deleteCredentialsItem.target = self;
     _deleteCredentialsItem.textAlignment = NSTextAlignmentLeft;
 
     _deleteCredentialsFileItem = [[ProfileItem alloc] initWithName:@"DeleteCredentialsFileItem"];
-    _deleteCredentialsFileItem.currentValue = NSLocalizedString(@"delete_credentials_file", nil);
-    _deleteCredentialsFileItem.editLabel = NSLocalizedString(@"delete_credentials_file", nil);
+    _deleteCredentialsFileItem.currentValue = NSLocalizedString(@"credentials_file_delete_btn_title, nil);
+    _deleteCredentialsFileItem.editLabel = NSLocalizedString(@"credentials_file_delete_btn_title, nil);
     _deleteCredentialsFileItem.cellClass = [UserDefaultsCell class];
     _deleteCredentialsFileItem.action = @selector(deleteCredentialsFilePressed:);
     _deleteCredentialsFileItem.target = self;
@@ -846,9 +846,9 @@ typedef enum ActionSheetTags {
 
 - (NSString*) renewKeypairButtonTitle {
     if (!_renewKeypairRequested) {
-        return NSLocalizedString(@"profile_renew_keypair", nil);
+        return NSLocalizedString(@"key_renew_keypair", nil);
     } else {
-        return [NSString stringWithFormat:@"%@ ✔",NSLocalizedString(@"profile_renew_keypair", nil)];
+        return [NSString stringWithFormat:@"%@ ✔",NSLocalizedString(@"key_renew_keypair", nil)];
     }    
 }
 
@@ -910,15 +910,15 @@ typedef enum ActionSheetTags {
             _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,nil];
         }
 
-        if ([self.contact.relationshipState isEqualToString: @"friend"]) {
+        if ([self.contact.relationshipState isEqualToString: kRelationStateFriend]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: @"blocked"]) {
+        } else if ([self.contact.relationshipState isEqualToString: kRelationStateBlocked]) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: @"groupfriend"]) {
+        } else if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: @"kept"]) {
+        } else if ([self.contact.relationshipState isEqualToString: kRelationStateKept]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else {
             return @[_coreSection, _fingerprintSection];//, _profileItemsSection, _fingerprintSection];
@@ -1047,12 +1047,12 @@ typedef enum ActionSheetTags {
 - (void) toggleBlockedPressed: (id) sender {
     id item = _profileDataSource[[sender section]][[sender row]];
     id cell = [self.tableView cellForRowAtIndexPath: sender];
-    if ([_contact.relationshipState isEqualToString: @"friend"]) {
+    if ([_contact.relationshipState isEqualToString: kRelationStateFriend]) {
         // NSLog(@"friend -> blocked");
         [self.chatBackend blockClient: _contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"blockClient: %@", success ? @"success" : @"failed");
         }];
-    } else if ([_contact.relationshipState isEqualToString: @"blocked"]) {
+    } else if ([_contact.relationshipState isEqualToString: kRelationStateBlocked]) {
         // NSLog(@"blocked -> friend");
         [self.chatBackend unblockClient: _contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"unblockClient: %@", success ? @"success" : @"failed");
@@ -1067,10 +1067,10 @@ typedef enum ActionSheetTags {
 }
 
 - (void) deleteContactPressed: (id) sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_contact_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"contact_delete_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"delete_contact_confirm", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"contact_delete_confirm", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetDeleteContact;
@@ -1080,7 +1080,7 @@ typedef enum ActionSheetTags {
 - (void) deleteContact: (Contact*) contact {
     [self.navigationController popViewControllerAnimated: YES];
     NSLog(@"deleting contact with relationshipState %@", contact.relationshipState);
-    if ([contact.relationshipState isEqualToString:@"groupfriend"] || [contact.relationshipState isEqualToString:@"kept"]) {
+    if ([contact.relationshipState isEqualToString: kRelationStateGroupFriend] || [contact.relationshipState isEqualToString: kRelationStateKept]) {
         [self.chatBackend handleDeletionOfContact:contact];
         return;
     }
@@ -1093,11 +1093,11 @@ typedef enum ActionSheetTags {
 }
 
 + (void) exportCredentials {
-    [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"Enter encryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+    [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"credentials_file_enter_passphrase_alert",nil) withPlaceHolder:NSLocalizedString(@"credentials_file_passphrase_placeholder",nil)
                      onCompletion:^(NSString *entry) {
                          if (entry != nil) {
                              [[UserProfile sharedProfile] exportCredentialsWithPassphrase:entry];
-                             [HXOUI showErrorAlertWithMessageAsync: nil withTitle:@"credentials_exported"];
+                             [HXOUI showErrorAlertWithMessageAsync: nil withTitle:@"credentials_exported_alert"];
                          }
                      }];
 }
@@ -1110,10 +1110,10 @@ typedef enum ActionSheetTags {
 
 
 - (void) importPublicKeyPressed: (id) sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_key_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"key_import_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"import_confirm", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"key_import_confirm_btn_title", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetImportPublicKey;
@@ -1121,10 +1121,10 @@ typedef enum ActionSheetTags {
 }
 
 - (void) importPrivateKeyPressed: (id) sender {
-     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_key_safety_question", nil)
+     UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"key_import_safety_question", nil)
      delegate: self
-     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-     destructiveButtonTitle: NSLocalizedString(@"import_confirm", nil)
+     cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+     destructiveButtonTitle: NSLocalizedString(@"key_import_confirm_btn_title", nil)
      otherButtonTitles: nil];
      sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
      sheet.tag = kActionSheetImportPrivateKey;
@@ -1155,10 +1155,10 @@ typedef enum ActionSheetTags {
 }
 
 - (void) exportPrivateKeyPressed: (id) sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"export_private_key_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"key_export_private_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"export_confirm", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"key_export_confirm_btn_title", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetExportPrivateKey;
@@ -1221,10 +1221,10 @@ typedef enum ActionSheetTags {
 
 - (void) importCredentialsPressed: (id) sender {
 
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_import_safety_question", nil)
                                                     delegate: self
-                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                      destructiveButtonTitle: NSLocalizedString(@"import_credentials_confirm", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                      destructiveButtonTitle: NSLocalizedString(@"credentials_key_import_confirm_btn_title", nil)
                                            otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetImportCredentials;
@@ -1232,10 +1232,10 @@ typedef enum ActionSheetTags {
 }
 
 - (void) deleteCredentialsFilePressed: (id) sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_file_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_file_delete_safety_question", nil)
                                                         delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"delete_credentials_file_confirm", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                          destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                                otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetDeleteCredentialsFile;
@@ -1243,10 +1243,10 @@ typedef enum ActionSheetTags {
 }
     
 - (void) deleteCredentialsPressed: (id) sender {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"delete_credentials_safety_question", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"credentials_delete_safety_question", nil)
                                                     delegate: self
-                                           cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                      destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                      destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                            otherButtonTitles: nil];
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     sheet.tag = kActionSheetDeleteCredentialsLate;
@@ -1288,12 +1288,12 @@ typedef enum ActionSheetTags {
 }
 
 - (NSString*) attachmentPickerActionSheetTitle {
-    return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
+    return NSLocalizedString(@"profile_avatar_option_sheet_title", "Profile View Avatar Chooser Action Sheet Title");
 }
 
 - (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
     if (_avatarItem.currentValue != nil) {
-        actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_delete_avatar_button_title", nil)];
+        actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_avatar_option_delete_btn_title", nil)];
     }
 }
 

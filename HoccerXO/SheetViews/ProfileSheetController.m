@@ -32,14 +32,14 @@
 - (void) commonInit {
     [super commonInit];
 
-    self.title = @"navigation_title_profile";
+    self.title = @"profile_nav_title";
 
     self.nicknameItem.enabledMask = DatasheetModeEdit;
 
     //self.keyItem.visibilityMask = DatasheetModeView;
     self.keyItem.cellIdentifier = @"DatasheetActionCell";
 
-    self.destructiveButton.title = @"delete_credentials";
+    self.destructiveButton.title = @"credentials_delete_btn_title";
     self.destructiveButton.visibilityMask = DatasheetModeEdit;
     self.destructiveButton.target = self;
     self.destructiveButton.action = @selector(deleteCredentialsPressed:);
@@ -49,6 +49,8 @@
 }
 
 - (void) awakeFromNib {
+
+
     self.inspectedObject = [UserProfile sharedProfile];
 }
 
@@ -98,7 +100,7 @@
 
 - (DatasheetItem*) exportCredentialsItem {
     if ( ! _exportCredentialsItem) {
-        _exportCredentialsItem = [self itemWithIdentifier: @"export_credentials" cellIdentifier: @"DatasheetActionCell"];
+        _exportCredentialsItem = [self itemWithIdentifier: @"credentials_export_btn_title" cellIdentifier: @"DatasheetActionCell"];
         _exportCredentialsItem.visibilityMask = DatasheetModeEdit;
         _exportCredentialsItem.target = self;
         _exportCredentialsItem.action = @selector(exportCredentialsPressed:);
@@ -110,13 +112,13 @@
     void(^completion)(NSString*) = ^(NSString * passphrase) {
         if (passphrase) {
             [[UserProfile sharedProfile] exportCredentialsWithPassphrase: passphrase];
-            [HXOUI showErrorAlertWithMessageAsync: nil withTitle: @"credentials_exported"];
+            [HXOUI showErrorAlertWithMessageAsync: nil withTitle: @"credentials_exported_alert"];
             [self updateCurrentItems];
         }
     };
 
-    [HXOUI enterStringAlert:nil withTitle: NSLocalizedString(@"Enter encryption passphrase",nil)
-                  withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+    [HXOUI enterStringAlert:nil withTitle: NSLocalizedString(@"credentials_file_choose_passphrase_alert",nil)
+                  withPlaceHolder:NSLocalizedString(@"credentials_file_passphrase_placeholder",nil)
                      onCompletion: completion];
 }
 
@@ -124,7 +126,7 @@
 
 - (DatasheetItem*) importCredentialsItem {
     if ( ! _importCredentialsItem) {
-        _importCredentialsItem = [self itemWithIdentifier: @"import_credentials" cellIdentifier: @"DatasheetActionCell"];
+        _importCredentialsItem = [self itemWithIdentifier: @"credentials_import_btn_title" cellIdentifier: @"DatasheetActionCell"];
         _importCredentialsItem.visibilityMask = DatasheetModeEdit;
         _importCredentialsItem.dependencyPaths = @[@"foundCredentialsFile"];
         _importCredentialsItem.target = self;
@@ -143,10 +145,10 @@
                     [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"New login credentials have been imported. Restart Hoccer XO to use them" withTitle:@"New Login Credentials Imported"];
                     break;
                 case -1:
-                    [HXOUI showErrorAlertWithMessageAsync:@"Wrong decryption passphrase or credentials file damaged. Try again." withTitle:@"Credentials Import Failed"];
+                    [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];
                     break;
                 case 0:
-                    [HXOUI showErrorAlertWithMessageAsync:@"Imported credentials are the same as the active ones." withTitle:@"Same credentials"];
+                    [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_equals_current_message" withTitle:@"credentials_file_equals_current_title"];
                     break;
                 default:
                     NSLog(@"importCredentialsPressed: unhandled result %d", result);
@@ -157,17 +159,17 @@
 
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"Enter decryption passphrase",nil) withPlaceHolder:NSLocalizedString(@"Enter passphrase",nil)
+            [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"credentials_file_enter_passphrase_alert",nil) withPlaceHolder:NSLocalizedString(@"credentials_file_passphrase_placeholder",nil)
                        onCompletion: passphraseCompletion];
         }
     };
 
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"import_credentials_safety_question", nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_import_safety_question", nil)
                                         completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"import_credentials_confirm", nil)
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"credentials_key_import_confirm_btn_title", nil)
                                       otherButtonTitles: nil];
-    [sheet showInView: sender.view];
+    [sheet showInView: self.delegate.view];
 }
 
 #pragma mark - Delete Credentials
@@ -180,12 +182,12 @@
 
         }
     };
-    
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_credentials_safety_question", nil)
-                                                        completionBlock: completion
-                                               cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle: NSLocalizedString(@"delete_credentials_confirm", nil)
-                                               otherButtonTitles: nil];
+
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_delete_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
+                                      otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }
 
@@ -193,7 +195,7 @@
 
 - (DatasheetItem*) deleteCredentialsFileItem {
     if ( ! _deleteCredentialsFileItem) {
-        _deleteCredentialsFileItem = [self itemWithIdentifier: @"delete_credentials_file" cellIdentifier: @"DatasheetActionCell"];
+        _deleteCredentialsFileItem = [self itemWithIdentifier: @"credentials_file_delete_btn_title" cellIdentifier: @"DatasheetActionCell"];
         _deleteCredentialsFileItem.visibilityMask = DatasheetModeEdit;
         _deleteCredentialsFileItem.target = self;
         _deleteCredentialsFileItem.action = @selector(deleteCredentialsFilePressed:);
@@ -205,19 +207,19 @@
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             if ([[UserProfile sharedProfile] deleteCredentialsFile]) {
-                [HXOUI showErrorAlertWithMessageAsync: @"The exported credentials have been deleted." withTitle:@"Credentials File Deleted"];
+                [HXOUI showErrorAlertWithMessageAsync: nil withTitle:@"credentials_file_deleted_alert"];
             }
             // TODO: show error message if it has not been deleted
             [self updateCurrentItems];
         }
     };
 
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"delete_credentials_file_safety_question", nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_file_delete_safety_question", nil)
                                         completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"delete_credentials_file_confirm", nil)
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                       otherButtonTitles: nil];
-    [sheet showInView: sender.view];
+    [sheet showInView: self.delegate.view];
 }
 
 @end

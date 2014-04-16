@@ -81,7 +81,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 - (DatasheetItem*) keyItem {
     if (! _keyItem) {
         _keyItem = [self itemWithIdentifier: @"Key" cellIdentifier: @"DatasheetKeyValueCell"];
-        _keyItem.title = @"profile_fingerprint_label";
+        _keyItem.title = @"profile_key_btn_title";
         _keyItem.segueIdentifier = @"showKey";
         _keyItem.accessoryStyle = DatasheetAccessoryDisclosure;
     }
@@ -118,7 +118,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (DatasheetItem*) destructiveButton {
     if ( ! _destructiveButton) {
-        _destructiveButton = [self itemWithIdentifier: @"Delete" cellIdentifier: @"DatasheetActionCell"];
+        _destructiveButton = [self itemWithIdentifier: @"delete" cellIdentifier: @"DatasheetActionCell"];
         _destructiveButton.titleTextColor = [HXOUI theme].destructiveTextColor;
         _destructiveButton.visibilityMask = DatasheetModeNone;
     }
@@ -269,12 +269,12 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (NSString*) attachmentPickerActionSheetTitle {
-    return NSLocalizedString(@"Pick an Avatar", "Profile View Avatar Chooser Action Sheet Title");
+    return NSLocalizedString(@"profile_avatar_option_sheet_title", "Profile View Avatar Chooser Action Sheet Title");
 }
 
 - (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
     if (_avatarItem.currentValue != nil) {
-        actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_delete_avatar_button_title", nil)];
+        actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_avatar_option_delete_btn_title", nil)];
     }
 }
 

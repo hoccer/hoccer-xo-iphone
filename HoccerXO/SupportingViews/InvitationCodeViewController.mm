@@ -124,7 +124,7 @@
     [self.codeDrawerView addSubview: self.codeLabel];
 
     UIButton * doneButton = [UIButton buttonWithType: UIButtonTypeCustom];
-    [doneButton setTitle: NSLocalizedString(@"done_button_title", nil) forState: UIControlStateNormal];
+    [doneButton setTitle: NSLocalizedString(@"done", nil) forState: UIControlStateNormal];
     [doneButton sizeToFit];
     frame = doneButton.frame;
     frame.origin.x = kHXOCellPadding;
@@ -134,7 +134,7 @@
     
     UIButton * enterButton = [UIButton buttonWithType: UIButtonTypeCustom];
     enterButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [enterButton setTitle: NSLocalizedString(@"enter_button_title", nil) forState: UIControlStateNormal];
+    [enterButton setTitle: NSLocalizedString(@"enter", nil) forState: UIControlStateNormal];
     [enterButton sizeToFit];
     frame = enterButton.frame;
     frame.origin.x = self.view.bounds.size.width - (frame.size.width + kHXOCellPadding);
@@ -273,7 +273,7 @@
                 [self.chatBackend pairByToken: url.host];
                 [self addFlash: readableObject];
             } else {
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invite_not_a_hoccer_xo_qr_code_title", nil)
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invite_no_xo_qr_code_title", nil)
                                                                  message: readableObject.stringValue
                                                          completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alert) {
                                                              if (buttonIndex != alert.cancelButtonIndex) {
@@ -284,10 +284,10 @@
                                                        cancelButtonTitle: nil
                                                        otherButtonTitles: nil];
                 if ([url.scheme isEqualToString: @"http"] || [url.scheme isEqualToString: @"https"]) {
-                    alert.cancelButtonIndex = [alert addButtonWithTitle: NSLocalizedString(@"Cancel", nil)];
+                    alert.cancelButtonIndex = [alert addButtonWithTitle: NSLocalizedString(@"cancel", nil)];
                     [alert addButtonWithTitle: NSLocalizedString(@"Open", nil)];
                 } else {
-                    alert.cancelButtonIndex = [alert addButtonWithTitle: NSLocalizedString(@"ok_button_title", nil)];
+                    alert.cancelButtonIndex = [alert addButtonWithTitle: NSLocalizedString(@"ok", nil)];
                 }
                 [alert show];
             }

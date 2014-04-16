@@ -50,9 +50,11 @@
 @synthesize rememberedLastVisibleChatCell;
 @synthesize friendMessageShown;
 
-NSString * const kRelationStateNone    = @"none";
-NSString * const kRelationStateFriend  = @"friend";
-NSString * const kRelationStateBlocked = @"blocked";
+NSString * const kRelationStateNone        = @"none";
+NSString * const kRelationStateFriend      = @"friend";
+NSString * const kRelationStateBlocked     = @"blocked";
+NSString * const kRelationStateGroupFriend = @"groupfriend";
+NSString * const kRelationStateKept        = @"kept";
 
 
 @dynamic relationshipState;
@@ -162,20 +164,20 @@ NSString * const kRelationStateBlocked = @"blocked";
 }
 
 - (NSString*) nickNameWithStatus {
-    if ([self.relationshipState isEqualToString: @"kept"]) {
+    if ([self.relationshipState isEqualToString: kRelationStateKept]) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
     }
     if (self.isBlocked) {
         return self.nickName;
     }
-    if ([self.type isEqualToString:@"Group"] && [self.myGroupMembership.group.groupState isEqualToString: @"kept"]) {
+    if ([self.type isEqualToString:@"Group"] && [self.myGroupMembership.group.groupState isEqualToString: kRelationStateKept]) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
     }
-    if ([self.relationshipState isEqualToString: @"none"]) {
+    if ([self.relationshipState isEqualToString: kRelationStateNone]) {
         return [NSString stringWithFormat:@"%@ ❓", self.nickName];
     }
     NSString * name = self.nickName;
-    if ([self.relationshipState isEqualToString: @"groupfriend"]) {
+    if ([self.relationshipState isEqualToString: kRelationStateGroupFriend]) {
         name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
     }    
     if ( ! self.connectionStatus || self.isOnline || [self.connectionStatus isEqualToString:@"offline"]) {

@@ -1945,7 +1945,7 @@ NSArray * TransferStateName = @[@"detached",
                         // NSLog(@"Saved image to Library");
                     } else {
                         NSLog(@"trySaveToAlbum: Error saving image in Library, error = %@", error);
-                        [HXOUI showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not save image in Album"];
+                        [HXOUI showErrorAlertWithMessage:[error localizedDescription] withTitle: @"attachment_save_to_album_failed_title"];
                     }
                 };
                 ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
@@ -1953,7 +1953,7 @@ NSArray * TransferStateName = @[@"detached",
                                           orientation:(ALAssetOrientation)[image imageOrientation]
                                       completionBlock:completeBlock];
             } else {
-                [HXOUI showErrorAlertWithMessage:[error localizedDescription] withTitle:@"Can not load image to save it in Album"];
+                [HXOUI showErrorAlertWithMessage:[error localizedDescription] withTitle: @"attachment_save_to_album_failed_title"];
                 NSLog(@"trySaveToAlbum: Failed to get image: %@", error);
             }
         }];
@@ -1967,7 +1967,7 @@ NSArray * TransferStateName = @[@"detached",
             NSLog(@"trySaveToAlbum: saved video in album at path = %@",myVideoFilePath);
         } else {
             NSLog(@"trySaveToAlbum: failed to save video in album at path = %@",myVideoFilePath);
-            [HXOUI showErrorAlertWithMessage:@"Video not compatible with album" withTitle:@"Can not save video in Album"];
+            [HXOUI showErrorAlertWithMessage:@"attachment_incompatible_video_message" withTitle: @"attachment_save_to_album_failed_title"];
         }
     }
 }

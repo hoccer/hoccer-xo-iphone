@@ -1,489 +1,377 @@
 "language_code"="en";
 
-/* Attachment Actionsheet Title */
-"Add Attachement" = "Add Attachement from:";
-
-/* Actionsheet Title */
-"Attachment" = "Attachment";
-
-/* Actionsheet Button Title */
-"Cancel" = "Cancel";
-
-/* Action Sheet Button Ttitle */
-"Choose Photo/Video" = "Album";
-
-/* Action Sheet Button Ttitle */
-"Take Photo/Video" = "Camera";
-
-/* Action Sheet Button Ttitle */
-"Take Photo" = "Camera";
-
-/* Action Sheet Button Ttitle */
-"Choose Photo" = "Album";
-
-
-/* Action Sheet Button Ttitle */
-"Choose Audio" = "Music Library";
-
-/* Action Sheet Button Ttitle */
-"Record Audio" = "Audio Recorder";
-
-
-/* Action Sheet Button Ttitle */
-"Choose Adressbook Item" = "Adressbook";
-
-/* Action Sheet Button Ttitle */
-"Pick a Location"="Map";
-
-
-/* Action Sheet Button Ttitle */
-"Paste Image Attachment" = "Pasteboard (Image)";
-
-/* Action Sheet Button Ttitle */
-"Paste Video Attachment" = "Pasteboard (Video)";
-
-/* Action Sheet Button Ttitle */
-"Paste Audio Attachment" = "Pasteboard (Audio)";
-
-/* Action Sheet Button Ttitle */
-"Paste vcard Attachment" = "Pasteboard (vcard)";
-
-/* Action Sheet Button Ttitle */
-"Paste geolocation Attachment" = "Pasteboard (Location)";
-
-/* Action Sheet Button Ttitle */
-"Paste Image" = "Pasteboard (Image)";
-
-"Paste data Attachment"="Pasteboard (%@)";
-
-"Opened data Attachment %@"="External (%@)";
-
-
-/* Profile View Avatar Chooser Action Sheet Title */
-"Pick an Avatar"="Get Avatar Image from:";
-
-
-/* Navigation Menu Item */
-"Chats" = "Chats";
-
-/* Contacts Navigation Bar Title */
-"Contacts" = "Contacts";
-
-/* Invite Code Copy/Paste Button */
-"Copy" = "Copy";
-
-/* Mail Invitation Body */
-"invitation_mail_body" = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
-
-/* Mail Invitation Subject */
-"invitation_mail_subject" = "Hoccer XO Invitation";
-
-/* SMS Invitation Body */
-"invitation_sms_text" = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
-
-/* Actionsheet Title */
-"Invite by" = "Invite Friends";
-
-/* Invite Actionsheet Button Title */
-"SMS" = "Invite via SMS";
-
-/* Invite Actionsheet Button Title */
-"Mail" = "Invite via E-Mail";
-
-"invite_by_code_button_title" = "Invite by Code";
-
-/* Invite Alert Title */
-"Invite failed" = "Invite failed";
-
-/* Navigation Menu Item */
-"Profile" = "Profile";
-
-"contacts_menu_item" = "Contacts";
-
-/* Actionsheet Button Title */
-"Remove Attachment" = "Remove Attachment";
-
-/* Actionsheet Button Title */
-"Choose Attachment" = "Choose New Attachment";
-
-/* Contact List Search Placeholder */
-"search" = "search";
-
-/* Chat Send Button Title */
-"Send" = "Send";
-
-/* Settings View Title */
-"Settings" = "Settings";
-
-/* Invite Alert Message */
-/* "The server accepted your code" = "The code has been accepted";*/
-
-/* Invite Alert Message */
-"The server rejected your invite code" = "The code has been rejected";
-
-/* Actionsheet Button Title */
-"View Attachment" = "View Attachment";
-
-/* APN new messages */
-"apn_new_messages" = "You have %@ new messages!";
-
-/* APN one new message */
-"apn_one_new_message" = "You have a new message!";
-
-"profile_name_label" = "Name:";
-
-"profile_name_placeholder" = "Your Name";
-
-"profile_delete_avatar_button_title" = "Delete Avatar";
-
-"profile_renew_keypair" = "Renew RSA Keypair";
-
-"profile_renew_keypair_info" = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
-
-"contact_group_friends" = "Friends";
-
-"contact_group_groups" = "Groups";
-
-"setting_save_incoming_media" = "Save incoming Media";
-
-"setting_save_incoming_media_info" = "Automatically save images and videos in your photo album. Contacts are saved to your address book.";
-
-"no_messages_exchanged" = "No messages yet.";
-
-"conversation_empty_placeholder" = "Chats";
-
-"contacts_empty_placeholder" = "Contacts";
-
-"navigation_title_profile" = "Profile";
-
-"navigation_title_contact"  = "Contact";
-"navigation_title_contacts" = "Contacts";
-
-"profile_fingerprint_label" = "Key";
-"profile_fingerprint_info" = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
-
-"contact_unblock" = "Unblock %@";
-
-"contact_block" = "Block %@";
-
-"contact_remove" = "Remove %@";
-
-"message_count_format_singular" = "%@ message";
-"message_count_format_plural"   = "%@ messages";
-
-"unverified_key_title" = "Not verified";
-"verified_key_title"   = "Verfied";
-"mistrusted_key_title"  = "Mistrusted";
-
-"fingerprint_item" = "Id";
-"key_length_item" = "Key Length";
-"key_length_unit" = "%@ bit";
-
-"key_view_title_you"   = "Your Key";
-"key_view_title_other" = "Key";
-
-"chat_with_contact" = "Chat";
-
-
-"delete_credentials_file"="Delete exported credentials";
-
-"delete_credentials_file_safety_question"="Really deleted exported credentials?";
-"delete_credentials_file_confirm"="Delete";
-
-"The exported credentials have been deleted."="The exported credentials have been deleted.";
-"Credentials File Deleted"="Credentials File Deleted";
-
-
-"import_credentials_safety_question"="Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
-"import_credentials_confirm"="Import";
-
-"delete_credentials_safety_question"="Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
-"delete_credentials_confirm"="Delete Credentials";
-
-"credentials_exported"="Login credentials have been exported to the document directory. If you transfer them to a another device, you must no longer use them here!";
-
-"Enter decryption passphrase"="Enter the decryption passphrase";
-"Enter encryption passphrase"="Enter a encryption passphrase and remember it";
-"Enter passphrase"="Enter passphrase";
-
-"Wrong decryption passphrase or credentials file damaged. Try again."="Wrong decryption passphrase or credentials file damaged. Try again.";
-"Credentials Import Failed"="Credentials Import Failed";
-
-"Imported credentials are the same as the active ones."="Imported credentials are the same as the active ones.";
-"Same credentials"="Same credentials";
-
-"export_publickey"="Export Public Key";
-"export_privatekey"="Export Private Key";
-"import_publickey"="Import Public Key";
-"import_privatekey"="Import Private Key";
-
-"key_export_success"="The key has been succesfully exported to the pasteboard";
-"key_export_success_title"="Key exported";
-
-"key_export_failed"="Sorry, the key export has failed.";
-"key_export_failed_title"="Key export failed";
-
-"key_import_success"="The key has been successfully imported from the pasteboard";
-"key_import_success_title"="Key Import Succeeded";
-
-"key_import_failed"="Sorry, the key import from pasteboard has failed.";
-"key_import_failed_title"="Key Import Failed";
-
-
-"verify_publickey"="Mark key verified";
-"unverify_publickey"="Mark key not verified";
-
-"Verified key of contact %@ has changed"="The key of contact '%@' has changed, and the old key had been verified. Verify the new key for additional security.";
-"Verified Key Changed" = "Verified Key has Changed";
-
-"import_confirm"="Import";
-"import_key_safety_question"="This will import an RSA key in PEM-format from the pasteboard. Only do it when you know what you are doing. Do you want to proceed?";
-
-
-"export_confirm"="Export";
-"export_private_key_safety_question"="Your private key can be used to decrypt messages sent to you. Therefore exporting a private key is generally not recommended. Do you want to export it to the pasteboard anyway?";
-
-"Save" = "Save";
-
-"Forward" = "Forward";
-
-"Delete" = "Delete";
-
-"Open with..."="Open with...";
-
-"Share"="Share";
-
-"about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer XO is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer XO is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
-
-"message_too_long_title" = "Message too long";
-
-"message_too_long_text" = "Message is longer than %d bytes. Please keep it brief.";
-
-"ok_button_title" = "Ok";
-
-"done_button_title" = "Done";
-
-"enter_button_title" = "Enter";
-
-"Resend" = "Send";
-
-"delete_contact" = "Delete contact";
-
-"invite_code_sheet_title" = "Invite Code";
-"invite_code_enter_dialog_title" = "Enter an xo invite code";
-"invite_code_enter_placeholder" = "Invite Code";
-"invite_code_fetch_failed" = "Failed to get code";
-"invite_not_a_hoccer_xo_qr_code_title" = "Not a Hoccer XO code";
-"invite_scanner_prompt" = "Looking for xo QR codes...";
-
-"delete_contact_safety_question" = "Delete contact, chat and attachments?";
-
-"delete_contact_confirm" = "Delete Contact";
-
-"attachment_download_failed_title" = "Download failed";
-
-"attachment_download_failed_message" = "Failed to download an attachment";
-
-"attachment_upload_failed_title" = "Upload failed";
-
-"attachment_upload_failed_message" = "Failed to upload an attachment";
-
-"stopped" = "not connected";
-"connecting" = "connecting...";
-"registering" = "registering...";
-"authenticating" = "authenticating...";
-"ready" = "connected";
-"stopping" = "disconnecting...";
-"no internet" = "no internet connection";
-
-"image" = "Image";
-"video" = "Video";
-"audio" = "Audio";
-"vcard" = "Adress";
-"geolocation" = "Location";
-
-"Upload %@\n%1.2f MB"="Upload %@\n%1.2f MB";
-"Download %@\n%1.2f MB"="Download %@\n%1.2f MB";
-
-"The Place"="The Place";
-
-"http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
-"http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
-
-"group_segment_title" = "Groups";
-
-"invalid_cert_title" = "Invalid Server Certificate";
-
-"invalid_cert_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
-
-"navigation_title_new_group" = "New Group";
-"navigation_title_group" = "Group";
-
-"group_name_placeholder" = "Group Name";
-"group_invite_button" = "Invite or kick Member";
-
-"group_invite_members_title" = "Invite more";
-
-"group_invite_title" = "Invite '%@' to group '%@'?";
-"group_kick_title" = "Kick '%@' from group '%@'?";
-"group_join_button" = "Join Group";
-"group_admin_you" = "You";
-"group_admin_label_singular" = "Admin: ";
-"group_admin_label_plural" = "Admins: ";
-"group_decline_invitation" = "Decline Invitation";
-"group_leave" = "Leave Group";
-"group_decline_invitation_title" = "Decline Invitation?";
-"group_decline_button_title" = "Decline";
-"group_leave_group_title" = "Leave Group?";
-"group_leave_group_button_title" = "Leave";
-"group_close" = "Close Group";
-"group_close_group_title" = "Do you really want to close the group for everybody and ever?";
-"group_close_group_button_title" = "Close";
-"group_delete_data"="Delete Group Data";
-
-"group_kick_member_confirm" = "Kick";
-
-"group_no_admin" = "No Admin";
-
-"group_no_other_joined_partners_text"="You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
-"group_no_other_partner_text"="You can not send a message to this group because there are no members except you. Please invite friends to this group.";
-"group_no_other_partners_title"="No other group members";
-
-"'%@' has joined group '%@'"="'%@' has joined group '%@' as new member.";
-"group_joined_title"="Group Joined";
-
-"'%@' has left group '%@'"="'%@' is no longer member of group '%@'.";
-"group_left_title"="Group Left";
-
-"'%@' no longer invited to group '%@'"="'%@' is no longer invited to group '%@'";
-"group_disinvited_title"="Invitation dismissed";
-
-
-"Group '%@' no longer exists. Delete associated chats and data?"="Your membership in group '%@' no longer exists. Delete associated chats and data?";
-"group_deleted_title"="Group Membership Removed";
-"group_keep_data_button"="Keep Data";
-"group_delete_data_button"="Delete Data";
-
-"group_delete_title"="Delete group and all associated chats and data?";
-"group_delete_button_title"="Delete Group";
-
-"You have been invited to group '%@' administrated by '%@'"="You have been invited to group '%@' administrated by '%@'. What do you want to do?";
-"invitation_title"="Group Invitation";
-"invitation_decide_later_button_title"="Decide later";
-"invitation_join_group_button_title"="Join Group";
-"invitation_decline_button_title"="Decline Invitation";
-
-"You have been kicked from group '%@'"="Your membership in group '%@' has been removed.";
-"The invitation for group '%@' has been removed."="The invitation for group '%@' has been removed.";
-
-"Group Deactivated"="Group Deactivated";
-"invited"="invited";
-"Invitation not yet accepted"="Invitation not yet accepted";
-"Admin"="Admin";
-"%@%d joined"="%@%d joined";
-"%@one joined"="%@one joined";
-"%@you are alone"="%@you are alone";     
-"%@%d invited"="%@%d invited";
-
-"corrupt_database_not_deleted_title"   = "Database not deleted";
-"corrupt_database_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
-"corrupt_database_deleted_title"       = "Database deleted";
-"corrupt_database_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
+"ok"     = "Ok";
+"cancel" = "Cancel";
+"done"   = "Done";
+"save"   = "Save";
+"delete" = "Delete";
+"enter"  = "Enter";
+
+"search_placeholder" = "search";
 
 "fatal_error_default_title"   = "Fatal Error";
 "fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
 
-"new_friend_message"="Contact '%@' is now your friend.";
-"new_friend_title"="New Friend";
+"http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
+"http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
 
-"friend_blocked_message"="Exchange of messages with contact '%@' has been temporarily blocked.";
-"friend_blocked_title"="Contact Blocked";
+//==============================================================================
+// About
+//==============================================================================
 
-"relationship_removed_message"="Relationship with contact '%@' has been removed.";
-"relationship_removed_title"="Relationship removal";
- 
-"relationship_removed_but_contact_kept_message"="No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
+"about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer XO is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer XO is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
 
+//==============================================================================
+// Apple Push Notifications
+//==============================================================================
 
-"contact_delete_associated_data_question"="Relationship with contact '%@' no longer exists. Delete associated profile, chats and data?";
-"contact_deleted_title"="Contact Releationship removed";
-"contact_keep_data_button"="Keep Data";
-"contact_delete_data_button"="Delete Data";
+"apn_new_messages"    = "You have %@ new messages!";
+"apn_one_new_message" = "You have a new message!";
 
-"geolocation_picker_title"="Drag the Pin";
+//==============================================================================
+// Attachments
+//==============================================================================
 
-"membership_state_invited" = "invited";
-"membership_state_joined" = "joined";
+"attachment_add_sheet_title"             = "Add Attachement from:";
+"attachment_src_photo_album_btn_title"   = "Album";
+"attachment_src_camera_btn_title"        = "Camera";
+"attachment_src_music_library_btn_title" = "Music Library";
+"attachment_src_recorder_btn_title"      = "Audio Recorder";
+"attachment_src_adressbook_btn_title"    = "Adressbook";
+"attachment_src_map_btn_title"           = "Map";
 
-"membership_role_admin" = "admin";
-"membership_role_member" = "member";
+"attachment_option_sheet_title"          = "Attachment";
+"attachment_option_remove_btn_title"     = "Remove Attachment";
+"attachment_option_choose_new_btn_title" = "Choose New Attachment";
+"attachment_option_view_btn_title"       = "View Attachment";
 
-"friend"="Friend";
-"groupfriend"="Acquaintance by group";
+"attachment_download_failed_title"       = "Download failed";
+"attachment_download_failed_message"     = "Failed to download an attachment";
+"attachment_upload_failed_title"         = "Upload failed";
+"attachment_upload_failed_message"       = "Failed to upload an attachment";
 
-"kept"="No Relationship";
-"blocked"="Blocked";
+"attachment_type_image"                  = "Image";
+"attachment_type_video"                  = "Video";
+"attachment_type_audio"                  = "Audio";
+"attachment_type_vcard"                  = "Adress";
+"attachment_type_geolocation"            = "Location";
 
-"cant_send_contact_blocked"="Contact is blocked.";
-"cant_send_relationship_removed"="Relationship with this contact does no longer exist.";
-"cant_send_title"="Can Not Send Message";
+"attachment_overlimit_title"             = "Really send Message?";
+"attachment_overlimit_upload_question"   = "Attachment size is %@. Do you really want to send this message?";
+"attachment_overlimit_confirm"           = "Send";
+"attachment_on_hold_upload_question"     = "Upload %@?";
+"attachment_on_hold_download_question"   = "Download %@?";
 
-"overlimit_attachment_upload_question"="Attachment size is %@. Do you really want to send this message?";
-"overlimit_attachment_title"="Really send Message?";
-"message_do_not_send_button_title"="No";
-"message_send_button_title"="Send";
+"attachment_save_to_album_failed_title"  = "Save in Album Failed";
+"attachment_incompatible_video_message"  = "Video is not compatible with Album";
 
-"cant_send_no_groupkey_title"="No Group Key";
-"cant_send_no_groupkey"="Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
+// Not cleaned up - these have to go...
+"Paste Image Attachment" = "Pasteboard (Image)";
+"Paste Video Attachment" = "Pasteboard (Video)";
+"Paste Audio Attachment" = "Pasteboard (Audio)";
+"Paste vcard Attachment" = "Pasteboard (vcard)";
+"Paste geolocation Attachment" = "Pasteboard (Location)";
+"Paste Image" = "Pasteboard (Image)";
+"Paste data Attachment"="Pasteboard (%@)";
+"Opened data Attachment %@"="External (%@)";
 
-"button_title_call" = "Call";
+//==============================================================================
+// Backend
+//==============================================================================
 
-"vcard_default_title" = "Contact";
-"location_default_title" = "Location";
+"backend_stopped"        = "not connected";
+"backend_connecting"     = "connecting...";
+"backend_registering"    = "registering...";
+"backend_authenticating" = "authenticating...";
+"backend_ready"          = "connected";
+"backend_stopping"       = "disconnecting...";
+"backend_no_internet"    = "no internet connection";
 
-"chat_view_message_placeholder" = "Message";
+//==============================================================================
+// Certificates
+//==============================================================================
 
-"microphone_access_denied_title"="Microphone Access Denied";
-"microphone_access_denied_message"="Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
+"certificate_invalid_title"   = "Invalid Server Certificate";
+"certificate_invalid_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
-"Chats"="Chats";
+//==============================================================================
+// Chat
+//==============================================================================
 
-"message_pending"   = "pending";
-"message_sent"      = "sent";
-"message_delivered" = "delivered";
-"message_read"      = "read";
-"message_failed"    = "failed";
+"chat_list_nav_title"        = "Chats";
 
-"upload_question" = "Upload %@?";
-"download_question" = "Download %@?";
+"chat_message_placeholder"          = "Message";
+"chat_call_phone_number_btn_title"  = "Call";
 
-"Can not save image in Album"="Can not save image in Album";
-"Can not load image to save it in Album"="Can not load image to save it in Album";
-"Can not save video in Album"="Can not save video in Album";
-"Video not compatible with Album"="Video not compatible with Album";
+"chat_cant_send_alert_title"        = "Can Not Send Message";
+"chat_contact_blocked_message"      = "Contact is blocked.";
+"chat_relationship_removed_message" = "Relationship with this contact does no longer exist.";
+"chat_message_too_long_message"     = "Message is longer than %d bytes. Please keep it brief.";
+"chat_wait_for_invitees_message"    = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
+"chat_group_you_are_alone_message"  = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
+"chat_no_groupkey_message"          = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
+
+"chat_message_pending"              = "pending";
+"chat_message_sent"                 = "sent";
+"chat_message_delivered"            = "delivered";
+"chat_message_read"                 = "read";
+"chat_message_failed"               = "failed";
+
+"chat_resend_menu_item"             = "Send";
+"chat_open_with_menu_item"          = "Open with...";
+"chat_share_menu_item"              = "Share";
+
+//==============================================================================
+// Contact - uses strings from profile
+//==============================================================================
+
+"contact_list_nav_title" = "Contacts";
+"contact_nav_title"  = "Contact";
+
+"contact_chat_title"                            = "Chat";
+"contact_unblock_btn_title_format"              = "Unblock %@";
+"contact_block_btn_title_format"                = "Block %@";
+
+"contact_message_count_format_s"                = "%@ message";
+"contact_message_count_format_p"                = "%@ messages";
+
+"contact_delete_btn_title"                      = "Delete contact";
+"contact_delete_safety_question"                = "Delete contact, chat and attachments?";
+
+"contact_delete_associated_data_question"       = "Relationship with contact '%@' no longer exists. Delete associated profile, chats and data?";
+"contact_deleted_title"                         = "Contact Releationship removed";
+"contact_keep_data_button"                      = "Keep Data";
+"contact_delete_data_button"                    = "Delete Data";
+
+"contact_new_friend_title"                      = "New Friend";
+"contact_new_friend_message"                    = "Contact '%@' is now your friend.";
+
+"contact_blocked_title"                         = "Contact Blocked";
+"contact_blocked_message"                       = "Exchange of messages with contact '%@' has been temporarily blocked.";
+
+"contact_relationship_removed_title"            = "Relationship removal";
+"contact_relationship_removed_message"          = "Relationship with contact '%@' has been removed.";
+"contact_kept_and_relationship_removed_message" = "No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
+
+"contact_relationship_none"                     = "None";
+"contact_relationship_friend"                   = "Friend";
+"contact_relationship_groupfriend"              = "Acquaintance by group";
+"contact_relationship_kept"                     = "No Relationship";
+"contact_relationship_blocked"                  = "Blocked";
+
+//==============================================================================
+// Credentials
+//==============================================================================
+
+"credentials_setup_nav_title"                = "Account";
+"credentials_setup_found_old_text"           = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
+"credentials_setup_found_file_text"          = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
+"credentials_setup_keep_btn_title"           = "Reactivate account";
+"credentials_setup_import_btn_title"         = "Import";
+"credentials_setup_create_btn_title"         = "New Account";
+
+"credentials_file_delete_btn_title"          = "Delete exported credentials";
+"credentials_file_delete_safety_question"    = "Really deleted exported credentials?";
+"credentials_file_deleted_alert"             = "Credentials File Deleted";
+"credentials_file_enter_passphrase_alert"    = "Enter the decryption passphrase";
+"credentials_file_choose_passphrase_alert"   = "Choose an encryption passphrase and remember it";
+"credentials_file_passphrase_placeholder"    = "Passphrase";
+"credentials_file_import_failed_title"       = "Credentials Import Failed";
+"credentials_file_decryption_failed_message" = "Wrong decryption passphrase or credentials file damaged. Try again.";
+"credentials_file_equals_current_title"      = "Same credentials";
+"credentials_file_equals_current_message"    = "Imported credentials are the same as the active ones.";
+
+"credentials_export_btn_title"               = "Export Login Credentials";
+"credentials_exported_alert"                 = "Login credentials have been exported to the document directory. If you transfer them to a another device, you must no longer use them here!";
+
+"credentials_import_btn_title"               = "Import Login Credentials";
+"credentials_import_safety_question"         = "Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
+"credentials_key_import_confirm_btn_title"       = "Import";
+
+"credentials_delete_btn_title"               = "Delete Login Credentials";
+"credentials_delete_safety_question"         = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
+
+//==============================================================================
+// Database
+//==============================================================================
+
+"database_corrupt_not_deleted_title"   = "Database not deleted";
+"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
+"database_corrupt_deleted_title"       = "Database deleted";
+"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
+
+//==============================================================================
+// Geolocations
+//==============================================================================
+
+"geolocation_default_name" = "The Place";
+"geolocation_picker_title" = "Drag the Pin";
+
+//==============================================================================
+// Groups - uses strings from contact and thus profile...
+//==============================================================================
+
+"group_list_nav_title"                  = "Groups";
+"group_nav_title"                       = "Group";
+"group_new_nav_title"                   = "New Group";
+
+"group_name_placeholder"                = "Group Name";
+
+"group_invite_members_title"            = "Invite more";
+"group_invite_message_format"           = "You have been invited to group '%@' administrated by '%@'. What do you want to do?";
+"group_invite_title"                    = "Group Invitation";
+"group_invite_decide_later_btn_title"   = "Decide later";
+"group_invite_join_group_btn_title"     = "Join Group";
+"group_invite_decline_btn_title"        = "Decline Invitation";
+"group_invite_dismissed_title"          = "Invitation dismissed";
+"group_invite_dismissed_message_format" = "'%@' is no longer invited to group '%@'";
+"group_invite_removed_title"            = "The invitation for group '%@' has been removed.";
+
+"group_join_button"                     = "Join Group";
+"group_admin_you"                       = "You";
+"group_admin_label_s"                   = "Admin: ";
+"group_admin_label_p"                   = "Admins: ";
+"group_decline_invitation"              = "Decline Invitation";
+"group_leave"                           = "Leave Group";
+"group_decline_invitation_title"        = "Decline Invitation?";
+"group_decline_button_title"            = "Decline";
+"group_leave_group_title"               = "Leave Group?";
+"group_leave_group_button_title"        = "Leave";
+"group_close"                           = "Close Group";
+"group_close_group_title"               = "Do you really want to close the group for everybody and ever?";
+"group_close_group_button_title"        = "Close";
+"group_delete_data"                     = "Delete Group Data";
+
+"group_kick_member_confirm"             = "Kick";
+"group_no_admin"                        = "No Admin";
+
+"group_joined_title"                    = "Group Joined";
+"group_joined_message_format"           = "%@ joined group %@ as a new member.";
+
+"group_left_title"                      = "Group Left";
+"group_left_message_format"             = "'%@' is no longer member of group '%@'.";
+
+"group_deleted_title"                   = "Group Membership Removed";
+"group_deleted_message_format"          = "Your membership in group '%@' no longer exists. Delete associated chats and data?";
+"group_keep_data_button"                = "Keep Data";
+"group_delete_data_button"              = "Delete Data";
+
+"group_delete_title"                    = "Delete group and all associated chats and data?";
+"group_delete_button_title"             = "Delete Group";
+
+"group_kicked_title"                    = "Your membership in group '%@' has been removed.";
+
+"group_state_kept"                      = "Group Deactivated";
+
+"group_membership_state_invited"        = "invited";
+"group_membership_state_joined"         = "joined";
+
+"group_membership_role_admin"           = "admin";
+"group_membership_role_member"          = "member";
+
+"group_member_count_n_joined"           = "%@%d joined";
+"group_member_count_one_joined"         = "%@one joined";
+"group_member_count_none_joined"        = "%@you are alone";
+"group_member_invited_count"            = "%@%d invited";
+
+//==============================================================================
+// Invitations
+//==============================================================================
+
+"invite_option_sheet_title"       = "Invite Friends";
+"invite_option_sms_btn_title"     = "Invite via SMS";
+"invite_option_mail_btn_title"    = "Invite via E-Mail";
+"invite_option_code_btn_title"    = "Invite by Code";
+
+"invite_mail_subject"             = "Hoccer XO Invitation";
+"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
+"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
+
+"invite_error_alert_title"        = "Invite failed";
+"invite_error_rejected_by_server" = "The code has been rejected";
+
+"invite_code_sheet_title"         = "Invite Code";
+"invite_code_enter_dialog_title"  = "Enter an xo invite code";
+"invite_code_enter_placeholder"   = "Invite Code";
+"invite_code_fetch_failed"        = "Failed to get code";
+"invite_no_xo_qr_code_title"      = "Not a Hoccer XO code";
+"invite_scanner_prompt"           = "Looking for xo QR codes...";
+
+//==============================================================================
+// Keys
+//==============================================================================
+
+"key_yours_nav_title"                            = "Your Key";
+"key_others_nav_title"                           = "Key";
+
+"key_state_unverified"                           = "Not verified";
+"key_state_verified"                             = "Verfied";
+"key_state_mistrusted"                           = "Mistrusted";
+
+"key_fingerprint_title"                          = "Id";
+"key_fingerprint_info"                           = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
+"key_length_item"                                = "Key Length";
+"key_length_unit_format"                         = "%@ bit";
+
+"key_renew_keypair"                              = "Renew RSA Keypair";
+"key_renew_keypair_info"                         = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+
+"key_import_public_btn_title"                    = "Import Public Key";
+"key_import_private_btn_title"                   = "Import Private Key";
+"key_import_success"                             = "The key has been successfully imported from the pasteboard";
+"key_import_success_title"                       = "Key Import Succeeded";
+"key_import_failed"                              = "Sorry, the key import from pasteboard has failed.";
+"key_import_failed_title"                        = "Key Import Failed";
+"key_import_confirm_btn_title"                   = "Import";
+"key_import_safety_question"                     = "This will import an RSA key in PEM-format from the pasteboard. Only do it when you know what you are doing. Do you want to proceed?";
+
+"key_export_public_btn_title"                    = "Export Public Key";
+"key_export_private_btn_title"                   = "Export Private Key";
+"key_export_success"                             = "The key has been succesfully exported to the pasteboard";
+"key_export_success_title"                       = "Key exported";
+"key_export_failed"                              = "Sorry, the key export has failed.";
+"key_export_failed_title"                        = "Key export failed";
+"key_export_confirm_btn_title"                   = "Export";
+"key_export_private_safety_question"             = "Your private key can be used to decrypt messages sent to you. Therefore exporting a private key is generally not recommended. Do you want to export it to the pasteboard anyway?";
+
+"key_verify_public_btn_title"                    = "Mark key verified";
+"key_unverify_public_btn_title"                  = "Mark key not verified";
+
+"key_verified_public_key_changed_title"          = "Verified Key has Changed";
+"key_verified_public_key_changed_message_format" = "The key of contact '%@' has changed, and the old key had been verified. Verify the new key for additional security.";
+
+//==============================================================================
+// Permissions
+//==============================================================================
+
+"permission_denied_title"              = "Access Denied";
+"permission_denied_microphone_message" = "Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
+
+//==============================================================================
+// Profile
+//==============================================================================
+
+"profile_nav_title"                      = "Profile";
+
+"profile_avatar_option_sheet_title"      = "Get Avatar Image from:";
+"profile_avatar_option_delete_btn_title" = "Delete Avatar";
+
+"profile_name_label"                     = "Name:";
+"profile_name_placeholder"               = "Your Name";
+
+"profile_key_btn_title"                  = "Key";
+
+//==============================================================================
+// Recorder
+//==============================================================================
 
 "recorder_play_button_title"   = "Play";
 "recorder_use_button_title"    = "Use";
 
-"location_picker_title" = "Drag the Pin";
-"location_picker_done_button_title" = "Done";
+//==============================================================================
+// Settings
+//==============================================================================
 
-"credentials_setup_nav_title"        = "Account";
-"credentials_setup_found_old_text"   = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
-"credentials_setup_found_file_text"  = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
-"credentials_setup_keep_btn_title"   = "Reactivate account";
-"credentials_setup_import_btn_title" = "Import";
-"credentials_setup_create_btn_title" = "New Account";
+"settings_nav_title" = "Settings";
 
-"delete_credentials_delete_title" = "Delete";
-"delete_credentials_saftey_question" = "Old Credentials";
-"delete_credentials"="Delete Login Credentials";
-
-"delete_credentials_confirm" = "Delete Credentials";
-"import_credentials_alert_title"="Import Credentials?";
-"import_credentials_not_button_title"="New Login";
-
-"export_credentials"="Export Login Credentials";
-"import_credentials"="Import Login Credentials";
-
-
+// See Settings.strings

@@ -254,12 +254,12 @@ static NSTimer * _stateNotificationDelayTimer;
 
 -(void) checkRelationsipStateForGroupMembershipOfContact:(Contact*) contact {
     if (contact.groupMemberships.count > 0) {
-        if ([contact.relationshipState isEqualToString:@"none"]) {
-            contact.relationshipState = @"groupfriend";
+        if ([contact.relationshipState isEqualToString: kRelationStateNone]) {
+            contact.relationshipState = kRelationStateGroupFriend;
         }
     } else {
-        if ([contact.relationshipState isEqualToString:@"groupfriend"]) {
-            contact.relationshipState = @"none";
+        if ([contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
+            contact.relationshipState = kRelationStateNone;
         }
     }
 }
@@ -292,22 +292,22 @@ static NSTimer * _stateNotificationDelayTimer;
 - (NSString*) stateString: (BackendState) state {
     switch (state) {
         case kBackendStopped:
-            return @"stopped";
+            return @"backend_stopped";
             break;
         case kBackendConnecting:
-            return @"connecting";
+            return @"backend_connecting";
             break;
         case kBackendRegistering:
-            return @"registering";
+            return @"backend_registering";
             break;
         case kBackendAuthenticating:
-            return @"authenticating";
+            return @"backend_authenticating";
             break;
         case kBackendReady:
-            return @"ready";
+            return @"backend_ready";
             break;
         case kBackendStopping:
-            return @"stopping";
+            return @"backend_stopping";
             break;
         case kBackendStateUnknown:
             return @"unknown";
@@ -348,7 +348,7 @@ static NSTimer * _stateNotificationDelayTimer;
             oldState != kBackendStateUnknown &&
             !_stateNotificationDelayTimer.isValid;
     } else {
-        newInfo = @"no internet";
+        newInfo = @"backend_no_internet";
     }
     [self cancelStateNotificationDelayTimer];
     id userInfo = @{ @"statusinfo":NSLocalizedString(newInfo, @"connection states"),
@@ -1184,8 +1184,8 @@ static NSTimer * _stateNotificationDelayTimer;
     // XXX The server sends relationship updates with state 'none' even after depairing.
     if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
         [self checkRelationsipStateForGroupMembershipOfContact:contact];
-        if (contact != nil && ![contact.relationshipState isEqualToString:@"none"] && ![contact.relationshipState isEqualToString:@"kept"] && ![contact.relationshipState isEqualToString:@"groupfriend"]) {
-            contact.relationshipState = @"none";
+        if (contact != nil && ![contact.relationshipState isEqualToString: kRelationStateNone] && ![contact.relationshipState isEqualToString: kRelationStateKept] && ![contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
+            contact.relationshipState = kRelationStateNone;
             [self handleDeletionOfContact:contact];
         }
         return;
@@ -1195,9 +1195,9 @@ static NSTimer * _stateNotificationDelayTimer;
         contact.type = [Contact entityName];
         contact.clientId = clientId;
     }
-    if (contact.nickName.length > 0 && ![contact.relationshipState isEqualToString:@"friend"] && [relationshipDict[@"state"] isEqualToString:@"friend"]) {
+    if (contact.nickName.length > 0 && ![contact.relationshipState isEqualToString: kRelationStateFriend] && [relationshipDict[@"state"] isEqualToString: kRelationStateFriend]) {
         [self newFriendAlertForContact:contact];
-    } else if (![contact.relationshipState isEqualToString:@"blocked"] && [relationshipDict[@"state"] isEqualToString:@"blocked"]) {
+    } else if (![contact.relationshipState isEqualToString: kRelationStateBlocked] && [relationshipDict[@"state"] isEqualToString: kRelationStateBlocked]) {
         [self blockedAlertForContact:contact];
     }
     // NSLog(@"relationship Dict: %@", relationshipDict);
@@ -1211,31 +1211,31 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     contact.friendMessageShown = YES;
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"new_friend_message",nil), contact.nickName];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"new_friend_title", nil)
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_new_friend_message",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_new_friend_title", nil)
                                                      message: message
                                                     delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
 
 - (void) blockedAlertForContact:(Contact*)contact {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"friend_blocked_message",nil), contact.nickName];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"friend_blocked_title", nil)
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_blocked_message",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_blocked_title", nil)
                                                      message: message
                                                     delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
 
 - (void) removedAlertForContact:(Contact*)contact {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"relationship_removed_message",nil), contact.nickName];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"relationship_removed_title", nil)
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_relationship_removed_message",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_relationship_removed_title", nil)
                                                      message: message
                                                     delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
@@ -1261,11 +1261,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) removedButKeptInGroupAlertForContact:(Contact*)contact {
     
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"relationship_removed_but_contact_kept_message",nil), contact.nickName, [self groupMembershipListofContact:contact]];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"relationship_removed_title", nil)
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_kept_and_relationship_removed_message",nil), contact.nickName, [self groupMembershipListofContact:contact]];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_relationship_removed_title", nil)
                                                      message: message
                                                     delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
@@ -1306,7 +1306,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                              [moc deleteObject: contact];
                                                              break;
                                                          case 0:
-                                                             contact.relationshipState = @"kept";
+                                                             contact.relationshipState = kRelationStateKept;
                                                              // keep contact and chats
                                                              break;
                                                      }
@@ -1316,7 +1316,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                otherButtonTitles: NSLocalizedString(@"contact_delete_data_button",nil),nil];
         [alert show];
     } else {
-        contact.relationshipState = @"groupfriend";
+        contact.relationshipState = kRelationStateGroupFriend;
         [self removedButKeptInGroupAlertForContact:contact];
     }
     
@@ -1373,7 +1373,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     [theContact.publicKey isEqualToData: theContact.verifiedKey])
                 {
                     // a verified key has been changed, warn about it
-                    [HXOUI showAlertWithMessageAsync:@"Verified key of contact %@ has changed" withTitle: @"Verified Key Changed" withArgument: theContact.nickName];
+                    [HXOUI showAlertWithMessageAsync:@"key_verified_public_key_changed_message_format" withTitle: @"key_verified_public_key_changed_title" withArgument: theContact.nickName];
                 }
                 theContact.publicKeyString = keyRecord[@"key"];
                 theContact.publicKeyId = keyRecord[@"keyId"];
@@ -1421,7 +1421,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     if (myContact) {
         NSString * newNickName = thePresence[@"clientName"];
-        if (myContact.nickName == nil && newNickName.length > 0 && [myContact.relationshipState isEqualToString:@"friend"]) {
+        if (myContact.nickName == nil && newNickName.length > 0 && [myContact.relationshipState isEqualToString: kRelationStateFriend]) {
             newFriend = YES;
         }
         myContact.nickName = newNickName;
@@ -1430,7 +1430,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (myContact.connectionStatus == nil) { // TODO: this no longer happens, we need another server-side notfication in order to determine if presence comes via a group relationship
             // is a group
             myContact.connectionStatus = @"group";
-            myContact.relationshipState = @"groupfriend";
+            myContact.relationshipState = kRelationStateGroupFriend;
         }
         if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) && ![self fastStart])) {
             // fetch key
@@ -1480,7 +1480,7 @@ static NSTimer * _stateNotificationDelayTimer;
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
                                                      message: nil
                                                     delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
     
@@ -1697,7 +1697,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     if ([groupState isEqualToString:@"none"]) {
-        if (group != nil && ![group.groupState isEqualToString:@"kept"] && ![group.groupState isEqualToString:@"none"]) {
+        if (group != nil && ![group.groupState isEqualToString: kRelationStateKept] && ![group.groupState isEqualToString:@"none"]) {
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
             [group updateWithDictionary: groupDict];
             [self handleDeletionOfGroup:group];
@@ -2060,7 +2060,7 @@ static NSTimer * _stateNotificationDelayTimer;
             }
         });
         if (memberContact.relationshipState == nil ||
-            (![memberContact.relationshipState isEqualToString:@"friend"] && ![memberContact.relationshipState isEqualToString:@"blocked"] &&
+            (![memberContact.relationshipState isEqualToString:kRelationStateFriend] && ![memberContact.relationshipState isEqualToString: kRelationStateBlocked] &&
              memberContact.groupMemberships.count == 1))
         {
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
@@ -2071,7 +2071,7 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
         // we have been thrown out or left group
-        if (![group.groupState isEqualToString:@"kept"]) {
+        if (![group.groupState isEqualToString: kRelationStateKept]) {
             if (group.messages.count == 0) {
                 // show kicked message
                 if (!disinvited) {
@@ -2096,7 +2096,7 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"Group '%@' no longer exists. Delete associated chats and data?",nil), group.nickName];
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_deleted_message_format",nil), group.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_deleted_title", nil)
                                                      message: NSLocalizedString(message, nil)
                                              completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
@@ -2108,7 +2108,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                          [moc deleteObject: group];
                                                          break;
                                                      case 0:
-                                                         group.groupState = @"kept";
+                                                         group.groupState = kRelationStateKept;
                                                          // keep group and chats
                                                          break;
                                                  }
@@ -2120,51 +2120,51 @@ static NSTimer * _stateNotificationDelayTimer;
 
 }
 - (void) groupKickedAlertForGroup:(Group*)group {
-    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"You have been kicked from group '%@'",nil), group.nickName];
+    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"group_kicked_title",nil), group.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
                                                      message: nil
                                                     delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
 
 - (void) groupDisinvitedAlertForGroup:(Group*)group {
-    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"The invitation for group '%@' has been removed.",nil), group.nickName];
+    NSString * title = [NSString stringWithFormat: NSLocalizedString(@"group_invite_removed_title",nil), group.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
                                                      message: nil
                                                     delegate: nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
 
 - (void) groupJoinedAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' has joined group '%@'",nil), member.contact.nickName, group.nickName];
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_joined_message_format",nil), member.contact.nickName, group.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_joined_title", nil)
                                                      message: NSLocalizedString(message, nil)
                                              delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
 
 - (void) groupLeftAlertForGroupNamed:(NSString*)groupName withMemberNamed:(NSString*)memberName {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' has left group '%@'",nil), memberName, groupName];
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_left_message_format",nil), memberName, groupName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_left_title", nil)
                                                      message: message
                                                     delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
 
 - (void) groupDisinvitedAlertForGroupNamed:(NSString*)groupName withMemberNamed:(NSString*)memberName {
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"'%@' no longer invited to group '%@'",nil), memberName, groupName];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_disinvited_title", nil)
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_invite_dismissed_message_format",nil), memberName, groupName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_invite_dismissed_title", nil)
                                                      message: message
                                                     delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                            otherButtonTitles: nil];
     [alert show];
 }
@@ -2183,8 +2183,8 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
     NSString * adminNames = [admins componentsJoinedByString:@", "];    
     
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"You have been invited to group '%@' administrated by '%@'",nil), group.nickName, adminNames];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invitation_title", nil)
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_invite_message_format",nil), group.nickName, adminNames];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_invite_title", nil)
                                                      message: NSLocalizedString(message, nil)
                                                     completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                         switch (buttonIndex) {
@@ -2214,7 +2214,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                         }
                                                     }
                                            cancelButtonTitle: nil
-                                           otherButtonTitles: NSLocalizedString(@"invitation_join_group_button_title", nil), NSLocalizedString(@"invitation_decline_button_title", nil), NSLocalizedString(@"invitation_decide_later_button_title", nil),nil];
+                                           otherButtonTitles: NSLocalizedString(@"group_invite_join_group_btn_title", nil), NSLocalizedString(@"group_invite_decline_btn_title", nil), NSLocalizedString(@"group_invite_decide_later_btn_title", nil),nil];
     [alert show];
 }
 
@@ -2226,8 +2226,8 @@ static NSTimer * _stateNotificationDelayTimer;
     if (GROUP_DEBUG) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup found %d members", groupMembers.count);
     for (GroupMembership * member in groupMembers) {
         if (member.contact != nil && ![group isEqual:member.contact] &&
-            ![member.contact.relationshipState isEqualToString:@"friend"] &&
-            ![member.contact.relationshipState isEqualToString:@"blocked"] &&
+            ![member.contact.relationshipState isEqualToString: kRelationStateFriend] &&
+            ![member.contact.relationshipState isEqualToString: kRelationStateBlocked] &&
             member.contact.groupMemberships.count == 1)
         {
             // we can throw out this member contact
@@ -3009,7 +3009,7 @@ static NSTimer * _stateNotificationDelayTimer;
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(titleKey, nil)
                                                          message: NSLocalizedString(messageKey, nil)
                                                         delegate: nil
-                                               cancelButtonTitle: NSLocalizedString(@"ok_button_title", nil)
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                otherButtonTitles: nil];
         [alert show];
         if (TRANSFER_DEBUG) NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",

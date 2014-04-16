@@ -71,21 +71,21 @@
 }
 
 - (NSString*) title {
-    return NSLocalizedString(self.userProfile ? @"key_view_title_you" : @"key_view_title_other", nil);
+    return NSLocalizedString(self.userProfile ? @"key_yours_nav_title" : @"key_others_nav_title", nil);
 }
 
 - (DatasheetSection*) fingerprintSection {
     if ( ! _fingerprintSection) {
         _fingerprintSection = [DatasheetSection datasheetSectionWithIdentifier: @"fingerprint_section"];
         _fingerprintSection.items = @[self.fingerprintItem, self.keyLengthItem];
-        _fingerprintSection.footerText = HXOLocalizedStringWithLinks(@"profile_fingerprint_info", nil);
+        _fingerprintSection.footerText = HXOLocalizedStringWithLinks(@"key_fingerprint_info", nil);
     }
     return _fingerprintSection;
 }
 
 - (DatasheetItem*) fingerprintItem {
     if ( ! _fingerprintItem) {
-        _fingerprintItem = [self itemWithIdentifier: @"fingerprint_item" cellIdentifier: @"DatasheetKeyValueCell"];
+        _fingerprintItem = [self itemWithIdentifier: @"key_fingerprint_title" cellIdentifier: @"DatasheetKeyValueCell"];
         _fingerprintItem.dependencyPaths = @[@"publicKeyId"];
     }
     return _fingerprintItem;
@@ -94,7 +94,7 @@
 - (DatasheetItem*) keyLengthItem {
     if ( ! _keyLengthItem) {
         _keyLengthItem = [self itemWithIdentifier: @"key_length_item" cellIdentifier: @"DatasheetKeyValueCell"];
-        _keyLengthItem.valueFormatString = @"key_length_unit";
+        _keyLengthItem.valueFormatString = @"key_length_unit_format";
     }
     return _keyLengthItem;
 }
@@ -162,9 +162,9 @@
 
 - (NSString*) verificationItemTitle {
     if ([self keyIsVerified]) {
-        return NSLocalizedString((@"unverify_publickey"), nil);
+        return NSLocalizedString((@"key_unverify_public_btn_title"), nil);
     } else {
-        return  NSLocalizedString((@"verify_publickey"), nil);
+        return  NSLocalizedString((@"key_verify_public_btn_title"), nil);
     }
 }
 
@@ -182,7 +182,7 @@
     if ( ! _renewKeypairSection) {
         _renewKeypairSection = [DatasheetSection datasheetSectionWithIdentifier: @"renew_keypair_section"];
         _renewKeypairSection.items = @[self.renewKeypairItem];
-        _renewKeypairSection.footerText = HXOLocalizedStringWithLinks(@"profile_renew_keypair_info", nil);
+        _renewKeypairSection.footerText = HXOLocalizedStringWithLinks(@"key_renew_keypair_info", nil);
     }
     return _renewKeypairSection;
 }
@@ -190,7 +190,7 @@
 - (DatasheetItem*) renewKeypairItem {
     if (! _renewKeypairItem) {
         _renewKeypairItem = [self itemWithIdentifier: @"" cellIdentifier: @"DatasheetActionCell"];
-        _renewKeypairItem.title = @"profile_renew_keypair";
+        _renewKeypairItem.title = @"key_renew_keypair";
         _renewKeypairItem.visibilityMask = DatasheetModeEdit;
         _renewKeypairItem.target = self;
         _renewKeypairItem.action = @selector(renewKeypairPressed:);

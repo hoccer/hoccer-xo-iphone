@@ -17,6 +17,9 @@
 FOUNDATION_EXPORT NSString * const kRelationStateNone;
 FOUNDATION_EXPORT NSString * const kRelationStateFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
+FOUNDATION_EXPORT NSString * const kRelationStateGroupFriend;
+FOUNDATION_EXPORT NSString * const kRelationStateKept;
+
 
 @interface Contact : HXOModel <HXOClientProtocol>
 

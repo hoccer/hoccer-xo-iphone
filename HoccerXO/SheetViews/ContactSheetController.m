@@ -139,7 +139,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 }
 
 - (NSString*) title {
-    return self.groupInStatuNascendi ? @"navigation_title_new_group" : self.group ? @"navigation_title_group" :  @"navigation_title_contact";
+    return self.groupInStatuNascendi ? @"group_new_nav_title" : self.group ? @"group_nav_title" :  @"contact_nav_title";
 }
 
 - (DatasheetSection*) commonSection {
@@ -150,7 +150,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (DatasheetItem*) chatItem {
     if ( ! _chatItem) {
-        _chatItem = [self itemWithIdentifier: @"chat_with_contact" cellIdentifier: @"DatasheetKeyValueCell"];
+        _chatItem = [self itemWithIdentifier: @"contact_chat_title" cellIdentifier: @"DatasheetKeyValueCell"];
         _chatItem.dependencyPaths = @[@"messages.@count"];
         //_chatItem.visibilityMask = DatasheetModeView;
         _chatItem.accessoryStyle = DatasheetAccessoryDisclosure;
@@ -213,7 +213,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
-        return self.contact.messages.count == 1 ? @"message_count_format_singular" : @"message_count_format_plural";
+        return self.contact.messages.count == 1 ? @"contact_message_count_format_s" : @"contact_message_count_format_p";
     }
     return nil;
 }
@@ -290,18 +290,18 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (NSString*) keyItemTitle {
     NSString * titleKey;
     if (self.contact.verifiedKey == nil) {
-        titleKey = @"unverified_key_title";
+        titleKey = @"key_state_unverified";
     } else if ([self.contact.verifiedKey isEqualToData:self.contact.publicKey]) {
-        titleKey = @"verified_key_title";
+        titleKey = @"key_state_verified";
     } else {
-        titleKey = @"mistrusted_key_title";
+        titleKey = @"key_state_mistrusted";
     }
     return NSLocalizedString(titleKey, nil);
 }
 
 - (NSString*) destructiveButtonTitle {
     if (self.group) {
-        if ([self.group.groupState isEqualToString:@"kept"]) {
+        if ([self.group.groupState isEqualToString: kRelationStateKept]) {
             return NSLocalizedString(@"group_delete_data", nil);
         }
         if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
@@ -314,7 +314,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             }
         }
     } else {
-        return @"delete_contact";
+        return @"contact_delete_btn_title";
     }
 }
 
@@ -403,9 +403,9 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (NSString*) blockItemTitle {
     NSString * formatKey = nil;
     if (self.contact.isFriend) {
-        formatKey = @"contact_block";
+        formatKey = @"contact_block_btn_title_format";
     } else if (self.contact.isBlocked) {
-        formatKey = @"contact_unblock";
+        formatKey = @"contact_unblock_btn_title_format";
     }
     return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
 }
@@ -433,9 +433,9 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     NSString * destructiveButtonTitle = nil;
     SEL        destructor;
 
-    if ([self.group.groupState isEqualToString:@"kept"]) {
+    if ([self.group.groupState isEqualToString: kRelationStateKept]) {
         title = NSLocalizedString(@"group_delete_title", nil);
-        destructiveButtonTitle = NSLocalizedString(@"group_delete_button_title", nil);
+        destructiveButtonTitle = NSLocalizedString(@"delete", nil);
         destructor = @selector(deleteGroupData);
     } else if (self.group.iAmAdmin) {
         title = NSLocalizedString(@"group_close_group_title", nil);
@@ -446,8 +446,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
         destructor = @selector(leaveGroup);
     } else {
-        title = NSLocalizedString(@"delete_contact_title", nil);
-        destructiveButtonTitle = NSLocalizedString(@"Delete", nil);
+        title = NSLocalizedString(@"delete", nil);
+        destructiveButtonTitle = NSLocalizedString(@"delete", nil);
         destructor = @selector(deleteContact);
     }
 
@@ -462,7 +462,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     };
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(title, nil)
                                         completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                  destructiveButtonTitle: NSLocalizedString(destructiveButtonTitle, nil)
                                       otherButtonTitles: nil];
     [sheet showInView: [(id)self.delegate view]];
@@ -499,7 +499,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (void) deleteContact {
     NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
-    if ([self.contact.relationshipState isEqualToString:@"groupfriend"] || [self.contact.relationshipState isEqualToString:@"kept"]) {
+    if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend] || [self.contact.relationshipState isEqualToString: kRelationStateKept]) {
         [self.chatBackend handleDeletionOfContact: self.contact];
     } else {
         [self.chatBackend depairClient: self.contact.clientId handler:^(BOOL success) {
@@ -559,7 +559,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     };
     UIActionSheet * actionSheet = [HXOUI actionSheetWithTitle: title
                                               completionBlock: completion
-                                            cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                            cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                        destructiveButtonTitle: destructiveButtonTitle
                                             otherButtonTitles: nil];
     [actionSheet showInView: [(id)self.delegate view]];
@@ -613,7 +613,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if (admins.count == 0) {
         title = NSLocalizedString(@"group_no_admin", nil);
     } else {
-        NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_plural" : @"group_admin_label_singular", nil);
+        NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_p" : @"group_admin_label_s", nil);
         title = [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
     }
     return [[NSAttributedString alloc] initWithString: title attributes: nil];
@@ -659,7 +659,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.alpha     = isInvited ? 0.5 : 1;
         cell.titleLabel.textColor = [UIColor blackColor];
-        cell.subtitleLabel.text   = isInvited ? NSLocalizedString(membership.state, nil) : nil;
+        cell.subtitleLabel.text   = isInvited ? NSLocalizedString(@"group_membership_state_invited", nil) : nil;
         cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
