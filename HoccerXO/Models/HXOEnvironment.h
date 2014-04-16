@@ -41,4 +41,7 @@
 - (void)activateLocation;
 - (NSDictionary*) asDictionary;
 
+- (void)setActivation:(BOOL)active;
+- (BOOL)isActive;
+
 @end

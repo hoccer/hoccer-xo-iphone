@@ -28,6 +28,7 @@
 @dynamic latestMessageTime;
 @dynamic nickName;
 @dynamic status;
+@dynamic isNearby;
 
 // @dynamic currentTimeSection;
 @dynamic unreadMessages;

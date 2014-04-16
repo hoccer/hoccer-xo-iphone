@@ -140,8 +140,10 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 - (void) checkTransferQueues;
 
 - (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler;
-- (void) destroyEnvironment:(HXOEnvironment *) environment withHandler:(GenericResultHandler)handler;
-- (void) sendLocationUpdate;
+- (void) destroyEnvironmentWithHandler:(GenericResultHandler)handler;
+
+- (void) sendEnvironmentDestroy;
+- (void) sendEnvironmentUpdate;
 
 
 -(Contact *) getContactByClientId:(NSString *) theClientId;

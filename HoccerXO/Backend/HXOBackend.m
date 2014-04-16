@@ -191,13 +191,14 @@ static NSTimer * _stateNotificationDelayTimer;
         _attachmentUploadsActive = [[NSMutableArray alloc] init];
         
         _locationUpdatePending = NO;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
-
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
     }
     
     return self;
 }
 
+
+/*
 - (void)defaultsChanged:(NSNotification*)aNotification {
     // NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
     BOOL updateLocations = [[[HXOUserDefaults standardUserDefaults] valueForKey:@"updateLocations"] boolValue];
@@ -212,9 +213,21 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
 }
+*/
 
--(void)sendLocationUpdate {
+-(void)sendEnvironmentDestroy {
     if (_state == kBackendReady && !_locationUpdatePending) {
+        if (_state == kBackendReady) {
+            [self destroyEnvironmentWithHandler:^(BOOL ok) {
+                NSLog(@"Enviroment destroyed = %d",ok);
+            }];
+        }
+    }
+}
+
+-(void)sendEnvironmentUpdate {
+    if (_state == kBackendReady && !_locationUpdatePending) {
+        _locationUpdatePending = YES;
         [self updateEnvironment:[HXOEnvironment sharedInstance] withHandler:^(NSString * groupId) {
             _locationUpdatePending = NO;
         }];
@@ -1673,7 +1686,6 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
-
 - (BOOL) updateGroupHere: (NSDictionary*) groupDict {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
         
@@ -1714,40 +1726,11 @@ static NSTimer * _stateNotificationDelayTimer;
        if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
     }
     
-    NSDate * lastKnown = group.lastChanged; // remember the previously local lastChanged date before overwriting
     [group updateWithDictionary: groupDict];
     if (group.hasGroupKey) {
         [group checkGroupKey];
     }
 
-/** We should not need to call getGroupMembers except when syncing
-    
-//#ifdef FASTER_BETTER
-    NSDate * latestMemberChangeDate = [group latestMemberChangeDate];
-//#endif
-    
- #if 0
-     NSLog(@">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-     NSLog(@"lastKnown = %@",lastKnown);
-     NSLog(@"group.lastChanged = %@, equal=%d",group.lastChanged,[group.lastChanged isEqualToDate:lastKnown]);
-     NSLog(@"latestMemberChangeDate = %@, equal=%d",latestMemberChangeDate,[latestMemberChangeDate isEqualToDate:lastKnown]);
-#endif
-    if (self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown) {
-        [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0]];
-    } else {
-        //#ifdef FASTER_BETTER
-        if (!([group.lastChanged isEqualToDate:lastKnown] && [group.lastChanged isEqualToDate:latestMemberChangeDate])) {
-            // TODO: right now, latestMemberChangeDate always differs from the group changed date, it is implemented this
-            // way on the server; we should discuss if we keep it that way or not.
-            // update members
-            [self getGroupMembers:group lastKnown:latestMemberChangeDate];
-        } else {
-            //#endif
-            [self getGroupMembers:group lastKnown:lastKnown];
-        }
-        //NSLog(@"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    }
- */
     // download group avatar if changed
     if (!group.iAmAdmin && groupDict[@"groupAvatarUrl"] != group.avatarURL) {
         [self updateAvatarForContact:group forAvatarURL:groupDict[@"groupAvatarUrl"]];
@@ -2017,6 +2000,18 @@ static NSTimer * _stateNotificationDelayTimer;
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
     
+    if (memberContact != nil) {
+        if (myMembership.group.groupType != nil && [myMembership.group.groupType isEqualToString:@"nearby"] && [myMembership.state isEqualToString:@"joined"]) {
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: set contact nearby");
+            memberContact.isNearby = @"YES";
+        } else {
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: set contact not nearby");
+            memberContact.isNearby = nil;
+        }
+    } else {
+        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no memberContact yet");
+    }
+    
     [self.delegate saveDatabase];
 
     if (memberShipDeleted) {
@@ -2050,8 +2045,10 @@ static NSTimer * _stateNotificationDelayTimer;
     if (![group isEqual:myMember.contact]) { // not us
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!disinvited) {
-                // show group left alerts to all members
-                [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
+                // show group left alerts to all members if not a nearby group
+                if (![@"nearby" isEqualToString:group.groupType] ) {
+                    [self groupLeftAlertForGroupNamed:group.nickName withMemberNamed:memberContact.nickName];
+                }
             } else {
                 // show disinvitation only to admins or affected contacts
                 if (group.iAmAdmin || [group isEqual:myMember.contact]) {

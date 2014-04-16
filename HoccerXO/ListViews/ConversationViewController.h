@@ -20,5 +20,4 @@
 //@property (readonly, nonatomic) NSFetchedResultsController * fetchedResultsController;
 //@property (readonly, nonatomic) NSManagedObjectContext *     managedObjectContext;
 
-
 @end

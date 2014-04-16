@@ -22,6 +22,7 @@
 #import "HXOUI.h"
 #import "AvatarView.h"
 #import "tab_chats.h"
+#import "HXOEnvironment.h"
 
 @implementation ConversationViewController
 
@@ -44,7 +45,17 @@
     return [ConversationCell class];
 }
 
+//- (void) setupTitle {
+//    self.navigationItem.title = NSLocalizedString(@"chat_list_nav_title", nil);
+//}
+
 - (void) setupTitle {
+    if (self.hasGroupContactToggle) {
+        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"chat_list_nav_title", nil), NSLocalizedString(@"nearby_list_nav_title", nil)]];
+        self.groupContactsToggle.selectedSegmentIndex = 0;
+        [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
+        self.navigationItem.titleView = self.groupContactsToggle;
+    }
     self.navigationItem.title = NSLocalizedString(@"chat_list_nav_title", nil);
 }
 
@@ -79,6 +90,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void) segmentChanged: (id) sender {
+    [super segmentChanged:sender];
+    [HXOEnvironment.sharedInstance setActivation:(self.groupContactsToggle.selectedSegmentIndex == 1)];
+}
+    
 #pragma mark - Table View
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -94,6 +110,18 @@
     }
 }
 
+- (void) addButtonPressed: (id) sender {
+    if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 1) {
+        // [self performSegueWithIdentifier: @"showGroup" sender: sender];
+    } else {
+        [self invitePeople];
+    }
+}
+
+- (id) entityName {
+    return [Contact entityName];
+}
+
 #pragma mark - Fetched results controller
 
 - (NSArray*) sortDescriptors {
@@ -102,8 +130,15 @@
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {
+    if (self.groupContactsToggle.selectedSegmentIndex == 0) {
+        // Chats
     [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
+    } else {
+        // NearBy
+        [predicates addObject: [NSPredicate predicateWithFormat: @"isNearby == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
+    }
 }
+
 
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
     // TODO: add full text search?

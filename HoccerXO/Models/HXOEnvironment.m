@@ -17,6 +17,7 @@
     CLLocation * _lastLocation;
     NSDate * _lastLocationUpdate;
     HXOBackend * _chatBackend;
+    BOOL _activationState;
 }
 @end
 
@@ -49,9 +50,26 @@ static HXOEnvironment *instance;
 		_locationManager.delegate = self;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.distanceFilter = 10.0;
+        _activationState = NO;
     }
     
     return self;
+}
+
+- (void)setActivation:(BOOL)active {
+    if (active != _activationState) {
+        if (active) {
+            [self activateLocation];
+        } else {
+            [self deactivateLocation];
+            [[self chatBackend] sendEnvironmentDestroy];
+        }
+        _activationState = active;
+    }
+}
+
+- (BOOL)isActive {
+    return _activationState;
 }
 
 - (void)deactivateLocation{
@@ -102,7 +120,7 @@ static HXOEnvironment *instance;
 }
 
 - (void) sendEnvironmentUpdate {
-    [[self chatBackend] sendLocationUpdate];
+    [[self chatBackend] sendEnvironmentUpdate];
 }
 
 - (void) updateProperties {

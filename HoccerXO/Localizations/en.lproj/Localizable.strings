@@ -99,6 +99,7 @@
 //==============================================================================
 
 "chat_list_nav_title"        = "Chats";
+"nearby_list_nav_title"      = "Nearby";
 
 "chat_message_placeholder"          = "Message";
 "chat_call_phone_number_btn_title"  = "Call";

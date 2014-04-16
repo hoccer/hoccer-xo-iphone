@@ -17,6 +17,8 @@
 @property (nonatomic, assign)   BOOL                         hasAddButton;
 @property (nonatomic, assign)   BOOL                         hasGroupContactToggle;
 
+@property (nonatomic,strong)    UISegmentedControl          * groupContactsToggle;
+
 - (void) clearFetchedResultsControllers;
 - (void) configureCell: (id) cell atIndexPath:(NSIndexPath *)indexPath;
 
@@ -26,5 +28,8 @@
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString;
 
 - (id) cellClass;
+- (void) invitePeople;
+- (void) addButtonPressed: (id) sender;
+- (void) segmentChanged: (id) sender;
 
 @end
