@@ -208,10 +208,38 @@ static HXOEnvironment *instance;
 - (NSString*) fetchBSSID {
     NSDictionary * info = [self fetchSSIDInfo];
     if (info != nil) {
-        return info[(__bridge NSString*)kCNNetworkInfoKeyBSSID];
+        return [HXOEnvironment normalizeBSSID:info[(__bridge NSString*)kCNNetworkInfoKeyBSSID]];
     } else {
         return nil;
     }
+}
+
++(NSString*)normalizeBSSID:(NSString*)someBSSID {
+    NSScanner *scanner = [NSScanner scannerWithString:someBSSID];
+    unsigned int byte;
+    NSString * result = @"";
+    bool ok = YES;
+    unsigned int done = 0;
+    for (int i = 0; ok && i<6;++i) {
+        ok = ok && [scanner scanHexInt:&byte];
+        if (ok) {
+            result = [result stringByAppendingString:[NSString stringWithFormat:@"%02x",byte]];
+            done+=2;
+        }
+        if (i < 5) {
+            ok = ok && [scanner scanString:@":" intoString:nil];
+            if (ok) {
+                result = [result stringByAppendingString:@":"];
+                done+=1;
+            }
+        }
+    }
+    if (ok) {
+        if (LOCATION_DEBUG) NSLog(@"%s: returning normalized BSSID=%@, orig=%@", __func__, result, someBSSID );
+        return result;
+    }
+    NSLog(@"WARNING: %s: returning nil BSSID,  failed to parse %@ at pos %d, gathered result up to %@", __func__, someBSSID, done, result);
+    return nil;
 }
 
 
