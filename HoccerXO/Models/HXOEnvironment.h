@@ -13,6 +13,12 @@
 
 @interface HXOEnvironment : NSObject<CLLocationManagerDelegate>
 
+// type of the environment, e.g. nearby
+@property (nonatomic, strong) NSString * type;
+
+// name of the environment
+@property (nonatomic, strong) NSString * name;
+
 // id of the sending client
 @property (nonatomic, strong) NSString * clientId;
 

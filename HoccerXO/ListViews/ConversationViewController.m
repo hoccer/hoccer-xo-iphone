@@ -26,6 +26,8 @@
 
 @implementation ConversationViewController
 
+@dynamic inNearbyMode;
+
 - (void)awakeFromNib {
     [super awakeFromNib];
 
@@ -92,7 +94,7 @@
 
 - (void) segmentChanged: (id) sender {
     [super segmentChanged:sender];
-    [HXOEnvironment.sharedInstance setActivation:(self.groupContactsToggle.selectedSegmentIndex == 1)];
+    [HXOEnvironment.sharedInstance setActivation:self.inNearbyMode];
 }
     
 #pragma mark - Table View
@@ -111,7 +113,7 @@
 }
 
 - (void) addButtonPressed: (id) sender {
-    if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 1) {
+    if (self.inNearbyMode) {
         // [self performSegueWithIdentifier: @"showGroup" sender: sender];
     } else {
         [self invitePeople];
@@ -125,14 +127,23 @@
 #pragma mark - Fetched results controller
 
 - (NSArray*) sortDescriptors {
-    return @[[[NSSortDescriptor alloc] initWithKey: @"latestMessageTime" ascending: NO],
-             [[NSSortDescriptor alloc] initWithKey: @"nickName" ascending: YES]];
+    if (!self.inNearbyMode) {
+        return @[[[NSSortDescriptor alloc] initWithKey: @"latestMessageTime" ascending: NO],
+                 [[NSSortDescriptor alloc] initWithKey: @"nickName" ascending: YES]];
+    } else {
+        return @[[[NSSortDescriptor alloc] initWithKey: @"type" ascending: NO],
+                 [[NSSortDescriptor alloc] initWithKey: @"nickName" ascending: YES]];
+    }
+}
+
+- (BOOL) inNearbyMode {
+    return self.groupContactsToggle != nil && self.groupContactsToggle.selectedSegmentIndex == 1;
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {
-    if (self.groupContactsToggle.selectedSegmentIndex == 0) {
+    if (!self.inNearbyMode) {
         // Chats
-    [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     } else {
         // NearBy
         [predicates addObject: [NSPredicate predicateWithFormat: @"isNearby == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];

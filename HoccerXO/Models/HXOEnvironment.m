@@ -11,6 +11,11 @@
 #import "AppDelegate.h"
 #import "UserProfile.h"
 
+#import <ifaddrs.h>
+#import <arpa/inet.h>
+
+#import <SystemConfiguration/CaptiveNetwork.h>
+
 @interface HXOEnvironment ()
 {
     CLLocationManager * _locationManager;
@@ -59,10 +64,12 @@ static HXOEnvironment *instance;
 - (void)setActivation:(BOOL)active {
     if (active != _activationState) {
         if (active) {
-            [self activateLocation];
+            [self activate];
         } else {
-            [self deactivateLocation];
-            [[self chatBackend] sendEnvironmentDestroy];
+            [self deactivate];
+            if (self.type != nil) {
+                [[self chatBackend] sendEnvironmentDestroyWithType:self.type];
+            }
         }
         _activationState = active;
     }
@@ -70,6 +77,16 @@ static HXOEnvironment *instance;
 
 - (BOOL)isActive {
     return _activationState;
+}
+
+- (void)activate {
+    if (LOCATION_DEBUG) {NSLog(@"Environment: activate");}
+    [self activateLocation];
+}
+
+- (void)deactivate {
+    if (LOCATION_DEBUG) {NSLog(@"Environment: deactivate");}
+    [self deactivateLocation];
 }
 
 - (void)deactivateLocation{
@@ -124,6 +141,7 @@ static HXOEnvironment *instance;
 }
 
 - (void) updateProperties {
+    self.type = @"nearby"; // for now
     self.clientId = [UserProfile sharedProfile].clientId;
     self.timestamp = [HXOBackend millisFromDate:_lastLocationUpdate];
     
@@ -140,6 +158,12 @@ static HXOEnvironment *instance;
     
     // bssids in the vicinity of the client
     // NSArray * bssids;
+    NSString * bssid = [self fetchBSSID];
+    if (bssid != nil) {
+        NSMutableArray * bssids = [[NSMutableArray alloc] init];
+        [bssids addObject:bssid];
+        self.bssids = bssids;
+    }
     
     // possible other location identifiers
     // NSArray * identifiers;
@@ -148,16 +172,48 @@ static HXOEnvironment *instance;
 - (NSDictionary*) asDictionary {
     [self updateProperties];
     NSMutableDictionary * result = [NSMutableDictionary dictionaryWithDictionary:
-                                    @{ @"clientId" : self.clientId,
-                               @"timestamp" : self.timestamp,
-                               @"locationType" : self.locationType,
-                               @"geoLocation" : self.geoLocation,
-                               @"accuracy" : self.accuracy}];
+                                    @{@"type": self.type,
+                                      @"clientId" : self.clientId,
+                                      @"timestamp" : self.timestamp,
+                                      @"locationType" : self.locationType,
+                                      @"geoLocation" : self.geoLocation,
+                                      @"accuracy" : self.accuracy}];
     if (self.groupId != nil) {
         result[@"groupId"] = self.groupId;
     }
+    if (self.bssids != nil) {
+        result[@"bssids"] = self.bssids;
+    }
+    if (self.name != nil) {
+        result[@"name"] = self.name;
+    }
     return result;
 }
+
+- (NSDictionary*)fetchSSIDInfo
+{
+    NSArray *ifs = CFBridgingRelease(CNCopySupportedInterfaces());
+    if (LOCATION_DEBUG) NSLog(@"%s: Supported interfaces: %@", __func__, ifs);
+    NSDictionary * info = nil;
+    for (NSString *ifnam in ifs) {
+        info = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)(ifnam)));
+        if (LOCATION_DEBUG) NSLog(@"%s: %@ => %@", __func__, ifnam, info);
+        if (info && [info count]) {
+            break;
+        }
+    }
+    return info;
+}
+
+- (NSString*) fetchBSSID {
+    NSDictionary * info = [self fetchSSIDInfo];
+    if (info != nil) {
+        return info[(__bridge NSString*)kCNNetworkInfoKeyBSSID];
+    } else {
+        return nil;
+    }
+}
+
 
 
 @end

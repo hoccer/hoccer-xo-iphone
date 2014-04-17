@@ -63,6 +63,8 @@
 @property (nonatomic, strong) MFMessageComposeViewController *smsPicker;
 @property (nonatomic, strong) MFMailComposeViewController *mailPicker;
 
+@property (nonatomic, strong) ConversationViewController * conversationViewController;
+
 
 - (void)saveContext;
 - (void)saveDatabase;
@@ -87,8 +89,6 @@
 + (void) updateStatusbarForViewController:(UIViewController*)viewcontroller style:(UIStatusBarStyle)theStyle;
 + (void) setBlackFontStatusbarForViewController:(UIViewController*)viewcontroller;
 + (void) setWhiteFontStatusbarForViewController:(UIViewController*)viewcontroller;
-
-
 
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
 + (NSString *)sanitizeFileNameString:(NSString *)fileName;

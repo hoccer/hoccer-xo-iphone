@@ -20,4 +20,6 @@
 //@property (readonly, nonatomic) NSFetchedResultsController * fetchedResultsController;
 //@property (readonly, nonatomic) NSManagedObjectContext *     managedObjectContext;
 
+@property (readonly) BOOL inNearbyMode;
+
 @end

@@ -39,6 +39,7 @@
 #import "NSMutableArray+QueueAdditions.h"
 #import "HXOEnvironment.h"
 #import "HXOUI.h" // XXX
+#import "ConversationViewController.h"
 
 #import <sys/utsname.h>
 
@@ -46,8 +47,8 @@
 #define GLITCH_TRACE NO
 #define SECTION_TRACE NO
 #define CONNECTION_TRACE NO
-#define GROUPKEY_DEBUG YES
-#define GROUP_DEBUG YES
+#define GROUPKEY_DEBUG NO
+#define GROUP_DEBUG NO
 #define RELATIONSHIP_DEBUG NO
 #define TRANSFER_DEBUG NO
 #define CHECK_URL_TRACE NO
@@ -215,10 +216,10 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 */
 
--(void)sendEnvironmentDestroy {
+-(void)sendEnvironmentDestroyWithType:(NSString*)type {
     if (_state == kBackendReady && !_locationUpdatePending) {
         if (_state == kBackendReady) {
-            [self destroyEnvironmentWithHandler:^(BOOL ok) {
+            [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
                 NSLog(@"Enviroment destroyed = %d",ok);
             }];
         }
@@ -778,6 +779,9 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self getGroupsForceAll:NO];
                 [self flushPendingMessages];
                 [self flushPendingFiletransfers];
+                if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
+                    [HXOEnvironment.sharedInstance setActivation:YES];
+                }
             }];
         }];
     } else {
@@ -1594,10 +1598,10 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
-// void destroyEnvironment(String clientId, String groupId);
-- (void) destroyEnvironmentWithHandler:(GenericResultHandler)handler {
+// void destroyEnvironment(String type);
+- (void) destroyEnvironmentType:(NSString*)type withHandler:(GenericResultHandler)handler {
     
-    [_serverConnection invoke: @"destroyEnvironment" withParams: nil
+    [_serverConnection invoke: @"destroyEnvironment" withParams: @[type]
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
@@ -2072,7 +2076,10 @@ static NSTimer * _stateNotificationDelayTimer;
             if (group.messages.count == 0) {
                 // show kicked message
                 if (!disinvited) {
-                    [self groupKickedAlertForGroup:group];
+                    // show kicked from group alert if not a nearby group
+                    if (![@"nearby" isEqualToString:group.groupType] ) {
+                        [self groupKickedAlertForGroup:group];
+                    }
                 } else {
                     [self groupDisinvitedAlertForGroup:group];
                 }
