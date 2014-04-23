@@ -1050,10 +1050,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (NSString*) cellIdentifierForMessage: (HXOMessage*) message {
     BOOL hasAttachment = message.attachment != nil;
     BOOL hasText = message.body != nil && ! [message.body isEqualToString: @""];
-    if (hasAttachment && hasText) {
-        return [self hasImageAttachment: message] ? [ImageAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentWithTextMessageCell reuseIdentifier];
-    } else if (hasAttachment) {
-        return [self hasImageAttachment: message] ? [ImageAttachmentMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
+    if (hasAttachment) {
+        if ([self hasImageAttachment: message]) {
+            return hasText ? [ImageAttachmentWithTextMessageCell reuseIdentifier] : [ImageAttachmentMessageCell reuseIdentifier];
+        } else {
+            return hasText ? [GenericAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
+        }
     } else if (hasText) {
         return [TextMessageCell reuseIdentifier];
     } else {
