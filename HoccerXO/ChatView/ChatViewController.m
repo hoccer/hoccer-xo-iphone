@@ -1053,6 +1053,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (hasAttachment) {
         if ([self hasImageAttachment: message]) {
             return hasText ? [ImageAttachmentWithTextMessageCell reuseIdentifier] : [ImageAttachmentMessageCell reuseIdentifier];
+        } else if ([self hasAudioAttachment: message]) {
+            return hasText ? [GenericAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
         } else {
             return hasText ? [GenericAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
         }
@@ -1066,6 +1068,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (BOOL) hasImageAttachment: (HXOMessage*) message {
     return [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"];
+}
+
+- (BOOL) hasAudioAttachment: (HXOMessage*) message {
+    return [message.attachment.mediaType isEqualToString: @"audio"];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
