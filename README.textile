@@ -1,3 +1,8 @@
 h1. Hoccer Talk
 
 Chat, baby.
+
+h2. Development Setup
+
+* Update submodules: @git submodule update --init --recursive@
+* Build Hoccer XO project in Xcode
