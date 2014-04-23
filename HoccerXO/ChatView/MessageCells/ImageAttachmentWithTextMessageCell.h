@@ -12,7 +12,6 @@
 
 @interface ImageAttachmentWithTextMessageCell : MessageCell <AttachmentMessageCell>
 
-@property (nonatomic,readonly) ImageAttachmentSection * imageSection;
 @property (nonatomic,readonly) AttachmentSection *      attachmentSection;
 
 @end

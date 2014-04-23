@@ -18,15 +18,10 @@
 - (void) commonInit {
     [super commonInit];
 
-    _imageSection = [[ImageAttachmentSection alloc] initWithFrame: CGRectMake(0, 0, self.bubbleWidth, self.bubbleWidth)];
+    _attachmentSection = [[ImageAttachmentSection alloc] initWithFrame: CGRectMake(0, 0, self.bubbleWidth, self.bubbleWidth)];
 
-    [self addSection: self.imageSection];
-
+    [self addSection: self.attachmentSection];
     [self addSection: [[TextSection alloc] initWithFrame:CGRectMake(0, 0, self.bubbleWidth, 5 * kHXOGridSpacing)]];
-}
-
-- (AttachmentSection*) attachmentSection {
-    return self.imageSection;
 }
 
 @end
