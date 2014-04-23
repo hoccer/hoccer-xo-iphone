@@ -2444,7 +2444,7 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -2478,7 +2478,7 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
