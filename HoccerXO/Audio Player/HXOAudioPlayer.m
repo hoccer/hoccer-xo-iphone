@@ -31,12 +31,6 @@
     return instance;
 }
 
-- (id) init {
-    self = [super init];
-
-    return self;
-}
-
 #pragma mark - Public interface
 
 - (void) playURL: (NSURL *) url {
