@@ -39,8 +39,9 @@
 }
 
 - (void) updatePlaybackState {
-    NSString *title = [self isPlaying] ? @"■" : @"▶";
-    [self setTitle:title forState:UIControlStateNormal];
+    NSString *imageName = [self isPlaying] ? @"button-stop" : @"button-play";
+    UIImage *image = [UIImage imageNamed:imageName];
+    [self setImage:image forState:UIControlStateNormal];
 }
 
 - (BOOL) isPlaying {
