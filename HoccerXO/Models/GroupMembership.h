@@ -31,8 +31,8 @@
 @property (nonatomic, retain) NSData   * sharedKeyId;
 @property (nonatomic, retain) NSData   * sharedKeyIdSalt;
 
-@property (nonatomic, retain) NSString   * sharedKeyIdString;
-@property (nonatomic, retain) NSString   * sharedKeyIdSaltString;
+@property (nonatomic, retain) NSString * sharedKeyIdString;
+@property (nonatomic, retain) NSString * sharedKeyIdSaltString;
 
 @property (nonatomic, retain) NSString * keySupplier;
 @property (nonatomic, retain) NSDate * sharedKeyDate;
@@ -43,10 +43,21 @@
 - (NSData *) calcCipheredGroupKey;
 - (NSData *) decryptedGroupKey;
 - (BOOL) hasCipheredGroupKey;
-- (BOOL) copyKeyFromGroup;
+//- (BOOL) copyKeyFromGroup;
 - (BOOL) hasLatestGroupKey;
+- (BOOL) hasValidGroupKey;
+- (BOOL) hasGroupKeyCryptedWithLatestPublicKey;
+- (void) updateKeyFromGroup;
 
--(void) checkGroupKey;
+
+- (BOOL) isOwnMembership;
+
+- (NSString*)contactClientId;
+- (NSString*)contactPubKeyId;
+- (BOOL)contactHasPubKey;
+
+
+//-(void) checkGroupKey;
 -(BOOL) checkGroupKeyTransfer:(NSString*)cipheredGroupKeyString withKeyId:(NSString*)keyIdString withSharedKeyId:(NSString*)sharedKeyIdString withSharedKeyIdSalt:(NSString*)sharedKeyIdSaltString;
 
 

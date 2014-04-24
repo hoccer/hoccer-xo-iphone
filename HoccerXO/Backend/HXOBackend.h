@@ -145,6 +145,7 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 - (void) sendEnvironmentDestroyWithType:(NSString*)type;
 - (void) sendEnvironmentUpdate;
 
+- (NSDate*) estimatedServerTime;
 
 -(Contact *) getContactByClientId:(NSString *) theClientId;
 

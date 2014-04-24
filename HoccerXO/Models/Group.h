@@ -42,10 +42,19 @@
 - (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
 
 - (BOOL) hasGroupKey;
+- (BOOL) hasValidGroupKey;
 - (void) generateNewGroupKey;
 - (BOOL) copyKeyFromMember:(GroupMembership*)member;
 - (BOOL) checkGroupKey;
 
+- (BOOL) hasKeyOnServer;
+- (BOOL) hasKeyMaster;
+- (BOOL) iAmKeyMaster;
+- (BOOL) iCanSetKeys;
+
+- (BOOL)syncKeyWithMembership;
+
+- (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds;
 
 @end
 
