@@ -11,6 +11,7 @@
 #import "MessageCell.h"
 #import "UpDownLoadControl.h"
 #import "HXOUI.h"
+#import "HXOAudioPlaybackButton.h"
 
 @implementation AudioAttachmentSection
 
@@ -23,9 +24,9 @@
     
     self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
-    _playButton = [[UIButton alloc] initWithFrame: [self attachmentControlFrame]];
-    self.playButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self addSubview: self.playButton];
+    _playbackButton = [[HXOAudioPlaybackButton alloc] initWithFrame: [self attachmentControlFrame]];
+    self.playbackButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self addSubview: self.playbackButton];
     
     self.subtitle.frame = CGRectMake(2 * kHXOGridSpacing, 24, self.bounds.size.width - 9 * kHXOGridSpacing, 16);
     self.subtitle.font = [UIFont systemFontOfSize: 10];
@@ -41,7 +42,7 @@
     [super colorSchemeDidChange];
     self.title.textColor = [[HXOUI theme] messageAttachmentTitleColorForScheme: self.cell.colorScheme];
     self.subtitle.textColor = [[HXOUI theme] messageAttachmentSubtitleColorForScheme: self.cell.colorScheme];
-    self.playButton.tintColor = [[HXOUI theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
+    self.playbackButton.tintColor = [[HXOUI theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
 }
 
 - (CGRect) attachmentControlFrame {

@@ -8,9 +8,11 @@
 
 #import "AttachmentSection.h"
 
+@class HXOAudioPlaybackButton;
+
 @interface AudioAttachmentSection : AttachmentSection
 
 @property (nonatomic,readonly) UILabel * title;
-@property (nonatomic,readonly) UIButton * playButton;
+@property (nonatomic,readonly) HXOAudioPlaybackButton * playbackButton;
 
 @end
