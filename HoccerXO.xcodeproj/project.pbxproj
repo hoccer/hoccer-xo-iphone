@@ -171,13 +171,13 @@
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
 		C5BA22EB19093E8A0072F4A5 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */; };
-		C5BA22EE1909486B0072F4A5 /* HXOAudioPlaybackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BA22ED1909486B0072F4A5 /* HXOAudioPlaybackButton.m */; };
 		C5BA23001909676C0072F4A5 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FA1909676C0072F4A5 /* button-pause.png */; };
 		C5BA23011909676C0072F4A5 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FB1909676C0072F4A5 /* button-pause@2x.png */; };
 		C5BA23021909676C0072F4A5 /* button-play.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FC1909676C0072F4A5 /* button-play.png */; };
 		C5BA23031909676C0072F4A5 /* button-play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FD1909676C0072F4A5 /* button-play@2x.png */; };
 		C5BA23041909676C0072F4A5 /* button-stop.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FE1909676C0072F4A5 /* button-stop.png */; };
 		C5BA23051909676C0072F4A5 /* button-stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FF1909676C0072F4A5 /* button-stop@2x.png */; };
+		C5BA231619096C080072F4A5 /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BA231519096C080072F4A5 /* HXOAudioPlaybackButtonController.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -685,14 +685,14 @@
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C5BA22E919093E8A0072F4A5 /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
 		C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlayer.m; sourceTree = "<group>"; };
-		C5BA22EC1909486B0072F4A5 /* HXOAudioPlaybackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButton.h; sourceTree = "<group>"; };
-		C5BA22ED1909486B0072F4A5 /* HXOAudioPlaybackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButton.m; sourceTree = "<group>"; };
 		C5BA22FA1909676C0072F4A5 /* button-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause.png"; sourceTree = "<group>"; };
 		C5BA22FB1909676C0072F4A5 /* button-pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause@2x.png"; sourceTree = "<group>"; };
 		C5BA22FC1909676C0072F4A5 /* button-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play.png"; sourceTree = "<group>"; };
 		C5BA22FD1909676C0072F4A5 /* button-play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play@2x.png"; sourceTree = "<group>"; };
 		C5BA22FE1909676C0072F4A5 /* button-stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-stop.png"; sourceTree = "<group>"; };
 		C5BA22FF1909676C0072F4A5 /* button-stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-stop@2x.png"; sourceTree = "<group>"; };
+		C5BA231419096C080072F4A5 /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
+		C5BA231519096C080072F4A5 /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
@@ -1642,8 +1642,8 @@
 		C5BA22D719093E140072F4A5 /* Audio Player */ = {
 			isa = PBXGroup;
 			children = (
-				C5BA22EC1909486B0072F4A5 /* HXOAudioPlaybackButton.h */,
-				C5BA22ED1909486B0072F4A5 /* HXOAudioPlaybackButton.m */,
+				C5BA231419096C080072F4A5 /* HXOAudioPlaybackButtonController.h */,
+				C5BA231519096C080072F4A5 /* HXOAudioPlaybackButtonController.m */,
 				C5BA22E919093E8A0072F4A5 /* HXOAudioPlayer.h */,
 				C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */,
 			);
@@ -2309,7 +2309,6 @@
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
 				E9E92F7818733D01007B8042 /* HTTPErrorResponse.m in Sources */,
-				C5BA22EE1909486B0072F4A5 /* HXOAudioPlaybackButton.m in Sources */,
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
 				63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */,
 				63AE45471704945C0099F0CB /* WebViewController.m in Sources */,
@@ -2339,6 +2338,7 @@
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
 				632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */,
+				C5BA231619096C080072F4A5 /* HXOAudioPlaybackButtonController.m in Sources */,
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
 				63638F8E18EC8210008DA997 /* avatar_group.m in Sources */,

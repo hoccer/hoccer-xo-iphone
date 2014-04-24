@@ -1,47 +1,53 @@
 //
-//  HXOAudioPlaybackButton.m
+//  HXOAudioPlaybackButtonController.m
 //  HoccerXO
 //
 //  Created by Guido Lorenz on 24.04.14.
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "HXOAudioPlaybackButton.h"
+#import "HXOAudioPlaybackButtonController.h"
 #import "HXOAudioPlayer.h"
 
 
-@implementation HXOAudioPlaybackButton
+@interface HXOAudioPlaybackButtonController ()
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+@property (nonatomic, strong) NSURL * audioURL;
+@property (nonatomic, strong) UIButton * button;
 
+@end
+
+
+@implementation HXOAudioPlaybackButtonController
+
+- (id) initWithButton: (UIButton *) button audioURL: (NSURL *)url {
+    self = [super init];
+    
     if (self) {
+        self.audioURL = url;
+        self.button = button;
+
         [[HXOAudioPlayer sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(nowPlayingURL)) options:0 context:NULL];
-        [self addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
+        [self.button addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
         [self updatePlaybackState];
     }
-
+    
     return self;
 }
 
 - (void) dealloc {
     [[HXOAudioPlayer sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(nowPlayingURL))];
+    [self.button removeTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void) observeValueForKeyPath: (NSString *)keyPath ofObject: (id)object change: (NSDictionary *)change context: (void *)context {
     [self updatePlaybackState];
 }
 
-- (void) setAudioURL:(NSURL *)audioURL {
-    _audioURL = audioURL;
-    [self updatePlaybackState];
-}
-
 - (void) updatePlaybackState {
     NSString *imageName = [self isPlaying] ? @"button-stop" : @"button-play";
     UIImage *image = [UIImage imageNamed:imageName];
-    [self setImage:image forState:UIControlStateNormal];
+    [self.button setImage:image forState:UIControlStateNormal];
 }
 
 - (BOOL) isPlaying {

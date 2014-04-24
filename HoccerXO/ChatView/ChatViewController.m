@@ -53,7 +53,7 @@
 #import "AvatarView.h"
 #import "avatar_contact.h"
 #import "AttachmentButton.h"
-#import "HXOAudioPlaybackButton.h"
+#import "HXOAudioPlaybackButtonController.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -1495,7 +1495,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
     section.title.text = [self attachmentTitle: message];
-    section.playbackButton.audioURL = message.attachment.contentURL;
+    section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton audioURL:message.attachment.contentURL];
 }
 
 - (void) loadAttachmentImage: (Attachment*) attachment withSection: (AttachmentSection*) section completion: (AttachmentImageCompletion) completion {

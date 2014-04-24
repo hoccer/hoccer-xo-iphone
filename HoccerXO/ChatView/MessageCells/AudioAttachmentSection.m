@@ -11,7 +11,6 @@
 #import "MessageCell.h"
 #import "UpDownLoadControl.h"
 #import "HXOUI.h"
-#import "HXOAudioPlaybackButton.h"
 
 @implementation AudioAttachmentSection
 
@@ -24,7 +23,8 @@
     
     self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
-    _playbackButton = [[HXOAudioPlaybackButton alloc] initWithFrame: [self attachmentControlFrame]];
+    _playbackButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.playbackButton.frame = [self attachmentControlFrame];
     self.playbackButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self addSubview: self.playbackButton];
     
