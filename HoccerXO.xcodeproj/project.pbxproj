@@ -174,6 +174,8 @@
 		E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAED61870A0F900D72D79 /* libz.dylib */; };
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
 		E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = E951759818DE420200EFD1C6 /* HXOEnvironment.m */; };
+		E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175E31909191F00EFD1C6 /* Kleistr.gpx */; };
+		E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175F31909920E00EFD1C6 /* Choriner.gpx */; };
 		E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F3118733B79007B8042 /* DDTTYLogger.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
@@ -683,6 +685,8 @@
 		E95175AA18F330FC00EFD1C6 /* HoccerXO-34.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-34.xcdatamodel"; sourceTree = "<group>"; };
 		E95175AB18F5957D00EFD1C6 /* HoccerXO-35.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-35.xcdatamodel"; sourceTree = "<group>"; };
 		E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-36.xcdatamodel"; sourceTree = "<group>"; };
+		E95175E31909191F00EFD1C6 /* Kleistr.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Kleistr.gpx; sourceTree = "<group>"; };
+		E95175F31909920E00EFD1C6 /* Choriner.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Choriner.gpx; sourceTree = "<group>"; };
 		E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-23.xcdatamodel"; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
 		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
@@ -1392,6 +1396,8 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				E95175F31909920E00EFD1C6 /* Choriner.gpx */,
+				E95175E31909191F00EFD1C6 /* Kleistr.gpx */,
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
 				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
 				6302A9B718DA8A9500B2D04F /* HoccerXO Tests */,
@@ -2088,6 +2094,7 @@
 			files = (
 				E9A85D9D184FD1AD00EB9B68 /* chatbar-attachment-icon-contact@2x.png in Resources */,
 				63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */,
+				E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */,
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
@@ -2120,6 +2127,7 @@
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
+				E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,

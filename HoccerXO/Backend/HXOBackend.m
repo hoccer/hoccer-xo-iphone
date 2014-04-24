@@ -1710,11 +1710,12 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (group != nil) {
         group.lastUpdateReceived = [NSDate date];
-
-//        if ([group.lastChangedMillis isEqual:groupDict[@"lastChanged" ]] && !self.firstConnectionAfterCrashOrUpdate && !_uncleanConnectionShutdown) {
-//            if (GROUP_DEBUG,1) NSLog(@"updateGroupHere: we already have the latest version '%@' of group id %@, not processing", group.lastChangedMillis, group.clientId);
-//            return;
-//        }
+        
+        if (group.keySettingInProgress) {
+            group.updatesRefused = group.updatesRefused+1;
+            if (GROUPKEY_DEBUG) NSLog(@"updateGroupHere updatesRefused=%d",group.updatesRefused);
+            return NO;
+        }
     }
     
     if ([groupState isEqualToString:@"none"]) {
@@ -1845,7 +1846,7 @@ static NSTimer * _stateNotificationDelayTimer;
             handler(responseOrError);
         } else {
             NSLog(@"getGroupMembers(): failed: %@", responseOrError);
-            handler(NO);
+            handler(nil);
         }
     }];
 }
@@ -1856,6 +1857,48 @@ static NSTimer * _stateNotificationDelayTimer;
     // NSLog(@"latest date %@", lastKnown);
     [self getGroupMembers: group lastKnown:lastKnown membershipsHandler:^(NSArray * changedMembers) {
         for (NSDictionary * memberDict in changedMembers) {
+            [self updateGroupMemberHere: memberDict];
+        }
+    }];
+}
+
+//TalkGroup getGroup(String groupId);
+- (void) getGroup:(NSString *)groupId onResult:(ObjectResultHandler)handler {
+    [_serverConnection invoke: @"getGroup" withParams: @[groupId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            if (GROUP_DEBUG) NSLog(@"getGroup(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"getGroup(): failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+- (void) getGroup:(Group *)group {
+    [self getGroup: group.clientId onResult:^(NSDictionary * groupDict) {
+        if (groupDict) {
+            [self updateGroupHere:groupDict];
+        }
+    }];
+}
+
+//TalkGroupMember[] getGroupMembers(String groupId, Date lastKnown);
+- (void) getGroupMember:(NSString *)groupId clientId:(NSString*)clientId onResult:(ObjectResultHandler)handler {
+    [_serverConnection invoke: @"getGroupMember" withParams: @[groupId,clientId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            if (GROUP_DEBUG) NSLog(@"getGroupMember(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"getGroupMember(): failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+- (void) getGroupMember:(GroupMembership *)member {
+    [self getGroupMember:member.group.clientId clientId:member.contactClientId onResult:^(NSDictionary *memberDict) {
+        if (memberDict != nil) {
             [self updateGroupMemberHere: memberDict];
         }
     }];
@@ -1963,6 +2006,11 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         myMembership = [theMemberSet anyObject];
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: got member from memberset with nick %@ id %@",myMembership.contact.nickName, myMembership.contact.clientId);
+        if (myMembership.keySettingInProgress) {
+            if (GROUPKEY_DEBUG) NSLog(@"updateGroupMemberHere: refusing update, key setting in progress");
+            group.updatesRefused = group.updatesRefused + 1;
+            return;
+        }
     }
     
     [self checkRelationsipStateForGroupMembershipOfContact:memberContact];
@@ -2506,17 +2554,53 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updateKeyboxesFor:(Group*)group withMembers:(NSSet*)members {
     NSLog(@"updateKeyboxesFor: group %@, members.count=%d",group.clientId,members.count);
+
+    unsigned updatesRefused = group.updatesRefused;
+    //NSDate * latestChangedDate = group.latestMemberChangeDate;
+
     [self updateGroupKeys:group forMembers:members onSuccess:^(NSArray * unfinishedMembers) {
+        if (group.updatesRefused != updatesRefused) {
+            NSLog(@"updateKeyboxesFor: updateGroupKeys result arrived, and we have updates refused in the meantime");
+            NSDate * postCallGroupDate = group.lastChanged;
+            NSDate * latestChangedDate = group.latestMemberChangeDate;
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
+                NSLog(@"updateKeyboxesFor: checking for late arrivals");
+                if (group.keySettingInProgress) {
+                    NSLog(@"updateKeyboxesFor: more key setting going on, postponing");
+                    group.updatesRefused = group.updatesRefused + 1;
+                } else {
+                    NSLog(@"updateKeyboxesFor: no more key setting going on, check for updating now");
+                    if ([postCallGroupDate isEqualToDate:group.lastChanged]) {
+                        NSLog(@"updateKeyboxesFor: nothing arrived, getting group");
+                        [self getGroup:group];
+                    }
+                    if ([latestChangedDate isEqualToDate:group.latestMemberChangeDate]) {
+                        NSLog(@"updateKeyboxesFor: nothing arrived, getting group members");
+                        [self getGroupMembers:group lastKnown:latestChangedDate];
+                    }
+                }
+            });
+        }
         if (unfinishedMembers != nil) {
             if (unfinishedMembers.count == 1 && [[UserProfile sharedProfile].clientId isEqualToString:unfinishedMembers[0]]) {
                 // group key updating locked, some other admin is doing the job
-                NSLog(@"updateKeyboxesFor: Lock encountered, doing nothing");
+                NSLog(@"updateKeyboxesFor: Lock encountered, but no updates were refused, so doing nothing");
             } else {
                 if (group.iAmAdmin && unfinishedMembers.count > 0) {
+                    NSLog(@"updateKeyboxesFor: %d unfinished members returned, check if we can service them with key updates", unfinishedMembers.count);
                     NSSet * theMembersToUpdate = [group activeMembersWithClientIds:unfinishedMembers];
                     if (theMembersToUpdate.count > 0) {
+                        NSLog(@"updateKeyboxesFor: servicing %d unfinished members with key updates", theMembersToUpdate.count);
                         [self updateKeyboxesFor:group withMembers:theMembersToUpdate];
                     }
+                    /*
+                    NSSet * theMembersWithMissingKey = [group activeMembersWithClientIdsAndMissingKey:unfinishedMembers];
+                    if (theMembersWithMissingKey.count > 0) {
+                        NSLog(@"updateKeyboxesFor: servicing %d unfinished members with missing keys", theMembersToUpdate.count);
+                        [self updateKeyboxesFor:group withMembers:theMembersToUpdate];
+                    }
+                    */
                 }
             }
         }

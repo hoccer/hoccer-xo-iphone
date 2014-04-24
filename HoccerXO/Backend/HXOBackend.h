@@ -29,6 +29,7 @@ typedef void (^MembershipsHandler)(NSArray*);
 typedef void (^PresenceHandler)(NSArray*);
 typedef void (^GroupMembersOutdatedHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
+typedef void (^ObjectResultHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);

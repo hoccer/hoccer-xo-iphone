@@ -109,11 +109,12 @@
 - (BOOL) hasLatestGroupKey {
     if (self.hasCipheredGroupKey) {
         if ([self.sharedKeyId isEqualToData:self.group.sharedKeyId]) {
-            NSLog(@"Member:hasLatestGroupKey: YES (1)");
+            NSLog(@"Member:hasLatestGroupKey: YES (1) -- member %@", self.contactClientId);
             return YES;
         } else {
             BOOL result = [self.sharedKeyDate compare:self.group.keyDate] == NSOrderedDescending;
-            NSLog(@"Member:hasLatestGroupKey: %@", result ? @"YES (2)" : @"NO (2)");
+            NSLog(@"Member:hasLatestGroupKey: self.sharedKeyDate= %@,  self.group.keyDate=%@", self.sharedKeyDate, self.group.keyDate);
+            NSLog(@"Member:hasLatestGroupKey: %@ --- member %@", result ? @"YES (2)" : @"NO (2)", self.contactClientId);
             return result;
             // true if self.sharedKeyDate later than self.group.keyDate
         }

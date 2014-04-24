@@ -33,6 +33,8 @@
 
 @dynamic keyDateMillis;
 @dynamic lastChangedMillis;
+
+@synthesize updatesRefused;
 // @dynamic myGroupMembership;
 
 
@@ -84,7 +86,7 @@
 
 - (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        BOOL stateOK = ([obj.state isEqualToString:@"invited"] || [obj.state isEqualToString:@"invited"]);
+        BOOL stateOK = ([obj.state isEqualToString:@"invited"] || [obj.state isEqualToString:@"joined"]);
         BOOL pubKeyOK = obj.contactPubKeyId != nil && obj.contactHasPubKey;
         BOOL contains = [clientIds containsObject:obj.contactClientId];
         NSLog(@"activeMembersWithClientIds:filtering: %@", obj.contactClientId);
@@ -94,6 +96,21 @@
         return stateOK && pubKeyOK && contains;
     }];
     NSLog(@"activeMembersWithClientIds:passed %d members", theMemberSet.count);
+    return theMemberSet;
+}
+
+- (NSSet*) activeMembersWithClientIdsAndMissingKey:(NSArray*)clientIds {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        BOOL stateOK = ([obj.state isEqualToString:@"invited"] || [obj.state isEqualToString:@"joined"]);
+        BOOL pubKeyOK = obj.contactPubKeyId != nil && obj.contactHasPubKey;
+        BOOL contains = [clientIds containsObject:obj.contactClientId];
+        NSLog(@"activeMembersWithClientIdsAndMissingKey:filtering: %@", obj.contactClientId);
+        NSLog(@"activeMembersWithClientIdsAndMissingKey:stateOK: %@", stateOK ? @"YES" : @"NO");
+        NSLog(@"aactiveMembersWithClientIdsAndMissingKey: %@", pubKeyOK ? @"YES" : @"NO");
+        NSLog(@"activeMembersWithClientIdsAndMissingKey:contains: %@", contains ? @"YES" : @"NO");
+        return stateOK && contains && !pubKeyOK;
+    }];
+    NSLog(@"activeMembersWithClientIdsAndMissingKey:passed %d members", theMemberSet.count);
     return theMemberSet;
 }
 
@@ -267,24 +284,55 @@
     return result;
 }
 
+- (BOOL) keySettingInProgress {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.keySettingInProgress;
+    }];
+    return theMemberSet.count > 0;
+}
+
+- (BOOL)canBeKeyMaster:(NSString*)clientID {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        if ([obj.contactClientId isEqualToString:clientID]) {
+            NSLog(@"canBeKeyMaster: found clientid %@", clientID);
+            BOOL stateOK = ([obj.state isEqualToString:@"invited"] || [obj.state isEqualToString:@"joined"]);
+            BOOL isAdmin = [obj.role isEqualToString:@"admin"];
+            BOOL masterIsOffline = obj.contact.connectionStatus != nil && [obj.contact.connectionStatus isEqualToString:@"offline"];
+            NSLog(@"canBeKeyMaster: stateOK %@", stateOK ? @"YES" : @"NO");
+            NSLog(@"canBeKeyMaster: isAdmin %@", isAdmin ? @"YES" : @"NO");
+            NSLog(@"canBeKeyMaster: masterIsOffline %@", masterIsOffline ? @"YES" : @"NO");
+            return stateOK && isAdmin && !masterIsOffline;
+        } else {
+            return NO;
+        }
+    }];
+    return theMemberSet.count > 0;
+}
+
 - (BOOL) hasKeyMaster {
     NSDate * estimatedServerTime = [HXOBackend.instance estimatedServerTime];
     NSTimeInterval passed = [estimatedServerTime timeIntervalSinceDate:self.keyDate];
     NSLog(@"Group;hasKeyMaster: estimatedServerTime %@, keyDate %@, passed = %f", estimatedServerTime, self.keyDate, passed);
-    BOOL result = [self hasKeyOnServer] && [[HXOBackend.instance estimatedServerTime] timeIntervalSinceDate:self.keyDate] < 60.0;
-    NSLog(@"Group;hasKeyMaster: %@", result ? @"YES" : @"NO");
+    BOOL result = [self hasKeyOnServer] && [[HXOBackend.instance estimatedServerTime] timeIntervalSinceDate:self.keyDate] < 30.0;
+    NSLog(@"Group:hasKeyMaster: maybe %@", result ? @"YES" : @"NO");
+    if (result && ![self.keySupplier isEqualToString:UserProfile.sharedProfile.clientId]) {
+        result = [self canBeKeyMaster:self.keySupplier];
+        NSLog(@"Group:hasKeyMaster: canBeKeyMaster: %@", result ? @"YES" : @"NO");
+    } else {
+        NSLog(@"Group:hasKeyMaster: %@", result ? @"YES" : @"NO");
+    }
     return result;
 }
 
 - (BOOL) iAmKeyMaster {
     BOOL result = self.iAmAdmin && self.hasKeyMaster && [self.keySupplier isEqualToString:UserProfile.sharedProfile.clientId];
-    NSLog(@"Group;iAmKeyMaster: %@", result ? @"YES" : @"NO");
+    NSLog(@"Group:iAmKeyMaster: %@", result ? @"YES" : @"NO");
     return result;
 }
 
 - (BOOL) iCanSetKeys {
     BOOL result = !self.hasKeyMaster || self.iAmKeyMaster;
-    NSLog(@"Group;iCanSetKeys: %@", result ? @"YES" : @"NO");
+    NSLog(@"Group:iCanSetKeys: %@", result ? @"YES" : @"NO");
     return result;
 }
 
