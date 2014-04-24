@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		03039EE919081D8100898ADD /* AudioAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 03039EE819081D8100898ADD /* AudioAttachmentMessageCell.m */; };
 		03039EFA19081DE900898ADD /* AudioAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 03039EF919081DE900898ADD /* AudioAttachmentSection.m */; };
+		0372318219090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0372318119090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
@@ -377,6 +378,8 @@
 		03039EE819081D8100898ADD /* AudioAttachmentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentMessageCell.m; sourceTree = "<group>"; };
 		03039EF819081DE900898ADD /* AudioAttachmentSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentSection.h; sourceTree = "<group>"; };
 		03039EF919081DE900898ADD /* AudioAttachmentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentSection.m; sourceTree = "<group>"; };
+		0372318019090C4A0043E79F /* AudioAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
+		0372318119090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -1238,6 +1241,8 @@
 				03039EE819081D8100898ADD /* AudioAttachmentMessageCell.m */,
 				03039EF819081DE900898ADD /* AudioAttachmentSection.h */,
 				03039EF919081DE900898ADD /* AudioAttachmentSection.m */,
+				0372318019090C4A0043E79F /* AudioAttachmentWithTextMessageCell.h */,
+				0372318119090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m */,
 				632502A21865FC2600543D80 /* DateSectionHeaderView.h */,
 				632502A31865FC2600543D80 /* DateSectionHeaderView.m */,
 				63808A33185A27730001AC96 /* GenericAttachmentMessageCell.h */,
@@ -2237,6 +2242,7 @@
 				6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */,
 				6378484616F4000500DE03C2 /* Delivery.m in Sources */,
 				E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */,
+				0372318219090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m in Sources */,
 				6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */,
 				63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */,
 				6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */,
