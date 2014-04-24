@@ -691,8 +691,15 @@ static CCRSA *instance;
     [publicKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
     [publicKey setObject: @YES forKey:(__bridge id)kSecReturnRef];
     [publicKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
-    SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&persistentRef);
+    
+    OSStatus sanityCheck = SecItemCopyMatching((__bridge CFDictionaryRef)publicKey,(CFTypeRef *)&persistentRef);
         
+	if (sanityCheck != noErr) {
+        if (persistentRef != NULL) {
+            CFRelease(persistentRef);
+        }
+		persistentRef = NULL;
+	}
     return persistentRef;
 
 }
@@ -713,8 +720,7 @@ static CCRSA *instance;
     CFDataRef publicKeyBitsCF;
 	sanityCheck = SecItemCopyMatching((__bridge CFDictionaryRef)publicKey, (CFTypeRef *)&publicKeyBitsCF);
     
-	if (sanityCheck != noErr)
-	{
+	if (sanityCheck != noErr) {
 		publicKeyBits = nil;
 	} else {
         publicKeyBits = (__bridge_transfer NSData *)publicKeyBitsCF;
