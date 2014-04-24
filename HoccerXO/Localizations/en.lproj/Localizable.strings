@@ -126,8 +126,8 @@
 // Contact - uses strings from profile
 //==============================================================================
 
-"contact_list_nav_title" = "Contacts";
-"contact_nav_title"  = "Contact";
+"contact_list_nav_title"                        = "Contacts";
+"contact_nav_title"                             = "Contact";
 
 "contact_chat_title"                            = "Chat";
 "contact_unblock_btn_title_format"              = "Unblock %@";
