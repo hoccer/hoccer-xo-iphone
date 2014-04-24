@@ -1393,7 +1393,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         } else if ([section isKindOfClass: [ImageAttachmentSection class]]) {
             [self configureImageAttachmentSection: (ImageAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         } else if ([section isKindOfClass: [AudioAttachmentSection class]]) {
-            [self configureAudioAttachmentSection: (AudioAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
+            [self configureAudioAttachmentSection: (AudioAttachmentSection*)section forMessage: message];
         } else if ([section isKindOfClass: [GenericAttachmentSection class]]) {
             [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         }
@@ -1491,40 +1491,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
-- (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
+- (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
-    
-    if (loadPreview) {
-        [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
-            [self finishConfigureAudioAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
-        }];
-    } else {
-        [self finishConfigureAudioAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
-    }
-    
-    NSString * title = message.attachment.humanReadableFileName;
-    if (title == nil || [title isEqualToString: @""]) {
-        
-    }
     section.title.text = [self attachmentTitle: message];
-}
-
-- (void)finishConfigureAudioAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
-    if ([section isKindOfClass: [AudioAttachmentSection class]]) {
-        Attachment * attachment = message.attachment;
-        AudioAttachmentSection * attachmentSection = (AudioAttachmentSection*)section;
-        
-        if (loadPreview && attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
-            attachmentSection.icon.image = attachment.previewImage;
-            attachmentSection.icon.layer.cornerRadius = 0.5 * attachmentSection.icon.frame.size.width;
-            attachmentSection.icon.layer.masksToBounds = YES;
-        } else if (attachment.state == kAttachmentTransfered) {
-            attachmentSection.icon.image = [self typeIconForAttachment: message.attachment];
-            attachmentSection.icon.layer.masksToBounds = NO;
-        } else {
-            attachmentSection.icon.image = nil;
-        }
-    }
 }
 
 - (void) loadAttachmentImage: (Attachment*) attachment withSection: (AttachmentSection*) section completion: (AttachmentImageCompletion) completion {
