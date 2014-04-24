@@ -70,7 +70,7 @@
 
 - (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *) player successfully: (BOOL) flag {
     self.player = nil;
-    _nowPlayingURL = nil;
+    [self updateNowPlayingURL:nil];
 }
 
 @end
