@@ -8,24 +8,44 @@
 
 #import "AudioAttachmentSection.h"
 
+#import "MessageCell.h"
+#import "UpDownLoadControl.h"
+#import "HXOUI.h"
+
 @implementation AudioAttachmentSection
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
+- (void) commonInit {
+    [super commonInit];
+    
+    _title = [[UILabel alloc] initWithFrame:CGRectMake(2 * kHXOGridSpacing, 0, self.bounds.size.width - 9 * kHXOGridSpacing, 32)];
+    self.title.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self addSubview: self.title];
+    
+    self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    
+    _playButton = [[UIButton alloc] initWithFrame: [self attachmentControlFrame]];
+    self.playButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self addSubview: self.playButton];
+    
+    self.subtitle.frame = CGRectMake(2 * kHXOGridSpacing, 24, self.bounds.size.width - 9 * kHXOGridSpacing, 16);
+    self.subtitle.font = [UIFont systemFontOfSize: 10];
+    
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+- (CGSize) sizeThatFits:(CGSize)size {
+    size.height = 6 * kHXOGridSpacing;
+    return size;
 }
-*/
+
+- (void) colorSchemeDidChange {
+    [super colorSchemeDidChange];
+    self.title.textColor = [[HXOUI theme] messageAttachmentTitleColorForScheme: self.cell.colorScheme];
+    self.subtitle.textColor = [[HXOUI theme] messageAttachmentSubtitleColorForScheme: self.cell.colorScheme];
+    self.playButton.tintColor = [[HXOUI theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
+}
+
+- (CGRect) attachmentControlFrame {
+    return CGRectMake(self.bounds.size.width - (2 * kHXOGridSpacing + 4 * kHXOGridSpacing), kHXOGridSpacing, 4 * kHXOGridSpacing, 4 * kHXOGridSpacing);
+}
 
 @end

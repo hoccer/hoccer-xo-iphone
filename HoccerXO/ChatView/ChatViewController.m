@@ -32,11 +32,14 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "TextMessageCell.h"
 #import "ImageAttachmentMessageCell.h"
+#import "AudioAttachmentMessageCell.h"
 #import "GenericAttachmentMessageCell.h"
 #import "ImageAttachmentWithTextMessageCell.h"
+#import "AudioAttachmentWithTextMessageCell.h"
 #import "GenericAttachmentWithTextMessageCell.h"
-#import "ImageAttachmentSection.h"
 #import "TextSection.h"
+#import "ImageAttachmentSection.h"
+#import "AudioAttachmentSection.h"
 #import "GenericAttachmentSection.h"
 #import "ProfileViewController.h"
 #import "LabelWithLED.h"
@@ -116,8 +119,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [ImageAttachmentMessageCell class]];
+    [self registerCellClass: [AudioAttachmentMessageCell class]];
     [self registerCellClass: [GenericAttachmentMessageCell class]];
     [self registerCellClass: [ImageAttachmentWithTextMessageCell class]];
+    [self registerCellClass: [AudioAttachmentWithTextMessageCell class]];
     [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
     [self.tableView registerClass: [DateSectionHeaderView class] forHeaderFooterViewReuseIdentifier: @"date_header"];
 
@@ -1054,7 +1059,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         if ([self hasImageAttachment: message]) {
             return hasText ? [ImageAttachmentWithTextMessageCell reuseIdentifier] : [ImageAttachmentMessageCell reuseIdentifier];
         } else if ([self hasAudioAttachment: message]) {
-            return hasText ? [GenericAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
+            return hasText ? [AudioAttachmentWithTextMessageCell reuseIdentifier] : [AudioAttachmentMessageCell reuseIdentifier];
         } else {
             return hasText ? [GenericAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
         }
@@ -1387,6 +1392,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             [self configureTextSection: (TextSection*)section forMessage: message];
         } else if ([section isKindOfClass: [ImageAttachmentSection class]]) {
             [self configureImageAttachmentSection: (ImageAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
+        } else if ([section isKindOfClass: [AudioAttachmentSection class]]) {
+            [self configureAudioAttachmentSection: (AudioAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         } else if ([section isKindOfClass: [GenericAttachmentSection class]]) {
             [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         }
@@ -1481,6 +1488,42 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }
         imageSection.subtitle.hidden = imageSection.image != nil;
         imageSection.showPlayButton = [attachment.mediaType isEqualToString: @"video"] && imageSection.image != nil;
+    }
+}
+
+- (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
+    [self configureAttachmentSection: section forMessage: message];
+    
+    if (loadPreview) {
+        [self loadAttachmentImage: message.attachment withSection: section completion:^(Attachment * attachment, AttachmentSection * section) {
+            [self finishConfigureAudioAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
+        }];
+    } else {
+        [self finishConfigureAudioAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
+    }
+    
+    NSString * title = message.attachment.humanReadableFileName;
+    if (title == nil || [title isEqualToString: @""]) {
+        
+    }
+    section.title.text = [self attachmentTitle: message];
+}
+
+- (void)finishConfigureAudioAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
+    if ([section isKindOfClass: [AudioAttachmentSection class]]) {
+        Attachment * attachment = message.attachment;
+        AudioAttachmentSection * attachmentSection = (AudioAttachmentSection*)section;
+        
+        if (loadPreview && attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
+            attachmentSection.icon.image = attachment.previewImage;
+            attachmentSection.icon.layer.cornerRadius = 0.5 * attachmentSection.icon.frame.size.width;
+            attachmentSection.icon.layer.masksToBounds = YES;
+        } else if (attachment.state == kAttachmentTransfered) {
+            attachmentSection.icon.image = [self typeIconForAttachment: message.attachment];
+            attachmentSection.icon.layer.masksToBounds = NO;
+        } else {
+            attachmentSection.icon.image = nil;
+        }
     }
 }
 

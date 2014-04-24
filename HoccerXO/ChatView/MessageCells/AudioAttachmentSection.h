@@ -10,4 +10,7 @@
 
 @interface AudioAttachmentSection : AttachmentSection
 
+@property (nonatomic,readonly) UILabel * title;
+@property (nonatomic,readonly) UIButton * playButton;
+
 @end
