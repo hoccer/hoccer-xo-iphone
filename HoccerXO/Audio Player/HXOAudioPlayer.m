@@ -11,6 +11,7 @@
 
 @interface HXOAudioPlayer ()
 
+@property (nonatomic, strong) NSURL *nowPlayingURL;
 @property (nonatomic, strong) AVAudioPlayer *player;
 
 @end
@@ -36,12 +37,12 @@
 - (void) playURL: (NSURL *) url {
     [self ensurePlayerForURL:url];
     [self.player play];
-    [self updateNowPlayingURL:url];
+    self.nowPlayingURL = url;
 }
 
 - (void) pause {
     [self.player pause];
-    [self updateNowPlayingURL:nil];
+    self.nowPlayingURL = nil;
 }
 
 #pragma mark - Private helpers
@@ -53,18 +54,11 @@
     }
 }
 
-- (void) updateNowPlayingURL:(NSURL *)url {
-    NSString *key = NSStringFromSelector(@selector(nowPlayingURL));
-    [self willChangeValueForKey:key];
-    _nowPlayingURL = url;
-    [self didChangeValueForKey:key];
-}
-
 #pragma mark - AVAudioPlayerDelegate methods
 
 - (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *) player successfully: (BOOL) flag {
     self.player = nil;
-    [self updateNowPlayingURL:nil];
+    self.nowPlayingURL = nil;
 }
 
 @end
