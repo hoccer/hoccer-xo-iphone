@@ -27,6 +27,12 @@
     
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
+        
+        // Continue playing audio when app goes into background
+        // See https://developer.apple.com/library/ios/qa/qa1668
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [session setActive:YES error:nil];
     });
     
     return instance;
