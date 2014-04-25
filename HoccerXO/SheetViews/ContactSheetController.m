@@ -447,7 +447,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         destructiveButtonTitle = NSLocalizedString(@"group_leave_group_button_title", nil);
         destructor = @selector(leaveGroup);
     } else {
-        title = NSLocalizedString(@"delete", nil);
+        title = NSLocalizedString(@"contact_delete_safety_question", nil);
         destructiveButtonTitle = NSLocalizedString(@"delete", nil);
         destructor = @selector(deleteContact);
     }
