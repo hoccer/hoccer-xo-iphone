@@ -40,7 +40,7 @@
                         <segue destination="3" kind="relationship" relationship="viewControllers" id="V24-g4-ZsO"/>
                         <segue destination="ndO-Hb-TaY" kind="relationship" relationship="viewControllers" id="2GK-kg-5Zm"/>
                         <segue destination="dNK-Pr-I05" kind="relationship" relationship="viewControllers" id="XMf-TI-tCX"/>
-                        <segue destination="69M-9C-Zrd" kind="relationship" relationship="viewControllers" id="R1i-4x-FWK"/>
+                        <segue destination="cUQ-wS-0VX" kind="relationship" relationship="viewControllers" id="qTr-Sa-EVe"/>
                         <segue destination="TcE-yq-ikP" kind="relationship" relationship="viewControllers" id="Ycj-Rj-5IS"/>
                     </connections>
                 </tabBarController>
@@ -811,7 +811,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Yp8-1M-K2z">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Yp8-1M-K2z" id="yxZ-TK-Ds3">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -825,10 +825,27 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Item" id="2OT-aj-jRR"/>
+                    <navigationItem key="navigationItem" id="Skk-N9-fJi"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e4E-iZ-1D3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-405" y="423"/>
+            <point key="canvasLocation" x="59" y="477"/>
+        </scene>
+        <!--Themed Navigation Controller - Music-->
+        <scene sceneID="QCC-p9-EDN">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="cUQ-wS-0VX" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Music" id="dRm-Zp-puv"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Fbf-Xb-aYg">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="69M-9C-Zrd" kind="relationship" relationship="rootViewController" id="57k-z7-2Ln"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oap-bi-UmD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-405" y="477"/>
         </scene>
         <!--Themed Navigation Controller-->
         <scene sceneID="YWf-kL-LN8">
@@ -1070,10 +1087,10 @@
     <inferredMetricsTieBreakers>
         <segue reference="6i4-qU-VgJ"/>
         <segue reference="NNl-EZ-WW3"/>
+        <segue reference="4Tx-uH-B8w"/>
         <segue reference="fCA-bC-lkd"/>
         <segue reference="CES-Ic-Rhf"/>
         <segue reference="I8w-H7-Q9a"/>
-        <segue reference="k8Y-EQ-OHi"/>
         <segue reference="3XQ-ea-QwO"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -15,8 +15,10 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
+    NSString *title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
     self.tabBarItem.image = [[[tab_settings alloc] init] image];
-    self.tabBarItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
+    self.tabBarItem.title = title;
+    self.navigationItem.title = title;
 }
 
 @end
