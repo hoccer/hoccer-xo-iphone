@@ -65,6 +65,9 @@
 "attachment_save_to_album_failed_title"  = "Speichern fehlgeschlagen";
 "attachment_incompatible_video_message"  = "Videoformat ist inkompatibel mit dem Album";
 
+"attachment_cannot_play_title"           = "Anhang kann nicht abgespielt werden";
+"attachment_cannot_play_message"         = "Das Format der Audiodatei wird auf diesem Gerät nicht unterstützt.";
+
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Ablage (Bild)";
 "Paste Video Attachment" = "Ablage (Video)";

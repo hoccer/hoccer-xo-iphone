@@ -15,7 +15,7 @@
 
 + (HXOAudioPlayer *) sharedInstance;
 
-- (void) playURL: (NSURL *) url;
+- (BOOL) playURL: (NSURL *) url;
 - (void) pause;
 
 @property (nonatomic, readonly) BOOL isPlaying;

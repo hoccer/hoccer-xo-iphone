@@ -65,6 +65,9 @@
 "attachment_save_to_album_failed_title"  = "Save in Album Failed";
 "attachment_incompatible_video_message"  = "Video is not compatible with Album";
 
+"attachment_cannot_play_title"           = "Cannot Play Audio Attachment";
+"attachment_cannot_play_message"         = "The audio attachment cannot be played on this device.";
+
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Pasteboard (Image)";
 "Paste Video Attachment" = "Pasteboard (Video)";

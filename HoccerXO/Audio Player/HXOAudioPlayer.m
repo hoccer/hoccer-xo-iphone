@@ -40,10 +40,17 @@
 
 #pragma mark - Public interface
 
-- (void) playURL: (NSURL *) url {
+- (BOOL) playURL: (NSURL *) url {
     [self ensurePlayerForURL:url];
-    [self.player play];
-    self.isPlaying = YES;
+    
+    if (self.player) {
+        [self.player play];
+        self.isPlaying = YES;
+    } else {
+        self.isPlaying = NO;
+    }
+    
+    return self.isPlaying;
 }
 
 - (void) pause {

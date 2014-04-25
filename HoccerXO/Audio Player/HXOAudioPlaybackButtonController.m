@@ -60,7 +60,16 @@
     if ([self isPlaying]) {
         [[HXOAudioPlayer sharedInstance] pause];
     } else {
-        [[HXOAudioPlayer sharedInstance] playURL:self.audioURL];
+        BOOL success = [[HXOAudioPlayer sharedInstance] playURL:self.audioURL];
+        
+        if (!success) {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
+                                                             message: NSLocalizedString(@"attachment_cannot_play_message", nil)
+                                                            delegate: nil
+                                                   cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                                   otherButtonTitles: nil];
+            [alert show];
+        }
     }
 }
 
