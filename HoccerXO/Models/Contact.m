@@ -172,21 +172,12 @@ NSString * const kRelationStateKept        = @"kept";
 
 - (BOOL) hasPublicKey {
     if (![HXOBackend isInvalid:self.publicKey]) {
-        NSLog(@"Contact hasPublicKey YES, id %@", self.clientId);
+        //NSLog(@"Contact hasPublicKey YES, id %@", self.clientId);
         return YES;
     } else {
-        NSLog(@"Contact hasPublicKey NO, id %@ ", self.clientId);
+        //NSLog(@"Contact hasPublicKey NO, id %@ ", self.clientId);
         return NO;
     }
-    /*
-    CCRSA * rsa = [CCRSA sharedInstance];
-    SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
-    if (myResult != NULL) {
-        NSLog(@"Contact id %@, hasPublicKey YES (2)", self.clientId);
-        return YES;
-    }
-    return NO;
-     */
 }
 
 

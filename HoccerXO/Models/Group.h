@@ -32,6 +32,8 @@
 @property (nonatomic, retain) NSNumber    * lastChangedMillis;
 @property (nonatomic, retain) NSNumber    * keyDateMillis;
 
+@property  unsigned updatesRefused;
+
 // @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
 
 - (BOOL) iAmAdmin;
@@ -52,9 +54,13 @@
 - (BOOL) iAmKeyMaster;
 - (BOOL) iCanSetKeys;
 
+- (BOOL) keySettingInProgress;
+
+
 - (BOOL)syncKeyWithMembership;
 
 - (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds;
+- (NSSet*) activeMembersNeedingKeyUpdate;
 
 @end
 

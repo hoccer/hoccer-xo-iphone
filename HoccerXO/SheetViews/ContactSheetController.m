@@ -242,6 +242,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
+                [self.chatBackend updateGroup:newGroup]; // <-- don't know if this is supposed to be like this, but right now we do never call updateGroup:
                 for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
                     [self.chatBackend inviteGroupMember: self.groupInStatuNascendi.members[i] toGroup: newGroup onDone:^(BOOL success) {
                         // yeah, baby
