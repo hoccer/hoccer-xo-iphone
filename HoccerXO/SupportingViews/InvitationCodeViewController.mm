@@ -100,7 +100,7 @@
     self.codeTextField.layer.borderWidth = 1;
     self.codeTextField.layer.cornerRadius = kHXOGridSpacing;
     self.codeTextField.layer.masksToBounds = YES;
-    // Odd issue: Not setting the color twice leaves my iPhone4 with an invisible text field :-/
+    // Wierd issue: Not setting the color twice leaves my iPhone4 with an invisible text field (Works in simulator) :-/
     self.codeTextField.backgroundColor = [UIColor orangeColor];
     self.codeTextField.backgroundColor = [UIColor whiteColor];
     self.codeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -285,6 +285,8 @@
     if (self.scanOrGenerateToggle.selectedSegmentIndex == 0 && self.codeTextField.text && ! [self.codeTextField.text isEqualToString: @""]) {
         [self.chatBackend pairByToken: self.codeTextField.text];
     }
+    self.codeTextField.text = @"";
+    self.qrCodeView.image = nil;
     [self dismissViewControllerAnimated: YES completion: nil];
 }
 
