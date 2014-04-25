@@ -1979,27 +1979,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
         _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
-    } else  if ([myAttachment.mediaType isEqual: @"audio"]) {
-        _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
-        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
-        _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
-        
-        UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.previewImage];
-        
-        CGRect myFrame = myView.frame;
-        myFrame.size = CGSizeMake(320,320);
-        myView.frame = myFrame;
-        
-        myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin |
-                                  UIViewAutoresizingFlexibleRightMargin |
-                                  UIViewAutoresizingFlexibleTopMargin |
-                                  UIViewAutoresizingFlexibleBottomMargin;
-        
-        //[_moviePlayerViewController.moviePlayer.view addSubview:myView];
-        [_moviePlayerViewController.moviePlayer.backgroundView addSubview:myView];
-        [AppDelegate setMusicAudioSession]; // TODO: set default audio session when playback has ended
-
-        [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
         // used with old DB entries preventing https://github.com/hoccer/hoccer-xo-iphone/issues/211
         [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
