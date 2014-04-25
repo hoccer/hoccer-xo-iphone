@@ -60,7 +60,7 @@
 - (BOOL)syncKeyWithMembership;
 
 - (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds;
-- (NSSet*) activeMembersWithClientIdsAndMissingKey:(NSArray*)clientIds;
+- (NSSet*) activeMembersNeedingKeyUpdate;
 
 @end
 

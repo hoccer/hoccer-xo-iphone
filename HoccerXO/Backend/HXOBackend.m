@@ -61,7 +61,7 @@
 #endif
 
 #define FULL_HELLO
-#define TRACE_TIME_DIFFERENCE NO
+#define TRACE_TIME_DIFFERENCE YES
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
 
@@ -1543,7 +1543,6 @@ static NSTimer * _stateNotificationDelayTimer;
     group.type = [Group entityName];
     group.groupTag = [NSString stringWithUUID];
     //group.groupKey = [Crypto random256BitKey];
-    [group generateNewGroupKey];
     
     GroupMembership * myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
     //AUTOREL [group addMembersObject:myMember];
@@ -1553,6 +1552,7 @@ static NSTimer * _stateNotificationDelayTimer;
     myMember.contact = group;
     myMember.role = @"admin";
     myMember.state = @"accepted";
+    [group generateNewGroupKey];
 
     [self.delegate saveDatabase];
     [self createGroup: group withHandler:handler];
@@ -1710,12 +1710,13 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (group != nil) {
         group.lastUpdateReceived = [NSDate date];
-        
+/*
         if (group.keySettingInProgress) {
             group.updatesRefused = group.updatesRefused+1;
             if (GROUPKEY_DEBUG) NSLog(@"updateGroupHere updatesRefused=%d",group.updatesRefused);
             return NO;
         }
+ */
     }
     
     if ([groupState isEqualToString:@"none"]) {
@@ -1738,9 +1739,23 @@ static NSTimer * _stateNotificationDelayTimer;
     
     [group updateWithDictionary: groupDict];
     
+    if (group.iCanSetKeys) {
+        if (!group.hasKeyOnServer) {
+            if (GROUP_DEBUG) NSLog(@"updateGroupHere: generating key for group with id %@",groupId);
+            [group generateNewGroupKey];
+        }
+        NSSet *updatableMembers = group.activeMembersNeedingKeyUpdate;
+        if (updatableMembers.count > 0) {
+            if (GROUP_DEBUG) NSLog(@"updateGroupHere: updating key boxes for %d members",updatableMembers.count);
+            [self updateKeyboxesFor:group withMembers:updatableMembers];
+        }
+    }
+    
+    /*
     if (!group.hasKeyOnServer && group.iAmAdmin) {
         [group generateNewGroupKey];
     }
+     */
 
     // download group avatar if changed
     if (!group.iAmAdmin && groupDict[@"groupAvatarUrl"] != group.avatarURL) {
@@ -2006,11 +2021,13 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         myMembership = [theMemberSet anyObject];
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: got member from memberset with nick %@ id %@",myMembership.contact.nickName, myMembership.contact.clientId);
+        /*
         if (myMembership.keySettingInProgress) {
             if (GROUPKEY_DEBUG) NSLog(@"updateGroupMemberHere: refusing update, key setting in progress");
             group.updatesRefused = group.updatesRefused + 1;
             return;
         }
+         */
     }
     
     [self checkRelationsipStateForGroupMembershipOfContact:memberContact];
@@ -2050,9 +2067,11 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
     
-    if ([group isEqual:myMembership.contact]) { // its us
-        [myMembership checkGroupKeyTransfer:groupMemberDict[@"encryptedGroupKey"] withKeyId:groupMemberDict[@"memberKeyId"]
-                            withSharedKeyId:groupMemberDict[@"sharedKeyId"] withSharedKeyIdSalt:groupMemberDict[@"sharedKeyIdSalt"]];
+    if (GROUPKEY_DEBUG) {
+        if ([group isEqual:myMembership.contact]) { // its us
+            [myMembership checkGroupKeyTransfer:groupMemberDict[@"encryptedGroupKey"] withKeyId:groupMemberDict[@"memberKeyId"]
+                                withSharedKeyId:groupMemberDict[@"sharedKeyId"] withSharedKeyIdSalt:groupMemberDict[@"sharedKeyIdSalt"]];
+        }
     }
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
@@ -2559,6 +2578,7 @@ static NSTimer * _stateNotificationDelayTimer;
     //NSDate * latestChangedDate = group.latestMemberChangeDate;
 
     [self updateGroupKeys:group forMembers:members onSuccess:^(NSArray * unfinishedMembers) {
+        /*
         if (group.updatesRefused != updatesRefused) {
             NSLog(@"updateKeyboxesFor: updateGroupKeys result arrived, and we have updates refused in the meantime");
             NSDate * postCallGroupDate = group.lastChanged;
@@ -2582,10 +2602,11 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
             });
         }
+         */
         if (unfinishedMembers != nil) {
             if (unfinishedMembers.count == 1 && [[UserProfile sharedProfile].clientId isEqualToString:unfinishedMembers[0]]) {
                 // group key updating locked, some other admin is doing the job
-                NSLog(@"updateKeyboxesFor: Lock encountered, but no updates were refused, so doing nothing");
+                NSLog(@"updateKeyboxesFor: Lock encountered, doing nothing");
             } else {
                 if (group.iAmAdmin && unfinishedMembers.count > 0) {
                     NSLog(@"updateKeyboxesFor: %d unfinished members returned, check if we can service them with key updates", unfinishedMembers.count);
