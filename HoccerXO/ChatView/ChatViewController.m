@@ -1495,7 +1495,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
     section.title.text = [self attachmentTitle: message];
-    section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton audioURL:message.attachment.contentURL];
+    
+    Attachment *attachment = message.attachment;
+    
+    if (attachment.state == kAttachmentTransfered) {
+        section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton audioURL:attachment.contentURL];
+    } else {
+        section.playbackButtonController = nil;
+    }
 }
 
 - (void) loadAttachmentImage: (Attachment*) attachment withSection: (AttachmentSection*) section completion: (AttachmentImageCompletion) completion {
