@@ -25,6 +25,7 @@
     
     _playbackButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.playbackButton.frame = [self attachmentControlFrame];
+    self.playbackButton.imageEdgeInsets = UIEdgeInsetsMake(0, self.bounds.size.width - 6 * kHXOGridSpacing, 0, 2 * kHXOGridSpacing);
     self.playbackButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self addSubview: self.playbackButton];
     
@@ -46,7 +47,7 @@
 }
 
 - (CGRect) attachmentControlFrame {
-    return CGRectMake(self.bounds.size.width - (2 * kHXOGridSpacing + 4 * kHXOGridSpacing), kHXOGridSpacing, 4 * kHXOGridSpacing, 4 * kHXOGridSpacing);
+    return CGRectMake(0, 0, self.bounds.size.width, 6 * kHXOGridSpacing);
 }
 
 @end
