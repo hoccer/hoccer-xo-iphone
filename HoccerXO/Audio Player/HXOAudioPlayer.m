@@ -8,6 +8,8 @@
 
 #import "HXOAudioPlayer.h"
 
+#import "AppDelegate.h"
+
 
 @interface HXOAudioPlayer ()
 
@@ -27,12 +29,6 @@
     
     dispatch_once(&onceToken, ^{
         instance = [[self alloc] init];
-        
-        // Continue playing audio when app goes into background
-        // See https://developer.apple.com/library/ios/qa/qa1668
-        AVAudioSession *session = [AVAudioSession sharedInstance];
-        [session setCategory:AVAudioSessionCategoryPlayback error:nil];
-        [session setActive:YES error:nil];
     });
     
     return instance;
@@ -44,6 +40,7 @@
     [self ensurePlayerForURL:url];
     
     if (self.player) {
+        [AppDelegate setMusicAudioSession];
         [self.player play];
         self.isPlaying = YES;
     } else {
@@ -55,6 +52,7 @@
 
 - (void) pause {
     [self.player pause];
+    [AppDelegate setDefaultAudioSession];
     self.isPlaying = NO;
 }
 
@@ -78,6 +76,7 @@
 #pragma mark - AVAudioPlayerDelegate methods
 
 - (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *) player successfully: (BOOL) flag {
+    [AppDelegate setDefaultAudioSession];
     self.player = nil;
     self.isPlaying = NO;
 }
