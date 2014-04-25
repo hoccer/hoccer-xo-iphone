@@ -35,11 +35,6 @@
 
 @end
 
-
-@interface NonRotatingThemedNavigationController : HXOThemedNavigationController
-
-@end
-
 @implementation InvitationCodeViewController
 
 @synthesize chatBackend = _chatBackend;
@@ -163,6 +158,18 @@
     [super viewDidDisappear: animated];
     [self tearDownCaptureSession];
     [self clearCodeView];
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
 }
 
 #pragma mark - Video Capture and (QR) Codes
@@ -367,10 +374,3 @@
 
 @end
 
-@implementation NonRotatingThemedNavigationController
-
-- (BOOL) shouldAutorotate {
-    return NO;
-}
-
-@end

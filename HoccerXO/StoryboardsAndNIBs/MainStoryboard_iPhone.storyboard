@@ -598,10 +598,10 @@
             </objects>
             <point key="canvasLocation" x="1014" y="723"/>
         </scene>
-        <!--Non Rotating Themed Navigation Controller-->
+        <!--Themed Navigation Controller-->
         <scene sceneID="Naz-dy-kRv">
             <objects>
-                <navigationController definesPresentationContext="YES" id="Ux6-gE-xyd" customClass="NonRotatingThemedNavigationController" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="Ux6-gE-xyd" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="69b-Lz-5Vh"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Syd-8c-xlS">
                         <autoresizingMask key="autoresizingMask"/>
@@ -1038,12 +1038,12 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="fCA-bC-lkd"/>
         <segue reference="6i4-qU-VgJ"/>
         <segue reference="I8w-H7-Q9a"/>
-        <segue reference="iwW-8u-tft"/>
         <segue reference="CES-Ic-Rhf"/>
         <segue reference="3XQ-ea-QwO"/>
+        <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="fCA-bC-lkd"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>
