@@ -15,7 +15,7 @@
 #import "HXOLabel.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "CopyableUITextField.h"
-
+#import "HXOThemedNavigationController.h"
 
 @interface InvitationCodeViewController ()
 
@@ -32,6 +32,11 @@
 @property (nonatomic, strong)   AVCaptureVideoPreviewLayer * videoLayer;
 @property (nonatomic, strong)   HXOLabel                   * promptLabel;
 @property (nonatomic, readonly) HXOBackend                 * chatBackend;
+
+@end
+
+
+@interface NonRotatingThemedNavigationController : HXOThemedNavigationController
 
 @end
 
@@ -158,10 +163,6 @@
     [super viewDidDisappear: animated];
     [self tearDownCaptureSession];
     [self clearCodeView];
-}
-
-- (BOOL) shouldAutorotate {
-    return NO;
 }
 
 #pragma mark - Video Capture and (QR) Codes
@@ -362,6 +363,14 @@
         _chatBackend = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).chatBackend;
     }
     return _chatBackend;
+}
+
+@end
+
+@implementation NonRotatingThemedNavigationController
+
+- (BOOL) shouldAutorotate {
+    return NO;
 }
 
 @end
