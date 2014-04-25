@@ -12,6 +12,7 @@
 
 @interface HXOAudioPlaybackButtonController ()
 
+@property (nonatomic, readonly) HXOAudioPlayer * audioPlayer;
 @property (nonatomic, strong) NSURL * audioURL;
 @property (nonatomic, strong) UIButton * button;
 
@@ -24,10 +25,11 @@
     self = [super init];
     
     if (self) {
+        _audioPlayer = [HXOAudioPlayer sharedInstance];
         self.audioURL = url;
         self.button = button;
 
-        [[HXOAudioPlayer sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(nowPlayingURL)) options:0 context:NULL];
+        [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
         [self.button addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
         [self updatePlaybackState];
     }
@@ -36,7 +38,7 @@
 }
 
 - (void) dealloc {
-    [[HXOAudioPlayer sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(nowPlayingURL))];
+    [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying))];
     [self.button removeTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -51,13 +53,13 @@
 }
 
 - (BOOL) isPlaying {
-    return self.audioURL && [[[HXOAudioPlayer sharedInstance] nowPlayingURL] isEqual:self.audioURL];
+    return [self.audioPlayer isPlaying] && [self.audioPlayer.url isEqual:self.audioURL];
 }
 
 - (void) togglePlayback: (id) sender {
     if ([self isPlaying]) {
         [[HXOAudioPlayer sharedInstance] pause];
-    } else if (self.audioURL) {
+    } else {
         [[HXOAudioPlayer sharedInstance] playURL:self.audioURL];
     }
 }

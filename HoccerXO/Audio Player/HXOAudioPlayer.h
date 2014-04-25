@@ -18,6 +18,7 @@
 - (void) playURL: (NSURL *) url;
 - (void) pause;
 
-@property (nonatomic, readonly) NSURL *nowPlayingURL;
+@property (nonatomic, readonly) BOOL isPlaying;
+@property (nonatomic, readonly) NSURL * url;
 
 @end

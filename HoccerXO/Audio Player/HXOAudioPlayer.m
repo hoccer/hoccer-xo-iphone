@@ -11,7 +11,7 @@
 
 @interface HXOAudioPlayer ()
 
-@property (nonatomic, strong) NSURL *nowPlayingURL;
+@property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, strong) AVAudioPlayer *player;
 
 @end
@@ -37,18 +37,26 @@
 - (void) playURL: (NSURL *) url {
     [self ensurePlayerForURL:url];
     [self.player play];
-    self.nowPlayingURL = url;
+    self.isPlaying = YES;
 }
 
 - (void) pause {
     [self.player pause];
-    self.nowPlayingURL = nil;
+    self.isPlaying = NO;
+}
+
+- (NSURL *) url {
+    if (self.player) {
+        return self.player.url;
+    } else {
+        return nil;
+    }
 }
 
 #pragma mark - Private helpers
 
 - (void) ensurePlayerForURL: (NSURL *) url {
-    if (!self.player || ![self.player.url isEqual:url]) {
+    if (![self.url isEqual:url]) {
         self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
         [self.player setDelegate:self];
     }
@@ -58,7 +66,7 @@
 
 - (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *) player successfully: (BOOL) flag {
     self.player = nil;
-    self.nowPlayingURL = nil;
+    self.isPlaying = NO;
 }
 
 @end
