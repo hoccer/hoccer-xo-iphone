@@ -290,16 +290,16 @@
 "invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
 "invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
 
+"invite_scan_nav_title"           = "Scannen";
+"invite_generate_nav_title"       = "Generieren";
+
+"invite_enter_code_prompt"        = "Oder Einladungscode eingeben";
+"invite_copy_code_prompt"         = "Oder kopiere diesen Code";
+
 "invite_error_alert_title"        = "Einladung fehlgeschlagen";
 "invite_error_rejected_by_server" = "Der Code wurde abgelehnt";
 
-
-"invite_code_sheet_title"         = "Einladungs Code";
-"invite_code_enter_dialog_title"  = "Einladungscode eingeben";
-"invite_code_enter_placeholder"   = "Einladungs Code";
-"invite_code_fetch_failed"        = "Codeabruf fehlgeschlagen";
 "invite_no_xo_qr_code_title"      = "Kein Hoccer XO Code";
-"invite_scanner_prompt"           = "Suche nach xo QR Codes...";
 
 //==============================================================================
 // Keys
