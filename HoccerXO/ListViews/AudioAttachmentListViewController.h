@@ -8,6 +8,6 @@
 
 #import "HXOTableViewController.h"
 
-@interface AudioAttachmentListViewController : HXOTableViewController
+@interface AudioAttachmentListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate>
 
 @end
