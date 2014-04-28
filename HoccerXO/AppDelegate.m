@@ -135,6 +135,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     } else {
         [self setupDone: NO];
     }
+#ifdef DEBUG
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.193:8080/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.193:8081/" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+#endif
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
     NSString * lastRunBuildNumber = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
@@ -817,8 +824,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (NSString *) userAgent {
 	if (userAgent == nil) {
-        userAgent = [NSString stringWithFormat: @"%@ %@ / %@ / %@ %@",
+        userAgent = [NSString stringWithFormat: @"%@ %@ %@ / %@ / %@ %@",
                      [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
                      [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
                      [UIDevice currentDevice].model,
                      [UIDevice currentDevice].systemName,

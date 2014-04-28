@@ -2097,7 +2097,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact disinvited:disinvited];
     } else {
         // now check if we have to update the encrypted group key
-        if (![group isEqual:myMembership.contact] || group.iCanSetKeys) {
+        if (![myMembership isOwnMembership] || group.iCanSetKeys) {
             // not us or we are admin
             [self ifNeededUpdateGroupKeyForMember:myMembership];
         } else {
@@ -3413,10 +3413,12 @@ static NSTimer * _stateNotificationDelayTimer;
                              @"systemName"     : [UIDevice currentDevice].systemName,
                              @"systemVersion"  : [UIDevice currentDevice].systemVersion,
                              @"clientName"     : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-                             @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
+                             @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
+                             @"clientBuildNumber"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
                              @"clientLanguage" : NSLocalizedString(@"language_code", nil),
                              @"supportTag"     : supportTag
                              };
+    
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:initParams];
     if (hasCrashed) {
         params[@"clientCrashed"] = @(hasCrashed);
