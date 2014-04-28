@@ -10,7 +10,7 @@
 
 #import "AppDelegate.h"
 #import "Attachment.h"
-#import "tab_settings.h"
+#import "tab_attachments.h"
 
 
 @interface AudioAttachmentListViewController ()
@@ -31,7 +31,7 @@ static NSString *reuseIdentifier = @"audio_attachment";
     [super awakeFromNib];
     
     NSString *title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
-    self.tabBarItem.image = [[[tab_settings alloc] init] image];
+    self.tabBarItem.image = [[[tab_attachments alloc] init] image];
     self.tabBarItem.title = title;
     self.navigationItem.title = title;
 

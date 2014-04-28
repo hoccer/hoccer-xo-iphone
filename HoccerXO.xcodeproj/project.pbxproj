@@ -167,6 +167,10 @@
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
+		6A937A02190EADAC00221B82 /* tab_attachments.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A00190EADAC00221B82 /* tab_attachments.pcvd */; };
+		6A937A03190EADAC00221B82 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A01190EADAC00221B82 /* tab_attachments.svg */; };
+		6A937A14190EADC200221B82 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A937A13190EADC200221B82 /* tab_attachments.m */; };
+		6A937A15190EADC200221B82 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A937A13190EADC200221B82 /* tab_attachments.m */; };
 		C53EBCF7190AA77F0016ACCF /* AudioAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C53EBCF6190AA77F0016ACCF /* AudioAttachmentListViewController.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -669,6 +673,10 @@
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6A937A00190EADAC00221B82 /* tab_attachments.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tab_attachments.pcvd; sourceTree = "<group>"; };
+		6A937A01190EADAC00221B82 /* tab_attachments.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tab_attachments.svg; sourceTree = "<group>"; };
+		6A937A12190EADC200221B82 /* tab_attachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tab_attachments.h; sourceTree = "<group>"; };
+		6A937A13190EADC200221B82 /* tab_attachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tab_attachments.m; sourceTree = "<group>"; };
 		C53EBCF5190AA77F0016ACCF /* AudioAttachmentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentListViewController.h; sourceTree = "<group>"; };
 		C53EBCF6190AA77F0016ACCF /* AudioAttachmentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentListViewController.m; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
@@ -1594,6 +1602,10 @@
 		63E9B00318F3151B00EFF829 /* Tab Bar */ = {
 			isa = PBXGroup;
 			children = (
+				6A937A12190EADC200221B82 /* tab_attachments.h */,
+				6A937A13190EADC200221B82 /* tab_attachments.m */,
+				6A937A00190EADAC00221B82 /* tab_attachments.pcvd */,
+				6A937A01190EADAC00221B82 /* tab_attachments.svg */,
 				63B78FF818D4D6C1003A9125 /* tab_chats.h */,
 				63B78FF918D4D6C1003A9125 /* tab_chats.m */,
 				63E9B00418F3156C00EFF829 /* tab_chats.pcvd */,
@@ -2113,6 +2125,7 @@
 				E9A85D9C184FD1AD00EB9B68 /* chatbar-attachment-icon-contact.png in Resources */,
 				63AE45501705E1440099F0CB /* MainStoryboard_iPad.storyboard in Resources */,
 				63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */,
+				6A937A03190EADAC00221B82 /* tab_attachments.svg in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
 				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
@@ -2134,6 +2147,7 @@
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
+				6A937A02190EADAC00221B82 /* tab_attachments.pcvd in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
@@ -2206,6 +2220,7 @@
 			files = (
 				6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */,
 				6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */,
+				6A937A15190EADC200221B82 /* tab_attachments.m in Sources */,
 				6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */,
 				6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */,
 				6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */,
@@ -2329,6 +2344,7 @@
 				E9D1145E1732E74000737EF7 /* Vcard.m in Sources */,
 				E9D1148A1736702E00737EF7 /* GCHTTPRequestOperation.m in Sources */,
 				E9D1148B1736702E00737EF7 /* GCImageRequestOperation.m in Sources */,
+				6A937A14190EADC200221B82 /* tab_attachments.m in Sources */,
 				63808A2F185A11B60001AC96 /* AttachmentSection.m in Sources */,
 				E9D1148C1736702E00737EF7 /* GCJSONRequestOperation.m in Sources */,
 				E9D1148D1736702E00737EF7 /* GCNetworkQueue.m in Sources */,
