@@ -627,6 +627,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if ( ! _groupMemberSection) {
         _groupMemberSection = [DatasheetSection datasheetSectionWithIdentifier: @"group_member_section"];
         _groupMemberSection.delegate = self;
+        _groupMemberSection.titleTextAlignment = NSTextAlignmentCenter;
     }
     return _groupMemberSection;
 }

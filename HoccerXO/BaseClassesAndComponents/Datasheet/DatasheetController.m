@@ -681,6 +681,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     copy.footerViewIdentifier = _footerViewIdentifier;
     copy.headerViewIdentifier = _headerViewIdentifier;
     copy.title = _title;
+    copy.titleTextAlignment = _titleTextAlignment;
     copy.footerText = _footerText;
     copy.delegate = _delegate;
     copy.items = _items;

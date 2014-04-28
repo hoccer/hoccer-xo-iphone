@@ -153,15 +153,15 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic,strong) id inspectedObject;
 
-@property (nonatomic, strong)   NSString    * title;
-@property (nonatomic, strong)   NSString    * backButtonTitle;
-@property (nonatomic, strong)   DatasheetSection     * items;
-@property (nonatomic, readonly) DatasheetSection     * currentItems;
-@property (nonatomic, assign)   BOOL          isEditable;
-@property (nonatomic, assign)   BOOL          isCancelable;
-@property (nonatomic, readonly) DatasheetMode mode;
-@property (nonatomic, readonly) BOOL          isEditing;
-@property (nonatomic, readonly) BOOL          allItemsValid;
+@property (nonatomic, strong)   NSString         * title;
+@property (nonatomic, strong)   NSString         * backButtonTitle;
+@property (nonatomic, strong)   DatasheetSection * items;
+@property (nonatomic, readonly) DatasheetSection * currentItems;
+@property (nonatomic, assign)   BOOL               isEditable;
+@property (nonatomic, assign)   BOOL               isCancelable;
+@property (nonatomic, readonly) DatasheetMode      mode;
+@property (nonatomic, readonly) BOOL               isEditing;
+@property (nonatomic, readonly) BOOL               allItemsValid;
 
 @property (nonatomic, weak)     UIViewController<DatasheetControllerDelegate> * delegate;
 
