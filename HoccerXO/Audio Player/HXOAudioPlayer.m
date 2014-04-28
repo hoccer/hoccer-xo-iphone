@@ -41,6 +41,9 @@
     
     if (self.player) {
         [AppDelegate setMusicAudioSession];
+        [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+        [[AppDelegate instance] becomeFirstResponder];
+
         [self.player play];
         self.isPlaying = YES;
     } else {
@@ -52,7 +55,6 @@
 
 - (void) pause {
     [self.player pause];
-    [AppDelegate setDefaultAudioSession];
     self.isPlaying = NO;
 }
 
@@ -77,6 +79,9 @@
 
 - (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *) player successfully: (BOOL) flag {
     [AppDelegate setDefaultAudioSession];
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [[AppDelegate instance] resignFirstResponder];
+
     self.player = nil;
     self.isPlaying = NO;
 }

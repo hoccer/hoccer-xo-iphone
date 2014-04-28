@@ -22,6 +22,7 @@
 #import "TestFlight.h"
 #import "HXOUI.h"
 #import "ChatViewController.h"
+#import "HXOAudioPlayer.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
@@ -1352,6 +1353,41 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         freeifaddrs(interfaces);
     }
     return [addresses count] ? addresses : nil;
+}
+
+#pragma mark - Remote control event handling
+
+- (void) remoteControlReceivedWithEvent:(UIEvent *)event {
+    if (event.type == UIEventTypeRemoteControl) {
+        HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
+
+        switch (event.subtype) {
+            case UIEventSubtypeRemoteControlPause:
+                [player pause];
+                break;
+
+            case UIEventSubtypeRemoteControlPlay:
+                [player playURL:[player url]];
+                break;
+                
+            case UIEventSubtypeRemoteControlTogglePlayPause:
+                if (player.isPlaying) {
+                    [player pause];
+                } else {
+                    [player playURL:[player url]];
+                }
+                break;
+                
+            case UIEventSubtypeRemoteControlPreviousTrack:
+                break;
+                
+            case UIEventSubtypeRemoteControlNextTrack:
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 @end
