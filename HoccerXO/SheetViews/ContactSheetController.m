@@ -242,19 +242,18 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
-                [self.chatBackend updateGroup:newGroup]; // <-- don't know if this is supposed to be like this, but right now we do never call updateGroup:
-                                                         // looks good to me... [DS]
+                [self.chatBackend updateGroup:newGroup];
                 for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
                     [self.chatBackend inviteGroupMember: self.groupInStatuNascendi.members[i] toGroup: newGroup onDone:^(BOOL success) {
                         // yeah, baby
                     }];
                 }
-                
+
                 self.inspectedObject = newGroup;
             }
         }];
     } else if (self.group) {
-        [self.chatBackend updateGroup: self.group]; // if we are editing a group, we need to call updateGroup:
+        [self.chatBackend updateGroup: self.group];
     }
 }
 
@@ -600,7 +599,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
 - (NSAttributedString*) groupMemberSectionTitle {
     NSMutableArray * admins = [[NSMutableArray alloc] init];
-    if (self.group.iAmAdmin) {
+    if (self.group.iAmAdmin || self.groupInStatuNascendi) {
         [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
     }
     [self.group.members enumerateObjectsUsingBlock:^(GroupMembership* member, BOOL *stop) {
