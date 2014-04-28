@@ -33,6 +33,8 @@
 
 @interface ProfileSetupSheet : ProfileSheetController
 
+@property (nonatomic,assign) BOOL performRegistration;
+
 @end
 
 @implementation SetupViewController
@@ -141,6 +143,7 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     if ([segue.identifier isEqualToString: @"showProfileSetup"]) {
         DatasheetViewController * vc = segue.destinationViewController;
+        ((ProfileSetupSheet*)vc.dataSheetController).performRegistration = [item isEqual: self.optionCreateNew];
         vc.inspectedObject = [UserProfile sharedProfile];
     }
 }
@@ -153,7 +156,8 @@
     if ( ! self.isEditing) {
         [self editModeChanged: nil];
     }
-    [self.delegate makeFirstResponder: [self indexPathForItem: self.nicknameItem]];
+    // doesn't look good on 3.5" displays
+    // [self.delegate makeFirstResponder: [self indexPathForItem: self.nicknameItem]];
     [super inspectedObjectDidChange];
 }
 
@@ -171,7 +175,7 @@
 
 - (void) didUpdateInspectedObject {
     [super didUpdateInspectedObject];
-    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: ! [UserProfile sharedProfile].isRegistered];
+    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: self.performRegistration];
     [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [((UIViewController*)self.delegate).navigationController dismissViewControllerAnimated: YES completion: nil];
 }
