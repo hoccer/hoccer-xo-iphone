@@ -136,11 +136,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         [self setupDone: NO];
     }
 #ifdef DEBUG
+// #define DEFINE_OTHER_SERVERS
+#ifdef DEFINE_OTHER_SERVERS
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.193:8080/" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.193:8081/" forKey: kHXOForceFilecacheURL];
     [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
     [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
     [[HXOUserDefaults standardUserDefaults] synchronize];
+#endif
 #endif
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
