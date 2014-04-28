@@ -74,6 +74,7 @@
 // This creates the view and adds it at the end of the view chain so it doesn't interfere, but is still present */
 -(void) addDisabledRecognizer {
     self.contextGestureRecognizerViewForDisabled = [[CopyableUITextFieldResponderView alloc] initWithFrame:self.bounds];
+    self.contextGestureRecognizerViewForDisabled.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.contextGestureRecognizerViewForDisabled.userInteractionEnabled = NO;
     [self addSubview:self.contextGestureRecognizerViewForDisabled];
 }

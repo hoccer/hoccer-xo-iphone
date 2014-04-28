@@ -11,10 +11,11 @@
 #import "HXOUI.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
-#import "CopyableLabel.h"
 #import "QREncoder.h"
 #import "HXOLabel.h"
 #import "UIAlertView+BlockExtensions.h"
+#import "CopyableUITextField.h"
+#import "HXOThemedNavigationController.h"
 
 @interface InvitationCodeViewController ()
 
@@ -22,21 +23,15 @@
 @property (nonatomic, strong)   NSMutableDictionary        * codes;
 @property (nonatomic, strong)   NSArray                    * codesInView;
 
-@property (nonatomic, strong)   UIScrollView               * drawerScrollView;
-@property (nonatomic, strong)   UIView                     * codeDrawerView;
-@property (nonatomic, strong)   UIView                     * drawerHandleView;
-@property (nonatomic, strong)   UIView                     * headerView;
+@property (nonatomic, strong)   UISegmentedControl         * scanOrGenerateToggle;
+@property (nonatomic, strong)   UIToolbar                  * toolbar;
+@property (nonatomic, strong)   NSLayoutConstraint         * keyboardHeight;
+@property (nonatomic, strong)   UIView                     * qrBackgroundView;
 @property (nonatomic, strong)   UIImageView                * qrCodeView;
-@property (nonatomic, strong)   CopyableLabel              * codeLabel;
-@property (nonatomic, strong)   UILabel                    * codeDrawerTitle;
+@property (nonatomic, strong)   CopyableUITextField        * codeTextField;
 @property (nonatomic, strong)   AVCaptureVideoPreviewLayer * videoLayer;
-@property (nonatomic, strong)   HXOLabel                   * statusText;
+@property (nonatomic, strong)   HXOLabel                   * promptLabel;
 @property (nonatomic, readonly) HXOBackend                 * chatBackend;
-@property (nonatomic, assign)   BOOL                         isDrawerExtended;
-
-@end
-
-@interface PullUpView : UIScrollView
 
 @end
 
@@ -49,137 +44,104 @@
 
     self.view.backgroundColor = [UIColor lightGrayColor];
 
-    CGFloat headerHeight = 4 * kHXOGridSpacing;
-    self.headerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, headerHeight)];
-    self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.headerView.backgroundColor = [UIColor colorWithWhite: 0 alpha: 0.3];
-    [self.view addSubview: self.headerView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-    CGFloat contentWidth = self.view.bounds.size.width - 2 * kHXOCellPadding;
-    self.codeDrawerTitle = [[UILabel alloc] initWithFrame: CGRectZero];
-    self.codeDrawerTitle.text = NSLocalizedString(@"invite_code_sheet_title", nil);
-    self.codeDrawerTitle.textAlignment = NSTextAlignmentCenter;
-    self.codeDrawerTitle.font = [UIFont systemFontOfSize: 18];
-    //self.codeDrawerTitle.textColor = [HXOUI theme].smallBoldTextColor;
-    [self.codeDrawerTitle sizeToFit];
-    CGRect frame = self.codeDrawerTitle.frame;
-    frame.size.width = contentWidth;
-    frame.origin.x = kHXOCellPadding;
-    frame.origin.y = self.headerView.bounds.size.height + kHXOCellPadding;
-    self.codeDrawerTitle.frame = frame;
-
-    CGFloat y = self.codeDrawerTitle.frame.origin.y + self.codeDrawerTitle.frame.size.height;
-    y += kHXOCellPadding;
-
-    self.qrCodeView = [[UIImageView alloc] initWithFrame: CGRectMake(kHXOCellPadding, y, contentWidth, contentWidth)];
-    //self.qrCodeView.backgroundColor = [UIColor lightGrayColor];
-
-    y += self.qrCodeView.frame.size.height + kHXOCellPadding;
-
-    self.codeLabel = [[CopyableLabel alloc] initWithFrame: CGRectZero];
-    self.codeLabel.font = [UIFont systemFontOfSize: 36];
-    self.codeLabel.text = @"0123456789";
-    [self.codeLabel sizeToFit];
-    self.codeLabel.text = @"";
-    frame = self.codeLabel.frame;
-    frame.origin.x = kHXOCellPadding;
-    frame.origin.y = y;
-    frame.size.width = contentWidth;
-    frame.size.height += kHXOGridSpacing;
-    self.codeLabel.frame = frame;
-    self.codeLabel.textAlignment = NSTextAlignmentCenter;
-    self.codeLabel.userInteractionEnabled = YES;
-    UIGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(codeLabelTapped:)];
-    [self.codeLabel addGestureRecognizer: tapGesture];
-    self.codeLabel.backgroundColor = [UIColor whiteColor];
-    self.codeLabel.layer.borderColor = [HXOUI theme].messageFieldBorderColor.CGColor;
-    self.codeLabel.layer.borderWidth = 1;
-    self.codeLabel.layer.cornerRadius = kHXOGridSpacing;
-    self.codeLabel.layer.masksToBounds = YES;
-
-    y += self.codeLabel.frame.size.height;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action: @selector(donePressed:)];
+    NSArray * items = @[NSLocalizedString(@"invite_scan_nav_title", nil), NSLocalizedString(@"invite_generate_nav_title", nil)];
+    self.scanOrGenerateToggle = [[UISegmentedControl alloc] initWithItems: items];
+    [self.scanOrGenerateToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
+    self.navigationItem.titleView = self.scanOrGenerateToggle;
 
 
-    CGFloat codeViewHeight = y + headerHeight;
 
-    self.drawerScrollView = [[PullUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, codeViewHeight)];
-    self.drawerScrollView.delegate = self;
-    self.drawerScrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    self.drawerScrollView.bounces = NO;
-    self.drawerScrollView.pagingEnabled = YES;
-    self.drawerScrollView.showsVerticalScrollIndicator = NO;
-    self.drawerScrollView.layer.masksToBounds = NO;
-    self.drawerScrollView.contentSize = CGSizeMake(self.view.bounds.size.width, 2 * self.drawerScrollView.bounds.size.height);
-    self.drawerScrollView.contentOffset = CGPointMake(0, self.drawerScrollView.bounds.size.height);
-    //self.drawerScrollView.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview: self.drawerScrollView];
-    //[self.view sendSubviewToBack: self.drawerScrollView];
-    [self.view bringSubviewToFront: self.headerView];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
 
-    self.codeDrawerView = [[UIToolbar alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, codeViewHeight)];
-    self.codeDrawerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.drawerScrollView addSubview: self.codeDrawerView];
-    [self.codeDrawerView addSubview: self.codeDrawerTitle];
-    [self.codeDrawerView addSubview: self.qrCodeView];
-    [self.codeDrawerView addSubview: self.codeLabel];
-
-    UIButton * doneButton = [UIButton buttonWithType: UIButtonTypeCustom];
-    [doneButton setTitle: NSLocalizedString(@"done", nil) forState: UIControlStateNormal];
-    [doneButton sizeToFit];
-    frame = doneButton.frame;
-    frame.origin.x = kHXOCellPadding;
-    doneButton.frame = frame;
-    [doneButton addTarget: self action: @selector(donePressed:) forControlEvents: UIControlEventTouchUpInside];
-    [self.headerView addSubview: doneButton];
-    
-    UIButton * enterButton = [UIButton buttonWithType: UIButtonTypeCustom];
-    enterButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [enterButton setTitle: NSLocalizedString(@"enter", nil) forState: UIControlStateNormal];
-    [enterButton sizeToFit];
-    frame = enterButton.frame;
-    frame.origin.x = self.view.bounds.size.width - (frame.size.width + kHXOCellPadding);
-    enterButton.frame = frame;
-    [enterButton addTarget: self action: @selector(enterPressed:) forControlEvents: UIControlEventTouchUpInside];
-    [self.headerView addSubview: enterButton];
-
-    CGFloat handleWidth = 60;
-    self.drawerHandleView = [[UIView alloc] initWithFrame: CGRectMake(0.5 * (self.view.bounds.size.width - handleWidth), self.codeDrawerView.frame.origin.y + self.codeDrawerView.frame.size.height + headerHeight + kHXOGridSpacing, handleWidth, kHXOGridSpacing)];
-    self.drawerHandleView.backgroundColor = [UIColor colorWithWhite: 1.0 alpha: 0.5];
-    self.drawerHandleView.layer.cornerRadius = 0.5 * self.drawerHandleView.bounds.size.height;
-    [self.drawerScrollView addSubview: self.drawerHandleView];
+    [self.view addGestureRecognizer:tap];
 
 
-    self.statusText = [[HXOLabel alloc] initWithFrame: CGRectZero];
-    self.statusText.translatesAutoresizingMaskIntoConstraints = NO;
-    self.statusText.autoresizingMask = UIViewAutoresizingNone;
-    self.statusText.font = [HXOUI theme].smallTextFont;
-    self.statusText.text = NSLocalizedString(@"invite_scanner_prompt", nil);
-    self.statusText.textInsets = UIEdgeInsetsMake(0, kHXOGridSpacing, 0, kHXOGridSpacing);
-    [self.statusText sizeToFit];
-    self.statusText.textColor = [UIColor whiteColor];
-    self.statusText.backgroundColor = self.headerView.backgroundColor;
-    self.statusText.layer.cornerRadius = 0.5 * self.statusText.bounds.size.height;
-    self.statusText.layer.masksToBounds = YES;
-    [self.view addSubview: self.statusText];
-    [self.view sendSubviewToBack: self.statusText];
+    self.toolbar = [[UIToolbar alloc] initWithFrame: CGRectZero];
+    self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview: self.toolbar];
 
-    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.statusText
+
+    self.keyboardHeight = [NSLayoutConstraint constraintWithItem: self.view attribute: NSLayoutAttributeBottom relatedBy: NSLayoutRelationEqual toItem: self.toolbar attribute:NSLayoutAttributeBottom multiplier: 1 constant: 0];
+    [self.view addConstraint: self.keyboardHeight];
+
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|-[bar]-|" options: 0 metrics: nil views: @{@"bar": self.toolbar}]];
+
+    self.promptLabel = [[HXOLabel alloc] initWithFrame: CGRectZero];
+    self.promptLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.promptLabel.font = [HXOUI theme].smallTextFont;
+    self.promptLabel.text = NSLocalizedString(@"invite_enter_code_prompt", nil);
+    [self.promptLabel sizeToFit];
+    [self.toolbar addSubview: self.promptLabel];
+
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.promptLabel
                                                            attribute:NSLayoutAttributeCenterX
                                                            relatedBy:NSLayoutRelationEqual
                                                               toItem:self.view
                                                            attribute:NSLayoutAttributeCenterX
                                                           multiplier:1.f constant:0.f]];
 
-    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.statusText
-                                                           attribute:NSLayoutAttributeBottom
-                                                           relatedBy:NSLayoutRelationEqual
-                                                              toItem:self.view
-                                                           attribute:NSLayoutAttributeBottom
-                                                          multiplier:1.f constant: -50.f]];
+    UIFont * font = [UIFont systemFontOfSize: 36];
+    CGRect frame;
+    frame.origin.x = kHXOCellPadding;
+    frame.origin.y = kHXOGridSpacing;
+    frame.size.height = font.lineHeight;
+    self.codeTextField = [[CopyableUITextField alloc] initWithFrame: frame];
+    self.codeTextField.translatesAutoresizingMaskIntoConstraints = NO;
+    //self.codeTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.codeTextField.font = font;
+    self.codeTextField.textAlignment = NSTextAlignmentCenter;
+    self.codeTextField.layer.borderColor = [HXOUI theme].messageFieldBorderColor.CGColor;
+    self.codeTextField.layer.borderWidth = 1;
+    self.codeTextField.layer.cornerRadius = kHXOGridSpacing;
+    self.codeTextField.layer.masksToBounds = YES;
+    // Wierd issue: Not setting the color twice leaves my iPhone4 with an invisible text field (Works in simulator) :-/
+    self.codeTextField.backgroundColor = [UIColor orangeColor];
+    self.codeTextField.backgroundColor = [UIColor whiteColor];
+    self.codeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.codeTextField.returnKeyType = UIReturnKeySend;
+    self.codeTextField.spellCheckingType = UITextSpellCheckingTypeNo;
+    self.codeTextField.delegate = self;
+    [self.toolbar addSubview: self.codeTextField];
+
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[field]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    [self.toolbar addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: @{@"field": self.codeTextField}]];
+
+    format = [NSString stringWithFormat: @"V:|-%f-[label(>=%f)]-%f-[field(>=%f)]-%f-|", kHXOGridSpacing, self.promptLabel.font.lineHeight, kHXOGridSpacing, font.lineHeight, kHXOGridSpacing];
+    [self.toolbar addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: @{@"label": self.promptLabel, @"field": self.codeTextField}]];
+
+    self.qrBackgroundView = [[UIToolbar alloc] initWithFrame: CGRectZero];
+    self.qrBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.qrBackgroundView.alpha = 0;
+    [self.view addSubview: self.qrBackgroundView];
+
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|-[view]-|" options: 0 metrics: nil views: @{@"view": self.qrBackgroundView}]];
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.qrBackgroundView attribute: NSLayoutAttributeTop relatedBy: NSLayoutRelationEqual toItem: self.topLayoutGuide attribute: NSLayoutAttributeBottom multiplier: 1 constant: 0]];
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.qrBackgroundView attribute: NSLayoutAttributeBottom relatedBy: NSLayoutRelationEqual toItem: self.toolbar attribute: NSLayoutAttributeTop multiplier: 1 constant: -1]];
+
+
+    self.qrCodeView = [[UIImageView alloc] initWithFrame: CGRectZero];
+    self.qrCodeView.contentMode = UIViewContentModeScaleAspectFit;
+    self.qrCodeView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.qrBackgroundView addSubview: self.qrCodeView];
+    format = [NSString stringWithFormat: @"H:|-%f-[qr]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    [self.qrBackgroundView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: @{@"qr": self.qrCodeView}]];
+    format = [NSString stringWithFormat: @"V:|-%f-[qr]-(>=%f)-|", kHXOCellPadding, kHXOCellPadding];
+    [self.qrBackgroundView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: @{@"qr": self.qrCodeView}]];
+    //self.qrCodeView.backgroundColor = [UIColor lightGrayColor];
+
+    self.scanOrGenerateToggle.selectedSegmentIndex = 0;
+
 }
 
 - (void) dealloc {
-    self.drawerScrollView.delegate = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -189,21 +151,7 @@
 
 - (void) viewWillAppear: (BOOL) animated {
     [super viewWillAppear: animated];
-
     [self setupCaptureSession];
-
-    self.drawerScrollView.layer.masksToBounds = YES;
-}
-
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear: animated];
-    
-    self.drawerScrollView.layer.masksToBounds = NO;
-}
-
-- (void) viewWillDisappear: (BOOL) animated {
-    [super viewWillDisappear: animated];
-    self.drawerScrollView.layer.masksToBounds = YES;
 }
 
 - (void) viewDidDisappear: (BOOL) animated {
@@ -216,8 +164,12 @@
     return NO;
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return YES;
+- (NSUInteger) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
 }
 
 #pragma mark - Video Capture and (QR) Codes
@@ -299,50 +251,22 @@
 
 #pragma mark - UI Actions
 
-- (void) donePressed: (id) sender {
-    [self dismissViewControllerAnimated: YES completion: nil];
-}
+- (void) segmentChanged: (UISegmentedControl*) segmentedControl {
+    BOOL generate = segmentedControl.selectedSegmentIndex == 1;
+    self.promptLabel.text = NSLocalizedString(generate ? @"invite_copy_code_prompt" : @"invite_enter_code_prompt", nil);
+    self.codeTextField.text = @"";
+    self.codeTextField.enabled = ! generate;
+    self.qrCodeView.image = nil;
+    self.qrBackgroundView.alpha = generate ? 1 : 0;
 
-- (void) enterPressed: (id) sender {
-    [HXOUI enterStringAlert: nil withTitle: NSLocalizedString(@"invite_code_enter_dialog_title", nil) withPlaceHolder: NSLocalizedString(@"invite_code_enter_placeholder", nil) onCompletion:^(NSString *entry) {
-        if (entry) {
-            [self.chatBackend pairByToken: entry];
-        }
-    }];
-}
-
-- (void) codeLabelTapped: (UIGestureRecognizer*) recognizer {
-    [self.codeLabel becomeFirstResponder];
-    UIMenuController *menuController = [UIMenuController sharedMenuController];
-    [menuController setTargetRect: self.codeLabel.bounds inView: self.codeLabel];
-    [menuController setMenuVisible:YES animated:YES];
-}
-
-- (BOOL) canBecomeFirstResponder {
-    return YES;
-}
-
-#pragma mark - Code Drawer View
-
-- (void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat pagingPosition = scrollView.contentOffset.y / scrollView.bounds.size.height;
-    CGRect frame = self.drawerHandleView.frame;
-    frame.origin.y = [self handlePosition: pagingPosition];
-    self.drawerHandleView.frame = frame;
-    CGFloat white, alpha;
-    [self.drawerHandleView.backgroundColor getWhite: &white alpha: &alpha];
-    self.drawerHandleView.backgroundColor = [UIColor colorWithWhite: pagingPosition alpha: alpha];
-}
-
-- (void) scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if (fabs(scrollView.contentOffset.y) < 0.00001) {
-        if ( ! self.isDrawerExtended) {
-            [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
-                if (token == nil || ! [token isKindOfClass:[NSString class]]) {
-                    self.codeDrawerTitle.text = NSLocalizedString(@"invite_code_fetch_failed", nil);
-                    return;
-                }
-                self.codeLabel.text = token;
+    if (generate) {
+        [self.chatBackend generatePairingTokenWithHandler: ^(id token) {
+            if (token == nil || ! [token isKindOfClass:[NSString class]]) {
+                NSLog(@"ERROR: Failed to get invite token: %@", token);
+                return;
+            }
+            if (segmentedControl.selectedSegmentIndex == 1) { // monkey guard
+                self.codeTextField.text = token;
                 NSString * hxoURL = [NSString stringWithFormat: @"hxo://%@", token];
                 DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
                 [UIView transitionWithView: self.qrCodeView
@@ -351,27 +275,63 @@
                                 animations: ^{
                                     self.qrCodeView.image = [QREncoder renderTransparentDataMatrix: qrMatrix imageDimension: self.qrCodeView.bounds.size.width];
                                 } completion:nil];
-            }];
-        }
-        self.isDrawerExtended = YES;
-    } else {
-        [self clearCodeView];
-        self.isDrawerExtended = NO;
+            }
+        }];
     }
 }
 
-- (void) clearCodeView {
-    self.codeLabel.text = nil;
+- (void) donePressed: (id) sender {
+    if (self.scanOrGenerateToggle.selectedSegmentIndex == 0 && self.codeTextField.text && ! [self.codeTextField.text isEqualToString: @""]) {
+        [self.chatBackend pairByToken: self.codeTextField.text];
+    }
+    self.codeTextField.text = @"";
     self.qrCodeView.image = nil;
-    self.codeDrawerTitle.text = NSLocalizedString(@"invite_code_sheet_title", nil);
-    self.drawerScrollView.contentOffset = CGPointMake(0, self.drawerScrollView.bounds.size.height);
+    [self dismissViewControllerAnimated: YES completion: nil];
 }
 
-- (CGFloat) handlePosition: (CGFloat) t {
-    CGFloat drawerBottom = self.codeDrawerView.frame.origin.y + self.codeDrawerView.frame.size.height;
-    CGFloat min = drawerBottom - (self.drawerHandleView.bounds.size.height + kHXOGridSpacing);
-    CGFloat max = drawerBottom + self.headerView.bounds.size.height + kHXOGridSpacing;
-    return min + t * (max - min);
+#pragma mark - Keyboard Handling
+
+- (void)keyboardWillShow:(NSNotification*) notification {
+    NSTimeInterval duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationOptions curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    CGRect keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGFloat height = orientation == UIInterfaceOrientationIsPortrait(orientation) ? keyboardFrame.size.height : keyboardFrame.size.width;
+
+    [UIView animateWithDuration: duration delay: 0 options: curve animations:^{
+        self.keyboardHeight.constant = height;
+        [self.view layoutIfNeeded];
+    } completion: nil];
+
+}
+
+- (void)keyboardWillHide:(NSNotification*) notification {
+    NSTimeInterval duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationOptions curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+
+    [UIView animateWithDuration: duration delay: 0 options: curve animations:^{
+        self.keyboardHeight.constant = 0;
+        [self.view layoutIfNeeded];
+    } completion: nil];
+    
+}
+
+- (void) dismissKeyboard {
+    [self.codeTextField resignFirstResponder];
+}
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    [self.chatBackend pairByToken: textField.text];
+    textField.text = @"";
+    [textField resignFirstResponder];
+    return YES;
+}
+
+#pragma mark - Code Drawer View
+
+- (void) clearCodeView {
+    self.codeTextField.text = nil;
+    self.qrCodeView.image = nil;
 }
 
 #pragma mark - Outline Rendering & Flashes
@@ -415,13 +375,3 @@
 
 @end
 
-@implementation PullUpView
-
-- (UIView*) hitTest: (CGPoint) point withEvent: (UIEvent*) event {
-    if (point.y > self.bounds.size.height + 80) { // XXX
-        return nil;
-    }
-    return [super hitTest:point withEvent:event];
-}
-
-@end

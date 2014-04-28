@@ -126,8 +126,8 @@
 // Contact - uses strings from profile
 //==============================================================================
 
-"contact_list_nav_title" = "Contacts";
-"contact_nav_title"  = "Contact";
+"contact_list_nav_title"                        = "Contacts";
+"contact_nav_title"                             = "Contact";
 
 "contact_chat_title"                            = "Chat";
 "contact_unblock_btn_title_format"              = "Unblock %@";
@@ -187,7 +187,7 @@
 
 "credentials_import_btn_title"               = "Import Login Credentials";
 "credentials_import_safety_question"         = "Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
-"credentials_key_import_confirm_btn_title"       = "Import";
+"credentials_key_import_confirm_btn_title"   = "Import";
 
 "credentials_delete_btn_title"               = "Delete Login Credentials";
 "credentials_delete_safety_question"         = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
@@ -288,15 +288,16 @@
 "invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
 "invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
 
+"invite_scan_nav_title"           = "Scan";
+"invite_generate_nav_title"       = "Generate";
+
+"invite_enter_code_prompt"        = "Or enter invite code";
+"invite_copy_code_prompt"         = "Or copy this code";
+
 "invite_error_alert_title"        = "Invite failed";
 "invite_error_rejected_by_server" = "The code has been rejected";
 
-"invite_code_sheet_title"         = "Invite Code";
-"invite_code_enter_dialog_title"  = "Enter an xo invite code";
-"invite_code_enter_placeholder"   = "Invite Code";
-"invite_code_fetch_failed"        = "Failed to get code";
 "invite_no_xo_qr_code_title"      = "Not a Hoccer XO code";
-"invite_scanner_prompt"           = "Looking for xo QR codes...";
 
 //==============================================================================
 // Keys

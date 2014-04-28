@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -125,7 +125,7 @@
                 <exit id="0GB-ZL-UwX" userLabel="Exit" sceneMemberID="exit"/>
                 <customObject id="ct6-Sp-MIE" customClass="ContactSheetController"/>
             </objects>
-            <point key="canvasLocation" x="1128" y="-1123"/>
+            <point key="canvasLocation" x="1128" y="-1141"/>
         </scene>
         <!--Key View Controller-->
         <scene sceneID="Yn8-nt-cME">
@@ -148,7 +148,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mZs-Jr-ULf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="STd-pg-7UE" customClass="KeySheetController"/>
             </objects>
-            <point key="canvasLocation" x="1662" y="-1095"/>
+            <point key="canvasLocation" x="1662" y="-1141"/>
         </scene>
         <!--Modal View with Navigation Bar Helper-->
         <scene sceneID="FUT-t7-A6G">
@@ -185,8 +185,8 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="Kn0-3b-fVd"/>
-                        <segue destination="RTv-PU-Cyy" kind="modal" identifier="showInviteCodeViewController" id="2U5-We-Ovb"/>
                         <segue destination="VTA-Oa-XCk" kind="push" identifier="showGroup" id="5v1-4P-ajP"/>
+                        <segue destination="Ux6-gE-xyd" kind="modal" identifier="showInviteCodeViewController" id="S5q-xe-rQg"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -410,7 +410,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="21" kind="push" identifier="showChat" id="4Tx-uH-B8w"/>
-                        <segue destination="RTv-PU-Cyy" kind="modal" identifier="showInviteCodeViewController" id="BtW-Nz-U6U"/>
+                        <segue destination="Ux6-gE-xyd" kind="modal" identifier="showInviteCodeViewController" id="fCA-bC-lkd"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
@@ -472,7 +472,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>
                 <exit id="yCh-Sb-rCK" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1128" y="-1914"/>
+            <point key="canvasLocation" x="1128" y="-1932"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="Cde-1N-k7V">
@@ -483,7 +483,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1662" y="-313"/>
+            <point key="canvasLocation" x="1662" y="-331"/>
         </scene>
         <!--Server View Controller - ServerViewController-->
         <scene sceneID="wA0-Za-oFP">
@@ -598,6 +598,22 @@
             </objects>
             <point key="canvasLocation" x="1014" y="723"/>
         </scene>
+        <!--Themed Navigation Controller-->
+        <scene sceneID="Naz-dy-kRv">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="Ux6-gE-xyd" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="69b-Lz-5Vh"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Syd-8c-xlS">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="RTv-PU-Cyy" kind="relationship" relationship="rootViewController" id="YQR-y5-Tba"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AIL-MY-nIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="590" y="-2768"/>
+        </scene>
         <!--Invitation Code View Controller-->
         <scene sceneID="eWu-7T-N4a">
             <objects>
@@ -611,10 +627,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="cc7-xx-bxW"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DiA-No-hK7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="602" y="-1542"/>
+            <point key="canvasLocation" x="1128" y="-2768"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
@@ -1021,12 +1038,12 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="4Tx-uH-B8w"/>
-        <segue reference="Jku-Va-0fi"/>
-        <segue reference="KXG-tu-Cv6"/>
+        <segue reference="6i4-qU-VgJ"/>
+        <segue reference="I8w-H7-Q9a"/>
+        <segue reference="CES-Ic-Rhf"/>
         <segue reference="3XQ-ea-QwO"/>
-        <segue reference="Kn0-3b-fVd"/>
-        <segue reference="BtW-Nz-U6U"/>
+        <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="fCA-bC-lkd"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>
