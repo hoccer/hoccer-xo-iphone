@@ -471,6 +471,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self.chatBackend sendMessage:self.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
     self.currentAttachment = nil;
     self.messageField.text = @"";
+    [self textViewDidChange: self.messageField];
     [self trashCurrentAttachment];
 }
 
