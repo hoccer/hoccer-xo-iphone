@@ -24,7 +24,7 @@
     self.upDownLoadControl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
     _playbackButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.playbackButton.frame = [self attachmentControlFrame];
+    self.playbackButton.frame = CGRectMake(0, 0, self.bounds.size.width, 6 * kHXOGridSpacing);
     self.playbackButton.imageEdgeInsets = UIEdgeInsetsMake(0, self.bounds.size.width - 6 * kHXOGridSpacing, 0, 2 * kHXOGridSpacing);
     self.playbackButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self addSubview: self.playbackButton];
@@ -47,7 +47,7 @@
 }
 
 - (CGRect) attachmentControlFrame {
-    return CGRectMake(0, 0, self.bounds.size.width, 6 * kHXOGridSpacing);
+    return CGRectMake(self.bounds.size.width - (2 * kHXOGridSpacing + 4 * kHXOGridSpacing), kHXOGridSpacing, 4 * kHXOGridSpacing, 4 * kHXOGridSpacing);
 }
 
 @end
