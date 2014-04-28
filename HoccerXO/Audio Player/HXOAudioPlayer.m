@@ -58,6 +58,11 @@
     self.isPlaying = NO;
 }
 
+- (void) stop {
+    [self pause];
+    self.player = nil;
+}
+
 - (NSURL *) url {
     if (self.player) {
         return self.player.url;
@@ -82,8 +87,11 @@
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [[AppDelegate instance] resignFirstResponder];
 
-    self.player = nil;
-    self.isPlaying = NO;
+    [self stop];
+}
+
+- (void) audioPlayerBeginInterruption:(AVAudioPlayer *)player {
+    [self stop];
 }
 
 @end
