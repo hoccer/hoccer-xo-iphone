@@ -34,16 +34,6 @@ static NSString *reuseIdentifier = @"audio_attachment";
     self.tabBarItem.image = [[[tab_attachments alloc] init] image];
     self.tabBarItem.title = title;
     self.navigationItem.title = title;
-
-    NSDictionary *vars = @{ @"mediaType" : @"audio" };
-    NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsByMediaType" substitutionVariables:vars];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"humanReadableFileName" ascending: YES];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    [fetchRequest setSortDescriptors:sortDescriptors];
-    
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
-    self.fetchedResultsController.delegate = self;
-    [self.fetchedResultsController performFetch:nil];
 }
 
 - (void)viewDidLoad {
@@ -66,6 +56,22 @@ static NSString *reuseIdentifier = @"audio_attachment";
         _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
     }
     return _managedObjectModel;
+}
+
+- (NSFetchedResultsController *)fetchedResultsController {
+    if (_fetchedResultsController == nil) {
+        NSDictionary *vars = @{ @"mediaType" : @"audio" };
+        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsByMediaType" substitutionVariables:vars];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"humanReadableFileName" ascending: YES];
+        NSArray *sortDescriptors = @[sortDescriptor];
+        [fetchRequest setSortDescriptors:sortDescriptors];
+        
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _fetchedResultsController.delegate = self;
+        [_fetchedResultsController performFetch:nil];
+    }
+
+    return _fetchedResultsController;
 }
 
 #pragma mark - Table view data source
