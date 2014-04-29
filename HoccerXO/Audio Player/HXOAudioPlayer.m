@@ -8,8 +8,11 @@
 
 #import "HXOAudioPlayer.h"
 
+#import <MediaPlayer/MediaPlayer.h>
+
 #import "Attachment.h"
 #import "AppDelegate.h"
+#import "MessageItems.h"
 
 
 @interface HXOAudioPlayer ()
@@ -81,6 +84,36 @@
         } else {
             self.player = nil;
         }
+    }
+    
+    [self updateNowPlayingInfo];
+}
+
+- (void) updateNowPlayingInfo {
+    MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
+    if (self.attachment) {
+        MessageItem *messageItem = [[MessageItem alloc] initWithMessage:self.attachment.message];
+        NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
+        
+        if (messageItem.audioTitle) {
+            [nowPlayingInfo setValue:messageItem.audioTitle forKey:MPMediaItemPropertyTitle];
+        } else {
+            [nowPlayingInfo setValue:self.attachment.humanReadableFileName forKey:MPMediaItemPropertyTitle];
+        }
+
+        if (messageItem.audioArtist) {
+            [nowPlayingInfo setValue:messageItem.audioArtist forKey:MPMediaItemPropertyArtist];
+        }
+
+        if (messageItem.audioAlbum) {
+            [nowPlayingInfo setValue:messageItem.audioAlbum forKey:MPMediaItemPropertyAlbumTitle];
+        }
+
+        [nowPlayingInfo setValue:[NSNumber numberWithDouble: messageItem.audioDuration] forKey:MPMediaItemPropertyPlaybackDuration];
+
+        infoCenter.nowPlayingInfo = nowPlayingInfo;
+    } else {
+        infoCenter.nowPlayingInfo = nil;
     }
 }
 
