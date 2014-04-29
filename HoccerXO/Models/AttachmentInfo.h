@@ -1,22 +1,18 @@
 //
-//  MessageItem.h
+//  AttachmentInfo.h
 //  HoccerXO
 //
-//  Created by David Siegel on 21.12.13.
-//  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
+//  Created by Guido Lorenz on 29.04.14.
+//  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@class HXOMessage;
+@class Attachment;
 
-@interface MessageItem : NSObject
+@interface AttachmentInfo : NSObject
 
-- (id) initWithMessage: (HXOMessage*) message;
-
-@property (nonatomic,weak) HXOMessage * message;
-
-@property (nonatomic,readonly) NSAttributedString * attributedBody;
+- (id) initWithAttachment: (Attachment *) attachment;
 
 @property (nonatomic,readonly) NSString * vcardName;
 @property (nonatomic,readonly) NSString * vcardOrganization;

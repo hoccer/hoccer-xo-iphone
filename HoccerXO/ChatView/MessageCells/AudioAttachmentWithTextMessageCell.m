@@ -1,24 +1,24 @@
 //
-//  ImageAttachmentWithTextMessageCell.m
+//  AudioAttachmentWithTextMessageCell.m
 //  HoccerXO
 //
-//  Created by David Siegel on 14.12.13.
+//  Created by Nico Nußbaum on 24.04.2014
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "ImageAttachmentWithTextMessageCell.h"
+#import "AudioAttachmentWithTextMessageCell.h"
 
-#import "ImageAttachmentSection.h"
+#import "AudioAttachmentSection.h"
 #import "TextSection.h"
 
 #import "HXOUI.h"
 
-@implementation ImageAttachmentWithTextMessageCell
+@implementation AudioAttachmentWithTextMessageCell
 
 - (void) commonInit {
     [super commonInit];
 
-    _attachmentSection = [[ImageAttachmentSection alloc] initWithFrame: CGRectMake(0, 0, self.bubbleWidth, self.bubbleWidth)];
+    _attachmentSection = [[AudioAttachmentSection alloc] initWithFrame: CGRectMake(0, 0, self.bubbleWidth, self.bubbleWidth)];
 
     [self addSection: self.attachmentSection];
     [self addSection: [[TextSection alloc] initWithFrame:CGRectMake(0, 0, self.bubbleWidth, 5 * kHXOGridSpacing)]];

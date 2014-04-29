@@ -8,11 +8,8 @@
 
 #import "MessageCell.h"
 
-@class ImageAttachmentSection;
-
 @interface ImageAttachmentMessageCell : MessageCell <AttachmentMessageCell>
 
 @property (nonatomic,readonly) AttachmentSection * attachmentSection;
-@property (nonatomic,readonly) ImageAttachmentSection * imageSection;
 
 @end
