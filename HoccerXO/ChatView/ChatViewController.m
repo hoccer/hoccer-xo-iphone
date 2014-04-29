@@ -46,6 +46,7 @@
 #import "UpDownLoadControl.h"
 #import "DateSectionHeaderView.h"
 #import "MessageItem.h"
+#import "AttachmentInfo.h"
 #import "HXOHyperLabel.h"
 #import "paper_dart.h"
 #import "paper_clip.h"
@@ -1687,13 +1688,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSString * title;
     if (isComplete || isOutgoing) {
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
-            title = item.vcardName;
+            title = item.attachmentInfo.vcardName;
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
             title = NSLocalizedString(@"attachment_type_geolocation", nil);
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
             NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
             if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-                title = item.audioTitle;
+                title = item.attachmentInfo.audioTitle;
             }
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
@@ -1736,19 +1737,21 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 
     NSString * subtitle;
-    if (item.attachmentInfoLoaded) {
+    if (item.attachmentInfo) {
+        AttachmentInfo *attachmentInfo = item.attachmentInfo;
+
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
-            NSString * info = item.vcardEmail;
+            NSString * info = attachmentInfo.vcardEmail;
             if (! info) {
-                info = item.vcardOrganization;
+                info = attachmentInfo.vcardOrganization;
             }
             subtitle = info;
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-            NSString * duration = [self stringFromTimeInterval: item.audioDuration];
-            if (item.audioArtist && item.audioAlbum) {
-                subtitle = [NSString stringWithFormat:@"%@ – %@ – %@", item.audioArtist, item.audioAlbum, duration];
-            } else if (item.audioArtist || item.audioAlbum) {
-                NSString * name = item.audioAlbum ? item.audioAlbum : item.audioArtist;
+            NSString * duration = [self stringFromTimeInterval: attachmentInfo.audioDuration];
+            if (attachmentInfo.audioArtist && attachmentInfo.audioAlbum) {
+                subtitle = [NSString stringWithFormat:@"%@ – %@ – %@", attachmentInfo.audioArtist, attachmentInfo.audioAlbum, duration];
+            } else if (attachmentInfo.audioArtist || attachmentInfo.audioAlbum) {
+                NSString * name = attachmentInfo.audioAlbum ? attachmentInfo.audioAlbum : attachmentInfo.audioArtist;
                 subtitle = [NSString stringWithFormat:@"%@ – %@", name, duration];
             }
         }

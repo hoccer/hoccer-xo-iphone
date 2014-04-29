@@ -8,16 +8,10 @@
 
 #import "MessageItem.h"
 
-#import <AssetsLibrary/AssetsLibrary.h>
-#import <AVFoundation/AVAsset.h>
-#import <AVFoundation/AVMetadataItem.h>
-#import <AVFoundation/AVMetadataFormat.h>
-#import <AVFoundation/AVAssetExportSession.h>
-#import <AVFoundation/AVMediaFormat.h>
-
-#import "HXOMessage.h"
 #import "Attachment.h"
+#import "AttachmentInfo.h"
 #import "HXOHyperLabel.h"
+#import "HXOMessage.h"
 #import "Vcard.h"
 
 
@@ -40,7 +34,6 @@ static NSDataDetector * _linkDetector;
 - (id) initWithMessage: (HXOMessage*) message {
     self = [super init];
     if (self) {
-        _attachmentInfoLoaded = NO;
         self.message = message;
     }
     return self;
@@ -48,8 +41,10 @@ static NSDataDetector * _linkDetector;
 
 - (void) setMessage:(HXOMessage *)message {
     _message = message;
-    if (message.attachment && message.attachment.available && ! self.attachmentInfoLoaded) {
-        [self loadAttachmentInfo];
+    if (message.attachment && message.attachment.available) {
+        _attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:message.attachment];
+    } else {
+        _attachmentInfo = nil;
     }
 }
 
@@ -64,49 +59,6 @@ static NSDataDetector * _linkDetector;
     NSMutableAttributedString * body = [[NSMutableAttributedString alloc] initWithString: self.message.body];
     [body addLinksMatching: _linkDetector];
     return body;
-}
-
-- (void) loadAttachmentInfo {
-    if ([self.message.attachment.mediaType isEqualToString: @"vcard"]) {
-        Vcard * myVcard = [[Vcard alloc] initWithVcardURL:self.message.attachment.contentURL];
-        if (myVcard != nil) {
-            _vcardName = myVcard.nameString;
-            _vcardOrganization = myVcard.organization;
-            NSArray * emails = myVcard.emails;
-            if (emails && emails.count > 0) {
-                VcardMultiValueItem * firstMail = emails[0];
-                _vcardEmail = firstMail.value;
-            }
-        }
-
-    } else if ([self.message.attachment.mediaType isEqualToString: @"audio"]) {
-        NSRange findResult = [self.message.attachment.humanReadableFileName rangeOfString:@"recording"];
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:self.message.attachment.contentURL options:nil];
-        CMTime audioDuration = asset.duration;
-        _audioDuration = CMTimeGetSeconds(audioDuration);
-        if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-            NSArray * metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-            AVMetadataItem * metaItem;
-            if (metaData.count > 0) {
-                metaItem = metaData[0];
-                _audioTitle = metaItem.stringValue;
-            }
-            metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
-            if (metaData.count > 0) {
-                metaItem = metaData[0];
-                _audioArtist = metaItem.stringValue;
-            }
-
-            metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
-            if (metaData.count > 0) {
-                metaItem = metaData[0];
-                _audioAlbum = metaItem.stringValue;
-            }
-
-        }
-    }
-
-    _attachmentInfoLoaded = YES;
 }
 
 @end

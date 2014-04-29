@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class AttachmentInfo;
 @class HXOMessage;
 
 @interface MessageItem : NSObject
@@ -18,15 +19,6 @@
 
 @property (nonatomic,readonly) NSAttributedString * attributedBody;
 
-@property (nonatomic,readonly) NSString * vcardName;
-@property (nonatomic,readonly) NSString * vcardOrganization;
-@property (nonatomic,readonly) NSString * vcardEmail;
-
-@property (nonatomic,readonly) NSString * audioTitle;
-@property (nonatomic,readonly) NSString * audioArtist;
-@property (nonatomic,readonly) NSString * audioAlbum;
-@property (nonatomic,readonly) NSTimeInterval audioDuration;
-
-@property (nonatomic,readonly) BOOL attachmentInfoLoaded;
+@property (nonatomic,readonly) AttachmentInfo * attachmentInfo;
 
 @end

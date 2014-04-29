@@ -170,6 +170,7 @@
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
+		C5AC1988190FA09B0075C07C /* AttachmentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC1987190FA09B0075C07C /* AttachmentInfo.m */; };
 		C5BA22EB19093E8A0072F4A5 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */; };
 		C5BA23001909676C0072F4A5 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FA1909676C0072F4A5 /* button-pause.png */; };
 		C5BA23011909676C0072F4A5 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FB1909676C0072F4A5 /* button-pause@2x.png */; };
@@ -681,6 +682,8 @@
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C5AC1986190FA09B0075C07C /* AttachmentInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentInfo.h; sourceTree = "<group>"; };
+		C5AC1987190FA09B0075C07C /* AttachmentInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentInfo.m; sourceTree = "<group>"; };
 		C5BA22E919093E8A0072F4A5 /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
 		C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlayer.m; sourceTree = "<group>"; };
 		C5BA22FA1909676C0072F4A5 /* button-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause.png"; sourceTree = "<group>"; };
@@ -1524,6 +1527,8 @@
 			children = (
 				631457A816EF96B400AA8EB9 /* Attachment.h */,
 				631457A916EF96B500AA8EB9 /* Attachment.m */,
+				C5AC1986190FA09B0075C07C /* AttachmentInfo.h */,
+				C5AC1987190FA09B0075C07C /* AttachmentInfo.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				6378484416F4000500DE03C2 /* Delivery.h */,
@@ -2297,6 +2302,7 @@
 				6302A98C18DA870400B2D04F /* SRPParameters.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
+				C5AC1988190FA09B0075C07C /* AttachmentInfo.m in Sources */,
 				630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,

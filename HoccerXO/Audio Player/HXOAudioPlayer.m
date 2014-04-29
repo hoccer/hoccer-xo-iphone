@@ -12,7 +12,7 @@
 
 #import "Attachment.h"
 #import "AppDelegate.h"
-#import "MessageItem.h"
+#import "AttachmentInfo.h"
 
 
 @interface HXOAudioPlayer ()
@@ -92,24 +92,24 @@
 - (void) updateNowPlayingInfo {
     MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
     if (self.attachment) {
-        MessageItem *messageItem = [[MessageItem alloc] initWithMessage:self.attachment.message];
+        AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:self.attachment];
         NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
         
-        if (messageItem.audioTitle) {
-            [nowPlayingInfo setValue:messageItem.audioTitle forKey:MPMediaItemPropertyTitle];
+        if (attachmentInfo.audioTitle) {
+            [nowPlayingInfo setValue:attachmentInfo.audioTitle forKey:MPMediaItemPropertyTitle];
         } else {
             [nowPlayingInfo setValue:self.attachment.humanReadableFileName forKey:MPMediaItemPropertyTitle];
         }
 
-        if (messageItem.audioArtist) {
-            [nowPlayingInfo setValue:messageItem.audioArtist forKey:MPMediaItemPropertyArtist];
+        if (attachmentInfo.audioArtist) {
+            [nowPlayingInfo setValue:attachmentInfo.audioArtist forKey:MPMediaItemPropertyArtist];
         }
 
-        if (messageItem.audioAlbum) {
-            [nowPlayingInfo setValue:messageItem.audioAlbum forKey:MPMediaItemPropertyAlbumTitle];
+        if (attachmentInfo.audioAlbum) {
+            [nowPlayingInfo setValue:attachmentInfo.audioAlbum forKey:MPMediaItemPropertyAlbumTitle];
         }
 
-        [nowPlayingInfo setValue:[NSNumber numberWithDouble: messageItem.audioDuration] forKey:MPMediaItemPropertyPlaybackDuration];
+        [nowPlayingInfo setValue:[NSNumber numberWithDouble: attachmentInfo.audioDuration] forKey:MPMediaItemPropertyPlaybackDuration];
 
         infoCenter.nowPlayingInfo = nowPlayingInfo;
     } else {
