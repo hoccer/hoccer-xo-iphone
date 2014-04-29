@@ -1499,7 +1499,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     Attachment *attachment = message.attachment;
     
     if (attachment.state == kAttachmentTransfered) {
-        section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton audioURL:attachment.contentURL];
+        section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton attachment:attachment];
     } else {
         section.playbackButtonController = nil;
     }

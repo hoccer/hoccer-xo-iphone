@@ -8,13 +8,15 @@
 
 #import "HXOAudioPlayer.h"
 
+#import "Attachment.h"
 #import "AppDelegate.h"
 
 
 @interface HXOAudioPlayer ()
 
 @property (nonatomic, assign) BOOL isPlaying;
-@property (nonatomic, strong) AVAudioPlayer *player;
+@property (nonatomic, strong) Attachment * attachment;
+@property (nonatomic, strong) AVAudioPlayer * player;
 
 @end
 
@@ -36,8 +38,8 @@
 
 #pragma mark - Public interface
 
-- (BOOL) playURL: (NSURL *) url {
-    [self ensurePlayerForURL:url];
+- (BOOL) playAttachment: (Attachment *) attachment {
+    self.attachment = attachment;
     
     if (self.player) {
         [AppDelegate setMusicAudioSession];
@@ -53,6 +55,10 @@
     return self.isPlaying;
 }
 
+- (void) play {
+    [self playAttachment:self.attachment];
+}
+
 - (void) pause {
     [self.player pause];
     self.isPlaying = NO;
@@ -60,23 +66,21 @@
 
 - (void) stop {
     [self pause];
-    self.player = nil;
-}
-
-- (NSURL *) url {
-    if (self.player) {
-        return self.player.url;
-    } else {
-        return nil;
-    }
+    self.attachment = nil;
 }
 
 #pragma mark - Private helpers
 
-- (void) ensurePlayerForURL: (NSURL *) url {
-    if (![self.url isEqual:url]) {
-        self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
-        [self.player setDelegate:self];
+- (void) setAttachment:(Attachment *)attachment {
+    if (![_attachment isEqual:attachment]) {
+        _attachment = attachment;
+        
+        if (attachment) {
+            self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:attachment.contentURL error:nil];
+            [self.player setDelegate:self];
+        } else {
+            self.player = nil;
+        }
     }
 }
 

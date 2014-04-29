@@ -1367,14 +1367,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 break;
 
             case UIEventSubtypeRemoteControlPlay:
-                [player playURL:[player url]];
+                [player play];
                 break;
                 
             case UIEventSubtypeRemoteControlTogglePlayPause:
                 if (player.isPlaying) {
                     [player pause];
                 } else {
-                    [player playURL:[player url]];
+                    [player play];
                 }
                 break;
                 

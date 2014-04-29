@@ -8,13 +8,14 @@
 
 #import "HXOAudioPlaybackButtonController.h"
 
+#import "Attachment.h"
 #import "HXOAudioPlayer.h"
 
 
 @interface HXOAudioPlaybackButtonController ()
 
 @property (nonatomic, readonly) HXOAudioPlayer * audioPlayer;
-@property (nonatomic, strong) NSURL * audioURL;
+@property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) UIButton * button;
 
 @end
@@ -22,12 +23,12 @@
 
 @implementation HXOAudioPlaybackButtonController
 
-- (id) initWithButton: (UIButton *) button audioURL: (NSURL *)url {
+- (id) initWithButton: (UIButton *) button attachment: (Attachment *) attachment {
     self = [super init];
     
     if (self) {
         _audioPlayer = [HXOAudioPlayer sharedInstance];
-        self.audioURL = url;
+        self.attachment = attachment;
         self.button = button;
 
         [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
@@ -54,14 +55,14 @@
 }
 
 - (BOOL) isPlaying {
-    return [self.audioPlayer isPlaying] && [self.audioPlayer.url isEqual:self.audioURL];
+    return [self.audioPlayer isPlaying] && [self.audioPlayer.attachment isEqual:self.attachment];
 }
 
 - (void) togglePlayback: (id) sender {
     if ([self isPlaying]) {
         [[HXOAudioPlayer sharedInstance] pause];
     } else {
-        BOOL success = [[HXOAudioPlayer sharedInstance] playURL:self.audioURL];
+        BOOL success = [[HXOAudioPlayer sharedInstance] playAttachment:self.attachment];
         
         if (!success) {
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)

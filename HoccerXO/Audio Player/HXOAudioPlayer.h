@@ -9,17 +9,18 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Foundation/Foundation.h>
 
-#import "Attachment.h"
+@class Attachment;
 
 @interface HXOAudioPlayer : NSObject <AVAudioPlayerDelegate>
 
 + (HXOAudioPlayer *) sharedInstance;
 
-- (BOOL) playURL: (NSURL *) url;
+- (BOOL) playAttachment: (Attachment *) attachment;
+- (void) play;
 - (void) pause;
 - (void) stop;
 
 @property (nonatomic, readonly) BOOL isPlaying;
-@property (nonatomic, readonly) NSURL * url;
+@property (nonatomic, readonly) Attachment * attachment;
 
 @end

@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class Attachment;
+
 @interface HXOAudioPlaybackButtonController : NSObject
 
-- (id) initWithButton: (UIButton *) button audioURL: (NSURL *)url;
+- (id) initWithButton: (UIButton *) button attachment: (Attachment *) attachment;
 
 @end
