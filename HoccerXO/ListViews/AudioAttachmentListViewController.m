@@ -40,6 +40,11 @@ static NSString *reuseIdentifier = @"audio_attachment";
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:reuseIdentifier];
 }
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    _fetchedResultsController = nil;
+}
+
 #pragma mark - Core Data Stack
 
 - (NSManagedObjectContext *)managedObjectContext {
