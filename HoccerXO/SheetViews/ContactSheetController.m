@@ -252,7 +252,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
                 self.inspectedObject = newGroup;
             }
         }];
-    } else if (self.group) {
+    } else if (self.group.iAmAdmin) {
         [self.chatBackend updateGroup: self.group];
     }
 }
