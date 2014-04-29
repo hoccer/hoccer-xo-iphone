@@ -341,12 +341,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         self.fetchedResultsController = nil;
     }
 
-    [self.delegate controllerWillChangeContent: self];
-    for (DatasheetItem * item in self.groupMemberItems) {
-        [self.delegate controller: self didChangeObject: [self indexPathForItem: item] forChangeType: DatasheetChangeDelete newIndexPath: nil];
-    }
     [self.groupMemberItems removeAllObjects];
-    [self.delegate controllerDidChangeContent: self];
 }
 
 - (void) inspectedObjectDidChange {
@@ -354,10 +349,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         if (self.groupMemberItems.count == 0) {
             DatasheetItem * me = [self itemWithIdentifier: [NSString stringWithFormat: @"%p", self.groupInStatuNascendi] cellIdentifier: @"SmallContactCell"];
             me.currentValue = self.groupInStatuNascendi;
-            [self.delegate controllerWillChangeContent: self];
             [self.groupMemberItems addObject: me];
-            [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: [self indexPathForItem: me]];
-            [self.delegate controllerDidChangeContent: self];
+            [self updateCurrentItems];
         }
         if ( ! self.isEditing) {
             [self editModeChanged: nil];
@@ -367,15 +360,11 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 
     self.fetchedResultsController = [self createFetchedResutsController];
     if (self.fetchedResultsController) {
-        [self.delegate controllerWillChangeContent: self];
         for (int i = 0; i < [self.fetchedResultsController.sections[0] numberOfObjects]; ++i) {
             DatasheetItem * item = [self groupMemberItem: i];
             [self.groupMemberItems addObject: item];
-            [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: [self indexPathForItem: item]];
         }
-        [self.delegate controllerDidChangeContent: self];
     }
-
 
     [self addProfileObservers];
 
@@ -625,7 +614,8 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (DatasheetSection*) groupMemberSection {
     if ( ! _groupMemberSection) {
         _groupMemberSection = [DatasheetSection datasheetSectionWithIdentifier: @"group_member_section"];
-        _groupMemberSection.delegate = self;
+        _groupMemberSection.dataSource = self;
+        _groupMemberSection.delegate   = self;
         _groupMemberSection.titleTextAlignment = NSTextAlignmentCenter;
     }
     return _groupMemberSection;
@@ -736,43 +726,28 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    NSUInteger sectionIndex = [self indexPathForItem: self.groupMemberSection].section;
     switch(type) {
         case NSFetchedResultsChangeInsert:
         {
             DatasheetItem * item = [self groupMemberItem: newIndexPath.row];
             [self.groupMemberItems insertObject: item atIndex: newIndexPath.row];
-            [self.delegate controller: self
-                      didChangeObject: nil
-                        forChangeType: DatasheetChangeInsert
-                         newIndexPath: [NSIndexPath indexPathForRow: newIndexPath.row inSection: sectionIndex]];
             break;
         }
         case NSFetchedResultsChangeDelete:
             [self.groupMemberItems removeObjectAtIndex: indexPath.row];
-            [self.delegate controller: self didChangeObject: [NSIndexPath indexPathForRow: indexPath.row inSection: sectionIndex] forChangeType: DatasheetChangeDelete newIndexPath: nil];
             break;
 
         case NSFetchedResultsChangeUpdate:
-            [self.delegate controller: self didChangeObject: [NSIndexPath indexPathForRow: indexPath.row inSection: sectionIndex] forChangeType: DatasheetChangeUpdate newIndexPath: nil];
+            // update is triggered in any case. see controllerDidChangeContent:
             break;
         case NSFetchedResultsChangeMove:
+            NSLog(@"FIXME: unhandled change type move");
             break;
     }
 }
 
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [self.delegate controllerWillChangeContent: self];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
-{
-}
-
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.delegate controllerDidChangeContent: self];
+    [self updateCurrentItems];
 }
 
 
@@ -799,7 +774,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (DatasheetItem*) inviteMembersItem {
     if ( ! _inviteMembersItem) {
         _inviteMembersItem = [self itemWithIdentifier: @"group_invite_friends" cellIdentifier: @"DatasheetActionCell"];
-//        _inviteMembersItem.dependencyPaths = @[@"iAmAdmin"];
         _inviteMembersItem.target = self;
         _inviteMembersItem.action = @selector(inviteMembersPressed:);
     }
@@ -809,16 +783,12 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) inviteMembersPressed: (id) sender {
     ContactPickerCompletion completion = ^(NSArray * result) {
         if (self.groupInStatuNascendi) {
-            [self.delegate controllerWillChangeContent: self];
             for (Contact * contact in result) {
                 DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
-                NSUInteger sectionIndex = [self indexPathForItem: self.groupMemberSection].section;
-                NSIndexPath * indexPath = [NSIndexPath indexPathForRow: self.groupMemberItems.count inSection: sectionIndex];
                 [self.groupMemberItems addObject: contactItem];
                 [self.groupInStatuNascendi.members addObject: contact];
-                [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: indexPath];
             }
-            [self.delegate controllerDidChangeContent: self];
+            [self updateCurrentItems];
         } else {
             for (Contact * contact in result) {
                 [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
@@ -832,7 +802,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     if (self.groupInStatuNascendi) {
         predicate = [NSPredicate predicateWithFormat: @"(type == %@) AND NOT (self IN (%@))", [Contact entityName], self.groupInStatuNascendi.members];
     } else {
-        predicate = [NSPredicate predicateWithFormat:@"(type == %@) AND SUBQUERY(groupMemberships, $g, $g.group == %@).@count = 0", [Contact entityName], self.group];
+        predicate = [NSPredicate predicateWithFormat:@"(type == %@) AND SUBQUERY(groupMemberships, $g, $g.group == %@).@count == 0", [Contact entityName], self.group];
     }
 
 
@@ -853,19 +823,14 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
 - (void) editRemoveItem:(DatasheetItem *)item {
     Contact * contact = [self contactForItem: item];
     if (self.groupInStatuNascendi) {
-        [self.delegate controllerWillChangeContent: self];
         NSUInteger index = [self.groupMemberItems indexOfObject: item];
         if (index == NSNotFound) {
             NSLog(@"ERROR: item not found");
         } else {
-            NSIndexPath * indexPath = [self indexPathForItem: item];
             [self.groupMemberItems removeObjectAtIndex: index];
             [self.groupInStatuNascendi.members removeObjectAtIndex: index];
-            [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeDelete newIndexPath: nil];
         }
-
-        [self.delegate controllerDidChangeContent: self];
-
+        [self updateCurrentItems];
     } else {
         [self.chatBackend removeGroupMember: [self membershipOfContact: contact] onDeletion:^(GroupMembership *member) {
             // yeah... absolutely

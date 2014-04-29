@@ -327,6 +327,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
             }
         } else {
             DatasheetSection * newSection = [section copy];
+            newSection.dataSource = nil; // take content authority
             [marks addObject: @(stack.count)];
             [stack addObject: newSection];
         }
@@ -684,6 +685,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     copy.titleTextAlignment = _titleTextAlignment;
     copy.footerText = _footerText;
     copy.delegate = _delegate;
+    copy.dataSource = _dataSource;
     copy.items = _items;
     return copy;
 }
@@ -693,15 +695,15 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (NSUInteger) count {
-    if ([self.delegate respondsToSelector: @selector(numberOfItemsInSection:)]) {
-        return [self.delegate numberOfItemsInSection: self];
+    if ([self.dataSource respondsToSelector: @selector(numberOfItemsInSection:)]) {
+        return [self.dataSource numberOfItemsInSection: self];
     }
     return _items.count;
 }
 
 - (id) objectAtIndexedSubscript: (NSUInteger) index {
-    if ([self.delegate respondsToSelector: @selector(section:itemAtIndex:)]) {
-        return [self.delegate section: self itemAtIndex: index];
+    if ([self.dataSource respondsToSelector: @selector(section:itemAtIndex:)]) {
+        return [self.dataSource section: self itemAtIndex: index];
     }
     return _items[index];
 }

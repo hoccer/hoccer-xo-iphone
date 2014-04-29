@@ -78,10 +78,16 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @end
 
-@protocol DatasheetSectionDelegate <NSObject>
+@protocol DatasheetSectionDataSource <NSObject>
 
 - (NSUInteger) numberOfItemsInSection: (DatasheetSection*) section;
 - (DatasheetItem*) section: (DatasheetSection*) section itemAtIndex: (NSUInteger) index;
+
+@end
+
+@protocol DatasheetSectionDelegate <NSObject>
+
+@optional
 
 - (NSAttributedString*) titleForSection: (DatasheetSection*) section;
 
@@ -140,7 +146,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic, strong) NSString           * footerViewIdentifier;
 @property (nonatomic, readonly) NSUInteger         count;
 
-@property (nonatomic, weak) id<DatasheetSectionDelegate> delegate;
+@property (nonatomic, weak) id<DatasheetSectionDataSource> dataSource;
+@property (nonatomic, weak) id<DatasheetSectionDelegate>   delegate;
 
 + (id) datasheetSectionWithIdentifier: (NSString*) identifier;
 
