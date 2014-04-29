@@ -12,7 +12,7 @@
 
 #import "Attachment.h"
 #import "AppDelegate.h"
-#import "MessageItems.h"
+#import "MessageItem.h"
 
 
 @interface HXOAudioPlayer ()

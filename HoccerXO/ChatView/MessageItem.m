@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
-#import "MessageItems.h"
+#import "MessageItem.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AVFoundation/AVAsset.h>

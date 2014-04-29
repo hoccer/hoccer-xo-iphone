@@ -45,7 +45,7 @@
 #import "LabelWithLED.h"
 #import "UpDownLoadControl.h"
 #import "DateSectionHeaderView.h"
-#import "MessageItems.h"
+#import "MessageItem.h"
 #import "HXOHyperLabel.h"
 #import "paper_dart.h"
 #import "paper_clip.h"
