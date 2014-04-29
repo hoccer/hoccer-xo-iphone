@@ -33,6 +33,8 @@
 static const BOOL GROUPVIEW_DEBUG    = NO;
 static const BOOL RELATIONSHIP_DEBUG = NO;
 
+static int  groupMemberContext;
+
 @interface ContactSheetController ()
 
 @property (nonatomic, readonly) DatasheetItem              * chatItem;
@@ -340,8 +342,9 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
     }
-
-    [self.groupMemberItems removeAllObjects];
+    for (unsigned i = 0; i < self.groupMemberItems.count; ++i) {
+        [self removeGroupMemberItem: i contact: [self contactAtIndex: i]];
+    }
 }
 
 - (void) inspectedObjectDidChange {
@@ -361,8 +364,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     self.fetchedResultsController = [self createFetchedResutsController];
     if (self.fetchedResultsController) {
         for (int i = 0; i < [self.fetchedResultsController.sections[0] numberOfObjects]; ++i) {
-            DatasheetItem * item = [self groupMemberItem: i];
-            [self.groupMemberItems addObject: item];
+            [self.groupMemberItems addObject: [self createGroupMemberItem: i]];
         }
     }
 
@@ -656,6 +658,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
+        cell.avatar.isOnline      = contact.isOnline;
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];
@@ -677,12 +680,39 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return frc;
 }
 
-- (DatasheetItem*) groupMemberItem: (NSUInteger) index {
+- (DatasheetItem*) createGroupMemberItem: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
     NSString * identifier = [NSString stringWithFormat: @"%@", contact.objectID];
-    DatasheetItem * result = [self itemWithIdentifier: identifier cellIdentifier: [SmallContactCell reuseIdentifier]];
-    result.accessoryStyle = DatasheetAccessoryDisclosure;
-    return result;
+    DatasheetItem * item = [self itemWithIdentifier: identifier cellIdentifier: [SmallContactCell reuseIdentifier]];
+    item.accessoryStyle = DatasheetAccessoryDisclosure;
+    [self addContactObservers: contact];
+    return item;
+}
+
+- (void) removeGroupMemberItem: (NSUInteger) index contact: (Contact*) contact {
+    [self removeContactObservers: contact];
+    [self.groupMemberItems removeObjectAtIndex: index];
+}
+
+- (void) addContactObservers: (Contact*) contact {
+    for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
+        [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &groupMemberContext];
+    }
+}
+
+- (void) removeContactObservers: (Contact*) contact {
+    for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
+        [contact removeObserver: self forKeyPath: keyPath context: &groupMemberContext];
+    }
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &groupMemberContext) {
+        [self performSelectorOnMainThread: @selector(updateCurrentItems) withObject: nil waitUntilDone: NO];
+//        [self updateCurrentItems]; // Bam!
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (NSFetchedResultsController*) createFetchedResutsControllerWithRequest: (NSFetchRequest*) fetchRequest {
@@ -722,19 +752,16 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     return fetchRequest;
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(GroupMembership*) membership
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     switch(type) {
         case NSFetchedResultsChangeInsert:
-        {
-            DatasheetItem * item = [self groupMemberItem: newIndexPath.row];
-            [self.groupMemberItems insertObject: item atIndex: newIndexPath.row];
+            [self.groupMemberItems insertObject: [self createGroupMemberItem: newIndexPath.row] atIndex: newIndexPath.row];
             break;
-        }
         case NSFetchedResultsChangeDelete:
-            [self.groupMemberItems removeObjectAtIndex: indexPath.row];
+            [self removeGroupMemberItem: indexPath.row contact: membership.contact];
             break;
 
         case NSFetchedResultsChangeUpdate:
@@ -827,7 +854,7 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
         if (index == NSNotFound) {
             NSLog(@"ERROR: item not found");
         } else {
-            [self.groupMemberItems removeObjectAtIndex: index];
+            [self removeGroupMemberItem: index contact: contact];
             [self.groupInStatuNascendi.members removeObjectAtIndex: index];
         }
         [self updateCurrentItems];
@@ -855,9 +882,6 @@ static const BOOL RELATIONSHIP_DEBUG = NO;
     }
     return matching.anyObject;
 }
-
-#pragma mark - Group Creation
-
 
 #pragma mark - Attic
 
