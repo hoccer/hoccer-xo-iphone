@@ -1512,7 +1512,6 @@ static NSTimer * _stateNotificationDelayTimer;
 
 //  void groupUpdated(TalkGroup group);
 - (void) groupUpdated:(NSArray*) group_param {
-    if (GROUP_DEBUG) NSLog(@"groupUpdated with %@",group_param);
     [self updateGroupHere: group_param[0]];
 }
 
@@ -1933,13 +1932,27 @@ static NSTimer * _stateNotificationDelayTimer;
 //    private Date lastChanged;
 //}
 
+- (Group*) createLocalGroup: (NSString*) groupId withState:(NSString*)groupState {
+    Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.managedObjectContext];
+    group.type = [Group entityName];
+    group.clientId = groupId;
+    group.groupState = groupState;
+    group.nickName = @"temporary";
+    if (GROUP_DEBUG) NSLog(@"createLocalGroup: created a new group with id %@",groupId);
+    return group;
+}
+
 - (void) updateGroupMemberHere: (NSDictionary*) groupMemberDict {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
     
     NSString * groupId = groupMemberDict[@"groupId"];
     Group * group = [self getGroupById: groupId];
     if (group == nil) {
-        return;
+        if ([groupMemberDict[@"state"] isEqualToString:@"none"] || [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
+            return;
+        } else {
+            group = [self createLocalGroup:groupMemberDict[@"groupId"] withState:@"exists"];
+        }
     }
     if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere with %@",groupMemberDict);
     if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere found group nick %@ id %@",group.nickName, group.clientId);
@@ -2383,114 +2396,6 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
-
-/*
-#if 0
-- (void) ifNeededUpdateGroupKeyForOtherMember:(GroupMembership*) myMember {
-    Group * group = myMember.group;
-    Contact * memberContact = myMember.contact;
-    if ([group isEqual:memberContact]) {
-        NSLog(@"ERROR: must not call ifNeededUpdateGroupKeyForOtherMember on own membership, group=%@, memberContact=%@", group, memberContact);
-        return;
-    }
-    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: My Group %@, member %@: iAmAdmin=%d, keySettingInProgress=%d, myMember.cipheredGroupKey=%@, myMember.distributedCipheredGroupKey=%@",group.clientId, memberContact.clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.distributedCipheredGroupKey);}
-    
-    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: memberContact.publicKeyId %@, myMember.memberKeyId %@: myMember.sharedKeyId=%@, group.sharedKeyId=%@, group.keyDate=%@,myMember.sharedKeyDate=%@",memberContact.publicKeyId,myMember.memberKeyId,[myMember.sharedKeyId asBase64EncodedString],[group.sharedKeyId asBase64EncodedString],group.keyDate,myMember.sharedKeyDate);}
-
-    if ([group iAmAdmin] && !myMember.keySettingInProgress) {
-        // we are admin
-        if ([HXOBackend isInvalid:myMember.cipheredGroupKey] ||
-            ![memberContact.publicKeyId isEqualToString:myMember.memberKeyId] ||
-            (![myMember.sharedKeyId isEqualToData:group.sharedKeyId] && group.keyDate != nil && [group.keyDate compare:myMember.sharedKeyDate] == NSOrderedDescending)
-            //![myMember.distributedGroupKey isEqualToData:group.groupKey] ||
-            //(self.firstConnectionAfterCrashOrUpdate  && ![self fastStart])
-            )
-        {
-            // we need to put up a new group key for this member
-            if (GROUPKEY_DEBUG) {NSLog(@"Setting key as admin for member (nick %@) group (nick %@ groupId %@), groupKey=%@", myMember.contact.nickName, group.nickName, group.clientId, group.groupKey);}
-            
-            if ([HXOBackend isInvalid:group.groupKey]) {
-                // We have lost the group key, generate a new one
-                if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
-                [group generateNewGroupKey];
-            }
-            if ([memberContact getPublicKeyRef] == nil) {
-                if (memberContact.publicKeyId != nil) {
-                    [self fetchKeyForContact:memberContact withKeyId:memberContact.publicKeyId withCompletion:^(NSError *theError) {
-                        if (theError == nil) {
-#define USE_MEMBERKEY_PROTOCOL_V2
-#ifdef USE_MEMBERKEY_PROTOCOL_V2
-                            [self setGroupMemberKeyV2:myMember];
-#else
-                            [self setGroupMemberKey:myMember];
-#endif
-                        }
-                    }];
-                } else {
-                    if (GROUPKEY_DEBUG) NSLog(@"ifNeededUpdateGroupKeyForOtherMember: Cant update group member nick %@ id %@ yet, don't have a contact public keyId yet",memberContact.nickName, memberContact.clientId);
-                }
-            } else {
-                if (GROUPKEY_DEBUG) NSLog(@"ifNeededUpdateGroupKeyForOtherMember: setting group member key for contact nick %@ client id %@", memberContact.nickName, memberContact.clientId);
-#ifdef USE_MEMBERKEY_PROTOCOL_V2
-                [self setGroupMemberKeyV2:myMember];
-#else
-                [self setGroupMemberKey:myMember];
-#endif
-            }
-        } else {
-            if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: not updating(2)");}
-        }
-    } else {
-        if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForOtherMember: not updating(1)");}
-    }
-}
-#endif
-
-#ifndef USE_MEMBERKEY_PROTOCOL_V2
-- (void) setGroupMemberKey:(GroupMembership *)myMember {
-    myMember.cipheredGroupKey = [myMember calcCipheredGroupKey];
-    myMember.keySettingInProgress = YES;
-    [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
-        member.keySettingInProgress = NO;
-        if (member) {
-            // member.distributedCipheredGroupKey = member.cipheredGroupKey;
-            member.distributedGroupKey = myMember.group.groupKey;
-        }
-        [self.delegate saveDatabase];
-    }];
-}
-#endif
-
-#if 0
-- (void) setGroupMemberKeyV2:(GroupMembership *)myMember {
-    if (myMember.group.hasGroupKey) {
-//        if (!myMember.hasLatestGroupKey) {
-//            if (![myMember copyKeyFromGroup]) {
-//                NSLog(@"setGroupMemberKeyV2: could not copy key from group");
-//            }
-//        }
-
-        myMember.keySettingInProgress = YES;
-        [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
-            myMember.keySettingInProgress = NO;
-            if (unfinishedMembers != nil) {
-                if (unfinishedMembers.count == 1 && [[UserProfile sharedProfile].clientId isEqualToString:unfinishedMembers[0]]) {
-                    // group key updating locked, some other admin is doing the job
-                    NSLog(@"setGroupMemberKeyV2: Lock encountered, doing nothing");
-                } else {
-                    NSLog(@"setGroupMemberKeyV2: Successfully distributed key for member nick %@ if %@",myMember.contact.nickName, myMember.contact.clientId);
-                    myMember.distributedGroupKey = myMember.group.groupKey;
-                }
-            }
-            [self.delegate saveDatabase];
-        }];
-    } else {
-        NSLog(@"setGroupMemberKeyV2: no group key");
-    }
-}
-#endif
- */
-
 - (void) updateGroupKeysForMyGroupMemberships {
     NSEntityDescription *entity = [NSEntityDescription entityForName:[GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
     NSFetchRequest *request = [NSFetchRequest new];
@@ -2501,108 +2406,12 @@ static NSTimer * _stateNotificationDelayTimer;
         [self ifNeededUpdateGroupKeyForMyMembership:membership];
     }
 }
-/*
-- (void) ifNeededUpdateGroupKeyForMyMembership0:(GroupMembership*) myMember {
-    // it is us
-    Group * group = myMember.group;
-
-    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey=%@, memberKeyId=%@\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress,myMember.cipheredGroupKey,myMember.memberKeyId);}
-    
-    if ([group iJoined] && !myMember.keySettingInProgress) {
-        // check if our own key on the server is ok
-        if ([HXOBackend isInvalid:myMember.cipheredGroupKey] ||
-             ![[[UserProfile sharedProfile] publicKeyId] isEqualToString:myMember.memberKeyId] ||
-             ([group iAmAdmin] && ![myMember.distributedGroupKey isEqualToData:group.groupKey]))
-        {
-            if (GROUPKEY_DEBUG) {NSLog(@"myMember.group.groupKey=%@, group.groupKey=%@", myMember.group.groupKey,group.groupKey);}
-            if ([HXOBackend isInvalid: group.groupKey]) {
-                if ([group iAmAdmin]) {
-                    group.groupKey = [Crypto random256BitKey];
-                    if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
-                } else {
-                    NSLog(@"NO GROUP KEY, cant generate (not admin), group nick %@, id %@", group.nickName, group.clientId);
-                    return;
-                }
-            }
-
-            
-            SecKeyRef myReceiverKey = [[CCRSA sharedInstance] getPublicKeyRef];
-            CCRSA * rsa = [CCRSA sharedInstance];
-            myMember.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
-            
-            myMember.keySettingInProgress = YES;
-#ifndef USE_MEMBERKEY_PROTOCOL_V2
-            NSString * myCryptedGroupKeyString = [myMember.cipheredGroupKey asBase64EncodedString];
-            [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[HXOBackend ownPublicKeyIdString],myCryptedGroupKeyString]
-            // [_serverConnection invoke: @"updateGroupKey" withParams: @[myMember.group.clientId,[UserProfile sharedProfile].clientId,[[UserProfile sharedProfile] publicKeyId],myCryptedGroupKeyString]
-                           onResponse: ^(id responseOrError, BOOL success)
-             {
-                 myMember.keySettingInProgress = NO;
-                 if (success) {
-                     //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
-                     // myMember.distributedCipheredGroupKey = myMember.cipheredGroupKey;
-                     myMember.distributedGroupKey = group.groupKey;
-                 } else {
-                     NSLog(@"updateGroupKey() failed: %@", responseOrError);
-                 }
-                 [self.delegate saveDatabase];
-             }];
-#else
-            [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
-                myMember.keySettingInProgress = NO;
-                if (unfinishedMembers != nil) {
-                    if (unfinishedMembers.count == 1 && [[UserProfile sharedProfile].clientId isEqualToString:unfinishedMembers[0]]) {
-                        // group key updating locked, some other admin is doing the job
-                        NSLog(@"ifNeededUpdateGroupKeyForMyMembership2: Lock encountered, doing nothing");
-                    } else {
-                        myMember.distributedGroupKey = myMember.group.groupKey;
-                    }
-                }
-                [self.delegate saveDatabase];
-            }];
-#endif
-        } else {
-            if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(2)");}
-        }
-    } else {
-        if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: not updating(1)");}
-    }
-}
-*/
-
 
 - (void) updateKeyboxesFor:(Group*)group withMembers:(NSSet*)members {
     NSLog(@"updateKeyboxesFor: group %@, members.count=%d",group.clientId,members.count);
 
-    unsigned updatesRefused = group.updatesRefused;
-    //NSDate * latestChangedDate = group.latestMemberChangeDate;
-
     [self updateGroupKeys:group forMembers:members onSuccess:^(NSArray * unfinishedMembers) {
-        /*
-        if (group.updatesRefused != updatesRefused) {
-            NSLog(@"updateKeyboxesFor: updateGroupKeys result arrived, and we have updates refused in the meantime");
-            NSDate * postCallGroupDate = group.lastChanged;
-            NSDate * latestChangedDate = group.latestMemberChangeDate;
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
-                NSLog(@"updateKeyboxesFor: checking for late arrivals");
-                if (group.keySettingInProgress) {
-                    NSLog(@"updateKeyboxesFor: more key setting going on, postponing");
-                    group.updatesRefused = group.updatesRefused + 1;
-                } else {
-                    NSLog(@"updateKeyboxesFor: no more key setting going on, check for updating now");
-                    if ([postCallGroupDate isEqualToDate:group.lastChanged]) {
-                        NSLog(@"updateKeyboxesFor: nothing arrived, getting group");
-                        [self getGroup:group];
-                    }
-                    if ([latestChangedDate isEqualToDate:group.latestMemberChangeDate]) {
-                        NSLog(@"updateKeyboxesFor: nothing arrived, getting group members");
-                        [self getGroupMembers:group lastKnown:latestChangedDate];
-                    }
-                }
-            });
-        }
-         */
+
         if (unfinishedMembers != nil) {
             if (unfinishedMembers.count == 1 && [[UserProfile sharedProfile].clientId isEqualToString:unfinishedMembers[0]]) {
                 // group key updating locked, some other admin is doing the job
@@ -2615,13 +2424,6 @@ static NSTimer * _stateNotificationDelayTimer;
                         NSLog(@"updateKeyboxesFor: servicing %d unfinished members with key updates", theMembersToUpdate.count);
                         [self updateKeyboxesFor:group withMembers:theMembersToUpdate];
                     }
-                    /*
-                    NSSet * theMembersWithMissingKey = [group activeMembersWithClientIdsAndMissingKey:unfinishedMembers];
-                    if (theMembersWithMissingKey.count > 0) {
-                        NSLog(@"updateKeyboxesFor: servicing %d unfinished members with missing keys", theMembersToUpdate.count);
-                        [self updateKeyboxesFor:group withMembers:theMembersToUpdate];
-                    }
-                    */
                 }
             }
         }
@@ -2629,90 +2431,6 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
-
-/*
-#if 0
-// newer version
-- (void) ifNeededUpdateGroupKeyForMyMembership:(GroupMembership*) myMember {
-    // it is us
-    Group * group = myMember.group;
-    
-    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey invalid=%d, memberKeyId=%@, hasGroupKey=%d\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress,[HXOBackend isInvalid:myMember.cipheredGroupKey],myMember.memberKeyId, group.hasGroupKey);}
-    
-    // Lets check if we might have to get group key first
-    if (!group.hasGroupKey) {
-        // no group key there, lets see if we can get it from our membership
-        if (myMember.hasCipheredGroupKey) {
-            // there seems to be a keybox, lets try to open it
-            NSData * myGroupKey = myMember.decryptedGroupKey;
-            if (myGroupKey != nil) {
-                if (![group copyKeyFromMember:myMember]) {
-                    NSLog(@"ifNeededUpdateGroupKeyForMyMembership2: Failed to get group key from key box");
-                }  else {
-                    NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(XX0): copied group key from member key box");
-                }
-            }  else {
-                NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(X0): Failed to decrypt group key from member key box although myMember.hasCipheredGroupKey");
-            }
-        }
-        if (!group.hasGroupKey && group.iAmAdmin) {
-            // we still do not have a group key, but we are admin and can generate one
-            [group generateNewGroupKey];
-        }
-    } else {
-        NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(XX0): We have a group key, but may be there is a newer one");
-        // there might be a newer group key from another admin
-        NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(X1): group.sharedKeyId=%@, myMember.sharedKeyId=%@", [group.sharedKeyId asBase64EncodedString], [myMember.sharedKeyId asBase64EncodedString]);
-        if (group.sharedKeyId == nil || ![group.sharedKeyId isEqualToData:myMember.sharedKeyId]) {
-            NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(X2): myMember.sharedKeyDate=%@, group.keyDate=%@", myMember.sharedKeyDate, group.keyDate);
-            if (myMember.sharedKeyDate != nil && [myMember.sharedKeyDate compare:group.keyDate]==NSOrderedDescending) {
-                // some other admin has pushed a new key, lets update
-                if (![group copyKeyFromMember:myMember]) {
-                    NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(X3): Failed to get group key from key box");
-                } else {
-                    NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(X4): Copied group key from member key box");
-                    // we have just copied the key stuff from our own group membership, so it is already on the server and we need not to do anything
-                    return;
-                }
-            } else {
-                NSLog(@"ifNeededUpdateGroupKeyForMyMembership2(X5): No member key box or not newer than group KeyDate");
-            }
-        }
-    }
-    // we normally should have a groupkey when we get here
-    if (!group.hasGroupKey) {
-        // but if we don't, we can't do anything about it, only complain
-        NSLog(@"WARNING: ifNeededUpdateGroupKeyForMyMembership2: No group key, can't do anything about it");
-        return;
-    }
-    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership(2): group %@, member self:%@ iAmAdmin=%d, keySettingInProgress=%d, cipheredGroupKey invalid=%d, memberKeyId=%@, hasGroupKey=%d\n",group.clientId, [UserProfile sharedProfile].clientId,[group iAmAdmin],myMember.keySettingInProgress, [HXOBackend isInvalid:myMember.cipheredGroupKey],myMember.memberKeyId, group.hasGroupKey);}
-    // now let's check if we need to update the key for our own group membership
-    if (![[[UserProfile sharedProfile] publicKeyId] isEqualToString:myMember.memberKeyId] ||
-        ![group.sharedKeyId isEqualToData:myMember.sharedKeyId] //||
-        //![group.groupKey isEqualToData:myMember.distributedGroupKey]
-        )
-    {
-        // we need to update
-        
-        [self updateGroupKeys:myMember.group forMembers:@[myMember] onSuccess:^(NSArray * unfinishedMembers) {
-            myMember.keySettingInProgress = NO;
-            if (unfinishedMembers != nil) {
-                if (unfinishedMembers.count == 1 && [[UserProfile sharedProfile].clientId isEqualToString:unfinishedMembers[0]]) {
-                    // group key updating locked, some other admin is doing the job
-                    NSLog(@"ifNeededUpdateGroupKeyForMyMembership2: Lock encountered, doing nothing");
-                } else {
-                    myMember.distributedGroupKey = myMember.group.groupKey;
-                    if (group.iAmAdmin && unfinishedMembers.count > 0) {
-                        [self updateKeyboxesFor:group clients:unfinishedMembers];
-                    }
-                }
-            }
-            [self.delegate saveDatabase];
-        }];
-    }
-}
-#endif
-*/
 
 + (BOOL) isZeroData:(NSData*)theData {
     const uint8_t * buffer = (uint8_t *)[theData bytes];
@@ -2725,52 +2443,6 @@ static NSTimer * _stateNotificationDelayTimer;
 + (BOOL) isInvalid:(NSData*)theData {
     return theData == nil || [HXOBackend isZeroData:theData];
 }
-
-/*
-- (void) updateGroupKeyIfNeeded:(GroupMembership *) myMember keyGetter:(KeyGetter)getKey keyIdGetter(KeyIdGetter)getKeyId {
-    if (myMember.cipheredGroupKey.length == 0 || ![myMember.cipheredGroupKey isEqualToData:myMember.distributedCipheredGroupKey]) {
-        myMember.cipheredGroupKey = getKey(myMember);
-        
-        [self updateGroupKey:myMember onSuccess:^(GroupMembership *member) {
-            if (member) {
-                member.distributedCipheredGroupKey = member.cipheredGroupKey;
-            }
-        }];
-    }    
-}
-*/
-
-//public class TalkGroupMember {
-//    public static final String ROLE_NONE = "none";
-//    public static final String ROLE_ADMIN = "admin";
-//    public static final String ROLE_MEMBER = "member";
-//
-//    private String groupId;
-//    private String clientId;
-//    private String role;
-//    private String state;
-//    private String invitationSecret;
-//    private String encryptedGroupKey;
-//    private Date lastChanged;
-//}
-#if 0
-- (NSDictionary*) groupMemberKeys {
-    return @{
-             @"groupId": @"group.clientId",
-             @"clientId": @"contact.clientId",
-             @"role": @"role",
-             @"state": @"state",
-             @"lastChanged": @"lastChangedMillis",
-             @"encryptedGroupKey": @"cipheredGroupKeyString",
-             @"sharedKeyId"  : @"sharedKeyId",
-             @"sharedKeyIdSalt"  : @"sharedKeyIdSalt"
-             };
-}
-
-- (NSDictionary*) dictOfGroupMember:(GroupMembership*) member {
-    return [HXOModel createDictionaryFromObject:member withKeys:[self groupMemberKeys]];
-}
-#endif
 
 // void inviteGroupMember(String groupId, String clientId);
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler{
