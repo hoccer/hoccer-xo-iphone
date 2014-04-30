@@ -174,6 +174,9 @@
 }
 
 -(BOOL) hasValidGroupKey {
+    if (self.groupKey == nil || self.sharedKeyIdSalt == nil) {
+        return NO;
+    }
     NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:self.groupKey withSalt:self.sharedKeyIdSalt];
     if (myGroupKeyId == nil) {
         if (GROUPKEY_DEBUG) NSLog(@"Group hasValidGroupKey: nil id, self.groupKey = %@, self.sharedKeyIdSalt = %@", self.groupKey, self.sharedKeyIdSalt);
@@ -307,7 +310,7 @@
 }
 
 - (BOOL) iCanSetKeys {
-    BOOL result = !self.hasKeyMaster || self.iAmKeyMaster;
+    BOOL result = (!self.hasKeyMaster || self.iAmKeyMaster) && self.iAmAdmin;
     if (GROUPKEY_DEBUG) NSLog(@"Group:iCanSetKeys: %@", result ? @"YES" : @"NO");
     return result;
 }
