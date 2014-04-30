@@ -6,6 +6,7 @@
 "save"   = "Speichern";
 "delete" = "Löschen";
 "enter"  = "Eingeben";
+"no"     = "Nein";
 
 "search_placeholder" = "suchen";
 
@@ -194,6 +195,17 @@
 
 "credentials_delete_btn_title"               = "Zugangsdaten löschen";
 
+"credentials_and_database_not_deleted_title"= "Daten behalten";
+"credentials_and_database_not_deleted_message"="Versuche eine Sicherungskopie einzuspielen oder gültige Zugangsdaten zu importieren.";
+
+"credentials_and_database_deleted_title"="Zugangsdaten gelöscht";
+"credentials_and_database_deleted_message"="Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer XO neu.";
+
+"credentials_invalid_title"="Anmeldung fehlgeschlagen";
+"credentials_invalid_delete_question"="Willst du deine Zugangsdaten and alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
+
+"credentials_database_delete_btn_title"="Alles löschen";
+
 //==============================================================================
 // Database
 //==============================================================================
@@ -202,6 +214,8 @@
 "database_corrupt_not_deleted_message" = "Veraltete oder korrupte Datenbank wurde nicht gelöscht. Hoccer XO wird nicht funktionieren.";
 "database_corrupt_deleted_title"       = "Datenbank gelöscht";
 "database_corrupt_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer XO neu.";
+
+"database_delete_btn_title"="Datenbank löschen";
 
 //==============================================================================
 // Geolocations

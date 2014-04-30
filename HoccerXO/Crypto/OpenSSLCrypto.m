@@ -184,8 +184,8 @@ out_err:
     *pubkey = [NSString stringWithUTF8String:[pubData bytes]];
     *privkey = [NSString stringWithUTF8String:[privData bytes]];
 
-    NSLog(@"makeRSAKeyPairPEMWithSize: privkey\n=%@\n", *privkey);
-    NSLog(@"makeRSAKeyPairPEMWithSize: pubkey=\n%@\n", *pubkey);
+    //NSLog(@"makeRSAKeyPairPEMWithSize: privkey\n=%@\n", *privkey);
+    //NSLog(@"makeRSAKeyPairPEMWithSize: pubkey=\n%@\n", *pubkey);
 cleanup:
     RSA_free(rsa);
 cleanup2:

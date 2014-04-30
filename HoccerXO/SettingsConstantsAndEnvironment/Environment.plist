@@ -9,13 +9,13 @@
 	</array>
 	<key>certificateFiles</key>
 	<dict>
-		<key>orig_development</key>
-		<array>
-			<string>server_development</string>
-		</array>
 		<key>development</key>
 		<array>
 			<string>server_production</string>
+		</array>
+		<key>development_orig</key>
+		<array>
+			<string>server_development</string>
 		</array>
 		<key>production</key>
 		<array>
@@ -24,10 +24,8 @@
 	</dict>
 	<key>talkServer</key>
 	<dict>
-		<key>other</key>
-		<string>wss://217.115.15.73</string>
 		<key>development</key>
-		<string>ws://10.1.8.51:8080/</string>
+		<string>wss://test1.talk.hoccer.de</string>
 		<key>production</key>
 		<string>wss://server.talk.hoccer.de</string>
 	</dict>

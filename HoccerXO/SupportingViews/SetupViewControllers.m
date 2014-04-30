@@ -175,7 +175,7 @@
 
 - (void) didUpdateInspectedObject {
     [super didUpdateInspectedObject];
-    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: self.performRegistration];
+    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: self.performRegistration  || ![UserProfile sharedProfile].isRegistered];
     [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [((UIViewController*)self.delegate).navigationController dismissViewControllerAnimated: YES completion: nil];
 }

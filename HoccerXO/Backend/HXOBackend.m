@@ -115,6 +115,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableArray * _attachmentDownloadsActive;
     NSMutableArray * _attachmentUploadsActive;
     BOOL            _locationUpdatePending;
+    unsigned        _loginFailures;
 }
 
 - (void) identify;
@@ -131,6 +132,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _serverConnection = [[JsonRpcWebSocket alloc] init];
         _serverConnection.delegate = self;
         _apnsDeviceToken = nil;
+        _loginFailures = 0;
         
         _firstConnectionAfterCrashOrUpdate = theAppDelegate.launchedAfterCrash || theAppDelegate.runningNewBuild;
         
@@ -738,7 +740,15 @@ static NSTimer * _stateNotificationDelayTimer;
             NSLog(@"SRP phase 1 failed");
             // can happen if the client thinks the connection was closed, but the server still considers it as open
             // so let us also close and try again
-            [self stopAndRetry];
+            _loginFailures++;
+            if (_loginFailures < 3) {
+                [self stopAndRetry];
+            } else {
+                NSLog(@"Login SRP phase 1 failed %d times", _loginFailures);
+                [AppDelegate.instance showInvalidCredentialsWithContinueHandler:^{
+                    [self stopAndRetry];
+                }];
+            }
         } else {
             NSError * error;
             NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge error: &error];
@@ -755,6 +765,7 @@ static NSTimer * _stateNotificationDelayTimer;
                             NSLog(@"%@", error);
                         }
                         [self didFinishLogin: success];
+                        _loginFailures = 0;
                     } else {
                         [self didFinishLogin: NO];
                     }

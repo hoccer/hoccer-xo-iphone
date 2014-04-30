@@ -6,6 +6,7 @@
 "save"   = "Save";
 "delete" = "Delete";
 "enter"  = "Enter";
+"no"     = "No";
 
 "search_placeholder" = "search";
 
@@ -190,7 +191,18 @@
 "credentials_key_import_confirm_btn_title"   = "Import";
 
 "credentials_delete_btn_title"               = "Delete Login Credentials";
-"credentials_delete_safety_question"         = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
+"credentials_delete_safety_question"         = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to delete your credentials?";
+
+"credentials_and_database_not_deleted_title"="Nothing was deleted";
+"credentials_and_database_not_deleted_message"="Try restoring from backup or import saved credentials";
+
+"credentials_and_database_deleted_title"="Credentials Deleted";
+"credentials_and_database_deleted_message"="Credentials and database have been deleted. Please restart Hoccer XO.";
+
+"credentials_invalid_title"="Login failed";
+"credentials_invalid_delete_question"="Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+
+"credentials_database_delete_btn_title"="Delete All";
 
 //==============================================================================
 // Database
@@ -200,6 +212,8 @@
 "database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
 "database_corrupt_deleted_title"       = "Database deleted";
 "database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
+
+"database_delete_btn_title"="Delete Database";
 
 //==============================================================================
 // Geolocations

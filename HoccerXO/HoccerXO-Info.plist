@@ -51,12 +51,14 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>12427</string>
+	<string>12465</string>
 	<key>HXOClientDevelopers</key>
 	<array>
 		<string>David Siegel</string>
 		<string>Pavel Mayer</string>
 	</array>
+	<key>HXODefaultEnvironment</key>
+	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
 	<key>HXODesigners</key>
 	<array>
 		<string>Peter Amende</string>

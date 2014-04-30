@@ -998,13 +998,13 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
         strippedPublicKeyData = [NSData dataWithBytes:&bytes[i] length:bytesLen - i];
     }
     
-    NSLog(@"X.509 Formatted Public Key bytes:\n%@",[strippedPublicKeyData description]);
+    //NSLog(@"X.509 Formatted Public Key bytes:\n%@",[strippedPublicKeyData description]);
     
     if (strippedPublicKeyData == nil){
         NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format (2)");
         return nil;
     }
-    NSLog(@"Stripped Public Key Bytes:\n%@",[strippedPublicKeyData description]);
+    //NSLog(@"Stripped Public Key Bytes:\n%@",[strippedPublicKeyData description]);
     return strippedPublicKeyData;
 }
 

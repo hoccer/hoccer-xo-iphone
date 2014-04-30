@@ -14,6 +14,7 @@
 #import "HXOBackend.h"
 #import "GCNetworkReachability.h"
 
+typedef void (^ContinueBlock)();
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
@@ -73,6 +74,7 @@
 - (NSURL *)applicationLibraryDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
+- (void) showInvalidCredentialsWithContinueHandler:(ContinueBlock)onNotDeleted;
 
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 

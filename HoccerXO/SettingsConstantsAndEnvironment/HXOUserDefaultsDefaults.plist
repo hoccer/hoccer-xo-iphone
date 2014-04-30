@@ -26,8 +26,6 @@
 	<integer>16</integer>
 	<key>saveDatabasePolicy</key>
 	<string>delayed</string>
-	<key>environment</key>
-	<string>production</string>
 	<key>autoUploadLimitCellular</key>
 	<integer>0</integer>
 	<key>autoDownloadLimitCellular</key>
