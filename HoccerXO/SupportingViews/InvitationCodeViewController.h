@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 
-@interface InvitationCodeViewController : UIViewController <AVCaptureMetadataOutputObjectsDelegate, UIScrollViewDelegate>
+@interface InvitationCodeViewController : UIViewController <AVCaptureMetadataOutputObjectsDelegate, UITextFieldDelegate>
 
 
 @end

@@ -170,13 +170,14 @@
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
-		C5AC1988190FA09B0075C07C /* AttachmentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC1987190FA09B0075C07C /* AttachmentInfo.m */; };
-		C5BA22EB19093E8A0072F4A5 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */; };
-		C5BA23001909676C0072F4A5 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FA1909676C0072F4A5 /* button-pause.png */; };
-		C5BA23011909676C0072F4A5 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FB1909676C0072F4A5 /* button-pause@2x.png */; };
-		C5BA23021909676C0072F4A5 /* button-play.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FC1909676C0072F4A5 /* button-play.png */; };
-		C5BA23031909676C0072F4A5 /* button-play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5BA22FD1909676C0072F4A5 /* button-play@2x.png */; };
-		C5BA231619096C080072F4A5 /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BA231519096C080072F4A5 /* HXOAudioPlaybackButtonController.m */; };
+		6A937A02190EADAC00221B82 /* tab_attachments.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A00190EADAC00221B82 /* tab_attachments.pcvd */; };
+		6A937A03190EADAC00221B82 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A01190EADAC00221B82 /* tab_attachments.svg */; };
+		6A937A14190EADC200221B82 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A937A13190EADC200221B82 /* tab_attachments.m */; };
+		6A937A15190EADC200221B82 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A937A13190EADC200221B82 /* tab_attachments.m */; };
+		C53EBCF7190AA77F0016ACCF /* AudioAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C53EBCF6190AA77F0016ACCF /* AudioAttachmentListViewController.m */; };
+		C5AC19C4191157810075C07C /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19C1191157810075C07C /* HXOAudioPlaybackButtonController.m */; };
+		C5AC19C5191157810075C07C /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19C3191157810075C07C /* HXOAudioPlayer.m */; };
+		C5AC19D6191157960075C07C /* AttachmentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19D5191157960075C07C /* AttachmentInfo.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -184,6 +185,8 @@
 		E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAED61870A0F900D72D79 /* libz.dylib */; };
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
 		E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = E951759818DE420200EFD1C6 /* HXOEnvironment.m */; };
+		E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175E31909191F00EFD1C6 /* Kleistr.gpx */; };
+		E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175F31909920E00EFD1C6 /* Choriner.gpx */; };
 		E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F3118733B79007B8042 /* DDTTYLogger.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
@@ -682,16 +685,18 @@
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		C5AC1986190FA09B0075C07C /* AttachmentInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentInfo.h; sourceTree = "<group>"; };
-		C5AC1987190FA09B0075C07C /* AttachmentInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentInfo.m; sourceTree = "<group>"; };
-		C5BA22E919093E8A0072F4A5 /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
-		C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlayer.m; sourceTree = "<group>"; };
-		C5BA22FA1909676C0072F4A5 /* button-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause.png"; sourceTree = "<group>"; };
-		C5BA22FB1909676C0072F4A5 /* button-pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause@2x.png"; sourceTree = "<group>"; };
-		C5BA22FC1909676C0072F4A5 /* button-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play.png"; sourceTree = "<group>"; };
-		C5BA22FD1909676C0072F4A5 /* button-play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play@2x.png"; sourceTree = "<group>"; };
-		C5BA231419096C080072F4A5 /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
-		C5BA231519096C080072F4A5 /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
+		6A937A00190EADAC00221B82 /* tab_attachments.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tab_attachments.pcvd; sourceTree = "<group>"; };
+		6A937A01190EADAC00221B82 /* tab_attachments.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tab_attachments.svg; sourceTree = "<group>"; };
+		6A937A12190EADC200221B82 /* tab_attachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tab_attachments.h; sourceTree = "<group>"; };
+		6A937A13190EADC200221B82 /* tab_attachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tab_attachments.m; sourceTree = "<group>"; };
+		C53EBCF5190AA77F0016ACCF /* AudioAttachmentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentListViewController.h; sourceTree = "<group>"; };
+		C53EBCF6190AA77F0016ACCF /* AudioAttachmentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentListViewController.m; sourceTree = "<group>"; };
+		C5AC19C0191157810075C07C /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
+		C5AC19C1191157810075C07C /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
+		C5AC19C2191157810075C07C /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
+		C5AC19C3191157810075C07C /* HXOAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlayer.m; sourceTree = "<group>"; };
+		C5AC19D4191157960075C07C /* AttachmentInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentInfo.h; sourceTree = "<group>"; };
+		C5AC19D5191157960075C07C /* AttachmentInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentInfo.m; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
@@ -709,6 +714,8 @@
 		E95175AA18F330FC00EFD1C6 /* HoccerXO-34.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-34.xcdatamodel"; sourceTree = "<group>"; };
 		E95175AB18F5957D00EFD1C6 /* HoccerXO-35.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-35.xcdatamodel"; sourceTree = "<group>"; };
 		E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-36.xcdatamodel"; sourceTree = "<group>"; };
+		E95175E31909191F00EFD1C6 /* Kleistr.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Kleistr.gpx; sourceTree = "<group>"; };
+		E95175F31909920E00EFD1C6 /* Choriner.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Choriner.gpx; sourceTree = "<group>"; };
 		E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-23.xcdatamodel"; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
 		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
@@ -1330,6 +1337,8 @@
 		63848A9218F46F2D00C253A4 /* List Views */ = {
 			isa = PBXGroup;
 			children = (
+				C53EBCF5190AA77F0016ACCF /* AudioAttachmentListViewController.h */,
+				C53EBCF6190AA77F0016ACCF /* AudioAttachmentListViewController.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
@@ -1425,6 +1434,8 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				E95175F31909920E00EFD1C6 /* Choriner.gpx */,
+				E95175E31909191F00EFD1C6 /* Kleistr.gpx */,
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
 				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
 				6302A9B718DA8A9500B2D04F /* HoccerXO Tests */,
@@ -1527,8 +1538,8 @@
 			children = (
 				631457A816EF96B400AA8EB9 /* Attachment.h */,
 				631457A916EF96B500AA8EB9 /* Attachment.m */,
-				C5AC1986190FA09B0075C07C /* AttachmentInfo.h */,
-				C5AC1987190FA09B0075C07C /* AttachmentInfo.m */,
+				C5AC19D4191157960075C07C /* AttachmentInfo.h */,
+				C5AC19D5191157960075C07C /* AttachmentInfo.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				6378484416F4000500DE03C2 /* Delivery.h */,
@@ -1619,6 +1630,10 @@
 		63E9B00318F3151B00EFF829 /* Tab Bar */ = {
 			isa = PBXGroup;
 			children = (
+				6A937A12190EADC200221B82 /* tab_attachments.h */,
+				6A937A13190EADC200221B82 /* tab_attachments.m */,
+				6A937A00190EADAC00221B82 /* tab_attachments.pcvd */,
+				6A937A01190EADAC00221B82 /* tab_attachments.svg */,
 				63B78FF818D4D6C1003A9125 /* tab_chats.h */,
 				63B78FF918D4D6C1003A9125 /* tab_chats.m */,
 				63E9B00418F3156C00EFF829 /* tab_chats.pcvd */,
@@ -1643,10 +1658,10 @@
 		C5BA22D719093E140072F4A5 /* Audio Player */ = {
 			isa = PBXGroup;
 			children = (
-				C5BA231419096C080072F4A5 /* HXOAudioPlaybackButtonController.h */,
-				C5BA231519096C080072F4A5 /* HXOAudioPlaybackButtonController.m */,
-				C5BA22E919093E8A0072F4A5 /* HXOAudioPlayer.h */,
-				C5BA22EA19093E8A0072F4A5 /* HXOAudioPlayer.m */,
+				C5AC19C0191157810075C07C /* HXOAudioPlaybackButtonController.h */,
+				C5AC19C1191157810075C07C /* HXOAudioPlaybackButtonController.m */,
+				C5AC19C2191157810075C07C /* HXOAudioPlayer.h */,
+				C5AC19C3191157810075C07C /* HXOAudioPlayer.m */,
 			);
 			path = "Audio Player";
 			sourceTree = "<group>";
@@ -1654,10 +1669,6 @@
 		C5BA22F91909676C0072F4A5 /* AudioPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				C5BA22FA1909676C0072F4A5 /* button-pause.png */,
-				C5BA22FB1909676C0072F4A5 /* button-pause@2x.png */,
-				C5BA22FC1909676C0072F4A5 /* button-play.png */,
-				C5BA22FD1909676C0072F4A5 /* button-play@2x.png */,
 			);
 			path = AudioPlayer;
 			sourceTree = "<group>";
@@ -2146,6 +2157,7 @@
 			files = (
 				E9A85D9D184FD1AD00EB9B68 /* chatbar-attachment-icon-contact@2x.png in Resources */,
 				63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */,
+				E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */,
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
@@ -2159,9 +2171,9 @@
 				E9A85D9C184FD1AD00EB9B68 /* chatbar-attachment-icon-contact.png in Resources */,
 				63AE45501705E1440099F0CB /* MainStoryboard_iPad.storyboard in Resources */,
 				63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */,
+				6A937A03190EADAC00221B82 /* tab_attachments.svg in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
 				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
-				C5BA23021909676C0072F4A5 /* button-play.png in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
 				63B1C9DF1843E4FD00B75CD8 /* cnt-location.png in Resources */,
 				636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */,
@@ -2177,18 +2189,17 @@
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
-				C5BA23031909676C0072F4A5 /* button-play@2x.png in Resources */,
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
+				E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
+				6A937A02190EADAC00221B82 /* tab_attachments.pcvd in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
-				C5BA23001909676C0072F4A5 /* button-pause.png in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
-				C5BA23011909676C0072F4A5 /* button-pause@2x.png in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
@@ -2255,6 +2266,7 @@
 			files = (
 				6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */,
 				6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */,
+				6A937A15190EADC200221B82 /* tab_attachments.m in Sources */,
 				6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */,
 				6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */,
 				6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */,
@@ -2302,7 +2314,6 @@
 				6302A98C18DA870400B2D04F /* SRPParameters.m in Sources */,
 				6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */,
 				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
-				C5AC1988190FA09B0075C07C /* AttachmentInfo.m in Sources */,
 				630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
@@ -2323,6 +2334,7 @@
 				63DC01511713976B00609513 /* ImageViewController.m in Sources */,
 				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
+				C5AC19C5191157810075C07C /* HXOAudioPlayer.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
 				630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */,
 				630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */,
@@ -2336,8 +2348,8 @@
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
 				632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */,
-				C5BA231619096C080072F4A5 /* HXOAudioPlaybackButtonController.m in Sources */,
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
+				C5AC19C4191157810075C07C /* HXOAudioPlaybackButtonController.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
 				63638F8E18EC8210008DA997 /* avatar_group.m in Sources */,
 				E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */,
@@ -2361,6 +2373,7 @@
 				63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */,
 				E9E92F7018733D01007B8042 /* HTTPMessage.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
+				C53EBCF7190AA77F0016ACCF /* AudioAttachmentListViewController.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
 				6365EC8518E7976600B41054 /* avatar_contact.m in Sources */,
 				E9E92F6C18733D01007B8042 /* DDNumber.m in Sources */,
@@ -2381,6 +2394,7 @@
 				E9D1145E1732E74000737EF7 /* Vcard.m in Sources */,
 				E9D1148A1736702E00737EF7 /* GCHTTPRequestOperation.m in Sources */,
 				E9D1148B1736702E00737EF7 /* GCImageRequestOperation.m in Sources */,
+				6A937A14190EADC200221B82 /* tab_attachments.m in Sources */,
 				63808A2F185A11B60001AC96 /* AttachmentSection.m in Sources */,
 				E9D1148C1736702E00737EF7 /* GCJSONRequestOperation.m in Sources */,
 				E9D1148D1736702E00737EF7 /* GCNetworkQueue.m in Sources */,
@@ -2420,6 +2434,7 @@
 				630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
+				C5AC19D6191157960075C07C /* AttachmentInfo.m in Sources */,
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,
 				E9E92F3C18733B7A007B8042 /* DDASLLogger.m in Sources */,
 				6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */,
@@ -2432,7 +2447,6 @@
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
 				63CED3E318F9D86E0095110B /* SetupViewControllers.m in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
-				C5BA22EB19093E8A0072F4A5 /* HXOAudioPlayer.m in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
 				E9E92F4118733B7A007B8042 /* DispatchQueueLogFormatter.m in Sources */,
 				63FE105418EFA726008630DE /* AttachmentButton.m in Sources */,

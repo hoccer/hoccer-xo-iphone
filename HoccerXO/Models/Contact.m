@@ -147,9 +147,15 @@ NSString * const kRelationStateKept        = @"kept";
     SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
     if (myResult == nil) {
         // store public key from contact in key store
-        [rsa addPublicPeerKey: self.publicKeyString withPeerName: self.clientId];
+        if (self.publicKey != nil) {
+            [rsa addPublicPeerKey: self.publicKeyString withPeerName: self.clientId];
+        }
     } else {
         // check if correct key id in key store
+        if (self.publicKey == nil) {
+            NSLog(@"ERROR: Contact:getPublicKeyRef: public key in keystore but not in database for client id %@, nick %@", self.clientId, self.nickName);
+            return nil;
+        }
         NSData * myKeyBits = [rsa getKeyBitsForPeerRef:self.clientId];
         if (![myKeyBits isEqualToData:self.publicKey]) {
             [rsa removePeerPublicKey:self.clientId];
@@ -163,6 +169,18 @@ NSString * const kRelationStateKept        = @"kept";
     }
     return myResult;
 }
+
+- (BOOL) hasPublicKey {
+    if (![HXOBackend isInvalid:self.publicKey]) {
+        //NSLog(@"Contact hasPublicKey YES, id %@", self.clientId);
+        return YES;
+    } else {
+        //NSLog(@"Contact hasPublicKey NO, id %@ ", self.clientId);
+        return NO;
+    }
+}
+
+
 
 - (NSString*) nickNameWithStatus {
     if ([self.relationshipState isEqualToString: kRelationStateKept]) {

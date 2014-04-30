@@ -32,6 +32,8 @@
 @property (nonatomic, retain) NSNumber    * lastChangedMillis;
 @property (nonatomic, retain) NSNumber    * keyDateMillis;
 
+@property  unsigned updatesRefused;
+
 // @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
 
 - (BOOL) iAmAdmin;
@@ -42,10 +44,23 @@
 - (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
 
 - (BOOL) hasGroupKey;
+- (BOOL) hasValidGroupKey;
 - (void) generateNewGroupKey;
 - (BOOL) copyKeyFromMember:(GroupMembership*)member;
 - (BOOL) checkGroupKey;
 
+- (BOOL) hasKeyOnServer;
+- (BOOL) hasKeyMaster;
+- (BOOL) iAmKeyMaster;
+- (BOOL) iCanSetKeys;
+
+- (BOOL) keySettingInProgress;
+
+
+- (BOOL)syncKeyWithMembership;
+
+- (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds;
+- (NSSet*) activeMembersNeedingKeyUpdate;
 
 @end
 

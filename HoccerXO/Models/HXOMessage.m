@@ -64,7 +64,7 @@
 @dynamic bodyCiphertext;
 
 
-#define KEY_DEBUG YES
+#define KEY_DEBUG NO
 
 -(CGFloat) cachedCellHeight {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
@@ -119,10 +119,10 @@
             } else {
                 _cryptoKey = key;
             }
-            if (KEY_DEBUG) {NSLog(@"message  cryptoKey=%@", _cryptoKey);}
+            if (KEY_DEBUG) {NSLog(@"message cryptoKey=%@", _cryptoKey);}
         }
     }
-    if (KEY_DEBUG) {NSLog(@"returning message  cryptoKey=%@", _cryptoKey);}
+    if (KEY_DEBUG) {NSLog(@"returning message cryptoKey=%@", _cryptoKey);}
     return _cryptoKey;
 }
 
@@ -181,14 +181,19 @@
         if ([self.contact.type isEqualToString:@"Group"]) {
             self.salt =  [Crypto random256BitKey];
             Group * group = (Group*)self.contact;
-            NSLog(@"HXOMessage:setupOutgoingEncryption: using group key %@ with stored id %@ computed id %@",group.groupKey,group.sharedKeyId,[Crypto calcSymmetricKeyId:group.groupKey withSalt:group.sharedKeyIdSalt]);
+            [group syncKeyWithMembership];
+            NSData * computedId = [Crypto calcSymmetricKeyId:group.groupKey withSalt:group.sharedKeyIdSalt];
+            if (KEY_DEBUG) NSLog(@"HXOMessage:setupOutgoingEncryption: using group key %@ with stored id %@ computed id %@",group.groupKey,group.sharedKeyId,computedId);
+            if (![computedId isEqualToData:group.sharedKeyId]) {
+                NSLog(@"ERROR: HXOMessage:setupOutgoingEncryption: stored id %@ does not match computed id %@",group.sharedKeyId,computedId);
+            }
             self.outgoingCryptoKey = [Crypto XOR:group.groupKey with:self.salt];
         } else {
             self.outgoingCryptoKey = [Crypto random256BitKey];
         }
     } else {
         NSLog(@"HXOMessage:setupOutgoingEncryption: (re)using key %@",self.outgoingCryptoKey);
-   }
+    }
     [self setCryptoKey:self.outgoingCryptoKey];
 }
 
