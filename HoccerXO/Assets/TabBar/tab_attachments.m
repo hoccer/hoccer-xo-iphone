@@ -11,9 +11,8 @@
 @implementation tab_attachments
 
 - (void)initPath {
-    
-    
     UIBezierPath* bezierPath = self.path;
+
     [bezierPath moveToPoint: CGPointMake(13.51, 3.85)];
     [bezierPath addCurveToPoint: CGPointMake(13.51, 3.22) controlPoint1: CGPointMake(13.68, 3.67) controlPoint2: CGPointMake(13.68, 3.4)];
     [bezierPath addCurveToPoint: CGPointMake(12.89, 3.22) controlPoint1: CGPointMake(13.33, 3.03) controlPoint2: CGPointMake(13.07, 3.03)];
@@ -21,8 +20,6 @@
     [bezierPath addLineToPoint: CGPointMake(2.59, 15.08)];
     [bezierPath addLineToPoint: CGPointMake(13.51, 3.85)];
     [bezierPath closePath];
-    
-    
     
     //// Bezier 2 Drawing
     [bezierPath moveToPoint: CGPointMake(23.68, 1.63)];
@@ -52,12 +49,7 @@
     [bezierPath closePath];
     bezierPath.miterLimit = 4;
     
-    [[UIColor blackColor] setFill];
-    [bezierPath fill];
-    
-    
     self.fillColor = [UIColor blackColor];
-    
 }
 
 @end
