@@ -342,8 +342,12 @@ static int  groupMemberContext;
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
     }
-    for (unsigned i = 0; i < self.groupMemberItems.count; ++i) {
-        [self removeGroupMemberItem: i contact: [self contactAtIndex: i]];
+    for (int i =  self.groupMemberItems.count - 1; i >= 0; --i) {
+        if ([self.groupMemberItems[i] isEqual: [self myMembershipItem]]) {
+            [self.groupMemberItems removeObjectAtIndex: i];
+        } else {
+            [self removeGroupMemberItem: i contact: [self contactAtIndex: i]];
+        }
     }
 }
 
@@ -658,7 +662,7 @@ static int  groupMemberContext;
         cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
-        // cell.avatar.isOnline      = contact.isOnline;
+        cell.avatar.isOnline      = ! isMyMembership && contact.isOnline;
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];
@@ -812,6 +816,7 @@ static int  groupMemberContext;
         if (self.groupInStatuNascendi) {
             for (Contact * contact in result) {
                 DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
+                [self addContactObservers: contact];
                 [self.groupMemberItems addObject: contactItem];
                 [self.groupInStatuNascendi.members addObject: contact];
             }
