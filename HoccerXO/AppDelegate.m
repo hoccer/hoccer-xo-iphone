@@ -104,7 +104,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
  
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
+#ifdef HOCCER_DEV
+        [TestFlight takeOff:@"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b"];
+#else
         [TestFlight takeOff:@"26645843-f312-456c-8954-444e435d4ad2"];
+#endif
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
