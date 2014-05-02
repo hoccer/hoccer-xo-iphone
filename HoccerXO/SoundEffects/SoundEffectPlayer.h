@@ -14,6 +14,8 @@
 + (void)messageArrived;
 + (void)messageDelivered;
 + (void)messageSent;
++ (void)throwDetected;
++ (void)catchDetected;
 
 + (void)playSoundWithId: (SystemSoundID)soundId;
 

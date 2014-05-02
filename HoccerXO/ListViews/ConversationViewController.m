@@ -23,6 +23,20 @@
 #import "AvatarView.h"
 #import "tab_chats.h"
 #import "HXOEnvironment.h"
+#import "GesturesInterpreter.h"
+#import "SoundEffectPlayer.h"
+
+@interface ConversationViewController ()
+
+@property (strong) id catchObserver;
+@property (strong) id messageObserver;
+@property (strong) NSDate * catchDate;
+@property (strong) HXOMessage * caughtMessage;
+@property (strong) HXOMessage * lastMessage;
+@property (strong) NSDate * lastMessageDate;
+
+@end
+
 
 @implementation ConversationViewController
 
@@ -74,6 +88,60 @@
 
     [AppDelegate setWhiteFontStatusbarForViewController:self];
 
+    NSLog(@"ConversationView: viewWillAppear, adding observers");
+
+    self.catchObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"gesturesInterpreterDidDetectCatch"
+                                                                           object:nil
+                                                                            queue:[NSOperationQueue mainQueue]
+                                                                       usingBlock:^(NSNotification *note) {
+                                                                           NSLog(@"ConversationView: Catch");
+                                                                           [SoundEffectPlayer catchDetected];
+                                                                           const NSTimeInterval catchMessageBeforeGestureTime = 5.0;
+                                                                           if (self.lastMessageDate != nil && [self.lastMessageDate timeIntervalSinceNow] > -catchMessageBeforeGestureTime) {
+                                                                               // catch message that have arrived in the last 5 seconds before the gesture
+                                                                               self.catchDate = nil;
+                                                                               self.caughtMessage = self.lastMessage;
+                                                                               [self performSegueWithIdentifier: @"showChat" sender: self];
+                                                                           } else {
+                                                                               self.catchDate = [NSDate new];
+                                                                           }
+                                                                           self.lastMessage = nil;
+                                                                           self.lastMessageDate = nil;
+                                                                       }];
+    
+    self.messageObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"receivedNewHXOMessage"
+                                                                           object:nil
+                                                                            queue:[NSOperationQueue mainQueue]
+                                                                       usingBlock:^(NSNotification *note) {
+                                                                           NSLog(@"ConversationView: Message received");
+                                                                           NSDictionary * info = [note userInfo];
+                                                                           HXOMessage * message = (HXOMessage *)info[@"message"];
+                                                                           if (message != nil) {
+                                                                               const NSTimeInterval catchMessageAfterGestureTime = 15.0;
+                                                                               if (self.catchDate != nil && [self.catchDate timeIntervalSinceNow] > -catchMessageAfterGestureTime) {
+                                                                                   // catch messages that arrive up to 15 sec after the catch gesture
+                                                                                   self.catchDate = nil;
+                                                                                   self.caughtMessage = message;
+                                                                                   self.lastMessage = nil;
+                                                                                   self.lastMessageDate = nil;
+                                                                                   [self performSegueWithIdentifier: @"showChat" sender: self];
+                                                                               } else {
+                                                                                   self.lastMessage = message;
+                                                                                   self.lastMessageDate = [NSDate new];
+                                                                               }
+                                                                           }
+
+                                                                       }];
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    NSLog(@"ConversationView: viewWillDisappear, removing observers");
+    if (self.catchObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.catchObserver];
+    }
+    if (self.messageObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.messageObserver];
+    }
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -95,6 +163,11 @@
 - (void) segmentChanged: (id) sender {
     [super segmentChanged:sender];
     [HXOEnvironment.sharedInstance setActivation:self.inNearbyMode];
+    if (self.inNearbyMode) {
+        [GesturesInterpreter.instance start];
+    } else {
+        [GesturesInterpreter.instance stop];
+    }
 }
     
 #pragma mark - Table View
@@ -105,10 +178,16 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showChat"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        _chatViewController = [segue destinationViewController];
-        _chatViewController.inspectedObject = contact;
+        if (self.caughtMessage == nil) {
+            NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+            Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
+            _chatViewController = [segue destinationViewController];
+            _chatViewController.inspectedObject = contact;
+        } else {
+            _chatViewController = [segue destinationViewController];
+            _chatViewController.inspectedObject = self.caughtMessage.contact;
+            self.caughtMessage = nil;
+        }
     }
 }
 

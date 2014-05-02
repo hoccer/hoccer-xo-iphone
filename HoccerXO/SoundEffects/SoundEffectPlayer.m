@@ -12,11 +12,13 @@
 SystemSoundID messageArrivedId = 0;
 SystemSoundID messageDeliveredId = 0;
 SystemSoundID messageSentId = 0;
+SystemSoundID throwSoundId = 0;
+SystemSoundID catchSoundId = 0;
 
 NSDate * lastAlertSoundStart;
 NSDate * lastEffectSoundStart;
 
-const double minEffectSoundInterval = 0.5;
+const double minEffectSoundInterval = 0.2;
 const double minAlertSoundInterval = 2.0;
 
 
@@ -25,8 +27,10 @@ const double minAlertSoundInterval = 2.0;
 +  (void)initialize {
     if (self == [SoundEffectPlayer class]) {
         [self createSoundWithName: @"new_message"        ofType: @"aif" withId: &messageArrivedId];
-        [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &messageDeliveredId];
+        [self createSoundWithName: @"sweep_in_sound"     ofType: @"wav" withId: &messageDeliveredId];
         [self createSoundWithName: @"sweep_out_sound"    ofType: @"wav" withId: &messageSentId];
+        [self createSoundWithName: @"throw_sound"        ofType: @"wav" withId: &throwSoundId];
+        [self createSoundWithName: @"catch_sound"        ofType: @"wav" withId: &catchSoundId];
         lastAlertSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
         lastEffectSoundStart = [[NSDate alloc] initWithTimeIntervalSince1970:0];
     }
@@ -49,6 +53,15 @@ const double minAlertSoundInterval = 2.0;
 + (void)messageSent {
 	[SoundEffectPlayer playSoundWithId: messageSentId];
 }
+
++ (void)throwDetected {
+	[SoundEffectPlayer playSoundWithId: throwSoundId];
+}
+
++ (void)catchDetected {
+	[SoundEffectPlayer playSoundWithId: catchSoundId];
+}
+
 
 // Will just play sound
 + (void)playSoundWithId: (SystemSoundID)soundId {

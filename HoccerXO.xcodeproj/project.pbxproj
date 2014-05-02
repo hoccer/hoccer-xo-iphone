@@ -176,6 +176,12 @@
 		E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = E951759818DE420200EFD1C6 /* HXOEnvironment.m */; };
 		E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175E31909191F00EFD1C6 /* Kleistr.gpx */; };
 		E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175F31909920E00EFD1C6 /* Choriner.gpx */; };
+		E951760D1913EB6100EFD1C6 /* CatchDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176031913EB6100EFD1C6 /* CatchDetector.m */; };
+		E951760E1913EB6100EFD1C6 /* FeatureHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176051913EB6100EFD1C6 /* FeatureHistory.m */; };
+		E951760F1913EB6100EFD1C6 /* GesturesInterpreter.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176071913EB6100EFD1C6 /* GesturesInterpreter.m */; };
+		E95176101913EB6100EFD1C6 /* LineFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = E951760A1913EB6100EFD1C6 /* LineFeature.m */; };
+		E95176111913EB6100EFD1C6 /* ThrowDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E951760C1913EB6100EFD1C6 /* ThrowDetector.m */; };
+		E95176141913ECCB00EFD1C6 /* NSObject+DelegateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */; };
 		E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F3118733B79007B8042 /* DDTTYLogger.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
@@ -687,6 +693,19 @@
 		E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-36.xcdatamodel"; sourceTree = "<group>"; };
 		E95175E31909191F00EFD1C6 /* Kleistr.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Kleistr.gpx; sourceTree = "<group>"; };
 		E95175F31909920E00EFD1C6 /* Choriner.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Choriner.gpx; sourceTree = "<group>"; };
+		E95176021913EB6100EFD1C6 /* CatchDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CatchDetector.h; sourceTree = "<group>"; };
+		E95176031913EB6100EFD1C6 /* CatchDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CatchDetector.m; sourceTree = "<group>"; };
+		E95176041913EB6100EFD1C6 /* FeatureHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureHistory.h; sourceTree = "<group>"; };
+		E95176051913EB6100EFD1C6 /* FeatureHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureHistory.m; sourceTree = "<group>"; };
+		E95176061913EB6100EFD1C6 /* GesturesInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GesturesInterpreter.h; sourceTree = "<group>"; };
+		E95176071913EB6100EFD1C6 /* GesturesInterpreter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GesturesInterpreter.m; sourceTree = "<group>"; };
+		E95176081913EB6100EFD1C6 /* GesturesInterpreterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GesturesInterpreterDelegate.h; sourceTree = "<group>"; };
+		E95176091913EB6100EFD1C6 /* LineFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineFeature.h; sourceTree = "<group>"; };
+		E951760A1913EB6100EFD1C6 /* LineFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineFeature.m; sourceTree = "<group>"; };
+		E951760B1913EB6100EFD1C6 /* ThrowDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThrowDetector.h; sourceTree = "<group>"; };
+		E951760C1913EB6100EFD1C6 /* ThrowDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThrowDetector.m; sourceTree = "<group>"; };
+		E95176121913ECCB00EFD1C6 /* NSObject+DelegateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+DelegateHelper.h"; sourceTree = "<group>"; };
+		E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+DelegateHelper.m"; sourceTree = "<group>"; };
 		E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-23.xcdatamodel"; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
 		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
@@ -1051,6 +1070,8 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
+				E95176121913ECCB00EFD1C6 /* NSObject+DelegateHelper.h */,
+				E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */,
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
@@ -1454,6 +1475,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXGroup;
 			children = (
+				E95176011913EB6100EFD1C6 /* GesturesInterpreter */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -1608,6 +1630,24 @@
 			);
 			name = "Tab Bar";
 			path = TabBar;
+			sourceTree = "<group>";
+		};
+		E95176011913EB6100EFD1C6 /* GesturesInterpreter */ = {
+			isa = PBXGroup;
+			children = (
+				E95176021913EB6100EFD1C6 /* CatchDetector.h */,
+				E95176031913EB6100EFD1C6 /* CatchDetector.m */,
+				E95176041913EB6100EFD1C6 /* FeatureHistory.h */,
+				E95176051913EB6100EFD1C6 /* FeatureHistory.m */,
+				E95176061913EB6100EFD1C6 /* GesturesInterpreter.h */,
+				E95176071913EB6100EFD1C6 /* GesturesInterpreter.m */,
+				E95176081913EB6100EFD1C6 /* GesturesInterpreterDelegate.h */,
+				E95176091913EB6100EFD1C6 /* LineFeature.h */,
+				E951760A1913EB6100EFD1C6 /* LineFeature.m */,
+				E951760B1913EB6100EFD1C6 /* ThrowDetector.h */,
+				E951760C1913EB6100EFD1C6 /* ThrowDetector.m */,
+			);
+			path = GesturesInterpreter;
 			sourceTree = "<group>";
 		};
 		E95A75A518D257FD0027AE3E /* fmemopen */ = {
@@ -2233,6 +2273,7 @@
 				631457CA16F0E76D00AA8EB9 /* HXOBackend.m in Sources */,
 				6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */,
 				6378484616F4000500DE03C2 /* Delivery.m in Sources */,
+				E95176141913ECCB00EFD1C6 /* NSObject+DelegateHelper.m in Sources */,
 				E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */,
 				6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */,
 				63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */,
@@ -2297,6 +2338,7 @@
 				63CED3CE18F8A45D0095110B /* GroupInStatuNascendi.m in Sources */,
 				E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */,
 				E9E92F7618733D01007B8042 /* HTTPDataResponse.m in Sources */,
+				E951760E1913EB6100EFD1C6 /* FeatureHistory.m in Sources */,
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
 				E9DBE3E31865C0A000880252 /* CryptoJSON.m in Sources */,
@@ -2316,6 +2358,7 @@
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 				E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */,
 				E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */,
+				E95176111913EB6100EFD1C6 /* ThrowDetector.m in Sources */,
 				E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */,
 				63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */,
 				63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */,
@@ -2331,6 +2374,7 @@
 				E9D114901736702E00737EF7 /* GCXMLRequestOperation.m in Sources */,
 				630CAB7B18E0F78500782507 /* DatasheetController.m in Sources */,
 				E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */,
+				E95176101913EB6100EFD1C6 /* LineFeature.m in Sources */,
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */,
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
@@ -2368,6 +2412,8 @@
 				6302A98D18DA870400B2D04F /* SRPServer.m in Sources */,
 				632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */,
 				E9E92F6B18733D01007B8042 /* DDData.m in Sources */,
+				E951760F1913EB6100EFD1C6 /* GesturesInterpreter.m in Sources */,
+				E951760D1913EB6100EFD1C6 /* CatchDetector.m in Sources */,
 				6302A98618DA870400B2D04F /* BigInteger.m in Sources */,
 				63E9B00218F314AB00EFF829 /* ghost_busters_sign.m in Sources */,
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,

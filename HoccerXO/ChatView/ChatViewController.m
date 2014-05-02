@@ -82,6 +82,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, strong)   UITextField                   * autoCorrectTriggerHelper;
 @property (nonatomic, strong)   UILabel                       * messageFieldPlaceholder;
 
+@property (strong) id throwObserver;
+@property (strong) id catchObserver;
+
 @end
 
 @implementation ChatViewController
@@ -250,6 +253,23 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self scrollToRememberedCellOrToBottomIfNone];
     [AppDelegate setWhiteFontStatusbarForViewController:self];
+    
+    self.throwObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"gesturesInterpreterDidDetectThrow"
+                                                                    object:nil
+                                                                     queue:[NSOperationQueue mainQueue]
+                                                                usingBlock:^(NSNotification *note) {
+                                                                    NSLog(@"ChatView: Throw");
+                                                                    if (self.sendButton.enabled) {
+                                                                        [self sendPressed:nil];
+                                                                    }
+                                                                }];
+
+    self.catchObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"gesturesInterpreterDidDetectCatch"
+                                                                           object:nil
+                                                                            queue:[NSOperationQueue mainQueue]
+                                                                       usingBlock:^(NSNotification *note) {
+                                                                           NSLog(@"ChatView: Catch");
+                                                                       }];
 }
 
 - (NSMutableDictionary*) messageItems {
@@ -271,6 +291,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) viewWillDisappear:(BOOL)animated {
     [self rememberLastVisibleCell];
+    if (self.throwObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.throwObserver];
+    }
+    if (self.catchObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.catchObserver];
+    }
 }
 
 - (void)didReceiveMemoryWarning

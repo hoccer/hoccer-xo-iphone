@@ -713,6 +713,12 @@ static NSTimer * _stateNotificationDelayTimer;
         [SoundEffectPlayer messageArrived];
     }
     [self checkTransferQueues];
+    
+    id userInfo = @{ @"message":message };
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewHXOMessage"
+                                                        object:self
+                                                      userInfo:userInfo
+     ];
 }
 
 - (void) performRegistration {

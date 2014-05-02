@@ -112,6 +112,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
+    application.applicationSupportsShakeToEdit = NO;
 
     if ([self persistentStoreCoordinator] == nil) {
         return NO;
