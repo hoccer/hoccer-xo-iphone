@@ -904,7 +904,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #pragma mark - URL Handling
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+#ifdef HOCCER_DEV
+    if ([[url scheme] isEqualToString:@"hxod"]) {
+#else
     if ([[url scheme] isEqualToString:@"hxo"]) {
+#endif
         // TODO: input verification
         [self.chatBackend acceptInvitation: url.host];
     }

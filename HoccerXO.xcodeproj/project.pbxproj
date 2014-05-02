@@ -2572,6 +2572,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_URL_SCHEME = hxo;
+				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -2609,6 +2611,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_URL_SCHEME = hxo;
+				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -2680,6 +2684,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_URL_SCHEME = hxod;
+				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -2785,6 +2791,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_URL_SCHEME = hxod;
+				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -2797,7 +2805,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO Dev";
-				PROVISIONING_PROFILE = "52E13936-560D-4116-83A4-FE153778F3F4";
+				PROVISIONING_PROFILE = "54CD45D1-510A-4016-B3B7-382AB4F4E592";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";

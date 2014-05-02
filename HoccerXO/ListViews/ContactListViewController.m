@@ -510,7 +510,11 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (NSString*) inviteURL: (NSString*) token {
+#ifdef HOCCER_DEV
+    return [NSString stringWithFormat: @"hxod://%@", token];
+#else
     return [NSString stringWithFormat: @"hxo://%@", token];
+#endif
 }
 
 - (NSString*) appStoreURL {
