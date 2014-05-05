@@ -35,6 +35,7 @@
 
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
+    [self.skipBackButton addTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
     [self updateAttachmentInfo];
     [self updatePlaybackState];
     [self updateCurrentTime];
@@ -106,6 +107,15 @@
 
 - (void) seekTime: (id)sender {
     self.audioPlayer.currentTime = self.seekSlider.value;
+}
+
+- (void) skipBack: (id)sender {
+    if (self.audioPlayer.currentTime > 3.0f){
+        self.audioPlayer.currentTime = 0.0f;
+        [self updateCurrentTime];
+    } else {
+        // TODO: implement playlist skip to previous track
+    }
 }
 
 @end

@@ -19,8 +19,8 @@
 @property (nonatomic, strong) IBOutlet UILabel *currentTimeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *remainingTimeLabel;
 @property (nonatomic, strong) IBOutlet UIButton *playButton;
-@property (nonatomic, strong) IBOutlet UIButton *previousButton;
-@property (nonatomic, strong) IBOutlet UIButton *nextButton;
+@property (nonatomic, strong) IBOutlet UIButton *skipBackButton;
+@property (nonatomic, strong) IBOutlet UIButton *skipForwardButton;
 @property (nonatomic, strong) IBOutlet UISlider *seekSlider;
 
 

@@ -272,11 +272,11 @@
                     <connections>
                         <outlet property="artistLabel" destination="3zo-vz-vjI" id="jQ8-lO-aVa"/>
                         <outlet property="currentTimeLabel" destination="MXk-2i-gTo" id="jf6-N5-byB"/>
-                        <outlet property="nextButton" destination="liZ-gI-Pdx" id="j94-kD-YcD"/>
                         <outlet property="playButton" destination="85y-tl-b3q" id="fwK-18-Hpw"/>
-                        <outlet property="previousButton" destination="dBA-Xa-6es" id="mZa-9O-Azt"/>
                         <outlet property="remainingTimeLabel" destination="KJX-QM-Eai" id="kUd-Qp-5C3"/>
                         <outlet property="seekSlider" destination="k7m-XD-mWz" id="8mT-DY-gX1"/>
+                        <outlet property="skipBackButton" destination="dBA-Xa-6es" id="xwQ-Ri-HwH"/>
+                        <outlet property="skipForwardButton" destination="liZ-gI-Pdx" id="1Xj-vg-Ekw"/>
                         <outlet property="titleLabel" destination="JOo-wW-6Ox" id="hEW-Iq-dZj"/>
                     </connections>
                 </viewController>
