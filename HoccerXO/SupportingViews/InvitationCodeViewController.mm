@@ -217,6 +217,11 @@
         self.codes = [NSMutableDictionary dictionary];
     }
     for (AVMetadataObject *metadataObject in metadataObjects) {
+        if ( ! [metadataObject isKindOfClass: [AVMetadataMachineReadableCodeObject class]]) {
+            // ignore faces, &c.
+            continue;
+        }
+
         AVMetadataMachineReadableCodeObject *readableObject = (AVMetadataMachineReadableCodeObject *)metadataObject;
 
         if ( ! self.codes[readableObject.stringValue]) {
