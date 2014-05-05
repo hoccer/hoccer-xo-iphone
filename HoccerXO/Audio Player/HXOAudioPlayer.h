@@ -18,7 +18,9 @@
 - (BOOL) playAttachment: (Attachment *) attachment;
 - (void) play;
 - (void) pause;
-- (void) stop;
+- (void) togglePlayPause;
+- (void) skipBack;
+- (void) skipForward;
 
 @property (nonatomic, readonly) BOOL isPlaying;
 @property (nonatomic, readonly) Attachment * attachment;

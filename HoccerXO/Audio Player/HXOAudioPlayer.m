@@ -67,9 +67,24 @@
     self.isPlaying = NO;
 }
 
-- (void) stop {
-    [self pause];
-    self.attachment = nil;
+- (void) togglePlayPause {
+    if (self.isPlaying) {
+        [self pause];
+    } else {
+        [self play];
+    }
+}
+
+- (void) skipBack {
+    if (self.currentTime > 3.0f){
+        self.currentTime = 0.0f;
+    } else {
+        // TODO: implement playlist skip to previous track
+    }
+}
+
+- (void) skipForward {
+    
 }
 
 - (NSTimeInterval) currentTime {
@@ -89,6 +104,11 @@
 }
 
 #pragma mark - Private helpers
+
+- (void) stop {
+    [self pause];
+    self.attachment = nil;
+}
 
 - (void) setAttachment:(Attachment *)attachment {
     if (![_attachment isEqual:attachment]) {

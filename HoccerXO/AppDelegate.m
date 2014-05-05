@@ -1371,17 +1371,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 break;
                 
             case UIEventSubtypeRemoteControlTogglePlayPause:
-                if (player.isPlaying) {
-                    [player pause];
-                } else {
-                    [player play];
-                }
+                [player togglePlayPause];
                 break;
                 
             case UIEventSubtypeRemoteControlPreviousTrack:
+                [player skipBack];
                 break;
                 
             case UIEventSubtypeRemoteControlNextTrack:
+                [player skipForward];
                 break;
                 
             default:

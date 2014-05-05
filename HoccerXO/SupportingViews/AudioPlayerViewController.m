@@ -98,11 +98,7 @@
 }
 
 - (void) togglePlayback: (id)sender {
-    if ([self.audioPlayer isPlaying]) {
-        [self.audioPlayer pause];
-    } else {
-        [self.audioPlayer play];
-    }
+    [self.audioPlayer togglePlayPause];
 }
 
 - (void) seekTime: (id)sender {
@@ -110,12 +106,8 @@
 }
 
 - (void) skipBack: (id)sender {
-    if (self.audioPlayer.currentTime > 3.0f){
-        self.audioPlayer.currentTime = 0.0f;
-        [self updateCurrentTime];
-    } else {
-        // TODO: implement playlist skip to previous track
-    }
+    [self.audioPlayer skipBack];
+    [self updateCurrentTime];
 }
 
 @end
