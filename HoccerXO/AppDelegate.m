@@ -49,8 +49,14 @@
 #define AUDIOSESSION_DEBUG NO
 #define TRACE_DATABASE_SAVE YES
 
-//static const NSInteger kFatalDatabaseErrorAlertTag = 100;
-//static const NSInteger kDatabaseDeleteAlertTag = 200;
+#ifdef HOCCER_DEV
+NSString * const kHXOURLScheme = @"hxod";
+static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
+#else
+NSString * const kHXOURLScheme = @"hxo";
+static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
+#endif
+
 static NSInteger validationErrorCount = 0;
 
 #ifdef WITH_WEBSERVER
@@ -104,11 +110,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
  
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
-#ifdef HOCCER_DEV
-        [TestFlight takeOff:@"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b"];
-#else
-        [TestFlight takeOff:@"26645843-f312-456c-8954-444e435d4ad2"];
-#endif
+        [TestFlight takeOff: kTestFlightAppToken];
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
@@ -909,11 +911,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #pragma mark - URL Handling
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-#ifdef HOCCER_DEV
-    if ([[url scheme] isEqualToString:@"hxod"]) {
-#else
-    if ([[url scheme] isEqualToString:@"hxo"]) {
-#endif
+    if ([[url scheme] isEqualToString: kHXOURLScheme]) {
         // TODO: input verification
         [self.chatBackend acceptInvitation: url.host];
     }
