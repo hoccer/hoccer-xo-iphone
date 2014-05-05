@@ -427,20 +427,25 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             
         }
     } else if (![self.partner.relationshipState isEqualToString: kRelationStateFriend]) {
-        NSString * messageText;
+        NSString * messageText = nil;
         if ([self.partner.relationshipState isEqualToString: kRelationStateBlocked]) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
+        } else if ([@"YES" isEqualToString:self.partner.isNearby]) {
+            if (!self.partner.isOnline) {
+                messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
+            }
         } else {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_relationship_removed_message", nil)];
         }
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
-                                                         message: messageText
-                                                        delegate: nil
-                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
-                                               otherButtonTitles: nil];
-        [alert show];
-        return;
-        
+        if (messageText != nil) {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
+                                                             message: messageText
+                                                            delegate: nil
+                                                   cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                                   otherButtonTitles: nil];
+            [alert show];
+            return;
+        }
     }
 
     // TODO: find a better way to detect that we have an attachment... :-/
