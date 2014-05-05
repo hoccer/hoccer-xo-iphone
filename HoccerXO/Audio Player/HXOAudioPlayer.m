@@ -77,7 +77,9 @@
 
 - (void) skipBack {
     if (self.currentTime > 3.0f){
-        self.currentTime = 0.0f;
+        Attachment *attachment = self.attachment;
+        [self stop];
+        [self playAttachment:attachment];
     } else {
         // TODO: implement playlist skip to previous track
     }
@@ -149,7 +151,7 @@
             [nowPlayingInfo setValue:attachmentInfo.audioAlbum forKey:MPMediaItemPropertyAlbumTitle];
         }
 
-        [nowPlayingInfo setValue:[NSNumber numberWithDouble: attachmentInfo.audioDuration] forKey:MPMediaItemPropertyPlaybackDuration];
+        [nowPlayingInfo setValue:[NSNumber numberWithDouble:attachmentInfo.audioDuration] forKey:MPMediaItemPropertyPlaybackDuration];
 
         infoCenter.nowPlayingInfo = nowPlayingInfo;
     } else {
