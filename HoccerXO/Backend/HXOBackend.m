@@ -477,18 +477,22 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     [self.delegate.managedObjectContext refreshObject: contact mergeChanges: YES];
-    
-    if (_state == kBackendReady) {
+
+    // Delivery may already be in state failed, e.g. if the public key is missing.
+    BOOL deliveryFailed = [delivery.state isEqualToString: kDeliveryStateFailed];
+    if (_state == kBackendReady && ! deliveryFailed) {
         [self deliveryRequest: message withDeliveries: @[delivery]];
     }
     
-    if (attachment != nil && attachment.state == kAttachmentWantsTransfer) {
+    if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
         [self enqueueUploadOfAttachment:attachment];
         // [attachment upload];
     }
     
     [self.delegate saveDatabase];
-    [SoundEffectPlayer messageSent];
+    if ( ! deliveryFailed) {
+        [SoundEffectPlayer messageSent];
+    }
     [self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
     
 }
