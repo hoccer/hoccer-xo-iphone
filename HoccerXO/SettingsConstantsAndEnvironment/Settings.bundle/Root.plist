@@ -311,8 +311,6 @@
 				<string>2048 Bit</string>
 				<string>3072 Bit</string>
 				<string>4096 Bit</string>
-				<string>6144 Bit</string>
-				<string>8192 Bit</string>
 			</array>
 			<key>Values</key>
 			<array>
@@ -320,8 +318,6 @@
 				<integer>2048</integer>
 				<integer>3072</integer>
 				<integer>4096</integer>
-				<string>6144</string>
-				<integer>8192</integer>
 			</array>
 		</dict>
 		<dict>

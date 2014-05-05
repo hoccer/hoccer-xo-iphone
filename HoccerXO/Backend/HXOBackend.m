@@ -1684,9 +1684,10 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
                 ok = ok && stateOk;
             }
-            if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]] && ok) {
-                [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
-            }
+//            if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]] && ok) {
+//                [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
+//            }
+            [self checkGroupMemberships];
         }
         [self finishFirstConnectionAfterCrashOrUpdate];
     }];
@@ -1892,6 +1893,49 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }];
 }
+
+// Boolean[] isMemberInGroups(String[] groupIds);
+- (void) checkGroupMemberships {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext: self.delegate.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSMutableArray *predicateArray = [NSMutableArray array];
+    [predicateArray addObject: [NSPredicate predicateWithFormat:@"type == Group AND groupState == exists" ]];
+
+    NSError *error;
+    NSArray *groupArray = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (groupArray == nil)
+    {
+        NSLog(@"Fetch request for 'checkGroupMemberships' failed: %@", error);
+        abort();
+    }
+    NSMutableArray * groupsToCheck = [[NSMutableArray alloc]init];
+    for (Group * group in groupArray) {
+        [groupsToCheck addObject:group.clientId];
+    }
+    if (groupsToCheck.count > 0) {
+        [_serverConnection invoke: @"isMemberInGroups" withParams: @[groupsToCheck] onResponse: ^(id responseOrError, BOOL success) {
+            if (success) {
+                NSArray * memberFlags = responseOrError;
+                if (memberFlags.count != groupsToCheck.count || memberFlags.count != groupArray.count) {
+                    NSLog(@"ERROR: isMemberInGroups(): return type mismatch, requested %d/%d flags, got %d",groupsToCheck.count,groupArray.count,memberFlags.count);
+                    return;
+                }
+                for (int i = 0; i < memberFlags.count;++i) {
+                    if ([memberFlags[i] boolValue] == NO) {
+                        Group * group = groupArray[i];
+                        NSLog(@"checkGroupMemberships: removing group with id: %@ nick: %@", group.clientId, group.nickName);
+                        [self handleDeletionOfGroup:group];
+                    }
+                }
+            } else {
+                NSLog(@"isMemberInGroups(): failed: %@", responseOrError);
+            }
+        }];
+    }
+}
+
 
 //TalkGroup getGroup(String groupId);
 - (void) getGroup:(NSString *)groupId onResult:(ObjectResultHandler)handler {
