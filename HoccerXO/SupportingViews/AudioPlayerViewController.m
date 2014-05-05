@@ -26,7 +26,13 @@
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
     
     self.titleLabel.text = self.audioPlayer.attachment.humanReadableFileName;
+    [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self updatePlaybackState];
+}
+
+- (void) dealloc {
+    [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying))];
+    [self.playButton removeTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void) observeValueForKeyPath: (NSString *)keyPath ofObject: (id)object change: (NSDictionary *)change context: (void *)context {
@@ -36,6 +42,14 @@
 - (void) updatePlaybackState {
     NSString *playState = [self.audioPlayer isPlaying] ? @"Pause" : @"Play";
     [self.playButton setTitle:playState forState:UIControlStateNormal];
+}
+
+- (void) togglePlayback: (id) sender {
+    if ([self.audioPlayer isPlaying]) {
+        [self.audioPlayer pause];
+    } else {
+        [self.audioPlayer play];
+    }
 }
 
 @end

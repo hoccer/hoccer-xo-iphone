@@ -124,9 +124,18 @@ static NSString *reuseIdentifier = @"audio_attachment";
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
     
     HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
-    [audioPlayer playAttachment:attachment];
+    BOOL success = [audioPlayer playAttachment:attachment];
     
-    [self performSegueWithIdentifier:@"showAudioPlayer" sender:attachment];
+    if (success) {
+        [self performSegueWithIdentifier:@"showAudioPlayer" sender:attachment];
+    } else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
+                                                         message: NSLocalizedString(@"attachment_cannot_play_message", nil)
+                                                        delegate: nil
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+    }
 }
 
 #pragma mark - Fetched results controller delegate
