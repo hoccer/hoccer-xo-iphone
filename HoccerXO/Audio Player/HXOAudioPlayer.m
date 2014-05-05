@@ -105,6 +105,12 @@
     [self updateNowPlayingInfo];
 }
 
+- (void) setCurrentTime:(NSTimeInterval)currentTime {
+    if (self.player) {
+        self.player.currentTime = currentTime;
+    }
+}
+
 - (void) updateNowPlayingInfo {
     MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
     if (self.attachment) {

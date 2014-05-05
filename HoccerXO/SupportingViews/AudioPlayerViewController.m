@@ -32,6 +32,7 @@
     self.seekSlider.maximumValue = self.audioPlayer.duration;
 
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
+    [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
     [self updatePlaybackState];
     [self updateCurrentTime];
 }
@@ -79,12 +80,16 @@
     return [NSString stringWithFormat:@"%@%02i:%02i", sign, minutes, seconds];
 }
 
-- (void) togglePlayback: (id) sender {
+- (void) togglePlayback: (id)sender {
     if ([self.audioPlayer isPlaying]) {
         [self.audioPlayer pause];
     } else {
         [self.audioPlayer play];
     }
+}
+
+- (void) seekTime: (id)sender {
+    self.audioPlayer.currentTime = self.seekSlider.value;
 }
 
 @end

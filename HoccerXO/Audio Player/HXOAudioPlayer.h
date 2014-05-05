@@ -23,7 +23,7 @@
 @property (nonatomic, readonly) BOOL isPlaying;
 @property (nonatomic, readonly) Attachment * attachment;
 @property (nonatomic, readonly) NSTimeInterval duration;
-@property (nonatomic, readonly) NSTimeInterval currentTime;
+@property NSTimeInterval currentTime;
 
 
 @end
