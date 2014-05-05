@@ -1,4 +1,4 @@
-"language_code"="de";
+"language_code" = "de";
 
 "ok"     = "Ok";
 "cancel" = "Abbrechen";
@@ -129,10 +129,12 @@
 // Contact - uses strings from profile
 //==============================================================================
 
-"contact_list_nav_title" = "Kontakte";
-"contact_nav_title" = "Kontakt";
+"contact_list_nav_title"                        = "Kontakte";
+"contact_nav_title"                             = "Kontakt";
 
-"contact_chat_title"                            = "Chat";
+"contact_chat_title"                            = "Chat:";
+"contact_key_btn_title"                         = "Schlüssel:";
+
 "contact_unblock_btn_title_format"              = "%@ entblockieren";
 "contact_block_btn_title_format"                = "%@ blockieren";
 
@@ -167,45 +169,45 @@
 // Credentials
 //==============================================================================
 
-"credentials_setup_nav_title"                = "Konto";
-"credentials_setup_found_old_text"           = "Hoccer XO war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
-"credentials_setup_found_file_text"          = "Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
-"credentials_setup_keep_btn_title"           = "Konto reaktivieren";
-"credentials_setup_import_btn_title"         = "Importieren";
-"credentials_setup_create_btn_title"         = "Neues Konto";
+"credentials_setup_nav_title"                  = "Konto";
+"credentials_setup_found_old_text"             = "Hoccer XO war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
+"credentials_setup_found_file_text"            = "Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
+"credentials_setup_keep_btn_title"             = "Konto reaktivieren";
+"credentials_setup_import_btn_title"           = "Importieren";
+"credentials_setup_create_btn_title"           = "Neues Konto";
 
-"credentials_file_delete_btn_title"          = "Exportierte Daten löschen";
-"credentials_file_delete_safety_question"    = "Exportierte Zugangsdaten wirklich löschen?";
-"credentials_file_deleted_alert"             = "Exportierte Zugangsdaten gelöscht";
-"credentials_file_enter_passphrase_alert"    = "Enschlüsselungskennwort eingeben";
-"credentials_file_choose_passphrase_alert"   = "Verschlüsselungskennwort eingeben und merken";
-"credentials_file_passphrase_placeholder"    = "Kennwort eingeben";
-"credentials_file_import_failed_title"       = "Zugangsdatenimport fehlgeschlagen";
-"credentials_file_decryption_failed_message" = "Falsches Kennwort oder ungültige Zugangsdaten. Versuchen sie es noch einmal.";
-"credentials_file_equals_current_title"      = "Identische Zugangsdaten";
-"credentials_file_equals_current_message"    = "Importiere Zugangsdaten sind mit den geltenden identisch.";
+"credentials_file_delete_btn_title"            = "Exportierte Daten löschen";
+"credentials_file_delete_safety_question"      = "Exportierte Zugangsdaten wirklich löschen?";
+"credentials_file_deleted_alert"               = "Exportierte Zugangsdaten gelöscht";
+"credentials_file_enter_passphrase_alert"      = "Enschlüsselungskennwort eingeben";
+"credentials_file_choose_passphrase_alert"     = "Verschlüsselungskennwort eingeben und merken";
+"credentials_file_passphrase_placeholder"      = "Kennwort eingeben";
+"credentials_file_import_failed_title"         = "Zugangsdatenimport fehlgeschlagen";
+"credentials_file_decryption_failed_message"   = "Falsches Kennwort oder ungültige Zugangsdaten. Versuchen sie es noch einmal.";
+"credentials_file_equals_current_title"        = "Identische Zugangsdaten";
+"credentials_file_equals_current_message"      = "Importiere Zugangsdaten sind mit den geltenden identisch.";
 
-"credentials_export_btn_title"               = "Zugangsdaten exportieren";
-"credentials_exported_alert"                 = "Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
+"credentials_export_btn_title"                 = "Zugangsdaten exportieren";
+"credentials_exported_alert"                   = "Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
 
-"credentials_import_btn_title"               = "Zugangsdaten importieren";
-"credentials_import_safety_question"         = "Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
-"credentials_key_import_confirm_btn_title"   = "Importieren";
+"credentials_import_btn_title"                 = "Zugangsdaten importieren";
+"credentials_import_safety_question"           = "Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
+"credentials_key_import_confirm_btn_title"     = "Importieren";
 
-"credentials_delete_safety_question"         = "Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
+"credentials_delete_safety_question"           = "Das Löschen von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch löschen?";
 
-"credentials_delete_btn_title"               = "Zugangsdaten löschen";
+"credentials_delete_btn_title"                 = "Zugangsdaten löschen";
 
-"credentials_and_database_not_deleted_title"= "Daten behalten";
-"credentials_and_database_not_deleted_message"="Versuche eine Sicherungskopie einzuspielen oder gültige Zugangsdaten zu importieren.";
+"credentials_and_database_not_deleted_title"   = "Daten behalten";
+"credentials_and_database_not_deleted_message" = "Versuche eine Sicherungskopie einzuspielen oder gültige Zugangsdaten zu importieren.";
 
-"credentials_and_database_deleted_title"="Zugangsdaten gelöscht";
-"credentials_and_database_deleted_message"="Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer XO neu.";
+"credentials_and_database_deleted_title"       = "Zugangsdaten gelöscht";
+"credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer XO neu.";
 
-"credentials_invalid_title"="Anmeldung fehlgeschlagen";
-"credentials_invalid_delete_question"="Willst du deine Zugangsdaten and alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
+"credentials_invalid_title"                    = "Anmeldung fehlgeschlagen";
+"credentials_invalid_delete_question"          = "Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
 
-"credentials_database_delete_btn_title"="Alles löschen";
+"credentials_database_delete_btn_title"        = "Alles löschen";
 
 //==============================================================================
 // Database
@@ -366,8 +368,8 @@
 //==============================================================================
 
 
-"permission_denied_title"             = "Zugriff verweigert";
-"permission_denied_microphone_message"= "Um Sprache aufzunehmen erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
+"permission_denied_title"              = "Zugriff verweigert";
+"permission_denied_microphone_message" = "Um Sprache aufzunehmen erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
 
 //==============================================================================
 // Profile
@@ -379,8 +381,10 @@
 "profile_avatar_option_sheet_title"      = "Wähle ein Avatarbild aus:";
 "profile_avatar_option_delete_btn_title" = "Avatar löschen";
 
+"profile_name_label"                     = "Name:";
 "profile_name_placeholder"               = "Dein Name";
-"profile_key_btn_title"                  = "Schlüssel";
+
+"profile_key_btn_title"                  = "Dein Schlüssel";
 
 
 //==============================================================================

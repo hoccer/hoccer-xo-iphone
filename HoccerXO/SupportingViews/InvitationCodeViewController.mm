@@ -217,15 +217,16 @@
         self.codes = [NSMutableDictionary dictionary];
     }
     for (AVMetadataObject *metadataObject in metadataObjects) {
+        if ( ! [metadataObject isKindOfClass: [AVMetadataMachineReadableCodeObject class]]) {
+            // ignore faces, &c.
+            continue;
+        }
+
         AVMetadataMachineReadableCodeObject *readableObject = (AVMetadataMachineReadableCodeObject *)metadataObject;
 
         if ( ! self.codes[readableObject.stringValue]) {
             NSURL * url = [NSURL URLWithString: readableObject.stringValue];
-#ifdef HOCCER_DEV
-            if ([url.scheme isEqualToString: @"hxod"]) {
-#else
-            if ([url.scheme isEqualToString: @"hxo"]) {
-#endif
+            if ([url.scheme isEqualToString: kHXOURLScheme]) {
                 [self.chatBackend pairByToken: url.host];
                 [self addFlash: readableObject];
             } else {
@@ -271,11 +272,7 @@
             }
             if (segmentedControl.selectedSegmentIndex == 1) { // monkey guard
                 self.codeTextField.text = token;
-#ifdef HOCCER_DEV
-                NSString * hxoURL = [NSString stringWithFormat: @"hxod://%@", token];
-#else
-                NSString * hxoURL = [NSString stringWithFormat: @"hxo://%@", token];
-#endif
+                NSString * hxoURL = [NSString stringWithFormat: @"%@://%@", kHXOURLScheme, token];
                 DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
                 [UIView transitionWithView: self.qrCodeView
                                   duration: 0.3f

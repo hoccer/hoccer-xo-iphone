@@ -516,7 +516,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (IBAction)attachmentPressed: (id)sender {
     // NSLog(@"attachmentPressed");
-    //    [self.messageField resignFirstResponder];
+    [self.messageField resignFirstResponder]; // XXX :-/
     if (_currentPickInfo || _currentAttachment) {
         [self showAttachmentOptions];
     } else {

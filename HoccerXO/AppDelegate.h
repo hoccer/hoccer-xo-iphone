@@ -14,6 +14,9 @@
 #import "HXOBackend.h"
 #import "GCNetworkReachability.h"
 
+
+FOUNDATION_EXPORT NSString * const kHXOURLScheme;
+
 typedef void (^ContinueBlock)();
 
 @class ConversationViewController;
