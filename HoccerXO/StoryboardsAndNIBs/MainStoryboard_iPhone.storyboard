@@ -281,6 +281,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="AXf-sx-DVH"/>
                     <connections>
+                        <outlet property="playButton" destination="85y-tl-b3q" id="fwK-18-Hpw"/>
                         <outlet property="titleLabel" destination="JOo-wW-6Ox" id="hEW-Iq-dZj"/>
                     </connections>
                 </viewController>

@@ -12,31 +12,30 @@
 
 @interface AudioPlayerViewController ()
 
+@property (nonatomic, readonly) HXOAudioPlayer * audioPlayer;
+
 @end
 
 @implementation AudioPlayerViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-    }
-    return self;
-}
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
-    HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
-    self.titleLabel.text = audioPlayer.attachment.humanReadableFileName;
+    _audioPlayer = [HXOAudioPlayer sharedInstance];
+    
+    [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
+    
+    self.titleLabel.text = self.audioPlayer.attachment.humanReadableFileName;
+    [self updatePlaybackState];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void) observeValueForKeyPath: (NSString *)keyPath ofObject: (id)object change: (NSDictionary *)change context: (void *)context {
+    [self updatePlaybackState];
 }
 
+- (void) updatePlaybackState {
+    NSString *playState = [self.audioPlayer isPlaying] ? @"Pause" : @"Play";
+    [self.playButton setTitle:playState forState:UIControlStateNormal];
+}
 
 @end
