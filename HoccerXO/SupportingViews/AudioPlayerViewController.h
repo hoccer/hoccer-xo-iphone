@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class Attachment;
+
 @interface AudioPlayerViewController : UIViewController
+
+@property (nonatomic, strong) Attachment *audioAttachment;
 
 @end

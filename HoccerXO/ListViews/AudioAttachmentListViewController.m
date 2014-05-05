@@ -100,18 +100,41 @@ static NSString *reuseIdentifier = @"audio_attachment";
 }
 
 - (void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    Attachment *attachment = [self attachmentAtIndexPath:indexPath];
+    
+    if (attachment) {
+        cell.textLabel.text = attachment.humanReadableFileName;
+    }
+}
+
+- (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     if ([object isKindOfClass:[Attachment class]]) {
-        Attachment *attachment = (Attachment *)object;
-        cell.textLabel.text = attachment.humanReadableFileName;
+        return (Attachment *)object;
     }
+    
+    return nil;
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:@"showAudioPlayer" sender:self];
+    Attachment *attachment = [self attachmentAtIndexPath:indexPath];
+    [self performSegueWithIdentifier:@"showAudioPlayer" sender:attachment];
+}
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([sender isKindOfClass:[Attachment class]] ) {
+        Attachment *attachment = (Attachment *)sender;
+        
+        if ([segue.destinationViewController respondsToSelector:@selector(setAudioAttachment:)]) {
+            [segue.destinationViewController setValue:attachment forKey:@"audioAttachment"];
+        }
+    }
 }
 
 #pragma mark - Fetched results controller delegate
