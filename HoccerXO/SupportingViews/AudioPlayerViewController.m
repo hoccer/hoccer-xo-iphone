@@ -8,6 +8,7 @@
 
 #import "AudioPlayerViewController.h"
 #import "Attachment.h"
+#import "AttachmentInfo.h"
 #import "HXOAudioPlayer.h"
 
 @interface AudioPlayerViewController ()
@@ -24,6 +25,7 @@
     
     _audioPlayer = [HXOAudioPlayer sharedInstance];
     
+    [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(attachment)) options:0 context:NULL];
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
     
     // TODO: dump that code for playlist
@@ -33,6 +35,7 @@
 
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
+    [self updateAttachmentInfo];
     [self updatePlaybackState];
     [self updateCurrentTime];
 }
@@ -46,12 +49,25 @@
 }
 
 - (void) dealloc {
+    [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(attachment))];
     [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying))];
     [self.playButton removeTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void) observeValueForKeyPath: (NSString *)keyPath ofObject: (id)object change: (NSDictionary *)change context: (void *)context {
-    [self updatePlaybackState];
+    if ([keyPath isEqual:NSStringFromSelector(@selector(attachment))]) {
+        [self updateAttachmentInfo];
+    } else if ([keyPath isEqual:NSStringFromSelector(@selector(isPlaying))]) {
+        [self updatePlaybackState];
+    }
+}
+
+- (void) updateAttachmentInfo {
+    Attachment *attachment = self.audioPlayer.attachment;
+
+    AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:attachment];
+    self.titleLabel.text = attachmentInfo.audioTitle;
+    self.artistLabel.text = attachmentInfo.audioArtist;
 }
 
 - (void) updatePlaybackState {

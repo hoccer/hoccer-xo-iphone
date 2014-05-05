@@ -47,20 +47,24 @@
         _audioDuration = CMTimeGetSeconds(audioDuration);
         if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
             NSArray * metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-            AVMetadataItem * metaItem;
             if (metaData.count > 0) {
-                metaItem = metaData[0];
+                AVMetadataItem * metaItem = metaData[0];
                 _audioTitle = metaItem.stringValue;
             }
+
+            if (self.audioTitle == nil || self.audioTitle.length == 0) {
+                _audioTitle = attachment.humanReadableFileName;
+            }
+
             metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
             if (metaData.count > 0) {
-                metaItem = metaData[0];
+                AVMetadataItem * metaItem = metaData[0];
                 _audioArtist = metaItem.stringValue;
             }
             
             metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
             if (metaData.count > 0) {
-                metaItem = metaData[0];
+                AVMetadataItem * metaItem = metaData[0];
                 _audioAlbum = metaItem.stringValue;
             }
             

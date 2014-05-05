@@ -119,8 +119,6 @@
         
         if (attachmentInfo.audioTitle) {
             [nowPlayingInfo setValue:attachmentInfo.audioTitle forKey:MPMediaItemPropertyTitle];
-        } else {
-            [nowPlayingInfo setValue:self.attachment.humanReadableFileName forKey:MPMediaItemPropertyTitle];
         }
 
         if (attachmentInfo.audioArtist) {
