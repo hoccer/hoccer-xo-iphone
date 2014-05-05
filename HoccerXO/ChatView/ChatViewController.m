@@ -399,7 +399,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if ([self.partner.type isEqualToString:[Group entityName]]) {
         // check if there are other members in the group
         Group * group = (Group*)self.partner;
-        if ([[group otherJoinedMembers] count] == 0) {
+        if ([[group otherJoinedMembers] count] == 0 || [group.groupState isEqualToString:@"kept"]) {
             // cant send message, no other joined members
             NSString * messageText;
             if ([[group otherInvitedMembers] count] > 0) {
