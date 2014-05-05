@@ -88,6 +88,7 @@ static int  groupMemberContext;
     self.keyItem.visibilityMask = DatasheetModeView;
     self.keyItem.dependencyPaths = @[@"verifiedKey"];
     self.keyItem.cellIdentifier  = @"KeyStatusCell";
+    self.keyItem.title           = @"contact_key_btn_title";
 
     self.destructiveButton.visibilityMask = DatasheetModeEdit;
     self.destructiveButton.target = self;
