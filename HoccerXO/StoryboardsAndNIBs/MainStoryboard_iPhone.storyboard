@@ -210,19 +210,19 @@
                                 <rect key="frame" x="66" y="69" width="189" height="191"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MXk-2i-gTo">
-                                <rect key="frame" x="20" y="273" width="37" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00:00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MXk-2i-gTo">
+                                <rect key="frame" x="20" y="273" width="67" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="k7m-XD-mWz">
-                                <rect key="frame" x="64" y="269" width="193" height="31"/>
+                                <rect key="frame" x="96" y="269" width="129" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </slider>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="End" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KJX-QM-Eai">
-                                <rect key="frame" x="269" y="273" width="31" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-00:00:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KJX-QM-Eai">
+                                <rect key="frame" x="226" y="273" width="74" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
@@ -281,8 +281,15 @@
                     </view>
                     <navigationItem key="navigationItem" id="AXf-sx-DVH"/>
                     <connections>
+                        <outlet property="artistLabel" destination="3zo-vz-vjI" id="jQ8-lO-aVa"/>
+                        <outlet property="currentTimeLabel" destination="MXk-2i-gTo" id="jf6-N5-byB"/>
+                        <outlet property="nextButton" destination="liZ-gI-Pdx" id="j94-kD-YcD"/>
                         <outlet property="playButton" destination="85y-tl-b3q" id="fwK-18-Hpw"/>
+                        <outlet property="previousButton" destination="dBA-Xa-6es" id="mZa-9O-Azt"/>
+                        <outlet property="remainingTimeLabel" destination="KJX-QM-Eai" id="kUd-Qp-5C3"/>
+                        <outlet property="seekSlider" destination="k7m-XD-mWz" id="8mT-DY-gX1"/>
                         <outlet property="titleLabel" destination="JOo-wW-6Ox" id="hEW-Iq-dZj"/>
+                        <outlet property="volumeSlider" destination="LAK-eh-7Fx" id="Mrb-Tb-IhD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GLZ-Ck-YSt" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -72,12 +72,28 @@
     self.attachment = nil;
 }
 
+- (NSTimeInterval) currentTime {
+    if (self.player) {
+        return self.player.currentTime;
+    } else {
+        return 0.0f;
+    }
+}
+
+- (NSTimeInterval) duration {
+    if (self.player) {
+        return self.player.duration;
+    } else {
+        return 0.0f;
+    }
+}
+
 #pragma mark - Private helpers
 
 - (void) setAttachment:(Attachment *)attachment {
     if (![_attachment isEqual:attachment]) {
         _attachment = attachment;
-        
+
         if (attachment) {
             self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:attachment.contentURL error:nil];
             [self.player setDelegate:self];
