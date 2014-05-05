@@ -108,6 +108,12 @@ static NSString *reuseIdentifier = @"audio_attachment";
     }
 }
 
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self performSegueWithIdentifier:@"showAudioPlayer" sender:self];
+}
+
 #pragma mark - Fetched results controller delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
