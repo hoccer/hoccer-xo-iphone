@@ -76,7 +76,7 @@
 }
 
 - (void) skipBack {
-    if (self.currentTime > 3.0f){
+    if (self.currentTime > 3.0){
         Attachment *attachment = self.attachment;
         [self stop];
         [self playAttachment:attachment];
@@ -93,7 +93,7 @@
     if (self.player) {
         return self.player.currentTime;
     } else {
-        return 0.0f;
+        return 0.0;
     }
 }
 
@@ -101,7 +101,7 @@
     if (self.player) {
         return self.player.duration;
     } else {
-        return 0.0f;
+        return 0.0;
     }
 }
 

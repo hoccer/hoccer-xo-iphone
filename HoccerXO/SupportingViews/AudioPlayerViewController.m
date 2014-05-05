@@ -42,7 +42,7 @@
 }
 
 - (void) viewDidAppear:(BOOL)animated {
-    self.playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateCurrentTime) userInfo:nil repeats:YES];
+    self.playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateCurrentTime) userInfo:nil repeats:YES];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -88,7 +88,7 @@
     NSInteger minutes = (ti / 60) % 60;
     NSInteger hours = (ti / 3600);
 
-    NSString *sign = interval < 0.0f ? @"-" : @"";
+    NSString *sign = interval < 0.0 ? @"-" : @"";
 
     if (hours > 0) {
         return [NSString stringWithFormat:@"%@%i:%02i:%02i", sign, hours, minutes, seconds];
