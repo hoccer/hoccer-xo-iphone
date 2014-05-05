@@ -88,7 +88,7 @@
     NSInteger minutes = (ti / 60) % 60;
     NSInteger hours = (ti / 3600);
 
-    NSString *sign = interval < 0.0 ? @"-" : @"";
+    NSString *sign = interval <= -0.5 ? @"-" : @"";
 
     if (hours > 0) {
         return [NSString stringWithFormat:@"%@%i:%02i:%02i", sign, hours, minutes, seconds];
