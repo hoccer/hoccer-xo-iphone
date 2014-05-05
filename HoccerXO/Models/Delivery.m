@@ -107,6 +107,14 @@ NSString * const kDeliveryStateFailed     = @"failed";
     
     // get public key of receiver first
     SecKeyRef myReceiverKey = [self.receiver getPublicKeyRef];
+
+    // Since we support custom key sizes it is very well possible to end up without a public key.
+    // Because we might have more than one delivery and this is called in a setter in a setter ... in a setter
+    // we tag the delivery as failed here. The backend respects this by not sending the message. [DS]
+    if ( ! myReceiverKey) {
+        self.state = kDeliveryStateFailed;
+        return;
+    }
     
     CCRSA * rsa = [CCRSA sharedInstance];
     self.keyCiphertext = [rsa encryptWithKey:myReceiverKey plainData:theMessageKey];

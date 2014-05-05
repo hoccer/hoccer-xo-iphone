@@ -361,7 +361,7 @@
 "key_unverify_public_btn_title"                  = "Verifikation aufheben";
 
 "key_verified_public_key_changed_title"          = "Verifizierter Schlüssel wurde geändert.";
-"key_verified_public_key_changed_message_format" = "Der von ihnen verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
+"key_verified_public_key_changed_message_format" = "Der von dir verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
 
 //==============================================================================
 // Permissions
