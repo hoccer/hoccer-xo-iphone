@@ -8,6 +8,7 @@
 
 #import "AudioPlayerViewController.h"
 #import "Attachment.h"
+#import "HXOAudioPlayer.h"
 
 @interface AudioPlayerViewController ()
 
@@ -19,7 +20,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-
     }
     return self;
 }
@@ -28,9 +28,8 @@
 {
     [super viewDidLoad];
     
-    if (self.audioAttachment) {
-        
-    }
+    HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
+    self.titleLabel.text = audioPlayer.attachment.humanReadableFileName;
 }
 
 - (void)didReceiveMemoryWarning

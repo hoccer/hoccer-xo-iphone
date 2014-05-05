@@ -14,4 +14,6 @@
 
 @property (nonatomic, strong) Attachment *audioAttachment;
 
+@property (nonatomic, strong) IBOutlet UILabel *titleLabel;
+
 @end

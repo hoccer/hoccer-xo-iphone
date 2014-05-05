@@ -10,6 +10,7 @@
 
 #import "AppDelegate.h"
 #import "Attachment.h"
+#import "HXOAudioPlayer.h"
 #import "tab_attachments.h"
 
 
@@ -121,20 +122,11 @@ static NSString *reuseIdentifier = @"audio_attachment";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
+    
+    HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
+    [audioPlayer playAttachment:attachment];
+    
     [self performSegueWithIdentifier:@"showAudioPlayer" sender:attachment];
-}
-
-#pragma mark - Navigation
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([sender isKindOfClass:[Attachment class]] ) {
-        Attachment *attachment = (Attachment *)sender;
-        
-        if ([segue.destinationViewController respondsToSelector:@selector(setAudioAttachment:)]) {
-            [segue.destinationViewController setValue:attachment forKey:@"audioAttachment"];
-        }
-    }
 }
 
 #pragma mark - Fetched results controller delegate
