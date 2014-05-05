@@ -22,7 +22,6 @@
 @property (nonatomic, strong) IBOutlet UIButton *previousButton;
 @property (nonatomic, strong) IBOutlet UIButton *nextButton;
 @property (nonatomic, strong) IBOutlet UISlider *seekSlider;
-@property (nonatomic, strong) IBOutlet UISlider *volumeSlider;
 
 
 @end
