@@ -215,8 +215,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 #pragma mark - Search Bar
 
 - (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    self.searchFetchedResultsController.delegate = nil;
-    self.searchFetchedResultsController = nil;
+    [self clearFetchedResultsControllers];
     [self.tableView reloadData];
 }
 
@@ -245,10 +244,10 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     [fetchRequest setFetchBatchSize:20];
 
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                                                                                managedObjectContext:self.managedObjectContext
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
+                                                                                                managedObjectContext: self.managedObjectContext
                                                                                                   sectionNameKeyPath: nil
-                                                                                                           cacheName:nil];
+                                                                                                           cacheName: nil];
     aFetchedResultsController.delegate = self;
 
     NSError *error = nil;
