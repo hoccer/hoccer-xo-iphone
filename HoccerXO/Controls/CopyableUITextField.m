@@ -96,4 +96,8 @@
     }
 }
 
+- (BOOL) canPerformAction: (SEL) action withSender: (id) sender {
+    return self.enabled ? [super canPerformAction:action withSender: sender] : action == @selector(copy:);
+}
+
 @end
