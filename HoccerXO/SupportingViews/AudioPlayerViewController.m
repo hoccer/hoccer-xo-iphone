@@ -38,7 +38,7 @@
 }
 
 - (void) viewDidAppear:(BOOL)animated {
-    self.playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateCurrentTime) userInfo:nil repeats:YES];
+    self.playbackTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateCurrentTime) userInfo:nil repeats:YES];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
