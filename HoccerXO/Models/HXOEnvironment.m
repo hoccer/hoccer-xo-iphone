@@ -62,7 +62,7 @@ static HXOEnvironment *instance;
 }
 
 - (void)setActivation:(BOOL)active {
-    if (active != _activationState) {
+    // if (active != _activationState) {
         if (active) {
             [self activate];
         } else {
@@ -72,7 +72,7 @@ static HXOEnvironment *instance;
             }
         }
         _activationState = active;
-    }
+    // }
 }
 
 - (BOOL)isActive {
@@ -159,6 +159,7 @@ static HXOEnvironment *instance;
     // bssids in the vicinity of the client
     // NSArray * bssids;
     NSString * bssid = [self fetchBSSID];
+    // bssid = nil; // DEBUG, remove
     if (bssid != nil) {
         NSMutableArray * bssids = [[NSMutableArray alloc] init];
         [bssids addObject:bssid];

@@ -347,6 +347,12 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
     [self updateConnectionStatusInfoFromState:oldState];
+    if (state == kBackendReady) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"loginSucceeded"
+                                                            object:self
+                                                          userInfo:nil];
+        
+    }
 }
 
 // notify everyone who is interested in displaying the status
