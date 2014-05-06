@@ -405,7 +405,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if ([[group otherInvitedMembers] count] > 0) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_wait_for_invitees_message", nil)];
             } else {
-                messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
+                if ([group.isNearby isEqualToString:@"YES"]) {
+                    messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_group_you_are_alone_message", nil)];
+                } else {
+                    messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
+                }
             }
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
                                                              message: messageText
