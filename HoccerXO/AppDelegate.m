@@ -25,6 +25,7 @@
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
+#import "CCRSA.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -108,12 +109,32 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
- 
+
+#ifdef DEBUG
+//#define DEFINE_OTHER_SERVERS
+#ifdef DEFINE_OTHER_SERVERS
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.209:8080/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.209:8081/" forKey: kHXOForceFilecacheURL];
+    
+    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
+    
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+#endif
+#endif
+    
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
         [TestFlight takeOff: kTestFlightAppToken];
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
+    
+    if (!UserProfile.sharedProfile.hasKeyPair) {
+        [UserProfile.sharedProfile renewKeypair];
+    }
+    
     application.applicationSupportsShakeToEdit = NO;
 
     if ([self persistentStoreCoordinator] == nil) {
@@ -142,20 +163,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     } else {
         [self setupDone: NO];
     }
-#ifdef DEBUG
-//#define DEFINE_OTHER_SERVERS
-#ifdef DEFINE_OTHER_SERVERS
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.103:8080/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.103:8081/" forKey: kHXOForceFilecacheURL];
-    
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
-    
-    [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
-    [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
-    [[HXOUserDefaults standardUserDefaults] synchronize];
-#endif
-#endif
+
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
     NSString * lastRunBuildNumber = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
@@ -218,7 +226,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSDate * now = [NSDate date];
     [[HXOUserDefaults standardUserDefaults] setValue:now forKey: [[Environment sharedEnvironment] suffixedString:kHXOlastDeactivationDate]];
 }
-
 
 + (void) setDefaultAudioSession {
     if (AUDIOSESSION_DEBUG) NSLog(@"setDefaultAudioSession");

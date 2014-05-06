@@ -63,4 +63,11 @@ typedef void(^HXOKeypairRenewalCompletion)();
 - (void) renewKeypair;
 - (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion;
 
+- (NSNumber*)getRSAKeyBitSizeSetting;
+- (BOOL)generateKeyPair:(NSNumber*)bits;
+- (BOOL)hasKeyPair;
+- (BOOL)saveOldKeyPair;
+- (BOOL)deleteKeyPair;
+- (BOOL)deleteAllKeys;
+
 @end
