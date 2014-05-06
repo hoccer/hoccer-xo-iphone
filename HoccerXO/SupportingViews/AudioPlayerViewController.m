@@ -28,14 +28,10 @@
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(attachment)) options:0 context:NULL];
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
     
-    // TODO: dump that code for playlist
-    self.titleLabel.text = self.audioPlayer.attachment.humanReadableFileName;
-    self.seekSlider.minimumValue = 0.0f;
-    self.seekSlider.maximumValue = self.audioPlayer.duration;
-
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
-    [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
     [self.skipBackButton addTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
+
     [self updateAttachmentInfo];
     [self updatePlaybackState];
     [self updateCurrentTime];
@@ -52,7 +48,10 @@
 - (void) dealloc {
     [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(attachment))];
     [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying))];
+
     [self.playButton removeTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
+    [self.skipBackButton removeTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.seekSlider removeTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void) observeValueForKeyPath: (NSString *)keyPath ofObject: (id)object change: (NSDictionary *)change context: (void *)context {
@@ -69,6 +68,9 @@
     AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:attachment];
     self.titleLabel.text = attachmentInfo.audioTitle;
     self.artistLabel.text = attachmentInfo.audioArtist;
+
+    self.seekSlider.minimumValue = 0.0f;
+    self.seekSlider.maximumValue = self.audioPlayer.duration;
 }
 
 - (void) updatePlaybackState {
