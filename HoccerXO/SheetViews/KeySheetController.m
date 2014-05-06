@@ -201,29 +201,16 @@
 
 - (void) renewKeypairPressed: (id) sender {
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
-        if (buttonIndex != actionSheet.cancelButtonIndex) {
-            switch (buttonIndex) {
-                case 0:
-                {
-                    if ( ! self.renewKeypairItem.isBusy) {
-                        self.renewKeypairItem.isBusy = YES;
-                        ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: @"Crunching Numbers..."];
-                        [hud showInView: self.delegate.view];
-                        [self updateItem: self.renewKeypairItem];
-                        [self.userProfile renewKeypairWithCompletion:^{
-                            self.renewKeypairItem.isBusy = NO;
-                            [self updateItem: self.renewKeypairItem];
-                            [hud dismiss];
-                        }];
-                    }
-                    break;
-                }
-                case 1:
-                    [self.delegate performSegueWithIdentifier: @"createCustomKey" sender: sender];
-                    break;
-                default:
-                    break;
-            }
+        if (buttonIndex == 0) {
+            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: @"Crunching Numbers..."];
+            [hud show];
+            [self updateItem: self.renewKeypairItem];
+            [self.userProfile renewKeypairWithCompletion:^{
+                [self updateItem: self.renewKeypairItem];
+                [hud dismiss];
+            }];
+        } else if (buttonIndex == 1) {
+            [self.delegate performSegueWithIdentifier: @"createCustomKey" sender: sender];
         }
     };
 
@@ -235,16 +222,6 @@
                                                          NSLocalizedString(@"key_renew_option_manual", nil),
                                                          nil];
     [sheet showInView: self.delegate.view];
-
-    /*
-    if ( ! self.renewKeypairItem.isBusy) {
-        self.renewKeypairItem.isBusy = YES;
-        [self updateItem: self.renewKeypairItem];
-        [self.userProfile renewKeypairWithCompletion:^{
-            self.renewKeypairItem.isBusy = NO;
-            [self updateItem: self.renewKeypairItem];
-        }];
-    }*/
 }
 
 @end

@@ -10,11 +10,11 @@
 
 @interface ModalTaskHUD : UIView
 
-
 @property (nonatomic, strong) NSString * title;
+@property (nonatomic, strong) UIColor  * dimColor;
 
 
-- (void) showInView: (UIView*) view ;
+- (void) show;
 - (void) dismiss;
 
 + (id) modalTaskHUDWithTitle: (NSString*) title;
