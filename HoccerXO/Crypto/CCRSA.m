@@ -41,11 +41,7 @@ static CCRSA *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[CCRSA alloc] init];
-        if ([instance getPrivateKeyRef] == nil || [instance getPublicKeyRef] == nil) {
-            NSLog(@"There are no RSA keys, generate them...");
-            [instance generateKeyPairKeys];
-        }
-    }); 
+    });
     //[instance getCertificate];
     return instance;
 }
@@ -67,29 +63,37 @@ static CCRSA *instance;
     return [NSString stringWithRandomCharactersOfLength: length usingCharacterSet: letters];
 }
 
--(void)generateKeyPairKeysWithOpenSSLandSize:(int)bits {
-    NSString * pubkey;
-    NSString * privkey;
-    [OpenSSLCrypto makeRSAKeyPairPEMWithSize:bits withPublicKey:&pubkey withPrivateKey:&privkey];
-    
-    NSData * pubBits = [CCRSA extractPublicKeyBitsFromPEM:pubkey];
-    NSData * privBits = [CCRSA extractPrivateKeyBitsFromPEM:privkey];
-
-    [self addPrivateKeyBits:privBits];
-    [self addPublicKeyBits:pubBits];
+- (BOOL)hasKeyPair {
+    return [instance getPublicKeyRef] != nil && [instance getPrivateKeyRef] != nil;
 }
 
-
-- (void)generateKeyPairKeys
-{
-    NSNumber * bits =[[HXOUserDefaults standardUserDefaults] valueForKey:kHXORsaKeySize];
-    if ([bits longLongValue] != 1024 /*&& [bits longLongValue] != 2048*/) {
-        [self generateKeyPairKeysWithOpenSSLandSize:[bits intValue]];
-        return;
+-(BOOL)generateKeyPairKeysWithOpenSSLandSize:(int)bits {
+    NSString * pubkey;
+    NSString * privkey;
+    if ([OpenSSLCrypto makeRSAKeyPairPEMWithSize:bits withPublicKey:&pubkey withPrivateKey:&privkey]) {
+    
+        NSData * pubBits = [CCRSA extractPublicKeyBitsFromPEM:pubkey];
+        NSData * privBits = [CCRSA extractPrivateKeyBitsFromPEM:privkey];
+        
+        if (privBits != nil && pubBits != nil) {
+            [self deleteKeyPairKeys];
+            BOOL ok1 = [self addPrivateKeyBits:privBits];
+            BOOL ok2 = [self addPublicKeyBits:pubBits];
+            return ok1 && ok2;
+        }
     }
+    return NO;
+}
+
+- (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits {
     
     NSLog(@"Generating RSA Keys with %@ bits", bits);
-    OSStatus status = noErr;	
+    
+    //if ([bits longLongValue] != 1024 /*&& [bits longLongValue] != 2048*/) {
+        return [self generateKeyPairKeysWithOpenSSLandSize:[bits intValue]];
+    //}
+#if 0
+    OSStatus status = noErr;
     NSMutableDictionary *privateKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *publicKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *keyPairAttr = [[NSMutableDictionary alloc] init];
@@ -113,15 +117,16 @@ static CCRSA *instance;
     
     if (status != noErr) {
         NSLog(@"generateKeyPairKeys: something went wrong, error=%d", (int)status);
+        return NO;
     }else {
-        NSLog(@"generateKeyPairKeys: successfully generated RSA key pairs");
+        return YES;
     }
     
     // NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
     // NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
 
     // NSLog(@"pubkeyid : %@", [HXOBackend ownPublicKeyIdString]);
-
+#endif
 }
 
 - (void)testEncryption {
@@ -628,7 +633,7 @@ static CCRSA *instance;
     SecItemDelete((__bridge CFDictionaryRef)publicKey);
 }
 
-- (void)cleanKeyPairKeys {
+- (BOOL)deleteKeyPairKeys {
     //[self cleanAllRSAKeys];
     // NSLog(@"Cleaning cleanKeyPairKeys");
 
@@ -637,17 +642,16 @@ static CCRSA *instance;
 	[privateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
 	[privateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)privateKey);
-    NSLog(@"SecItemDelete returned %ld on privateKey dict %@", myStatus, privateKey);
+    // NSLog(@"SecItemDelete returned %ld on privateKey dict %@", myStatus, privateKey);
 
     
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
 	[publicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    myStatus = SecItemDelete((__bridge CFDictionaryRef)publicKey);
-    NSLog(@"SecItemDelete returned %ld on publicKey dict %@", myStatus, publicKey);
-    
-    [self generateKeyPairKeys];
+    OSStatus myStatus2 = SecItemDelete((__bridge CFDictionaryRef)publicKey);
+    // NSLog(@"SecItemDelete returned %ld on publicKey dict %@", myStatus, publicKey);
+    return myStatus == noErr && myStatus2 == noErr;
 }
 
 - (SecKeyRef)getKeyRefWithPersistentKeyRef:(CFTypeRef)persistentRef {
@@ -802,7 +806,7 @@ static CCRSA *instance;
     }
 }
 
-- (void) cleanAllRSAKeys {
+- (BOOL) deleteAllRSAKeys {
     
     NSDictionary * query = @{(__bridge id) kSecClass: (__bridge id) kSecClassKey,
                              (__bridge id) kSecAttrKeyType: (__bridge id) kSecAttrKeyTypeRSA,
@@ -816,14 +820,14 @@ static CCRSA *instance;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef*)&result);
     
     id resultObj = CFBridgingRelease(result);
-    NSLog(@"resultObj = %@", resultObj);
+    //NSLog(@"resultObj = %@", resultObj);
     
     
     int deleted = 0;
     if (status == 0 && resultObj != nil) {
         // do something with the result
         int results = [resultObj count];
-        NSLog(@"found %d keys",results);
+        NSLog(@"deleteAllRSAKeys: found %d keys",results);
         for (int i = 0; i < results;++i ) {
             //NSLog(@"result %d = %@",i,resultObj[i]);
             NSData * atag = resultObj[i][@"atag"];
@@ -833,7 +837,7 @@ static CCRSA *instance;
                 [dict setObject:atag forKey:(__bridge id)kSecAttrApplicationTag];
                 [dict setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
                 OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)dict);
-                NSLog(@"SecItemDelete returned %ld on dict %@", myStatus, dict);
+                //NSLog(@"SecItemDelete returned %ld on dict %@", myStatus, dict);
                 if (myStatus == 0) {
                     ++deleted;
                 }
@@ -846,6 +850,7 @@ static CCRSA *instance;
     } else {
         NSLog(@"cleanAllRSAKeys: find error OSStatus %d",(int)status);
     }
+    return status == noErr;
 }
 
 

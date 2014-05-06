@@ -20,7 +20,12 @@
 
 + (CCRSA*)sharedInstance;
 
-- (void)generateKeyPairKeys;
+- (BOOL)hasKeyPair;
+- (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits;
+- (BOOL)deleteKeyPairKeys;
+- (BOOL)cloneKeyPairKeys;
+- (BOOL)deleteAllRSAKeys;
+
 - (void)testEncryption;
 - (NSString *)generateRandomString:(NSUInteger)length;
 
@@ -57,9 +62,6 @@
 - (NSData *)getKeyBitsForPeerRef:(NSString *)peerName;
 
 - (void)getCertificate;
-
--(void)cleanKeyPairKeys;
--(BOOL)cloneKeyPairKeys;
 
 - (NSData *) publicTagForPeer:(NSString *) peerName;
 

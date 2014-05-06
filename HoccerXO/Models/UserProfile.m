@@ -335,15 +335,47 @@ static const NSUInteger kHXOPasswordLength    = 23;
     return[[CCRSA sharedInstance] getPublicKeyBits];
 }
 
+- (NSNumber*)getRSAKeyBitSizeSetting {
+    NSNumber * bits =[[HXOUserDefaults standardUserDefaults] valueForKey:kHXORsaKeySize];
+    return bits;
+}
+
+- (BOOL)generateKeyPair:(NSNumber*)bits {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa generateKeyPairKeysWithBits:bits];
+}
+
+- (BOOL)hasKeyPair {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa hasKeyPair];
+}
+
+- (BOOL)saveOldKeyPair {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa cloneKeyPairKeys];
+}
+
+- (BOOL)deleteKeyPair {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa deleteKeyPairKeys];
+}
+
+- (BOOL)deleteAllKeys {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa deleteAllRSAKeys];
+}
+
 - (void) renewKeypair {
     [self willChangePublicKey];
     [self renewKeypairInternal];
     [self didChangePublicKey];
 }
 
-- (void) renewKeypairInternal {
-    [[CCRSA sharedInstance] cloneKeyPairKeys];
-    [[CCRSA sharedInstance] cleanKeyPairKeys];
+- (BOOL) renewKeypairInternal {
+    if (self.hasKeyPair) {
+        [self saveOldKeyPair];
+    }
+    return [self generateKeyPair:self.getRSAKeyBitSizeSetting];
 }
 
 - (void) willChangePublicKey {
