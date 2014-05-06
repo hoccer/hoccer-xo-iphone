@@ -36,6 +36,8 @@
 @property (strong) HXOMessage * lastMessage;
 @property (strong) NSDate * lastMessageDate;
 
+@property (strong) UIBarButtonItem * addButton;
+
 @end
 
 
@@ -53,6 +55,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.addButton = self.navigationItem.rightBarButtonItem;
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
@@ -180,6 +183,7 @@
     } else {
         [GesturesInterpreter.instance stop];
     }
+    //self.navigationItem.rightBarButtonItem = self.inNearbyMode ? nil : self.addButton;
 }
     
 #pragma mark - Table View
@@ -204,11 +208,7 @@
 }
 
 - (void) addButtonPressed: (id) sender {
-    if (self.inNearbyMode) {
-        // [self performSegueWithIdentifier: @"showGroup" sender: sender];
-    } else {
-        [self invitePeople];
-    }
+    [self invitePeople];
 }
 
 - (id) entityName {
