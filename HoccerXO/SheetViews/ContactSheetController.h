@@ -10,6 +10,6 @@
 
 @interface ContactSheetController : ContactSheetBase
 
-<DatasheetSectionDelegate, NSFetchedResultsControllerDelegate>
+<DatasheetSectionDataSource, DatasheetSectionDelegate, NSFetchedResultsControllerDelegate>
 
 @end

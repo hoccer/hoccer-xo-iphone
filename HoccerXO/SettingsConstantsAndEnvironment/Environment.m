@@ -38,6 +38,7 @@ NSString * const kValidEnvironments = @"_validEnvironments";
 
 
 @synthesize talkServer = _talkServer;
+
 - (NSString*) talkServer {
     if (_talkServer == nil) {
         _talkServer = [self getEnvironmentValueForKeySelector: _cmd];
@@ -65,7 +66,15 @@ NSString * const kValidEnvironments = @"_validEnvironments";
 @synthesize currentEnvironment = _currentEnvironment;
 - (NSString*) currentEnvironment {
     if (_currentEnvironment == nil) {
-        _currentEnvironment = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOEnvironment];
+        NSString * defaultEnvironment = (NSString*)[[NSBundle mainBundle] objectForInfoDictionaryKey: @"HXODefaultEnvironment"];
+        NSString * overrideEnvironment = (NSString*)[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOEnvironment];
+        if (overrideEnvironment != nil) {
+            _currentEnvironment = overrideEnvironment;
+        } else {
+            _currentEnvironment = defaultEnvironment;
+        }
+        NSLog(@"defaultEnvironment=%@, overrideEnvironment=%@, using environment %@",defaultEnvironment, overrideEnvironment,_currentEnvironment);
+        
         if ([self.validEnvironments indexOfObject: _currentEnvironment] == NSNotFound) {
             NSLog(@"FATAL: environment '%@' is unknown", _currentEnvironment);
             abort();

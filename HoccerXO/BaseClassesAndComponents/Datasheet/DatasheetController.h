@@ -78,10 +78,16 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @end
 
-@protocol DatasheetSectionDelegate <NSObject>
+@protocol DatasheetSectionDataSource <NSObject>
 
 - (NSUInteger) numberOfItemsInSection: (DatasheetSection*) section;
 - (DatasheetItem*) section: (DatasheetSection*) section itemAtIndex: (NSUInteger) index;
+
+@end
+
+@protocol DatasheetSectionDelegate <NSObject>
+
+@optional
 
 - (NSAttributedString*) titleForSection: (DatasheetSection*) section;
 
@@ -140,7 +146,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic, strong) NSString           * footerViewIdentifier;
 @property (nonatomic, readonly) NSUInteger         count;
 
-@property (nonatomic, weak) id<DatasheetSectionDelegate> delegate;
+@property (nonatomic, weak) id<DatasheetSectionDataSource> dataSource;
+@property (nonatomic, weak) id<DatasheetSectionDelegate>   delegate;
 
 + (id) datasheetSectionWithIdentifier: (NSString*) identifier;
 
@@ -153,15 +160,15 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic,strong) id inspectedObject;
 
-@property (nonatomic, strong)   NSString    * title;
-@property (nonatomic, strong)   NSString    * backButtonTitle;
-@property (nonatomic, strong)   DatasheetSection     * items;
-@property (nonatomic, readonly) DatasheetSection     * currentItems;
-@property (nonatomic, assign)   BOOL          isEditable;
-@property (nonatomic, assign)   BOOL          isCancelable;
-@property (nonatomic, readonly) DatasheetMode mode;
-@property (nonatomic, readonly) BOOL          isEditing;
-@property (nonatomic, readonly) BOOL          allItemsValid;
+@property (nonatomic, strong)   NSString         * title;
+@property (nonatomic, strong)   NSString         * backButtonTitle;
+@property (nonatomic, strong)   DatasheetSection * items;
+@property (nonatomic, readonly) DatasheetSection * currentItems;
+@property (nonatomic, assign)   BOOL               isEditable;
+@property (nonatomic, assign)   BOOL               isCancelable;
+@property (nonatomic, readonly) DatasheetMode      mode;
+@property (nonatomic, readonly) BOOL               isEditing;
+@property (nonatomic, readonly) BOOL               allItemsValid;
 
 @property (nonatomic, weak)     UIViewController<DatasheetControllerDelegate> * delegate;
 

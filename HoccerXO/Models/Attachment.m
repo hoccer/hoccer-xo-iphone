@@ -2116,8 +2116,8 @@ NSArray * TransferStateName = @[@"detached",
     NSDictionary * myRepresentation = [HXOModel createDictionaryFromObject:self withKeys:self.JsonKeys];
     NSData * myJsonData = [NSJSONSerialization dataWithJSONObject: myRepresentation options: 0 error: nil];
     NSString * myJsonUTF8String = [[NSString alloc] initWithData:myJsonData encoding:NSUTF8StringEncoding];
-    NSLog(@"attachmentJsonString=%@",myJsonUTF8String);
-    NSLog(@"%@", [NSThread callStackSymbols]);
+    // NSLog(@"attachmentJsonString=%@",myJsonUTF8String);
+    // NSLog(@"%@", [NSThread callStackSymbols]);
     return myJsonUTF8String;
 }
 

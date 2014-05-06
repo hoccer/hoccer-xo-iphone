@@ -1,4 +1,4 @@
-"language_code"="en";
+"language_code" = "en";
 
 "ok"     = "Ok";
 "cancel" = "Cancel";
@@ -6,6 +6,7 @@
 "save"   = "Save";
 "delete" = "Delete";
 "enter"  = "Enter";
+"no"     = "No";
 
 "search_placeholder" = "search";
 
@@ -120,6 +121,7 @@
 "chat_wait_for_invitees_message"    = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
 "chat_group_you_are_alone_message"  = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
 "chat_no_groupkey_message"          = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
+"chat_nearby_contact_offline"       = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
 
 "chat_message_pending"              = "pending";
 "chat_message_sent"                 = "sent";
@@ -138,7 +140,9 @@
 "contact_list_nav_title"                        = "Contacts";
 "contact_nav_title"                             = "Contact";
 
-"contact_chat_title"                            = "Chat";
+"contact_chat_title"                            = "Chat:";
+"contact_key_btn_title"                         = "Key:";
+
 "contact_unblock_btn_title_format"              = "Unblock %@";
 "contact_block_btn_title_format"                = "Block %@";
 
@@ -173,33 +177,44 @@
 // Credentials
 //==============================================================================
 
-"credentials_setup_nav_title"                = "Account";
-"credentials_setup_found_old_text"           = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
-"credentials_setup_found_file_text"          = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
-"credentials_setup_keep_btn_title"           = "Reactivate account";
-"credentials_setup_import_btn_title"         = "Import";
-"credentials_setup_create_btn_title"         = "New Account";
+"credentials_setup_nav_title"                  = "Account";
+"credentials_setup_found_old_text"             = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
+"credentials_setup_found_file_text"            = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
+"credentials_setup_keep_btn_title"             = "Reactivate account";
+"credentials_setup_import_btn_title"           = "Import";
+"credentials_setup_create_btn_title"           = "New Account";
 
-"credentials_file_delete_btn_title"          = "Delete exported credentials";
-"credentials_file_delete_safety_question"    = "Really deleted exported credentials?";
-"credentials_file_deleted_alert"             = "Credentials File Deleted";
-"credentials_file_enter_passphrase_alert"    = "Enter the decryption passphrase";
-"credentials_file_choose_passphrase_alert"   = "Choose an encryption passphrase and remember it";
-"credentials_file_passphrase_placeholder"    = "Passphrase";
-"credentials_file_import_failed_title"       = "Credentials Import Failed";
-"credentials_file_decryption_failed_message" = "Wrong decryption passphrase or credentials file damaged. Try again.";
-"credentials_file_equals_current_title"      = "Same credentials";
-"credentials_file_equals_current_message"    = "Imported credentials are the same as the active ones.";
+"credentials_file_delete_btn_title"            = "Delete exported credentials";
+"credentials_file_delete_safety_question"      = "Really deleted exported credentials?";
+"credentials_file_deleted_alert"               = "Credentials File Deleted";
+"credentials_file_enter_passphrase_alert"      = "Enter the decryption passphrase";
+"credentials_file_choose_passphrase_alert"     = "Choose an encryption passphrase and remember it";
+"credentials_file_passphrase_placeholder"      = "Passphrase";
+"credentials_file_import_failed_title"         = "Credentials Import Failed";
+"credentials_file_decryption_failed_message"   = "Wrong decryption passphrase or credentials file damaged. Try again.";
+"credentials_file_equals_current_title"        = "Same credentials";
+"credentials_file_equals_current_message"      = "Imported credentials are the same as the active ones.";
 
-"credentials_export_btn_title"               = "Export Login Credentials";
-"credentials_exported_alert"                 = "Login credentials have been exported to the document directory. If you transfer them to a another device, you must no longer use them here!";
+"credentials_export_btn_title"                 = "Export Login Credentials";
+"credentials_exported_alert"                   = "Login credentials have been exported to the document directory. If you transfer them to a another device, you must no longer use them here!";
 
-"credentials_import_btn_title"               = "Import Login Credentials";
-"credentials_import_safety_question"         = "Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
-"credentials_key_import_confirm_btn_title"   = "Import";
+"credentials_import_btn_title"                 = "Import Login Credentials";
+"credentials_import_safety_question"           = "Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
+"credentials_key_import_confirm_btn_title"     = "Import";
 
-"credentials_delete_btn_title"               = "Delete Login Credentials";
-"credentials_delete_safety_question"         = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to import delete your credentials?";
+"credentials_delete_btn_title"                 = "Delete Login Credentials";
+"credentials_delete_safety_question"           = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to delete your credentials?";
+
+"credentials_and_database_not_deleted_title"   = "Nothing was deleted";
+"credentials_and_database_not_deleted_message" = "Try restoring from backup or import saved credentials";
+
+"credentials_and_database_deleted_title"       = "Credentials Deleted";
+"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer XO.";
+
+"credentials_invalid_title"                    = "Login failed";
+"credentials_invalid_delete_question"          = "Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+
+"credentials_database_delete_btn_title"        = "Delete All";
 
 //==============================================================================
 // Database
@@ -209,6 +224,8 @@
 "database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
 "database_corrupt_deleted_title"       = "Database deleted";
 "database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
+
+"database_delete_btn_title"="Delete Database";
 
 //==============================================================================
 // Geolocations
@@ -370,7 +387,7 @@
 "profile_name_label"                     = "Name:";
 "profile_name_placeholder"               = "Your Name";
 
-"profile_key_btn_title"                  = "Key";
+"profile_key_btn_title"                  = "Your Key";
 
 //==============================================================================
 // Recorder

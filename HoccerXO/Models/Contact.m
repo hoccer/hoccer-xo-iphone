@@ -189,8 +189,14 @@ NSString * const kRelationStateKept        = @"kept";
     if (self.isBlocked) {
         return self.nickName;
     }
-    if ([self.type isEqualToString:@"Group"] && [self.myGroupMembership.group.groupState isEqualToString: kRelationStateKept]) {
-        return [NSString stringWithFormat:@"%@ ❌", self.nickName];
+    if ([self.type isEqualToString:@"Group"]) {
+        if ([self.myGroupMembership.group.groupState isEqualToString: kRelationStateKept]) {
+            return [NSString stringWithFormat:@"%@ ❌", self.nickName];
+        }
+        Group * group = (Group*)self;
+        if ([[group otherJoinedMembers] count] == 0) {
+            return [NSString stringWithFormat:@"%@ ⭕", self.nickName];
+        }
     }
     if ([self.relationshipState isEqualToString: kRelationStateNone]) {
         return [NSString stringWithFormat:@"%@ ❓", self.nickName];

@@ -217,11 +217,16 @@
         self.codes = [NSMutableDictionary dictionary];
     }
     for (AVMetadataObject *metadataObject in metadataObjects) {
+        if ( ! [metadataObject isKindOfClass: [AVMetadataMachineReadableCodeObject class]]) {
+            // ignore faces, &c.
+            continue;
+        }
+
         AVMetadataMachineReadableCodeObject *readableObject = (AVMetadataMachineReadableCodeObject *)metadataObject;
 
         if ( ! self.codes[readableObject.stringValue]) {
             NSURL * url = [NSURL URLWithString: readableObject.stringValue];
-            if ([url.scheme isEqualToString: @"hxo"]) {
+            if ([url.scheme isEqualToString: kHXOURLScheme]) {
                 [self.chatBackend pairByToken: url.host];
                 [self addFlash: readableObject];
             } else {
@@ -267,7 +272,7 @@
             }
             if (segmentedControl.selectedSegmentIndex == 1) { // monkey guard
                 self.codeTextField.text = token;
-                NSString * hxoURL = [NSString stringWithFormat: @"hxo://%@", token];
+                NSString * hxoURL = [NSString stringWithFormat: @"%@://%@", kHXOURLScheme, token];
                 DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
                 [UIView transitionWithView: self.qrCodeView
                                   duration: 0.3f

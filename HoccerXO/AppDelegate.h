@@ -15,6 +15,10 @@
 #import "GCNetworkReachability.h"
 
 
+FOUNDATION_EXPORT NSString * const kHXOURLScheme;
+
+typedef void (^ContinueBlock)();
+
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
 @class HTTPServer;
@@ -73,6 +77,7 @@
 - (NSURL *)applicationLibraryDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
+- (void) showInvalidCredentialsWithContinueHandler:(ContinueBlock)onNotDeleted;
 
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 

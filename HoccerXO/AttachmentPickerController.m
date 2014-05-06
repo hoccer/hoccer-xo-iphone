@@ -413,7 +413,7 @@
     // NSLog(@"adding view");
     
     //[UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:self.recordViewController.view];
-    [_viewController presentSemiModalViewController:self.recordViewController];
+    [_viewController presentSemiModalViewController:self.recordViewController inView: UIApplication.sharedApplication.delegate.window];
 }
 
 - (void)audiorecorder:(RecordViewController *)audioRecorder didRecordAudio:(NSURL *)audioFileURL {

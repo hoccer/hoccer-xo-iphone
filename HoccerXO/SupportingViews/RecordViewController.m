@@ -25,9 +25,6 @@ static const CGFloat kRingWidth = 6.0;
 @end
 
 @implementation RecordViewController
-{
-    CGFloat disabledAlpha;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

@@ -90,9 +90,9 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (DatasheetItem*) nicknameItem {
     if ( !_nicknameItem) {
-    _nicknameItem = [self itemWithIdentifier: @"Name" cellIdentifier: @"DatasheetTextInputCell"];
+    _nicknameItem = [self itemWithIdentifier: NSLocalizedString(@"profile_name_label", nil) cellIdentifier: @"DatasheetTextInputCell"];
     _nicknameItem.valuePath = kHXONickName;
-    _nicknameItem.valuePlaceholder = NSLocalizedString(@"Your Name", nil);
+    _nicknameItem.valuePlaceholder = NSLocalizedString(@"profile_name_placeholder", nil);
     _nicknameItem.enabledMask = DatasheetModeEdit;
     _nicknameItem.validator = ^BOOL(DatasheetItem* item) {
         return item.currentValue && ! [item.currentValue isEqualToString: @""];
