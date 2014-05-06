@@ -98,7 +98,7 @@ static int  groupMemberContext;
 }
 
 - (BOOL) isEditable {
-    return ! self.group || ! [self.group.myGroupMembership.state isEqualToString: @"invited"];
+    return ! self.group || ! ([self.group.myGroupMembership.state isEqualToString: @"invited"] || [self.group.groupType isEqualToString: @"nearby"]);
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -190,7 +190,7 @@ static int  groupMemberContext;
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return (self.group.iAmAdmin || self.groupInStatuNascendi) && [super isItemVisible: item];
+        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! [self.group.groupType isEqualToString: @"nearby"] && [super isItemVisible: item];
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
         return [self.group.myGroupMembership.state isEqualToString: @"invited"];
     } else if ([item isEqual: self.destructiveButton]) {
