@@ -338,6 +338,13 @@
 "key_renew_keypair"                              = "RSA-Schlüssel erneuern";
 "key_renew_keypair_info"                         = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
 
+"key_renew_option_sheet_title"                   = "Neues RSA Schlüsselpaar erzeugen?";
+"key_renew_option_automatic"                     = "Automatisch";
+"key_renew_option_manual"                        = "Manuell";
+
+"key_custom_generate_nav_title"                  = "Erzeugen";
+"key_custom_import_nav_title"                    = "Importieren";
+
 "key_import_public_btn_title"                    = "Öffentl. Schlüssel importieren";
 "key_import_private_btn_title"                   = "Priv. Schlüssel importieren";
 "key_import_success"                             = "Schlüssel wurde erfolgreich aus der Zwischenablage importiert.";

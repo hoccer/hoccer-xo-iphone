@@ -40,6 +40,8 @@
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
 		631457CA16F0E76D00AA8EB9 /* HXOBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457C916F0E76D00AA8EB9 /* HXOBackend.m */; };
 		631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */; };
+		631FE50A191947D90073E980 /* CustomKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE509191947D90073E980 /* CustomKeyViewController.m */; };
+		631FE50D19195EB10073E980 /* ModalTaskHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE50C19195EB10073E980 /* ModalTaskHUD.m */; };
 		6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6324C03D18BE09AE00E4BD82 /* SubViewController.m */; };
 		632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502A31865FC2600543D80 /* DateSectionHeaderView.m */; };
 		632502A71866340A00543D80 /* MessageItems.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502A61866340A00543D80 /* MessageItems.m */; };
@@ -437,6 +439,10 @@
 		631F6CD61705F5C700FB28D5 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ScaleAndCrop.h"; sourceTree = "<group>"; };
 		631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ScaleAndCrop.m"; sourceTree = "<group>"; };
+		631FE508191947D80073E980 /* CustomKeyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomKeyViewController.h; sourceTree = "<group>"; };
+		631FE509191947D90073E980 /* CustomKeyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomKeyViewController.m; sourceTree = "<group>"; };
+		631FE50B19195EB10073E980 /* ModalTaskHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalTaskHUD.h; sourceTree = "<group>"; };
+		631FE50C19195EB10073E980 /* ModalTaskHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalTaskHUD.m; sourceTree = "<group>"; };
 		6324C03C18BE09AE00E4BD82 /* SubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
 		6324C03D18BE09AE00E4BD82 /* SubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
 		632502A21865FC2600543D80 /* DateSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateSectionHeaderView.h; sourceTree = "<group>"; };
@@ -1163,6 +1169,8 @@
 				630CAB8A18E22EBC00782507 /* HXOLabel.m */,
 				63B2178B181FDFAA00C057D9 /* LabelWithLED.h */,
 				63B2178C181FDFAB00C057D9 /* LabelWithLED.m */,
+				631FE50B19195EB10073E980 /* ModalTaskHUD.h */,
+				631FE50C19195EB10073E980 /* ModalTaskHUD.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -1374,6 +1382,8 @@
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
 				63756A8E18F6434C003F7555 /* ContactPicker.h */,
 				63756A8F18F6434C003F7555 /* ContactPicker.m */,
+				631FE508191947D80073E980 /* CustomKeyViewController.h */,
+				631FE509191947D90073E980 /* CustomKeyViewController.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
 				639094BD1739828700DF889B /* GeoLocationPicker.m */,
 				63DC014F1713976B00609513 /* ImageViewController.h */,
@@ -2306,6 +2316,7 @@
 				63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */,
 				63DC01511713976B00609513 /* ImageViewController.m in Sources */,
 				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,
+				631FE50A191947D90073E980 /* CustomKeyViewController.m in Sources */,
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
 				630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */,
@@ -2358,6 +2369,7 @@
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 				E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */,
 				E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */,
+				631FE50D19195EB10073E980 /* ModalTaskHUD.m in Sources */,
 				E95176111913EB6100EFD1C6 /* ThrowDetector.m in Sources */,
 				E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */,
 				63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */,
