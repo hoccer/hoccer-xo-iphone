@@ -30,6 +30,7 @@
 
 @property (strong) id catchObserver;
 @property (strong) id messageObserver;
+@property (strong) id loginObserver;
 @property (strong) NSDate * catchDate;
 @property (strong) HXOMessage * caughtMessage;
 @property (strong) HXOMessage * lastMessage;
@@ -132,6 +133,14 @@
                                                                            }
 
                                                                        }];
+    self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"loginSucceeded"
+                                                                             object:nil
+                                                                              queue:[NSOperationQueue mainQueue]
+                                                                         usingBlock:^(NSNotification *note) {
+                                                                             NSLog(@"ConversationView: loginSucceeded");
+                                                                             [HXOEnvironment.sharedInstance setActivation:self.inNearbyMode];
+                                                                         }];
+
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -141,6 +150,9 @@
     }
     if (self.messageObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.messageObserver];
+    }
+    if (self.loginObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.loginObserver];
     }
 }
 
