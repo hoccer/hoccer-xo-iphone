@@ -22,6 +22,7 @@
 #import "TestFlight.h"
 #import "HXOUI.h"
 #import "ChatViewController.h"
+#import "ModalTaskHUD.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
@@ -130,9 +131,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
-    
+
     if (!UserProfile.sharedProfile.hasKeyPair) {
-        [UserProfile.sharedProfile renewKeypair];
+        dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
+            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
+            [hud show];
+            [UserProfile.sharedProfile renewKeypairWithCompletion:^{
+                [hud dismiss];
+            }];
+        });
     }
     
     application.applicationSupportsShakeToEdit = NO;
@@ -157,7 +164,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
 
     if (isFirstRun) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{  // delay until window is realized
             [self.window.rootViewController performSegueWithIdentifier: @"showSetup" sender: self];
         });
     } else {
