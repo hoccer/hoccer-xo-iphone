@@ -21,6 +21,7 @@
 #import "LabelWithLED.h"
 #import "avatar_contact.h"
 #import "avatar_group.h"
+#import "avatar_location.h"
 #import "AvatarView.h"
 #import "HXOUserDefaults.h"
 #import "InvitationCodeViewController.h"
@@ -376,7 +377,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     
     UIImage * avatar = contact.avatarImage;
     cell.avatar.image = avatar;
-    cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [contact isBlocked];
     cell.avatar.isOnline  = contact.isOnline;
 

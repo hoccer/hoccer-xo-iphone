@@ -18,6 +18,7 @@
 #import "HXOUI.h"
 #import "avatar_contact.h"
 #import "avatar_group.h"
+#import "avatar_location.h"
 #import "GroupMembership.h"
 #import "SmallContactCell.h"
 #import "DatasheetViewController.h"
@@ -375,7 +376,7 @@ static int  groupMemberContext;
 
     [self addProfileObservers];
 
-    self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [self.group.groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
     [super inspectedObjectDidChange];
 }
