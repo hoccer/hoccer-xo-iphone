@@ -10,4 +10,7 @@
 
 @interface HXOActivityIndicatorView : UIView
 
+- (void) startSpinning;
+- (void) stopSpinning;
+
 @end

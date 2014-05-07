@@ -202,7 +202,7 @@
 - (void) renewKeypairPressed: (id) sender {
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex == 0) {
-            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: @"Crunching Numbers..."];
+            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
             [hud show];
             [self updateItem: self.renewKeypairItem];
             [self.userProfile renewKeypairWithCompletion:^{

@@ -328,9 +328,9 @@
 "key_state_verified"                             = "Verfied";
 "key_state_mistrusted"                           = "Mistrusted";
 
-"key_fingerprint_title"                          = "Id";
+"key_fingerprint_title"                          = "Id:";
 "key_fingerprint_info"                           = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
-"key_length_item"                                = "Key Length";
+"key_length_item"                                = "Key Length:";
 "key_length_unit_format"                         = "%@ bit";
 
 "key_renew_keypair"                              = "Renew RSA Keypair";
@@ -339,6 +339,8 @@
 "key_renew_option_sheet_title"                   = "Create new RSA Keypair?";
 "key_renew_option_automatic"                     = "Automatic";
 "key_renew_option_manual"                        = "Manual";
+
+"key_renewal_hud_title"                          = "Generating Keys…";
 
 "key_custom_generate_nav_title"                  = "Generate";
 "key_custom_import_nav_title"                    = "Import";

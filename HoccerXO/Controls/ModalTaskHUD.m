@@ -79,6 +79,7 @@ static const CGFloat kAnimationDuration = 0.3;
 - (void) show {
     self.alpha = 0;
     [[UIApplication sharedApplication].delegate.window addSubview: self];
+    [self.spinner startSpinning];
     [UIView animateWithDuration: kAnimationDuration animations:^{
         self.alpha = 1;
     }];
@@ -88,6 +89,7 @@ static const CGFloat kAnimationDuration = 0.3;
     [UIView animateWithDuration: kAnimationDuration animations:^{
         self.alpha = 0;
     } completion:^(BOOL finished) {
+        [self.spinner stopSpinning];
         [self removeFromSuperview];
     }];
 }
