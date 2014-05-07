@@ -7,6 +7,7 @@
 "delete" = "Delete";
 "enter"  = "Enter";
 "no"     = "No";
+"go"     = "Go";
 
 "search_placeholder" = "search";
 
@@ -344,6 +345,7 @@
 
 "key_custom_generate_nav_title"                  = "Generate";
 "key_custom_import_nav_title"                    = "Import";
+"key_custom_size_instructions"                   = "Generate a RSA key pair with a custom size. Note that the generation of large keys takes a conciderable amount of time and battery power.\n\nThis feature is intended for curious security enthusiasts.";
 
 "key_import_public_btn_title"                    = "Import Public Key";
 "key_import_private_btn_title"                   = "Import Private Key";

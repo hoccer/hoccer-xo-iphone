@@ -175,10 +175,11 @@
                         <viewControllerLayoutGuide type="bottom" id="rZT-c5-lGc"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="IvW-Fo-wQL">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="jZ3-cT-vUP"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2g8-Cj-RoX" userLabel="First Responder" sceneMemberID="firstResponder"/>
