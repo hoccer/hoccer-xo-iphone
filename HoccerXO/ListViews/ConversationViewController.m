@@ -161,12 +161,6 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
-    /*
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
-        UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileNavigationController"];
-        [self.navigationController presentViewController: profileView animated: YES completion: nil];
-    }
-     */
 }
 
 - (void)didReceiveMemoryWarning
