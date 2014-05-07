@@ -1573,7 +1573,7 @@ static NSTimer * _stateNotificationDelayTimer;
     myMember.ownGroupContact = group;
     myMember.contact = group;
     myMember.role = @"admin";
-    myMember.state = @"accepted";
+    myMember.state = @"joined";
     [group generateNewGroupKey];
 
     [self.delegate saveDatabase];
@@ -2147,15 +2147,18 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
     
-    if (GROUPKEY_DEBUG) {
-        if ([group isEqual:myMembership.contact]) { // its us
-            [myMembership checkGroupKeyTransfer:groupMemberDict[@"encryptedGroupKey"] withKeyId:groupMemberDict[@"memberKeyId"]
-                                withSharedKeyId:groupMemberDict[@"sharedKeyId"] withSharedKeyIdSalt:groupMemberDict[@"sharedKeyIdSalt"]];
-        }
+    BOOL trashKeys = NO;
+    if ([group isEqual:myMembership.contact]) { // its us
+        trashKeys = ![myMembership checkGroupKeyTransfer:groupMemberDict[@"encryptedGroupKey"] withKeyId:groupMemberDict[@"memberKeyId"]
+                                           withSharedKeyId:groupMemberDict[@"sharedKeyId"] withSharedKeyIdSalt:groupMemberDict[@"sharedKeyIdSalt"]];
     }
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
+    
+    if (trashKeys) {
+        [myMembership trashKey];
+    }
     
     if (memberContact != nil) {
         if (myMembership.group.groupType != nil && [myMembership.group.groupType isEqualToString:@"nearby"] && [myMembership.state isEqualToString:@"joined"]) {

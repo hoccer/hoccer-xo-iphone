@@ -195,26 +195,14 @@
     return result;
 }
 
-/*
-- (BOOL) copyKeyFromGroup {
-    if ([self hasCipheredGroupKey]) {
-        self.cipheredGroupKey = [self calcCipheredGroupKey];
-        self.sharedKeyIdSalt = self.group.sharedKeyIdSalt;
-        NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:self.decryptedGroupKey withSalt:self.sharedKeyIdSalt];
-        if (![myGroupKeyId isEqualToData:self.group.sharedKeyId]) {
-            NSLog(@"ERROR:copyKeyFromGroup: something went wrong");
-            return NO;
-        }
-        self.sharedKeyId = myGroupKeyId;
-        self.memberKeyId = self.contact.publicKeyId;
-        [self checkGroupKey];
-        NSLog(@"Member:copyKeyFromGroup: YES");
-        return YES;
-    }
-    NSLog(@"Member:copyKeyFromGroup: NO");
-    return NO;
+- (void)trashKey {
+    self.cipheredGroupKey = nil;
+    self.memberKeyId = nil;
+    self.sharedKeyId = nil;
+    self.sharedKeyIdSalt = nil;
+    self.keySupplier = nil;
+    self.sharedKeyDate = nil;
 }
-*/
 
 - (void) updateKeyFromGroup {
     if (self.isOwnMembership) {
@@ -235,34 +223,11 @@
     }
 }
 
-
-/*
--(void) checkGroupKey {
-    NSData * myGroupKeyId;
-    NSString * name;
-    if ([self.group isEqual:self.contact]) {
-        myGroupKeyId = [Crypto calcSymmetricKeyId:self.decryptedGroupKey withSalt:self.sharedKeyIdSalt];
-        name = @"SELF";
-    } else {
-        NSLog(@"Member id %@ checkGroupKey: using stored group key (and not member key) for id calculation, your mileage may vary", self.contact.clientId);
-        myGroupKeyId = [Crypto calcSymmetricKeyId:self.group.groupKey withSalt:self.sharedKeyIdSalt];
-        name = self.contact.nickName != nil ?  self.contact.nickName : self.contact.clientId;
-    }
-    if (![myGroupKeyId isEqualToData:self.sharedKeyId]) {
-        NSLog(@"Member %@ checkGroupKey: stored id = %@, computed id = %@", name, self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
-        NSLog(@"%@",[NSThread callStackSymbols]);
-        //@throw [NSException exceptionWithName: @"Membership checkGroupKeyFailure" reason: @"stored id does not match computed id" userInfo: nil];
-    } else {
-        NSLog(@"Member %@ checkGroupKey OK: stored id = %@, computed id = %@", name, self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);        
-    }
-}
-*/
-
 -(BOOL) checkGroupKeyTransfer:(NSString*)cipheredGroupKeyString withKeyId:(NSString*)keyIdString withSharedKeyId:(NSString*)sharedKeyIdString withSharedKeyIdSalt:(NSString*)sharedKeyIdSaltString {
     if (GROUPKEY_DEBUG) NSLog(@"checkGroupKeyTransfer: cipheredGroupKeyString = %@, keyIdString = %@, sharedKeyIdString=%@, sharedKeyIdSaltString=%@", cipheredGroupKeyString,keyIdString,sharedKeyIdString, sharedKeyIdSaltString);
     if (keyIdString == nil) {
         NSLog(@"Member checkGroupKeyTransfer: no key material received");
-        return NO;
+        return YES;
     }
     NSData * cipheredGroupKey =[NSData dataWithBase64EncodedString:cipheredGroupKeyString];
     NSData * myGroupKey = [self decryptGroupKey:cipheredGroupKey withMemberKeyId:keyIdString];
@@ -276,7 +241,7 @@
     
     if (![myGroupKeyId isEqualToData:sharedKeyId]) {
         NSLog(@"WARNING: Member checkGroupKeyTransfer: stored id = %@, computed id = %@", self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
-        if (GROUPKEY_DEBUG) NSLog(@"%@",[NSThread callStackSymbols]);
+        //if (GROUPKEY_DEBUG) NSLog(@"%@",[NSThread callStackSymbols]);
         //@throw [NSException exceptionWithName: @"Membership checkGroupKeyFailure" reason: @"stored id does not match computed id" userInfo: nil];
         return NO;
     }
