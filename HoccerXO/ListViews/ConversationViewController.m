@@ -183,7 +183,8 @@
     } else {
         [GesturesInterpreter.instance stop];
     }
-    //self.navigationItem.rightBarButtonItem = self.inNearbyMode ? nil : self.addButton;
+    // hide plus button in nearby mode ... just for chrissy
+    self.navigationItem.rightBarButtonItem = self.inNearbyMode ? nil : self.addButton;
 }
     
 #pragma mark - Table View

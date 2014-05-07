@@ -34,7 +34,7 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) navigationBarBackgroundColor {
-    return [UIColor colorWithHexString: @"#39C0B3"];
+    return [UIColor colorWithHexString: @"#4DBFAC"];
 }
 
 - (UIColor*) navigationBarTintColor {
@@ -103,7 +103,7 @@ static HXOUI * _currentTheme;
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
         case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: @"#E6E7EB"];
-        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#39C0B3"];
+        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#4DBFAC"];
         case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: @"#B8CCCA"];
         case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: @"#BD3935"];
     }
