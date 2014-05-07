@@ -63,7 +63,7 @@
 #define FULL_HELLO
 #define TRACE_TIME_DIFFERENCE YES
 
-const NSString * const kHXOProtocol = @"com.hoccer.talk.v1";
+const NSString * const kHXOProtocol = @"com.hoccer.talk.v2";
 
 const int kGroupInvitationAlert = 1;
 static const NSUInteger kHXOMaxCertificateVerificationErrors = 3;
@@ -95,11 +95,8 @@ static NSTimer * _stateNotificationDelayTimer;
     BackendState       _state;
     double             _backoffTime;
     NSString *         _apnsDeviceToken;
-    //NSURLConnection *  _avatarUploadConnection;
     NSString *         _avatarUploadURL;
     NSString *         _avatarURL;
-    //NSInteger          _avatarBytesUploaded;
-    //NSInteger          _avatarBytesTotal;
     BOOL               _performRegistration;
     id                 _internetConnectionObserver;
     NSUInteger         _certificateVerificationErrors;
@@ -152,7 +149,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [_serverConnection registerIncomingCall: @"groupUpdated"        withSelector:@selector(groupUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"groupMemberUpdated"  withSelector:@selector(groupMemberUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"ping"                withSelector:@selector(ping) isNotification: NO];
-        [_serverConnection registerIncomingCall: @"alertUser"           withSelector:@selector(alertUser) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"alertUser"           withSelector:@selector(alertUser:) isNotification: YES];
         
         _delegate = theAppDelegate;
         [self cleanupTables];
@@ -492,7 +489,6 @@ static NSTimer * _stateNotificationDelayTimer;
     
     if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
         [self enqueueUploadOfAttachment:attachment];
-        // [attachment upload];
     }
     
     [self.delegate saveDatabase];
