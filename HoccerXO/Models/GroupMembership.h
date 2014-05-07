@@ -56,6 +56,7 @@
 - (NSString*)contactPubKeyId;
 - (BOOL)contactHasPubKey;
 
+- (void)trashKey;
 
 //-(void) checkGroupKey;
 -(BOOL) checkGroupKeyTransfer:(NSString*)cipheredGroupKeyString withKeyId:(NSString*)keyIdString withSharedKeyId:(NSString*)sharedKeyIdString withSharedKeyIdSalt:(NSString*)sharedKeyIdSaltString;

@@ -155,6 +155,11 @@
         NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:myGroupKey withSalt:member.sharedKeyIdSalt];
         if (![myGroupKeyId isEqualToData:member.sharedKeyId]) {
             NSLog(@"Group:copyKeyFromMember: groupKeyId mismatch, shared key id from decrypted group key does not match computed key id, group nick %@, member nick %@, computed myGroupKeyId=%@, stored member.sharedKeyId=%@", self.nickName, member.contact.nickName,myGroupKeyId, member.sharedKeyId);
+            // trash bad key values
+            member.sharedKeyIdSalt = nil;
+            member.sharedKeyId = nil;
+            member.cipheredGroupKey = nil;
+            member.keySupplier = nil;
             return NO;
         }
         self.groupKey = myGroupKey;
@@ -186,6 +191,13 @@
     if (![myGroupKeyId isEqualToData:self.sharedKeyId]) {
         if (GROUPKEY_DEBUG) NSLog(@"Group hasValidGroupKey mismatch: stored id = %@, computed id = %@", self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
         //NSLog(@"%@",[NSThread callStackSymbols]);
+        NSLog(@"Group hasValidGroupKey: trashing bad group key for group %@ nick %@", self.clientId, self.nickName);
+        // trash invalid group key
+        self.groupKey = nil;
+        self.sharedKeyIdSalt = nil;
+        self.sharedKeyId = nil;
+        self.keySupplier = nil;
+        self.keyDate = nil;
         return NO;
     }
     if (GROUPKEY_DEBUG) NSLog(@"Group:hasValidGroupKey: YES");
@@ -203,7 +215,10 @@
     }
     if (ownMember.hasLatestGroupKey || (ownMember.hasValidGroupKey && !self.hasValidGroupKey)) {
         if (GROUPKEY_DEBUG) NSLog(@"Group:syncKeyWithMember: copyKeyFromMember");
-        [self copyKeyFromMember:ownMember];
+        if (![self copyKeyFromMember:ownMember]) {
+            ownMember.sharedKeyId = nil;
+            ownMember.cipheredGroupKey = nil;
+        };
         return NO;
     }
     if (self.hasValidGroupKey && !ownMember.hasLatestGroupKey) {
@@ -237,10 +252,7 @@
                 }
             }
             NSLog(@"Group checkGroupKey: deleting all myGroupMembership key material");
-            self.myGroupMembership.cipheredGroupKey = nil;
-            self.myGroupMembership.memberKeyId = nil;
-            self.myGroupMembership.sharedKeyIdSalt = nil;
-            self.myGroupMembership.sharedKeyId = nil;
+            [self.myGroupMembership trashKey];
         }
         return NO;
     }
