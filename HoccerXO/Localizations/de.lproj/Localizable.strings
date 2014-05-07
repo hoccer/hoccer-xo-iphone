@@ -7,6 +7,7 @@
 "delete" = "Löschen";
 "enter"  = "Eingeben";
 "no"     = "Nein";
+"go"     = "Los";
 
 "search_placeholder" = "suchen";
 
@@ -330,13 +331,23 @@
 "key_state_verified"                             = "Verifiziert";
 "key_state_mistrusted"                           = "Misstraut";
 
-"key_fingerprint_title"                          = "Id";
+"key_fingerprint_title"                          = "Id:";
 "key_fingerprint_info"                           = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
-"key_length_item"                                = "Schlüssellänge";
+"key_length_item"                                = "Schlüssellänge:";
 "key_length_unit_format"                         = "%@ Bit";
 
 "key_renew_keypair"                              = "RSA-Schlüssel erneuern";
 "key_renew_keypair_info"                         = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
+
+"key_renew_option_sheet_title"                   = "Neues RSA Schlüsselpaar erzeugen?";
+"key_renew_option_automatic"                     = "Automatisch";
+"key_renew_option_manual"                        = "Manuell";
+
+"key_renewal_hud_title"                          = "Generiere Schlüssel…";
+
+"key_custom_generate_nav_title"                  = "Erzeugen";
+"key_custom_import_nav_title"                    = "Importieren";
+"key_custom_size_instructions"                   = "Erzeuge einen RSA Schlüssel mit bestimmter Länge. Das Erzeugen grosser Schlüssel dauert lange und belastet die Akkulaufzeit.\n\nDiese Funktion ist für neugierige Sicherheitsenthusiasten gedacht.";
 
 "key_import_public_btn_title"                    = "Öffentl. Schlüssel importieren";
 "key_import_private_btn_title"                   = "Priv. Schlüssel importieren";
@@ -355,8 +366,6 @@
 "key_export_failed_title"                        = "Schlüsselexport fehlgeschlagen";
 "key_export_confirm_btn_title"                   = "Exportieren";
 "key_export_private_safety_question"             = "Mit deinem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
-
-
 
 "key_verify_public_btn_title"                    = "Als verifiziert markieren";
 "key_unverify_public_btn_title"                  = "Verifikation aufheben";

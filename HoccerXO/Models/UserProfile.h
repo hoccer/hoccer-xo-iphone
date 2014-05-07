@@ -15,6 +15,8 @@
 
 typedef void(^HXOKeypairRenewalCompletion)();
 
+FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
+
 @interface UserProfile : NSObject <HXOClientProtocol>
 
 @property (nonatomic,strong)   UIImage  * avatarImage;
@@ -61,6 +63,8 @@ typedef void(^HXOKeypairRenewalCompletion)();
 +(NSURL*)getKeyFileURLWithKeyTypeName:(NSString*)keyTypeName forUser:(NSString*)userName withKeyId:(NSString*)keyId;
 
 - (void) renewKeypair;
+- (void) renewKeypairWithSize: (NSUInteger) size;
+- (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion;
 - (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion;
 
 - (NSNumber*)getRSAKeyBitSizeSetting;

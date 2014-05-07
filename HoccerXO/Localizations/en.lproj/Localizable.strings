@@ -7,6 +7,7 @@
 "delete" = "Delete";
 "enter"  = "Enter";
 "no"     = "No";
+"go"     = "Go";
 
 "search_placeholder" = "search";
 
@@ -328,13 +329,23 @@
 "key_state_verified"                             = "Verfied";
 "key_state_mistrusted"                           = "Mistrusted";
 
-"key_fingerprint_title"                          = "Id";
+"key_fingerprint_title"                          = "Id:";
 "key_fingerprint_info"                           = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
-"key_length_item"                                = "Key Length";
+"key_length_item"                                = "Key Length:";
 "key_length_unit_format"                         = "%@ bit";
 
 "key_renew_keypair"                              = "Renew RSA Keypair";
 "key_renew_keypair_info"                         = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+
+"key_renew_option_sheet_title"                   = "Create new RSA Keypair?";
+"key_renew_option_automatic"                     = "Automatic";
+"key_renew_option_manual"                        = "Manual";
+
+"key_renewal_hud_title"                          = "Generating Keys…";
+
+"key_custom_generate_nav_title"                  = "Generate";
+"key_custom_import_nav_title"                    = "Import";
+"key_custom_size_instructions"                   = "Generate a RSA key pair with a custom size. Note that the generation of large keys takes a conciderable amount of time and battery power.\n\nThis feature is intended for curious security enthusiasts.";
 
 "key_import_public_btn_title"                    = "Import Public Key";
 "key_import_private_btn_title"                   = "Import Private Key";

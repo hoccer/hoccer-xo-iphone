@@ -13,6 +13,7 @@
 #import "CCRSA.h"
 #import "HXOUI.h"
 #import "UserProfile.h"
+#import "ModalTaskHUD.h"
 
 @interface KeySheetController ()
 
@@ -199,14 +200,28 @@
 }
 
 - (void) renewKeypairPressed: (id) sender {
-    if ( ! self.renewKeypairItem.isBusy) {
-        self.renewKeypairItem.isBusy = YES;
-        [self updateItem: self.renewKeypairItem];
-        [self.userProfile renewKeypairWithCompletion:^{
-            self.renewKeypairItem.isBusy = NO;
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex == 0) {
+            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
+            [hud show];
             [self updateItem: self.renewKeypairItem];
-        }];
-    }
+            [self.userProfile renewKeypairWithCompletion:^{
+                [self updateItem: self.renewKeypairItem];
+                [hud dismiss];
+            }];
+        } else if (buttonIndex == 1) {
+            [self.delegate performSegueWithIdentifier: @"createCustomKey" sender: sender];
+        }
+    };
+
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"key_renew_option_sheet_title", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: nil
+                                      otherButtonTitles: NSLocalizedString(@"key_renew_option_automatic", nil),
+                                                         NSLocalizedString(@"key_renew_option_manual", nil),
+                                                         nil];
+    [sheet showInView: self.delegate.view];
 }
 
 @end
