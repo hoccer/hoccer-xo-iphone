@@ -105,6 +105,6 @@ typedef void (^ContinueBlock)();
 + (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern;
 
 + (AppDelegate*)instance;
-
++ (void) renewRSAKeyPairWithSize: (NSUInteger) size;
 
 @end

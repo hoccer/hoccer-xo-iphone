@@ -12,6 +12,7 @@
 #import "UserProfile.h"
 #import "HXOHyperLabel.h"
 #import "HXOUI.h"
+#import "AppDelegate.h"
 
 @interface CustomKeyViewController ()
 
@@ -85,12 +86,8 @@
 - (void) onDone: (id) sender {
     if ([sender isEqual: self.navigationItem.rightBarButtonItem]) {
         if (self.generateOrImportSelector.selectedSegmentIndex == 0) {
-            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
-            [hud show];
             NSUInteger keySize = [self.validKeySizes[[self.sizePicker selectedRowInComponent: 0]] unsignedIntegerValue];
-            [[UserProfile sharedProfile] renewKeypairWithSize: keySize completion:^{
-                [hud dismiss];
-            }];
+            [AppDelegate renewRSAKeyPairWithSize: keySize];
         } else {
 
         }

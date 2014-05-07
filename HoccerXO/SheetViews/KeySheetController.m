@@ -14,6 +14,7 @@
 #import "HXOUI.h"
 #import "UserProfile.h"
 #import "ModalTaskHUD.h"
+#import "AppDelegate.h"
 
 @interface KeySheetController ()
 
@@ -202,13 +203,7 @@
 - (void) renewKeypairPressed: (id) sender {
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex == 0) {
-            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
-            [hud show];
-            [self updateItem: self.renewKeypairItem];
-            [self.userProfile renewKeypairWithCompletion:^{
-                [self updateItem: self.renewKeypairItem];
-                [hud dismiss];
-            }];
+            [AppDelegate renewRSAKeyPairWithSize: kHXODefaultKeySize];
         } else if (buttonIndex == 1) {
             [self.delegate performSegueWithIdentifier: @"createCustomKey" sender: sender];
         }

@@ -134,11 +134,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     if (!UserProfile.sharedProfile.hasKeyPair) {
         dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
-            ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
-            [hud show];
-            [UserProfile.sharedProfile renewKeypairWithCompletion:^{
-                [hud dismiss];
-            }];
+            [AppDelegate renewRSAKeyPairWithSize: kHXODefaultKeySize];
         });
     }
     
@@ -1316,6 +1312,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         didValidate = YES;
     
     return didValidate;
+}
+
++ (void) renewRSAKeyPairWithSize: (NSUInteger) size {
+    ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
+    [hud show];
+    [UserProfile.sharedProfile renewKeypairWithSize: size completion: ^{ [hud dismiss]; }];
 }
 
 #ifdef WITH_WEBSERVER
