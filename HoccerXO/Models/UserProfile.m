@@ -27,6 +27,8 @@ static NSString * const kHXOAccountIdentifier = @"HXOAccount";
 static NSString * const kHXOSaltIdentifier    = @"HXOSalt";
 static const NSUInteger kHXOPasswordLength    = 23;
 
+const NSUInteger kHXODefaultKeySize    = 2048;
+
 @interface UserProfile ()
 {
     KeychainItemWrapper * _accountItem;
@@ -335,11 +337,6 @@ static const NSUInteger kHXOPasswordLength    = 23;
     return[[CCRSA sharedInstance] getPublicKeyBits];
 }
 
-- (NSNumber*)getRSAKeyBitSizeSetting {
-    NSNumber * bits =[[HXOUserDefaults standardUserDefaults] valueForKey:kHXORsaKeySize];
-    return bits;
-}
-
 - (BOOL)generateKeyPair:(NSNumber*)bits {
     CCRSA * rsa = [CCRSA sharedInstance];
     return [rsa generateKeyPairKeysWithBits:bits];
@@ -366,16 +363,20 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 - (void) renewKeypair {
+    [self renewKeypairWithSize: kHXODefaultKeySize];
+}
+
+- (void) renewKeypairWithSize: (NSUInteger) bits {
     [self willChangePublicKey];
-    [self renewKeypairInternal];
+    [self renewKeypairInternal: bits];
     [self didChangePublicKey];
 }
 
-- (BOOL) renewKeypairInternal {
+- (BOOL) renewKeypairInternal: (NSUInteger) bits {
     if (self.hasKeyPair) {
         [self saveOldKeyPair];
     }
-    return [self generateKeyPair:self.getRSAKeyBitSizeSetting];
+    return [self generateKeyPair: @(bits)];
 }
 
 - (void) willChangePublicKey {
@@ -391,16 +392,19 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 
-- (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion {
-    // Start the long-running task and return immediately.
+- (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{ [self willChangePublicKey]; });
-        [self renewKeypairInternal];
+        [self renewKeypairInternal: size];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self didChangePublicKey];
             completion();
         });
     });
+}
+
+- (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion {
+    [self renewKeypairWithSize: kHXODefaultKeySize completion: completion];
 }
 
 @end
