@@ -385,6 +385,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		03B7E5CE191923D40018DD11 /* HoccerXO-37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-37.xcdatamodel"; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -2988,8 +2989,9 @@
 				E95175AA18F330FC00EFD1C6 /* HoccerXO-34.xcdatamodel */,
 				E95175AB18F5957D00EFD1C6 /* HoccerXO-35.xcdatamodel */,
 				E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */,
+				03B7E5CE191923D40018DD11 /* HoccerXO-37.xcdatamodel */,
 			);
-			currentVersion = E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */;
+			currentVersion = 03B7E5CE191923D40018DD11 /* HoccerXO-37.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

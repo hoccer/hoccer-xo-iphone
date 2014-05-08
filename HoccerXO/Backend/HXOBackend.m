@@ -1442,22 +1442,27 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) presenceUpdated:(NSDictionary *) thePresence {
-    if (USE_VALIDATOR) [self validateObject: thePresence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
-    NSString * myClient = thePresence[@"clientId"];
-    if ([myClient isEqualToString: [UserProfile sharedProfile].clientId]) {
+    if (USE_VALIDATOR) {
+        [self validateObject: thePresence forEntity:@"RPC_TalkPresence_in"];  // TODO: Handle Validation Error
+    }
+    
+    NSString * clientId = thePresence[@"clientId"];
+    if ([clientId isEqualToString: [UserProfile sharedProfile].clientId]) {
         return;
     }
-    Contact * myContact = [self getContactByClientId:myClient];
+    
+    Contact * myContact = [self getContactByClientId:clientId];
     if (myContact == nil) {
         // NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
         myContact = [NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext: self.delegate.managedObjectContext];
         myContact.type = [Contact entityName];
-        myContact.clientId = myClient;
+        myContact.clientId = clientId;
         myContact.relationshipState = kRelationStateNone;
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
         myContact.avatarURL = @"";
         [self checkRelationsipStateForGroupMembershipOfContact:myContact];
     }
+    
     myContact.lastUpdateReceived = [NSDate date];
     
     BOOL newFriend = NO;
@@ -1483,11 +1488,15 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         [self updateAvatarForContact:myContact forAvatarURL:thePresence[@"avatarUrl"]];
         
+        if (thePresence[@"featured"]) {
+            myContact.isFeatured = @"YES";
+        }
+        
         myContact.presenceLastUpdatedMillis = thePresence[@"timestamp"];
         // NSLog(@"presenceUpdated, contact = %@", myContact);
 
     } else {
-        NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
+        NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", clientId);
     }
     [self.delegate saveDatabase];
     if (newFriend) {
