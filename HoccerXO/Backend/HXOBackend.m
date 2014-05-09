@@ -2483,7 +2483,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [self updateGroupKeys:group forMembers:members onSuccess:^(NSArray * unfinishedMembers) {
 
         if (unfinishedMembers != nil) {
-            if (unfinishedMembers.count == 1 && [[UserProfile sharedProfile].clientId isEqualToString:unfinishedMembers[0]]) {
+            if (unfinishedMembers.count == 1 && [@"LOCKED" isEqualToString:unfinishedMembers[0]]) {
                 // group key updating locked, some other admin is doing the job
                 NSLog(@"updateKeyboxesFor: Lock encountered, doing nothing");
             } else {
@@ -2629,76 +2629,6 @@ static NSTimer * _stateNotificationDelayTimer;
          }
      }];
 }
-/*
-// String[] updateGroupKeys(String groupId, String sharedKeyId, String sharedKeyIdSalt, String[] clientIds, String[] publicKeyIds, String[] cryptedSharedKeys);
-- (void) updateGroupKeys:(Group *)group forMembers:(NSSet*)members onSuccess:(GroupMembersOutdatedHandler)outDatedHandler{
-    
-    NSMutableArray * clientIds = [[NSMutableArray alloc]initWithCapacity:members.count];
-    NSMutableArray * publicKeyIds = [[NSMutableArray alloc]initWithCapacity:members.count];
-    NSMutableArray * cryptedSharedKeys = [[NSMutableArray alloc]initWithCapacity:members.count];
-    for (GroupMembership * m in members) {
-        if ([group isEqual:m.contact]) {
-            // handle self contact update
-            [clientIds addObject:[UserProfile sharedProfile].clientId];
-            
-            NSString * myPublicKeyIdString = [[UserProfile sharedProfile] publicKeyId];
-            [publicKeyIds addObject:myPublicKeyIdString];
-            
-            CCRSA * rsa = [CCRSA sharedInstance];
-            SecKeyRef myReceiverKey = [rsa getPublicKeyRef];
-            m.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
-            m.memberKeyId = myPublicKeyIdString;
-            m.sharedKeyId = group.sharedKeyId;
-            m.sharedKeyIdSalt = group.sharedKeyIdSalt;
-            
-            [cryptedSharedKeys addObject:m.cipheredGroupKeyString];
-            [m checkGroupKeyTransfer:m.cipheredGroupKeyString withKeyId:myPublicKeyIdString withSharedKeyId:group.sharedKeyIdString withSharedKeyIdSalt:group.sharedKeyIdSaltString];
-        } else {
-            // handle other contact update
-            NSLog(@"updateGroupKeys: %@ - %@ - %@",m.contact.clientId, m.contact.publicKeyId, m.cipheredGroupKeyString);
-            [clientIds addObject:m.contact.clientId];
-            [publicKeyIds addObject:m.contact.publicKeyId];
-            m.memberKeyId = m.contact.publicKeyId;
-            m.cipheredGroupKey = [m calcCipheredGroupKey];
-            [cryptedSharedKeys addObject:m.cipheredGroupKeyString];
-            m.sharedKeyId = group.sharedKeyId;
-            m.sharedKeyIdSalt = group.sharedKeyIdSalt;
-        }
-        m.keySettingInProgress = YES;
-    }
-    // NSLog(@"%@ - %@ - %@ / %d - %d - %d",group.clientId,group.sharedKeyIdString,group.sharedKeyIdSaltString,clientIds.count,publicKeyIds.count,cryptedSharedKeys.count);
-    [_serverConnection invoke: @"updateGroupKeys" withParams: @[group.clientId,group.sharedKeyIdString,group.sharedKeyIdSaltString,clientIds,publicKeyIds,cryptedSharedKeys]
-                   onResponse: ^(id responseOrError, BOOL success)
-     {
-         for (GroupMembership * m in members) {
-             m.keySettingInProgress = NO;
-         }
-         if (success) {
-             //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
-             outDatedHandler(responseOrError);
-         } else {
-             NSLog(@"updateGroupKey() failed: %@", responseOrError);
-             outDatedHandler(nil);
-         }
-     }];
-}
-*/
-# if 0
-// void updateGroupMember(TalkGroupMember member);
-- (void) updateGroupMember:(GroupMembership *) member  {
-    NSDictionary * myGroupMemberDict = [self dictOfGroupMember:member];
-    [_serverConnection invoke: @"updateGroupMember" withParams: @[myGroupMemberDict]
-                   onResponse: ^(id responseOrError, BOOL success)
-     {
-         if (success) {
-             NSLog(@"updateGroupMember succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
-         } else {
-             NSLog(@"updateGroupMember() failed: %@", responseOrError);
-         }
-     }];    
-}
-#endif
-
 
 #pragma mark - Attachment upload and download
 
