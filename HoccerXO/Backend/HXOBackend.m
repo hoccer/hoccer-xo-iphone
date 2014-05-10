@@ -74,7 +74,7 @@ static const NSTimeInterval kHXOPairingTokenValidTime   = 60 * 60 * 24 * 7; // o
 static const int kMaxConcurrentDownloads = 2;
 static const int kMaxConcurrentUploads = 2;
 
-const double kHXHelloInterval = 2 * 60; // say hello every n minutes
+const double kHXgetServerTimeInterval = 2 * 60; // get Server Time every n minutes
 
 
 typedef enum BackendStates {
@@ -102,7 +102,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSUInteger         _certificateVerificationErrors;
     NSTimer *          _reconnectTimer;
     NSTimer *          _backgroundDisconnectTimer;
-    NSTimer *          _helloTimer;
+    NSTimer *          _syncTimeTimer;
     GCNetworkQueue *   _avatarDownloadQueue;
     GCNetworkQueue *   _avatarUploadQueue;
     BOOL               _uncleanConnectionShutdown;
@@ -336,13 +336,13 @@ static NSTimer * _stateNotificationDelayTimer;
     _state = state;
     if (_state == kBackendReady) {
         _backoffTime = 0.0;
-        if (!_helloTimer.isValid) {
-            _helloTimer = [NSTimer scheduledTimerWithTimeInterval:kHXHelloInterval target:self selector:@selector(hello) userInfo:nil repeats:YES];
+        if (!_syncTimeTimer.isValid) {
+            _syncTimeTimer = [NSTimer scheduledTimerWithTimeInterval:kHXgetServerTimeInterval target:self selector:@selector(syncTime) userInfo:nil repeats:YES];
         }
     } else {
-        if (_helloTimer.isValid) {
-            [_helloTimer invalidate];
-            _helloTimer = nil;
+        if (_syncTimeTimer.isValid) {
+            [_syncTimeTimer invalidate];
+            _syncTimeTimer = nil;
         }
     }
     [self updateConnectionStatusInfoFromState:oldState];
@@ -819,35 +819,51 @@ static NSTimer * _stateNotificationDelayTimer;
             _apnsDeviceToken = nil; // XXX: this is not nice...
         }
         [self setState: kBackendReady];
-
-        [self hello];
-        [self updateRelationships];
-        [self updatePresences];
-        [self flushPendingInvites];
-        [self updateKeyWithHandler:^(BOOL ok) {
-            [self updatePresenceWithHandler:^(BOOL ok) {
-                [self getGroupsForceAll:NO];
-                [self flushPendingMessages];
-                [self flushPendingFiletransfers];
-                if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
-                    [HXOEnvironment.sharedInstance setActivation:YES];
-                }
-            }];
-        }];
+        [self postLoginSynchronize];
     } else {
         [self stopAndRetry];
     }
 }
 
+- (void)postLoginSynchronize {
+    [self hello];
+    [self updateRelationships];
+    [self updatePresences];
+    [self flushPendingInvites];
+    [self verifyKeyWithHandler:^(BOOL ok) {
+        if (!ok) {
+            [self updateKeyWithHandler:^(BOOL ok) {
+                [self postKeySynchronize];
+            }];
+        } else {
+            [self postKeySynchronize];
+        }
+    }];
+}
+
+- (void)postKeySynchronize {
+    [self updatePresenceWithHandler:^(BOOL ok) {
+        [self getGroupsForceAll:NO withCompletion:^{
+            [self ready:^(BOOL ok) {
+                [self finishFirstConnectionAfterCrashOrUpdate];
+                [self flushPendingMessages];
+                [self flushPendingFiletransfers];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"postLoginSyncCompleted"
+                                                                    object:self
+                                                                  userInfo:nil
+                 ];
+                if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
+                    [HXOEnvironment.sharedInstance setActivation:YES];
+                }
+            }];
+        }];
+    }];
+}
+
 - (void) finishFirstConnectionAfterCrashOrUpdate {
     _uncleanConnectionShutdown = NO;
     if (self.firstConnectionAfterCrashOrUpdate) {
-        NSNumber * clientTime = [HXOBackend millisFromDate:[NSDate date]];
-        [self hello:clientTime crashFlag:NO updateFlag:NO unclean:NO handler:^(NSDictionary * result) {
-            if (result != nil) {
-                self.firstConnectionAfterCrashOrUpdate = NO;
-            }
-        }];
+        self.firstConnectionAfterCrashOrUpdate = NO;
         [self makeSureAvatarUploaded];
     }
 }
@@ -1716,7 +1732,7 @@ static NSTimer * _stateNotificationDelayTimer;
     return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fastStart"] boolValue];
 }
 
-- (void) getGroupsForceAll:(BOOL)forceAll {
+- (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)completion {
     NSDate * latestChange;
     if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown || forceAll) && ![self fastStart]) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
@@ -1738,9 +1754,9 @@ static NSTimer * _stateNotificationDelayTimer;
                         if (CHECK_URL_TRACE) NSLog(@"makeSureAvatarUploadedForGroup %@ error=%@",group.nickName,theError);
                     }];
                     if ((self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown || forceAll) && ![self fastStart]) {
-                        [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0]];
+                        [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0] withCompletion:nil];
                     } else {
-                        [self getGroupMembers:group lastKnown:[group latestMemberChangeDate]];
+                        [self getGroupMembers:group lastKnown:[group latestMemberChangeDate] withCompletion:nil];
                     }
                 }
                 ok = ok && stateOk;
@@ -1748,9 +1764,8 @@ static NSTimer * _stateNotificationDelayTimer;
 //            if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]] && ok) {
 //                [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
 //            }
-            [self checkGroupMemberships];
         }
-        [self finishFirstConnectionAfterCrashOrUpdate];
+        [self checkGroupMembershipsWithCompletion:completion];
     }];
 }
 
@@ -1944,7 +1959,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
-- (void) getGroupMembers:(Group *)group lastKnown:(NSDate *)lastKnown {
+- (void) getGroupMembers:(Group *)group lastKnown:(NSDate *)lastKnown withCompletion:(DoneBlock)completion{
     // NSDate * lastKnown = group.lastChanged;
     // NSDate * lastKnown = [NSDate dateWithTimeIntervalSince1970:0]; // provoke update for testing
     // NSLog(@"latest date %@", lastKnown);
@@ -1952,11 +1967,12 @@ static NSTimer * _stateNotificationDelayTimer;
         for (NSDictionary * memberDict in changedMembers) {
             [self updateGroupMemberHere: memberDict];
         }
+        if (completion) completion();
     }];
 }
 
 // Boolean[] isMemberInGroups(String[] groupIds);
-- (void) checkGroupMemberships {
+- (void) checkGroupMembershipsWithCompletion:(DoneBlock)completion {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext: self.delegate.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -1990,10 +2006,14 @@ static NSTimer * _stateNotificationDelayTimer;
                         [self handleDeletionOfGroup:group];
                     }
                 }
+                if (completion) completion();
             } else {
                 NSLog(@"isMemberInGroups(): failed: %@", responseOrError);
+                if (completion) completion();
             }
         }];
+    } else {
+        if (completion) completion(nil);
     }
 }
 
@@ -3076,6 +3096,37 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+- (void) ready: (GenericResultHandler) handler {
+    [_serverConnection invoke: @"ready" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(YES);
+        } else {
+            NSLog(@"ready failed: %@", responseOrError);
+            handler(NO);
+        }
+    }];
+}
+
+- (void) getTime: (DateHandler) handler {
+    [_serverConnection invoke: @"bing" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            NSDate * date = [HXOBackend dateFromMillis:responseOrError];
+            handler(date);
+        } else {
+            NSLog(@"getTime failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+- (void) syncTime {
+    [self getTime:^(NSDate *date) {
+        if (date != nil) {
+            [self saveServerTime:date];
+        }
+    }];
+}
+
 - (void) identify {
     NSString * clientId = [UserProfile sharedProfile].clientId;
     // NSLog(@"identify() clientId: %@", clientId);
@@ -3192,8 +3243,7 @@ static NSTimer * _stateNotificationDelayTimer;
         handler:^(NSDictionary * result)
     {
         if (result != nil) {
-            [self saveServerTime:[HXOBackend dateFromMillis:result[@"serverTime"]]];
-            _uncleanConnectionShutdown = NO;
+            self.serverInfo = result;
         }
     }];
 }
@@ -3498,6 +3548,27 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) updateKeyWithHandler:(GenericResultHandler) handler {
     NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
     [self updateKey:myKeyBits handler:handler];
+}
+
+- (void) verifyKey: (NSData*) publicKey handler:(GenericResultHandler) handler {
+    // NSLog(@"verifyKey: %@", publicKey);
+    NSData * myKeyId = [HXOBackend calcKeyId:publicKey];
+    NSString * myKeyIdString = [myKeyId hexadecimalString];
+    
+    [_serverConnection invoke: @"verifyKey" withParams: @[myKeyIdString] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"verifyKey() got result: %@", responseOrError);
+            handler([responseOrError boolValue]);
+        } else {
+            handler(NO);
+            NSLog(@"verifyKey() failed: %@", responseOrError);
+        }
+    }];
+}
+
+- (void) verifyKeyWithHandler:(GenericResultHandler) handler {
+    NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
+    [self verifyKey:myKeyBits handler:handler];
 }
 
 - (void) registerApns: (NSString*) token {

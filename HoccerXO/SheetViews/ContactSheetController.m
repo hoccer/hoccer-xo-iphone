@@ -480,7 +480,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
         } else {
             NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
-            [self.chatBackend getGroupsForceAll: YES];
+            [self.chatBackend getGroupsForceAll: YES withCompletion:nil];
         }
     }];
 }
@@ -491,7 +491,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
         } else {
             NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
-            [self.chatBackend getGroupsForceAll:YES];
+            [self.chatBackend getGroupsForceAll:YES withCompletion:nil];
         }
     }];
 }

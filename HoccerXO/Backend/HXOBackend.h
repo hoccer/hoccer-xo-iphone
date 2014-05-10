@@ -42,6 +42,7 @@ typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
 typedef void (^UpdateEnvironmentHandler)(NSString*);
+typedef void (^DateHandler)(NSDate* date);
 
 @protocol HXODelegate <NSObject>
 
@@ -68,6 +69,7 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 @property (nonatomic) NSTimeInterval latestKnownServerTimeOffset;
 
 @property (atomic, strong) NSString *connectionInfo;
+@property (atomic, strong) NSDictionary * serverInfo;
 
 @property (readonly, nonatomic) NSArray * certificates;
 
@@ -98,7 +100,7 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 - (void) updateGroupKeysForMyGroupMemberships;
 
-- (void) getGroupsForceAll:(BOOL)forceAll;
+- (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)done;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
@@ -129,7 +131,7 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler;
 
-- (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
+- (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
 - (void) handleDeletionOfContact:(Contact*)contact;
 
 
@@ -150,11 +152,6 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 -(Contact *) getContactByClientId:(NSString *) theClientId;
 
-/*
-+ (NSString *) ownPublicKeyIdString;
-+ (NSData *) ownPublicKeyId;
-+ (NSData *) ownPublicKey;
- */
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;
 
