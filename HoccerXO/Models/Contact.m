@@ -205,9 +205,10 @@ NSString * const kRelationStateKept        = @"kept";
     if ([self.relationshipState isEqualToString: kRelationStateGroupFriend]) {
         name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
     }    
-    if ( ! self.connectionStatus || self.isOnline || [self.connectionStatus isEqualToString:@"offline"]) {
+    if ( ! self.connectionStatus || self.isOnline || self.isOffline) {
         return name;
     } else {
+        // show special connection
         return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
     }
 }
@@ -220,8 +221,28 @@ NSString * const kRelationStateKept        = @"kept";
     return [self.relationshipState isEqualToString: kRelationStateFriend];
 }
 
+- (BOOL) isOffline {
+    return self.connectionStatus == nil || [self.connectionStatus isEqualToString: @"offline"];
+}
+
+- (BOOL) isBackground {
+    return self.connectionStatus != nil && [self.connectionStatus isEqualToString: @"background"];
+}
+
 - (BOOL) isOnline {
-    return [self.connectionStatus isEqualToString: @"online"];
+    return self.connectionStatus != nil && [self.connectionStatus isEqualToString: @"online"];
+}
+
+- (BOOL) isTyping {
+    return self.connectionStatus != nil && [self.connectionStatus isEqualToString: @"typing"];
+}
+
+- (BOOL) isPresent {
+    return self.isOnline || self.isTyping;
+}
+
+- (BOOL) isConnected {
+    return self.isPresent || self.isBackground;
 }
 
 - (NSString*) groupMembershipList {

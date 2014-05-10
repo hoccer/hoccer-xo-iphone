@@ -379,7 +379,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     cell.avatar.image = avatar;
     cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [contact isBlocked];
-    cell.avatar.isOnline  = contact.isOnline;
+    cell.avatar.isPresent  = contact.isPresent;
 
     cell.subtitleLabel.text = [self statusStringForContact: contact];
 }

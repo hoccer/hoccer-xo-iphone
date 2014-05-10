@@ -113,6 +113,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableArray * _attachmentUploadsActive;
     BOOL            _locationUpdatePending;
     unsigned        _loginFailures;
+    unsigned        _loginRefusals;
 }
 
 - (void) identify;
@@ -130,6 +131,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _serverConnection.delegate = self;
         _apnsDeviceToken = nil;
         _loginFailures = 0;
+        _loginRefusals = 0;
         
         _firstConnectionAfterCrashOrUpdate = theAppDelegate.launchedAfterCrash || theAppDelegate.runningNewBuild;
         
@@ -747,20 +749,41 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) startAuthentication {
     [self setState: kBackendAuthenticating];
     NSString * A = [[UserProfile sharedProfile] startSrpAuthentication];
-    [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge) {
+    [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge, NSDictionary * errorReturned) {
         if (challenge == nil) {
             NSLog(@"SRP phase 1 failed");
             // can happen if the client thinks the connection was closed, but the server still considers it as open
             // so let us also close and try again
-            _loginFailures++;
-            if (_loginFailures < 3) {
-                [self stopAndRetry];
-            } else {
-                NSLog(@"Login SRP phase 1 failed %d times", _loginFailures);
-                [AppDelegate.instance showInvalidCredentialsWithContinueHandler:^{
+            NSString * errorMessage = errorReturned[@"message"];
+            
+            if (errorReturned != nil &&
+                ([errorMessage isEqualToString:@"No such client"] ||
+                 [errorMessage isEqualToString:@"Authentication failed"] ||
+                 [errorMessage isEqualToString:@"Bad salt"] ||
+                 [errorMessage isEqualToString:@"Not registered"] ))
+            {
+                // check if our credentials were refused
+                NSLog(@"Login credentials refused in SRP phase1 with ‘%@', loginRefusals=%d", errorMessage, _loginRefusals);
+                _loginRefusals++;
+                if (_loginRefusals >= 3) {
+                    [AppDelegate.instance showInvalidCredentialsWithInfo:errorMessage withContinueHandler:^{
+                    }];
+                } else {
                     [self stopAndRetry];
-                }];
+                }
+            } else {
+                _loginFailures++;
+                if (_loginFailures >= 3) {
+                    NSLog(@"Login SRP phase 1 failed %d times", _loginFailures);
+                    [AppDelegate.instance showLoginFailedWithInfo:errorMessage withContinueHandler:^{
+                        _loginFailures = 0;
+                        [self stopAndRetry];
+                    }];
+                } else {
+                    [self stopAndRetry];
+                }
             }
+            
         } else {
             NSError * error;
             NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge error: &error];
@@ -769,7 +792,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 // possible tampering ... trigger reconnect by closing the socket
                 [self stopAndRetry];
             } else {
-                [self srpPhase2: M handler:^(NSString * HAMK) {
+                [self srpPhase2: M handler:^(NSString * HAMK, NSDictionary * errorReturned) {
                     if (HAMK != nil) {
                         NSError * error;
                         BOOL success = [[UserProfile sharedProfile] verifySrpSession: HAMK error: &error];
@@ -778,6 +801,7 @@ static NSTimer * _stateNotificationDelayTimer;
                         }
                         [self didFinishLogin: success];
                         _loginFailures = 0;
+                        _loginRefusals = 0;
                     } else {
                         [self didFinishLogin: NO];
                     }
@@ -3046,10 +3070,10 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) srpPhase1WithClientId: (NSString*) clientId A: (NSString*) A andHandler: (SrpHanlder) handler {
     [_serverConnection invoke: @"srpPhase1" withParams: @[clientId, A] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            handler(responseOrError);
+            handler(responseOrError, nil);
         } else {
             NSLog(@"SRP Phase 1 failed: %@", responseOrError);
-            handler(nil);
+            handler(nil, responseOrError);
         }
     }];
 }
@@ -3057,11 +3081,10 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) srpPhase2: (NSString*) M handler: (SrpHanlder) handler {
     [_serverConnection invoke: @"srpPhase2" withParams: @[M] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            handler(responseOrError);
+            handler(responseOrError, nil);
         } else {
             NSLog(@"SRP Phase 2 failed: %@", responseOrError);
-            handler(nil);
-            //abort();
+            handler(nil, responseOrError);
         }
     }];
 }

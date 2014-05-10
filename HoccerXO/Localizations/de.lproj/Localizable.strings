@@ -8,6 +8,8 @@
 "enter"  = "Eingeben";
 "no"     = "Nein";
 "go"     = "Los";
+"continue"= "Weitermachen";
+"abort"   ="Beenden";
 
 "search_placeholder" = "suchen";
 
@@ -88,6 +90,9 @@
 "backend_ready"          = "verbunden";
 "backend_stopping"       = "Verbindung wird beendet...";
 "backend_no_internet"    = "Keine Internetverbindung";
+
+"backend_login_temporarily_failed_title"               = "Anmeldung fehlgeschlagen";
+"backend_login_temporarily_failed_continue_question"   = "Die Anmeldung ist aufgrund eines vorübergehenden technischen Problems mit der Verbindung oder dem Server fehlgeschlagen.('%@') Wollen sie es weiter versuchen?";
 
 //==============================================================================
 // Certificates
@@ -206,9 +211,10 @@
 "credentials_and_database_deleted_title"       = "Zugangsdaten gelöscht";
 "credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer XO neu.";
 
-"credentials_invalid_title"                    = "Anmeldung fehlgeschlagen";
-"credentials_invalid_delete_question"          = "Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
+"credentials_invalid_title"                    = "Zugangsdaten zurückgewiesen";
+"credentials_invalid_delete_question"          = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Falls dies ein neues Gerät ist und du Daten von einem alten Gerät übertragen hast, kannst du dort die alten Zugangsdaten unter 'Profil' exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
 
+"credentials_and_database_really_delete_title" = "Zugangsdaten und Datenbank wirklich löschen?";
 "credentials_database_delete_btn_title"        = "Alles löschen";
 
 //==============================================================================

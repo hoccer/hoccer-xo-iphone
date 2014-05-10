@@ -139,7 +139,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.image = item.currentValue;
-        self.avatarView.isOnline = NO;
+        self.avatarView.isPresent = NO;
         self.avatarView.isBlocked = NO;
         self.avatarView.badgeText = nil;
         [self backgroundImageChanged];

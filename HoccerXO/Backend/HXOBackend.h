@@ -22,7 +22,7 @@
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^GenerateIdHandler)(NSString*);
-typedef void (^SrpHanlder)(NSString*);
+typedef void (^SrpHanlder)(NSString*, NSDictionary * error);
 typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^GroupsHandler)(NSArray*);
 typedef void (^MembershipsHandler)(NSArray*);

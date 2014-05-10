@@ -314,7 +314,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) configureTitle {
     self.titleLabel.text = self.partner.nickNameWithStatus;
-    self.titleLabel.ledOn = self.partner.isOnline;
+    self.titleLabel.ledOn = self.partner.isPresent;
     [self.titleLabel sizeToFit];
 }
 
@@ -435,7 +435,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         if ([self.partner.relationshipState isEqualToString: kRelationStateBlocked]) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
         } else if ([@"YES" isEqualToString:self.partner.isNearby]) {
-            if (!self.partner.isOnline) {
+            if (!self.partner.isPresent) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
             }
         } else {
@@ -1405,7 +1405,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     cell.avatar.image = [author avatarImage];
     cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
-    cell.avatar.isOnline = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isOnline;
+    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isPresent;
 
     cell.subtitle.text = [self subtitleForMessage: message];
 

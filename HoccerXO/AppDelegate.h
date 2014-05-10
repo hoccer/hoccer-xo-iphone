@@ -77,7 +77,8 @@ typedef void (^ContinueBlock)();
 - (NSURL *)applicationLibraryDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
-- (void) showInvalidCredentialsWithContinueHandler:(ContinueBlock)onNotDeleted;
+- (void) showInvalidCredentialsWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onNotDeleted;
+- (void) showLoginFailedWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onContinue;
 
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 

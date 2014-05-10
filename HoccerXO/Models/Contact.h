@@ -49,7 +49,12 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
 @property (nonatomic, readonly) BOOL              isBlocked;
 @property (nonatomic, readonly) BOOL              isFriend;
+@property (nonatomic, readonly) BOOL              isOffline;
+@property (nonatomic, readonly) BOOL              isBackground;
 @property (nonatomic, readonly) BOOL              isOnline;
+@property (nonatomic, readonly) BOOL              isTyping;
+@property (nonatomic, readonly) BOOL              isPresent;
+@property (nonatomic, readonly) BOOL              isConnected;
 
 @property (nonatomic, retain)   NSDate          * lastUpdateReceived;
 

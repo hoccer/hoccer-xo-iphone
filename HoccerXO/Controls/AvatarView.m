@@ -186,14 +186,14 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     [self setNeedsLayout];
 }
 
-- (void) setIsBlocked:(BOOL)isBlocked {
-    _isBlocked = isBlocked;
-    self.blockedSignLayer.opacity = isBlocked ? 1 : 0;
+- (void) setIsBlocked:(BOOL)isBlockedFlag {
+    _isBlocked = isBlockedFlag;
+    self.blockedSignLayer.opacity = isBlockedFlag ? 1 : 0;
 }
 
-- (void) setIsOnline:(BOOL)isOnline {
-    _isOnline = isOnline;
-    self.ledLayer.opacity = isOnline ? 1 : 0;
+- (void) setIsPresent:(BOOL)isPresentFlag {
+    _isPresent = isPresentFlag;
+    self.ledLayer.opacity = isPresentFlag ? 1 : 0;
 }
 
 - (CGFloat) blockedSignPadding {

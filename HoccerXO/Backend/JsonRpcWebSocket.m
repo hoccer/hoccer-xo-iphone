@@ -312,7 +312,7 @@ static const NSTimeInterval kResponseTimeout = 30;
         ResponseBlock handler = responseHandler[@"handler"];
         NSTimer * timer = responseHandler[@"timer"];
         [timer invalidate];
-        handler(@"request dropped", NO);
+        handler(@{@"message":@"request dropped",@"code":@7001}, NO);
     }
 }
 
@@ -323,7 +323,7 @@ static const NSTimeInterval kResponseTimeout = 30;
     if (responseHandler != nil) {
         ResponseBlock handler = responseHandler[@"handler"];
         [_responseHandlers removeObjectForKey: jsonRpcId];
-        handler(@"request timeout", NO);
+        handler(@{@"message":@"request timeout",@"code":@7002}, NO);
     } else {
         NSLog(@"No response handler for request %@, timeout ignored",jsonRpcId);
     }

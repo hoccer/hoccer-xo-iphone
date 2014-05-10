@@ -114,8 +114,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #ifdef DEBUG
 //#define DEFINE_OTHER_SERVERS
 #ifdef DEFINE_OTHER_SERVERS
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.209:8080/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.209:8081/" forKey: kHXOForceFilecacheURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.99:8080/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.99:8081/" forKey: kHXOForceFilecacheURL];
     
     [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
     [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
@@ -1071,7 +1071,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
                                                    delegate:nil
-                                          cancelButtonTitle:@"ok"
+                                          cancelButtonTitle:NSLocalizedString(@"ok",nil)
                                           otherButtonTitles:nil];
 
     [alert show];
@@ -1088,7 +1088,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
                                                    completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) { exit(1); }
-                                          cancelButtonTitle:@"ok"
+                                          cancelButtonTitle:NSLocalizedString(@"ok",nil)
                                           otherButtonTitles:nil];
     [alert show];
 }
@@ -1126,7 +1126,22 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [alert show];
 }
 
-- (void) showInvalidCredentialsWithContinueHandler:(ContinueBlock)onNotDeleted {
+- (void) showInvalidCredentialsWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onNotDeleted {
+    
+    
+    HXOAlertViewCompletionBlock deleteCompletionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        switch (buttonIndex) {
+            case 1: {
+                NSString * title_tag;
+                NSString * message_tag;
+                [[UserProfile sharedProfile] deleteCredentials];
+                [self deleteDatabase];
+                title_tag = @"credentials_and_database_deleted_title";
+                message_tag = @"credentials_and_database_deleted_message";
+                [self showFatalErrorAlertWithMessage: NSLocalizedString(message_tag, nil) withTitle: NSLocalizedString(title_tag, nil)];
+            }
+        }
+    };
     
     HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
         NSString * title_tag;
@@ -1136,30 +1151,58 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 {
                     title_tag = @"credentials_and_database_not_deleted_title";
                     message_tag = @"credentials_and_database_not_deleted_message";
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title_tag
-                                                                    message: message_tag
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title_tag,nil)
+                                                                    message: NSLocalizedString(message_tag,nil)
                                                             completionBlock: onNotDeleted
-                                                          cancelButtonTitle:@"Continue"
+                                                          cancelButtonTitle: NSLocalizedString(@"continue",nil)
                                                           otherButtonTitles:nil];
                     [alert show];
                 }
                 break;
             case 1:
-                [[UserProfile sharedProfile] deleteCredentials];
-                [self deleteDatabase];
-                title_tag = @"credentials_and_database_deleted_title";
-                message_tag = @"credentials_and_database_deleted_message";
-                [self showFatalErrorAlertWithMessage: NSLocalizedString(message_tag, nil) withTitle: NSLocalizedString(title_tag, nil)];
-                break;
+            {
+                title_tag = @"credentials_and_database_really_delete_title";
+                message_tag = nil;
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title_tag,nil)
+                                                                message: NSLocalizedString(message_tag,nil)
+                                                        completionBlock: deleteCompletionBlock
+                                                      cancelButtonTitle:NSLocalizedString(@"no",nil)
+                                                      otherButtonTitles:NSLocalizedString(@"credentials_database_delete_btn_title",nil),nil];
+                [alert show];
+            }
         }
         
     };
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_invalid_title", nil)
-                                                    message: NSLocalizedString(@"credentials_invalid_delete_question", nil)
+                                                    message: [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_delete_question", nil),info]
                                             completionBlock: completionBlock
                                           cancelButtonTitle:NSLocalizedString(@"no",nil)
                                           otherButtonTitles:NSLocalizedString(@"credentials_database_delete_btn_title",nil),nil];
+    [alert show];
+}
+
+
+- (void) showLoginFailedWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onContinue {
+    
+    HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        switch (buttonIndex) {
+            case 0:
+                // continue
+                onContinue();
+                break;
+            case 1:
+                // abort
+                exit(0);
+                break;
+        }
+    };
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"backend_login_temporarily_failed_title", nil)
+                                                    message: [NSString stringWithFormat:NSLocalizedString(@"backend_login_temporarily_failed_continue_question", nil),info]
+                                            completionBlock: completionBlock
+                                          cancelButtonTitle:NSLocalizedString(@"continue",nil)
+                                          otherButtonTitles:NSLocalizedString(@"abort",nil),nil];
     [alert show];
 }
 

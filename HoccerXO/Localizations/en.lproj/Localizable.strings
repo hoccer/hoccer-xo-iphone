@@ -8,6 +8,8 @@
 "enter"  = "Enter";
 "no"     = "No";
 "go"     = "Go";
+"continue"= "Continue";
+"abort"   ="Abort";
 
 "search_placeholder" = "search";
 
@@ -88,6 +90,10 @@
 "backend_ready"          = "connected";
 "backend_stopping"       = "disconnecting...";
 "backend_no_internet"    = "no internet connection";
+
+"backend_login_temporarily_failed_title"               = "Login failed";
+"backend_login_temporarily_failed_continue_question"   = "The Login has failed beacause there is a temporary technical problem with the connection or the server. ('%@') Do you want to keep trying to log in?";
+
 
 //==============================================================================
 // Certificates
@@ -204,10 +210,12 @@
 "credentials_and_database_deleted_title"       = "Credentials Deleted";
 "credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer XO.";
 
-"credentials_invalid_title"                    = "Login failed";
-"credentials_invalid_delete_question"          = "Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_title"                    = "Credentials not accepted";
+"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') If this is a new device and you have transfered data from the old device, you can transfer your credentials from your old device under 'Profile'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
+"credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
+
 
 //==============================================================================
 // Database
