@@ -3420,7 +3420,8 @@ static NSTimer * _stateNotificationDelayTimer;
                              @"clientName" : clientName,
                              @"clientStatus" : clientStatus,
                              @"avatarUrl" : avatarURL,
-                             @"keyId" : [keyId hexadecimalString]
+                             @"keyId" : [keyId hexadecimalString],
+                             @"connectionStatus": @"online"
                              };
     if (USE_VALIDATOR) [self validateObject: params forEntity:@"RPC_TalkPresence_out"];  // TODO: Handle Validation Error
 
