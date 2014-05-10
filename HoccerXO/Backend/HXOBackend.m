@@ -3086,7 +3086,7 @@ static NSTimer * _stateNotificationDelayTimer;
 #pragma mark - Outgoing RPC Calls
 
 - (void) bing: (GenericResultHandler) handler {
-    [_serverConnection invoke: @"bing" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"bing" withParams: nil onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             handler(YES);
         } else {
@@ -3097,7 +3097,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) ready: (GenericResultHandler) handler {
-    [_serverConnection invoke: @"ready" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"ready" withParams: nil onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             handler(YES);
         } else {
@@ -3108,7 +3108,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) getTime: (DateHandler) handler {
-    [_serverConnection invoke: @"bing" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"getTime" withParams: nil onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSDate * date = [HXOBackend dateFromMillis:responseOrError];
             handler(date);
