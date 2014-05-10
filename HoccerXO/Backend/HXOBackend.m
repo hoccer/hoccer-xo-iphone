@@ -166,16 +166,16 @@ static NSTimer * _stateNotificationDelayTimer;
             GCNetworkReachabilityStatus status = [[note userInfo][kGCNetworkReachabilityStatusKey] integerValue];
             switch (status) {
                 case GCNetworkReachabilityStatusNotReachable:
-                    NSLog(@"No connection, disconnecting");
-                    [self disconnect];
+                    NSLog(@"No connection, checking");
+                    [self checkReconnect];
                     break;
                 case GCNetworkReachabilityStatusWWAN:
                     NSLog(@"Reachable via WWAN");
-                    [self reconnect];
+                    [self checkReconnect];
                     break;
                 case GCNetworkReachabilityStatusWiFi:
                     NSLog(@"Reachable via WiFi");
-                    [self reconnect];
+                    [self checkReconnect];
                     break;
                     
             }
@@ -983,7 +983,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [_serverConnection close];
 }
 
-// called by internetReachabilty Observer when internet connection is lost
+// called by internetReachabilty Observer when internet connection is lost or gained
 - (void) disconnect {
     if (_reconnectTimer != nil) {
         [_reconnectTimer invalidate];
@@ -991,6 +991,38 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (_state != kBackendStopped && _state != kBackendStopping) {
         [self stop];
+    }
+}
+
+-(BackendState)getBackendState {
+    return _state;
+}
+
+
+// called by internetReachabilty Observer when internet connection seems to be lost
+-(void) checkReconnect {
+    if (_state == kBackendStopped) {
+        NSLog(@"checkReconnect: backend stopped, try reconnecting");
+        [self reconnect];
+        return;
+    }
+    if (_state == kBackendReady) {
+        // check if we might be still connected
+        NSLog(@"checkReconnect: backend still in ready state, try bing");
+        [self bing:^(BOOL ok) {
+            // we still believe to be connected, but bing failed
+            if (!ok && [self getBackendState] == kBackendReady) {
+                NSLog(@"checkReconnect: bing failed, disconnect and start over");
+                [self disconnect];
+                [self reconnect];
+            }
+            if (_state == kBackendStopped) {
+                NSLog(@"checkReconnect: backend now stopped, try reconnecting");
+                [self reconnect];
+            }
+        }];
+    } else {
+        NSLog(@"checkReconnect: backend in state %@, doing nothing", [self stateString: _state]);
     }
 }
 
@@ -3033,6 +3065,17 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 #pragma mark - Outgoing RPC Calls
+
+- (void) bing: (GenericResultHandler) handler {
+    [_serverConnection invoke: @"bing" withParams: @[] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(YES);
+        } else {
+            NSLog(@"bing failed: %@", responseOrError);
+            handler(NO);
+        }
+    }];
+}
 
 - (void) identify {
     NSString * clientId = [UserProfile sharedProfile].clientId;
