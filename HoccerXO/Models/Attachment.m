@@ -175,7 +175,7 @@ NSArray * TransferStateName = @[@"detached",
         } else {
             name = self.contentURL.lastPathComponent;
         }
-        // NSLog(@"Attachment '%@' state='%@'",name, [Attachment getStateName:myState]);
+        NSLog(@"Attachment '%@' state='%@'",name, [Attachment getStateName:myState]);
     }
     return myState;
 }
@@ -2175,7 +2175,7 @@ NSArray * TransferStateName = @[@"detached",
     }
     
     // remove associated media file if not referenced by other attachments
-    if (self.ownedURL.length > 0) {
+    if (self.ownedURL != nil && self.ownedURL.length > 0) {
         AppDelegate * delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         NSError *error;
         NSDictionary * vars = @{ @"ownedURL" : self.ownedURL};

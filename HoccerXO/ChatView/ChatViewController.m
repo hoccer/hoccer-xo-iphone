@@ -805,21 +805,16 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 
                 
                 UIImage * myOriginalImage = attachmentInfo[UIImagePickerControllerOriginalImage];
-                UIImage * myImage = myOriginalImage;
                 NSURL * myFileURL = nil;
                 
                 // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
-                //if ([Attachment tooLargeImage:myImage]) {
-                    myImage = [Attachment qualityAdjustedImage:myOriginalImage];
-                    NSString * newFileName = @"reducedSnapshotImage.jpg";
-                    myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-                    
-                    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-                    [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
-                //} else {
-                //  TODO: save a local copy of the image without JPEG reencoding
-                //}
-
+                UIImage * myImage = [Attachment qualityAdjustedImage:myOriginalImage];
+                NSString * newFileName = @"reducedSnapshotImage.jpg";
+                myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+                
+                float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+                [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
+                
                 // funky method using ALAssetsLibrary
                 ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
                     if (!error) {

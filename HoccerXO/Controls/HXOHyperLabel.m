@@ -245,7 +245,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     if (self.textColor) {
         [attributes setObject: (id)self.textColor.CGColor forKey: (id)kCTForegroundColorAttributeName];
     }
-    [attributes setObject: (id)[self paragraphStyle] forKey: (id)kCTParagraphStyleAttributeName];
+    [attributes setObject: (id)CFBridgingRelease([self paragraphStyle]) forKey: (id)kCTParagraphStyleAttributeName];
     return attributes;
 }
 

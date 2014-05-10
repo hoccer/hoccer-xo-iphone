@@ -1723,17 +1723,16 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         latestChange = [self getLatestChangeDateForGroups];
     }
-    NSDate * preUpdateTime = [NSDate date];
+    //NSDate * preUpdateTime = [NSDate date];
     // NSLog(@"latest date %@", latestChange);
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
         if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
         if ([changedGroups isKindOfClass:[NSArray class]]) {
             BOOL ok = YES;
             for (NSDictionary * groupDict in changedGroups) {
-                Group * group = [self getGroupById:groupDict[@"groupId"]];
                 
                 BOOL stateOk =[self updateGroupHere: groupDict];
-                group = [self getGroupById:groupDict[@"groupId"]];
+                Group * group = [self getGroupById:groupDict[@"groupId"]];
                 if (group != nil) {
                     [self makeSureAvatarUploadedForGroup:group withCompletion:^(NSError *theError) {
                         if (CHECK_URL_TRACE) NSLog(@"makeSureAvatarUploadedForGroup %@ error=%@",group.nickName,theError);
@@ -3141,8 +3140,12 @@ static NSTimer * _stateNotificationDelayTimer;
     NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
 
     NSString * supportTag = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOSupportTag];
-    if (supportTag && ! [supportTag isEqualToString: @""]) {
-        NSLog(@"Using support tag '%@'", supportTag);
+    if (supportTag != nil) {
+        if ( ! [supportTag isEqualToString: @""]) {
+            NSLog(@"Using support tag '%@'", supportTag);
+        }
+    }else {
+        supportTag = @"";
     }
     NSDictionary * initParams = @{
                              @"clientTime"     : clientTime,

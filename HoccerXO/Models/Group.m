@@ -302,9 +302,9 @@
 
 - (BOOL) hasKeyMaster {
     NSDate * estimatedServerTime = [HXOBackend.instance estimatedServerTime];
-    NSTimeInterval passed = [estimatedServerTime timeIntervalSinceDate:self.keyDate];
-    if (GROUPKEY_DEBUG) NSLog(@"Group;hasKeyMaster: estimatedServerTime %@, keyDate %@, passed = %f", estimatedServerTime, self.keyDate, passed);
-    BOOL result = [self hasKeyOnServer] && [[HXOBackend.instance estimatedServerTime] timeIntervalSinceDate:self.keyDate] < 30.0;
+    NSTimeInterval timePassed = [estimatedServerTime timeIntervalSinceDate:self.keyDate];
+    if (GROUPKEY_DEBUG) NSLog(@"Group;hasKeyMaster: estimatedServerTime %@, keyDate %@, passed = %f", estimatedServerTime, self.keyDate, timePassed);
+    BOOL result = [self hasKeyOnServer] && timePassed < 30.0;
     if (GROUPKEY_DEBUG) NSLog(@"Group:hasKeyMaster: maybe %@", result ? @"YES" : @"NO");
     if (result && ![self.keySupplier isEqualToString:UserProfile.sharedProfile.clientId]) {
         result = [self canBeKeyMaster:self.keySupplier];

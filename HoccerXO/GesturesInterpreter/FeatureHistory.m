@@ -38,7 +38,11 @@
 
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)addAcceleration : (UIAcceleration *)acceleration 
+#pragma clang diagnostic pop
+
 {
 	if (starttime == -1) {
 		starttime = acceleration.timestamp;

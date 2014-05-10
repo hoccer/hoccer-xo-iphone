@@ -67,7 +67,6 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion;
 - (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion;
 
-- (NSNumber*)getRSAKeyBitSizeSetting;
 - (BOOL)generateKeyPair:(NSNumber*)bits;
 - (BOOL)hasKeyPair;
 - (BOOL)saveOldKeyPair;

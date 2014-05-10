@@ -1137,6 +1137,11 @@ size_t encodeLength(unsigned char * buf, size_t length) {
                                 CC_SHA256_DIGEST_LENGTH,
                                 (uint8_t *)signedHashBytes,
                                 &signedHashBytesSize);
+    if (sanityCheck != noErr) {
+        NSLog(@"makeSignatureOf failed with error: %d", (int)sanityCheck);
+        if (signedHashBytes) free(signedHashBytes);
+        return nil;
+    }
     signedHash = [NSData dataWithBytes:(const void *)signedHashBytes length:(NSUInteger)signedHashBytesSize];
     if (signedHashBytes) free(signedHashBytes);
     return signedHash;

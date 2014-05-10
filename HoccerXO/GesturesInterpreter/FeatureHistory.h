@@ -23,7 +23,10 @@
 
 @property (readonly) NSMutableArray *xLineFeatures, *yLineFeatures, *zLineFeatures;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)addAcceleration : (UIAcceleration *)acceleration;
+#pragma clang diagnastic pop
 
 - (UIImage *)chart;
 - (NSString *)featurePatternOnAxis: (NSInteger)axis inTimeInterval: (NSTimeInterval)timeInterval;

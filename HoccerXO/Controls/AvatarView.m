@@ -241,7 +241,7 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
         CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
 
 
-        NSDictionary * attributes = @{(id)kCTFontAttributeName: (__bridge id)CTFontCreateWithName((CFStringRef)@"Helvetica", self.badgeTextLayer.fontSize, NULL),
+        NSDictionary * attributes = @{(id)kCTFontAttributeName: CFBridgingRelease(CTFontCreateWithName((CFStringRef)@"Helvetica", self.badgeTextLayer.fontSize, NULL)),
                                       (id)kCTParagraphStyleAttributeName: (__bridge id)paragraphStyle};
 
         NSAttributedString * attributedText = [[NSAttributedString alloc] initWithString: text attributes: attributes];
