@@ -74,8 +74,9 @@
 }
 
 - (void) updatePlaybackState {
-    NSString *playState = [self.audioPlayer isPlaying] ? @"Pause" : @"Play";
-    [self.playButton setTitle:playState forState:UIControlStateNormal];
+    NSString *imageName = [self.audioPlayer isPlaying] ? @"fullscreen-button-pause" : @"fullscreen-button-play";
+    UIImage *image = [UIImage imageNamed:imageName];
+    [self.playButton setImage:image forState:UIControlStateNormal];
 }
 
 - (void) updateCurrentTime {
