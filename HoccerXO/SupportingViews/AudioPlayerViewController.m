@@ -15,6 +15,7 @@
 
 @property (nonatomic, readonly) HXOAudioPlayer * audioPlayer;
 @property (nonatomic, strong) NSTimer * playbackTimer;
+@property (nonatomic, assign) BOOL isSeeking;
 
 @end
 
@@ -30,6 +31,7 @@
     
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipBackButton addTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.seekSlider addTarget:self action:@selector(startSeekingTime:) forControlEvents:UIControlEventTouchDown];
     [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
 
     [self updateAttachmentInfo];
@@ -85,7 +87,10 @@
 - (void) updateCurrentTime {
     self.currentTimeLabel.text = [self stringFromTimeInterval:self.audioPlayer.currentTime];
     self.remainingTimeLabel.text = [self stringFromTimeInterval:(self.audioPlayer.currentTime - self.audioPlayer.duration)];
-    self.seekSlider.value = self.audioPlayer.currentTime;
+
+    if (!self.isSeeking) {
+        self.seekSlider.value = self.audioPlayer.currentTime;
+    }
 }
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
@@ -107,8 +112,13 @@
     [self.audioPlayer togglePlayPause];
 }
 
+- (void) startSeekingTime: (id)sender {
+    self.isSeeking = YES;
+}
+
 - (void) seekTime: (id)sender {
     self.audioPlayer.currentTime = self.seekSlider.value;
+    self.isSeeking = NO;
 }
 
 - (void) skipBack: (id)sender {
