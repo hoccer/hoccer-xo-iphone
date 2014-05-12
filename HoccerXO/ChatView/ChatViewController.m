@@ -56,6 +56,7 @@
 #define DEBUG_TABLE_CELLS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
+static const NSTimeInterval kTypingTimerInterval = 3;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
@@ -77,10 +78,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, readonly) NSDateFormatter               * dateFormatter;
 @property (nonatomic, readonly) NSByteCountFormatter          * byteCountFormatter;
 
-@property (nonatomic, assign)   BOOL                            keyBoardShown;
-
 @property (nonatomic, strong)   UITextField                   * autoCorrectTriggerHelper;
 @property (nonatomic, strong)   UILabel                       * messageFieldPlaceholder;
+@property (nonatomic, strong)   NSTimer                       * typingTimer;
 
 @property (strong) id throwObserver;
 @property (strong) id catchObserver;
@@ -199,10 +199,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [menuController setMenuItems:@[myShareMessageMenuItem,myOpenWithMessageMenuItem,myDeleteMessageMenuItem,myResendMessageMenuItem/*, myForwardMessageMenuItem*/,mySaveMenuItem]];
     [menuController update];
     return menuController;
-}
-
-- (void) textViewDidChange:(UITextView *)textView {
-    self.messageFieldPlaceholder.alpha = [textView isEqual: self.messageField] && textView.text && ! [textView.text isEqualToString:@""] ? 0 : 1;
 }
 
 -(void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -354,6 +350,15 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.masterPopoverController = nil;
 }
 
+#pragma mark - UITextViewDelegate Methods
+
+- (void) textViewDidChange:(UITextView *)textView {
+    if ([textView isEqual: self.messageField]) {
+        self.messageFieldPlaceholder.alpha = textView.text && ! [textView.text isEqualToString:@""] ? 0 : 1;
+        [self userDidType];
+    }
+}
+
 #pragma mark - Keyboard Handling
 
 - (void)keyboardWillShow:(NSNotification*) notification {
@@ -371,7 +376,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [self.view layoutIfNeeded];
     } completion: nil];
     
-    [self.chatBackend changePresenceToTyping];
 }
 
 - (void)keyboardWillHide:(NSNotification*) notification {
@@ -382,15 +386,27 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.keyboardHeight.constant = 0;
         [self.view layoutIfNeeded];
     } completion: nil];
-
-    [self.chatBackend changePresenceToNotTyping];
 }
 
 - (void) hideKeyboard {
-//    if (self.keyBoardShown) {
-        // NSLog(@"hideKeyboard:self = %@, self.view=%@", self, self.view);
-        [self.view endEditing: NO];
-//    }
+    [self.view endEditing: NO];
+}
+
+#pragma mark - Typing State Handling
+
+- (void) userDidType {
+    if (self.typingTimer) {
+        [self.typingTimer invalidate];
+        self.typingTimer = nil;
+    }
+
+    self.typingTimer = [NSTimer scheduledTimerWithTimeInterval: kTypingTimerInterval target: self selector: @selector(typingTimerFired:) userInfo: nil repeats: NO];
+    [self.chatBackend changePresenceToTyping];
+}
+
+- (void) typingTimerFired: (NSTimer*) timer {
+    [self.chatBackend changePresenceToNotTyping];
+    self.typingTimer = nil;
 }
 
 #pragma mark - Actions
