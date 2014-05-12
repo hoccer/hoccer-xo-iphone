@@ -525,6 +525,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.currentAttachment = nil;
     self.messageField.text = @"";
     [self textViewDidChange: self.messageField];
+    if (self.typingTimer) {
+        [self.typingTimer fire];
+    }
     [self trashCurrentAttachment];
 }
 
