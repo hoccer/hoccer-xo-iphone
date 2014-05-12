@@ -573,7 +573,7 @@
 		63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		63AE45591705EE770099F0CB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63AE455C1705EE820099F0CB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
-		63AEE2D416CA4D0200522F92 /* Hoccer XO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer XO.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AEE2D416CA4D0200522F92 /* Hoccer Wings.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer Wings.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1460,7 +1460,7 @@
 		63AEE2D516CA4D0200522F92 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				63AEE2D416CA4D0200522F92 /* Hoccer XO.app */,
+				63AEE2D416CA4D0200522F92 /* Hoccer Wings.app */,
 				6302A9B318DA8A9500B2D04F /* HoccerXO Tests.xctest */,
 			);
 			name = Products;
@@ -1997,7 +1997,7 @@
 			);
 			name = HoccerXO;
 			productName = Hoccenger;
-			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer XO.app */;
+			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer Wings.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2670,7 +2670,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer XO";
+				PRODUCT_NAME = "Hoccer Wings";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2709,7 +2709,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer XO";
+				PRODUCT_NAME = "Hoccer Wings";
 				PROVISIONING_PROFILE = "473C0135-A15E-4F09-88D5-FD666C6E152C";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "473C0135-A15E-4F09-88D5-FD666C6E152C";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
