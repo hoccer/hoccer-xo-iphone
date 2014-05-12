@@ -250,7 +250,7 @@ static HXOUI * _currentTheme;
     
     id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
-    [navigationBarAppearance setBarStyle:     UIBarStyleBlackTranslucent];
+    [navigationBarAppearance setBarStyle:     UIBarStyleBlack];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
     [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
 

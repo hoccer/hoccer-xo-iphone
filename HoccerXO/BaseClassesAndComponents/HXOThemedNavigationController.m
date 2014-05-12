@@ -10,6 +10,10 @@
 
 @implementation HXOThemedNavigationController
 
+- (void)awakeFromNib {
+    self.navigationBar.translucent = NO;
+}
+
 - (BOOL) shouldAutorotate {
     return [[self.viewControllers lastObject] shouldAutorotate];
 }
