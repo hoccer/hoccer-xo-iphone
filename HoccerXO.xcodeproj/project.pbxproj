@@ -60,8 +60,6 @@
 		633AA86918C4DCF6009403CB /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		633AA8E718C66DCE009403CB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633AA8E118C66DCE009403CB /* libTestFlight.a */; };
 		634010F6191AAA44007A2C67 /* avatar_location.m in Sources */ = {isa = PBXBuildFile; fileRef = 634010F5191AAA44007A2C67 /* avatar_location.m */; };
-		63401107191AAAA3007A2C67 /* avatar_location.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = 63401105191AAAA3007A2C67 /* avatar_location.pcvd */; };
-		63401108191AAAA3007A2C67 /* avatar_location.svg in Resources */ = {isa = PBXBuildFile; fileRef = 63401106191AAAA3007A2C67 /* avatar_location.svg */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
@@ -2168,7 +2166,6 @@
 				63AE4516170350750099F0CB /* Default.png in Resources */,
 				63AE4517170350750099F0CB /* Default@2x.png in Resources */,
 				63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */,
-				63401108191AAAA3007A2C67 /* avatar_location.svg in Resources */,
 				E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */,
 				63B1C9E71843E4FD00B75CD8 /* cnt-video.png in Resources */,
 				E9A85D9F184FD1AD00EB9B68 /* chatbar-attachment-icon-location@2x.png in Resources */,
@@ -2209,7 +2206,6 @@
 				63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
-				63401107191AAAA3007A2C67 /* avatar_location.pcvd in Resources */,
 				E9A85DA0184FD1AD00EB9B68 /* chatbar-attachment-icon-music.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
