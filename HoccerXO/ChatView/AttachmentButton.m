@@ -64,6 +64,7 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
     self.previewImageLayer.masksToBounds = YES;
     [self.layer addSublayer: self.previewImageLayer];
 
+    self.tintColor = [UIApplication sharedApplication].delegate.window.tintColor;
     [self configure];
 }
 
