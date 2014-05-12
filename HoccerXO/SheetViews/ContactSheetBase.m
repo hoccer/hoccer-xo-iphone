@@ -183,15 +183,6 @@ static const NSUInteger kHXOMaxNameLength = 25;
     return nil;
 }
 
-- (UIImage*) imageFromDefaultAvatar {
-    CGRect frame = CGRectMake(0, 0, 128, 128);
-    VectorArt * va = [[VectorArt alloc] init];
-    va.path = [self.avatarView.defaultIcon pathScaledToSize: frame.size];
-    va.fillColor = self.avatarView.defaultIcon.fillColor;
-    va.strokeColor = self.avatarView.defaultIcon.strokeColor;
-    return [va imageWithFrame: frame];
-}
-
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     [super prepareForSegue: segue withItem: item sender: sender];
     if ([item isEqual: self.keyItem]) {
