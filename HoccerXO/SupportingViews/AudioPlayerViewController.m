@@ -35,6 +35,9 @@
     [self updateAttachmentInfo];
     [self updatePlaybackState];
     [self updateCurrentTime];
+    
+    self.volumeDownImage.image = [self.volumeDownImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.volumeUpImage.image = [self.volumeUpImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
