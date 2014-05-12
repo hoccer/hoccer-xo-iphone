@@ -112,6 +112,22 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;
 
+- (void) modifyPresenceClientName: (NSString*) clientName handler:(GenericResultHandler)handler;
+- (void) modifyPresenceClientStatus: (NSString*) clientStatus handler:(GenericResultHandler)handler;
+- (void) modifyPresenceAvatarURL: (NSString*) avatarURL handler:(GenericResultHandler)handler;
+- (void) modifyPresenceKeyId: (NSData*) keyId handler:(GenericResultHandler)handler;
+- (void) modifyPresenceConnectionStatus: (NSString*) connectionStatus handler:(GenericResultHandler)handler;
+
+// Call one of the following five function after one of the presence fields has been updated
+- (void) modifyPresenceClientNameWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceClientStatusWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceAvatarURLWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceKeyIdWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceConnectionStatusWithHandler:(GenericResultHandler)handler;
+
+- (void) changePresenceToTyping;
+- (void) changePresenceToNotTyping;
+
 - (void) start: (BOOL) performRegistration;
 - (void) stop;
 

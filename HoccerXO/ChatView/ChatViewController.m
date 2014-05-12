@@ -370,7 +370,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.tableView.contentOffset = contentOffset;
         [self.view layoutIfNeeded];
     } completion: nil];
-
+    
+    [self.chatBackend changePresenceToTyping];
 }
 
 - (void)keyboardWillHide:(NSNotification*) notification {
@@ -382,6 +383,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [self.view layoutIfNeeded];
     } completion: nil];
 
+    [self.chatBackend changePresenceToNotTyping];
 }
 
 - (void) hideKeyboard {

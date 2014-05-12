@@ -26,6 +26,7 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 
 @property (nonatomic,strong)   NSString * nickName;
 @property (nonatomic,strong)   NSString * status;
+@property (nonatomic,strong)   NSString * connectionStatus;
 
 @property (nonatomic, strong) NSData   * publicKey;       // public key of this contact
 @property (nonatomic, strong) NSString * publicKeyId;     // id of public key

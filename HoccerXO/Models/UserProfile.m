@@ -33,6 +33,9 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 {
     KeychainItemWrapper * _accountItem;
     KeychainItemWrapper * _saltItem;
+    UIImage * _avatarImage;
+    unsigned int _avatarImageVersion;
+    unsigned int _savedAvatarImageVersion;
 }
 
 @property (nonatomic,readonly) SRPClient * srpClient;
@@ -42,6 +45,8 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 @implementation UserProfile
 
 @dynamic groupMembershipList;
+@synthesize connectionStatus;
+@dynamic avatarImage;
 
 - (id) init {
     self = [super init];
@@ -85,6 +90,15 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     [[HXOUserDefaults standardUserDefaults] synchronize];
 }
 
+- (UIImage *) avatarImage {
+    return _avatarImage;
+}
+
+- (void) setAvatarImage:(UIImage *)newAvatarImage {
+    _avatarImage = newAvatarImage;
+    _avatarImageVersion++;
+}
+
 - (void) loadProfile {
     self.nickName       = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName];
     /*
@@ -96,17 +110,39 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSData * avatar     = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAvatar];
     self.status         = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOUserStatus];
     self.avatarImage = [UIImage imageWithData: avatar];
+    _savedAvatarImageVersion = 0;
+    _avatarImageVersion = 0;
 }
 
 - (void) saveProfile {
-    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-    NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, photoQualityCompressionSetting/10.0);
+    
+    NSMutableDictionary * itemsChanged = [NSMutableDictionary new];
+    if (_avatarImageVersion != _savedAvatarImageVersion) {
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, photoQualityCompressionSetting/10.0);
+        [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
+        itemsChanged[kHXOAvatar] = @YES;
+        _savedAvatarImageVersion = _avatarImageVersion;
+    }
+    
+    
+    if (![self.nickName isEqualToString:[[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]]) {
+        itemsChanged[kHXONickName] = @YES;
+    }
+    NSString * oldStatus = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOUserStatus];
+    if (self.status != nil || self.status != oldStatus) {
+        if (![self.status isEqualToString:oldStatus]) {
+            itemsChanged[kHXOUserStatus] = @YES;
+        }
+    }
+    
     [[HXOUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHXONickName];
-    [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
     [[HXOUserDefaults standardUserDefaults] setValue: self.status         forKey: kHXOUserStatus];
     [[HXOUserDefaults standardUserDefaults] synchronize];
 
-    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+    id userInfo = @{ @"itemsChanged":itemsChanged};
+    NSLog(@"profileUpdatedByUser info %@",userInfo);
+    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self userInfo:userInfo];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 

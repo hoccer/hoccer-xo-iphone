@@ -147,6 +147,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [_serverConnection registerIncomingCall: @"outgoingDelivery"    withSelector:@selector(outgoingDelivery:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered"   withSelector:@selector(pushNotRegistered:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"presenceUpdated"     withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"presenceModified"     withSelector:@selector(presenceModifiedNotification:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"relationshipUpdated" withSelector:@selector(relationshipUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"groupUpdated"        withSelector:@selector(groupUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"groupMemberUpdated"  withSelector:@selector(groupMemberUpdated:) isNotification: YES];
@@ -1567,6 +1568,58 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
+- (void) presenceModified:(NSDictionary *) thePresence {
+
+    NSString * myClient = thePresence[@"clientId"];
+    if ([myClient isEqualToString: [UserProfile sharedProfile].clientId]) {
+        return;
+    }
+    Contact * myContact = [self getContactByClientId:myClient];
+    if (myContact == nil) {
+        // no presence modification for unknown contacts;
+        return;
+    }
+    myContact.lastUpdateReceived = [NSDate date];
+    
+    NSString * newNickName = thePresence[@"clientName"];
+    if (newNickName != nil && newNickName.length > 0) {
+        myContact.nickName = newNickName;
+    }
+    
+    NSString * newStatus = thePresence[@"clientStatus"];
+    if (newStatus != nil) {
+        myContact.status = newStatus;
+    }
+
+    NSString * newConnectionStatus = thePresence[@"connectionStatus"];
+    if (newConnectionStatus != nil) {
+        myContact.connectionStatus = newConnectionStatus;
+    }
+
+    NSString * newKeyId = thePresence[@"keyId"];
+    if (newKeyId != nil) {
+        if (![myContact.publicKeyId isEqualToString: newKeyId]) {
+            // fetch key
+            [self fetchKeyForContact: myContact withKeyId:newKeyId withCompletion:^(NSError *theError) {
+                [self checkGroupKeysForGroupMembershipOfContact:myContact];
+            }];
+        }
+    }
+    
+    NSString * newAvatarURL = thePresence[@"avatarUrl"];
+    if (newAvatarURL != nil) {
+        [self updateAvatarForContact:myContact forAvatarURL:newAvatarURL];
+    }
+    
+    NSNumber * newTimeStamp = thePresence[@"timestamp"];
+    if (newTimeStamp != nil) {
+        NSLog(@"WARNING: presenceModified receiced timestamp for contact id = %@", myContact.clientId);
+        myContact.presenceLastUpdatedMillis = newTimeStamp;
+        
+    }
+    [self.delegate saveDatabase];
+}
+
 - (void) updateAvatarForContact:(Contact*)myContact forAvatarURL:(NSString*)theAvatarURL {
     if (![myContact.avatarURL isEqualToString: theAvatarURL]) {
         if (theAvatarURL.length) {
@@ -2708,7 +2761,11 @@ static NSTimer * _stateNotificationDelayTimer;
 #pragma mark - Attachment upload and download
 
 - (void) flushPendingFiletransfers {
-    [self uploadAvatarIfNeeded];
+    [self uploadAvatarIfNeededWithCompletion:^(BOOL didIt) {
+        if (didIt) {
+            [self modifyPresenceAvatarURLWithHandler:nil];
+        }
+    }];
     [self flushPendingAttachmentUploads];
     [self flushPendingAttachmentDownloads];
     [self checkTransferQueues];
@@ -3464,17 +3521,22 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
-- (void) updatePresence: (NSString*) clientName withStatus: clientStatus withAvatar: (NSString*)avatarURL withKey: (NSData*)keyId handler:(GenericResultHandler)handler{
-    // NSLog(@"updatePresence: %@, %@, %@", clientName, clientStatus, avatarURL);
+- (void) updatePresence: (NSString*) clientName
+             withStatus: (NSString*) clientStatus
+             withAvatar: (NSString*)avatarURL
+                withKey: (NSData*) keyId
+   withConnectionStatus: (NSString*) clientConnectionStatus
+                handler:(GenericResultHandler)handler
+{
     NSDictionary *params = @{
                              @"clientName" : clientName,
                              @"clientStatus" : clientStatus,
                              @"avatarUrl" : avatarURL,
                              @"keyId" : [keyId hexadecimalString],
-                             @"connectionStatus": @"online"
+                             @"connectionStatus": clientConnectionStatus
                              };
     if (USE_VALIDATOR) [self validateObject: params forEntity:@"RPC_TalkPresence_out"];  // TODO: Handle Validation Error
-
+    
     [_serverConnection invoke: @"updatePresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"updatePresence() got result: %@", responseOrError);
@@ -3493,27 +3555,155 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     UserProfile * myProfile = [UserProfile sharedProfile];
     NSString * myNickName = myProfile.nickName;
-   // NSString * myStatus = myProfile.status;
-    NSString * myStatus = @"";
-    
+    NSString * myClientStatus = [UserProfile sharedProfile].status;
+    if (myClientStatus == nil) {
+        myClientStatus = @"";
+    }
     if (myNickName == nil) {
         myNickName = @"";
     }
-    [self updatePresence: myNickName withStatus:myStatus withAvatar:myAvatarURL withKey: myProfile.publicKeyIdData handler:handler];
+    NSString * myConnectionStatus = [UserProfile sharedProfile].connectionStatus;
+    if (myConnectionStatus == nil) {
+        myConnectionStatus = @"online";
+    }
+    [self updatePresence: myNickName
+              withStatus: myClientStatus
+              withAvatar: myAvatarURL
+                 withKey: myProfile.publicKeyIdData
+    withConnectionStatus:myConnectionStatus
+                 handler: handler];
 }
+
+- (void) modifyPresence:(NSDictionary *)params handler:(GenericResultHandler)handler{
+    // NSLog(@"modifyPresence: %@, %@, %@", clientName, clientStatus, avatarURL);
+    //if (USE_VALIDATOR) [self validateObject: params forEntity:@"RPC_TalkPresence_out"];  // TODO: Handle Validation Error
+    
+    [_serverConnection invoke: @"modifyPresence" withParams: @[params] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"modifyPresence() got result: %@", responseOrError);
+            if (handler) handler(YES);
+        } else {
+            NSLog(@"modifyPresence() failed: %@", responseOrError);
+            if (handler) handler(NO);
+        }
+    }];
+}
+
+- (void) modifyPresenceClientName: (NSString*) clientName handler:(GenericResultHandler)handler {
+    [self modifyPresence:@{@"clientName" : clientName} handler:handler];
+}
+
+- (void) modifyPresenceClientStatus: (NSString*) clientStatus handler:(GenericResultHandler)handler {
+    [self modifyPresence:@{@"clientStatus" : clientStatus} handler:handler];
+}
+
+- (void) modifyPresenceAvatarURL: (NSString*) avatarURL handler:(GenericResultHandler)handler {
+    [self modifyPresence:@{@"avatarUrl" : avatarURL} handler:handler];
+}
+
+- (void) modifyPresenceKeyId: (NSData*) keyId handler:(GenericResultHandler)handler {
+    [self modifyPresence:@{@"keyId" : [keyId hexadecimalString]} handler:handler];
+}
+
+- (void) modifyPresenceConnectionStatus: (NSString*) connectionStatus handler:(GenericResultHandler)handler {
+    [self modifyPresence:@{@"connectionStatus" : connectionStatus} handler:handler];
+}
+
+// Call one of the following five function after one of the presence fields has been updated
+
+- (void) modifyPresenceClientNameWithHandler:(GenericResultHandler)handler {
+    [self modifyPresenceClientName:[UserProfile sharedProfile].nickName handler:handler];
+}
+
+- (void) modifyPresenceClientStatusWithHandler:(GenericResultHandler)handler {
+    NSString * myClientStatus = [UserProfile sharedProfile].status;
+    if (myClientStatus == nil) {
+        myClientStatus = @"";
+    }
+    [self modifyPresenceClientStatus:myClientStatus handler:handler];
+}
+
+- (void) modifyPresenceAvatarURLWithHandler:(GenericResultHandler)handler {
+    NSString * myAvatarURL = [UserProfile sharedProfile].avatarURL;
+    if (myAvatarURL == nil) {
+        myAvatarURL = @"";
+    }
+    [self modifyPresenceAvatarURL:myAvatarURL handler:handler];
+}
+
+- (void) modifyPresenceKeyIdWithHandler:(GenericResultHandler)handler {
+    [self modifyPresenceKeyId:[UserProfile sharedProfile].publicKeyIdData handler:handler];
+}
+
+- (void) modifyPresenceConnectionStatusWithHandler:(GenericResultHandler)handler {
+    NSString * myConnectionStatus = [UserProfile sharedProfile].connectionStatus;
+    if (myConnectionStatus == nil) {
+        myConnectionStatus = @"online";
+    }
+    [self modifyPresenceConnectionStatus:myConnectionStatus handler:handler];
+}
+
+- (void) changePresenceToNotTyping {
+    if (![@"online" isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
+        [UserProfile sharedProfile].connectionStatus=@"online";
+        [self modifyPresenceConnectionStatusWithHandler:nil];
+    }
+}
+
+- (void) changePresenceToTyping {
+    if (![@"typing" isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
+        [UserProfile sharedProfile].connectionStatus=@"typing";
+        [self modifyPresenceConnectionStatusWithHandler:nil];
+    }
+}
+/*
+ if (fullPresenceUpdate) {
+ [self updatePresenceWithHandler:^(BOOL success) {
+ NSLog(@"Avatar upload succeeded=%d",success);
+ }];
+ } else {
+ [self modifyPresenceAvatarURLWithHandler:^(BOOL success) {
+ NSLog(@"Avatar upload succeeded=%d",success);
+ }];
+ }
+ */
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
     if (_state == kBackendReady) {
-        [self uploadAvatarIfNeeded];
-        [self updateKeyWithHandler:^(BOOL ok) {
-            if (ok) {
-                [self updatePresenceWithHandler:^(BOOL ok) {
-                    if (ok) {
-                        [self updateGroupKeysForMyGroupMemberships];
-                    }
-                }];
-            }
-        }];
+        NSDictionary * itemsChanged = aNotification.userInfo[@"itemsChanged"];
+        //NSLog(@"notification = %@, itemsChanged=%@", aNotification,itemsChanged);
+        BOOL publicKeyChanged = itemsChanged == nil || [itemsChanged[@"publicKey"] boolValue];
+        BOOL avatarChanged = itemsChanged == nil || [itemsChanged[@"avatar"] boolValue];
+        BOOL nickNameChanged = itemsChanged == nil || [itemsChanged[@"nickName"] boolValue];
+        BOOL userStatusChanged = itemsChanged == nil || [itemsChanged[@"userStatus"] boolValue];
+        
+        if (nickNameChanged) {
+            [self modifyPresenceClientNameWithHandler:^(BOOL success) { }];
+        }
+        if (userStatusChanged) {
+            [self modifyPresenceClientStatusWithHandler:^(BOOL success) { }];
+        }
+        if (avatarChanged) {
+            [self uploadAvatarIfNeededWithCompletion:^(BOOL ok) {
+                if (ok || UserProfile.sharedProfile.avatar == nil) {
+                    [self modifyPresenceAvatarURLWithHandler:^(BOOL success) {
+                        NSLog(@"Avatar upload and presence update succeeded=%d",success);
+                    }];
+                }
+            }];
+        }
+        if (publicKeyChanged) {
+            [self updateKeyWithHandler:^(BOOL ok) {
+                if (ok) {
+                    //[self updatePresenceWithHandler:^(BOOL ok) {
+                    [self modifyPresenceKeyIdWithHandler:^(BOOL ok) {
+                        if (ok) {
+                            [self updateGroupKeysForMyGroupMemberships];
+                        }
+                    }];
+                }
+            }];
+        }
     }
 }
 
@@ -3937,8 +4127,16 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) presenceUpdatedNotification: (NSArray*) params {
     //TODO: Error checking
     for (id presence in params) {
-        // NSLog(@"updatePresences presence=%@",presence);
+        // NSLog(@"presenceUpdatedNotification presence=%@",presence);
         [self presenceUpdated:presence];
+    }
+}
+
+- (void) presenceModifiedNotification: (NSArray*) params {
+    //TODO: Error checking
+    for (id presence in params) {
+        // NSLog(@"presenceModifiedNotification presence=%@",presence);
+        [self presenceModified:presence];
     }
 }
 
@@ -4216,7 +4414,9 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self checkUploadStatus:myCurrentAvatarUploadURL hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
                     if (!ok) {
                         [UserProfile sharedProfile].avatarURL = @"";
-                        [self uploadAvatarIfNeeded];
+                        [self uploadAvatarIfNeededWithCompletion:^(BOOL didIt) {
+                            [self modifyPresenceAvatarURLWithHandler:nil];
+                        }];
                     }
                 }];
             }
@@ -4224,7 +4424,9 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
-- (void) uploadAvatarIfNeeded {
+// completion will be called with YES when an upload has occured and succeeded, otherwise completion will be called with NO argument
+// the caller must perform a presence update itself in the completion handler in case of a YES argument
+- (void) uploadAvatarIfNeededWithCompletion:(GenericResultHandler)completion {
     NSData * myAvatarData = [UserProfile sharedProfile].avatar;
     if (myAvatarData != nil && myAvatarData.length>0) {
         NSString * myCurrentAvatarURL = [UserProfile sharedProfile].avatarURL;
@@ -4235,25 +4437,31 @@ static NSTimer * _stateNotificationDelayTimer;
                     [self uploadAvatar:myAvatarData toURL:urls[@"uploadUrl"] withDownloadURL:urls[@"downloadUrl"] inQueue:_avatarUploadQueue withCompletion:^(NSError *theError) {
                         if (theError != nil) {
                             NSLog(@"#ERROR: Avatar upload failed, error=%@", theError);
+                            completion(NO);
                         } else {
                             NSLog(@"Avatar upload succeeded, lets check");
                             [self checkUploadStatus:urls[@"uploadUrl"] hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
                                 if (ok) {
                                     [UserProfile sharedProfile].avatarURL = urls[@"downloadUrl"];
                                     [UserProfile sharedProfile].avatarUploadURL = urls[@"uploadUrl"];
-                                    [self updatePresenceWithHandler:^(BOOL success) {
-                                        NSLog(@"Avatar upload succeeded=%d",success);
-                                    }];
+                                    NSLog(@"Avatar upload verified, is ok");
+                                    completion(YES);
+                                } else {
+                                    completion(NO);
                                 }
                             }];
                         }
                     }];
-                    return;
                 } else {
                     NSLog(@"Failed to get Avatar upload urls");
+                    completion(NO);
                 }
             }];
+        } else {
+            completion(NO); // avatar is already upload
         }
+    } else {
+        completion(NO); // avatar is default, no update required
     }
 }
 

@@ -1360,7 +1360,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 + (void) renewRSAKeyPairWithSize: (NSUInteger) size {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
     [hud show];
-    [UserProfile.sharedProfile renewKeypairWithSize: size completion: ^{ [hud dismiss]; }];
+    [UserProfile.sharedProfile renewKeypairWithSize: size completion: ^{
+        [hud dismiss];
+        id userInfo = @{ @"itemsChanged":@{@"publicKey": @YES}};
+        NSLog(@"profileUpdatedByUser info %@",userInfo);
+        NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }];
 }
 
 #ifdef WITH_WEBSERVER

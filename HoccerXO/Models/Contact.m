@@ -205,10 +205,16 @@ NSString * const kRelationStateKept        = @"kept";
     if ([self.relationshipState isEqualToString: kRelationStateGroupFriend]) {
         name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
     }    
-    if ( ! self.connectionStatus || self.isOnline || self.isOffline) {
+    if ( self.isTyping) {
+        name = [NSString stringWithFormat:@"%@ 💬", self.nickName];
+    }
+    if ( self.isBackground) {
+        name = [NSString stringWithFormat:@"%@ 💤", self.nickName];
+    }
+    if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
         return name;
     } else {
-        // show special connection
+        // show special connection status
         return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
     }
 }
