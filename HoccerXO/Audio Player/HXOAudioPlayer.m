@@ -20,6 +20,8 @@
 @property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) AVAudioPlayer * player;
+@property (nonatomic, strong) NSArray * playlist;
+@property (nonatomic, assign) NSUInteger playlistIndex;
 
 @end
 
@@ -39,27 +41,26 @@
     return instance;
 }
 
-#pragma mark - Public interface
-
-- (BOOL) playAttachment: (Attachment *) attachment {
-    self.attachment = attachment;
+- (id) init {
+    self = [super init];
     
-    if (self.player) {
-        [AppDelegate setMusicAudioSession];
-        [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-        [[AppDelegate instance] becomeFirstResponder];
-
-        [self.player play];
-        self.isPlaying = YES;
-    } else {
-        self.isPlaying = NO;
+    if (self) {
+        self.playlist = @[];
+        self.playlistIndex = 0;
     }
     
-    return self.isPlaying;
+    return self;
 }
 
-- (void) play {
-    [self playAttachment:self.attachment];
+#pragma mark - Public interface
+
+- (BOOL) playWithPlaylist: (NSArray *) playlist atIndex: (NSUInteger) index {
+    self.playlist = playlist;
+    return [self playAtIndex:index];
+}
+
+- (BOOL) play {
+    return [self playAtIndex:self.playlistIndex];
 }
 
 - (void) pause {
@@ -81,12 +82,16 @@
         [self stop];
         [self playAttachment:attachment];
     } else {
-        // TODO: implement playlist skip to previous track
+        if (self.playlistIndex > 0) {
+            [self playAtIndex:self.playlistIndex - 1];
+        }
     }
 }
 
 - (void) skipForward {
-    
+    if (self.playlistIndex < self.playlist.count - 1) {
+        [self playAtIndex:self.playlistIndex + 1];
+    }
 }
 
 - (NSTimeInterval) currentTime {
@@ -106,6 +111,34 @@
 }
 
 #pragma mark - Private helpers
+
+- (BOOL) playAtIndex: (NSUInteger) index {
+    self.playlistIndex = index;
+    
+    if (index < self.playlist.count) {
+        Attachment *attachment = [self.playlist objectAtIndex:index];
+        return [self playAttachment:attachment];
+    } else {
+        return YES;
+    }
+}
+
+- (BOOL) playAttachment: (Attachment *) attachment {
+    self.attachment = attachment;
+    
+    if (self.player) {
+        [AppDelegate setMusicAudioSession];
+        [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+        [[AppDelegate instance] becomeFirstResponder];
+        
+        [self.player play];
+        self.isPlaying = YES;
+    } else {
+        self.isPlaying = NO;
+    }
+    
+    return self.isPlaying;
+}
 
 - (void) stop {
     [self pause];
@@ -166,7 +199,11 @@
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [[AppDelegate instance] resignFirstResponder];
 
-    [self stop];
+    if (self.playlistIndex < self.playlist.count - 1) {
+        [self skipForward];
+    } else {
+        [self stop];
+    }
 }
 
 - (void) audioPlayerBeginInterruption:(AVAudioPlayer *)player {

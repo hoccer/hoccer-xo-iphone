@@ -31,6 +31,7 @@
     
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipBackButton addTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.skipForwardButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
     [self.seekSlider addTarget:self action:@selector(startSeekingTime:) forControlEvents:UIControlEventTouchDown];
     [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
 
@@ -123,6 +124,11 @@
 
 - (void) skipBack: (id)sender {
     [self.audioPlayer skipBack];
+    [self updateCurrentTime];
+}
+
+- (void) skipForward: (id)sender {
+    [self.audioPlayer skipForward];
     [self updateCurrentTime];
 }
 

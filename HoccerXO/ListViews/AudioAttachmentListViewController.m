@@ -121,13 +121,13 @@ static NSString *reuseIdentifier = @"audio_attachment";
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    Attachment *attachment = [self attachmentAtIndexPath:indexPath];
+    NSArray * playlist = [self.fetchedResultsController fetchedObjects];
     
     HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
-    BOOL success = [audioPlayer playAttachment:attachment];
+    BOOL success = [audioPlayer playWithPlaylist:playlist atIndex:indexPath.row];
     
     if (success) {
-        [self performSegueWithIdentifier:@"showAudioPlayer" sender:attachment];
+        [self performSegueWithIdentifier:@"showAudioPlayer" sender:nil];
     } else {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
                                                          message: NSLocalizedString(@"attachment_cannot_play_message", nil)

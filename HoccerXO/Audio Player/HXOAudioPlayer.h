@@ -15,8 +15,8 @@
 
 + (HXOAudioPlayer *) sharedInstance;
 
-- (BOOL) playAttachment: (Attachment *) attachment;
-- (void) play;
+- (BOOL) playWithPlaylist: (NSArray *) playlist atIndex: (NSUInteger) index;
+- (BOOL) play;
 - (void) pause;
 - (void) togglePlayPause;
 - (void) skipBack;
