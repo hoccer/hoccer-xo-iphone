@@ -998,7 +998,7 @@ typedef enum ActionSheetTags {
     if ([model isKindOfClass: [UserProfile class]]) {
         [[UserProfile sharedProfile] saveProfile];
         id userInfo = @{ @"itemsChanged":self.itemsChanged};
-        NSLog(@"profileUpdatedByUser info %@",userInfo);
+        // NSLog(@"profileUpdatedByUser info %@",userInfo);
         NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self userInfo:userInfo];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
     }
