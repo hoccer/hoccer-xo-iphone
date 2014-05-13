@@ -77,6 +77,10 @@
 
     self.seekSlider.minimumValue = 0.0f;
     self.seekSlider.maximumValue = self.audioPlayer.duration;
+    
+    [attachment loadImage:^(UIImage *image, NSError *error) {
+        self.artworkImage.image = image;
+    }];
 }
 
 - (void) updatePlaybackState {
