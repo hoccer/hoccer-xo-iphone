@@ -287,7 +287,7 @@
     return [self.myGroupMembership.state isEqualToString:@"joined"];
 }
 
-
+/*
 - (BOOL) hasKeyOnServer {
     BOOL result = self.keySupplier != nil && self.sharedKeyId != nil && self.sharedKeyIdSalt != nil && self.keyDate != nil;
     if (GROUPKEY_DEBUG) NSLog(@"Group;hasKeyOnServer: %@", result ? @"YES" : @"NO");
@@ -345,7 +345,23 @@
     if (GROUPKEY_DEBUG) NSLog(@"Group:iCanSetKeys: %@", result ? @"YES" : @"NO");
     return result;
 }
+*/
 
+- (BOOL)isKeptGroup {
+    return [self.groupState isEqualToString:@"kept"];
+}
+
+- (BOOL)isRemovedGroup {
+    return [self.groupState isEqualToString:@"none"];
+}
+
+- (BOOL)isExistingGroup {
+    return [self.groupState isEqualToString:@"exists"];
+}
+
+- (BOOL)isNearbyGroup{
+    return [self.groupType isEqualToString:@"nearby"];
+}
 
 //public class TalkGroup {
 //    public String groupTag;

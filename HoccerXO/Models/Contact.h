@@ -55,6 +55,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, readonly) BOOL              isTyping;
 @property (nonatomic, readonly) BOOL              isPresent;
 @property (nonatomic, readonly) BOOL              isConnected;
+@property (nonatomic, readonly) BOOL              isNearbyTagged;
 
 @property (nonatomic, retain)   NSDate          * lastUpdateReceived;
 

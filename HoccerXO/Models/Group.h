@@ -47,6 +47,11 @@
 - (BOOL) hasValidGroupKey;
 - (void) generateNewGroupKey;
 - (BOOL) copyKeyFromMember:(GroupMembership*)member;
+
+- (BOOL)isKeptGroup ;
+- (BOOL)isRemovedGroup;
+- (BOOL)isExistingGroup;
+- (BOOL)isNearbyGroup;
 /*
 - (BOOL) checkGroupKey;
 

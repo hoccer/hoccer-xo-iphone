@@ -191,10 +191,13 @@ static int  groupMemberContext;
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! [self.group.groupType isEqualToString: @"nearby"] && [super isItemVisible: item];
+        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && [super isItemVisible: item];
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
         return [self.group.myGroupMembership.state isEqualToString: @"invited"];
     } else if ([item isEqual: self.destructiveButton]) {
+        if (self.group && self.group.isNearbyGroup && self.group.isKeptGroup) {
+            return YES;
+        }
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
