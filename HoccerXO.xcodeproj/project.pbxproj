@@ -182,6 +182,7 @@
 		C5DEFD2C1921FECD002FFD9D /* SeekSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DEFD2B1921FECD002FFD9D /* SeekSlider.m */; };
 		C5DEFD3D19221709002FFD9D /* slider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DEFD3B19221709002FFD9D /* slider-thumb.png */; };
 		C5DEFD3E19221709002FFD9D /* slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DEFD3C19221709002FFD9D /* slider-thumb@2x.png */; };
+		C5DEFD4619222BAB002FFD9D /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DEFD4519222BAB002FFD9D /* UIImage+Tint.m */; };
 		C5EA78D41921095A00085C46 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CA1921095A00085C46 /* button-pause.png */; };
 		C5EA78D51921095A00085C46 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CB1921095A00085C46 /* button-pause@2x.png */; };
 		C5EA78D61921095A00085C46 /* button-play.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CC1921095A00085C46 /* button-play.png */; };
@@ -731,6 +732,8 @@
 		C5DEFD2B1921FECD002FFD9D /* SeekSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeekSlider.m; sourceTree = "<group>"; };
 		C5DEFD3B19221709002FFD9D /* slider-thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slider-thumb.png"; sourceTree = "<group>"; };
 		C5DEFD3C19221709002FFD9D /* slider-thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slider-thumb@2x.png"; sourceTree = "<group>"; };
+		C5DEFD4419222BAB002FFD9D /* UIImage+Tint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Tint.h"; sourceTree = "<group>"; };
+		C5DEFD4519222BAB002FFD9D /* UIImage+Tint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Tint.m"; sourceTree = "<group>"; };
 		C5EA78CA1921095A00085C46 /* button-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause.png"; sourceTree = "<group>"; };
 		C5EA78CB1921095A00085C46 /* button-pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause@2x.png"; sourceTree = "<group>"; };
 		C5EA78CC1921095A00085C46 /* button-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play.png"; sourceTree = "<group>"; };
@@ -1177,6 +1180,8 @@
 				6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */,
 				631F6CDB1706558100FB28D5 /* UIImage+ScaleAndCrop.h */,
 				631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */,
+				C5DEFD4419222BAB002FFD9D /* UIImage+Tint.h */,
+				C5DEFD4519222BAB002FFD9D /* UIImage+Tint.m */,
 				E980E27318648D80004AF79D /* UIResponder+Debug.h */,
 				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
 			);
@@ -2425,6 +2430,7 @@
 				63B7900318D4E546003A9125 /* tab_settings.m in Sources */,
 				63C413BC16E94735004E1F6D /* ConversationCell.m in Sources */,
 				631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */,
+				C5DEFD4619222BAB002FFD9D /* UIImage+Tint.m in Sources */,
 				63808A201858A6F90001AC96 /* MessageSection.m in Sources */,
 				631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */,
 				032CBBB919178DDB00987008 /* AudioPlayerViewController.m in Sources */,

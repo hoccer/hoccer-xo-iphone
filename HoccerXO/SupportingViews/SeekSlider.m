@@ -8,19 +8,21 @@
 
 #import "SeekSlider.h"
 
+#import "UIImage+Tint.h"
+
 @implementation SeekSlider
-
-- (void) awakeFromNib {
-    UIImage *trackImage = [[UIImage imageNamed:@"slider-track"] resizableImageWithCapInsets:UIEdgeInsetsZero];
-    [self setMinimumTrackImage:trackImage forState:UIControlStateNormal];
-    [self setMaximumTrackImage:trackImage forState:UIControlStateNormal];
-
-    UIImage *thumbImage = [UIImage imageNamed:@"slider-thumb"];
-    [self setThumbImage:thumbImage forState:UIControlStateNormal];
-}
 
 - (CGRect) trackRectForBounds:(CGRect)bounds {
     return CGRectInset(bounds, 0.0f, 0.5f * (CGRectGetHeight(bounds) - 7.0f));
+}
+
+- (void) tintColorDidChange {
+    UIImage *trackImage = [[[UIImage imageNamed:@"slider-track"] tintWithColor:[UIColor lightGrayColor]] resizableImageWithCapInsets:UIEdgeInsetsZero];
+    [self setMinimumTrackImage:trackImage forState:UIControlStateNormal];
+    [self setMaximumTrackImage:trackImage forState:UIControlStateNormal];
+    
+    UIImage *thumbImage = [[UIImage imageNamed:@"slider-thumb"] tintWithColor:self.tintColor];
+    [self setThumbImage:thumbImage forState:UIControlStateNormal];
 }
 
 @end
