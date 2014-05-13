@@ -39,8 +39,8 @@
     [self updatePlaybackState];
     [self updateCurrentTime];
     
-    self.volumeDownImage.image = [self.volumeDownImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    self.volumeUpImage.image = [self.volumeUpImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.volumeDownImageView.image = [self.volumeDownImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.volumeUpImageView.image = [self.volumeUpImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -79,7 +79,7 @@
     self.seekSlider.maximumValue = self.audioPlayer.duration;
     
     [attachment loadImage:^(UIImage *image, NSError *error) {
-        self.artworkImage.image = image;
+        self.artworkImageView.image = image;
     }];
 }
 

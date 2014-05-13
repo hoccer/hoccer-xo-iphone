@@ -22,8 +22,8 @@
 @property (nonatomic, strong) IBOutlet UIButton *skipBackButton;
 @property (nonatomic, strong) IBOutlet UIButton *skipForwardButton;
 @property (nonatomic, strong) IBOutlet UISlider *seekSlider;
-@property (nonatomic, strong) IBOutlet UIImageView *artworkImage;
-@property (nonatomic, strong) IBOutlet UIImageView *volumeDownImage;
-@property (nonatomic, strong) IBOutlet UIImageView *volumeUpImage;
+@property (nonatomic, strong) IBOutlet UIImageView *artworkImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *volumeDownImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *volumeUpImageView;
 
 @end

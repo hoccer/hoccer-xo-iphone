@@ -275,7 +275,7 @@
                     <navigationItem key="navigationItem" id="AXf-sx-DVH"/>
                     <connections>
                         <outlet property="artistLabel" destination="3zo-vz-vjI" id="jQ8-lO-aVa"/>
-                        <outlet property="artworkImage" destination="V7Z-6c-o9p" id="FJi-9c-6Tx"/>
+                        <outlet property="artworkImageView" destination="V7Z-6c-o9p" id="eGB-7I-s66"/>
                         <outlet property="currentTimeLabel" destination="MXk-2i-gTo" id="jf6-N5-byB"/>
                         <outlet property="playButton" destination="85y-tl-b3q" id="fwK-18-Hpw"/>
                         <outlet property="remainingTimeLabel" destination="KJX-QM-Eai" id="kUd-Qp-5C3"/>
@@ -283,8 +283,8 @@
                         <outlet property="skipBackButton" destination="dBA-Xa-6es" id="xwQ-Ri-HwH"/>
                         <outlet property="skipForwardButton" destination="liZ-gI-Pdx" id="1Xj-vg-Ekw"/>
                         <outlet property="titleLabel" destination="JOo-wW-6Ox" id="hEW-Iq-dZj"/>
-                        <outlet property="volumeDownImage" destination="wsF-BK-75X" id="Ibx-Z1-lxa"/>
-                        <outlet property="volumeUpImage" destination="Ft5-cI-TVh" id="WfV-nF-xX9"/>
+                        <outlet property="volumeDownImageView" destination="wsF-BK-75X" id="ncs-an-003"/>
+                        <outlet property="volumeUpImageView" destination="Ft5-cI-TVh" id="BNr-O3-v4b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GLZ-Ck-YSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
