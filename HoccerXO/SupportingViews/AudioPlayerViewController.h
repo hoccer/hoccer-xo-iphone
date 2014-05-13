@@ -15,7 +15,7 @@
 @property (nonatomic, strong) Attachment *audioAttachment;
 
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
-@property (nonatomic, strong) IBOutlet UILabel *artistLabel;
+@property (nonatomic, strong) IBOutlet UILabel *artistAndAlbumLabel;
 @property (nonatomic, strong) IBOutlet UILabel *currentTimeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *remainingTimeLabel;
 @property (nonatomic, strong) IBOutlet UIButton *playButton;

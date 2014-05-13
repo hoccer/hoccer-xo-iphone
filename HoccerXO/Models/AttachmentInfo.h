@@ -22,6 +22,8 @@
 @property (nonatomic,readonly) NSString * audioArtist;
 @property (nonatomic,readonly) NSString * audioAlbum;
 @property (nonatomic,readonly) NSTimeInterval audioDuration;
+@property (nonatomic,readonly) NSString * audioArtistAndAlbum;
+@property (nonatomic,readonly) NSString * audioArtistAlbumAndDuration;
 
 @property (nonatomic,readonly) BOOL attachmentInfoLoaded;
 

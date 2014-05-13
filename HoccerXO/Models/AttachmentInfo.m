@@ -13,6 +13,7 @@
 #import <AVFoundation/AVMetadataItem.h>
 
 #import "Attachment.h"
+#import "NSString+FromTimeInterval.h"
 #import "Vcard.h"
 
 @implementation AttachmentInfo
@@ -72,6 +73,26 @@
     }
     
     _attachmentInfoLoaded = YES;
+}
+
+- (NSString *) audioArtistAndAlbum {
+    if (self.audioArtist && self.audioAlbum) {
+        return [NSString stringWithFormat:@"%@ – %@", self.audioArtist, self.audioAlbum];
+    } else if (self.audioArtist || self.audioAlbum) {
+        return self.audioAlbum ? self.audioAlbum : self.audioArtist;
+    } else {
+        return nil;
+    }
+}
+
+- (NSString *) audioArtistAlbumAndDuration {
+    NSString * artistAndAlbum = self.audioArtistAndAlbum;
+    NSString * duration = [NSString stringFromTimeInterval:self.audioDuration];
+    if (artistAndAlbum) {
+        return [NSString stringWithFormat:@"%@ – %@", artistAndAlbum, duration];
+    } else {
+        return duration;
+    }
 }
 
 @end

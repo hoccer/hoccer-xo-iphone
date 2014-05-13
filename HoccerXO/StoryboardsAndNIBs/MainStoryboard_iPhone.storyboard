@@ -274,7 +274,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="AXf-sx-DVH"/>
                     <connections>
-                        <outlet property="artistLabel" destination="3zo-vz-vjI" id="jQ8-lO-aVa"/>
+                        <outlet property="artistAndAlbumLabel" destination="3zo-vz-vjI" id="dFh-rb-jf9"/>
                         <outlet property="artworkImageView" destination="V7Z-6c-o9p" id="eGB-7I-s66"/>
                         <outlet property="currentTimeLabel" destination="MXk-2i-gTo" id="jf6-N5-byB"/>
                         <outlet property="playButton" destination="85y-tl-b3q" id="fwK-18-Hpw"/>

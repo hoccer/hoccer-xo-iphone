@@ -1780,13 +1780,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             }
             subtitle = info;
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-            NSString * duration = [NSString stringFromTimeInterval: attachmentInfo.audioDuration];
-            if (attachmentInfo.audioArtist && attachmentInfo.audioAlbum) {
-                subtitle = [NSString stringWithFormat:@"%@ – %@ – %@", attachmentInfo.audioArtist, attachmentInfo.audioAlbum, duration];
-            } else if (attachmentInfo.audioArtist || attachmentInfo.audioAlbum) {
-                NSString * name = attachmentInfo.audioAlbum ? attachmentInfo.audioAlbum : attachmentInfo.audioArtist;
-                subtitle = [NSString stringWithFormat:@"%@ – %@", name, duration];
-            }
+            subtitle = attachmentInfo.audioArtistAlbumAndDuration;
         }
             
     }
