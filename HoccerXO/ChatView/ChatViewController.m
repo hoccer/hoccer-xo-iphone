@@ -55,6 +55,7 @@
 #import "avatar_contact.h"
 #import "AttachmentButton.h"
 #import "HXOAudioPlaybackButtonController.h"
+#import "NSString+FromTimeInterval.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -1779,7 +1780,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             }
             subtitle = info;
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-            NSString * duration = [self stringFromTimeInterval: attachmentInfo.audioDuration];
+            NSString * duration = [NSString stringFromTimeInterval: attachmentInfo.audioDuration];
             if (attachmentInfo.audioArtist && attachmentInfo.audioAlbum) {
                 subtitle = [NSString stringWithFormat:@"%@ – %@ – %@", attachmentInfo.audioArtist, attachmentInfo.audioAlbum, duration];
             } else if (attachmentInfo.audioArtist || attachmentInfo.audioAlbum) {
@@ -1794,18 +1795,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
      }
     return subtitle;
-}
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
-    NSInteger ti = (NSInteger)interval;
-    NSInteger seconds = ti % 60;
-    NSInteger minutes = (ti / 60) % 60;
-    NSInteger hours = (ti / 3600);
-    if (hours) {
-        return [NSString stringWithFormat: @"%i:%02i:%02i", hours, minutes, seconds];
-    } else {
-        return [NSString stringWithFormat: @"%i:%02i", minutes, seconds];
-    }
 }
 
 #pragma mark - MessageViewControllerDelegate methods

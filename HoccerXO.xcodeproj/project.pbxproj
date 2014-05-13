@@ -183,6 +183,7 @@
 		C5DEFD3D19221709002FFD9D /* slider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DEFD3B19221709002FFD9D /* slider-thumb.png */; };
 		C5DEFD3E19221709002FFD9D /* slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DEFD3C19221709002FFD9D /* slider-thumb@2x.png */; };
 		C5DEFD4619222BAB002FFD9D /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DEFD4519222BAB002FFD9D /* UIImage+Tint.m */; };
+		C5DEFD5719226794002FFD9D /* NSString+FromTimeInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DEFD5619226794002FFD9D /* NSString+FromTimeInterval.m */; };
 		C5EA78D41921095A00085C46 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CA1921095A00085C46 /* button-pause.png */; };
 		C5EA78D51921095A00085C46 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CB1921095A00085C46 /* button-pause@2x.png */; };
 		C5EA78D61921095A00085C46 /* button-play.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CC1921095A00085C46 /* button-play.png */; };
@@ -734,6 +735,8 @@
 		C5DEFD3C19221709002FFD9D /* slider-thumb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slider-thumb@2x.png"; sourceTree = "<group>"; };
 		C5DEFD4419222BAB002FFD9D /* UIImage+Tint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Tint.h"; sourceTree = "<group>"; };
 		C5DEFD4519222BAB002FFD9D /* UIImage+Tint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Tint.m"; sourceTree = "<group>"; };
+		C5DEFD5519226794002FFD9D /* NSString+FromTimeInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FromTimeInterval.h"; sourceTree = "<group>"; };
+		C5DEFD5619226794002FFD9D /* NSString+FromTimeInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FromTimeInterval.m"; sourceTree = "<group>"; };
 		C5EA78CA1921095A00085C46 /* button-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause.png"; sourceTree = "<group>"; };
 		C5EA78CB1921095A00085C46 /* button-pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause@2x.png"; sourceTree = "<group>"; };
 		C5EA78CC1921095A00085C46 /* button-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play.png"; sourceTree = "<group>"; };
@@ -1160,6 +1163,8 @@
 				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
 				E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */,
 				E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */,
+				C5DEFD5519226794002FFD9D /* NSString+FromTimeInterval.h */,
+				C5DEFD5619226794002FFD9D /* NSString+FromTimeInterval.m */,
 				E9E92F91187503F7007B8042 /* NSString+HTML.h */,
 				E9E92F92187503F7007B8042 /* NSString+HTML.m */,
 				63D8EE1417230050000F9E53 /* NSString+RandomString.h */,
@@ -2590,6 +2595,7 @@
 				E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */,
 				63CED3E318F9D86E0095110B /* SetupViewControllers.m in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
+				C5DEFD5719226794002FFD9D /* NSString+FromTimeInterval.m in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
 				E9E92F4118733B7A007B8042 /* DispatchQueueLogFormatter.m in Sources */,
 				63FE105418EFA726008630DE /* AttachmentButton.m in Sources */,

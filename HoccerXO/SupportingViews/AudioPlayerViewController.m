@@ -10,6 +10,7 @@
 #import "Attachment.h"
 #import "AttachmentInfo.h"
 #import "HXOAudioPlayer.h"
+#import "NSString+FromTimeInterval.h"
 
 @interface AudioPlayerViewController ()
 
@@ -90,27 +91,12 @@
 }
 
 - (void) updateCurrentTime {
-    self.currentTimeLabel.text = [self stringFromTimeInterval:self.audioPlayer.currentTime];
-    self.remainingTimeLabel.text = [self stringFromTimeInterval:(self.audioPlayer.currentTime - self.audioPlayer.duration)];
+    self.currentTimeLabel.text = [NSString stringFromTimeInterval:self.audioPlayer.currentTime];
+    self.remainingTimeLabel.text = [NSString stringFromTimeInterval:(self.audioPlayer.currentTime - self.audioPlayer.duration)];
 
     if (!self.isSeeking) {
         self.seekSlider.value = self.audioPlayer.currentTime;
     }
-}
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
-    NSInteger ti = (NSInteger)abs(round(interval));
-    NSInteger seconds = ti % 60;
-    NSInteger minutes = (ti / 60) % 60;
-    NSInteger hours = (ti / 3600);
-
-    NSString *sign = interval <= -0.5 ? @"-" : @"";
-
-    if (hours > 0) {
-        return [NSString stringWithFormat:@"%@%i:%02i:%02i", sign, hours, minutes, seconds];
-    }
-
-    return [NSString stringWithFormat:@"%@%02i:%02i", sign, minutes, seconds];
 }
 
 - (void) togglePlayback: (id)sender {
