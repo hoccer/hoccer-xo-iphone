@@ -251,6 +251,10 @@ NSString * const kRelationStateKept        = @"kept";
     return self.isPresent || self.isBackground;
 }
 
+- (BOOL) isNearbyTagged {
+    return self.isNearby != nil && [self.isNearby isEqualToString: @"YES"];
+}
+
 - (NSString*) groupMembershipList {
     NSLog(@"groupMembershipList called on contact %@",self);
     NSMutableArray * groups = [[NSMutableArray alloc] init];

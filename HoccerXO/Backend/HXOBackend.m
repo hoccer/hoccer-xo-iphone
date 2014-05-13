@@ -152,6 +152,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [_serverConnection registerIncomingCall: @"groupUpdated"        withSelector:@selector(groupUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"groupMemberUpdated"  withSelector:@selector(groupMemberUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"ping"                withSelector:@selector(ping) isNotification: NO];
+        [_serverConnection registerIncomingCall: @"getEncryptedGroupKeys" withSelector:@selector(getEncryptedGroupKeys:) isNotification: NO];
         [_serverConnection registerIncomingCall: @"alertUser"           withSelector:@selector(alertUser:) isNotification: YES];
         
         _delegate = theAppDelegate;
@@ -1551,7 +1552,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) && ![self fastStart])) {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"] withCompletion:^(NSError *theError) {
-                [self checkGroupKeysForGroupMembershipOfContact:myContact];
+                // [self checkGroupKeysForGroupMembershipOfContact:myContact];
             }];
         }
         [self updateAvatarForContact:myContact forAvatarURL:thePresence[@"avatarUrl"]];
@@ -1601,7 +1602,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (![myContact.publicKeyId isEqualToString: newKeyId]) {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:newKeyId withCompletion:^(NSError *theError) {
-                [self checkGroupKeysForGroupMembershipOfContact:myContact];
+                // [self checkGroupKeysForGroupMembershipOfContact:myContact];
             }];
         }
     }
@@ -1885,6 +1886,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     [group updateWithDictionary: groupDict];
     
+    /*
     if (group.iCanSetKeys) {
         if (!group.hasKeyOnServer) {
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: generating key for group with id %@",groupId);
@@ -1896,6 +1898,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [self updateKeyboxesFor:group withMembers:updatableMembers];
         }
     }
+     */
     
     /*
     if (!group.hasKeyOnServer && group.iAmAdmin) {
@@ -2274,19 +2277,27 @@ static NSTimer * _stateNotificationDelayTimer;
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: memberShipDeleted");
         }
     }
-    
+    /*
     BOOL trashKeys = NO;
     if ([group isEqual:myMembership.contact]) { // its us
         trashKeys = ![myMembership checkGroupKeyTransfer:groupMemberDict[@"encryptedGroupKey"] withKeyId:groupMemberDict[@"memberKeyId"]
                                            withSharedKeyId:groupMemberDict[@"sharedKeyId"] withSharedKeyIdSalt:groupMemberDict[@"sharedKeyIdSalt"]];
     }
+     */
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
     
+    if (myMembership.isOwnMembership && groupMemberDict[@"encryptedGroupKey"] != nil) {
+        // we got a new key
+        [group copyKeyFromMember:myMembership];
+    }
+    
+    /*
     if (trashKeys) {
         [myMembership trashKey];
     }
+     */
     
     if (memberContact != nil) {
         if (myMembership.group.groupType != nil && [myMembership.group.groupType isEqualToString:@"nearby"] && [myMembership.state isEqualToString:@"joined"]) {
@@ -2307,6 +2318,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting member with state '%@', nick=%@", groupMemberDict[@"state"], memberContact.nickName);
         [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact disinvited:disinvited];
     } else {
+        /*
         // now check if we have to update the encrypted group key
         if (![myMembership isOwnMembership] || group.iCanSetKeys) {
             // not us or we are admin
@@ -2314,6 +2326,7 @@ static NSTimer * _stateNotificationDelayTimer;
         } else {
             [self ifNeededUpdateGroupKeyForMyMembership:myMembership];
         }
+         */
         if (weHaveBeenInvited) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self invitationAlertForGroup:group withMemberShip:myMembership];
@@ -2527,7 +2540,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [moc deleteObject: member];
     }
 }
-
+/*
 - (void) ifNeededUpdateGroupKeyForMember:(GroupMembership*) myMember {
     if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMember:%@",myMember.contact.clientId);}
     Group * group = myMember.group;
@@ -2628,7 +2641,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self.delegate saveDatabase];
     }];
 }
-
+*/
 
 + (BOOL) isZeroData:(NSData*)theData {
     const uint8_t * buffer = (uint8_t *)[theData bytes];
@@ -2727,6 +2740,95 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
+// String[] getEncryptedGroupKeys(String groupId, String sharedKeyId, String sharedKeyIdSalt, String[] clientIds, String[] publicKeyIds);
+- (id) getEncryptedGroupKeys:(NSArray*)params {
+    
+    id failed = @[];
+    
+    if (params.count != 5) {
+        NSLog(@"getEncryptedGroupKeys() bad number of argument in params: %@, expected 5, got %d", params, params.count);
+        return failed;
+    }
+    
+    NSString * groupId = params[0];
+    NSString * sharedKeyId = params[1];
+    NSString * sharedKeyIdSalt = params[2];
+    NSArray * clientIds = params[3];
+    NSArray * publicKeyIds = params[4];
+    
+    if (groupId.length == 0 || sharedKeyId.length == 0 || sharedKeyIdSalt.length == 0 ||
+        clientIds.count == 0 || publicKeyIds.count == 0 || clientIds.count != publicKeyIds.count)
+    {
+        NSLog(@"getEncryptedGroupKeys() missing or invalid argument in params: %@", params);
+        return failed;
+    }
+    Group * group = [self getGroupById: groupId];
+    if (group == nil) {
+        NSLog(@"getEncryptedGroupKeys() unknown group with id : %@", groupId);
+        return failed;
+    }
+    if (![group.groupState isEqualToString:@"exists"]) {
+        NSLog(@"getEncryptedGroupKeys() group not in state exist, id: %@", groupId);
+        return failed;
+    }
+    NSString * newSharedKeyId = nil;
+    NSString * newSharedKeyIdSalt = nil;
+    if ([sharedKeyId isEqualToString:@"RENEW"]) {
+        [group generateNewGroupKey];
+        newSharedKeyId = group.sharedKeyIdString;
+        newSharedKeyIdSalt = group.sharedKeyIdSaltString;
+    } else {
+        if (![sharedKeyId isEqualToString:group.sharedKeyIdString] ||
+            ![sharedKeyIdSalt isEqualToString:group.sharedKeyIdSaltString] )
+        {
+            NSLog(@"getEncryptedGroupKeys() I have not the requested group key for group: %@ with sharedKeyId %@ and salt %@", groupId,sharedKeyId,sharedKeyIdSalt);
+            return failed;
+        }
+    }
+    
+    NSMutableArray * contacts = [NSMutableArray new];
+    for (int i = 0; i < clientIds.count;++i) {
+        Contact * contact = nil;
+        if ([clientIds[i] isEqualToString:UserProfile.sharedProfile.clientId]) {
+            contact = (id)UserProfile.sharedProfile;
+        } else {
+            contact = [self getContactByClientId:clientIds[i]];
+        }
+        if (contact == nil) {
+            NSLog(@"getEncryptedGroupKeys() don't know contact id: %@", clientIds[i]);
+            return failed;
+        }
+        if (!contact.hasPublicKey) {
+            NSLog(@"getEncryptedGroupKeys() I have no public key for contact id: %@", clientIds[i]);
+            return failed;
+        }
+        if (![contact.publicKeyId isEqualToString:publicKeyIds[i]]) {
+            NSLog(@"getEncryptedGroupKeys() I have not the requested public key %@ for contact id: %@", publicKeyIds[i], clientIds[i]);
+            return failed;
+        }
+        [contacts addObject:contact];
+    }
+    // ok, now we have all the ingredients to perform the request and can do the heavy lifting
+    NSMutableArray * result = [NSMutableArray new];
+    CCRSA * rsa = [CCRSA sharedInstance];
+    for (int i = 0; i < clientIds.count;++i) {
+        Contact * contact = (Contact*)contacts[i];
+        SecKeyRef myReceiverKey = [contact getPublicKeyRef];
+        NSData * keyBox = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
+        if (keyBox == nil) {
+            NSLog(@"#ERROR: getEncryptedGroupKeys() Encryption failed for key %@ contact id: %@", publicKeyIds[i], clientIds[i]);
+            return failed;
+        }
+        [result addObject:[keyBox asBase64EncodedString]];
+    }
+    if (newSharedKeyId != nil && newSharedKeyIdSalt != nil) {
+        [result addObject:newSharedKeyId];
+        [result addObject:newSharedKeyIdSalt];
+    }
+    return result;
+}
+
+/*
 // String[] updateGroupKeys(String groupId, String sharedKeyId, String sharedKeyIdSalt, String[] clientIds, String[] publicKeyIds, String[] cryptedSharedKeys);
 - (void) updateGroupKeys:(Group *)group forMembers:(NSSet*)members onSuccess:(GroupMembersOutdatedHandler)outDatedHandler{
     [group syncKeyWithMembership];
@@ -2757,7 +2859,7 @@ static NSTimer * _stateNotificationDelayTimer;
          }
      }];
 }
-
+*/
 #pragma mark - Attachment upload and download
 
 - (void) flushPendingFiletransfers {
@@ -3698,7 +3800,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     //[self updatePresenceWithHandler:^(BOOL ok) {
                     [self modifyPresenceKeyIdWithHandler:^(BOOL ok) {
                         if (ok) {
-                            [self updateGroupKeysForMyGroupMemberships];
+                            //[self updateGroupKeysForMyGroupMemberships];
                         }
                     }];
                 }

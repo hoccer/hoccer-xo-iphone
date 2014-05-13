@@ -107,7 +107,7 @@
     if (GROUPKEY_DEBUG) NSLog(@"hasCipheredGroupKey: NO");
     return NO;
 }
-
+/*
 - (BOOL) hasLatestGroupKey {
     if (self.sharedKeyId != nil) {
         if ([self.sharedKeyId isEqualToData:self.group.sharedKeyId]) {
@@ -155,7 +155,7 @@
         return result;
     }
 }
-
+*/
 - (BOOL) isOwnMembership {
     return [self.group isEqual:self.contact];
 }
@@ -178,7 +178,7 @@
 
 - (BOOL)contactHasPubKey {
     if (self.isOwnMembership) {
-        BOOL result = UserProfile.sharedProfile.publicKey != nil;
+        BOOL result = UserProfile.sharedProfile.hasPublicKey;
         if (GROUPKEY_DEBUG) NSLog(@"Member(selfcontact):contactHasPubKey: %@", result ? @"YES" : @"NO");
         return result;
     } else {
@@ -187,7 +187,7 @@
         return result;
     }
 }
-
+/*
 - (BOOL) hasGroupKeyCryptedWithLatestPublicKey {
     NSString * myKeyId = self.contactPubKeyId;
     BOOL result = self.memberKeyId != nil && myKeyId != nil && [self.memberKeyId isEqualToString:myKeyId];
@@ -247,7 +247,7 @@
     }
     return YES;
 }
-
+*/
 - (NSData *) decryptedGroupKey {
     if (![self.group isEqual:self.contact]) {
         NSLog(@"ERROR:Group key won't be encrypted for me - must not call this function on other group members except me, contact nick=%@ contact.clientId = %@, group nick=%@, group.clientId = %@", self.contact.nickName, self.contact.clientId ,self.group.nickName, self.group.clientId);

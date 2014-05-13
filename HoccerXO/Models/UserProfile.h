@@ -70,8 +70,12 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 
 - (BOOL)generateKeyPair:(NSNumber*)bits;
 - (BOOL)hasKeyPair;
+- (BOOL)hasPublicKey;
 - (BOOL)saveOldKeyPair;
 - (BOOL)deleteKeyPair;
 - (BOOL)deleteAllKeys;
+- (SecKeyRef) getPublicKeyRef;
+
+
 
 @end
