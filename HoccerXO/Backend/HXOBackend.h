@@ -98,7 +98,7 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
-- (void) updateGroupKeysForMyGroupMemberships;
+//- (void) updateGroupKeysForMyGroupMemberships;
 
 - (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)done;
 

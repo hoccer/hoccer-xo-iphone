@@ -47,6 +47,7 @@
 - (BOOL) hasValidGroupKey;
 - (void) generateNewGroupKey;
 - (BOOL) copyKeyFromMember:(GroupMembership*)member;
+/*
 - (BOOL) checkGroupKey;
 
 - (BOOL) hasKeyOnServer;
@@ -61,7 +62,7 @@
 
 - (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds;
 - (NSSet*) activeMembersNeedingKeyUpdate;
-
+*/
 @end
 
 @interface Group (CoreDataGeneratedAccessors)

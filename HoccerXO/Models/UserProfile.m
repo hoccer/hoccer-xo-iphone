@@ -359,6 +359,13 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
 }
 
+- (BOOL) hasPublicKey {
+    if (![HXOBackend isInvalid:self.publicKey]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
 
 - (NSString *) publicKeyId {
     return [HXOBackend keyIdString:[self publicKeyIdData]];
@@ -371,6 +378,10 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 - (NSData *) publicKey {
     return[[CCRSA sharedInstance] getPublicKeyBits];
+}
+
+- (SecKeyRef) getPublicKeyRef {
+    return[[CCRSA sharedInstance] getPublicKeyRef];
 }
 
 - (BOOL)generateKeyPair:(NSNumber*)bits {

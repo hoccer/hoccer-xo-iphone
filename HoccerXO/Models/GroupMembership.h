@@ -44,10 +44,10 @@
 - (NSData *) decryptedGroupKey;
 - (BOOL) hasCipheredGroupKey;
 //- (BOOL) copyKeyFromGroup;
-- (BOOL) hasLatestGroupKey;
-- (BOOL) hasValidGroupKey;
-- (BOOL) hasGroupKeyCryptedWithLatestPublicKey;
-- (void) updateKeyFromGroup;
+//- (BOOL) hasLatestGroupKey;
+//- (BOOL) hasValidGroupKey;
+//- (BOOL) hasGroupKeyCryptedWithLatestPublicKey;
+//- (void) updateKeyFromGroup;
 
 
 - (BOOL) isOwnMembership;
@@ -56,10 +56,10 @@
 - (NSString*)contactPubKeyId;
 - (BOOL)contactHasPubKey;
 
-- (void)trashKey;
+//- (void)trashKey;
 
 //-(void) checkGroupKey;
--(BOOL) checkGroupKeyTransfer:(NSString*)cipheredGroupKeyString withKeyId:(NSString*)keyIdString withSharedKeyId:(NSString*)sharedKeyIdString withSharedKeyIdSalt:(NSString*)sharedKeyIdSaltString;
+//-(BOOL) checkGroupKeyTransfer:(NSString*)cipheredGroupKeyString withKeyId:(NSString*)keyIdString withSharedKeyId:(NSString*)sharedKeyIdString withSharedKeyIdSalt:(NSString*)sharedKeyIdSaltString;
 
 
 @end
