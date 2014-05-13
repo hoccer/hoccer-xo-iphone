@@ -11,9 +11,12 @@
 @implementation SeekSlider
 
 - (void) awakeFromNib {
-    self.minimumTrackTintColor = [UIColor lightGrayColor];
-    self.maximumTrackTintColor = [UIColor lightGrayColor];
-    self.thumbTintColor = self.tintColor;
+    UIImage *trackImage = [[UIImage imageNamed:@"slider-track"] resizableImageWithCapInsets:UIEdgeInsetsZero];
+    [self setMinimumTrackImage:trackImage forState:UIControlStateNormal];
+    [self setMaximumTrackImage:trackImage forState:UIControlStateNormal];
+
+    UIImage *thumbImage = [UIImage imageNamed:@"slider-thumb"];
+    [self setThumbImage:thumbImage forState:UIControlStateNormal];
 }
 
 - (CGRect) trackRectForBounds:(CGRect)bounds {
