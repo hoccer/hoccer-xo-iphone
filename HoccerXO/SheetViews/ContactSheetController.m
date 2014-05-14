@@ -474,6 +474,7 @@ static int  groupMemberContext;
     [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: self.group];
     NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
     [moc deleteObject: self.group];
+    self.inspectedObject = nil;
     [self.appDelegate saveDatabase];
 }
 
