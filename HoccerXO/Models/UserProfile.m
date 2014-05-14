@@ -454,12 +454,12 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     [self renewKeypairWithSize: kHXODefaultKeySize completion: completion];
 }
 
-- (BOOL) importKeypair: (NSString*) publicPEMText private:(NSString *)privatePEMText {
+- (BOOL) importKeypair: (NSString*) pemText {
     if (self.hasKeyPair) {
         [self saveOldKeyPair];
     }
     [self willChangePublicKey];
-    BOOL success = [[CCRSA sharedInstance] addPrivateKeyBits: [CCRSA extractPrivateKeyBitsFromPEM: privatePEMText]] && [[CCRSA sharedInstance] addPublicKeyBits: [CCRSA extractPublicKeyBitsFromPEM: publicPEMText]];
+    BOOL success = [[CCRSA sharedInstance] importKeypairFromPEM: pemText];
     [self didChangePublicKey];
     return success;
 }

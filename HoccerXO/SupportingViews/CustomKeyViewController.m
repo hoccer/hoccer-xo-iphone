@@ -23,12 +23,10 @@
 
 @property (strong) UIView             * importView;
 @property (strong) HXOHyperLabel      * importInstructions;
-@property (strong) UILabel            * publicKeyLabel;
-@property (strong) UITextView         * publicKeyTextView;
-@property (strong) UILabel            * privateKeyLabel;
-@property (strong) UITextView         * privateKeyTextView;
+@property (strong) UITextView         * pemKeysTextView;
 
 @property (strong) NSArray            * validKeySizes;
+
 @end
 
 @implementation CustomKeyViewController
@@ -105,46 +103,21 @@
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|[v(>=0)]|" options: 0 metrics: nil views: views]];
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"V:|[v(>=0)]|" options: 0 metrics: nil views: views]];
 
-    self.publicKeyLabel = [[UILabel alloc] initWithFrame: CGRectZero];
-    self.publicKeyLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.publicKeyLabel.text = NSLocalizedString(@"key_custom_public_key_label", nil);
-    [self.importView addSubview: self.publicKeyLabel];
-
-    self.publicKeyTextView = [self makeTextView];
-    [self.importView addSubview: self.publicKeyTextView];
-
-    self.privateKeyLabel = [[UILabel alloc] initWithFrame: CGRectZero];
-    self.privateKeyLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.privateKeyLabel.text = NSLocalizedString(@"key_custom_private_key_label", nil);
-    [self.importView addSubview: self.privateKeyLabel];
-
-    self.privateKeyTextView = [self makeTextView];
-    [self.importView addSubview: self.privateKeyTextView];
+    self.pemKeysTextView = [self makeTextView];
+    [self.importView addSubview: self.pemKeysTextView];
 
     views = @{@"inst": self.importInstructions,
-              @"pubLabel":  self.publicKeyLabel,
-              @"pubText":   self.publicKeyTextView,
-              @"privLabel": self.privateKeyLabel,
-              @"privText":  self.privateKeyTextView};
-    format = [NSString stringWithFormat: @"V:|-(%f)-[inst]-%f-[pubLabel]-[pubText]-[privLabel]-[privText]-%f-|", kHXOCellPadding, 3 * kHXOGridSpacing, kHXOCellPadding];
+              @"pubText":   self.pemKeysTextView
+              };
+    format = [NSString stringWithFormat: @"V:|-(%f)-[inst]-%f-[pubText]-%f-|", kHXOCellPadding, 3 * kHXOGridSpacing, kHXOCellPadding];
     [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
     format = [NSString stringWithFormat: @"H:|-%f-[inst]-%f-|", kHXOCellPadding, kHXOCellPadding];
     [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
-    format = [NSString stringWithFormat: @"H:|-%f-[pubLabel]-%f-|", kHXOCellPadding, kHXOCellPadding];
-    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-
     format = [NSString stringWithFormat: @"H:|-%f-[pubText]-%f-|", kHXOCellPadding, kHXOCellPadding];
     [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
-    format = [NSString stringWithFormat: @"H:|-%f-[privLabel]-%f-|", kHXOCellPadding, kHXOCellPadding];
-    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-
-    format = [NSString stringWithFormat: @"H:|-%f-[privText]-%f-|", kHXOCellPadding, kHXOCellPadding];
-    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-
-    [self.importView addConstraint: [NSLayoutConstraint constraintWithItem: self.publicKeyTextView attribute: NSLayoutAttributeHeight relatedBy: NSLayoutRelationEqual toItem:self.privateKeyTextView attribute: NSLayoutAttributeHeight multiplier: 1 constant: 0]];
 }
 
 - (UITextView*) makeTextView {
@@ -180,7 +153,7 @@
             NSUInteger keySize = [self.validKeySizes[[self.sizePicker selectedRowInComponent: 0]] unsignedIntegerValue];
             [AppDelegate renewRSAKeyPairWithSize: keySize];
         } else {
-            [[UserProfile sharedProfile] importKeypair: self.publicKeyTextView.text private: self.privateKeyTextView.text];
+            [[UserProfile sharedProfile] importKeypair: self.pemKeysTextView.text];
         }
     }
     [self dismissViewControllerAnimated: YES completion: nil];
@@ -208,7 +181,7 @@
 }
 
 - (void) textViewDidChange:(UITextView *)textView {
-    self.navigationItem.rightBarButtonItem.enabled =  ! ([@"" isEqualToString: self.publicKeyTextView.text] || [@"" isEqualToString: self.privateKeyTextView.text]);
+    self.navigationItem.rightBarButtonItem.enabled =  ! [@"" isEqualToString: self.pemKeysTextView.text];
 }
 
 @end

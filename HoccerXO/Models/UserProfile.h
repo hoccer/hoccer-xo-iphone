@@ -68,7 +68,7 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion;
 - (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion;
 
-- (BOOL) importKeypair: (NSString*) publicPEMText private: (NSString*) privatePEMText;
+- (BOOL) importKeypair: (NSString*) pemText;
 
 - (BOOL)generateKeyPair:(NSNumber*)bits;
 - (BOOL)hasKeyPair;
