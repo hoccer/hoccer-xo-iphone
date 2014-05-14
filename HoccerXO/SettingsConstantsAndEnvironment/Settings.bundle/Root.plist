@@ -6,16 +6,6 @@
 	<array>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Startup faster</string>
-			<key>Key</key>
-			<string>fastStart</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Media</string>
@@ -303,6 +293,16 @@
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Key</key>
 			<string>reportCrashes</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>full_sync_title</string>
+			<key>Key</key>
+			<string>fullSync</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

@@ -46,5 +46,7 @@
 	<string></string>
 	<key>reportCrashes</key>
 	<false/>
+	<key>fullSync</key>
+	<false/>
 </dict>
 </plist>

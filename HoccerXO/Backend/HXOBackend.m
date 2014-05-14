@@ -834,6 +834,11 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)postLoginSynchronize {
+    if ([self fullSync]) {
+        NSLog(@"Running forced full sync");
+    } else {
+        // NSLog(@"Not Running forced full sync");
+    }
     [self hello];
     [self updateRelationships];
     [self updatePresences];
@@ -1206,7 +1211,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updateRelationships {
     NSDate * latestChange;
-    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) && ![self fastStart]) {
+    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) || [self fullSync]) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0]; 
     } else {
         latestChange = [self getLatestChangeDateForContactRelationships];
@@ -1455,7 +1460,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updatePresences {
     NSDate * latestChange;
-    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) && ![self fastStart]) {
+    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) || [self fullSync]) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForContactPresence];
@@ -1565,7 +1570,7 @@ static NSTimer * _stateNotificationDelayTimer;
             myContact.connectionStatus = @"group";
             myContact.relationshipState = kRelationStateGroupFriend;
         }
-        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) && ![self fastStart])) {
+        if (![myContact.publicKeyId isEqualToString: thePresence[@"keyId"]] || ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) || [self fullSync])) {
             // fetch key
             [self fetchKeyForContact: myContact withKeyId:thePresence[@"keyId"] withCompletion:^(NSError *theError) {
                 // [self checkGroupKeysForGroupMembershipOfContact:myContact];
@@ -1800,13 +1805,13 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
--(BOOL)fastStart {
-    return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fastStart"] boolValue];
+-(BOOL)fullSync {
+    return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fullSync"] boolValue];
 }
 
 - (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)completion {
     NSDate * latestChange;
-    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown || forceAll) && ![self fastStart]) {
+    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown || forceAll) || [self fullSync]) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForGroups];
@@ -1825,7 +1830,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     [self makeSureAvatarUploadedForGroup:group withCompletion:^(NSError *theError) {
                         if (CHECK_URL_TRACE) NSLog(@"makeSureAvatarUploadedForGroup %@ error=%@",group.nickName,theError);
                     }];
-                    if ((self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown || forceAll) && ![self fastStart]) {
+                    if ((self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown || forceAll) || ![self fullSync]) {
                         [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0] withCompletion:nil];
                     } else {
                         [self getGroupMembers:group lastKnown:[group latestMemberChangeDate] withCompletion:nil];
