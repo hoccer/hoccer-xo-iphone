@@ -184,6 +184,8 @@
 		C5DEFD3E19221709002FFD9D /* slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DEFD3C19221709002FFD9D /* slider-thumb@2x.png */; };
 		C5DEFD4619222BAB002FFD9D /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DEFD4519222BAB002FFD9D /* UIImage+Tint.m */; };
 		C5DEFD5719226794002FFD9D /* NSString+FromTimeInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DEFD5619226794002FFD9D /* NSString+FromTimeInterval.m */; };
+		C5DEFD6419236FBD002FFD9D /* cover-art-fallback.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DEFD6219236FBD002FFD9D /* cover-art-fallback.png */; };
+		C5DEFD6519236FBD002FFD9D /* cover-art-fallback@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DEFD6319236FBD002FFD9D /* cover-art-fallback@2x.png */; };
 		C5EA78D41921095A00085C46 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CA1921095A00085C46 /* button-pause.png */; };
 		C5EA78D51921095A00085C46 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CB1921095A00085C46 /* button-pause@2x.png */; };
 		C5EA78D61921095A00085C46 /* button-play.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EA78CC1921095A00085C46 /* button-play.png */; };
@@ -737,6 +739,8 @@
 		C5DEFD4519222BAB002FFD9D /* UIImage+Tint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Tint.m"; sourceTree = "<group>"; };
 		C5DEFD5519226794002FFD9D /* NSString+FromTimeInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FromTimeInterval.h"; sourceTree = "<group>"; };
 		C5DEFD5619226794002FFD9D /* NSString+FromTimeInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FromTimeInterval.m"; sourceTree = "<group>"; };
+		C5DEFD6219236FBD002FFD9D /* cover-art-fallback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cover-art-fallback.png"; sourceTree = "<group>"; };
+		C5DEFD6319236FBD002FFD9D /* cover-art-fallback@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cover-art-fallback@2x.png"; sourceTree = "<group>"; };
 		C5EA78CA1921095A00085C46 /* button-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause.png"; sourceTree = "<group>"; };
 		C5EA78CB1921095A00085C46 /* button-pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause@2x.png"; sourceTree = "<group>"; };
 		C5EA78CC1921095A00085C46 /* button-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play.png"; sourceTree = "<group>"; };
@@ -1755,6 +1759,8 @@
 				C5EA78CB1921095A00085C46 /* button-pause@2x.png */,
 				C5EA78CC1921095A00085C46 /* button-play.png */,
 				C5EA78CD1921095A00085C46 /* button-play@2x.png */,
+				C5DEFD6219236FBD002FFD9D /* cover-art-fallback.png */,
+				C5DEFD6319236FBD002FFD9D /* cover-art-fallback@2x.png */,
 				C5EA78CE1921095A00085C46 /* fullscreen-button-back.png */,
 				C5EA78CF1921095A00085C46 /* fullscreen-button-back@2x.png */,
 				C5EA78D01921095A00085C46 /* fullscreen-button-forward.png */,
@@ -2326,10 +2332,12 @@
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
+				C5DEFD6419236FBD002FFD9D /* cover-art-fallback.png in Resources */,
 				C5EA78D51921095A00085C46 /* button-pause@2x.png in Resources */,
 				C5EA78D91921095A00085C46 /* fullscreen-button-back@2x.png in Resources */,
 				C5EA78F6192113BD00085C46 /* fullscreen-icon-volume-up.png in Resources */,
 				C5EA78FB1921270000085C46 /* slider-track@2x.png in Resources */,
+				C5DEFD6519236FBD002FFD9D /* cover-art-fallback@2x.png in Resources */,
 				C5EA78FA1921270000085C46 /* slider-track.png in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,

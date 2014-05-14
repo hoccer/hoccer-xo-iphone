@@ -711,8 +711,7 @@ NSArray * TransferStateName = @[@"detached",
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        // block([UIImage imageNamed:@"audio-default.png"], nil);
-        block([[UIImage alloc]init], nil);
+        block([UIImage imageNamed:@"cover-art-fallback.png"], nil);
     }
 }
 
