@@ -1434,7 +1434,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) handleDeletionOfContact:(Contact*)contact {
-    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    // NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     if (contact.messages.count == 0 && contact.groupMemberships.count == 0) {
         // if theres nothing to save, delete right away and dont ask
         if (RELATIONSHIP_DEBUG) NSLog(@"handleDeletionOfContact: nothing to save, delete contact id %@",contact.clientId);
@@ -2405,7 +2405,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) handleDeletionOfGroup:(Group*)group {
-    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    // NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     NSString * groupId = group.clientId;
     if (![_pendingGroupDeletions containsObject:groupId]) {
         [_pendingGroupDeletions addObject:groupId];
@@ -2557,7 +2557,7 @@ static NSTimer * _stateNotificationDelayTimer;
 // delete all group member contacts that are not friends or contacts in other group
 - (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group {
     if (GROUP_DEBUG) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup id %@ nick %@", group.clientId, group.nickName);
-    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    // NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     NSSet * groupMembers = group.members;
     if (GROUP_DEBUG) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup found %d members", groupMembers.count);
     for (GroupMembership * member in groupMembers) {
