@@ -52,6 +52,7 @@
 #define RELATIONSHIP_DEBUG NO
 #define TRANSFER_DEBUG NO
 #define CHECK_URL_TRACE NO
+#define CHECK_CERTS_DEBUG NO
 
 
 #ifdef DEBUG
@@ -1097,7 +1098,7 @@ static NSTimer * _stateNotificationDelayTimer;
             NSString * path = [[NSBundle mainBundle] pathForResource: file ofType:@"der"];
             NSData * certificateData = [[NSData alloc] initWithContentsOfFile: path];
             SecCertificateRef certificate = SecCertificateCreateWithData(nil, (__bridge CFDataRef)(certificateData));
-            //NSLog(@"certificate: path: %@ cert: %@", path, certificate);
+            if (CHECK_CERTS_DEBUG) NSLog(@"certificate: path: %@ cert: %@", path, certificate);
             [certs addObject: CFBridgingRelease(certificate)];
         }
         _certificates = [certs copy];
@@ -4366,33 +4367,29 @@ static NSTimer * _stateNotificationDelayTimer;
     completion(nil);
 }
 
-#ifdef DEBUG
-
 + (NSString*)checkForceFilecacheUrl:(NSString*)theURL {
     NSString * forceFilecacheURL = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOForceFilecacheURL];
     if (forceFilecacheURL && ! [forceFilecacheURL isEqualToString: @""]) {
         NSURL * origURL = [NSURL URLWithString:theURL];
         NSURL * newBaseURL = [NSURL URLWithString:forceFilecacheURL];
-        //NSURLComponents * newURL = [[NSURLComponents alloc] initWithScheme:[newBaseURL scheme] host:[newBaseURL host] path:[origURL path]];
         NSURLComponents * newURLComponents = [NSURLComponents new];
         newURLComponents.scheme = [newBaseURL scheme];
         newURLComponents.host = [newBaseURL host];
         newURLComponents.port = [newBaseURL port];
         newURLComponents.path = [origURL path];
         NSURL * newURL = [newURLComponents URL];
+#ifdef DEBUG
         NSLog(@"force URL %@ => %@",theURL, newURL);
+#endif
         return [newURL absoluteString];
     }
     return theURL;
 }
-#endif
 
 - (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL inQueue:(GCNetworkQueue*)queue withCompletion:(CompletionBlock)handler {
     if (CONNECTION_TRACE) {NSLog(@"uploadAvatar size %d uploadURL=%@, downloadURL=%@", avatar.length, toURL, downloadURL );}
     
-#ifdef DEBUG
     toURL = [HXOBackend checkForceFilecacheUrl:toURL];
-#endif
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:toURL HTTPMethod:@"PUT" parameters:nil];
     NSDictionary * headers = [self httpHeaderWithContentLength: avatar.length];
     for (NSString *key in headers) {
@@ -4449,9 +4446,7 @@ static NSTimer * _stateNotificationDelayTimer;
 + (void) downloadDataFromURL:(NSString*)fromURL inQueue:(GCNetworkQueue*)queue withCompletion:(DataLoadedBlock)handler {
     if (CONNECTION_TRACE) {NSLog(@"downloadDataFromURL  %@", fromURL );}
     
-#ifdef DEBUG
     fromURL = [HXOBackend checkForceFilecacheUrl:fromURL];
-#endif
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:fromURL HTTPMethod:@"GET" parameters:nil];
     NSString * userAgent = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).userAgent;
     [request addValue:userAgent forHTTPHeaderField:@"User-Agent"];
@@ -4685,14 +4680,15 @@ static NSTimer * _stateNotificationDelayTimer;
                     SecCertificateRef cert = SecTrustGetCertificateAtIndex(secTrust, i);
                     NSData *certData = CFBridgingRelease(SecCertificateCopyData(cert));
                     
-                    // NSLog(@"certData %d = %@", i, certData);
+                    //NSLog(@"certData %d = %@", i, certData);
+                    if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: certData %d = len = %lu", i, (unsigned long)certData.length);
                     for (id ref in sslCerts) {
                         SecCertificateRef trustedCert = (__bridge SecCertificateRef)ref;
                         NSData *trustedCertData = CFBridgingRelease(SecCertificateCopyData(trustedCert));
                         
-                        // NSLog(@"comparing with trustedCertData len %d", trustedCertData.length);
+                        if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: comparing with trustedCertData len %d", trustedCertData.length);
                         if ([trustedCertData isEqualToData:certData]) {
-                            // NSLog(@"!!!_pinnedCertFound");
+                            if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: found pinnned cert len %lu", (unsigned long)trustedCertData.length);
                             _pinnedCertFound = YES;
                             break;
                         }
@@ -4786,9 +4782,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) checkUploadStatus:(NSString*)theURL hasSize:(long long)expectedSize withCompletion:(DataURLStatusHandler)handler {
     if (CHECK_URL_TRACE) {NSLog(@"checkUploadStatus uploadURL=%@, expectedSize=%lld", theURL, expectedSize );}
     
-#ifdef DEBUG
     theURL = [HXOBackend checkForceFilecacheUrl:theURL];
-#endif
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:theURL HTTPMethod:@"PUT" parameters:nil];
     NSDictionary * headers = @{@"Content-Length": @"0"};
     if (CHECK_URL_TRACE) {NSLog(@"checkUploadStatus: headers=%@", headers);}

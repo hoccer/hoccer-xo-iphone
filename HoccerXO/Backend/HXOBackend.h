@@ -196,8 +196,6 @@ typedef void (^DateHandler)(NSDate* date);
 + (BOOL) isZeroData:(NSData*)theData;
 + (BOOL) isInvalid:(NSData*)theData;
 
-#ifdef DEBUG
 + (NSString*)checkForceFilecacheUrl:(NSString*)theURL;
-#endif
 
 @end

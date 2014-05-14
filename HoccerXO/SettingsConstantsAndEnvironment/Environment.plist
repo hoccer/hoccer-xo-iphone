@@ -11,6 +11,8 @@
 	<dict>
 		<key>development</key>
 		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
 		<key>development_orig</key>
@@ -19,6 +21,8 @@
 		</array>
 		<key>production</key>
 		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
 	</dict>
@@ -27,7 +31,7 @@
 		<key>development</key>
 		<string>wss://test1.talk.hoccer.de</string>
 		<key>production</key>
-		<string>wss://server.talk.hoccer.de</string>
+		<string>wss://talkserver.talk.hoccer.de:8443</string>
 	</dict>
 </dict>
 </plist>
