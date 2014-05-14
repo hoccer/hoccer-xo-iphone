@@ -442,16 +442,26 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 - (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{ [self willChangePublicKey]; });
-        [self renewKeypairInternal: size];
+        BOOL success = [self renewKeypairInternal: size];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self didChangePublicKey];
-            completion();
+            completion(success);
         });
     });
 }
 
 - (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion {
     [self renewKeypairWithSize: kHXODefaultKeySize completion: completion];
+}
+
+- (BOOL) importKeypair: (NSString*) publicPEMText private:(NSString *)privatePEMText {
+    if (self.hasKeyPair) {
+        [self saveOldKeyPair];
+    }
+    [self willChangePublicKey];
+    BOOL success = [[CCRSA sharedInstance] addPrivateKeyBits: [CCRSA extractPrivateKeyBitsFromPEM: privatePEMText]] && [[CCRSA sharedInstance] addPublicKeyBits: [CCRSA extractPublicKeyBitsFromPEM: publicPEMText]];
+    [self didChangePublicKey];
+    return success;
 }
 
 @end

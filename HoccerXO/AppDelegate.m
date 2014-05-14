@@ -1365,7 +1365,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 + (void) renewRSAKeyPairWithSize: (NSUInteger) size {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
     [hud show];
-    [UserProfile.sharedProfile renewKeypairWithSize: size completion: ^{
+    [UserProfile.sharedProfile renewKeypairWithSize: size completion: ^(BOOL success){
         [hud dismiss];
         id userInfo = @{ @"itemsChanged":@{@"publicKey": @YES}};
         if (TRACE_PROFILE_UPDATES) NSLog(@"profileUpdatedByUser info %@",userInfo);

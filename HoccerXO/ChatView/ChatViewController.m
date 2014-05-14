@@ -531,14 +531,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self trashCurrentAttachment];
 }
 
-/*
-- (IBAction)addAttachmentPressed:(id)sender {
-    // NSLog(@"addAttachmentPressed");
-    [self.messageField resignFirstResponder];
-    [self.attachmentPicker showInView: self.view];
-}
-*/
-
 - (IBAction)attachmentPressed: (id)sender {
     // NSLog(@"attachmentPressed");
     [self.messageField resignFirstResponder]; // XXX :-/

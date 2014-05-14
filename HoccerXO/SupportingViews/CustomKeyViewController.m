@@ -17,9 +17,16 @@
 @interface CustomKeyViewController ()
 
 @property (strong) UISegmentedControl * generateOrImportSelector;
-@property (strong) HXOHyperLabel      * instructions;
+@property (strong) HXOHyperLabel      * generateInstructions;
 @property (strong) HXOHyperLabel      * expertNote;
 @property (strong) UIPickerView       * sizePicker;
+
+@property (strong) UIView             * importView;
+@property (strong) HXOHyperLabel      * importInstructions;
+@property (strong) UILabel            * publicKeyLabel;
+@property (strong) UITextView         * publicKeyTextView;
+@property (strong) UILabel            * privateKeyLabel;
+@property (strong) UITextView         * privateKeyTextView;
 
 @property (strong) NSArray            * validKeySizes;
 @end
@@ -49,6 +56,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action: @selector(onDone:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"go", nil) style: UIBarButtonItemStyleDone target: self action: @selector(onDone:)];
 
@@ -56,12 +65,12 @@
     [self.generateOrImportSelector addTarget: self action: @selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
     self.navigationItem.titleView = self.generateOrImportSelector;
 
-    self.instructions = [[HXOHyperLabel alloc] initWithFrame: CGRectZero];
-    self.instructions.translatesAutoresizingMaskIntoConstraints = NO;
-    self.instructions.attributedText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"key_custom_size_instructions", nil)];
-    self.instructions.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    [self.view addSubview: self.instructions];
-    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.instructions attribute: NSLayoutAttributeCenterX relatedBy: NSLayoutRelationEqual toItem: self.view attribute: NSLayoutAttributeCenterX multiplier: 1 constant: 0]];
+    self.generateInstructions = [[HXOHyperLabel alloc] initWithFrame: CGRectZero];
+    self.generateInstructions.translatesAutoresizingMaskIntoConstraints = NO;
+    self.generateInstructions.attributedText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"key_custom_size_instructions", nil)];
+    self.generateInstructions.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    [self.view addSubview: self.generateInstructions];
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.generateInstructions attribute: NSLayoutAttributeCenterX relatedBy: NSLayoutRelationEqual toItem: self.view attribute: NSLayoutAttributeCenterX multiplier: 1 constant: 0]];
 
     self.sizePicker = [[UIPickerView alloc] initWithFrame: CGRectZero];
     self.sizePicker.translatesAutoresizingMaskIntoConstraints = NO;
@@ -71,12 +80,94 @@
     [self.view addSubview: self.sizePicker];
     [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.sizePicker attribute: NSLayoutAttributeCenterX relatedBy: NSLayoutRelationEqual toItem: self.view attribute: NSLayoutAttributeCenterX multiplier: 1 constant: 0]];
 
-    NSDictionary * views = @{@"instructions": self.instructions,
+    NSDictionary * views = @{@"instructions": self.generateInstructions,
                              @"picker": self.sizePicker
                              };
     NSString * format = [NSString stringWithFormat: @"V:|-(>=%f)-[instructions]-%f-[picker]-%f-|", kHXOCellPadding, kHXOGridSpacing, kHXOCellPadding];
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
     self.generateOrImportSelector.selectedSegmentIndex = 0;
+
+    self.importView = [[UIView alloc] initWithFrame: self.view.bounds];
+    self.importView.backgroundColor = [UIColor whiteColor];
+    self.importView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.importView.alpha = 0;
+    self.importView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    [self.view addSubview: self.importView];
+
+    self.importInstructions = [[HXOHyperLabel alloc] initWithFrame: CGRectZero];
+    self.importInstructions.translatesAutoresizingMaskIntoConstraints = NO;
+    self.importInstructions.attributedText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"key_custom_import_instructions", nil)];
+    self.importInstructions.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    [self.importView addSubview: self.importInstructions];
+
+
+    views = @{@"v": self.importView};
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|[v(>=0)]|" options: 0 metrics: nil views: views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"V:|[v(>=0)]|" options: 0 metrics: nil views: views]];
+
+    self.publicKeyLabel = [[UILabel alloc] initWithFrame: CGRectZero];
+    self.publicKeyLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.publicKeyLabel.text = NSLocalizedString(@"key_custom_public_key_label", nil);
+    [self.importView addSubview: self.publicKeyLabel];
+
+    self.publicKeyTextView = [self makeTextView];
+    [self.importView addSubview: self.publicKeyTextView];
+
+    self.privateKeyLabel = [[UILabel alloc] initWithFrame: CGRectZero];
+    self.privateKeyLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.privateKeyLabel.text = NSLocalizedString(@"key_custom_private_key_label", nil);
+    [self.importView addSubview: self.privateKeyLabel];
+
+    self.privateKeyTextView = [self makeTextView];
+    [self.importView addSubview: self.privateKeyTextView];
+
+    views = @{@"inst": self.importInstructions,
+              @"pubLabel":  self.publicKeyLabel,
+              @"pubText":   self.publicKeyTextView,
+              @"privLabel": self.privateKeyLabel,
+              @"privText":  self.privateKeyTextView};
+    format = [NSString stringWithFormat: @"V:|-(%f)-[inst]-%f-[pubLabel]-[pubText]-[privLabel]-[privText]-%f-|", kHXOCellPadding, 3 * kHXOGridSpacing, kHXOCellPadding];
+    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+    format = [NSString stringWithFormat: @"H:|-%f-[inst]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+    format = [NSString stringWithFormat: @"H:|-%f-[pubLabel]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+    format = [NSString stringWithFormat: @"H:|-%f-[pubText]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+    format = [NSString stringWithFormat: @"H:|-%f-[privLabel]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+    format = [NSString stringWithFormat: @"H:|-%f-[privText]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    [self.importView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+    [self.importView addConstraint: [NSLayoutConstraint constraintWithItem: self.publicKeyTextView attribute: NSLayoutAttributeHeight relatedBy: NSLayoutRelationEqual toItem:self.privateKeyTextView attribute: NSLayoutAttributeHeight multiplier: 1 constant: 0]];
+}
+
+- (UITextView*) makeTextView {
+    UITextView * text = [[UITextView alloc] initWithFrame: CGRectZero];
+    text.translatesAutoresizingMaskIntoConstraints = NO;
+    text.layer.cornerRadius = kHXOGridSpacing;
+    text.layer.borderColor  = [HXOUI theme].messageFieldBorderColor.CGColor;
+    text.layer.borderWidth  = 1;
+    text.inputView = [[UIView alloc] initWithFrame: CGRectZero];
+    text.delegate = self;
+    return text;
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,14 +180,15 @@
             NSUInteger keySize = [self.validKeySizes[[self.sizePicker selectedRowInComponent: 0]] unsignedIntegerValue];
             [AppDelegate renewRSAKeyPairWithSize: keySize];
         } else {
-
+            [[UserProfile sharedProfile] importKeypair: self.publicKeyTextView.text private: self.privateKeyTextView.text];
         }
     }
     [self dismissViewControllerAnimated: YES completion: nil];
 }
 
-- (void) segmentChanged: (id) sender {
+- (void) segmentChanged: (UISegmentedControl*) segmentedControl {
     self.navigationItem.rightBarButtonItem.enabled = self.generateOrImportSelector.selectedSegmentIndex == 0;
+    self.importView.alpha = segmentedControl.selectedSegmentIndex == 1 ? 1 : 0;
 }
 
 - (NSInteger)numberOfComponentsInPickerView: (UIPickerView*) pickerView {
@@ -113,6 +205,10 @@
 
 - (CGFloat) pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
     return self.view.bounds.size.width;
+}
+
+- (void) textViewDidChange:(UITextView *)textView {
+    self.navigationItem.rightBarButtonItem.enabled =  ! ([@"" isEqualToString: self.publicKeyTextView.text] || [@"" isEqualToString: self.privateKeyTextView.text]);
 }
 
 @end

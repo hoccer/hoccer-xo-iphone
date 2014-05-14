@@ -13,7 +13,7 @@
 
 // NOT a core data model, but a model nonetheless. 
 
-typedef void(^HXOKeypairRenewalCompletion)();
+typedef void(^HXOKeypairRenewalCompletion)(BOOL success);
 
 FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 
@@ -67,6 +67,8 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (void) renewKeypairWithSize: (NSUInteger) size;
 - (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion;
 - (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion;
+
+- (BOOL) importKeypair: (NSString*) publicPEMText private: (NSString*) privatePEMText;
 
 - (BOOL)generateKeyPair:(NSNumber*)bits;
 - (BOOL)hasKeyPair;

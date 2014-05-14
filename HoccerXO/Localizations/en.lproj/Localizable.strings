@@ -354,6 +354,9 @@
 "key_custom_generate_nav_title"                  = "Generate";
 "key_custom_import_nav_title"                    = "Import";
 "key_custom_size_instructions"                   = "Generate a RSA key pair with a custom size. Note that the generation of large keys takes a conciderable amount of time and battery power.\n\nThis feature is intended for curious security enthusiasts.";
+"key_custom_import_instructions"                 = "Import your own RSA key pair in PEM format.\n\nThis feature is intended for curious security enthusiasts.";
+"key_custom_public_key_label"                    = "Public Key:";
+"key_custom_private_key_label"                   = "Private Key:";
 
 "key_import_public_btn_title"                    = "Import Public Key";
 "key_import_private_btn_title"                   = "Import Private Key";
