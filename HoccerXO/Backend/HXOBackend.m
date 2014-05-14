@@ -115,6 +115,7 @@ static NSTimer * _stateNotificationDelayTimer;
     BOOL            _locationUpdatePending;
     unsigned        _loginFailures;
     unsigned        _loginRefusals;
+    NSMutableSet * _pendingGroupDeletions;
 }
 
 - (void) identify;
@@ -133,6 +134,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _apnsDeviceToken = nil;
         _loginFailures = 0;
         _loginRefusals = 0;
+        _pendingGroupDeletions = [NSMutableSet new];
         
         _firstConnectionAfterCrashOrUpdate = theAppDelegate.launchedAfterCrash || theAppDelegate.runningNewBuild;
         
@@ -254,7 +256,8 @@ static NSTimer * _stateNotificationDelayTimer;
     for (GroupMembership * membership in fetchResults) {
         if (membership.group == nil) {
             NSLog(@"WARNING: cleanupGroupMembershipTable: removing group membership %@ without group",membership.objectID);
-            [self.delegate.managedObjectContext deleteObject:membership];
+            [AppDelegate.instance deleteObject:membership];
+            //[self.delegate.managedObjectContext deleteObject:membership];
         }
     }
 }
@@ -642,8 +645,10 @@ static NSTimer * _stateNotificationDelayTimer;
         }
 
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
-        [self.delegate.managedObjectContext deleteObject: message];
-        [self.delegate.managedObjectContext deleteObject: delivery];
+        //[self.delegate.managedObjectContext deleteObject: message];
+        //[self.delegate.managedObjectContext deleteObject: delivery];
+        [AppDelegate.instance deleteObject:message];
+        [AppDelegate.instance deleteObject:delivery];
         return;
     }
     Contact * contact = nil;
@@ -1147,7 +1152,8 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     for (Invite * invite in invites) {
         [self pairByToken: invite.token];
-        [self.delegate.managedObjectContext deleteObject: invite];
+        [AppDelegate.instance deleteObject:invite];
+        //[self.delegate.managedObjectContext deleteObject: invite];
     }
 }
 
@@ -1402,37 +1408,44 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 */
- 
+
+- (void) askForDeletionOfContact:(Contact*)contact {
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_delete_associated_data_question",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_deleted_title", nil)
+                                                     message: message
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 switch (buttonIndex) {
+                                                     case 1:
+                                                         // delete all group member contacts that are not friends or contacts in other group
+                                                         //[moc deleteObject: contact];
+                                                         [AppDelegate.instance deleteObject:contact];
+                                                         break;
+                                                     case 0:
+                                                         contact.relationshipState = kRelationStateKept;
+                                                         // keep contact and chats
+                                                         break;
+                                                 }
+                                                 [self.delegate saveDatabase];
+                                             }
+                                           cancelButtonTitle: NSLocalizedString(@"contact_keep_data_button", nil)
+                                           otherButtonTitles: NSLocalizedString(@"contact_delete_data_button",nil),nil];
+    [alert show];
+    
+}
+
 - (void) handleDeletionOfContact:(Contact*)contact {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     if (contact.messages.count == 0 && contact.groupMemberships.count == 0) {
         // if theres nothing to save, delete right away and dont ask
         if (RELATIONSHIP_DEBUG) NSLog(@"handleDeletionOfContact: nothing to save, delete contact id %@",contact.clientId);
         [self removedAlertForContact:contact];
-        [moc deleteObject: contact];
+        [AppDelegate.instance deleteObject:contact];
+        //[moc deleteObject: contact];
         return;
     }
     
     if (contact.groupMemberships.count == 0) {
-        NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_delete_associated_data_question",nil), contact.nickName];
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_deleted_title", nil)
-                                                         message: message
-                                                 completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                     switch (buttonIndex) {
-                                                         case 1:
-                                                             // delete all group member contacts that are not friends or contacts in other group
-                                                             [moc deleteObject: contact];
-                                                             break;
-                                                         case 0:
-                                                             contact.relationshipState = kRelationStateKept;
-                                                             // keep contact and chats
-                                                             break;
-                                                     }
-                                                     [self.delegate saveDatabase];
-                                                 }
-                                               cancelButtonTitle: NSLocalizedString(@"contact_keep_data_button", nil)
-                                               otherButtonTitles: NSLocalizedString(@"contact_delete_data_button",nil),nil];
-        [alert show];
+        [self askForDeletionOfContact:contact];
     } else {
         contact.relationshipState = kRelationStateGroupFriend;
         [self removedButKeptInGroupAlertForContact:contact];
@@ -1522,6 +1535,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([myClient isEqualToString: [UserProfile sharedProfile].clientId]) {
         return;
     }
+    BOOL newContact = NO;
     Contact * myContact = [self getContactByClientId:myClient];
     if (myContact == nil) {
         // NSLog(@"clientId unknown, creating new contact for client: %@", myClient);
@@ -1532,6 +1546,7 @@ static NSTimer * _stateNotificationDelayTimer;
         myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
         myContact.avatarURL = @"";
         [self checkRelationsipStateForGroupMembershipOfContact:myContact];
+        newContact = YES;
     }
     myContact.lastUpdateReceived = [NSDate date];
     
@@ -1560,7 +1575,9 @@ static NSTimer * _stateNotificationDelayTimer;
         
         myContact.presenceLastUpdatedMillis = thePresence[@"timestamp"];
         // NSLog(@"presenceUpdated, contact = %@", myContact);
-
+        if (newContact) {
+            [self checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:myContact];
+        }
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
     }
@@ -1858,13 +1875,6 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (group != nil) {
         group.lastUpdateReceived = [NSDate date];
-/*
-        if (group.keySettingInProgress) {
-            group.updatesRefused = group.updatesRefused+1;
-            if (GROUPKEY_DEBUG) NSLog(@"updateGroupHere updatesRefused=%d",group.updatesRefused);
-            return NO;
-        }
- */
     }
     
     if ([groupState isEqualToString:@"none"]) {
@@ -1872,8 +1882,8 @@ static NSTimer * _stateNotificationDelayTimer;
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
             [group updateWithDictionary: groupDict];
             [self handleDeletionOfGroup:group];
+            if (GROUP_DEBUG) NSLog(@"updateGroupHere: end processing of a removed group");
         }
-        if (GROUP_DEBUG) NSLog(@"updateGroupHere: end processing of a removed group");
         return YES;
     }
 
@@ -2150,7 +2160,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if ([groupMemberDict[@"state"] isEqualToString:@"none"] || [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
             return;
         } else {
-            group = [self createLocalGroup:groupMemberDict[@"groupId"] withState:@"exists"];
+            group = [self createLocalGroup:groupMemberDict[@"groupId"] withState:@"incomplete"];
         }
     }
     if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere with %@",groupMemberDict);
@@ -2233,13 +2243,6 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         myMembership = [theMemberSet anyObject];
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: got member from memberset with nick %@ id %@",myMembership.contact.nickName, myMembership.contact.clientId);
-        /*
-        if (myMembership.keySettingInProgress) {
-            if (GROUPKEY_DEBUG) NSLog(@"updateGroupMemberHere: refusing update, key setting in progress");
-            group.updatesRefused = group.updatesRefused + 1;
-            return;
-        }
-         */
     }
     
     [self checkRelationsipStateForGroupMembershipOfContact:memberContact];
@@ -2257,7 +2260,7 @@ static NSTimer * _stateNotificationDelayTimer;
         weHaveBeenInvited = YES;
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: weHaveBeenInvited");
     }
-
+    
     BOOL someoneHasJoinedGroup = NO;
     if ([groupMemberDict[@"state"] isEqualToString:@"joined"] &&
         [myMembership.state isEqualToString:@"invited"] &&
@@ -2278,13 +2281,6 @@ static NSTimer * _stateNotificationDelayTimer;
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: memberShipDeleted");
         }
     }
-    /*
-    BOOL trashKeys = NO;
-    if ([group isEqual:myMembership.contact]) { // its us
-        trashKeys = ![myMembership checkGroupKeyTransfer:groupMemberDict[@"encryptedGroupKey"] withKeyId:groupMemberDict[@"memberKeyId"]
-                                           withSharedKeyId:groupMemberDict[@"sharedKeyId"] withSharedKeyIdSalt:groupMemberDict[@"sharedKeyIdSalt"]];
-    }
-     */
     
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
@@ -2293,12 +2289,6 @@ static NSTimer * _stateNotificationDelayTimer;
         // we got a new key
         [group copyKeyFromMember:myMembership];
     }
-    
-    /*
-    if (trashKeys) {
-        [myMembership trashKey];
-    }
-     */
     
     if (memberContact != nil) {
         if (myMembership.group.groupType != nil && [myMembership.group.groupType isEqualToString:@"nearby"] && [myMembership.state isEqualToString:@"joined"]) {
@@ -2319,19 +2309,17 @@ static NSTimer * _stateNotificationDelayTimer;
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting member with state '%@', nick=%@", groupMemberDict[@"state"], memberContact.nickName);
         [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact disinvited:disinvited];
     } else {
-        /*
-        // now check if we have to update the encrypted group key
-        if (![myMembership isOwnMembership] || group.iCanSetKeys) {
-            // not us or we are admin
-            [self ifNeededUpdateGroupKeyForMember:myMembership];
-        } else {
-            [self ifNeededUpdateGroupKeyForMyMembership:myMembership];
-        }
-         */
         if (weHaveBeenInvited) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self invitationAlertForGroup:group withMemberShip:myMembership];
-            });
+            if (!group.shouldPresentInvitation) {
+                if (![self tryPresentInvitationIfPossibleForGroup:group withMemberShip:myMembership]) {
+                    group.shouldPresentInvitation = true;
+                }
+            }
+        } else {
+            if (group.shouldPresentInvitation) {
+                [self tryPresentInvitationIfPossibleForGroup:group withMemberShip:myMembership];
+            }
+
         }
         if (someoneHasJoinedGroup) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -2342,8 +2330,31 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate.managedObjectContext refreshObject: group mergeChanges: YES];
 }
 
+- (BOOL)tryPresentInvitationIfPossibleForGroup:(Group *) group withMemberShip:(GroupMembership*)myMembership {
+    if (!group.isIncompleteGroup && group.hasAdmin) {
+        [self invitationAlertForGroup:group withMemberShip:myMembership];
+        return true;
+    }
+    return false;
+}
+
+- (void)checkIfNeedToPresentInvitationForGroup:(Group *)group {
+    if (group.shouldPresentInvitation) {
+        if ([self tryPresentInvitationIfPossibleForGroup:group withMemberShip:group.myGroupMembership]) {
+            group.shouldPresentInvitation = false;
+        }
+    }
+}
+
+- (void)checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:(Contact *)contact {
+    NSSet * memberShips = contact.groupMemberships;
+    for (GroupMembership* m in memberShips) {
+        [self checkIfNeedToPresentInvitationForGroup:m.group];
+    }
+}
+
 - (void)handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact disinvited:(BOOL)disinvited{
-    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
+    //NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     if (![group isEqual:myMember.contact]) { // not us
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!disinvited) {
@@ -2362,11 +2373,17 @@ static NSTimer * _stateNotificationDelayTimer;
             (![memberContact.relationshipState isEqualToString:kRelationStateFriend] && ![memberContact.relationshipState isEqualToString: kRelationStateBlocked] &&
              memberContact.groupMemberships.count == 1))
         {
-            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
-            [moc deleteObject: memberContact];
+            if (memberContact.messages.count > 0) {
+                [self askForDeletionOfContact:memberContact];
+            } else {
+                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
+                [AppDelegate.instance deleteObject:memberContact];
+                //[moc deleteObject: memberContact];
+            }
         }
         // delete group membership
-        [moc deleteObject: myMember];
+        //[moc deleteObject: myMember];
+        [AppDelegate.instance deleteObject:myMember];
     } else {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
         // we have been thrown out or left group
@@ -2389,37 +2406,47 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) handleDeletionOfGroup:(Group*)group {
     NSManagedObjectContext * moc = self.delegate.managedObjectContext;
-    if (group.messages.count == 0) {
-        // if theres nothing to save, delete right away and dont ask
-        if (GROUP_DEBUG, YES) NSLog(@"handleDeletionOfGroup: nothing to save, delete group with name ‘%@' id %@",group.nickName, group.clientId);
-        [self deleteInDatabaseAllMembersAndContactsofGroup:group];
-        [moc deleteObject: group];
-        [self.delegate saveDatabase];
-        return;
-    }
-    
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_deleted_message_format",nil), group.nickName];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_deleted_title", nil)
-                                                     message: NSLocalizedString(message, nil)
-                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                 switch (buttonIndex) {
-                                                     case 1:
-                                                         // delete all group member contacts that are not friends or contacts in other group
-                                                         [self deleteInDatabaseAllMembersAndContactsofGroup:group];
-                                                         // delete the group
-                                                         [moc deleteObject: group];
-                                                         break;
-                                                     case 0:
-                                                         group.groupState = kRelationStateKept;
-                                                         // keep group and chats
-                                                         break;
+    NSString * groupId = group.clientId;
+    if (![_pendingGroupDeletions containsObject:groupId]) {
+        [_pendingGroupDeletions addObject:groupId];
+        if (group.messages.count == 0) {
+            // if theres nothing to save, delete right away and dont ask
+            if (GROUP_DEBUG, YES) NSLog(@"handleDeletionOfGroup: nothing to save, delete group with name ‘%@' id %@",group.nickName, group.clientId);
+            [self deleteInDatabaseAllMembersAndContactsofGroup:group];
+            //[moc deleteObject: group];
+            [AppDelegate.instance deleteObject:group];
+            [self.delegate saveDatabase];
+            [_pendingGroupDeletions removeObject:groupId];
+            return;
+        }
+        
+        NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_deleted_message_format",nil), group.nickName];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_deleted_title", nil)
+                                                         message: NSLocalizedString(message, nil)
+                                                 completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                     switch (buttonIndex) {
+                                                         case 1:
+                                                             // delete all group member contacts that are not friends or contacts in other group
+                                                             [self deleteInDatabaseAllMembersAndContactsofGroup:group];
+                                                             // delete the group
+                                                             //[moc deleteObject: group];
+                                                             [AppDelegate.instance deleteObject:group];
+                                                             break;
+                                                         case 0:
+                                                             group.groupState = kRelationStateKept;
+                                                             // keep group and chats
+                                                             break;
+                                                     }
+                                                     [self.delegate saveDatabase];
+                                                     [_pendingGroupDeletions removeObject:groupId];
                                                  }
-                                                 [self.delegate saveDatabase];
-                                             }
-                                           cancelButtonTitle: NSLocalizedString(@"group_keep_data_button", nil)
-                                           otherButtonTitles: NSLocalizedString(@"group_delete_data_button",nil),nil];
-    [alert show];
-
+                                               cancelButtonTitle: NSLocalizedString(@"group_keep_data_button", nil)
+                                               otherButtonTitles: NSLocalizedString(@"group_delete_data_button",nil),nil];
+        [alert show];
+        
+    } else {
+        NSLog(@"updateGroupHere: group deletion in progess for group id %@", group.clientId);
+    }
 }
 - (void) groupKickedAlertForGroup:(Group*)group {
     NSString * title = [NSString stringWithFormat: NSLocalizedString(@"group_kicked_title",nil), group.nickName];
@@ -2473,6 +2500,10 @@ static NSTimer * _stateNotificationDelayTimer;
 
 
 - (void) invitationAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
+    if (group.presentingInvitation) {
+        return;
+    }
+    group.presentingInvitation = YES;
     NSMutableArray * admins = [[NSMutableArray alloc] init];
     if (group.iAmAdmin) {
         [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
@@ -2498,6 +2529,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                     } else {
                                                                         NSLog(@"ERROR: joinGroup %@ failed", group);
                                                                     }
+                                                                    group.presentingInvitation = NO;
                                                                 }];
                                                                 break;
                                                             case 1:
@@ -2508,10 +2540,12 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                     } else {
                                                                         NSLog(@"ERROR: leaveGroup %@ failed", group);
                                                                     }
+                                                                    group.presentingInvitation = NO;
                                                                 }];
                                                                 break;
                                                             case 2:
                                                                 // do nothing
+                                                                group.presentingInvitation = NO;
                                                                 break;
                                                         }
                                                     }
@@ -2532,117 +2566,22 @@ static NSTimer * _stateNotificationDelayTimer;
             ![member.contact.relationshipState isEqualToString: kRelationStateBlocked] &&
             member.contact.groupMemberships.count == 1)
         {
-            // we can throw out this member contact
-            if (GROUP_DEBUG) NSLog(@"deleting group member contact id %@", member.contact.clientId);
-            [moc deleteObject: member.contact];
+            if (member.contact.messages.count > 0) {
+                // message in chat, ask for deletion
+                [self askForDeletionOfContact:member.contact];
+            } else {
+                // we can throw out this member contact without asking
+                if (GROUP_DEBUG) NSLog(@"deleting group member contact id %@", member.contact.clientId);
+                //[moc deleteObject: member.contact];
+                [AppDelegate.instance deleteObject:member.contact];
+            }
         }
         // the membership can be deleted in any case, including our own membership
         if (GROUP_DEBUG) NSLog(@"deleting group membership %@", member.objectID);
-        [moc deleteObject: member];
+        //[moc deleteObject: member];
+        [AppDelegate.instance deleteObject:member];
     }
 }
-/*
-- (void) ifNeededUpdateGroupKeyForMember:(GroupMembership*) myMember {
-    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMember:%@",myMember.contact.clientId);}
-    Group * group = myMember.group;
-    if ([group iCanSetKeys] && !myMember.keySettingInProgress && !(myMember.hasLatestGroupKey && myMember.hasGroupKeyCryptedWithLatestPublicKey)) {
-        if (!group.hasGroupKey) {
-            if (GROUPKEY_DEBUG) {NSLog(@"NO GROUP KEY, generating");}
-            [group generateNewGroupKey];
-        }
-        [self updateKeyBoxForMember:myMember];
-    }
-}
-
-- (void) ifNeededUpdateGroupKeyForMyMembership:(GroupMembership*) myMember {
-    if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership:");}
-    if (!myMember.keySettingInProgress && myMember.hasLatestGroupKey && !myMember.hasGroupKeyCryptedWithLatestPublicKey) {
-        if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership: myMember.hasLatestGroupKey=%d, myMember.hasGroupKeyCryptedWithLatestPublicKey=%d",myMember.hasLatestGroupKey,myMember.hasGroupKeyCryptedWithLatestPublicKey);}
-        [self updateMyGroupKey:myMember onSuccess:^(GroupMembership *member) {
-            if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership, updated my own key");}
-        }];
-    } else {
-        if (GROUPKEY_DEBUG) {NSLog(@"ifNeededUpdateGroupKeyForMyMembership, no own key ");}
-        if ([myMember.group syncKeyWithMembership]) {
-            // when YES has been returned, our membership has been updated from the group, so send that to the server
-            [self updateKeyboxesFor:myMember.group withMembers:[NSSet setWithObject:myMember]];
-        }
-    }
-}
-
--(void) checkGroupKeysForGroupMembershipOfContact:(Contact*) contact {
-    NSSet * memberShips = contact.groupMemberships;
-    for (GroupMembership * m in memberShips) {
-        [self ifNeededUpdateGroupKeyForMember:m];
-    }
-}
-
-
--(void)updateKeyBoxForMember:(GroupMembership*)myMember {
-    
-    // however, check if we have a public key for the contact
-    if (!myMember.contactHasPubKey) {
-        Contact * memberContact = myMember.contact;
-        if (memberContact.publicKeyId != nil) {
-            [self fetchKeyForContact:memberContact withKeyId:memberContact.publicKeyId withCompletion:^(NSError *theError) {
-                if (theError == nil) {
-                    [self updateKeyboxesFor:myMember.group withMembers:[NSSet setWithObject:myMember]];
-                } else {
-                    NSLog(@"Error: could not fetch public key with id %@ for client %@, error=%@",memberContact.publicKeyId, memberContact.clientId, theError);
-                }
-            }];
-        } else {
-            if (GROUPKEY_DEBUG) NSLog(@"updateKeyBoxForMember: Can not update group member nick %@ id %@ yet, don't have a contact public keyId yet",memberContact.nickName, memberContact.clientId);
-        }
-    } else {
-        if (GROUPKEY_DEBUG) {
-            Contact * memberContact = myMember.contact;
-            if (myMember.isOwnMembership) {
-                NSLog(@"updateKeyBoxForMember: setting self member key for group %@", memberContact.nickName);
-            } else {
-                NSLog(@"updateKeyBoxForMember: setting group member key for contact nick %@ client id %@", memberContact.nickName, memberContact.clientId);
-            }
-        }
-        [self updateKeyboxesFor:myMember.group withMembers:[NSSet setWithObject:myMember]];
-    }
-}
-
-
-- (void) updateGroupKeysForMyGroupMemberships {
-    NSEntityDescription *entity = [NSEntityDescription entityForName:[GroupMembership entityName] inManagedObjectContext:self.delegate.managedObjectContext];
-    NSFetchRequest *request = [NSFetchRequest new];
-    [request setEntity:entity];
-    NSError *error;
-    NSMutableArray *fetchResults = [[self.delegate.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    for (GroupMembership * membership in fetchResults) {
-        [self ifNeededUpdateGroupKeyForMyMembership:membership];
-    }
-}
-
-- (void) updateKeyboxesFor:(Group*)group withMembers:(NSSet*)members {
-    NSLog(@"updateKeyboxesFor: group %@, members.count=%d",group.clientId,members.count);
-
-    [self updateGroupKeys:group forMembers:members onSuccess:^(NSArray * unfinishedMembers) {
-
-        if (unfinishedMembers != nil) {
-            if (unfinishedMembers.count == 1 && [@"LOCKED" isEqualToString:unfinishedMembers[0]]) {
-                // group key updating locked, some other admin is doing the job
-                NSLog(@"updateKeyboxesFor: Lock encountered, doing nothing");
-            } else {
-                if (group.iAmAdmin && unfinishedMembers.count > 0) {
-                    NSLog(@"updateKeyboxesFor: %d unfinished members returned, check if we can service them with key updates", unfinishedMembers.count);
-                    NSSet * theMembersToUpdate = [group activeMembersWithClientIds:unfinishedMembers];
-                    if (theMembersToUpdate.count > 0) {
-                        NSLog(@"updateKeyboxesFor: servicing %d unfinished members with key updates", theMembersToUpdate.count);
-                        [self updateKeyboxesFor:group withMembers:theMembersToUpdate];
-                    }
-                }
-            }
-        }
-        [self.delegate saveDatabase];
-    }];
-}
-*/
 
 + (BOOL) isZeroData:(NSData*)theData {
     const uint8_t * buffer = (uint8_t *)[theData bytes];
@@ -2829,38 +2768,6 @@ static NSTimer * _stateNotificationDelayTimer;
     return result;
 }
 
-/*
-// String[] updateGroupKeys(String groupId, String sharedKeyId, String sharedKeyIdSalt, String[] clientIds, String[] publicKeyIds, String[] cryptedSharedKeys);
-- (void) updateGroupKeys:(Group *)group forMembers:(NSSet*)members onSuccess:(GroupMembersOutdatedHandler)outDatedHandler{
-    [group syncKeyWithMembership];
-    
-    NSMutableArray * clientIds = [[NSMutableArray alloc]initWithCapacity:members.count];
-    NSMutableArray * publicKeyIds = [[NSMutableArray alloc]initWithCapacity:members.count];
-    NSMutableArray * cryptedSharedKeys = [[NSMutableArray alloc]initWithCapacity:members.count];
-    for (GroupMembership * m in members) {
-        [m updateKeyFromGroup];
-        [clientIds addObject:m.contactClientId];
-        [publicKeyIds addObject:m.memberKeyId];
-        [cryptedSharedKeys addObject:m.cipheredGroupKeyString];
-        m.keySettingInProgress = YES;
-    }
-    // NSLog(@"%@ - %@ - %@ / %d - %d - %d",group.clientId,group.sharedKeyIdString,group.sharedKeyIdSaltString,clientIds.count,publicKeyIds.count,cryptedSharedKeys.count);
-    [_serverConnection invoke: @"updateGroupKeys" withParams: @[group.clientId,group.sharedKeyIdString,group.sharedKeyIdSaltString,clientIds,publicKeyIds,cryptedSharedKeys]
-                   onResponse: ^(id responseOrError, BOOL success)
-     {
-         for (GroupMembership * m in members) {
-             m.keySettingInProgress = NO;
-         }
-         if (success) {
-             //NSLog(@"updateGroupKey succeeded groupId: %@, clientId:%@",member.group.clientId,member.contact.clientId);
-             outDatedHandler(responseOrError);
-         } else {
-             NSLog(@"updateGroupKey() failed: %@", responseOrError);
-             outDatedHandler(nil);
-         }
-     }];
-}
-*/
 #pragma mark - Attachment upload and download
 
 - (void) flushPendingFiletransfers {

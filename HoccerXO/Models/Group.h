@@ -32,7 +32,8 @@
 @property (nonatomic, retain) NSNumber    * lastChangedMillis;
 @property (nonatomic, retain) NSNumber    * keyDateMillis;
 
-@property  unsigned updatesRefused;
+@property BOOL shouldPresentInvitation;
+@property BOOL presentingInvitation;
 
 // @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
 
@@ -40,11 +41,17 @@
 - (BOOL) iJoined;
 - (NSSet*) otherJoinedMembers;
 - (NSSet*) otherInvitedMembers;
+- (NSSet*) adminMembers;
+- (NSSet*) knownAdminMembers;
+
 
 - (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
 
 - (BOOL) hasGroupKey;
 - (BOOL) hasValidGroupKey;
+- (BOOL) hasAdmin;
+- (BOOL) hasKnownAdmins;
+
 - (void) generateNewGroupKey;
 - (BOOL) copyKeyFromMember:(GroupMembership*)member;
 
@@ -52,22 +59,8 @@
 - (BOOL)isRemovedGroup;
 - (BOOL)isExistingGroup;
 - (BOOL)isNearbyGroup;
-/*
-- (BOOL) checkGroupKey;
+- (BOOL)isIncompleteGroup;
 
-- (BOOL) hasKeyOnServer;
-- (BOOL) hasKeyMaster;
-- (BOOL) iAmKeyMaster;
-- (BOOL) iCanSetKeys;
-
-- (BOOL) keySettingInProgress;
-
-
-- (BOOL)syncKeyWithMembership;
-
-- (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds;
-- (NSSet*) activeMembersNeedingKeyUpdate;
-*/
 @end
 
 @interface Group (CoreDataGeneratedAccessors)
