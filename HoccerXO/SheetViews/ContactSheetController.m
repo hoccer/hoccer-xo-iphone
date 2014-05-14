@@ -472,8 +472,10 @@ static int  groupMemberContext;
 
 - (void) deleteGroupData {
     [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: self.group];
-    NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
-    [moc deleteObject: self.group];
+    //NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
+    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: self.group");
+    //[moc deleteObject: self.group];
+    [AppDelegate.instance deleteObject:self.group];
     self.inspectedObject = nil;
     [self.appDelegate saveDatabase];
 }

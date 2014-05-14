@@ -72,6 +72,7 @@ typedef void (^ContinueBlock)();
 
 - (void)saveContext;
 - (void)saveDatabase;
+- (BOOL)deleteObject:(id)object;
 
 - (NSURL *)applicationDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;

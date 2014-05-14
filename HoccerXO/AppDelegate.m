@@ -51,6 +51,7 @@
 #define AUDIOSESSION_DEBUG NO
 #define TRACE_DATABASE_SAVE YES
 #define TRACE_PROFILE_UPDATES NO
+#define TRACE_DELETES NO
 
 #ifdef HOCCER_DEV
 NSString * const kHXOURLScheme = @"hxod";
@@ -118,14 +119,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.166:8081/" forKey: kHXOForceFilecacheURL];
     
-    [[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"https://filecache.talk.hoccer.de:8444/" forKey: kHXOForceFilecacheURL];
 
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
     
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
-    [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
     [[HXOUserDefaults standardUserDefaults] synchronize];
 #endif
 #endif
@@ -503,6 +504,32 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             [alert show];
         }
     }
+}
+
+-(BOOL)deleteObject:(id)object {
+    if (TRACE_DELETES) NSLog(@"deleteObject called from %@", [NSThread callStackSymbols]);
+    NSManagedObjectContext * moc = self.managedObjectContext;
+    if (object != nil) {
+        if ([object isKindOfClass:[NSManagedObject class]]) {
+            NSManagedObject * mo = object;
+            if (![mo.managedObjectContext isEqual:moc]) {
+                NSLog(@"#ERROR: deleteObject: bad context for object %@", object);
+                return false;
+            }
+            if (mo.isDeleted) {
+                NSLog(@"#WARNING: deleteObject: deletion call for deleted object entity ‘%@‘ id ‘%@‘", mo.entity.name, mo.objectID.URIRepresentation);
+            }
+            if (TRACE_DELETES) NSLog(@"deleteObject: deleting object of entity %@ id %@", mo.entity.name, mo.objectID.URIRepresentation);
+            [moc deleteObject:mo];
+            if (TRACE_DELETES) NSLog(@"deleteObject: done");
+            return true;
+        } else {
+            NSLog(@"#ERROR: deleteObject: not a NSManagedObject");
+        }
+    } else {
+        NSLog(@"#ERROR: deleteObject: nil");
+    }
+    return false;
 }
 
 - (void)saveDatabase

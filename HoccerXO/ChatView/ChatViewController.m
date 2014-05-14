@@ -977,8 +977,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 // NSLog(@"Picking still in progress, can't trash - or can I?");
             }
         }
-        
-        [self.managedObjectContext deleteObject: self.currentAttachment];
+        [AppDelegate.instance deleteObject:self.currentAttachment];
+        //[self.managedObjectContext deleteObject: self.currentAttachment];
         self.currentAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
@@ -1938,7 +1938,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     // deletion of deliveries and attachment handled by cascade deletion policies in database model
     
-    [self.managedObjectContext deleteObject: message];
+    //[self.managedObjectContext deleteObject: message];
+    [AppDelegate.instance deleteObject:message];
     [self.chatBackend.delegate saveDatabase];
     
 }
