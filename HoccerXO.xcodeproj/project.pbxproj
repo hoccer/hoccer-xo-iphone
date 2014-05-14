@@ -479,6 +479,7 @@
 		634010F5191AAA44007A2C67 /* avatar_location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = avatar_location.m; sourceTree = "<group>"; };
 		63401105191AAAA3007A2C67 /* avatar_location.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = avatar_location.pcvd; sourceTree = "<group>"; };
 		63401106191AAAA3007A2C67 /* avatar_location.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = avatar_location.svg; sourceTree = "<group>"; };
+		6340111C192274C4007A2C67 /* Guineastr.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Guineastr.gpx; sourceTree = "<group>"; };
 		6343B4E316CD604700B3A29E /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		634BE1BC185C9B2B00B2DF05 /* UpDownLoadControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpDownLoadControl.h; sourceTree = "<group>"; };
@@ -1437,6 +1438,7 @@
 		63AEE2CB16CA4D0200522F92 = {
 			isa = PBXGroup;
 			children = (
+				6340111C192274C4007A2C67 /* Guineastr.gpx */,
 				E95175F31909920E00EFD1C6 /* Choriner.gpx */,
 				E95175E31909191F00EFD1C6 /* Kleistr.gpx */,
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
