@@ -476,6 +476,7 @@ static int  groupMemberContext;
     NSLog(@"ContactSheetController: cleanupGroup: deleteObject: self.group");
     //[moc deleteObject: self.group];
     [AppDelegate.instance deleteObject:self.group];
+    self.inspectedObject = nil;
     [self.appDelegate saveDatabase];
 }
 
