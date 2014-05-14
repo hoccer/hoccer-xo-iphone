@@ -44,6 +44,9 @@
 - (BOOL)addPublicKey:(NSString *)key withTag:(NSData *)tag;
 - (BOOL)addPublicPeerKey:(NSString *)key withPeerName:(NSString *)peerName;
 
+- (BOOL) importKeypairFromPEM: (NSString*) pemText;
+- (BOOL) importKeypairFromPEM: (NSString*) pemText withPublicTag: (NSData*) tag;
+
 - (BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString;
 
 // - (void)decryptWithPrivateKey:(uint8_t *)cipherBuffer plainBuffer:(uint8_t *)plainBuffer;

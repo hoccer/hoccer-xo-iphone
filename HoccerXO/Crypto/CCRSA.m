@@ -869,7 +869,6 @@ static NSString *pKCS1PublicFooter = @"-----END RSA PUBLIC KEY-----";
 static NSString *pemPrivateHeader = @"-----BEGIN RSA PRIVATE KEY-----";
 static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
 
-
 + (NSString*)makeSSHFormattedPublicKey:(NSData *)publicKeyBits {
     char length[4] = {0,0,0,7};
     NSMutableData * data = [NSMutableData dataWithBytes:length length:4];
@@ -923,26 +922,26 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
 {
     BOOL isX509 = NO;
     
-    NSString *strippedKey = nil;
+    NSString * header, * footer;
     if (([pemPublicKeyString rangeOfString:x509PublicHeader].location != NSNotFound) &&
         ([pemPublicKeyString rangeOfString:x509PublicFooter].location != NSNotFound))
     {
-        strippedKey = [[pemPublicKeyString stringByReplacingOccurrencesOfString:x509PublicHeader withString:@""] stringByReplacingOccurrencesOfString:x509PublicFooter withString:@""];
-        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
+        header = x509PublicHeader;
+        footer = x509PublicFooter;
         isX509 = YES;
     } else if (([pemPublicKeyString rangeOfString:pKCS1PublicHeader].location != NSNotFound) &&
                ([pemPublicKeyString rangeOfString:pKCS1PublicFooter].location != NSNotFound))
     {
-        strippedKey = [[pemPublicKeyString stringByReplacingOccurrencesOfString:pKCS1PublicHeader withString:@""] stringByReplacingOccurrencesOfString:pKCS1PublicFooter withString:@""];
-        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
+        header = pKCS1PublicHeader;
+        footer = pKCS1PublicFooter;
         isX509 = NO;
     } else {
         NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format");
         return nil;
     }
-    
+
+    NSString *strippedKey = [self extractPayloadFromPEM: pemPublicKeyString header: header footer: footer];
+
     NSData *strippedPublicKeyData = [NSData dataWithBase64EncodedString:strippedKey];
     
     if (isX509)
@@ -1042,24 +1041,42 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 }
 
 +(NSData*)extractPrivateKeyBitsFromPEM:(NSString *)pemPrivateKeyString {
-    NSString *strippedKey = nil;
     if (([pemPrivateKeyString rangeOfString:pemPrivateHeader].location != NSNotFound) && ([pemPrivateKeyString rangeOfString:pemPrivateFooter].location != NSNotFound))
     {
-        strippedKey = [[pemPrivateKeyString stringByReplacingOccurrencesOfString:pemPrivateHeader withString:@""] stringByReplacingOccurrencesOfString:pemPrivateFooter withString:@""];
-        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+        NSString *strippedKey = [self extractPayloadFromPEM: pemPrivateKeyString header: pemPrivateHeader footer: pemPrivateFooter];
+        return [NSData dataWithBase64EncodedString:strippedKey];
     }
-    else {
-        NSLog(@"importPrivateKeyBits: not in PEM format");
-        return nil;
-    }
-    
-    NSData *privateKeyBits = [NSData dataWithBase64EncodedString:strippedKey];
-    return privateKeyBits;
+    NSLog(@"importPrivateKeyBits: not in PEM format");
+    return nil;
+}
+
++ (NSString*) extractPayloadFromPEM: (NSString*) pemString header: (NSString*) header footer: (NSString*) footer {
+    NSRange headerRange = [pemString rangeOfString: header];
+    NSRange footerRange = [pemString rangeOfString: footer];
+    NSUInteger start = headerRange.location + headerRange.length;
+    NSRange payloadRange = NSMakeRange(start, footerRange.location - start);
+
+    return [[[pemString substringWithRange: payloadRange]
+             stringByReplacingOccurrencesOfString: @"\n" withString: @""]
+             stringByReplacingOccurrencesOfString: @" "  withString: @""];
 }
 
 -(BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString {
     NSData * myBits = [CCRSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
     return [self addPrivateKeyBits:myBits withTag:privateTag];
+}
+
+- (BOOL) importPublicKeyBits: (NSString*) pemText withTag: (NSData*) tag {
+    NSData * myBits = [CCRSA extractPublicKeyBitsFromPEM: pemText];
+    return [self addPublicKeyBits: myBits withTag: tag];
+}
+
+- (BOOL) importKeypairFromPEM: (NSString*) pemText withPublicTag: (NSData*) tag {
+    return [self importPrivateKeyBits: pemText] && [self importPublicKeyBits: pemText withTag: tag];
+}
+
+- (BOOL) importKeypairFromPEM: (NSString*) pemText {
+    return [self importPrivateKeyBits: pemText] && [self importPublicKeyBits: pemText withTag: publicTag];
 }
 
 
