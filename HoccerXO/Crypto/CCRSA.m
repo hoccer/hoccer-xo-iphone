@@ -912,8 +912,8 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
     [encKey appendBytes:builder length:j + 2];
     [encKey appendData:publicKeyBits];
     
-    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
-//    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@\n", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
+    //NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
+    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@\n", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
     //NSLog(@"PEM formatted key:\n%@",returnString);
     
     return returnString;
