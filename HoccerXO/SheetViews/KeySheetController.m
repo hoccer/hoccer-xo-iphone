@@ -31,6 +31,9 @@
 @property (nonatomic, readonly) Contact * contact;
 @property (nonatomic, readonly) UserProfile * userProfile;
 
+@property (nonatomic, readonly) DatasheetSection * destructiveSection;
+@property (nonatomic, readonly) DatasheetItem * destructiveItem;
+
 @end
 
 @implementation KeySheetController
@@ -42,6 +45,8 @@
 @synthesize renewKeypairItem = _renewKeypairItem;
 @synthesize renewKeypairSection = _renewKeypairSection;
 @synthesize exportKeypairItem = _exportKeypairItem;
+@synthesize destructiveSection = _destructiveSection;
+@synthesize destructiveItem = _destructiveItem;
 
 
 - (void) commonInit {
@@ -104,7 +109,7 @@
 }
 
 - (NSArray*) buildSections {
-    return @[self.fingerprintSection, self.renewKeypairSection];
+    return @[self.fingerprintSection, self.renewKeypairSection, self.destructiveSection];
 }
 
 - (void) inspectedObjectDidChange {
@@ -274,6 +279,42 @@
                                  destructiveButtonTitle: nil
                                       otherButtonTitles: NSLocalizedString(@"key_export_option_public", nil), NSLocalizedString(@"key_export_option_private", nil), NSLocalizedString(@"key_export_option_both", nil), nil];
 
+    [sheet showInView: self.delegate.view];
+}
+
+#pragma mark - Destructive Section
+
+- (DatasheetSection*) destructiveSection {
+    if ( ! _destructiveSection) {
+        _destructiveSection = [DatasheetSection datasheetSectionWithIdentifier: @"destructive_section"];
+        _destructiveSection.items = @[self.destructiveItem];
+    }
+    return _destructiveSection;
+}
+
+- (DatasheetItem*) destructiveItem {
+    if ( ! _destructiveItem) {
+        _destructiveItem = [self itemWithIdentifier: @"key_delete_all" cellIdentifier: @"DatasheetActionCell"];
+        _destructiveItem.visibilityMask = DatasheetModeEdit;
+        _destructiveItem.titleTextColor = [HXOUI theme].destructiveTextColor;
+        _destructiveItem.target = self;
+        _destructiveItem.action = @selector(deleteAllKeys:);
+    }
+    return _destructiveItem;
+}
+
+- (void) deleteAllKeys: (id) sender {
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger button, UIActionSheet * sheet) {
+        if (button != sheet.cancelButtonIndex) {
+            [self.userProfile deleteAllKeys];
+            [AppDelegate renewRSAKeyPairWithSize: kHXODefaultKeySize];
+        }
+    };
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"key_delete_all_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
+                                      otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }
 

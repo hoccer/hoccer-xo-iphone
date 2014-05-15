@@ -386,6 +386,9 @@
 "key_verified_public_key_changed_title"          = "Verifizierter Schlüssel wurde geändert.";
 "key_verified_public_key_changed_message_format" = "Der von dir verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
 
+"key_delete_all"                                 = "Alle Schlüssel löschen";
+"key_delete_all_safety_question"                 = "Alle Schlüssel löschen und einen neuen Standardschlüssel anlegen?";
+
 //==============================================================================
 // Permissions
 //==============================================================================

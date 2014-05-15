@@ -386,6 +386,9 @@
 "key_verified_public_key_changed_title"          = "Verified Key has Changed";
 "key_verified_public_key_changed_message_format" = "The key of contact '%@' has changed, and the old key had been verified. Verify the new key for additional security.";
 
+"key_delete_all"                                 = "Delete All Keys";
+"key_delete_all_safety_question"                 = "Delete all keys and generate a new one using default settings?";
+
 //==============================================================================
 // Permissions
 //==============================================================================
