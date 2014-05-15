@@ -48,7 +48,7 @@
 - (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
 
 - (BOOL) hasGroupKey;
-- (BOOL) hasValidGroupKey;
+//- (BOOL) hasValidGroupKey;
 - (BOOL) hasAdmin;
 - (BOOL) hasKnownAdmins;
 

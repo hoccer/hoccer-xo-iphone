@@ -458,6 +458,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     if (self.hasKeyPair) {
         [self saveOldKeyPair];
     }
+    //NSLog(@"pemText:%@\n",pemText);
     [self willChangePublicKey];
     BOOL success = [[CCRSA sharedInstance] importKeypairFromPEM: pemText];
     [self didChangePublicKey];

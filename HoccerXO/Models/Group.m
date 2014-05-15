@@ -164,7 +164,7 @@
     return NO;
 }
 
-
+/*
 -(BOOL) hasValidGroupKey {
     if (self.groupKey == nil || self.sharedKeyIdSalt == nil) {
         return NO;
@@ -190,7 +190,7 @@
     if (GROUPKEY_DEBUG) NSLog(@"Group:hasValidGroupKey: YES");
     return YES;
 }
-
+*/
 - (BOOL) hasAdmin {
     return self.adminMembers.count > 0;
 }
