@@ -355,8 +355,12 @@
 "key_custom_import_nav_title"                    = "Importieren";
 "key_custom_size_instructions"                   = "Erzeuge einen RSA Schlüssel mit bestimmter Länge. Das Erzeugen grosser Schlüssel dauert lange und belastet die Akkulaufzeit.\n\nDiese Funktion ist für neugierige Sicherheitsenthusiasten gedacht.";
 "key_custom_import_instructions"                 = "Importiere dein eigens RSA Schlüsselpaar im PEM Format.\n\nDiese Funktion ist für neugierige Sicherheitsenthusiasten gedacht.";
-"key_custom_public_key_label"                    = "Öffentlicher Schlüssel:";
-"key_custom_private_key_label"                   = "Privater Schlüssel:";
+
+"key_export_keypair"                             = "Exportieren";
+"key_export_option_sheet_title"                  = "RSA Schlüssel in die Zwischenablage exportieren:";
+"key_export_option_public"                       = "Öffentlicher Schlüssel";
+"key_export_option_private"                      = "Privater Schlüssel";
+"key_export_option_both"                         = "Beide Schlüssel";
 
 "key_import_public_btn_title"                    = "Öffentl. Schlüssel importieren";
 "key_import_private_btn_title"                   = "Priv. Schlüssel importieren";

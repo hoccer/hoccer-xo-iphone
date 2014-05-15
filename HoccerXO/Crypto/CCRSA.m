@@ -734,7 +734,7 @@ static CCRSA *instance;
 }
 
 
-- (NSDictionary*) findeKeypairsWithPrivatePrefix:(NSData*)privatePrefix withPublicPrefix:(NSData*) publicPrefix {
+- (NSDictionary*) findKeypairsWithPrivatePrefix:(NSData*)privatePrefix withPublicPrefix:(NSData*) publicPrefix {
 
     NSDictionary * query = @{(__bridge id) kSecClass: (__bridge id) kSecClassKey,
                              (__bridge id) kSecAttrKeyType: (__bridge id) kSecAttrKeyTypeRSA,
@@ -855,7 +855,7 @@ static CCRSA *instance;
 
 
 - (NSDictionary*) findKeyPairs {
-    return [self findeKeypairsWithPrivatePrefix:privateTag withPublicPrefix:publicTag];
+    return [self findKeypairsWithPrivatePrefix:privateTag withPublicPrefix:publicTag];
 }
 
 
@@ -912,8 +912,8 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
     [encKey appendBytes:builder length:j + 2];
     [encKey appendData:publicKeyBits];
     
-    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
-    NSLog(@"PEM formatted key:\n%@",returnString);
+    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@\n", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
+    //NSLog(@"PEM formatted key:\n%@",returnString);
     
     return returnString;
 }
@@ -1078,7 +1078,6 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 - (BOOL) importKeypairFromPEM: (NSString*) pemText {
     return [self importPrivateKeyBits: pemText] && [self importPublicKeyBits: pemText withTag: publicTag];
 }
-
 
 + (int)derEncodingGetSizeFrom:(NSData*)buf at:(int*)iterator
 {

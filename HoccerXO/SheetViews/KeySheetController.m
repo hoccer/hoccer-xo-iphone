@@ -25,6 +25,7 @@
 
 @property (nonatomic, readonly) DatasheetSection * renewKeypairSection;
 @property (nonatomic, readonly) DatasheetItem * renewKeypairItem;
+@property (nonatomic, readonly) DatasheetItem * exportKeypairItem;
 
 @property (nonatomic, readonly) id<HXOClientProtocol> client;
 @property (nonatomic, readonly) Contact * contact;
@@ -40,6 +41,7 @@
 @synthesize verificationItem = _verificationItem;
 @synthesize renewKeypairItem = _renewKeypairItem;
 @synthesize renewKeypairSection = _renewKeypairSection;
+@synthesize exportKeypairItem = _exportKeypairItem;
 
 
 - (void) commonInit {
@@ -183,7 +185,7 @@
 - (DatasheetSection*) renewKeypairSection {
     if ( ! _renewKeypairSection) {
         _renewKeypairSection = [DatasheetSection datasheetSectionWithIdentifier: @"renew_keypair_section"];
-        _renewKeypairSection.items = @[self.renewKeypairItem];
+        _renewKeypairSection.items = @[self.renewKeypairItem, self.exportKeypairItem];
         _renewKeypairSection.footerText = HXOLocalizedStringWithLinks(@"key_renew_keypair_info", nil);
     }
     return _renewKeypairSection;
@@ -198,6 +200,17 @@
         _renewKeypairItem.action = @selector(renewKeypairPressed:);
     }
     return _renewKeypairItem;
+}
+
+- (DatasheetItem*) exportKeypairItem {
+    if (! _exportKeypairItem) {
+        _exportKeypairItem = [self itemWithIdentifier: @"" cellIdentifier: @"DatasheetActionCell"];
+        _exportKeypairItem.title = @"key_export_keypair";
+        _exportKeypairItem.visibilityMask = DatasheetModeEdit;
+        _exportKeypairItem.target = self;
+        _exportKeypairItem.action = @selector(exportKeypairPressed:);
+    }
+    return _exportKeypairItem;
 }
 
 - (void) renewKeypairPressed: (id) sender {
@@ -216,6 +229,51 @@
                                       otherButtonTitles: NSLocalizedString(@"key_renew_option_automatic", nil),
                                                          NSLocalizedString(@"key_renew_option_manual", nil),
                                                          nil];
+    [sheet showInView: self.delegate.view];
+}
+
+- (void) exportKeypairPressed: (id) sender {
+    void(^export)(BOOL,BOOL) = ^(BOOL public, BOOL private) {
+        NSString * keyString = [NSString stringWithFormat: @"%d %@ %@ (RSA)\n", [self keyLength], [self fingerprint], self.client.nickName];
+
+        if (public) {
+            keyString = [keyString stringByAppendingString: [CCRSA makeX509FormattedPublicKey: self.client.publicKey]];
+        }
+        if (private) {
+            keyString = [keyString stringByAppendingString: [CCRSA makePEMFormattedPrivateKey: [[CCRSA sharedInstance] getPrivateKeyBits]]];
+        }
+
+        [[UIPasteboard generalPasteboard] setString: keyString];
+        [HXOUI showErrorAlertWithMessage:@"key_export_success" withTitle:@"key_export_success_title"];
+    };
+
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * sheet) {
+        if (buttonIndex != sheet.cancelButtonIndex) {
+            BOOL exportPublic = buttonIndex == 0 || buttonIndex == 2;
+            BOOL exportPrivate = buttonIndex == 1 || buttonIndex == 2;
+            if (exportPrivate) {
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: nil
+                                                                 message: NSLocalizedString(@"key_export_private_safety_question", nil)
+                                                         completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                             if (buttonIndex != alertView.cancelButtonIndex) {
+                                                                 export(exportPublic, exportPrivate);
+                                                             }
+                                                         }
+                                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                                       otherButtonTitles: NSLocalizedString(@"key_export_confirm_btn_title", nil), nil];
+                [alert show];
+            } else {
+                export(exportPublic, exportPrivate);
+            }
+        }
+    };
+
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"key_export_option_sheet_title", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: nil
+                                      otherButtonTitles: NSLocalizedString(@"key_export_option_public", nil), NSLocalizedString(@"key_export_option_private", nil), NSLocalizedString(@"key_export_option_both", nil), nil];
+
     [sheet showInView: self.delegate.view];
 }
 
