@@ -234,7 +234,7 @@
         [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     } else {
         // NearBy
-        [predicates addObject: [NSPredicate predicateWithFormat: @"isNearby == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat: @"isNearbyTag == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
     }
 }
 

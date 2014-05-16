@@ -99,7 +99,7 @@ static int  groupMemberContext;
 }
 
 - (BOOL) isEditable {
-    return ! self.group || ! ([self.group.myGroupMembership.state isEqualToString: @"invited"] || [self.group.groupType isEqualToString: @"nearby"]);
+    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup);
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -186,14 +186,19 @@ static int  groupMemberContext;
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
+        
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.inviteMembersItem]) {
         return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
-        return [self.group.myGroupMembership.state isEqualToString: @"invited"];
+        return self.group.myGroupMembership.isInvited;
+        
     } else if ([item isEqual: self.destructiveButton]) {
         if (self.group && self.group.isNearbyGroup && self.group.isKeptGroup) {
             return YES;
@@ -313,7 +318,7 @@ static int  groupMemberContext;
         if ([self.group.groupState isEqualToString: kRelationStateKept]) {
             return NSLocalizedString(@"group_delete_data", nil);
         }
-        if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
+        if (self.group.myGroupMembership.isInvited) {
             return NSLocalizedString(@"group_decline_invitation", nil);
         } else {
             if (self.group.iAmAdmin) {
@@ -504,7 +509,7 @@ static int  groupMemberContext;
 
 - (void) deleteContact {
     NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
-    if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend] || [self.contact.relationshipState isEqualToString: kRelationStateKept]) {
+    if (self.contact.isGroupFriend || self.contact.isKept) {
         [self.chatBackend handleDeletionOfContact: self.contact];
     } else {
         [self.chatBackend depairClient: self.contact.clientId handler:^(BOOL success) {
@@ -661,7 +666,7 @@ static int  groupMemberContext;
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
         BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
-        BOOL isInvited = [membership.state isEqualToString: @"invited"];
+        BOOL isInvited = membership.isInvited;
         SmallContactCell * cell = (SmallContactCell*)aCell;
         cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.alpha     = isInvited ? 0.5 : 1;

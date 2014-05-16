@@ -71,21 +71,21 @@
 
 - (NSSet*) otherJoinedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"joined"];
+        return ![self isEqual:obj.contact] && obj.isJoined;
     }];
     return theMemberSet;
 }
 
 - (NSSet*) otherInvitedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"invited"];
+        return ![self isEqual:obj.contact] && obj.isInvited;
     }];
     return theMemberSet;
 }
 
 - (NSSet*) adminMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return [obj.state isEqualToString:@"joined"] && [obj.role isEqualToString:@"admin"];
+        return obj.isJoined && obj.isAdmin;
     }];
     return theMemberSet;
 }

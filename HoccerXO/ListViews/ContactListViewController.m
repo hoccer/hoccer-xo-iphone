@@ -392,10 +392,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
         NSString * joinedStatus = @"";
 
-        if ([group.groupState isEqualToString: kRelationStateKept]) {
+        if (group.isKept) {
             joinedStatus = NSLocalizedString(@"group_state_kept", nil);
-        } else if ([group.myGroupMembership.state isEqualToString:@"invited"]){
+            
+        } else if (group.myGroupMembership.isInvited){
             joinedStatus = NSLocalizedString(@"group_membership_state_invited", nil);
+            
         } else {
             if (group.iAmAdmin) {
                 joinedStatus = NSLocalizedString(@"group_membership_role_admin", nil);

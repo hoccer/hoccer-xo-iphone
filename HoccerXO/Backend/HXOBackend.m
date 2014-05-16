@@ -275,13 +275,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 -(void) checkRelationsipStateForGroupMembershipOfContact:(Contact*) contact {
     if (contact.groupMemberships.count > 0) {
-        if ([contact.relationshipState isEqualToString: kRelationStateNone] ||
-            [contact.relationshipState isEqualToString: kRelationStateKept])
-        {
+        if (contact.isNotRelated || contact.isKept) {
             contact.relationshipState = kRelationStateGroupFriend;
         }
     } else {
-        if ([contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
+        if (contact.isGroupFriend) {
             contact.relationshipState = kRelationStateNone;
         }
     }
@@ -1315,7 +1313,7 @@ static NSTimer * _stateNotificationDelayTimer;
     // XXX The server sends relationship updates with state 'none' even after depairing.
     if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
         [self checkRelationsipStateForGroupMembershipOfContact:contact];
-        if (contact != nil && ![contact.relationshipState isEqualToString: kRelationStateNone] && ![contact.relationshipState isEqualToString: kRelationStateKept] && ![contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
+        if (contact != nil && !contact.isNotRelated && !contact.isKept && !contact.isGroupFriend) {
             contact.relationshipState = kRelationStateNone;
             [self handleDeletionOfContact:contact];
         }
@@ -1326,9 +1324,9 @@ static NSTimer * _stateNotificationDelayTimer;
         contact.type = [Contact entityName];
         contact.clientId = clientId;
     }
-    if (contact.nickName.length > 0 && ![contact.relationshipState isEqualToString: kRelationStateFriend] && [relationshipDict[@"state"] isEqualToString: kRelationStateFriend]) {
+    if (contact.nickName.length > 0 && !contact.isFriend && [relationshipDict[@"state"] isEqualToString: kRelationStateFriend]) {
         [self newFriendAlertForContact:contact];
-    } else if (![contact.relationshipState isEqualToString: kRelationStateBlocked] && [relationshipDict[@"state"] isEqualToString: kRelationStateBlocked]) {
+    } else if (!contact.isBlocked && [relationshipDict[@"state"] isEqualToString: kRelationStateBlocked]) {
         [self blockedAlertForContact:contact];
     }
     // NSLog(@"relationship Dict: %@", relationshipDict);
@@ -1561,7 +1559,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     if (myContact) {
         NSString * newNickName = thePresence[@"clientName"];
-        if (myContact.nickName == nil && newNickName.length > 0 && [myContact.relationshipState isEqualToString: kRelationStateFriend]) {
+        if (myContact.nickName == nil && newNickName.length > 0 && myContact.isFriend) {
             newFriend = YES;
         }
         myContact.nickName = newNickName;
@@ -2259,7 +2257,7 @@ static NSTimer * _stateNotificationDelayTimer;
     // check for invitation
     BOOL weHaveBeenInvited = NO;
     if ([groupMemberDict[@"state"] isEqualToString:@"invited"] &&
-        ![myMembership.state isEqualToString:@"invited"] &&
+        !myMembership.isInvited &&
         [group isEqual:myMembership.contact])
     {
         weHaveBeenInvited = YES;
@@ -2268,9 +2266,9 @@ static NSTimer * _stateNotificationDelayTimer;
     
     BOOL someoneHasJoinedGroup = NO;
     if ([groupMemberDict[@"state"] isEqualToString:@"joined"] &&
-        [myMembership.state isEqualToString:@"invited"] &&
+        myMembership.isInvited &&
         ![group isEqual:myMembership.contact] &&                   // only if s.o. membership else has been updated
-        [group.myGroupMembership.state isEqualToString:@"joined"]) // only show when we habe already joined
+        group.myGroupMembership.isJoined) // only show when we habe already joined
     {
         someoneHasJoinedGroup = YES;
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: someoneHasJoinedGroup");
@@ -2282,7 +2280,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if ([groupMemberDict[@"state"] isEqualToString:@"none"]/* && ![myMembership.state isEqualToString:@"none"]*/) {
             // someone has left the group or we have been kicked out of an existing group
             memberShipDeleted = YES;
-            disinvited = [myMembership.state isEqualToString:@"invited"];
+            disinvited = myMembership.isInvited;
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: memberShipDeleted");
         }
     }
@@ -2298,12 +2296,12 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     if (memberContact != nil) {
-        if (myMembership.group.groupType != nil && [myMembership.group.groupType isEqualToString:@"nearby"] && [myMembership.state isEqualToString:@"joined"]) {
+        if (myMembership.group.groupType != nil && myMembership.group.isNearbyGroup && myMembership.isJoined) {
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: set contact nearby");
-            memberContact.isNearby = @"YES";
+            memberContact.isNearbyTag = @"YES";
         } else {
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: set contact not nearby");
-            memberContact.isNearby = nil;
+            memberContact.isNearbyTag = nil;
         }
     } else {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no memberContact yet");
@@ -2377,8 +2375,7 @@ static NSTimer * _stateNotificationDelayTimer;
             }
         });
         if (memberContact.relationshipState == nil ||
-            (![memberContact.relationshipState isEqualToString:kRelationStateFriend] && ![memberContact.relationshipState isEqualToString: kRelationStateBlocked] &&
-             memberContact.groupMemberships.count == 1))
+            (!memberContact.isFriend && !memberContact.isBlocked && memberContact.groupMemberships.count == 1))
         {
             if (memberContact.messages.count > 0) {
                 [self askForDeletionOfContact:memberContact];
@@ -2569,8 +2566,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (GROUP_DEBUG) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup found %d members", groupMembers.count);
     for (GroupMembership * member in groupMembers) {
         if (member.contact != nil && ![group isEqual:member.contact] &&
-            ![member.contact.relationshipState isEqualToString: kRelationStateFriend] &&
-            ![member.contact.relationshipState isEqualToString: kRelationStateBlocked] &&
+            !member.contact.isFriend && !member.contact.isBlocked &&
             member.contact.groupMemberships.count == 1)
         {
             if (member.contact.messages.count > 0) {

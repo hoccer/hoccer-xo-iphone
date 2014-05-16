@@ -802,6 +802,7 @@
 		E9A85D99184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-record@2x.png"; sourceTree = "<group>"; };
 		E9A85D9A184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-video.png"; sourceTree = "<group>"; };
 		E9A85D9B184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-video@2x.png"; sourceTree = "<group>"; };
+		E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-37.xcdatamodel"; sourceTree = "<group>"; };
 		E9B7BAB5172D5E4E00212420 /* RPCObjectsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RPCObjectsModel.xcdatamodel; sourceTree = "<group>"; };
 		E9B7BAB7172EA15E00212420 /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
@@ -2994,8 +2995,9 @@
 				E95175AA18F330FC00EFD1C6 /* HoccerXO-34.xcdatamodel */,
 				E95175AB18F5957D00EFD1C6 /* HoccerXO-35.xcdatamodel */,
 				E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */,
+				E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */,
 			);
-			currentVersion = E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */;
+			currentVersion = E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -423,7 +423,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if ([[group otherInvitedMembers] count] > 0) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_wait_for_invitees_message", nil)];
             } else {
-                if ([group.isNearby isEqualToString:@"YES"]) {
+                if (group.isNearby) {
                     messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_group_you_are_alone_message", nil)];
                 } else {
                     messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
@@ -448,11 +448,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             return;
             
         }
-    } else if (![self.partner.relationshipState isEqualToString: kRelationStateFriend]) {
+    } else if (!self.partner.isFriend) {
         NSString * messageText = nil;
-        if ([self.partner.relationshipState isEqualToString: kRelationStateBlocked]) {
+        if (self.partner.isBlocked) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
-        } else if ([@"YES" isEqualToString:self.partner.isNearby]) {
+        } else if (self.partner.isNearby) {
             if (!self.partner.isPresent) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
             }

@@ -914,15 +914,18 @@ typedef enum ActionSheetTags {
             _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,nil];
         }
 
-        if ([self.contact.relationshipState isEqualToString: kRelationStateFriend]) {
+        if (self.contact.isFriend) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: kRelationStateBlocked]) {
+            
+        } else if (self.contact.isBlocked) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
+            
+        } else if ([self.contact.isGroupFriend]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: kRelationStateKept]) {
+            
+        } else if ([self.contact.isKept]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else {
             return @[_coreSection, _fingerprintSection];//, _profileItemsSection, _fingerprintSection];
