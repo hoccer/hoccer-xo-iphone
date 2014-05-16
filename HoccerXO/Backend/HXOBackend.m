@@ -275,7 +275,9 @@ static NSTimer * _stateNotificationDelayTimer;
 
 -(void) checkRelationsipStateForGroupMembershipOfContact:(Contact*) contact {
     if (contact.groupMemberships.count > 0) {
-        if ([contact.relationshipState isEqualToString: kRelationStateNone]) {
+        if ([contact.relationshipState isEqualToString: kRelationStateNone] ||
+            [contact.relationshipState isEqualToString: kRelationStateKept])
+        {
             contact.relationshipState = kRelationStateGroupFriend;
         }
     } else {
@@ -2250,8 +2252,6 @@ static NSTimer * _stateNotificationDelayTimer;
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: got member from memberset with nick %@ id %@",myMembership.contact.nickName, myMembership.contact.clientId);
     }
     
-    [self checkRelationsipStateForGroupMembershipOfContact:memberContact];
-    
     if (myMembership == nil) {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no member found and not created, incoming member state must be 'none'");
         return;
@@ -2290,6 +2290,8 @@ static NSTimer * _stateNotificationDelayTimer;
     // NSLog(@"groupMemberDict Dict: %@", groupMemberDict);
     [myMembership updateWithDictionary: groupMemberDict];
     
+    [self checkRelationsipStateForGroupMembershipOfContact:memberContact];
+
     if (myMembership.isOwnMembership && groupMemberDict[@"encryptedGroupKey"] != nil) {
         // we got a new key
         [group copyKeyFromMember:myMembership];
