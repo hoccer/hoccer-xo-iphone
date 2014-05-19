@@ -12,6 +12,10 @@
 
 #import "HXOUserDefaults.h"
 
+#import "NSData+Compression.h"
+#import "NSData+GZIP.h"
+#import "NSData+DictCompression.h"
+
 static const NSInteger kJsonRpcParseError     = -32700;
 static const NSInteger kJsonRpcInvalidRequest = -32600;
 static const NSInteger kJsonRpcMethodNotFound = -32601;
@@ -84,7 +88,13 @@ static const NSTimeInterval kResponseTimeout = 30;
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass: [NSString class]]) {
-        if ([[self verbosityLevel]isEqualToString:@"dump"]) {NSLog(@"JSON RECV<-: %@",message);}
+        if ([[self verbosityLevel]isEqualToString:@"dump"]) {
+            NSLog(@"JSON RECV<-: %@",message);
+#ifdef TEST_COMPRESSION
+            NSData * myPayloaddata = [message dataUsingEncoding:NSUTF8StringEncoding];
+            [self testCompression:myPayloaddata];
+#endif
+        }
         [self unmarshall: message];
     } else if ([message isKindOfClass: [NSData class]]) {
         NSLog(@"ERROR: got binary message, but binary messages are not implemented");
@@ -270,10 +280,86 @@ static const NSTimeInterval kResponseTimeout = 30;
     };
 }
 
+#ifdef TEST_COMPRESSION
+
+- (void)testCompression:(NSData*)myPayloaddata {
+    NSArray * dict = @[
+                       @"\"jsonrpc\":\"2.0\",\"method\":\"getTime\",\"id\":",
+                       @"\"jsonrpc\":\"2.0\",\"params\":[" ,
+                       @"\"jsonrpc\":\"2.0\",\"id\":" ,
+                       @"\"method\":\"updatePresence\"" ,
+                       @"\"method\":\"modifyPresence\"" ,
+                       @"\"connectionStatus\":\"online\"",
+                       @"\"connectionStatus\":\"offline\"",
+                       @"\"method\":\"getEncryptedGroupKeys\"",
+                       @"\"method\":\"groupMemberUpdated\"",
+                       @"\"method\":\"presenceModified\"",
+                       @"\"method\":\"destroyEnvironment\"",
+                       @"\"method\":\"updateEnvironment\"",
+                       @"\"groupType\":\"nearby\"",
+                       @"\"connectionStatus\":\"",
+                       @"\"keyCiphertext\":",
+                       @"\"role\":\"member\"",
+                       @"\"role\":\"admin\"",
+                       @"\"state\":\"none\"",
+                       @"\"state\":\"exists\"",
+                       @"\"state\":\"delivered\"",
+                       @"\"state\":\"joined\"",
+                       @"\"state\":\"",
+                       @"\"clientStatus\":\"",
+                       @"\"result\":null",
+                       @"\"jsonrpc\":\"2.0\"",
+                       @"\"RENEW\",\"RENEW\"",
+                       @"\"params\":[",
+                       @"\"method\":",
+                       @"\"result\":",
+                       @"\"timeUpdated",
+                       @"\"groupId\":",
+                       @"\"clientId\":",
+                       @"\"senderId\":",
+                       @"\"receiverId\":",
+                       @"\"messageTag\":",
+                       @"\"messageId\":",
+                       @"\"geoLocation\":",
+                       @"group",
+                       @"client",
+                       @"system",
+                       @"Version",
+                       @"Name",
+                       @"Time",
+                       @",\"id\":",
+                       ];
+    
+    NSString * dictString = [dict componentsJoinedByString:@""];
+    
+    ;
+    //NSLog(@"Using dict:%@",dictString);
+    
+    NSData * dzlibCompressed = [myPayloaddata zlibDeflateWithDict:[dictString dataUsingEncoding:NSUTF8StringEncoding]];
+    //NSData * zlibCompressed = [myPayloaddata zlibDeflate];
+    //NSData * gzipCompressed = [myPayloaddata gzipDeflate];
+    //NSData * gzipCompressed2 = [myPayloaddata gzippedData];
+    NSData * dictCompressed = [myPayloaddata compressWithDict:dict];
+    NSLog(@"Original payload        len: %d", myPayloaddata.length);
+    NSLog(@"dzlibCompressed payload len: %d, (%2.1f%%)", dzlibCompressed.length, (double)dzlibCompressed.length / (double)myPayloaddata.length * 100.0);
+    NSLog(@"dictCompressed payload  len: %d, (%2.1f%%)", dictCompressed.length, (double)dictCompressed.length / (double)myPayloaddata.length * 100.0);
+    //NSLog(@"zlibCompressed payload  len: %d, (%2.1f%%)", zlibCompressed.length, (double)zlibCompressed.length / (double)myPayloaddata.length * 100.0);
+    //NSLog(@"gzipCompressed payload  len: %d, (%2.1f%%)", gzipCompressed.length, (double)gzipCompressed.length / (double)myPayloaddata.length * 100.0);
+    //NSLog(@"gzipCompressed2 payload len: %d, (%2.1f%%)", gzipCompressed2.length, (double)gzipCompressed2.length / (double)myPayloaddata.length * 100.0);
+    NSLog(@"\n");
+    
+}
+#endif
+
 - (BOOL) sendJson: (NSDictionary*) jsonObject {
     NSData * myPayloaddata = [NSJSONSerialization dataWithJSONObject: jsonObject options: 0 error: nil];
     NSString * myPayloadString = [[NSString alloc] initWithData:myPayloaddata encoding:NSUTF8StringEncoding];
-    if ([[self verbosityLevel]isEqualToString:@"dump"]) {NSLog(@"JSON SEND->: %@",myPayloadString);}
+    if ([[self verbosityLevel]isEqualToString:@"dump"]) {
+        NSLog(@"JSON SEND->: %@",myPayloadString);
+#ifdef TEST_COMPRESSION
+        [self testCompression:myPayloaddata];
+#endif
+    }
     if (_websocket.readyState == SR_OPEN) {
         [_websocket send: myPayloadString];
         return YES;

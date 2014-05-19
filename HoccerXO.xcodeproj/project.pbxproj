@@ -232,6 +232,9 @@
 		E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A85D99184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png */; };
 		E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A85D9A184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png */; };
 		E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A85D9B184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png */; };
+		E9AF289E1927BDAA00E29A03 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = E9AF289B1927BDAA00E29A03 /* NSData+Compression.m */; };
+		E9AF289F1927BDAA00E29A03 /* NSData+GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = E9AF289D1927BDAA00E29A03 /* NSData+GZIP.m */; };
+		E9AF28A21927CBFF00E29A03 /* NSData+DictCompression.m in Sources */ = {isa = PBXBuildFile; fileRef = E9AF28A11927CBFF00E29A03 /* NSData+DictCompression.m */; };
 		E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */; };
 		E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B7BAB8172EA15E00212420 /* RecordViewController.m */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
@@ -803,6 +806,12 @@
 		E9A85D9A184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-video.png"; sourceTree = "<group>"; };
 		E9A85D9B184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-video@2x.png"; sourceTree = "<group>"; };
 		E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-37.xcdatamodel"; sourceTree = "<group>"; };
+		E9AF289A1927BDAA00E29A03 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
+		E9AF289B1927BDAA00E29A03 /* NSData+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compression.m"; sourceTree = "<group>"; };
+		E9AF289C1927BDAA00E29A03 /* NSData+GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GZIP.h"; sourceTree = "<group>"; };
+		E9AF289D1927BDAA00E29A03 /* NSData+GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GZIP.m"; sourceTree = "<group>"; };
+		E9AF28A01927CBFF00E29A03 /* NSData+DictCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+DictCompression.h"; sourceTree = "<group>"; };
+		E9AF28A11927CBFF00E29A03 /* NSData+DictCompression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+DictCompression.m"; sourceTree = "<group>"; };
 		E9B7BAB5172D5E4E00212420 /* RPCObjectsModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RPCObjectsModel.xcdatamodel; sourceTree = "<group>"; };
 		E9B7BAB7172EA15E00212420 /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
@@ -1090,6 +1099,10 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
+				E9AF289A1927BDAA00E29A03 /* NSData+Compression.h */,
+				E9AF289B1927BDAA00E29A03 /* NSData+Compression.m */,
+				E9AF289C1927BDAA00E29A03 /* NSData+GZIP.h */,
+				E9AF289D1927BDAA00E29A03 /* NSData+GZIP.m */,
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
@@ -1124,6 +1137,8 @@
 				631F6CDC1706558100FB28D5 /* UIImage+ScaleAndCrop.m */,
 				E980E27318648D80004AF79D /* UIResponder+Debug.h */,
 				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
+				E9AF28A01927CBFF00E29A03 /* NSData+DictCompression.h */,
+				E9AF28A11927CBFF00E29A03 /* NSData+DictCompression.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
@@ -2296,8 +2311,10 @@
 				63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */,
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */,
+				E9AF289F1927BDAA00E29A03 /* NSData+GZIP.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
 				637FD6BA18FDCDCD0057F854 /* ProfileViewTabItemHelper.m in Sources */,
+				E9AF28A21927CBFF00E29A03 /* NSData+DictCompression.m in Sources */,
 				630CAB8518E1E31600782507 /* DatasheetActionCell.m in Sources */,
 				63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */,
 				63B7900318D4E546003A9125 /* tab_settings.m in Sources */,
@@ -2337,6 +2354,7 @@
 				63B7900018D4E52D003A9125 /* tab_profile.m in Sources */,
 				636D400317106EC000304EDF /* Environment.m in Sources */,
 				E9E92F93187503F7007B8042 /* NSString+HTML.m in Sources */,
+				E9AF289E1927BDAA00E29A03 /* NSData+Compression.m in Sources */,
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,
 				636492D71711E97900E35514 /* AvatarView.m in Sources */,
 				63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */,
