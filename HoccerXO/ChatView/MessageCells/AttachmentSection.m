@@ -9,6 +9,7 @@
 #import "AttachmentSection.h"
 #import "UpDownLoadControl.h"
 #import "MessageCell.h"
+#import "HXOUI.h"
 
 @implementation AttachmentSection
 
@@ -32,6 +33,12 @@
 - (void) messageDirectionDidChange {
     [super messageDirectionDidChange];
     self.upDownLoadControl.transferDirection = self.cell.messageDirection == HXOMessageDirectionIncoming ? HXOTranserDirectionReceiving : HXOTranserDirectionSending;
+}
+
+- (void) colorSchemeDidChange {
+    [super colorSchemeDidChange];
+    self.subtitle.textColor = [[HXOUI theme] messageAttachmentSubtitleColorForScheme: self.cell.colorScheme];
+    self.upDownLoadControl.tintColor = [[HXOUI theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
 }
 
 @end

@@ -57,7 +57,7 @@ NSString * kSpinnerAnim = @"spinner";
     self.progressLayer = [CAShapeLayer layer];
     self.progressLayer.bounds = self.bounds;
     self.progressLayer.path = [UIBezierPath bezierPathWithArcCenter: center radius: center.x startAngle: -0.5 * M_PI endAngle: 1.5 * M_PI clockwise:YES].CGPath;
-    self.progressLayer.strokeColor = self.tintColor.CGColor;
+    // strokeColor is set in tintColorDidChange
     self.progressLayer.fillColor = NULL;
     self.progressLayer.anchorPoint = anchor;
     self.progressLayer.position = center;
@@ -139,6 +139,11 @@ NSString * kSpinnerAnim = @"spinner";
     CGFloat x = 0.5 * (self.bounds.size.width - sideLength);
     CGFloat y = 0.5 * (self.bounds.size.height - sideLength);
     return CGRectMake(x, y, sideLength, sideLength);
+}
+
+- (void) tintColorDidChange {
+    [super tintColorDidChange];
+    self.progressLayer.strokeColor = self.tintColor.CGColor;
 }
 
 @end

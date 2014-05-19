@@ -11,7 +11,6 @@
 #import "MessageCell.h"
 #import "UpDownLoadControl.h"
 #import "HXOUI.h"
-#import "HXOUI.h"
 
 @implementation GenericAttachmentSection
 
@@ -41,14 +40,11 @@
 - (void) colorSchemeDidChange {
     [super colorSchemeDidChange];
     self.title.textColor = [[HXOUI theme] messageAttachmentTitleColorForScheme: self.cell.colorScheme];
-    self.subtitle.textColor = [[HXOUI theme] messageAttachmentSubtitleColorForScheme: self.cell.colorScheme];
     self.icon.tintColor = [[HXOUI theme] messageAttachmentIconTintColorForScheme: self.cell.colorScheme];
 }
 
 - (CGRect) attachmentControlFrame {
     return CGRectMake(self.bounds.size.width - (2 * kHXOGridSpacing + 4 * kHXOGridSpacing), kHXOGridSpacing, 4 * kHXOGridSpacing, 4 * kHXOGridSpacing);
 }
-
-
 
 @end
