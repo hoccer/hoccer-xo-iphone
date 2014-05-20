@@ -605,12 +605,16 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
                 NSMutableData * hexSequence = [NSMutableData dataWithBytes:indexReference length: isUUID ? 2 : 3];
                 [hexSequence appendData:hexData];
                 
-                if (COMPRESSION_TRACE) NSLog(@"Replacing:%@", [[data subdataWithRange:found] asciiString]);
-                if (COMPRESSION_TRACE) NSLog(@"with:%@", [hexSequence asciiString]);
+                NSData * replacedData = nil;
+                if (COMPRESSION_TRACE || SOME_COMPRESSION_TRACE) {
+                    replacedData = [data subdataWithRange:found];
+                    if (COMPRESSION_TRACE) NSLog(@"Replacing:%@", [replacedData asciiString]);
+                    if (COMPRESSION_TRACE) NSLog(@"with:%@", [hexSequence asciiString]);
+                }
                 
                 [data replaceBytesInRange:found withBytes:hexSequence.bytes length:hexSequence.length];
                 
-                if (SOME_COMPRESSION_TRACE) NSLog(@"%@ %@ %@ (reduced %d -> %d)", isUUID?@"uuid":@"hex", isUpperCase?@"uc":@"lc", quoted?@"quoted":@"", found.length, hexSequence.length);
+                if (SOME_COMPRESSION_TRACE) NSLog(@"%@ %@ %@ (reduced %d -> %d) %@", isUUID?@"uuid":@"hex", isUpperCase?@"uc":@"lc", quoted?@"quoted":@"", found.length, hexSequence.length, [replacedData asciiStringWithMaxBytes:16]);
                 
                 NSRange done = NSMakeRange(found.location, hexSequence.length);
                 return done;
@@ -667,6 +671,13 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             if (replacement != nil) {
                 [replacement appendData:base64Data];
                 
+                NSData * replacedData = nil;
+                if (COMPRESSION_TRACE || SOME_COMPRESSION_TRACE) {
+                    replacedData = [data subdataWithRange:found];
+                    if (COMPRESSION_TRACE) NSLog(@"Replacing:%@", [replacedData asciiString]);
+                    if (COMPRESSION_TRACE) NSLog(@"with:%@", [replacement asciiString]);
+                }
+                
                 if (COMPRESSION_TRACE) NSLog(@"b64:Replacing:%@", [[data subdataWithRange:found] asciiString]);
                 if (COMPRESSION_TRACE) NSLog(@"with:%@", [replacement asciiString]);
                 
@@ -676,7 +687,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
                 
                 if (MORE_COMPRESSION_TRACE) NSLog(@"after  replacement:%@", [data asciiString]);
                 
-                if (SOME_COMPRESSION_TRACE) NSLog(@"base64 (reduced %d -> %d)", replaceRange.length, replacement.length);
+                if (SOME_COMPRESSION_TRACE) NSLog(@"base64 (reduced %d -> %d) %@", replaceRange.length, replacement.length, [replacedData asciiStringWithMaxBytes:16]);
                 
                 NSRange done = NSMakeRange(found.location, replacement.length);
                 return done;
@@ -960,6 +971,22 @@ b64, hex, dict:
         } else {
             [rep appendString:[NSString stringWithFormat:@"<%d>",c]];
         }
+    }
+    return rep;
+}
+
+- (NSString*)asciiStringWithMaxBytes:(NSUInteger)maxBytes {
+    NSMutableString * rep = [NSMutableString new];
+    for (int i = 0; i < self.length && i < maxBytes; ++i) {
+        unsigned char c = ((unsigned char*)self.bytes)[i];
+        if (c >=0x20 && c < 0x7f) {
+            [rep appendString:[NSString stringWithFormat:@"%c",c]];
+        } else {
+            [rep appendString:[NSString stringWithFormat:@"<%d>",c]];
+        }
+    }
+    if (self.length > maxBytes) {
+        rep = [NSMutableString stringWithFormat:@"%@ ...[%d more bytes]", rep, self.length - maxBytes];
     }
     return rep;
 }
