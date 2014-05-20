@@ -171,6 +171,7 @@
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
+		C540BB85192BB2CE00B7ECD2 /* star.hoccer.de.der in Resources */ = {isa = PBXBuildFile; fileRef = C540BB76192BB2C900B7ECD2 /* star.hoccer.de.der */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -691,6 +692,7 @@
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		C540BB76192BB2C900B7ECD2 /* star.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = star.hoccer.de.der; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
@@ -1367,6 +1369,7 @@
 				E9DFD23A1922749800CC1202 /* talkserver.talk.hoccer.de.der */,
 				6382545017503531000347CD /* server_production.der */,
 				6390949F1738751800DF889B /* server_development.der */,
+				C540BB76192BB2C900B7ECD2 /* star.hoccer.de.der */,
 			);
 			path = Certificates;
 			sourceTree = "<group>";
@@ -2173,6 +2176,7 @@
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
 				63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */,
 				63AE4516170350750099F0CB /* Default.png in Resources */,
+				C540BB85192BB2CE00B7ECD2 /* star.hoccer.de.der in Resources */,
 				63AE4517170350750099F0CB /* Default@2x.png in Resources */,
 				63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */,
 				E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */,
