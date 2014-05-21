@@ -49,6 +49,13 @@
     if ([[HXOAudioPlayer sharedInstance] isPlaying]) {
         if (![navBarButtons containsObject:self.barButtonItem]) {
             [navBarButtons addObject:self.barButtonItem];
+            
+            if (navBarButtons.count > 1) {
+                // HACK: reduce margin to right neighbor by using a negative image inset
+                self.barButtonItem.imageInsets = UIEdgeInsetsMake(0, 0, 0, -18);
+            } else {
+                self.barButtonItem.imageInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+            }
         }
     } else {
         if ([navBarButtons containsObject:self.barButtonItem]) {
