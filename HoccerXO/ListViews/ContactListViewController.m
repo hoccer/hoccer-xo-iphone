@@ -27,6 +27,7 @@
 #import "ContactCellProtocol.h"
 #import "GroupInStatuNascendi.h"
 #import "tab_contacts.h"
+#import "AudioPlayerStateItemController.h"
 
 #define HIDE_SEPARATORS
 #define FETCHED_RESULTS_DEBUG NO
@@ -35,15 +36,16 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @interface ContactListViewController ()
 
-@property (nonatomic, strong)   NSFetchedResultsController  * searchFetchedResultsController;
-@property (nonatomic, readonly) NSFetchedResultsController  * fetchedResultsController;
-@property (nonatomic, strong)   NSManagedObjectContext      * managedObjectContext;
+@property (nonatomic, strong)   NSFetchedResultsController   * searchFetchedResultsController;
+@property (nonatomic, readonly) NSFetchedResultsController   * fetchedResultsController;
+@property (nonatomic, strong)   NSManagedObjectContext       * managedObjectContext;
 
-@property                       id                            keyboardHidingObserver;
-@property (strong, nonatomic)   id                            connectionInfoObserver;
-@property (nonatomic, readonly) HXOBackend                  * chatBackend;
+@property                       id                             keyboardHidingObserver;
+@property (strong, nonatomic)   id                             connectionInfoObserver;
+@property (nonatomic, readonly) HXOBackend                   * chatBackend;
 
-@property (nonatomic, readonly) UITableViewCell             * cellPrototype;
+@property (nonatomic, readonly) UITableViewCell              * cellPrototype;
+@property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
 
 @end
 
@@ -94,6 +96,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 #endif
 
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
+    self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }

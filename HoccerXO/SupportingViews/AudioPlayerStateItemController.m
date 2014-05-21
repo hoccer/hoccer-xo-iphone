@@ -44,13 +44,28 @@
 }
 
 - (void) updatePlaybackState {
+    NSMutableArray *navBarButtons = [NSMutableArray arrayWithArray:self.viewController.navigationItem.rightBarButtonItems];
+
     if ([[HXOAudioPlayer sharedInstance] isPlaying]) {
-        UIImage *image = [UIImage imageNamed:@"navbar-music-is-playing"];
-        self.barButtonItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(onClick:)];
-        self.viewController.navigationItem.rightBarButtonItem = self.barButtonItem;
+        if (![navBarButtons containsObject:self.barButtonItem]) {
+            [navBarButtons addObject:self.barButtonItem];
+        }
     } else {
-        self.viewController.navigationItem.rightBarButtonItem = nil;
+        if ([navBarButtons containsObject:self.barButtonItem]) {
+            [navBarButtons removeObject:self.barButtonItem];
+        }
     }
+
+    self.viewController.navigationItem.rightBarButtonItems = navBarButtons;
+}
+
+- (UIBarButtonItem *) barButtonItem {
+    if (_barButtonItem == nil) {
+        UIImage *image = [UIImage imageNamed:@"navbar-music-is-playing"];
+        _barButtonItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(onClick:)];
+    }
+
+    return _barButtonItem;
 }
 
 @end
