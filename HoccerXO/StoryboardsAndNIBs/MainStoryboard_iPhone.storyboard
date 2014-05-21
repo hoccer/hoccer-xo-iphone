@@ -197,7 +197,7 @@
         <!--Audio Player View Controller-->
         <scene sceneID="eiv-9j-o6Z">
             <objects>
-                <viewController id="cOx-sC-aUC" customClass="AudioPlayerViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AudioPlayerViewController" id="cOx-sC-aUC" customClass="AudioPlayerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dGI-ip-VRl"/>
                         <viewControllerLayoutGuide type="bottom" id="MaU-B6-Kk7"/>

@@ -10,6 +10,7 @@
 
 #import "AppDelegate.h"
 #import "Attachment.h"
+#import "AudioPlayerStateItemController.h"
 #import "HXOAudioPlayer.h"
 #import "tab_attachments.h"
 
@@ -19,6 +20,7 @@
 @property (nonatomic, strong) NSFetchedResultsController * fetchedResultsController;
 @property (nonatomic, strong) NSManagedObjectContext     * managedObjectContext;
 @property (nonatomic, strong) NSManagedObjectModel       * managedObjectModel;
+@property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
 
 @end
 
@@ -39,6 +41,7 @@ static NSString *reuseIdentifier = @"audio_attachment";
 
 - (void)viewDidLoad {
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:reuseIdentifier];
+    self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
 }
 
 - (void)didReceiveMemoryWarning {

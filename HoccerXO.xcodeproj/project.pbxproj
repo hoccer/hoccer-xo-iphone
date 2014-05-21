@@ -176,6 +176,9 @@
 		6A937A14190EADC200221B82 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A937A13190EADC200221B82 /* tab_attachments.m */; };
 		6A937A15190EADC200221B82 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A937A13190EADC200221B82 /* tab_attachments.m */; };
 		C53EBCF7190AA77F0016ACCF /* AudioAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C53EBCF6190AA77F0016ACCF /* AudioAttachmentListViewController.m */; };
+		C559261A192C9EED0000F24E /* navbar-music-is-playing.png in Resources */ = {isa = PBXBuildFile; fileRef = C5592618192C9EEC0000F24E /* navbar-music-is-playing.png */; };
+		C559261B192C9EED0000F24E /* navbar-music-is-playing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5592619192C9EEC0000F24E /* navbar-music-is-playing@2x.png */; };
+		C559262F192CA6AF0000F24E /* AudioPlayerStateItemController.m in Sources */ = {isa = PBXBuildFile; fileRef = C559262E192CA6AF0000F24E /* AudioPlayerStateItemController.m */; };
 		C5AC19C4191157810075C07C /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19C1191157810075C07C /* HXOAudioPlaybackButtonController.m */; };
 		C5AC19C5191157810075C07C /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19C3191157810075C07C /* HXOAudioPlayer.m */; };
 		C5AC19D6191157960075C07C /* AttachmentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19D5191157960075C07C /* AttachmentInfo.m */; };
@@ -725,6 +728,10 @@
 		6A937A13190EADC200221B82 /* tab_attachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tab_attachments.m; sourceTree = "<group>"; };
 		C53EBCF5190AA77F0016ACCF /* AudioAttachmentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentListViewController.h; sourceTree = "<group>"; };
 		C53EBCF6190AA77F0016ACCF /* AudioAttachmentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentListViewController.m; sourceTree = "<group>"; };
+		C5592618192C9EEC0000F24E /* navbar-music-is-playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-music-is-playing.png"; sourceTree = "<group>"; };
+		C5592619192C9EEC0000F24E /* navbar-music-is-playing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-music-is-playing@2x.png"; sourceTree = "<group>"; };
+		C559262D192CA6AF0000F24E /* AudioPlayerStateItemController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayerStateItemController.h; sourceTree = "<group>"; };
+		C559262E192CA6AF0000F24E /* AudioPlayerStateItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerStateItemController.m; sourceTree = "<group>"; };
 		C5AC19C0191157810075C07C /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
 		C5AC19C1191157810075C07C /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
 		C5AC19C2191157810075C07C /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
@@ -1472,6 +1479,8 @@
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
 				032CBBB819178DDB00987008 /* AudioPlayerViewController.h */,
 				032CBBB719178DDB00987008 /* AudioPlayerViewController.m */,
+				C559262D192CA6AF0000F24E /* AudioPlayerStateItemController.h */,
+				C559262E192CA6AF0000F24E /* AudioPlayerStateItemController.m */,
 				63756A8E18F6434C003F7555 /* ContactPicker.h */,
 				63756A8F18F6434C003F7555 /* ContactPicker.m */,
 				639094BC1739828700DF889B /* GeoLocationPicker.h */,
@@ -1773,6 +1782,8 @@
 				C5EA78F1192113BD00085C46 /* fullscreen-icon-volume-down@2x.png */,
 				C5EA78F2192113BD00085C46 /* fullscreen-icon-volume-up.png */,
 				C5EA78F3192113BD00085C46 /* fullscreen-icon-volume-up@2x.png */,
+				C5592618192C9EEC0000F24E /* navbar-music-is-playing.png */,
+				C5592619192C9EEC0000F24E /* navbar-music-is-playing@2x.png */,
 				C5DEFD3B19221709002FFD9D /* slider-thumb.png */,
 				C5DEFD3C19221709002FFD9D /* slider-thumb@2x.png */,
 				C5EA78F81921270000085C46 /* slider-track.png */,
@@ -2313,6 +2324,7 @@
 				C5EA78DB1921095A00085C46 /* fullscreen-button-forward@2x.png in Resources */,
 				C5EA78DD1921095A00085C46 /* fullscreen-button-play@2x.png in Resources */,
 				C5EA78F7192113BD00085C46 /* fullscreen-icon-volume-up@2x.png in Resources */,
+				C559261A192C9EED0000F24E /* navbar-music-is-playing.png in Resources */,
 				63B1C9E51843E4FD00B75CD8 /* cnt-record.png in Resources */,
 				E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
@@ -2333,6 +2345,7 @@
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				C5DEFD6419236FBD002FFD9D /* cover-art-fallback.png in Resources */,
+				C559261B192C9EED0000F24E /* navbar-music-is-playing@2x.png in Resources */,
 				C5EA78D51921095A00085C46 /* button-pause@2x.png in Resources */,
 				C5EA78D91921095A00085C46 /* fullscreen-button-back@2x.png in Resources */,
 				C5EA78F6192113BD00085C46 /* fullscreen-icon-volume-up.png in Resources */,
@@ -2453,6 +2466,7 @@
 				E95176141913ECCB00EFD1C6 /* NSObject+DelegateHelper.m in Sources */,
 				E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */,
 				0372318219090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m in Sources */,
+				C559262F192CA6AF0000F24E /* AudioPlayerStateItemController.m in Sources */,
 				6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */,
 				63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */,
 				6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */,
