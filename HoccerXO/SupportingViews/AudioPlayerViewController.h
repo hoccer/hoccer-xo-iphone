@@ -26,4 +26,6 @@
 @property (nonatomic, strong) IBOutlet UIImageView *volumeDownImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *volumeUpImageView;
 
+- (IBAction) close:(id)sender;
+
 @end

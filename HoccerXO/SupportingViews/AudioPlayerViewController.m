@@ -122,4 +122,8 @@
     [self updateCurrentTime];
 }
 
+- (IBAction) close: (id)sender {
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
 @end

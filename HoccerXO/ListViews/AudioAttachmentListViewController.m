@@ -130,7 +130,8 @@ static NSString *reuseIdentifier = @"audio_attachment";
     BOOL success = [audioPlayer playWithPlaylist:playlist atIndex:indexPath.row];
     
     if (success) {
-        [self performSegueWithIdentifier:@"showAudioPlayer" sender:nil];
+        UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
+        [self presentViewController:audioPlayerViewController animated:YES completion:NULL];
     } else {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
                                                          message: NSLocalizedString(@"attachment_cannot_play_message", nil)
