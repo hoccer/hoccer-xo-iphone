@@ -56,6 +56,7 @@
 #import "AttachmentButton.h"
 #import "HXOAudioPlaybackButtonController.h"
 #import "NSString+FromTimeInterval.h"
+#import "AudioPlayerStateItemController.h"
 
 #define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
@@ -67,26 +68,27 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @interface ChatViewController ()
 
-@property (nonatomic, strong)   UIPopoverController *masterPopoverController;
-@property (nonatomic, readonly) AttachmentPickerController    * attachmentPicker;
-//@property (nonatomic, strong)   UIView                        * attachmentPreview;
-@property (nonatomic, strong)   NSIndexPath                   * firstNewMessage;
-@property (nonatomic, strong)   NSMutableDictionary           * cellPrototypes;
-@property (nonatomic, strong)   MPMoviePlayerViewController   *  moviePlayerViewController;
-@property (nonatomic, readonly) ImageViewController           * imageViewController;
-@property (nonatomic, readonly) ABUnknownPersonViewController * vcardViewController;
-@property (nonatomic, strong)   LabelWithLED                  * titleLabel;
+@property (nonatomic, strong)   UIPopoverController            * masterPopoverController;
+@property (nonatomic, readonly) AttachmentPickerController     * attachmentPicker;
+//@property (nonatomic, strong)   UIView                         * attachmentPreview;
+@property (nonatomic, strong)   NSIndexPath                    * firstNewMessage;
+@property (nonatomic, strong)   NSMutableDictionary            * cellPrototypes;
+@property (nonatomic, strong)   MPMoviePlayerViewController    *  moviePlayerViewController;
+@property (nonatomic, readonly) ImageViewController            * imageViewController;
+@property (nonatomic, readonly) ABUnknownPersonViewController  * vcardViewController;
+@property (nonatomic, strong)   LabelWithLED                   * titleLabel;
 
-@property (strong, nonatomic)   HXOMessage                    * messageToForward;
+@property (strong, nonatomic)   HXOMessage                     * messageToForward;
 
-@property (nonatomic, readonly) NSMutableDictionary           * messageItems;
-@property (nonatomic, readonly) NSDateFormatter               * dateFormatter;
-@property (nonatomic, readonly) NSByteCountFormatter          * byteCountFormatter;
+@property (nonatomic, readonly) NSMutableDictionary            * messageItems;
+@property (nonatomic, readonly) NSDateFormatter                * dateFormatter;
+@property (nonatomic, readonly) NSByteCountFormatter           * byteCountFormatter;
 
-@property (nonatomic, assign)   BOOL                            keyBoardShown;
+@property (nonatomic, assign)   BOOL                             keyBoardShown;
 
-@property (nonatomic, strong)   UITextField                   * autoCorrectTriggerHelper;
-@property (nonatomic, strong)   UILabel                       * messageFieldPlaceholder;
+@property (nonatomic, strong)   UITextField                    * autoCorrectTriggerHelper;
+@property (nonatomic, strong)   UILabel                        * messageFieldPlaceholder;
+@property (nonatomic, strong)   AudioPlayerStateItemController * audioPlayerStateItemController;
 
 @property (strong) id throwObserver;
 @property (strong) id catchObserver;
@@ -138,7 +140,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     // XXX do this in a more general way...
     self.titleLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-
+    
+    self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
+    
     [self configureView];
 }
 
