@@ -10,6 +10,8 @@
 
 #import "AppDelegate.h"
 #import "Attachment.h"
+#import "AttachmentInfo.h"
+#import "AudioAttachmentCell.h"
 #import "AudioPlayerStateItemController.h"
 #import "HXOAudioPlayer.h"
 #import "tab_attachments.h"
@@ -25,9 +27,6 @@
 @end
 
 
-static NSString *reuseIdentifier = @"audio_attachment";
-
-
 @implementation AudioAttachmentListViewController
 
 - (void)awakeFromNib {
@@ -40,13 +39,19 @@ static NSString *reuseIdentifier = @"audio_attachment";
 }
 
 - (void)viewDidLoad {
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:reuseIdentifier];
+    [self registerCellClass:[AudioAttachmentCell class]];
     self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    [self preferredContentSizeChanged:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     _fetchedResultsController = nil;
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
 #pragma mark - Core Data Stack
@@ -93,8 +98,8 @@ static NSString *reuseIdentifier = @"audio_attachment";
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
-    [self configureCell: cell atIndexPath: indexPath];
+    AudioAttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:[AudioAttachmentCell reuseIdentifier] forIndexPath:indexPath];
+    [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
 
@@ -103,11 +108,13 @@ static NSString *reuseIdentifier = @"audio_attachment";
     return [sectionInfo name];
 }
 
-- (void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+- (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
     
     if (attachment) {
-        cell.textLabel.text = attachment.humanReadableFileName;
+        AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
+        cell.titleLabel.text = info.audioTitle;
+        cell.subtitleLabel.text = info.audioArtistAndAlbum;
     }
 }
 
@@ -119,6 +126,20 @@ static NSString *reuseIdentifier = @"audio_attachment";
     }
     
     return nil;
+}
+
+- (void) preferredContentSizeChanged: (NSNotification*) notification {
+    self.tableView.rowHeight = [self calculateRowHeight];
+    [self.tableView reloadData];
+}
+
+- (CGFloat) calculateRowHeight {
+    // XXX Note: The +1 magically fixes the layout. Without it the multiline
+    // label in the conversation view is one pixel short and only fits one line
+    // of text. I'm not sure if i'm compensating the separator (thus an apple
+    // bug) or if it it is my fault.
+    UITableViewCell *prototypeCell = [self prototypeCellOfClass:[AudioAttachmentCell class]];
+    return ceilf([prototypeCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height) + 1;
 }
 
 #pragma mark - Table view delegate
