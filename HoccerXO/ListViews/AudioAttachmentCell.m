@@ -68,7 +68,7 @@
     
     [self addFirstRowHorizontalConstraints: views];
     
-    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(>=10)]-%f-|", [self verticalPadding], [self verticalPadding]];
+    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(>=%f)]-%f-|", [self verticalPadding], [self artworkSize], [self verticalPadding]];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
     
@@ -80,11 +80,11 @@
 }
 
 - (CGFloat) artworkSize {
-    return 10;
+    return 6 * kHXOGridSpacing;
 }
 
 - (CGFloat) verticalPadding {
-    return 1.5 * kHXOGridSpacing;
+    return kHXOGridSpacing;
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
@@ -98,7 +98,6 @@
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     self.titleLabel.font = [HXOUI theme].titleFont;
-    //NSLog(@"nickname size %@", NSStringFromCGSize( self.titleLabel.intrinsicContentSize));
     self.subtitleLabel.font = [HXOUI theme].smallTextFont;
     
     if (self.verticalConstraints) {
@@ -107,7 +106,7 @@
     UIView * title = self.titleLabel;
     UIView * subtitle = self.subtitleLabel;
     NSDictionary * views = NSDictionaryOfVariableBindings(title, subtitle);
-    CGFloat y = [self verticalPadding] - (self.titleLabel.font.ascender - self.titleLabel.font.capHeight);
+    CGFloat y = 2 * [self verticalPadding] - (self.titleLabel.font.ascender - self.titleLabel.font.capHeight);
     NSString * format = [NSString stringWithFormat: @"V:|-%f-[title]-%f-[subtitle]-(>=%f)-|", y, [self labelSpacing], [self verticalPadding]];
     self.verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                        options: 0 metrics: nil views: views];
@@ -117,7 +116,7 @@
 }
 
 - (CGFloat) labelSpacing {
-    return 0;//0.25 * kHXOGridSpacing;
+    return 0.5 * kHXOGridSpacing;
 }
 
 - (void) layoutSubviews {

@@ -142,12 +142,8 @@
 }
 
 - (CGFloat) calculateRowHeight {
-    // XXX Note: The +1 magically fixes the layout. Without it the multiline
-    // label in the conversation view is one pixel short and only fits one line
-    // of text. I'm not sure if i'm compensating the separator (thus an apple
-    // bug) or if it it is my fault.
     UITableViewCell *prototypeCell = [self prototypeCellOfClass:[AudioAttachmentCell class]];
-    return ceilf([prototypeCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height) + 1;
+    return [prototypeCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
 }
 
 #pragma mark - Table view delegate
