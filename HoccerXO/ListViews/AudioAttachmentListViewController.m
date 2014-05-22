@@ -115,6 +115,14 @@
         AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
         cell.titleLabel.text = info.audioTitle;
         cell.subtitleLabel.text = info.audioArtistAndAlbum;
+        
+        [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *error) {
+            if (error == nil) {
+                cell.artwork.image = attachment.previewImage;
+            } else {
+                NSLog(@"ERROR: Failed to load attachment preview image: %@", error);
+            }
+        }];
     }
 }
 
@@ -200,7 +208,8 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            // Ignore updates because loading the preview image leads to an infinite update loop
+            // [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
         case NSFetchedResultsChangeMove:
