@@ -11,6 +11,8 @@
 #import "AttachmentInfo.h"
 #import "HXOAudioPlayer.h"
 #import "NSString+FromTimeInterval.h"
+#import "player_button_play.h"
+#import "player_button_pause.h"
 
 @interface AudioPlayerViewController ()
 
@@ -85,9 +87,14 @@
 }
 
 - (void) updatePlaybackState {
-    NSString *imageName = [self.audioPlayer isPlaying] ? @"fullscreen-button-pause" : @"fullscreen-button-play";
-    UIImage *image = [UIImage imageNamed:imageName];
-    [self.playButton setImage:image forState:UIControlStateNormal];
+    if ([self.audioPlayer isPlaying]){
+        UIImage *image = [[[player_button_pause alloc]init]image];
+        [self.playButton setImage:image forState:UIControlStateNormal];
+    } else {
+        UIImage *image = [[[player_button_play alloc]init]image];
+        [self.playButton setImage:image forState:UIControlStateNormal];
+    }
+    
 }
 
 - (void) updateCurrentTime {
