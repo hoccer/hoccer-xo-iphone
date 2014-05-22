@@ -188,6 +188,10 @@
 		6A34B2AC192E14E400215DF1 /* player_button_shuffle_off.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2AA192E14E400215DF1 /* player_button_shuffle_off.m */; };
 		6A34B2B1192E157F00215DF1 /* player_button_shuffle_on.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */; };
 		6A34B2B2192E157F00215DF1 /* player_button_shuffle_on.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */; };
+		6A34B2B7192E168200215DF1 /* player_icon_volume_up.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2B6192E168200215DF1 /* player_icon_volume_up.m */; };
+		6A34B2B8192E168200215DF1 /* player_icon_volume_up.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2B6192E168200215DF1 /* player_icon_volume_up.m */; };
+		6A34B2BD192E170A00215DF1 /* player_icon_volume_down.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2BC192E170A00215DF1 /* player_icon_volume_down.m */; };
+		6A34B2BE192E170A00215DF1 /* player_icon_volume_down.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2BC192E170A00215DF1 /* player_icon_volume_down.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
 		6A937A02190EADAC00221B82 /* tab_attachments.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A00190EADAC00221B82 /* tab_attachments.pcvd */; };
 		6A937A03190EADAC00221B82 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A01190EADAC00221B82 /* tab_attachments.svg */; };
@@ -775,6 +779,12 @@
 		6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_button_shuffle_on.m; sourceTree = "<group>"; };
 		6A34B2B3192E15EF00215DF1 /* player_shuffle_on.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = player_shuffle_on.pcvd; sourceTree = "<group>"; };
 		6A34B2B4192E15EF00215DF1 /* player_shuffle_on.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = player_shuffle_on.svg; sourceTree = "<group>"; };
+		6A34B2B5192E168200215DF1 /* player_icon_volume_up.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_icon_volume_up.h; sourceTree = "<group>"; };
+		6A34B2B6192E168200215DF1 /* player_icon_volume_up.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_icon_volume_up.m; sourceTree = "<group>"; };
+		6A34B2B9192E16E300215DF1 /* player_volume_up.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = player_volume_up.pcvd; sourceTree = "<group>"; };
+		6A34B2BA192E16E300215DF1 /* player_volume_up.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = player_volume_up.svg; sourceTree = "<group>"; };
+		6A34B2BB192E170A00215DF1 /* player_icon_volume_down.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_icon_volume_down.h; sourceTree = "<group>"; };
+		6A34B2BC192E170A00215DF1 /* player_icon_volume_down.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_icon_volume_down.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6A937A00190EADAC00221B82 /* tab_attachments.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tab_attachments.pcvd; sourceTree = "<group>"; };
 		6A937A01190EADAC00221B82 /* tab_attachments.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tab_attachments.svg; sourceTree = "<group>"; };
@@ -1878,6 +1888,12 @@
 				6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */,
 				6A34B2B3192E15EF00215DF1 /* player_shuffle_on.pcvd */,
 				6A34B2B4192E15EF00215DF1 /* player_shuffle_on.svg */,
+				6A34B2B5192E168200215DF1 /* player_icon_volume_up.h */,
+				6A34B2B6192E168200215DF1 /* player_icon_volume_up.m */,
+				6A34B2B9192E16E300215DF1 /* player_volume_up.pcvd */,
+				6A34B2BA192E16E300215DF1 /* player_volume_up.svg */,
+				6A34B2BB192E170A00215DF1 /* player_icon_volume_down.h */,
+				6A34B2BC192E170A00215DF1 /* player_icon_volume_down.m */,
 			);
 			path = AudioPlayer;
 			sourceTree = "<group>";
@@ -2517,8 +2533,10 @@
 			files = (
 				6A34B2AC192E14E400215DF1 /* player_button_shuffle_off.m in Sources */,
 				6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */,
+				6A34B2B8192E168200215DF1 /* player_icon_volume_up.m in Sources */,
 				6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */,
 				6A937A15190EADC200221B82 /* tab_attachments.m in Sources */,
+				6A34B2BE192E170A00215DF1 /* player_icon_volume_down.m in Sources */,
 				6A34B2A6192E13F200215DF1 /* player_button_repeat_off.m in Sources */,
 				6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */,
 				6A34B270192DEE4E00215DF1 /* player_button_play.m in Sources */,
@@ -2679,6 +2697,7 @@
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */,
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
+				6A34B2B7192E168200215DF1 /* player_icon_volume_up.m in Sources */,
 				E9E92F6E18733D01007B8042 /* HTTPAuthenticationRequest.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
 				E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */,
@@ -2688,6 +2707,7 @@
 				6A34B28D192E0D7000215DF1 /* player_button_prev.m in Sources */,
 				03039EE919081D8100898ADD /* AudioAttachmentMessageCell.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
+				6A34B2BD192E170A00215DF1 /* player_icon_volume_down.m in Sources */,
 				63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */,
 				63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */,
 				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,
