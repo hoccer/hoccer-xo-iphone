@@ -13,6 +13,8 @@
 #import "NSString+FromTimeInterval.h"
 #import "player_button_play.h"
 #import "player_button_pause.h"
+#import "player_button_next.h"
+#import "player_button_prev.h"
 
 @interface AudioPlayerViewController ()
 
@@ -31,6 +33,9 @@
     
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(attachment)) options:0 context:NULL];
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
+    
+    [self.skipBackButton setImage:[[[player_button_prev alloc]init]image] forState:UIControlStateNormal];
+    [self.skipForwardButton setImage:[[[player_button_next alloc]init]image] forState:UIControlStateNormal];
     
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipBackButton addTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
