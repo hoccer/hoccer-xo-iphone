@@ -131,7 +131,6 @@
         <attribute name="token" attributeType="String" syncable="YES"/>
     </entity>
     <fetchRequest name="AllOutgoingAttachments" entity="Attachment" predicateString="message.isOutgoing != 0"/>
-    <fetchRequest name="AttachmentsByMediaType" entity="Attachment" predicateString="mediaType == $mediaType"/>
     <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0 AND transferFailures &lt; $max_retries"/>
     <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
@@ -151,6 +150,7 @@
     <fetchRequest name="MessagesByContactSinceTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt; $beforeTime"/>
     <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
+    <fetchRequest name="ReceivedAttachmentsByMediaType" entity="Attachment" predicateString="mediaType == $mediaType AND contentSize == transferSize AND message.isOutgoing == 0"/>
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="390"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="416"/>

@@ -73,7 +73,7 @@
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
         NSDictionary *vars = @{ @"mediaType" : @"audio" };
-        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsByMediaType" substitutionVariables:vars];
+        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAttachmentsByMediaType" substitutionVariables:vars];
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"humanReadableFileName" ascending: YES];
         NSArray *sortDescriptors = @[sortDescriptor];
         [fetchRequest setSortDescriptors:sortDescriptors];
