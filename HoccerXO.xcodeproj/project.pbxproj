@@ -184,6 +184,10 @@
 		6A34B2A0192E133B00215DF1 /* player_button_repeat_title.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B29E192E133B00215DF1 /* player_button_repeat_title.m */; };
 		6A34B2A5192E13F200215DF1 /* player_button_repeat_off.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2A4192E13F200215DF1 /* player_button_repeat_off.m */; };
 		6A34B2A6192E13F200215DF1 /* player_button_repeat_off.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2A4192E13F200215DF1 /* player_button_repeat_off.m */; };
+		6A34B2AB192E14E400215DF1 /* player_button_shuffle_off.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2AA192E14E400215DF1 /* player_button_shuffle_off.m */; };
+		6A34B2AC192E14E400215DF1 /* player_button_shuffle_off.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2AA192E14E400215DF1 /* player_button_shuffle_off.m */; };
+		6A34B2B1192E157F00215DF1 /* player_button_shuffle_on.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */; };
+		6A34B2B2192E157F00215DF1 /* player_button_shuffle_on.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
 		6A937A02190EADAC00221B82 /* tab_attachments.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A00190EADAC00221B82 /* tab_attachments.pcvd */; };
 		6A937A03190EADAC00221B82 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = 6A937A01190EADAC00221B82 /* tab_attachments.svg */; };
@@ -763,6 +767,14 @@
 		6A34B2A4192E13F200215DF1 /* player_button_repeat_off.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_button_repeat_off.m; sourceTree = "<group>"; };
 		6A34B2A7192E148800215DF1 /* player_repeat_off.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = player_repeat_off.pcvd; sourceTree = "<group>"; };
 		6A34B2A8192E148800215DF1 /* player_repeat_off.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = player_repeat_off.svg; sourceTree = "<group>"; };
+		6A34B2A9192E14E400215DF1 /* player_button_shuffle_off.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_button_shuffle_off.h; sourceTree = "<group>"; };
+		6A34B2AA192E14E400215DF1 /* player_button_shuffle_off.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_button_shuffle_off.m; sourceTree = "<group>"; };
+		6A34B2AD192E156400215DF1 /* player_shuffle_off.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = player_shuffle_off.pcvd; sourceTree = "<group>"; };
+		6A34B2AE192E156400215DF1 /* player_shuffle_off.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = player_shuffle_off.svg; sourceTree = "<group>"; };
+		6A34B2AF192E157F00215DF1 /* player_button_shuffle_on.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_button_shuffle_on.h; sourceTree = "<group>"; };
+		6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_button_shuffle_on.m; sourceTree = "<group>"; };
+		6A34B2B3192E15EF00215DF1 /* player_shuffle_on.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = player_shuffle_on.pcvd; sourceTree = "<group>"; };
+		6A34B2B4192E15EF00215DF1 /* player_shuffle_on.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = player_shuffle_on.svg; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6A937A00190EADAC00221B82 /* tab_attachments.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tab_attachments.pcvd; sourceTree = "<group>"; };
 		6A937A01190EADAC00221B82 /* tab_attachments.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tab_attachments.svg; sourceTree = "<group>"; };
@@ -1858,6 +1870,14 @@
 				6A34B2A4192E13F200215DF1 /* player_button_repeat_off.m */,
 				6A34B2A7192E148800215DF1 /* player_repeat_off.pcvd */,
 				6A34B2A8192E148800215DF1 /* player_repeat_off.svg */,
+				6A34B2A9192E14E400215DF1 /* player_button_shuffle_off.h */,
+				6A34B2AA192E14E400215DF1 /* player_button_shuffle_off.m */,
+				6A34B2AD192E156400215DF1 /* player_shuffle_off.pcvd */,
+				6A34B2AE192E156400215DF1 /* player_shuffle_off.svg */,
+				6A34B2AF192E157F00215DF1 /* player_button_shuffle_on.h */,
+				6A34B2B0192E157F00215DF1 /* player_button_shuffle_on.m */,
+				6A34B2B3192E15EF00215DF1 /* player_shuffle_on.pcvd */,
+				6A34B2B4192E15EF00215DF1 /* player_shuffle_on.svg */,
 			);
 			path = AudioPlayer;
 			sourceTree = "<group>";
@@ -2495,6 +2515,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A34B2AC192E14E400215DF1 /* player_button_shuffle_off.m in Sources */,
 				6302A9CC18DA9CDD00B2D04F /* NSString+RandomString.m in Sources */,
 				6302A9C718DA8AFD00B2D04F /* SRP_SRP6aSafeguardsTest.m in Sources */,
 				6A937A15190EADC200221B82 /* tab_attachments.m in Sources */,
@@ -2504,6 +2525,7 @@
 				6A34B28E192E0D7000215DF1 /* player_button_prev.m in Sources */,
 				6A34B288192E0C2C00215DF1 /* player_button_pause.m in Sources */,
 				6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */,
+				6A34B2B2192E157F00215DF1 /* player_button_shuffle_on.m in Sources */,
 				6A34B2A0192E133B00215DF1 /* player_button_repeat_title.m in Sources */,
 				6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */,
 				6A34B29A192E128F00215DF1 /* player_button_repeat_all.m in Sources */,
@@ -2616,6 +2638,7 @@
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
 				E9DBE3E31865C0A000880252 /* CryptoJSON.m in Sources */,
+				6A34B2B1192E157F00215DF1 /* player_button_shuffle_on.m in Sources */,
 				63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */,
 				E9E92F7018733D01007B8042 /* HTTPMessage.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
@@ -2627,6 +2650,7 @@
 				E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */,
 				63B76F6418E9EA3300E014E6 /* ContactSheetController.m in Sources */,
 				E99886C71725CB3F0089A510 /* ACAddressBookPerson.m in Sources */,
+				6A34B2AB192E14E400215DF1 /* player_button_shuffle_off.m in Sources */,
 				E99886C81725CB3F0089A510 /* VcardParser.m in Sources */,
 				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
 				E9E92F4018733B7A007B8042 /* ContextFilterLogFormatter.m in Sources */,
