@@ -459,6 +459,7 @@
 		03039EF919081DE900898ADD /* AudioAttachmentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentSection.m; sourceTree = "<group>"; };
 		032CBBB719178DDB00987008 /* AudioPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerViewController.m; sourceTree = "<group>"; };
 		032CBBB819178DDB00987008 /* AudioPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayerViewController.h; sourceTree = "<group>"; };
+		034915BD192F80EE00557C8B /* HoccerXO-38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-38.xcdatamodel"; sourceTree = "<group>"; };
 		0372318019090C4A0043E79F /* AudioAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
 		0372318119090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
@@ -3344,6 +3345,7 @@
 		E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				034915BD192F80EE00557C8B /* HoccerXO-38.xcdatamodel */,
 				E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */,
 				E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */,
 				E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */,
@@ -3365,7 +3367,7 @@
 				E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */,
 				E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */,
 			);
-			currentVersion = E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */;
+			currentVersion = 034915BD192F80EE00557C8B /* HoccerXO-38.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
