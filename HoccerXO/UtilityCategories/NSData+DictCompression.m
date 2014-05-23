@@ -40,6 +40,22 @@ enum {
 };
 
 
+
+-(void)makeTreeFormDict:(NSArray*)dataList into:(NSMutableArray*)tree {
+    for (int i = 0; i < dataList.count;++i) {
+        NSRange found = NSMakeRange(NSNotFound, 0);
+        for (t = 0; t < tree.count; ++t) {
+            NSData *
+            found = [
+        }
+    }
+}
+
+-(NSRange)findTree:(NSData*)characters withOffsets:(NSData*)offsets {
+    
+}
+
+
 -(NSData*)dataByReplacingOccurrencesOfData:(NSData*)what withData:(NSData*)replacement {
     NSMutableData * result = [NSMutableData dataWithData:self];
     NSRange where = NSMakeRange(0,result.length);
