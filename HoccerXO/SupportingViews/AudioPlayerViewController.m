@@ -15,6 +15,7 @@
 #import "player_button_pause.h"
 #import "player_button_next.h"
 #import "player_button_prev.h"
+#import "UIImage+ImageEffects.h"
 
 @interface AudioPlayerViewController ()
 
@@ -88,6 +89,7 @@
     
     [attachment loadImage:^(UIImage *image, NSError *error) {
         self.artworkImageView.image = image;
+        [self updateBackgroundWithImage:image];
     }];
 }
 
@@ -109,6 +111,10 @@
     if (!self.isSeeking) {
         self.seekSlider.value = self.audioPlayer.currentTime;
     }
+}
+
+- (void) updateBackgroundWithImage: (UIImage *)image {
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: nil saturationDeltaFactor: 1.8 maskImage: nil]];
 }
 
 - (void) togglePlayback: (id)sender {
