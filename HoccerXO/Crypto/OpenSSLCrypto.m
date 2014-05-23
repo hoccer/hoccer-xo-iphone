@@ -27,7 +27,7 @@ RSA *create_rsa_key(const int bits)
     BN_set_word(f4, RSA_F4);
     
     /* generate private and public keys */
-    NSLog(@"*****************Creating RSA of %d bits\n\n\n", bits);
+    NSLog(@"Creating RSA key with %d bits\n\n\n", bits);
     if (!RSA_generate_key_ex(rsa, bits, f4, NULL)) {
         NSLog(@"create_rsa_key failed (RSA_generate_key_ex): %s\n", ERR_error_string(ERR_get_error(), NULL));
         goto err_out;

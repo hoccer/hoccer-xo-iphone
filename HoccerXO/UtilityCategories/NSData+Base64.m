@@ -29,9 +29,29 @@
 
 #import "NSData+Base64.h"
 
-#import "Base64Transcoder.h"
-
 @implementation NSData (Base64)
+
+#define USE_APPLE_BASE64_CODEC
+
+#ifdef USE_APPLE_BASE64_CODEC
++ (id)dataWithBase64EncodedString:(NSString *)inString {
+    if (inString == nil) {
+        return nil;
+    }
+    return [[NSData alloc] initWithBase64EncodedString:inString options:0];
+}
+
+- (NSString *)asBase64EncodedString {
+    return [self base64EncodedStringWithOptions:0];
+}
+
+- (NSString *)asBase64EncodedString: (NSInteger)inFlags {
+    return [self base64EncodedStringWithOptions:inFlags];
+}
+
+#else
+
+#import "Base64Transcoder.h"
 
 + (id)dataWithBase64EncodedString:(NSString *)inString {
     NSData *theEncodedData = [inString dataUsingEncoding:NSASCIIStringEncoding];
@@ -62,5 +82,6 @@
     free(theEncodedData);
     return theString;
 }
+#endif
 
 @end

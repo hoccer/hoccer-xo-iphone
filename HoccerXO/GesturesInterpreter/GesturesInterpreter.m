@@ -15,6 +15,8 @@
 
 @implementation GesturesInterpreter
 
+@synthesize delegate;
+
 static GesturesInterpreter * _instance = nil;
 
 - (id) init
@@ -29,6 +31,9 @@ static GesturesInterpreter * _instance = nil;
 	}
 	return self;
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 - (void)dealloc 
 {
@@ -59,6 +64,9 @@ static GesturesInterpreter * _instance = nil;
 - (void)stop {
     [UIAccelerometer sharedAccelerometer].delegate = nil;
 }
+
+#pragma clang diagnostic pop
+
 
 + (GesturesInterpreter*)instance {
     if (_instance == nil) {

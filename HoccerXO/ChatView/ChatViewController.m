@@ -63,6 +63,7 @@
 #define DEBUG_TABLE_CELLS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
+static const NSTimeInterval kTypingTimerInterval = 3;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
@@ -84,10 +85,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, readonly) NSDateFormatter                * dateFormatter;
 @property (nonatomic, readonly) NSByteCountFormatter           * byteCountFormatter;
 
-@property (nonatomic, assign)   BOOL                             keyBoardShown;
-
 @property (nonatomic, strong)   UITextField                    * autoCorrectTriggerHelper;
 @property (nonatomic, strong)   UILabel                        * messageFieldPlaceholder;
+@property (nonatomic, strong)   NSTimer                        * typingTimer;
 @property (nonatomic, strong)   AudioPlayerStateItemController * audioPlayerStateItemController;
 
 @property (strong) id throwObserver;
@@ -213,10 +213,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     return menuController;
 }
 
-- (void) textViewDidChange:(UITextView *)textView {
-    self.messageFieldPlaceholder.alpha = [textView isEqual: self.messageField] && textView.text && ! [textView.text isEqualToString:@""] ? 0 : 1;
-}
-
 -(void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer {
     //NSLog(@"ChatViewController:handleLongPress");
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
@@ -326,7 +322,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) configureTitle {
     self.titleLabel.text = self.partner.nickNameWithStatus;
-    self.titleLabel.ledOn = self.partner.isOnline;
+    self.titleLabel.ledOn = self.partner.isPresent;
     [self.titleLabel sizeToFit];
 }
 
@@ -366,6 +362,15 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.masterPopoverController = nil;
 }
 
+#pragma mark - UITextViewDelegate Methods
+
+- (void) textViewDidChange:(UITextView *)textView {
+    if ([textView isEqual: self.messageField]) {
+        self.messageFieldPlaceholder.alpha = textView.text && ! [textView.text isEqualToString:@""] ? 0 : 1;
+        [self userDidType];
+    }
+}
+
 #pragma mark - Keyboard Handling
 
 - (void)keyboardWillShow:(NSNotification*) notification {
@@ -382,7 +387,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.tableView.contentOffset = contentOffset;
         [self.view layoutIfNeeded];
     } completion: nil];
-
+    
 }
 
 - (void)keyboardWillHide:(NSNotification*) notification {
@@ -393,14 +398,27 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.keyboardHeight.constant = 0;
         [self.view layoutIfNeeded];
     } completion: nil];
-
 }
 
 - (void) hideKeyboard {
-//    if (self.keyBoardShown) {
-        // NSLog(@"hideKeyboard:self = %@, self.view=%@", self, self.view);
-        [self.view endEditing: NO];
-//    }
+    [self.view endEditing: NO];
+}
+
+#pragma mark - Typing State Handling
+
+- (void) userDidType {
+    if (self.typingTimer) {
+        [self.typingTimer invalidate];
+        self.typingTimer = nil;
+    }
+
+    self.typingTimer = [NSTimer scheduledTimerWithTimeInterval: kTypingTimerInterval target: self selector: @selector(typingTimerFired:) userInfo: nil repeats: NO];
+    [self.chatBackend changePresenceToTyping];
+}
+
+- (void) typingTimerFired: (NSTimer*) timer {
+    [self.chatBackend changePresenceToNotTyping];
+    self.typingTimer = nil;
 }
 
 #pragma mark - Actions
@@ -417,7 +435,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if ([[group otherInvitedMembers] count] > 0) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_wait_for_invitees_message", nil)];
             } else {
-                messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
+                if (group.isNearby) {
+                    messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_group_you_are_alone_message", nil)];
+                } else {
+                    messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
+                }
             }
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: cantSendTitle
                                                              message: messageText
@@ -438,12 +460,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             return;
             
         }
-    } else if (![self.partner.relationshipState isEqualToString: kRelationStateFriend]) {
+    } else if (!self.partner.isFriend) {
         NSString * messageText = nil;
-        if ([self.partner.relationshipState isEqualToString: kRelationStateBlocked]) {
+        if (self.partner.isBlocked) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
-        } else if ([@"YES" isEqualToString:self.partner.isNearby]) {
-            if (!self.partner.isOnline) {
+        } else if (self.partner.isNearby) {
+            if (!self.partner.isPresent) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
             }
         } else {
@@ -515,16 +537,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.currentAttachment = nil;
     self.messageField.text = @"";
     [self textViewDidChange: self.messageField];
+    if (self.typingTimer) {
+        [self.typingTimer fire];
+    }
     [self trashCurrentAttachment];
 }
-
-/*
-- (IBAction)addAttachmentPressed:(id)sender {
-    // NSLog(@"addAttachmentPressed");
-    [self.messageField resignFirstResponder];
-    [self.attachmentPicker showInView: self.view];
-}
-*/
 
 - (IBAction)attachmentPressed: (id)sender {
     // NSLog(@"attachmentPressed");
@@ -813,21 +830,16 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 
                 
                 UIImage * myOriginalImage = attachmentInfo[UIImagePickerControllerOriginalImage];
-                UIImage * myImage = myOriginalImage;
                 NSURL * myFileURL = nil;
                 
                 // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
-                //if ([Attachment tooLargeImage:myImage]) {
-                    myImage = [Attachment qualityAdjustedImage:myOriginalImage];
-                    NSString * newFileName = @"reducedSnapshotImage.jpg";
-                    myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-                    
-                    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-                    [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
-                //} else {
-                //  TODO: save a local copy of the image without JPEG reencoding
-                //}
-
+                UIImage * myImage = [Attachment qualityAdjustedImage:myOriginalImage];
+                NSString * newFileName = @"reducedSnapshotImage.jpg";
+                myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+                
+                float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+                [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
+                
                 // funky method using ALAssetsLibrary
                 ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
                     if (!error) {
@@ -977,8 +989,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 // NSLog(@"Picking still in progress, can't trash - or can I?");
             }
         }
-        
-        [self.managedObjectContext deleteObject: self.currentAttachment];
+        [AppDelegate.instance deleteObject:self.currentAttachment];
+        //[self.managedObjectContext deleteObject: self.currentAttachment];
         self.currentAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
@@ -1421,7 +1433,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     cell.avatar.image = [author avatarImage];
     cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
-    cell.avatar.isOnline = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isOnline;
+    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isPresent;
 
     cell.subtitle.text = [self subtitleForMessage: message];
 
@@ -1945,7 +1957,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     // deletion of deliveries and attachment handled by cascade deletion policies in database model
     
-    [self.managedObjectContext deleteObject: message];
+    //[self.managedObjectContext deleteObject: message];
+    [AppDelegate.instance deleteObject:message];
     [self.chatBackend.delegate saveDatabase];
     
 }

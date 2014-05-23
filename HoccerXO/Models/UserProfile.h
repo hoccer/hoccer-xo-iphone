@@ -13,7 +13,9 @@
 
 // NOT a core data model, but a model nonetheless. 
 
-typedef void(^HXOKeypairRenewalCompletion)();
+typedef void(^HXOKeypairRenewalCompletion)(BOOL success);
+
+FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 
 @interface UserProfile : NSObject <HXOClientProtocol>
 
@@ -24,6 +26,7 @@ typedef void(^HXOKeypairRenewalCompletion)();
 
 @property (nonatomic,strong)   NSString * nickName;
 @property (nonatomic,strong)   NSString * status;
+@property (nonatomic,strong)   NSString * connectionStatus;
 
 @property (nonatomic, strong) NSData   * publicKey;       // public key of this contact
 @property (nonatomic, strong) NSString * publicKeyId;     // id of public key
@@ -61,6 +64,20 @@ typedef void(^HXOKeypairRenewalCompletion)();
 +(NSURL*)getKeyFileURLWithKeyTypeName:(NSString*)keyTypeName forUser:(NSString*)userName withKeyId:(NSString*)keyId;
 
 - (void) renewKeypair;
+- (void) renewKeypairWithSize: (NSUInteger) size;
+- (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion;
 - (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion;
+
+- (BOOL) importKeypair: (NSString*) pemText;
+
+- (BOOL)generateKeyPair:(NSNumber*)bits;
+- (BOOL)hasKeyPair;
+- (BOOL)hasPublicKey;
+- (BOOL)saveOldKeyPair;
+- (BOOL)deleteKeyPair;
+- (BOOL)deleteAllKeys;
+- (SecKeyRef) getPublicKeyRef;
+
+
 
 @end

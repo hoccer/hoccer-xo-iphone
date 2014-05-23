@@ -36,7 +36,6 @@ FOUNDATION_EXPORT NSString * const kHXOSaveDatabasePolicyDelayed;
 
 FOUNDATION_EXPORT NSString * const kHXOPreviewImageWidth;
 //FOUNDATION_EXPORT NSString * const kHXOMessageFontSize;
-FOUNDATION_EXPORT NSString * const kHXORsaKeySize;
 FOUNDATION_EXPORT NSString * const kHXOManualKeyManagement;
 FOUNDATION_EXPORT NSString * const kHXOSignMessages;
 

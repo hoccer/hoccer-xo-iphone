@@ -18,22 +18,16 @@
 
 #import "OpenSSLCrypto.h"
 
+#define RSA_DEBUG NO
 
-//#import "HXOBackend.h" // debug, remove later
 
 @implementation CCRSA
 
-//static const size_t BUFFER_SIZE = 64;
-//static const size_t CIPHER_BUFFER_SIZE = 1024;
 static const uint32_t PADDING = kSecPaddingPKCS1;
 
 static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.publickey";
 static const uint8_t privateKeyIdentifier[] = "com.hoccertalk.client.privatekey";
 static const uint8_t publicPeerKeyIdentifier[]  = "com.hoccertalk.peer.publickey";
-
-
-//SecKeyRef publicKey;
-//SecKeyRef privateKey;
 
 static CCRSA *instance;
 
@@ -41,11 +35,7 @@ static CCRSA *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[CCRSA alloc] init];
-        if ([instance getPrivateKeyRef] == nil || [instance getPublicKeyRef] == nil) {
-            NSLog(@"There are no RSA keys, generate them...");
-            [instance generateKeyPairKeys];
-        }
-    }); 
+    });
     //[instance getCertificate];
     return instance;
 }
@@ -67,29 +57,37 @@ static CCRSA *instance;
     return [NSString stringWithRandomCharactersOfLength: length usingCharacterSet: letters];
 }
 
--(void)generateKeyPairKeysWithOpenSSLandSize:(int)bits {
-    NSString * pubkey;
-    NSString * privkey;
-    [OpenSSLCrypto makeRSAKeyPairPEMWithSize:bits withPublicKey:&pubkey withPrivateKey:&privkey];
-    
-    NSData * pubBits = [CCRSA extractPublicKeyBitsFromPEM:pubkey];
-    NSData * privBits = [CCRSA extractPrivateKeyBitsFromPEM:privkey];
-
-    [self addPrivateKeyBits:privBits];
-    [self addPublicKeyBits:pubBits];
+- (BOOL)hasKeyPair {
+    return [instance getPublicKeyRef] != nil && [instance getPrivateKeyRef] != nil;
 }
 
-
-- (void)generateKeyPairKeys
-{
-    NSNumber * bits =[[HXOUserDefaults standardUserDefaults] valueForKey:kHXORsaKeySize];
-    if ([bits longLongValue] != 1024 /*&& [bits longLongValue] != 2048*/) {
-        [self generateKeyPairKeysWithOpenSSLandSize:[bits intValue]];
-        return;
+-(BOOL)generateKeyPairKeysWithOpenSSLandSize:(int)bits {
+    NSString * pubkey;
+    NSString * privkey;
+    if ([OpenSSLCrypto makeRSAKeyPairPEMWithSize:bits withPublicKey:&pubkey withPrivateKey:&privkey]) {
+    
+        NSData * pubBits = [CCRSA extractPublicKeyBitsFromPEM:pubkey];
+        NSData * privBits = [CCRSA extractPrivateKeyBitsFromPEM:privkey];
+        
+        if (privBits != nil && pubBits != nil) {
+            [self deleteKeyPairKeys];
+            BOOL ok1 = [self addPrivateKeyBits:privBits];
+            BOOL ok2 = [self addPublicKeyBits:pubBits];
+            return ok1 && ok2;
+        }
     }
+    return NO;
+}
+
+- (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits {
     
     NSLog(@"Generating RSA Keys with %@ bits", bits);
-    OSStatus status = noErr;	
+    
+    //if ([bits longLongValue] != 1024 /*&& [bits longLongValue] != 2048*/) {
+        return [self generateKeyPairKeysWithOpenSSLandSize:[bits intValue]];
+    //}
+#if 0
+    OSStatus status = noErr;
     NSMutableDictionary *privateKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *publicKeyAttr = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *keyPairAttr = [[NSMutableDictionary alloc] init];
@@ -112,16 +110,17 @@ static CCRSA *instance;
     status = SecKeyGeneratePair((__bridge CFDictionaryRef)keyPairAttr, &publicKey, &privateKey);
     
     if (status != noErr) {
-        NSLog(@"generateKeyPairKeys: something went wrong, error=%d", (int)status);
+        NSLog(@"#ERROR: generateKeyPairKeys: something went wrong, error=%d", (int)status);
+        return NO;
     }else {
-        NSLog(@"generateKeyPairKeys: successfully generated RSA key pairs");
+        return YES;
     }
     
     // NSLog(@"pubkey : %@", [[self getPublicKeyBits] hexadecimalString]);
     // NSLog(@"privkey: %@", [[self getPrivateKeyBits] hexadecimalString]);
 
     // NSLog(@"pubkeyid : %@", [HXOBackend ownPublicKeyIdString]);
-
+#endif
 }
 
 - (void)testEncryption {
@@ -191,10 +190,10 @@ static CCRSA *instance;
                            &plainBufferSize);
     
     if (status != noErr) {
-        NSLog(@"RSA:decryptWithKey: Error decrypting, OSStatus = %d", (NSInteger)status);
+        NSLog(@"CCRSA:decryptWithKey: Error decrypting, OSStatus = %d", (NSInteger)status);
         NSNotification *notification = [NSNotification notificationWithName:@"decryptionError" object:self];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
-        NSLog(@"%@", [NSThread callStackSymbols]);
+        if (RSA_DEBUG) NSLog(@"%@", [NSThread callStackSymbols]);
     }
     
     //NSLog(@"decoded %d bytes, status %d", (NSInteger)plainBufferSize, (NSInteger)status);
@@ -203,58 +202,6 @@ static CCRSA *instance;
     if (plainBuffer) { free(plainBuffer); }
     return plainData;
 }
-
-
-/* do we need that? - pavel
-- (void)encryptWithPublicKey:(uint8_t *)plainBuffer cipherBuffer:(uint8_t *)cipherBuffer
-{	
-    OSStatus status = noErr;	
-	
-    size_t plainBufferSize = strlen((char *)plainBuffer);
-    size_t cipherBufferSize = CIPHER_BUFFER_SIZE;
-	SecKeyRef key = [self getPublicKeyRef];
-    //NSLog(@"SecKeyGetBlockSize() public = %d", (int)SecKeyGetBlockSize(key));
-    
-    //  Error handling
-    // Encrypt using the public.
-    status = SecKeyEncrypt(key,
-                           PADDING,
-                           plainBuffer,
-                           plainBufferSize,
-                           &cipherBuffer[0],
-                           &cipherBufferSize
-                           );
-    //NSLog(@"encryption result code: %d (size: %d)", (int)status, (int)cipherBufferSize);
-    //NSLog(@"encrypted text: %s", cipherBuffer);
-}
- 
-
-- (void)decryptWithPrivateKey:(uint8_t *)cipherBuffer plainBuffer:(uint8_t *)plainBuffer
-{
-    OSStatus status = noErr;
-	
-    size_t cipherBufferSize = strlen((char *)cipherBuffer);
-	
-    //NSLog(@"decryptWithPrivateKey: length of buffer: %d", (int)BUFFER_SIZE);
-    //NSLog(@"decryptWithPrivateKey: length of input: %d", (int)cipherBufferSize);
-	
-    // DECRYPTION
-    size_t plainBufferSize = BUFFER_SIZE;
-	
-    //  Error handling
-    status = SecKeyDecrypt([self getPrivateKeyRef],
-                           PADDING,
-                           &cipherBuffer[0],
-                           cipherBufferSize,
-                           &plainBuffer[0],
-                           &plainBufferSize
-                           );
-    //NSLog(@"decryption result code: %d (size: %d)", (int)status, (int)plainBufferSize);
-    //NSLog(@"FINAL decrypted text: %s", plainBuffer);
-	
-}
- 
- */
 
 
 - (SecKeyRef)getPublicKeyRef {
@@ -468,8 +415,8 @@ static CCRSA *instance;
     NSData * publicTagSpec = [self publicTagForKeyIdString:publicKeyIdString];
     NSData * privateTagSpec = [self privateTagForKeyIdString:publicKeyIdString];
     
-    NSLog(@"cloneKeyPairKeys, cloning private key to %@", [[NSString alloc] initWithData:privateTagSpec encoding:NSUTF8StringEncoding]);
-    NSLog(@"cloneKeyPairKeys, cloning public key to %@", [[NSString alloc] initWithData:publicTagSpec encoding:NSUTF8StringEncoding]);
+    if (RSA_DEBUG) NSLog(@"cloneKeyPairKeys, cloning private key to %@", [[NSString alloc] initWithData:privateTagSpec encoding:NSUTF8StringEncoding]);
+    if (RSA_DEBUG) NSLog(@"cloneKeyPairKeys, cloning public key to %@", [[NSString alloc] initWithData:publicTagSpec encoding:NSUTF8StringEncoding]);
     
     if (![self addPrivateKeyBits:privateBits withTag:privateTagSpec]) {
         return NO;
@@ -482,38 +429,38 @@ static CCRSA *instance;
 }
 
 - (NSData *) publicTagForKeyIdString:(NSString *) keyIdString {
-    // NSLog(@"publicTagForKeyIdString keyIdString = %@",keyIdString);
+    if (RSA_DEBUG) NSLog(@"publicTagForKeyIdString keyIdString = %@",keyIdString);
     
     NSString * tagStr = [NSString stringWithUTF8String:[publicTag bytes]];
     tagStr = [tagStr stringByAppendingString:@"."];
     tagStr = [tagStr stringByAppendingString:keyIdString];
     
     NSData * tag = [tagStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"publicTagForKeyIdString, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
+    if (RSA_DEBUG) NSLog(@"publicTagForKeyIdString, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
     return tag;
 }
 
 - (NSData *) privateTagForKeyIdString:(NSString *) keyIdString {
-    //NSLog(@"privateTagForKeyIdString keyIdString = %@",keyIdString);
+    if (RSA_DEBUG) NSLog(@"privateTagForKeyIdString keyIdString = %@",keyIdString);
     
     NSString * tagStr = [NSString stringWithUTF8String:[privateTag bytes]];
     tagStr = [tagStr stringByAppendingString:@"."];
     tagStr = [tagStr stringByAppendingString:keyIdString];
     
     NSData * tag = [tagStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"privateTagForKeyIdString, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
+    if (RSA_DEBUG) NSLog(@"privateTagForKeyIdString, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
     return tag;
 }
 
 - (NSData *) publicTagForPeer:(NSString *) peerName {
-    //NSLog(@"publicTagForPeer peerName = %@",peerName);
+    if (RSA_DEBUG) NSLog(@"publicTagForPeer peerName = %@",peerName);
     
     NSString * tagStr = [NSString stringWithUTF8String:[publicPeerTag bytes]];
     tagStr = [tagStr stringByAppendingString:@"."];
     tagStr = [tagStr stringByAppendingString:peerName];
     
     NSData * tag = [tagStr dataUsingEncoding:NSUTF8StringEncoding];
-    //NSLog(@"publicTagForPeer, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
+    if (RSA_DEBUG) NSLog(@"publicTagForPeer, result %@", [[NSString alloc] initWithData:tag encoding:NSUTF8StringEncoding]);
     return tag;
 }
 
@@ -628,7 +575,7 @@ static CCRSA *instance;
     SecItemDelete((__bridge CFDictionaryRef)publicKey);
 }
 
-- (void)cleanKeyPairKeys {
+- (BOOL)deleteKeyPairKeys {
     //[self cleanAllRSAKeys];
     // NSLog(@"Cleaning cleanKeyPairKeys");
 
@@ -637,17 +584,16 @@ static CCRSA *instance;
 	[privateKey setObject:privateTag forKey:(__bridge id)kSecAttrApplicationTag];
 	[privateKey setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
     OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)privateKey);
-    NSLog(@"SecItemDelete returned %ld on privateKey dict %@", myStatus, privateKey);
+    // NSLog(@"SecItemDelete returned %ld on privateKey dict %@", myStatus, privateKey);
 
     
     NSMutableDictionary *publicKey = [[NSMutableDictionary alloc] init];
     [publicKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
 	[publicKey setObject:publicTag forKey:(__bridge id)kSecAttrApplicationTag];
     [publicKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    myStatus = SecItemDelete((__bridge CFDictionaryRef)publicKey);
-    NSLog(@"SecItemDelete returned %ld on publicKey dict %@", myStatus, publicKey);
-    
-    [self generateKeyPairKeys];
+    OSStatus myStatus2 = SecItemDelete((__bridge CFDictionaryRef)publicKey);
+    // NSLog(@"SecItemDelete returned %ld on publicKey dict %@", myStatus, publicKey);
+    return myStatus == noErr && myStatus2 == noErr;
 }
 
 - (SecKeyRef)getKeyRefWithPersistentKeyRef:(CFTypeRef)persistentRef {
@@ -730,7 +676,7 @@ static CCRSA *instance;
 }
 
 
-- (NSDictionary*) findeKeypairsWithPrivatePrefix:(NSData*)privatePrefix withPublicPrefix:(NSData*) publicPrefix {
+- (NSDictionary*) findKeypairsWithPrivatePrefix:(NSData*)privatePrefix withPublicPrefix:(NSData*) publicPrefix {
 
     NSDictionary * query = @{(__bridge id) kSecClass: (__bridge id) kSecClassKey,
                              (__bridge id) kSecAttrKeyType: (__bridge id) kSecAttrKeyTypeRSA,
@@ -766,7 +712,7 @@ static CCRSA *instance;
                 }
                 //NSString * prefixString = [[NSString alloc] initWithData:prefix encoding:NSUTF8StringEncoding];
                 //NSLog(@"result %d = %@",i,resultObj[i]);
-                NSLog(@"tag %d = ‘%@‘",i,tag);
+                if (RSA_DEBUG) NSLog(@"tag %d = ‘%@‘",i,tag);
                 //NSLog(@"priv prefix %d = ‘%@‘",i,privatePrefixString);
                 //NSLog(@"pub  prefix %d = ‘%@‘",i,publicPrefixString);
                 NSString * postFix;
@@ -794,7 +740,7 @@ static CCRSA *instance;
                 
             }
         }
-        NSLog(@"found=%@",found);
+        if (RSA_DEBUG) NSLog(@"found=%@",found);
         return found;
     } else {
         NSLog(@"findKeyPairsWithPrefix: error OSStatus %d",(int)status);
@@ -802,7 +748,7 @@ static CCRSA *instance;
     }
 }
 
-- (void) cleanAllRSAKeys {
+- (BOOL) deleteAllRSAKeys {
     
     NSDictionary * query = @{(__bridge id) kSecClass: (__bridge id) kSecClassKey,
                              (__bridge id) kSecAttrKeyType: (__bridge id) kSecAttrKeyTypeRSA,
@@ -816,14 +762,14 @@ static CCRSA *instance;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef*)&result);
     
     id resultObj = CFBridgingRelease(result);
-    NSLog(@"resultObj = %@", resultObj);
+    //NSLog(@"resultObj = %@", resultObj);
     
     
     int deleted = 0;
     if (status == 0 && resultObj != nil) {
         // do something with the result
         int results = [resultObj count];
-        NSLog(@"found %d keys",results);
+        if (RSA_DEBUG) NSLog(@"deleteAllRSAKeys: found %d keys",results);
         for (int i = 0; i < results;++i ) {
             //NSLog(@"result %d = %@",i,resultObj[i]);
             NSData * atag = resultObj[i][@"atag"];
@@ -833,7 +779,7 @@ static CCRSA *instance;
                 [dict setObject:atag forKey:(__bridge id)kSecAttrApplicationTag];
                 [dict setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
                 OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)dict);
-                NSLog(@"SecItemDelete returned %ld on dict %@", myStatus, dict);
+                if (RSA_DEBUG) NSLog(@"SecItemDelete returned %ld on dict %@", myStatus, dict);
                 if (myStatus == 0) {
                     ++deleted;
                 }
@@ -842,15 +788,16 @@ static CCRSA *instance;
                 NSLog(@"Error no atag for item %d = %@",i,resultObj[i]);
             }
         }
-        NSLog(@"deleted %d keys",deleted);
+        NSLog(@"CCRA: deleted %d keys",deleted);
     } else {
         NSLog(@"cleanAllRSAKeys: find error OSStatus %d",(int)status);
     }
+    return status == noErr;
 }
 
 
 - (NSDictionary*) findKeyPairs {
-    return [self findeKeypairsWithPrivatePrefix:privateTag withPublicPrefix:publicTag];
+    return [self findKeypairsWithPrivatePrefix:privateTag withPublicPrefix:publicTag];
 }
 
 
@@ -863,7 +810,6 @@ static NSString *pKCS1PublicHeader = @"-----BEGIN RSA PUBLIC KEY-----";
 static NSString *pKCS1PublicFooter = @"-----END RSA PUBLIC KEY-----";
 static NSString *pemPrivateHeader = @"-----BEGIN RSA PRIVATE KEY-----";
 static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
-
 
 + (NSString*)makeSSHFormattedPublicKey:(NSData *)publicKeyBits {
     char length[4] = {0,0,0,7};
@@ -908,8 +854,8 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
     [encKey appendBytes:builder length:j + 2];
     [encKey appendData:publicKeyBits];
     
-    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
-    NSLog(@"PEM formatted key:\n%@",returnString);
+    NSString *returnString = [NSString stringWithFormat:@"%@\n%@\n%@\n", x509PublicHeader, [encKey asBase64EncodedString:1], x509PublicFooter];
+    //NSLog(@"PEM formatted key:\n%@",returnString);
     
     return returnString;
 }
@@ -918,26 +864,26 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
 {
     BOOL isX509 = NO;
     
-    NSString *strippedKey = nil;
+    NSString * header, * footer;
     if (([pemPublicKeyString rangeOfString:x509PublicHeader].location != NSNotFound) &&
         ([pemPublicKeyString rangeOfString:x509PublicFooter].location != NSNotFound))
     {
-        strippedKey = [[pemPublicKeyString stringByReplacingOccurrencesOfString:x509PublicHeader withString:@""] stringByReplacingOccurrencesOfString:x509PublicFooter withString:@""];
-        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
+        header = x509PublicHeader;
+        footer = x509PublicFooter;
         isX509 = YES;
     } else if (([pemPublicKeyString rangeOfString:pKCS1PublicHeader].location != NSNotFound) &&
                ([pemPublicKeyString rangeOfString:pKCS1PublicFooter].location != NSNotFound))
     {
-        strippedKey = [[pemPublicKeyString stringByReplacingOccurrencesOfString:pKCS1PublicHeader withString:@""] stringByReplacingOccurrencesOfString:pKCS1PublicFooter withString:@""];
-        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
+        header = pKCS1PublicHeader;
+        footer = pKCS1PublicFooter;
         isX509 = NO;
     } else {
         NSLog(@"extractPrivateKeyBitsFromPEM: not in PEM format");
         return nil;
     }
-    
+
+    NSString *strippedKey = [self extractPayloadFromPEM: pemPublicKeyString header: header footer: footer];
+
     NSData *strippedPublicKeyData = [NSData dataWithBase64EncodedString:strippedKey];
     
     if (isX509)
@@ -1037,19 +983,25 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 }
 
 +(NSData*)extractPrivateKeyBitsFromPEM:(NSString *)pemPrivateKeyString {
-    NSString *strippedKey = nil;
     if (([pemPrivateKeyString rangeOfString:pemPrivateHeader].location != NSNotFound) && ([pemPrivateKeyString rangeOfString:pemPrivateFooter].location != NSNotFound))
     {
-        strippedKey = [[pemPrivateKeyString stringByReplacingOccurrencesOfString:pemPrivateHeader withString:@""] stringByReplacingOccurrencesOfString:pemPrivateFooter withString:@""];
-        strippedKey = [[strippedKey stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+        NSString *strippedKey = [self extractPayloadFromPEM: pemPrivateKeyString header: pemPrivateHeader footer: pemPrivateFooter];
+        if (RSA_DEBUG) NSLog(@"strippedkey:\n%@",strippedKey);
+        return [NSData dataWithBase64EncodedString:strippedKey];
     }
-    else {
-        NSLog(@"importPrivateKeyBits: not in PEM format");
-        return nil;
-    }
-    
-    NSData *privateKeyBits = [NSData dataWithBase64EncodedString:strippedKey];
-    return privateKeyBits;
+    return nil;
+}
+
++ (NSString*) extractPayloadFromPEM: (NSString*) pemString header: (NSString*) header footer: (NSString*) footer {
+    NSRange headerRange = [pemString rangeOfString: header];
+    NSRange footerRange = [pemString rangeOfString: footer];
+    NSUInteger start = headerRange.location + headerRange.length;
+    NSRange payloadRange = NSMakeRange(start, footerRange.location - start);
+
+    return [[[[pemString substringWithRange: payloadRange]
+             stringByReplacingOccurrencesOfString: @"\n" withString: @""]
+             stringByReplacingOccurrencesOfString: @"\r" withString: @""]
+             stringByReplacingOccurrencesOfString: @" "  withString: @""];
 }
 
 -(BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString {
@@ -1057,6 +1009,18 @@ size_t encodeLength(unsigned char * buf, size_t length) {
     return [self addPrivateKeyBits:myBits withTag:privateTag];
 }
 
+- (BOOL) importPublicKeyBits: (NSString*) pemText withTag: (NSData*) tag {
+    NSData * myBits = [CCRSA extractPublicKeyBitsFromPEM: pemText];
+    return [self addPublicKeyBits: myBits withTag: tag];
+}
+
+- (BOOL) importKeypairFromPEM: (NSString*) pemText withPublicTag: (NSData*) tag {
+    return [self importPrivateKeyBits: pemText] && [self importPublicKeyBits: pemText withTag: tag];
+}
+
+- (BOOL) importKeypairFromPEM: (NSString*) pemText {
+    return [self importPrivateKeyBits: pemText] && [self importPublicKeyBits: pemText withTag: publicTag];
+}
 
 + (int)derEncodingGetSizeFrom:(NSData*)buf at:(int*)iterator
 {
@@ -1115,7 +1079,7 @@ size_t encodeLength(unsigned char * buf, size_t length) {
         NSData * modulus = [CCRSA getPublicKeyMod:keyBits];
         return modulus.length * 8;
     } @catch (NSException* ex) {
-        NSLog(@"getPublicKeySize exception: %@", ex);
+        NSLog(@"#ERROR: getPublicKeySize exception: %@", ex);
     }
     return 0;
 }
@@ -1132,6 +1096,11 @@ size_t encodeLength(unsigned char * buf, size_t length) {
                                 CC_SHA256_DIGEST_LENGTH,
                                 (uint8_t *)signedHashBytes,
                                 &signedHashBytesSize);
+    if (sanityCheck != noErr) {
+        NSLog(@"makeSignatureOf failed with error: %d", (int)sanityCheck);
+        if (signedHashBytes) free(signedHashBytes);
+        return nil;
+    }
     signedHash = [NSData dataWithBytes:(const void *)signedHashBytes length:(NSUInteger)signedHashBytesSize];
     if (signedHashBytes) free(signedHashBytes);
     return signedHash;

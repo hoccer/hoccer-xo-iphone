@@ -181,7 +181,7 @@
         if ([self.contact.type isEqualToString:@"Group"]) {
             self.salt =  [Crypto random256BitKey];
             Group * group = (Group*)self.contact;
-            [group syncKeyWithMembership];
+            // [group syncKeyWithMembership];
             NSData * computedId = [Crypto calcSymmetricKeyId:group.groupKey withSalt:group.sharedKeyIdSalt];
             if (KEY_DEBUG) NSLog(@"HXOMessage:setupOutgoingEncryption: using group key %@ with stored id %@ computed id %@",group.groupKey,group.sharedKeyId,computedId);
             if (![computedId isEqualToData:group.sharedKeyId]) {

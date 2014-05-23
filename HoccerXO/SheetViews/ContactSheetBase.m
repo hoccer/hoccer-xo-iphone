@@ -139,7 +139,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
     [super didChangeValueForItem: item];
     if ([item isEqual: self.avatarItem]) {
         self.avatarView.image = item.currentValue;
-        self.avatarView.isOnline = NO;
+        self.avatarView.isPresent = NO;
         self.avatarView.isBlocked = NO;
         self.avatarView.badgeText = nil;
         [self backgroundImageChanged];
@@ -181,15 +181,6 @@ static const NSUInteger kHXOMaxNameLength = 25;
         return image;
     }
     return nil;
-}
-
-- (UIImage*) imageFromDefaultAvatar {
-    CGRect frame = CGRectMake(0, 0, 128, 128);
-    VectorArt * va = [[VectorArt alloc] init];
-    va.path = [self.avatarView.defaultIcon pathScaledToSize: frame.size];
-    va.fillColor = self.avatarView.defaultIcon.fillColor;
-    va.strokeColor = self.avatarView.defaultIcon.strokeColor;
-    return [va imageWithFrame: frame];
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {

@@ -72,12 +72,14 @@ typedef void (^ContinueBlock)();
 
 - (void)saveContext;
 - (void)saveDatabase;
+- (BOOL)deleteObject:(id)object;
 
 - (NSURL *)applicationDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
-- (void) showInvalidCredentialsWithContinueHandler:(ContinueBlock)onNotDeleted;
+- (void) showInvalidCredentialsWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onNotDeleted;
+- (void) showLoginFailedWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onContinue;
 
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 
@@ -105,6 +107,6 @@ typedef void (^ContinueBlock)();
 + (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern;
 
 + (AppDelegate*)instance;
-
++ (void) renewRSAKeyPairWithSize: (NSUInteger) size;
 
 @end

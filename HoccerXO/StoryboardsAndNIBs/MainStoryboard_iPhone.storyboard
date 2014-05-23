@@ -144,12 +144,48 @@
                     <navigationItem key="navigationItem" title="Key" id="HnC-Qh-A6n"/>
                     <connections>
                         <outlet property="dataSheetController" destination="STd-pg-7UE" id="PKT-hh-xT2"/>
+                        <segue destination="tNj-Of-x8v" kind="modal" identifier="createCustomKey" id="ePX-J5-JHB"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mZs-Jr-ULf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="STd-pg-7UE" customClass="KeySheetController"/>
             </objects>
             <point key="canvasLocation" x="1662" y="-1141"/>
+        </scene>
+        <!--Themed Navigation Controller-->
+        <scene sceneID="2Eb-au-ibP">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="tNj-Of-x8v" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UCv-Z3-t2Q">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="HTD-g7-1Gz" kind="relationship" relationship="rootViewController" id="3dg-xT-Ua0"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IeZ-Va-xaP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2114" y="-1141"/>
+        </scene>
+        <!--Custom Key View Controller-->
+        <scene sceneID="KHg-qu-w1k">
+            <objects>
+                <viewController id="HTD-g7-1Gz" customClass="CustomKeyViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Gt6-ad-b8o"/>
+                        <viewControllerLayoutGuide type="bottom" id="rZT-c5-lGc"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IvW-Fo-wQL">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" id="jZ3-cT-vUP"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2g8-Cj-RoX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2554" y="-1141"/>
         </scene>
         <!--Modal View with Navigation Bar Helper-->
         <scene sceneID="FUT-t7-A6G">

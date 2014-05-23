@@ -27,10 +27,15 @@ static NSString * const kHXOAccountIdentifier = @"HXOAccount";
 static NSString * const kHXOSaltIdentifier    = @"HXOSalt";
 static const NSUInteger kHXOPasswordLength    = 23;
 
+const NSUInteger kHXODefaultKeySize    = 2048;
+
 @interface UserProfile ()
 {
     KeychainItemWrapper * _accountItem;
     KeychainItemWrapper * _saltItem;
+    UIImage * _avatarImage;
+    unsigned int _avatarImageVersion;
+    unsigned int _savedAvatarImageVersion;
 }
 
 @property (nonatomic,readonly) SRPClient * srpClient;
@@ -40,6 +45,8 @@ static const NSUInteger kHXOPasswordLength    = 23;
 @implementation UserProfile
 
 @dynamic groupMembershipList;
+@synthesize connectionStatus;
+@dynamic avatarImage;
 
 - (id) init {
     self = [super init];
@@ -83,6 +90,15 @@ static const NSUInteger kHXOPasswordLength    = 23;
     [[HXOUserDefaults standardUserDefaults] synchronize];
 }
 
+- (UIImage *) avatarImage {
+    return _avatarImage;
+}
+
+- (void) setAvatarImage:(UIImage *)newAvatarImage {
+    _avatarImage = newAvatarImage;
+    _avatarImageVersion++;
+}
+
 - (void) loadProfile {
     self.nickName       = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName];
     /*
@@ -94,17 +110,39 @@ static const NSUInteger kHXOPasswordLength    = 23;
     NSData * avatar     = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAvatar];
     self.status         = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOUserStatus];
     self.avatarImage = [UIImage imageWithData: avatar];
+    _savedAvatarImageVersion = 0;
+    _avatarImageVersion = 0;
 }
 
 - (void) saveProfile {
-    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-    NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, photoQualityCompressionSetting/10.0);
+    
+    NSMutableDictionary * itemsChanged = [NSMutableDictionary new];
+    if (_avatarImageVersion != _savedAvatarImageVersion) {
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        NSData * avatar = UIImageJPEGRepresentation(self.avatarImage, photoQualityCompressionSetting/10.0);
+        [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
+        itemsChanged[kHXOAvatar] = @YES;
+        _savedAvatarImageVersion = _avatarImageVersion;
+    }
+    
+    
+    if (![self.nickName isEqualToString:[[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]]) {
+        itemsChanged[kHXONickName] = @YES;
+    }
+    NSString * oldStatus = [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOUserStatus];
+    if (self.status != nil || self.status != oldStatus) {
+        if (![self.status isEqualToString:oldStatus]) {
+            itemsChanged[kHXOUserStatus] = @YES;
+        }
+    }
+    
     [[HXOUserDefaults standardUserDefaults] setValue: self.nickName       forKey: kHXONickName];
-    [[HXOUserDefaults standardUserDefaults] setValue: avatar              forKey: kHXOAvatar];
     [[HXOUserDefaults standardUserDefaults] setValue: self.status         forKey: kHXOUserStatus];
     [[HXOUserDefaults standardUserDefaults] synchronize];
 
-    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+    id userInfo = @{ @"itemsChanged":itemsChanged};
+    NSLog(@"profileUpdatedByUser info %@",userInfo);
+    NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self userInfo:userInfo];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
@@ -321,6 +359,13 @@ static const NSUInteger kHXOPasswordLength    = 23;
     NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
 }
 
+- (BOOL) hasPublicKey {
+    if (![HXOBackend isInvalid:self.publicKey]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
 
 - (NSString *) publicKeyId {
     return [HXOBackend keyIdString:[self publicKeyIdData]];
@@ -335,15 +380,50 @@ static const NSUInteger kHXOPasswordLength    = 23;
     return[[CCRSA sharedInstance] getPublicKeyBits];
 }
 
+- (SecKeyRef) getPublicKeyRef {
+    return[[CCRSA sharedInstance] getPublicKeyRef];
+}
+
+- (BOOL)generateKeyPair:(NSNumber*)bits {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa generateKeyPairKeysWithBits:bits];
+}
+
+- (BOOL)hasKeyPair {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa hasKeyPair];
+}
+
+- (BOOL)saveOldKeyPair {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa cloneKeyPairKeys];
+}
+
+- (BOOL)deleteKeyPair {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa deleteKeyPairKeys];
+}
+
+- (BOOL)deleteAllKeys {
+    CCRSA * rsa = [CCRSA sharedInstance];
+    return [rsa deleteAllRSAKeys];
+}
+
 - (void) renewKeypair {
+    [self renewKeypairWithSize: kHXODefaultKeySize];
+}
+
+- (void) renewKeypairWithSize: (NSUInteger) bits {
     [self willChangePublicKey];
-    [self renewKeypairInternal];
+    [self renewKeypairInternal: bits];
     [self didChangePublicKey];
 }
 
-- (void) renewKeypairInternal {
-    [[CCRSA sharedInstance] cloneKeyPairKeys];
-    [[CCRSA sharedInstance] cleanKeyPairKeys];
+- (BOOL) renewKeypairInternal: (NSUInteger) bits {
+    if (self.hasKeyPair) {
+        [self saveOldKeyPair];
+    }
+    return [self generateKeyPair: @(bits)];
 }
 
 - (void) willChangePublicKey {
@@ -359,16 +439,30 @@ static const NSUInteger kHXOPasswordLength    = 23;
 }
 
 
-- (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion {
-    // Start the long-running task and return immediately.
+- (void) renewKeypairWithSize: (NSUInteger) size completion: (HXOKeypairRenewalCompletion) completion {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{ [self willChangePublicKey]; });
-        [self renewKeypairInternal];
+        BOOL success = [self renewKeypairInternal: size];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self didChangePublicKey];
-            completion();
+            completion(success);
         });
     });
+}
+
+- (void) renewKeypairWithCompletion: (HXOKeypairRenewalCompletion) completion {
+    [self renewKeypairWithSize: kHXODefaultKeySize completion: completion];
+}
+
+- (BOOL) importKeypair: (NSString*) pemText {
+    if (self.hasKeyPair) {
+        [self saveOldKeyPair];
+    }
+    //NSLog(@"pemText:%@\n",pemText);
+    [self willChangePublicKey];
+    BOOL success = [[CCRSA sharedInstance] importKeypairFromPEM: pemText];
+    [self didChangePublicKey];
+    return success;
 }
 
 @end

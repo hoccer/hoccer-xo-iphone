@@ -98,8 +98,10 @@
     if (_deleteGroupFlag || (_newGroupCreated && _canceled)) {
         if ([self.group.groupState isEqualToString: kRelationStateKept]) {
             [self.backend deleteInDatabaseAllMembersAndContactsofGroup:self.group];
-            NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
-            [moc deleteObject: self.group];
+            //NSManagedObjectContext * moc = self.backend.delegate.managedObjectContext;
+            NSLog(@"GroupViewController: cleanupGroup: deleteObject: self.group");
+            //[moc deleteObject: self.group];
+            [AppDelegate.instance deleteObject:self.group];
             [self.appDelegate saveDatabase];
         } else {
             if (self.group.iAmAdmin) {
@@ -258,6 +260,7 @@
             // TODO: clean-up group handling and replace this mess with something sane.
             if (self.group) {
                 NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
+                NSLog(@"GroupViewController: cleanupGroup: deleteObject: self.group");
                 [moc deleteObject: self.group];
             }
         } else {
@@ -367,9 +370,9 @@
 
 - (ProfileSection*) groupUtilities {
     NSMutableArray * utilities = [[NSMutableArray alloc] init];
-    if ([self.group.myGroupMembership.state isEqualToString:@"joined"]) {
+    if (self.group.myGroupMembership.isJoined) {
         [utilities addObject: _chatWithContactItem];
-    } else if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
+    } else if (self.group.myGroupMembership.isInvited) {
         [utilities addObject: _joinGroupItem];
     } else {
         NSLog(@"unhandled state - membership: %@ state: %@", self.group.myGroupMembership, self.group.myGroupMembership.state);

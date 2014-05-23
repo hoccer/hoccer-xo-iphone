@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>forceFilecacheURL</key>
+	<string>https://filecache.talk.hoccer.de:8444/</string>
 	<key>updateLocations</key>
 	<false/>
 	<key>httpServerPassword</key>
@@ -10,8 +12,6 @@
 	<false/>
 	<key>signMessages</key>
 	<false/>
-	<key>rsaKeySize</key>
-	<integer>2048</integer>
 	<key>autoSaveMedia</key>
 	<false/>
 	<key>playAlertSounds</key>
@@ -45,6 +45,8 @@
 	<key>supportTag</key>
 	<string></string>
 	<key>reportCrashes</key>
+	<false/>
+	<key>fullSync</key>
 	<false/>
 </dict>
 </plist>

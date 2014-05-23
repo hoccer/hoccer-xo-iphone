@@ -16,4 +16,6 @@
 
 #ifdef DEBUG
 # define WITH_WEBSERVER
+// get rid of warning in DDTTYLogger.m
+# define kCGImageAlphaNoneSkipLast ((CGBitmapInfo)kCGImageAlphaNoneSkipLast)
 #endif

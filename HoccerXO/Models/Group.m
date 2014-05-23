@@ -34,9 +34,8 @@
 @dynamic keyDateMillis;
 @dynamic lastChangedMillis;
 
-@synthesize updatesRefused;
-// @dynamic myGroupMembership;
-
+@synthesize shouldPresentInvitation;
+@synthesize presentingInvitation;
 
 - (NSString*) sharedKeyIdString {
     return [self.sharedKeyId asBase64EncodedString];
@@ -72,46 +71,32 @@
 
 - (NSSet*) otherJoinedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"joined"];
+        return ![self isEqual:obj.contact] && obj.isJoined;
     }];
     return theMemberSet;
 }
 
 - (NSSet*) otherInvitedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"invited"];
+        return ![self isEqual:obj.contact] && obj.isInvited;
     }];
     return theMemberSet;
 }
 
-- (NSSet*) activeMembersWithClientIds:(NSArray*)clientIds {
+- (NSSet*) adminMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        BOOL stateOK = ([obj.state isEqualToString:@"invited"] || [obj.state isEqualToString:@"joined"]);
-        BOOL pubKeyOK = obj.contactPubKeyId != nil && obj.contactHasPubKey;
-        BOOL contains = [clientIds containsObject:obj.contactClientId];
-        if (GROUPKEY_DEBUG) NSLog(@"activeMembersWithClientIds:filtering: %@", obj.contactClientId);
-        if (GROUPKEY_DEBUG) NSLog(@"activeMembersWithClientIds:stateOK: %@", stateOK ? @"YES" : @"NO");
-        if (GROUPKEY_DEBUG) NSLog(@"activeMembersWithClientIds:pubKeyOK: %@", pubKeyOK ? @"YES" : @"NO");
-        if (GROUPKEY_DEBUG) NSLog(@"activeMembersWithClientIds:contains: %@", contains ? @"YES" : @"NO");
-        return stateOK && pubKeyOK && contains;
+        return obj.isJoined && obj.isAdmin;
     }];
-    if (GROUPKEY_DEBUG) NSLog(@"activeMembersWithClientIds:passed %d members", theMemberSet.count);
     return theMemberSet;
 }
 
-- (NSSet*) activeMembersNeedingKeyUpdate {
-    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        BOOL stateOK = ([obj.state isEqualToString:@"invited"] || [obj.state isEqualToString:@"joined"]);
-        BOOL pubKeyOK = obj.contactPubKeyId != nil && obj.contactHasPubKey;
-        BOOL validKey = obj.hasValidGroupKey;
-        if (GROUPKEY_DEBUG) NSLog(@"activeMembersNeedingKeyUpdate:stateOK: %@", stateOK ? @"YES" : @"NO");
-        if (GROUPKEY_DEBUG) NSLog(@"activeMembersNeedingKeyUpdate:pubKeyOK: %@", pubKeyOK ? @"YES" : @"NO");
-        if (GROUPKEY_DEBUG) NSLog(@"activeMembersNeedingKeyUpdate:validKey: %@", validKey ? @"YES" : @"NO");
-        return stateOK && !validKey && pubKeyOK;
+- (NSSet*) knownAdminMembers {
+    NSSet * theMemberSet = [self.adminMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact.nickName != nil;
     }];
-    if (GROUPKEY_DEBUG) NSLog(@"activeMembersNeedingKeyUpdate:passed %d members", theMemberSet.count);
     return theMemberSet;
 }
+
 
 - (NSDate *) latestMemberChangeDate {
     NSSet * myMembers = self.members;
@@ -141,12 +126,13 @@
         if (![self hasGroupKey]) {
             NSLog(@"ERROR: Group:generateNewGroupKey: hasGroupKey failed");
         }
-        if (GROUPKEY_DEBUG) [self checkGroupKey];
+        //if (GROUPKEY_DEBUG) [self checkGroupKey];
     } else {
         NSLog(@"Group:generateNewGroupKey: can't generate (not admin), group nick %@, id %@", self.nickName, self.clientId);
         NSLog(@"%@", [NSThread callStackSymbols]);
     }
 }
+
 
 -(BOOL) copyKeyFromMember:(GroupMembership*)member {
     if (GROUPKEY_DEBUG) NSLog(@"Group:copyKeyFromMember: %@",member.contact.clientId);
@@ -155,6 +141,11 @@
         NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:myGroupKey withSalt:member.sharedKeyIdSalt];
         if (![myGroupKeyId isEqualToData:member.sharedKeyId]) {
             NSLog(@"Group:copyKeyFromMember: groupKeyId mismatch, shared key id from decrypted group key does not match computed key id, group nick %@, member nick %@, computed myGroupKeyId=%@, stored member.sharedKeyId=%@", self.nickName, member.contact.nickName,myGroupKeyId, member.sharedKeyId);
+            // trash bad key values
+            member.sharedKeyIdSalt = nil;
+            member.sharedKeyId = nil;
+            member.cipheredGroupKey = nil;
+            member.keySupplier = nil;
             return NO;
         }
         self.groupKey = myGroupKey;
@@ -165,7 +156,7 @@
         if (![self hasGroupKey]) {
             NSLog(@"ERROR: Group:copyKeyFromMember: hasGroupKey failed");
         }
-        if (GROUPKEY_DEBUG) [self checkGroupKey];
+        // if (GROUPKEY_DEBUG) [self checkGroupKey];
         return YES;
     } else {
         NSLog(@"ERROR: Group:copyKeyFromMember: member.decryptedGroupKey failed");
@@ -173,6 +164,7 @@
     return NO;
 }
 
+/*
 -(BOOL) hasValidGroupKey {
     if (self.groupKey == nil || self.sharedKeyIdSalt == nil) {
         return NO;
@@ -186,67 +178,26 @@
     if (![myGroupKeyId isEqualToData:self.sharedKeyId]) {
         if (GROUPKEY_DEBUG) NSLog(@"Group hasValidGroupKey mismatch: stored id = %@, computed id = %@", self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
         //NSLog(@"%@",[NSThread callStackSymbols]);
+        NSLog(@"Group hasValidGroupKey: trashing bad group key for group %@ nick %@", self.clientId, self.nickName);
+        // trash invalid group key
+        self.groupKey = nil;
+        self.sharedKeyIdSalt = nil;
+        self.sharedKeyId = nil;
+        self.keySupplier = nil;
+        self.keyDate = nil;
         return NO;
     }
     if (GROUPKEY_DEBUG) NSLog(@"Group:hasValidGroupKey: YES");
     return YES;
 }
-
-// return YES when member key has been updated from group, otherwise NO
-// result can be used to decide if key shall be updated on server
-- (BOOL)syncKeyWithMembership {
-    if (GROUPKEY_DEBUG) NSLog(@"Group:syncKeyWithMember:");
-    GroupMembership * ownMember = self.myGroupMembership;
-    if (ownMember == nil) {
-        if (GROUPKEY_DEBUG) NSLog(@"Group:syncKeyWithMember: no own member");
-        return NO;
-    }
-    if (ownMember.hasLatestGroupKey || (ownMember.hasValidGroupKey && !self.hasValidGroupKey)) {
-        if (GROUPKEY_DEBUG) NSLog(@"Group:syncKeyWithMember: copyKeyFromMember");
-        [self copyKeyFromMember:ownMember];
-        return NO;
-    }
-    if (self.hasValidGroupKey && !ownMember.hasLatestGroupKey) {
-        if (GROUPKEY_DEBUG) NSLog(@"Group:syncKeyWithMember: updateKeyFromGroup");
-        [ownMember updateKeyFromGroup];
-        return YES;
-    }
-    if (GROUPKEY_DEBUG) NSLog(@"Group:syncKeyWithMember: NO");
-    return NO;
+*/
+- (BOOL) hasAdmin {
+    return self.adminMembers.count > 0;
 }
 
-// just for debugging purposes
--(BOOL) checkGroupKey {
-    NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:self.groupKey withSalt:self.sharedKeyIdSalt];
-    if (myGroupKeyId == nil) {
-        NSLog(@"Group checkGroupKey: nil id, self.groupKey = %@, self.sharedKeyIdSalt = %@", self.groupKey, self.sharedKeyIdSalt);
-        NSLog(@"%@",[NSThread callStackSymbols]);
-        return NO;
-    }
-    if (![myGroupKeyId isEqualToData:self.sharedKeyId]) {
-        //@throw [NSException exceptionWithName: @"checkGroupKeyFailure" reason: @"stored id does not match computed id" userInfo: nil];
-        NSLog(@"Group checkGroupKey mismatch, deleting group key: stored id = %@, computed id = %@", self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
-        NSLog(@"%@",[NSThread callStackSymbols]);
-        self.groupKey = nil;
-        if (self.myGroupMembership != nil) {
-            if (self.myGroupMembership.sharedKeyId != nil && [self.myGroupMembership.sharedKeyId isEqualToData:self.sharedKeyId]) {
-                if ([self copyKeyFromMember:self.myGroupMembership]) {
-                    myGroupKeyId = [Crypto calcSymmetricKeyId:self.groupKey withSalt:self.sharedKeyIdSalt];
-                    NSLog(@"Group checkGroupKey: copied key from member, stored id = %@, computed id = %@", self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
-                    return YES;
-                }
-            }
-            NSLog(@"Group checkGroupKey: deleting all myGroupMembership key material");
-            self.myGroupMembership.cipheredGroupKey = nil;
-            self.myGroupMembership.memberKeyId = nil;
-            self.myGroupMembership.sharedKeyIdSalt = nil;
-            self.myGroupMembership.sharedKeyId = nil;
-        }
-        return NO;
-    }
-    return YES;
+- (BOOL) hasKnownAdmins {
+    return self.knownAdminMembers.count > 0;
 }
-
 
 - (BOOL) iAmAdmin {
     return [self.myGroupMembership.role isEqualToString:@"admin"];
@@ -257,64 +208,25 @@
 }
 
 
-- (BOOL) hasKeyOnServer {
-    BOOL result = self.keySupplier != nil && self.sharedKeyId != nil && self.sharedKeyIdSalt != nil && self.keyDate != nil;
-    if (GROUPKEY_DEBUG) NSLog(@"Group;hasKeyOnServer: %@", result ? @"YES" : @"NO");
-    return result;
+- (BOOL)isKeptGroup {
+    return [self.groupState isEqualToString:@"kept"];
 }
 
-- (BOOL) keySettingInProgress {
-    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return obj.keySettingInProgress;
-    }];
-    return theMemberSet.count > 0;
+- (BOOL)isRemovedGroup {
+    return [self.groupState isEqualToString:@"none"];
 }
 
-- (BOOL)canBeKeyMaster:(NSString*)clientID {
-    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        if ([obj.contactClientId isEqualToString:clientID]) {
-            if (GROUPKEY_DEBUG) NSLog(@"canBeKeyMaster: found clientid %@", clientID);
-            BOOL stateOK = ([obj.state isEqualToString:@"invited"] || [obj.state isEqualToString:@"joined"]);
-            BOOL isAdmin = [obj.role isEqualToString:@"admin"];
-            BOOL masterIsOffline = obj.contact.connectionStatus != nil && [obj.contact.connectionStatus isEqualToString:@"offline"];
-            if (GROUPKEY_DEBUG) NSLog(@"canBeKeyMaster: stateOK %@", stateOK ? @"YES" : @"NO");
-            if (GROUPKEY_DEBUG) NSLog(@"canBeKeyMaster: isAdmin %@", isAdmin ? @"YES" : @"NO");
-            if (GROUPKEY_DEBUG) NSLog(@"canBeKeyMaster: masterIsOffline %@", masterIsOffline ? @"YES" : @"NO");
-            return stateOK && isAdmin && !masterIsOffline;
-        } else {
-            return NO;
-        }
-    }];
-    return theMemberSet.count > 0;
+- (BOOL)isExistingGroup {
+    return [self.groupState isEqualToString:@"exists"];
 }
 
-- (BOOL) hasKeyMaster {
-    NSDate * estimatedServerTime = [HXOBackend.instance estimatedServerTime];
-    NSTimeInterval passed = [estimatedServerTime timeIntervalSinceDate:self.keyDate];
-    if (GROUPKEY_DEBUG) NSLog(@"Group;hasKeyMaster: estimatedServerTime %@, keyDate %@, passed = %f", estimatedServerTime, self.keyDate, passed);
-    BOOL result = [self hasKeyOnServer] && [[HXOBackend.instance estimatedServerTime] timeIntervalSinceDate:self.keyDate] < 30.0;
-    if (GROUPKEY_DEBUG) NSLog(@"Group:hasKeyMaster: maybe %@", result ? @"YES" : @"NO");
-    if (result && ![self.keySupplier isEqualToString:UserProfile.sharedProfile.clientId]) {
-        result = [self canBeKeyMaster:self.keySupplier];
-        if (GROUPKEY_DEBUG) NSLog(@"Group:hasKeyMaster: canBeKeyMaster: %@", result ? @"YES" : @"NO");
-    } else {
-        if (GROUPKEY_DEBUG) NSLog(@"Group:hasKeyMaster: %@", result ? @"YES" : @"NO");
-    }
-    return result;
+- (BOOL)isIncompleteGroup {
+    return [self.groupState isEqualToString:@"incomplete"];
 }
 
-- (BOOL) iAmKeyMaster {
-    BOOL result = self.iAmAdmin && self.hasKeyMaster && [self.keySupplier isEqualToString:UserProfile.sharedProfile.clientId];
-    if (GROUPKEY_DEBUG) NSLog(@"Group:iAmKeyMaster: %@", result ? @"YES" : @"NO");
-    return result;
+- (BOOL)isNearbyGroup{
+    return [self.groupType isEqualToString:@"nearby"];
 }
-
-- (BOOL) iCanSetKeys {
-    BOOL result = (!self.hasKeyMaster || self.iAmKeyMaster) && self.iAmAdmin;
-    if (GROUPKEY_DEBUG) NSLog(@"Group:iCanSetKeys: %@", result ? @"YES" : @"NO");
-    return result;
-}
-
 
 //public class TalkGroup {
 //    public String groupTag;

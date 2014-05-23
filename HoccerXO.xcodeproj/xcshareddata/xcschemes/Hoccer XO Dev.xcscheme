@@ -192,7 +192,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "../../Choriner.gpx"
+         identifier = "../../Guineastr.gpx"
          referenceType = "0">
       </LocationScenarioReference>
    </LaunchAction>

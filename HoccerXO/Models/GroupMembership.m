@@ -91,6 +91,38 @@
     self.sharedKeyIdSalt = [NSData dataWithBase64EncodedString:theB64String];
 }
 
+- (BOOL)isJoined {
+    return [@"joined" isEqualToString: self.state];
+}
+
+- (BOOL)isInvited {
+    return [@"invited" isEqualToString: self.state];
+}
+
+- (BOOL)isStateNone {
+    return [@"none" isEqualToString: self.state];
+}
+
+- (BOOL)isGroupRemoved {
+    return [@"groupRemoved" isEqualToString: self.state];
+}
+
+- (BOOL)isMember {
+    return [@"member" isEqualToString: self.role];
+}
+
+- (BOOL)isAdmin {
+    return [@"admin" isEqualToString: self.role];
+}
+
+- (BOOL)hasRoleMemberOrAdmin {
+    return self.isMember || self.isAdmin;
+}
+
+- (BOOL)isRoleNone {
+    return [@"none" isEqualToString: self.role];
+}
+
 - (NSData *) calcCipheredGroupKey {
     // get public key of receiver first
     SecKeyRef myReceiverKey = [self.contact getPublicKeyRef];
@@ -106,54 +138,6 @@
     }
     if (GROUPKEY_DEBUG) NSLog(@"hasCipheredGroupKey: NO");
     return NO;
-}
-
-- (BOOL) hasLatestGroupKey {
-    if (self.sharedKeyId != nil) {
-        if ([self.sharedKeyId isEqualToData:self.group.sharedKeyId]) {
-            if (GROUPKEY_DEBUG) NSLog(@"Member:hasLatestGroupKey: YES (1) -- member %@", self.contactClientId);
-            return YES;
-        } else {
-            BOOL result = [self.sharedKeyDate compare:self.group.keyDate] == NSOrderedDescending;
-            if (GROUPKEY_DEBUG) NSLog(@"Member:hasLatestGroupKey: self.sharedKeyDate= %@,  self.group.keyDate=%@", self.sharedKeyDate, self.group.keyDate);
-            if (GROUPKEY_DEBUG) NSLog(@"Member:hasLatestGroupKey: %@ --- member %@", result ? @"YES (2)" : @"NO (2)", self.contactClientId);
-            return result;
-            // true if self.sharedKeyDate later than self.group.keyDate
-        }
-    }
-    if (GROUPKEY_DEBUG) NSLog(@"Member:hasLatestGroupKey: NO (3)");
-    return NO;
-}
-
--(BOOL) hasValidGroupKey {
-    if (self.isOwnMembership) {
-        // only own membership has key material
-        if (!self.hasCipheredGroupKey) {
-            if (GROUPKEY_DEBUG) NSLog(@"Member:hasValidGroupKey: NO (0)");
-            return NO;
-        }
-        NSData * myDecryptedKey = [self decryptedGroupKey];
-        NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:myDecryptedKey withSalt:self.sharedKeyIdSalt];
-        if (myGroupKeyId == nil) {
-            if (GROUPKEY_DEBUG) NSLog(@"Own GroupMembership hasValidGroupKey: nil id, self.groupKey = %@, self.sharedKeyIdSalt = %@", myDecryptedKey, self.sharedKeyIdSalt);
-            //NSLog(@"%@",[NSThread callStackSymbols]);
-            if (GROUPKEY_DEBUG) NSLog(@"Own Member:hasValidGroupKey: NO (1)");
-            return NO;
-        }
-        if (![myGroupKeyId isEqualToData:self.sharedKeyId]) {
-            if (GROUPKEY_DEBUG) NSLog(@"GroupMembership hasValidGroupKey mismatch: stored id = %@, computed id = %@", self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
-            //NSLog(@"%@",[NSThread callStackSymbols]);
-            if (GROUPKEY_DEBUG) NSLog(@"Own Member:hasValidGroupKey: NO (2)");
-            return NO;
-        }
-        if (GROUPKEY_DEBUG) NSLog(@"Own Member:hasValidGroupKey: YES");
-        return YES;
-    } else {
-        // for other group key, we check the meta data
-        BOOL result = self.hasGroupKeyCryptedWithLatestPublicKey && self.hasLatestGroupKey;
-        if (GROUPKEY_DEBUG) NSLog(@"Other Member hasValidGroupKey: %@", result ? @"YES" : @"NO");
-        return result;
-    }
 }
 
 - (BOOL) isOwnMembership {
@@ -178,7 +162,7 @@
 
 - (BOOL)contactHasPubKey {
     if (self.isOwnMembership) {
-        BOOL result = UserProfile.sharedProfile.publicKey != nil;
+        BOOL result = UserProfile.sharedProfile.hasPublicKey;
         if (GROUPKEY_DEBUG) NSLog(@"Member(selfcontact):contactHasPubKey: %@", result ? @"YES" : @"NO");
         return result;
     } else {
@@ -186,101 +170,6 @@
         if (GROUPKEY_DEBUG) NSLog(@"Member(%@):contactHasPubKey: %@", self.contact.clientId, result ? @"YES" : @"NO");
         return result;
     }
-}
-
-- (BOOL) hasGroupKeyCryptedWithLatestPublicKey {
-    NSString * myKeyId = self.contactPubKeyId;
-    BOOL result = self.memberKeyId != nil && myKeyId != nil && [self.memberKeyId isEqualToString:myKeyId];
-    if (GROUPKEY_DEBUG) NSLog(@"Member:hasGroupKeyCryptedWithLatestPublicKey: %@", result ? @"YES" : @"NO");
-    return result;
-}
-
-/*
-- (BOOL) copyKeyFromGroup {
-    if ([self hasCipheredGroupKey]) {
-        self.cipheredGroupKey = [self calcCipheredGroupKey];
-        self.sharedKeyIdSalt = self.group.sharedKeyIdSalt;
-        NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:self.decryptedGroupKey withSalt:self.sharedKeyIdSalt];
-        if (![myGroupKeyId isEqualToData:self.group.sharedKeyId]) {
-            NSLog(@"ERROR:copyKeyFromGroup: something went wrong");
-            return NO;
-        }
-        self.sharedKeyId = myGroupKeyId;
-        self.memberKeyId = self.contact.publicKeyId;
-        [self checkGroupKey];
-        NSLog(@"Member:copyKeyFromGroup: YES");
-        return YES;
-    }
-    NSLog(@"Member:copyKeyFromGroup: NO");
-    return NO;
-}
-*/
-
-- (void) updateKeyFromGroup {
-    if (self.isOwnMembership) {
-        // handle self contact
-        NSString * myPublicKeyIdString = [[UserProfile sharedProfile] publicKeyId];
-        CCRSA * rsa = [CCRSA sharedInstance];
-        SecKeyRef myReceiverKey = [rsa getPublicKeyRef];
-        self.cipheredGroupKey = [rsa encryptWithKey:myReceiverKey plainData:self.group.groupKey];
-        self.memberKeyId = myPublicKeyIdString;
-        self.sharedKeyId = self.group.sharedKeyId;
-        self.sharedKeyIdSalt = self.group.sharedKeyIdSalt;
-    } else {
-        // handle other contact
-        self.memberKeyId = self.contact.publicKeyId;
-        self.cipheredGroupKey = [self calcCipheredGroupKey];
-        self.sharedKeyId = self.group.sharedKeyId;
-        self.sharedKeyIdSalt = self.group.sharedKeyIdSalt;
-    }
-}
-
-
-/*
--(void) checkGroupKey {
-    NSData * myGroupKeyId;
-    NSString * name;
-    if ([self.group isEqual:self.contact]) {
-        myGroupKeyId = [Crypto calcSymmetricKeyId:self.decryptedGroupKey withSalt:self.sharedKeyIdSalt];
-        name = @"SELF";
-    } else {
-        NSLog(@"Member id %@ checkGroupKey: using stored group key (and not member key) for id calculation, your mileage may vary", self.contact.clientId);
-        myGroupKeyId = [Crypto calcSymmetricKeyId:self.group.groupKey withSalt:self.sharedKeyIdSalt];
-        name = self.contact.nickName != nil ?  self.contact.nickName : self.contact.clientId;
-    }
-    if (![myGroupKeyId isEqualToData:self.sharedKeyId]) {
-        NSLog(@"Member %@ checkGroupKey: stored id = %@, computed id = %@", name, self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
-        NSLog(@"%@",[NSThread callStackSymbols]);
-        //@throw [NSException exceptionWithName: @"Membership checkGroupKeyFailure" reason: @"stored id does not match computed id" userInfo: nil];
-    } else {
-        NSLog(@"Member %@ checkGroupKey OK: stored id = %@, computed id = %@", name, self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);        
-    }
-}
-*/
-
--(BOOL) checkGroupKeyTransfer:(NSString*)cipheredGroupKeyString withKeyId:(NSString*)keyIdString withSharedKeyId:(NSString*)sharedKeyIdString withSharedKeyIdSalt:(NSString*)sharedKeyIdSaltString {
-    if (GROUPKEY_DEBUG) NSLog(@"checkGroupKeyTransfer: cipheredGroupKeyString = %@, keyIdString = %@, sharedKeyIdString=%@, sharedKeyIdSaltString=%@", cipheredGroupKeyString,keyIdString,sharedKeyIdString, sharedKeyIdSaltString);
-    if (keyIdString == nil) {
-        NSLog(@"Member checkGroupKeyTransfer: no key material received");
-        return NO;
-    }
-    NSData * cipheredGroupKey =[NSData dataWithBase64EncodedString:cipheredGroupKeyString];
-    NSData * myGroupKey = [self decryptGroupKey:cipheredGroupKey withMemberKeyId:keyIdString];
-    if (myGroupKey == nil) {
-        NSLog(@"Member checkGroupKeyTransfer: can't decode");
-        return NO;
-    }
-    NSData * sharedKeyId =[NSData dataWithBase64EncodedString:sharedKeyIdString];
-    NSData * sharedKeyIdSalt =[NSData dataWithBase64EncodedString:sharedKeyIdSaltString];
-    NSData * myGroupKeyId = [Crypto calcSymmetricKeyId:myGroupKey withSalt:sharedKeyIdSalt];
-    
-    if (![myGroupKeyId isEqualToData:sharedKeyId]) {
-        NSLog(@"WARNING: Member checkGroupKeyTransfer: stored id = %@, computed id = %@", self.sharedKeyIdString, [myGroupKeyId asBase64EncodedString]);
-        if (GROUPKEY_DEBUG) NSLog(@"%@",[NSThread callStackSymbols]);
-        //@throw [NSException exceptionWithName: @"Membership checkGroupKeyFailure" reason: @"stored id does not match computed id" userInfo: nil];
-        return NO;
-    }
-    return YES;
 }
 
 - (NSData *) decryptedGroupKey {

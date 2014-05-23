@@ -18,6 +18,7 @@
 #import "HXOUI.h"
 #import "avatar_contact.h"
 #import "avatar_group.h"
+#import "avatar_location.h"
 #import "GroupMembership.h"
 #import "SmallContactCell.h"
 #import "DatasheetViewController.h"
@@ -98,7 +99,7 @@ static int  groupMemberContext;
 }
 
 - (BOOL) isEditable {
-    return ! self.group || ! [self.group.myGroupMembership.state isEqualToString: @"invited"];
+    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup);
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -185,15 +186,23 @@ static int  groupMemberContext;
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
+        
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return (self.group.iAmAdmin || self.groupInStatuNascendi) && [super isItemVisible: item];
+        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
-        return [self.group.myGroupMembership.state isEqualToString: @"invited"];
+        return self.group.myGroupMembership.isInvited;
+        
     } else if ([item isEqual: self.destructiveButton]) {
+        if (self.group && self.group.isNearbyGroup && self.group.isKeptGroup) {
+            return YES;
+        }
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
@@ -227,10 +236,10 @@ static int  groupMemberContext;
         self.avatarView.isBlocked = self.contact.isBlocked;
         if ( ! self.contact.avatarImage) {
             // a liitle extra somethin for those without avatars ;)
-            self.avatarView.isOnline = self.contact.isOnline;
+            self.avatarView.isPresent = self.contact.isPresent;
             self.avatarView.badgeText = [HXOUI messageCountBadgeText: self.contact.unreadMessages.count];
         } else {
-            self.avatarView.isOnline = NO;
+            self.avatarView.isPresent = NO;
             self.avatarView.badgeText = nil;
         }
     } else if ([item isEqual: self.inviteMembersItem]) {
@@ -309,7 +318,7 @@ static int  groupMemberContext;
         if ([self.group.groupState isEqualToString: kRelationStateKept]) {
             return NSLocalizedString(@"group_delete_data", nil);
         }
-        if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
+        if (self.group.myGroupMembership.isInvited) {
             return NSLocalizedString(@"group_decline_invitation", nil);
         } else {
             if (self.group.iAmAdmin) {
@@ -375,7 +384,7 @@ static int  groupMemberContext;
 
     [self addProfileObservers];
 
-    self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [self.group.groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
     [super inspectedObjectDidChange];
 }
@@ -468,8 +477,11 @@ static int  groupMemberContext;
 
 - (void) deleteGroupData {
     [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: self.group];
-    NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
-    [moc deleteObject: self.group];
+    //NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
+    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: self.group");
+    //[moc deleteObject: self.group];
+    [AppDelegate.instance deleteObject:self.group];
+    self.inspectedObject = nil;
     [self.appDelegate saveDatabase];
 }
 
@@ -479,7 +491,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
         } else {
             NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
-            [self.chatBackend getGroupsForceAll: YES];
+            [self.chatBackend getGroupsForceAll: YES withCompletion:nil];
         }
     }];
 }
@@ -490,14 +502,14 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
         } else {
             NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
-            [self.chatBackend getGroupsForceAll:YES];
+            [self.chatBackend getGroupsForceAll:YES withCompletion:nil];
         }
     }];
 }
 
 - (void) deleteContact {
     NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
-    if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend] || [self.contact.relationshipState isEqualToString: kRelationStateKept]) {
+    if (self.contact.isGroupFriend || self.contact.isKept) {
         [self.chatBackend handleDeletionOfContact: self.contact];
     } else {
         [self.chatBackend depairClient: self.contact.clientId handler:^(BOOL success) {
@@ -654,7 +666,7 @@ static int  groupMemberContext;
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
         BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
-        BOOL isInvited = [membership.state isEqualToString: @"invited"];
+        BOOL isInvited = membership.isInvited;
         SmallContactCell * cell = (SmallContactCell*)aCell;
         cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.alpha     = isInvited ? 0.5 : 1;
@@ -663,7 +675,7 @@ static int  groupMemberContext;
         cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
-        cell.avatar.isOnline      = ! isMyMembership && contact.isOnline;
+        cell.avatar.isPresent      = ! isMyMembership && contact.isPresent;
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];

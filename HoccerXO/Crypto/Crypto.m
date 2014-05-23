@@ -83,7 +83,7 @@ NSData * randomBytes(size_t count) {
         NSLog(@"%@",[NSThread callStackSymbols]);
         return nil;
     }
-    const int rounds = 10000;
+    const int rounds = 100;
     
     NSMutableData* keyIdData = [NSMutableData dataWithLength:32];
     unsigned char * keyId = [keyIdData mutableBytes];

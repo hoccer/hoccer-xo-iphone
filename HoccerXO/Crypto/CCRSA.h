@@ -20,7 +20,12 @@
 
 + (CCRSA*)sharedInstance;
 
-- (void)generateKeyPairKeys;
+- (BOOL)hasKeyPair;
+- (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits;
+- (BOOL)deleteKeyPairKeys;
+- (BOOL)cloneKeyPairKeys;
+- (BOOL)deleteAllRSAKeys;
+
 - (void)testEncryption;
 - (NSString *)generateRandomString:(NSUInteger)length;
 
@@ -38,6 +43,9 @@
 - (BOOL)addPublicKeyBits:(NSData *)d_key withTag:(NSData *)d_tag;
 - (BOOL)addPublicKey:(NSString *)key withTag:(NSData *)tag;
 - (BOOL)addPublicPeerKey:(NSString *)key withPeerName:(NSString *)peerName;
+
+- (BOOL) importKeypairFromPEM: (NSString*) pemText;
+- (BOOL) importKeypairFromPEM: (NSString*) pemText withPublicTag: (NSData*) tag;
 
 - (BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString;
 
@@ -57,9 +65,6 @@
 - (NSData *)getKeyBitsForPeerRef:(NSString *)peerName;
 
 - (void)getCertificate;
-
--(void)cleanKeyPairKeys;
--(BOOL)cloneKeyPairKeys;
 
 - (NSData *) publicTagForPeer:(NSString *) peerName;
 

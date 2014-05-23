@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SSHKEYGEN=${SSHKEYGEN:=ssh-keygen}
+KEYNAME=test_key
+OUT=${KEYNAME}.pem
+
+${SSHKEYGEN} $* -N "" -f ${KEYNAME}
+echo >> ${KEYNAME}
+${SSHKEYGEN} -e -m pem -f ${KEYNAME}.pub >> ${KEYNAME}
+echo -n "fingerprint: " > ${OUT}
+${SSHKEYGEN} -l -f ${KEYNAME}.pub >> ${OUT}
+echo -e "ssh-keygen options: $*\n" >> ${OUT}
+cat ${KEYNAME} >> ${OUT}
+rm ${KEYNAME}.pub ${KEYNAME}
+

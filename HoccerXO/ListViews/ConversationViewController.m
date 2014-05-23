@@ -26,14 +26,19 @@
 #import "GesturesInterpreter.h"
 #import "SoundEffectPlayer.h"
 
+#define TRACE_NOTIFICATIONS NO
+
 @interface ConversationViewController ()
 
 @property (strong) id catchObserver;
 @property (strong) id messageObserver;
+@property (strong) id loginObserver;
 @property (strong) NSDate * catchDate;
 @property (strong) HXOMessage * caughtMessage;
 @property (strong) HXOMessage * lastMessage;
 @property (strong) NSDate * lastMessageDate;
+
+@property (strong) UIBarButtonItem * addButton;
 
 @end
 
@@ -52,6 +57,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.addButton = self.navigationItem.rightBarButtonItem;
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
@@ -88,13 +94,13 @@
 
     [AppDelegate setWhiteFontStatusbarForViewController:self];
 
-    NSLog(@"ConversationView: viewWillAppear, adding observers");
+    if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: viewWillAppear, adding observers");
 
     self.catchObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"gesturesInterpreterDidDetectCatch"
                                                                            object:nil
                                                                             queue:[NSOperationQueue mainQueue]
                                                                        usingBlock:^(NSNotification *note) {
-                                                                           NSLog(@"ConversationView: Catch");
+                                                                           if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: Catch");
                                                                            [SoundEffectPlayer catchDetected];
                                                                            const NSTimeInterval catchMessageBeforeGestureTime = 5.0;
                                                                            if (self.lastMessageDate != nil && [self.lastMessageDate timeIntervalSinceNow] > -catchMessageBeforeGestureTime) {
@@ -113,7 +119,7 @@
                                                                            object:nil
                                                                             queue:[NSOperationQueue mainQueue]
                                                                        usingBlock:^(NSNotification *note) {
-                                                                           NSLog(@"ConversationView: Message received");
+                                                                           if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: Message received");
                                                                            NSDictionary * info = [note userInfo];
                                                                            HXOMessage * message = (HXOMessage *)info[@"message"];
                                                                            if (message != nil) {
@@ -132,26 +138,31 @@
                                                                            }
 
                                                                        }];
+    self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"loginSucceeded"
+                                                                             object:nil
+                                                                              queue:[NSOperationQueue mainQueue]
+                                                                         usingBlock:^(NSNotification *note) {
+                                                                             if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: loginSucceeded");
+                                                                             [HXOEnvironment.sharedInstance setActivation:self.inNearbyMode];
+                                                                         }];
+
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
-    NSLog(@"ConversationView: viewWillDisappear, removing observers");
+    if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: viewWillDisappear, removing observers");
     if (self.catchObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.catchObserver];
     }
     if (self.messageObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.messageObserver];
     }
+    if (self.loginObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.loginObserver];
+    }
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
-    /*
-    if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
-        UINavigationController * profileView = [self.storyboard instantiateViewControllerWithIdentifier: @"modalProfileNavigationController"];
-        [self.navigationController presentViewController: profileView animated: YES completion: nil];
-    }
-     */
 }
 
 - (void)didReceiveMemoryWarning
@@ -168,6 +179,8 @@
     } else {
         [GesturesInterpreter.instance stop];
     }
+    // hide plus button in nearby mode ... just for chrissy
+    self.navigationItem.rightBarButtonItem = self.inNearbyMode ? nil : self.addButton;
 }
     
 #pragma mark - Table View
@@ -192,11 +205,7 @@
 }
 
 - (void) addButtonPressed: (id) sender {
-    if (self.inNearbyMode) {
-        // [self performSegueWithIdentifier: @"showGroup" sender: sender];
-    } else {
-        [self invitePeople];
-    }
+    [self invitePeople];
 }
 
 - (id) entityName {
@@ -225,7 +234,7 @@
         [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     } else {
         // NearBy
-        [predicates addObject: [NSPredicate predicateWithFormat: @"isNearby == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat: @"isNearbyTag == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
     }
 }
 

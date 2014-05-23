@@ -7,6 +7,9 @@
 "delete" = "Delete";
 "enter"  = "Enter";
 "no"     = "No";
+"go"     = "Go";
+"continue"= "Continue";
+"abort"   ="Abort";
 
 "search_placeholder" = "search";
 
@@ -97,6 +100,10 @@
 "backend_stopping"       = "disconnecting...";
 "backend_no_internet"    = "no internet connection";
 
+"backend_login_temporarily_failed_title"               = "Login failed";
+"backend_login_temporarily_failed_continue_question"   = "The Login has failed beacause there is a temporary technical problem with the connection or the server. ('%@') Do you want to keep trying to log in?";
+
+
 //==============================================================================
 // Certificates
 //==============================================================================
@@ -120,6 +127,7 @@
 "chat_message_too_long_message"     = "Message is longer than %d bytes. Please keep it brief.";
 "chat_wait_for_invitees_message"    = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
 "chat_group_you_are_alone_message"  = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
+"chat_nearby_group_you_are_alone_message"  = "You can not send a message to this group because there are no other active nearby users. Other users close to you must also activate 'Nearby' to join this group.";
 "chat_no_groupkey_message"          = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
 "chat_nearby_contact_offline"       = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
 
@@ -211,10 +219,12 @@
 "credentials_and_database_deleted_title"       = "Credentials Deleted";
 "credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer XO.";
 
-"credentials_invalid_title"                    = "Login failed";
-"credentials_invalid_delete_question"          = "Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_title"                    = "Credentials not accepted";
+"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') If this is a new device and you have transfered data from the old device, you can transfer your credentials from your old device under 'Profile'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
+"credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
+
 
 //==============================================================================
 // Database
@@ -336,13 +346,30 @@
 "key_state_verified"                             = "Verfied";
 "key_state_mistrusted"                           = "Mistrusted";
 
-"key_fingerprint_title"                          = "Id";
+"key_fingerprint_title"                          = "Id:";
 "key_fingerprint_info"                           = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
-"key_length_item"                                = "Key Length";
+"key_length_item"                                = "Key Length:";
 "key_length_unit_format"                         = "%@ bit";
 
 "key_renew_keypair"                              = "Renew RSA Keypair";
 "key_renew_keypair_info"                         = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+
+"key_renew_option_sheet_title"                   = "Create new RSA Keypair?";
+"key_renew_option_automatic"                     = "Automatic";
+"key_renew_option_manual"                        = "Manual";
+
+"key_renewal_hud_title"                          = "Generating Keys…";
+
+"key_custom_generate_nav_title"                  = "Generate";
+"key_custom_import_nav_title"                    = "Import";
+"key_custom_size_instructions"                   = "Generate a RSA key pair with a custom size. Note that the generation of large keys takes a conciderable amount of time and battery power.\n\nThis feature is intended for curious security enthusiasts.";
+"key_custom_import_instructions"                 = "Import your own RSA key pair in PEM format.\n\nThis feature is intended for curious security enthusiasts.";
+
+"key_export_keypair"                             = "Export";
+"key_export_option_sheet_title"                  = "Export RSA keys to pasteboard:";
+"key_export_option_public"                       = "Public Key";
+"key_export_option_private"                      = "Private Key";
+"key_export_option_both"                         = "Both Keys";
 
 "key_import_public_btn_title"                    = "Import Public Key";
 "key_import_private_btn_title"                   = "Import Private Key";
@@ -359,14 +386,17 @@
 "key_export_success_title"                       = "Key exported";
 "key_export_failed"                              = "Sorry, the key export has failed.";
 "key_export_failed_title"                        = "Key export failed";
-"key_export_confirm_btn_title"                   = "Export";
 "key_export_private_safety_question"             = "Your private key can be used to decrypt messages sent to you. Therefore exporting a private key is generally not recommended. Do you want to export it to the pasteboard anyway?";
+"key_export_confirm_btn_title"                   = "Export";
 
 "key_verify_public_btn_title"                    = "Mark key verified";
 "key_unverify_public_btn_title"                  = "Mark key not verified";
 
 "key_verified_public_key_changed_title"          = "Verified Key has Changed";
 "key_verified_public_key_changed_message_format" = "The key of contact '%@' has changed, and the old key had been verified. Verify the new key for additional security.";
+
+"key_delete_all"                                 = "Delete All Keys";
+"key_delete_all_safety_question"                 = "Delete all keys and generate a new one using default settings?";
 
 //==============================================================================
 // Permissions

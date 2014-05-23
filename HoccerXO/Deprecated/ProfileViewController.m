@@ -67,6 +67,8 @@ typedef enum ActionSheetTags {
 @property (nonatomic,strong) AvatarView * avatarView;
 @property (nonatomic,strong) UIImageView * avatarBackgroundView;
 
+@property (nonatomic,strong) NSDictionary * itemsChanged; // add a NSNumber BOOL with value @ for each item (avatar, key, name) that has been edited
+
 @end
 
 @implementation ProfileViewController
@@ -141,6 +143,7 @@ typedef enum ActionSheetTags {
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear: animated];
+    self.itemsChanged = [NSMutableDictionary new];
     if (_mode == ProfileViewModeFirstRun) {
         if ( ! self.isEditing) {
             [self setEditing: YES animated: YES];
@@ -614,6 +617,7 @@ typedef enum ActionSheetTags {
         if ( ! _canceled) {
             if (_renewKeypairRequested) {
                 [self performKeypairRenewal];
+                self.itemsChanged[@"key"] = @YES;
                 _renewKeypairRequested = NO;
                 _renewKeyPairItem.editLabel = _renewKeyPairItem.currentValue = [self renewKeypairButtonTitle];
                 [self updateKeyFingerprint];
@@ -910,15 +914,18 @@ typedef enum ActionSheetTags {
             _fingerprintSection = [ProfileSection sectionWithName: @"FingerprintSection" items: _fingerprintItem,_verifyPublicKeyItem,_fingerprintInfoItem,nil];
         }
 
-        if ([self.contact.relationshipState isEqualToString: kRelationStateFriend]) {
+        if (self.contact.isFriend) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _chatWithContactItem, _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: kRelationStateBlocked]) {
+            
+        } else if (self.contact.isBlocked) {
             _utilitySection = [ProfileSection sectionWithName: @"UtilitySection" items: _blockContactItem, nil];
             return @[ _coreSection, _utilitySection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend]) {
+            
+        } else if ([self.contact.isGroupFriend]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
-        } else if ([self.contact.relationshipState isEqualToString: kRelationStateKept]) {
+            
+        } else if ([self.contact.isKept]) {
             return @[ _coreSection/*, _profileItemsSection*/, _fingerprintSection, _destructiveSection];
         } else {
             return @[_coreSection, _fingerprintSection];//, _profileItemsSection, _fingerprintSection];
@@ -959,6 +966,8 @@ typedef enum ActionSheetTags {
 
 - (void) save {
     // TODO: proper size handling
+    NSMutableDictionary changeSet = [NSMutableDictionary new];
+    
     CGFloat scale;
     if (_avatarItem.currentValue.size.height > _avatarItem.currentValue.size.width) {
         scale = 128.0 / _avatarItem.currentValue.size.width;
@@ -969,21 +978,31 @@ typedef enum ActionSheetTags {
     UIImage * scaledAvatar = [_avatarItem.currentValue imageScaledToSize: size];
 
     id model = [self getModelObject];
-    [model setAvatarImage: scaledAvatar];
-    [model setAvatarURL: nil];
-    if ([model respondsToSelector: @selector(setAvatarUploadURL:)]) {
-        [model setAvatarUploadURL: nil];
-    }
-
-    for (ProfileItem* item in _allProfileItems) {
-        if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
-            [model setValue: item.currentValue forKey: item.valueKey];
+    
+    NSNumber * avatarChanged = self.itemsChanged[@"avatar"];
+    if ([avatarChanged boolValue]) {
+        [model setAvatarImage: scaledAvatar];
+        [model setAvatarURL: nil];
+        if ([model respondsToSelector: @selector(setAvatarUploadURL:)]) {
+            [model setAvatarUploadURL: nil];
         }
     }
 
+    for (ProfileItem* item in _allProfileItems) {
+        
+        if (item.currentValue != nil && ! [item.currentValue isEqual: @""]) {
+            if (![item.currentValue isEqual:model valueForKey:item.valueKey]) {
+                self.itemsChanged[item.name] = @YES;
+            }
+            [model setValue: item.currentValue forKey: item.valueKey];
+        }
+    }
+    
     if ([model isKindOfClass: [UserProfile class]]) {
         [[UserProfile sharedProfile] saveProfile];
-        NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self];
+        id userInfo = @{ @"itemsChanged":self.itemsChanged};
+        // NSLog(@"profileUpdatedByUser info %@",userInfo);
+        NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self userInfo:userInfo];
         [[NSNotificationCenter defaultCenter] postNotification:notification];
     }
     if ( ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]) {
@@ -1270,6 +1289,7 @@ typedef enum ActionSheetTags {
     if (attachmentInfo != nil) {
         UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
         [self updateAvatar: image];
+        self.itemsChanged[@"avatar"] = @YES;
     }
 }
 

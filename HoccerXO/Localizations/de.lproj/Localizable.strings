@@ -7,6 +7,9 @@
 "delete" = "Löschen";
 "enter"  = "Eingeben";
 "no"     = "Nein";
+"go"     = "Los";
+"continue"= "Weitermachen";
+"abort"   ="Beenden";
 
 "search_placeholder" = "suchen";
 
@@ -97,6 +100,9 @@
 "backend_stopping"       = "Verbindung wird beendet...";
 "backend_no_internet"    = "Keine Internetverbindung";
 
+"backend_login_temporarily_failed_title"               = "Anmeldung fehlgeschlagen";
+"backend_login_temporarily_failed_continue_question"   = "Die Anmeldung ist aufgrund eines vorübergehenden technischen Problems mit der Verbindung oder dem Server fehlgeschlagen.('%@') Wollen sie es weiter versuchen?";
+
 //==============================================================================
 // Certificates
 //==============================================================================
@@ -121,6 +127,7 @@
 "chat_message_too_long_message"     = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
 "chat_wait_for_invitees_message"    = "Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
 "chat_group_you_are_alone_message"  = "Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
+"chat_nearby_group_you_are_alone_message"  = "Du kannst keine Nachrichten an die Gruppe verschicken niemand in der Nähe aktiv ist. Andere Nutzer müssen auch die ‘In der Nähe'-Funktion auswählen um in der Gruppe zu erscheinen.";
 "chat_no_groupkey_message"          = "Leider kann die Nachricht nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
 "chat_nearby_contact_offline"       = "Leider kann die Nachricht nicht versendet werden, weil der Kontakt sich nicht mehr im Umfeld befindet oder abgemeldet ist und keine Freundschaftsbeziehung besteht.";
 
@@ -213,9 +220,10 @@
 "credentials_and_database_deleted_title"       = "Zugangsdaten gelöscht";
 "credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer XO neu.";
 
-"credentials_invalid_title"                    = "Anmeldung fehlgeschlagen";
-"credentials_invalid_delete_question"          = "Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
+"credentials_invalid_title"                    = "Zugangsdaten zurückgewiesen";
+"credentials_invalid_delete_question"          = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Falls dies ein neues Gerät ist und du Daten von einem alten Gerät übertragen hast, kannst du dort die alten Zugangsdaten unter 'Profil' exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
 
+"credentials_and_database_really_delete_title" = "Zugangsdaten und Datenbank wirklich löschen?";
 "credentials_database_delete_btn_title"        = "Alles löschen";
 
 //==============================================================================
@@ -338,13 +346,30 @@
 "key_state_verified"                             = "Verifiziert";
 "key_state_mistrusted"                           = "Misstraut";
 
-"key_fingerprint_title"                          = "Id";
+"key_fingerprint_title"                          = "Id:";
 "key_fingerprint_info"                           = "Für ein Extra an Sicherheit vergleiche diesen Fingerabdruck mit dem Fingerabdruck den Deine Freunde in Deiner Kontaktkarte sehen.";
-"key_length_item"                                = "Schlüssellänge";
+"key_length_item"                                = "Schlüssellänge:";
 "key_length_unit_format"                         = "%@ Bit";
 
 "key_renew_keypair"                              = "RSA-Schlüssel erneuern";
 "key_renew_keypair_info"                         = "Wenn dein Gerät in falschen Händen war kannst du hier deine [Schlüssel erneuern](http://hoccer.com/xo/explain/new_keys).";
+
+"key_renew_option_sheet_title"                   = "Neues RSA Schlüsselpaar erzeugen?";
+"key_renew_option_automatic"                     = "Automatisch";
+"key_renew_option_manual"                        = "Manuell";
+
+"key_renewal_hud_title"                          = "Generiere Schlüssel…";
+
+"key_custom_generate_nav_title"                  = "Erzeugen";
+"key_custom_import_nav_title"                    = "Importieren";
+"key_custom_size_instructions"                   = "Erzeuge einen RSA Schlüssel mit bestimmter Länge. Das Erzeugen grosser Schlüssel dauert lange und belastet die Akkulaufzeit.\n\nDiese Funktion ist für neugierige Sicherheitsenthusiasten gedacht.";
+"key_custom_import_instructions"                 = "Importiere dein eigens RSA Schlüsselpaar im PEM Format.\n\nDiese Funktion ist für neugierige Sicherheitsenthusiasten gedacht.";
+
+"key_export_keypair"                             = "Exportieren";
+"key_export_option_sheet_title"                  = "RSA Schlüssel in die Zwischenablage exportieren:";
+"key_export_option_public"                       = "Öffentlicher Schlüssel";
+"key_export_option_private"                      = "Privater Schlüssel";
+"key_export_option_both"                         = "Beide Schlüssel";
 
 "key_import_public_btn_title"                    = "Öffentl. Schlüssel importieren";
 "key_import_private_btn_title"                   = "Priv. Schlüssel importieren";
@@ -364,13 +389,14 @@
 "key_export_confirm_btn_title"                   = "Exportieren";
 "key_export_private_safety_question"             = "Mit deinem privaten Schlüssel können an dich gesendete Nachrichten entschlüsselt werden. Wir raten daher grundsätzlich vom Export ab. Willst du den Schlüssel dennoch in die Zwischenablage exportieren?";
 
-
-
 "key_verify_public_btn_title"                    = "Als verifiziert markieren";
 "key_unverify_public_btn_title"                  = "Verifikation aufheben";
 
 "key_verified_public_key_changed_title"          = "Verifizierter Schlüssel wurde geändert.";
 "key_verified_public_key_changed_message_format" = "Der von dir verifizierte öffentliche Schlüssel von Partner '%@' hat sich geändert. Verifizieren sie den Schlüssel erneut für bessere Sicherheit";
+
+"key_delete_all"                                 = "Alle Schlüssel löschen";
+"key_delete_all_safety_question"                 = "Alle Schlüssel löschen und einen neuen Standardschlüssel anlegen?";
 
 //==============================================================================
 // Permissions

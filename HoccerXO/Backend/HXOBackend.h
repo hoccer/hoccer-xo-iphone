@@ -22,7 +22,7 @@
 
 typedef void (^InviteTokenHanlder)(NSString*);
 typedef void (^GenerateIdHandler)(NSString*);
-typedef void (^SrpHanlder)(NSString*);
+typedef void (^SrpHanlder)(NSString*, NSDictionary * error);
 typedef void (^RelationshipHandler)(NSArray*);
 typedef void (^GroupsHandler)(NSArray*);
 typedef void (^MembershipsHandler)(NSArray*);
@@ -42,6 +42,7 @@ typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
 typedef void (^UpdateEnvironmentHandler)(NSString*);
+typedef void (^DateHandler)(NSDate* date);
 
 @protocol HXODelegate <NSObject>
 
@@ -68,6 +69,7 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 @property (nonatomic) NSTimeInterval latestKnownServerTimeOffset;
 
 @property (atomic, strong) NSString *connectionInfo;
+@property (atomic, strong) NSDictionary * serverInfo;
 
 @property (readonly, nonatomic) NSArray * certificates;
 
@@ -96,9 +98,9 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
-- (void) updateGroupKeysForMyGroupMemberships;
+//- (void) updateGroupKeysForMyGroupMemberships;
 
-- (void) getGroupsForceAll:(BOOL)forceAll;
+- (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)done;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
@@ -109,6 +111,22 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;
+
+- (void) modifyPresenceClientName: (NSString*) clientName handler:(GenericResultHandler)handler;
+- (void) modifyPresenceClientStatus: (NSString*) clientStatus handler:(GenericResultHandler)handler;
+- (void) modifyPresenceAvatarURL: (NSString*) avatarURL handler:(GenericResultHandler)handler;
+- (void) modifyPresenceKeyId: (NSData*) keyId handler:(GenericResultHandler)handler;
+- (void) modifyPresenceConnectionStatus: (NSString*) connectionStatus handler:(GenericResultHandler)handler;
+
+// Call one of the following five function after one of the presence fields has been updated
+- (void) modifyPresenceClientNameWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceClientStatusWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceAvatarURLWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceKeyIdWithHandler:(GenericResultHandler)handler;
+- (void) modifyPresenceConnectionStatusWithHandler:(GenericResultHandler)handler;
+
+- (void) changePresenceToTyping;
+- (void) changePresenceToNotTyping;
 
 - (void) start: (BOOL) performRegistration;
 - (void) stop;
@@ -129,7 +147,7 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler;
 
-- (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
+- (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
 - (void) handleDeletionOfContact:(Contact*)contact;
 
 
@@ -150,11 +168,6 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 
 -(Contact *) getContactByClientId:(NSString *) theClientId;
 
-/*
-+ (NSString *) ownPublicKeyIdString;
-+ (NSData *) ownPublicKeyId;
-+ (NSData *) ownPublicKey;
- */
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;
 
@@ -183,8 +196,6 @@ typedef void (^UpdateEnvironmentHandler)(NSString*);
 + (BOOL) isZeroData:(NSData*)theData;
 + (BOOL) isInvalid:(NSData*)theData;
 
-#ifdef DEBUG
 + (NSString*)checkForceFilecacheUrl:(NSString*)theURL;
-#endif
 
 @end

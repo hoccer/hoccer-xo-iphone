@@ -28,7 +28,7 @@
 @dynamic latestMessageTime;
 @dynamic nickName;
 @dynamic status;
-@dynamic isNearby;
+@dynamic isNearbyTag;
 
 // @dynamic currentTimeSection;
 @dynamic unreadMessages;
@@ -122,26 +122,6 @@ NSString * const kRelationStateKept        = @"kept";
 }
 
 
-/*
-- (NSDate*) sectionTimeForMessageTime: (NSDate*) date {
-    return [NSDate dateWithTimeIntervalSince1970:100];
-    
-    if ((self.latestMessageTime == nil) ||
-        [date timeIntervalSinceDate: self.latestMessageTime] > kTimeSectionInterval ||
-        self.currentTimeSection == nil)
-    {
-        self.currentTimeSection = date;
-    } else {
-        if ([date timeIntervalSinceDate:self.currentTimeSection] < 0) {
-            // date is before self.currentTimeSection
-            return date; // TODO: this will introduce a new time section, the proper way would be to search all existing time sections and choose the right one; however, timeAccepted and timeSection must yield the same sort order, otherwise we will crash
-        }
-    }
-    return self.currentTimeSection;
-}
-*/
-
-
 - (SecKeyRef) getPublicKeyRef {
     CCRSA * rsa = [CCRSA sharedInstance];
     SecKeyRef myResult = [rsa getPeerKeyRef:self.clientId];
@@ -183,45 +163,108 @@ NSString * const kRelationStateKept        = @"kept";
 
 
 - (NSString*) nickNameWithStatus {
-    if ([self.relationshipState isEqualToString: kRelationStateKept]) {
+    if (self.isKept) {
         return [NSString stringWithFormat:@"%@ ❌", self.nickName];
     }
     if (self.isBlocked) {
         return self.nickName;
     }
-    if ([self.type isEqualToString:@"Group"]) {
-        if ([self.myGroupMembership.group.groupState isEqualToString: kRelationStateKept]) {
-            return [NSString stringWithFormat:@"%@ ❌", self.nickName];
-        }
+    if (self.isGroup) {
         Group * group = (Group*)self;
         if ([[group otherJoinedMembers] count] == 0) {
             return [NSString stringWithFormat:@"%@ ⭕", self.nickName];
         }
     }
-    if ([self.relationshipState isEqualToString: kRelationStateNone]) {
+    if (self.isNotRelated) {
         return [NSString stringWithFormat:@"%@ ❓", self.nickName];
     }
     NSString * name = self.nickName;
-    if ([self.relationshipState isEqualToString: kRelationStateGroupFriend]) {
+    if (self.isGroupFriend) {
         name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
-    }    
-    if ( ! self.connectionStatus || self.isOnline || [self.connectionStatus isEqualToString:@"offline"]) {
+    }
+    if ( self.isTyping) {
+        name = [NSString stringWithFormat:@"%@ 💬", self.nickName];
+    }
+    if ( self.isBackground) {
+        name = [NSString stringWithFormat:@"%@ 💤", self.nickName];
+    }
+    if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
         return name;
     } else {
+        // show special connection status
         return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
     }
 }
 
+- (BOOL) isGroup {
+    return [@"Group" isEqualToString:self.type];
+}
+
 - (BOOL) isBlocked {
-    return [self.relationshipState isEqualToString: kRelationStateBlocked];
+    return [kRelationStateBlocked isEqualToString: self.relationshipState];
 }
 
 - (BOOL) isFriend {
-    return [self.relationshipState isEqualToString: kRelationStateFriend];
+    return [kRelationStateFriend isEqualToString: self.relationshipState];
+}
+
+- (BOOL) isGroupFriend {
+    return [kRelationStateGroupFriend isEqualToString: self.relationshipState];
+}
+
+- (BOOL) isRelationKept {
+    return [kRelationStateKept isEqualToString: self.relationshipState];
+}
+- (BOOL) isGroupKept {
+    return [kRelationStateKept isEqualToString: self.myGroupMembership.group.groupState];
+}
+
+- (BOOL) isKept {
+    if (self.isGroup) {
+        return self.isGroupKept;
+    } else {
+        return self.isRelationKept;
+    }
+}
+
+- (BOOL) isNotRelated {
+    return [kRelationStateNone isEqualToString: self.relationshipState];
+}
+
+- (BOOL) isOffline {
+    return self.connectionStatus == nil || [ @"offline" isEqualToString: self.connectionStatus];
+}
+
+- (BOOL) isBackground {
+    return [@"background" isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isOnline {
-    return [self.connectionStatus isEqualToString: @"online"];
+    return [@"online" isEqualToString: self.connectionStatus];
+}
+
+- (BOOL) isTyping {
+    return [@"typing" isEqualToString: self.connectionStatus];
+}
+
+- (BOOL) isPresent {
+    return self.isOnline || self.isTyping;
+}
+
+- (BOOL) isConnected {
+    return self.isPresent || self.isBackground;
+}
+
+- (BOOL) isNearbyContact {
+    return [@"YES" isEqualToString: self.isNearbyTag];
+}
+
+- (BOOL) isNearby {
+    if (self.isGroup) {
+        return [(Group*)self isNearbyGroup];
+    } else {
+        return self.isNearbyContact;
+    }
 }
 
 - (NSString*) groupMembershipList {

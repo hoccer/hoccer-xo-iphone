@@ -22,10 +22,12 @@
 #import "TestFlight.h"
 #import "HXOUI.h"
 #import "ChatViewController.h"
+#import "ModalTaskHUD.h"
 #import "HXOAudioPlayer.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
+#import "CCRSA.h"
 
 #ifdef WITH_WEBSERVER
 #import "HTTPServer.h"
@@ -49,6 +51,8 @@
 #define MIGRATION_DEBUG NO
 #define AUDIOSESSION_DEBUG NO
 #define TRACE_DATABASE_SAVE YES
+#define TRACE_PROFILE_UPDATES NO
+#define TRACE_DELETES NO
 
 #ifdef HOCCER_DEV
 NSString * const kHXOURLScheme = @"hxod";
@@ -109,12 +113,37 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
- 
+
+#ifdef DEBUG
+//#define DEFINE_OTHER_SERVERS
+#ifdef DEFINE_OTHER_SERVERS
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.166:8081/" forKey: kHXOForceFilecacheURL];
+    
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"https://filecache.talk.hoccer.de:8444/" forKey: kHXOForceFilecacheURL];
+
+    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
+    
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+#endif
+#endif
+    
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
         [TestFlight takeOff: kTestFlightAppToken];
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
+
+    if (!UserProfile.sharedProfile.hasKeyPair) {
+        dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
+            [AppDelegate renewRSAKeyPairWithSize: kHXODefaultKeySize];
+        });
+    }
+    
     application.applicationSupportsShakeToEdit = NO;
 
     if ([self persistentStoreCoordinator] == nil) {
@@ -137,26 +166,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
 
     if (isFirstRun) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{  // delay until window is realized
             [self.window.rootViewController performSegueWithIdentifier: @"showSetup" sender: self];
         });
     } else {
         [self setupDone: NO];
     }
-#ifdef DEBUG
-//#define DEFINE_OTHER_SERVERS
-#ifdef DEFINE_OTHER_SERVERS
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.103:8080/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.103:8081/" forKey: kHXOForceFilecacheURL];
-    
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
-    
-    [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
-    [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
-    [[HXOUserDefaults standardUserDefaults] synchronize];
-#endif
-#endif
+
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
     NSString * lastRunBuildNumber = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
@@ -219,7 +235,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSDate * now = [NSDate date];
     [[HXOUserDefaults standardUserDefaults] setValue:now forKey: [[Environment sharedEnvironment] suffixedString:kHXOlastDeactivationDate]];
 }
-
 
 + (void) setDefaultAudioSession {
     if (AUDIOSESSION_DEBUG) NSLog(@"setDefaultAudioSession");
@@ -362,6 +377,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self.chatBackend changePresenceToNotTyping]; // not typing anymore ... yep, pretty sure...
     [self saveDatabaseNow];
     [self setLastActiveDate];
     [self updateUnreadMessageCountAndStop];
@@ -489,6 +505,32 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             [alert show];
         }
     }
+}
+
+-(BOOL)deleteObject:(id)object {
+    if (TRACE_DELETES) NSLog(@"deleteObject called from %@", [NSThread callStackSymbols]);
+    NSManagedObjectContext * moc = self.managedObjectContext;
+    if (object != nil) {
+        if ([object isKindOfClass:[NSManagedObject class]]) {
+            NSManagedObject * mo = object;
+            if (![mo.managedObjectContext isEqual:moc]) {
+                NSLog(@"#ERROR: deleteObject: bad context for object %@", object);
+                return false;
+            }
+            if (mo.isDeleted) {
+                NSLog(@"#WARNING: deleteObject: deletion call for deleted object entity ‘%@‘ id ‘%@‘", mo.entity.name, mo.objectID.URIRepresentation);
+            }
+            if (TRACE_DELETES) NSLog(@"deleteObject: deleting object of entity %@ id %@", mo.entity.name, mo.objectID.URIRepresentation);
+            [moc deleteObject:mo];
+            if (TRACE_DELETES) NSLog(@"deleteObject: done");
+            return true;
+        } else {
+            NSLog(@"#ERROR: deleteObject: not a NSManagedObject");
+        }
+    } else {
+        NSLog(@"#ERROR: deleteObject: nil");
+    }
+    return false;
 }
 
 - (void)saveDatabase
@@ -1062,7 +1104,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
                                                    delegate:nil
-                                          cancelButtonTitle:@"ok"
+                                          cancelButtonTitle:NSLocalizedString(@"ok",nil)
                                           otherButtonTitles:nil];
 
     [alert show];
@@ -1079,7 +1121,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
                                                    completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) { exit(1); }
-                                          cancelButtonTitle:@"ok"
+                                          cancelButtonTitle:NSLocalizedString(@"ok",nil)
                                           otherButtonTitles:nil];
     [alert show];
 }
@@ -1117,7 +1159,22 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [alert show];
 }
 
-- (void) showInvalidCredentialsWithContinueHandler:(ContinueBlock)onNotDeleted {
+- (void) showInvalidCredentialsWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onNotDeleted {
+    
+    
+    HXOAlertViewCompletionBlock deleteCompletionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        switch (buttonIndex) {
+            case 1: {
+                NSString * title_tag;
+                NSString * message_tag;
+                [[UserProfile sharedProfile] deleteCredentials];
+                [self deleteDatabase];
+                title_tag = @"credentials_and_database_deleted_title";
+                message_tag = @"credentials_and_database_deleted_message";
+                [self showFatalErrorAlertWithMessage: NSLocalizedString(message_tag, nil) withTitle: NSLocalizedString(title_tag, nil)];
+            }
+        }
+    };
     
     HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
         NSString * title_tag;
@@ -1127,30 +1184,58 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 {
                     title_tag = @"credentials_and_database_not_deleted_title";
                     message_tag = @"credentials_and_database_not_deleted_message";
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title_tag
-                                                                    message: message_tag
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title_tag,nil)
+                                                                    message: NSLocalizedString(message_tag,nil)
                                                             completionBlock: onNotDeleted
-                                                          cancelButtonTitle:@"Continue"
+                                                          cancelButtonTitle: NSLocalizedString(@"continue",nil)
                                                           otherButtonTitles:nil];
                     [alert show];
                 }
                 break;
             case 1:
-                [[UserProfile sharedProfile] deleteCredentials];
-                [self deleteDatabase];
-                title_tag = @"credentials_and_database_deleted_title";
-                message_tag = @"credentials_and_database_deleted_message";
-                [self showFatalErrorAlertWithMessage: NSLocalizedString(message_tag, nil) withTitle: NSLocalizedString(title_tag, nil)];
-                break;
+            {
+                title_tag = @"credentials_and_database_really_delete_title";
+                message_tag = nil;
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title_tag,nil)
+                                                                message: NSLocalizedString(message_tag,nil)
+                                                        completionBlock: deleteCompletionBlock
+                                                      cancelButtonTitle:NSLocalizedString(@"no",nil)
+                                                      otherButtonTitles:NSLocalizedString(@"credentials_database_delete_btn_title",nil),nil];
+                [alert show];
+            }
         }
         
     };
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_invalid_title", nil)
-                                                    message: NSLocalizedString(@"credentials_invalid_delete_question", nil)
+                                                    message: [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_delete_question", nil),info]
                                             completionBlock: completionBlock
                                           cancelButtonTitle:NSLocalizedString(@"no",nil)
                                           otherButtonTitles:NSLocalizedString(@"credentials_database_delete_btn_title",nil),nil];
+    [alert show];
+}
+
+
+- (void) showLoginFailedWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onContinue {
+    
+    HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        switch (buttonIndex) {
+            case 0:
+                // continue
+                onContinue();
+                break;
+            case 1:
+                // abort
+                exit(0);
+                break;
+        }
+    };
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"backend_login_temporarily_failed_title", nil)
+                                                    message: [NSString stringWithFormat:NSLocalizedString(@"backend_login_temporarily_failed_continue_question", nil),info]
+                                            completionBlock: completionBlock
+                                          cancelButtonTitle:NSLocalizedString(@"continue",nil)
+                                          otherButtonTitles:NSLocalizedString(@"abort",nil),nil];
     [alert show];
 }
 
@@ -1303,6 +1388,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         didValidate = YES;
     
     return didValidate;
+}
+
++ (void) renewRSAKeyPairWithSize: (NSUInteger) size {
+    ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
+    [hud show];
+    [UserProfile.sharedProfile renewKeypairWithSize: size completion: ^(BOOL success){
+        [hud dismiss];
+        id userInfo = @{ @"itemsChanged":@{@"publicKey": @YES}};
+        if (TRACE_PROFILE_UPDATES) NSLog(@"profileUpdatedByUser info %@",userInfo);
+        NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }];
 }
 
 #ifdef WITH_WEBSERVER

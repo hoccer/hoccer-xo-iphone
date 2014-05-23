@@ -11,33 +11,33 @@
 
 @implementation NSObject (DelegateHelper)
 
-- (id)checkAndPerformSelector: (SEL)aSelector  
-{
+- (id)checkAndPerformSelector: (SEL)aSelector {
 	if (![self respondsToSelector:aSelector]) {
 		return nil;
 	}
-	
-	return [self performSelector:aSelector];
+
+    IMP imp = [self methodForSelector: aSelector];
+    id (*func)(id, SEL) = (void *)imp;
+    return func(self, aSelector);
 }
 
-- (id)checkAndPerformSelector: (SEL)aSelector withObject: (id)aObject  
-{
+- (id)checkAndPerformSelector: (SEL)aSelector withObject: (id)aObject {
 	if (![self respondsToSelector:aSelector]) {
 		return nil;
 	}
-	
-	return [self performSelector:aSelector withObject:aObject];
+
+    IMP imp = [self methodForSelector: aSelector];
+    id (*func)(id, SEL, id) = (void *)imp;
+    return func(self, aSelector, aObject);
 }
 
-- (id)checkAndPerformSelector: (SEL)aSelector withObject: (id)firstObject withObject: (id)secondObject  
-{
+- (id)checkAndPerformSelector: (SEL)aSelector withObject: (id)firstObject withObject: (id)secondObject {
 	if (![self respondsToSelector:aSelector]) {
 		return nil;
 	}
-	
-	return [self performSelector:aSelector withObject:firstObject withObject: secondObject];
+    IMP imp = [self methodForSelector: aSelector];
+    id (*func)(id, SEL, id, id) = (void *)imp;
+    return func(self, aSelector, firstObject, secondObject);
 }
-
-
 
 @end
