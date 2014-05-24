@@ -48,6 +48,12 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, retain)   NSString        * relationshipState;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
 
+// dynamic key properties
+@property (nonatomic,strong)    NSString        * publicKeyString; // b64-string
+@property (readonly)            NSNumber        * keyLength;       // length of public key in bits
+
+
+// class type helper
 @property (nonatomic, readonly) BOOL              isGroup;
 
 // relationsShip helpers
@@ -76,9 +82,6 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSNumber        * presenceLastUpdatedMillis;
 
 @property (nonatomic, strong)   NSIndexPath     * rememberedLastVisibleChatCell;
-
-@property (nonatomic,strong)    NSString        * publicKeyString; // b64-string
-
 
 @property (nonatomic, strong)   NSMutableSet    * messages;
 @property (nonatomic, strong)   NSMutableSet    * groupMemberships;

@@ -215,6 +215,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ContactListController:prepareForSegue %@ sender %@", segue, sender);
     NSString * sid = [segue identifier];
     if ([sid isEqualToString: @"showGroup"] && [sender isEqual: self.navigationItem.rightBarButtonItem]) {
         DatasheetViewController * vc = [segue destinationViewController];

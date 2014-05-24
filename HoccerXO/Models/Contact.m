@@ -57,12 +57,13 @@ NSString * const kRelationStateBlocked     = @"blocked";
 NSString * const kRelationStateGroupFriend = @"groupfriend";
 NSString * const kRelationStateKept        = @"kept";
 
-
+@dynamic publicKeyString;
 @dynamic relationshipState;
 @dynamic relationshipLastChanged;
 @dynamic relationshipLastChangedMillis;
 
 @dynamic presenceLastUpdatedMillis;
+@dynamic keyLength;
 
 - (NSNumber*) relationshipLastChangedMillis {
     return [HXOBackend millisFromDate:self.relationshipLastChanged];
@@ -111,8 +112,6 @@ NSString * const kRelationStateKept        = @"kept";
     [self didChangeValueForKey: @"avatarImage"];
 }
 
-@dynamic publicKeyString;
-
 -(NSString*) publicKeyString {
     return [self.publicKey asBase64EncodedString];
 }
@@ -121,6 +120,9 @@ NSString * const kRelationStateKept        = @"kept";
     self.publicKey = [NSData dataWithBase64EncodedString:theB64String];
 }
 
+- (NSNumber*) keyLength {
+    return [NSNumber numberWithInt:[CCRSA getPublicKeySize: self.publicKey]];
+}
 
 - (SecKeyRef) getPublicKeyRef {
     CCRSA * rsa = [CCRSA sharedInstance];
