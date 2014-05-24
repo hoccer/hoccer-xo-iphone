@@ -51,9 +51,9 @@
 #import "avatar_contact.h"
 #import "AttachmentButton.h"
 
-#define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
+#define DEBUG_NOTIFICATIONS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -84,6 +84,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property (strong) id throwObserver;
 @property (strong) id catchObserver;
+@property (strong) id loginObserver;
 
 @end
 
@@ -255,7 +256,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                                                     object:nil
                                                                      queue:[NSOperationQueue mainQueue]
                                                                 usingBlock:^(NSNotification *note) {
-                                                                    NSLog(@"ChatView: Throw");
+                                                                    if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Throw");
                                                                     if (self.sendButton.enabled) {
                                                                         [self sendPressed:nil];
                                                                     }
@@ -265,7 +266,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                                                            object:nil
                                                                             queue:[NSOperationQueue mainQueue]
                                                                        usingBlock:^(NSNotification *note) {
-                                                                           NSLog(@"ChatView: Catch");
+                                                                           if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Catch");
+                                                                       }];
+    self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"loginSucceeded"
+                                                                           object:nil
+                                                                            queue:[NSOperationQueue mainQueue]
+                                                                       usingBlock:^(NSNotification *note) {
+                                                                           if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: loginSucceeded");
+                                                                           [AppDelegate.instance configureForNearbyMode:self.partner.isNearby];
                                                                        }];
 }
 
@@ -294,11 +302,21 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (self.catchObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.catchObserver];
     }
+    if (self.loginObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.loginObserver];
+    }
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear: animated];
-    //NSLog(@"ContactListViewController:viewDidDisappear");
+    NSLog(@"ChatViewController:viewDidDisappear");
+    if ([self isMovingFromParentViewController]) {
+        NSLog(@"isMovingFromParentViewController");
+        [AppDelegate.instance endInspecting:self.partner withInspector:self];
+    }
+    if ([self isBeingDismissed]) {
+        NSLog(@"isBeingDismissed");
+    }
     self.fetchedResultsController.delegate = nil;
 }
 
@@ -1425,7 +1443,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     cell.subtitle.text = [self subtitleForMessage: message];
 
-
     for (MessageSection * section in cell.sections) {
         if ([section isKindOfClass: [TextSection class]]) {
             [self configureTextSection: (TextSection*)section forMessage: message];
@@ -2325,7 +2342,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) setInspectedObject:(Contact *)inspectedObject {
+    [AppDelegate.instance endInspecting:self.partner withInspector:self];
     self.partner = inspectedObject;
+    [AppDelegate.instance beginInspecting:self.partner withInspector:self];
 }
 
 @end

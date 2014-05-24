@@ -28,6 +28,7 @@
 
 #define TRACE_NOTIFICATIONS NO
 #define FETCHED_RESULTS_DEBUG_PERF NO
+#define NEARBY_CONFIG_DEBUG NO
 
 @interface ConversationViewController ()
 
@@ -143,8 +144,8 @@
                                                                              object:nil
                                                                               queue:[NSOperationQueue mainQueue]
                                                                          usingBlock:^(NSNotification *note) {
-                                                                             if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: loginSucceeded");
-                                                                             [HXOEnvironment.sharedInstance setActivation:self.inNearbyMode];
+                                                                             if (TRACE_NOTIFICATIONS, YES) NSLog(@"ConversationView: loginSucceeded");
+                                                                             [self configureForNearbyMode:self.inNearbyMode];
                                                                          }];
 
 }
@@ -169,16 +170,18 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) segmentChanged: (id) sender {
-    [super segmentChanged:sender];
-    [HXOEnvironment.sharedInstance setActivation:self.inNearbyMode];
-    if (self.inNearbyMode) {
-        [GesturesInterpreter.instance start];
-    } else {
-        [GesturesInterpreter.instance stop];
-    }
+-(void)configureForNearbyMode:(BOOL)mode {
+    if (NEARBY_CONFIG_DEBUG) NSLog(@"ConversationViewController:configureForNearbyMode= %d", mode);
+    [AppDelegate.instance configureForNearbyMode:mode];
     // hide plus button in nearby mode ... just for chrissy
-    self.navigationItem.rightBarButtonItem = self.inNearbyMode ? nil : self.addButton;
+    self.navigationItem.rightBarButtonItem = mode ? nil : self.addButton;
+    
+}
+
+- (void) segmentChanged: (id) sender {
+    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:segmentChanged, sender= %@", sender);
+    [super segmentChanged:sender];
+    [self configureForNearbyMode:self.inNearbyMode];
 }
     
 #pragma mark - Table View
@@ -232,7 +235,8 @@
         [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     } else {
         // NearBy
-        [predicates addObject: [NSPredicate predicateWithFormat: @"isNearbyTag == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
+        //[predicates addObject: [NSPredicate predicateWithFormat: @"isNearbyTag == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat: @"(type == 'Contact' AND isNearbyTag == 'YES') OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby' AND myGroupMembership.group.groupState =='exists'))"]];
     }
 }
 

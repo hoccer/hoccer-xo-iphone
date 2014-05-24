@@ -269,6 +269,23 @@ NSString * const kRelationStateKept        = @"kept";
     }
 }
 
+-(void) updateNearbyFlag {
+    NSSet * myMemberships = self.groupMemberships;
+    BOOL isNearby = NO;
+    for (GroupMembership * memberShip in myMemberships) {
+        if (memberShip.group.isExistingGroup && memberShip.group.isNearbyGroup) {
+            isNearby = YES;
+        }
+    }
+    if (isNearby != self.isNearbyContact) {
+        if (isNearby) {
+            self.isNearbyTag = @"YES";
+        } else {
+            self.isNearbyTag = nil;
+        }
+    }
+}
+
 - (NSString*) groupMembershipList {
     NSLog(@"groupMembershipList called on contact %@",self);
     NSMutableArray * groups = [[NSMutableArray alloc] init];

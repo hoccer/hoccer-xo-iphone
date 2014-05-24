@@ -23,6 +23,8 @@
 #import "HXOUI.h"
 #import "ChatViewController.h"
 #import "ModalTaskHUD.h"
+#import "GesturesInterpreter.h"
+#import "HXOEnvironment.h"
 
 #import "OpenSSLCrypto.h"
 #import "Crypto.h"
@@ -52,6 +54,8 @@
 #define TRACE_DATABASE_SAVE YES
 #define TRACE_PROFILE_UPDATES NO
 #define TRACE_DELETES NO
+#define TRACE_INSPECTION NO
+#define TRACE_PENDING_CHANGES NO
 
 #ifdef HOCCER_DEV
 NSString * const kHXOURLScheme = @"hxod";
@@ -67,20 +71,87 @@ static NSInteger validationErrorCount = 0;
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #endif
 
+@interface AppDelegate ()
+{
+    NSMutableArray * _inspectedObjects;
+    NSMutableArray * _inspectors;
+}
+@end
 
 @implementation AppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize inNearbyMode = _inNearbyMode;
 
 #ifdef WITH_WEBSERVER
 @synthesize httpServer = _httpServer;
 #endif
 
 @synthesize rpcObjectModel = _rpcObjectModel;
-
 @synthesize userAgent;
+
+-(void)printInspection {
+    int i = 0;
+    for (id obj in _inspectedObjects) {
+        NSLog(@"%d)inspected id %@ name %@ by %@", i,[obj clientId], [obj nickName], [_inspectors[i] class]);
+        ++i;
+    }
+    NSLog(@"\n");
+}
+
+-(void)beginInspecting:(id)inspectedObject withInspector:(id)inspector {
+    if (TRACE_INSPECTION) NSLog(@"--> begin inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+    if (_inspectedObjects == nil) {
+        _inspectedObjects = [NSMutableArray new];
+        _inspectors = [NSMutableArray new];
+    }
+    if (inspectedObject != nil) {
+        [_inspectedObjects insertObject:inspectedObject atIndex:0];
+        [_inspectors insertObject:inspector atIndex:0];
+    }
+    if (TRACE_INSPECTION) [self printInspection];
+}
+
+-(void)endInspecting:(id)inspectedObject withInspector:(id)inspector {
+    if (TRACE_INSPECTION) NSLog(@"<-- end inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+    if (_inspectedObjects == nil) {
+        _inspectedObjects = [NSMutableArray new];
+        _inspectors = [NSMutableArray new];
+    }
+    for (int i = 0; i < _inspectedObjects.count;++i) {
+        if (_inspectedObjects[i] == inspectedObject && _inspectors[i] == inspector) {
+            [_inspectedObjects removeObjectAtIndex:i];
+            [_inspectors removeObjectAtIndex:i];
+            break;
+        }
+    }
+    if (TRACE_INSPECTION) [self printInspection];
+ }
+
+-(BOOL)isInspecting:(id)inspectedObject withInspector:(id)inspector {
+    if (inspectedObject == nil || inspector == nil) {
+        return false;
+    }
+    for (int i = 0; i < _inspectedObjects.count;++i) {
+        if (_inspectedObjects[i] == inspectedObject && _inspectors[i] == inspector) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+-(BOOL)isInspecting:(id)inspectedObject {
+    if (_inspectedObjects == nil) {
+        return false;
+    }
+    if (inspectedObject != nil) {
+        return [_inspectedObjects containsObject:inspectedObject];
+    }
+    return NO;
+}
+
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self seedRand];
@@ -114,16 +185,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
 
 #ifdef DEBUG
-//#define DEFINE_OTHER_SERVERS
+#define DEFINE_OTHER_SERVERS
 #ifdef DEFINE_OTHER_SERVERS
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.166:8081/" forKey: kHXOForceFilecacheURL];
     
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"https://filecache.talk.hoccer.de:8444/" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"https://filecache.talk.hoccer.de:8444/" forKey: kHXOForceFilecacheURL];
 
-    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
-    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
     
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
@@ -379,6 +450,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self.chatBackend changePresenceToNotTyping]; // not typing anymore ... yep, pretty sure...
     [self saveDatabaseNow];
     [self setLastActiveDate];
+    if (self.inNearbyMode) {
+        [self suspendNearbyMode]; // for resuming nearby mode, the Conversations- or ChatView are responsible; the must do it after login
+    }
     [self updateUnreadMessageCountAndStop];
 }
 
@@ -399,6 +473,29 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
     [self setLastDeactivationDate];
+}
+
+#pragma mark - Nearby
+
+-(void)configureForNearbyMode:(BOOL)modeNearby {
+    NSLog(@"AppDelegate:configureForNearbyMode= %d", modeNearby);
+    [HXOEnvironment.sharedInstance setActivation:modeNearby];
+    if (modeNearby) {
+        [GesturesInterpreter.instance start];
+    } else {
+        [GesturesInterpreter.instance stop];
+    }
+    _inNearbyMode = modeNearby;
+}
+
+-(void)suspendNearbyMode {
+    NSLog(@"suspendNearbyMode");
+    [HXOEnvironment.sharedInstance deactivateLocation];
+    [GesturesInterpreter.instance stop];
+}
+
+-(BOOL)inNearbyMode {
+    return _inNearbyMode;
 }
 
 #pragma mark - Core Data stack
@@ -542,15 +639,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     [self.nextDatabaseSaveTimer invalidate];
     
-    NSTimeInterval lastPendingProcessed = [[NSDate new] timeIntervalSinceDate:self.lastPendingChangesProcessed];
+    //NSTimeInterval lastPendingProcessed = [[NSDate new] timeIntervalSinceDate:self.lastPendingChangesProcessed];
     //NSLog(@"lastPendingProcessed ago %f",lastPendingProcessed);
-    if (lastPendingProcessed > 2.0) {
-        [self doProcessPendingChanges];
-    } else {
-        if (self.nextChangeProcessTimer == nil) {
-            self.nextChangeProcessTimer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(doProcessPendingChanges) userInfo:nil repeats:NO];
-        }
-    }
+    //if (lastPendingProcessed > 2.0, YES) {
+    //    [self doProcessPendingChangesNow:YES];
+    //} else {
+    //    if (self.nextChangeProcessTimer == nil) {
+    //        self.nextChangeProcessTimer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(doProcessPendingChanges) userInfo:nil repeats:NO];
+    //    }
+    //}
+
+    [self doProcessPendingChangesNow:YES];
+
     
     const double minDatabaseSaveInterval = 5.0;
     const double nextDatabaseSaveInterval = 6.0;
@@ -567,14 +667,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     // NSLog(@"Saved database at %@",self.lastDatebaseSaveDate);
 }
 
-- (void)doProcessPendingChanges {
+- (void)doProcessPendingChangesNow:(BOOL)now {
     NSTimeInterval lastPendingProcessed = [[NSDate new] timeIntervalSinceDate:self.lastPendingChangesProcessed];
-    if (lastPendingProcessed > 2.0) {
-        NSLog(@"process pending changes started");
+    if (now || lastPendingProcessed > 2.0) {
+        if (TRACE_PENDING_CHANGES) NSLog(@"process pending changes started");
         NSDate * pendingChangesProcessingStart = [NSDate new];
         [self.managedObjectContext processPendingChanges]; // will perform all UI changes
         NSDate * pendingChangesProcessingStop = [NSDate new];
-        NSLog(@"process pending changes took %1.3f secs.",[pendingChangesProcessingStop timeIntervalSinceDate:pendingChangesProcessingStart]);
+        if (TRACE_PENDING_CHANGES) NSLog(@"process pending changes took %1.3f secs.",[pendingChangesProcessingStop timeIntervalSinceDate:pendingChangesProcessingStart]);
         self.lastPendingChangesProcessed = [NSDate new];
     }
     self.nextChangeProcessTimer = nil;

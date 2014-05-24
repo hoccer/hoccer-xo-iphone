@@ -95,6 +95,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
+- (void) updateNearbyFlag;
+
 
 
 @end

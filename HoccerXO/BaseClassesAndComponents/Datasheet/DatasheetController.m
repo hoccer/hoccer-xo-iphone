@@ -7,6 +7,7 @@
 //
 
 #import "DatasheetController.h"
+#import "AppDelegate.h"
 
 #define DEBUG_VALUE_UPDATING NO
 
@@ -90,7 +91,9 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         if (_inspectedObject) {
             [self removeObjectObservers];
         }
+        [AppDelegate.instance endInspecting:_inspectedObject withInspector:self];
         _inspectedObject = inspectedObject;
+        [AppDelegate.instance beginInspecting:_inspectedObject withInspector:self];
         if (_inspectedObject) {
             [self addObjectObservers];
         }

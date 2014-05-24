@@ -476,32 +476,35 @@ static int  groupMemberContext;
 }
 
 - (void) deleteGroupData {
-    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: self.group];
-    //NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
-    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: self.group");
-    //[moc deleteObject: self.group];
-    [AppDelegate.instance deleteObject:self.group];
-    self.inspectedObject = nil;
+    Group * group = self.group;
+    [self quitInspection];
+    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: group];
+    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: group");
+    [AppDelegate.instance deleteObject:group];
     [self.appDelegate saveDatabase];
 }
 
 - (void) deleteGroup {
-    [self.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
+    Group * group = self.group;
+    [self quitInspection];
+    [self.chatBackend deleteGroup: group onDeletion:^(Group *group) {
         if (group != nil) {
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
         } else {
-            NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
+            NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", group);
             [self.chatBackend getGroupsForceAll: YES withCompletion:nil];
         }
     }];
 }
 
 - (void) leaveGroup {
-    [self.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
+    Group * group = self.group;
+    [self quitInspection];
+    [self.chatBackend leaveGroup: group onGroupLeft:^(Group *group) {
         if (group != nil) {
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
         } else {
-            NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
+            NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", group);
             [self.chatBackend getGroupsForceAll:YES withCompletion:nil];
         }
     }];
@@ -509,13 +512,21 @@ static int  groupMemberContext;
 
 - (void) deleteContact {
     NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
-    if (self.contact.isGroupFriend || self.contact.isKept) {
-        [self.chatBackend handleDeletionOfContact: self.contact];
+    Contact * contact = self.contact;
+    [self quitInspection];
+    if (contact.isGroupFriend || contact.isKept) {
+        [self.chatBackend handleDeletionOfContact: contact];
     } else {
-        [self.chatBackend depairClient: self.contact.clientId handler:^(BOOL success) {
+        [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
         }];
     }
+}
+
+- (void) quitInspection {
+    self.fetchedResultsController.delegate = nil;
+    self.inspectedObject = nil;
+    [self.delegate controllerDidFinish:self];
 }
 
 #pragma mark - Invitation Response Section

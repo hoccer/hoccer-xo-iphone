@@ -18,6 +18,7 @@
 #import "disclosure_arrow.h"
 #import "VectorArtView.h"
 #import "WebViewController.h"
+#import "AppDelegate.h"
 
 static CGFloat kHeaderHeight;
 
@@ -78,6 +79,18 @@ static CGFloat kHeaderHeight;
     if (self.dataSheetController.isEditing != self.isEditing) {
         [self setEditing: self.dataSheetController.isEditing animated: animated];
     }
+}
+
+- (void) viewDidDisappear:(BOOL)animated {
+    NSLog(@"DataSheetViewController:viewDidDisappear");
+    if ([self isMovingFromParentViewController]) {
+        NSLog(@"isMovingFromParentViewController");
+        [AppDelegate.instance endInspecting:self.dataSheetController.inspectedObject withInspector:self.dataSheetController];
+    }
+    if ([self isBeingDismissed]) {
+        NSLog(@"isBeingDismissed");
+    }
+    [super viewDidDisappear: animated];
 }
 
 - (void) dealloc {
