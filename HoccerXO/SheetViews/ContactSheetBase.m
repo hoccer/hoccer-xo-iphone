@@ -170,7 +170,20 @@ static const NSUInteger kHXOMaxNameLength = 25;
     BOOL darken = self.isEditing && [self isItemEnabled: self.avatarItem];
     UIColor * tintColor = [UIColor colorWithWhite: 0.0 alpha: darken ? 0.5 : 0.0];
     if (image) {
-        return [image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: tintColor saturationDeltaFactor: 1.8 maskImage: nil];
+        if (image.size.width * image.size.height > 100 * 100) {
+            NSLog(@"before resizing: %f x %f", image.size.width, image.size.height);
+            NSDate * scaleStart = [NSDate new];
+            image = [image imageScaledToSize:CGSizeMake(100.0, image.size.height/image.size.width * 100.0)];
+            NSDate * scaleStop = [NSDate new];
+            NSLog(@"scaling took %1.3f secs.", [scaleStop timeIntervalSinceDate:scaleStart]);
+            NSLog(@"after resizing: %f x %f", image.size.width, image.size.height);
+        }
+        //return [image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: tintColor saturationDeltaFactor: 1.8 maskImage: nil];
+        NSDate * blurStart = [NSDate new];
+        image = [image applyBlurWithRadius: 0.5 * kHXOGridSpacing tintColor: tintColor saturationDeltaFactor: 1.8 maskImage: nil];
+        NSDate * blurStop = [NSDate new];
+        NSLog(@"blur took %1.3f secs.", [blurStop timeIntervalSinceDate:blurStart]);
+        return image;
     } else if (self.isEditing) {
         CGRect r = CGRectMake(0, 0, 1, 1);
         UIGraphicsBeginImageContextWithOptions(r.size, NO, 0);
