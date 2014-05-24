@@ -542,8 +542,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     [self.nextDatabaseSaveTimer invalidate];
     
-    [self.managedObjectContext processPendingChanges]; // will perform all UI changes
-
+    NSTimeInterval lastPendingProcessed = [[NSDate new] timeIntervalSinceDate:self.lastPendingChangesProcessed];
+    //NSLog(@"lastPendingProcessed ago %f",lastPendingProcessed);
+    if (lastPendingProcessed > 2.0) {
+        [self doProcessPendingChanges];
+    } else {
+        if (self.nextChangeProcessTimer == nil) {
+            self.nextChangeProcessTimer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(doProcessPendingChanges) userInfo:nil repeats:NO];
+        }
+    }
+    
     const double minDatabaseSaveInterval = 5.0;
     const double nextDatabaseSaveInterval = 6.0;
     // NSLog(@"lastDatebaseSaveDate interval %f",[self.lastDatebaseSaveDate timeIntervalSinceNow]);
@@ -555,8 +563,23 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
     [self saveContext];
     self.lastDatebaseSaveDate = [NSDate date];
+    self.lastPendingChangesProcessed = self.lastDatebaseSaveDate;
     // NSLog(@"Saved database at %@",self.lastDatebaseSaveDate);
 }
+
+- (void)doProcessPendingChanges {
+    NSTimeInterval lastPendingProcessed = [[NSDate new] timeIntervalSinceDate:self.lastPendingChangesProcessed];
+    if (lastPendingProcessed > 2.0) {
+        NSLog(@"process pending changes started");
+        NSDate * pendingChangesProcessingStart = [NSDate new];
+        [self.managedObjectContext processPendingChanges]; // will perform all UI changes
+        NSDate * pendingChangesProcessingStop = [NSDate new];
+        NSLog(@"process pending changes took %1.3f secs.",[pendingChangesProcessingStop timeIntervalSinceDate:pendingChangesProcessingStart]);
+        self.lastPendingChangesProcessed = [NSDate new];
+    }
+    self.nextChangeProcessTimer = nil;
+}
+
 
 - (void)saveDatabaseNow
 {
@@ -564,6 +587,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     self.nextDatabaseSaveTimer = nil;
     [self saveContext];
     self.lastDatebaseSaveDate = [NSDate date];
+    self.lastPendingChangesProcessed = self.lastDatebaseSaveDate;
 }
 
 // Returns the managed object context for the application.

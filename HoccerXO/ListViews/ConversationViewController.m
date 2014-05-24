@@ -27,6 +27,7 @@
 #import "SoundEffectPlayer.h"
 
 #define TRACE_NOTIFICATIONS NO
+#define FETCHED_RESULTS_DEBUG_PERF NO
 
 @interface ConversationViewController ()
 
@@ -161,9 +162,6 @@
     }
 }
 
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear: animated];
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -245,6 +243,11 @@
 }
 
 - (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
+    if (cell == nil) {
+        NSLog(@"%@:configureCell is nil, path %@",[self class], indexPath);
+        NSLog(@"%@",[NSThread callStackSymbols]);
+    }
     [super configureCell: cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
 

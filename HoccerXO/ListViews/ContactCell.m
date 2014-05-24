@@ -15,6 +15,8 @@
 #import "VectorArtView.h"
 #import "disclosure_arrow.h"
 
+#define CELL_DEBUG NO
+
 @interface ContactCell ()
 
 @property (nonatomic,strong) NSArray * verticalConstraints;
@@ -32,6 +34,7 @@
 }
 
 - (void) commonInit {
+    if (CELL_DEBUG) NSLog(@"ContactCell:commonInit");
 
     self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[disclosure_arrow alloc] init]];
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentCenter;
@@ -91,6 +94,7 @@
 }
 
 - (void) addFirstRowHorizontalConstraints: (NSDictionary*) views {
+    if (CELL_DEBUG) NSLog(@"%@:layoutSubviews", [self class]);
     NSString * format = [NSString stringWithFormat: @"H:|-%f-[image]-%f-[title(>=0)]->=%f-|", kHXOCellPadding, kHXOCellPadding, kHXOGridSpacing];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
@@ -100,6 +104,7 @@
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
+    if (CELL_DEBUG) NSLog(@"%@:preferredContentSizeChanged", [self class]);
     self.titleLabel.font = [HXOUI theme].titleFont;
     //NSLog(@"nickname size %@", NSStringFromCGSize( self.titleLabel.intrinsicContentSize));
     self.subtitleLabel.font = [HXOUI theme].smallTextFont;
@@ -124,6 +129,7 @@
 }
 
 - (void) layoutSubviews {
+    if (CELL_DEBUG) NSLog(@"%@:layoutSubviews", [self class]);
     [super layoutSubviews];
     UIEdgeInsets insets = self.separatorInset;
     insets.left = self.titleLabel.frame.origin.x;

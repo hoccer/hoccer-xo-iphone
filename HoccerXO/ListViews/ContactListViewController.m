@@ -31,6 +31,7 @@
 
 #define HIDE_SEPARATORS
 #define FETCHED_RESULTS_DEBUG NO
+#define FETCHED_RESULTS_DEBUG_PERF NO
 
 static const CGFloat kMagicSearchBarHeight = 44;
 
@@ -139,8 +140,20 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    self.fetchedResultsController.delegate = self;
     [super viewWillAppear: animated];
     [HXOBackend broadcastConnectionInfo];
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear: animated];
+    //NSLog(@"ContactListViewController:viewDidAppear");
+}
+
+- (void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear: animated];
+    //NSLog(@"ContactListViewController:viewDidDisappear");
+    self.fetchedResultsController.delegate = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -306,6 +319,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     //NSLog(@"controllerWillChangeContent: %@",[NSThread callStackSymbols]);
     if (FETCHED_RESULTS_DEBUG) NSLog(@"controllerWillChangeContent: %@ fetchRequest %@",controller, [controller fetchRequest]);
+    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@:controllerWillChangeContent", [self class]);
     [self.tableView beginUpdates];
 }
 
@@ -327,14 +341,16 @@ static const CGFloat kMagicSearchBarHeight = 44;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    if (FETCHED_RESULTS_DEBUG) {
+    if (FETCHED_RESULTS_DEBUG || FETCHED_RESULTS_DEBUG_PERF) {
         NSDictionary * changeTypeName = @{@(NSFetchedResultsChangeInsert):@"NSFetchedResultsChangeInsert",
                                           @(NSFetchedResultsChangeDelete):@"NSFetchedResultsChangeDelete",
                                           @(NSFetchedResultsChangeUpdate):@"NSFetchedResultsChangeUpdate",
                                           @(NSFetchedResultsChangeMove):@"NSFetchedResultsChangeMove"};
         
         
-        NSLog(@"ContactListViewController:NSFetchedResultsController: %@ fetchRequest %@ didChangeObject:class %@ ptr=%x path:%@ type:%@ newpath=%@",controller, [controller fetchRequest], [anObject class],(unsigned int)(__bridge void*)anObject,indexPath,changeTypeName[@(type)],newIndexPath);
+        if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactListViewController:NSFetchedResultsController: %@ fetchRequest %@ didChangeObject:class %@ ptr=%x path:%@ type:%@ newpath=%@",controller, [controller fetchRequest], [anObject class],(unsigned int)(__bridge void*)anObject,indexPath,changeTypeName[@(type)],newIndexPath);
+        
+        if (!FETCHED_RESULTS_DEBUG) NSLog(@"ContactListViewController:NSFetchedResultsController: %@ didChangeObject:class %@ ptr=%x path:%@ type:%@ newpath=%@",controller, [anObject class],(unsigned int)(__bridge void*)anObject,indexPath,changeTypeName[@(type)],newIndexPath);
         //NSLog(@"ContactListViewController:NSFetchedResultsController:didChangeObject:%@ path:%@ type:%@ newpath=%@",anObject,indexPath,changeTypeName[@(type)],newIndexPath);
         //NSLog(@"ContactListViewController:NSFetchedResultsController: %@",[NSThread callStackSymbols]);
     }
@@ -353,8 +369,15 @@ static const CGFloat kMagicSearchBarHeight = 44;
              * and
              * http://developer.apple.com/library/ios/#releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/
              */
-            [self configureCell: [self.tableView cellForRowAtIndexPath:indexPath]
-                               atIndexPath: newIndexPath ? newIndexPath : indexPath];
+            //[self configureCell: [self.tableView cellForRowAtIndexPath:indexPath]
+            //                   atIndexPath: newIndexPath ? newIndexPath : indexPath];
+            {
+                UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                // cell is nil if not visible
+                if (cell != nil) {
+                    [self configureCell: cell atIndexPath: newIndexPath ? newIndexPath : indexPath];
+                }
+            }
             break;
 
         case NSFetchedResultsChangeMove:
@@ -367,10 +390,15 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     //NSLog(@"controllerDidChangeContent: %@",[NSThread callStackSymbols]);
     if (FETCHED_RESULTS_DEBUG) NSLog(@"controllerDidChangeContent %@ fetchRequest %@",controller, [controller fetchRequest]);
+    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@:controllerDidChangeContent", [self class]);
+    NSDate * start = [NSDate new];
     [self.tableView endUpdates];
+    NSDate * stop = [NSDate new];
+    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@:controllerDidChangeContent: updates took %1.3f", [self class], [stop timeIntervalSinceDate:start]);
 }
 
 - (void)configureCell: (id<ContactCell>) cell atIndexPath:(NSIndexPath *)indexPath {
+    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ContactListViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
 
     cell.titleLabel.text = contact.nickNameWithStatus;

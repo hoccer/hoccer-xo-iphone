@@ -243,6 +243,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) viewWillAppear:(BOOL)animated {
     // NSLog(@"ChatViewController:viewWillAppear");
+    self.fetchedResultsController.delegate = self;
     [super viewWillAppear: animated];
 
     [HXOBackend broadcastConnectionInfo];
@@ -294,6 +295,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [[NSNotificationCenter defaultCenter] removeObserver:self.catchObserver];
     }
 }
+
+- (void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear: animated];
+    //NSLog(@"ContactListViewController:viewDidDisappear");
+    self.fetchedResultsController.delegate = nil;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

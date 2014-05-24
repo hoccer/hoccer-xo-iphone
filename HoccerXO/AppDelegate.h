@@ -44,6 +44,9 @@ typedef void (^ContinueBlock)();
 @property (strong, nonatomic)  NSDate * lastDatebaseSaveDate;
 @property (strong, nonatomic)  NSTimer * nextDatabaseSaveTimer;
 
+@property (strong, nonatomic)  NSDate * lastPendingChangesProcessed;
+@property (strong, nonatomic)  NSTimer * nextChangeProcessTimer;
+
 @property (nonatomic, strong) NSURL * openedFileURL;
 @property (nonatomic, strong) NSString * openedFileName;
 @property (nonatomic, strong) NSString * openedFileDocumentType;
