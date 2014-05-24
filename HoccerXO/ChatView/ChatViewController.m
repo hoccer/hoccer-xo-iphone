@@ -1802,19 +1802,27 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     //NSLog(@"messageCell:canPerformAction:");
     if (action == @selector(deleteMessage:)) return YES;
 
-    if (action == @selector(copy:)) {return YES;}
-#ifdef DEBUG
-    if (action == @selector(resendMessage:)) {return YES;}
-#endif
-    if (action == @selector(forwardMessage:)) {return YES;}
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    BOOL available;
+    if (message.attachment != nil) {
+        available = message.attachment.available;
+    } else {
+        available = YES;
+    }
     
-    if (action == @selector(openWithMessage:)) {return YES;}
-
-    if (action == @selector(shareMessage:)) {return YES;}
+    if (action == @selector(copy:)) {return available;}
+#ifdef DEBUG
+    if (action == @selector(resendMessage:)) { return available; }
+    
+#endif
+    if (action == @selector(forwardMessage:)) { return available; }
+    
+    if (action == @selector(openWithMessage:)) { return available; }
+    
+    if (action == @selector(shareMessage:)) { return available; }
     
     if (action == @selector(saveMessage:)) {
-        HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-        if ([message.isOutgoing isEqualToNumber: @NO], YES) {
+        if (available) {
             Attachment * myAttachment = message.attachment;
             if (myAttachment != nil) {
                 if ([myAttachment.mediaType isEqualToString: @"video"] ||
@@ -2082,7 +2090,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) openWithInteractionController:(HXOMessage *)message {
     NSLog(@"openWithInteractionController");
     Attachment * attachment = message.attachment;
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available) {
         NSURL * myURL = [attachment contentURL];
         NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
         NSString * name = attachment.humanReadableFileName;
@@ -2099,23 +2107,26 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSLog(@"openWithActivityController");
     Attachment * attachment = message.attachment;
     
-    NSMutableArray *activityItems = [[NSMutableArray alloc]init];
-    
-    if (message.body.length > 0) {
-        [activityItems addObject:message];
+    if (attachment != nil && attachment.available) {
+        
+        NSMutableArray *activityItems = [[NSMutableArray alloc]init];
+        
+        if (message.body.length > 0) {
+            [activityItems addObject:message];
+        }
+        if (attachment != nil) {
+            [activityItems addObject:attachment];
+        }
+        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+        activityViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        
+        [self presentViewController:activityViewController animated:YES completion:nil];
     }
-    if (attachment != nil) {
-        [activityItems addObject:attachment];
-    }
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-    activityViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
-    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 - (void) previewAttachment:(Attachment *)attachment {
     // NSLog(@"previewAttachment");
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available) {
         NSURL * myURL = [attachment contentURL];
         NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
         NSString * name = attachment.humanReadableFileName;
