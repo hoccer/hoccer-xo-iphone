@@ -40,6 +40,8 @@
 @dynamic presenceLastUpdated;
 
 @dynamic messages;
+@dynamic deliveriesSent;
+@dynamic deliveriesReceived;
 @dynamic groupMemberships;
 @dynamic nickNameWithStatus;
 @dynamic myGroupMembership;
@@ -223,7 +225,7 @@ NSString * const kRelationStateKept        = @"kept";
 
 - (BOOL) isKept {
     if (self.isGroup) {
-        return self.isGroupKept;
+        return self.isGroupKept || self.isRelationKept;
     } else {
         return self.isRelationKept;
     }

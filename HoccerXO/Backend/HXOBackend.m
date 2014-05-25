@@ -53,7 +53,7 @@
 #define TRANSFER_DEBUG NO
 #define CHECK_URL_TRACE NO
 #define CHECK_CERTS_DEBUG NO
-#define DEBUG_DELETION NO
+#define DEBUG_DELETION YES
 
 
 #ifdef DEBUG
@@ -1423,7 +1423,6 @@ static NSTimer * _stateNotificationDelayTimer;
                                                  switch (buttonIndex) {
                                                      case 1:
                                                          // delete all group member contacts that are not friends or contacts in other group
-                                                         //[moc deleteObject: contact];
                                                          [AppDelegate.instance deleteObject:contact];
                                                          break;
                                                      case 0:
@@ -1441,7 +1440,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) handleDeletionOfContact:(Contact*)contact {
-    //[contact updateNearbyFlag];
+
     if ((AppDelegate.instance.inNearbyMode && contact.isNearby) || [AppDelegate.instance isInspecting:contact]) {
         if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: is active nearby or being inspected, autokeeping contact id %@",contact.clientId);
         contact.relationshipState = kRelationStateKept;
@@ -1449,7 +1448,7 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
-    if ((contact.messages.count == 0 && contact.groupMemberships.count == 0) || contact.isKept) {
+    if ((contact.messages.count == 0 && contact.groupMemberships.count == 0 && contact.deliveriesSent.count == 0) || contact.isKept) {
         // if there is nothing to save, delete right away and dont ask
         if (RELATIONSHIP_DEBUG || DEBUG_DELETION) NSLog(@"handleDeletionOfContact: nothing to save or kept, delete contact id %@",contact.clientId);
         if (!contact.isKept) {
@@ -2391,7 +2390,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (memberContact.relationshipState == nil ||
             (!memberContact.isFriend && !memberContact.isBlocked && memberContact.groupMemberships.count == 1))
         {
-            if (memberContact.messages.count > 0) {
+            if (memberContact.messages.count > 0 || memberContact.deliveriesSent.count > 0) {
                 if (!group.isNearbyGroup) {
                     [self askForDeletionOfContact:memberContact];
                 }  else {
@@ -2408,7 +2407,7 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: we have been thrown out or have left group, deleting own contact clientId %@",memberContact.clientId);
         // we have been thrown out or left group
-        if (![group.groupState isEqualToString: kRelationStateKept]) {
+        if (!group.isKept) {
             if (group.messages.count == 0) {
                 // show kicked message
                 if (!disinvited) {
@@ -2431,6 +2430,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (group.messages.count > 0 || [AppDelegate.instance isInspecting:group]) {
             if (DEBUG_DELETION) NSLog(@"handleDeletionOfGroup: is nearby with messages, autokeeping group id %@",group.clientId);
             group.groupState = kRelationStateKept;
+            group.relationshipState = kRelationStateKept;
             [self deleteInDatabaseAllMembersAndContactsofGroup:group];
             [self.delegate saveDatabase];
             return;
@@ -2464,6 +2464,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                              break;
                                                          case 0:
                                                              group.groupState = kRelationStateKept;
+                                                             group.relationshipState = kRelationStateKept;
                                                              // keep group and chats
                                                              break;
                                                      }
@@ -2597,7 +2598,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 !member.contact.isKept &&
                 member.contact.groupMemberships.count == 1)
             {
-                if (member.contact.messages.count > 0) {
+                if (member.contact.messages.count > 0 || member.contact.deliveriesSent > 0) {
                     // message in chat, ask for deletion
                     if (!member.group.isNearby) {
                         if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"ask for deletion of group member contact id %@", member.contact.clientId);

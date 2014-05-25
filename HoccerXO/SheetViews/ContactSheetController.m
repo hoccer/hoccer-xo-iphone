@@ -315,7 +315,7 @@ static int  groupMemberContext;
 
 - (NSString*) destructiveButtonTitle {
     if (self.group) {
-        if ([self.group.groupState isEqualToString: kRelationStateKept]) {
+        if (self.group.isKept) {
             return NSLocalizedString(@"group_delete_data", nil);
         }
         if (self.group.myGroupMembership.isInvited) {
@@ -440,7 +440,7 @@ static int  groupMemberContext;
     NSString * destructiveButtonTitle = nil;
     SEL        destructor;
 
-    if ([self.group.groupState isEqualToString: kRelationStateKept]) {
+    if (self.group.isKept) {
         title = NSLocalizedString(@"group_delete_title", nil);
         destructiveButtonTitle = NSLocalizedString(@"delete", nil);
         destructor = @selector(deleteGroupData);

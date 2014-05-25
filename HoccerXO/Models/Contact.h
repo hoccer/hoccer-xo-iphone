@@ -84,6 +84,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSIndexPath     * rememberedLastVisibleChatCell;
 
 @property (nonatomic, strong)   NSMutableSet    * messages;
+@property (nonatomic, strong)   NSMutableSet    * deliveriesSent;
+@property (nonatomic, strong)   NSMutableSet    * deliveriesReceived;
 @property (nonatomic, strong)   NSMutableSet    * groupMemberships;
 @property (readonly)            NSString        * nickNameWithStatus;
 
