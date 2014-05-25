@@ -1915,30 +1915,17 @@ static NSTimer * _stateNotificationDelayTimer;
     
     [group updateWithDictionary: groupDict];
     
-    /*
-    if (group.iCanSetKeys) {
-        if (!group.hasKeyOnServer) {
-            if (GROUP_DEBUG) NSLog(@"updateGroupHere: generating key for group with id %@",groupId);
-            [group generateNewGroupKey];
-        }
-        NSSet *updatableMembers = group.activeMembersNeedingKeyUpdate;
-        if (updatableMembers.count > 0) {
-            if (GROUP_DEBUG) NSLog(@"updateGroupHere: updating key boxes for %d members",updatableMembers.count);
-            [self updateKeyboxesFor:group withMembers:updatableMembers];
-        }
+    if (!group.isKeptGroup && group.isKeptRelation) {
+        group.relationshipState = nil;
     }
-     */
     
-    /*
-    if (!group.hasKeyOnServer && group.iAmAdmin) {
-        [group generateNewGroupKey];
-    }
-     */
-
     // download group avatar if changed
     if (!group.iAmAdmin && groupDict[@"groupAvatarUrl"] != group.avatarURL) {
         [self updateAvatarForContact:group forAvatarURL:groupDict[@"groupAvatarUrl"]];
     }
+    
+    [self.delegate saveDatabase];
+
     return YES;
 }
 

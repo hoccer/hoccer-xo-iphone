@@ -2223,15 +2223,21 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     // NSLog(@"rememberLastVisibleCell = %@",self.partner.rememberedLastVisibleChatCell);
 }
 
+- (BOOL)isValidIndexPath:(NSIndexPath*)thePath {
+    if (thePath == nil) {
+        return NO;
+    }
+    return thePath.section < [self.tableView numberOfSections] && thePath.row < [self.tableView numberOfRowsInSection:thePath.section];
+}
+
 - (void) scrollToCell:(NSIndexPath*)theCell {
-    // save index path of bottom most visible cell
     //NSLog(@"scrollToCell %@", theCell);
     //NSLog(@"%@", [NSThread callStackSymbols]);
     [self.tableView scrollToRowAtIndexPath: self.partner.rememberedLastVisibleChatCell atScrollPosition:UITableViewScrollPositionBottom animated: NO];
 }
 
 - (void) scrollToRememberedCellOrToBottomIfNone {
-    if (self.partner.rememberedLastVisibleChatCell != nil) {
+    if ([self isValidIndexPath:self.partner.rememberedLastVisibleChatCell]) {
         [self scrollToCell:self.partner.rememberedLastVisibleChatCell];
     } else {
         [self scrollToBottomAnimated];

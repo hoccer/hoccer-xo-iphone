@@ -526,7 +526,7 @@ static int  groupMemberContext;
 - (void) quitInspection {
     self.fetchedResultsController.delegate = nil;
     self.inspectedObject = nil;
-    [self.delegate controllerDidFinish:self];
+    //[self.delegate controllerDidFinish:self];
 }
 
 #pragma mark - Invitation Response Section

@@ -216,18 +216,18 @@ NSString * const kRelationStateKept        = @"kept";
     return [kRelationStateGroupFriend isEqualToString: self.relationshipState];
 }
 
-- (BOOL) isRelationKept {
+- (BOOL) isKeptRelation {
     return [kRelationStateKept isEqualToString: self.relationshipState];
 }
-- (BOOL) isGroupKept {
+- (BOOL) isKeptGroup {
     return [kRelationStateKept isEqualToString: self.myGroupMembership.group.groupState];
 }
 
 - (BOOL) isKept {
     if (self.isGroup) {
-        return self.isGroupKept || self.isRelationKept;
+        return self.isKeptGroup || self.isKeptRelation;
     } else {
-        return self.isRelationKept;
+        return self.isKeptRelation;
     }
 }
 

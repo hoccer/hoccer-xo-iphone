@@ -61,8 +61,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, readonly) BOOL              isFriend;
 @property (nonatomic, readonly) BOOL              isGroupFriend;
 @property (nonatomic, readonly) BOOL              isKept;         // valid for both single contacts and groups
-@property (nonatomic, readonly) BOOL              isRelationKept; // only valid for non-group contacts
-@property (nonatomic, readonly) BOOL              isGroupKept;    // only valid for groups
+@property (nonatomic, readonly) BOOL              isKeptRelation; // only valid for non-group contacts
+@property (nonatomic, readonly) BOOL              isKeptGroup;    // only valid for groups
 @property (nonatomic, readonly) BOOL              isNotRelated;
 
 // presence state helpers
