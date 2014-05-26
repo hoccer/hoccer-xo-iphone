@@ -40,6 +40,7 @@
     [self.skipBackButton setImage:[[[player_button_prev alloc] init] image] forState:UIControlStateNormal];
     [self.skipForwardButton setImage:[[[player_button_next alloc] init] image] forState:UIControlStateNormal];
     
+    [self.closeButton addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipBackButton addTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipForwardButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
@@ -66,8 +67,11 @@
     [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(attachment))];
     [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying))];
 
+    [self.closeButton removeTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
     [self.playButton removeTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipBackButton removeTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.skipForwardButton removeTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
+    [self.seekSlider removeTarget:self action:@selector(startSeekingTime:) forControlEvents:UIControlEventTouchDown];
     [self.seekSlider removeTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
 }
 
@@ -142,7 +146,7 @@
     [self updateCurrentTime];
 }
 
-- (IBAction) close: (id)sender {
+- (void) close: (id)sender {
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 

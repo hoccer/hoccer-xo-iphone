@@ -18,6 +18,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *artistAndAlbumLabel;
 @property (nonatomic, strong) IBOutlet UILabel *currentTimeLabel;
 @property (nonatomic, strong) IBOutlet UILabel *remainingTimeLabel;
+@property (nonatomic, strong) IBOutlet UIButton *closeButton;
 @property (nonatomic, strong) IBOutlet UIButton *playButton;
 @property (nonatomic, strong) IBOutlet UIButton *skipBackButton;
 @property (nonatomic, strong) IBOutlet UIButton *skipForwardButton;
@@ -25,7 +26,5 @@
 @property (nonatomic, strong) IBOutlet UIImageView *artworkImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *volumeDownImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *volumeUpImageView;
-
-- (IBAction) close:(id)sender;
 
 @end
