@@ -12,7 +12,7 @@
 
 #import "HXOUserDefaults.h"
 
-//#define TEST_COMPRESSION
+#define TEST_COMPRESSION
 
 #ifdef TEST_COMPRESSION
 #import "NSData+Compression.h"
