@@ -297,15 +297,15 @@
                                 <state key="normal" image="fullscreen-button-back.png"/>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hYH-dV-vAz" customClass="MPVolumeView">
-                                <rect key="frame" x="64" y="509" width="192" height="32"/>
+                                <rect key="frame" x="35" y="518" width="248" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </view>
                             <imageView userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="fullscreen-icon-volume-down.png" translatesAutoresizingMaskIntoConstraints="NO" id="wsF-BK-75X">
-                                <rect key="frame" x="14" y="520" width="14" height="16"/>
+                                <rect key="frame" x="16" y="520" width="14" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="fullscreen-icon-volume-up.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ft5-cI-TVh">
-                                <rect key="frame" x="290" y="520" width="18" height="16"/>
+                                <rect key="frame" x="289" y="520" width="19" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T5U-YR-stl">
