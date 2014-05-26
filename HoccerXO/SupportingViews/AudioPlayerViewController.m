@@ -49,6 +49,8 @@
     [self.skipForwardButton addTarget:self action:@selector(skipForward:) forControlEvents:UIControlEventTouchUpInside];
     [self.seekSlider addTarget:self action:@selector(startSeekingTime:) forControlEvents:UIControlEventTouchDown];
     [self.seekSlider addTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
+    [self.shuffleButton addTarget:self action:@selector(toggleShuffle:) forControlEvents:UIControlEventTouchUpInside];
+    [self.repeatButton addTarget:self action:@selector(toggleRepeat:) forControlEvents:UIControlEventTouchUpInside];
 
     [self updateAttachmentInfo];
     [self updatePlaybackState];
@@ -176,6 +178,14 @@
 
 - (void) close: (id)sender {
     [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void) toggleShuffle: (id)sender {
+    
+}
+
+- (void) toggleRepeat: (id)sender {
+    
 }
 
 @end
