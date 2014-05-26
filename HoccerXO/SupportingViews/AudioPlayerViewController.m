@@ -102,7 +102,8 @@
         
         [attachment loadImage:^(UIImage *image, NSError *error) {
             self.artworkImageView.image = image;
-            [self updateBackgroundWithImage:image];
+            self.view.layer.contents = (id)[image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor:[UIColor colorWithWhite:0.1 alpha:0.6] saturationDeltaFactor: 1.0 maskImage: nil].CGImage;
+            self.view.layer.contentsRect = CGRectMake(0.22, 0, 0.56, 1);
         }];
         
         HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
@@ -130,10 +131,6 @@
     if (!self.isSeeking) {
         self.seekSlider.value = self.audioPlayer.currentTime;
     }
-}
-
-- (void) updateBackgroundWithImage: (UIImage *)image {
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor:[UIColor colorWithWhite:0.1 alpha:0.6] saturationDeltaFactor: 1.0 maskImage: nil]];
 }
 
 - (void) togglePlayback: (id)sender {
