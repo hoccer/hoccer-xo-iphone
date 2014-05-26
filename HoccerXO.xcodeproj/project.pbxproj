@@ -208,6 +208,7 @@
 		C559261B192C9EED0000F24E /* navbar-music-is-playing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5592619192C9EEC0000F24E /* navbar-music-is-playing@2x.png */; };
 		C559262F192CA6AF0000F24E /* AudioPlayerStateItemController.m in Sources */ = {isa = PBXBuildFile; fileRef = C559262E192CA6AF0000F24E /* AudioPlayerStateItemController.m */; };
 		C559264A192CE50F0000F24E /* AudioAttachmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C5592649192CE50F0000F24E /* AudioAttachmentCell.m */; };
+		C576EB541933392100C0D254 /* player_icon_now_playing.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EB531933392100C0D254 /* player_icon_now_playing.m */; };
 		C5AC19C4191157810075C07C /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19C1191157810075C07C /* HXOAudioPlaybackButtonController.m */; };
 		C5AC19C5191157810075C07C /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19C3191157810075C07C /* HXOAudioPlayer.m */; };
 		C5AC19D6191157960075C07C /* AttachmentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AC19D5191157960075C07C /* AttachmentInfo.m */; };
@@ -828,6 +829,8 @@
 		C559262E192CA6AF0000F24E /* AudioPlayerStateItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerStateItemController.m; sourceTree = "<group>"; };
 		C5592648192CE50F0000F24E /* AudioAttachmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentCell.h; sourceTree = "<group>"; };
 		C5592649192CE50F0000F24E /* AudioAttachmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentCell.m; sourceTree = "<group>"; };
+		C576EB521933392100C0D254 /* player_icon_now_playing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_icon_now_playing.h; sourceTree = "<group>"; };
+		C576EB531933392100C0D254 /* player_icon_now_playing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_icon_now_playing.m; sourceTree = "<group>"; };
 		C5AC19C0191157810075C07C /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
 		C5AC19C1191157810075C07C /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
 		C5AC19C2191157810075C07C /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
@@ -1962,6 +1965,8 @@
 				6A34B2C0192E17BF00215DF1 /* player_close.m */,
 				6A34B2C5192E182A00215DF1 /* player_close.pcvd */,
 				6A34B2C6192E182A00215DF1 /* player_close.svg */,
+				C576EB521933392100C0D254 /* player_icon_now_playing.h */,
+				C576EB531933392100C0D254 /* player_icon_now_playing.m */,
 			);
 			path = AudioPlayer;
 			sourceTree = "<group>";
@@ -2749,6 +2754,7 @@
 				6A34B2AB192E14E400215DF1 /* player_button_shuffle_off.m in Sources */,
 				E99886C81725CB3F0089A510 /* VcardParser.m in Sources */,
 				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
+				C576EB541933392100C0D254 /* player_icon_now_playing.m in Sources */,
 				E9E92F4018733B7A007B8042 /* ContextFilterLogFormatter.m in Sources */,
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 				E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */,

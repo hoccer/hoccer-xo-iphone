@@ -11,7 +11,7 @@
 #import "HXOLabel.h"
 #import "HXOUI.h"
 #import "VectorArtView.h"
-#import "disclosure_arrow.h"
+#import "player_icon_now_playing.h"
 
 @interface AudioAttachmentCell ()
 
@@ -31,7 +31,7 @@
 
 - (void) commonInit {
     
-    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[disclosure_arrow alloc] init]];
+    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[player_icon_now_playing alloc] init]];
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentCenter;
     
     self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
