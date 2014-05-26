@@ -110,6 +110,10 @@
     }
 }
 
+- (NSUInteger) playlistLength {
+    return self.playlist.count;
+}
+
 #pragma mark - Private helpers
 
 - (BOOL) playAtIndex: (NSUInteger) index {

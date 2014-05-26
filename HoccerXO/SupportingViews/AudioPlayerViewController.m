@@ -115,8 +115,12 @@
         self.playButton.tintColor = tintColor;
         self.skipBackButton.tintColor = tintColor;
         self.skipForwardButton.tintColor = tintColor;
+        self.playlistStatusLabel.textColor = tintColor;
         self.titleLabel.textColor = tintColor;
     }];
+    
+    HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
+    self.playlistStatusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"audio_player_playlist_status", nil), player.playlistIndex + 1, player.playlistLength];
 }
 
 - (void) updatePlaybackState {

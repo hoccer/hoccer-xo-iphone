@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) Attachment *audioAttachment;
 
+@property (nonatomic, strong) IBOutlet UILabel *playlistStatusLabel;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
 @property (nonatomic, strong) IBOutlet UILabel *artistLabel;
 @property (nonatomic, strong) IBOutlet UILabel *currentTimeLabel;

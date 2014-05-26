@@ -24,8 +24,9 @@
 
 @property (nonatomic, readonly) BOOL isPlaying;
 @property (nonatomic, readonly) Attachment * attachment;
+@property (nonatomic, readonly) NSUInteger playlistIndex;
+@property (nonatomic, readonly) NSUInteger playlistLength;
 @property (nonatomic, readonly) NSTimeInterval duration;
 @property NSTimeInterval currentTime;
-
 
 @end
