@@ -17,7 +17,7 @@
 }
 
 - (void) tintColorDidChange {
-    UIImage *trackImage = [[[UIImage imageNamed:@"slider-track"] tintWithColor:[UIColor lightGrayColor]] resizableImageWithCapInsets:UIEdgeInsetsZero];
+    UIImage *trackImage = [[[UIImage imageNamed:@"slider-track"] tintWithColor:[UIColor colorWithWhite:1.0 alpha:0.6]] resizableImageWithCapInsets:UIEdgeInsetsZero];
     [self setMinimumTrackImage:trackImage forState:UIControlStateNormal];
     [self setMaximumTrackImage:trackImage forState:UIControlStateNormal];
     
