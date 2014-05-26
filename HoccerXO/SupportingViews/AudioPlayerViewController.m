@@ -18,7 +18,6 @@
 #import "player_button_prev.h"
 #import "player_icon_volume_down.h"
 #import "player_icon_volume_up.h"
-#import "UIImage+AverageColor.h"
 #import "UIImage+ImageEffects.h"
 
 @interface AudioPlayerViewController ()
@@ -54,8 +53,8 @@
     [self updatePlaybackState];
     [self updateCurrentTime];
     
-    self.volumeDownImageView.image = [[[[player_icon_volume_down alloc] init] image] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    self.volumeUpImageView.image = [[[[player_icon_volume_up alloc] init] image] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.volumeDownImageView.image = [[[player_icon_volume_down alloc] init] image];
+    self.volumeUpImageView.image = [[[player_icon_volume_up alloc] init] image];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -104,20 +103,6 @@
         [attachment loadImage:^(UIImage *image, NSError *error) {
             self.artworkImageView.image = image;
             [self updateBackgroundWithImage:image];
-
-            UIColor *averageColor = [image averageColor];
-            CGFloat white = 0.0f;
-            CGFloat alpha = 0.0;
-            [averageColor getWhite:&white alpha:&alpha];
-
-            UIColor *tintColor = white > 0.5f ? [UIColor blackColor] : [UIColor whiteColor];
-            self.view.tintColor = tintColor;
-            self.closeButton.tintColor = tintColor;
-            self.playButton.tintColor = tintColor;
-            self.skipBackButton.tintColor = tintColor;
-            self.skipForwardButton.tintColor = tintColor;
-            self.playlistStatusLabel.textColor = tintColor;
-            self.titleLabel.textColor = tintColor;
         }];
         
         HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
@@ -148,7 +133,7 @@
 }
 
 - (void) updateBackgroundWithImage: (UIImage *)image {
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor: nil saturationDeltaFactor: 1.8 maskImage: nil]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor:[UIColor colorWithWhite:0.1 alpha:0.6] saturationDeltaFactor: 1.0 maskImage: nil]];
 }
 
 - (void) togglePlayback: (id)sender {
