@@ -78,9 +78,7 @@
 
 - (void) skipBack {
     if (self.currentTime > 3.0){
-        Attachment *attachment = self.attachment;
-        [self stop];
-        [self playAttachment:attachment];
+        self.currentTime = 0.0;
     } else {
         if (self.playlistIndex > 0) {
             [self playAtIndex:self.playlistIndex - 1];
