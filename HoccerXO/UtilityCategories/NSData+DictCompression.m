@@ -289,10 +289,6 @@ BOOL isBase64Char(unsigned char c) {
 }
 
 
-static const unsigned char UUID_bytes_lower[18] = "0123456789abcdef-";
-static const unsigned char UUID_bytes_upper[18] = "0123456789ABCDEF-";
-
-
 // return the first range of bytes in inRange where all bytes are contained in bytesset
 - (NSRange) rangeOfBytesFromSet:(NSData*)byteSet range:(NSRange)range minLenght:(NSUInteger)minLength {
     unsigned char min = 255;

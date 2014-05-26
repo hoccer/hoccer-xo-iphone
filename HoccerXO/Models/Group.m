@@ -200,32 +200,32 @@
 }
 
 - (BOOL) iAmAdmin {
-    return [self.myGroupMembership.role isEqualToString:@"admin"];
+    return [@"admin" isEqualToString: self.myGroupMembership.role];
 }
 
 - (BOOL) iJoined {
-    return [self.myGroupMembership.state isEqualToString:@"joined"];
+    return [@"joined" isEqualToString: self.myGroupMembership.state];
 }
 
 
 - (BOOL)isKeptGroup {
-    return [self.groupState isEqualToString:@"kept"];
+    return [kRelationStateKept isEqualToString:self.groupState];
 }
 
 - (BOOL)isRemovedGroup {
-    return [self.groupState isEqualToString:@"none"];
+    return [kRelationStateNone isEqualToString:self.groupState];
 }
 
 - (BOOL)isExistingGroup {
-    return [self.groupState isEqualToString:@"exists"];
+    return [@"exists" isEqualToString:self.groupState];
 }
 
 - (BOOL)isIncompleteGroup {
-    return [self.groupState isEqualToString:@"incomplete"];
+    return [@"incomplete" isEqualToString:self.groupState ];
 }
 
 - (BOOL)isNearbyGroup{
-    return [self.groupType isEqualToString:@"nearby"];
+    return [@"nearby" isEqualToString: self.groupType];
 }
 
 //public class TalkGroup {

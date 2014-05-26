@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSData   * publicKey;       // public key of this contact
 @property (nonatomic, strong) NSString * publicKeyId;     // id of public key
 @property (nonatomic, strong) NSString * publicKeyString; // b64-string
+@property (readonly)          NSNumber * keyLength;       // length of public key in Bits
 @property (nonatomic, strong) NSString * status;
 //@property (nonatomic, strong) NSString*     connectionStatus;
 

@@ -44,11 +44,16 @@ typedef void (^ContinueBlock)();
 @property (strong, nonatomic)  NSDate * lastDatebaseSaveDate;
 @property (strong, nonatomic)  NSTimer * nextDatabaseSaveTimer;
 
+@property (strong, nonatomic)  NSDate * lastPendingChangesProcessed;
+@property (strong, nonatomic)  NSTimer * nextChangeProcessTimer;
+
 @property (nonatomic, strong) NSURL * openedFileURL;
 @property (nonatomic, strong) NSString * openedFileName;
 @property (nonatomic, strong) NSString * openedFileDocumentType;
 @property (nonatomic, strong) NSString * openedFileMediaType;
 @property (nonatomic, strong) NSString * openedFileMimeType;
+
+@property (readonly) BOOL inNearbyMode;
 
 
 @property (nonatomic,readonly) ABPeoplePickerNavigationController * peoplePicker;
@@ -84,7 +89,16 @@ typedef void (^ContinueBlock)();
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 
 - (void) showFatalErrorAlertWithMessage:(NSString *)message withTitle:(NSString *)title;
-    
+
+-(void)configureForNearbyMode:(BOOL)modeNearby;
+-(BOOL)inNearbyMode;
+
+-(void)beginInspecting:(id)inspectedObject withInspector:(id)inspector;
+-(void)endInspecting:(id)inspectedObject withInspector:(id)inspector;
+-(BOOL)isInspecting:(id)inspectedObject withInspector:(id)inspector;
+-(BOOL)isInspecting:(id)inspectedObject;
+
+
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;
 + (void) setMusicAudioSession;
