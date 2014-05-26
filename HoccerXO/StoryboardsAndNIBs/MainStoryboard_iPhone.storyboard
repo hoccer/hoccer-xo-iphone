@@ -273,6 +273,7 @@
                                 <rect key="frame" x="20" y="319" width="280" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85y-tl-b3q">
@@ -320,7 +321,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="AXf-sx-DVH"/>
                     <connections>
-                        <outlet property="artistAndAlbumLabel" destination="3zo-vz-vjI" id="dFh-rb-jf9"/>
+                        <outlet property="artistLabel" destination="3zo-vz-vjI" id="Wxm-Ef-7hZ"/>
                         <outlet property="artworkImageView" destination="V7Z-6c-o9p" id="eGB-7I-s66"/>
                         <outlet property="closeButton" destination="T5U-YR-stl" id="lsg-rl-Kia"/>
                         <outlet property="currentTimeLabel" destination="MXk-2i-gTo" id="jf6-N5-byB"/>
