@@ -77,6 +77,10 @@
     [self.seekSlider removeTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
 }
 
+- (NSUInteger) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (void) observeValueForKeyPath: (NSString *)keyPath ofObject: (id)object change: (NSDictionary *)change context: (void *)context {
     if ([keyPath isEqual:NSStringFromSelector(@selector(attachment))]) {
         [self updateAttachmentInfo];
