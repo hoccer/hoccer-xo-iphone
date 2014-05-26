@@ -10,7 +10,6 @@
 
 #import "AppDelegate.h"
 #import "Attachment.h"
-#import "AttachmentInfo.h"
 #import "AudioAttachmentCell.h"
 #import "AudioPlayerStateItemController.h"
 #import "HXOAudioPlayer.h"
@@ -110,20 +109,7 @@
 
 - (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
-    
-    if (attachment) {
-        AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
-        cell.titleLabel.text = info.audioTitle;
-        cell.subtitleLabel.text = info.audioArtistAndAlbum;
-        
-        [attachment loadImage:^(UIImage *image, NSError *error) {
-            if (error == nil) {
-                cell.artwork.image = image;
-            } else {
-                NSLog(@"ERROR: Loading audio artwork image failed: %@", error);
-            }
-        }];
-    }
+    cell.attachment = attachment;
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {

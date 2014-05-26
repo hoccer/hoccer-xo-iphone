@@ -10,6 +10,7 @@
 
 #import "HXOTableViewCell.h"
 
+@class Attachment;
 @class AvatarView;
 
 @interface AudioAttachmentCell : HXOTableViewCell
@@ -17,6 +18,7 @@
 @property (nonatomic,readonly) UILabel     * titleLabel;
 @property (nonatomic,readonly) UILabel     * subtitleLabel;
 @property (nonatomic,readonly) UIImageView * artwork;
+@property (nonatomic,strong)   Attachment  * attachment;
 
 - (void) commonInit;
 - (void) preferredContentSizeChanged: (NSNotification*) notification;

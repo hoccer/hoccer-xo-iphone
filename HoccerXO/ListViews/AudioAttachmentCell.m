@@ -6,7 +6,10 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
+#import "Attachment.h"
+#import "AttachmentInfo.h"
 #import "AudioAttachmentCell.h"
+#import "HXOAudioPlayer.h"
 #import "HXOUI.h"
 #import "HXOLabel.h"
 #import "HXOUI.h"
@@ -31,7 +34,6 @@
 
 - (void) commonInit {
     
-    self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[player_icon_now_playing alloc] init]];
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentCenter;
     
     self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
@@ -77,6 +79,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     
     [self preferredContentSizeChanged: nil];
+    
+    [[HXOAudioPlayer sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
+    [self updatePlaybackState];
 }
 
 - (CGFloat) artworkSize {
@@ -127,7 +132,49 @@
 }
 
 - (void) dealloc {
+    [[HXOAudioPlayer sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying))];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+- (void) observeValueForKeyPath: (NSString *)keyPath ofObject: (id)object change: (NSDictionary *)change context: (void *)context {
+    if ([keyPath isEqual:NSStringFromSelector(@selector(isPlaying))]) {
+        [self updatePlaybackState];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+- (void) setAttachment:(Attachment *)attachment {
+    _attachment = attachment;
+
+    if (attachment) {
+        AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
+        self.titleLabel.text = info.audioTitle;
+        self.subtitleLabel.text = info.audioArtistAndAlbum;
+        
+        [attachment loadImage:^(UIImage *image, NSError *error) {
+            if (error == nil) {
+                self.artwork.image = image;
+            } else {
+                NSLog(@"ERROR: Loading audio artwork image failed: %@", error);
+            }
+        }];
+    } else {
+        self.titleLabel.text = @"";
+        self.subtitleLabel.text = @"";
+        self.artwork.image = nil;
+    }
+
+    [self updatePlaybackState];
+}
+
+- (void) updatePlaybackState {
+    HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
+    if (player.isPlaying && [player.attachment isEqual:self.attachment]) {
+        self.hxoAccessoryView = [[VectorArtView alloc] initWithVectorArt: [[player_icon_now_playing alloc] init]];
+    } else {
+        self.hxoAccessoryView = nil;
+    }
 }
 
 @end
