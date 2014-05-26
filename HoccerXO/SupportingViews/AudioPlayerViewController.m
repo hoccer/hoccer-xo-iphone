@@ -93,34 +93,38 @@
 - (void) updateAttachmentInfo {
     Attachment *attachment = self.audioPlayer.attachment;
 
-    AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:attachment];
-    self.titleLabel.text = attachmentInfo.audioTitle;
-    self.artistLabel.text = attachmentInfo.audioArtist;
+    if (attachment) {
+        AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:attachment];
+        self.titleLabel.text = attachmentInfo.audioTitle;
+        self.artistLabel.text = attachmentInfo.audioArtist;
 
-    self.seekSlider.minimumValue = 0.0f;
-    self.seekSlider.maximumValue = self.audioPlayer.duration;
-    
-    [attachment loadImage:^(UIImage *image, NSError *error) {
-        self.artworkImageView.image = image;
-        [self updateBackgroundWithImage:image];
+        self.seekSlider.minimumValue = 0.0f;
+        self.seekSlider.maximumValue = self.audioPlayer.duration;
+        
+        [attachment loadImage:^(UIImage *image, NSError *error) {
+            self.artworkImageView.image = image;
+            [self updateBackgroundWithImage:image];
 
-        UIColor *averageColor = [image averageColor];
-        CGFloat white = 0.0f;
-        CGFloat alpha = 0.0;
-        [averageColor getWhite:&white alpha:&alpha];
+            UIColor *averageColor = [image averageColor];
+            CGFloat white = 0.0f;
+            CGFloat alpha = 0.0;
+            [averageColor getWhite:&white alpha:&alpha];
 
-        UIColor *tintColor = white > 0.5f ? [UIColor blackColor] : [UIColor whiteColor];
-        self.view.tintColor = tintColor;
-        self.closeButton.tintColor = tintColor;
-        self.playButton.tintColor = tintColor;
-        self.skipBackButton.tintColor = tintColor;
-        self.skipForwardButton.tintColor = tintColor;
-        self.playlistStatusLabel.textColor = tintColor;
-        self.titleLabel.textColor = tintColor;
-    }];
-    
-    HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
-    self.playlistStatusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"audio_player_playlist_status", nil), player.playlistIndex + 1, player.playlistLength];
+            UIColor *tintColor = white > 0.5f ? [UIColor blackColor] : [UIColor whiteColor];
+            self.view.tintColor = tintColor;
+            self.closeButton.tintColor = tintColor;
+            self.playButton.tintColor = tintColor;
+            self.skipBackButton.tintColor = tintColor;
+            self.skipForwardButton.tintColor = tintColor;
+            self.playlistStatusLabel.textColor = tintColor;
+            self.titleLabel.textColor = tintColor;
+        }];
+        
+        HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
+        self.playlistStatusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"audio_player_playlist_status", nil), player.playlistIndex + 1, player.playlistLength];
+    } else {
+        [self close:nil];
+    }
 }
 
 - (void) updatePlaybackState {
