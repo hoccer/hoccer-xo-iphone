@@ -15,6 +15,8 @@
 #import "player_button_pause.h"
 #import "player_button_next.h"
 #import "player_button_prev.h"
+#import "player_icon_volume_down.h"
+#import "player_icon_volume_up.h"
 #import "UIImage+ImageEffects.h"
 
 @interface AudioPlayerViewController ()
@@ -35,8 +37,8 @@
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(attachment)) options:0 context:NULL];
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
     
-    [self.skipBackButton setImage:[[[player_button_prev alloc]init]image] forState:UIControlStateNormal];
-    [self.skipForwardButton setImage:[[[player_button_next alloc]init]image] forState:UIControlStateNormal];
+    [self.skipBackButton setImage:[[[player_button_prev alloc] init] image] forState:UIControlStateNormal];
+    [self.skipForwardButton setImage:[[[player_button_next alloc] init] image] forState:UIControlStateNormal];
     
     [self.playButton addTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipBackButton addTarget:self action:@selector(skipBack:) forControlEvents:UIControlEventTouchUpInside];
@@ -48,8 +50,8 @@
     [self updatePlaybackState];
     [self updateCurrentTime];
     
-    self.volumeDownImageView.image = [self.volumeDownImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    self.volumeUpImageView.image = [self.volumeUpImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.volumeDownImageView.image = [[[[player_icon_volume_down alloc] init] image] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.volumeUpImageView.image = [[[[player_icon_volume_up alloc] init] image] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -95,10 +97,10 @@
 
 - (void) updatePlaybackState {
     if ([self.audioPlayer isPlaying]){
-        UIImage *image = [[[player_button_pause alloc]init]image];
+        UIImage *image = [[[player_button_pause alloc] init] image];
         [self.playButton setImage:image forState:UIControlStateNormal];
     } else {
-        UIImage *image = [[[player_button_play alloc]init]image];
+        UIImage *image = [[[player_button_play alloc] init] image];
         [self.playButton setImage:image forState:UIControlStateNormal];
     }
     
