@@ -22,7 +22,7 @@
         return [NSString stringWithFormat:@"%@%i:%02i:%02i", sign, hours, minutes, seconds];
     }
     
-    return [NSString stringWithFormat:@"%@%02i:%02i", sign, minutes, seconds];
+    return [NSString stringWithFormat:@"%@%i:%02i", sign, minutes, seconds];
 }
 
 @end
