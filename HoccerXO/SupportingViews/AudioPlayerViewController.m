@@ -11,6 +11,7 @@
 #import "AttachmentInfo.h"
 #import "HXOAudioPlayer.h"
 #import "NSString+FromTimeInterval.h"
+#import "player_close.h"
 #import "player_button_play.h"
 #import "player_button_pause.h"
 #import "player_button_next.h"
@@ -37,6 +38,7 @@
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(attachment)) options:0 context:NULL];
     [self.audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying)) options:0 context:NULL];
     
+    [self.closeButton setImage:[[[player_close alloc] init] image] forState:UIControlStateNormal];
     [self.skipBackButton setImage:[[[player_button_prev alloc] init] image] forState:UIControlStateNormal];
     [self.skipForwardButton setImage:[[[player_button_next alloc] init] image] forState:UIControlStateNormal];
     
