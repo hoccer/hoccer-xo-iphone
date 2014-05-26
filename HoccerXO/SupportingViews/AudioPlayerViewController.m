@@ -55,6 +55,7 @@
     
     self.volumeDownImageView.image = [[[player_icon_volume_down alloc] init] image];
     self.volumeUpImageView.image = [[[player_icon_volume_up alloc] init] image];
+    self.seekSlider.tintColor = self.view.tintColor;
 }
 
 - (void) viewDidAppear:(BOOL)animated {

@@ -13,11 +13,12 @@
 @implementation SeekSlider
 
 - (CGRect) trackRectForBounds:(CGRect)bounds {
-    return CGRectInset(bounds, 0.0f, 0.5f * (CGRectGetHeight(bounds) - 7.0f));
+    return CGRectInset(bounds, 0.0f, 0.5f * (CGRectGetHeight(bounds) - 8.0f));
 }
 
 - (void) tintColorDidChange {
-    UIImage *trackImage = [[[UIImage imageNamed:@"slider-track"] tintWithColor:[UIColor colorWithWhite:1.0 alpha:0.6]] resizableImageWithCapInsets:UIEdgeInsetsZero];
+    UIColor *trackColor = [UIColor colorWithWhite:1.0 alpha:0.6];
+    UIImage *trackImage = [[[UIImage imageNamed:@"slider-track"] tintWithColor:trackColor] resizableImageWithCapInsets:UIEdgeInsetsZero];
     [self setMinimumTrackImage:trackImage forState:UIControlStateNormal];
     [self setMaximumTrackImage:trackImage forState:UIControlStateNormal];
     
