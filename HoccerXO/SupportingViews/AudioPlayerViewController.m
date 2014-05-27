@@ -81,6 +81,7 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     self.playbackTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateCurrentTime) userInfo:nil repeats:YES];
+    [self updatePlaylistStatus];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -90,6 +91,8 @@
 - (void) dealloc {
     [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(attachment))];
     [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(isPlaying))];
+    [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(isShuffled))];
+    [self.audioPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(repeatState))];
 
     [self.closeButton removeTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
     [self.playButton removeTarget:self action:@selector(togglePlayback:) forControlEvents:UIControlEventTouchUpInside];
