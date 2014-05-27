@@ -135,7 +135,9 @@
         [attachment loadImage:^(UIImage *image, NSError *error) {
             self.artworkImageView.image = image;
             self.view.layer.contents = (id)[image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor:[UIColor colorWithWhite:0.1 alpha:0.6] saturationDeltaFactor: 1.0 maskImage: nil].CGImage;
-            self.view.layer.contentsRect = CGRectMake(0.22, 0, 0.56, 1);
+            CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+            CGFloat aspectRatio = screenSize.width / screenSize.height;
+            self.view.layer.contentsRect = CGRectMake(0.5 * (1 - aspectRatio), 0, aspectRatio, 1);
         }];
         
         HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
