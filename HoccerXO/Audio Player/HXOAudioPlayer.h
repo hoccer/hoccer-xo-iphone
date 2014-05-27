@@ -21,9 +21,13 @@
 - (void) togglePlayPause;
 - (void) skipBack;
 - (void) skipForward;
+- (void) toggleShuffle;
+- (void) toggleRepeat;
 
 @property (nonatomic, readonly) BOOL isPlaying;
+@property (nonatomic, readonly) BOOL isShuffled;
 @property (nonatomic, readonly) Attachment * attachment;
+@property (nonatomic, readonly) NSUInteger currentPlaylistTrackNumber;
 @property (nonatomic, readonly) NSUInteger playlistIndex;
 @property (nonatomic, readonly) NSUInteger playlistLength;
 @property (nonatomic, readonly) NSTimeInterval duration;

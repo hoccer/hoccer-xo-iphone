@@ -13,14 +13,16 @@
 #import "Attachment.h"
 #import "AppDelegate.h"
 #import "AttachmentInfo.h"
-
+#import "NSArray+Shuffle.h"
 
 @interface HXOAudioPlayer ()
 
 @property (nonatomic, assign) BOOL isPlaying;
+@property (nonatomic, assign) BOOL isShuffled;
 @property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) AVAudioPlayer * player;
 @property (nonatomic, strong) NSArray * playlist;
+@property (nonatomic, strong) NSArray * playlistIndices;
 @property (nonatomic, assign) NSUInteger playlistIndex;
 
 @end
@@ -46,7 +48,9 @@
     
     if (self) {
         self.playlist = @[];
+        self.playlistIndices = [NSMutableArray alloc];
         self.playlistIndex = 0;
+        self.isShuffled = NO;
     }
     
     return self;
@@ -56,6 +60,8 @@
 
 - (BOOL) playWithPlaylist: (NSArray *) playlist atIndex: (NSUInteger) index {
     self.playlist = playlist;
+    [self createPlaylistIndices];
+
     return [self playAtIndex:index];
 }
 
@@ -110,6 +116,25 @@
 
 - (NSUInteger) playlistLength {
     return self.playlist.count;
+}
+
+- (NSUInteger) currentPlaylistTrackNumber {
+    return (NSUInteger)[self.playlistIndices objectAtIndex: self.playlistIndex];
+}
+
+
+- (void) toggleShuffle {
+    if (self.isShuffled) {
+        self.isShuffled = YES;
+    } else {
+        self.isShuffled = NO;
+    }
+
+    [self createPlaylistIndices];
+}
+
+- (void) toggleRepeat {
+
 }
 
 #pragma mark - Private helpers
@@ -191,6 +216,32 @@
         infoCenter.nowPlayingInfo = nowPlayingInfo;
     } else {
         infoCenter.nowPlayingInfo = nil;
+    }
+}
+
+- (void) createPlaylistIndices {
+    NSUInteger current = 0;
+    if ([self.playlistIndices count] > 0) {
+        current = [self currentPlaylistTrackNumber];
+    }
+    
+    NSMutableArray *indices = [[NSMutableArray alloc] initWithCapacity:[self.playlist count]];
+    for (int i = 0; i < [self.playlist count]; i++) {
+        [indices addObject:[NSNumber numberWithInt:i]];
+    }
+
+    self.playlistIndices = indices;
+    if (self.isShuffled) {
+        NSMutableArray *shuffledPlaylist = [[NSMutableArray alloc] initWithArray: [self.playlistIndices arrayByShuffling]];
+        NSNumber *currentTrackNumber = [NSNumber numberWithInt:self.currentPlaylistTrackNumber];
+        NSNumber *firstShuffledTrackNumber = [shuffledPlaylist firstObject];
+        NSUInteger indexOfCurrentTrackNumber = [shuffledPlaylist indexOfObject:currentTrackNumber];
+        [shuffledPlaylist insertObject:currentTrackNumber atIndex:0];
+        [shuffledPlaylist insertObject:firstShuffledTrackNumber atIndex: indexOfCurrentTrackNumber];
+        self.playlistIndex = 0;
+        self.playlistIndices = shuffledPlaylist;
+    } else {
+        self.playlistIndex = current;
     }
 }
 
