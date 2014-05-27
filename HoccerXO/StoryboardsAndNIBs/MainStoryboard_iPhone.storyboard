@@ -326,6 +326,22 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7br-sq-EAi">
+                                <rect key="frame" x="14" y="442" width="36" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="imageEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePq-at-U6r">
+                                <rect key="frame" x="270" y="442" width="37" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <inset key="imageEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -338,7 +354,9 @@
                         <outlet property="playButton" destination="85y-tl-b3q" id="fwK-18-Hpw"/>
                         <outlet property="playlistStatusLabel" destination="gSs-fM-2li" id="r0G-3u-Pgd"/>
                         <outlet property="remainingTimeLabel" destination="KJX-QM-Eai" id="kUd-Qp-5C3"/>
+                        <outlet property="repeatButton" destination="ePq-at-U6r" id="wv9-gA-WxE"/>
                         <outlet property="seekSlider" destination="k7m-XD-mWz" id="8mT-DY-gX1"/>
+                        <outlet property="shuffleButton" destination="7br-sq-EAi" id="xzQ-CX-1wL"/>
                         <outlet property="skipBackButton" destination="dBA-Xa-6es" id="xwQ-Ri-HwH"/>
                         <outlet property="skipForwardButton" destination="liZ-gI-Pdx" id="1Xj-vg-Ekw"/>
                         <outlet property="titleLabel" destination="JOo-wW-6Ox" id="hEW-Iq-dZj"/>
