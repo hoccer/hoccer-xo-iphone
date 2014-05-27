@@ -140,11 +140,23 @@
             self.view.layer.contentsRect = CGRectMake(0.5 * (1 - aspectRatio), 0, aspectRatio, 1);
         }];
         
-        HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
-        self.playlistStatusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"audio_player_playlist_status", nil), player.playlistIndex + 1, player.playlistLength];
+        [self updatePlaylistStatus];
     } else {
         [self close:nil];
     }
+}
+
+- (void) updatePlaylistStatus {
+    HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
+    NSString *playlistStatus = [NSString stringWithFormat:NSLocalizedString(@"audio_player_playlist_status", nil), player.playlistIndex + 1, player.playlistLength];
+    
+    CGFloat fontSize = self.playlistStatusLabel.font.pointSize;
+    NSMutableAttributedString *attributedPlaylistStatus = [[NSMutableAttributedString alloc] initWithString:playlistStatus attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize] }];
+    NSArray *components = [playlistStatus componentsSeparatedByString:@" "];
+    NSRange range = NSMakeRange([(NSString *)[components objectAtIndex:0] length] + 1, [(NSString *)[components objectAtIndex:1] length]);
+    [attributedPlaylistStatus setAttributes:@{ NSFontAttributeName: [UIFont systemFontOfSize:fontSize] } range:range];
+
+    self.playlistStatusLabel.attributedText = attributedPlaylistStatus;
 }
 
 - (void) updatePlaybackState {
