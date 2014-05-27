@@ -11,6 +11,12 @@
 
 @class Attachment;
 
+NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
+    HXOAudioPlayerRepeatStateOff,
+    HXOAudioPlayerRepeatStateOne,
+    HXOAudioPlayerRepeatStateAll
+};
+
 @interface HXOAudioPlayer : NSObject <AVAudioPlayerDelegate>
 
 + (HXOAudioPlayer *) sharedInstance;
