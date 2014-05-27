@@ -32,6 +32,8 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 @property (nonatomic, strong) NSString * publicKeyId;     // id of public key
 @property (nonatomic, strong) NSData   * publicKeyIdData; // public key of this contact
 @property (nonatomic, strong) NSString * publicKeyString; // b64-string
+@property (readonly)          NSNumber * keyLength;       // length of public key in bits
+
 
 @property (nonatomic,readonly) NSString * groupMembershipList;
 

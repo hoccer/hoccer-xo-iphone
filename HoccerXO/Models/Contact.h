@@ -48,6 +48,12 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, retain)   NSString        * relationshipState;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
 
+// dynamic key properties
+@property (nonatomic,strong)    NSString        * publicKeyString; // b64-string
+@property (readonly)            NSNumber        * keyLength;       // length of public key in bits
+
+
+// class type helper
 @property (nonatomic, readonly) BOOL              isGroup;
 
 // relationsShip helpers
@@ -55,8 +61,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, readonly) BOOL              isFriend;
 @property (nonatomic, readonly) BOOL              isGroupFriend;
 @property (nonatomic, readonly) BOOL              isKept;         // valid for both single contacts and groups
-@property (nonatomic, readonly) BOOL              isRelationKept; // only valid for non-group contacts
-@property (nonatomic, readonly) BOOL              isGroupKept;    // only valid for groups
+@property (nonatomic, readonly) BOOL              isKeptRelation; // only valid for non-group contacts
+@property (nonatomic, readonly) BOOL              isKeptGroup;    // only valid for groups
 @property (nonatomic, readonly) BOOL              isNotRelated;
 
 // presence state helpers
@@ -77,10 +83,9 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
 @property (nonatomic, strong)   NSIndexPath     * rememberedLastVisibleChatCell;
 
-@property (nonatomic,strong)    NSString        * publicKeyString; // b64-string
-
-
 @property (nonatomic, strong)   NSMutableSet    * messages;
+@property (nonatomic, strong)   NSMutableSet    * deliveriesSent;
+@property (nonatomic, strong)   NSMutableSet    * deliveriesReceived;
 @property (nonatomic, strong)   NSMutableSet    * groupMemberships;
 @property (readonly)            NSString        * nickNameWithStatus;
 
@@ -92,6 +97,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
+- (void) updateNearbyFlag;
+
 
 
 @end

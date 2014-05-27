@@ -40,6 +40,8 @@
 @dynamic presenceLastUpdated;
 
 @dynamic messages;
+@dynamic deliveriesSent;
+@dynamic deliveriesReceived;
 @dynamic groupMemberships;
 @dynamic nickNameWithStatus;
 @dynamic myGroupMembership;
@@ -57,12 +59,13 @@ NSString * const kRelationStateBlocked     = @"blocked";
 NSString * const kRelationStateGroupFriend = @"groupfriend";
 NSString * const kRelationStateKept        = @"kept";
 
-
+@dynamic publicKeyString;
 @dynamic relationshipState;
 @dynamic relationshipLastChanged;
 @dynamic relationshipLastChangedMillis;
 
 @dynamic presenceLastUpdatedMillis;
+@dynamic keyLength;
 
 - (NSNumber*) relationshipLastChangedMillis {
     return [HXOBackend millisFromDate:self.relationshipLastChanged];
@@ -111,8 +114,6 @@ NSString * const kRelationStateKept        = @"kept";
     [self didChangeValueForKey: @"avatarImage"];
 }
 
-@dynamic publicKeyString;
-
 -(NSString*) publicKeyString {
     return [self.publicKey asBase64EncodedString];
 }
@@ -121,6 +122,9 @@ NSString * const kRelationStateKept        = @"kept";
     self.publicKey = [NSData dataWithBase64EncodedString:theB64String];
 }
 
+- (NSNumber*) keyLength {
+    return [NSNumber numberWithInt:[CCRSA getPublicKeySize: self.publicKey]];
+}
 
 - (SecKeyRef) getPublicKeyRef {
     CCRSA * rsa = [CCRSA sharedInstance];
@@ -212,18 +216,18 @@ NSString * const kRelationStateKept        = @"kept";
     return [kRelationStateGroupFriend isEqualToString: self.relationshipState];
 }
 
-- (BOOL) isRelationKept {
+- (BOOL) isKeptRelation {
     return [kRelationStateKept isEqualToString: self.relationshipState];
 }
-- (BOOL) isGroupKept {
+- (BOOL) isKeptGroup {
     return [kRelationStateKept isEqualToString: self.myGroupMembership.group.groupState];
 }
 
 - (BOOL) isKept {
     if (self.isGroup) {
-        return self.isGroupKept;
+        return self.isKeptGroup || self.isKeptRelation;
     } else {
-        return self.isRelationKept;
+        return self.isKeptRelation;
     }
 }
 
@@ -264,6 +268,23 @@ NSString * const kRelationStateKept        = @"kept";
         return [(Group*)self isNearbyGroup];
     } else {
         return self.isNearbyContact;
+    }
+}
+
+-(void) updateNearbyFlag {
+    NSSet * myMemberships = self.groupMemberships;
+    BOOL isNearby = NO;
+    for (GroupMembership * memberShip in myMemberships) {
+        if (memberShip.group.isExistingGroup && memberShip.group.isNearbyGroup) {
+            isNearby = YES;
+        }
+    }
+    if (isNearby != self.isNearbyContact) {
+        if (isNearby) {
+            self.isNearbyTag = @"YES";
+        } else {
+            self.isNearbyTag = nil;
+        }
     }
 }
 

@@ -12,9 +12,13 @@
 
 #import "HXOUserDefaults.h"
 
+//#define TEST_COMPRESSION
+
+#ifdef TEST_COMPRESSION
 #import "NSData+Compression.h"
 #import "NSData+GZIP.h"
 #import "NSData+DictCompression.h"
+#endif
 
 static const NSInteger kJsonRpcParseError     = -32700;
 static const NSInteger kJsonRpcInvalidRequest = -32600;
@@ -334,15 +338,19 @@ static const NSTimeInterval kResponseTimeout = 30;
     
     ;
     //NSLog(@"Using dict:%@",dictString);
-    
+    NSDate * startTime = [NSDate new];
     NSData * dzlibCompressed = [myPayloaddata zlibDeflateWithDict:[dictString dataUsingEncoding:NSUTF8StringEncoding]];
+    NSDate * dzTime = [NSDate new];
     //NSData * zlibCompressed = [myPayloaddata zlibDeflate];
     //NSData * gzipCompressed = [myPayloaddata gzipDeflate];
     //NSData * gzipCompressed2 = [myPayloaddata gzippedData];
     NSData * dictCompressed = [myPayloaddata compressWithDict:dict];
+    NSDate * dictTime = [NSDate new];
+    NSTimeInterval dzElapsed = [dzTime timeIntervalSinceDate:startTime];
+    NSTimeInterval dictElapsed = [dictTime timeIntervalSinceDate:dzTime];
     NSLog(@"Original payload        len: %d", myPayloaddata.length);
-    NSLog(@"dzlibCompressed payload len: %d, (%2.1f%%)", dzlibCompressed.length, (double)dzlibCompressed.length / (double)myPayloaddata.length * 100.0);
-    NSLog(@"dictCompressed payload  len: %d, (%2.1f%%)", dictCompressed.length, (double)dictCompressed.length / (double)myPayloaddata.length * 100.0);
+    NSLog(@"dzlibCompressed payload len: %d, (%2.1f%%) time %0.2f ms", dzlibCompressed.length, (double)dzlibCompressed.length / (double)myPayloaddata.length * 100.0, dzElapsed*1000);
+    NSLog(@"dictCompressed payload  len: %d, (%2.1f%%) time %0.2f ms", dictCompressed.length, (double)dictCompressed.length / (double)myPayloaddata.length * 100.0, dictElapsed*1000);
     //NSLog(@"zlibCompressed payload  len: %d, (%2.1f%%)", zlibCompressed.length, (double)zlibCompressed.length / (double)myPayloaddata.length * 100.0);
     //NSLog(@"gzipCompressed payload  len: %d, (%2.1f%%)", gzipCompressed.length, (double)gzipCompressed.length / (double)myPayloaddata.length * 100.0);
     //NSLog(@"gzipCompressed2 payload len: %d, (%2.1f%%)", gzipCompressed2.length, (double)gzipCompressed2.length / (double)myPayloaddata.length * 100.0);
