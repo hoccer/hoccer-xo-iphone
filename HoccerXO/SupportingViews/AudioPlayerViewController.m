@@ -148,7 +148,7 @@
 
 - (void) updatePlaylistStatus {
     HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
-    NSString *playlistStatus = [NSString stringWithFormat:NSLocalizedString(@"audio_player_playlist_status", nil), player.playlistIndex + 1, player.playlistLength];
+    NSString *playlistStatus = [NSString stringWithFormat:NSLocalizedString(@"audio_player_playlist_status", nil), player.currentPlaylistTrackNumber + 1, player.playlistLength];
     
     CGFloat fontSize = self.playlistStatusLabel.font.pointSize;
     NSMutableAttributedString *attributedPlaylistStatus = [[NSMutableAttributedString alloc] initWithString:playlistStatus attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:fontSize] }];

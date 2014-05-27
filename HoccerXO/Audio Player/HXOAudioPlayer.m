@@ -13,7 +13,7 @@
 #import "Attachment.h"
 #import "AppDelegate.h"
 #import "AttachmentInfo.h"
-#import "NSArray+Shuffle.h"
+#import "NSMutableArray+Shuffle.h"
 
 @interface HXOAudioPlayer ()
 
@@ -22,7 +22,7 @@
 @property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) AVAudioPlayer * player;
 @property (nonatomic, strong) NSArray * playlist;
-@property (nonatomic, strong) NSArray * playlistIndices;
+@property (nonatomic, strong) NSArray * playlistTrackNumbers;
 @property (nonatomic, assign) NSUInteger playlistIndex;
 
 @end
@@ -48,7 +48,7 @@
     
     if (self) {
         self.playlist = @[];
-        self.playlistIndices = [NSMutableArray alloc];
+        self.playlistTrackNumbers = @[];
         self.playlistIndex = 0;
         self.isShuffled = NO;
     }
@@ -58,9 +58,9 @@
 
 #pragma mark - Public interface
 
-- (BOOL) playWithPlaylist: (NSArray *) playlist atIndex: (NSUInteger) index {
+- (BOOL) playWithPlaylist: (NSArray *) playlist atTrackNumber: (NSUInteger) trackNumber {
     self.playlist = playlist;
-    [self createPlaylistIndices];
+    NSUInteger index = [self createPlaylistTrackNumbersWithCurrentTrackNumber:trackNumber];
 
     return [self playAtIndex:index];
 }
@@ -119,18 +119,14 @@
 }
 
 - (NSUInteger) currentPlaylistTrackNumber {
-    return (NSUInteger)[self.playlistIndices objectAtIndex: self.playlistIndex];
+    return [(NSNumber *)[self.playlistTrackNumbers objectAtIndex:self.playlistIndex] unsignedIntegerValue];
 }
 
 
 - (void) toggleShuffle {
-    if (self.isShuffled) {
-        self.isShuffled = YES;
-    } else {
-        self.isShuffled = NO;
-    }
-
-    [self createPlaylistIndices];
+    self.isShuffled = !self.isShuffled;
+    NSUInteger index = [self createPlaylistTrackNumbersWithCurrentTrackNumber:self.currentPlaylistTrackNumber];
+    [self playAtIndex:index];
 }
 
 - (void) toggleRepeat {
@@ -143,7 +139,7 @@
     self.playlistIndex = index;
     
     if (index < self.playlist.count) {
-        Attachment *attachment = [self.playlist objectAtIndex:index];
+        Attachment *attachment = [self.playlist objectAtIndex:self.currentPlaylistTrackNumber];
         return [self playAttachment:attachment];
     } else {
         return YES;
@@ -219,29 +215,24 @@
     }
 }
 
-- (void) createPlaylistIndices {
-    NSUInteger current = 0;
-    if ([self.playlistIndices count] > 0) {
-        current = [self currentPlaylistTrackNumber];
-    }
-    
-    NSMutableArray *indices = [[NSMutableArray alloc] initWithCapacity:[self.playlist count]];
+- (NSUInteger) createPlaylistTrackNumbersWithCurrentTrackNumber: (NSUInteger) trackNumber {
+    NSMutableArray *trackNumbers = [[NSMutableArray alloc] initWithCapacity:[self.playlist count]];
     for (int i = 0; i < [self.playlist count]; i++) {
-        [indices addObject:[NSNumber numberWithInt:i]];
+        [trackNumbers addObject:[NSNumber numberWithInt:i]];
     }
 
-    self.playlistIndices = indices;
     if (self.isShuffled) {
-        NSMutableArray *shuffledPlaylist = [[NSMutableArray alloc] initWithArray: [self.playlistIndices arrayByShuffling]];
-        NSNumber *currentTrackNumber = [NSNumber numberWithInt:self.currentPlaylistTrackNumber];
-        NSNumber *firstShuffledTrackNumber = [shuffledPlaylist firstObject];
-        NSUInteger indexOfCurrentTrackNumber = [shuffledPlaylist indexOfObject:currentTrackNumber];
-        [shuffledPlaylist insertObject:currentTrackNumber atIndex:0];
-        [shuffledPlaylist insertObject:firstShuffledTrackNumber atIndex: indexOfCurrentTrackNumber];
-        self.playlistIndex = 0;
-        self.playlistIndices = shuffledPlaylist;
+        NSNumber *currentTrackNumber = [trackNumbers objectAtIndex:trackNumber];
+
+        [trackNumbers shuffle];
+        NSUInteger indexOfCurrentTrackNumber = [trackNumbers indexOfObject:currentTrackNumber];
+        [trackNumbers exchangeObjectAtIndex:0 withObjectAtIndex:indexOfCurrentTrackNumber];
+
+        self.playlistTrackNumbers = trackNumbers;
+        return 0;
     } else {
-        self.playlistIndex = current;
+        self.playlistTrackNumbers = trackNumbers;
+        return trackNumber;
     }
 }
 

@@ -11,7 +11,7 @@
 		03039EFA19081DE900898ADD /* AudioAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 03039EF919081DE900898ADD /* AudioAttachmentSection.m */; };
 		032CBBB919178DDB00987008 /* AudioPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 032CBBB719178DDB00987008 /* AudioPlayerViewController.m */; };
 		0372318219090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0372318119090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m */; };
-		03DECA041933899F00393DCA /* NSArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DECA031933899F00393DCA /* NSArray+Shuffle.m */; };
+		03DECA041933899F00393DCA /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DECA031933899F00393DCA /* NSMutableArray+Shuffle.m */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
@@ -463,8 +463,8 @@
 		034915BD192F80EE00557C8B /* HoccerXO-38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-38.xcdatamodel"; sourceTree = "<group>"; };
 		0372318019090C4A0043E79F /* AudioAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
 		0372318119090C4A0043E79F /* AudioAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
-		03DECA021933899F00393DCA /* NSArray+Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Shuffle.h"; sourceTree = "<group>"; };
-		03DECA031933899F00393DCA /* NSArray+Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Shuffle.m"; sourceTree = "<group>"; };
+		03DECA021933899F00393DCA /* NSMutableArray+Shuffle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Shuffle.h"; sourceTree = "<group>"; };
+		03DECA031933899F00393DCA /* NSMutableArray+Shuffle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Shuffle.m"; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -1284,8 +1284,8 @@
 				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
 				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
 				E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */,
-				03DECA021933899F00393DCA /* NSArray+Shuffle.h */,
-				03DECA031933899F00393DCA /* NSArray+Shuffle.m */,
+				03DECA021933899F00393DCA /* NSMutableArray+Shuffle.h */,
+				03DECA031933899F00393DCA /* NSMutableArray+Shuffle.m */,
 				E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */,
 				E95176121913ECCB00EFD1C6 /* NSObject+DelegateHelper.h */,
 				E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */,
@@ -2784,7 +2784,7 @@
 				634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */,
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
 				6A34B2B7192E168200215DF1 /* player_icon_volume_up.m in Sources */,
-				03DECA041933899F00393DCA /* NSArray+Shuffle.m in Sources */,
+				03DECA041933899F00393DCA /* NSMutableArray+Shuffle.m in Sources */,
 				E9E92F6E18733D01007B8042 /* HTTPAuthenticationRequest.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
 				E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */,

@@ -138,7 +138,7 @@
     NSArray * playlist = [self.fetchedResultsController fetchedObjects];
     
     HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
-    BOOL success = [audioPlayer playWithPlaylist:playlist atIndex:indexPath.row];
+    BOOL success = [audioPlayer playWithPlaylist:playlist atTrackNumber:indexPath.row];
     
     if (success) {
         UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];

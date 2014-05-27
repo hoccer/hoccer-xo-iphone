@@ -11,7 +11,7 @@
 
 @class Attachment;
 
-NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
+typedef NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
     HXOAudioPlayerRepeatStateOff,
     HXOAudioPlayerRepeatStateOne,
     HXOAudioPlayerRepeatStateAll
@@ -21,7 +21,7 @@ NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
 
 + (HXOAudioPlayer *) sharedInstance;
 
-- (BOOL) playWithPlaylist: (NSArray *) playlist atIndex: (NSUInteger) index;
+- (BOOL) playWithPlaylist: (NSArray *) playlist atTrackNumber: (NSUInteger) trackNumber;
 - (BOOL) play;
 - (void) pause;
 - (void) togglePlayPause;
@@ -32,9 +32,9 @@ NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
 
 @property (nonatomic, readonly) BOOL isPlaying;
 @property (nonatomic, readonly) BOOL isShuffled;
+@property (nonatomic, readonly) HXOAudioPlayerRepeatState repeatState;
 @property (nonatomic, readonly) Attachment * attachment;
 @property (nonatomic, readonly) NSUInteger currentPlaylistTrackNumber;
-@property (nonatomic, readonly) NSUInteger playlistIndex;
 @property (nonatomic, readonly) NSUInteger playlistLength;
 @property (nonatomic, readonly) NSTimeInterval duration;
 @property NSTimeInterval currentTime;

@@ -62,7 +62,7 @@
     if ([self isPlaying]) {
         [[HXOAudioPlayer sharedInstance] pause];
     } else {
-        BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:@[ self.attachment ] atIndex:0];
+        BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:@[ self.attachment ] atTrackNumber:0];
         
         if (!success) {
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
