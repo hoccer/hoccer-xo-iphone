@@ -19,6 +19,7 @@
 
 @property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, assign) BOOL isShuffled;
+@property (nonatomic, assign) HXOAudioPlayerRepeatState repeatState;
 @property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) AVAudioPlayer * player;
 @property (nonatomic, strong) NSArray * playlist;
@@ -51,6 +52,7 @@
         self.playlistTrackNumbers = @[];
         self.playlistIndex = 0;
         self.isShuffled = NO;
+        self.repeatState = HXOAudioPlayerRepeatStateOff;
     }
     
     return self;
@@ -88,6 +90,8 @@
     } else {
         if (self.playlistIndex > 0) {
             [self playAtIndex:self.playlistIndex - 1];
+        } else {
+            [self playAtIndex:self.playlist.count - 1];
         }
     }
 }
@@ -95,6 +99,8 @@
 - (void) skipForward {
     if (self.playlistIndex < self.playlist.count - 1) {
         [self playAtIndex:self.playlistIndex + 1];
+    } else {
+        [self playAtIndex:0];
     }
 }
 
@@ -130,7 +136,19 @@
 }
 
 - (void) toggleRepeat {
+    switch (self.repeatState) {
+        case HXOAudioPlayerRepeatStateOff:
+            self.repeatState = HXOAudioPlayerRepeatStateAll;
+            break;
+            
+        case HXOAudioPlayerRepeatStateAll:
+            self.repeatState = HXOAudioPlayerRepeatStateOne;
+            break;
 
+        case HXOAudioPlayerRepeatStateOne:
+            self.repeatState = HXOAudioPlayerRepeatStateOff;
+            break;
+    }
 }
 
 #pragma mark - Private helpers
@@ -243,10 +261,18 @@
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [[AppDelegate instance] resignFirstResponder];
 
-    if (self.playlistIndex < self.playlist.count - 1) {
-        [self skipForward];
+    if (self.repeatState == HXOAudioPlayerRepeatStateOne) {
+        [self play];
     } else {
-        [self stop];
+        if (self.playlistIndex < self.playlist.count - 1) {
+            [self skipForward];
+        } else {
+            if (self.repeatState == HXOAudioPlayerRepeatStateAll) {
+                [self playAtIndex:0];
+            } else {
+                [self stop];
+            }
+        }
     }
 }
 
