@@ -11,12 +11,18 @@
 #import "HXOTableViewCell.h"
 
 @class AvatarView;
+@class ContactCell;
+
+@protocol ContactCellDelegate <NSObject>
+- (void) contactCellDidPressAvatar: (ContactCell*) cell;
+@end
 
 @interface ContactCell : HXOTableViewCell
 
-@property (nonatomic,readonly) UILabel    * titleLabel;
-@property (nonatomic,readonly) UILabel    * subtitleLabel;
-@property (nonatomic,readonly) AvatarView * avatar;
+@property (nonatomic,readonly) UILabel                 * titleLabel;
+@property (nonatomic,readonly) UILabel                 * subtitleLabel;
+@property (nonatomic,readonly) AvatarView              * avatar;
+@property (nonatomic, weak)    id<ContactCellDelegate>   delegate;
 
 - (void) commonInit;
 - (void) preferredContentSizeChanged: (NSNotification*) notification;

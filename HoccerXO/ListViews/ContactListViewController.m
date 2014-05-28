@@ -426,10 +426,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@:controllerDidChangeContent: updates took %1.3f", [self class], [stop timeIntervalSinceDate:start]);
 }
 
-- (void)configureCell: (id<ContactCell>) cell atIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell: (ContactCell*) cell atIndexPath:(NSIndexPath *)indexPath {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ContactListViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@",  [NSThread callStackSymbols]);
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
+
+    cell.delegate = nil;
 
     cell.titleLabel.text = contact.nickNameWithStatus;
     
