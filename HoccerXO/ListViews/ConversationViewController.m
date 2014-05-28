@@ -305,4 +305,14 @@
     //[cell setNeedsLayout];
 }
 
+#pragma mark - Empty Table Placeholder
+
+- (NSString*) placeholderText {
+    return NSLocalizedString(self.groupContactsToggle.selectedSegmentIndex == 1 ? @"contact_list_placeholder_nearby" : @"contact_list_placeholder", nil);
+}
+
+- (UIImage*) placeholderImage {
+    return [UIImage imageNamed: self.groupContactsToggle.selectedSegmentIndex == 1 ? @"placeholder-nearby" : @"placeholder-chats"];
+}
+
 @end

@@ -106,8 +106,8 @@
 // Chat
 //==============================================================================
 
-"chat_list_nav_title"        = "Chats";
-"nearby_list_nav_title"      = "Nearby";
+"chat_list_nav_title"               = "Chats";
+"nearby_list_nav_title"             = "Nearby";
 
 "chat_message_placeholder"          = "Message";
 "chat_call_phone_number_btn_title"  = "Call";
@@ -171,6 +171,9 @@
 "contact_relationship_groupfriend"              = "Acquaintance by group";
 "contact_relationship_kept"                     = "No Relationship";
 "contact_relationship_blocked"                  = "Blocked";
+
+"contact_list_placeholder"                      = "Invite friends to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others nearby…";
 
 //==============================================================================
 // Credentials
