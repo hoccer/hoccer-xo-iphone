@@ -14,6 +14,7 @@
 @implementation ConversationCell
 
 - (void) commonInit {
+    // NSLog(@"ConversationCell:commonInit");
 
     self.hxoAccessoryXOffset = kHXOGridSpacing - 1;
     
@@ -27,7 +28,7 @@
     [self.contentView addSubview: _dateLabel];
 
     [super commonInit];
-    
+
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: _dateLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.titleLabel attribute: NSLayoutAttributeBaseline multiplier: 1.0 constant: 0.0]];
 
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentTop;
@@ -63,6 +64,7 @@
 }
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
+    // NSLog(@"%@:preferredContentSizeChanged", [self class]);
     [super preferredContentSizeChanged: notification];
     
     self.dateLabel.font = [HXOUI theme].smallBoldTextFont;

@@ -32,8 +32,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSDate          * presenceLastUpdated;
 @property (nonatomic, strong)   NSString        * nickName;
 @property (nonatomic, strong)   NSString        * status;
-@property (nonatomic, strong)   NSString        * isNearby; // using string as boolean because booleans totally suck in CoreData predicates;
-                                                            // values are the string "YES" for true, all other values indicate false
+@property (nonatomic, strong)   NSString        * isNearbyTag; // using string as boolean because booleans totally suck in CoreData predicates;
+                                                               // values are the string "YES" for true, all other values indicate false
 
 @property (nonatomic, retain)   GroupMembership * myGroupMembership;
 
@@ -47,28 +47,45 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
 @property (nonatomic, retain)   NSString        * relationshipState;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
+
+// dynamic key properties
+@property (nonatomic,strong)    NSString        * publicKeyString; // b64-string
+@property (readonly)            NSNumber        * keyLength;       // length of public key in bits
+
+
+// class type helper
+@property (nonatomic, readonly) BOOL              isGroup;
+
+// relationsShip helpers
 @property (nonatomic, readonly) BOOL              isBlocked;
 @property (nonatomic, readonly) BOOL              isFriend;
+@property (nonatomic, readonly) BOOL              isGroupFriend;
+@property (nonatomic, readonly) BOOL              isKept;         // valid for both single contacts and groups
+@property (nonatomic, readonly) BOOL              isKeptRelation; // only valid for non-group contacts
+@property (nonatomic, readonly) BOOL              isKeptGroup;    // only valid for groups
+@property (nonatomic, readonly) BOOL              isNotRelated;
+
+// presence state helpers
 @property (nonatomic, readonly) BOOL              isOffline;
 @property (nonatomic, readonly) BOOL              isBackground;
 @property (nonatomic, readonly) BOOL              isOnline;
 @property (nonatomic, readonly) BOOL              isTyping;
 @property (nonatomic, readonly) BOOL              isPresent;
 @property (nonatomic, readonly) BOOL              isConnected;
-@property (nonatomic, readonly) BOOL              isNearbyTagged;
+
+@property (nonatomic, readonly) BOOL              isNearby; // valid for both single contacts and groups
+@property (nonatomic, readonly) BOOL              isNearbyContact; // only valid for non-group contacts
 
 @property (nonatomic, retain)   NSDate          * lastUpdateReceived;
-
 
 @property (nonatomic ,strong)   NSNumber        * relationshipLastChangedMillis;
 @property (nonatomic, strong)   NSNumber        * presenceLastUpdatedMillis;
 
 @property (nonatomic, strong)   NSIndexPath     * rememberedLastVisibleChatCell;
 
-@property (nonatomic,strong)    NSString        * publicKeyString; // b64-string
-
-
 @property (nonatomic, strong)   NSMutableSet    * messages;
+@property (nonatomic, strong)   NSMutableSet    * deliveriesSent;
+@property (nonatomic, strong)   NSMutableSet    * deliveriesReceived;
 @property (nonatomic, strong)   NSMutableSet    * groupMemberships;
 @property (readonly)            NSString        * nickNameWithStatus;
 
@@ -80,6 +97,8 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
+- (void) updateNearbyFlag;
+
 
 
 @end

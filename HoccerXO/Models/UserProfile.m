@@ -47,6 +47,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 @dynamic groupMembershipList;
 @synthesize connectionStatus;
 @dynamic avatarImage;
+@dynamic keyLength;
 
 - (id) init {
     self = [super init];
@@ -371,6 +372,10 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return [HXOBackend keyIdString:[self publicKeyIdData]];
 }
 
+- (NSNumber*) keyLength {
+    return [NSNumber numberWithInt:[CCRSA getPublicKeySize: self.publicKey]];
+}
+
 - (NSData *) publicKeyIdData {
     NSData * myKeyBits = [self publicKey];
     return [HXOBackend calcKeyId:myKeyBits];
@@ -430,12 +435,14 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     [self willChangeValueForKey: @"publicKey"];
     [self willChangeValueForKey: @"publicKeyId"];
     [self willChangeValueForKey: @"publicKeyData"];
+    [self willChangeValueForKey: @"keyLength"];
 }
 
 - (void) didChangePublicKey {
     [self didChangeValueForKey: @"publicKeyData"];
     [self didChangeValueForKey: @"publicKeyId"];
     [self didChangeValueForKey: @"publicKey"];
+    [self didChangeValueForKey: @"keyLength"];
 }
 
 
@@ -458,6 +465,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     if (self.hasKeyPair) {
         [self saveOldKeyPair];
     }
+    //NSLog(@"pemText:%@\n",pemText);
     [self willChangePublicKey];
     BOOL success = [[CCRSA sharedInstance] importKeypairFromPEM: pemText];
     [self didChangePublicKey];

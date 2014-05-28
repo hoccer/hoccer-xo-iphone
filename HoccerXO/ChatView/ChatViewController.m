@@ -51,9 +51,9 @@
 #import "avatar_contact.h"
 #import "AttachmentButton.h"
 
-#define ACTION_MENU_DEBUG YES
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
+#define DEBUG_NOTIFICATIONS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -84,6 +84,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property (strong) id throwObserver;
 @property (strong) id catchObserver;
+@property (strong) id loginObserver;
 
 @end
 
@@ -243,6 +244,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) viewWillAppear:(BOOL)animated {
     // NSLog(@"ChatViewController:viewWillAppear");
+    self.fetchedResultsController.delegate = self;
     [super viewWillAppear: animated];
 
     [HXOBackend broadcastConnectionInfo];
@@ -254,7 +256,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                                                     object:nil
                                                                      queue:[NSOperationQueue mainQueue]
                                                                 usingBlock:^(NSNotification *note) {
-                                                                    NSLog(@"ChatView: Throw");
+                                                                    if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Throw");
                                                                     if (self.sendButton.enabled) {
                                                                         [self sendPressed:nil];
                                                                     }
@@ -264,7 +266,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                                                            object:nil
                                                                             queue:[NSOperationQueue mainQueue]
                                                                        usingBlock:^(NSNotification *note) {
-                                                                           NSLog(@"ChatView: Catch");
+                                                                           if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Catch");
+                                                                       }];
+    self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"loginSucceeded"
+                                                                           object:nil
+                                                                            queue:[NSOperationQueue mainQueue]
+                                                                       usingBlock:^(NSNotification *note) {
+                                                                           if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: loginSucceeded");
+                                                                           [AppDelegate.instance configureForNearbyMode:self.partner.isNearby];
                                                                        }];
 }
 
@@ -293,7 +302,24 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (self.catchObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.catchObserver];
     }
+    if (self.loginObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.loginObserver];
+    }
 }
+
+- (void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear: animated];
+    NSLog(@"ChatViewController:viewDidDisappear");
+    if ([self isMovingFromParentViewController]) {
+        NSLog(@"isMovingFromParentViewController");
+        [AppDelegate.instance endInspecting:self.partner withInspector:self];
+    }
+    if ([self isBeingDismissed]) {
+        NSLog(@"isBeingDismissed");
+    }
+    self.fetchedResultsController.delegate = nil;
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -423,7 +449,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if ([[group otherInvitedMembers] count] > 0) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_wait_for_invitees_message", nil)];
             } else {
-                if ([group.isNearby isEqualToString:@"YES"]) {
+                if (group.isNearby) {
                     messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_group_you_are_alone_message", nil)];
                 } else {
                     messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
@@ -448,11 +474,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             return;
             
         }
-    } else if (![self.partner.relationshipState isEqualToString: kRelationStateFriend]) {
+    } else if (!self.partner.isFriend) {
         NSString * messageText = nil;
-        if ([self.partner.relationshipState isEqualToString: kRelationStateBlocked]) {
+        if (self.partner.isBlocked) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
-        } else if ([@"YES" isEqualToString:self.partner.isNearby]) {
+        } else if (self.partner.isNearby) {
             if (!self.partner.isPresent) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
             }
@@ -1417,7 +1443,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     cell.subtitle.text = [self subtitleForMessage: message];
 
-
     for (MessageSection * section in cell.sections) {
         if ([section isKindOfClass: [TextSection class]]) {
             [self configureTextSection: (TextSection*)section forMessage: message];
@@ -1794,19 +1819,27 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     //NSLog(@"messageCell:canPerformAction:");
     if (action == @selector(deleteMessage:)) return YES;
 
-    if (action == @selector(copy:)) {return YES;}
-#ifdef DEBUG
-    if (action == @selector(resendMessage:)) {return YES;}
-#endif
-    if (action == @selector(forwardMessage:)) {return YES;}
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    BOOL available;
+    if (message.attachment != nil) {
+        available = message.attachment.available;
+    } else {
+        available = YES;
+    }
     
-    if (action == @selector(openWithMessage:)) {return YES;}
-
-    if (action == @selector(shareMessage:)) {return YES;}
+    if (action == @selector(copy:)) {return available;}
+#ifdef DEBUG
+    if (action == @selector(resendMessage:)) { return available; }
+    
+#endif
+    if (action == @selector(forwardMessage:)) { return available; }
+    
+    if (action == @selector(openWithMessage:)) { return available; }
+    
+    if (action == @selector(shareMessage:)) { return available; }
     
     if (action == @selector(saveMessage:)) {
-        HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-        if ([message.isOutgoing isEqualToNumber: @NO], YES) {
+        if (available) {
             Attachment * myAttachment = message.attachment;
             if (myAttachment != nil) {
                 if ([myAttachment.mediaType isEqualToString: @"video"] ||
@@ -2074,7 +2107,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) openWithInteractionController:(HXOMessage *)message {
     NSLog(@"openWithInteractionController");
     Attachment * attachment = message.attachment;
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available) {
         NSURL * myURL = [attachment contentURL];
         NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
         NSString * name = attachment.humanReadableFileName;
@@ -2091,23 +2124,26 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSLog(@"openWithActivityController");
     Attachment * attachment = message.attachment;
     
-    NSMutableArray *activityItems = [[NSMutableArray alloc]init];
-    
-    if (message.body.length > 0) {
-        [activityItems addObject:message];
+    if (attachment != nil && attachment.available) {
+        
+        NSMutableArray *activityItems = [[NSMutableArray alloc]init];
+        
+        if (message.body.length > 0) {
+            [activityItems addObject:message];
+        }
+        if (attachment != nil) {
+            [activityItems addObject:attachment];
+        }
+        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+        activityViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        
+        [self presentViewController:activityViewController animated:YES completion:nil];
     }
-    if (attachment != nil) {
-        [activityItems addObject:attachment];
-    }
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-    activityViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
-    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 - (void) previewAttachment:(Attachment *)attachment {
     // NSLog(@"previewAttachment");
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available) {
         NSURL * myURL = [attachment contentURL];
         NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
         NSString * name = attachment.humanReadableFileName;
@@ -2187,15 +2223,21 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     // NSLog(@"rememberLastVisibleCell = %@",self.partner.rememberedLastVisibleChatCell);
 }
 
+- (BOOL)isValidIndexPath:(NSIndexPath*)thePath {
+    if (thePath == nil) {
+        return NO;
+    }
+    return thePath.section < [self.tableView numberOfSections] && thePath.row < [self.tableView numberOfRowsInSection:thePath.section];
+}
+
 - (void) scrollToCell:(NSIndexPath*)theCell {
-    // save index path of bottom most visible cell
     //NSLog(@"scrollToCell %@", theCell);
     //NSLog(@"%@", [NSThread callStackSymbols]);
     [self.tableView scrollToRowAtIndexPath: self.partner.rememberedLastVisibleChatCell atScrollPosition:UITableViewScrollPositionBottom animated: NO];
 }
 
 - (void) scrollToRememberedCellOrToBottomIfNone {
-    if (self.partner.rememberedLastVisibleChatCell != nil) {
+    if ([self isValidIndexPath:self.partner.rememberedLastVisibleChatCell]) {
         [self scrollToCell:self.partner.rememberedLastVisibleChatCell];
     } else {
         [self scrollToBottomAnimated];
@@ -2306,7 +2348,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) setInspectedObject:(Contact *)inspectedObject {
+    [AppDelegate.instance endInspecting:self.partner withInspector:self];
     self.partner = inspectedObject;
+    [AppDelegate.instance beginInspecting:self.partner withInspector:self];
 }
 
 @end

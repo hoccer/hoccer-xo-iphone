@@ -99,7 +99,7 @@ static int  groupMemberContext;
 }
 
 - (BOOL) isEditable {
-    return ! self.group || ! ([self.group.myGroupMembership.state isEqualToString: @"invited"] || [self.group.groupType isEqualToString: @"nearby"]);
+    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup);
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -186,14 +186,19 @@ static int  groupMemberContext;
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
+        
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.inviteMembersItem]) {
         return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && [super isItemVisible: item];
+        
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
-        return [self.group.myGroupMembership.state isEqualToString: @"invited"];
+        return self.group.myGroupMembership.isInvited;
+        
     } else if ([item isEqual: self.destructiveButton]) {
         if (self.group && self.group.isNearbyGroup && self.group.isKeptGroup) {
             return YES;
@@ -310,10 +315,10 @@ static int  groupMemberContext;
 
 - (NSString*) destructiveButtonTitle {
     if (self.group) {
-        if ([self.group.groupState isEqualToString: kRelationStateKept]) {
+        if (self.group.isKept) {
             return NSLocalizedString(@"group_delete_data", nil);
         }
-        if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
+        if (self.group.myGroupMembership.isInvited) {
             return NSLocalizedString(@"group_decline_invitation", nil);
         } else {
             if (self.group.iAmAdmin) {
@@ -435,7 +440,7 @@ static int  groupMemberContext;
     NSString * destructiveButtonTitle = nil;
     SEL        destructor;
 
-    if ([self.group.groupState isEqualToString: kRelationStateKept]) {
+    if (self.group.isKept) {
         title = NSLocalizedString(@"group_delete_title", nil);
         destructiveButtonTitle = NSLocalizedString(@"delete", nil);
         destructor = @selector(deleteGroupData);
@@ -471,32 +476,35 @@ static int  groupMemberContext;
 }
 
 - (void) deleteGroupData {
-    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: self.group];
-    //NSManagedObjectContext * moc = self.chatBackend.delegate.managedObjectContext;
-    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: self.group");
-    //[moc deleteObject: self.group];
-    [AppDelegate.instance deleteObject:self.group];
-    self.inspectedObject = nil;
+    Group * group = self.group;
+    [self quitInspection];
+    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: group];
+    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: group");
+    [AppDelegate.instance deleteObject:group];
     [self.appDelegate saveDatabase];
 }
 
 - (void) deleteGroup {
-    [self.chatBackend deleteGroup: self.group onDeletion:^(Group *group) {
+    Group * group = self.group;
+    [self quitInspection];
+    [self.chatBackend deleteGroup: group onDeletion:^(Group *group) {
         if (group != nil) {
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
         } else {
-            NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
+            NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", group);
             [self.chatBackend getGroupsForceAll: YES withCompletion:nil];
         }
     }];
 }
 
 - (void) leaveGroup {
-    [self.chatBackend leaveGroup: self.group onGroupLeft:^(Group *group) {
+    Group * group = self.group;
+    [self quitInspection];
+    [self.chatBackend leaveGroup: group onGroupLeft:^(Group *group) {
         if (group != nil) {
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
         } else {
-            NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
+            NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", group);
             [self.chatBackend getGroupsForceAll:YES withCompletion:nil];
         }
     }];
@@ -504,13 +512,21 @@ static int  groupMemberContext;
 
 - (void) deleteContact {
     NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
-    if ([self.contact.relationshipState isEqualToString: kRelationStateGroupFriend] || [self.contact.relationshipState isEqualToString: kRelationStateKept]) {
-        [self.chatBackend handleDeletionOfContact: self.contact];
+    Contact * contact = self.contact;
+    [self quitInspection];
+    if (contact.isGroupFriend || contact.isKept) {
+        [self.chatBackend handleDeletionOfContact: contact];
     } else {
-        [self.chatBackend depairClient: self.contact.clientId handler:^(BOOL success) {
+        [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
         }];
     }
+}
+
+- (void) quitInspection {
+    self.fetchedResultsController.delegate = nil;
+    self.inspectedObject = nil;
+    //[self.delegate controllerDidFinish:self];
 }
 
 #pragma mark - Invitation Response Section
@@ -661,7 +677,7 @@ static int  groupMemberContext;
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
         BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
-        BOOL isInvited = [membership.state isEqualToString: @"invited"];
+        BOOL isInvited = membership.isInvited;
         SmallContactCell * cell = (SmallContactCell*)aCell;
         cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
         cell.titleLabel.alpha     = isInvited ? 0.5 : 1;

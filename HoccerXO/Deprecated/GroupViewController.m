@@ -370,9 +370,9 @@
 
 - (ProfileSection*) groupUtilities {
     NSMutableArray * utilities = [[NSMutableArray alloc] init];
-    if ([self.group.myGroupMembership.state isEqualToString:@"joined"]) {
+    if (self.group.myGroupMembership.isJoined) {
         [utilities addObject: _chatWithContactItem];
-    } else if ([self.group.myGroupMembership.state isEqualToString: @"invited"]) {
+    } else if (self.group.myGroupMembership.isInvited) {
         [utilities addObject: _joinGroupItem];
     } else {
         NSLog(@"unhandled state - membership: %@ state: %@", self.group.myGroupMembership, self.group.myGroupMembership.state);

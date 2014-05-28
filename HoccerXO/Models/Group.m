@@ -71,21 +71,21 @@
 
 - (NSSet*) otherJoinedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"joined"];
+        return ![self isEqual:obj.contact] && obj.isJoined;
     }];
     return theMemberSet;
 }
 
 - (NSSet*) otherInvitedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return ![self isEqual:obj.contact] && [obj.state isEqualToString:@"invited"];
+        return ![self isEqual:obj.contact] && obj.isInvited;
     }];
     return theMemberSet;
 }
 
 - (NSSet*) adminMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return [obj.state isEqualToString:@"joined"] && [obj.role isEqualToString:@"admin"];
+        return obj.isJoined && obj.isAdmin;
     }];
     return theMemberSet;
 }
@@ -164,7 +164,7 @@
     return NO;
 }
 
-
+/*
 -(BOOL) hasValidGroupKey {
     if (self.groupKey == nil || self.sharedKeyIdSalt == nil) {
         return NO;
@@ -190,7 +190,7 @@
     if (GROUPKEY_DEBUG) NSLog(@"Group:hasValidGroupKey: YES");
     return YES;
 }
-
+*/
 - (BOOL) hasAdmin {
     return self.adminMembers.count > 0;
 }
@@ -200,32 +200,32 @@
 }
 
 - (BOOL) iAmAdmin {
-    return [self.myGroupMembership.role isEqualToString:@"admin"];
+    return [@"admin" isEqualToString: self.myGroupMembership.role];
 }
 
 - (BOOL) iJoined {
-    return [self.myGroupMembership.state isEqualToString:@"joined"];
+    return [@"joined" isEqualToString: self.myGroupMembership.state];
 }
 
 
 - (BOOL)isKeptGroup {
-    return [self.groupState isEqualToString:@"kept"];
+    return [kRelationStateKept isEqualToString:self.groupState];
 }
 
 - (BOOL)isRemovedGroup {
-    return [self.groupState isEqualToString:@"none"];
+    return [kRelationStateNone isEqualToString:self.groupState];
 }
 
 - (BOOL)isExistingGroup {
-    return [self.groupState isEqualToString:@"exists"];
+    return [@"exists" isEqualToString:self.groupState];
 }
 
 - (BOOL)isIncompleteGroup {
-    return [self.groupState isEqualToString:@"incomplete"];
+    return [@"incomplete" isEqualToString:self.groupState ];
 }
 
 - (BOOL)isNearbyGroup{
-    return [self.groupType isEqualToString:@"nearby"];
+    return [@"nearby" isEqualToString: self.groupType];
 }
 
 //public class TalkGroup {

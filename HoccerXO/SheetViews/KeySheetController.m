@@ -104,6 +104,8 @@
     if ( ! _keyLengthItem) {
         _keyLengthItem = [self itemWithIdentifier: @"key_length_item" cellIdentifier: @"DatasheetKeyValueCell"];
         _keyLengthItem.valueFormatString = @"key_length_unit_format";
+        _keyLengthItem.valuePath = @"keyLength";
+        _fingerprintItem.dependencyPaths = @[@"publicKeyId"];
     }
     return _keyLengthItem;
 }
@@ -123,9 +125,9 @@
 - (id) valueForItem:(DatasheetItem *)item {
     if ([item isEqual: self.fingerprintItem]) {
         return [self fingerprint];
-    } else if ([item isEqual: self.keyLengthItem]) {
-        return @([self keyLength]);
-    }
+    }/* else if ([item isEqual: self.keyLengthItem]) {
+        return [self keyLength];
+    }*/
     return [super valueForItem: item];
 }
 
@@ -145,8 +147,8 @@
 
 #pragma mark - Key Attributes
 
-- (NSUInteger) keyLength {
-    return [CCRSA getPublicKeySize: self.client.publicKey];
+- (NSNumber*) keyLength {
+    return self.client.keyLength;
 }
 
 - (NSString*) fingerprint {
@@ -239,7 +241,7 @@
 
 - (void) exportKeypairPressed: (id) sender {
     void(^export)(BOOL,BOOL) = ^(BOOL public, BOOL private) {
-        NSString * keyString = [NSString stringWithFormat: @"%d %@ %@ (RSA)\n", [self keyLength], [self fingerprint], self.client.nickName];
+        NSString * keyString = [NSString stringWithFormat: @"%@ %@ %@ (RSA)\n", [self keyLength], [self fingerprint], self.client.nickName];
 
         if (public) {
             keyString = [keyString stringByAppendingString: [CCRSA makeX509FormattedPublicKey: self.client.publicKey]];
