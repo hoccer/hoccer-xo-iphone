@@ -193,6 +193,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         }
         return NO;
     }];
+    
+    
     if (path.count == 0) {
         return nil;
     }
@@ -411,24 +413,28 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     if (DEBUG_VALUE_UPDATING) NSLog(@"insertedSections=%d", insertedSections.count);
     for (DatasheetSection * section in insertedSections) {
         NSIndexPath * indexPath = [self indexPathForItem: section];
+        if (DEBUG_VALUE_UPDATING) NSLog(@"insertedSection path=%@", indexPath);
         [self.delegate controller: self didChangeSection: indexPath forChangeType: DatasheetChangeInsert];
     }
 
     if (DEBUG_VALUE_UPDATING) NSLog(@"insertedItems=%d", insertedItems.count);
     for (DatasheetItem * item in insertedItems) {
         NSIndexPath * indexPath = [self indexPathForItem: item];
+        if (DEBUG_VALUE_UPDATING) NSLog(@"insertedItem path=%@", indexPath);
         [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: indexPath];
     }
     
     if (DEBUG_VALUE_UPDATING) NSLog(@"deletedItemsIndexPaths=%d", deletedItemsIndexPaths.count);
     for (NSIndexPath * indexPath in deletedItemsIndexPaths) {
+        if (DEBUG_VALUE_UPDATING) NSLog(@"deletedItem path=%@", indexPath);
         [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeDelete newIndexPath: nil];
     }
 
     if (DEBUG_VALUE_UPDATING) NSLog(@"survivingItems=%d", survivingItems.count);
     for (DatasheetItem * item in survivingItems) {
         NSIndexPath * indexPath = [self indexPathForItem: item];
-        [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
+        if (DEBUG_VALUE_UPDATING) NSLog(@"survivingItem path=%@", indexPath);
+       [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeUpdate newIndexPath: nil];
     }
     [self.delegate controllerDidChangeContent: self];
     NSDate * stopUpdate = [NSDate new];

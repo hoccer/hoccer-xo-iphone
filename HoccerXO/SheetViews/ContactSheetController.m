@@ -40,6 +40,10 @@ static int  groupMemberContext;
 
 @property (nonatomic, readonly) DatasheetItem              * chatItem;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
+
+@property (nonatomic, readonly) DatasheetSection           * inviteContactSection;
+@property (nonatomic, readonly) DatasheetItem              * inviteContactItem;
+
 @property (nonatomic, readonly) Contact                    * contact;
 @property (nonatomic, readonly) Group                      * group;
 @property (nonatomic, readonly) GroupInStatuNascendi       * groupInStatuNascendi;
@@ -47,6 +51,10 @@ static int  groupMemberContext;
 @property (nonatomic, readonly) DatasheetSection           * invitationResponseSection;
 @property (nonatomic, readonly) DatasheetItem              * joinGroupItem;
 @property (nonatomic, readonly) DatasheetItem              * invitationDeclineItem;
+
+@property (nonatomic, readonly) DatasheetSection           * friendInvitationResponseSection;
+@property (nonatomic, readonly) DatasheetItem              * acceptFriendItem;
+@property (nonatomic, readonly) DatasheetItem              * refuseFriendItem;
 
 @property (nonatomic, readonly) DatasheetSection           * groupMemberSection;
 @property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
@@ -67,6 +75,8 @@ static int  groupMemberContext;
 
 @synthesize chatItem = _chatItem;
 @synthesize blockContactItem = _blockContactItem;
+@synthesize inviteContactSection = _inviteContactSection;
+@synthesize inviteContactItem = _inviteContactItem;
 @synthesize chatBackend = _chatBackend;
 @synthesize groupMemberSection = _groupMemberSection;
 
@@ -111,6 +121,8 @@ static int  groupMemberContext;
 - (void) addUtilitySections:(NSMutableArray *)sections {
     [super addUtilitySections: sections];
     [sections addObject: self.invitationResponseSection];
+    [sections addObject: self.inviteContactSection];
+    [sections addObject: self.friendInvitationResponseSection];
     [sections addObject: self.groupMemberSection];
 }
 
@@ -173,6 +185,26 @@ static int  groupMemberContext;
     return _blockContactItem;
 }
 
+
+- (DatasheetSection*) inviteContactSection {
+    if ( ! _inviteContactSection) {
+        _inviteContactSection = [DatasheetSection datasheetSectionWithIdentifier: @"invite_contact_section"];
+        _inviteContactSection.items = @[self.inviteContactItem];
+    }
+    return _inviteContactSection;
+}
+
+- (DatasheetItem*) inviteContactItem {
+    if ( ! _inviteContactItem) {
+        _inviteContactItem = [self itemWithIdentifier: @"invite_contact" cellIdentifier: @"DatasheetActionCell"];
+        _inviteContactItem.dependencyPaths = @[@"relationshipState", kHXONickName];
+        _inviteContactItem.visibilityMask = DatasheetModeEdit;
+        _inviteContactItem.target = self;
+        _inviteContactItem.action = @selector(inviteToggled:);
+    }
+    return _inviteContactItem;
+}
+
 - (id) valueForItem: (DatasheetItem*) item {
     if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
@@ -189,6 +221,14 @@ static int  groupMemberContext;
         
     } else if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
+        
+    } else if ([item isEqual: self.inviteContactItem]) {
+        NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
+        return !(self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe) && [super isItemVisible:item];
+        
+    } else if ([item isEqual: self.acceptFriendItem] || [item isEqual: self.refuseFriendItem]) {
+        NSLog(@"isItemVisible acceptFriendItem or refuseFriendItem %d %d", self.contact.invitedMe, [super isItemVisible:item]);
+        return self.contact.invitedMe && [super isItemVisible: item];;
         
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
@@ -272,6 +312,8 @@ static int  groupMemberContext;
 - (NSString*) titleForItem:(DatasheetItem *)item {
     if ([item isEqual: self.blockContactItem]) {
         return [self blockItemTitle];
+    } else  if ([item isEqual: self.inviteContactItem]) {
+        return [self inviteItemTitle];
     } else if ([item isEqual: self.destructiveButton]) {
         return [self destructiveButtonTitle];
     } else if ([item isEqual: self.inviteMembersItem]) {
@@ -417,6 +459,16 @@ static int  groupMemberContext;
     return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
 }
 
+- (NSString*) inviteItemTitle {
+    NSString * formatKey = nil;
+    if (!self.contact.isInvited) {
+        formatKey = @"contact_invite_btn_title_format";
+    } else if (self.contact.isInvited) {
+        formatKey = @"contact_disinvite_btn_title_format";
+    }
+    return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
+}
+
 - (void) blockToggled: (id) sender {
     if (self.contact.isFriend) {
         // NSLog(@"friend -> blocked");
@@ -432,6 +484,23 @@ static int  groupMemberContext;
         NSLog(@"ContactSheetController toggleBlockedPressed: unhandled status %@", self.contact.status);
     }
 }
+
+- (void) inviteToggled: (id) sender {
+    if (self.contact.isInvited) {
+        // NSLog(@"friend -> invited");
+        [self.chatBackend disinviteFriend: self.contact.clientId handler:^(BOOL success) {
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"disinviteClient: %@", success ? @"success" : @"failed");
+        }];
+    } else if (self.contact.isGroupFriend || self.contact.isBlocked || self.contact.isKept || self.contact.isNotRelated) {
+        // NSLog(@"none, blocked -> invited");
+        [self.chatBackend inviteFriend: self.contact.clientId handler:^(BOOL success) {
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"inviteClient: %@", success ? @"success" : @"failed");
+        }];
+    } else {
+        NSLog(@"ContactSheetController inviteToggled: unhandled status %@", self.contact.status);
+    }
+}
+
 
 #pragma mark - Destructive Button
 
@@ -529,12 +598,73 @@ static int  groupMemberContext;
     //[self.delegate controllerDidFinish:self];
 }
 
-#pragma mark - Invitation Response Section
+#pragma mark - Friend Invitation Response Section
+
+@synthesize friendInvitationResponseSection = _friendInvitationResponseSection;
+- (DatasheetSection*) friendInvitationResponseSection {
+    if ( ! _friendInvitationResponseSection) {
+        _friendInvitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"friend_invitation_response_section"];
+        _friendInvitationResponseSection.title = [[NSAttributedString alloc] initWithString: @"Du bist eingeladen" attributes: nil];
+        [_friendInvitationResponseSection setItems: @[self.acceptFriendItem, self.refuseFriendItem]];
+    }
+    return _friendInvitationResponseSection;
+}
+
+@synthesize acceptFriendItem = _acceptFriendItem;
+- (DatasheetItem*) acceptFriendItem {
+    if ( ! _acceptFriendItem) {
+        _acceptFriendItem = [self itemWithIdentifier: @"friend_invitation_accept" cellIdentifier: @"DatasheetActionCell"];
+        _acceptFriendItem.title = NSLocalizedString(@"friend_accept_button", nil);
+        _acceptFriendItem.target = self;
+        _acceptFriendItem.action = @selector(acceptFriendTapped:);
+    }
+    return _acceptFriendItem;
+}
+
+@synthesize refuseFriendItem = _refuseFriendItem;
+- (DatasheetItem*) refuseFriendItem {
+    if ( ! _refuseFriendItem) {
+        _refuseFriendItem = [self itemWithIdentifier: @"friend_invitation_refuse" cellIdentifier: @"DatasheetActionCell"];
+        _refuseFriendItem.title = NSLocalizedString( @"friend_refuse_button", nil);
+        _refuseFriendItem.target = self;
+        _refuseFriendItem.action = @selector(refuseFriendTapped:);
+    }
+    return _refuseFriendItem;
+}
+
+- (void) acceptFriendTapped: (id) sender {
+    [self.chatBackend acceptFriend:self.contact.clientId handler:^(BOOL success) {
+        NSLog(@"Accepted friend %@", self.contact.clientId);
+    }];
+}
+
+- (void) refuseFriendTapped: (id) sender {
+    NSString * title = NSLocalizedString(@"friend_refuse_title", nil);
+    NSString * destructiveButtonTitle = NSLocalizedString(@"friend_refuse_button_title", nil);
+    
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self.chatBackend refuseFriend:self.contact.clientId handler:^(BOOL success) {
+                NSLog(@"Refused friend %@", self.contact.clientId);
+            }];
+        }
+    };
+    UIActionSheet * actionSheet = [HXOUI actionSheetWithTitle: title
+                                              completionBlock: completion
+                                            cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                       destructiveButtonTitle: destructiveButtonTitle
+                                            otherButtonTitles: nil];
+    [actionSheet showInView: [(id)self.delegate view]];
+}
+
+
+
+#pragma mark - Group Invitation Response Section
 
 @synthesize invitationResponseSection = _invitationResponseSection;
 - (DatasheetSection*) invitationResponseSection {
     if ( ! _invitationResponseSection) {
-        _invitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"invitation_response_section"];
+        _invitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"group_invitation_response_section"];
         _invitationResponseSection.title = [[NSAttributedString alloc] initWithString: @"Du bist eingeladen der gruppe beizutreten" attributes: nil];
         [_invitationResponseSection setItems: @[self.joinGroupItem, self.invitationDeclineItem]];
     }

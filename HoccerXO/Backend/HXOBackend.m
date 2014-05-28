@@ -3824,7 +3824,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }];
 }
-
+/*
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
     // NSLog(@"generateToken:");
     [_serverConnection invoke: @"generateToken" withParams: @[purpose, @(seconds)] onResponse: ^(id responseOrError, BOOL success) {
@@ -3837,7 +3837,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }];
 }
-
+*/
 - (void) generatePairingToken: (NSUInteger) maxUseCount validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
     // NSLog(@"generatePairingToken:");
     [_serverConnection invoke: @"generatePairingToken" withParams: @[@(maxUseCount), @(seconds)] onResponse: ^(id responseOrError, BOOL success) {
@@ -3964,6 +3964,34 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) depairClient: (NSString*) clientId handler: (GenericResultHandler) handler {
     //NSLog(@"unblockClient");
     [_serverConnection invoke: @"depairClient" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+- (void) inviteFriend: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"inviteFriend");
+    [_serverConnection invoke: @"inviteFriend" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+- (void) disinviteFriend: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"disinviteFriend");
+    [_serverConnection invoke: @"disinviteFriend" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+- (void) acceptFriend: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"acceptFriend");
+    [_serverConnection invoke: @"acceptFriend" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+- (void) refuseFriend: (NSString*) clientId handler: (GenericResultHandler) handler {
+    //NSLog(@"refuseFriend");
+    [_serverConnection invoke: @"refuseFriend" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
         handler(success);
     }];
 }

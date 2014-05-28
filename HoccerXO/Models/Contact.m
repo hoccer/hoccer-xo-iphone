@@ -56,6 +56,8 @@
 NSString * const kRelationStateNone        = @"none";
 NSString * const kRelationStateFriend      = @"friend";
 NSString * const kRelationStateBlocked     = @"blocked";
+NSString * const kRelationStateInvited     = @"invited";
+NSString * const kRelationStateInvitedMe   = @"invitedMe";
 NSString * const kRelationStateGroupFriend = @"groupfriend";
 NSString * const kRelationStateKept        = @"kept";
 
@@ -206,6 +208,14 @@ NSString * const kRelationStateKept        = @"kept";
 
 - (BOOL) isBlocked {
     return [kRelationStateBlocked isEqualToString: self.relationshipState];
+}
+
+- (BOOL) isInvited {
+    return [kRelationStateInvited isEqualToString: self.relationshipState];
+}
+
+- (BOOL) invitedMe {
+    return [kRelationStateInvitedMe isEqualToString: self.relationshipState];
 }
 
 - (BOOL) isFriend {

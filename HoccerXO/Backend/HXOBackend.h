@@ -109,6 +109,11 @@ typedef void (^DateHandler)(NSDate* date);
 
 - (void) depairClient: (NSString*) clientId handler: (GenericResultHandler) handler;
 
+- (void) inviteFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+- (void) disinviteFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+- (void) acceptFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+- (void) refuseFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;
 

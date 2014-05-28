@@ -17,6 +17,8 @@
 FOUNDATION_EXPORT NSString * const kRelationStateNone;
 FOUNDATION_EXPORT NSString * const kRelationStateFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
+FOUNDATION_EXPORT NSString * const kRelationStateInvited;
+FOUNDATION_EXPORT NSString * const kRelationStateInvitedMe;
 FOUNDATION_EXPORT NSString * const kRelationStateGroupFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
@@ -56,8 +58,11 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 // class type helper
 @property (nonatomic, readonly) BOOL              isGroup;
 
+
 // relationsShip helpers
 @property (nonatomic, readonly) BOOL              isBlocked;
+@property (nonatomic, readonly) BOOL              isInvited;
+@property (nonatomic, readonly) BOOL              invitedMe;
 @property (nonatomic, readonly) BOOL              isFriend;
 @property (nonatomic, readonly) BOOL              isGroupFriend;
 @property (nonatomic, readonly) BOOL              isKept;         // valid for both single contacts and groups
