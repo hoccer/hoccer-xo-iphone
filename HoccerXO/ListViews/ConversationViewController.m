@@ -25,6 +25,7 @@
 #import "HXOEnvironment.h"
 #import "GesturesInterpreter.h"
 #import "SoundEffectPlayer.h"
+#import "DatasheetViewController.h"
 
 #define TRACE_NOTIFICATIONS NO
 #define FETCHED_RESULTS_DEBUG_PERF NO
@@ -187,14 +188,13 @@
 #pragma mark - Table View
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier: @"showChat" sender: self];
+    [self performSegueWithIdentifier: @"showChat" sender: indexPath];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"showChat"]) {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath*) indexPath {
+    if ([segue.identifier isEqualToString:@"showChat"]) {
+        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
         if (self.caughtMessage == nil) {
-            NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-            Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
             _chatViewController = [segue destinationViewController];
             _chatViewController.inspectedObject = contact;
         } else {
@@ -202,6 +202,9 @@
             _chatViewController.inspectedObject = self.caughtMessage.contact;
             self.caughtMessage = nil;
         }
+    } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
+        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
+        ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
     }
 }
 
@@ -211,6 +214,13 @@
 
 - (id) entityName {
     return [Contact entityName];
+}
+
+- (void) contactCellDidPressAvatar:(ContactCell *)cell {
+    NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
+    Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath: indexPath];
+
+    [self performSegueWithIdentifier: contact.isGroup ? @"showGroup" : @"showContact" sender: indexPath];
 }
 
 #pragma mark - Fetched results controller
@@ -230,16 +240,12 @@
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {
-    if (!self.inNearbyMode) {
-        // Chats
-        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
-    } else {
-        // NearBy
-        //[predicates addObject: [NSPredicate predicateWithFormat: @"isNearbyTag == 'YES' OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby'))"]];
+    if (self.inNearbyMode) {
         [predicates addObject: [NSPredicate predicateWithFormat: @"(type == 'Contact' AND isNearbyTag == 'YES') OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby' AND myGroupMembership.group.groupState =='exists'))"]];
+    } else {
+        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     }
 }
-
 
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
     // TODO: add full text search?
@@ -255,10 +261,9 @@
     [super configureCell: cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
 
+    cell.delegate = self;
     cell.avatar.badgeText = [HXOUI messageCountBadgeText: contact.unreadMessages.count];
 
-    // XXX TODO: cell.avatar.showLed = NO;
-    
     NSDate * latestMessageTime = nil;
     if ([contact.latestMessage count] == 0){
         cell.subtitleLabel.text = nil;
@@ -303,6 +308,16 @@
 
 
     //[cell setNeedsLayout];
+}
+
+#pragma mark - Empty Table Placeholder
+
+- (NSString*) placeholderText {
+    return NSLocalizedString(self.groupContactsToggle.selectedSegmentIndex == 1 ? @"contact_list_placeholder_nearby" : @"contact_list_placeholder", nil);
+}
+
+- (UIImage*) placeholderImage {
+    return [UIImage imageNamed: self.groupContactsToggle.selectedSegmentIndex == 1 ? @"placeholder-nearby" : @"placeholder-chats"];
 }
 
 @end

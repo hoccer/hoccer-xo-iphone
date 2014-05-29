@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -447,6 +447,8 @@
                     <connections>
                         <segue destination="21" kind="push" identifier="showChat" id="4Tx-uH-B8w"/>
                         <segue destination="Ux6-gE-xyd" kind="modal" identifier="showInviteCodeViewController" id="fCA-bC-lkd"/>
+                        <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="yj0-Vd-HPq"/>
+                        <segue destination="VTA-Oa-XCk" kind="push" identifier="showGroup" id="UJI-wH-YH7"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
@@ -1074,12 +1076,13 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="fCA-bC-lkd"/>
+        <segue reference="yj0-Vd-HPq"/>
+        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="UJI-wH-YH7"/>
         <segue reference="6i4-qU-VgJ"/>
         <segue reference="I8w-H7-Q9a"/>
-        <segue reference="CES-Ic-Rhf"/>
         <segue reference="3XQ-ea-QwO"/>
-        <segue reference="k8Y-EQ-OHi"/>
-        <segue reference="fCA-bC-lkd"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -64,6 +64,7 @@
     _avatar = [[AvatarView alloc] initWithFrame: CGRectMake(0, 0, [self avatarSize], [self avatarSize])];
     _avatar.autoresizingMask = UIViewAutoresizingNone;
     _avatar.translatesAutoresizingMaskIntoConstraints = NO;
+    [_avatar addTarget: self action: @selector(avatarPressed:) forControlEvents: UIControlEventTouchUpInside];
     [self.contentView addSubview: _avatar];
 
     UIView * title = _titleLabel;
@@ -83,6 +84,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     
     [self preferredContentSizeChanged: nil];
+    self.delegate = nil;
 }
 
 - (CGFloat) avatarSize {
@@ -140,4 +142,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
+- (void) setDelegate:(id<ContactCellDelegate>)delegate {
+    _delegate = delegate;
+    self.avatar.userInteractionEnabled = _delegate != nil;
+}
+
+- (void) avatarPressed: (id) sender {
+    if ([self.delegate respondsToSelector: @selector(contactCellDidPressAvatar:)]) {
+        [self.delegate contactCellDidPressAvatar: self];
+    }
+}
 @end

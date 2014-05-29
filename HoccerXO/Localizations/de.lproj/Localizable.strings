@@ -184,6 +184,9 @@
 "contact_relationship_invited"                  = "Eingeladen als Friend";
 "contact_relationship_invitedMe"                = "Hat dich als Freund eingeladen";
 
+"contact_list_placeholder"                      = "Lade Freunde zum chatten ein.";
+"contact_list_placeholder_nearby"               = "Warte auf Kontake in der Nähe…";
+
 //==============================================================================
 // Credentials
 //==============================================================================
