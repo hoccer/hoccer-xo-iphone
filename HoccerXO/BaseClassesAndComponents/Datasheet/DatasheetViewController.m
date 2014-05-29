@@ -401,7 +401,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) controller: (DatasheetController*) controller didChangeObject: (NSIndexPath*) indexPath forChangeType: (DatasheetChangeType) type newIndexPath: (NSIndexPath*) newIndexPath {
-    NSLog(@"DatasheetController:didChangeObject path %@ type %@ newIndexPath %@", indexPath, type==DatasheetChangeDelete ? @"DatasheetChangeDelete" : type==DatasheetChangeInsert ? @"DatasheetChangeInsert" : type==DatasheetChangeUpdate ? @"DatasheetChangeUpdate" : @"???", newIndexPath);
+    //NSLog(@"DatasheetController:didChangeObject path %@ type %@ newIndexPath %@", indexPath, type==DatasheetChangeDelete ? @"DatasheetChangeDelete" : type==DatasheetChangeInsert ? @"DatasheetChangeInsert" : type==DatasheetChangeUpdate ? @"DatasheetChangeUpdate" : @"???", newIndexPath);
     
     switch(type) {
         case DatasheetChangeInsert:
@@ -421,7 +421,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) controller: (DatasheetController*) controller didChangeSection: (NSIndexPath*) indexPath forChangeType: (DatasheetChangeType) type {
-    NSLog(@"DatasheetController:didChangeSection path %@ type %@", indexPath, type==DatasheetChangeDelete ? @"DatasheetChangeDelete" : type==DatasheetChangeInsert ? @"DatasheetChangeInsert" :   @"???");
+    //NSLog(@"DatasheetController:didChangeSection path %@ type %@", indexPath, type==DatasheetChangeDelete ? @"DatasheetChangeDelete" : type==DatasheetChangeInsert ? @"DatasheetChangeInsert" :   @"???");
     switch(type) {
         case DatasheetChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex: indexPath.section] withRowAnimation:UITableViewRowAnimationFade];

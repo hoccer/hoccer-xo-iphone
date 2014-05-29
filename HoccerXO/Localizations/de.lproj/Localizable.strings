@@ -169,11 +169,20 @@
 "contact_relationship_removed_message"          = "Die Beziehung zu Kontakt '%@' wurde entfernt.";
 "contact_kept_and_relationship_removed_message" = "Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
 
+"contact_friend_invitation_section_title"       = "Freundschaftseinladung";
+
+"contact_friend_accept_button"                  ="Freundschaft annehmen";
+"contact_friend_refuse_button"                  ="Freundschaft ablehnen";
+
+"contact_friend_refuse_title"                   = "Freundschaft ablehnen?";
+"contact_friend_refuse_button_title"            = "Ablehnen";
 
 "contact_relationship_friend"                   = "Freund";
 "contact_relationship_groupfriend"              = "Gruppenbekanntschaft";
 "contact_relationship_kept"                     = "Keine Beziehung";
 "contact_relationship_blocked"                  = "Geblockt";
+"contact_relationship_invited"                  = "Eingeladen als Friend";
+"contact_relationship_invitedMe"                = "Hat dich als Freund eingeladen";
 
 //==============================================================================
 // Credentials

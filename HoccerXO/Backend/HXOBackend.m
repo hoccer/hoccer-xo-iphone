@@ -835,29 +835,30 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)postLoginSynchronize {
-    if ([self fullSync]) {
+    BOOL forced = self.firstConnectionAfterCrashOrUpdate||[self fullSync];
+    if (forced) {
         NSLog(@"Running forced full sync");
-    } else {
-        // NSLog(@"Not Running forced full sync");
     }
     [self hello];
-    [self updateRelationships];
-    [self updatePresences];
-    [self flushPendingInvites];
-    [self verifyKeyWithHandler:^(BOOL ok) {
-        if (!ok) {
-            [self updateKeyWithHandler:^(BOOL ok) {
+    [self syncPresencesWithForce:forced withCompletion:^{
+        [self syncRelationshipsWithForce:forced withCompletion:nil];
+        [self flushPendingInvites];
+        [self verifyKeyWithHandler:^(BOOL ok) {
+            if (!ok) {
+                [self updateKeyWithHandler:^(BOOL ok) {
+                    [self postKeySynchronize];
+                }];
+            } else {
                 [self postKeySynchronize];
-            }];
-        } else {
-            [self postKeySynchronize];
-        }
+            }
+        }];
     }];
 }
 
 - (void)postKeySynchronize {
+    BOOL forced = self.firstConnectionAfterCrashOrUpdate||[self fullSync];
     [self updatePresenceWithHandler:^(BOOL ok) {
-        [self getGroupsForceAll:NO withCompletion:^{
+        [self syncGroupsWithForce:forced withCompletion:^{
             [self ready:^(BOOL ok) {
                 [self finishFirstConnectionAfterCrashOrUpdate];
                 [self flushPendingMessages];
@@ -1159,7 +1160,6 @@ static NSTimer * _stateNotificationDelayTimer;
     for (Invite * invite in invites) {
         [self pairByToken: invite.token];
         [AppDelegate.instance deleteObject:invite];
-        //[self.delegate.managedObjectContext deleteObject: invite];
     }
 }
 
@@ -1210,9 +1210,9 @@ static NSTimer * _stateNotificationDelayTimer;
     return latest;
 }
 
-- (void) updateRelationships {
+- (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion {
     NSDate * latestChange;
-    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) || [self fullSync]) {
+    if (forceAll) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0]; 
     } else {
         latestChange = [self getLatestChangeDateForContactRelationships];
@@ -1222,6 +1222,7 @@ static NSTimer * _stateNotificationDelayTimer;
         for (NSDictionary * relationshipDict in changedRelationships) {
             [self updateRelationship: relationshipDict];
         }
+        if (completion) completion();
     }];
 }
 
@@ -1316,7 +1317,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self checkRelationsipStateForGroupMembershipOfContact:contact];
         if (contact != nil && !contact.isNotRelated && !contact.isKept && !contact.isGroupFriend) {
             contact.relationshipState = kRelationStateNone;
-            [self handleDeletionOfContact:contact];
+            [self handleDeletionOfContact:contact withForce:NO];
         }
         return;
     }
@@ -1400,21 +1401,6 @@ static NSTimer * _stateNotificationDelayTimer;
     [alert show];
 }
 
-
-/* never called. dead code? [DS]
-// delete all group member contacts that are not friends or contacts in other group
-- (void)deleteContactIfNotInAGroup:(Contact*) contact {
-    NSManagedObjectContext * moc = self.delegate.managedObjectContext;
-    
-    // find out if contact is member of any group
-    if (contact.groupMemberships.count == 0) {
-        if (RELATIONSHIP_DEBUG) NSLog(@"deleteContactIfNotInAGroup: not in a group, delete contact with id %@",contact.clientId);
-        [self removedAlertForContact:contact];
-        [moc deleteObject: contact];
-    }
-}
-*/
-
 - (void) askForDeletionOfContact:(Contact*)contact {
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_delete_associated_data_question",nil), contact.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_deleted_title", nil)
@@ -1439,19 +1425,23 @@ static NSTimer * _stateNotificationDelayTimer;
     
 }
 
-- (void) handleDeletionOfContact:(Contact*)contact {
+- (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force {
 
-    if ((AppDelegate.instance.inNearbyMode && contact.isNearby) || [AppDelegate.instance isInspecting:contact]) {
+    if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) || [AppDelegate.instance isInspecting:contact])) {
         if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: is active nearby or being inspected, autokeeping contact id %@",contact.clientId);
-        contact.relationshipState = kRelationStateKept;
+        if (contact.groupMemberships.count == 0) {
+            contact.relationshipState = kRelationStateKept;
+        } else {
+            contact.relationshipState = kRelationStateGroupFriend;
+        }
         [contact updateNearbyFlag];
         return;
     }
     
-    if ((contact.messages.count == 0 && contact.groupMemberships.count == 0 && contact.deliveriesSent.count == 0) || contact.isKept) {
+    if ((contact.messages.count == 0 && contact.groupMemberships.count == 0 && contact.deliveriesSent.count == 0) || force) {
         // if there is nothing to save, delete right away and dont ask
         if (RELATIONSHIP_DEBUG || DEBUG_DELETION) NSLog(@"handleDeletionOfContact: nothing to save or kept, delete contact id %@",contact.clientId);
-        if (!contact.isKept) {
+        if (!force) {
             [self removedAlertForContact:contact];
         }
         [AppDelegate.instance deleteObject:contact];
@@ -1468,44 +1458,24 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
-- (void) updatePresences {
+- (void) syncPresencesWithForce:(BOOL)force withCompletion:(DoneBlock)completion {
     NSDate * latestChange;
-    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown) || [self fullSync]) {
+    if (force) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForContactPresence];
     }
-    NSDate * preUpdateTime = [NSDate date];
+
     // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
         for (id presence in changedPresences) {
             // NSLog(@"updatePresences presence=%@",presence);
             [self presenceUpdated:presence];
         }
-        if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]]) {
-            [self cleanupContactsLastUpdatedBefore:preUpdateTime];
-        }
+        [self checkContactsWithCompletion:completion];
     }];
 }
 
--(void) cleanupContactsLastUpdatedBefore:(NSDate*)lastUpdateTime {
-    NSDictionary * vars = @{ @"lastUpdatedBefore" : lastUpdateTime};
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"ContactsLastUpdatedBefore" substitutionVariables: vars];
-    NSError *error;
-    NSArray * contacts = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (error != nil) {
-        NSLog(@"Error=%@",error);
-    }
-    // NSLog(@"found %d contacts last updated before time %@", contacts.count, lastUpdateTime);
-    if (contacts == nil) {
-        NSLog(@"Fetch request failed: %@", error);
-        abort();
-    }
-    for (Contact * contact in contacts) {
-        NSLog(@"cleanupContactsLastUpdatedBefore: deleting contact with id %@ name %@ state %@ lastUpdateTime %@", contact.clientId, contact.nickName, contact.relationshipState, contact.lastUpdateReceived);
-        //[self handleDeletionOfContact:contact];
-    }
-}
 
 - (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionBlock)handler {
     [self getKeyForClientId: theContact.clientId withKeyId:theId keyHandler:^(NSDictionary * keyRecord) {
@@ -1822,15 +1792,14 @@ static NSTimer * _stateNotificationDelayTimer;
     return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fullSync"] boolValue];
 }
 
-- (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)completion {
+- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion {
     NSDate * latestChange;
-    if ((self.firstConnectionAfterCrashOrUpdate  || _uncleanConnectionShutdown || forceAll) || [self fullSync]) {
+    if (forceAll) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
     } else {
         latestChange = [self getLatestChangeDateForGroups];
     }
-    //NSDate * preUpdateTime = [NSDate date];
-    // NSLog(@"latest date %@", latestChange);
+
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
         if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
         if ([changedGroups isKindOfClass:[NSArray class]]) {
@@ -1843,7 +1812,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     [self makeSureAvatarUploadedForGroup:group withCompletion:^(NSError *theError) {
                         if (CHECK_URL_TRACE) NSLog(@"makeSureAvatarUploadedForGroup %@ error=%@",group.nickName,theError);
                     }];
-                    if ((self.firstConnectionAfterCrashOrUpdate || _uncleanConnectionShutdown || forceAll) || ![self fullSync]) {
+                    if (forceAll) {
                         [self getGroupMembers:group lastKnown:[NSDate dateWithTimeIntervalSince1970:0] withCompletion:nil];
                     } else {
                         [self getGroupMembers:group lastKnown:[group latestMemberChangeDate] withCompletion:nil];
@@ -1851,14 +1820,11 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
                 ok = ok && stateOk;
             }
-//            if ([latestChange isEqualToDate:[NSDate dateWithTimeIntervalSince1970:0]] && ok) {
-//                [self cleanupGroupsLastUpdatedBefore:preUpdateTime];
-//            }
         }
         [self checkGroupMembershipsWithCompletion:completion];
     }];
 }
-
+/*
 -(void) cleanupGroupsLastUpdatedBefore:(NSDate*)lastUpdateTime {
     NSDictionary * vars = @{ @"lastUpdatedBefore" : lastUpdateTime};
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupsLastUpdatedBefore" substitutionVariables: vars];
@@ -1877,6 +1843,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self handleDeletionOfGroup:group];
     }
 }
+*/
 
 - (BOOL) updateGroupHere: (NSDictionary*) groupDict {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
@@ -2081,6 +2048,53 @@ static NSTimer * _stateNotificationDelayTimer;
                 if (completion) completion();
             } else {
                 NSLog(@"isMemberInGroups(): failed: %@", responseOrError);
+                if (completion) completion();
+            }
+        }];
+    } else {
+        if (completion) completion(nil);
+    }
+}
+
+
+// Boolean[] isContactOf  (String[] clientIds);
+- (void) checkContactsWithCompletion:(DoneBlock)completion {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: self.delegate.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSMutableArray *predicateArray = [NSMutableArray array];
+    [predicateArray addObject: [NSPredicate predicateWithFormat:@"type == 'Contact' AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'groupfriend' OR relationshipState == 'invited' OR relationshipState == 'invitedMe')" ]];
+    
+    NSError *error;
+    NSArray *contactArray = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (contactArray == nil)
+    {
+        NSLog(@"Fetch request for 'checkContacts' failed: %@", error);
+        abort();
+    }
+    NSMutableArray * contactsToCheck = [[NSMutableArray alloc]init];
+    for (Contact * contact in contactArray) {
+        [contactsToCheck addObject:contact.clientId];
+    }
+    if (contactsToCheck.count > 0) {
+        [_serverConnection invoke: @"isContactOf" withParams: @[contactsToCheck] onResponse: ^(id responseOrError, BOOL success) {
+            if (success) {
+                NSArray * contactFlags = responseOrError;
+                if (contactFlags.count != contactsToCheck.count || contactFlags.count != contactArray.count) {
+                    NSLog(@"ERROR: isContactOf(): return type mismatch, requested %d/%d flags, got %d",contactsToCheck.count,contactArray.count,contactFlags.count);
+                    return;
+                }
+                for (int i = 0; i < contactFlags.count;++i) {
+                    if ([contactFlags[i] boolValue] == NO) {
+                        Contact * contact = contactArray[i];
+                        NSLog(@"checkContacts: removing contact with id: %@ nick: %@", contact.clientId, contact.nickName);
+                        [self handleDeletionOfContact:contact withForce:NO];
+                    }
+                }
+                if (completion) completion();
+            } else {
+                NSLog(@"isContactOf(): failed: %@", responseOrError);
                 if (completion) completion();
             }
         }];
@@ -3858,7 +3872,6 @@ static NSTimer * _stateNotificationDelayTimer;
         if (success) {
             // NSLog(@"pairByToken(): got result: %@", responseOrError);
             [self updatePresenceWithHandler:^(BOOL ok) {
-                [self updatePresences];
             }];
         } else {
             NSLog(@"pairByToken(): failed: %@", responseOrError);

@@ -497,7 +497,7 @@ static int  groupMemberContext;
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"inviteClient: %@", success ? @"success" : @"failed");
         }];
     } else {
-        NSLog(@"ContactSheetController inviteToggled: unhandled status %@", self.contact.status);
+        NSLog(@"ContactSheetController inviteToggled: unhandled status %@", self.contact.relationshipState);
     }
 }
 
@@ -561,7 +561,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
         } else {
             NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", group);
-            [self.chatBackend getGroupsForceAll: YES withCompletion:nil];
+            [self.chatBackend syncGroupsWithForce: NO withCompletion:nil];
         }
     }];
 }
@@ -574,7 +574,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
         } else {
             NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", group);
-            [self.chatBackend getGroupsForceAll:YES withCompletion:nil];
+            [self.chatBackend syncGroupsWithForce:NO withCompletion:nil];
         }
     }];
 }
@@ -584,7 +584,7 @@ static int  groupMemberContext;
     Contact * contact = self.contact;
     [self quitInspection];
     if (contact.isGroupFriend || contact.isKept) {
-        [self.chatBackend handleDeletionOfContact: contact];
+        [self.chatBackend handleDeletionOfContact: contact withForce:YES];
     } else {
         [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
@@ -604,7 +604,7 @@ static int  groupMemberContext;
 - (DatasheetSection*) friendInvitationResponseSection {
     if ( ! _friendInvitationResponseSection) {
         _friendInvitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"friend_invitation_response_section"];
-        _friendInvitationResponseSection.title = [[NSAttributedString alloc] initWithString: @"Du bist eingeladen" attributes: nil];
+        _friendInvitationResponseSection.title = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"contact_friend_invitation_section_title",nil) attributes: nil];
         [_friendInvitationResponseSection setItems: @[self.acceptFriendItem, self.refuseFriendItem]];
     }
     return _friendInvitationResponseSection;
@@ -614,7 +614,7 @@ static int  groupMemberContext;
 - (DatasheetItem*) acceptFriendItem {
     if ( ! _acceptFriendItem) {
         _acceptFriendItem = [self itemWithIdentifier: @"friend_invitation_accept" cellIdentifier: @"DatasheetActionCell"];
-        _acceptFriendItem.title = NSLocalizedString(@"friend_accept_button", nil);
+        _acceptFriendItem.title = NSLocalizedString(@"contact_friend_accept_button", nil);
         _acceptFriendItem.target = self;
         _acceptFriendItem.action = @selector(acceptFriendTapped:);
     }
@@ -625,7 +625,7 @@ static int  groupMemberContext;
 - (DatasheetItem*) refuseFriendItem {
     if ( ! _refuseFriendItem) {
         _refuseFriendItem = [self itemWithIdentifier: @"friend_invitation_refuse" cellIdentifier: @"DatasheetActionCell"];
-        _refuseFriendItem.title = NSLocalizedString( @"friend_refuse_button", nil);
+        _refuseFriendItem.title = NSLocalizedString( @"contact_friend_refuse_button", nil);
         _refuseFriendItem.target = self;
         _refuseFriendItem.action = @selector(refuseFriendTapped:);
     }
@@ -639,8 +639,8 @@ static int  groupMemberContext;
 }
 
 - (void) refuseFriendTapped: (id) sender {
-    NSString * title = NSLocalizedString(@"friend_refuse_title", nil);
-    NSString * destructiveButtonTitle = NSLocalizedString(@"friend_refuse_button_title", nil);
+    NSString * title = NSLocalizedString(@"contact_friend_refuse_title", nil);
+    NSString * destructiveButtonTitle = NSLocalizedString(@"contact_friend_refuse_button_title", nil);
     
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {

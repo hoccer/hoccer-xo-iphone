@@ -98,9 +98,7 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
-//- (void) updateGroupKeysForMyGroupMemberships;
-
-- (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)done;
+- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
@@ -147,13 +145,13 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) downloadFailed:(Attachment *)theAttachment;
 - (void) uploadFailed:(Attachment *)theAttachment;
 
-- (void) updateRelationships;
+- (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion;
 - (void) updatePresenceWithHandler:(GenericResultHandler)handler;
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler;
 
 - (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
-- (void) handleDeletionOfContact:(Contact*)contact;
+- (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force;
 
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment;

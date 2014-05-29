@@ -169,9 +169,6 @@ NSString * const kRelationStateKept        = @"kept";
 
 
 - (NSString*) nickNameWithStatus {
-    if (self.isKept) {
-        return [NSString stringWithFormat:@"%@ ❌", self.nickName];
-    }
     if (self.isBlocked) {
         return self.nickName;
     }
@@ -181,18 +178,27 @@ NSString * const kRelationStateKept        = @"kept";
             return [NSString stringWithFormat:@"%@ ⭕", self.nickName];
         }
     }
-    if (self.isNotRelated) {
-        return [NSString stringWithFormat:@"%@ ❓", self.nickName];
-    }
     NSString * name = self.nickName;
+    if (self.isKept) {
+        name = [NSString stringWithFormat:@"%@ ❌", name];
+    }
+    if (!self.isGroup && self.isNotRelated) {
+        name = [NSString stringWithFormat:@"%@ ❓", name];
+    }
     if (self.isGroupFriend) {
-        name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
+        name = [NSString stringWithFormat:@"%@ 🔗", name];
     }
     if ( self.isTyping) {
-        name = [NSString stringWithFormat:@"%@ 💬", self.nickName];
+        name = [NSString stringWithFormat:@"%@ 💬", name];
     }
     if ( self.isBackground) {
-        name = [NSString stringWithFormat:@"%@ 💤", self.nickName];
+        name = [NSString stringWithFormat:@"%@ 💤", name];
+    }
+    if ( self.isInvited) {
+        name = [NSString stringWithFormat:@"%@ ★", name];
+    }
+    if ( self.invitedMe) {
+        name = [NSString stringWithFormat:@"%@ ☆", name];
     }
     if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
         return name;
@@ -242,7 +248,7 @@ NSString * const kRelationStateKept        = @"kept";
 }
 
 - (BOOL) isNotRelated {
-    return [kRelationStateNone isEqualToString: self.relationshipState];
+    return self.relationshipState == nil || [kRelationStateNone isEqualToString: self.relationshipState];
 }
 
 - (BOOL) isOffline {

@@ -169,11 +169,21 @@
 "contact_relationship_removed_message"          = "Relationship with contact '%@' has been removed.";
 "contact_kept_and_relationship_removed_message" = "No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
 
+"contact_friend_invitation_section_title"       = "You are invited as friend";
+
+"contact_friend_accept_button"                  = "Accept as friend";
+"contact_friend_refuse_button"                  = "Refuse friendship";
+
+"contact_friend_refuse_title"                   = "Refuse friendship?";
+"contact_friend_refuse_button_title"            = "Refuse";
+
 "contact_relationship_none"                     = "None";
 "contact_relationship_friend"                   = "Friend";
 "contact_relationship_groupfriend"              = "Acquaintance by group";
 "contact_relationship_kept"                     = "No Relationship";
 "contact_relationship_blocked"                  = "Blocked";
+"contact_relationship_invited"                  = "Invited as Friend";
+"contact_relationship_invitedMe"                = "Invited you as Friend";
 
 //==============================================================================
 // Credentials

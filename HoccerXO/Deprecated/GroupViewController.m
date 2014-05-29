@@ -111,7 +111,7 @@
                         _newGroupCreated = NO;
                     } else {
                         NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
-                        [self.backend getGroupsForceAll:YES];
+                        [self.backend syncGroupsWithForce:YES];
                     }
                 }];
             } else {
@@ -120,7 +120,7 @@
                         if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
                     } else {
                         NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
-                        [self.backend getGroupsForceAll:YES];
+                        [self.backend syncGroupsWithForce:YES];
                     }
                 }];
             }
