@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "ContactListViewController.h"
+#import "ContactCell.h"
 
 @class ChatViewController;
 
 
-@interface ConversationViewController : ContactListViewController <NSFetchedResultsControllerDelegate>
+@interface ConversationViewController : ContactListViewController <ContactCellDelegate>
 
 @property (strong, nonatomic) ChatViewController *chatViewController;
 

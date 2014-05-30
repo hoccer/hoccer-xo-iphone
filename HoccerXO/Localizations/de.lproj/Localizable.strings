@@ -187,6 +187,9 @@
 "contact_relationship_kept"                     = "Keine Beziehung";
 "contact_relationship_blocked"                  = "Geblockt";
 
+"contact_list_placeholder"                      = "Lade Freunde zum chatten ein.";
+"contact_list_placeholder_nearby"               = "Warte auf Kontake in der Nähe…";
+
 //==============================================================================
 // Credentials
 //==============================================================================

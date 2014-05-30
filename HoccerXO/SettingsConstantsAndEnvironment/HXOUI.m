@@ -45,6 +45,10 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString: @"#D"];
 }
 
+- (UIColor*) tablePlaceholderTextColor {
+    return [UIColor colorWithHexString: @"#B5BAC5"];
+}
+
 - (UIColor*) ledColor {
     return [UIColor colorWithHexString: @"#8EC12C"];
 }

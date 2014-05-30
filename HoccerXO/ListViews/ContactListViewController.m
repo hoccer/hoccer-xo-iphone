@@ -47,7 +47,10 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (strong, nonatomic)   id                             connectionInfoObserver;
 @property (nonatomic, readonly) HXOBackend                   * chatBackend;
 
-@property (nonatomic, readonly) UITableViewCell              * cellPrototype;
+@property (nonatomic, readonly) UITableViewCell             * cellPrototype;
+@property (nonatomic, readonly) UIView                      * placeholderView;
+@property (nonatomic, readonly) UIImageView                 * placeholderImageView;
+@property (nonatomic, readonly) UILabel                     * placeholderLabel;
 @property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
 
 @end
@@ -55,6 +58,9 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @implementation ContactListViewController
 
 @synthesize fetchedResultsController = _fetchedResultsController;
+@synthesize placeholderView = _placeholderView;
+@synthesize placeholderImageView = _placeholderImageView;
+@synthesize placeholderLabel = _placeholderLabel;
 
 - (void)awakeFromNib {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -102,6 +108,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
     self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+
+    [self.tableView addSubview: self.placeholderView];
 }
 
 - (id) cellClass {
@@ -138,6 +146,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     self.currentFetchedResultsController.delegate = nil;
     [self clearFetchedResultsControllers];
     [self.tableView reloadData];
+    [self configurePlaceholder];
 }
 
 - (void)dealloc {
@@ -151,6 +160,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [self.tableView reloadData];
     [super viewWillAppear: animated];
     [HXOBackend broadcastConnectionInfo];
+
+    [self configurePlaceholder];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -404,6 +415,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+
+    [self configurePlaceholder];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
@@ -416,10 +429,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@:controllerDidChangeContent: updates took %1.3f", [self class], [stop timeIntervalSinceDate:start]);
 }
 
-- (void)configureCell: (id<ContactCell>) cell atIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell: (ContactCell*) cell atIndexPath:(NSIndexPath *)indexPath {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ContactListViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@",  [NSThread callStackSymbols]);
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
+
+    cell.delegate = nil;
 
     cell.titleLabel.text = contact.nickNameWithStatus;
     
@@ -611,6 +626,73 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [self dismissViewControllerAnimated: NO completion: nil];
 }
 
+#pragma mark - Empty Table Placeholder
+
+- (UIView*) placeholderView {
+    if ( ! _placeholderView) {
+        _placeholderView = [[UIView alloc] initWithFrame: self.view.bounds];
+        _placeholderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+        [_placeholderView addSubview: self.placeholderImageView];
+        [_placeholderView addSubview: self.placeholderLabel];
+
+        NSDictionary * views = @{@"image": self.placeholderImageView, @"label": self.placeholderLabel};
+        NSString * format = [NSString stringWithFormat: @"H:|-[image]-|"];
+        [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+        format = [NSString stringWithFormat: @"H:|-[label]-|"];
+        [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+        format = [NSString stringWithFormat: @"V:|-(%f)-[image]-(%f)-[label]", 8 * kHXOGridSpacing, 4 * kHXOGridSpacing];
+        [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+    }
+    return _placeholderView;
+}
+
+- (UIImageView*) placeholderImageView {
+    if ( ! _placeholderImageView) {
+        _placeholderImageView = [[UIImageView alloc] initWithFrame: CGRectZero];
+        _placeholderImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        _placeholderImageView.contentMode = UIViewContentModeCenter;
+    }
+    return _placeholderImageView;
+}
+
+- (UILabel*) placeholderLabel {
+    if ( ! _placeholderLabel) {
+        _placeholderLabel = [[UILabel alloc] initWithFrame: CGRectZero];
+        _placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _placeholderLabel.textColor = [HXOUI theme].tablePlaceholderTextColor;
+        _placeholderLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleCaption1];
+        _placeholderLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _placeholderLabel;
+}
+
+- (void) configurePlaceholder {
+    self.placeholderLabel.text = [self placeholderText];
+    self.placeholderImageView.image = [self placeholderImage];
+    self.placeholderView.alpha = [self tableViewIsEmpty] ? 1 : 0;
+}
+
+- (BOOL) tableViewIsEmpty {
+    for (int i = 0; i < [self numberOfSectionsInTableView: self.tableView]; ++i) {
+        if ([self tableView: self.tableView numberOfRowsInSection: i] > 0) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+- (NSString*) placeholderText {
+    return nil; //NSLocalizedString(@"contact_list_placeholder", nil);
+}
+
+- (UIImage*) placeholderImage {
+    return nil; //[UIImage imageNamed: @"placeholder-chats"];
+}
+
+#pragma mark - Attic
 
 @synthesize chatBackend = _chatBackend;
 - (HXOBackend*) chatBackend {
@@ -619,6 +701,5 @@ static const CGFloat kMagicSearchBarHeight = 44;
     }
     return _chatBackend;
 }
-
 
 @end
