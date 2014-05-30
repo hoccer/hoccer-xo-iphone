@@ -50,7 +50,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (nonatomic, readonly) UIView                      * placeholderView;
 @property (nonatomic, readonly) UIImageView                 * placeholderImageView;
 @property (nonatomic, readonly) UILabel                     * placeholderLabel;
-
 @end
 
 @implementation ContactListViewController
@@ -669,7 +668,10 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void) configurePlaceholder {
     self.placeholderLabel.text = [self placeholderText];
     self.placeholderImageView.image = [self placeholderImage];
-    self.placeholderView.alpha = [self tableViewIsEmpty] ? 1 : 0;
+
+    BOOL isEmpty = [self tableViewIsEmpty];
+    self.placeholderView.alpha = isEmpty ? 1 : 0;
+    self.tableView.tableHeaderView = isEmpty ? nil : self.searchBar;
 }
 
 - (BOOL) tableViewIsEmpty {
