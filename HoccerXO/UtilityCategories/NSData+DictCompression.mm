@@ -11,10 +11,15 @@
 #import "NSData+Base64.h"
 #import <Foundation/NSUUID.h>
 
-#define SOME_COMPRESSION_TRACE YES
+#import "map"
+#import "memory"
+
+#define COMPRESSION_TIMING YES
+#define SOME_COMPRESSION_TRACE NO
 #define COMPRESSION_TRACE NO
 #define MORE_COMPRESSION_TRACE NO
-#define COMPRESSION_TIMING YES
+#define TREE_COMP_TRACE NO
+#define TREE_FIND_TRACE NO
 
 
 typedef NSRange (^CompressBlock)(NSMutableData * data, NSRange range);
@@ -39,6 +44,185 @@ enum {
     BASE64_LONGER_SLASHESC    = 252  //0xfc
 };
 
+NSString* asciiChar(unsigned char c) {
+    NSMutableString * rep = [NSMutableString new];
+    if (c >=0x20 && c < 0x7f) {
+        [rep appendString:[NSString stringWithFormat:@"%c",c]];
+    } else {
+        [rep appendString:[NSString stringWithFormat:@"<%d>",c]];
+    }
+    return rep;
+}
+
+- (NSString*)asciiString {
+    NSMutableString * rep = [NSMutableString new];
+    for (int i = 0; i < self.length; ++i) {
+        unsigned char c = ((unsigned char*)self.bytes)[i];
+        [rep appendString:asciiChar(c)];
+    }
+    return rep;
+}
+
+- (NSString*)asciiStringWithMaxBytes:(NSUInteger)maxBytes {
+    NSMutableString * rep = [NSMutableString new];
+    for (int i = 0; i < self.length && i < maxBytes; ++i) {
+        unsigned char c = ((unsigned char*)self.bytes)[i];
+        [rep appendString:asciiChar(c)];
+    }
+    if (self.length > maxBytes) {
+        rep = [NSMutableString stringWithFormat:@"%@ ...[%d more bytes]", rep, self.length - maxBytes];
+    }
+    return rep;
+}
+
+template <typename Key, typename Value>
+struct Tree {
+//    std::map< Key, std::shared_ptr<Tree> > child;
+//    std::map< Key, Tree*> child;
+    typedef std::map<Key,Tree> type;
+    std::map< Key, Tree> child;
+    Value value;
+};
+
+ 
+template<typename T> struct STree {
+//    typedef std::map<T,std::shared_ptr<STree> > type;
+    typedef std::map<T,STree> type;
+};
+
+//typedef STree<unsigned char>::type CharTree;
+typedef Tree<unsigned char,int> CharTree;
+typedef std::shared_ptr<CharTree> CharTreePtr;
+
+
+
+void checkTree(NSArray* dataList, const CharTree & tree) {
+    NSLog(@"------->   starting checktree");
+    for (int i = 0; i < dataList.count;++i) {
+        NSLog(@"--> start of chain %i",i);
+        NSData * data = dataList[i];
+        int value;
+        NSRange found = [data findTree:tree inRange:NSMakeRange(0,data.length) returnValue:value];
+        if (found.location != 0) {
+            NSLog(@"#### bad location (%d) for %@", found.location, [data asciiString]);
+        }
+        if (found.length != data.length) {
+            NSLog(@"### bad length (%d) for %@", found.length, [data asciiString]);
+        }
+        if (value != i+1) {
+            NSLog(@"#### bad value (%d) for %@, should be %d", value, [data asciiString], i);
+        }
+        NSMutableData * mdata =  [[NSMutableData alloc] initWithData:[@"<" dataUsingEncoding:NSUTF8StringEncoding ]];
+        [mdata appendData:data];
+        [mdata appendData:[@">" dataUsingEncoding:NSUTF8StringEncoding ]];
+        NSLog(@"---> check %@",[mdata asciiString]);
+        found = [mdata findTree:tree inRange:NSMakeRange(0,mdata.length) returnValue:value];
+        if (found.location != 1) {
+            NSLog(@"####-2 bad location (%d) for %@", found.location, [data asciiString]);
+        }
+        if (found.length != data.length) {
+            NSLog(@"####-2 bad length (%d) for %@", found.length, [data asciiString]);
+        }
+        if (value != i+1) {
+            NSLog(@"####-2 bad value (%d) for %@, should be %d", value, [data asciiString], i);
+        }
+        
+    }
+    NSLog(@"------->   finished checktree");
+}
+
+CharTreePtr makeTreeForDict(NSArray* dataList)  {
+    
+    CharTreePtr tree = CharTreePtr(new CharTree());
+    tree->value = 0;
+    
+    for (int i = 0; i < dataList.count;++i) {
+        //NSLog(@"--> start of chain %i",i);
+        NSData * data = dataList[i];
+        const unsigned char * bytes = (const unsigned char *)[data bytes];
+        CharTree * subtree = &(*tree);
+        for (int c = 0; c < data.length;++c) {
+            CharTree::type::iterator ti = subtree->child.find(bytes[c]);
+            if (ti == subtree->child.end()) {
+                //NSLog(@"insert char %c",bytes[c]);
+                subtree->child[bytes[c]] = CharTree();
+                subtree = &subtree->child[bytes[c]]; // advance to new created tree
+                subtree->value = 0; // 0 indicates that it is not the end of the tree
+            } else {
+                //NSLog(@"found char %c",bytes[c]);
+                subtree = &(*ti).second; // advance to next tree
+            }
+        }
+        subtree->value = i+1; // remember index in last tree
+        //NSLog(@"--> end of chain %i, index %d",i, subtree->value);
+    }
+    if (TREE_COMP_TRACE) printTree(*tree ,@"");
+    //checkTree(dataList, *tree);
+    return tree;
+}
+
+NSString * makeRepeatedString(NSString * c, int repeatCount) {
+    NSMutableString * result = [NSMutableString new];
+    for (int i = 0; i < repeatCount;++i) {
+        [result appendString:c];
+    }
+    return result;
+}
+
+void printTree(const CharTree & tree, NSString* prefix) {
+    NSUInteger depth = prefix.length;
+    if (!tree.child.empty()) {
+        for (CharTree::type::const_iterator it = tree.child.begin(); it != tree.child.end();++it) {
+            //NSLog(@"Enter depth:%2d c=:%c",depth, it->first);
+            const unsigned char c = it->first;
+            NSString * line = [NSString stringWithFormat:@"%@%c",prefix,c];
+            if (it->second.child.size() > 1) {
+                NSLog(@"depth:%2d line: %@ --- %lu",depth, line, it->second.child.size());
+            }
+            if (it->second.value != 0) {
+                NSLog(@"depth:%2d lineX:%@ (%d)\n",prefix.length, line, it->second.value);
+            }
+            printTree(it->second, line);
+        }
+    } else {
+        //NSLog(@"depth:%2d line: %@ (%d)\n",prefix.length, prefix, tree.value);
+    }
+}
+
+
+// return first and longest matching path range
+-(NSRange)findTree:(const CharTree &)tree inRange:(NSRange)range returnValue:(int&)returnValue {
+    const unsigned char * bytes = (const unsigned char *)[self bytes];
+    int rangeEnd = range.location+range.length;
+    for (int i = range.location; i < rangeEnd;++i) {
+        const CharTree * subtree = &tree;
+        int offs = 0;
+        int match = 0;
+        int matchLen = 0;
+        CharTree::type::const_iterator ti = subtree->child.find(bytes[i]);
+        while (ti != subtree->child.end() && i+offs < rangeEnd) {
+            if (TREE_FIND_TRACE) NSLog(@"found char %@ pos=%d offs=%d", asciiChar(bytes[i+offs]),i,offs);
+            ++offs; // advance index in byte array searched
+            subtree = &(*ti).second; // advance tree ptr
+            if (subtree->value != 0) {
+                match = subtree->value;
+                matchLen = offs;
+                if (TREE_FIND_TRACE) NSLog(@"fmatch pos=%d offs=%d value=%d", i,offs,match);
+            }
+            ti = subtree->child.find(bytes[i+offs]); // try next char
+        }
+        if (TREE_FIND_TRACE) NSLog(@"endwhile pos=%d offs=%d value=%d DATA=%d TREE=%d", i,offs,match,i+offs < rangeEnd,ti != subtree->child.end());
+        // we have now either reached the end of the tree or the end of the search range
+        if (match != 0) {
+            // we have found a full path
+            returnValue = match;
+            return NSMakeRange(i, matchLen);
+        }
+        if (TREE_FIND_TRACE) NSLog(@"loop pos=%d done", i);
+    }
+    returnValue = 0;
+    return NSMakeRange(NSNotFound, 0);
+}
 
 -(NSData*)dataByReplacingOccurrencesOfData:(NSData*)what withData:(NSData*)replacement {
     NSMutableData * result = [NSMutableData dataWithData:self];
@@ -88,7 +272,7 @@ BOOL isAlphaChar(unsigned char c) {
 }
 
 - (BOOL)isAlphaRange:(NSRange)range {
-    const unsigned char * bytes = [self bytes];
+    const unsigned char * bytes = (const unsigned char *)[self bytes];
     for (int i = 0; i < range.length;++i) {
         unsigned char c = bytes[range.location+i];
         if (!isAlphaChar(c)) {
@@ -104,7 +288,7 @@ BOOL isLowerHexChar(unsigned char c) {
 }
 
 - (BOOL)isLowerHexRange:(NSRange)range {
-    const unsigned char * bytes = [self bytes];
+    const unsigned char * bytes = (const unsigned char *)[self bytes];
     for (int i = 0; i < range.length;++i) {
         unsigned char c = bytes[range.location+i];
         if (!isLowerHexChar(c)) {
@@ -121,7 +305,7 @@ BOOL isUpperHexChar(unsigned char c) {
 }
 
 - (BOOL)isUpperHexRange:(NSRange)range {
-    const unsigned char * bytes = [self bytes];
+    const unsigned char * bytes = (const unsigned char *)[self bytes];
     for (int i = 0; i < range.length;++i) {
         unsigned char c = bytes[range.location+i];
         if (!isUpperHexChar(c)) {
@@ -140,7 +324,7 @@ BOOL isUpperHexChar(unsigned char c) {
     if (range.length != 36) {
         return NO;
     }
-    const unsigned char * bytes = [self bytes] + range.location;
+    const unsigned char * bytes = (const unsigned char *)[self bytes] + range.location;
     BOOL hasMinuses = (bytes[8] == '-') && (bytes[13] == '-') && (bytes[18] == '-') && (bytes[23] == '-');
     return hasMinuses;
 }
@@ -148,7 +332,7 @@ BOOL isUpperHexChar(unsigned char c) {
 
 - (BOOL)isUpperUUIDRange:(NSRange)range {
     if ([self canBeUUIDRange:range]) {
-        const unsigned char * bytes = [self bytes];
+        const unsigned char * bytes = (const unsigned char *)[self bytes];
         for (int i = 0; i < range.length;++i) {
             unsigned char c = bytes[range.location+i];
             if (!isUpperHexChar(c) && (c != '-')) {
@@ -163,7 +347,7 @@ BOOL isUpperHexChar(unsigned char c) {
 
 - (BOOL)isLowerUUIDRange:(NSRange)range {
     if ([self canBeUUIDRange:range]) {
-        const unsigned char * bytes = [self bytes];
+        const unsigned char * bytes = (const unsigned char *)[self bytes];
         for (int i = 0; i < range.length;++i) {
             unsigned char c = bytes[range.location+i];
             if (!isLowerHexChar(c) && c!= '-') {
@@ -184,7 +368,7 @@ BOOL isBase64Char(unsigned char c) {
 
 - (BOOL)isBase64Range:(NSRange)range {
     int payload = 0;
-    const unsigned char * bytes = [self bytes];
+    const unsigned char * bytes = (const unsigned char *)[self bytes];
     int pads = 0;
     for (int i = 0; i < range.length;++i) {
         unsigned char c = bytes[range.location+i];
@@ -217,7 +401,7 @@ BOOL isBase64Char(unsigned char c) {
 
 - (NSRange) rangeOfQuotedBase64StringInRange:(NSRange)range {
     NSRange searchRange = range;
-    const unsigned char * bytes = [self bytes];
+    const unsigned char * bytes = (const unsigned char *)[self bytes];
     int nextQuote = -1;
     int rangeEnd = range.location + range.length;
     do {
@@ -313,8 +497,8 @@ BOOL isBase64Char(unsigned char c) {
     return NSMakeRange(NSNotFound, 0);
 }
 
-static const unsigned char hex_bytes_lower[16] = "0123456789abcdef";
-static const unsigned char hex_bytes_upper[16] = "0123456789ABCDEF";
+static const unsigned char hex_bytes_lower[17] = "0123456789abcdef";
+static const unsigned char hex_bytes_upper[17] = "0123456789ABCDEF";
 
 NSData * dataFromBytes(const unsigned char * bytes, int len) {
     return [NSData dataWithBytes:bytes length:len];
@@ -420,7 +604,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
     NSMutableData * result = [NSMutableData dataWithData:self];
     NSRange searchRange = NSMakeRange(0,result.length);
     int start = 0;
-    int stop = findByteIndexFrom2(0, result.bytes, result.length, searchRange.location);
+    int stop = findByteIndexFrom2(0, (const unsigned char *)result.bytes, result.length, searchRange.location);
     while (stop >= 0 && start < result.length) {
         int gap = stop - start;
         if (MORE_COMPRESSION_TRACE) NSLog(@"start: %d stop %d gap %d", start, stop, gap);
@@ -432,7 +616,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             start = stop;
         }
         if (start < result.length) {
-            const unsigned char * bytes = result.bytes;
+            const unsigned char * bytes = (const unsigned char *)result.bytes;
             if (MORE_COMPRESSION_TRACE) NSLog(@"check pos %d for 0", start);
             if (bytes[start] == 0) {
                 if (MORE_COMPRESSION_TRACE) NSLog(@"pos %d is zero", start);
@@ -443,7 +627,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             } else {
                 if (MORE_COMPRESSION_TRACE) NSLog(@"pos %d is not zero, searching for next zero as stop", start);
             }
-            stop = findByteIndexFrom2(0, result.bytes, result.length, start);
+            stop = findByteIndexFrom2(0, (const unsigned char *)result.bytes, result.length, start);
         } else {
             if (MORE_COMPRESSION_TRACE) NSLog(@"pos %d has reached end", start);
         }
@@ -464,11 +648,11 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             [dataDict addObject: entry];
         }
         entry = dataDict[i];
-        if (findByteIndex(0, entry.bytes, 1) >= 0) {
+        if (findByteIndex(0, (const unsigned char *)entry.bytes, 1) >= 0) {
             // 0 in dict not allowed
             return nil;
         }
-        unsigned char indexReference[2] = {0, i+1};
+        unsigned char indexReference[2] = {0, (unsigned char)(i+1)};
         [opcodes addObject:dataFromBytes(indexReference, 2)];
         
         if (MORE_COMPRESSION_TRACE) NSLog(@"\n");
@@ -493,6 +677,36 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             return range;
         }];
     }
+    return result;
+}
+
+
+- (NSData*)performDictTreeCompressionWitTree:(const CharTree &)tree {
+    
+    NSData * result = self;
+    
+    result  = [result iterateOverUncompressedWithMinSize:4 withBlock:^NSRange(NSMutableData *data, NSRange range) {
+        if (MORE_COMPRESSION_TRACE | TREE_COMP_TRACE) NSLog(@"dictTree search range from %d size %d",range.location, range.length);
+        int value = 0;
+        NSRange found = [data findTree:tree inRange:range returnValue:value];
+        if (MORE_COMPRESSION_TRACE| TREE_COMP_TRACE) NSLog(@"findtree returned pos=%d len=%d index=%d",found.location, found.length, value);
+        if (found.location != NSNotFound) {
+            unsigned char refop[2] = {0, (unsigned char)value};
+            NSString * replacing = nil;
+            if (COMPRESSION_TRACE | SOME_COMPRESSION_TRACE| TREE_COMP_TRACE) {
+                replacing = [[data subdataWithRange:found] asciiString];
+                if (COMPRESSION_TRACE| TREE_COMP_TRACE) NSLog(@"Tree: replacing %@ with %@",replacing, [dataFromBytes(refop, 2) asciiString] );
+            }
+            if (MORE_COMPRESSION_TRACE| TREE_COMP_TRACE) NSLog(@"before=%@",[data asciiString]);
+            
+            [data replaceBytesInRange:found withBytes:(unsigned char*)refop length:2];
+            
+            if (MORE_COMPRESSION_TRACE| TREE_COMP_TRACE) NSLog(@"after=%@",[data asciiString]);
+            if (SOME_COMPRESSION_TRACE| TREE_COMP_TRACE) NSLog(@"tree  (reduced %d->%d):%@ (at %d)",found.length,2, replacing, found.location);
+            return NSMakeRange(found.location, 2);
+        }
+        return range;
+    }];
     return result;
 }
 
@@ -560,7 +774,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
                 BOOL quoted = NO;
                 if (found.location > range.location && found.location+found.length+1 < data.length) {
                     // check for quotes
-                    const unsigned char * bytes = data.bytes;
+                    const unsigned char * bytes = (const unsigned char *)data.bytes;
                     if (bytes[found.location-1] == '"' && bytes[found.location+found.length] == '"') {
                         quoted = YES;
                         if (COMPRESSION_TRACE) NSLog(@"Found Quoutes");
@@ -602,7 +816,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
                 [hexSequence appendData:hexData];
                 
                 NSData * replacedData = nil;
-                if (COMPRESSION_TRACE || SOME_COMPRESSION_TRACE) {
+                if (COMPRESSION_TRACE | SOME_COMPRESSION_TRACE) {
                     replacedData = [data subdataWithRange:found];
                     if (COMPRESSION_TRACE) NSLog(@"Replacing:%@", [replacedData asciiString]);
                     if (COMPRESSION_TRACE) NSLog(@"with:%@", [hexSequence asciiString]);
@@ -650,16 +864,16 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             
             NSMutableData * replacement = nil;
             if (base64Data.length<256) {
-                unsigned char short_base64[3] = {0, slashEscaped ? BASE64_SHORT_SLASHESC : BASE64_SHORT, base64Data.length};
+                unsigned char short_base64[3] = {0, static_cast<unsigned char>(slashEscaped ? BASE64_SHORT_SLASHESC : BASE64_SHORT), static_cast<unsigned char>(base64Data.length)};
                 replacement = mutableDataFromBytes(short_base64,3);
             } else if (base64Data.length < 65536) {
-                unsigned char longer_base64[4] = {0, slashEscaped ? BASE64_LONGER_SLASHESC : BASE64_LONGER, base64Data.length/256, base64Data.length % 256};
+                unsigned char longer_base64[4] = {0, static_cast<unsigned char>(slashEscaped ? BASE64_LONGER_SLASHESC : BASE64_LONGER), static_cast<unsigned char>(base64Data.length/256), static_cast<unsigned char>(base64Data.length % 256)};
                 replacement = mutableDataFromBytes(longer_base64,4);
             } else {
                 NSLog(@"#warning, b64 block > 64k, not compressing");
             }
             if (MORE_COMPRESSION_TRACE) {
-                const unsigned char * bytes = replacement.bytes;
+                const unsigned char * bytes = (const unsigned char *)replacement.bytes;
                 int oplen = operationEncodedSize(bytes[1], bytes);
                 NSLog(@"base64: encoded oplen = %d, base64Data.length=%d, msb=%d, lsb=%d", oplen, base64Data.length, bytes[2], bytes[3]);
             }
@@ -668,7 +882,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
                 [replacement appendData:base64Data];
                 
                 NSData * replacedData = nil;
-                if (COMPRESSION_TRACE || SOME_COMPRESSION_TRACE) {
+                if (COMPRESSION_TRACE | SOME_COMPRESSION_TRACE) {
                     replacedData = [data subdataWithRange:found];
                     if (COMPRESSION_TRACE) NSLog(@"Replacing:%@", [replacedData asciiString]);
                     if (COMPRESSION_TRACE) NSLog(@"with:%@", [replacement asciiString]);
@@ -698,9 +912,9 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
     
     NSMutableData * result = [NSMutableData dataWithData:self];
     
-    int start = findByteIndexFrom2(0, result.bytes, result.length, 0);
+    int start = findByteIndexFrom2(0, (const unsigned char *)result.bytes, result.length, 0);
     while (start >= 0 && start != NSNotFound && start+1 < result.length ) {
-        const unsigned char * bytes = result.bytes;
+        const unsigned char * bytes = (const unsigned char *)result.bytes;
         unsigned char opcode = bytes[start+1];
         int compressedSize = operationEncodedSize(opcode, bytes+start);
         int opEnd = start + compressedSize -1;
@@ -715,12 +929,12 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             NSLog(@"iterateOverCompressedWithBlock: block too short at pos %d, required end = %d, actual size = %d",start,opEnd,result.length);
             return nil;
         }
-        start = findByteIndexFrom2(0, result.bytes, result.length, start);
+        start = findByteIndexFrom2(0, (const unsigned char *)result.bytes, result.length, start);
     }
     return result;
 }
 
--(NSData*) performdecompressionWithDict:(NSArray*)dict {
+NSArray * sanitizedDict(NSArray* dict) {
     NSMutableArray * dataDict = [NSMutableArray new];
     for (int i = 0; i < dict.count;++i) {
         NSData * entry = dict[i];
@@ -731,14 +945,21 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
             [dataDict addObject: entry];
         }
         entry = dataDict[i];
-        if (findByteIndex(0, entry.bytes, 1) >= 0) {
+        if (findByteIndex(0, (const unsigned char *)entry.bytes, 1) >= 0) {
             // 0 in dict not allowed
             return nil;
         }
     }
+    return dataDict;
+}
+
+-(NSData*) performdecompressionWithDict:(NSArray*)dict {
+    
+    NSArray * dataDict = sanitizedDict(dict);
+    
     NSData * result;
     result = [self iterateOverCompressedWithBlock:^NSRange(NSMutableData *data, NSRange range) {
-        const unsigned char * bytes = data.bytes;
+        const unsigned char * bytes = (const unsigned char *)data.bytes;
         unsigned char opcode = bytes[range.location+1];
         NSData * replacement = nil;
         if (opcodeIsDictionary(opcode)) {
@@ -765,7 +986,7 @@ BOOL opcodeIsDictionary(unsigned char opcode) {
 
 NSData * hexReplacement(NSData * compressedData) {
     
-    const unsigned char * bytes = compressedData.bytes;
+    const unsigned char * bytes = (const unsigned char *)compressedData.bytes;
     unsigned char opcode = bytes[1];
     
     BOOL quoted = opcodeIsQuoted(opcode);
@@ -794,7 +1015,7 @@ NSData * hexReplacement(NSData * compressedData) {
 
     NSString * hexString;
     if (isUUID) {
-        NSUUID * uuid = [[NSUUID alloc] initWithUUIDBytes:binaryData.bytes];
+        NSUUID * uuid = [[NSUUID alloc] initWithUUIDBytes:(const unsigned char *)binaryData.bytes];
         hexString = [uuid UUIDString];
     } else {
         hexString = [binaryData hexadecimalString];
@@ -812,7 +1033,7 @@ NSData * hexReplacement(NSData * compressedData) {
 }
 
 NSData * base64Replacement(NSData * compressedData) {
-    const unsigned char * bytes = compressedData.bytes;
+    const unsigned char * bytes = (const unsigned char *)compressedData.bytes;
     unsigned char opcode = bytes[1];
     
     BOOL isLonger = opcodeIsLonger(opcode);
@@ -888,12 +1109,20 @@ b64, hex, dict:
 
  */
 
-- (NSData *) compressWithDict:(NSArray*)dict {
+- (NSData *) compressWithDict:(NSArray*)rawDict {
 
-    if (dict.count >= DICT_LIMIT) {
+    if (rawDict.count >= DICT_LIMIT) {
         // dict too large
         return nil;
     }
+    NSArray * dict = sanitizedDict(rawDict);
+    if (dict == nil) {
+        return nil;
+    }
+    NSDate * treeStartTime = [NSDate new];
+    CharTreePtr myTree = makeTreeForDict(dict);
+    NSDate * treeStopTime = [NSDate new];
+    
     NSData * compressed = [self escaped];
     
     NSDate * startTime = [NSDate new];
@@ -913,12 +1142,21 @@ b64, hex, dict:
     int afterHexSize = compressed.length;
 
     // dict
+    /*
     int beforeDictSize = compressed.length;
     NSDate * dictStartTime = [NSDate new];
-    compressed = [compressed performDictCompressionWithDict:dict];
+    NSData * compressed2 = [compressed performDictCompressionWithDict:dict];
     NSDate * dictStopTime = [NSDate new];
-    int afterDictSize = compressed.length;
-  
+    int afterDictSize = compressed2.length;
+     */
+    
+    // dict tree
+    int beforeTreeDictSize = compressed.length;
+    NSDate * treeDictStartTime = [NSDate new];
+    compressed = [compressed performDictTreeCompressionWitTree:*myTree];
+    NSDate * treeDictStopTime = [NSDate new];
+    int afterTreeDictSize = compressed.length;
+    
     NSDate * stopTime = [NSDate new];
     
     NSDate * decompStartTime = [NSDate new];
@@ -926,20 +1164,25 @@ b64, hex, dict:
     NSDate * decompStopTime = [NSDate new];
  
     if (COMPRESSION_TIMING) {
-        NSTimeInterval dictElapsed = [dictStopTime timeIntervalSinceDate:dictStartTime];
+        NSTimeInterval treeElapsed = [treeStopTime timeIntervalSinceDate:treeStartTime];
+        NSTimeInterval treeDictElapsed = [treeDictStopTime timeIntervalSinceDate:treeDictStartTime];
+        //NSTimeInterval dictElapsed = [dictStopTime timeIntervalSinceDate:dictStartTime];
         NSTimeInterval hexElapsed = [hexStopTime timeIntervalSinceDate:hexStartTime];
         NSTimeInterval b64Elapsed = [b64StopTime timeIntervalSinceDate:b64StartTime];
         NSTimeInterval decompElapsed = [decompStopTime timeIntervalSinceDate:decompStartTime];
         NSTimeInterval totalComprElapsed = [stopTime timeIntervalSinceDate:startTime];
         
-        NSLog(@"dictElapsed   %0.2f ms", dictElapsed*1000);
+        NSLog(@"treeElapsed   %0.2f ms", treeElapsed*1000);
+        NSLog(@"treeDictElapsed   %0.2f ms", treeDictElapsed*1000);
+        //NSLog(@"dictElapsed   %0.2f ms", dictElapsed*1000);
         NSLog(@"hexElapsed    %0.2f ms", hexElapsed*1000);
         NSLog(@"b64Elapsed    %0.2f ms", b64Elapsed*1000);
         NSLog(@"total compr.  %0.2f ms", totalComprElapsed*1000);
         NSLog(@"decompression %0.2f ms", decompElapsed*1000);
     }
     
-    if (SOME_COMPRESSION_TRACE) NSLog(@"all dict (reduced %d->%d, %.1f %%)",beforeDictSize, afterDictSize, (double)afterDictSize / (double)beforeDictSize * 100.0);
+    //if (SOME_COMPRESSION_TRACE) NSLog(@"all dict (reduced %d->%d, %.1f %%)",beforeDictSize, afterDictSize, (double)afterDictSize / (double)beforeDictSize * 100.0);
+    if (SOME_COMPRESSION_TRACE) NSLog(@"all tree (reduced %d->%d, %.1f %%)",beforeTreeDictSize, afterTreeDictSize, (double)afterTreeDictSize / (double)beforeTreeDictSize * 100.0);
     if (SOME_COMPRESSION_TRACE) NSLog(@"all hex  (reduced %d->%d, %.1f %%)",beforeHexSize, afterHexSize, (double)afterHexSize / (double)beforeHexSize * 100.0);
     if (SOME_COMPRESSION_TRACE) NSLog(@"all b64  (reduced %d->%d, %.1f %%)",beforeb64Size, afterb64Size, (double)afterb64Size / (double)beforeb64Size * 100.0);
 
@@ -958,34 +1201,6 @@ b64, hex, dict:
     return compressed;
 }
 
-- (NSString*)asciiString {
-    NSMutableString * rep = [NSMutableString new];
-    for (int i = 0; i < self.length; ++i) {
-        unsigned char c = ((unsigned char*)self.bytes)[i];
-        if (c >=0x20 && c < 0x7f) {
-            [rep appendString:[NSString stringWithFormat:@"%c",c]];
-        } else {
-            [rep appendString:[NSString stringWithFormat:@"<%d>",c]];
-        }
-    }
-    return rep;
-}
-
-- (NSString*)asciiStringWithMaxBytes:(NSUInteger)maxBytes {
-    NSMutableString * rep = [NSMutableString new];
-    for (int i = 0; i < self.length && i < maxBytes; ++i) {
-        unsigned char c = ((unsigned char*)self.bytes)[i];
-        if (c >=0x20 && c < 0x7f) {
-            [rep appendString:[NSString stringWithFormat:@"%c",c]];
-        } else {
-            [rep appendString:[NSString stringWithFormat:@"<%d>",c]];
-        }
-    }
-    if (self.length > maxBytes) {
-        rep = [NSMutableString stringWithFormat:@"%@ ...[%d more bytes]", rep, self.length - maxBytes];
-    }
-    return rep;
-}
 
 - (NSData *) decompressWithDict:(NSArray*)dict {
     if (dict.count >= DICT_LIMIT) {
