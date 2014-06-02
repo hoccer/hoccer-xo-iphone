@@ -72,13 +72,14 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     CGSize result = CTFramesetterSuggestFrameSizeWithConstraints(self.framesetter, CFRangeMake(0, 0), NULL, size, NULL);
 
     result.width = self.textAlignment == NSTextAlignmentCenter ? size.width : ceilf(result.width);
-    return  result;
+    return result;
 }
 
 - (void) setAttributedText:(NSAttributedString *)attributedText {
     if ( ! [_attributedText isEqual: attributedText]) {
         _attributedText = attributedText;
         [self releaseFramesetter];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 }
