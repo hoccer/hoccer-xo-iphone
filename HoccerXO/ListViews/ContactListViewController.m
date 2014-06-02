@@ -49,7 +49,9 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (nonatomic, readonly) UITableViewCell             * cellPrototype;
 @property (nonatomic, readonly) UIView                      * placeholderView;
 @property (nonatomic, readonly) UIImageView                 * placeholderImageView;
-@property (nonatomic, readonly) UILabel                     * placeholderLabel;
+@property (nonatomic, readonly) HXOHyperLabel               * placeholderLabel;
+@property (nonatomic, readonly) BOOL                          inGroupMode;
+
 @end
 
 @implementation ContactListViewController
@@ -187,11 +189,15 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) addButtonPressed: (id) sender {
-    if (self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 1) {
+    if (self.inGroupMode) {
         [self performSegueWithIdentifier: @"showGroup" sender: sender];
     } else {
         [self invitePeople];
     }
+}
+
+- (BOOL) inGroupMode {
+    return self.groupContactsToggle && self.groupContactsToggle.selectedSegmentIndex == 1;
 }
 
 - (UITableViewCell*) cellPrototype {
@@ -316,14 +322,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (id) entityName {
-    if (self.hasGroupContactToggle) {
-        if (self.groupContactsToggle.selectedSegmentIndex == 0) {
-            return [Contact entityName];
-        } else {
-            return [Group entityName];
-        }
-    }
-    return [Contact entityName];
+    return self.inGroupMode ? [Group entityName] : [Contact entityName];
 }
 
 - (NSFetchedResultsController *)fetchedResultsController {
@@ -626,7 +625,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (UIView*) placeholderView {
     if ( ! _placeholderView) {
-        _placeholderView = [[UIView alloc] initWithFrame: self.view.bounds];
+        CGFloat h = self.view.bounds.size.height - (self.view.bounds.origin.y + 50);
+        _placeholderView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, h)];
         _placeholderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
         [_placeholderView addSubview: self.placeholderImageView];
@@ -639,7 +639,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         format = [NSString stringWithFormat: @"H:|-[label]-|"];
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
-        format = [NSString stringWithFormat: @"V:|-(%f)-[image]-(%f)-[label]", 8 * kHXOGridSpacing, 4 * kHXOGridSpacing];
+        format = [NSString stringWithFormat: @"V:|-(%f)-[image]-(%f)-[label]-(>=%f)-|", 8 * kHXOGridSpacing, 4 * kHXOGridSpacing, kHXOGridSpacing];
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
     }
     return _placeholderView;
@@ -654,9 +654,9 @@ static const CGFloat kMagicSearchBarHeight = 44;
     return _placeholderImageView;
 }
 
-- (UILabel*) placeholderLabel {
+- (HXOHyperLabel*) placeholderLabel {
     if ( ! _placeholderLabel) {
-        _placeholderLabel = [[UILabel alloc] initWithFrame: CGRectZero];
+        _placeholderLabel = [[HXOHyperLabel alloc] initWithFrame: CGRectZero];
         _placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _placeholderLabel.textColor = [HXOUI theme].tablePlaceholderTextColor;
         _placeholderLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleCaption1];
@@ -666,7 +666,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 - (void) configurePlaceholder {
-    self.placeholderLabel.text = [self placeholderText];
+    self.placeholderLabel.attributedText = [self placeholderText];
     self.placeholderImageView.image = [self placeholderImage];
 
     BOOL isEmpty = [self tableViewIsEmpty];
@@ -683,12 +683,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
     return YES;
 }
 
-- (NSString*) placeholderText {
-    return nil; //NSLocalizedString(@"contact_list_placeholder", nil);
+- (NSAttributedString*) placeholderText {
+    return HXOLocalizedStringWithLinks(self.inGroupMode ? @"group_list_placeholder" : @"contact_list_placeholder", nil);
 }
 
 - (UIImage*) placeholderImage {
-    return nil; //[UIImage imageNamed: @"placeholder-chats"];
+    return [UIImage imageNamed: self.inGroupMode ? @"placeholder-groups" : @"placeholder-chats"];
 }
 
 #pragma mark - Attic

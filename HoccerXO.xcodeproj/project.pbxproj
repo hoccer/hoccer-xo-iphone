@@ -35,6 +35,7 @@
 		630CAB8E18E2333E00782507 /* DatasheetKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */; };
 		630FD45218BCCCA7000D8C55 /* HXOUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOUI.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
+		6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6310C42019390E870029706A /* placeholder-groups@2x.png */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63126C2F170E46F800A6804A /* MessageUI.framework */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
@@ -437,6 +438,7 @@
 		630FD45018BCCCA7000D8C55 /* HXOUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOUI.h; sourceTree = "<group>"; };
 		630FD45118BCCCA7000D8C55 /* HXOUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUI.m; sourceTree = "<group>"; };
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
+		6310C42019390E870029706A /* placeholder-groups@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@2x.png"; sourceTree = "<group>"; };
 		631254C816EC198E009A6584 /* JsonRpcWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonRpcWebSocket.h; sourceTree = "<group>"; };
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
 		63126C2F170E46F800A6804A /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -1250,16 +1252,17 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				63D670EC193634C700CBF1C3 /* placeholder-chats@2x.png */,
-				63D670ED193634C700CBF1C3 /* placeholder-nearby@2x.png */,
 				63E9AFF218F3137E00EFF829 /* Avatar */,
 				6381FEB91745536B001D16E0 /* ChatView */,
 				63AE4511170350750099F0CB /* Default */,
-				63E9AFFB18F314AB00EFF829 /* disclosure_arrow.svg */,
 				63E9AFFC18F314AB00EFF829 /* disclosure_arrow.h */,
 				63E9AFFD18F314AB00EFF829 /* disclosure_arrow.m */,
+				63E9AFFB18F314AB00EFF829 /* disclosure_arrow.svg */,
 				63E9AFFE18F314AB00EFF829 /* ghost_busters_sign.h */,
 				63E9AFFF18F314AB00EFF829 /* ghost_busters_sign.m */,
+				63D670EC193634C700CBF1C3 /* placeholder-chats@2x.png */,
+				6310C42019390E870029706A /* placeholder-groups@2x.png */,
+				63D670ED193634C700CBF1C3 /* placeholder-nearby@2x.png */,
 				E99886E717282C950089A510 /* Sounds */,
 				63E9B00318F3151B00EFF829 /* Tab Bar */,
 			);
@@ -2193,6 +2196,7 @@
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
 				63D670EE193634C700CBF1C3 /* placeholder-chats@2x.png in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
+				6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */,
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
 				63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */,
 				63AE4516170350750099F0CB /* Default.png in Resources */,

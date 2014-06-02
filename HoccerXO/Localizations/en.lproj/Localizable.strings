@@ -305,6 +305,8 @@
 "group_member_count_none_joined"        = "%@you are alone";
 "group_member_invited_count"            = "%@%d invited";
 
+"group_list_placeholder"                = "Create groups to chat with many friends at once.";
+
 //==============================================================================
 // Invitations
 //==============================================================================
