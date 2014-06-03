@@ -14,4 +14,6 @@
 
 + (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel;
 
+@property (nonatomic, strong) Contact *contact;
+
 @end

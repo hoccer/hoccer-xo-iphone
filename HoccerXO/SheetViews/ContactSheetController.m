@@ -430,6 +430,9 @@ static int  groupMemberContext;
     } else if ([segue.identifier isEqualToString: @"showChat"]) {
         ChatViewController * chatView = segue.destinationViewController;
         chatView.inspectedObject = self.contact;
+    } else if ([segue.identifier isEqualToString: @"showAttachments"]) {
+        AudioAttachmentListViewController * attachmentView = segue.destinationViewController;
+        attachmentView.contact = self.contact;
     }
 }
 

@@ -29,6 +29,8 @@
 
 @implementation AudioAttachmentListViewController
 
+#pragma mark - Lifecycle
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     
@@ -52,6 +54,13 @@
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIContentSizeCategoryDidChangeNotification object:nil];
+}
+
+#pragma mark - Configuration
+
+- (void) setContact:(Contact *)contact {
+    self.fetchedResultsController = nil;
+    _contact = contact;
 }
 
 #pragma mark - Core Data Stack
@@ -83,7 +92,7 @@
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
-        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:nil managedObjectModel:self.managedObjectModel];
+        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _fetchedResultsController.delegate = self;
         [_fetchedResultsController performFetch:nil];
