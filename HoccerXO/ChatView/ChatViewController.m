@@ -16,6 +16,7 @@
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVAssetExportSession.h>
 #import <AVFoundation/AVMediaFormat.h>
+#import <AVFoundation/AVMetadataItem.h>
 
 #import "HXOMessage.h"
 #import "Delivery.h"
@@ -783,7 +784,31 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         _currentExportSession.outputURL = myExportURL;
         _currentExportSession.outputFileType = AVFileTypeAppleM4A;
         _currentExportSession.shouldOptimizeForNetworkUse = YES;
-        // exporter.shouldOptimizeForNetworkUse = NO;
+
+        AVMutableMetadataItem * titleItem = [AVMutableMetadataItem metadataItem];
+        titleItem.keySpace = AVMetadataKeySpaceCommon;
+        titleItem.key = AVMetadataCommonKeyTitle;
+        titleItem.value = [song valueForProperty:MPMediaItemPropertyTitle];
+
+        AVMutableMetadataItem * artistItem = [AVMutableMetadataItem metadataItem];
+        artistItem.keySpace = AVMetadataKeySpaceCommon;
+        artistItem.key = AVMetadataCommonKeyArtist;
+        artistItem.value = [song valueForProperty:MPMediaItemPropertyArtist];
+
+        AVMutableMetadataItem * albumItem = [AVMutableMetadataItem metadataItem];
+        albumItem.keySpace = AVMetadataKeySpaceCommon;
+        albumItem.key = AVMetadataCommonKeyAlbumName;
+        albumItem.value = [song valueForProperty:MPMediaItemPropertyAlbumTitle];
+        
+        MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
+        UIImage * artworkImage = [artwork imageWithSize:artwork.bounds.size];
+        
+        AVMutableMetadataItem * artworkItem = [AVMutableMetadataItem metadataItem];
+        artworkItem.keySpace = AVMetadataKeySpaceCommon;
+        artworkItem.key = AVMetadataCommonKeyArtwork;
+        artworkItem.value = UIImageJPEGRepresentation(artworkImage, 0.6);
+        
+        _currentExportSession.metadata = @[titleItem, artistItem, albumItem, artworkItem];
         
         [AppDelegate setProcessingAudioSession];
         
