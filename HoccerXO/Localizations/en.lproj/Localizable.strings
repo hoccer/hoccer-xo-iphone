@@ -140,6 +140,8 @@
 "contact_list_nav_title"                        = "Contacts";
 "contact_nav_title"                             = "Contact";
 
+"contact_alias_title"                           = "Alias:";
+"contact_alias_placeholder"                     = "Alternative Name";
 "contact_chat_title"                            = "Chat:";
 "contact_key_btn_title"                         = "Key:";
 

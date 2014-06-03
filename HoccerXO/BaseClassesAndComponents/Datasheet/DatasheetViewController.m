@@ -379,11 +379,13 @@ static CGFloat kHeaderHeight;
     [self.dataSheetController editModeChanged: sender];
     [self setEditing: self.dataSheetController.isEditing animated: YES];
     [self updateNavigationButtons];
+    [self.view endEditing: YES];
 }
 
 - (void) leftButtonPressed: (id) sender {
     [self.dataSheetController cancelEditing: nil];
     [self updateNavigationButtons];
+    [self.view endEditing: YES];
 }
 
 #pragma mark - Datasheet Controller Delegate
