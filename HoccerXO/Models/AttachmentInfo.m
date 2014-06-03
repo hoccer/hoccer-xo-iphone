@@ -30,49 +30,56 @@
 
 - (void) loadInfoForAttachment: (Attachment *) attachment {
     if ([attachment.mediaType isEqualToString: @"vcard"]) {
-        Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
-        if (myVcard != nil) {
-            _vcardName = myVcard.nameString;
-            _vcardOrganization = myVcard.organization;
-            NSArray * emails = myVcard.emails;
-            if (emails && emails.count > 0) {
-                VcardMultiValueItem * firstMail = emails[0];
-                _vcardEmail = firstMail.value;
-            }
-        }
-        
+        [self loadInfoForVCardAttachment:attachment];
     } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-        NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:attachment.contentURL options:nil];
-        CMTime audioDuration = asset.duration;
-        _audioDuration = CMTimeGetSeconds(audioDuration);
-        if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-            NSArray * metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-            if (metaData.count > 0) {
-                AVMetadataItem * metaItem = metaData[0];
-                _audioTitle = metaItem.stringValue;
-            }
+        [self loadInfoForAudioAttachment:attachment];
+    }
 
-            if (self.audioTitle == nil || self.audioTitle.length == 0) {
-                _audioTitle = attachment.humanReadableFileName;
-            }
+    _attachmentInfoLoaded = YES;
+}
 
-            metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
-            if (metaData.count > 0) {
-                AVMetadataItem * metaItem = metaData[0];
-                _audioArtist = metaItem.stringValue;
-            }
-            
-            metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
-            if (metaData.count > 0) {
-                AVMetadataItem * metaItem = metaData[0];
-                _audioAlbum = metaItem.stringValue;
-            }
-            
+- (void) loadInfoForVCardAttachment: (Attachment *) attachment {
+    Vcard * myVcard = [[Vcard alloc] initWithVcardURL:attachment.contentURL];
+    if (myVcard != nil) {
+        _vcardName = myVcard.nameString;
+        _vcardOrganization = myVcard.organization;
+        NSArray * emails = myVcard.emails;
+        if (emails && emails.count > 0) {
+            VcardMultiValueItem * firstMail = emails[0];
+            _vcardEmail = firstMail.value;
         }
     }
-    
-    _attachmentInfoLoaded = YES;
+}
+
+- (void) loadInfoForAudioAttachment: (Attachment *) attachment {
+    NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:attachment.contentURL options:nil];
+
+    CMTime audioDuration = asset.duration;
+    _audioDuration = CMTimeGetSeconds(audioDuration);
+    if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
+        NSArray * metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
+        if (metaData.count > 0) {
+            AVMetadataItem * metaItem = metaData[0];
+            _audioTitle = metaItem.stringValue;
+        }
+
+        if (self.audioTitle == nil || self.audioTitle.length == 0) {
+            _audioTitle = attachment.humanReadableFileName;
+        }
+
+        metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
+        if (metaData.count > 0) {
+            AVMetadataItem * metaItem = metaData[0];
+            _audioArtist = metaItem.stringValue;
+        }
+        
+        metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
+        if (metaData.count > 0) {
+            AVMetadataItem * metaItem = metaData[0];
+            _audioAlbum = metaItem.stringValue;
+        }
+    }
 }
 
 - (NSString *) audioArtistAndAlbum {
