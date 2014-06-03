@@ -10,6 +10,7 @@
 
 #import "Contact.h"
 #import "Group.h"
+#import "AudioAttachmentListViewController.h"
 #import "ChatViewController.h"
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h"
@@ -59,6 +60,7 @@ static int  groupMemberContext;
 
 @property (nonatomic, strong)   NSFetchedResultsController * fetchedResultsController;
 @property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
+@property (nonatomic, readonly) NSManagedObjectModel       * managedObjectModel;
 
 @property (nonatomic, strong)   id                           profileObserver;
 
@@ -187,8 +189,8 @@ static int  groupMemberContext;
     if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
     } else if ([item isEqual: self.attachmentItem]) {
-        // TODO: return attachment count
-        return @(42);
+        NSFetchRequest *fetchRequest = [AudioAttachmentListViewController fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
+        return @([self.managedObjectContext countForFetchRequest:fetchRequest error:nil]);
     } else if ([item isEqual: self.keyItem]) {
         return [self keyItemTitle];
     }
@@ -243,9 +245,11 @@ static int  groupMemberContext;
     if ([item isEqual: self.chatItem]) {
         return self.contact.messages.count == 1 ? @"contact_message_count_format_s" : @"contact_message_count_format_p";
     } else if ([item isEqual: self.attachmentItem]) {
-        // TODO: Correct value format string
-        // return self.contact.messages.count == 1 ? @"contact_attachment_count_format_s" : @"contact_attachment_count_format_p";
-        return @"%@ attachments";
+        if ([[self valueForItem:item] isEqualToNumber:[NSNumber numberWithUnsignedInteger:1]]) {
+            return @"contact_audio_attachment_count_format_s";
+        } else {
+            return @"contact_audio_attachment_count_format_p";
+        }
     }
     return nil;
 }
@@ -961,6 +965,14 @@ static int  groupMemberContext;
         _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     }
     return _managedObjectContext;
+}
+
+@synthesize managedObjectModel = _managedObjectModel;
+- (NSManagedObjectModel*) managedObjectModel {
+    if ( ! _managedObjectModel) {
+        _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
+    }
+    return _managedObjectModel;
 }
 
 @end

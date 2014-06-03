@@ -8,6 +8,10 @@
 
 #import "HXOTableViewController.h"
 
+@class Contact;
+
 @interface AudioAttachmentListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate>
+
++ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel;
 
 @end

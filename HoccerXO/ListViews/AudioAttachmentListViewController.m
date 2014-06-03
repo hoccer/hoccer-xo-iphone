@@ -12,6 +12,7 @@
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
 #import "AudioPlayerStateItemController.h"
+#import "Contact.h"
 #import "HXOAudioPlayer.h"
 #import "tab_attachments.h"
 
@@ -69,14 +70,20 @@
     return _managedObjectModel;
 }
 
++ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
+    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null],
+                            @"mediaType" : @"audio" };
+    NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAttachmentsByMediaType" substitutionVariables:vars];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeReceived" ascending: NO];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    return fetchRequest;
+}
+
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
-        NSDictionary *vars = @{ @"mediaType" : @"audio" };
-        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAttachmentsByMediaType" substitutionVariables:vars];
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeReceived" ascending: NO];
-        NSArray *sortDescriptors = @[sortDescriptor];
-        [fetchRequest setSortDescriptors:sortDescriptors];
-        
+        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:nil managedObjectModel:self.managedObjectModel];
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _fetchedResultsController.delegate = self;
         [_fetchedResultsController performFetch:nil];
