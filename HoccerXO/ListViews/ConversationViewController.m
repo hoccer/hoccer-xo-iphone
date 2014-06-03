@@ -22,7 +22,6 @@
 #import "HXOUI.h"
 #import "AvatarView.h"
 #import "tab_chats.h"
-#import "HXOEnvironment.h"
 #import "GesturesInterpreter.h"
 #import "SoundEffectPlayer.h"
 #import "DatasheetViewController.h"
