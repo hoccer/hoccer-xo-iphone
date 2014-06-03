@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HXOTableViewController.h"
 #import <MessageUI/MessageUI.h>
 
-@interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
+#import "HXOTableViewController.h"
+#import "HXOHyperLabel.h"
+@interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, HXOHyperLabelDelegate>
 
 @property (nonatomic, strong) IBOutlet UISearchBar         * searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;

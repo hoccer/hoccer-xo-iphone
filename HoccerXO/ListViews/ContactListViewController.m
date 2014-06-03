@@ -27,6 +27,7 @@
 #import "InvitationCodeViewController.h"
 #import "ContactCellProtocol.h"
 #import "GroupInStatuNascendi.h"
+#import "WebViewController.h"
 #import "tab_contacts.h"
 
 #define HIDE_SEPARATORS
@@ -52,6 +53,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (nonatomic, readonly) HXOHyperLabel               * placeholderLabel;
 @property (nonatomic, readonly) BOOL                          inGroupMode;
 
+@property (nonatomic, readonly) UINavigationController      * webViewController;
+
 @end
 
 @implementation ContactListViewController
@@ -60,6 +63,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @synthesize placeholderView = _placeholderView;
 @synthesize placeholderImageView = _placeholderImageView;
 @synthesize placeholderLabel = _placeholderLabel;
+@synthesize webViewController = _webViewController;
 
 - (void)awakeFromNib {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -661,6 +665,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         _placeholderLabel.textColor = [HXOUI theme].tablePlaceholderTextColor;
         _placeholderLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleCaption1];
         _placeholderLabel.textAlignment = NSTextAlignmentCenter;
+        _placeholderLabel.delegate = self;
     }
     return _placeholderLabel;
 }
@@ -689,6 +694,18 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 - (UIImage*) placeholderImage {
     return [UIImage imageNamed: self.inGroupMode ? @"placeholder-groups" : @"placeholder-chats"];
+}
+
+- (void) hyperLabel: (HXOHyperLabel*) label didPressLink: (id) link long: (BOOL) longPress {
+    ((WebViewController*)self.webViewController.viewControllers[0]).homeUrl = link;
+    [self.navigationController presentViewController: self.webViewController animated: YES completion: nil];
+}
+
+- (UINavigationController*) webViewController {
+    if ( ! _webViewController) {
+        _webViewController = [self.storyboard instantiateViewControllerWithIdentifier: @"webViewController"];
+    }
+    return _webViewController;
 }
 
 #pragma mark - Attic

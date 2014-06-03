@@ -57,7 +57,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     self.textAlignment = NSTextAlignmentNatural;
     self.lineBreakMode = NSLineBreakByWordWrapping;
     self.textToViewTransform = CGAffineTransformIdentity;
-    self.linkColor = [UIColor blueColor];
+    self.linkColor = self.tintColor;
     self.backgroundColor = [UIColor clearColor];
 
     [self addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
