@@ -155,6 +155,7 @@
 "contact_nav_title"                             = "Contact";
 
 "contact_chat_title"                            = "Chat:";
+"contact_attachment_title"                      = "Media:";
 "contact_key_btn_title"                         = "Key:";
 
 "contact_unblock_btn_title_format"              = "Unblock %@";
@@ -162,6 +163,8 @@
 
 "contact_message_count_format_s"                = "%@ message";
 "contact_message_count_format_p"                = "%@ messages";
+"contact_audio_attachment_count_format_s"       = "%@ song";
+"contact_audio_attachment_count_format_p"       = "%@ songs";
 
 "contact_delete_btn_title"                      = "Delete contact";
 "contact_delete_safety_question"                = "Delete contact, chat and attachments?";

@@ -39,6 +39,7 @@ static int  groupMemberContext;
 @interface ContactSheetController ()
 
 @property (nonatomic, readonly) DatasheetItem              * chatItem;
+@property (nonatomic, readonly) DatasheetItem              * attachmentItem;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
 @property (nonatomic, readonly) Contact                    * contact;
 @property (nonatomic, readonly) Group                      * group;
@@ -66,6 +67,7 @@ static int  groupMemberContext;
 @implementation ContactSheetController
 
 @synthesize chatItem = _chatItem;
+@synthesize attachmentItem = _attachmentItem;
 @synthesize blockContactItem = _blockContactItem;
 @synthesize chatBackend = _chatBackend;
 @synthesize groupMemberSection = _groupMemberSection;
@@ -148,7 +150,7 @@ static int  groupMemberContext;
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[self.nicknameItem, self.chatItem, self.keyItem];
+    section.items = @[self.nicknameItem, self.chatItem, self.keyItem, self.attachmentItem];
     return section;
 }
 
@@ -160,6 +162,14 @@ static int  groupMemberContext;
         _chatItem.accessoryStyle = DatasheetAccessoryDisclosure;
     }
     return _chatItem;
+}
+
+- (DatasheetItem*) attachmentItem {
+    if (! _attachmentItem) {
+        _attachmentItem = [self itemWithIdentifier:@"contact_attachment_title" cellIdentifier:@"DatasheetKeyValueCell"];
+        _attachmentItem.accessoryStyle = DatasheetAccessoryDisclosure;
+    }
+    return _attachmentItem;
 }
 
 - (DatasheetItem*) blockContactItem {
@@ -176,6 +186,9 @@ static int  groupMemberContext;
 - (id) valueForItem: (DatasheetItem*) item {
     if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
+    } else if ([item isEqual: self.attachmentItem]) {
+        // TODO: return attachment count
+        return @(42);
     } else if ([item isEqual: self.keyItem]) {
         return [self keyItemTitle];
     }
@@ -187,6 +200,9 @@ static int  groupMemberContext;
     if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
         
+    } else if ([item isEqual: self.attachmentItem]) {
+        return ! self.groupInStatuNascendi && [super isItemVisible: item];
+
     } else if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
         
@@ -226,6 +242,10 @@ static int  groupMemberContext;
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
         return self.contact.messages.count == 1 ? @"contact_message_count_format_s" : @"contact_message_count_format_p";
+    } else if ([item isEqual: self.attachmentItem]) {
+        // TODO: Correct value format string
+        // return self.contact.messages.count == 1 ? @"contact_attachment_count_format_s" : @"contact_attachment_count_format_p";
+        return @"%@ attachments";
     }
     return nil;
 }
@@ -293,6 +313,8 @@ static int  groupMemberContext;
         return [self groupMemberSegueIdentifier: groupMemeberIndex];
     } else if ([item isEqual: self.chatItem]) {
         return [self chatItemSegueIdentifier];
+    } else if ([item isEqual: self.attachmentItem]) {
+        return [self attachmentItemSegueIdentifier];
     }
     return nil;
 }
@@ -343,6 +365,10 @@ static int  groupMemberContext;
     } else {
         return @"showChat";
     }
+}
+
+- (NSString*) attachmentItemSegueIdentifier {
+    return @"showAttachments";
 }
 
 - (void) inspectedObjectWillChange {
