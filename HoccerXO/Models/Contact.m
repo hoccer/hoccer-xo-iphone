@@ -27,6 +27,7 @@
 @dynamic clientId;
 @dynamic latestMessageTime;
 @dynamic nickName;
+@dynamic alias;
 @dynamic status;
 @dynamic isNearbyTag;
 
