@@ -166,6 +166,7 @@
                                                cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                otherButtonTitles: nil];
         [alert show];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
