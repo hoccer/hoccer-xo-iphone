@@ -173,6 +173,7 @@
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
+		6AC25EE1193F844700ED5E61 /* navbar-playing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25EE0193F844700ED5E61 /* navbar-playing.m */; };
 		C576EBB61934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */; };
 		C576EBB71934CC3B00C0D254 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB51934CC3B00C0D254 /* HXOAudioPlayer.m */; };
 		C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBC71934CC6100C0D254 /* NSMutableArray+Shuffle.m */; };
@@ -201,8 +202,6 @@
 		C576EC371934CCB200C0D254 /* fullscreen-icon-volume-down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBEE1934CCB100C0D254 /* fullscreen-icon-volume-down@2x.png */; };
 		C576EC381934CCB200C0D254 /* fullscreen-icon-volume-up.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBEF1934CCB100C0D254 /* fullscreen-icon-volume-up.png */; };
 		C576EC391934CCB200C0D254 /* fullscreen-icon-volume-up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBF01934CCB100C0D254 /* fullscreen-icon-volume-up@2x.png */; };
-		C576EC3A1934CCB200C0D254 /* navbar-music-is-playing.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBF11934CCB100C0D254 /* navbar-music-is-playing.png */; };
-		C576EC3B1934CCB200C0D254 /* navbar-music-is-playing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBF21934CCB200C0D254 /* navbar-music-is-playing@2x.png */; };
 		C576EC3C1934CCB200C0D254 /* player_button_next.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBF41934CCB200C0D254 /* player_button_next.m */; };
 		C576EC3D1934CCB200C0D254 /* player_button_pause.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBF61934CCB200C0D254 /* player_button_pause.m */; };
 		C576EC3E1934CCB200C0D254 /* player_button_play.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBF81934CCB200C0D254 /* player_button_play.m */; };
@@ -776,6 +775,10 @@
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6AC25EDF193F844700ED5E61 /* navbar-playing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "navbar-playing.h"; sourceTree = "<group>"; };
+		6AC25EE0193F844700ED5E61 /* navbar-playing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-playing.m"; sourceTree = "<group>"; };
+		6AC25EF0193F872300ED5E61 /* navbar-playing.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-playing.pcvd"; sourceTree = "<group>"; };
+		6AC25EF1193F872300ED5E61 /* navbar-playing.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "navbar-playing.svg"; sourceTree = "<group>"; };
 		C576EBB21934CC3B00C0D254 /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
 		C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
 		C576EBB41934CC3B00C0D254 /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
@@ -814,8 +817,6 @@
 		C576EBEE1934CCB100C0D254 /* fullscreen-icon-volume-down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fullscreen-icon-volume-down@2x.png"; sourceTree = "<group>"; };
 		C576EBEF1934CCB100C0D254 /* fullscreen-icon-volume-up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fullscreen-icon-volume-up.png"; sourceTree = "<group>"; };
 		C576EBF01934CCB100C0D254 /* fullscreen-icon-volume-up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fullscreen-icon-volume-up@2x.png"; sourceTree = "<group>"; };
-		C576EBF11934CCB100C0D254 /* navbar-music-is-playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-music-is-playing.png"; sourceTree = "<group>"; };
-		C576EBF21934CCB200C0D254 /* navbar-music-is-playing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navbar-music-is-playing@2x.png"; sourceTree = "<group>"; };
 		C576EBF31934CCB200C0D254 /* player_button_next.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_button_next.h; sourceTree = "<group>"; };
 		C576EBF41934CCB200C0D254 /* player_button_next.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = player_button_next.m; sourceTree = "<group>"; };
 		C576EBF51934CCB200C0D254 /* player_button_pause.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_button_pause.h; sourceTree = "<group>"; };
@@ -1935,8 +1936,10 @@
 				C576EBEE1934CCB100C0D254 /* fullscreen-icon-volume-down@2x.png */,
 				C576EBEF1934CCB100C0D254 /* fullscreen-icon-volume-up.png */,
 				C576EBF01934CCB100C0D254 /* fullscreen-icon-volume-up@2x.png */,
-				C576EBF11934CCB100C0D254 /* navbar-music-is-playing.png */,
-				C576EBF21934CCB200C0D254 /* navbar-music-is-playing@2x.png */,
+				6AC25EDF193F844700ED5E61 /* navbar-playing.h */,
+				6AC25EE0193F844700ED5E61 /* navbar-playing.m */,
+				6AC25EF0193F872300ED5E61 /* navbar-playing.pcvd */,
+				6AC25EF1193F872300ED5E61 /* navbar-playing.svg */,
 				C576EBF31934CCB200C0D254 /* player_button_next.h */,
 				C576EBF41934CCB200C0D254 /* player_button_next.m */,
 				C576EBF51934CCB200C0D254 /* player_button_pause.h */,
@@ -2547,7 +2550,6 @@
 				63B1C9E51843E4FD00B75CD8 /* cnt-record.png in Resources */,
 				E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */,
 				C576EC371934CCB200C0D254 /* fullscreen-icon-volume-down@2x.png in Resources */,
-				C576EC3B1934CCB200C0D254 /* navbar-music-is-playing@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
 				C576EC351934CCB200C0D254 /* fullscreen-button-play@2x.png in Resources */,
@@ -2578,7 +2580,6 @@
 				C576EC561934CCB200C0D254 /* player_repeat_off.svg in Resources */,
 				C576EC601934CCB200C0D254 /* player_volume_up.svg in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
-				C576EC3A1934CCB200C0D254 /* navbar-music-is-playing.png in Resources */,
 				C576EC541934CCB200C0D254 /* player_repeat_all.svg in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
@@ -2735,6 +2736,7 @@
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,
 				636492D71711E97900E35514 /* AvatarView.m in Sources */,
 				63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */,
+				6AC25EE1193F844700ED5E61 /* navbar-playing.m in Sources */,
 				63DC01511713976B00609513 /* ImageViewController.m in Sources */,
 				C576EC6D1934CD1500C0D254 /* AudioAttachmentMessageCell.m in Sources */,
 				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,
