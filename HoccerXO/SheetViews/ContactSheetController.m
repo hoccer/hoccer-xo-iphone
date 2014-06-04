@@ -154,7 +154,7 @@ static int  groupMemberContext;
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[self.nicknameItem, self.aliasItem, self.chatItem, self.keyItem, self.attachmentItem];
+    section.items = @[self.nicknameItem, self.keyItem, self.aliasItem, self.chatItem, self.attachmentItem];
     return section;
 }
 
