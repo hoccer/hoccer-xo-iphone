@@ -810,8 +810,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         
         _currentExportSession.metadata = @[titleItem, artistItem, albumItem, artworkItem];
         
-        [AppDelegate setProcessingAudioSession];
-        
         [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
             int exportStatus = _currentExportSession.status;
             switch (exportStatus) {
@@ -821,13 +819,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                     NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                     _currentExportSession = nil;
-                    [AppDelegate setDefaultAudioSession];
                     [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
                     if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted");
-                    [AppDelegate setDefaultAudioSession];
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
                         self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
