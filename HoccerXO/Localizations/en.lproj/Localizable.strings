@@ -1,15 +1,16 @@
 "language_code" = "en";
 
-"ok"     = "Ok";
-"cancel" = "Cancel";
-"done"   = "Done";
-"save"   = "Save";
-"delete" = "Delete";
-"enter"  = "Enter";
-"no"     = "No";
-"go"     = "Go";
-"continue"= "Continue";
-"abort"   ="Abort";
+"ok"       = "Ok";
+"cancel"   = "Cancel";
+"done"     = "Done";
+"save"     = "Save";
+"delete"   = "Delete";
+"enter"    = "Enter";
+"no"       = "No";
+"go"       = "Go";
+"continue" = "Continue";
+"abort"    = "Abort";
+"loading"  = "Loading…";
 
 "search_placeholder" = "search";
 
@@ -154,6 +155,8 @@
 "contact_list_nav_title"                        = "Contacts";
 "contact_nav_title"                             = "Contact";
 
+"contact_alias_title"                           = "Alias:";
+"contact_alias_placeholder"                     = "Alternative Name";
 "contact_chat_title"                            = "Chat:";
 "contact_attachment_title"                      = "Media:";
 "contact_key_btn_title"                         = "Key:";
@@ -190,8 +193,8 @@
 "contact_relationship_kept"                     = "No Relationship";
 "contact_relationship_blocked"                  = "Blocked";
 
-"contact_list_placeholder"                      = "Invite friends to chat with.";
-"contact_list_placeholder_nearby"               = "Waiting for others nearby…";
+"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/xo/help/invitations) to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://hoccer.com/xo/help/nearby)…";
 
 //==============================================================================
 // Credentials
@@ -322,6 +325,8 @@
 "group_member_count_one_joined"         = "%@one joined";
 "group_member_count_none_joined"        = "%@you are alone";
 "group_member_invited_count"            = "%@%d invited";
+
+"group_list_placeholder"                = "Create [groups](http://hoccer.com/xo/help/groups) to chat with many friends at once.";
 
 //==============================================================================
 // Invitations

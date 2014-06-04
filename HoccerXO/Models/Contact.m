@@ -27,6 +27,7 @@
 @dynamic clientId;
 @dynamic latestMessageTime;
 @dynamic nickName;
+@dynamic alias;
 @dynamic status;
 @dynamic isNearbyTag;
 
@@ -182,7 +183,7 @@ NSString * const kRelationStateKept        = @"kept";
     if (self.isNotRelated) {
         return [NSString stringWithFormat:@"%@ ❓", self.nickName];
     }
-    NSString * name = self.nickName;
+    NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
     if (self.isGroupFriend) {
         name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
     }

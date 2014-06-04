@@ -35,6 +35,7 @@
 		630CAB8E18E2333E00782507 /* DatasheetKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630CAB8D18E2333E00782507 /* DatasheetKeyValueCell.m */; };
 		630FD45218BCCCA7000D8C55 /* HXOUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOUI.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
+		6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6310C42019390E870029706A /* placeholder-groups@2x.png */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63126C2F170E46F800A6804A /* MessageUI.framework */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
@@ -514,6 +515,7 @@
 		630FD45018BCCCA7000D8C55 /* HXOUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOUI.h; sourceTree = "<group>"; };
 		630FD45118BCCCA7000D8C55 /* HXOUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUI.m; sourceTree = "<group>"; };
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
+		6310C42019390E870029706A /* placeholder-groups@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@2x.png"; sourceTree = "<group>"; };
 		631254C816EC198E009A6584 /* JsonRpcWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonRpcWebSocket.h; sourceTree = "<group>"; };
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
 		63126C2F170E46F800A6804A /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -629,6 +631,7 @@
 		63848A9318F473AC00C253A4 /* SmallContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallContactCell.h; sourceTree = "<group>"; };
 		63848A9418F473AC00C253A4 /* SmallContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallContactCell.m; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 39.xcdatamodel"; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
@@ -1438,17 +1441,18 @@
 		63540A9316E61B420087D24E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				63D670EC193634C700CBF1C3 /* placeholder-chats@2x.png */,
-				63D670ED193634C700CBF1C3 /* placeholder-nearby@2x.png */,
 				C576EBDE1934CCB100C0D254 /* AudioPlayer */,
 				63E9AFF218F3137E00EFF829 /* Avatar */,
 				6381FEB91745536B001D16E0 /* ChatView */,
 				63AE4511170350750099F0CB /* Default */,
-				63E9AFFB18F314AB00EFF829 /* disclosure_arrow.svg */,
 				63E9AFFC18F314AB00EFF829 /* disclosure_arrow.h */,
 				63E9AFFD18F314AB00EFF829 /* disclosure_arrow.m */,
+				63E9AFFB18F314AB00EFF829 /* disclosure_arrow.svg */,
 				63E9AFFE18F314AB00EFF829 /* ghost_busters_sign.h */,
 				63E9AFFF18F314AB00EFF829 /* ghost_busters_sign.m */,
+				63D670EC193634C700CBF1C3 /* placeholder-chats@2x.png */,
+				6310C42019390E870029706A /* placeholder-groups@2x.png */,
+				63D670ED193634C700CBF1C3 /* placeholder-nearby@2x.png */,
 				E99886E717282C950089A510 /* Sounds */,
 				63E9B00318F3151B00EFF829 /* Tab Bar */,
 			);
@@ -2499,6 +2503,7 @@
 				63D670EE193634C700CBF1C3 /* placeholder-chats@2x.png in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
 				C576EC531934CCB200C0D254 /* player_repeat_all.pcvd in Resources */,
+				6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */,
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
 				C576EC521934CCB200C0D254 /* player_prev.svg in Resources */,
 				C576EC5C1934CCB200C0D254 /* player_shuffle_on.svg in Resources */,
@@ -3404,8 +3409,9 @@
 				E95175CA18FEBA4500EFD1C6 /* HoccerXO-36.xcdatamodel */,
 				E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */,
 				E9A2EDFD19316840003A8464 /* HoccerXO-38.xcdatamodel */,
+				63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */,
 			);
-			currentVersion = E9A2EDFD19316840003A8464 /* HoccerXO-38.xcdatamodel */;
+			currentVersion = 63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

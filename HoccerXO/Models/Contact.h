@@ -31,6 +31,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSDate          * latestMessageTime;
 @property (nonatomic, strong)   NSDate          * presenceLastUpdated;
 @property (nonatomic, strong)   NSString        * nickName;
+@property (nonatomic, strong)   NSString        * alias;
 @property (nonatomic, strong)   NSString        * status;
 @property (nonatomic, strong)   NSString        * isNearbyTag; // using string as boolean because booleans totally suck in CoreData predicates;
                                                                // values are the string "YES" for true, all other values indicate false

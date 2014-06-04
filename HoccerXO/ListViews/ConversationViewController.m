@@ -22,7 +22,6 @@
 #import "HXOUI.h"
 #import "AvatarView.h"
 #import "tab_chats.h"
-#import "HXOEnvironment.h"
 #import "GesturesInterpreter.h"
 #import "SoundEffectPlayer.h"
 #import "DatasheetViewController.h"
@@ -312,12 +311,12 @@
 
 #pragma mark - Empty Table Placeholder
 
-- (NSString*) placeholderText {
-    return NSLocalizedString(self.groupContactsToggle.selectedSegmentIndex == 1 ? @"contact_list_placeholder_nearby" : @"contact_list_placeholder", nil);
+- (NSAttributedString*) placeholderText {
+    return HXOLocalizedStringWithLinks(self.inNearbyMode ? @"contact_list_placeholder_nearby" : @"contact_list_placeholder", nil);
 }
 
 - (UIImage*) placeholderImage {
-    return [UIImage imageNamed: self.groupContactsToggle.selectedSegmentIndex == 1 ? @"placeholder-nearby" : @"placeholder-chats"];
+    return [UIImage imageNamed: self.inNearbyMode ? @"placeholder-nearby" : @"placeholder-chats"];
 }
 
 @end
