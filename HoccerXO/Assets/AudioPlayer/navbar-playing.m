@@ -52,8 +52,8 @@
     self.path.miterLimit = 4;
     
     self.path.usesEvenOddFillRule = YES;
-    
-    self.fillColor = [UIColor whiteColor];
+
+    self.fillColor = [[HXOUI theme] navigationBarTintColor];
     
 }
 
