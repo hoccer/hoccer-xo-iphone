@@ -190,11 +190,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.166:8081/" forKey: kHXOForceFilecacheURL];
     
-    [[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
-    [[HXOUserDefaults standardUserDefaults] setValue: @"https://filecache.talk.hoccer.de:8444/" forKey: kHXOForceFilecacheURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
+    //[[HXOUserDefaults standardUserDefaults] setValue: @"https://filecache.talk.hoccer.de:8444/" forKey: kHXOForceFilecacheURL];
 
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
-    //[[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
     
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];

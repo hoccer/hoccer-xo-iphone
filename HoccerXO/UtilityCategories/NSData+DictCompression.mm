@@ -84,12 +84,12 @@ struct Tree {
     Value value;
 };
 
- 
+/*
 template<typename T> struct STree {
 //    typedef std::map<T,std::shared_ptr<STree> > type;
     typedef std::map<T,STree> type;
 };
-
+*/
 //typedef STree<unsigned char>::type CharTree;
 typedef Tree<unsigned char,int> CharTree;
 typedef std::shared_ptr<CharTree> CharTreePtr;
