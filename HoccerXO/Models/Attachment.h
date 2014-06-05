@@ -70,6 +70,7 @@ typedef enum AttachmentStates {
 @property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
 @property (nonatomic)         NSInteger  transferFailures;      // number of upload or download failures
+@property (nonatomic)         NSString * playable;              // whether the attachment can be played on the device (can be "YES", "NO", "UNKNOWN")
 @property (nonatomic, strong) NSData   * previewImageData;      // remote URL where the file should/was uploaded
 @property (nonatomic, strong) NSDate   * transferPaused;        // if not nil it containes the date the transfer was paused by the user
 @property (nonatomic, strong) NSDate   * transferAborted;       // if not nil it containes the date the transfer was aborted by the user
@@ -155,7 +156,7 @@ typedef enum AttachmentStates {
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing;
 - (void) trySaveToAlbum;
-
+- (void) determinePlayability;
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;

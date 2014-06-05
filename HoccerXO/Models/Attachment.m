@@ -91,6 +91,7 @@
 @dynamic cipherTransferSize;
 @dynamic cipheredSize;
 @dynamic transferFailures;
+@dynamic playable;
 @dynamic previewImageData;
 
 @dynamic message;
@@ -1978,6 +1979,7 @@ NSArray * TransferStateName = @[@"detached",
                 if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);}
                 self.localURL = self.ownedURL;
                 [self computeDestMac];
+                [self determinePlayability];
                 [self.chatBackend downloadFinished:self];
                 if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"autoSaveMedia"] boolValue]) {
                     [self trySaveToAlbum];
@@ -2005,6 +2007,13 @@ NSArray * TransferStateName = @[@"detached",
         [self notifyTransferFinished];
     } else {
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
+    }
+}
+
+- (void) determinePlayability {
+    if ([self.mediaType isEqualToString:@"audio"] && self.contentURL) {
+        AVURLAsset *asset = [AVURLAsset assetWithURL:self.contentURL];
+        self.playable = asset.playable ? @"YES" : @"NO";
     }
 }
 

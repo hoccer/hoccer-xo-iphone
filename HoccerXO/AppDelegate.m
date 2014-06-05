@@ -11,6 +11,7 @@
 #import "ConversationViewController.h"
 #import "Contact.h"
 #import "Attachment.h"
+#import "AttachmentMigration.h"
 #import "HXOMessage.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
@@ -275,6 +276,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
+
 #ifdef PASSWORD_BASELINE
     unsigned char salt[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
         17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
@@ -282,6 +284,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSData * myKey = [Crypto make256BitKeyFromPassword:@"myPassword" withSalt:mySalt];
     NSLog(@"myKey=%@", [myKey hexadecimalString]);
 #endif
+
+    [AttachmentMigration determinePlayabilityForAllAudioAttachments];
+    
     return YES;
 }
 

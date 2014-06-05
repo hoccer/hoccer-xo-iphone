@@ -250,6 +250,7 @@
 		C576EC751934CD2E00C0D254 /* tab_attachments.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC721934CD2E00C0D254 /* tab_attachments.pcvd */; };
 		C576EC761934CD2E00C0D254 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC731934CD2E00C0D254 /* tab_attachments.svg */; };
 		C576EC791934CDD900C0D254 /* MessageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC781934CDD900C0D254 /* MessageItem.m */; };
+		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -884,6 +885,9 @@
 		C576EC731934CD2E00C0D254 /* tab_attachments.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tab_attachments.svg; sourceTree = "<group>"; };
 		C576EC771934CDD900C0D254 /* MessageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageItem.h; sourceTree = "<group>"; };
 		C576EC781934CDD900C0D254 /* MessageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageItem.m; sourceTree = "<group>"; };
+		C5C3BD07193F5F9B0072AE5F /* HoccerXO-40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-40.xcdatamodel"; sourceTree = "<group>"; };
+		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
+		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
@@ -1785,6 +1789,8 @@
 				631457A916EF96B500AA8EB9 /* Attachment.m */,
 				C576EC641934CCE000C0D254 /* AttachmentInfo.h */,
 				C576EC651934CCE000C0D254 /* AttachmentInfo.m */,
+				C5C3BD16194065100072AE5F /* AttachmentMigration.h */,
+				C5C3BD17194065100072AE5F /* AttachmentMigration.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				6378484416F4000500DE03C2 /* Delivery.h */,
@@ -2789,6 +2795,7 @@
 				C576EC481934CCB200C0D254 /* player_icon_now_playing.m in Sources */,
 				63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */,
 				6365EC8518E7976600B41054 /* avatar_contact.m in Sources */,
+				C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */,
 				E9E92F6C18733D01007B8042 /* DDNumber.m in Sources */,
 				E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */,
 				E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */,
@@ -3412,8 +3419,9 @@
 				E9AF288B192652B000E29A03 /* HoccerXO-37.xcdatamodel */,
 				E9A2EDFD19316840003A8464 /* HoccerXO-38.xcdatamodel */,
 				63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */,
+				C5C3BD07193F5F9B0072AE5F /* HoccerXO-40.xcdatamodel */,
 			);
-			currentVersion = 63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */;
+			currentVersion = C5C3BD07193F5F9B0072AE5F /* HoccerXO-40.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
