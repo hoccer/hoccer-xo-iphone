@@ -299,7 +299,7 @@ static int  groupMemberContext;
     if ([item isEqual: self.nicknameItem]) {
         return  NSLocalizedString( self.group || self.groupInStatuNascendi ? @"group_name_placeholder" : @"profile_name_placeholder", nil);
     }
-    return nil; //[super valuePlaceholderForItem: item];
+    return nil;
 }
 
 - (NSString*) segueIdentifierForItem:(DatasheetItem *)item {
