@@ -69,8 +69,7 @@
 
 - (UIBarButtonItem *) barButtonItem {
     if (_barButtonItem == nil) {
-        //UIImage *image = [UIImage imageNamed:@"navbar-music-is-playing"];
-        UIImage *image = [[navbar_playing alloc] init].image;
+        UIImage *image = [[[navbar_playing alloc] init] image];
         _barButtonItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(onClick:)];
     }
 
