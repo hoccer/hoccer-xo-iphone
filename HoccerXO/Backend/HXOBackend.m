@@ -3509,7 +3509,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
     // NSLog(@"deliveryConfirm: %@", delivery);
     [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
-        if (success) {
+        if (success && responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
             // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
             if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             if (DELIVERY_TRACE) {NSLog(@"deliveryConfirm result: state %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
@@ -3519,7 +3519,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
         } else {
-            NSLog(@"deliveryConfirm() failed: %@", responseOrError);
+            NSLog(@"#ERROR: deliveryConfirm() failed, response: %@", responseOrError);
         }
     }];
 }
@@ -3530,7 +3530,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[delivery.message.messageId, delivery.receiver.clientId]
                    onResponse: ^(id responseOrError, BOOL success)
     {
-        if (success) {
+        if (success && responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
             // NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);
             if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             
@@ -3557,7 +3557,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [self.delegate saveDatabase];
             [self.delegate.managedObjectContext refreshObject: delivery.message mergeChanges: YES];
         } else {
-            NSLog(@"deliveryAcknowledge() failed: %@", responseOrError);
+            NSLog(@"#ERROR:deliveryAcknowledge() failed, response: %@", responseOrError);
         }
     }];
 }
