@@ -82,6 +82,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, strong)   UILabel                       * messageFieldPlaceholder;
 @property (nonatomic, strong)   NSTimer                       * typingTimer;
 
+@property  BOOL                                                keyboardShown;
+
+
 @property (strong) id throwObserver;
 @property (strong) id catchObserver;
 @property (strong) id loginObserver;
@@ -402,6 +405,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [self.view layoutIfNeeded];
     } completion: nil];
     
+    self.keyboardShown = YES;
 }
 
 - (void)keyboardWillHide:(NSNotification*) notification {
@@ -412,10 +416,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.keyboardHeight.constant = 0;
         [self.view layoutIfNeeded];
     } completion: nil];
+    self.keyboardShown = NO;
 }
 
 - (void) hideKeyboard {
-    [self.view endEditing: NO];
+    if (self.keyboardShown) {
+        [self.view endEditing: NO];
+    }
 }
 
 #pragma mark - Typing State Handling
@@ -1856,8 +1863,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) messageCell:(MessageCell *)theCell resendMessage:(id)sender {
     //NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    for (int i = 0; i < 10;++i) {
-        [self.chatBackend forwardMessage: message.body toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment];
+    for (int i = 0; i < 200;++i) {
+        double delayInSeconds = 0.5 * i;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            NSString * numberedBody = [NSString stringWithFormat:@"%d:%@", i, message.body];
+            [self.chatBackend forwardMessage: numberedBody toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment];
+        });
     }
 }
 
