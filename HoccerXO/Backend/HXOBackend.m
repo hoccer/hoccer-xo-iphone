@@ -44,7 +44,7 @@
 #import <sys/utsname.h>
 
 #define DELIVERY_TRACE NO
-#define GLITCH_TRACE NO
+#define GLITCH_TRACE YES
 #define SECTION_TRACE NO
 #define CONNECTION_TRACE NO
 #define GROUPKEY_DEBUG YES
@@ -258,7 +258,6 @@ static NSTimer * _stateNotificationDelayTimer;
         if (membership.group == nil) {
             NSLog(@"WARNING: cleanupGroupMembershipTable: removing group membership %@ without group",membership.objectID);
             [AppDelegate.instance deleteObject:membership];
-            //[self.delegate.managedObjectContext deleteObject:membership];
         }
     }
 }
@@ -571,6 +570,25 @@ static NSTimer * _stateNotificationDelayTimer;
     [self createUrlsForTransferOfAttachmentOfMessage:message];
 }
 
+-(HXOMessage*) getMessageById:(NSString*)messageId {
+    NSError *error;
+    NSDictionary * vars = @{ @"messageId" : messageId};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessageByMessageId" substitutionVariables: vars];
+    NSArray *messages = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (messages == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    if (messages.count > 0) {
+        if (messages.count != 1) {
+            NSLog(@"ERROR: Database corrupted, duplicate messages with id %@ in database", messageId);
+            return nil;
+        }
+        HXOMessage * message = messages[0];
+        return message;
+    }
+    return nil;
+}
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
     // Ignore duplicate messages. This happens if a message is offered to us by the server multiple times
@@ -646,8 +664,6 @@ static NSTimer * _stateNotificationDelayTimer;
         }
 
         [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
-        //[self.delegate.managedObjectContext deleteObject: message];
-        //[self.delegate.managedObjectContext deleteObject: delivery];
         [AppDelegate.instance deleteObject:message];
         [AppDelegate.instance deleteObject:delivery];
         return;
@@ -763,7 +779,15 @@ static NSTimer * _stateNotificationDelayTimer;
             NSLog(@"SRP phase 1 failed");
             // can happen if the client thinks the connection was closed, but the server still considers it as open
             // so let us also close and try again
-            NSString * errorMessage = errorReturned[@"message"];
+            
+            NSString * errorMessage;
+            if (errorReturned == nil) {
+                errorMessage = @"unknown error";
+            } else if ([errorReturned isKindOfClass:[NSDictionary class]]) {
+                errorMessage = errorReturned[@"message"];
+            } else {
+                errorMessage = [errorReturned description];
+            }
             
             if (errorReturned != nil &&
                 ([errorMessage isEqualToString:@"No such client"] ||
@@ -828,10 +852,69 @@ static NSTimer * _stateNotificationDelayTimer;
             _apnsDeviceToken = nil; // XXX: this is not nice...
         }
         [self setState: kBackendReady];
-        [self postLoginSynchronize];
+        if ([self quickStart]) {
+            [self performParallelSync];
+        } else {
+            [self postLoginSynchronize];
+        }
     } else {
         [self stopAndRetry];
     }
+}
+
+-(void)syncFailed {
+    [self stopAndRetry];
+}
+
+- (void)performParallelSync {
+    BOOL forced = self.firstConnectionAfterCrashOrUpdate||[self fullSync];
+    if (forced) {
+        NSLog(@"Running forced full sync");
+    }
+    [self hello];
+    [self syncPresencesWithForce:forced withCompletion:^(BOOL ok) {
+        if (!ok) [self syncFailed];
+    }];
+    [self syncRelationshipsWithForce:forced withCompletion:^(BOOL ok) {
+        if (!ok) [self syncFailed];
+    }];
+    [self flushPendingInvites];
+    [self verifyKeyWithHandler:^(BOOL keyOk, BOOL ok) {
+        if (ok) {
+            if (!keyOk) {
+                [self updateKeyWithHandler:^(BOOL ok) {
+                    if (!ok) [self syncFailed];
+                }];
+            }
+        } else {
+            [self syncFailed];
+        }
+    }];
+    [self updatePresenceWithHandler:^(BOOL ok) {
+        if (!ok) [self syncFailed];
+    }];
+    
+    [self syncGroupsWithForce:forced withCompletion:^(BOOL ok)  {
+        if (!ok) [self syncFailed];
+        else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"postLoginSyncCompleted"
+                                                                object:self
+                                                              userInfo:nil
+             ];
+            if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
+                [HXOEnvironment.sharedInstance setActivation:YES];
+            }
+        }
+    }];
+    [self ready:^(BOOL ok)   {
+        if (!ok) [self syncFailed];
+    }];
+    
+    [self finishFirstConnectionAfterCrashOrUpdate];
+    [self flushPendingMessages];
+    [self flushPendingFiletransfers];
+
+    
 }
 
 - (void)postLoginSynchronize {
@@ -840,38 +923,67 @@ static NSTimer * _stateNotificationDelayTimer;
         NSLog(@"Running forced full sync");
     }
     [self hello];
-    [self syncPresencesWithForce:forced withCompletion:^{
-        [self syncRelationshipsWithForce:forced withCompletion:nil];
-        [self flushPendingInvites];
-        [self verifyKeyWithHandler:^(BOOL ok) {
-            if (!ok) {
-                [self updateKeyWithHandler:^(BOOL ok) {
-                    [self postKeySynchronize];
-                }];
-            } else {
-                [self postKeySynchronize];
-            }
-        }];
+    [self syncPresencesWithForce:forced withCompletion:^(BOOL ok1) {
+        if (ok1) {
+            [self syncRelationshipsWithForce:forced withCompletion:^(BOOL ok2) {
+                if (ok2) {
+                    [self flushPendingInvites];
+                    [self verifyKeyWithHandler:^(BOOL keyOk, BOOL ok3) {
+                        if (ok3) {
+                            if (!keyOk) {
+                                [self updateKeyWithHandler:^(BOOL ok4) {
+                                    if (ok4) {
+                                        [self postKeySynchronize];
+                                    } else {
+                                        [self syncFailed];
+                                    }
+                                }];
+                            } else {
+                                [self postKeySynchronize];
+                            }
+                        } else {
+                            [self syncFailed];
+                        }
+                    }];
+                } else {
+                    [self syncFailed];
+                }
+            }];
+        } else {
+            [self syncFailed];
+        }
     }];
 }
 
 - (void)postKeySynchronize {
     BOOL forced = self.firstConnectionAfterCrashOrUpdate||[self fullSync];
-    [self updatePresenceWithHandler:^(BOOL ok) {
-        [self syncGroupsWithForce:forced withCompletion:^{
-            [self ready:^(BOOL ok) {
-                [self finishFirstConnectionAfterCrashOrUpdate];
-                [self flushPendingMessages];
-                [self flushPendingFiletransfers];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"postLoginSyncCompleted"
-                                                                    object:self
-                                                                  userInfo:nil
-                 ];
-                if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
-                    [HXOEnvironment.sharedInstance setActivation:YES];
+    [self updatePresenceWithHandler:^(BOOL ok1) {
+        if (ok1) {
+            [self syncGroupsWithForce:forced withCompletion:^(BOOL ok2) {
+                if (ok2) {
+                    [self ready:^(BOOL ok3) {
+                        if (ok3) {
+                            [self finishFirstConnectionAfterCrashOrUpdate];
+                            [self flushPendingMessages];
+                            [self flushPendingFiletransfers];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"postLoginSyncCompleted"
+                                                                                object:self
+                                                                              userInfo:nil
+                             ];
+                            if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
+                                [HXOEnvironment.sharedInstance setActivation:YES];
+                            }
+                        } else {
+                            [self syncFailed];
+                        }
+                    }];
+                } else {
+                    [self syncFailed];
                 }
             }];
-        }];
+        } else {
+            [self syncFailed];
+        }
     }];
 }
 
@@ -1210,7 +1322,7 @@ static NSTimer * _stateNotificationDelayTimer;
     return latest;
 }
 
-- (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion {
+- (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion {
     NSDate * latestChange;
     if (forceAll) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0]; 
@@ -1219,10 +1331,14 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     // NSLog(@"latest date %@", latestChange);
     [self getRelationships: latestChange relationshipHandler:^(NSArray * changedRelationships) {
-        for (NSDictionary * relationshipDict in changedRelationships) {
-            [self updateRelationship: relationshipDict];
+        if (changedRelationships != nil) {
+            for (NSDictionary * relationshipDict in changedRelationships) {
+                [self updateRelationship: relationshipDict];
+            }
+            if (completion) completion(YES);
+        } else {
+            if (completion) completion(NO);
         }
-        if (completion) completion();
     }];
 }
 
@@ -1458,7 +1574,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
-- (void) syncPresencesWithForce:(BOOL)force withCompletion:(DoneBlock)completion {
+- (void) syncPresencesWithForce:(BOOL)force withCompletion:(GenericResultHandler)completion {
     NSDate * latestChange;
     if (force) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
@@ -1792,7 +1908,11 @@ static NSTimer * _stateNotificationDelayTimer;
     return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fullSync"] boolValue];
 }
 
-- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion {
+-(BOOL)quickStart {
+    return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"quickStart"] boolValue];
+}
+
+- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion {
     NSDate * latestChange;
     if (forceAll) {
         latestChange = [NSDate dateWithTimeIntervalSince1970:0];
@@ -2011,7 +2131,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 // Boolean[] isMemberInGroups(String[] groupIds);
-- (void) checkGroupMembershipsWithCompletion:(DoneBlock)completion {
+- (void) checkGroupMembershipsWithCompletion:(GenericResultHandler)completion {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext: self.delegate.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -2045,20 +2165,20 @@ static NSTimer * _stateNotificationDelayTimer;
                         [self handleDeletionOfGroup:group];
                     }
                 }
-                if (completion) completion();
+                if (completion) completion(YES);
             } else {
                 NSLog(@"isMemberInGroups(): failed: %@", responseOrError);
-                if (completion) completion();
+                if (completion) completion(NO);
             }
         }];
     } else {
-        if (completion) completion(nil);
+        if (completion) completion(YES);
     }
 }
 
 
 // Boolean[] isContactOf  (String[] clientIds);
-- (void) checkContactsWithCompletion:(DoneBlock)completion {
+- (void) checkContactsWithCompletion:(GenericResultHandler)completion {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: self.delegate.managedObjectContext];
     [fetchRequest setEntity:entity];
@@ -2092,14 +2212,14 @@ static NSTimer * _stateNotificationDelayTimer;
                         [self handleDeletionOfContact:contact withForce:NO];
                     }
                 }
-                if (completion) completion();
+                if (completion) completion(YES);
             } else {
                 NSLog(@"isContactOf(): failed: %@", responseOrError);
-                if (completion) completion();
+                if (completion) completion(NO);
             }
         }];
     } else {
-        if (completion) completion(nil);
+        if (completion) completion(YES);
     }
 }
 
@@ -3488,7 +3608,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 if (delivery.group != nil) {
                     delivery.group.latestMessageTime = message.timeAccepted;
                 }
-                if (DELIVERY_TRACE) {NSLog(@"Delivery message time update: message.timeAccepted=%@, delivery.receiver.latestMessageTime=%@, delivery.group.latestMessageTime=%@",message.timeAccepted, delivery.receiver.latestMessageTime, delivery.group.latestMessageTime);}
+                if (DELIVERY_TRACE) {NSLog(@"Delivery message time update: messageId = %@, message.timeAccepted=%@, delivery.receiver.latestMessageTime=%@, delivery.group.latestMessageTime=%@",message.messageId, message.timeAccepted, delivery.receiver.latestMessageTime, delivery.group.latestMessageTime);}
             }
             [self.delegate saveDatabase];
             
@@ -3794,7 +3914,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [self updateKey:myKeyBits handler:handler];
 }
 
-- (void) verifyKey: (NSData*) publicKey handler:(GenericResultHandler) handler {
+- (void) verifyKey: (NSData*) publicKey handler:(BoolResultHandler) handler {
     // NSLog(@"verifyKey: %@", publicKey);
     NSData * myKeyId = [HXOBackend calcKeyId:publicKey];
     NSString * myKeyIdString = [myKeyId hexadecimalString];
@@ -3802,15 +3922,15 @@ static NSTimer * _stateNotificationDelayTimer;
     [_serverConnection invoke: @"verifyKey" withParams: @[myKeyIdString] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"verifyKey() got result: %@", responseOrError);
-            handler([responseOrError boolValue]);
+            handler([responseOrError boolValue], YES);
         } else {
-            handler(NO);
             NSLog(@"verifyKey() failed: %@", responseOrError);
+            handler(NO,NO);
         }
     }];
 }
 
-- (void) verifyKeyWithHandler:(GenericResultHandler) handler {
+- (void) verifyKeyWithHandler:(BoolResultHandler) handler {
     NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
     [self verifyKey:myKeyBits handler:handler];
 }
@@ -3888,7 +4008,7 @@ static NSTimer * _stateNotificationDelayTimer;
             handler(responseOrError);
         } else {
             NSLog(@"getRelationships(): failed: %@", responseOrError);
-            handler(NO);
+            handler(nil);
         }
     }];
 }
@@ -4038,6 +4158,7 @@ static NSTimer * _stateNotificationDelayTimer;
 -(Delivery *) getDeliveryByMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId  {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"receiverId" : theReceiverId};
+    NSLog(@"getDeliveryByMessageTagAndReceiverId vars = %@", vars);
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndReceiverId" substitutionVariables: vars];
     NSError *error;
     NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
@@ -4062,6 +4183,7 @@ static NSTimer * _stateNotificationDelayTimer;
 -(Delivery *) getDeliveryByMessageTagAndGroupId:(NSString *) theMessageTag withGroupId: (NSString *) theGroupId  {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"groupId" : theGroupId};
+    NSLog(@"getDeliveryByMessageTagAndGroupId vars = %@", vars);
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndGroupId" substitutionVariables: vars];
     NSError *error;
     NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
@@ -4086,6 +4208,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"groupId" : theGroupId,
                              @"receiverId" : receiverId};
+    NSLog(@"getDeliveryByMessageTagAndGroupIdAndReceiverId vars = %@", vars);
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndGroupIdAndReceiverId" substitutionVariables: vars];
     NSError *error;
     NSArray *deliveries = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
@@ -4123,12 +4246,14 @@ static NSTimer * _stateNotificationDelayTimer;
     if (USE_VALIDATOR) [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
     
     NSString * myMessageTag = deliveryDict[@"messageTag"];
+    NSString * myMessageId = deliveryDict[@"messageId"];
     NSString * myReceiverId = deliveryDict[@"receiverId"];
     NSString * myGroupId = deliveryDict[@"groupId"];
     
     Delivery * myDelivery = nil;
     if (myGroupId) {
         if (myReceiverId != nil && myReceiverId.length > 0) {
+            NSLog(@"myDelivery=%@",myDelivery);
             myDelivery = [self getDeliveryByMessageTagAndGroupIdAndReceiverId:myMessageTag withGroupId: myGroupId withReceiverId:myReceiverId];
         } else {
             myDelivery = [self getDeliveryByMessageTagAndGroupId:myMessageTag withGroupId: myGroupId];
@@ -4136,13 +4261,22 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         myDelivery = [self getDeliveryByMessageTagAndReceiverId:myMessageTag withReceiver: myReceiverId];
     }
+    if (DELIVERY_TRACE) NSLog(@"myDelivery: message Id: %@ receiver:%@ group:%@ objId:%@",myDelivery.message.messageId, myDelivery.receiver.clientId, myDelivery.group.clientId, myDelivery.objectID);
     
+    HXOMessage * myMessage = [self getMessageById:myMessageId];
+    if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%@",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries);
+
     if (myDelivery != nil) {
         // TODO: server should not send outgoingDelivery-changes for confirmed object, we just won't answer them for now to avoid ack-storms
         if ([myDelivery.state isEqualToString:@"confirmed"]) {
             // we have already acknowledged and received confirmation for ack, so server should have shut up and never sent us this in the first time
-            NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery msg-id: %@", deliveryDict[@"messageId"]);
-            // [self deliveryAcknowledge: myDelivery];
+            if (myMessage != nil) {
+                NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery msg-id: %@", deliveryDict[@"messageId"]);
+                [self deliveryAcknowledge: myDelivery];
+            } else {
+                NSLog(@"#ERROR: outgoingDelivery delivery and message id mismatch, aborting message: %@", deliveryDict[@"messageId"]);
+                [self deliveryAbort:myMessageId forClient:myReceiverId];
+            }
             return;
         }
         

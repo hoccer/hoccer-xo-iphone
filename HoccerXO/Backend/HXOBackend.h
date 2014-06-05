@@ -31,7 +31,8 @@ typedef void (^GroupMembersOutdatedHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^ObjectResultHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
-typedef void (^GenericResultHandler)(BOOL);
+typedef void (^GenericResultHandler)(BOOL ok);
+typedef void (^BoolResultHandler)(BOOL result, BOOL ok);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DataLoadedBlock)(NSData *, NSError*);
 typedef void (^DoneBlock)();
@@ -98,7 +99,7 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
-- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion;
+- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
@@ -145,7 +146,7 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) downloadFailed:(Attachment *)theAttachment;
 - (void) uploadFailed:(Attachment *)theAttachment;
 
-- (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(DoneBlock)completion;
+- (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
 - (void) updatePresenceWithHandler:(GenericResultHandler)handler;
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler;

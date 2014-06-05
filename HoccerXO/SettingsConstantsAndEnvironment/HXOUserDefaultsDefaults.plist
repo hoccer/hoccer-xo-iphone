@@ -48,5 +48,7 @@
 	<false/>
 	<key>fullSync</key>
 	<false/>
+	<key>quickStart</key>
+	<true/>
 </dict>
 </plist>

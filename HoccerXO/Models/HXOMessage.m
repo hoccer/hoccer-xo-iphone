@@ -192,7 +192,7 @@
             self.outgoingCryptoKey = [Crypto random256BitKey];
         }
     } else {
-        NSLog(@"HXOMessage:setupOutgoingEncryption: (re)using key %@",self.outgoingCryptoKey);
+        if (KEY_DEBUG) NSLog(@"HXOMessage:setupOutgoingEncryption: (re)using key %@",self.outgoingCryptoKey);
     }
     [self setCryptoKey:self.outgoingCryptoKey];
 }

@@ -393,7 +393,7 @@ static const NSTimeInterval kResponseTimeout = 30;
         NSTimer * timer = request[@"timer"];
         [timer invalidate];
         NSLog(@"JsonRpc: request %@ was flushed (connection was closed)", theKey);
-        handler(@"connection closed", NO);
+        handler(@{@"message":@"connection closed",@"code":@7003}, NO);
     }
     
 }
