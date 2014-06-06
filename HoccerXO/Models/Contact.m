@@ -169,28 +169,28 @@ NSString * const kRelationStateKept        = @"kept";
 
 - (NSString*) nickNameWithStatus {
     NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
-    NSString * stausString = nil;
+    NSString * statusString = nil;
     if (self.isKept) {
-        stausString = @"❌";
+        statusString = @"❌";
     } else if (self.isBlocked) {
-        stausString = nil;
+        statusString = nil;
     } else if (self.isGroup && [(Group*)self otherJoinedMembers].count == 0) {
-        stausString = @"⭕";
+        statusString = @"⭕";
     } else if (self.isNotRelated) {
-        stausString = @"❓";
+        statusString = @"❓";
     } else if (self.isGroupFriend) {
-        stausString = @"🔗";
+        statusString = @"🔗";
     } else if (self.isTyping) {
-        stausString = @"💬";
+        statusString = @"💬";
     } else if ( self.isBackground) {
-        stausString = @"💤";
+        statusString = @"💤";
     } else if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
-        stausString = nil;
+        statusString = nil;
     } else {
         // show special connection status
-        stausString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];
+        statusString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];
     }
-    return stausString ? [NSString stringWithFormat: @"%@ %@", name, stausString] : name;
+    return statusString ? [NSString stringWithFormat: @"%@ %@", name, statusString] : name;
 }
 
 - (BOOL) isGroup {
