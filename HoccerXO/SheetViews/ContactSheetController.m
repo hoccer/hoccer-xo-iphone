@@ -268,6 +268,7 @@ static int  groupMemberContext;
         [self.chatBackend createGroupWithHandler:^(Group * newGroup) {
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
+                newGroup.alias = self.groupInStatuNascendi.alias;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
                 [self.chatBackend updateGroup:newGroup];
                 for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {

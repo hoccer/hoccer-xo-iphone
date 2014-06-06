@@ -168,37 +168,29 @@ NSString * const kRelationStateKept        = @"kept";
 
 
 - (NSString*) nickNameWithStatus {
-    if (self.isKept) {
-        return [NSString stringWithFormat:@"%@ ❌", self.nickName];
-    }
-    if (self.isBlocked) {
-        return self.nickName;
-    }
-    if (self.isGroup) {
-        Group * group = (Group*)self;
-        if ([[group otherJoinedMembers] count] == 0) {
-            return [NSString stringWithFormat:@"%@ ⭕", self.nickName];
-        }
-    }
-    if (self.isNotRelated) {
-        return [NSString stringWithFormat:@"%@ ❓", self.nickName];
-    }
     NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
-    if (self.isGroupFriend) {
-        name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
-    }
-    if ( self.isTyping) {
-        name = [NSString stringWithFormat:@"%@ 💬", self.nickName];
-    }
-    if ( self.isBackground) {
-        name = [NSString stringWithFormat:@"%@ 💤", self.nickName];
-    }
-    if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
-        return name;
+    NSString * stausString = nil;
+    if (self.isKept) {
+        stausString = @"❌";
+    } else if (self.isBlocked) {
+        stausString = nil;
+    } else if (self.isGroup && [(Group*)self otherJoinedMembers].count == 0) {
+        stausString = @"⭕";
+    } else if (self.isNotRelated) {
+        stausString = @"❓";
+    } else if (self.isGroupFriend) {
+        stausString = @"🔗";
+    } else if (self.isTyping) {
+        stausString = @"💬";
+    } else if ( self.isBackground) {
+        stausString = @"💤";
+    } else if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
+        stausString = nil;
     } else {
         // show special connection status
-        return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
+        stausString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];
     }
+    return stausString ? [NSString stringWithFormat: @"%@ %@", name, stausString] : name;
 }
 
 - (BOOL) isGroup {
