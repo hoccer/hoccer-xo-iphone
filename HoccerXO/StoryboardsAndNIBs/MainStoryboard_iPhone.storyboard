@@ -94,6 +94,7 @@
                         <segue destination="gLM-u6-CgJ" kind="push" identifier="showProfile" id="6i4-qU-VgJ"/>
                         <segue destination="21" kind="push" identifier="showChat" id="iwW-8u-tft"/>
                         <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="I8w-H7-Q9a"/>
+                        <segue destination="69M-9C-Zrd" kind="push" identifier="showAttachments" id="7Jz-jk-4yN"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kaL-dN-SRW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1336,14 +1337,14 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="fCA-bC-lkd"/>
-        <segue reference="yj0-Vd-HPq"/>
-        <segue reference="UJI-wH-YH7"/>
-        <segue reference="k8Y-EQ-OHi"/>
-        <segue reference="rav-wy-jJw"/>
-        <segue reference="p46-dj-699"/>
-        <segue reference="sc8-Bm-80f"/>
-        <segue reference="nwS-55-3Qg"/>
         <segue reference="thl-MY-iCZ"/>
+        <segue reference="iwW-8u-tft"/>
+        <segue reference="5v1-4P-ajP"/>
+        <segue reference="S5q-xe-rQg"/>
+        <segue reference="CES-Ic-Rhf"/>
+        <segue reference="7Jz-jk-4yN"/>
+        <segue reference="I8w-H7-Q9a"/>
+        <segue reference="6i4-qU-VgJ"/>
+        <segue reference="rav-wy-jJw"/>
     </inferredMetricsTieBreakers>
 </document>
