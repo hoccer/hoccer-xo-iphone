@@ -314,8 +314,14 @@ NSString * const kRelationStateKept        = @"kept";
     NSSet * myMemberships = self.groupMemberships;
     BOOL isNearby = NO;
     for (GroupMembership * memberShip in myMemberships) {
+        /*
         if (memberShip.group.isExistingGroup && memberShip.group.isNearbyGroup) {
             isNearby = YES;
+        }
+         */
+        if (memberShip.isNearbyMember) {
+            isNearby = YES;
+            break;
         }
     }
     if (isNearby != self.isNearbyContact) {

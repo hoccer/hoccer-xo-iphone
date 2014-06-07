@@ -53,10 +53,11 @@
 #define AUDIOSESSION_DEBUG NO
 #define TRACE_DATABASE_SAVE NO
 #define TRACE_PROFILE_UPDATES NO
-#define TRACE_DELETES YES
+#define TRACE_DELETES NO
 #define TRACE_INSPECTION NO
 #define TRACE_PENDING_CHANGES NO
 #define TRACE_BACKGROUND_PROCESSING NO
+#define TRACE_NEARBY_ACTIVATION NO
 
 #ifdef HOCCER_DEV
 NSString * const kHXOURLScheme = @"hxod";
@@ -479,7 +480,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #pragma mark - Nearby
 
 -(void)configureForNearbyMode:(BOOL)modeNearby {
-    NSLog(@"AppDelegate:configureForNearbyMode= %d", modeNearby);
+    if (TRACE_NEARBY_ACTIVATION) NSLog(@"AppDelegate:configureForNearbyMode= %d", modeNearby);
     [HXOEnvironment.sharedInstance setActivation:modeNearby];
     if (modeNearby) {
         [GesturesInterpreter.instance start];

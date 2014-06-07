@@ -55,8 +55,9 @@
 - (BOOL)isStateNone;
 - (BOOL)isGroupRemoved;
 - (BOOL)isMember;
+- (BOOL)isNearbyMember;
 - (BOOL)isAdmin;
-- (BOOL)hasRoleMemberOrAdmin;
+- (BOOL)hasActiveRole;
 - (BOOL)isRoleNone;
 
 @end

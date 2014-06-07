@@ -47,13 +47,14 @@
 #define GLITCH_TRACE YES
 #define SECTION_TRACE NO
 #define CONNECTION_TRACE NO
-#define GROUPKEY_DEBUG YES
+#define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
 #define RELATIONSHIP_DEBUG NO
 #define TRANSFER_DEBUG NO
 #define CHECK_URL_TRACE NO
 #define CHECK_CERTS_DEBUG NO
-#define DEBUG_DELETION YES
+#define DEBUG_DELETION NO
+#define LOCKING_TRACE NO
 
 
 #ifdef DEBUG
@@ -1483,7 +1484,7 @@ static NSTimer * _stateNotificationDelayTimer;
             return;
         }
         @synchronized([self idLock:clientId]) {
-            NSLog(@"Entering synchronized updateRelationship %@",clientId);
+            if (LOCKING_TRACE) NSLog(@"Entering synchronized updateRelationship %@",clientId);
             Contact * contact = [self getContactByClientId: clientId inContext:context];
             // XXX The server sends relationship updates with state 'none' even after depairing.
             if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
@@ -1493,7 +1494,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     //[self handleDeletionOfContact:contact withForce:NO];
                     [self handleDeletionOfContact:contact withForce:NO inContext:context];
                 }
-                NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",clientId);
+                if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",clientId);
                 return;
             }
             if (contact == nil) {
@@ -1510,7 +1511,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [contact updateWithDictionary: relationshipDict];
             [self checkRelationsipStateForGroupMembershipOfContact:contact];
             [self.delegate saveContext:context];
-            NSLog(@"Done synchronized updateGroupMemberHere %@",clientId);
+            if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere %@",clientId);
         }
     }];
 }
@@ -1724,7 +1725,7 @@ static NSTimer * _stateNotificationDelayTimer;
             return;
         }
         @synchronized([self idLock:myClient]) {
-            NSLog(@"Entering synchronized presenceUpdated %@",myClient);
+            if (LOCKING_TRACE) NSLog(@"Entering synchronized presenceUpdated %@",myClient);
             BOOL newContact = NO;
             Contact * myContact = [self getContactByClientId:myClient inContext:context];
             if (myContact == nil) {
@@ -1778,7 +1779,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self newFriendAlertForContact:myContact];
             }
         }
-        NSLog(@"Done synchronized presenceUpdated %@",myClient);
+        if (LOCKING_TRACE) NSLog(@"Done synchronized presenceUpdated %@",myClient);
     }];
 }
 
@@ -2048,26 +2049,76 @@ static NSTimer * _stateNotificationDelayTimer;
         }];
     }];
 }
-/*
--(void) cleanupGroupsLastUpdatedBefore:(NSDate*)lastUpdateTime {
-    NSDictionary * vars = @{ @"lastUpdatedBefore" : lastUpdateTime};
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"GroupsLastUpdatedBefore" substitutionVariables: vars];
-    NSError *error;
-    NSArray * groups = [self.delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    if (error != nil) {
-        NSLog(@"Error=%@",error);
+
+-(void) mergeGroups:(NSArray*)myGroups intoGroup:(Group*)targetGroup inContext:(NSManagedObjectContext *)context {
+    NSArray * groups = [NSArray arrayWithArray:myGroups];
+    for (int i = 0; i < groups.count;++i) {
+        Group * src = groups[i];
+        if (![src isEqual:targetGroup]) {
+            NSLog(@"mergeGroups: merging group %@ to %@", src.clientId, targetGroup.clientId);
+            NSSet * messages = [NSSet setWithSet: src.messages];
+            for (HXOMessage * message in messages) {
+                Delivery * delivery = message.deliveries.anyObject;
+                message.contact = targetGroup;
+                delivery.group = targetGroup;
+            }
+        }
     }
-    NSLog(@"found %d groups last updated before time %@", groups.count, lastUpdateTime);
-    if (groups == nil) {
-        NSLog(@"Fetch request failed: %@", error);
+    for (int i = 0; i < groups.count;++i) {
+        Group * src = groups[i];
+        if (![src isEqual:targetGroup]) {
+            NSLog(@"mergeGroups: deleting group %@", src.clientId);
+            [self.delegate deleteObject:src inContext:context];
+        }
+    }
+    [self.delegate saveContext:context];
+}
+
+-(Group*)findInspectedNearbyGroupInContext:(NSManagedObjectContext *)context {
+    NSArray * groups = [self getNearbyGroupsInContext:context];
+    for (Group * group in groups) {
+        if ([self.delegate isInspecting:group]) {
+            return group;
+        }
+    }
+    return nil;
+}
+
+-(NSArray*) getNearbyGroupsInContext:(NSManagedObjectContext *)context{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext: context];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"type == 'Group' AND groupType == 'nearby'" ]];
+    
+    NSError *error;
+    NSArray *groups = [context executeFetchRequest:fetchRequest error:&error];
+    if (groups == nil)
+    {
+        NSLog(@"Fetch request for 'checkGroupMemberships' failed: %@", error);
         abort();
     }
-    for (Group * group in groups) {
-        NSLog(@"cleanupGroupsLastUpdatedBefore: deleting group with id %@ name %@ state %@ lastUpdateTime %@", group.clientId, group.nickName, group.groupState, group.lastUpdateReceived);
-        [self handleDeletionOfGroup:group];
-    }
+    return groups;
 }
-*/
+
+-(Group*)singleNearbyGroupWithId:(NSString*)groupId inContext:(NSManagedObjectContext *)context {
+    NSLog(@"singleNearbyGroupWithId: %@", groupId);
+    NSArray * groups = [self getNearbyGroupsInContext:context];
+    NSLog(@"singleNearbyGroupWithId: %@, found %d nearby groups", groupId, groups.count);
+    if (groups.count > 0) {
+        Group * inspectedGroup = [self findInspectedNearbyGroupInContext:context];
+        if (inspectedGroup == nil) {
+            inspectedGroup = groups[0];
+        }
+        NSLog(@"singleNearbyGroupWithId: changing group %@ to %@", inspectedGroup.clientId, groupId);
+        [inspectedGroup changeIdTo:groupId];
+        
+        if (groups.count > 1) {
+            [self mergeGroups: groups intoGroup:inspectedGroup inContext:context];
+        }
+        return inspectedGroup;
+    }
+    return nil;
+}
 
 - (BOOL) updateGroupHere: (NSDictionary*) groupDict inContext:(NSManagedObjectContext*) context {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
@@ -2076,7 +2127,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSString * groupId = groupDict[@"groupId"];
     
     @synchronized([self idLock:groupId]) {
-        NSLog(@"Entering synchronized updateGroupHere %@",groupId);
+        if (LOCKING_TRACE) NSLog(@"Entering synchronized updateGroupHere %@",groupId);
         Group * group = [self getGroupById: groupId orByTag:groupDict[@"groupTag"] inContext:context];
         
         NSString * groupState = groupDict[@"state"];
@@ -2089,7 +2140,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         
         if ([groupState isEqualToString:@"none"]) {
-            if (group != nil && ![group.groupState isEqualToString: kRelationStateKept] && ![group.groupState isEqualToString:@"none"]) {
+            if (group != nil && ![group.groupState isEqualToString: kRelationStateKept] && ![group.groupState isEqualToString:@"none"] && !group.isNearbyGroup) {
                 if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
                 [group updateWithDictionary: groupDict];
                 [self handleDeletionOfGroup:group inContext:context];
@@ -2099,11 +2150,17 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         
         if (group == nil) {
-            group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:context];
-            group.type = [Group entityName];
-            group.clientId = groupId;
-            group.lastUpdateReceived = [NSDate date];
-            if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
+            // handle nearby group merging
+            if ([@"nearby" isEqualToString: groupDict[@"groupType"]]) {
+                group = [self singleNearbyGroupWithId:groupId inContext:context];
+            }
+            if (group == nil) {
+                group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:context];
+                group.type = [Group entityName];
+                group.clientId = groupId;
+                group.lastUpdateReceived = [NSDate date];
+                if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
+            }
         }
         
         [group updateWithDictionary: groupDict];
@@ -2118,7 +2175,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         
         [self.delegate saveContext:context];
-        NSLog(@"Done synchronized updateGroupHere %@",groupId);
+        if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupHere %@",groupId);
         return YES;
     }
 }
@@ -2450,14 +2507,19 @@ static NSTimer * _stateNotificationDelayTimer;
     
     NSString * groupId = groupMemberDict[@"groupId"];
     @synchronized([self idLock:groupId]) {
-        NSLog(@"Entering synchronized updateGroupMemberHere %@",groupId);
+        if (LOCKING_TRACE) NSLog(@"Entering synchronized updateGroupMemberHere %@",groupId);
         Group * group = [self getGroupById: groupId inContext:context];
         if (group == nil) {
             if ([groupMemberDict[@"state"] isEqualToString:@"none"] || [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
-                NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",groupId);
+                if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",groupId);
                 return;
             } else {
-                group = [self createLocalGroup:groupMemberDict[@"groupId"] withState:@"incomplete" inContext:context];
+                if ([@"nearbyMember" isEqualToString: groupMemberDict[@"role"]]) {
+                    group = [self singleNearbyGroupWithId:groupId inContext:context];
+                }
+                if (group == nil) {
+                    group = [self createLocalGroup:groupMemberDict[@"groupId"] withState:@"incomplete" inContext:context];
+                }
             }
         }
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere with %@",groupMemberDict);
@@ -2474,7 +2536,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if ([groupMemberDict[@"state"] isEqualToString:@"none"] || [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
                 // do not process unknown contacts with membership state ‘none'
                 if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere not processing group member with state %@ id %@",groupMemberDict[@"state"], memberClientId);
-                NSLog(@"Done synchronized updateGroupMemberHere (r2) %@",groupId);
+                if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r2) %@",groupId);
                 return;
             }
             // create new Contact because it does not exist and is not own contact
@@ -2505,7 +2567,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }];
         if ([theMemberSet count] > 1) {
             NSLog(@"ERROR: duplicate members in group %@ with id %@",groupId,memberClientId);
-            NSLog(@"Done synchronized updateGroupMemberHere (r3) %@",groupId);
+            if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r3) %@",groupId);
             return;
         }
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: %d members, %d in filtered set",[group.members count], [theMemberSet count]);
@@ -2546,7 +2608,7 @@ static NSTimer * _stateNotificationDelayTimer;
         
         if (myMembership == nil) {
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no member found and not created, incoming member state must be 'none'");
-            NSLog(@"Done synchronized updateGroupMemberHere (r4) %@",groupId);
+            if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r4) %@",groupId);
             return;
         }
         // check for invitation
@@ -2628,12 +2690,10 @@ static NSTimer * _stateNotificationDelayTimer;
         [context performBlock:^{
             NSManagedObjectID * groupId = group.objectID;
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
-                NSLog(@"rupdateGroupMemberHere:refreshObject");
                 [context refreshObject: [context objectWithID:groupId] mergeChanges: YES];
-                NSLog(@"updateGroupMemberHere:refreshObject done");
             }];
         }];
-        NSLog(@"Done synchronized updateGroupMemberHere %@",groupId);
+        if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere %@",groupId);
     }
 }
 

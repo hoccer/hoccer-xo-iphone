@@ -144,7 +144,7 @@
                                                                              object:nil
                                                                               queue:[NSOperationQueue mainQueue]
                                                                          usingBlock:^(NSNotification *note) {
-                                                                             if (TRACE_NOTIFICATIONS, YES) NSLog(@"ConversationView: loginSucceeded");
+                                                                             if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: loginSucceeded");
                                                                              [self configureForNearbyMode:self.inNearbyMode];
                                                                          }];
 

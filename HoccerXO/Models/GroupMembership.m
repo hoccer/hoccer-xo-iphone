@@ -111,12 +111,16 @@
     return [@"member" isEqualToString: self.role];
 }
 
+- (BOOL)isNearbyMember {
+    return [@"nearbyMember" isEqualToString: self.role];
+}
+
 - (BOOL)isAdmin {
     return [@"admin" isEqualToString: self.role];
 }
 
-- (BOOL)hasRoleMemberOrAdmin {
-    return self.isMember || self.isAdmin;
+- (BOOL)hasActiveRole {
+    return self.isMember || self.isAdmin || self.isNearbyMember;
 }
 
 - (BOOL)isRoleNone {

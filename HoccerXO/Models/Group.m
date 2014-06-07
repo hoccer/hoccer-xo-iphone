@@ -107,6 +107,16 @@
     return latestDate;
 }
 
+-(void)changeIdTo:(NSString*)newId {
+    //NSSet * myMembers = self.members;
+    self.clientId = newId;
+    /*
+    for (GroupMembership * member in myMembers) {
+        member.group = self;
+    }
+     */
+}
+
 -(BOOL) hasGroupKey {
     //NSLog(@"hasGroupKey: self.groupKey = %@, self.groupKey.length = %d, self.sharedKeyId = %@, self.keySupplier = %@, self.sharedKeyIdSalt = %@", self.groupKey, self.groupKey.length, self.sharedKeyId, self.keySupplier, self.sharedKeyIdSalt);
     
@@ -116,21 +126,16 @@
 }
 
 -(void) generateNewGroupKey {
-    if (self.iAmAdmin) {
-        if (GROUPKEY_DEBUG) {NSLog(@"Group:generateNewGroupKey");}
-        self.groupKey = [Crypto random256BitKey];
-        self.sharedKeyIdSalt = [Crypto random256BitSalt];
-        self.keySupplier = [UserProfile sharedProfile].clientId;
-        self.sharedKeyId = [Crypto calcSymmetricKeyId:self.groupKey withSalt:self.sharedKeyIdSalt];
-        self.keyDateMillis = @0; // 0 indicates a local date not yet transmitted via the server which will give it a proper time stamp
-        if (![self hasGroupKey]) {
-            NSLog(@"ERROR: Group:generateNewGroupKey: hasGroupKey failed");
-        }
-        //if (GROUPKEY_DEBUG) [self checkGroupKey];
-    } else {
-        NSLog(@"Group:generateNewGroupKey: can't generate (not admin), group nick %@, id %@", self.nickName, self.clientId);
-        NSLog(@"%@", [NSThread callStackSymbols]);
+    if (GROUPKEY_DEBUG) {NSLog(@"Group:generateNewGroupKey");}
+    self.groupKey = [Crypto random256BitKey];
+    self.sharedKeyIdSalt = [Crypto random256BitSalt];
+    self.keySupplier = [UserProfile sharedProfile].clientId;
+    self.sharedKeyId = [Crypto calcSymmetricKeyId:self.groupKey withSalt:self.sharedKeyIdSalt];
+    self.keyDateMillis = @0; // 0 indicates a local date not yet transmitted via the server which will give it a proper time stamp
+    if (![self hasGroupKey]) {
+        NSLog(@"ERROR: Group:generateNewGroupKey: hasGroupKey failed");
     }
+    //if (GROUPKEY_DEBUG) [self checkGroupKey];
 }
 
 

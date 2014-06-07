@@ -61,6 +61,9 @@
 - (BOOL)isNearbyGroup;
 - (BOOL)isIncompleteGroup;
 
+-(void)changeIdTo:(NSString*)newId;
+
+
 @end
 
 @interface Group (CoreDataGeneratedAccessors)
