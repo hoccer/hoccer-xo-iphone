@@ -81,7 +81,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
     dispatch_sync(dispatch_get_main_queue(),^{
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         // Edit the entity name as appropriate.
-        NSEntityDescription *entity = [NSEntityDescription entityForName: [Contact entityName] inManagedObjectContext:AppDelegate.instance.managedObjectContext];
+        NSEntityDescription *entity = [NSEntityDescription entityForName: [Contact entityName] inManagedObjectContext:AppDelegate.instance.mainObjectContext];
         [fetchRequest setEntity:entity];
         
         // Set the batch size to a suitable number.
@@ -101,7 +101,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
         [fetchRequest setPredicate: filterPredicate];
         
         NSError *error;
-        NSArray * contacts = [AppDelegate.instance.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        NSArray * contacts = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
         if (error != nil) {
             NSLog(@"Error=%@",error);
         }
@@ -138,7 +138,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 -(NSData*)avatarForClientId:(NSString*)clientId mimeType:(NSString**)mimeType {
     __block NSData * imageData = nil;
     dispatch_sync(dispatch_get_main_queue(),^{
-        Contact * contact = [HXOBackend.instance getContactByClientId:clientId];
+        Contact * contact = [HXOBackend.instance getContactByClientId:clientId inContext:AppDelegate.instance.mainObjectContext];
         if (contact != nil) {
             if (contact.avatar != nil) {
                 imageData = [contact.avatar copy];
@@ -182,7 +182,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
     NSError *error;
     NSDictionary * vars = @{ @"messageId" : messageId};
     NSFetchRequest *fetchRequest = [AppDelegate.instance.managedObjectModel fetchRequestFromTemplateWithName:@"MessageByMessageId" substitutionVariables: vars];
-    NSArray *messages = [AppDelegate.instance.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    NSArray *messages = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
     if (messages == nil) {
         NSLog(@"Fetch request failed: %@", error);
         return nil;
@@ -229,7 +229,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
     __block NSString * partnerNick = nil;
     
     dispatch_sync(dispatch_get_main_queue(),^{
-        Contact * partner = [HXOBackend.instance getContactByClientId:clientId];
+        Contact * partner = [HXOBackend.instance getContactByClientId:clientId inContext:AppDelegate.instance.mainObjectContext];
         if (partner != nil) {
             partnerNick = [partner.nickName copy];
             NSDictionary * vars = @{ @"contact" : partner };
@@ -241,7 +241,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
             [fetchRequest setSortDescriptors:sortDescriptors];
             
             NSError *error;
-            NSArray * messages = [AppDelegate.instance.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+            NSArray * messages = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
             if (error != nil) {
                 NSLog(@"Error=%@",error);
             }

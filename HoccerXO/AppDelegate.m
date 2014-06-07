@@ -51,11 +51,12 @@
 #define CONNECTION_TRACE NO
 #define MIGRATION_DEBUG NO
 #define AUDIOSESSION_DEBUG NO
-#define TRACE_DATABASE_SAVE YES
+#define TRACE_DATABASE_SAVE NO
 #define TRACE_PROFILE_UPDATES NO
-#define TRACE_DELETES NO
+#define TRACE_DELETES YES
 #define TRACE_INSPECTION NO
 #define TRACE_PENDING_CHANGES NO
+#define TRACE_BACKGROUND_PROCESSING NO
 
 #ifdef HOCCER_DEV
 NSString * const kHXOURLScheme = @"hxod";
@@ -80,7 +81,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @implementation AppDelegate
 
-@synthesize managedObjectContext = _managedObjectContext;
+@synthesize mainObjectContext = _mainObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize inNearbyMode = _inNearbyMode;
@@ -508,7 +509,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         start = [[NSDate alloc] init];
     }
     NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSManagedObjectContext *managedObjectContext = self.currentObjectContext;
+    if (![managedObjectContext isEqual:self.mainObjectContext]) {
+        NSLog(@"ERROR: saveContext must be called on main context only");
+        return;
+    }
     if (managedObjectContext != nil) {
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
             // Replace this implementation with code to handle the error appropriately.
@@ -604,12 +609,21 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 -(BOOL)deleteObject:(id)object {
+    NSManagedObjectContext * moc = self.mainObjectContext;
+    if (![moc isEqual:self.currentObjectContext]) {
+        NSLog(@"#ERROR: deleteObject called from wrong context");
+        return NO;
+    }
+    return [self deleteObject:object inContext:moc];
+}
+
+-(BOOL)deleteObject:(id)object inContext:(NSManagedObjectContext *) context {
+
     if (TRACE_DELETES) NSLog(@"deleteObject called from %@", [NSThread callStackSymbols]);
-    NSManagedObjectContext * moc = self.managedObjectContext;
     if (object != nil) {
         if ([object isKindOfClass:[NSManagedObject class]]) {
             NSManagedObject * mo = object;
-            if (![mo.managedObjectContext isEqual:moc]) {
+            if (![mo.managedObjectContext isEqual:context]) {
                 NSLog(@"#ERROR: deleteObject: bad context for object %@", object);
                 return false;
             }
@@ -617,7 +631,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 NSLog(@"#WARNING: deleteObject: deletion call for deleted object entity ‘%@‘ id ‘%@‘", mo.entity.name, mo.objectID.URIRepresentation);
             }
             if (TRACE_DELETES) NSLog(@"deleteObject: deleting object of entity %@ id %@", mo.entity.name, mo.objectID.URIRepresentation);
-            [moc deleteObject:mo];
+            [context deleteObject:mo];
             if (TRACE_DELETES) NSLog(@"deleteObject: done");
             return true;
         } else {
@@ -672,7 +686,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if (now || lastPendingProcessed > 2.0) {
         if (TRACE_PENDING_CHANGES) NSLog(@"process pending changes started");
         NSDate * pendingChangesProcessingStart = [NSDate new];
-        [self.managedObjectContext processPendingChanges]; // will perform all UI changes
+        [self.mainObjectContext processPendingChanges]; // will perform all UI changes
         NSDate * pendingChangesProcessingStop = [NSDate new];
         if (TRACE_PENDING_CHANGES) NSLog(@"process pending changes took %1.3f secs.",[pendingChangesProcessingStop timeIntervalSinceDate:pendingChangesProcessingStart]);
         self.lastPendingChangesProcessed = [NSDate new];
@@ -692,20 +706,100 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 // Returns the managed object context for the application.
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext
+- (NSManagedObjectContext *)mainObjectContext
 {
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
+    if (_mainObjectContext != nil) {
+        return _mainObjectContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-        [_managedObjectContext setUndoManager: nil];
+        _mainObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        [_mainObjectContext setPersistentStoreCoordinator:coordinator];
+        [_mainObjectContext setUndoManager: nil];
+        [NSThread currentThread].threadDictionary[@"hxoMOContext"] = _mainObjectContext;
     }
-    return _managedObjectContext;
+    return _mainObjectContext;
 }
+
+- (NSManagedObjectContext *)currentObjectContext
+{
+    return [NSThread currentThread].threadDictionary[@"hxoMOContext"];
+}
+
+- (NSManagedObjectContext *)newBackgroundManagedObjectContext {
+    NSManagedObjectContext *temporaryContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    temporaryContext.parentContext = [self mainObjectContext];
+    return temporaryContext;
+}
+
+- (void)performInNewBackgroundContext:(ContextBlock)backgroundBlock {
+    NSManagedObjectContext *temporaryContext = [self newBackgroundManagedObjectContext];
+    NSManagedObjectContext * mainMOC = [self mainObjectContext];
+    [temporaryContext performBlock:^{
+        [NSThread currentThread].threadDictionary[@"hxoMOContext"] = temporaryContext;
+        if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Starting backgroundblock of ctx %@", temporaryContext);
+        backgroundBlock(temporaryContext);
+        if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished backgroundblock of ctx %@, pushing to parent", temporaryContext);
+        
+        // push to parent
+        [self saveContext:temporaryContext];
+
+        if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done", temporaryContext);
+        
+        // save parent to disk asynchronously
+        [mainMOC performBlock:^{
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@,", temporaryContext);
+            [self saveDatabaseNow];
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes done of ctx %@,", temporaryContext);
+        }];
+        [[NSThread currentThread].threadDictionary removeObjectForKey:@"hxoMOContext"];
+    }];
+}
+
+- (void)performInMainContext:(ContextBlock)contextBlock {
+    NSManagedObjectContext * mainMOC = [self mainObjectContext];
+    [mainMOC performBlock:^{
+        contextBlock(mainMOC);
+    }];
+}
+
+- (void)performInMainContextAndWait:(ContextBlock)contextBlock {
+    NSManagedObjectContext * mainMOC = [self mainObjectContext];
+    [mainMOC performBlockAndWait:^{
+        contextBlock(mainMOC);
+    }];
+}
+
+-(void)saveContext:(NSManagedObjectContext*)context {
+    NSDate * start;
+    if (TRACE_BACKGROUND_PROCESSING) {
+        NSLog(@"Saving context %@", context);
+        start = [[NSDate alloc] init];
+    }
+    NSError *error = nil;
+    if ([context hasChanges] && ![context save:&error]) {
+        // Replace this implementation with code to handle the error appropriately.
+        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        ++validationErrorCount;
+        if (validationErrorCount < 3) {
+            [self performInMainContext:^(NSManagedObjectContext *context) {
+                [self displayValidationError:error];
+            }];
+        } else {
+            [self performInMainContext:^(NSManagedObjectContext *context) {
+                [self showFatalErrorAlertWithMessage:nil withTitle:nil];
+            }];
+        }
+    }
+    if (start && TRACE_BACKGROUND_PROCESSING) {
+        double elapsed = -[start timeIntervalSinceNow];
+        NSLog(@"Saving context %@ took %f secs", context, elapsed);
+    }
+    
+}
+
 
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
@@ -1019,11 +1113,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (NSUInteger) unreadMessageCount {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    fetchRequest.entity = [NSEntityDescription entityForName: [HXOMessage entityName] inManagedObjectContext: self.managedObjectContext];
+    fetchRequest.entity = [NSEntityDescription entityForName: [HXOMessage entityName] inManagedObjectContext: self.currentObjectContext];
     fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isRead == NO"];
 
     NSError *error = nil;
-    NSUInteger numberOfRecords = [self.managedObjectContext countForFetchRequest:fetchRequest error:&error];
+    NSUInteger numberOfRecords = [self.currentObjectContext countForFetchRequest:fetchRequest error:&error];
 
     if (numberOfRecords == NSNotFound) {
         NSLog(@"ERROR: unreadMessageCount: failed to count unread messages: %@", error);
@@ -1363,11 +1457,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName {
-    NSEntityDescription *entity = [NSEntityDescription entityForName:theEntityName inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:theEntityName inManagedObjectContext:self.mainObjectContext];
     NSFetchRequest *request = [NSFetchRequest new];
     [request setEntity:entity];
     NSError *error;
-    NSMutableArray *fetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    NSMutableArray *fetchResults = [[self.mainObjectContext executeFetchRequest:request error:&error] mutableCopy];
     int i = 0;
     for (NSManagedObject * object in fetchResults) {
         NSLog(@"================== Showing object %d of entity '%@' =================", i, theEntityName);

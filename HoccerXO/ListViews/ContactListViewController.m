@@ -40,7 +40,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @property (nonatomic, strong)   NSFetchedResultsController  * searchFetchedResultsController;
 @property (nonatomic, readonly) NSFetchedResultsController  * fetchedResultsController;
-@property (nonatomic, strong)   NSManagedObjectContext      * managedObjectContext;
+//@property (nonatomic, strong)   NSManagedObjectContext      * managedObjectContext;
 
 @property                       id                            keyboardHidingObserver;
 @property (strong, nonatomic)   id                            connectionInfoObserver;
@@ -258,18 +258,19 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 #pragma mark - Fetched results controller
-
+/*
 - (NSManagedObjectContext *)managedObjectContext {
     if ( ! _managedObjectContext) {
         _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     }
     return _managedObjectContext;
 }
+*/
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactListController:newFetchedResultsControllerWithSearch %@", searchString);
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName: [self entityName] inManagedObjectContext: self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: [self entityName] inManagedObjectContext: AppDelegate.instance.mainObjectContext];
     [fetchRequest setEntity:entity];
     [fetchRequest setSortDescriptors: self.sortDescriptors];
 
@@ -284,7 +285,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [fetchRequest setFetchBatchSize:20];
 
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
-                                                                                                managedObjectContext: self.managedObjectContext
+                                                                                                managedObjectContext: AppDelegate.instance.mainObjectContext
                                                                                                   sectionNameKeyPath: nil
                                                                                                            cacheName: nil];
     aFetchedResultsController.delegate = self;

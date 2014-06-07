@@ -2157,7 +2157,7 @@ NSArray * TransferStateName = @[@"detached",
         NSError *error;
         NSDictionary * vars = @{ @"ownedURL" : self.ownedURL};
         NSFetchRequest *fetchRequest = [delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByOwnedURL" substitutionVariables: vars];
-        NSArray *messages = [delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        NSArray *messages = [delegate.currentObjectContext executeFetchRequest:fetchRequest error:&error];
         if (messages == nil) {
             NSLog(@"Fetch request failed: %@", error);
             abort();

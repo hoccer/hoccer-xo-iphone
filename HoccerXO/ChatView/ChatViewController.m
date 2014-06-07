@@ -93,7 +93,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @implementation ChatViewController
 
-@synthesize managedObjectContext = _managedObjectContext;
+//@synthesize managedObjectContext = _managedObjectContext;
 @synthesize chatBackend = _chatBackend;
 @synthesize attachmentPicker = _attachmentPicker;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
@@ -618,7 +618,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     //NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
-                                                                        inManagedObjectContext: self.managedObjectContext];
+                                                                        inManagedObjectContext: AppDelegate.instance.mainObjectContext];
 
     // handle geolocation
     if ([attachmentInfo isKindOfClass: [NSDictionary class]] &&
@@ -1151,17 +1151,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 #pragma mark - Core Data Stack
 
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (_managedObjectContext == nil) {
-        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
-    }
-    return _managedObjectContext;
-}
 
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (_managedObjectContext == nil) {
+    if (_managedObjectModel == nil) {
         _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
     }
     return _managedObjectModel;
@@ -1208,7 +1201,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
         [fetchRequest setSortDescriptors:sortDescriptors];
 
-        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:AppDelegate.instance.mainObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
         _fetchedResultsController.delegate = self;
 
         resultsControllers[partner.objectID] = _fetchedResultsController;
@@ -1436,7 +1429,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         if ([message.isRead isEqualToNumber: @NO]) {
             // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
             message.isRead = @YES;
-            [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
+            [AppDelegate.instance.mainObjectContext refreshObject: message.contact mergeChanges:YES];
         }
     }
 
@@ -1983,7 +1976,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     // deletion of deliveries and attachment handled by cascade deletion policies in database model
     
-    //[self.managedObjectContext deleteObject: message];
     [AppDelegate.instance deleteObject:message];
     [self.chatBackend.delegate saveDatabase];
     

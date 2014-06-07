@@ -40,11 +40,13 @@ UIDocumentInteractionControllerDelegate
 @property (nonatomic, strong) Contact                         * partner;
 @property (nonatomic, strong) Contact                         * inspectedObject;
 @property (nonatomic, strong) HXOBackend                      * chatBackend;
-
 @property (nonatomic, strong) NSFetchedResultsController      * fetchedResultsController;
-@property (nonatomic, strong) NSManagedObjectContext          * managedObjectContext;
-@property (nonatomic, strong) NSManagedObjectModel            * managedObjectModel;
 
+/*
+@property (nonatomic, strong) NSManagedObjectContext          * managedObjectContext;
+ */
+
+@property (nonatomic, strong) NSManagedObjectModel            * managedObjectModel;
 @property (nonatomic, strong) Attachment                      * currentAttachment;
 @property (nonatomic, strong) AVAssetExportSession            * currentExportSession;
 @property (nonatomic, strong) id                                currentPickInfo;

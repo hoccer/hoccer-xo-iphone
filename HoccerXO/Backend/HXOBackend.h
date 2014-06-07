@@ -48,7 +48,7 @@ typedef void (^DateHandler)(NSDate* date);
 @protocol HXODelegate <NSObject>
 
 - (NSString*) apnDeviceToken;
-@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 - (void) didPairWithStatus: (BOOL) status; // pregnant...
@@ -79,7 +79,6 @@ typedef void (^DateHandler)(NSDate* date);
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
 - (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
-- (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 - (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
 - (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
@@ -99,7 +98,8 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
-- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
+//- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
+- (void) syncGroupsWithForce:(BOOL)forceAll withCompletionContext:(NSManagedObjectContext*)completionContext withCompletion:(GenericResultHandler)completion;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
@@ -151,8 +151,9 @@ typedef void (^DateHandler)(NSDate* date);
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler;
 
-- (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
-- (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force;
+- (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group inContext:(NSManagedObjectContext*) context;
+- (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context;
+- (void) handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact disinvited:(BOOL)disinvited inContext:(NSManagedObjectContext*) context;
 
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment;
@@ -170,7 +171,7 @@ typedef void (^DateHandler)(NSDate* date);
 
 - (NSDate*) estimatedServerTime;
 
--(Contact *) getContactByClientId:(NSString *) theClientId;
+-(Contact *) getContactByClientId:(NSString *) theClientId inContext:(NSManagedObjectContext *)context;
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;

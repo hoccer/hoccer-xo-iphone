@@ -65,7 +65,7 @@ static int  groupMemberContext;
 @property (nonatomic, readonly) AppDelegate                * appDelegate;
 
 @property (nonatomic, strong)   NSFetchedResultsController * fetchedResultsController;
-@property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
+//@property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
 
 @property (nonatomic, strong)   id                           profileObserver;
 
@@ -547,7 +547,7 @@ static int  groupMemberContext;
 - (void) deleteGroupData {
     Group * group = self.group;
     [self quitInspection];
-    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: group];
+    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: group inContext:AppDelegate.instance.mainObjectContext];
     NSLog(@"ContactSheetController: cleanupGroup: deleteObject: group");
     [AppDelegate.instance deleteObject:group];
     [self.appDelegate saveDatabase];
@@ -561,7 +561,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
         } else {
             NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", group);
-            [self.chatBackend syncGroupsWithForce: NO withCompletion:nil];
+            [self.chatBackend syncGroupsWithForce:NO withCompletionContext:AppDelegate.instance.mainObjectContext withCompletion:nil];
         }
     }];
 }
@@ -574,7 +574,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
         } else {
             NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", group);
-            [self.chatBackend syncGroupsWithForce:NO withCompletion:nil];
+            [self.chatBackend syncGroupsWithForce:NO withCompletionContext:AppDelegate.instance.mainObjectContext withCompletion:nil];
         }
     }];
 }
@@ -584,7 +584,8 @@ static int  groupMemberContext;
     Contact * contact = self.contact;
     [self quitInspection];
     if (contact.isGroupFriend || contact.isKept) {
-        [self.chatBackend handleDeletionOfContact: contact withForce:YES];
+        //[self.chatBackend handleDeletionOfContact: contact withForce:YES];
+        [self.chatBackend handleDeletionOfContact: contact withForce:YES inContext:AppDelegate.instance.mainObjectContext];
     } else {
         [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
@@ -875,7 +876,7 @@ static int  groupMemberContext;
 
 - (NSFetchedResultsController*) createFetchedResutsControllerWithRequest: (NSFetchRequest*) fetchRequest {
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
-                                                                                                managedObjectContext: self.managedObjectContext
+                                                                                                managedObjectContext: AppDelegate.instance.mainObjectContext
                                                                                                   sectionNameKeyPath: nil
                                                                                                            cacheName: nil];
     if (aFetchedResultsController) {
@@ -895,7 +896,7 @@ static int  groupMemberContext;
         return nil;
     }
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName: [GroupMembership entityName] inManagedObjectContext: self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: [GroupMembership entityName] inManagedObjectContext: AppDelegate.instance.mainObjectContext];
     [fetchRequest setEntity:entity];
     [fetchRequest setSortDescriptors: @[[[NSSortDescriptor alloc] initWithKey:@"contact.nickName" ascending: YES]]];
 
@@ -1058,7 +1059,7 @@ static int  groupMemberContext;
     }
     return _appDelegate;
 }
-
+/*
 @synthesize managedObjectContext = _managedObjectContext;
 - (NSManagedObjectContext*) managedObjectContext {
     if ( ! _managedObjectContext) {
@@ -1066,5 +1067,5 @@ static int  groupMemberContext;
     }
     return _managedObjectContext;
 }
-
+*/
 @end

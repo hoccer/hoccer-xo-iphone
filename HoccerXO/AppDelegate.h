@@ -18,6 +18,7 @@
 FOUNDATION_EXPORT NSString * const kHXOURLScheme;
 
 typedef void (^ContinueBlock)();
+typedef void (^ContextBlock)(NSManagedObjectContext* context);
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
@@ -29,7 +30,8 @@ typedef void (^ContinueBlock)();
 }
 @property (strong, nonatomic) UIWindow *window;
 
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *mainObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *currentObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
@@ -77,7 +79,14 @@ typedef void (^ContinueBlock)();
 
 - (void)saveContext;
 - (void)saveDatabase;
+-(void)saveContext:(NSManagedObjectContext*)context;
 - (BOOL)deleteObject:(id)object;
+- (BOOL)deleteObject:(id)object inContext:(NSManagedObjectContext *) context;
+
+- (void)performInNewBackgroundContext:(ContextBlock)backgroundBlock;
+- (void)performInMainContext:(ContextBlock)contextBlock;
+- (void)performInMainContextAndWait:(ContextBlock)contextBlock;
+
 
 - (NSURL *)applicationDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;
