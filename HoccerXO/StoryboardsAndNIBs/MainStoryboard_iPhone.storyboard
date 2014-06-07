@@ -186,21 +186,6 @@
             </objects>
             <point key="canvasLocation" x="2554" y="-1141"/>
         </scene>
-        <!--Modal View with Navigation Bar Helper-->
-        <scene sceneID="FUT-t7-A6G">
-            <objects>
-                <navigationController storyboardIdentifier="modalProfileNavigationController" definesPresentationContext="YES" id="thk-mF-NB4" userLabel="Modal View with Navigation Bar Helper" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" tag="2342" contentMode="scaleToFill" id="ytv-nR-rCv">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="QfS-59-vwU" kind="relationship" relationship="rootViewController" id="pYy-NT-HJ9"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IrS-Lk-E4i" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2577" y="-5"/>
-        </scene>
         <!--Contact List View Controller - Contacts-->
         <scene sceneID="y7h-Kn-V4S">
             <objects>
@@ -674,7 +659,7 @@
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
             <objects>
-                <viewController storyboardIdentifier="webViewController" id="Eb7-MP-Pri" customClass="WebViewController" sceneMemberID="viewController">
+                <viewController id="Eb7-MP-Pri" customClass="WebViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="1xv-5z-sx9"/>
                         <viewControllerLayoutGuide type="bottom" id="3I5-tR-bG6"/>
@@ -697,13 +682,29 @@
                             <constraint firstAttribute="trailing" secondItem="r4k-je-7ov" secondAttribute="trailing" id="pmS-gA-SvN"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="VtQ-fS-n91"/>
                     <connections>
                         <outlet property="webView" destination="r4k-je-7ov" id="AuO-GO-Rsy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2je-aZ-0XN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2114" y="723"/>
+            <point key="canvasLocation" x="3044" y="-15"/>
+        </scene>
+        <!--Themed Navigation Controller-->
+        <scene sceneID="MpI-0Y-HX1">
+            <objects>
+                <navigationController storyboardIdentifier="webViewController" definesPresentationContext="YES" id="Xae-pO-reE" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="vS0-oV-bEa">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Eb7-MP-Pri" kind="relationship" relationship="rootViewController" id="0N4-LZ-hfi"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cQh-Jw-RvM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2592" y="-1"/>
         </scene>
         <!--Record View Controller-->
         <scene sceneID="cfc-HL-dXX">
@@ -1050,25 +1051,6 @@
             </objects>
             <point key="canvasLocation" x="59" y="485"/>
         </scene>
-        <!--Profile View Controller-->
-        <scene sceneID="nka-HN-GTp">
-            <objects>
-                <tableViewController storyboardIdentifier="modalProfileViewController" id="QfS-59-vwU" customClass="ProfileViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Ruz-K3-wiN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <connections>
-                            <outlet property="dataSource" destination="QfS-59-vwU" id="IPX-eI-4B9"/>
-                            <outlet property="delegate" destination="QfS-59-vwU" id="jUm-lo-2ns"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="SQE-7j-zHD"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="avv-g1-Fzi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3044" y="-5"/>
-        </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -1081,8 +1063,8 @@
         <segue reference="4Tx-uH-B8w"/>
         <segue reference="UJI-wH-YH7"/>
         <segue reference="6i4-qU-VgJ"/>
-        <segue reference="I8w-H7-Q9a"/>
         <segue reference="3XQ-ea-QwO"/>
+        <segue reference="KXG-tu-Cv6"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>

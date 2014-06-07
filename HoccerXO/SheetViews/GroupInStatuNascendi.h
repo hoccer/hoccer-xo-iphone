@@ -13,6 +13,7 @@
 
 // properties we want filled in
 @property (nonatomic, strong)   NSString       * nickName;
+@property (nonatomic, strong)   NSString       * alias;
 @property (nonatomic, strong)   UIImage        * avatarImage;
 @property (nonatomic, readonly) NSMutableArray * members;
 

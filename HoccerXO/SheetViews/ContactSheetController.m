@@ -39,6 +39,7 @@ static int  groupMemberContext;
 @interface ContactSheetController ()
 
 @property (nonatomic, readonly) DatasheetItem              * chatItem;
+@property (nonatomic, readonly) DatasheetItem              * aliasItem;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
 
 @property (nonatomic, readonly) DatasheetSection           * inviteContactSection;
@@ -79,6 +80,7 @@ static int  groupMemberContext;
 @synthesize inviteContactItem = _inviteContactItem;
 @synthesize chatBackend = _chatBackend;
 @synthesize groupMemberSection = _groupMemberSection;
+@synthesize aliasItem = _aliasItem;
 
 - (void) commonInit {
     [super commonInit];
@@ -160,7 +162,7 @@ static int  groupMemberContext;
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[self.nicknameItem, self.chatItem, self.keyItem];
+    section.items = @[self.nicknameItem, self.aliasItem, self.chatItem, self.keyItem];
     return section;
 }
 
@@ -172,6 +174,16 @@ static int  groupMemberContext;
         _chatItem.accessoryStyle = DatasheetAccessoryDisclosure;
     }
     return _chatItem;
+}
+
+- (DatasheetItem*) aliasItem {
+    if (! _aliasItem) {
+        _aliasItem = [self itemWithIdentifier: @"contact_alias_title" cellIdentifier: @"DatasheetTextInputCell"];
+        _aliasItem.valuePath = @"alias";
+        _aliasItem.visibilityMask = DatasheetModeEdit;
+        _aliasItem.valuePlaceholder = NSLocalizedString(@"contact_alias_placeholder", nil);
+    }
+    return _aliasItem;
 }
 
 - (DatasheetItem*) blockContactItem {
@@ -219,6 +231,9 @@ static int  groupMemberContext;
     if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
         
+    } else if ([item isEqual: self.aliasItem]) {
+        return (self.contact.alias && ! [self.contact.alias isEqualToString: @""]) || [super isItemVisible:item];
+
     } else if ([item isEqual: self.blockContactItem]) {
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
         
@@ -293,6 +308,7 @@ static int  groupMemberContext;
         [self.chatBackend createGroupWithHandler:^(Group * newGroup) {
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
+                newGroup.alias = self.groupInStatuNascendi.alias;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
                 [self.chatBackend updateGroup:newGroup];
                 for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
@@ -326,7 +342,7 @@ static int  groupMemberContext;
     if ([item isEqual: self.nicknameItem]) {
         return  NSLocalizedString( self.group || self.groupInStatuNascendi ? @"group_name_placeholder" : @"profile_name_placeholder", nil);
     }
-    return [super valuePlaceholderForItem: item];
+    return nil;
 }
 
 - (NSString*) segueIdentifierForItem:(DatasheetItem *)item {

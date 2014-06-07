@@ -16,6 +16,8 @@
 @interface WebViewController ()
 
 @property (strong, nonatomic) id connectionInfoObserver;
+@property (nonatomic, strong) UIBarButtonItem * backButton;
+@property (nonatomic, strong) UIBarButtonItem * forwardButton;
 
 @end
 
@@ -32,8 +34,12 @@
     
     _requestsRunning = 0;
 
-    //self.navigationItem.leftBarButtonItem = [self hxoMenuButton];
-    //self.navigationItem.rightBarButtonItem = [self hxoContactsButton];
+    self.backButton = [[UIBarButtonItem alloc] initWithTitle: @"<" style: UIBarButtonItemStylePlain target: self action: @selector(back:)];
+    self.forwardButton = [[UIBarButtonItem alloc] initWithTitle: @">" style: UIBarButtonItemStylePlain target: self action: @selector(forward:)];
+    self.navigationItem.leftBarButtonItems = @[self.backButton, self.forwardButton];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action: @selector(done:)];
+    self.forwardButton.enabled = self.webView.canGoForward;
+    self.backButton.enabled = self.webView.canGoBack;
     
     self.webView.suppressesIncrementalRendering = YES;
     self.webView.delegate = self;
@@ -85,24 +91,26 @@
     self.loadingOverlay.hidden = true;
     [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
     NSLog(@"webview finshed loading, RNCachingURLProtocol ungregistered");
+    self.forwardButton.enabled = self.webView.canGoForward;
+    self.backButton.enabled = self.webView.canGoBack;
+    self.navigationItem.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
 
 #pragma mark - Optional UIWebViewDelegate delegate methods
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSLog(@"webview shouldStartLoadWithRequest %@, _requestsRunning = %d", request.URL, _requestsRunning);
     return YES;
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
+- (void)webViewDidStartLoad:(UIWebView *)webView {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     ++_requestsRunning;
+    self.navigationItem.title = NSLocalizedString(@"loading", nil);
     // NSLog(@"webview webViewDidStartLoad _requestsRunning = %d", _requestsRunning);
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     if (_requestsRunning && --_requestsRunning == 0) {
         [self loadingFinished];
@@ -111,14 +119,26 @@
     
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
     if (_requestsRunning && --_requestsRunning == 0) {
         [self loadingFinished];
     }
     // NSLog(@"webview failed to load, _requestsRunning=%d", _requestsRunning);
+}
+
+- (void) done: (id) sender {
+    [self dismissViewControllerAnimated: YES completion: nil];
+}
+
+- (void) forward: (id) sender {
+    [self.webView goForward];
+
+}
+
+- (void) back: (id) sender {
+    [self.webView goBack];
 }
 
 @end

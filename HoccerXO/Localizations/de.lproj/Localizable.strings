@@ -1,15 +1,16 @@
 "language_code" = "de";
 
-"ok"     = "Ok";
-"cancel" = "Abbrechen";
-"done"   = "Fertig";
-"save"   = "Speichern";
-"delete" = "Löschen";
-"enter"  = "Eingeben";
-"no"     = "Nein";
-"go"     = "Los";
-"continue"= "Weitermachen";
-"abort"   ="Beenden";
+"ok"       = "Ok";
+"cancel"   = "Abbrechen";
+"done"     = "Fertig";
+"save"     = "Speichern";
+"delete"   = "Löschen";
+"enter"    = "Eingeben";
+"no"       = "Nein";
+"go"       = "Los";
+"continue" = "Weitermachen";
+"abort"    = "Beenden";
+"loading"  = "Lade…";
 
 "search_placeholder" = "suchen";
 
@@ -139,6 +140,9 @@
 "contact_list_nav_title"                        = "Kontakte";
 "contact_nav_title"                             = "Kontakt";
 
+"contact_alias_title"                           = "Alias:";
+"contact_alias_placeholder"                     = "Alternativer Name";
+
 "contact_chat_title"                            = "Chat:";
 "contact_key_btn_title"                         = "Schlüssel:";
 
@@ -184,8 +188,8 @@
 "contact_relationship_invited"                  = "Eingeladen als Friend";
 "contact_relationship_invitedMe"                = "Hat dich als Freund eingeladen";
 
-"contact_list_placeholder"                      = "Lade Freunde zum chatten ein.";
-"contact_list_placeholder_nearby"               = "Warte auf Kontake in der Nähe…";
+"contact_list_placeholder"                      = "[Lade Freunde ein](http://hoccer.com/xo/help/invitations) sicher mit dir zu chatten.";
+"contact_list_placeholder_nearby"               = "Warte auf Kontake [in der Nähe](http://hoccer.com/xo/help/nearby)…";
 
 //==============================================================================
 // Credentials
@@ -316,6 +320,8 @@
 "group_member_count_one_joined"         = "%@ein Mitglied";
 "group_member_count_none_joined"        = "%@du bist allein";
 "group_member_invited_count"            = "%@%d eingeladen";
+
+"group_list_placeholder"                = "Lege [Gruppen](http://hoccer.com/xo/help/groups) an um mit vielen Freunden gleichzeitig zu chatten.";
 
 //==============================================================================
 // Invitations

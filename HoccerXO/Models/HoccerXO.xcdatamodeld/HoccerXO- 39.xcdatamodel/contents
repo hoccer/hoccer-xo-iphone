@@ -26,6 +26,7 @@
         <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="attachment" inverseEntity="HXOMessage" syncable="YES"/>
     </entity>
     <entity name="Contact" representedClassName="Contact">
+        <attribute name="alias" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="avatarUploadURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avatarURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -152,7 +153,7 @@
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="390"/>
-        <element name="Contact" positionX="0" positionY="0" width="128" height="419"/>
+        <element name="Contact" positionX="0" positionY="0" width="128" height="434"/>
         <element name="Delivery" positionX="0" positionY="0" width="128" height="165"/>
         <element name="Group" positionX="0" positionY="0" width="128" height="210"/>
         <element name="GroupMembership" positionX="0" positionY="0" width="128" height="255"/>

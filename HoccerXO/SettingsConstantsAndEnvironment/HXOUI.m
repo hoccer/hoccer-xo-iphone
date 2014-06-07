@@ -34,11 +34,11 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) navigationBarBackgroundColor {
-    return [UIColor colorWithHexString: @"#4DBFAC"];
+    return [UIColor colorWithHexString: @"#f7f7f7"];
 }
 
 - (UIColor*) navigationBarTintColor {
-    return [UIColor whiteColor];
+    return [UIColor colorWithHexString: @"#4DBFAC"];
 }
 
 - (UIColor*) tableSeparatorColor {
@@ -254,9 +254,9 @@ static HXOUI * _currentTheme;
     
     id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
-    [navigationBarAppearance setBarStyle:     UIBarStyleBlackTranslucent];
+    [navigationBarAppearance setBarStyle:     UIBarStyleDefault];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
-    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: self.navigationBarTintColor}];
 
     [[LabelWithLED appearance] setLedColor: self.ledColor];
 }

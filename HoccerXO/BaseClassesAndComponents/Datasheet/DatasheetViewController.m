@@ -24,8 +24,8 @@ static CGFloat kHeaderHeight;
 
 @interface DatasheetViewController ()
 
-@property (nonatomic,readonly) UIImageView * backgroundImageView;
-@property (nonatomic,readonly) WebViewController * webViewController;
+@property (nonatomic,readonly) UIImageView            * backgroundImageView;
+@property (nonatomic,readonly) UINavigationController * webViewController;
 
 @end
 
@@ -322,7 +322,7 @@ static CGFloat kHeaderHeight;
             label.textAlignment = alignment;
             label.font = font;
             label.textColor = [HXOUI theme].smallBoldTextColor;
-            label.linkColor = [HXOUI theme].footerTextLinkColor;
+            //label.linkColor = [HXOUI theme].footerTextLinkColor;
         }
     }
 }
@@ -343,11 +343,11 @@ static CGFloat kHeaderHeight;
 
 
 - (void) hyperLabel: (HXOHyperLabel*) label didPressLink: (id) link long: (BOOL) longPress {
-    self.webViewController.homeUrl = link;
-    [self.navigationController pushViewController: self.webViewController animated: YES];
+    ((WebViewController*)self.webViewController.viewControllers[0]).homeUrl = link;
+    [self.navigationController presentViewController: self.webViewController animated: YES completion: nil];
 }
 
-- (WebViewController*) webViewController {
+- (UINavigationController*) webViewController {
     if ( ! _webViewController) {
         _webViewController = [self.storyboard instantiateViewControllerWithIdentifier: @"webViewController"];
     }
@@ -379,11 +379,13 @@ static CGFloat kHeaderHeight;
     [self.dataSheetController editModeChanged: sender];
     [self setEditing: self.dataSheetController.isEditing animated: YES];
     [self updateNavigationButtons];
+    [self.view endEditing: YES];
 }
 
 - (void) leftButtonPressed: (id) sender {
     [self.dataSheetController cancelEditing: nil];
     [self updateNavigationButtons];
+    [self.view endEditing: YES];
 }
 
 #pragma mark - Datasheet Controller Delegate
