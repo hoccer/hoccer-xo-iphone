@@ -41,7 +41,7 @@ typedef void (^GroupMemberChanged)(GroupMembership* member);
 typedef void (^GroupHandler)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
-typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
+typedef void (^DataURLStatusHandler)(NSString * url, long long transferedSize, BOOL ok);
 typedef void (^UpdateEnvironmentHandler)(NSString*);
 typedef void (^DateHandler)(NSDate* date);
 

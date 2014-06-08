@@ -212,11 +212,11 @@ static NSTimer * _stateNotificationDelayTimer;
     @synchronized(_idLocks) {
         id member = [_idLocks member:name];
         if (member != nil) {
-            NSLog(@"handing out lock %@",name);
+            if (LOCKING_TRACE) NSLog(@"handing out lock %@",name);
             return member;
         }
         [_idLocks addObject:name];
-        NSLog(@"handing out new lock %@",name);
+        if (LOCKING_TRACE) NSLog(@"handing out new lock %@",name);
         return [_idLocks member:name];
     }
 }
@@ -752,7 +752,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     NSLog(@"ERROR: Message hmac is %@, should be %@",[message.destinationMAC asBase64EncodedString], message.sourceMACString);
                     // TODO: throw away message or mark as bad
                 } else {
-                    NSLog(@"INFO: Message hmac is ok");
+                    NSLog(@"INFO: Message hmac is ok for id %@", message.messageId);
                 }
             }
             if (message.signature != nil && message.signature.length > 0) {
@@ -3106,7 +3106,9 @@ static NSTimer * _stateNotificationDelayTimer;
             NSLog(@"getEncryptedGroupKeys() bad number of argument in params: %@, expected 5, got %d", params, params.count);
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                 responder(failed);
-            }];        }
+            }];
+            return;
+        }
         
         NSString * groupId = params[0];
         NSString * sharedKeyId = params[1];
@@ -3121,6 +3123,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                 responder(failed);
             }];
+            return;
         }
         Group * group = [self getGroupById: groupId inContext:context];
         if (group == nil) {
@@ -3128,12 +3131,14 @@ static NSTimer * _stateNotificationDelayTimer;
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                 responder(failed);
             }];
+            return;
         }
         if (![group.groupState isEqualToString:@"exists"]) {
             NSLog(@"getEncryptedGroupKeys() group not in state exist, id: %@", groupId);
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                 responder(failed);
             }];
+            return;
         }
         NSString * newSharedKeyId = nil;
         NSString * newSharedKeyIdSalt = nil;
@@ -3149,6 +3154,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                     responder(failed);
                 }];
+                return;
             }
         }
         
@@ -3165,18 +3171,21 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                     responder(failed);
                 }];
+                return;
             }
             if (!contact.hasPublicKey) {
                 NSLog(@"getEncryptedGroupKeys() I have no public key for contact id: %@", clientIds[i]);
                 [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                     responder(failed);
                 }];
+                return;
             }
             if (![contact.publicKeyId isEqualToString:publicKeyIds[i]]) {
                 NSLog(@"getEncryptedGroupKeys() I have not the requested public key %@ for contact id: %@", publicKeyIds[i], clientIds[i]);
                 [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                     responder(failed);
                 }];
+                return;
             }
             [contacts addObject:contact];
         }
@@ -3192,6 +3201,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                     responder(failed);
                 }];
+                return;
             }
             [result addObject:[keyBox asBase64EncodedString]];
         }
@@ -3207,6 +3217,8 @@ static NSTimer * _stateNotificationDelayTimer;
 
 #pragma mark - Attachment upload and download
 
+
+
 - (void) flushPendingFiletransfers {
     [self uploadAvatarIfNeededWithCompletion:^(BOOL didIt) {
         if (didIt) {
@@ -3216,7 +3228,40 @@ static NSTimer * _stateNotificationDelayTimer;
     [self flushPendingAttachmentUploads];
     [self flushPendingAttachmentDownloads];
     [self checkTransferQueues];
+#ifdef DEBUG_CHECK_FINISHED_UPLOADS
+    [self checkReadyAttachmentUploads];
+#endif
 }
+
+
+- (void) checkReadyAttachmentUploads {
+    NSArray * readyAttachments = [self allReadyAttachmentUploads];
+    for (Attachment * attachment in readyAttachments) {
+        [self uploadFinished:attachment];
+    }
+}
+
+-(NSArray*) allReadyAttachmentUploads {
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AllOutgoingAttachments" substitutionVariables: @{}];
+    
+    NSError *error;
+    NSArray *attachments = [self.delegate.mainObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (attachments == nil)
+    {
+        NSLog(@"Fetch request for 'checkGroupMemberships' failed: %@", error);
+        abort();
+    }
+    NSMutableArray * readyAttachments = [[NSMutableArray alloc]init];
+    for (Attachment * attachment in attachments) {
+        AttachmentState attachmentState = attachment.state;
+        if (attachmentState == kAttachmentTransfered)
+        {
+            [readyAttachments enqueue:attachment];
+        }
+    }
+    return readyAttachments;
+}
+
 
 - (NSArray *) pendingAttachmentUploads {
     // NSLog(@"flushPendingAttachmentUploads");
@@ -3271,7 +3316,6 @@ static NSTimer * _stateNotificationDelayTimer;
             attachmentState == kAttachmentDownloadIncomplete)
         {
             [pendingAttachments enqueue:attachment];
-            [self enqueueDownloadOfAttachment:attachment];
         }
     }
     return pendingAttachments;
@@ -3281,6 +3325,9 @@ static NSTimer * _stateNotificationDelayTimer;
     NSArray * pendingAttachments = [self pendingAttachmentDownloads];
     for (Attachment * attachment in pendingAttachments) {
         [self enqueueDownloadOfAttachment:attachment];
+#ifdef DEBUG_TEST_DOWNLOAD
+        [self testAttachmentDownload:attachment];
+#endif
     }
 }
 
@@ -3455,6 +3502,41 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
     [self dequeueUploadOfAttachment:theAttachment];
+#ifdef DEBUG_CHECK_FINISHED_UPLOADS
+    [self checkUploadStatus:theAttachment.uploadURL hasSize:[theAttachment.cipherTransferSize longLongValue]  withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
+        if (!ok) {
+            NSLog(@"Upload check failed for Attachment url %@, uploaded = %lld, rescheduling",url,transferedSize);
+#ifdef REUPLOAD_WHEN_CHECK_FAILS
+            if (transferedSize > 32) {
+                theAttachment.transferSize = [NSNumber numberWithLongLong:transferedSize - 31];
+            } else {
+                theAttachment.transferSize = [NSNumber numberWithLongLong:1];
+            }
+            [self uploadFailed:theAttachment];
+#endif
+        } else {
+            NSLog(@"Upload check ok for Attachment url %@, uploaded = %lld",url,transferedSize);
+        }
+    }];
+#endif
+#ifdef DEBUG_TEST_DOWNLOAD
+    [self testAttachmentDownload:theAttachment];
+#endif
+}
+
+- (void)testAttachmentDownload:(Attachment*)theAttachment {
+    NSLog(@"testAttachmentDownload url %@",theAttachment.remoteURL);
+    [HXOBackend downloadDataFromURL:theAttachment.remoteURL inQueue:_avatarDownloadQueue withCompletion:^(NSData * data, NSError * error) {
+        if (data != nil && error == nil) {
+            if ([data length] == [theAttachment.cipherTransferSize longValue]) {
+                NSLog(@"Download check ok for Attachment url %@",theAttachment.remoteURL);
+            } else {
+                NSLog(@"Download check size mismtach for Attachment url %@, should be %@, was %uld", theAttachment.remoteURL,theAttachment.cipherTransferSize,data.length);
+            }
+        } else {
+            NSLog(@"Download check failed for Attachment url %@, error=%@, reason=%@",theAttachment.remoteURL,error.localizedDescription,error.localizedFailureReason);
+        }
+    }];
 }
 
 - (void) downloadFailed:(Attachment *)theAttachment {
@@ -3465,7 +3547,6 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate saveDatabase];
     [self dequeueDownloadOfAttachment:theAttachment];
     [self enqueueDownloadOfAttachment:theAttachment];
-    //[self scheduleNewDownloadFor:theAttachment];
 }
 
 - (void) uploadFailed:(Attachment *)theAttachment {
@@ -3476,7 +3557,6 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate saveDatabase];
     [self dequeueUploadOfAttachment:theAttachment];
     [self enqueueUploadOfAttachment:theAttachment];
-    // [self scheduleNewUploadFor:theAttachment];
 }
 
 - (double) transferRetryIntervalFor:(Attachment *)theAttachment {
@@ -4514,7 +4594,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"groupId" : theGroupId,
                              @"receiverId" : receiverId};
-    NSLog(@"getDeliveryByMessageTagAndGroupIdAndReceiverId vars = %@", vars);
+    if (DELIVERY_TRACE) NSLog(@"getDeliveryByMessageTagAndGroupIdAndReceiverId vars = %@", vars);
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndGroupIdAndReceiverId" substitutionVariables: vars];
     NSError *error;
     NSArray *deliveries = [context executeFetchRequest:fetchRequest error:&error];
@@ -4560,7 +4640,6 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         Delivery * myDelivery = nil;
         if (myGroupId) {
             if (myReceiverId != nil && myReceiverId.length > 0) {
-                NSLog(@"myDelivery=%@",myDelivery);
                 myDelivery = [self getDeliveryByMessageTagAndGroupIdAndReceiverId:myMessageTag withGroupId: myGroupId withReceiverId:myReceiverId inContext:context];
             } else {
                 myDelivery = [self getDeliveryByMessageTagAndGroupId:myMessageTag withGroupId: myGroupId inContext:context];
@@ -4761,7 +4840,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                 NSString * myCurrentAvatarUploadURL = group.avatarUploadURL;
                 if (myCurrentAvatarURL != nil && myCurrentAvatarURL.length > 0) {
                     if (myCurrentAvatarUploadURL != nil && myCurrentAvatarUploadURL.length > 0) {
-                        [self checkUploadStatus:myCurrentAvatarUploadURL hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
+                        [self checkUploadStatus:myCurrentAvatarUploadURL hasSize:myAvatarData.length withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
                             if (!ok) {
                                 group.avatarURL = @"";
                                 [self uploadAvatarIfNeededForGroup:group withCompletion:^(NSError *theError) {
@@ -4860,7 +4939,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                           }
                           if (response.statusCode == 301 || response.statusCode == 308 || response.statusCode == 200) {
                               if (CONNECTION_TRACE) {NSLog(@"uploadAvatar: seems ok, lets check");}
-                              [self checkUploadStatus:toURL hasSize:avatar.length withCompletion:^(NSString *url, BOOL ok) {
+                              [self checkUploadStatus:toURL hasSize:avatar.length withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
                                   if (ok) {
                                       handler(nil);
                                   } else {
@@ -4959,7 +5038,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         NSString * myCurrentAvatarUploadURL = [UserProfile sharedProfile].avatarUploadURL;
         if (myCurrentAvatarURL != nil && myCurrentAvatarURL.length > 0) {
             if (myCurrentAvatarUploadURL != nil && myCurrentAvatarUploadURL.length > 0) {
-                [self checkUploadStatus:myCurrentAvatarUploadURL hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
+                [self checkUploadStatus:myCurrentAvatarUploadURL hasSize:myAvatarData.length withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
                     if (!ok) {
                         [UserProfile sharedProfile].avatarURL = @"";
                         [self uploadAvatarIfNeededWithCompletion:^(BOOL didIt) {
@@ -4988,7 +5067,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                             completion(NO);
                         } else {
                             NSLog(@"Avatar upload succeeded, lets check");
-                            [self checkUploadStatus:urls[@"uploadUrl"] hasSize:myAvatarData.length withCompletion:^(NSString *url, BOOL ok) {
+                            [self checkUploadStatus:urls[@"uploadUrl"] hasSize:myAvatarData.length withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
                                 if (ok) {
                                     [UserProfile sharedProfile].avatarURL = urls[@"downloadUrl"];
                                     [UserProfile sharedProfile].avatarUploadURL = urls[@"uploadUrl"];
@@ -5269,7 +5348,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                   {
                                       if (rangeEnd + 1 == expectedSize) {
                                           if (CHECK_URL_TRACE) NSLog(@"checkUploadStatus size %lld matches", rangeEnd+1);
-                                          handler(theURL, YES);
+                                          handler(theURL, rangeEnd+1, YES);
                                           return;
                                       }
                                       NSLog(@"checkUploadStatus size returned %lld mismatch expected=%lld", rangeEnd+1, expectedSize);
@@ -5283,17 +5362,15 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                   } else {
                                       NSLog(@"checkUploadStatus irregular Content-Length %@, response status = %d, headers=%@",ContentLength, response.statusCode, response.allHeaderFields);
                                   }
-                              }
-                              handler(theURL, NO);
-                              
+                              }                              
                           } else {
                               NSLog(@"checkUploadStatus irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields);
                           }
-                          handler(theURL, NO);
+                          handler(theURL, -1, NO);
                       }
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
                                NSLog(@"checkUploadStatus error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
-                               handler(theURL, NO);
+                               handler(theURL, -1, NO);
                            }
                        challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
                            [[HXOBackend instance] connection:connection willSendRequestForAuthenticationChallenge:challenge];
