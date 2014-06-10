@@ -67,14 +67,14 @@
 
 - (NSManagedObjectContext *)managedObjectContext {
     if (_managedObjectContext == nil) {
-        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
+        _managedObjectContext = [[AppDelegate instance] managedObjectContext];
     }
     return _managedObjectContext;
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
     if (_managedObjectModel == nil) {
-        _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
+        _managedObjectModel = [[AppDelegate instance] managedObjectModel];
     }
     return _managedObjectModel;
 }
