@@ -9,8 +9,14 @@
 #import "AudioPlayerViewController.h"
 #import "Attachment.h"
 #import "AttachmentInfo.h"
+#import "Contact.h"
+#import "Group.h"
 #import "HXOAudioPlayer.h"
+#import "HXOMessage.h"
 #import "NSString+FromTimeInterval.h"
+#import "avatar_contact.h"
+#import "avatar_group.h"
+#import "avatar_location.h"
 #import "player_close.h"
 #import "player_button_play.h"
 #import "player_button_pause.h"
@@ -142,6 +148,12 @@
             CGFloat aspectRatio = screenSize.width / screenSize.height;
             self.view.layer.contentsRect = CGRectMake(0.5 * (1 - aspectRatio), 0, aspectRatio, 1);
         }];
+
+        UIImage * avatar = attachment.message.contact.avatarImage;
+        self.avatarView.image = avatar;
+        self.avatarView.defaultIcon = [attachment.message.contact.type isEqualToString: [Group entityName]] ? [((Group*)attachment.message.contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+        self.avatarView.isBlocked = [attachment.message.contact isBlocked];
+        self.avatarView.isPresent  = attachment.message.contact.isPresent && !attachment.message.contact.isKept;
         
         [self updatePlaylistStatus];
     } else {

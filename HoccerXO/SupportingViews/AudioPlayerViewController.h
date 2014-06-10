@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AvatarView.h"
 
 @class Attachment;
 
@@ -29,5 +30,6 @@
 @property (nonatomic, strong) IBOutlet UIImageView *artworkImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *volumeDownImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *volumeUpImageView;
+@property (nonatomic, strong) IBOutlet AvatarView *avatarView;
 
 @end

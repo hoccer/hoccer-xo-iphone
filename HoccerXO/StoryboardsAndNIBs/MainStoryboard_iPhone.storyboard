@@ -393,6 +393,11 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="93r-8Z-6a0" customClass="AvatarView">
+                                <rect key="frame" x="260" y="20" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -420,6 +425,7 @@
                     <connections>
                         <outlet property="artistLabel" destination="3zo-vz-vjI" id="Wxm-Ef-7hZ"/>
                         <outlet property="artworkImageView" destination="V7Z-6c-o9p" id="eGB-7I-s66"/>
+                        <outlet property="avatarView" destination="93r-8Z-6a0" id="Ycb-Vg-FfX"/>
                         <outlet property="closeButton" destination="T5U-YR-stl" id="lsg-rl-Kia"/>
                         <outlet property="currentTimeLabel" destination="MXk-2i-gTo" id="jf6-N5-byB"/>
                         <outlet property="playButton" destination="85y-tl-b3q" id="fwK-18-Hpw"/>
@@ -437,7 +443,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GLZ-Ck-YSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2114" y="723"/>
+            <point key="canvasLocation" x="2114" y="729"/>
         </scene>
         <!--Tutorial View Controller-->
         <scene sceneID="wlt-xN-hk4">
@@ -1337,14 +1343,14 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="thl-MY-iCZ"/>
         <segue reference="iwW-8u-tft"/>
         <segue reference="5v1-4P-ajP"/>
+        <segue reference="Kn0-3b-fVd"/>
         <segue reference="S5q-xe-rQg"/>
-        <segue reference="CES-Ic-Rhf"/>
-        <segue reference="7Jz-jk-4yN"/>
+        <segue reference="rav-wy-jJw"/>
         <segue reference="I8w-H7-Q9a"/>
         <segue reference="6i4-qU-VgJ"/>
-        <segue reference="rav-wy-jJw"/>
+        <segue reference="7Jz-jk-4yN"/>
+        <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>
