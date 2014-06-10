@@ -292,6 +292,7 @@ static int  groupMemberContext;
         [self.chatBackend createGroupWithHandler:^(Group * newGroup) {
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
+                newGroup.alias = self.groupInStatuNascendi.alias;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
                 [self.chatBackend updateGroup:newGroup];
                 for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
@@ -323,7 +324,7 @@ static int  groupMemberContext;
     if ([item isEqual: self.nicknameItem]) {
         return  NSLocalizedString( self.group || self.groupInStatuNascendi ? @"group_name_placeholder" : @"profile_name_placeholder", nil);
     }
-    return nil; //[super valuePlaceholderForItem: item];
+    return nil;
 }
 
 - (NSString*) segueIdentifierForItem:(DatasheetItem *)item {

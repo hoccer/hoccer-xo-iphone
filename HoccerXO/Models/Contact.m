@@ -168,37 +168,29 @@ NSString * const kRelationStateKept        = @"kept";
 
 
 - (NSString*) nickNameWithStatus {
-    if (self.isKept) {
-        return [NSString stringWithFormat:@"%@ ❌", self.nickName];
-    }
-    if (self.isBlocked) {
-        return self.nickName;
-    }
-    if (self.isGroup) {
-        Group * group = (Group*)self;
-        if ([[group otherJoinedMembers] count] == 0) {
-            return [NSString stringWithFormat:@"%@ ⭕", self.nickName];
-        }
-    }
-    if (self.isNotRelated) {
-        return [NSString stringWithFormat:@"%@ ❓", self.nickName];
-    }
     NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
-    if (self.isGroupFriend) {
-        name = [NSString stringWithFormat:@"%@ 🔗", self.nickName];
-    }
-    if ( self.isTyping) {
-        name = [NSString stringWithFormat:@"%@ 💬", self.nickName];
-    }
-    if ( self.isBackground) {
-        name = [NSString stringWithFormat:@"%@ 💤", self.nickName];
-    }
-    if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
-        return name;
+    NSString * statusString = nil;
+    if (self.isKept) {
+        statusString = @"❌";
+    } else if (self.isBlocked) {
+        statusString = nil;
+    } else if (self.isGroup && [(Group*)self otherJoinedMembers].count == 0) {
+        statusString = @"⭕";
+    } else if (self.isNotRelated) {
+        statusString = @"❓";
+    } else if (self.isGroupFriend) {
+        statusString = @"🔗";
+    } else if (self.isTyping) {
+        statusString = @"💬";
+    } else if ( self.isBackground) {
+        statusString = @"💤";
+    } else if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
+        statusString = nil;
     } else {
         // show special connection status
-        return [NSString stringWithFormat:@"%@ [%@]", name, self.connectionStatus];
+        statusString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];
     }
+    return statusString ? [NSString stringWithFormat: @"%@ %@", name, statusString] : name;
 }
 
 - (BOOL) isGroup {
