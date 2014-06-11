@@ -61,7 +61,7 @@
         NSArray * metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
         if (metaData.count > 0) {
             AVMetadataItem * metaItem = metaData[0];
-            _audioTitle = metaItem.stringValue;
+            _audioTitle = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         }
 
         if (self.audioTitle == nil || self.audioTitle.length == 0) {
@@ -71,13 +71,13 @@
         metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
         if (metaData.count > 0) {
             AVMetadataItem * metaItem = metaData[0];
-            _audioArtist = metaItem.stringValue;
+            _audioArtist = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         }
         
         metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
         if (metaData.count > 0) {
             AVMetadataItem * metaItem = metaData[0];
-            _audioAlbum = metaItem.stringValue;
+            _audioAlbum = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         }
     }
 }
