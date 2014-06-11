@@ -138,6 +138,7 @@
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="ContactsLastUpdatedBefore" entity="Contact" predicateString="type == &quot;Contacts&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND relationshipState != &quot;kept&quot;"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
+    <fetchRequest name="DeliveryByMessageIdAndReceiverId" entity="Delivery" predicateString="$messageId == message.messageId AND $receiverId == receiver.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupIdAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId AND $receiverId == receiver.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $receiverId == receiver.clientId"/>

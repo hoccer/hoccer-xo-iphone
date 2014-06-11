@@ -151,7 +151,8 @@ static NSTimer * _stateNotificationDelayTimer;
         [_avatarUploadQueue enableNetworkActivityIndicator:YES];
         
         [_serverConnection registerIncomingCall: @"incomingDelivery"    withSelector:@selector(incomingDelivery:) isNotification: YES];
-        [_serverConnection registerIncomingCall: @"outgoingDelivery"    withSelector:@selector(outgoingDelivery:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"incomingDeliveryUpdated" withSelector:@selector(incomingDeliveryUpdated:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"outgoingDeliveryUpdated" withSelector:@selector(outgoingDeliveryUpdated:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"pushNotRegistered"   withSelector:@selector(pushNotRegistered:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"presenceUpdated"     withSelector:@selector(presenceUpdatedNotification:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"presenceModified"     withSelector:@selector(presenceModifiedNotification:) isNotification: YES];
@@ -524,7 +525,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     if ( ! deliveryFailed) {
                         [SoundEffectPlayer messageSent];
                     }
-                    [self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
+                    //[self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
                    
                 }
                 [self.delegate saveDatabase];
@@ -811,7 +812,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if (message.attachment == nil) {
                 [SoundEffectPlayer messageArrived];
             }
-            [self checkTransferQueues];
+            //[self checkTransferQueues];
             
             id userInfo = @{ @"message":message };
             [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewHXOMessage"
@@ -3240,7 +3241,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
     [self flushPendingAttachmentUploads];
     [self flushPendingAttachmentDownloads];
-    [self checkTransferQueues];
+    //[self checkTransferQueues];
 #ifdef DEBUG_CHECK_FINISHED_UPLOADS
     [self checkReadyAttachmentUploads];
 #endif
@@ -3337,7 +3338,10 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) flushPendingAttachmentDownloads {
     NSArray * pendingAttachments = [self pendingAttachmentDownloads];
     for (Attachment * attachment in pendingAttachments) {
-        [self enqueueDownloadOfAttachment:attachment];
+        Delivery * delivery = attachment.message.deliveries.anyObject;
+        if (delivery.attachmentDownloadable) {
+            [self enqueueDownloadOfAttachment:attachment];
+        }
 #ifdef DEBUG_TEST_DOWNLOAD
         [self testAttachmentDownload:attachment];
 #endif
@@ -3384,7 +3388,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
-- (void)checkTransferQueues {
+- (void)checkTransferQueuesOff {
     if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues");
     NSArray * da = [_attachmentDownloadsActive copy];
     for (Attachment * a in da) {
@@ -3416,6 +3420,11 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
     if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues ready");
+}
+
+-(BOOL) alreadyInDowloadQueue:(Attachment*)attachment {
+    return [_attachmentDownloadsWaiting indexOfObject:attachment] != NSNotFound ||
+        [_attachmentDownloadsActive indexOfObject:attachment] != NSNotFound;
 }
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment {
@@ -4722,25 +4731,57 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             return;
         }
         if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
-            NSLog(@"incomingDelivery: parameter 0 must be an object");
+            NSLog(@"incomingDelivery: parameter 0 must be a NSDictionary");
             return;
         }
         NSDictionary * deliveryDict = params[0];
-        if ( ! [params[1] isKindOfClass: [NSDictionary class]]) {
-            NSLog(@"incomingDelivery: parameter 1 must be an object");
+        
+        if (USE_VALIDATOR) [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+        NSString * messageId = deliveryDict[@"messageId"];
+        NSString * receiverId = deliveryDict[@"receiverId"];
+        
+        if (messageId == nil || receiverId == nil) {
+            NSLog(@"#ERROR: incomingDeliveryUpdated: delivery has not message or receiver id");
             return;
         }
         
-        if (USE_VALIDATOR) [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
-        
-        //Delivery * delivery = [self getDeliveryByMessageTagAndReceiverId:<#(NSString *)#> withReceiver:<#(NSString *)#> inContext:<#(NSManagedObjectContext *)#>]
-        
-        //[self receiveMessage: messageDict withDelivery: deliveryDict inContext:context];
-        
+        @synchronized([self idLock:messageId]) {
+            Delivery * delivery = [self getDeliveryByMessageIdAndReceiverId:messageId withReceiver:receiverId inContext:context];
+            if (delivery == nil) {
+                NSLog(@"#ERROR: incomingDeliveryUpdated: delivery not found");
+                return;
+            }
+            //NSString * oldAttachmentState = delivery.attachmentState;
+            [delivery updateWithDictionary:deliveryDict];
+            if (delivery.message.attachment != nil) {
+                NSString * fileId = delivery.message.attachmentFileId;
+                if ([kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED isEqualToString:delivery.attachmentState]) {
+                    [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
+                        [self acknowledgeFailedFileUpload:fileId withhandler:^(NSString *result, BOOL ok) {
+                        }];
+                        // TODO: update UI
+                    }];
+                }
+                if ([kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED isEqualToString:delivery.attachmentState]) {
+                    [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
+                        [self acknowledgeAbortedFileUpload:fileId withhandler:^(NSString *result, BOOL ok) {
+                        }];
+                        // TODO: update UI
+                    }];
+                }
+                if ([kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:delivery.attachmentState] ||
+                    [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:delivery.attachmentState]) {
+                    NSManagedObjectID * attachmentId = delivery.message.attachment.objectID;
+                    [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
+                        Attachment * attachment = (Attachment*)[context objectWithID:attachmentId];
+                        [self enqueueDownloadOfAttachment:attachment];
+                    }];
+                }
+            }
+        }
     }];
 }
 
-// utility function to avoid code duplication
 -(Delivery *) getDeliveryByMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId inContext:(NSManagedObjectContext*)context {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"receiverId" : theReceiverId};
@@ -4765,32 +4806,30 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     return delivery;
 }
 
-// utility function to avoid code duplication
--(Delivery *) getDeliveryByMessageIdAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId inContext:(NSManagedObjectContext*)context {
-    NSDictionary * vars = @{ @"messageTag" : theMessageTag,
+-(Delivery *) getDeliveryByMessageIdAndReceiverId:(NSString *) theMessageId withReceiver: (NSString *) theReceiverId inContext:(NSManagedObjectContext*)context {
+    NSDictionary * vars = @{ @"messageId" : theMessageId,
                              @"receiverId" : theReceiverId};
-    if (DELIVERY_TRACE) NSLog(@"getDeliveryByMessageTagAndReceiverId vars = %@", vars);
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndReceiverId" substitutionVariables: vars];
+    if (DELIVERY_TRACE) NSLog(@"getDeliveryByMessageIdAndReceiverId vars = %@", vars);
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageIdAndReceiverId" substitutionVariables: vars];
     NSError *error;
     NSArray *deliveries = [context executeFetchRequest:fetchRequest error:&error];
     if (deliveries == nil)
     {
-        NSLog(@"DeliveryByMessageTagAndReceiverId: Fetch request failed: %@", error);
+        NSLog(@"getDeliveryByMessageIdAndReceiverId: Fetch request failed: %@", error);
         abort();
     }
     Delivery * delivery = nil;
     if (deliveries.count > 0) {
         delivery = deliveries[0];
         if (deliveries.count > 1) {
-            NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for receiver %@ found", theMessageTag, theReceiverId);
+            NSLog(@"WARNING: Multiple deliveries with MessageId %@ for receiver %@ found", theMessageId, theReceiverId);
         }
     } else {
-        if (DELIVERY_TRACE) NSLog(@"Delivery with MessageTag %@ for receiver %@ not in deliveries", theMessageTag, theReceiverId);
+        if (DELIVERY_TRACE) NSLog(@"Delivery with MessageId %@ for receiver %@ not in deliveries", theMessageId, theReceiverId);
     }
     return delivery;
 }
 
-// utility function to avoid code duplication
 -(Delivery *) getDeliveryByMessageTagAndGroupId:(NSString *) theMessageTag withGroupId: (NSString *) theGroupId inContext:(NSManagedObjectContext*)context {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"groupId" : theGroupId};
@@ -4814,7 +4853,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }
     return delivery;
 }
-// utility function to avoid code duplication
+
 -(Delivery *) getDeliveryByMessageTagAndGroupIdAndReceiverId:(NSString *) theMessageTag withGroupId: (NSString *) theGroupId  withReceiverId:(NSString*) receiverId inContext:(NSManagedObjectContext*)context{
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"groupId" : theGroupId,
@@ -4842,7 +4881,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 
 
 // called by server to notify us about status changes of outgoing deliveries we made
-- (void) outgoingDelivery: (NSArray*) params {
+- (void) outgoingDeliveryUpdated: (NSArray*) params {
     [self.delegate performInNewBackgroundContext:^(NSManagedObjectContext *context) {
         if (params.count != 1) {
             NSLog(@"outgoingDelivery: requires an array of one parameters (delivery), but got %d parameters.", params.count);

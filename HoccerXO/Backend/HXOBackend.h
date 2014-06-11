@@ -165,7 +165,7 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment;
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment;
     
-- (void) checkTransferQueues;
+- (void) checkTransferQueuesOff;
 
 - (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler;
 - (void) destroyEnvironmentType:(NSString*)type withHandler:(GenericResultHandler)handler;

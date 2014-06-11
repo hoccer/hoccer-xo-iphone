@@ -64,6 +64,11 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
     return [kDeliveryStateFailed isEqualToString:self.state] || [kDeliveryStateFailedAcknowledged isEqualToString:self.state];
 }
 
+-(BOOL)attachmentDownloadable {
+    return [kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:self.attachmentState] || [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:self.attachmentState];
+}
+
+
 
 -(NSString*) keyCiphertextString {
     return [self.keyCiphertext asBase64EncodedString];

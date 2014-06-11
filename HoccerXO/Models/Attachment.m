@@ -211,7 +211,7 @@ NSArray * TransferStateName = @[@"detached",
         return kAttachmentTransferScheduled;
     }
     if ([self.transferSize longLongValue]> 0) {
-        if ([self.message.isOutgoing boolValue] == YES) {
+        if (self.outgoing) {
             return kAttachmentUploadIncomplete;
         }
         return kAttachmentDownloadIncomplete;
@@ -223,9 +223,14 @@ NSArray * TransferStateName = @[@"detached",
     return kAttachmentWantsTransfer;
 }
 
+- (BOOL) outgoing {
+    return [self.message.isOutgoing boolValue] == YES;
+}
+
+
 - (BOOL) available {
     AttachmentState myState = self.state;
-    return myState == kAttachmentTransfered || ([self.message.isOutgoing boolValue] == YES && !(myState <= kAttachmentEmpty));
+    return myState == kAttachmentTransfered || (self.outgoing && !(myState <= kAttachmentEmpty));
 }
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing {
@@ -1291,6 +1296,9 @@ NSArray * TransferStateName = @[@"detached",
         }
         NSLog(@"pausedTransfer transfer, cipherTransferSize=%@, cipheredSize=%@",self.cipherTransferSize,self.cipheredSize);
         self.transferPaused = [[NSDate alloc] init];
+        if (!self.outgoing) {
+            [self.chatBackend uploadPaused:self];
+        }
     }
 }
 
@@ -1298,7 +1306,13 @@ NSArray * TransferStateName = @[@"detached",
     NSLog(@"unpausedTransfer");
     if (self.transferPaused != nil) {
         self.transferPaused = nil;
-        [self.chatBackend checkTransferQueues];
+        if (!self.outgoing) {
+            [self.chatBackend uploadStarted:self];
+            [self.chatBackend enqueueUploadOfAttachment:self];
+        } else {
+            [self.chatBackend enqueueDownloadOfAttachment:self];
+        }
+        //[self.chatBackend checkTransferQueues];
     }
 }
 
