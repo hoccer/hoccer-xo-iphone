@@ -23,7 +23,7 @@
 @property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) AVAudioPlayer * player;
 @property (nonatomic, strong) NSArray * playlist;
-@property (nonatomic, strong) NSArray * playlistTrackNumbers;
+@property (nonatomic, strong) NSArray * trackNumbers;
 @property (nonatomic, assign) NSUInteger playlistIndex;
 
 @end
@@ -49,7 +49,7 @@
     
     if (self) {
         self.playlist = @[];
-        self.playlistTrackNumbers = @[];
+        self.trackNumbers = @[];
         self.playlistIndex = 0;
         self.isShuffled = NO;
         self.repeatState = HXOAudioPlayerRepeatStateOff;
@@ -62,7 +62,7 @@
 
 - (BOOL) playWithPlaylist: (NSArray *) playlist atTrackNumber: (NSUInteger) trackNumber {
     self.playlist = playlist;
-    NSUInteger index = [self createPlaylistTrackNumbersWithCurrentTrackNumber:trackNumber];
+    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
 
     return [self playAtIndex:index];
 }
@@ -124,14 +124,14 @@
     return self.playlist.count;
 }
 
-- (NSUInteger) currentPlaylistTrackNumber {
-    return [(NSNumber *)[self.playlistTrackNumbers objectAtIndex:self.playlistIndex] unsignedIntegerValue];
+- (NSUInteger) currentTrackNumber {
+    return [(NSNumber *)[self.trackNumbers objectAtIndex:self.playlistIndex] unsignedIntegerValue];
 }
 
 
 - (void) toggleShuffle {
     self.isShuffled = !self.isShuffled;
-    NSUInteger index = [self createPlaylistTrackNumbersWithCurrentTrackNumber:self.currentPlaylistTrackNumber];
+    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:self.currentTrackNumber];
     [self playAtIndex:index];
 }
 
@@ -157,7 +157,7 @@
     self.playlistIndex = index;
     
     if (index < self.playlist.count) {
-        Attachment *attachment = [self.playlist objectAtIndex:self.currentPlaylistTrackNumber];
+        Attachment *attachment = [self.playlist objectAtIndex:self.currentTrackNumber];
         return [self playAttachment:attachment];
     } else {
         return YES;
@@ -233,23 +233,23 @@
     }
 }
 
-- (NSUInteger) createPlaylistTrackNumbersWithCurrentTrackNumber: (NSUInteger) trackNumber {
-    NSMutableArray *trackNumbers = [[NSMutableArray alloc] initWithCapacity:[self.playlist count]];
+- (NSUInteger) orderTrackNumbersWithCurrentTrackNumber: (NSUInteger) trackNumber {
+    NSMutableArray *orderedTrackNumbers = [[NSMutableArray alloc] initWithCapacity:[self.playlist count]];
     for (int i = 0; i < [self.playlist count]; i++) {
-        [trackNumbers addObject:[NSNumber numberWithInt:i]];
+        [orderedTrackNumbers addObject:[NSNumber numberWithInt:i]];
     }
 
     if (self.isShuffled) {
-        NSNumber *currentTrackNumber = [trackNumbers objectAtIndex:trackNumber];
+        NSNumber *currentTrackNumber = [orderedTrackNumbers objectAtIndex:trackNumber];
 
-        [trackNumbers shuffle];
-        NSUInteger indexOfCurrentTrackNumber = [trackNumbers indexOfObject:currentTrackNumber];
-        [trackNumbers exchangeObjectAtIndex:0 withObjectAtIndex:indexOfCurrentTrackNumber];
+        [orderedTrackNumbers shuffle];
+        NSUInteger indexOfCurrentTrackNumber = [orderedTrackNumbers indexOfObject:currentTrackNumber];
+        [orderedTrackNumbers exchangeObjectAtIndex:0 withObjectAtIndex:indexOfCurrentTrackNumber];
 
-        self.playlistTrackNumbers = trackNumbers;
+        self.trackNumbers = orderedTrackNumbers;
         return 0;
     } else {
-        self.playlistTrackNumbers = trackNumbers;
+        self.trackNumbers = orderedTrackNumbers;
         return trackNumber;
     }
 }

@@ -36,7 +36,7 @@ typedef NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
 @property (nonatomic, readonly) BOOL isShuffled;
 @property (nonatomic, readonly) HXOAudioPlayerRepeatState repeatState;
 @property (nonatomic, readonly) Attachment * attachment;
-@property (nonatomic, readonly) NSUInteger currentPlaylistTrackNumber;
+@property (nonatomic, readonly) NSUInteger currentTrackNumber;
 @property (nonatomic, readonly) NSUInteger playlistLength;
 @property (nonatomic, readonly) NSTimeInterval duration;
 @property NSTimeInterval currentTime;
