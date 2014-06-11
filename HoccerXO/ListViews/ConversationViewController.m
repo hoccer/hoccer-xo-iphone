@@ -270,8 +270,6 @@
         HXOMessage * message = contact.latestMessage[0];
         if (message.body.length > 0) {
             cell.subtitleLabel.text = message.body;
-            // TODO: do not mess with the fonts
-            //cell.subtitleLabel.font = [UIFont systemFontOfSize: cell.subtitleLabel.font.pointSize];
         } else {
             if (message.attachment != nil) {
                 NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", message.attachment.mediaType];
@@ -280,8 +278,6 @@
                 // can happen if the latest message has been deleted
                 cell.subtitleLabel.text = nil;
             }
-            // TODO: do not mess with the fonts
-            //cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
         }
         latestMessageTime = message.timeAccepted;
     }
