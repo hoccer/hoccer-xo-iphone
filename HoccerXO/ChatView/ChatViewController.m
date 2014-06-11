@@ -1840,17 +1840,17 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if (! info) {
                 info = attachmentInfo.vcardOrganization;
             }
-            subtitle = [info stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            subtitle = info;
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-            subtitle = [attachmentInfo.audioArtistAlbumAndDuration stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            subtitle = attachmentInfo.audioArtistAlbumAndDuration;
         }
             
     }
     if (subtitle == nil) {
         NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
-        subtitle = [NSString stringWithFormat: @"%@ – %@", [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]], [sizeString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+        subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
      }
-    return subtitle;
+    return [subtitle stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 #pragma mark - MessageViewControllerDelegate methods
