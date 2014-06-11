@@ -70,7 +70,8 @@
     
     [self addFirstRowHorizontalConstraints: views];
     
-    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(>=%f)]-%f-|", [self verticalPadding], [self artworkSize], [self verticalPadding]];
+    // HACK: Remove one to fix computed cell height
+    NSString * format = [NSString stringWithFormat:  @"V:|-%f-[image(>=%f)]-%f-|", [self verticalPadding], [self artworkSize], [self verticalPadding] - 1];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format
                                                                               options: 0 metrics: nil views: views]];
     

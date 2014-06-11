@@ -143,8 +143,9 @@
 }
 
 - (CGFloat) calculateRowHeight {
+    // HACK: Add one to fix layout constraint errors
     UITableViewCell *prototypeCell = [self prototypeCellOfClass:[AudioAttachmentCell class]];
-    return [prototypeCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    return ceilf([prototypeCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height) + 1;
 }
 
 #pragma mark - Table view delegate
