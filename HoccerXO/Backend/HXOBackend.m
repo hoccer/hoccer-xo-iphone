@@ -505,21 +505,34 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate.mainObjectContext refreshObject: contact mergeChanges: YES];
 
     // Delivery may already be in state failed, e.g. if the public key is missing.
-    BOOL deliveryFailed = [delivery.state isEqualToString: kDeliveryStateFailed];
+    BOOL deliveryFailed = delivery.hasFailed;
     if (_state == kBackendReady && ! deliveryFailed) {
-        [self deliveryRequest: message withDeliveries: @[delivery]];
+        [self outDeliveryRequest: message withDeliveries: @[delivery] withCompletion:^(NSArray *deliveries) {
+            if (deliveries != nil) {
+                BOOL oneOK = false;
+                for (Delivery * delivery in deliveries) {
+                    if ([kDeliveryStateDelivering isEqualToString:delivery.state]) {
+                        oneOK = YES;
+                        break;
+                    }
+                }
+                if (oneOK ) {
+                    if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
+                        [self enqueueUploadOfAttachment:attachment];
+                    }
+                    
+                    if ( ! deliveryFailed) {
+                        [SoundEffectPlayer messageSent];
+                    }
+                    [self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
+                   
+                }
+                [self.delegate saveDatabase];
+            }
+        }];
+    } else {
+        [self.delegate saveDatabase];
     }
-    
-    if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
-        [self enqueueUploadOfAttachment:attachment];
-    }
-    
-    [self.delegate saveDatabase];
-    if ( ! deliveryFailed) {
-        [SoundEffectPlayer messageSent];
-    }
-    [self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
-    
 }
 
 // TODO: contact should be an array of contacts
@@ -638,7 +651,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                 NSLog(@"receiveMessage: starting deliveryConfirm on old");
                 Delivery * oldDelivery = (Delivery *)[context objectWithID:deliverObjId];
-                [self deliveryConfirm: oldMessageId withDelivery: oldDelivery];
+                [self inDeliveryConfirm: oldMessageId withDelivery: oldDelivery];
                 NSLog(@"receiveMessage: done deliveryConfirm on old");
             }];
             return;
@@ -647,7 +660,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
             NSLog(@"ERROR: receiveMessage: aborting received message without keyCiphertext, id= %@", vars[@"messageId"]);
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
-                [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
+                [self outDeliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
             }];
             return;
         }
@@ -656,7 +669,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (myPrivateKeyRef == NULL) {
             NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[[UserProfile sharedProfile] publicKeyId]);
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
-                [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
+                [self outDeliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
             }];
             return;
         }
@@ -697,7 +710,7 @@ static NSTimer * _stateNotificationDelayTimer;
             }
             
             [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
-                [self deliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
+                [self outDeliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
             }];
             [AppDelegate.instance deleteObject:message inContext:context];
             [AppDelegate.instance deleteObject:delivery inContext:context];
@@ -794,7 +807,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self enqueueDownloadOfAttachment:attachment];
             }
             if (DELIVERY_TRACE,YES) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
-            [self deliveryConfirm: message.messageId withDelivery: delivery];
+            [self inDeliveryConfirm: message.messageId withDelivery: delivery];
             if (message.attachment == nil) {
                 [SoundEffectPlayer messageArrived];
             }
@@ -3497,10 +3510,22 @@ static NSTimer * _stateNotificationDelayTimer;
     [SoundEffectPlayer messageArrived];
 }
 
+- (void) uploadStarted:(Attachment *)theAttachment {
+    [self startedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+    }];
+}
+
+- (void) uploadPaused:(Attachment *)theAttachment {
+    [self pausedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+    }];
+}
+
 - (void) uploadFinished:(Attachment *)theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"uploadFinished of %@", theAttachment.uploadURL);
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    [self finishedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+    }];
     [self dequeueUploadOfAttachment:theAttachment];
 #ifdef DEBUG_CHECK_FINISHED_UPLOADS
     [self checkUploadStatus:theAttachment.uploadURL hasSize:[theAttachment.cipherTransferSize longLongValue]  withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
@@ -3545,6 +3570,10 @@ static NSTimer * _stateNotificationDelayTimer;
     theAttachment.transferFailed = [[NSDate alloc] init];
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    if (theAttachment.state == kAttachmentTransfersExhausted) {
+        [self failedFileDownload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        }];
+    }
     [self dequeueDownloadOfAttachment:theAttachment];
     [self enqueueDownloadOfAttachment:theAttachment];
 }
@@ -3555,6 +3584,13 @@ static NSTimer * _stateNotificationDelayTimer;
     theAttachment.transferFailed = [[NSDate alloc] init];
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    if (theAttachment.state == kAttachmentTransfersExhausted) {
+        [self pausedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        }];
+    } else {
+        [self failedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        }];
+    }
     [self dequeueUploadOfAttachment:theAttachment];
     [self enqueueUploadOfAttachment:theAttachment];
 }
@@ -3727,7 +3763,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (success) {
             handler(responseOrError);
         } else {
-            NSLog(@"deliveryRequest failed: %@", responseOrError);
+            NSLog(@"generateId failed: %@", responseOrError);
             handler(nil);
         }
     }];
@@ -3940,7 +3976,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
-- (void) deliveryRequest: (HXOMessage*) message withDeliveries: (NSArray*) deliveries {
+- (void) outDeliveryRequest: (HXOMessage*) message withDeliveries: (NSArray*) deliveries withCompletion:(DeliveriesRequestCompletion)completion {
     NSMutableDictionary * messageDict = [message rpcDictionary];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
     for (Delivery * delivery in deliveries) {
@@ -3962,7 +3998,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     
     if (USE_VALIDATOR) [self validateObject: messageDict forEntity:@"RPC_TalkMessage_out"]; // TODO: Handle Validation Error
     
-    [_serverConnection invoke: @"deliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"outDeliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             NSArray * deliveryIds = objectIds(deliveries);
             [self.delegate performInNewBackgroundContext:^(NSManagedObjectContext *context) {
@@ -4001,36 +4037,42 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                         }];
                     }
                 }
-                
+                [self.delegate saveContext:context];
+                NSArray * deliveryObjectIds = objectIds(deliveries);
+                [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
+                    NSArray * deliveries = managedObjects(deliveryObjectIds, context);
+                    completion(deliveries);
+                }];
             }];
         } else {
             NSLog(@"deliveryRequest failed: %@", responseOrError);
+            completion(nil);
         }
     }];
 }
 
-- (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
+- (void) inDeliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery {
     // NSLog(@"deliveryConfirm: %@", delivery);
-    [_serverConnection invoke: @"deliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
+    [_serverConnection invoke: @"inDeliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
         if (success && responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
             // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
             if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
-            if (DELIVERY_TRACE) {NSLog(@"deliveryConfirm result: state %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
+            if (DELIVERY_TRACE) {NSLog(@"inDeliveryConfirm result: state %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
             if ([delivery.state isEqualToString: responseOrError[@"state"]]) {
-                if (GLITCH_TRACE) {NSLog(@"#GLITCH: deliveryConfirm result: state unchanged %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
+                if (GLITCH_TRACE) {NSLog(@"#GLITCH: inDeliveryConfirm result: state unchanged %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
             }
             [delivery updateWithDictionary: responseOrError];
             [self.delegate saveDatabase];
         } else {
-            NSLog(@"#ERROR: deliveryConfirm() failed, response: %@", responseOrError);
+            NSLog(@"#ERROR: inDeliveryConfirm() failed, response: %@", responseOrError);
         }
     }];
 }
 
-- (void) deliveryAcknowledge: (Delivery*) delivery {
-    if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge: %@", delivery);}
+- (void) outDeliveryAcknowledge: (Delivery*) delivery {
+    if (DELIVERY_TRACE) {NSLog(@"outDeliveryAcknowledge: %@", delivery);}
         
-    [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[delivery.message.messageId, delivery.receiver.clientId]
+    [_serverConnection invoke: @"outDeliveryAcknowledge" withParams: @[delivery.message.messageId, delivery.receiver.clientId]
                    onResponse: ^(id responseOrError, BOOL success)
     {
         if (success && responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
@@ -4038,7 +4080,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
             
             if (![responseOrError isKindOfClass:[NSDictionary class]]) {
-                NSLog(@"ERROR: deliveryAcknowledge response is null");
+                NSLog(@"ERROR: outDeliveryAcknowledge response is null");
                 return;
             }
             
@@ -4046,13 +4088,13 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             [delivery updateWithDictionary: responseOrError];
             
             // TODO: fix acknowledge storm on server, server should return "confirmed" status
-            if (![delivery.state isEqualToString:@"confirmed"]) {
-                NSLog(@"#WARNING: Wrong Server Response: deliveryAcknowledge result should be state ‘confirmed' but is '%@', overriding own state to 'confirmed'", delivery.state);
-                delivery.state = @"confirmed";
+            if (![kDeliveryStateDeliveredAcknowledged isEqualToString: delivery.state]) {
+                NSLog(@"#WARNING: Wrong Server Response: outDeliveryAcknowledge result should be state ‘deliveredAcknowledged' but is '%@', overriding own state to 'eliveredAcknowledged'", delivery.state);
+                delivery.state = kDeliveryStateDeliveredAcknowledged;
             } else {
-                if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge result: state %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);}
+                if (DELIVERY_TRACE) {NSLog(@"outDeliveryAcknowledge result: state %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);}
                 if ([oldState isEqualToString: delivery.state]) {
-                    if (GLITCH_TRACE) {NSLog(@"#GLITCH: deliveryAcknowledge result: duplicate state change %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);}
+                    if (GLITCH_TRACE) {NSLog(@"#GLITCH: outDeliveryAcknowledge result: duplicate state change %@->%@ for messageTag %@ id %@",oldState, delivery.state, delivery.message.messageTag,delivery.message.messageId);}
                 }
             }
             // NSLog(@"deliveryAcknowledge:response was: %@",responseOrError);
@@ -4060,23 +4102,156 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             [self.delegate saveDatabase];
             [self.delegate.mainObjectContext refreshObject: delivery.message mergeChanges: YES];
         } else {
-            NSLog(@"#ERROR:deliveryAcknowledge() failed, response: %@", responseOrError);
+            NSLog(@"#outDeliveryAcknowledge() failed, response: %@", responseOrError);
         }
     }];
 }
 
-- (void) deliveryAbort: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId {
+// abort a delivery as sender
+//TalkDelivery outDeliveryAbort(String messageId, String recipientId);
+- (void) outDeliveryAbort: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId {
     // NSLog(@"deliveryAbort: %@", delivery);
-    [_serverConnection invoke: @"deliveryAbort" withParams: @[theMessageId, theReceiverClientId]
+    [_serverConnection invoke: @"outDeliveryAbort" withParams: @[theMessageId, theReceiverClientId]
                    onResponse: ^(id responseOrError, BOOL success)
      {
          if (success) {
-             // NSLog(@"deliveryAbort() returned delivery: %@", responseOrError);
+             NSDictionary * result = responseOrError;
+             NSString * resultState = result[@"state"];
+             if (![kDeliveryStateAborted isEqualToString:resultState] && ![kDeliveryStateAbortedAcknowledged isEqualToString:resultState]) {
+                 NSLog(@"ERROR: outDeliveryAbort() returned bad state %@", responseOrError);
+             } else {
+                 Delivery * delivery = [self getDeliveryByMessageTagAndReceiverId:theMessageId withReceiver:theReceiverClientId inContext:self.delegate.currentObjectContext];
+                 if (delivery != nil) {
+                     [delivery updateWithDictionary:result];
+                 } else {
+                     NSLog(@"outDeliveryAbort() : delivery not found");
+                 }
+             }
+             // NSLog(@"outDeliveryAbort() returned delivery: %@", responseOrError);
          } else {
-             NSLog(@"deliveryAbort() failed: %@", responseOrError);
+             NSLog(@"outDeliveryAbort() failed: %@", responseOrError);
          }
      }];
 }
+
+//TalkDelivery   outDeliveryAcknowledge(String messageId, String recipientId);
+
+// As sender, acknowledge a "failed" delivery
+//TalkDelivery   outDeliveryAcknowledgeFailed(String messageId, String recipientId);
+
+// As sender, acknowledge a "rejected" delivery
+//TalkDelivery   outDeliveryAcknowledgeRejected(String messageId, String recipientId);
+
+
+// reject a delivery as receiver
+// shoould be called when something is fishy with this message
+// TalkDelivery inDeliveryReject(String messageId, String reason);
+- (void) inDeliveryReject: (NSString*) theMessageId withReason:(NSString*) theReason {
+    // NSLog(@"deliveryAbort: %@", delivery);
+    [_serverConnection invoke: @"inDeliveryReject" withParams: @[theMessageId, theReason]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSDictionary * result = responseOrError;
+             NSString * resultState = result[@"state"];
+             if (![kDeliveryStateRejected isEqualToString:resultState]) {
+                 NSLog(@"ERROR: inDeliveryReject() returned bad state %@", responseOrError);
+             }
+             Delivery * delivery = [self getDeliveryByMessageTagAndReceiverId:theMessageId withReceiver:UserProfile.sharedProfile.clientId inContext:self.delegate.currentObjectContext];
+             if (delivery != nil) {
+                 [AppDelegate.instance deleteObject:delivery.message];
+             }
+
+             // NSLog(@"inDeliveryReject() returned delivery: %@", responseOrError);
+         } else {
+             NSLog(@"inDeliveryReject() failed: %@", responseOrError);
+         }
+     }];
+}
+
+#pragma mark - Attachment transfer signaling rpc
+
+
+- (void) callAttachmentStateChangeMethod:(NSString *)method withFileId:(NSString*) fileId withhandler:(StringResultHandler)handler{
+    
+    [_serverConnection invoke: method withParams: @[fileId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"%@() got result: %@", method, responseOrError);
+            if (handler) handler(responseOrError, YES);
+        } else {
+            NSLog(@"%@() failed: %@", method, responseOrError);
+            if (handler) handler(responseOrError, NO);
+        }
+    }];
+}
+
+
+// should be called by the receiver of an transfer file after download; the server can the delete the file in case
+//String receivedFile(String fileId);
+- (void) receivedFile:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"receivedFile" withFileId:fileId withhandler:handler];
+}
+
+// should be called by the receiver of an transfer file if the user has aborted the download
+//String abortedFileDownload(String fileId);
+- (void) abortedFileDownload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"abortedFileDownload" withFileId:fileId withhandler:handler];
+}
+// should be called by the receiver of an transfer file if the client has exceeded the download retry count
+//String failedFileDownload(String fileId);
+- (void) failedFileDownload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"failedFileDownload" withFileId:fileId withhandler:handler];
+}
+// should be called by the receiver of an transfer file when a final attachment sender set state has been seen
+//String acknowledgeAbortedFileUpload(String fileId);
+- (void) acknowledgeAbortedFileUpload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeAbortedFileUpload" withFileId:fileId withhandler:handler];
+}
+//String acknowledgeFailedFileUpload(String fileId);
+- (void) acknowledgeFailedFileUpload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeFailedFileUpload" withFileId:fileId withhandler:handler];
+}
+
+//------ sender attachment state indication methods
+// should be called by the sender of an transfer file after upload has been started
+//String startedFileUpload(String fileId);
+- (void) startedFileUpload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"startedFileUpload" withFileId:fileId withhandler:handler];
+}
+// should be called by the sender of an transfer file when the upload has been paused
+//String pausedFileUpload(String fileId);
+- (void) pausedFileUpload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"pausedFileUpload" withFileId:fileId withhandler:handler];
+}
+// should be called by the sender of an transfer file after upload has been finished
+//String finishedFileUpload(String fileId);
+- (void) finishedFileUpload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"finishedFileUpload" withFileId:fileId withhandler:handler];
+}
+// should be called by the sender of an transfer file when the upload is aborted by the user
+//String abortedFileUpload(String fileId);
+- (void) abortedFileUpload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"abortedFileUpload" withFileId:fileId withhandler:handler];
+}
+// should be called by the sender of an transfer file when upload retry count has been exceeded
+//String failedFileUpload(String fileId);
+- (void) failedFileUpload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"failedFileUpload" withFileId:fileId withhandler:handler];
+}
+// should be called by the sender of an transfer file when a final attachment receiver set state has been seen
+//String acknowledgeReceivedFile(String fileId);
+- (void) acknowledgeReceivedFile:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeReceivedFile" withFileId:fileId withhandler:handler];
+}
+//String acknowledgeAbortedFileDownload(String fileId);
+- (void) acknowledgeAbortedFileDownload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeAbortedFileDownload" withFileId:fileId withhandler:handler];
+}
+//String acknowledgeFailedFileDownload(String fileId);
+- (void) acknowledgeFailedFileDownload:(NSString*)fileId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeFailedFileDownload" withFileId:fileId withhandler:handler];
+}
+
 
 - (void) updatePresence: (NSString*) clientName
              withStatus: (NSString*) clientStatus
@@ -4540,8 +4715,58 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }];
 }
 
+- (void) incomingDeliveryUpdated: (NSArray*) params {
+    [[AppDelegate instance] performInNewBackgroundContext:^(NSManagedObjectContext *context) {
+        if (params.count != 1) {
+            NSLog(@"incomingDelivery one parameter (delivery), but got %d parameters.", params.count);
+            return;
+        }
+        if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
+            NSLog(@"incomingDelivery: parameter 0 must be an object");
+            return;
+        }
+        NSDictionary * deliveryDict = params[0];
+        if ( ! [params[1] isKindOfClass: [NSDictionary class]]) {
+            NSLog(@"incomingDelivery: parameter 1 must be an object");
+            return;
+        }
+        
+        if (USE_VALIDATOR) [self validateObject: deliveryDict forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+        
+        //Delivery * delivery = [self getDeliveryByMessageTagAndReceiverId:<#(NSString *)#> withReceiver:<#(NSString *)#> inContext:<#(NSManagedObjectContext *)#>]
+        
+        //[self receiveMessage: messageDict withDelivery: deliveryDict inContext:context];
+        
+    }];
+}
+
 // utility function to avoid code duplication
 -(Delivery *) getDeliveryByMessageTagAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId inContext:(NSManagedObjectContext*)context {
+    NSDictionary * vars = @{ @"messageTag" : theMessageTag,
+                             @"receiverId" : theReceiverId};
+    if (DELIVERY_TRACE) NSLog(@"getDeliveryByMessageTagAndReceiverId vars = %@", vars);
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndReceiverId" substitutionVariables: vars];
+    NSError *error;
+    NSArray *deliveries = [context executeFetchRequest:fetchRequest error:&error];
+    if (deliveries == nil)
+    {
+        NSLog(@"DeliveryByMessageTagAndReceiverId: Fetch request failed: %@", error);
+        abort();
+    }
+    Delivery * delivery = nil;
+    if (deliveries.count > 0) {
+        delivery = deliveries[0];
+        if (deliveries.count > 1) {
+            NSLog(@"WARNING: Multiple deliveries with MessageTag %@ for receiver %@ found", theMessageTag, theReceiverId);
+        }
+    } else {
+        if (DELIVERY_TRACE) NSLog(@"Delivery with MessageTag %@ for receiver %@ not in deliveries", theMessageTag, theReceiverId);
+    }
+    return delivery;
+}
+
+// utility function to avoid code duplication
+-(Delivery *) getDeliveryByMessageIdAndReceiverId:(NSString *) theMessageTag withReceiver: (NSString *) theReceiverId inContext:(NSManagedObjectContext*)context {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"receiverId" : theReceiverId};
     if (DELIVERY_TRACE) NSLog(@"getDeliveryByMessageTagAndReceiverId vars = %@", vars);
@@ -4662,12 +4887,12 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                     NSManagedObjectID * deliveryObjId = myDelivery.objectID;
                     [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                         Delivery * myDelivery = (Delivery*)[context objectWithID:deliveryObjId];
-                        [self deliveryAcknowledge: myDelivery];
+                        [self outDeliveryAcknowledge: myDelivery];
                     }];
                 } else {
                     NSLog(@"#ERROR: outgoingDelivery delivery and message id mismatch, aborting message: %@", deliveryDict[@"messageId"]);
                     [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
-                        [self deliveryAbort:myMessageId forClient:myReceiverId];
+                        [self outDeliveryAbort:myMessageId forClient:myReceiverId];
                     }];
                 }
                 return;
@@ -4702,7 +4927,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                 NSManagedObjectID * deliveryObjId = myDelivery.objectID;
                 [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
                     Delivery * myDelivery = (Delivery*)[context objectWithID:deliveryObjId];
-                    [self deliveryAcknowledge: myDelivery];
+                    [self outDeliveryAcknowledge: myDelivery];
                 }];
             }
             

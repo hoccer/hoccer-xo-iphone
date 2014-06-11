@@ -32,6 +32,7 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^ObjectResultHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL ok);
+typedef void (^StringResultHandler)(NSString* result, BOOL ok);
 typedef void (^BoolResultHandler)(BOOL result, BOOL ok);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DataLoadedBlock)(NSData *, NSError*);
@@ -44,6 +45,7 @@ typedef void (^FileURLRequestHandler)(NSDictionary* urls);
 typedef void (^DataURLStatusHandler)(NSString * url, long long transferedSize, BOOL ok);
 typedef void (^UpdateEnvironmentHandler)(NSString*);
 typedef void (^DateHandler)(NSDate* date);
+typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 
 @protocol HXODelegate <NSObject>
 
@@ -82,7 +84,7 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
 - (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
-- (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void) inDeliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
 //- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
 - (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler;
 
@@ -145,6 +147,8 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) uploadFinished:(Attachment *)theAttachment;
 - (void) downloadFailed:(Attachment *)theAttachment;
 - (void) uploadFailed:(Attachment *)theAttachment;
+- (void) uploadStarted:(Attachment *)theAttachment;
+- (void) uploadPaused:(Attachment *)theAttachment;
 
 - (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
 - (void) updatePresenceWithHandler:(GenericResultHandler)handler;

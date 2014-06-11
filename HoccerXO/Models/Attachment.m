@@ -933,6 +933,7 @@ NSArray * TransferStateName = @[@"detached",
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
             [self notifyTransferStarted];
+            [self.chatBackend uploadStarted:self];
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
@@ -1066,6 +1067,7 @@ NSArray * TransferStateName = @[@"detached",
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
             [self notifyTransferStarted];
+            [self.chatBackend uploadStarted:self];
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }

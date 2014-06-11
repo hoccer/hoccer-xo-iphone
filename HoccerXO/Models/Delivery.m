@@ -17,11 +17,32 @@
 #import "HXOBackend.h" // for class crypto methods
 #import "Group.h"
 
-NSString * const kDeliveryStateNew        = @"new";
-NSString * const kDeliveryStateDelivering = @"delivering";
-NSString * const kDeliveryStateDelivered  = @"delivered";
-NSString * const kDeliveryStateConfirmed  = @"confirmed";
-NSString * const kDeliveryStateFailed     = @"failed";
+NSString * const kDeliveryStateNew                      = @"new";
+NSString * const kDeliveryStateDelivering               = @"delivering";
+NSString * const kDeliveryStateDelivered                = @"delivered";
+NSString * const kDeliveryStateDeliveredAcknowledged    = @"deliveredAcknowledged";
+NSString * const kDeliveryStateFailed                   = @"failed";
+NSString * const kDeliveryStateRejected                 = @"rejected";
+NSString * const kDeliveryStateAborted                  = @"aborted";
+NSString * const kDeliveryStateAbortedAcknowledged      = @"aborteddelivered";
+NSString * const kDeliveryStateFailedAcknowledged       = @"failedAcknowledged";
+NSString * const kDeliveryStateRejectedAcknowledged     = @"rejectedAcknowledged";
+
+NSString * const kDelivery_ATTACHMENT_STATE_NONE                            = @"none";
+NSString * const kDelivery_ATTACHMENT_STATE_NEW                             = @"new";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOADING                       = @"uploading";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_PAUSED                   = @"paused";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOADED                        = @"uploaded";
+NSString * const kDelivery_ATTACHMENT_STATE_RECEIVED                        = @"received";
+NSString * const kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED           = @"receivedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED                   = @"uploadFailed";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED      = @"uploadFailedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED                  = @"uploadAborted";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED     = @"uploadAbortedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED                 = @"downloadFailed";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_ACKNOWLEDGED    = @"downloadFailedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED                = @"downloadAborted";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"downloadAbortedAcknowledged";
 
 @implementation Delivery
 
@@ -37,6 +58,12 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic timeChanged;
 @dynamic timeChangedMillis;
 @dynamic keyId;
+@dynamic attachmentState;
+
+-(BOOL)hasFailed {
+    return [kDeliveryStateFailed isEqualToString:self.state] || [kDeliveryStateFailedAcknowledged isEqualToString:self.state];
+}
+
 
 -(NSString*) keyCiphertextString {
     return [self.keyCiphertext asBase64EncodedString];
@@ -149,7 +176,8 @@ NSString * const kDeliveryStateFailed     = @"failed";
               @"timeAccepted"  : @"message.timeAcceptedMillis",
               @"timeChanged"   : @"timeChangedMillis",
               @"keyId"         : @"receiverKeyId",
-              @"keyCiphertext" : @"keyCiphertextString"
+              @"keyCiphertext" : @"keyCiphertextString",
+              @"attachmentState" : @"attachmentState"
               };
 }
 

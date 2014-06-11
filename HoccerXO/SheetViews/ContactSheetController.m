@@ -31,6 +31,8 @@
 //#define SHOW_CONNECTION_STATUS
 //#define SHOW_UNREAD_MESSAGE_COUNT
 
+#define DEBUG_INVITE_ITEMS NO
+
 static const BOOL GROUPVIEW_DEBUG    = NO;
 static const BOOL RELATIONSHIP_DEBUG = NO;
 
@@ -238,11 +240,11 @@ static int  groupMemberContext;
         return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
         
     } else if ([item isEqual: self.inviteContactItem]) {
-        NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
+        if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
         return !(self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe) && [super isItemVisible:item];
         
     } else if ([item isEqual: self.acceptFriendItem] || [item isEqual: self.refuseFriendItem]) {
-        NSLog(@"isItemVisible acceptFriendItem or refuseFriendItem %d %d", self.contact.invitedMe, [super isItemVisible:item]);
+        if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible acceptFriendItem or refuseFriendItem %d %d", self.contact.invitedMe, [super isItemVisible:item]);
         return self.contact.invitedMe && [super isItemVisible: item];;
         
     } else if ([item isEqual: self.keyItem]) {

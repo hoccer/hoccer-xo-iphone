@@ -54,6 +54,7 @@
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
 #define DEBUG_NOTIFICATIONS NO
+#define DEBUG_APPEAR NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -246,7 +247,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 
 - (void) viewWillAppear:(BOOL)animated {
-    // NSLog(@"ChatViewController:viewWillAppear");
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewWillAppear");
     self.fetchedResultsController.delegate = self;
     [super viewWillAppear: animated];
 
@@ -312,13 +313,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear: animated];
-    NSLog(@"ChatViewController:viewDidDisappear");
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewDidDisappear");
     if ([self isMovingFromParentViewController]) {
-        NSLog(@"isMovingFromParentViewController");
+        if (DEBUG_APPEAR) NSLog(@"isMovingFromParentViewController");
         [AppDelegate.instance endInspecting:self.partner withInspector:self];
     }
     if ([self isBeingDismissed]) {
-        NSLog(@"isBeingDismissed");
+        if (DEBUG_APPEAR) NSLog(@"isBeingDismissed");
     }
     self.fetchedResultsController.delegate = nil;
 }
@@ -1613,10 +1614,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         {
             return HXOBubbleColorSchemeInProgress;
         } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered] ||
-                   [myDelivery.state isEqualToString:kDeliveryStateConfirmed])
+                   [myDelivery.state isEqualToString:kDeliveryStateDeliveredAcknowledged])
         {
             return HXOBubbleColorSchemeSuccess;
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
+        } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed] ||
+                   [myDelivery.state isEqualToString:kDeliveryStateFailedAcknowledged]) {
             return HXOBubbleColorSchemeFailed;
         } else {
             NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
@@ -1638,7 +1640,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                    [myDelivery.state isEqualToString:kDeliveryStateDelivered])
         {
             return NSLocalizedString(@"chat_message_sent", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
+        } else if ([myDelivery.state isEqualToString:kDeliveryStateDeliveredAcknowledged]) {
             return NSLocalizedString(@"chat_message_delivered", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
             return NSLocalizedString(@"chat_message_failed", nil);
