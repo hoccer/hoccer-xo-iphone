@@ -1590,7 +1590,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message {
     [self configureAttachmentSection: section forMessage: message];
-    section.title.text = [self attachmentTitle: message];
+    section.title.text = [[self attachmentTitle: message] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     Attachment *attachment = message.attachment;
     
@@ -1709,7 +1709,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (NSString*) subtitleForMessage: (HXOMessage*) message {
     if ([message.isOutgoing isEqualToNumber: @YES]) {
-        return [self stateStringForMessage: message];
+        return [[self stateStringForMessage: message] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     } else {
 #ifdef DEBUG
         NSString * author = [[self getAuthor: message] nickName];
@@ -1800,7 +1800,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (title == nil) {
         title = attachment.humanReadableFileName;
     }
-    return title;
+    return [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 
@@ -1850,7 +1850,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
         subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
      }
-    return subtitle;
+    return [subtitle stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 #pragma mark - MessageViewControllerDelegate methods
