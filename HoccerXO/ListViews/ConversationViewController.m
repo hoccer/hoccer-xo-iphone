@@ -277,7 +277,8 @@
                 NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", message.attachment.mediaType];
                 cell.subtitleLabel.text = [NSString stringWithFormat:@"[%@]", NSLocalizedString(attachment_type,nil)];
             } else {
-                cell.subtitleLabel.text = @"<>"; // should never happen
+                // can happen if the latest message has been deleted
+                cell.subtitleLabel.text = nil;
             }
             // TODO: do not mess with the fonts
             //cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
