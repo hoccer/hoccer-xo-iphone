@@ -10,8 +10,8 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
-#import "Attachment.h"
 #import "AppDelegate.h"
+#import "Attachment.h"
 #import "AttachmentInfo.h"
 #import "NSMutableArray+Shuffle.h"
 
@@ -91,13 +91,13 @@
         if (self.playlistIndex > 0) {
             [self playAtIndex:self.playlistIndex - 1];
         } else {
-            [self playAtIndex:self.playlist.count - 1];
+            [self playAtIndex:[self.playlist count] - 1];
         }
     }
 }
 
 - (void) skipForward {
-    if (self.playlistIndex < self.playlist.count - 1) {
+    if (self.playlistIndex < [self.playlist count] - 1) {
         [self playAtIndex:self.playlistIndex + 1];
     } else {
         [self playAtIndex:0];
@@ -121,7 +121,7 @@
 }
 
 - (NSUInteger) playlistLength {
-    return self.playlist.count;
+    return [self.playlist count];
 }
 
 - (NSUInteger) currentTrackNumber {
@@ -264,7 +264,7 @@
     if (self.repeatState == HXOAudioPlayerRepeatStateOne) {
         [self play];
     } else {
-        if (self.playlistIndex < self.playlist.count - 1) {
+        if (self.playlistIndex < [self.playlist count] - 1) {
             [self skipForward];
         } else {
             if (self.repeatState == HXOAudioPlayerRepeatStateAll) {
