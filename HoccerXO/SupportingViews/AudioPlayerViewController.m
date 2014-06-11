@@ -135,8 +135,8 @@
 
     if (attachment) {
         AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:attachment];
-        self.titleLabel.text = [attachmentInfo.audioTitle stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        self.artistLabel.text = [attachmentInfo.audioArtist stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        self.titleLabel.text = attachmentInfo.audioTitle;
+        self.artistLabel.text = attachmentInfo.audioArtist;
 
         self.seekSlider.minimumValue = 0.0f;
         self.seekSlider.maximumValue = self.audioPlayer.duration;

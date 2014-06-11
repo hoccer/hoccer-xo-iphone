@@ -149,8 +149,8 @@
 
     if (attachment) {
         AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
-        self.titleLabel.text = [info.audioTitle stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        self.subtitleLabel.text = [info.audioArtistAndAlbum stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        self.titleLabel.text = info.audioTitle;
+        self.subtitleLabel.text = info.audioArtistAndAlbum;
         
         [attachment loadImage:^(UIImage *image, NSError *error) {
             if (error == nil) {
