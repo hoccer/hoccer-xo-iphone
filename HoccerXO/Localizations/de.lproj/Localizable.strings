@@ -58,6 +58,7 @@
 "attachment_type_image"                  = "Bild";
 "attachment_type_video"                  = "Video";
 "attachment_type_audio"                  = "Audio";
+"attachment_type_audio_recording"        = "Sprachaufnahme";
 "attachment_type_vcard"                  = "Adresse";
 "attachment_type_geolocation"            = "Ort";
 

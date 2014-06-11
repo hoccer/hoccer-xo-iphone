@@ -442,8 +442,7 @@ NSArray * TransferStateName = @[@"detached",
         }  else if ([self.mediaType isEqualToString: @"geolocation"]) {
             largeIconName = @"chatbar-attachment-icon-location";
         }  else if ([self.mediaType isEqualToString: @"audio"]) {
-            NSRange findResult = [self.humanReadableFileName rangeOfString:@"recording"];
-            if (findResult.length == @"recording".length && findResult.location == 0) {
+            if ([self.humanReadableFileName hasPrefix:@"recording"]) {
                 largeIconName = @"chatbar-attachment-icon-record";
             } else {
                 largeIconName = @"chatbar-attachment-icon-music";

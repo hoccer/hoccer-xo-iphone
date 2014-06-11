@@ -1746,8 +1746,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }  else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
         iconName = @"cnt-location";
     }  else if ([attachment.mediaType isEqualToString: @"audio"]) {
-        NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
-        if (findResult.length == @"recording".length && findResult.location == 0) {
+        if ([attachment.humanReadableFileName hasPrefix:@"recording"]) {
             iconName = @"cnt-record";
         } else {
             iconName = @"cnt-music";
@@ -1787,10 +1786,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
             title = NSLocalizedString(@"attachment_type_geolocation", nil);
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-            NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
-            if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-                title = item.attachmentInfo.audioTitle;
-            }
+            title = item.attachmentInfo.audioTitle;
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
         NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(message.attachment.mediaType, nil);

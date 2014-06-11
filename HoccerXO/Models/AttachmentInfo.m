@@ -52,33 +52,35 @@
 }
 
 - (void) loadInfoForAudioAttachment: (Attachment *) attachment {
-    NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:attachment.contentURL options:nil];
 
     CMTime audioDuration = asset.duration;
     _audioDuration = CMTimeGetSeconds(audioDuration);
-    if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-        NSArray * metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
-        if (metaData.count > 0) {
-            AVMetadataItem * metaItem = metaData[0];
-            _audioTitle = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        }
 
-        if (self.audioTitle == nil || self.audioTitle.length == 0) {
+    NSArray * metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyTitle keySpace:AVMetadataKeySpaceCommon];
+    if (metaData.count > 0) {
+        AVMetadataItem * metaItem = metaData[0];
+        _audioTitle = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    }
+
+    if (self.audioTitle == nil || self.audioTitle.length == 0) {
+        if ([attachment.humanReadableFileName hasPrefix:@"recording"]) {
+            _audioTitle = NSLocalizedString(@"attachment_type_audio_recording", nil);
+        } else {
             _audioTitle = attachment.humanReadableFileName;
         }
+    }
 
-        metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
-        if (metaData.count > 0) {
-            AVMetadataItem * metaItem = metaData[0];
-            _audioArtist = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        }
-        
-        metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
-        if (metaData.count > 0) {
-            AVMetadataItem * metaItem = metaData[0];
-            _audioAlbum = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        }
+    metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyArtist keySpace:AVMetadataKeySpaceCommon];
+    if (metaData.count > 0) {
+        AVMetadataItem * metaItem = metaData[0];
+        _audioArtist = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    }
+    
+    metaData = [AVMetadataItem metadataItemsFromArray:asset.commonMetadata withKey:AVMetadataCommonKeyAlbumName keySpace:AVMetadataKeySpaceCommon];
+    if (metaData.count > 0) {
+        AVMetadataItem * metaItem = metaData[0];
+        _audioAlbum = [metaItem.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     }
 }
 
