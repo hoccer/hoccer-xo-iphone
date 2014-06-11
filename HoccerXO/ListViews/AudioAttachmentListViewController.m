@@ -122,6 +122,18 @@
     return [sectionInfo name];
 }
 
+- (UITableViewCellEditingStyle) tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        Attachment *attachment = [self attachmentAtIndexPath:indexPath];
+        [[AppDelegate instance] deleteObject:attachment.message];
+        [[AppDelegate instance] saveDatabase];
+    }
+}
+
 - (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
     cell.attachment = attachment;
@@ -151,7 +163,8 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray * playlist = [self.fetchedResultsController fetchedObjects];
+    // The fetchedObjects array seems to change, so we take an immutable copy
+    NSArray * playlist = [[self.fetchedResultsController fetchedObjects] copy];
     
     HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
     BOOL success = [audioPlayer playWithPlaylist:playlist atTrackNumber:indexPath.row];

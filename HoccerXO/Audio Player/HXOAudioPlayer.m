@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "Attachment.h"
 #import "AttachmentInfo.h"
+#import "NSArray+RemoveObject.h"
 #import "NSMutableArray+Shuffle.h"
 
 @interface HXOAudioPlayer ()
@@ -53,9 +54,15 @@
         self.playlistIndex = 0;
         self.isShuffled = NO;
         self.repeatState = HXOAudioPlayerRepeatStateOff;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(objectsDidChange:) name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] managedObjectContext]];
     }
     
     return self;
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] managedObjectContext]];
 }
 
 #pragma mark - Public interface
@@ -154,14 +161,12 @@
 #pragma mark - Private helpers
 
 - (BOOL) playAtIndex: (NSUInteger) index {
+    NSAssert(index < [self.playlist count], @"playlist index out of bounds");
+
     self.playlistIndex = index;
     
-    if (index < self.playlist.count) {
-        Attachment *attachment = [self.playlist objectAtIndex:self.currentTrackNumber];
-        return [self playAttachment:attachment];
-    } else {
-        return YES;
-    }
+    Attachment *attachment = [self.playlist objectAtIndex:self.currentTrackNumber];
+    return [self playAttachment:attachment];
 }
 
 - (BOOL) playAttachment: (Attachment *) attachment {
@@ -199,6 +204,23 @@
     }
     
     [self updateNowPlayingInfo];
+}
+
+- (void) removeAttachmentFromPlaylist: (Attachment *) attachment {
+    NSUInteger removedTrackNumber = [self.playlist indexOfObject:attachment];
+    
+    if (removedTrackNumber != NSNotFound) {
+        NSArray *newPlaylist = [self.playlist arrayByRemovingObject:attachment];
+
+        NSUInteger currentTrackNumber = [self currentTrackNumber];
+        NSUInteger newTrackNumber = removedTrackNumber < currentTrackNumber ? currentTrackNumber - 1 : currentTrackNumber;
+
+        if (newTrackNumber < [newPlaylist count]) {
+            [self playWithPlaylist:newPlaylist atTrackNumber:newTrackNumber];
+        } else {
+            [self stop];
+        }
+    }
 }
 
 - (void) setCurrentTime:(NSTimeInterval)currentTime {
@@ -278,6 +300,19 @@
 
 - (void) audioPlayerBeginInterruption:(AVAudioPlayer *)player {
     [self stop];
+}
+
+#pragma mark - Notification handling
+
+- (void) objectsDidChange: (NSNotification *) notification {
+    NSArray *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
+    
+    for (id object in deletedObjects) {
+        if ([object isKindOfClass:[Attachment class]]) {
+            Attachment *attachment = (Attachment *)object;
+            [self removeAttachmentFromPlaylist:attachment];
+        }
+    }
 }
 
 @end

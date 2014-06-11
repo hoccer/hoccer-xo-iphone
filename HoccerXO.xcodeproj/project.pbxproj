@@ -173,9 +173,10 @@
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
+		6AC25EE1193F844700ED5E61 /* navbar-playing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25EE0193F844700ED5E61 /* navbar-playing.m */; };
 		6AC25F0C193FAB3200ED5E61 /* navbar-profile-contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25F0B193FAB3200ED5E61 /* navbar-profile-contact.m */; };
 		6AC25F0F193FAC0800ED5E61 /* navbar-profile-group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */; };
-		6AC25EE1193F844700ED5E61 /* navbar-playing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25EE0193F844700ED5E61 /* navbar-playing.m */; };
+		C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */; };
 		C576EBB61934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */; };
 		C576EBB71934CC3B00C0D254 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB51934CC3B00C0D254 /* HXOAudioPlayer.m */; };
 		C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBC71934CC6100C0D254 /* NSMutableArray+Shuffle.m */; };
@@ -778,6 +779,10 @@
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6AC25EDF193F844700ED5E61 /* navbar-playing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "navbar-playing.h"; sourceTree = "<group>"; };
+		6AC25EE0193F844700ED5E61 /* navbar-playing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-playing.m"; sourceTree = "<group>"; };
+		6AC25EF0193F872300ED5E61 /* navbar-playing.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-playing.pcvd"; sourceTree = "<group>"; };
+		6AC25EF1193F872300ED5E61 /* navbar-playing.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "navbar-playing.svg"; sourceTree = "<group>"; };
 		6AC25F06193FAB1C00ED5E61 /* navbar-profile-contact.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-profile-contact.pcvd"; sourceTree = "<group>"; };
 		6AC25F07193FAB1C00ED5E61 /* navbar-profile-group.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-profile-group.pcvd"; sourceTree = "<group>"; };
 		6AC25F08193FAB1C00ED5E61 /* navbar-profile-contact.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "navbar-profile-contact.svg"; sourceTree = "<group>"; };
@@ -786,10 +791,8 @@
 		6AC25F0B193FAB3200ED5E61 /* navbar-profile-contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-profile-contact.m"; sourceTree = "<group>"; };
 		6AC25F0D193FAC0800ED5E61 /* navbar-profile-group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "navbar-profile-group.h"; sourceTree = "<group>"; };
 		6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-profile-group.m"; sourceTree = "<group>"; };
-		6AC25EDF193F844700ED5E61 /* navbar-playing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "navbar-playing.h"; sourceTree = "<group>"; };
-		6AC25EE0193F844700ED5E61 /* navbar-playing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-playing.m"; sourceTree = "<group>"; };
-		6AC25EF0193F872300ED5E61 /* navbar-playing.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-playing.pcvd"; sourceTree = "<group>"; };
-		6AC25EF1193F872300ED5E61 /* navbar-playing.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "navbar-playing.svg"; sourceTree = "<group>"; };
+		C51B1146194858EC00FBCD2B /* NSArray+RemoveObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+RemoveObject.h"; sourceTree = "<group>"; };
+		C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+RemoveObject.m"; sourceTree = "<group>"; };
 		C576EBB21934CC3B00C0D254 /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
 		C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
 		C576EBB41934CC3B00C0D254 /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
@@ -1350,6 +1353,8 @@
 				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
 				E9AF28A01927CBFF00E29A03 /* NSData+DictCompression.h */,
 				E9AF28A11927CBFF00E29A03 /* NSData+DictCompression.m */,
+				C51B1146194858EC00FBCD2B /* NSArray+RemoveObject.h */,
+				C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
@@ -2868,6 +2873,7 @@
 				E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */,
 				6302A98818DA870400B2D04F /* Digest.m in Sources */,
 				E9E92F3918733B7A007B8042 /* GCDAsyncSocket.m in Sources */,
+				C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */,
 				C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
 				C576EC401934CCB200C0D254 /* player_button_repeat_all.m in Sources */,
