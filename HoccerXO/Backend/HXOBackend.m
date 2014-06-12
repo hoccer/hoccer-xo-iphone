@@ -3854,7 +3854,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) pairByToken: (NSString*) token {
     // NSLog(@"pairByToken:");
     [_serverConnection invoke: @"pairByToken" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
-        [self.delegate didPairWithStatus: [responseOrError boolValue]];
+        [self.delegate didPairWithStatus: success];
         if (success) {
             // NSLog(@"pairByToken(): got result: %@", responseOrError);
             [self updatePresenceWithHandler:^(BOOL ok) {
