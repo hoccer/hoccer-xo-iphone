@@ -19,6 +19,10 @@ FOUNDATION_EXPORT NSString * const kHXOURLScheme;
 
 typedef void (^ContinueBlock)();
 typedef void (^ContextBlock)(NSManagedObjectContext* context);
+typedef void (^ContextParameterBlock)(NSManagedObjectContext* context, NSArray * managedObjects);
+
+extern NSArray * objectIds(NSArray* managedObjects);
+extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context);
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
@@ -83,10 +87,19 @@ typedef void (^ContextBlock)(NSManagedObjectContext* context);
 - (BOOL)deleteObject:(id)object;
 - (BOOL)deleteObject:(id)object inContext:(NSManagedObjectContext *) context;
 
-- (void)performInNewBackgroundContext:(ContextBlock)backgroundBlock;
-- (void)performInMainContext:(ContextBlock)contextBlock;
-- (void)performInMainContextAndWait:(ContextBlock)contextBlock;
+//- (void)performInNewBackgroundContext:(ContextBlock)backgroundBlock;
+//- (void)performInMainContext:(ContextBlock)contextBlock;
+//- (void)performInMainContextAndWait:(ContextBlock)contextBlock;
 
+- (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock;
+- (void)performWithoutLockingInNewBackgroundContext:(ContextBlock)backgroundBlock;
+- (void)performWithLockingId:(NSString*)lockId inMainContext:(ContextBlock)contextBlock;
+- (void)performWithoutLockingInMainContext:(ContextBlock)contextBlock;
+- (void)performAfterCurrentContextFinishedInMainContext:(ContextBlock)contextBlock;
+- (void)performAfterCurrentContextFinishedInMainContextPassing:(NSArray*)objects withBlock:(ContextParameterBlock)contextBlock;
+- (void)lockId:(NSString*)Id;
+- (void)unlockId:(NSString*)Id;
+- (void)assertMainContext;
 
 - (NSURL *)applicationDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;

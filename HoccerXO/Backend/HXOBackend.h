@@ -100,8 +100,7 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
-//- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
-- (void) syncGroupsWithForce:(BOOL)forceAll withCompletionContext:(NSManagedObjectContext*)completionContext withCompletion:(GenericResultHandler)completion;
+- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 

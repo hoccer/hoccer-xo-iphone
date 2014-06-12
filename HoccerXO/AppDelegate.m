@@ -58,6 +58,8 @@
 #define TRACE_PENDING_CHANGES NO
 #define TRACE_BACKGROUND_PROCESSING NO
 #define TRACE_NEARBY_ACTIVATION NO
+#define TRACE_LOCKING NO
+
 
 #ifdef HOCCER_DEV
 NSString * const kHXOURLScheme = @"hxod";
@@ -77,6 +79,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
     NSMutableArray * _inspectedObjects;
     NSMutableArray * _inspectors;
+    NSMutableDictionary *_idLocks;
 }
 @end
 
@@ -185,6 +188,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
+    
+    _idLocks = [NSMutableDictionary new];
 
 #ifdef DEBUG
 #define DEFINE_OTHER_SERVERS
@@ -728,42 +733,171 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return [NSThread currentThread].threadDictionary[@"hxoMOContext"];
 }
 
+-(void) assertMainContext {
+    if (![self.currentObjectContext isEqual:self.mainObjectContext]) {
+        NSLog(@"#ERROR: assertMainContext: called from a background thread");
+        NSLog(@"%@", [NSThread callStackSymbols]);
+    }
+}
+
 - (NSManagedObjectContext *)newBackgroundManagedObjectContext {
+    if (![self.currentObjectContext isEqual:self.mainObjectContext]) {
+        NSLog(@"ERROR: calling newBackgroundManagedObjectContext from another background context is not allowed");
+        NSLog(@"%@", [NSThread callStackSymbols]);
+        return nil;
+    }
     NSManagedObjectContext *temporaryContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     temporaryContext.parentContext = [self mainObjectContext];
     return temporaryContext;
 }
 
-- (void)performInNewBackgroundContext:(ContextBlock)backgroundBlock {
+- (void)performWithoutLockingInNewBackgroundContext:(ContextBlock)backgroundBlock {
     NSManagedObjectContext *temporaryContext = [self newBackgroundManagedObjectContext];
-    NSManagedObjectContext * mainMOC = [self mainObjectContext];
-    [temporaryContext performBlock:^{
-        [NSThread currentThread].threadDictionary[@"hxoMOContext"] = temporaryContext;
-        if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Starting backgroundblock of ctx %@", temporaryContext);
-        backgroundBlock(temporaryContext);
-        if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished backgroundblock of ctx %@, pushing to parent", temporaryContext);
-        
-        // push to parent
-        [self saveContext:temporaryContext];
-
-        if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done", temporaryContext);
-        
-        // save parent to disk asynchronously
-        [mainMOC performBlock:^{
-            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@,", temporaryContext);
-            [self saveDatabaseNow];
-            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes done of ctx %@,", temporaryContext);
+    if (temporaryContext != nil) {
+        NSManagedObjectContext * mainMOC = [self mainObjectContext];
+        [temporaryContext performBlock:^{
+            [NSThread currentThread].threadDictionary[@"hxoMOContext"] = temporaryContext;
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Starting backgroundblock of ctx %@", temporaryContext);
+            backgroundBlock(temporaryContext);
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished backgroundblock of ctx %@, pushing to parent", temporaryContext);
+            
+            // push to parent
+            [self saveContext:temporaryContext];
+            
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done", temporaryContext);
+            
+            // save parent to disk asynchronously
+            [mainMOC performBlock:^{
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@,", temporaryContext);
+                [self saveDatabaseNow];
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes done of ctx %@,", temporaryContext);
+            }];
+            [[NSThread currentThread].threadDictionary removeObjectForKey:@"hxoMOContext"];
         }];
-        [[NSThread currentThread].threadDictionary removeObjectForKey:@"hxoMOContext"];
+    }
+}
+
+-(NSLock*)idLock:(NSString*)name {
+    @synchronized(_idLocks) {
+        NSLock * lock = _idLocks[name];
+        if (lock != nil) {
+            if (TRACE_LOCKING) NSLog(@"handing out lock %@",lock);
+            return lock;
+        }
+        lock = [NSLock new];
+        lock.name = name;
+        _idLocks[name] = lock;
+        if (TRACE_LOCKING) NSLog(@"handing out new lock %@",lock);
+        return lock;
+    }
+}
+
+- (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
+    NSManagedObjectContext *temporaryContext = [self newBackgroundManagedObjectContext];
+    if (temporaryContext != nil) {
+        NSManagedObjectContext * mainMOC = [self mainObjectContext];
+        [temporaryContext performBlock:^{
+            NSLock * lock = [self idLock:lockId];
+            if (TRACE_LOCKING) NSLog(@"acquiring lock %@",lock);
+            [lock lock];
+            if (TRACE_LOCKING) NSLog(@"acquired lock %@",lock);
+            [temporaryContext reset]; // load any changes in the parent context after lock acquisition
+            [NSThread currentThread].threadDictionary[@"hxoMOContext"] = temporaryContext;
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Starting backgroundblock of ctx %@", temporaryContext);
+            backgroundBlock(temporaryContext);
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished backgroundblock of ctx %@, pushing to parent", temporaryContext);
+            
+            // push to parent
+            [self saveContext:temporaryContext];
+            
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done", temporaryContext);
+            
+            // save parent to disk asynchronously
+            [mainMOC performBlock:^{
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@,", temporaryContext);
+                [self saveDatabaseNow];
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes done of ctx %@,", temporaryContext);
+                //[temporaryContext performBlock:^{
+                //}];
+            }];
+            [[NSThread currentThread].threadDictionary removeObjectForKey:@"hxoMOContext"];
+            if (TRACE_LOCKING) NSLog(@"releasing lock %@",lock);
+            [lock unlock];
+            if (TRACE_LOCKING) NSLog(@"released lock %@",lock);
+        }];
+    }
+}
+
+-(void)lockId:(NSString*)Id {
+    [[self idLock:Id] lock];
+}
+
+-(void)unlockId:(NSString*)Id {
+    [[self idLock:Id] unlock];
+}
+
+- (void)performWithLockingId:(NSString*)lockId inMainContext:(ContextBlock)contextBlock {
+    NSManagedObjectContext * mainMOC = [self mainObjectContext];
+    [mainMOC performBlock:^{
+        NSLock * lock = [self idLock:lockId];
+        [lock lock];
+        contextBlock(mainMOC);
+        [lock unlock];
     }];
 }
 
-- (void)performInMainContext:(ContextBlock)contextBlock {
+NSArray * objectIds(NSArray* managedObjects) {
+    NSMutableArray * result = [NSMutableArray new];
+    for (NSManagedObject * obj in managedObjects) {
+        [result addObject:obj.objectID];
+    }
+    return result;
+}
+
+NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
+    NSMutableArray * result = [NSMutableArray new];
+    for (NSManagedObjectID * objId in objectIds) {
+        [result addObject:[context objectWithID:objId]];
+    }
+    return result;
+}
+
+// our temporary background context is a serial context, so calling this method will result in this block excecuted after
+// the temporary context has finished it's main processing
+- (void)performAfterCurrentContextFinishedInMainContext:(ContextBlock)contextBlock {
+    NSManagedObjectContext * currentContext = self.currentObjectContext;
+    if ([currentContext isEqual:self.mainObjectContext]) {
+        NSLog(@"performAfterCurrentContextFinishedInMainContext called from main context, don't do that");
+    }
+    [currentContext performBlock:^{
+        NSManagedObjectContext * mainMOC = [self mainObjectContext];
+        [mainMOC performBlock:^{
+            contextBlock(mainMOC);
+        }];
+    }];
+}
+
+- (void)performAfterCurrentContextFinishedInMainContextPassing:(NSArray*)objects withBlock:(ContextParameterBlock)contextBlock {
+    NSManagedObjectContext * currentContext = self.currentObjectContext;
+    if ([currentContext isEqual:self.mainObjectContext]) {
+        NSLog(@"performAfterCurrentContextFinishedInMainContext called from main context, don't do that");
+    }
+    [currentContext performBlock:^{
+        NSArray * ids = objectIds(objects);
+        NSManagedObjectContext * mainMOC = [self mainObjectContext];
+        [mainMOC performBlock:^{
+            contextBlock(mainMOC, managedObjects(ids, mainMOC));
+        }];
+    }];
+}
+
+- (void)performWithoutLockingInMainContext:(ContextBlock)contextBlock {
     NSManagedObjectContext * mainMOC = [self mainObjectContext];
     [mainMOC performBlock:^{
         contextBlock(mainMOC);
     }];
 }
+/*
 
 - (void)performInMainContextAndWait:(ContextBlock)contextBlock {
     NSManagedObjectContext * mainMOC = [self mainObjectContext];
@@ -771,6 +905,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         contextBlock(mainMOC);
     }];
 }
+*/
 
 -(void)saveContext:(NSManagedObjectContext*)context {
     NSDate * start;
@@ -785,11 +920,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         ++validationErrorCount;
         if (validationErrorCount < 3) {
-            [self performInMainContext:^(NSManagedObjectContext *context) {
+            [self performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
                 [self displayValidationError:error];
             }];
         } else {
-            [self performInMainContext:^(NSManagedObjectContext *context) {
+            [self performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
                 [self showFatalErrorAlertWithMessage:nil withTitle:nil];
             }];
         }
