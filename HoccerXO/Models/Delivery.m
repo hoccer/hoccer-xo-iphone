@@ -68,6 +68,83 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
     return [kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:self.attachmentState] || [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:self.attachmentState];
 }
 
+-(BOOL)isInFinalState {
+    return [Delivery isAcknowledgedState:self.state] && [Delivery isAcknowledgedAttachmentState:self.attachmentState];
+}
+
+-(BOOL)isDelivered {
+    return [Delivery isDeliveredState:self.state];
+}
+
+-(BOOL)isFailure {
+    return [Delivery isFailureState:self.state];
+}
+
+-(BOOL)isAttachmentReceived {
+    return [Delivery isAttachmentReceivedState:self.attachmentState];
+}
+
+-(BOOL)isMissingAttachment {
+    return ![kDelivery_ATTACHMENT_STATE_NONE isEqualToString:self.attachmentState] && !self.isAttachmentReceived;
+}
+
+
++(BOOL)isDeliveredState:(NSString*) state {
+    return
+    [kDeliveryStateDeliveredAcknowledged isEqualToString:state] ||
+    [kDeliveryStateDelivered isEqualToString:state];
+}
+
++(BOOL)isFailureState:(NSString*) state {
+    return
+    [kDeliveryStateFailed isEqualToString:state] ||
+    [kDeliveryStateFailedAcknowledged isEqualToString:state] ||
+    [kDeliveryStateRejected isEqualToString:state] ||
+    [kDeliveryStateRejectedAcknowledged isEqualToString:state] ||
+    [kDeliveryStateAborted isEqualToString:state] ||
+    [kDeliveryStateAbortedAcknowledged isEqualToString:state];
+}
+
+
++(BOOL)isAcknowledgedState:(NSString*) state {
+    return [kDeliveryStateDeliveredAcknowledged isEqualToString:state] ||
+    [kDeliveryStateAbortedAcknowledged isEqualToString:state] ||
+    [kDeliveryStateRejectedAcknowledged isEqualToString:state] ||
+    [kDeliveryStateFailedAcknowledged isEqualToString:state];
+}
+
++(BOOL)shouldAcknowledgeStateForOutgoing:(NSString*) state {
+    return [kDeliveryStateDelivered isEqualToString:state] ||
+    [kDeliveryStateAborted isEqualToString:state] ||
+    [kDeliveryStateRejected isEqualToString:state] ||
+    [kDeliveryStateFailed isEqualToString:state];
+}
+
++(BOOL)isAttachmentReceivedState:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED isEqualToString:attachmentState];
+}
+
+
++(BOOL)isAcknowledgedAttachmentState:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_NONE isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState];
+}
+
++(BOOL)shouldAcknowledgeAttachmentStateForOutgoing:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED isEqualToString:attachmentState];
+}
+
++(BOOL)shouldAcknowledgeAttachmentStateForIncoming:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState];
+}
 
 
 -(NSString*) keyCiphertextString {

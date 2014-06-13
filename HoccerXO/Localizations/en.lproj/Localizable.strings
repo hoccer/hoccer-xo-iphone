@@ -129,6 +129,9 @@
 "chat_message_read"                 = "read";
 "chat_message_failed"               = "failed";
 
+"chat_message_delivered_missing_attachment %@"="sent, waiting for %@";
+
+
 "chat_resend_menu_item"             = "Send";
 "chat_open_with_menu_item"          = "Open with...";
 "chat_share_menu_item"              = "Share";

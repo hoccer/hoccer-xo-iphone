@@ -569,9 +569,11 @@ static NSTimer * _stateNotificationDelayTimer;
     if (attachment != nil) {
         message.attachment = attachment;
         attachment.cipheredSize = [attachment calcCipheredSize];
+        delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NEW;
         [self createUrlsForTransferOfAttachmentOfMessage:message];
         return;
     }
+    delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NONE;
     [self finishSendMessage:message toContact:contact withDelivery:delivery withAttachment:attachment];
 }
 
@@ -4160,7 +4162,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         }
     }];
 }
-
+/*
 - (void) outDeliveryAcknowledge: (Delivery*) delivery {
     if (DELIVERY_TRACE) {NSLog(@"outDeliveryAcknowledge: %@", delivery);}
         
@@ -4198,6 +4200,45 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         }
     }];
 }
+*/
+- (void) outDeliveryAcknowledgeMethod:(NSString*)method withExpectedState:(NSString*)expected withMessageId:(NSString*)messageId withReceiverId:(NSString*)receiverId{
+    if (DELIVERY_TRACE) {NSLog(@"outDeliveryAcknowledgeMethod: (%@) messageId=%@, receiverId=%@", method, messageId,receiverId);}
+    
+    [_serverConnection invoke: method withParams: @[messageId, receiverId]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success && responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
+             if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+             
+             if (![responseOrError isKindOfClass:[NSDictionary class]]) {
+                 NSLog(@"ERROR: outDeliveryAcknowledgeMethod (%@) response is null", method);
+                 return;
+             }
+             if (![expected isEqualToString: responseOrError[@"state"]]) {
+                 NSLog(@"ERROR: outDeliveryAcknowledgeMethod (%@), unexpected response state %@, expected %@", method, responseOrError[@"state"], expected);
+             }
+             [self outgoingDeliveryUpdated:@[responseOrError]];
+         } else {
+             NSLog(@" outDeliveryAcknowledgeMethod (%@) failed, response: %@", method, responseOrError);
+         }
+     }];
+}
+
+// As sender, acknowledge a "delivered" delivery
+
+- (void) outDeliveryAcknowledge: (NSString*)messageId withReceiverId:(NSString*)receiverId {
+    [self outDeliveryAcknowledgeMethod:@"outDeliveryAcknowledge" withExpectedState:kDeliveryStateDeliveredAcknowledged withMessageId:messageId withReceiverId:receiverId];
+}
+
+// As sender, acknowledge a "failed" delivery
+- (void) outDeliveryAcknowledgeFailed: (NSString*)messageId withReceiverId:(NSString*)receiverId {
+    [self outDeliveryAcknowledgeMethod:@"outDeliveryAcknowledgeFailed" withExpectedState:kDeliveryStateFailedAcknowledged withMessageId:messageId withReceiverId:receiverId];
+}
+
+// As sender, acknowledge a "rejected" delivery
+- (void) outDeliveryAcknowledgeRejected: (NSString*)messageId withReceiverId:(NSString*)receiverId {
+    [self outDeliveryAcknowledgeMethod:@"outDeliveryAcknowledgeFailed" withExpectedState:kDeliveryStateRejectedAcknowledged withMessageId:messageId withReceiverId:receiverId];
+}
 
 // abort a delivery as sender
 //TalkDelivery outDeliveryAbort(String messageId, String recipientId);
@@ -4212,12 +4253,15 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
              if (![kDeliveryStateAborted isEqualToString:resultState] && ![kDeliveryStateAbortedAcknowledged isEqualToString:resultState]) {
                  NSLog(@"ERROR: outDeliveryAbort() returned bad state %@", responseOrError);
              } else {
+                 [self outgoingDeliveryUpdated:@[responseOrError]];
+                 /*
                  Delivery * delivery = [self getDeliveryByMessageTagAndReceiverId:theMessageId withReceiver:theReceiverClientId inContext:self.delegate.currentObjectContext];
                  if (delivery != nil) {
                      [delivery updateWithDictionary:result];
                  } else {
                      NSLog(@"outDeliveryAbort() : delivery not found");
                  }
+                  */
              }
              // NSLog(@"outDeliveryAbort() returned delivery: %@", responseOrError);
          } else {
@@ -4226,17 +4270,8 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
      }];
 }
 
-//TalkDelivery   outDeliveryAcknowledge(String messageId, String recipientId);
-
-// As sender, acknowledge a "failed" delivery
-//TalkDelivery   outDeliveryAcknowledgeFailed(String messageId, String recipientId);
-
-// As sender, acknowledge a "rejected" delivery
-//TalkDelivery   outDeliveryAcknowledgeRejected(String messageId, String recipientId);
-
-
 // reject a delivery as receiver
-// shoould be called when something is fishy with this message
+// shoould be called when something is fishy with a message
 // TalkDelivery inDeliveryReject(String messageId, String reason);
 - (void) inDeliveryReject: (NSString*) theMessageId withReason:(NSString*) theReason {
     // NSLog(@"deliveryAbort: %@", delivery);
@@ -4249,7 +4284,9 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
              if (![kDeliveryStateRejected isEqualToString:resultState]) {
                  NSLog(@"ERROR: inDeliveryReject() returned bad state %@", responseOrError);
              }
-             Delivery * delivery = [self getDeliveryByMessageTagAndReceiverId:theMessageId withReceiver:UserProfile.sharedProfile.clientId inContext:self.delegate.currentObjectContext];
+             HXOMessage * message = [self getMessageById:theMessageId inContext:self.delegate.mainObjectContext];
+             Delivery * delivery = message.deliveries.anyObject;
+             
              if (delivery != nil) {
                  [AppDelegate.instance deleteObject:delivery.message];
              }
@@ -4962,15 +4999,53 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     return delivery;
 }
 
+- (void) outDeliveryAcknowledgeState:(NSString*)state withMessageId:(NSString*)messageId withReceiverId:(NSString*)receiverId {
+    if ([Delivery shouldAcknowledgeStateForOutgoing:state]) {
+        if ([kDeliveryStateDelivered isEqualToString:state]) {
+            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                [SoundEffectPlayer messageDelivered];
+                [self outDeliveryAcknowledge: messageId withReceiverId:receiverId];
+            }];
+        } else if ([kDeliveryStateFailed isEqualToString:state]) {
+            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                [self outDeliveryAcknowledgeFailed: messageId withReceiverId:receiverId];
+            }];
+        } else if ([kDeliveryStateRejected isEqualToString:state]) {
+            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                [self outDeliveryAcknowledgeRejected: messageId withReceiverId:receiverId];
+            }];
+        }
+    }
+}
+
+- (void) outDeliveryAcknowledgeAttachmentState:(NSString*)attachmentState withFileId:(NSString*)myFileId {
+    if ([Delivery shouldAcknowledgeAttachmentStateForOutgoing:attachmentState]) {
+        if ([kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:attachmentState]) {
+            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                [self acknowledgeReceivedFile: myFileId withhandler:nil];
+            }];
+        } else if ([kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:attachmentState]) {
+            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                [self acknowledgeFailedFileDownload: myFileId withhandler:nil];
+            }];
+        } else if ([kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED isEqualToString:attachmentState]) {
+            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                [self acknowledgeAbortedFileDownload: myFileId withhandler:nil];
+            }];
+        }
+    }
+}
+
+
 
 // called by server to notify us about status changes of outgoing deliveries we made
 - (void) outgoingDeliveryUpdated: (NSArray*) params {
         if (params.count != 1) {
-            NSLog(@"outgoingDelivery: requires an array of one parameters (delivery), but got %d parameters.", params.count);
+            NSLog(@"outgoingDeliveryUpdated: requires an array of one parameter (delivery), but got %d parameters.", params.count);
             return;
         }
         if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
-            NSLog(@"outgoingDelivery: argument is not a valid object");
+            NSLog(@"outgoingDeliveryUpdated: argument is not a valid object");
             return;
         }
         NSDictionary * deliveryDict = params[0];
@@ -5001,8 +5076,54 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%@",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries);
         
         if (myDelivery != nil) {
-            // TODO: server should not send outgoingDelivery-changes for confirmed object, we just won't answer them for now to avoid ack-storms
-            if ([myDelivery.state isEqualToString:@"confirmed"]) {
+            if (myDelivery.isInFinalState) {
+                NSLog(@"#WARNING: outgoingDelivery Notification received for delivery in final state '%@', attachmentState '%@', messageId: %@",
+                      myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
+                return;
+            }
+            if ([myDelivery.state isEqualToString:deliveryDict[@"state"]] && [myDelivery.attachmentState isEqualToString:deliveryDict[@"attachmentState"]]) {
+                NSLog(@"#WARNING: outgoingDelivery notification received with unchanged state '%@', attachmentState '%@', messageId: %@",
+                      myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
+            }
+            if (DELIVERY_TRACE) {NSLog(@"outgoingDelivery Notification: Delivery state '%@'->'%@' attachmentState '%@'->'%@'for messageTag %@ id %@",myDelivery.state, deliveryDict[@"state"], myDelivery.attachmentState, deliveryDict[@"attachmentState"],myMessageTag, deliveryDict[@"messageId"]);}
+            
+            [myDelivery updateWithDictionary: deliveryDict];
+            
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery.message]
+                                                                        withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
+             {
+                 [context refreshObject: managedObjects[0] mergeChanges: YES];
+             }];
+             
+             [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
+            
+             [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState withFileId:myMessage.attachmentFileId];
+
+        } else {
+            // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
+            // so we just acknowledge or abort if we can
+            
+            NSString * state = deliveryDict[@"state"];
+            if ([Delivery shouldAcknowledgeStateForOutgoing:state]) {
+                // acknowledge state if we can
+                [self outDeliveryAcknowledgeState:state withMessageId:myMessageId withReceiverId:myReceiverId];
+            } else {
+                // abort if we can
+                if ([kDeliveryStateDelivering isEqualToString:state]) {
+                    [self outDeliveryAbort:myMessageId forClient:myReceiverId];
+                }
+            }
+        }
+    }];
+}
+
+     
+            
+            
+/*
+            
+            // TODO: server should not send outgoingDelivery-changes for acknowledeged objects, we just won't answer them for now to avoid ack-storms
+            if ([kDeliveryStateDeliveredAcknowledged isEqualToString: myDelivery.state]) {
                 // we have already acknowledged and received confirmation for ack, so server should have shut up and never sent us this in the first time
                 if (myMessage != nil) {
                     NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery msg-id: %@", deliveryDict[@"messageId"]);
@@ -5029,19 +5150,23 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             }
             [myDelivery updateWithDictionary: deliveryDict];
             
-            [context performBlock:^{
-                [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery.message]
-                                                                            withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
-                 {
-                    [context refreshObject: managedObjects[0] mergeChanges: YES];
-                }];
-            }];
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery.message]
+                                                                        withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
+             {
+                 [context refreshObject: managedObjects[0] mergeChanges: YES];
+             }];
             
             // NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
             
             // TODO: decide what sound to play when a group message goes directly into state "confirmed"
             if ([myDelivery.state isEqualToString:@"delivered"] ) {
-                [SoundEffectPlayer messageDelivered];
+                [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery]
+                                                                            withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
+                 {
+                     Delivery * myDelivery = (Delivery*)managedObjects[0];
+                     [self outDeliveryAcknowledge: myDelivery];
+                     [SoundEffectPlayer messageDelivered];
+                 }];
             } else {
                 NSLog(@"#WARNING: We acknowledged Delivery state ‘%@‘ for messageTag %@ ", myDelivery.state, myMessageTag);
             }
@@ -5049,13 +5174,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             // TODO: check if acknowleding should be done when state set to delivered - right now we acknowledge every outgoingDelivery notification
             if (![myDelivery.state isEqualToString:@"confirmed"] ) {
                 //[self.delegate saveContext:self.delegate.currentObjectContext];
-                [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery]
-                                                                            withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
-                 {
-                     Delivery * myDelivery = (Delivery*)managedObjects[0];
-                    [self outDeliveryAcknowledge: myDelivery];
-                }];
-            }
+             }
             
         } else {
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user, so we just acknowledge
@@ -5089,7 +5208,9 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         }
     }];
 }
-
+*/
+        
+        
 - (void) pushNotRegistered: (NSArray*) unused {
     NSString * apnDeviceToken = [self.delegate apnDeviceToken];
     if (apnDeviceToken != nil) {

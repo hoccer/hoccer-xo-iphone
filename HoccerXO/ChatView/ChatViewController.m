@@ -1621,7 +1621,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                    [myDelivery.state isEqualToString:kDeliveryStateFailedAcknowledged]) {
             return HXOBubbleColorSchemeFailed;
         } else {
-            NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
+            NSLog(@"ERROR: colorSchemeForMessage: unknown delivery state '%@'", myDelivery.state);
         }
     }
     return HXOBubbleColorSchemeSuccess;
@@ -1636,12 +1636,18 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     for (Delivery * myDelivery in message.deliveries) {
         if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
             return NSLocalizedString(@"chat_message_pending", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering] ||
-                   [myDelivery.state isEqualToString:kDeliveryStateDelivered])
-        {
+        } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering]) {
             return NSLocalizedString(@"chat_message_sent", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateDeliveredAcknowledged]) {
-            return NSLocalizedString(@"chat_message_delivered", nil);
+        } else if (myDelivery.isDelivered) {
+            if (myDelivery.isMissingAttachment) {
+                NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_missing_attachment %@", nil),
+                                          NSLocalizedString(myDelivery.message.attachment.mediaType, nil)];
+                return stateString;
+            } else {
+                return NSLocalizedString(@"chat_message_delivered", nil);
+            }
+        } else if (myDelivery.isFailure) {
+            return NSLocalizedString(@"chat_message_failed", nil);
         } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
             return NSLocalizedString(@"chat_message_failed", nil);
         /* TODO } else if () {

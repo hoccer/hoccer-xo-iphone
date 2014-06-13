@@ -48,8 +48,6 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_AC
 FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED;
 FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED;
 
-
-
 @interface Delivery : HXOModel
 
 @property (nonatomic, strong) NSString * state;
@@ -74,6 +72,20 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 -(BOOL)hasFailed;
 -(BOOL)attachmentDownloadable;
 
+-(BOOL)isInFinalState;
+-(BOOL)isDelivered;
+-(BOOL)isFailure;
+-(BOOL)isAttachmentReceived;
+-(BOOL)isMissingAttachment;
 
++(BOOL)isDeliveredState:(NSString*) state;
++(BOOL)isFailureState:(NSString*) state;
++(BOOL)isAcknowledgedState:(NSString*) state;
++(BOOL)shouldAcknowledgeStateForOutgoing:(NSString*) state;
+
++(BOOL)isAttachmentReceivedState:(NSString*) attachmentState;
++(BOOL)isAcknowledgedAttachmentState:(NSString*) attachmentState;
++(BOOL)shouldAcknowledgeAttachmentStateForOutgoing:(NSString*) attachmentState;
++(BOOL)shouldAcknowledgeAttachmentStateForIncoming:(NSString*) attachmentState;
 
 @end
