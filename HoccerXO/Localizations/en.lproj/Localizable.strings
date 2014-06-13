@@ -141,6 +141,9 @@
 "chat_messages_delete_all %d"="Delete all %d messages";
 "chat_messages_delete_all_previous %d"="Delete %d previous messages";
 
+"chat_group_members_invite %d"="Invite %d group members a friend";
+"chat_group_members_invite_accept %d"="Accept %d friendship invitations";
+"chat_group_members_disinvite %d"="Disinvite %d group members as friend";
 
 //==============================================================================
 // Contact - uses strings from profile

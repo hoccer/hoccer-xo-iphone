@@ -69,6 +69,13 @@
     self.keyDate = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
+- (NSSet*) otherMembers {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return ![self isEqual:obj.contact];
+    }];
+    return theMemberSet;
+}
+
 - (NSSet*) otherJoinedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         return ![self isEqual:obj.contact] && obj.isJoined;
@@ -97,6 +104,33 @@
     return theMemberSet;
 }
 
+- (NSSet*) membersNotFriends {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return !obj.contact.isFriend;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) membersInvitable {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return !obj.contact.isFriend && !obj.contact.invitedMe && !obj.contact.isInvited;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) membersInvitedMeAsFriend {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact.invitedMe;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) membersInvitedAsFriend {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact.isInvited;
+    }];
+    return theMemberSet;
+}
 
 - (NSDate *) latestMemberChangeDate {
     NSSet * myMembers = self.members;

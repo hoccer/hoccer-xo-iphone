@@ -140,6 +140,10 @@
 "chat_messages_delete_all %d"="Alle %d Nachrichten löschen";
 "chat_messages_delete_all_previous %d"="%d vorige Nachrichten löschen";
 
+"chat_group_members_invite %d"="%d Mitglieder als Freund einladen";
+"chat_group_members_invite_accept %d"="Einladung von %d Mitgliedern annehmen";
+"chat_group_members_disinvite %d"="Einladung an %d Mitglieder zurückziehen";
+
 //==============================================================================
 // Contact - uses strings from profile
 //==============================================================================

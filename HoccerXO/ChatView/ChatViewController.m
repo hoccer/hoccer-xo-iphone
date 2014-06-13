@@ -29,6 +29,7 @@
 #import "Vcard.h"
 #import "NSData+Base64.h"
 #import "Group.h"
+#import "GroupMembership.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "TextMessageCell.h"
 #import "ImageAttachmentMessageCell.h"
@@ -499,37 +500,106 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [sheet showInView: self.view];
 }
 
+// Return nil when __INDEX__ is beyond the bounds of the array
+#define NSArrayObjectMaybeNil(__ARRAY__, __INDEX__) ((__INDEX__ >= [__ARRAY__ count]) ? nil : [__ARRAY__ objectAtIndex:__INDEX__])
+
+// Manually expand an array into an argument list
+#define NSArrayToVariableArgumentsList(__ARRAYNAME__)\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 0),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 1),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 2),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 3),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 4),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 5),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 6),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 7),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 8),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 9),\
+nil
+
 - (void) actionButtonPressed: (id) sender {
     
     NSArray * allMessagesInChat = [self allMessagesInChat];
     NSArray * allMessagesBeforeVisible = [self allMessagesBeforeVisible];
     
+    NSSet * membersInvitable = nil;
+    NSSet * membersInvitedMe = nil;
+    NSSet * membersInvited = nil;
+    Group * group = nil;
+    
+    if (self.partner.isGroup) {
+        group = (Group*)self.partner;
+        membersInvitable = group.membersInvitable;
+        membersInvitedMe = group.membersInvitedMeAsFriend;
+        membersInvited = group.membersInvitedAsFriend;
+    }
+    
+    int buttonIndex = 0;
+    NSMutableArray * buttonTitles = [NSMutableArray new];
+    
+    int deleteAllIndex = -1;
+    if (allMessagesBeforeVisible.count > 0) {
+        deleteAllIndex = buttonIndex++;
+        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all %d", nil), allMessagesInChat.count]];
+    }
+    
+    int deletePreviousIndex = -1;
+    if (allMessagesBeforeVisible.count > 0) {
+        deletePreviousIndex = buttonIndex++;
+        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all_previous %d", nil), allMessagesBeforeVisible.count]];
+    }
+
+    int invitableIndex = -1;
+    if (membersInvitable.count > 0) {
+        invitableIndex = buttonIndex++;
+        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_members_invite %d", nil), membersInvitable.count]];
+    }
+
+    int inviteMeIndex = -1;
+    if (membersInvitedMe.count > 0) {
+        inviteMeIndex = buttonIndex++;
+        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_members_invite_accept %d", nil), membersInvitedMe.count]];
+    }
+    
+    int invitedIndex = -1;
+    if (membersInvited.count > 0) {
+        invitedIndex = buttonIndex++;
+        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_members_disinvite %d", nil), membersInvited.count]];
+    }
+    
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
-        if (allMessagesInChat.count) {
-            switch (buttonIndex) {
-                case 0:
-                    [self askDeleteMessages:allMessagesInChat];
-                    break;
-                case 1:
-                    [self askDeleteMessages:allMessagesBeforeVisible];
-                    break;
-                default:
-                    break;
+        
+        if (buttonIndex == deleteAllIndex) {
+            [self askDeleteMessages:allMessagesInChat];
+            
+        } else if (buttonIndex == deletePreviousIndex) {
+            [self askDeleteMessages:allMessagesBeforeVisible];
+            
+        } else if (buttonIndex == invitableIndex) {
+            for (GroupMembership* member in membersInvitable) {
+                [self.chatBackend inviteFriend:member.contact.clientId handler:^(BOOL ok) {
+                }];
             }
-        }
+            
+        } else if (buttonIndex == inviteMeIndex) {
+            for (GroupMembership* member in membersInvitedMe) {
+                [self.chatBackend acceptFriend:member.contact.clientId handler:^(BOOL ok) {
+                }];
+            }
+            
+       } else if (buttonIndex == invitedIndex) {
+           for (GroupMembership* member in membersInvited) {
+               [self.chatBackend disinviteFriend:member.contact.clientId handler:^(BOOL ok) {
+               }];
+           }
+       }
     };
-    
-    NSString * deleteAllTitle = [NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all %d", nil), allMessagesInChat.count];
-    NSString * deleteAllPreviousTitle = [NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all_previous %d", nil), allMessagesBeforeVisible.count];
-    
-    if (allMessagesBeforeVisible.count == 0) deleteAllPreviousTitle = nil;
-    if (allMessagesInChat.count == 0) deleteAllTitle = nil;
     
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"chat_action_sheet_title", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                  destructiveButtonTitle: nil
-                                      otherButtonTitles: deleteAllTitle, deleteAllPreviousTitle, nil];
+                                      otherButtonTitles: NSArrayToVariableArgumentsList(buttonTitles)];
     
     [sheet showInView: self.view];
 

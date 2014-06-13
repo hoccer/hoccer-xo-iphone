@@ -39,11 +39,15 @@
 
 - (BOOL) iAmAdmin;
 - (BOOL) iJoined;
+- (NSSet*) otherMembers;
 - (NSSet*) otherJoinedMembers;
 - (NSSet*) otherInvitedMembers;
 - (NSSet*) adminMembers;
 - (NSSet*) knownAdminMembers;
-
+- (NSSet*) membersNotFriends;
+- (NSSet*) membersInvitable;
+- (NSSet*) membersInvitedMeAsFriend;
+- (NSSet*) membersInvitedAsFriend;
 
 - (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
 
@@ -62,7 +66,6 @@
 - (BOOL)isIncompleteGroup;
 
 -(void)changeIdTo:(NSString*)newId;
-
 
 @end
 
