@@ -111,6 +111,7 @@
 
 @dynamic state;
 @dynamic available;
+@dynamic uploadable;
 
 @synthesize transferConnection = _transferConnection;
 @synthesize transferError = _transferError;
@@ -232,6 +233,17 @@ NSArray * TransferStateName = @[@"detached",
     AttachmentState myState = self.state;
     return myState == kAttachmentTransfered || (self.outgoing && !(myState <= kAttachmentEmpty));
 }
+
+- (BOOL) uploadable {
+    AttachmentState myState = self.state;
+    return (myState == kAttachmentWantsTransfer || myState == kAttachmentUploadIncomplete) && self.outgoing;
+}
+
+- (BOOL) downloadable {
+    AttachmentState myState = self.state;
+    return (myState == kAttachmentWantsTransfer || myState == kAttachmentDownloadIncomplete) && !self.outgoing;
+}
+
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing {
     BOOL reachableViaWLAN = [self.chatBackend.delegate.internetReachabilty isReachableViaWiFi];
@@ -1306,7 +1318,7 @@ NSArray * TransferStateName = @[@"detached",
     NSLog(@"unpausedTransfer");
     if (self.transferPaused != nil) {
         self.transferPaused = nil;
-        if (!self.outgoing) {
+        if (self.outgoing) {
             [self.chatBackend uploadStarted:self];
             [self.chatBackend enqueueUploadOfAttachment:self];
         } else {

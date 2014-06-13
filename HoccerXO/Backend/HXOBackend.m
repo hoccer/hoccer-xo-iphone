@@ -50,7 +50,7 @@
 #define GROUPKEY_DEBUG NO
 #define GROUP_DEBUG NO
 #define RELATIONSHIP_DEBUG NO
-#define TRANSFER_DEBUG NO
+#define TRANSFER_DEBUG YES
 #define CHECK_URL_TRACE NO
 #define CHECK_CERTS_DEBUG NO
 #define DEBUG_DELETION NO
@@ -119,6 +119,7 @@ static NSTimer * _stateNotificationDelayTimer;
     unsigned        _loginRefusals;
     NSMutableSet * _pendingGroupDeletions;
     NSMutableSet * _idLocks;
+    NSDate * _startedConnectingTime;
 }
 
 - (void) identify;
@@ -137,6 +138,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _apnsDeviceToken = nil;
         _loginFailures = 0;
         _loginRefusals = 0;
+        _startedConnectingTime = nil;
         _pendingGroupDeletions = [NSMutableSet new];
         //_idLocks = [NSMutableSet new];
         
@@ -506,29 +508,13 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate.mainObjectContext refreshObject: contact mergeChanges: YES];
 
     // Delivery may already be in state failed, e.g. if the public key is missing.
-    BOOL deliveryFailed = delivery.hasFailed;
+    BOOL deliveryFailed = delivery.isFailure;
     if (_state == kBackendReady && ! deliveryFailed) {
         [self outDeliveryRequest: message withDeliveries: @[delivery] withCompletion:^(NSArray *deliveries) {
+            
             if (deliveries != nil) {
-                BOOL oneOK = false;
-                for (Delivery * delivery in deliveries) {
-                    if ([kDeliveryStateDelivering isEqualToString:delivery.state]) {
-                        oneOK = YES;
-                        break;
-                    }
-                }
-                if (oneOK ) {
-                    if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
-                        [self enqueueUploadOfAttachment:attachment];
-                    }
-                    
-                    if ( ! deliveryFailed) {
-                        [SoundEffectPlayer messageSent];
-                    }
-                    //[self checkTransferQueues]; // this can go when we are sure transferqueues are bugfree
-                   
-                }
-                [self.delegate saveDatabase];
+                [self outgoingDeliveryUpdated:@[delivery]];
+                [SoundEffectPlayer messageSent];
             }
         }];
     } else {
@@ -553,6 +539,7 @@ static NSTimer * _stateNotificationDelayTimer;
     Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.mainObjectContext];
     [message.deliveries addObject: delivery];
     delivery.message = message;
+    delivery.state = kDeliveryStateNew;
     
     if ([contact.type isEqualToString:@"Group"]) {
         delivery.group = (Group*)contact;
@@ -624,7 +611,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
     [self.delegate performWithLockingId:messageDictionary[@"messageId"] inNewBackgroundContext:^(NSManagedObjectContext *context) {
-        NSLog(@"receiveMessage");
+        if (DELIVERY_TRACE) NSLog(@"receiveMessage");
         if (USE_VALIDATOR) [self validateObject: messageDictionary forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
         if (USE_VALIDATOR) [self validateObject: deliveryDictionary forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
         NSError *error;
@@ -675,7 +662,7 @@ static NSTimer * _stateNotificationDelayTimer;
             return;
         }
         
-        NSLog(@"receiveMessage: inserting new message and delivery");
+        if (DELIVERY_TRACE) NSLog(@"receiveMessage: inserting new message and delivery");
         HXOMessage * message = [NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: context];
         Delivery * delivery = [NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: context];
         //AUTOREL [message.deliveries addObject: delivery];
@@ -717,7 +704,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [AppDelegate.instance deleteObject:delivery inContext:context];
             return;
         }
-        NSLog(@"receiveMessage: bulding stuff started");
+        if (DELIVERY_TRACE) NSLog(@"receiveMessage: bulding stuff started");
         Contact * contact = nil;
         if (group != nil) {
             contact = group;
@@ -788,24 +775,23 @@ static NSTimer * _stateNotificationDelayTimer;
         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[contact]
                                                                                   withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
         {
-            NSLog(@"receiveMessage:refreshObject");
             [context refreshObject: managedObjects[0] mergeChanges: YES];
-            NSLog(@"receiveMessage:refreshObject done");
-
         }];
 
-        NSLog(@"receiveMessage: scheduling new deliveryConfirm");
+        if (DELIVERY_TRACE) NSLog(@"receiveMessage: scheduling new deliveryConfirm");
         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[message, delivery]
                                                                                   withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
          {
-            NSLog(@"receiveMessage: starting new deliveryConfirm");
+            if (DELIVERY_TRACE) NSLog(@"receiveMessage: starting new deliveryConfirm");
             HXOMessage * message = (HXOMessage *)managedObjects[0];
             Delivery * delivery = (Delivery *)(HXOMessage *)managedObjects[1];
             Attachment * attachment = message.attachment;
              
-            [self enqueueDownloadOfAttachmentIfSensible:attachment];
+             if (delivery.attachmentDownloadable) {
+                 [self enqueueDownloadOfAttachment:attachment];
+             }
 
-            if (DELIVERY_TRACE,YES) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
+            if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming new message & delivery with state '%@' for tag %@ id %@",delivery.state, delivery.message.messageTag, message.messageId);}
             
              [self inDeliveryConfirm: message.messageId withDelivery: delivery];
              
@@ -1182,6 +1168,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     _performRegistration = performRegistration;
     [self setState: kBackendConnecting];
+    _startedConnectingTime = [NSDate new];
     [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol] allowUntrustedConnections:[HXOBackend allowUntrustedServerCertificate]];
 }
 
@@ -1234,6 +1221,11 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self reconnect];
             }
         }];
+    } else if (_state == kBackendConnecting) {
+        if (_startedConnectingTime.timeIntervalSinceNow < - 5.0) {
+            NSLog(@"checkReconnect: backend takes too long to connect, reconnect");
+            [self reconnect];
+        }
     } else {
         NSLog(@"checkReconnect: backend in state %@, doing nothing", [self stateString: _state]);
     }
@@ -3297,7 +3289,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
     [self flushPendingAttachmentUploads];
     [self flushPendingAttachmentDownloads];
-    //[self checkTransferQueues];
+    [self checkTransferQueues];
 #ifdef DEBUG_CHECK_FINISHED_UPLOADS
     [self checkReadyAttachmentUploads];
 #endif
@@ -3318,7 +3310,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSArray *attachments = [self.delegate.mainObjectContext executeFetchRequest:fetchRequest error:&error];
     if (attachments == nil)
     {
-        NSLog(@"Fetch request for 'checkGroupMemberships' failed: %@", error);
+        NSLog(@"Fetch request for 'AllOutgoingAttachments' failed: %@", error);
         abort();
     }
     NSMutableArray * readyAttachments = [[NSMutableArray alloc]init];
@@ -3348,10 +3340,8 @@ static NSTimer * _stateNotificationDelayTimer;
     if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
     NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in unfinishedAttachments) {
-        AttachmentState attachmentState = attachment.state;
-        if (attachmentState == kAttachmentWantsTransfer ||
-            attachmentState == kAttachmentUploadIncomplete)
-        {
+        Delivery * delivery = attachment.message.deliveries.anyObject;
+        if (delivery.attachmentUploadable) {
             [pendingAttachments enqueue:attachment];
         }
     }
@@ -3381,10 +3371,8 @@ static NSTimer * _stateNotificationDelayTimer;
     if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
     NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in unfinishedAttachments) {
-        AttachmentState attachmentState = attachment.state;
-        if (attachmentState == kAttachmentWantsTransfer ||
-            attachmentState == kAttachmentDownloadIncomplete)
-        {
+        Delivery * delivery = attachment.message.deliveries.anyObject;
+        if (delivery.attachmentDownloadable) {
             [pendingAttachments enqueue:attachment];
         }
     }
@@ -3394,7 +3382,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) flushPendingAttachmentDownloads {
     NSArray * pendingAttachments = [self pendingAttachmentDownloads];
     for (Attachment * attachment in pendingAttachments) {
-        [self enqueueDownloadOfAttachmentIfSensible:attachment];
+        [self enqueueDownloadOfAttachment:attachment];
 #ifdef DEBUG_TEST_DOWNLOAD
         [self testAttachmentDownload:attachment];
 #endif
@@ -3441,7 +3429,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
-- (void)checkTransferQueuesOff {
+- (void)checkTransferQueues {
     if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues");
     NSArray * da = [_attachmentDownloadsActive copy];
     for (Attachment * a in da) {
@@ -3568,6 +3556,8 @@ static NSTimer * _stateNotificationDelayTimer;
     if (TRANSFER_DEBUG) NSLog(@"downloadFinished of %@", theAttachment.remoteURL);
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
+    [self receivedFile:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+    }];
     [self dequeueDownloadOfAttachment:theAttachment];
     [SoundEffectPlayer messageArrived];
 }
@@ -3626,6 +3616,8 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+/*
+
 - (void) enqueueDownloadOfAttachmentIfSensible:(Attachment *)theAttachment {
     Delivery * delivery = theAttachment.message.deliveries.anyObject;
     AttachmentState state = theAttachment.state;
@@ -3639,7 +3631,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (TRANSFER_DEBUG) NSLog(@"not enqueueing attachment %@", theAttachment.remoteURL);
     }
 }
-
+*/
 - (void) updateAttachmentInDeliveryStateIfNecessary:(Attachment *)theAttachment {
     Delivery * delivery = theAttachment.message.deliveries.anyObject;
     AttachmentState state = theAttachment.state;
@@ -3655,8 +3647,6 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
-
-
 - (void) downloadFailed:(Attachment *)theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"downloadFailed of %@", theAttachment.remoteURL);
     theAttachment.transferFailures = theAttachment.transferFailures + 1;
@@ -3668,7 +3658,9 @@ static NSTimer * _stateNotificationDelayTimer;
         }];
     }
     [self dequeueDownloadOfAttachment:theAttachment];
-    [self enqueueDownloadOfAttachmentIfSensible:theAttachment];
+    if (theAttachment.downloadable) {
+        [self enqueueDownloadOfAttachment:theAttachment];
+    }
 }
 
 - (void) uploadFailed:(Attachment *)theAttachment {
@@ -3708,6 +3700,8 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 -(void) scheduleNewTransferFor:(Attachment *)theAttachment inSecs:(double)retryTime withSelector:(SEL)theTransferSelector withErrorKey: (NSString*) errorKey {
+    if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@", theAttachment.remoteURL);
+    
     if (theAttachment.transferRetryTimer != nil) {
         if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ invalidating timer for transfer in %f secs", theAttachment.remoteURL, [[theAttachment.transferRetryTimer fireDate] timeIntervalSinceNow]);
         [theAttachment.transferRetryTimer invalidate];
@@ -3721,7 +3715,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (theAttachment.state == kAttachmentUploadIncomplete ||
         theAttachment.state == kAttachmentDownloadIncomplete ||
         theAttachment.state == kAttachmentWantsTransfer) {
-        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ , retry in = %f secs, failures = %i",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, retryTime, theAttachment.transferFailures);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
@@ -4149,14 +4143,12 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     // NSLog(@"deliveryConfirm: %@", delivery);
     [_serverConnection invoke: @"inDeliveryConfirm" withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
         if (success && responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
-            // NSLog(@"deliveryConfirm() returned deliveries: %@", responseOrError);
-            if (USE_VALIDATOR) [self validateObject: responseOrError forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
+
             if (DELIVERY_TRACE) {NSLog(@"inDeliveryConfirm result: state %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
             if ([delivery.state isEqualToString: responseOrError[@"state"]]) {
                 if (GLITCH_TRACE) {NSLog(@"#GLITCH: inDeliveryConfirm result: state unchanged %@->%@ for messageTag %@",delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
             }
-            [delivery updateWithDictionary: responseOrError];
-            [self.delegate saveDatabase];
+            [self incomingDeliveryUpdated:@[responseOrError]];
         } else {
             NSLog(@"#ERROR: inDeliveryConfirm() failed, response: %@", responseOrError);
         }
@@ -4254,14 +4246,6 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                  NSLog(@"ERROR: outDeliveryAbort() returned bad state %@", responseOrError);
              } else {
                  [self outgoingDeliveryUpdated:@[responseOrError]];
-                 /*
-                 Delivery * delivery = [self getDeliveryByMessageTagAndReceiverId:theMessageId withReceiver:theReceiverClientId inContext:self.delegate.currentObjectContext];
-                 if (delivery != nil) {
-                     [delivery updateWithDictionary:result];
-                 } else {
-                     NSLog(@"outDeliveryAbort() : delivery not found");
-                 }
-                  */
              }
              // NSLog(@"outDeliveryAbort() returned delivery: %@", responseOrError);
          } else {
@@ -4893,7 +4877,9 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                                                             withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
                 {
                     Attachment * attachment = (Attachment*)managedObjects[0];
-                    [self enqueueDownloadOfAttachmentIfSensible:attachment];
+                    if (attachment.downloadable) {
+                        [self enqueueDownloadOfAttachment:attachment];
+                    }
                     [self updateAttachmentInDeliveryStateIfNecessary:attachment];
                 }];
             }
@@ -5036,8 +5022,6 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }
 }
 
-
-
 // called by server to notify us about status changes of outgoing deliveries we made
 - (void) outgoingDeliveryUpdated: (NSArray*) params {
         if (params.count != 1) {
@@ -5094,11 +5078,23 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
              {
                  [context refreshObject: managedObjects[0] mergeChanges: YES];
              }];
-             
-             [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
             
-             [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState withFileId:myMessage.attachmentFileId];
-
+            if (!myDelivery.isFailure) {
+                // start upload if message has not failed
+                if ([kDelivery_ATTACHMENT_STATE_NEW isEqualToString: myDelivery.attachmentState]) {
+                    [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery.message.attachment]
+                        withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
+                    {
+                        Attachment * attachment = managedObjects[0];
+                        [self enqueueUploadOfAttachment:attachment];
+                    }];
+                }
+            }
+            
+            [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
+            
+            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState withFileId:myMessage.attachmentFileId];
+            
         } else {
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
             // so we just acknowledge or abort if we can
@@ -5116,100 +5112,6 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         }
     }];
 }
-
-     
-            
-            
-/*
-            
-            // TODO: server should not send outgoingDelivery-changes for acknowledeged objects, we just won't answer them for now to avoid ack-storms
-            if ([kDeliveryStateDeliveredAcknowledged isEqualToString: myDelivery.state]) {
-                // we have already acknowledged and received confirmation for ack, so server should have shut up and never sent us this in the first time
-                if (myMessage != nil) {
-                    NSLog(@"Bad server behavior: outgoingDelivery Notification received for already confirmed delivery msg-id: %@", deliveryDict[@"messageId"]);
-                    //[self.delegate saveContext:context];
-                    [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery]
-                                                                                withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
-                     {
-                        Delivery * myDelivery = (Delivery*)managedObjects[0];
-                        [self outDeliveryAcknowledge: myDelivery];
-                    }];
-                } else {
-                    NSLog(@"#ERROR: outgoingDelivery delivery and message id mismatch, aborting message: %@", deliveryDict[@"messageId"]);
-                    [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                        [self outDeliveryAbort:myMessageId forClient:myReceiverId];
-                    }];
-                }
-                return;
-            }
-            
-            if (DELIVERY_TRACE) {NSLog(@"outgoingDelivery Notification: Delivery state '%@'->'%@' for messageTag %@ id %@",myDelivery.state, deliveryDict[@"state"], myMessageTag, deliveryDict[@"messageId"]);}
-            
-            if ([myDelivery.state isEqualToString:deliveryDict[@"state"]]) {
-                if (GLITCH_TRACE) {NSLog(@"#GLITCH: Duplicate outgoingDelivery Notification: Delivery state for messageTag %@ id %@ was already %@, timeStamps: old %@ new %@", myMessageTag, deliveryDict[@"messageId"], myDelivery.state, myDelivery.timeChangedMillis, deliveryDict[@"timeChanged"]);}
-            }
-            [myDelivery updateWithDictionary: deliveryDict];
-            
-            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery.message]
-                                                                        withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
-             {
-                 [context refreshObject: managedObjects[0] mergeChanges: YES];
-             }];
-            
-            // NSLog(@"Delivery state for messageTag %@ receiver %@ changed to %@", myMessageTag, myReceiverId, myDelivery.state);
-            
-            // TODO: decide what sound to play when a group message goes directly into state "confirmed"
-            if ([myDelivery.state isEqualToString:@"delivered"] ) {
-                [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery]
-                                                                            withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
-                 {
-                     Delivery * myDelivery = (Delivery*)managedObjects[0];
-                     [self outDeliveryAcknowledge: myDelivery];
-                     [SoundEffectPlayer messageDelivered];
-                 }];
-            } else {
-                NSLog(@"#WARNING: We acknowledged Delivery state ‘%@‘ for messageTag %@ ", myDelivery.state, myMessageTag);
-            }
-            
-            // TODO: check if acknowleding should be done when state set to delivered - right now we acknowledge every outgoingDelivery notification
-            if (![myDelivery.state isEqualToString:@"confirmed"] ) {
-                //[self.delegate saveContext:self.delegate.currentObjectContext];
-             }
-            
-        } else {
-            // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user, so we just acknowledge
-            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                if (myGroupId != nil) {
-                    // just acknowledge group delivery so we don't get it all the time again
-                    if (DELIVERY_TRACE) {NSLog(@"Acknowleding group delivery notification with messageTag %@ messageId %@ receiver %@ group %@", myMessageTag, deliveryDict[@"messageId"], myReceiverId, myGroupId);}
-                    [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[deliveryDict[@"messageId"], deliveryDict[@"receiverId"]]
-                                   onResponse: ^(id responseOrError, BOOL success)
-                     {
-                         if (success) {
-                             // ignore result because we do not keep track of individual group deliveries yet
-                             if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);}
-                         } else {
-                             NSLog(@"deliveryAcknowledge() for group delivery failed: %@", responseOrError);
-                         }
-                     }];
-                } else if ([deliveryDict[@"senderId"] isEqualToString:[UserProfile sharedProfile].clientId]) {
-                    NSLog(@"#WARNING: Acknowledging unknown outgoing delivery notification with messageTag %@ messageId %@ receiver %@ group %@ (Probably database had been nuked since sending)", myMessageTag, deliveryDict[@"messageId"], myReceiverId, myGroupId);
-                    [_serverConnection invoke: @"deliveryAcknowledge" withParams: @[deliveryDict[@"messageId"], deliveryDict[@"receiverId"]]
-                                   onResponse: ^(id responseOrError, BOOL success)
-                     {
-                         if (success) {
-                             if (DELIVERY_TRACE) {NSLog(@"deliveryAcknowledge() returned delivery: %@", responseOrError);}
-                         } else {
-                             NSLog(@"deliveryAcknowledge() for delivery failed: %@", responseOrError);
-                         }
-                     }];
-                }
-            }];
-        }
-    }];
-}
-*/
-        
         
 - (void) pushNotRegistered: (NSArray*) unused {
     NSString * apnDeviceToken = [self.delegate apnDeviceToken];

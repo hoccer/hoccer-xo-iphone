@@ -69,8 +69,11 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 
 @property (nonatomic) NSNumber * timeChangedMillis;
 
--(BOOL)hasFailed;
 -(BOOL)attachmentDownloadable;
+-(BOOL)attachmentUploadable;
+
+-(BOOL)isStateFailed;
+-(BOOL)isStateDelivering;
 
 -(BOOL)isInFinalState;
 -(BOOL)isDelivered;

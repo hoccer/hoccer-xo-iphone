@@ -16,6 +16,7 @@
 #import "NSData+CommonCrypto.h"
 #import "HXOBackend.h" // for class crypto methods
 #import "Group.h"
+#import "Attachment.h"
 
 NSString * const kDeliveryStateNew                      = @"new";
 NSString * const kDeliveryStateDelivering               = @"delivering";
@@ -60,12 +61,23 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 @dynamic keyId;
 @dynamic attachmentState;
 
--(BOOL)hasFailed {
+
+-(BOOL)isStateFailed {
     return [kDeliveryStateFailed isEqualToString:self.state] || [kDeliveryStateFailedAcknowledged isEqualToString:self.state];
 }
 
 -(BOOL)attachmentDownloadable {
-    return [kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:self.attachmentState] || [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:self.attachmentState];
+    return self.message.attachment != nil &&
+    self.message.attachment.downloadable &&
+    ([kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:self.attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:self.attachmentState]);
+}
+
+-(BOOL)attachmentUploadable {
+    return self.message.attachment != nil &&
+    self.message.attachment.uploadable &&
+    !self.isFailure &&
+    (self.isDelivered || self.isStateDelivering);
 }
 
 -(BOOL)isInFinalState {
@@ -75,6 +87,10 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 -(BOOL)isDelivered {
     return [Delivery isDeliveredState:self.state];
 }
+-(BOOL)isStateDelivering {
+    return [kDeliveryStateDelivering isEqualToString:self.state];
+}
+
 
 -(BOOL)isFailure {
     return [Delivery isFailureState:self.state];
