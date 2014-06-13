@@ -241,8 +241,15 @@
 - (void) addPredicates: (NSMutableArray*) predicates {
     if (self.inNearbyMode) {
         //[predicates addObject: [NSPredicate predicateWithFormat: @"(type == 'Contact' AND isNearbyTag == 'YES') OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby' AND myGroupMembership.group.groupState =='exists'))"]];
-        [predicates addObject: [NSPredicate predicateWithFormat: @"(type == 'Contact' AND isNearbyTag == 'YES') OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby' AND myGroupMembership.group.groupState =='exists' AND\
-                                SUBQUERY(myGroupMembership.group.members, $member, $member.state == 'nearby').@count > 1 ))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat:
+                                @"(type == 'Contact' AND \
+                                SUBQUERY(groupMemberships, $member, $member.group.groupType == 'nearby' AND $member.group.groupState =='exists').@count > 0 ) \
+                                OR \
+                                (type == 'Group' AND \
+                                (myGroupMembership.state == 'joined' AND \
+                                myGroupMembership.group.groupType == 'nearby' AND \
+                                myGroupMembership.group.groupState =='exists' AND\
+                                SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'nearbyMember').@count > 1 ))"]];
     } else {
         [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     }
