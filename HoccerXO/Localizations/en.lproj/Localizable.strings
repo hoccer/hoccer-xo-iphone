@@ -136,6 +136,12 @@
 "chat_open_with_menu_item"          = "Open with...";
 "chat_share_menu_item"              = "Share";
 
+"chat_action_sheet_title"="In this Chat:";
+"chat_messages_delete_safety_question %d"="Really delete %d messages including all media?";
+"chat_messages_delete_all %d"="Delete all %d messages";
+"chat_messages_delete_all_previous %d"="Delete %d previous messages";
+
+
 //==============================================================================
 // Contact - uses strings from profile
 //==============================================================================

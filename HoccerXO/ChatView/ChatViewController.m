@@ -85,6 +85,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property  BOOL                                                keyboardShown;
 
+@property (strong) UIBarButtonItem * actionButton;
 
 @property (strong) id throwObserver;
 @property (strong) id catchObserver;
@@ -116,6 +117,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
     [self setupChatbar];
+    
+    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAction target: self action: @selector(actionButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = actionButton;
 
     [HXOBackend registerConnectionInfoObserverFor:self];
     
@@ -445,6 +449,91 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 #pragma mark - Actions
 
+- (NSArray*) allMessagesInChat {
+    NSDictionary * vars = @{ @"contact" : self.partner };
+    NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByContact" substitutionVariables: vars];
+    NSError * error;
+    NSArray *messages = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (messages == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    return messages;
+}
+
+- (NSArray*) allMessagesInChatBeforeTime:(NSDate *)beforeTime {
+    NSDate * since = [NSDate dateWithTimeIntervalSince1970:0];
+    return [HXOBackend messagesByContact:self.partner inIntervalSinceTime:since beforeTime:beforeTime];
+}
+
+- (NSArray*) allMessagesBeforeVisible {
+    NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
+    if (indexPaths.count) {
+        HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath:indexPaths[0]];
+        NSDate * referenceDate = message.timeAccepted;
+        return [self allMessagesInChatBeforeTime:referenceDate];
+    }
+    return @[];
+}
+
+- (void) askDeleteMessages:(NSArray*)messages {
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            NSArray * ids = objectIds(messages);
+            [AppDelegate.instance performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+                NSArray * messages = managedObjects(ids, context);
+                for (HXOMessage * message in messages) {
+                    [AppDelegate.instance deleteObject:message inContext:context];
+                }
+            }];
+        }
+    };
+    
+    NSString * title = [NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_safety_question %d", nil), messages.count];
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: title
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.view];
+}
+
+- (void) actionButtonPressed: (id) sender {
+    
+    NSArray * allMessagesInChat = [self allMessagesInChat];
+    NSArray * allMessagesBeforeVisible = [self allMessagesBeforeVisible];
+    
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (allMessagesInChat.count) {
+            switch (buttonIndex) {
+                case 0:
+                    [self askDeleteMessages:allMessagesInChat];
+                    break;
+                case 1:
+                    [self askDeleteMessages:allMessagesBeforeVisible];
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    
+    NSString * deleteAllTitle = [NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all %d", nil), allMessagesInChat.count];
+    NSString * deleteAllPreviousTitle = [NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all_previous %d", nil), allMessagesBeforeVisible.count];
+    
+    if (allMessagesBeforeVisible.count == 0) deleteAllPreviousTitle = nil;
+    if (allMessagesInChat.count == 0) deleteAllTitle = nil;
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"chat_action_sheet_title", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: nil
+                                      otherButtonTitles: deleteAllTitle, deleteAllPreviousTitle, nil];
+    
+    [sheet showInView: self.view];
+
+}
 
 - (IBAction)sendPressed:(id)sender {
     NSString * cantSendTitle = NSLocalizedString(@"chat_cant_send_alert_title", nil);

@@ -131,10 +131,14 @@
 
 "chat_message_delivered_missing_attachment %@"="gesendet, wartet auf %@";
 
-
 "chat_resend_menu_item"             = "Senden";
 "chat_open_with_menu_item"          = "Öffnen mit...";
 "chat_share_menu_item"              = "Teilen";
+
+"chat_action_sheet_title"="In diesem Chat:";
+"chat_messages_delete_safety_question %d"="Wirklich %d Nachrichten und Anhänge löschen?";
+"chat_messages_delete_all %d"="Alle %d Nachrichten löschen";
+"chat_messages_delete_all_previous %d"="%d vorige Nachrichten löschen";
 
 //==============================================================================
 // Contact - uses strings from profile

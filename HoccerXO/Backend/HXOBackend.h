@@ -164,7 +164,7 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment;
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment;
     
-- (void) checkTransferQueuesOff;
+- (void) checkTransferQueues;
 
 - (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler;
 - (void) destroyEnvironmentType:(NSString*)type withHandler:(GenericResultHandler)handler;
@@ -205,5 +205,17 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 + (BOOL) isInvalid:(NSData*)theData;
 
 + (NSString*)checkForceFilecacheUrl:(NSString*)theURL;
+
+// messages >= sinceTime && < beforeTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalSinceTime:(NSDate *)sinceTime beforeTime:(NSDate*)beforeTime;
+
+// messages > afterTime && <= untilTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalAfterTime:(NSDate *)afterTime untilTime:(NSDate*)untilTime;
+
+// messages >= sinceTime && <= untilTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalSinceTime:(NSDate *)sinceTime untilTime:(NSDate*)untilTime;
+
+// messages > afterTime && < beforeTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalAfterTime:(NSDate *)afterTime beforeTime:(NSDate*)beforeTime;
 
 @end

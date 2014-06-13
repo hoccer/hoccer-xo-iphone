@@ -42,10 +42,6 @@ UIDocumentInteractionControllerDelegate
 @property (nonatomic, strong) HXOBackend                      * chatBackend;
 @property (nonatomic, strong) NSFetchedResultsController      * fetchedResultsController;
 
-/*
-@property (nonatomic, strong) NSManagedObjectContext          * managedObjectContext;
- */
-
 @property (nonatomic, strong) NSManagedObjectModel            * managedObjectModel;
 @property (nonatomic, strong) Attachment                      * currentAttachment;
 @property (nonatomic, strong) AVAssetExportSession            * currentExportSession;
@@ -55,11 +51,12 @@ UIDocumentInteractionControllerDelegate
 
 @property (nonatomic, strong) UIDocumentInteractionController * interactionController;
 
-// @property UIInterfaceOrientation interfaceOrientation;
-
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottomAnimated: (BOOL) animated;
 - (IBAction)sendPressed:(id)sender;
+
+- (void) actionButtonPressed: (id) sender;
+
 - (void) decorateAttachmentButton:(UIImage *) theImage;
 - (void) trashCurrentAttachment;
 
