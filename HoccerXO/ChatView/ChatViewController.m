@@ -51,6 +51,7 @@
 #import "AvatarView.h"
 #import "avatar_contact.h"
 #import "AttachmentButton.h"
+#import "GroupInStatuNascendi.h"
 
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
@@ -525,6 +526,7 @@ nil
     NSSet * membersInvitable = nil;
     NSSet * membersInvitedMe = nil;
     NSSet * membersInvited = nil;
+    NSSet * membersOther = nil;
     Group * group = nil;
     
     if (self.partner.isGroup) {
@@ -532,6 +534,7 @@ nil
         membersInvitable = group.membersInvitable;
         membersInvitedMe = group.membersInvitedMeAsFriend;
         membersInvited = group.membersInvitedAsFriend;
+        membersOther = group.otherMembers;
     }
     
     int buttonIndex = 0;
@@ -566,6 +569,13 @@ nil
         invitedIndex = buttonIndex++;
         [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_members_disinvite %d", nil), membersInvited.count]];
     }
+
+    int makeGroupIndex = -1;
+    if (membersOther.count > 0) {
+        makeGroupIndex = buttonIndex++;
+        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_create_new_from_group %d", nil), membersOther.count]];
+    }
+
     
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         
@@ -592,6 +602,8 @@ nil
                [self.chatBackend disinviteFriend:member.contact.clientId handler:^(BOOL ok) {
                }];
            }
+       } else if (buttonIndex == makeGroupIndex) {
+           [self performSegueWithIdentifier: @"newGroup" sender: self.actionButton];
        }
     };
     
@@ -2178,6 +2190,16 @@ nil
     } else if ([segue.identifier isEqualToString: @"showContact"]) {
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell: sender]];
         contactOrProfile = [(Delivery*)message.deliveries.anyObject sender];
+    } else if ([segue.identifier isEqualToString: @"newGroup"]) {
+        if (self.partner.isGroup) {
+            // make sure before calling this segue that all group members have a relationship (friends, invited or invitedMe)
+            GroupInStatuNascendi * newGroup = [GroupInStatuNascendi new];
+            Group * currentGroup = (Group*)self.partner;
+            [newGroup addGroupMemberContacts:currentGroup.otherMembers];
+            contactOrProfile = newGroup;
+        } else {
+            NSLog(@"ERROR: showGroup segue on non-group-partner");
+        }
     }
     if (contactOrProfile && [segue.destinationViewController respondsToSelector: @selector(setInspectedObject:)]) {
         [segue.destinationViewController setInspectedObject: contactOrProfile];

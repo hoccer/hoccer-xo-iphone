@@ -257,6 +257,10 @@ NSString * const kRelationStateKept        = @"kept";
 - (BOOL) invitedMe {
     return [kRelationStateInvitedMe isEqualToString: self.relationshipState];
 }
+    
+- (BOOL) isInvitable {
+    return !self.isFriend && !self.invitedMe && !self.isInvited;
+}
 
 - (BOOL) isFriend {
     return [kRelationStateFriend isEqualToString: self.relationshipState];

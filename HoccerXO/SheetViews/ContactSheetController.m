@@ -243,11 +243,11 @@ static int  groupMemberContext;
         
     } else if ([item isEqual: self.inviteContactItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
-        return !(self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe) && [super isItemVisible:item];
+        return !self.contact.isGroup && !self.groupInStatuNascendi && !(self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe) && [super isItemVisible:item];
         
     } else if ([item isEqual: self.acceptFriendItem] || [item isEqual: self.refuseFriendItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible acceptFriendItem or refuseFriendItem %d %d", self.contact.invitedMe, [super isItemVisible:item]);
-        return self.contact.invitedMe && [super isItemVisible: item];
+        return !self.contact.isGroup && !self.groupInStatuNascendi && self.contact.invitedMe && [super isItemVisible: item];
         
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
@@ -316,9 +316,18 @@ static int  groupMemberContext;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
                 [self.chatBackend updateGroup:newGroup];
                 for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
-                    [self.chatBackend inviteGroupMember: self.groupInStatuNascendi.members[i] toGroup: newGroup onDone:^(BOOL success) {
-                        // yeah, baby
-                    }];
+                    Contact * contact = self.groupInStatuNascendi.members[i];
+                    if (contact.isInvitable) {
+                        [self.chatBackend inviteFriend:contact.clientId handler:^(BOOL ok) {
+                            [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {}];
+                        }];
+                    } else if (contact.invitedMe) {
+                        [self.chatBackend acceptFriend:contact.clientId handler:^(BOOL ok) {
+                            [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {}];
+                        }];
+                    } else {
+                        [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {}];
+                    }
                 }
 
                 self.inspectedObject = newGroup;
@@ -426,6 +435,7 @@ static int  groupMemberContext;
 - (void) inspectedObjectDidChange {
     if (self.groupInStatuNascendi) {
         if (self.groupMemberItems.count == 0) {
+            
             DatasheetItem * me = [self itemWithIdentifier: [NSString stringWithFormat: @"%p", self.groupInStatuNascendi] cellIdentifier: @"SmallContactCell"];
             me.currentValue = self.groupInStatuNascendi;
             [self.groupMemberItems addObject: me];
@@ -436,11 +446,22 @@ static int  groupMemberContext;
         }
     }
 
-
     self.fetchedResultsController = [self createFetchedResutsController];
     if (self.fetchedResultsController) {
         for (int i = 0; i < [self.fetchedResultsController.sections[0] numberOfObjects]; ++i) {
             [self.groupMemberItems addObject: [self createGroupMemberItem: i]];
+        }
+    } else {
+        // Add pre-chosen members in case when groupInStatuNascendi has been already filled by segue sender
+        if (self.groupInStatuNascendi) {
+            for (Contact * contact in self.groupInStatuNascendi.members) {
+                if (![contact isEqual:self.groupInStatuNascendi]) {
+                    DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
+                    [self addContactObservers: contact];
+                    [self.groupMemberItems addObject: contactItem];
+                }
+            }
+            [self updateCurrentItems];
         }
     }
 

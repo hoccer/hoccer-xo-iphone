@@ -23,4 +23,6 @@
 @property (nonatomic, strong)   NSString       * verifiedKey;
 @property (nonatomic, strong)   NSArray        * messages;
 
+-(void) addGroupMemberContacts:(NSSet *)members;
+
 @end

@@ -113,7 +113,7 @@
 
 - (NSSet*) membersInvitable {
     NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return !obj.contact.isFriend && !obj.contact.invitedMe && !obj.contact.isInvited;
+        return obj.contact.isInvitable;
     }];
     return theMemberSet;
 }

@@ -64,6 +64,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, readonly) BOOL              isBlocked;
 @property (nonatomic, readonly) BOOL              isInvited;
 @property (nonatomic, readonly) BOOL              invitedMe;
+@property (nonatomic, readonly) BOOL              isInvitable;
 @property (nonatomic, readonly) BOOL              isFriend;
 @property (nonatomic, readonly) BOOL              isGroupFriend;
 @property (nonatomic, readonly) BOOL              isKept;         // valid for both single contacts and groups
