@@ -1611,7 +1611,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                          case 0:
                                                              contact.relationshipState = kRelationStateKept;
                                                              // keep contact and chats
-                                                             [contact updateNearbyFlag];
+                                                             //[contact updateNearbyFlag];
                                                              break;
                                                      }
                                                      [self.delegate saveContext:context];
@@ -1631,7 +1631,7 @@ static NSTimer * _stateNotificationDelayTimer;
         } else {
             contact.relationshipState = kRelationStateGroupFriend;
         }
-        [contact updateNearbyFlag];
+        //[contact updateNearbyFlag];
         return;
     }
     
@@ -1650,7 +1650,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self askForDeletionOfContact:contact];
     } else {
         contact.relationshipState = kRelationStateGroupFriend;
-        [contact updateNearbyFlag];
+        //[contact updateNearbyFlag];
         [self removedButKeptInGroupAlertForContact:contact];
     }
 }
@@ -1807,7 +1807,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (newContact) {
             [self checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:myContact];
         } else {
-            [myContact updateNearbyFlag];
+            //[myContact updateNearbyFlag];
         }
     } else {
         NSLog(@"presenceUpdated: unknown clientId failed to create new contact for id: %@", myClient);
@@ -2708,6 +2708,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [group copyKeyFromMember:myMembership];
     }
     
+    /*
     if (memberContact != nil) {
         if (myMembership.group.groupType != nil && myMembership.group.isNearbyGroup && myMembership.isJoined) {
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: set contact nearby");
@@ -2719,6 +2720,7 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no memberContact yet");
     }
+    */
     
     [self.delegate saveContext:context];
     
@@ -3041,7 +3043,7 @@ static NSTimer * _stateNotificationDelayTimer;
                         // auto-keeping contact
                         if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"auto-keeping group member contact id %@", member.contact.clientId);
                         member.contact.relationshipState = kRelationStateKept;
-                        [member.contact updateNearbyFlag];
+                        //[member.contact updateNearbyFlag];
                     }
                 } else {
                     // we can throw out this member contact without asking
@@ -3049,9 +3051,9 @@ static NSTimer * _stateNotificationDelayTimer;
                     [AppDelegate.instance deleteObject:member.contact inContext:context];
                 }
             } else {
-                if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"updating nearby of group member contact id %@, nearby=%d", member.contact.clientId, member.contact.isNearby);
-                [member.contact updateNearbyFlag];
-                if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"updating nearby of group member contact id %@, nearby=%d", member.contact.clientId, member.contact.isNearby);
+                //if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"updating nearby of group member contact id %@, nearby=%d", member.contact.clientId, member.contact.isNearby);
+                //[member.contact updateNearbyFlag];
+                //if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"updating nearby of group member contact id %@, nearby=%d", member.contact.clientId, member.contact.isNearby);
             }
         }
         // the membership can be deleted in any case, including our own membership

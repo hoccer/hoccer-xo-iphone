@@ -29,7 +29,7 @@
 @dynamic nickName;
 @dynamic alias;
 @dynamic status;
-@dynamic isNearbyTag;
+//@dynamic isNearbyTag;
 
 // @dynamic currentTimeSection;
 @dynamic unreadMessages;
@@ -299,7 +299,7 @@ NSString * const kRelationStateKept        = @"kept";
 }
 
 - (BOOL) isNearbyContact {
-    return [@"YES" isEqualToString: self.isNearbyTag];
+    return self.isMemberinNearbyGroup;
 }
 
 - (BOOL) isNearby {
@@ -309,16 +309,19 @@ NSString * const kRelationStateKept        = @"kept";
         return self.isNearbyContact;
     }
 }
-
+    
+- (BOOL) isMemberinNearbyGroup {
+    NSSet * thGroupSet = [self.groupMemberships objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.group.isNearbyGroup && obj.group.isExistingGroup;
+    }];
+    return thGroupSet.count > 0;
+}
+    
+/*
 -(void) updateNearbyFlag {
     NSSet * myMemberships = self.groupMemberships;
     BOOL isNearby = NO;
     for (GroupMembership * memberShip in myMemberships) {
-        /*
-        if (memberShip.group.isExistingGroup && memberShip.group.isNearbyGroup) {
-            isNearby = YES;
-        }
-         */
         if (memberShip.isNearbyMember) {
             isNearby = YES;
             break;
@@ -332,7 +335,7 @@ NSString * const kRelationStateKept        = @"kept";
         }
     }
 }
-
+*/
 - (NSString*) groupMembershipList {
     NSLog(@"groupMembershipList called on contact %@",self);
     NSMutableArray * groups = [[NSMutableArray alloc] init];

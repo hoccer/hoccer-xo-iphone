@@ -35,7 +35,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSString        * nickName;
 @property (nonatomic, strong)   NSString        * alias;
 @property (nonatomic, strong)   NSString        * status;
-@property (nonatomic, strong)   NSString        * isNearbyTag; // using string as boolean because booleans totally suck in CoreData predicates;
+//@property (nonatomic, strong)   NSString        * isNearbyTag; // using string as boolean because booleans totally suck in CoreData predicates;
                                                                // values are the string "YES" for true, all other values indicate false
 
 @property (nonatomic, retain)   GroupMembership * myGroupMembership;
@@ -103,7 +103,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
-- (void) updateNearbyFlag;
+//- (void) updateNearbyFlag;
 
 
 

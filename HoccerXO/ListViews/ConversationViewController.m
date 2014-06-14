@@ -240,7 +240,6 @@
 
 - (void) addPredicates: (NSMutableArray*) predicates {
     if (self.inNearbyMode) {
-        //[predicates addObject: [NSPredicate predicateWithFormat: @"(type == 'Contact' AND isNearbyTag == 'YES') OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby' AND myGroupMembership.group.groupState =='exists'))"]];
         [predicates addObject: [NSPredicate predicateWithFormat:
                                 @"(type == 'Contact' AND \
                                 SUBQUERY(groupMemberships, $member, $member.group.groupType == 'nearby' AND $member.group.groupState =='exists').@count > 0 ) \
