@@ -205,18 +205,29 @@ NSString * const kRelationStateKept        = @"kept";
     if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
         return name;
 #else
+    if (self.isGroup && self.isNearby) {
+        if (self.isKeptGroup) {
+            return NSLocalizedString(@"group_name_nearby_kept", nil);
+        } else {
+            return NSLocalizedString(@"group_name_nearby_active", nil);
+        }
+    }
     NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
     NSString * statusString = nil;
-    if (self.isKept) {
-        statusString = @"❌";
+    if (self.isInvited) {
+        statusString = @"★";
+    } else if (self.invitedMe) {
+        statusString = @"☆";
+    } else if (self.isKept) {
+        statusString = @"♻";
     } else if (self.isBlocked) {
-        statusString = nil;
+        statusString = @""; // We have already UI for blocked state
     } else if (self.isGroup && [(Group*)self otherJoinedMembers].count == 0) {
-        statusString = @"⭕";
-    } else if (self.isNotRelated) {
-        statusString = @"❓";
+        statusString = @"🚧";
+    } else if (!self.isGroup && self.isNotRelated) {
+        statusString = @"🔺";
     } else if (self.isGroupFriend) {
-        statusString = @"🔗";
+        statusString = @"👥";
     } else if (self.isTyping) {
         statusString = @"💬";
     } else if ( self.isBackground) {

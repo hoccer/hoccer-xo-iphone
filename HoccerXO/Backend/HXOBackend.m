@@ -2072,14 +2072,12 @@ static NSTimer * _stateNotificationDelayTimer;
         latestChange = [self getLatestChangeDateForGroups];
     }
     
-    [self getGroups: latestChange groupsHandler:^(NSArray * changedGroups) {
-        NSArray * changedGroupIds = objectIds(changedGroups);
+    [self getGroups: latestChange groupsHandler:^(NSArray * changedGroupsDicts) {
         [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
-            NSArray * changedGroups = managedObjects(changedGroupIds, context);
-            if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroups);
-            if ([changedGroups isKindOfClass:[NSArray class]]) {
+            if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroupsDicts);
+            if ([changedGroupsDicts isKindOfClass:[NSArray class]]) {
                 BOOL ok = YES;
-                for (NSDictionary * groupDict in changedGroups) {
+                for (NSDictionary * groupDict in changedGroupsDicts) {
                     
                     BOOL stateOk =[self updateGroupHereLocking: groupDict inContext:context];
                     Group * group = [self getGroupById:groupDict[@"groupId"] inContext:context];

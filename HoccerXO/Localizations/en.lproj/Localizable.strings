@@ -335,6 +335,9 @@
 
 "group_list_placeholder"                = "Create [groups](http://hoccer.com/xo/help/groups) to chat with many friends at once.";
 
+"group_name_nearby_active"              = "Everyone Nearby Group";
+"group_name_nearby_kept"                = "Stored Nearby Group";
+
 //==============================================================================
 // Invitations
 //==============================================================================

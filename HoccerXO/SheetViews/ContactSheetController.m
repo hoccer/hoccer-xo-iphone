@@ -215,6 +215,8 @@ static int  groupMemberContext;
         _inviteContactItem.visibilityMask = DatasheetModeEdit;
         _inviteContactItem.target = self;
         _inviteContactItem.action = @selector(inviteToggled:);
+        _inviteContactItem.visibilityMask = DatasheetModeView | DatasheetModeEdit;
+
     }
     return _inviteContactItem;
 }
@@ -245,7 +247,7 @@ static int  groupMemberContext;
         
     } else if ([item isEqual: self.acceptFriendItem] || [item isEqual: self.refuseFriendItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible acceptFriendItem or refuseFriendItem %d %d", self.contact.invitedMe, [super isItemVisible:item]);
-        return self.contact.invitedMe && [super isItemVisible: item];;
+        return self.contact.invitedMe && [super isItemVisible: item];
         
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
@@ -636,6 +638,7 @@ static int  groupMemberContext;
         _acceptFriendItem.title = NSLocalizedString(@"contact_friend_accept_button", nil);
         _acceptFriendItem.target = self;
         _acceptFriendItem.action = @selector(acceptFriendTapped:);
+        _acceptFriendItem.visibilityMask = DatasheetModeView | DatasheetModeEdit;
     }
     return _acceptFriendItem;
 }
@@ -647,6 +650,7 @@ static int  groupMemberContext;
         _refuseFriendItem.title = NSLocalizedString( @"contact_friend_refuse_button", nil);
         _refuseFriendItem.target = self;
         _refuseFriendItem.action = @selector(refuseFriendTapped:);
+        _refuseFriendItem.visibilityMask = DatasheetModeView | DatasheetModeEdit;
     }
     return _refuseFriendItem;
 }

@@ -334,6 +334,9 @@
 
 "group_list_placeholder"                = "Lege [Gruppen](http://hoccer.com/xo/help/groups) an um mit vielen Freunden gleichzeitig zu chatten.";
 
+"group_name_nearby_active"              = "Alle in der Nähe";
+"group_name_nearby_kept"                = "In der Nähe gespeichert";
+
 //==============================================================================
 // Invitations
 //==============================================================================
