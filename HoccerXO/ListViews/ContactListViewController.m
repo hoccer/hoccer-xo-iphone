@@ -65,6 +65,14 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @synthesize placeholderLabel = _placeholderLabel;
 @synthesize webViewController = _webViewController;
 
+
+#define SEARCHBAR_SCROLLING_IN_HACK
+#define SEARCHBAR_SCROLLING_DEBUG NO
+
+#ifdef SEARCHBAR_SCROLLING_IN_HACK
+CGPoint _correctContentOffset;
+#endif
+
 - (void)awakeFromNib {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.clearsSelectionOnViewWillAppear = NO;
@@ -76,8 +84,75 @@ static const CGFloat kMagicSearchBarHeight = 44;
     self.tabBarItem.title = NSLocalizedString(@"contact_list_nav_title", nil);
 }
 
+#ifdef SEARCHBAR_SCROLLING_IN_HACK
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if ([keyPath isEqual:@"contentOffset"]) {
+        // This is hack #2 to correct some misbehavior of the Apples' UIKit
+        // It actually changes the content offset without firing a notification;
+        // Here we detect if the value has changes without notification and
+        // restore it to the correct old value; we have to do it asynchronously
+        // because otherwise UIKit will change it again
+        
+        if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"contentOffset changed, dict = %@", change);
+        CGPoint newOffset;
+        [change[NSKeyValueChangeNewKey] getValue:&newOffset];
+        CGPoint oldOffset;
+        [change[NSKeyValueChangeOldKey] getValue:&oldOffset];
+        
+        if (oldOffset.x != _correctContentOffset.x || oldOffset.y != _correctContentOffset.y) {
+            if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"correcting offset to = %@", NSStringFromCGPoint(_correctContentOffset));
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView setContentOffset:_correctContentOffset];
+            });
+        } else {
+            _correctContentOffset = newOffset;
+        }
+        
+        //NSLog(@"contentOffset.y= %f", newOffset.y);
+
+    }
+    if ([keyPath isEqual:@"contentInset"]) {
+        // this is hack #1 to correct some misbehavior of the Apples' UIKit
+        // When the contentInset changes, the scroll position is actually correct,
+        // but it is subsequently changed to wrong scoll position
+        // In this hack we just set the correct position after 1 sec
+        if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"contentInset changed, dict = %@", change);
+        UIEdgeInsets newInset;
+        [change[NSKeyValueChangeNewKey] getValue:&newInset];
+        UIEdgeInsets oldInset;
+        [change[NSKeyValueChangeOldKey] getValue:&oldInset];
+        
+        CGPoint sameOffset = self.tableView.contentOffset;
+        
+        double delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"setting same offset = %@",  NSStringFromCGPoint(sameOffset));
+            [self.tableView setContentOffset:sameOffset animated:NO];
+        });
+    }
+    
+    /*
+    if ([super respondsToSelector:@selector(observeValueForKeyPath:ofObject:change:context:)]) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+    */
+}
+/*
+- (void)viewWillLayoutSubviews {
+    NSLog(@"viewWillLayoutSubviews");
+}
+- (void)viewDidLayoutSubviews {
+    NSLog(@"viewDidLayoutSubviews");
+}
+*/
+#endif
 
 - (void)viewDidLoad {
+    if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"ContactListViewController:viewDidLoad");
+    
     [super viewDidLoad];
 
     [self registerCellClass: [self cellClass]];
@@ -87,10 +162,17 @@ static const CGFloat kMagicSearchBarHeight = 44;
         self.navigationItem.rightBarButtonItem = addButton;
     }
 
+#ifdef SEARCHBAR_SCROLLING_IN_HACK
+    _correctContentOffset = self.tableView.contentOffset;
+    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
+    [self.tableView addObserver:self forKeyPath:@"contentInset" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
+#endif
+    
     [self setupTitle];
 
     if ( ! self.searchBar) {
-        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight)];
+        //self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight)];
+        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight-4)]; // for iPhone 5 this is the magic value
         self.tableView.tableHeaderView = self.searchBar;
     }
     self.searchBar.delegate = self;
@@ -112,7 +194,26 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
     [self.tableView addSubview: self.placeholderView];
+
+#ifdef SEARCHBAR_SCROLLING_IN_HACK_B
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self scrollSearchBarOffScreen];
+    });
+#endif
 }
+
+#ifdef SEARCHBAR_SCROLLING_IN_HACK_B
+
+-(void)scrollSearchBarOffScreen {
+    // scroll the search bar off-screen
+    CGRect newBounds = self.tableView.bounds;
+    newBounds.origin.y = newBounds.origin.y + self.searchBar.bounds.size.height;
+    self.tableView.bounds = newBounds;
+}
+
+#endif
 
 - (id) cellClass {
     return [ContactCell class];
@@ -192,6 +293,28 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [self.view endEditing:NO]; // hide keyboard on scrolling
 }
 
+bool almostEqual(CGFloat a, CGFloat b) {
+    return abs(a - b) < 0.01;
+}
+
+#ifdef SEARCHBAR_SCROLLING_IN_HACK
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"scrollViewDidScroll: pos = %f, height=%f tv.x=%f, tv.height=%f inset.top=%f inset.botton=%f",scrollView.contentOffset.y, scrollView.contentSize.height, self.tableView.bounds.origin.y, self.tableView.bounds.size.height, scrollView.contentInset.top, scrollView.contentInset.bottom);
+    //NSLog(@"%@",[NSThread callStackSymbols]);
+    
+    /*
+    //CGFloat searchBarHeight = self.searchBar.frame.size.height;
+    CGFloat searchBarHeight = kMagicSearchBarHeight;
+    if (scrollView.contentOffset.y >= searchBarHeight) {
+        scrollView.contentInset = UIEdgeInsetsMake(-searchBarHeight, 0, 0, 0);
+    } else {
+        scrollView.contentInset = UIEdgeInsetsZero;
+    }
+     */
+}
+#endif
+
 - (void) addButtonPressed: (id) sender {
     if (self.inGroupMode) {
         [self performSegueWithIdentifier: @"showGroup" sender: sender];
@@ -267,14 +390,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 }
 
 #pragma mark - Fetched results controller
-/*
-- (NSManagedObjectContext *)managedObjectContext {
-    if ( ! _managedObjectContext) {
-        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
-    }
-    return _managedObjectContext;
-}
-*/
+
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactListController:newFetchedResultsControllerWithSearch %@", searchString);
@@ -670,10 +786,17 @@ static const CGFloat kMagicSearchBarHeight = 44;
 - (void) configurePlaceholder {
     self.placeholderLabel.attributedText = [self placeholderText];
     self.placeholderImageView.image = [self placeholderImage];
-
+    
     BOOL isEmpty = [self tableViewIsEmpty];
     self.placeholderView.alpha = isEmpty ? 1 : 0;
     self.tableView.tableHeaderView = isEmpty ? nil : self.searchBar;
+
+#ifdef SEARCHBAR_SCROLLING_IN_HACK
+    // This is hack #3 which helps hack #2 to detect that
+    // the content offset has silently been changed
+   if (SEARCHBAR_SCROLLING_DEBUG)  NSLog(@"configurePlaceholder: resetting content offset");
+    [self.tableView setContentOffset:self.tableView.contentOffset];
+#endif
 }
 
 - (BOOL) tableViewIsEmpty {
