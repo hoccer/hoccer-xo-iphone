@@ -15,6 +15,16 @@
 
 #define GROUPKEY_DEBUG NO
 
+NSString * const kGroupStateNone    = @"none";
+NSString * const kGroupStateExists  = @"exists";
+
+NSString * const kGroupStateInternalIncomplete  = @"incomplete";
+NSString * const kGroupStateInternalKept        = @"kept";
+
+NSString * const kGroupTypeUser     = @"user";
+NSString * const kGroupTypeNearby   = @"nearby";
+
+
 @implementation Group
 
 @dynamic groupKey;
@@ -239,16 +249,15 @@
 }
 
 - (BOOL) iAmAdmin {
-    return [@"admin" isEqualToString: self.myGroupMembership.role];
+    return [kGroupMembershipRoleAdmin isEqualToString: self.myGroupMembership.role];
 }
 
 - (BOOL) iJoined {
-    return [@"joined" isEqualToString: self.myGroupMembership.state];
+    return [kGroupMembershipStateJoined isEqualToString: self.myGroupMembership.state];
 }
 
-
 - (BOOL)isKeptGroup {
-    return [kRelationStateKept isEqualToString:self.groupState];
+    return [kGroupStateInternalKept isEqualToString:self.groupState];
 }
 
 - (BOOL)isRemovedGroup {
@@ -256,15 +265,15 @@
 }
 
 - (BOOL)isExistingGroup {
-    return [@"exists" isEqualToString:self.groupState];
+    return [kGroupStateExists isEqualToString:self.groupState];
 }
 
 - (BOOL)isIncompleteGroup {
-    return [@"incomplete" isEqualToString:self.groupState ];
+    return [kGroupStateInternalIncomplete isEqualToString:self.groupState ];
 }
 
 - (BOOL)isNearbyGroup{
-    return [@"nearby" isEqualToString: self.groupType];
+    return [kGroupTypeNearby isEqualToString: self.groupType];
 }
 
 //public class TalkGroup {

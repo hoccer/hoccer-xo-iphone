@@ -184,6 +184,7 @@
 "contact_relationship_removed_message"          = "Die Beziehung zu Kontakt '%@' wurde entfernt.";
 "contact_kept_and_relationship_removed_message" = "Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
 
+// for invitation in contact sheet
 "contact_friend_invitation_section_title"       = "Freundschaftseinladung";
 
 "contact_friend_accept_button"                  ="Freundschaft annehmen";
@@ -192,6 +193,27 @@
 "contact_friend_refuse_title"                   = "Freundschaft ablehnen?";
 "contact_friend_refuse_button_title"            = "Ablehnen";
 
+// For invitation in dialog
+"contact_invited_me_as_friend_title"            = "Freundschaftseinladung";
+"contact_invited_me_as_friend_message %@"       = "Eine Gruppenbekanntschaft namens ‘%@' hat dich eingeladen, ihr Freund zu werden.";
+
+"contact_accept_friend_failed_message %@"      = "Das Annehmen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_accept_friend_failed_title"           = "Freundschaft annehmen fehlgeschlagen";
+
+"contact_accept_friend_failed_message %@"      = "Das Ablehnen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_accept_friend_failed_title"           = "Freundschaft ablehnen fehlgeschlagen";
+
+"contact_invite_friend_failed_message %@"      = "Die Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_invite_friend_failed_title"           = "Freundschaftseinladung fehlgeschlagen";
+
+"contact_disinvite_friend_failed_message %@"      = "Das Zurückziehen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_disinvite_friend_failed_title"           = "Freundschaft zurückziehen fehlgeschlagen";
+
+"contact_invited_me_as_friend_accept_btn_title"         = "Annehmen";
+"contact_invited_me_as_friend_decline_btn_title"        = "Ablehnen";
+"contact_invited_me_as_friend_decide_later_btn_title"   = "Später entscheiden";
+
+// relationship state display in contact list
 "contact_relationship_friend"                   = "Freund";
 "contact_relationship_groupfriend"              = "Gruppenbekanntschaft";
 "contact_relationship_kept"                     = "Keine Beziehung";
@@ -284,6 +306,12 @@
 "group_invite_dismissed_title"          = "Einladung abgelehnt oder zurückgezogen";
 "group_invite_dismissed_message_format" = "'%@' ist nicht mehr zu Gruppe '%@' eingeladen.";
 "group_invite_removed_title"            = "Die Einladung für die Gruppe '%@' wurde entfernt.";
+
+"group_invite_failed_message %@ %@"     = "Das Einladen von '%@' zur Gruppe '%@' ist fehlgeschlagen. Überprüfe deine Verbindung und versuche es später noch einmal";
+"group_invite_friend_failed_title"      = "Gruppeneinladung fehlgeschlagen";
+
+"group_disinvite_failed_message %@ %@"  = "Das Zurückziehen der Einladung von '%@' zur Gruppe '%@' ist fehlgeschlagen. Überprüfe deine Verbindung und versuche es später noch einmal";
+"group_disinvite_friend_failed_title"   = "Gruppeneinladung zurückziehen fehlgeschlagen";
 
 "group_join_button"                     = "Gruppe beitreten";
 "group_admin_you"                       = "Du";

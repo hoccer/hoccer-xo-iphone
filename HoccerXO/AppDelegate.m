@@ -80,6 +80,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSMutableArray * _inspectedObjects;
     NSMutableArray * _inspectors;
     NSMutableDictionary *_idLocks;
+    NSObject * _inspectionLock;
 }
 @end
 
@@ -98,63 +99,73 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @synthesize userAgent;
 
 -(void)printInspection {
-    int i = 0;
-    for (id obj in _inspectedObjects) {
-        NSLog(@"%d)inspected id %@ name %@ by %@", i,[obj clientId], [obj nickName], [_inspectors[i] class]);
-        ++i;
+    @synchronized(_inspectionLock) {
+        int i = 0;
+        for (id obj in _inspectedObjects) {
+            NSLog(@"%d)inspected id %@ name %@ by %@", i,[obj clientId], [obj nickName], [_inspectors[i] class]);
+            ++i;
+        }
+        NSLog(@"\n");
     }
-    NSLog(@"\n");
 }
 
 -(void)beginInspecting:(id)inspectedObject withInspector:(id)inspector {
-    if (TRACE_INSPECTION) NSLog(@"--> begin inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
-    if (_inspectedObjects == nil) {
-        _inspectedObjects = [NSMutableArray new];
-        _inspectors = [NSMutableArray new];
+    @synchronized(_inspectionLock) {
+        if (TRACE_INSPECTION) NSLog(@"--> begin inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+        if (_inspectedObjects == nil) {
+            _inspectedObjects = [NSMutableArray new];
+            _inspectors = [NSMutableArray new];
+        }
+        if (inspectedObject != nil) {
+            [_inspectedObjects insertObject:inspectedObject atIndex:0];
+            [_inspectors insertObject:inspector atIndex:0];
+        }
+        if (TRACE_INSPECTION) [self printInspection];
     }
-    if (inspectedObject != nil) {
-        [_inspectedObjects insertObject:inspectedObject atIndex:0];
-        [_inspectors insertObject:inspector atIndex:0];
-    }
-    if (TRACE_INSPECTION) [self printInspection];
 }
 
 -(void)endInspecting:(id)inspectedObject withInspector:(id)inspector {
-    if (TRACE_INSPECTION) NSLog(@"<-- end inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
-    if (_inspectedObjects == nil) {
-        _inspectedObjects = [NSMutableArray new];
-        _inspectors = [NSMutableArray new];
-    }
-    for (int i = 0; i < _inspectedObjects.count;++i) {
-        if (_inspectedObjects[i] == inspectedObject && _inspectors[i] == inspector) {
-            [_inspectedObjects removeObjectAtIndex:i];
-            [_inspectors removeObjectAtIndex:i];
-            break;
+    @synchronized(_inspectionLock) {
+        if (TRACE_INSPECTION) NSLog(@"<-- end inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+        if (_inspectedObjects == nil) {
+            _inspectedObjects = [NSMutableArray new];
+            _inspectors = [NSMutableArray new];
         }
+        for (int i = 0; i < _inspectedObjects.count;++i) {
+            if (_inspectedObjects[i] == inspectedObject && _inspectors[i] == inspector) {
+                [_inspectedObjects removeObjectAtIndex:i];
+                [_inspectors removeObjectAtIndex:i];
+                break;
+            }
+        }
+        if (TRACE_INSPECTION) [self printInspection];
     }
-    if (TRACE_INSPECTION) [self printInspection];
- }
+}
 
 -(BOOL)isInspecting:(id)inspectedObject withInspector:(id)inspector {
-    if (inspectedObject == nil || inspector == nil) {
-        return false;
-    }
-    for (int i = 0; i < _inspectedObjects.count;++i) {
-        if (_inspectedObjects[i] == inspectedObject && _inspectors[i] == inspector) {
-            return YES;
+    @synchronized(_inspectionLock) {
+        if (inspectedObject == nil || inspector == nil) {
+            return false;
         }
+        for (int i = 0; i < _inspectedObjects.count;++i) {
+            if (_inspectedObjects[i] == inspectedObject && _inspectors[i] == inspector) {
+                return YES;
+            }
+        }
+        return NO;
     }
-    return NO;
 }
 
 -(BOOL)isInspecting:(id)inspectedObject {
-    if (_inspectedObjects == nil) {
-        return false;
+    @synchronized(_inspectionLock) {
+        if (_inspectedObjects == nil) {
+            return false;
+        }
+        if (inspectedObject != nil) {
+            return [_inspectedObjects containsObject:inspectedObject];
+        }
+        return NO;
     }
-    if (inspectedObject != nil) {
-        return [_inspectedObjects containsObject:inspectedObject];
-    }
-    return NO;
 }
 
 
@@ -190,6 +201,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
     
     _idLocks = [NSMutableDictionary new];
+    _inspectionLock = [NSObject new];
 
 #ifdef DEBUG
 #define DEFINE_OTHER_SERVERS

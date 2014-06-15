@@ -100,6 +100,9 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
+- (void) inviteGroupMemberFailedForContact:(Contact*)contact inGroup:(Group*)group;
+- (void) disinviteGroupMemberFailedForContact:(Contact*)contact inGroup:(Group*)group;
+
 - (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
@@ -113,6 +116,11 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) disinviteFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
 - (void) acceptFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
 - (void) refuseFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+
+- (void) acceptFriendFailedAlertForContact:(Contact*)contact;
+- (void) refuseFriendFailedAlertForContact:(Contact*)contact;
+- (void) inviteFriendFailedAlertForContact:(Contact*)contact;
+- (void) disinviteFriendFailedAlertForContact:(Contact*)contact;
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;

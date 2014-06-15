@@ -11,6 +11,16 @@
 
 @class Contact, Group;
 
+FOUNDATION_EXPORT NSString * const kGroupMembershipStateNone;
+FOUNDATION_EXPORT NSString * const kGroupMembershipStateInvited;
+FOUNDATION_EXPORT NSString * const kGroupMembershipStateJoined;
+FOUNDATION_EXPORT NSString * const kGroupMembershipStateGroupRemoved;
+
+FOUNDATION_EXPORT NSString * const kGroupMembershipRoleAdmin;
+FOUNDATION_EXPORT NSString * const kGroupMembershipRoleMember;
+FOUNDATION_EXPORT NSString * const kGroupMembershipRoleNearbyMember;
+
+
 @interface GroupMembership : HXOModel
 
 @property (nonatomic, retain) NSString * role;
@@ -58,6 +68,5 @@
 - (BOOL)isNearbyMember;
 - (BOOL)isAdmin;
 - (BOOL)hasActiveRole;
-- (BOOL)isRoleNone;
 
 @end

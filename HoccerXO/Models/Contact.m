@@ -53,6 +53,7 @@
 
 @synthesize rememberedLastVisibleChatCell;
 @synthesize friendMessageShown;
+@synthesize presentingFriendInvitation;
 
 NSString * const kRelationStateNone        = @"none";
 NSString * const kRelationStateFriend      = @"friend";
@@ -60,7 +61,7 @@ NSString * const kRelationStateBlocked     = @"blocked";
 NSString * const kRelationStateInvited     = @"invited";
 NSString * const kRelationStateInvitedMe   = @"invitedMe";
 NSString * const kRelationStateGroupFriend = @"groupfriend";
-NSString * const kRelationStateKept        = @"kept";
+NSString * const kRelationStateInternalKept= @"kept";
 
 @dynamic publicKeyString;
 @dynamic relationshipState;
@@ -271,10 +272,10 @@ NSString * const kRelationStateKept        = @"kept";
 }
 
 - (BOOL) isKeptRelation {
-    return [kRelationStateKept isEqualToString: self.relationshipState];
+    return [kRelationStateInternalKept isEqualToString: self.relationshipState];
 }
 - (BOOL) isKeptGroup {
-    return [kRelationStateKept isEqualToString: self.myGroupMembership.group.groupState];
+    return [kRelationStateInternalKept isEqualToString: self.myGroupMembership.group.groupState];
 }
 
 - (BOOL) isKept {

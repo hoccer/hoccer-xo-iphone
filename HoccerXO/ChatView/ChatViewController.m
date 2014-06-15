@@ -588,22 +588,31 @@ nil
         } else if (buttonIndex == invitableIndex) {
             for (GroupMembership* member in membersInvitable) {
                 [self.chatBackend inviteFriend:member.contact.clientId handler:^(BOOL ok) {
+                    if (!ok) {
+                        [self.chatBackend inviteFriendFailedAlertForContact:member.contact];
+                    }
                 }];
             }
             
         } else if (buttonIndex == inviteMeIndex) {
             for (GroupMembership* member in membersInvitedMe) {
                 [self.chatBackend acceptFriend:member.contact.clientId handler:^(BOOL ok) {
+                    if (!ok) {
+                        [self.chatBackend acceptFriendFailedAlertForContact:member.contact];
+                    }
                 }];
             }
             
-       } else if (buttonIndex == invitedIndex) {
-           for (GroupMembership* member in membersInvited) {
-               [self.chatBackend disinviteFriend:member.contact.clientId handler:^(BOOL ok) {
-               }];
-           }
-       } else if (buttonIndex == makeGroupIndex) {
-           [self performSegueWithIdentifier: @"newGroup" sender: self.actionButton];
+        } else if (buttonIndex == invitedIndex) {
+            for (GroupMembership* member in membersInvited) {
+                [self.chatBackend disinviteFriend:member.contact.clientId handler:^(BOOL ok) {
+                    if (!ok) {
+                        [self.chatBackend disinviteFriendFailedAlertForContact:member.contact];
+                    }
+                }];
+            }
+        } else if (buttonIndex == makeGroupIndex) {
+            [self performSegueWithIdentifier: @"newGroup" sender: self.actionButton];
        }
     };
     
@@ -622,7 +631,7 @@ nil
     if ([self.partner.type isEqualToString:[Group entityName]]) {
         // check if there are other members in the group
         Group * group = (Group*)self.partner;
-        if ([[group otherJoinedMembers] count] == 0 || [group.groupState isEqualToString:@"kept"]) {
+        if ([[group otherJoinedMembers] count] == 0 || group.isKeptGroup) {
             // cant send message, no other joined members
             NSString * messageText;
             if ([[group otherInvitedMembers] count] > 0) {

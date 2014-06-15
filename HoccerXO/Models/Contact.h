@@ -20,7 +20,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
 FOUNDATION_EXPORT NSString * const kRelationStateInvited;
 FOUNDATION_EXPORT NSString * const kRelationStateInvitedMe;
 FOUNDATION_EXPORT NSString * const kRelationStateGroupFriend;
-FOUNDATION_EXPORT NSString * const kRelationStateKept;
+FOUNDATION_EXPORT NSString * const kRelationStateInternalKept;
 
 
 @interface Contact : HXOModel <HXOClientProtocol>
@@ -101,6 +101,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   UIImage         * avatarImage;
 
 @property BOOL friendMessageShown;
+@property BOOL presentingFriendInvitation;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;

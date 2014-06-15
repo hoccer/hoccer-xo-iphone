@@ -184,6 +184,7 @@
 "contact_relationship_removed_message"          = "Relationship with contact '%@' has been removed.";
 "contact_kept_and_relationship_removed_message" = "No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
 
+// for invitation in contact sheet
 "contact_friend_invitation_section_title"       = "You are invited as friend";
 
 "contact_friend_accept_button"                  = "Accept as friend";
@@ -192,6 +193,27 @@
 "contact_friend_refuse_title"                   = "Refuse friendship?";
 "contact_friend_refuse_button_title"            = "Refuse";
 
+// For invitation in dialog
+"contact_invited_me_as_friend_title"            = "Friendship Invitation";
+"contact_invited_me_as_friend_message %@"       = "A contact named ‘%@' known via a group invited you to become a friend. ";
+
+"contact_accept_friend_failed_message %@"      = "Accepting friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_accept_friend_failed_title"           = "Accepting Friendship Failed";
+
+"contact_accept_friend_failed_message %@"      = "Refusing friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_accept_friend_failed_title"           = "Refusing Friendship Failed";
+
+"contact_invite_friend_failed_message %@"      = "Friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_invite_friend_failed_title"           = "Friendship Invitation Failed";
+
+"contact_disinvite_friend_failed_message %@"   = "Friendship disinvitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_disinvite_friend_failed_title"         = "Friendship Disnvitation Failed";
+
+"contact_invited_me_as_friend_accept_btn_title"         = "Accept";
+"contact_invited_me_as_friend_decline_btn_title"        = "Refuse";
+"contact_invited_me_as_friend_decide_later_btn_title"   = "Decide Later";
+
+// relationship state display in contact list
 "contact_relationship_none"                     = "None";
 "contact_relationship_friend"                   = "Friend";
 "contact_relationship_groupfriend"              = "Acquaintance by group";
@@ -202,6 +224,7 @@
 
 "contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/xo/help/invitations) to chat with.";
 "contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://hoccer.com/xo/help/nearby)…";
+
 
 //==============================================================================
 // Credentials
@@ -285,6 +308,12 @@
 "group_invite_dismissed_title"          = "Invitation dismissed";
 "group_invite_dismissed_message_format" = "'%@' is no longer invited to group '%@'";
 "group_invite_removed_title"            = "The invitation for group '%@' has been removed.";
+
+"group_invite_failed_message %@ %@"     = "Invitation of contact '%@' to group '%@' failed. Check your connection and eventually try again later.";
+"group_invite_friend_failed_title"      = "Group Invitation Failed";
+
+"group_disinvite_failed_message %@ %@"  = "Disinvitation of contact '%@' from group '%@' failed. Check your connection and eventually try again later.";
+"group_disinvite_friend_failed_title"   = "Group Invitation Failed";
 
 "group_join_button"                     = "Join Group";
 "group_admin_you"                       = "You";

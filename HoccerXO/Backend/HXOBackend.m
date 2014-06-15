@@ -1483,44 +1483,187 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updateRelationship: (NSDictionary*) relationshipDict {
     
-    
     NSString * clientId = relationshipDict[@"otherClientId"];
     if ([clientId isEqualToString: [UserProfile sharedProfile].clientId]) {
         return;
     }
+    
     [self.delegate performWithLockingId:clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        
         if (USE_VALIDATOR) [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
         if (LOCKING_TRACE) NSLog(@"Entering synchronized updateRelationship %@",clientId);
+        
         Contact * contact = [self getContactByClientId: clientId inContext:context];
-        // XXX The server sends relationship updates with state 'none' even after depairing.
+        
+        // The server may send relationship updates with state 'none' even after depairing, so handle that
         if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
-            [self checkRelationsipStateForGroupMembershipOfContact:contact];
-            if (contact != nil && !contact.isNotRelated && !contact.isKept && !contact.isGroupFriend) {
-                contact.relationshipState = kRelationStateNone;
-                //[self handleDeletionOfContact:contact withForce:NO];
-                [self handleDeletionOfContact:contact withForce:NO inContext:context];
+            // if there is a local contact, check if we should delete, otherwise do nothing and return
+            if (contact != nil) {
+                [self checkRelationsipStateForGroupMembershipOfContact:contact];
+                if (!contact.isNotRelated && !contact.isKept && !contact.isGroupFriend) {
+                    contact.relationshipState = kRelationStateNone;
+                    [self handleDeletionOfContact:contact withForce:NO inContext:context];
+                }
             }
             if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",clientId);
             return;
         }
+        
+        // create new contact because we don't have this one yet
         if (contact == nil) {
             contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:context];
             contact.type = [Contact entityName];
             contact.clientId = clientId;
         }
-        if (contact.nickName.length > 0 && !contact.isFriend && [relationshipDict[@"state"] isEqualToString: kRelationStateFriend]) {
+        
+        // show "new friend" or "blocked" message in case the state changed
+        if (contact.nickName.length > 0 && !contact.isFriend && [kRelationStateFriend isEqualToString: relationshipDict[@"state"] ]) {
             [self newFriendAlertForContact:contact];
-        } else if (!contact.isBlocked && [relationshipDict[@"state"] isEqualToString: kRelationStateBlocked]) {
+        } else if (!contact.isBlocked && [kRelationStateBlocked isEqualToString: relationshipDict[@"state"]]) {
             [self blockedAlertForContact:contact];
+        } else if (!contact.invitedMe && [kRelationStateInvitedMe isEqualToString: relationshipDict[@"state"]]) {
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[contact] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                [self invitationAsFriendAlertByContact:contact];
+            }];
         }
+        
         // NSLog(@"relationship Dict: %@", relationshipDict);
         [contact updateWithDictionary: relationshipDict];
+        
         [self checkRelationsipStateForGroupMembershipOfContact:contact];
-        [self.delegate saveContext:context];
+        
+        //[self.delegate saveContext:context];
         if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere %@",clientId);
     }];
 }
 
+// main context only
+- (void) acceptFriendFailedAlertForContact:(Contact*)contact {
+    [self.delegate assertMainContext];
+    NSString * contactName = contact.nickName;
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_accept_friend_failed_message %@",nil), contactName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_accept_friend_failed_title", nil)
+                                                     message: message
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+// main context only
+- (void) refuseFriendFailedAlertForContact:(Contact*)contact {
+    [self.delegate assertMainContext];
+    NSString * contactName = contact.nickName;
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_refuse_friend_failed_message %@",nil), contactName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_refuse_friend_failed_title", nil)
+                                                     message: message
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+// main context only
+- (void) inviteFriendFailedAlertForContact:(Contact*)contact {
+    [self.delegate assertMainContext];
+    NSString * contactName = contact.nickName;
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_invite_friend_failed_message %@",nil), contactName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_invite_friend_failed_title", nil)
+                                                     message: message
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+// main context only
+- (void) disinviteFriendFailedAlertForContact:(Contact*)contact {
+    [self.delegate assertMainContext];
+    NSString * contactName = contact.nickName;
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_disinvite_friend_failed_message %@",nil), contactName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_disinvite_friend_failed_title", nil)
+                                                     message: message
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+// main context only
+- (void) inviteGroupMemberFailedForContact:(Contact*)contact inGroup:(Group*)group {
+    [self.delegate assertMainContext];
+    NSString * contactName = contact.nickName;
+    NSString * groupName = group.nickName;
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_invite_failed_message %@ %@",nil), contactName, groupName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_invite_friend_failed_title", nil)
+                                                     message: message
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+// main context only
+- (void) disinviteGroupMemberFailedForContact:(Contact*)contact inGroup:(Group*)group {
+    [self.delegate assertMainContext];
+    NSString * contactName = contact.nickName;
+    NSString * groupName = group.nickName;
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_disinvite_failed_message %@ %@",nil), contactName, groupName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_disinvite_friend_failed_title", nil)
+                                                     message: message
+                                                    delegate:nil
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
+}
+
+// main context only
+- (void) invitationAsFriendAlertByContact:(Contact*)contact {
+    [self.delegate assertMainContext];
+    
+    if (contact.presentingFriendInvitation) {
+        return;
+    }
+    contact.presentingFriendInvitation = YES;
+    
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_invited_me_as_friend_message %@",nil), contact.nickName];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_invited_me_as_friend_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 switch (buttonIndex) {
+                                                     case 0: {
+                                                         // accept invitation
+                                                         [self acceptFriend:contact.clientId handler:^(BOOL ok) {
+                                                             if (!ok) {
+                                                                 [self acceptFriendFailedAlertForContact:contact];
+                                                             }
+                                                             contact.presentingFriendInvitation = NO;
+                                                         }];
+                                                        }
+                                                        break;
+                                                     case 1: {
+                                                         // decline invitation
+                                                         [self refuseFriend:contact.clientId handler:^(BOOL ok) {
+                                                             if (!ok) {
+                                                                 [self refuseFriendFailedAlertForContact:contact];
+                                                             }
+                                                             contact.presentingFriendInvitation = NO;
+                                                         }];
+                                                        }
+                                                        break;
+                                                     case 2:
+                                                         // do nothing
+                                                         contact.presentingFriendInvitation = NO;
+                                                         break;
+                                                 }
+                                             }
+                                           cancelButtonTitle: nil
+                                           otherButtonTitles: NSLocalizedString(@"contact_invited_me_as_friend_accept_btn_title", nil), NSLocalizedString(@"contact_invited_me_as_friend_decline_btn_title", nil), NSLocalizedString(@"contact_invited_me_as_friend_decide_later_btn_title", nil),nil];
+    [alert show];
+}
+
+
+// background context safe
 - (void) newFriendAlertForContact:(Contact*)contact {
     if (contact.friendMessageShown) {
         return;
@@ -1538,6 +1681,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+// background context safe
 - (void) blockedAlertForContact:(Contact*)contact {
     NSString * contactName = contact.nickName;
     [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
@@ -1551,6 +1695,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+// background context safe
 - (void) removedAlertForContact:(Contact*)contact {
     NSString * contactName = contact.nickName;
     [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
@@ -1564,6 +1709,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+// background context safe
 - (NSString*) groupMembershipListofContact:(Contact*)contact {
     NSMutableArray * groups = [[NSMutableArray alloc] init];
 
@@ -1582,21 +1728,30 @@ static NSTimer * _stateNotificationDelayTimer;
     return [groups componentsJoinedByString:@", "];
 }
 
-
+// background context safe
 - (void) removedButKeptInGroupAlertForContact:(Contact*)contact {
+    NSString * contactName = contact.nickName;
+    NSString * membershipList = [self groupMembershipListofContact:contact];
     
-    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_kept_and_relationship_removed_message",nil), contact.nickName, [self groupMembershipListofContact:contact]];
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_relationship_removed_title", nil)
-                                                     message: message
-                                                    delegate:nil
-                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
-                                           otherButtonTitles: nil];
-    [alert show];
+    [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
+        
+        NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_kept_and_relationship_removed_message",nil), contactName, membershipList];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_relationship_removed_title", nil)
+                                                         message: message
+                                                        delegate:nil
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+    }];
 }
 
+// background context safe
 - (void) askForDeletionOfContact:(Contact*)contact {
+    
+    // save current context in case it is a background context in order to make sure we have a final object id, then obtain it
     [self.delegate saveContext:self.delegate.currentObjectContext];
     NSManagedObjectID * contactId = contact.objectID;
+    
     [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
         Contact* contact = (Contact*)[context objectWithID:contactId];
         NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_delete_associated_data_question",nil), contact.nickName];
@@ -1609,7 +1764,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                              [AppDelegate.instance deleteObject:contact inContext:context];
                                                              break;
                                                          case 0:
-                                                             contact.relationshipState = kRelationStateKept;
+                                                             contact.relationshipState = kRelationStateInternalKept;
                                                              // keep contact and chats
                                                              //[contact updateNearbyFlag];
                                                              break;
@@ -1622,12 +1777,14 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+// background context safe
 - (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context {
 
+    // autokeep contacts that are currently inspected
     if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) || [AppDelegate.instance isInspecting:contact])) {
         if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: is active nearby or being inspected, autokeeping contact id %@",contact.clientId);
         if (contact.groupMemberships.count == 0) {
-            contact.relationshipState = kRelationStateKept;
+            contact.relationshipState = kRelationStateInternalKept;
         } else {
             contact.relationshipState = kRelationStateGroupFriend;
         }
@@ -1635,7 +1792,8 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
-    if ((contact.messages.count == 0 && contact.groupMemberships.count == 0 && contact.deliveriesSent.count == 0) || force) {
+    // delete right away if there is nothing to save
+    if (force || (contact.messages.count == 0 && contact.groupMemberships.count == 0 && contact.deliveriesSent.count == 0)) {
         // if there is nothing to save, delete right away and dont ask
         if (RELATIONSHIP_DEBUG || DEBUG_DELETION) NSLog(@"handleDeletionOfContact: nothing to save or kept, delete contact id %@",contact.clientId);
         if (!force) {
@@ -1646,12 +1804,16 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
+    // there was something to save, so ask
     if (contact.groupMemberships.count == 0) {
+        // no group membership, but there are messages associated with this contact
         [self askForDeletionOfContact:contact];
     } else {
-        contact.relationshipState = kRelationStateGroupFriend;
-        //[contact updateNearbyFlag];
-        [self removedButKeptInGroupAlertForContact:contact];
+        // there is an active group membership for this contact, so keep it
+        if (![kRelationStateGroupFriend isEqualToString:contact.relationshipState]) {
+            contact.relationshipState = kRelationStateGroupFriend;
+            [self removedButKeptInGroupAlertForContact:contact];
+        }
     }
 }
 
@@ -1805,7 +1967,9 @@ static NSTimer * _stateNotificationDelayTimer;
         myContact.presenceLastUpdatedMillis = thePresence[@"timestamp"];
         // NSLog(@"presenceUpdated, contact = %@", myContact);
         if (newContact) {
-            [self checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:myContact];
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myContact] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                [self checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:managedObjects[0]];
+            }];
         } else {
             //[myContact updateNearbyFlag];
         }
@@ -2204,7 +2368,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     if ([groupState isEqualToString:@"none"]) {
-        if (group != nil && ![group.groupState isEqualToString: kRelationStateKept] && ![group.groupState isEqualToString:@"none"] && !group.isNearbyGroup) {
+        if (group != nil && ![group.groupState isEqualToString: kRelationStateInternalKept] && ![group.groupState isEqualToString:@"none"] && !group.isNearbyGroup) {
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
             [group updateWithDictionary: groupDict];
             [self handleDeletionOfGroup:group inContext:context];
@@ -2447,8 +2611,10 @@ static NSTimer * _stateNotificationDelayTimer;
         NSMutableArray * contactsToCheck = [[NSMutableArray alloc]init];
         for (Contact * contact in contactArray) {
             [contactsToCheck addObject:contact.clientId];
+            NSLog(@"adding contact id %@ nick %@ type %@ relstate %@", contact.clientId, contact.nickName, contact.type, contact.relationshipState);
         }
         if (contactsToCheck.count > 0) {
+            NSArray * contactObjIds = objectIds(contactArray);
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *mainContext) {
                 [_serverConnection invoke: @"isContactOf" withParams: @[contactsToCheck] onResponse: ^(id responseOrError, BOOL success) {
                     [self.delegate performWithLockingId:@"contacts" inNewBackgroundContext:^(NSManagedObjectContext *context) {
@@ -2460,7 +2626,8 @@ static NSTimer * _stateNotificationDelayTimer;
                             }
                             for (int i = 0; i < contactFlags.count;++i) {
                                 if ([contactFlags[i] boolValue] == NO) {
-                                    Contact * contact = contactArray[i];
+                                    NSManagedObjectID * contactObjId = contactObjIds[i];
+                                    Contact * contact = (Contact*)[context objectWithID:contactObjId];
                                     NSLog(@"checkContacts: removing contact with id: %@ nick: %@", contact.clientId, contact.nickName);
                                     [self handleDeletionOfContact:contact withForce:NO inContext:context];
                                 }
@@ -2688,7 +2855,7 @@ static NSTimer * _stateNotificationDelayTimer;
     BOOL memberShipDeleted = NO;
     BOOL disinvited = NO;
     if ([group.groupState isEqualToString:@"exists"]) {
-        if ([groupMemberDict[@"state"] isEqualToString:@"none"]/* && ![myMembership.state isEqualToString:@"none"]*/) {
+        if ([@"none"isEqualToString: groupMemberDict[@"state"]]/* && ![myMembership.state isEqualToString:@"none"]*/) {
             // someone has left the group or we have been kicked out of an existing group
             memberShipDeleted = YES;
             disinvited = myMembership.isInvited;
@@ -2748,18 +2915,11 @@ static NSTimer * _stateNotificationDelayTimer;
      {
          [context refreshObject: managedObjects[0] mergeChanges: YES];
      }];
-    /*
-    [context performBlock:^{
-        NSManagedObjectID * groupId = group.objectID;
-        [self.delegate performInMainContext:^(NSManagedObjectContext *context) {
-            [context refreshObject: [context objectWithID:groupId] mergeChanges: YES];
-        }];
-    }];
-     */
     if (LOCKING_TRACE) NSLog(@"Done unsynchronized updateGroupMemberHere %@",groupId);
 }
 
 - (BOOL)tryPresentInvitationIfPossibleForGroup:(Group *) group withMemberShip:(GroupMembership*)myMembership {
+    [self.delegate assertMainContext];
     if (!group.isIncompleteGroup && group.hasAdmin) {
         [self invitationAlertForGroup:group withMemberShip:myMembership];
         return true;
@@ -2768,6 +2928,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)checkIfNeedToPresentInvitationForGroup:(Group *)group {
+    [self.delegate assertMainContext];
     if (group.shouldPresentInvitation) {
         if ([self tryPresentInvitationIfPossibleForGroup:group withMemberShip:group.myGroupMembership]) {
             group.shouldPresentInvitation = false;
@@ -2776,6 +2937,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:(Contact *)contact {
+    [self.delegate assertMainContext];
     NSSet * memberShips = contact.groupMemberships;
     for (GroupMembership* m in memberShips) {
         [self checkIfNeedToPresentInvitationForGroup:m.group];
@@ -2809,7 +2971,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     [self askForDeletionOfContact:memberContact];
                 }  else {
                     //autokeep
-                    memberContact.relationshipState = kRelationStateKept;
+                    memberContact.relationshipState = kRelationStateInternalKept;
                 }
             } else {
                 if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
@@ -2843,8 +3005,8 @@ static NSTimer * _stateNotificationDelayTimer;
     if (group.isNearbyGroup) {
         if (group.messages.count > 0 || [AppDelegate.instance isInspecting:group]) {
             if (DEBUG_DELETION) NSLog(@"handleDeletionOfGroup: is nearby with messages, autokeeping group id %@",group.clientId);
-            group.groupState = kRelationStateKept;
-            group.relationshipState = kRelationStateKept;
+            group.groupState = kRelationStateInternalKept;
+            group.relationshipState = kRelationStateInternalKept;
             [self deleteInDatabaseAllMembersAndContactsofGroup:group inContext:context];
             [self.delegate saveContext:context];
             return;
@@ -2882,8 +3044,8 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                      [AppDelegate.instance deleteObject:group inContext:mainContext];
                                                                      break;
                                                                  case 0:
-                                                                     group.groupState = kRelationStateKept;
-                                                                     group.relationshipState = kRelationStateKept;
+                                                                     group.groupState = kRelationStateInternalKept;
+                                                                     group.relationshipState = kRelationStateInternalKept;
                                                                      // keep group and chats
                                                                      break;
                                                              }
@@ -2963,8 +3125,9 @@ static NSTimer * _stateNotificationDelayTimer;
     });
 }
 
-//TODO THREADING
 - (void) invitationAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
+    [self.delegate assertMainContext];
+    
     if (group.presentingInvitation) {
         return;
     }
@@ -3040,7 +3203,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     } else {
                         // auto-keeping contact
                         if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"auto-keeping group member contact id %@", member.contact.clientId);
-                        member.contact.relationshipState = kRelationStateKept;
+                        member.contact.relationshipState = kRelationStateInternalKept;
                         //[member.contact updateNearbyFlag];
                     }
                 } else {

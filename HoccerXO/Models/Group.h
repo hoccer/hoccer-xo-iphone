@@ -10,6 +10,18 @@
 #import <CoreData/CoreData.h>
 #import "Contact.h"
 
+// group states
+FOUNDATION_EXPORT NSString * const kGroupStateNone;
+FOUNDATION_EXPORT NSString * const kGroupStateExists;
+
+// internal group states, do not go over the wire
+FOUNDATION_EXPORT NSString * const kGroupStateInternalIncomplete;
+FOUNDATION_EXPORT NSString * const kGroupStateInternalKept;
+
+// group roles
+FOUNDATION_EXPORT NSString * const kGroupTypeUser;
+FOUNDATION_EXPORT NSString * const kGroupTypeNearby;
+
 @class GroupMembership;
 
 @interface Group : Contact

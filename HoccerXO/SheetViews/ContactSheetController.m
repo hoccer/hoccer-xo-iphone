@@ -319,17 +319,37 @@ static int  groupMemberContext;
                     Contact * contact = self.groupInStatuNascendi.members[i];
                     if (contact.isInvitable) {
                         [self.chatBackend inviteFriend:contact.clientId handler:^(BOOL ok) {
-                            [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {}];
+                            if (!ok) {
+                                [self.chatBackend inviteFriendFailedAlertForContact:contact];
+                            } else {
+                                [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {
+                                    if (!success) {
+                                        [self.chatBackend inviteGroupMemberFailedForContact:contact inGroup:newGroup];
+                                    }
+                                }];
+                            }
                         }];
                     } else if (contact.invitedMe) {
                         [self.chatBackend acceptFriend:contact.clientId handler:^(BOOL ok) {
-                            [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {}];
+                            if (!ok) {
+                                [self.chatBackend acceptFriendFailedAlertForContact:contact];
+                            } else {
+                                [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {
+                                    if (!success) {
+                                        [self.chatBackend inviteGroupMemberFailedForContact:contact inGroup:newGroup];
+                                    }
+                                }];
+                            }
                         }];
                     } else {
-                        [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {}];
+                        [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {
+                            if (!success) {
+                                [self.chatBackend inviteGroupMemberFailedForContact:contact inGroup:newGroup];
+                            }
+                        }];
                     }
                 }
-
+                
                 self.inspectedObject = newGroup;
             }
         }];
@@ -531,11 +551,17 @@ static int  groupMemberContext;
         // NSLog(@"friend -> invited");
         [self.chatBackend disinviteFriend: self.contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"disinviteClient: %@", success ? @"success" : @"failed");
+            if (!success) {
+                [self.chatBackend disinviteFriendFailedAlertForContact:self.contact];
+            }
         }];
     } else if (self.contact.isGroupFriend || self.contact.isBlocked || self.contact.isKept || self.contact.isNotRelated) {
         // NSLog(@"none, blocked -> invited");
         [self.chatBackend inviteFriend: self.contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"inviteClient: %@", success ? @"success" : @"failed");
+            if (!success) {
+                [self.chatBackend inviteFriendFailedAlertForContact:self.contact];
+            }
         }];
     } else {
         NSLog(@"ContactSheetController inviteToggled: unhandled status %@", self.contact.relationshipState);
@@ -678,7 +704,11 @@ static int  groupMemberContext;
 
 - (void) acceptFriendTapped: (id) sender {
     [self.chatBackend acceptFriend:self.contact.clientId handler:^(BOOL success) {
-        NSLog(@"Accepted friend %@", self.contact.clientId);
+        if (!success) {
+            [self.chatBackend acceptFriendFailedAlertForContact:self.contact];
+        } else {
+            NSLog(@"Accepted friend %@", self.contact.clientId);
+        }
     }];
 }
 
@@ -689,7 +719,11 @@ static int  groupMemberContext;
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [self.chatBackend refuseFriend:self.contact.clientId handler:^(BOOL success) {
-                NSLog(@"Refused friend %@", self.contact.clientId);
+                if (!success) {
+                    [self.chatBackend refuseFriendFailedAlertForContact:self.contact];
+                } else {
+                    NSLog(@"Refused friend %@", self.contact.clientId);
+                }
             }];
         }
     };
