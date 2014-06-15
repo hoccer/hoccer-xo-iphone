@@ -74,6 +74,7 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 
 -(BOOL)isStateFailed;
 -(BOOL)isStateDelivering;
+-(BOOL)isStateNew;
 
 -(BOOL)isInFinalState;
 -(BOOL)isDelivered;

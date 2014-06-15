@@ -226,7 +226,7 @@ NSString * const kRelationStateKept        = @"kept";
         statusString = @"🚧";
     } else if (!self.isGroup && self.isNotRelated) {
         statusString = @"🔺";
-    } else if (self.isGroupFriend) {
+    } else if (!self.isGroup && self.isGroupFriend) {
         statusString = @"👥";
     } else if (self.isTyping) {
         statusString = @"💬";

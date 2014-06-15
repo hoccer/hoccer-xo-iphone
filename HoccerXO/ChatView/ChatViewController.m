@@ -1780,16 +1780,13 @@ nil
         NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
     }
     for (Delivery * myDelivery in message.deliveries) {
-        if ([myDelivery.state isEqualToString:kDeliveryStateNew] ||
-            [myDelivery.state isEqualToString:kDeliveryStateDelivering])
+        if (myDelivery.isStateNew || myDelivery.isStateDelivering)
         {
             return HXOBubbleColorSchemeInProgress;
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered] ||
-                   [myDelivery.state isEqualToString:kDeliveryStateDeliveredAcknowledged])
+        } else if (myDelivery.isDelivered)
         {
             return HXOBubbleColorSchemeSuccess;
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed] ||
-                   [myDelivery.state isEqualToString:kDeliveryStateFailedAcknowledged]) {
+        } else if (myDelivery.isFailure) {
             return HXOBubbleColorSchemeFailed;
         } else {
             NSLog(@"ERROR: colorSchemeForMessage: unknown delivery state '%@'", myDelivery.state);
@@ -1805,9 +1802,10 @@ nil
     }
 
     for (Delivery * myDelivery in message.deliveries) {
-        if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
+        if (myDelivery.isStateNew) {
             return NSLocalizedString(@"chat_message_pending", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering]) {
+            
+        } else if (myDelivery.isStateDelivering) {
             return NSLocalizedString(@"chat_message_sent", nil);
         } else if (myDelivery.isDelivered) {
             if (myDelivery.isMissingAttachment) {

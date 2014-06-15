@@ -91,6 +91,9 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
     return [kDeliveryStateDelivering isEqualToString:self.state];
 }
 
+-(BOOL)isStateNew {
+    return [kDeliveryStateNew isEqualToString:self.state];
+}
 
 -(BOOL)isFailure {
     return [Delivery isFailureState:self.state];
