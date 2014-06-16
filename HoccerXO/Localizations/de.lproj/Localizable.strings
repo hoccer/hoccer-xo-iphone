@@ -144,6 +144,8 @@
 "chat_group_members_invite_accept %d"="Einladung von %d Mitgliedern annehmen";
 "chat_group_members_disinvite %d"="Einladung an %d Mitglieder zurückziehen";
 
+"chat_group_create_new_from_group %d"="Neue Gruppe mit %d Chatpartnern anlegen";
+
 //==============================================================================
 // Contact - uses strings from profile
 //==============================================================================

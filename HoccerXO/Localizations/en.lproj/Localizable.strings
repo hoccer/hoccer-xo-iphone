@@ -145,6 +145,9 @@
 "chat_group_members_invite_accept %d"="Accept %d friendship invitations";
 "chat_group_members_disinvite %d"="Disinvite %d group members as friend";
 
+"chat_group_create_new_from_group %d"="Create new group with %d chat partners";
+
+
 //==============================================================================
 // Contact - uses strings from profile
 //==============================================================================
