@@ -66,7 +66,7 @@
 #define FULL_HELLO
 #define TRACE_TIME_DIFFERENCE YES
 
-const NSString * const kHXOProtocol = @"com.hoccer.talk.v2";
+const NSString * const kHXOProtocol = @"com.hoccer.talk.v3";
 
 const int kGroupInvitationAlert = 1;
 static const NSUInteger kHXOMaxCertificateVerificationErrors = 3;
@@ -2612,7 +2612,7 @@ static NSTimer * _stateNotificationDelayTimer;
         NSMutableArray * contactsToCheck = [[NSMutableArray alloc]init];
         for (Contact * contact in contactArray) {
             [contactsToCheck addObject:contact.clientId];
-            NSLog(@"adding contact id %@ nick %@ type %@ relstate %@", contact.clientId, contact.nickName, contact.type, contact.relationshipState);
+            // NSLog(@"adding contact id %@ nick %@ type %@ relstate %@", contact.clientId, contact.nickName, contact.type, contact.relationshipState);
         }
         if (contactsToCheck.count > 0) {
             NSArray * contactObjIds = objectIds(contactArray);
