@@ -85,7 +85,7 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 }
 
 -(BOOL)isDelivered {
-    return [Delivery isDeliveredState:self.state];
+    return [Delivery isDeliveredState:self.state] || [@"confirmed" isEqualToString:self.state]; // confirmed is to handle locally stored legacy state
 }
 -(BOOL)isStateDelivering {
     return [kDeliveryStateDelivering isEqualToString:self.state];
