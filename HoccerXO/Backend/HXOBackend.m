@@ -1523,6 +1523,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [self blockedAlertForContact:contact];
         } else if (!contact.invitedMe && [kRelationStateInvitedMe isEqualToString: relationshipDict[@"state"]]) {
             [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[contact] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                Contact * contact = managedObjects[0];
                 [self invitationAsFriendAlertByContact:contact];
             }];
         }
