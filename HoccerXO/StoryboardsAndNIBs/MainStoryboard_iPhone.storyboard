@@ -413,7 +413,7 @@
         <!--Conversation View Controller - Contacts-->
         <scene sceneID="18">
             <objects>
-                <tableViewController title="Contacts" id="12" customClass="ConversationViewController" sceneMemberID="viewController">
+                <tableViewController title="Contacts" automaticallyAdjustsScrollViewInsets="NO" id="12" customClass="ConversationViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="64" sectionHeaderHeight="22" sectionFooterHeight="22" id="13">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1059,13 +1059,13 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="6i4-qU-VgJ"/>
-        <segue reference="UFf-pk-7rg"/>
-        <segue reference="iwW-8u-tft"/>
-        <segue reference="I8w-H7-Q9a"/>
-        <segue reference="CES-Ic-Rhf"/>
-        <segue reference="rav-wy-jJw"/>
+        <segue reference="UJI-wH-YH7"/>
+        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="yj0-Vd-HPq"/>
         <segue reference="fCA-bC-lkd"/>
+        <segue reference="I8w-H7-Q9a"/>
+        <segue reference="nwS-55-3Qg"/>
+        <segue reference="rav-wy-jJw"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>
