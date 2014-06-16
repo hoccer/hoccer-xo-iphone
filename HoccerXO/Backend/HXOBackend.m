@@ -2872,21 +2872,7 @@ static NSTimer * _stateNotificationDelayTimer;
         // we got a new key
         [group copyKeyFromMember:myMembership];
     }
-    
-    /*
-    if (memberContact != nil) {
-        if (myMembership.group.groupType != nil && myMembership.group.isNearbyGroup && myMembership.isJoined) {
-            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: set contact nearby");
-            memberContact.isNearbyTag = @"YES";
-        } else {
-            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: set contact not nearby");
-            memberContact.isNearbyTag = nil;
-        }
-    } else {
-        if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: no memberContact yet");
-    }
-    */
-    
+        
     [self.delegate saveContext:context];
     
     if (memberShipDeleted) {
@@ -2895,15 +2881,22 @@ static NSTimer * _stateNotificationDelayTimer;
         [self handleDeletionOfGroupMember:myMembership inGroup:group withContact:memberContact disinvited:disinvited inContext:context];
     } else {
         if (weHaveBeenInvited) {
-            if (!group.shouldPresentInvitation) {
-                if (![self tryPresentInvitationIfPossibleForGroup:group withMemberShip:myMembership]) {
-                    group.shouldPresentInvitation = true;
+            // we have been invited, but may not have enough data (e.g. presence information, admin membership) to present invitation alert, but we try
+            // we also have to make this checks in the main context because group has some non-persistent flags here that exist only in the main context
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                Group * group = managedObjects[0];
+                if (!group.shouldPresentInvitation) {
+                    if (![self tryPresentInvitationIfPossibleForGroup:group withMemberShip:myMembership]) {
+                        group.shouldPresentInvitation = true;
+                    }
                 }
-            }
+            }];
         } else {
-            if (group.shouldPresentInvitation) {
-                [self tryPresentInvitationIfPossibleForGroup:group withMemberShip:myMembership];
-            }
+            // we have not been invited in this call, but maybe this is our missing admin, so lets check
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                Group * group = managedObjects[0];
+                [self checkIfNeedToPresentInvitationForGroup:group];
+            }];
             
         }
         if (someoneHasJoinedGroup) {
