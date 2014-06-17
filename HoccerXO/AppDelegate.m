@@ -58,7 +58,7 @@ NSString * const kHXOURLScheme = @"hxod";
 static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 #else
 NSString * const kHXOURLScheme = @"hxow";
-static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
+static NSString * const kTestFlightAppToken = @"40f8be9e-fefc-42ca-bdce-b74b56c2200d";
 #endif
 
 static NSInteger validationErrorCount = 0;
