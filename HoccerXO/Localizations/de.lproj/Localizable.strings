@@ -14,7 +14,7 @@
 "search_placeholder" = "suchen";
 
 "fatal_error_default_title"   = "Unbehebbarer Fehlerzustand";
-"fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer Wings wird sich beenden. Bitte starte Hoccer Wings neu.";
+"fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer Whitelabel wird sich beenden. Bitte starte Hoccer Whitelabel neu.";
 
 "http://hoccer.com/hoccer-xo-tutorial/"="http://hoccer.com/hoccer-xo-anleitung/";
 "http://hoccer.com/hoccer-xo-faq/"="http://hoccer.com/hoccer-xo-fragen-antworten/";
@@ -23,7 +23,7 @@
 // About
 //==============================================================================
 
-"about_prosa" = "Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer Wings ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer Wings bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden.";
+"about_prosa" = "Deine kostenlose Messenger App!\nUnbegrenzter Datentransfer – sicher, zuverlässig und schnell\n\nHoccer Whitelabel ist dein persönlicher Dienst zur Übermittlung von Texten, Bildern, Audio, Video, Adressen und Standorten, die du mit deinen Freunden und Bekannten austauschen möchtest. Der Schutz deiner Privatsphäre steht hierbei im Mittelpunkt. Deine Nachrichten sind vom Sender bis zum Empfänger verschlüsselt. Hoccer Whitelabel bietet damit einen Sicherheitsvorteil gegenüber vielen anderen Messenger Diensten. Auch wir bei Hoccer können deine Nachrichten nicht lesen. Deine Kontakte und Telefonbucheintragungen verbleiben ebenfalls bei dir und können von uns weder genutzt noch eingesehen werden.";
 
 //==============================================================================
 // Apple Push Notifications
@@ -99,7 +99,7 @@
 //==============================================================================
 
 "certificate_invalid_title"   = "Ungültiges Server Zertifikat";
-"certificate_invalid_message" = "Hoccer Wings konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
+"certificate_invalid_message" = "Hoccer Whitelabel konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
 
 //==============================================================================
 // Chat
@@ -177,7 +177,7 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Konto";
-"credentials_setup_found_old_text"             = "Hoccer Wings war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
+"credentials_setup_found_old_text"             = "Hoccer Whitelabel war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
 "credentials_setup_found_file_text"            = "Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
 "credentials_setup_keep_btn_title"             = "Konto reaktivieren";
 "credentials_setup_import_btn_title"           = "Importieren";
@@ -209,7 +209,7 @@
 "credentials_and_database_not_deleted_message" = "Versuche eine Sicherungskopie einzuspielen oder gültige Zugangsdaten zu importieren.";
 
 "credentials_and_database_deleted_title"       = "Zugangsdaten gelöscht";
-"credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer Wings neu.";
+"credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer Whitelabel neu.";
 
 "credentials_invalid_title"                    = "Zugangsdaten zurückgewiesen";
 "credentials_invalid_delete_question"          = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Falls dies ein neues Gerät ist und du Daten von einem alten Gerät übertragen hast, kannst du dort die alten Zugangsdaten unter 'Profil' exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
@@ -222,9 +222,9 @@
 //==============================================================================
 
 "database_corrupt_not_deleted_title"   = "Datenbank nicht gelöscht";
-"database_corrupt_not_deleted_message" = "Veraltete oder korrupte Datenbank wurde nicht gelöscht. Hoccer Wings wird nicht funktionieren.";
+"database_corrupt_not_deleted_message" = "Veraltete oder korrupte Datenbank wurde nicht gelöscht. Hoccer Whitelabel wird nicht funktionieren.";
 "database_corrupt_deleted_title"       = "Datenbank gelöscht";
-"database_corrupt_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer Wings neu.";
+"database_corrupt_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer Whitelabel neu.";
 
 "database_delete_btn_title"="Datenbank löschen";
 
@@ -311,9 +311,9 @@
 "invite_option_mail_btn_title"    = "Einladen per Mail";
 "invite_option_code_btn_title"    = "Einladen per Code";
 
-"invite_mail_subject"             = "Einladung zu Hoccer Wings";
-"invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer Wings“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer Wings“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer Wings“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
-"invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer Wings zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
+"invite_mail_subject"             = "Einladung zu Hoccer Whitelabel";
+"invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer Whitelabel“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer Whitelabel“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer Whitelabel“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
+"invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer Whitelabel zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
 
 "invite_scan_nav_title"           = "Scannen";
 "invite_generate_nav_title"       = "Generieren";
@@ -324,7 +324,7 @@
 "invite_error_alert_title"        = "Einladung fehlgeschlagen";
 "invite_error_rejected_by_server" = "Der Code wurde abgelehnt";
 
-"invite_no_xo_qr_code_title"      = "Kein Hoccer Wings Code";
+"invite_no_xo_qr_code_title"      = "Kein Hoccer Whitelabel Code";
 
 //==============================================================================
 // Keys
@@ -395,7 +395,7 @@
 
 
 "permission_denied_title"              = "Zugriff verweigert";
-"permission_denied_microphone_message" = "Um Sprache aufzunehmen erlaube Hoccer Wings in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
+"permission_denied_microphone_message" = "Um Sprache aufzunehmen erlaube Hoccer Whitelabel in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
 
 //==============================================================================
 // Profile

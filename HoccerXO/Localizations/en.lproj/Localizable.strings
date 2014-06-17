@@ -14,7 +14,7 @@
 "search_placeholder" = "search";
 
 "fatal_error_default_title"   = "Fatal Error";
-"fatal_error_default_message" = "An unrecoverable error occured and Hoccer Wings will quit. Please restart Hoccer Wings.";
+"fatal_error_default_message" = "An unrecoverable error occured and Hoccer Whitelabel will quit. Please restart Hoccer Whitelabel.";
 
 "http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
 "http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
@@ -23,7 +23,7 @@
 // About
 //==============================================================================
 
-"about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer Wings is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer Wings is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
+"about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer Whitelabel is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer Whitelabel is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
 
 //==============================================================================
 // Apple Push Notifications
@@ -100,7 +100,7 @@
 //==============================================================================
 
 "certificate_invalid_title"   = "Invalid Server Certificate";
-"certificate_invalid_message" = "Hoccer Wings could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
+"certificate_invalid_message" = "Hoccer Whitelabel could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
 //==============================================================================
 // Chat
@@ -177,7 +177,7 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Account";
-"credentials_setup_found_old_text"             = "Hoccer Wings was installed before. Do you want to reactivate the old account and keep all contacts?";
+"credentials_setup_found_old_text"             = "Hoccer Whitelabel was installed before. Do you want to reactivate the old account and keep all contacts?";
 "credentials_setup_found_file_text"            = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
 "credentials_setup_keep_btn_title"             = "Reactivate account";
 "credentials_setup_import_btn_title"           = "Import";
@@ -208,7 +208,7 @@
 "credentials_and_database_not_deleted_message" = "Try restoring from backup or import saved credentials";
 
 "credentials_and_database_deleted_title"       = "Credentials Deleted";
-"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer Wings.";
+"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer Whitelabel.";
 
 "credentials_invalid_title"                    = "Credentials not accepted";
 "credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') If this is a new device and you have transfered data from the old device, you can transfer your credentials from your old device under 'Profile'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
@@ -222,9 +222,9 @@
 //==============================================================================
 
 "database_corrupt_not_deleted_title"   = "Database not deleted";
-"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer Wings will not work.";
+"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer Whitelabel will not work.";
 "database_corrupt_deleted_title"       = "Database deleted";
-"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer Wings.";
+"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer Whitelabel.";
 
 "database_delete_btn_title"="Delete Database";
 
@@ -311,9 +311,9 @@
 "invite_option_mail_btn_title"    = "Invite via E-Mail";
 "invite_option_code_btn_title"    = "Invite by Code";
 
-"invite_mail_subject"             = "Hoccer Wings Invitation";
-"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer Wings to chat securely with my friends.\nDownload Hoccer Wings now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
-"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer Wings for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
+"invite_mail_subject"             = "Hoccer Whitelabel Invitation";
+"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer Whitelabel to chat securely with my friends.\nDownload Hoccer Whitelabel now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
+"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer Whitelabel for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
 
 "invite_scan_nav_title"           = "Scan";
 "invite_generate_nav_title"       = "Generate";
@@ -324,7 +324,7 @@
 "invite_error_alert_title"        = "Invite failed";
 "invite_error_rejected_by_server" = "The code has been rejected";
 
-"invite_no_xo_qr_code_title"      = "Not a Hoccer Wings code";
+"invite_no_xo_qr_code_title"      = "Not a Hoccer Whitelabel code";
 
 //==============================================================================
 // Keys
@@ -343,7 +343,7 @@
 "key_length_unit_format"                         = "%@ bit";
 
 "key_renew_keypair"                              = "Renew RSA Keypair";
-"key_renew_keypair_info"                         = "Hoccer Wings protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+"key_renew_keypair_info"                         = "Hoccer Whitelabel protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
 
 "key_renew_option_sheet_title"                   = "Create new RSA Keypair?";
 "key_renew_option_automatic"                     = "Automatic";
@@ -394,7 +394,7 @@
 //==============================================================================
 
 "permission_denied_title"              = "Access Denied";
-"permission_denied_microphone_message" = "Grant microphone access to Hoccer Wings in Settings->Privacy->Microphone if you want to record audio.";
+"permission_denied_microphone_message" = "Grant microphone access to Hoccer Whitelabel in Settings->Privacy->Microphone if you want to record audio.";
 
 //==============================================================================
 // Profile
