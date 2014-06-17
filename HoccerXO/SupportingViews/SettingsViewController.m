@@ -12,6 +12,7 @@
 
 #import "UserProfile.h"
 #import "DatasheetViewController.h"
+#import "WebViewController.h"
 
 #import "tab_settings.h"
 
@@ -31,8 +32,23 @@
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {}
 
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
-    NSString * segueIdentifier = specifier.key;
-    [self performSegueWithIdentifier: segueIdentifier sender: self];
+    NSString * url;
+    if ([specifier.key isEqualToString: @"showTutorial"]) {
+        url = @"http://hoccer.com/hoccer-xo-tutorial/";
+    } else if ([specifier.key isEqualToString: @"showFaq"]) {
+        url= @"http://hoccer.com/hoccer-xo-faq/";
+    }
+    if (url){
+        [self performSegueWithIdentifier: @"showURL" sender: url];
+    } else {
+        [self performSegueWithIdentifier: specifier.key sender: self];
+    }
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString: @"showURL"]) {
+        ((WebViewController*)((UINavigationController*)segue.destinationViewController).viewControllers[0]).homeUrl = sender;
+    }
 }
 
 @end
