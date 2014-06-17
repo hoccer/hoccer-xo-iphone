@@ -218,6 +218,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
     [[HXOUserDefaults standardUserDefaults] synchronize];
+#else
+    [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
 #endif
 #endif
     
@@ -226,7 +230,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
-
+    
     if (!UserProfile.sharedProfile.hasKeyPair) {
         dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
             [AppDelegate renewRSAKeyPairWithSize: kHXODefaultKeySize];

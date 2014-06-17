@@ -22,6 +22,11 @@ FOUNDATION_EXPORT NSString * const kRelationStateInvitedMe;
 FOUNDATION_EXPORT NSString * const kRelationStateGroupFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateInternalKept;
 
+FOUNDATION_EXPORT NSString * const kPresenceStateOnline;
+FOUNDATION_EXPORT NSString * const kPresenceStateOffline;
+FOUNDATION_EXPORT NSString * const kPresenceStateBackground;
+FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
+
 
 @interface Contact : HXOModel <HXOClientProtocol>
 

@@ -4566,7 +4566,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }
     NSString * myConnectionStatus = [UserProfile sharedProfile].connectionStatus;
     if (myConnectionStatus == nil) {
-        myConnectionStatus = @"online";
+        myConnectionStatus = kPresenceStateOnline;
     }
     [self updatePresence: myNickName
               withStatus: myClientStatus
@@ -4646,15 +4646,15 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 }
 
 - (void) changePresenceToNotTyping {
-    if (![@"online" isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
-        [UserProfile sharedProfile].connectionStatus=@"online";
+    if (![kPresenceStateOnline isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
+        [UserProfile sharedProfile].connectionStatus=kPresenceStateOnline;
         [self modifyPresenceConnectionStatusWithHandler:nil];
     }
 }
 
 - (void) changePresenceToTyping {
-    if (![@"typing" isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
-        [UserProfile sharedProfile].connectionStatus=@"typing";
+    if (![kPresenceStateTyping isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
+        [UserProfile sharedProfile].connectionStatus=kPresenceStateTyping;
         [self modifyPresenceConnectionStatusWithHandler:nil];
     }
 }
@@ -5215,6 +5215,14 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         
         HXOMessage * myMessage = [self getMessageById:myMessageId inContext:context];
         if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%@",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries);
+        
+        // handle group delivery
+        if (myDelivery == nil && myMessage != nil && myGroupId != nil) {
+            if (DELIVERY_TRACE) NSLog(@"outgoingDeliveryUpdated: New group delivery for message Id: %@ group:%@ receiver:%@",myMessage.messageId, myGroupId, myReceiverId);
+            Delivery * delivery = [NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: context];
+            //AUTOREL [message.deliveries addObject: delivery];
+            delivery.message = myMessage;
+        }
         
         if (myDelivery != nil) {
             if (myDelivery.isInFinalState) {

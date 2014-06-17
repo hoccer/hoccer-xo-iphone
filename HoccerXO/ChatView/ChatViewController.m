@@ -346,7 +346,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) configureTitle {
     self.titleLabel.text = self.partner.nickNameWithStatus;
-    self.titleLabel.ledOn = self.partner.isPresent;
+    self.titleLabel.ledOn = self.partner.isConnected;
+    self.titleLabel.ledColor = self.partner.isBackground ? HXOUI.theme.avatarOnlineInBackgroundLedColor : HXOUI.theme.avatarOnlineLedColor;
     [self.titleLabel sizeToFit];
 }
 
@@ -1620,7 +1621,8 @@ nil
     cell.avatar.image = [author avatarImage];
     cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
-    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isPresent;
+    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isConnected;
+    cell.avatar.isInBackground = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isBackground;
 
     cell.subtitle.text = [self subtitleForMessage: message];
 
