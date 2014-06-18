@@ -563,7 +563,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
 
 - (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactListController:addPredicates %@", predicates);
-    [predicates addObject: [NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
+    [predicates addObject: [NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@ OR alias CONTAINS[cd] %@", searchString, searchString]];
 }
 
 - (id) entityName {

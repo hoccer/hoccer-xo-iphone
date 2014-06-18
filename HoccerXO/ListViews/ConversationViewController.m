@@ -254,11 +254,6 @@
     }
 }
 
-- (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
-    // TODO: add full text search?
-    [predicates addObject: [NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
-}
-
 - (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
     if (cell == nil) {
