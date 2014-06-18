@@ -63,6 +63,12 @@ NSString * const kRelationStateInvitedMe   = @"invitedMe";
 NSString * const kRelationStateGroupFriend = @"groupfriend";
 NSString * const kRelationStateInternalKept= @"kept";
 
+NSString * const kPresenceStateOnline = @"online";
+NSString * const kPresenceStateOffline = @"offline";
+NSString * const kPresenceStateBackground = @"background";
+NSString * const kPresenceStateTyping = @"typing";
+
+
 @dynamic publicKeyString;
 @dynamic relationshipState;
 @dynamic relationshipLastChanged;
@@ -216,23 +222,23 @@ NSString * const kRelationStateInternalKept= @"kept";
     NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
     NSString * statusString = nil;
     if (self.isInvited) {
-        statusString = @"★";
+        statusString = @"✪";
     } else if (self.invitedMe) {
-        statusString = @"☆";
+        statusString = @"★";
     } else if (self.isKept) {
-        statusString = @"♻";
+        statusString = @"❄";
     } else if (self.isBlocked) {
         statusString = @""; // We have already UI for blocked state
     } else if (self.isGroup && [(Group*)self otherJoinedMembers].count == 0) {
-        statusString = @"🚧";
+        statusString = @"◦";
     } else if (!self.isGroup && self.isNotRelated) {
-        statusString = @"🔺";
+        statusString = @"✢";
     } else if (!self.isGroup && self.isGroupFriend) {
-        statusString = @"👥";
+        statusString = @"❖";
     } else if (self.isTyping) {
-        statusString = @"💬";
+        statusString = @"‣";
     } else if ( self.isBackground) {
-        statusString = @"💤";
+        statusString = @""; // should be yellow online indicator
     } else if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
         statusString = nil;
 #endif
@@ -291,19 +297,19 @@ NSString * const kRelationStateInternalKept= @"kept";
 }
 
 - (BOOL) isOffline {
-    return self.connectionStatus == nil || [ @"offline" isEqualToString: self.connectionStatus];
+    return self.connectionStatus == nil || [ kPresenceStateOffline isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isBackground {
-    return [@"background" isEqualToString: self.connectionStatus];
+    return [kPresenceStateBackground isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isOnline {
-    return [@"online" isEqualToString: self.connectionStatus];
+    return [kPresenceStateOnline isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isTyping {
-    return [@"typing" isEqualToString: self.connectionStatus];
+    return [kPresenceStateTyping isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isPresent {

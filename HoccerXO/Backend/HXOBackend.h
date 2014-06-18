@@ -84,8 +84,12 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
 - (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
-- (void) inDeliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
-//- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
+- (void) inDeliveryConfirmPrivate: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void) inDeliveryConfirmSeen: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void) inDeliveryConfirmUnseen: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void)inDeliveryConfirmMessage:(HXOMessage *)message withDelivery:(Delivery *)delivery;
+
+    //- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
 - (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler;
 
 - (void) pairByToken: (NSString*) token;

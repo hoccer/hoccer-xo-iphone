@@ -66,6 +66,79 @@
 
 #define KEY_DEBUG NO
 
+
+- (NSSet*) deliveriesFailed {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isFailure;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesSeen {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isSeen;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesUnseen {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isUnseen;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesPrivate {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isPrivate;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesDelivered {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isDelivered;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesNew {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isStateNew;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesPending {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isPending;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesAttachmentsReceived {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isAttachmentReceived;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesAttachmentsFailed {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isAttachmentFailure;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesAttachmentsPending {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isAttachmentPending;
+    }];
+    return theMemberSet;
+}
+
+
+
 -(CGFloat) cachedCellHeight {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     double messageFontSize = [HXOUI theme].messageFont.pointSize;

@@ -518,6 +518,9 @@ bool almostEqual(CGFloat a, CGFloat b) {
 
 - (NSFetchedResultsController *)newFetchedResultsControllerWithSearch:(NSString *)searchString {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactListController:newFetchedResultsControllerWithSearch %@", searchString);
+    if (AppDelegate.instance.mainObjectContext == nil) {
+        return nil;
+    }
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName: [self entityName] inManagedObjectContext: AppDelegate.instance.mainObjectContext];
     [fetchRequest setEntity:entity];
@@ -682,8 +685,9 @@ bool almostEqual(CGFloat a, CGFloat b) {
     cell.avatar.image = avatar;
     cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [contact isBlocked];
-    cell.avatar.isPresent  = contact.isPresent && !contact.isKept;
-
+    cell.avatar.isPresent  = contact.isConnected && !contact.isKept;
+    cell.avatar.isInBackground  = contact.isBackground;
+    
     cell.subtitleLabel.text = [self statusStringForContact: contact];
 }
 

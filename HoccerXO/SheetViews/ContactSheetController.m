@@ -239,7 +239,7 @@ static int  groupMemberContext;
         return (self.contact.alias && ! [self.contact.alias isEqualToString: @""]) || [super isItemVisible:item];
 
     } else if ([item isEqual: self.blockContactItem]) {
-        return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
+        return (self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe || self.contact.isGroupFriend) && [super isItemVisible:item];
         
     } else if ([item isEqual: self.inviteContactItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
@@ -295,7 +295,8 @@ static int  groupMemberContext;
         self.avatarView.isBlocked = self.contact.isBlocked;
         if ( ! self.contact.avatarImage) {
             // a liitle extra somethin for those without avatars ;)
-            self.avatarView.isPresent = self.contact.isPresent;
+            self.avatarView.isPresent = self.contact.isConnected;
+            self.avatarView.isInBackground = self.contact.isBackground;
             self.avatarView.badgeText = [HXOUI messageCountBadgeText: self.contact.unreadMessages.count];
         } else {
             self.avatarView.isPresent = NO;
@@ -894,7 +895,8 @@ static int  groupMemberContext;
         cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
-        cell.avatar.isPresent      = ! isMyMembership && contact.isPresent;
+        cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
+        cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];

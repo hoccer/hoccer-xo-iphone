@@ -17,14 +17,12 @@
 
 FOUNDATION_EXPORT NSString * const kDeliveryStateNew;
 FOUNDATION_EXPORT NSString * const kDeliveryStateDelivering;
-FOUNDATION_EXPORT NSString * const kDeliveryStateDelivered;
-FOUNDATION_EXPORT NSString * const kDeliveryStateConfirmed;
-FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
-
-FOUNDATION_EXPORT NSString * const kDeliveryStateNew;
-FOUNDATION_EXPORT NSString * const kDeliveryStateDelivering;
-FOUNDATION_EXPORT NSString * const kDeliveryStateDelivered;
-FOUNDATION_EXPORT NSString * const kDeliveryStateDeliveredAcknowledged;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDeliveredPrivate;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDeliveredPrivateAcknowledged;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDeliveredUnseen;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDeliveredUnseenAcknowledged;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDeliveredSeen;
+FOUNDATION_EXPORT NSString * const kDeliveryStateDeliveredSeenAcknowledged;
 FOUNDATION_EXPORT NSString * const kDeliveryStateFailed;
 FOUNDATION_EXPORT NSString * const kDeliveryStateRejected;
 FOUNDATION_EXPORT NSString * const kDeliveryStateAborted;
@@ -69,26 +67,43 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 
 @property (nonatomic) NSNumber * timeChangedMillis;
 
+-(BOOL)isGroupDelivery;
+
 -(BOOL)attachmentDownloadable;
 -(BOOL)attachmentUploadable;
 
 -(BOOL)isStateFailed;
 -(BOOL)isStateDelivering;
 -(BOOL)isStateNew;
-
--(BOOL)isInFinalState;
--(BOOL)isDelivered;
+-(BOOL)isPending;
 -(BOOL)isFailure;
+-(BOOL)isDelivered;
+-(BOOL)isInFinalState;
+
+-(BOOL)isSeen;
+-(BOOL)isUnseen;
+-(BOOL)isPrivate;
+
 -(BOOL)isAttachmentReceived;
+-(BOOL)isAttachmentFailure;
+-(BOOL)isAttachmentPending;
+
 -(BOOL)isMissingAttachment;
 
 +(BOOL)isDeliveredState:(NSString*) state;
 +(BOOL)isFailureState:(NSString*) state;
 +(BOOL)isAcknowledgedState:(NSString*) state;
+
++(BOOL)isSeenState:(NSString*)state;
++(BOOL)isUnseenState:(NSString*)state;
++(BOOL)isPrivateState:(NSString*)state;
+
 +(BOOL)shouldAcknowledgeStateForOutgoing:(NSString*) state;
 
 +(BOOL)isAttachmentReceivedState:(NSString*) attachmentState;
 +(BOOL)isAcknowledgedAttachmentState:(NSString*) attachmentState;
++(BOOL)isAttachmentFailureState:(NSString*) attachmentState;
+
 +(BOOL)shouldAcknowledgeAttachmentStateForOutgoing:(NSString*) attachmentState;
 +(BOOL)shouldAcknowledgeAttachmentStateForIncoming:(NSString*) attachmentState;
 

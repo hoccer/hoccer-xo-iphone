@@ -69,5 +69,15 @@
 - (void)sign;
 - (BOOL)verifySignatureWithPublicKey:(SecKeyRef)publicKey;
 
+- (NSSet*) deliveriesFailed;
+- (NSSet*) deliveriesSeen;
+- (NSSet*) deliveriesUnseen;
+- (NSSet*) deliveriesPrivate;
+- (NSSet*) deliveriesDelivered;
+- (NSSet*) deliveriesNew;
+- (NSSet*) deliveriesPending;
+- (NSSet*) deliveriesAttachmentsReceived;
+- (NSSet*) deliveriesAttachmentsFailed;
+- (NSSet*) deliveriesAttachmentsPending;
 
 @end

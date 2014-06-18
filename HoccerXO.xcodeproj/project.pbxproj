@@ -711,6 +711,7 @@
 		6AC25F0B193FAB3200ED5E61 /* navbar-profile-contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-profile-contact.m"; sourceTree = "<group>"; };
 		6AC25F0D193FAC0800ED5E61 /* navbar-profile-group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "navbar-profile-group.h"; sourceTree = "<group>"; };
 		6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-profile-group.m"; sourceTree = "<group>"; };
+		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
@@ -3060,8 +3061,9 @@
 				E9A2EDFD19316840003A8464 /* HoccerXO-38.xcdatamodel */,
 				63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */,
 				E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */,
+				E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */,
 			);
-			currentVersion = E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */;
+			currentVersion = E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
