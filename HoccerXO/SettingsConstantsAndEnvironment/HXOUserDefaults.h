@@ -49,6 +49,7 @@ FOUNDATION_EXPORT NSString * const kHXOSupportTag;
 
 FOUNDATION_EXPORT NSString * const kHXODebugServerURL;
 FOUNDATION_EXPORT NSString * const kHXOForceFilecacheURL;
+FOUNDATION_EXPORT NSString * const kHXOConfirmMessagesSeen;
 
 FOUNDATION_EXPORT NSString * const kHXODebugAllowUntrustedCertificates;
 

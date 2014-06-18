@@ -896,7 +896,7 @@ static int  groupMemberContext;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
         cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
-        cell.avatar.isInBackground = contact.isBackground;
+        cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];

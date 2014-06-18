@@ -1612,6 +1612,7 @@ nil
             // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
             message.isRead = @YES;
             [AppDelegate.instance.mainObjectContext refreshObject: message.contact mergeChanges:YES];
+            [self.chatBackend inDeliveryConfirmMessage:message withDelivery:(Delivery*)message.deliveries.anyObject];
         }
     }
 
@@ -1782,22 +1783,23 @@ nil
 }
 
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
-
+    
     if ([message.isOutgoing isEqualToNumber: @NO]) {
         return HXOBubbleColorSchemeIncoming;
     }
-
+    
     if ([message.deliveries count] > 1) {
-        NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
+        NSLog(@"WARNING: colorSchemeForMessage: NOT YET IMPLEMENTED: delivery status for multiple deliveries, just chosing one color");
     }
     for (Delivery * myDelivery in message.deliveries) {
-        if (myDelivery.isStateNew || myDelivery.isStateDelivering)
-        {
+        if (myDelivery.isStateNew || myDelivery.isStateDelivering) {
+            
             return HXOBubbleColorSchemeInProgress;
-        } else if (myDelivery.isDelivered)
-        {
+        } else if (myDelivery.isDelivered) {
+            
             return HXOBubbleColorSchemeSuccess;
         } else if (myDelivery.isFailure) {
+            
             return HXOBubbleColorSchemeFailed;
         } else {
             NSLog(@"ERROR: colorSchemeForMessage: unknown delivery state '%@'", myDelivery.state);
@@ -1809,7 +1811,22 @@ nil
 - (NSString*) stateStringForMessage: (HXOMessage*) message {
 
     if ([message.deliveries count] > 1) {
-        NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
+        NSUInteger deliveredCount = message.deliveriesDelivered.count;
+        NSUInteger pendingCount = message.deliveriesPending.count;
+        NSUInteger failedCount = message.deliveriesFailed.count;
+        NSUInteger seenCount = message.deliveriesSeen.count;
+        NSUInteger privateCount = message.deliveriesPrivate.count;
+        NSUInteger attachmentPendingCount = message.deliveriesAttachmentsPending.count;
+        NSUInteger attachmentReceivedCount = message.deliveriesAttachmentsReceived.count;
+        NSUInteger attachmentFailedCount = message.deliveriesAttachmentsFailed.count;
+        NSUInteger totalDeliveries = message.deliveries.count;
+        if (message.attachment != nil) {
+            NSString * info = [NSString stringWithFormat:@"total:%d failed:%d pending:%d received:%d", totalDeliveries, attachmentFailedCount, attachmentPendingCount, attachmentReceivedCount];
+            return info;
+        } else {
+            NSString * info = [NSString stringWithFormat:@"tot:%d fail:%d pend:%d rec:%d seen:%d", totalDeliveries, failedCount, pendingCount, deliveredCount, seenCount];
+            return info;
+        }
     }
 
     for (Delivery * myDelivery in message.deliveries) {
@@ -1824,7 +1841,13 @@ nil
                                           NSLocalizedString(myDelivery.message.attachment.mediaType, nil)];
                 return stateString;
             } else {
-                return NSLocalizedString(@"chat_message_delivered", nil);
+                if (myDelivery.isSeen) {
+                    return NSLocalizedString(@"read", nil);
+                } else if (!myDelivery.isPrivate) {
+                    return NSLocalizedString(@"unread", nil);
+                } else {
+                    return NSLocalizedString(@"chat_message_delivered", nil);
+                }
             }
         } else if (myDelivery.isFailure) {
             return NSLocalizedString(@"chat_message_failed", nil);

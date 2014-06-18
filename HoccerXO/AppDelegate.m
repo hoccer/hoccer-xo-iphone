@@ -204,7 +204,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     _inspectionLock = [NSObject new];
 
 #ifdef DEBUG
-#define DEFINE_OTHER_SERVERS
+//#define DEFINE_OTHER_SERVERS
+#endif
 #ifdef DEFINE_OTHER_SERVERS
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"http://10.1.9.166:8081/" forKey: kHXOForceFilecacheURL];
@@ -222,7 +223,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
     [[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
     [[HXOUserDefaults standardUserDefaults] synchronize];
-#endif
 #endif
     
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {

@@ -13,7 +13,7 @@
     <entity name="RPC_TalkDelivery_in" parentEntity="RPC_TalkDelivery" syncable="YES">
         <attribute name="messageId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="senderId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
-        <attribute name="state" optional="YES" transient="YES" attributeType="String" minValueString="3" maxValueString="30" regularExpressionString="delivering|delivered|deliveredAcknowledged|failed|rejected|aborted|failedAcknowledged|rejectedAcknowledged|abortedAcknowledged" syncable="YES"/>
+        <attribute name="state" optional="YES" transient="YES" attributeType="String" minValueString="3" maxValueString="30" regularExpressionString="delivering|deliveredPrivate|deliveredSeen|deliveredUnseen|deliveredPrivateAcknowledged|deliveredSeenAcknowledged|deliveredUnseenAcknowledged|deliveredAcknowledged|failed|rejected|aborted|failedAcknowledged|rejectedAcknowledged|abortedAcknowledged" syncable="YES"/>
         <attribute name="timeAccepted" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
         <attribute name="timeChanged" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
     </entity>

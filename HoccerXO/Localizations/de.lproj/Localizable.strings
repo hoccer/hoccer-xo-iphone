@@ -127,7 +127,7 @@
 "chat_message_sent"                 = "gesendet";
 "chat_message_delivered"            = "zugestellt";
 "chat_message_read"                 = "gelesen";
-"chat_message_failed"               = "kaputt";
+"chat_message_failed"               = "unzustellbar";
 
 "chat_message_delivered_missing_attachment %@"="gesendet, wartet auf %@";
 
