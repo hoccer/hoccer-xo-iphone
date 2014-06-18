@@ -223,8 +223,8 @@
 "contact_relationship_invited"                  = "Eingeladen als Friend";
 "contact_relationship_invitedMe"                = "Hat dich als Freund eingeladen";
 
-"contact_list_placeholder"                      = "[Lade Freunde ein](http://hoccer.com/xo/help/invitations) sicher mit dir zu chatten.";
-"contact_list_placeholder_nearby"               = "Warte auf Kontake [in der Nähe](http://hoccer.com/xo/help/nearby)…";
+"contact_list_placeholder"                      = "[Lade Freunde ein](http://hoccer.com/hoccer-xo-anleitung/#kontakte) sicher mit dir zu chatten.";
+"contact_list_placeholder_nearby"               = "Warte auf Kontake [in der Nähe](http://hoccer.com/hoccer-xo-anleitung/#in-der-naehe)…";
 
 //==============================================================================
 // Credentials
@@ -362,7 +362,7 @@
 "group_member_count_none_joined"        = "%@du bist allein";
 "group_member_invited_count"            = "%@%d eingeladen";
 
-"group_list_placeholder"                = "Lege [Gruppen](http://hoccer.com/xo/help/groups) an um mit vielen Freunden gleichzeitig zu chatten.";
+"group_list_placeholder"                = "Lege [Gruppen](http://hoccer.com/hoccer-xo-anleitung/#gruppen) an um mit vielen Freunden gleichzeitig zu chatten.";
 
 "group_name_nearby_active"              = "Alle in der Nähe";
 "group_name_nearby_kept"                = "In der Nähe gespeichert";
