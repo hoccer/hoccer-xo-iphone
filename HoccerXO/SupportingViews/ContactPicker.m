@@ -107,4 +107,7 @@
     return [SmallContactCell class];
 }
 
+- (NSString*) placeholderText  { return nil; }
+- (UIImage*)  placeholderImage { return nil; }
+
 @end
