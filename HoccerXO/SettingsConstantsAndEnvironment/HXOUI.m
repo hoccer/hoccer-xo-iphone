@@ -30,7 +30,7 @@ static HXOUI * _currentTheme;
 #pragma mark - Applicationwide Colors
 
 - (UIColor*) tintColor {
-    return [UIColor colorWithHexString: @"#eb3d00"];
+    return [UIColor colorWithHexString: @"#0079FF"];
 }
 
 - (UIColor*) navigationBarBackgroundColor {
@@ -38,11 +38,15 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) navigationBarTintColor {
-    return [UIColor colorWithHexString: @"#eb3d00"];
+    return [UIColor colorWithHexString: @"#4DBFAC"];
 }
 
 - (UIColor*) tableSeparatorColor {
     return [UIColor colorWithHexString: @"#D"];
+}
+
+- (UIColor*) tablePlaceholderTextColor {
+    return [UIColor colorWithHexString: @"#B5BAC5"];
 }
 
 - (UIColor*) ledColor {
@@ -50,7 +54,7 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) cellAccessoryColor {
-    return [UIColor colorWithHexString:@"#D0"];
+    return [UIColor colorWithHexString:@"#20B4A4"];
 }
 
 - (UIColor*) messageFieldBackgroundColor {
@@ -103,7 +107,7 @@ static HXOUI * _currentTheme;
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
         case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: @"#E6E7EB"];
-        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#eb3d00"];
+        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#4DBFAC"];
         case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: @"#B8CCCA"];
         case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: @"#BD3935"];
     }
@@ -172,7 +176,7 @@ static HXOUI * _currentTheme;
                , UIContentSizeCategoryExtraLarge:                        @(13.0)
                , UIContentSizeCategoryExtraExtraLarge:                   @(14)
                , UIContentSizeCategoryExtraExtraExtraLarge:              @(15)
-
+               
                , UIContentSizeCategoryAccessibilityMedium:               @(16)
                , UIContentSizeCategoryAccessibilityLarge:                @(17)
                , UIContentSizeCategoryAccessibilityExtraLarge:           @(18)
@@ -189,7 +193,7 @@ static HXOUI * _currentTheme;
                , UIContentSizeCategoryExtraLarge:                        @(12.0)
                , UIContentSizeCategoryExtraExtraLarge:                   @(13)
                , UIContentSizeCategoryExtraExtraExtraLarge:              @(14)
-
+               
                , UIContentSizeCategoryAccessibilityMedium:               @(15)
                , UIContentSizeCategoryAccessibilityLarge:                @(16)
                , UIContentSizeCategoryAccessibilityExtraLarge:           @(17)
@@ -250,10 +254,10 @@ static HXOUI * _currentTheme;
     
     id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
-    [navigationBarAppearance setBarStyle:     UIBarStyleBlack];
+    [navigationBarAppearance setBarStyle:     UIBarStyleDefault];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
-    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
-
+    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: self.navigationBarTintColor}];
+    
     [[LabelWithLED appearance] setLedColor: self.ledColor];
 }
 
@@ -271,7 +275,7 @@ static HXOUI * _currentTheme;
 #pragma mark - Standard Dialogs :-/
 
 + (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title {
-
+    
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
                                                      message: NSLocalizedString(message, nil)
                                                     delegate: nil
@@ -287,10 +291,10 @@ static HXOUI * _currentTheme;
 }
 
 + (void) showAlertWithMessage: (NSString *) message withTitle:(NSString *) title withArgument:(NSString*) argument {
-
+    
     NSString * localizedMessage = NSLocalizedString(message, "");
     NSString * fullMessage = [NSString stringWithFormat:localizedMessage, argument];
-
+    
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
                                                      message: NSLocalizedString(fullMessage, nil)
                                                     delegate: nil
@@ -340,15 +344,15 @@ static HXOUI * _currentTheme;
                                                cancelButtonTitle: nil
                                           destructiveButtonTitle: nil
                                                otherButtonTitles: nil];
-
-
-
-
+    
+    
+    
+    
 	if (sheet) {
 		if (destructiveTitle) {
 			sheet.destructiveButtonIndex = [sheet addButtonWithTitle: destructiveTitle];
 		}
-
+        
 		id eachObject;
 		va_list argumentList;
 		if (otherTitles) {
@@ -359,15 +363,15 @@ static HXOUI * _currentTheme;
 			}
 			va_end(argumentList);
 		}
-
+        
 		if (cancelTitle) {
 			sheet.cancelButtonIndex = [sheet addButtonWithTitle: cancelTitle];
 		}
 	}
-
+    
     // Apply xo settings
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-
+    
     return sheet;
 }
 
@@ -386,18 +390,18 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
                                                    inString: text
                                                      offset: offset
                                                    template: @"$1"];
-
+        
         NSRange linkRange = [result rangeAtIndex: 1];
         linkRange.location += offset - 1; // eh ... compensate the opening bracket we are about to loose :-/
-
+        
         NSRange urlRange = [result rangeAtIndex: 2];
         urlRange.location += offset;
-
+        
         [linkRanges addObject: [NSValue valueWithRange: linkRange]];
         [urls addObject: [text substringWithRange: urlRange]];
-
+        
         [text replaceCharactersInRange: resultRange withString: match];
-
+        
         offset += [match length] - resultRange.length;
     }
     NSMutableAttributedString * result = [[NSMutableAttributedString alloc] initWithString: text attributes: nil];
