@@ -2714,8 +2714,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer Whitelabel";
-				PROVISIONING_PROFILE = "473C0135-A15E-4F09-88D5-FD666C6E152C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "473C0135-A15E-4F09-88D5-FD666C6E152C";
+				PROVISIONING_PROFILE = "EB13A6E7-8C02-45C0-B8F3-471E6749E438";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
