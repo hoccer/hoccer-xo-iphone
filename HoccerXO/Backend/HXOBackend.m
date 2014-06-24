@@ -2384,8 +2384,8 @@ static NSTimer * _stateNotificationDelayTimer;
         group.lastUpdateReceived = [NSDate date];
     }
     
-    if ([groupState isEqualToString:@"none"]) {
-        if (group != nil && ![group.groupState isEqualToString: kRelationStateInternalKept] && ![group.groupState isEqualToString:@"none"] && !group.isNearbyGroup) {
+    if ([kGroupStateNone isEqualToString: groupState]) {
+        if (group != nil && !group.isKeptGroup && !group.isRemovedGroup && !group.isNearbyGroup) {
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
             [group updateWithDictionary: groupDict];
             [self handleDeletionOfGroup:group inContext:context];
@@ -2396,7 +2396,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     if (group == nil) {
         // handle nearby group merging
-        if ([@"nearby" isEqualToString: groupDict[@"groupType"]]) {
+        if ([kGroupTypeNearby isEqualToString: groupDict[@"groupType"]]) {
             group = [self singleNearbyGroupWithId:groupId inContext:context];
         }
         if (group == nil) {
@@ -3043,8 +3043,13 @@ static NSTimer * _stateNotificationDelayTimer;
             
             [self.delegate saveContext:context];
             NSManagedObjectID * groupObjId = group.objectID;
-            [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *mainContext) {
+            NSArray * callerStack = [NSThread callStackSymbols];
+            [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
                 Group* group = (Group*)[context objectWithID:groupObjId];
+                if (group == nil) {
+                    NSLog(@"ERROR: group is nil, stack of caller = %@",callerStack);
+                    return;
+                }
                 NSString * message = [NSString stringWithFormat: NSLocalizedString(@"group_deleted_message_format",nil), group.nickName];
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_deleted_title", nil)
                                                                  message: NSLocalizedString(message, nil)
@@ -3052,9 +3057,9 @@ static NSTimer * _stateNotificationDelayTimer;
                                                              switch (buttonIndex) {
                                                                  case 1:
                                                                      // delete all group member contacts that are not friends or contacts in other group
-                                                                     [self deleteInDatabaseAllMembersAndContactsofGroup:group inContext:mainContext];
+                                                                     [self deleteInDatabaseAllMembersAndContactsofGroup:group inContext:context];
                                                                      // delete the group
-                                                                     [AppDelegate.instance deleteObject:group inContext:mainContext];
+                                                                     [AppDelegate.instance deleteObject:group inContext:context];
                                                                      break;
                                                                  case 0:
                                                                      group.groupState = kRelationStateInternalKept;
@@ -4384,11 +4389,13 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     [self inDeliveryConfirmWithMethod:@"inDeliveryConfirmUnseen" withMessageId:messageId withDelivery:delivery];
 }
 
-
-
-
 - (void) outDeliveryAcknowledgeMethod:(NSString*)method withExpectedState:(NSString*)expected withMessageId:(NSString*)messageId withReceiverId:(NSString*)receiverId{
     if (DELIVERY_TRACE) {NSLog(@"outDeliveryAcknowledgeMethod: (%@) messageId=%@, receiverId=%@", method, messageId,receiverId);}
+    
+    if (method == nil || messageId == nil || receiverId == nil) {
+        NSLog(@"#ERROR: outDeliveryAcknowledgeMethod: bad paramters: method:%@ messageId:%@ receiverId:%@",method, messageId, receiverId);
+        return;
+    }
     
     [_serverConnection invoke: method withParams: @[messageId, receiverId]
                    onResponse: ^(id responseOrError, BOOL success)
@@ -4432,7 +4439,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 
 // As sender, acknowledge a "rejected" delivery
 - (void) outDeliveryAcknowledgeRejected: (NSString*)messageId withReceiverId:(NSString*)receiverId {
-    [self outDeliveryAcknowledgeMethod:@"outDeliveryAcknowledgeFailed" withExpectedState:kDeliveryStateRejectedAcknowledged withMessageId:messageId withReceiverId:receiverId];
+    [self outDeliveryAcknowledgeMethod:@"outDeliveryAcknowledgeRejected" withExpectedState:kDeliveryStateRejectedAcknowledged withMessageId:messageId withReceiverId:receiverId];
 }
 
 // abort a delivery as sender
@@ -5287,7 +5294,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         }
          */
         
-        if (myDelivery != nil) {
+        if (myDelivery != nil && myMessage != nil) {
             if (myDelivery.isInFinalState) {
                 NSLog(@"#WARNING: outgoingDelivery Notification received for delivery in final state '%@', attachmentState '%@', messageId: %@",
                       myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
@@ -5326,6 +5333,13 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         } else {
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
             // so we just acknowledge or abort if we can
+            
+            NSLog(@"#WARNING, message or delivery not found, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
+            
+            if (myMessageId == nil || myReceiverId == nil) {
+                NSLog(@"#WARNING, myMessageId or myReceiverId is nil, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
+                return;
+            }
             
             NSString * state = deliveryDict[@"state"];
             if ([Delivery shouldAcknowledgeStateForOutgoing:state]) {
