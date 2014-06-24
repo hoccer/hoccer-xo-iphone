@@ -26,6 +26,10 @@
         <attribute name="uploadURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="attachment" inverseEntity="HXOMessage" syncable="YES"/>
     </entity>
+    <entity name="Collection" representedClassName="" syncable="YES">
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Attachment" syncable="YES"/>
+    </entity>
     <entity name="Contact" representedClassName="Contact">
         <attribute name="alias" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -162,5 +166,6 @@
         <element name="GroupMembership" positionX="0" positionY="0" width="128" height="255"/>
         <element name="HXOMessage" positionX="0" positionY="0" width="128" height="449"/>
         <element name="Invite" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="Collection" positionX="9" positionY="153" width="128" height="73"/>
     </elements>
 </model>
