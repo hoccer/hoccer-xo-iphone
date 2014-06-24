@@ -177,6 +177,7 @@
 		6AC25F0C193FAB3200ED5E61 /* navbar-profile-contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25F0B193FAB3200ED5E61 /* navbar-profile-contact.m */; };
 		6AC25F0F193FAC0800ED5E61 /* navbar-profile-group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */; };
 		C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */; };
+		C53954721959CDFC007DBD04 /* Collection.m in Sources */ = {isa = PBXBuildFile; fileRef = C53954711959CDFC007DBD04 /* Collection.m */; };
 		C576EBB61934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */; };
 		C576EBB71934CC3B00C0D254 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB51934CC3B00C0D254 /* HXOAudioPlayer.m */; };
 		C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBC71934CC6100C0D254 /* NSMutableArray+Shuffle.m */; };
@@ -793,6 +794,8 @@
 		6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-profile-group.m"; sourceTree = "<group>"; };
 		C51B1146194858EC00FBCD2B /* NSArray+RemoveObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+RemoveObject.h"; sourceTree = "<group>"; };
 		C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+RemoveObject.m"; sourceTree = "<group>"; };
+		C53954701959CDFC007DBD04 /* Collection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Collection.h; sourceTree = "<group>"; };
+		C53954711959CDFC007DBD04 /* Collection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Collection.m; sourceTree = "<group>"; };
 		C576EBB21934CC3B00C0D254 /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
 		C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
 		C576EBB41934CC3B00C0D254 /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
@@ -1807,6 +1810,8 @@
 				C576EC651934CCE000C0D254 /* AttachmentInfo.m */,
 				C5C3BD16194065100072AE5F /* AttachmentMigration.h */,
 				C5C3BD17194065100072AE5F /* AttachmentMigration.m */,
+				C53954701959CDFC007DBD04 /* Collection.h */,
+				C53954711959CDFC007DBD04 /* Collection.m */,
 				63AEE30616CA566B00522F92 /* Contact.h */,
 				63AEE30716CA566B00522F92 /* Contact.m */,
 				6378484416F4000500DE03C2 /* Delivery.h */,
@@ -2764,6 +2769,7 @@
 				6365EB2C18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m in Sources */,
 				63B7900018D4E52D003A9125 /* tab_profile.m in Sources */,
 				C576EBDD1934CC9E00C0D254 /* AudioAttachmentListViewController.m in Sources */,
+				C53954721959CDFC007DBD04 /* Collection.m in Sources */,
 				636D400317106EC000304EDF /* Environment.m in Sources */,
 				E9E92F93187503F7007B8042 /* NSString+HTML.m in Sources */,
 				C576EC3C1934CCB200C0D254 /* player_button_next.m in Sources */,
