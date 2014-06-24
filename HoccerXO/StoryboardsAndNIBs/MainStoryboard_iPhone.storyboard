@@ -444,6 +444,25 @@
             </objects>
             <point key="canvasLocation" x="2114" y="729"/>
         </scene>
+        <!--Table View Controller-->
+        <scene sceneID="uQn-ju-hon">
+            <objects>
+                <tableViewController id="1Mr-wx-hFf" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="QZM-fr-OS6">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="1Mr-wx-hFf" id="bV3-OQ-BVo"/>
+                            <outlet property="delegate" destination="1Mr-wx-hFf" id="JAE-za-ZBV"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="QWP-NG-awR"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lVy-kG-Spy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="590" y="87"/>
+        </scene>
         <!--Tutorial View Controller-->
         <scene sceneID="wlt-xN-hk4">
             <objects>
@@ -1084,6 +1103,9 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Music" id="2OT-aj-jRR"/>
                     <navigationItem key="navigationItem" id="Skk-N9-fJi"/>
+                    <connections>
+                        <segue destination="1Mr-wx-hFf" kind="push" identifier="showCollections" id="dvD-69-Vwv"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e4E-iZ-1D3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -38,6 +38,7 @@
     self.tabBarItem.image = [[[tab_attachments alloc] init] image];
     self.tabBarItem.title = title;
     self.navigationItem.title = title;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
 }
 
 - (void)viewDidLoad {
@@ -61,6 +62,12 @@
 - (void) setContact:(Contact *)contact {
     self.fetchedResultsController = nil;
     _contact = contact;
+}
+
+#pragma mark - Actions
+
+- (void) showCollections:(id)sender {
+    [self performSegueWithIdentifier:@"showCollections" sender:sender];
 }
 
 #pragma mark - Core Data Stack
