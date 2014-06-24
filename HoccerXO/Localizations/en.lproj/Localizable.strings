@@ -24,7 +24,13 @@
 // About
 //==============================================================================
 
-"about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer XO is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer XO is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
+"about_prosa"             = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer XO is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer XO is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
+
+"about_team_heading"      = "Team";
+"about_client_developers" = "Client Developers:";
+"about_server_developers" = "Server Developers:";
+"about_designers"         = "Design:";
+"about_operators"         = "Operations:";
 
 //==============================================================================
 // Apple Push Notifications
