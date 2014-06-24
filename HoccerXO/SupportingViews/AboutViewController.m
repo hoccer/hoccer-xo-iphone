@@ -112,42 +112,6 @@
 
     format = [NSString stringWithFormat: @"V:|-%f-[info]-%f-[prosa]-%f-[team]-%f-[HXOClientDevelopers]-%f-[HXOServerDevelopers]-%f-[HXODesigners]-%f-|", kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding];
     [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-
-
-    /*
-    NSString * version = infoPlist[@"CFBundleShortVersionString"];
-    NSString * buildNumber = infoPlist[@"CFBundleVersion"];
-    self.appVersionLabel.text = [NSString stringWithFormat: @"Version: %@ – %@", version, buildNumber];
-    NSString * releaseString = infoPlist[@"HXOReleaseName"];
-    if ( ! [[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"] || ! kReleaseBuild) {
-        releaseString = [NSString stringWithFormat: @"%@\n%@ – %@", releaseString, [Environment sharedEnvironment].currentEnvironment, kReleaseBuild ? @"release" : @"debug"];
-    }
-    self.appReleaseName.text = releaseString;
-    [self.appReleaseName sizeToFit];
-
-    float dy = 0;
-    dy = [self setLabel: self.aboutProsa toText: NSLocalizedString(@"about_prosa", nil) andUpdateDy: dy];
-    [self moveView: self.teamLabel by: dy];
-
-    [self moveView: self.clientDeveloperLabel by: dy];
-    [self moveView: self.clientDeveloperList by: dy];
-    dy = [self setLabel: self.clientDeveloperList toText: [self peopleListAsText: @"HXOClientDevelopers"] andUpdateDy: dy];
-
-    [self moveView: self.serverDeveloperLabel by: dy];
-    [self moveView: self.serverDeveloperList by: dy];
-    dy = [self setLabel: self.serverDeveloperList toText: [self peopleListAsText: @"HXOServerDevelopers"] andUpdateDy: dy];
-
-    [self moveView: self.designLabel by: dy];
-    [self moveView: self.designList by: dy];
-    dy = [self setLabel: self.designList toText: [self peopleListAsText: @"HXODesigners"] andUpdateDy: dy];
-
-    CGRect frame = self.scrolledContent.frame;
-    frame.size.height += dy + 100; // XXX
-    self.scrolledContent.frame = frame;
-    self.scrollView.contentSize = frame.size;
-
-    // XXX update scroll view content size dynamically
-     */
 }
 
 
@@ -183,17 +147,7 @@
     }
     NSString * versionString = [NSString stringWithFormat: @"\nVersion: %@ - %@\n%@", infoPlist[@"CFBundleShortVersionString"], infoPlist[@"CFBundleVersion"], releaseString];
     [appInfo appendAttributedString: [[NSAttributedString alloc] initWithString: versionString attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 14]}]];
-/*
-    self.appInfo.text = infoPlist[@"CFBundleDisplayName"];
 
-    NSString * version = infoPlist[@"CFBundleShortVersionString"];
-    NSString * buildNumber = infoPlist[@"CFBundleVersion"];
-    self.appVersionLabel.text = [NSString stringWithFormat: @"Version: %@ – %@", version, buildNumber];
-    NSString * releaseString = infoPlist[@"HXOReleaseName"];
-    if ( ! [[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"] || ! kReleaseBuild) {
-        releaseString = [NSString stringWithFormat: @"%@\n%@ – %@", releaseString, [Environment sharedEnvironment].currentEnvironment, kReleaseBuild ? @"release" : @"debug"];
-    }
-*/
     return appInfo;
 }
 
