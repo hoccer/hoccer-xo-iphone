@@ -33,8 +33,9 @@
 }
 
 - (void) commonInit {
-    
     self.hxoAccessoryAlignment = HXOCellAccessoryAlignmentCenter;
+    self.multipleSelectionBackgroundView = [[UIView alloc] init];
+    self.multipleSelectionBackgroundView.backgroundColor = [UIColor clearColor];
     
     self.contentView.autoresizingMask |= UIViewAutoresizingFlexibleHeight;
     //self.separatorInset = UIEdgeInsetsMake(0, kHXOCellPadding + [self avatarSize] + kHXOCellPadding, 0, 0);

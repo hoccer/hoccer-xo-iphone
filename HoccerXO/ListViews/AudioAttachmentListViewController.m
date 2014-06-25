@@ -37,6 +37,8 @@
     
     self.tabBarItem.image = [[[tab_attachments alloc] init] image];
     self.tabBarItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
+    
+    self.tableView.allowsMultipleSelectionDuringEditing = YES;
 }
 
 - (void)viewDidLoad {
@@ -197,23 +199,25 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // The fetchedObjects array seems to change, so we take an immutable copy
-    NSArray * playlist = [[self.fetchedResultsController fetchedObjects] copy];
-    
-    HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
-    BOOL success = [audioPlayer playWithPlaylist:playlist atTrackNumber:indexPath.row];
-    
-    if (success) {
-        UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
-        [self presentViewController:audioPlayerViewController animated:YES completion:NULL];
-    } else {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
-                                                         message: NSLocalizedString(@"attachment_cannot_play_message", nil)
-                                                        delegate: nil
-                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
-                                               otherButtonTitles: nil];
-        [alert show];
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (!self.tableView.isEditing) {
+        // The fetchedObjects array seems to change, so we take an immutable copy
+        NSArray * playlist = [[self.fetchedResultsController fetchedObjects] copy];
+        
+        HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
+        BOOL success = [audioPlayer playWithPlaylist:playlist atTrackNumber:indexPath.row];
+        
+        if (success) {
+            UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
+            [self presentViewController:audioPlayerViewController animated:YES completion:NULL];
+        } else {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
+                                                             message: NSLocalizedString(@"attachment_cannot_play_message", nil)
+                                                            delegate: nil
+                                                   cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                                   otherButtonTitles: nil];
+            [alert show];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
     }
 }
 
