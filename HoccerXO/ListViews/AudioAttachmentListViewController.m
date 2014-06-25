@@ -46,10 +46,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     [self preferredContentSizeChanged:nil];
 
-    [self configureNavigationBar];
+    [self updateNavigationBar];
 }
 
-- (void)configureNavigationBar {
+- (void)updateNavigationBar {
     if (self.collection) {
         self.navigationItem.title = self.collection.name;
     } else if (self.contact) {
@@ -58,6 +58,9 @@
         self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
     }
+    
+    UIBarButtonSystemItem item = self.tableView.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:item target:self action:@selector(toggleEditMode:)];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -85,6 +88,11 @@
 
 - (void) showCollections:(id)sender {
     [self performSegueWithIdentifier:@"showCollections" sender:sender];
+}
+
+- (void) toggleEditMode:(id)sender {
+    [self.tableView setEditing:!self.tableView.isEditing animated:YES];
+    [self updateNavigationBar];
 }
 
 #pragma mark - Core Data Stack
