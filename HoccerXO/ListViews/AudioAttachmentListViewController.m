@@ -35,18 +35,29 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    NSString *title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
     self.tabBarItem.image = [[[tab_attachments alloc] init] image];
-    self.tabBarItem.title = title;
-    self.navigationItem.title = title;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
+    self.tabBarItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
 }
 
 - (void)viewDidLoad {
     [self registerCellClass:[AudioAttachmentCell class]];
     self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     [self preferredContentSizeChanged:nil];
+
+    [self configureNavigationBar];
+}
+
+- (void)configureNavigationBar {
+    if (self.collection) {
+        self.navigationItem.title = self.collection.name;
+    } else if (self.contact) {
+        self.navigationItem.title = self.contact.displayName;
+    } else {
+        self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
