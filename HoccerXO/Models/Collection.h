@@ -11,6 +11,7 @@
 @interface Collection : HXOModel
 
 @property (nonatomic, retain) NSOrderedSet *attachments;
+@property (nonatomic, retain) NSString     *name;
 
 @end
 

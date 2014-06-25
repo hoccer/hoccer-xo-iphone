@@ -153,7 +153,9 @@
 // Collection
 //==============================================================================
 
-"collection_list_nav_title" = "Playlists";
+"collection_list_nav_title"         = "Playlists";
+"collection_new_collection_title"   = "New Playlist";
+"collection_new_collection_message" = "Please enter a name for the new playlist:";
 
 //==============================================================================
 // Contact - uses strings from profile

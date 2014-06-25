@@ -153,7 +153,9 @@
 // Collection
 //==============================================================================
 
-"collection_list_nav_title" = "Wiedergabelisten";
+"collection_list_nav_title"         = "Wiedergabelisten";
+"collection_new_collection_title"   = "Neue Wiedergabeliste";
+"collection_new_collection_message" = "Bitte gib einen Namen für die neue Wiedergabeliste ein:";
 
 //==============================================================================
 // Contact - uses strings from profile

@@ -8,6 +8,6 @@
 
 #import "HXOTableViewController.h"
 
-@interface CollectionListViewController : HXOTableViewController
+@interface CollectionListViewController : HXOTableViewController <UIAlertViewDelegate>
 
 @end

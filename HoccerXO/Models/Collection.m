@@ -11,5 +11,6 @@
 @implementation Collection
 
 @dynamic attachments;
+@dynamic name;
 
 @end
