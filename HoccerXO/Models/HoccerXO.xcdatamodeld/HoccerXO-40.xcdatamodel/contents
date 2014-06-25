@@ -26,7 +26,7 @@
         <attribute name="uploadURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="attachment" inverseEntity="HXOMessage" syncable="YES"/>
     </entity>
-    <entity name="Collection" representedClassName="" syncable="YES">
+    <entity name="Collection" representedClassName="Collection" syncable="YES">
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Attachment" syncable="YES"/>
     </entity>
@@ -140,6 +140,7 @@
     <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0 AND transferFailures &lt; $max_retries"/>
     <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
     <fetchRequest name="AudioAttachmentsWithUnknownPlayability" entity="Attachment" predicateString="mediaType == &quot;audio&quot; AND playable == &quot;UNKNOWN&quot;"/>
+    <fetchRequest name="Collections" entity="Collection"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="ContactsLastUpdatedBefore" entity="Contact" predicateString="type == &quot;Contacts&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND relationshipState != &quot;kept&quot;"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
