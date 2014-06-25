@@ -12,6 +12,7 @@
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
 #import "AudioPlayerStateItemController.h"
+#import "Collection.h"
 #import "Contact.h"
 #import "HXOAudioPlayer.h"
 #import "tab_attachments.h"
@@ -59,6 +60,11 @@
 
 #pragma mark - Configuration
 
+- (void) setCollection:(Collection *)collection {
+    self.fetchedResultsController = nil;
+    _collection = collection;
+}
+
 - (void) setContact:(Contact *)contact {
     self.fetchedResultsController = nil;
     _contact = contact;
@@ -86,8 +92,10 @@
     return _managedObjectModel;
 }
 
-+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
-    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null] };
++ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact collection:(Collection *)collection managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
+    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null],
+                            @"collection" : collection ? collection : [NSNull null] };
+
     NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAudioAttachments" substitutionVariables:vars];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeReceived" ascending: NO];
     NSArray *sortDescriptors = @[sortDescriptor];
@@ -100,7 +108,7 @@
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
-        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
+        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact collection:self.collection managedObjectModel:self.managedObjectModel];
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _fetchedResultsController.delegate = self;
         [_fetchedResultsController performFetch:nil];
