@@ -178,6 +178,7 @@
 		6AC25F0F193FAC0800ED5E61 /* navbar-profile-group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */; };
 		C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */; };
 		C53954721959CDFC007DBD04 /* Collection.m in Sources */ = {isa = PBXBuildFile; fileRef = C53954711959CDFC007DBD04 /* Collection.m */; };
+		C5395483195ABF66007DBD04 /* CollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5395482195ABF66007DBD04 /* CollectionListViewController.m */; };
 		C576EBB61934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */; };
 		C576EBB71934CC3B00C0D254 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB51934CC3B00C0D254 /* HXOAudioPlayer.m */; };
 		C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBC71934CC6100C0D254 /* NSMutableArray+Shuffle.m */; };
@@ -796,6 +797,8 @@
 		C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+RemoveObject.m"; sourceTree = "<group>"; };
 		C53954701959CDFC007DBD04 /* Collection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Collection.h; sourceTree = "<group>"; };
 		C53954711959CDFC007DBD04 /* Collection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Collection.m; sourceTree = "<group>"; };
+		C5395481195ABF66007DBD04 /* CollectionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionListViewController.h; sourceTree = "<group>"; };
+		C5395482195ABF66007DBD04 /* CollectionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionListViewController.m; sourceTree = "<group>"; };
 		C576EBB21934CC3B00C0D254 /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
 		C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioPlaybackButtonController.m; sourceTree = "<group>"; };
 		C576EBB41934CC3B00C0D254 /* HXOAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlayer.h; sourceTree = "<group>"; };
@@ -1595,6 +1598,8 @@
 				C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */,
 				C576EBDA1934CC9E00C0D254 /* AudioAttachmentListViewController.h */,
 				C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */,
+				C5395481195ABF66007DBD04 /* CollectionListViewController.h */,
+				C5395482195ABF66007DBD04 /* CollectionListViewController.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
 				6327EAEB171883C300AF75E1 /* ContactCell.m */,
 				6327EAD5171841F200AF75E1 /* ContactListViewController.h */,
@@ -2746,6 +2751,7 @@
 				E9E92F6D18733D01007B8042 /* DDRange.m in Sources */,
 				E95A75A818D257FD0027AE3E /* fmemopen.c in Sources */,
 				C576EC661934CCE000C0D254 /* AttachmentInfo.m in Sources */,
+				C5395483195ABF66007DBD04 /* CollectionListViewController.m in Sources */,
 				C576EC421934CCB200C0D254 /* player_button_repeat_title.m in Sources */,
 				E9E92F7418733D01007B8042 /* MultipartMessageHeaderField.m in Sources */,
 				C576EC411934CCB200C0D254 /* player_button_repeat_off.m in Sources */,
