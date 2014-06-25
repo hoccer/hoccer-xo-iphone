@@ -61,11 +61,12 @@
 "attachment_upload_failed_title"         = "Upload failed";
 "attachment_upload_failed_message"       = "Failed to upload an attachment";
 
-"attachment_type_image"                  = "Image";
-"attachment_type_video"                  = "Video";
-"attachment_type_audio"                  = "Audio";
-"attachment_type_vcard"                  = "Adress";
-"attachment_type_geolocation"            = "Location";
+"attachment_type_image"                 = "Image";
+"attachment_type_video"                 = "Video";
+"attachment_type_audio"                 = "Audio";
+"attachment_type_vcard"                 = "Adress";
+"attachment_type_geolocation"           = "Location";
+"attachment_type_data"                  = "Document";
 
 "attachment_overlimit_title"             = "Really send Message?";
 "attachment_overlimit_upload_question"   = "Attachment size is %@. Do you really want to send this message?";
@@ -133,9 +134,13 @@
 "chat_message_sent"                 = "sent";
 "chat_message_delivered"            = "delivered";
 "chat_message_read"                 = "read";
-"chat_message_failed"               = "failed";
+"chat_message_unread"               = "unread";
+"chat_message_failed"               = "undeliverable";
+"chat_message_aborted"              = "aborted";
+"chat_message_rejected"             = "rejected";
 
-"chat_message_delivered_missing_attachment %@"="sent, waiting for %@";
+"chat_message_delivered_missing_attachment %@"="expecting %@";
+"chat_message_delivered_failed_attachment %@"="undeliverable %@";
 
 
 "chat_resend_menu_item"             = "Send";

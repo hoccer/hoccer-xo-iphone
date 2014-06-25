@@ -260,8 +260,8 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
                 } else {
                     myMessageDict[@"body"] = @"";
                 }
-                myMessageDict[@"isOutgoing"] = [message.isOutgoing copy];
-                if ([message.isOutgoing isEqualToNumber: @YES]) {
+                myMessageDict[@"isOutgoingFlag"] = [message.isOutgoingFlag copy];
+                if ([message.isOutgoingFlag isEqualToNumber: @YES]) {
                     myMessageDict[@"author"] = [[[UserProfile sharedProfile] clientId] copy];
                     myMessageDict[@"authorNick"] = [[[UserProfile sharedProfile] nickName] copy];
                 } else if ([partner isKindOfClass: [Group class]]) {
@@ -299,7 +299,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
         NSString * authorURL = [NSString stringWithFormat:@"/chat/%@",message[@"author"]];
         NSString * authorAvatarURL = [NSString stringWithFormat:@"/avatar/%@",message[@"author"]];
         NSString * body = message[@"body"];
-        NSString * direction = [message[@"isOutgoing"] boolValue] ? @"->" : @"<-";
+        NSString * direction = [message[@"isOutgoingFlag"] boolValue] ? @"->" : @"<-";
         
         NSString * item = [NSString stringWithFormat:@"<div><a href='%@'><img src='%@' width='32' height='32' border='0' alt='avatar'/></a>%@%@<br/>\n",authorURL,authorAvatarURL,[direction stringByEscapingForHTML],[body stringByEscapingForHTML]];
         result = [result stringByAppendingString:item];

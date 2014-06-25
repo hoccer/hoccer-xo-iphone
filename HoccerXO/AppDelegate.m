@@ -204,7 +204,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     _inspectionLock = [NSObject new];
 
 #ifdef DEBUG
-//#define DEFINE_OTHER_SERVERS
+#define DEFINE_OTHER_SERVERS
 #endif
 #ifdef DEFINE_OTHER_SERVERS
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
@@ -1266,7 +1266,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 - (NSUInteger) unreadMessageCount {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     fetchRequest.entity = [NSEntityDescription entityForName: [HXOMessage entityName] inManagedObjectContext: self.currentObjectContext];
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isRead == NO"];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isReadFlag == NO"];
 
     NSError *error = nil;
     NSUInteger numberOfRecords = [self.currentObjectContext countForFetchRequest:fetchRequest error:&error];

@@ -1589,7 +1589,7 @@ nil
 }
 
 - (id) getAuthor: (HXOMessage*) message {
-    if ([message.isOutgoing isEqualToNumber: @YES]) {
+    if (message.isOutgoing) {
         return [UserProfile sharedProfile];
     } else if ([self.partner isKindOfClass: [Group class]]) {
         return [message.deliveries.anyObject sender];
@@ -1608,22 +1608,25 @@ nil
     cell.delegate = self;
 
     if ([self viewIsVisible]){
-        if ([message.isRead isEqualToNumber: @NO]) {
-            // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
-            message.isRead = @YES;
+        if (!message.isRead) {
+            NSLog(@"configureCell setting isReadFlag forMessage: %@", message.body);
+            message.isRead = YES;
             [AppDelegate.instance.mainObjectContext refreshObject: message.contact mergeChanges:YES];
-            [self.chatBackend inDeliveryConfirmMessage:message withDelivery:(Delivery*)message.deliveries.anyObject];
+            Delivery * delivery = (Delivery*)message.deliveries.anyObject;
+            if (message.isIncoming && delivery.isUnseen) {
+                [self.chatBackend inDeliveryConfirmMessage:message withDelivery:delivery];
+            }
         }
     }
 
     cell.colorScheme = [self colorSchemeForMessage: message];
-    cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
+    cell.messageDirection = message.isOutgoing ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
     id author = [self getAuthor: message];
     cell.avatar.image = [author avatarImage];
     cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
-    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isConnected;
-    cell.avatar.isInBackground = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isBackground;
+    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! message.isOutgoing && ((Contact*)[message.deliveries.anyObject sender]).isConnected;
+    cell.avatar.isInBackground = [self.partner isKindOfClass: [Group class]] && message.isIncoming && ((Contact*)[message.deliveries.anyObject sender]).isBackground;
 
     cell.subtitle.text = [self subtitleForMessage: message];
 
@@ -1769,7 +1772,7 @@ nil
                 message.attachment.state == kAttachmentWantsTransfer) {
                 [message.attachment pauseTransfer];
             } else if (message.attachment.state == kAttachmentTransferOnHold) {
-                if (message.isOutgoing.boolValue) {
+                if (message.isOutgoing) {
                     [message.attachment upload];
                 } else {
                     [message.attachment download];
@@ -1784,12 +1787,12 @@ nil
 
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
     
-    if ([message.isOutgoing isEqualToNumber: @NO]) {
+    if (message.isIncoming) {
         return HXOBubbleColorSchemeIncoming;
     }
     
     if ([message.deliveries count] > 1) {
-        NSLog(@"WARNING: colorSchemeForMessage: NOT YET IMPLEMENTED: delivery status for multiple deliveries, just chosing one color");
+        //NSLog(@"WARNING: colorSchemeForMessage: NOT YET IMPLEMENTED: delivery status for multiple deliveries, just chosing one color");
     }
     for (Delivery * myDelivery in message.deliveries) {
         if (myDelivery.isStateNew || myDelivery.isStateDelivering) {
@@ -1815,55 +1818,87 @@ nil
         NSUInteger pendingCount = message.deliveriesPending.count;
         NSUInteger failedCount = message.deliveriesFailed.count;
         NSUInteger seenCount = message.deliveriesSeen.count;
+        NSUInteger unseenCount = message.deliveriesUnseen.count;
         NSUInteger privateCount = message.deliveriesPrivate.count;
         NSUInteger attachmentPendingCount = message.deliveriesAttachmentsPending.count;
         NSUInteger attachmentReceivedCount = message.deliveriesAttachmentsReceived.count;
         NSUInteger attachmentFailedCount = message.deliveriesAttachmentsFailed.count;
         NSUInteger totalDeliveries = message.deliveries.count;
+        
+        NSString * info = @"";
+        if (privateCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", privateCount, [self stateStringForDelivery:message.deliveriesPrivate.anyObject]]];
+        }
+        if (pendingCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", pendingCount, [self stateStringForDelivery:message.deliveriesPending.anyObject]]];
+        }
+        if (failedCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", failedCount, [self stateStringForDelivery:message.deliveriesFailed.anyObject]]];
+        }
+        if (seenCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", seenCount, [self stateStringForDelivery:message.deliveriesSeen.anyObject]]];
+        }
+        if (unseenCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", unseenCount, [self stateStringForDelivery:message.deliveriesUnseen.anyObject]]];
+        }
         if (message.attachment != nil) {
-            NSString * info = [NSString stringWithFormat:@"total:%d failed:%d pending:%d received:%d", totalDeliveries, attachmentFailedCount, attachmentPendingCount, attachmentReceivedCount];
-            return info;
-        } else {
-            NSString * info = [NSString stringWithFormat:@"tot:%d fail:%d pend:%d rec:%d seen:%d", totalDeliveries, failedCount, pendingCount, deliveredCount, seenCount];
-            return info;
-        }
-    }
-
-    for (Delivery * myDelivery in message.deliveries) {
-        if (myDelivery.isStateNew) {
-            return NSLocalizedString(@"chat_message_pending", nil);
-            
-        } else if (myDelivery.isStateDelivering) {
-            return NSLocalizedString(@"chat_message_sent", nil);
-        } else if (myDelivery.isDelivered) {
-            if (myDelivery.isMissingAttachment) {
-                NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_missing_attachment %@", nil),
-                                          NSLocalizedString(myDelivery.message.attachment.mediaType, nil)];
-                return stateString;
-            } else {
-                if (myDelivery.isSeen) {
-                    return NSLocalizedString(@"read", nil);
-                } else if (!myDelivery.isPrivate) {
-                    return NSLocalizedString(@"unread", nil);
-                } else {
-                    return NSLocalizedString(@"chat_message_delivered", nil);
-                }
+            if (attachmentFailedCount != 0) {
+                info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", attachmentFailedCount, [self stateStringForDelivery:message.deliveriesAttachmentsFailed.anyObject]]];
             }
-        } else if (myDelivery.isFailure) {
-            return NSLocalizedString(@"chat_message_failed", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-            return NSLocalizedString(@"chat_message_failed", nil);
-        /* TODO } else if () {
-             return NSLocalizedString(@"chat_message_read", nil); */
-        } else {
-            NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
         }
+        info = [info stringByAppendingString:[NSString stringWithFormat:@" (%d)", totalDeliveries]];
+        return info;
+    } else {
+        Delivery * myDelivery = message.deliveries.anyObject;
+        return [self stateStringForDelivery:myDelivery];
     }
     return @"";
 }
 
+- (NSString*) stateStringForDelivery: (Delivery*) myDelivery {
+    if (myDelivery.isStateNew) {
+        return NSLocalizedString(@"chat_message_pending", nil);
+        
+    } else if (myDelivery.isStateDelivering) {
+        return NSLocalizedString(@"chat_message_sent", nil);
+        
+    } else if (myDelivery.isDelivered) {
+        if (myDelivery.isAttachmentFailure) {
+            NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", myDelivery.message.attachment.mediaType];
+            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_failed_attachment %@", nil),
+                                      NSLocalizedString(attachment_type, nil)];
+            return stateString;
+        } else  if (myDelivery.isMissingAttachment) {
+            NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", myDelivery.message.attachment.mediaType];
+            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_missing_attachment %@", nil),
+                                      NSLocalizedString(attachment_type, nil)];
+            return stateString;
+        } else {
+            if (myDelivery.isSeen) {
+                return NSLocalizedString(@"chat_message_read", nil);
+            } else if (!myDelivery.isPrivate) {
+                return NSLocalizedString(@"chat_message_unread", nil);
+            } else {
+                return NSLocalizedString(@"chat_message_delivered", nil);
+            }
+        }
+    } else if (myDelivery.isFailure) {
+        if (myDelivery.isFailed) {
+            return NSLocalizedString(@"chat_message_failed", nil);
+        } else if (myDelivery.isAborted) {
+            return NSLocalizedString(@"chat_message_aborted", nil);
+        } else if (myDelivery.isRejected) {
+            return NSLocalizedString(@"chat_message_rejected", nil);
+        }
+    } else {
+        NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
+    }
+    return myDelivery.state;
+}
+
+
 - (NSString*) subtitleForMessage: (HXOMessage*) message {
-    if ([message.isOutgoing isEqualToNumber: @YES]) {
+    if (message.isOutgoing) {
         return [self stateStringForMessage: message];
     } else {
 #ifdef DEBUG
@@ -1930,7 +1965,7 @@ nil
     MessageItem * item = [self getItemWithMessage: message];
 
     Attachment * attachment = message.attachment;
-    BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
+    BOOL isOutgoing = message.isOutgoing;
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
 
     // TODO: some of this stuff is quite expensive: reading vcards, loading audio metadata, &c.
@@ -1948,7 +1983,8 @@ nil
             }
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
-        NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(message.attachment.mediaType, nil);
+        NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", message.attachment.mediaType];
+        NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(attachment_type, nil);
         title = name;
     }
 
@@ -1965,7 +2001,7 @@ nil
     NSString * sizeString;
     long long contentSize;
     long long doneSize;
-    if ([attachment.message.isOutgoing isEqualToNumber: @NO]) {
+    if (attachment.incoming) {
         contentSize = [attachment.contentSize longLongValue];
         doneSize = [attachment.transferSize longLongValue];
     } else {
@@ -1982,7 +2018,7 @@ nil
     }
 
     if (attachment.state == kAttachmentTransferOnHold) {
-        NSString * question = attachment.message.isOutgoing.boolValue ? @"attachment_on_hold_upload_question" : @"attachment_on_hold_download_question";
+        NSString * question = attachment.outgoing ? @"attachment_on_hold_upload_question" : @"attachment_on_hold_download_question";
         return [NSString stringWithFormat: NSLocalizedString(question, nil), fileSize];
     }
 
@@ -2006,7 +2042,8 @@ nil
             
     }
     if (subtitle == nil) {
-        NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
+        NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", attachment.mediaType];
+        NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment_type, nil);
         subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
      }
     return subtitle;

@@ -76,11 +76,23 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 }
 
 -(BOOL)isInFinalState {
-    return [Delivery isAcknowledgedState:self.state] && [Delivery isAcknowledgedAttachmentState:self.attachmentState];
+    return [Delivery isAcknowledgedState:self.state] && [Delivery isAcknowledgedAttachmentState:self.attachmentState] && !self.isUnseen;
 }
 
 -(BOOL)isDelivered {
     return [Delivery isDeliveredState:self.state] || [@"confirmed" isEqualToString:self.state]; // confirmed is to handle locally stored legacy state
+}
+
+-(BOOL)isAborted {
+    return [Delivery isAbortedState:self.state];
+}
+
+-(BOOL)isRejected {
+    return [Delivery isRejectedState:self.state];
+}
+
+-(BOOL)isFailed {
+    return [Delivery isFailedState:self.state];
 }
 
 -(BOOL)isSeen {
@@ -156,11 +168,21 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 }
 
 +(BOOL)isFailureState:(NSString*) state {
+    return [self isFailedState:state] || [self isRejectedState:state] || [self isAbortedState:state];
+}
+
++(BOOL)isFailedState:(NSString*) state {
     return [kDeliveryStateFailed isEqualToString:state] ||
-    [kDeliveryStateFailedAcknowledged isEqualToString:state] ||
-    [kDeliveryStateRejected isEqualToString:state] ||
-    [kDeliveryStateRejectedAcknowledged isEqualToString:state] ||
-    [kDeliveryStateAborted isEqualToString:state] ||
+    [kDeliveryStateFailedAcknowledged isEqualToString:state];
+}
+
++(BOOL)isRejectedState:(NSString*) state {
+    return [kDeliveryStateRejected isEqualToString:state] ||
+    [kDeliveryStateRejectedAcknowledged isEqualToString:state];
+}
+
++(BOOL)isAbortedState:(NSString*) state {
+    return [kDeliveryStateAborted isEqualToString:state] ||
     [kDeliveryStateAbortedAcknowledged isEqualToString:state];
 }
 
@@ -259,7 +281,7 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 }
 
 -(NSString*) receiverKeyId {
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+    if (self.message.isOutgoing) {
         // for outgoing deliveries
         if ([self.message.contact.type isEqualToString:@"Group"]) {
             self.keyId = @"0000000000000000";  // sent arbitrary string, will be substituted by server
@@ -281,7 +303,7 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 
 // this function will yield the plaintext the keyCiphertext by decrypting it with the private key
 - (NSData *) keyCleartext {
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+    if (self.message.isOutgoing) {
         return nil; // can not decrypt outgoing key
     }
     CCRSA * rsa = [CCRSA sharedInstance];
@@ -298,7 +320,7 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 - (void) setKeyCleartext:(NSData *) theMessageKey {
     self.keyCiphertext = nil;
     // check a lot of preconditions just in case...
-    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+    if (self.message.isIncoming) {
         return;
     }
     if (![self.state isEqualToString:kDeliveryStateNew]) {

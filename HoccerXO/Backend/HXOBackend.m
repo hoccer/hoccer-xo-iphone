@@ -43,7 +43,7 @@
 
 #import <sys/utsname.h>
 
-#define DELIVERY_TRACE NO
+#define DELIVERY_TRACE YES
 #define GLITCH_TRACE YES
 #define SECTION_TRACE NO
 #define CONNECTION_TRACE NO
@@ -77,7 +77,7 @@ static const NSTimeInterval kHXOPairingTokenValidTime   = 60 * 60 * 24 * 7; // o
 static const int kMaxConcurrentDownloads = 2;
 static const int kMaxConcurrentUploads = 2;
 
-const double kHXgetServerTimeInterval = 2 * 60; // get Server Time every n minutes
+const double kHXgetServerTimeInterval = 10 * 60; // get Server Time every n minutes
 
 
 typedef enum BackendStates {
@@ -119,6 +119,7 @@ static NSTimer * _stateNotificationDelayTimer;
     unsigned        _loginRefusals;
     NSMutableSet * _pendingGroupDeletions;
     NSMutableSet * _idLocks;
+    NSMutableSet * _pendingAttachmentDeliveryUpdates;
     NSDate * _startedConnectingTime;
 }
 
@@ -140,7 +141,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _loginRefusals = 0;
         _startedConnectingTime = nil;
         _pendingGroupDeletions = [NSMutableSet new];
-        //_idLocks = [NSMutableSet new];
+        _pendingAttachmentDeliveryUpdates = [NSMutableSet new];
         
         _firstConnectionAfterCrashOrUpdate = theAppDelegate.launchedAfterCrash || theAppDelegate.runningNewBuild;
         
@@ -528,7 +529,7 @@ static NSTimer * _stateNotificationDelayTimer;
     message.timeSent = [self estimatedServerTime]; // [NSDate date];
     message.contact = contact;
     message.timeAccepted = [self estimatedServerTime];
-    message.isOutgoing = @YES;
+    message.isOutgoingFlag = @YES;
     // message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
     message.messageId = @"";
     //message.messageTag = [NSString stringWithUUID];
@@ -599,6 +600,26 @@ static NSTimer * _stateNotificationDelayTimer;
     if (messages.count > 0) {
         if (messages.count != 1) {
             NSLog(@"ERROR: Database corrupted, duplicate messages with id %@ in database", messageId);
+            return nil;
+        }
+        HXOMessage * message = messages[0];
+        return message;
+    }
+    return nil;
+}
+
+-(HXOMessage*) getMessageByTag:(NSString*)messageTag inContext:(NSManagedObjectContext*) context {
+    NSError *error;
+    NSDictionary * vars = @{ @"messageTag" : messageTag};
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessageByMessageTag" substitutionVariables: vars];
+    NSArray *messages = [context executeFetchRequest:fetchRequest error:&error];
+    if (messages == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    if (messages.count > 0) {
+        if (messages.count != 1) {
+            NSLog(@"ERROR: Database corrupted, duplicate messages with tag %@ in database", messageTag);
             return nil;
         }
         HXOMessage * message = messages[0];
@@ -709,8 +730,8 @@ static NSTimer * _stateNotificationDelayTimer;
             contact = sender;
         }
         
-        message.isOutgoing = @NO;
-        message.isRead = @NO;
+        message.isOutgoing = NO;
+        message.isRead = NO;
         message.timeReceived = [self estimatedServerTime];
         // message.timeSection = [contact sectionTimeForMessageTime: message.timeAccepted];
         message.timeSection = message.timeAccepted;
@@ -769,6 +790,7 @@ static NSTimer * _stateNotificationDelayTimer;
         
         contact.latestMessageTime = message.timeAccepted;
         
+        [self.delegate saveContext:context];
         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[contact]
                                                                                   withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
         {
@@ -807,14 +829,16 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)inDeliveryConfirmMessage:(HXOMessage *)message withDelivery:(Delivery *)delivery {
-    if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOConfirmMessagesSeen] boolValue]) {
-        if ([message.isRead isEqualToNumber: @NO]) {
-            [self inDeliveryConfirmUnseen: message.messageId withDelivery:delivery];
+    if (_state == kBackendReady) {
+        if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOConfirmMessagesSeen] boolValue]) {
+            if (message.isRead) {
+                [self inDeliveryConfirmSeen: message.messageId withDelivery:delivery];
+            } else {
+                [self inDeliveryConfirmUnseen: message.messageId withDelivery:delivery];
+            }
         } else {
-            [self inDeliveryConfirmSeen: message.messageId withDelivery:delivery];
+            [self inDeliveryConfirmPrivate:message.messageId withDelivery:delivery];
         }
-    } else {
-        [self inDeliveryConfirmPrivate:message.messageId withDelivery:delivery];
     }
 }
 
@@ -977,6 +1001,9 @@ static NSTimer * _stateNotificationDelayTimer;
     
     [self finishFirstConnectionAfterCrashOrUpdate];
     [self flushPendingMessages];
+    [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self flushIncomingDeliveriesInContext:context];
+    }];
     [self flushPendingFiletransfers];
 
     
@@ -1030,6 +1057,9 @@ static NSTimer * _stateNotificationDelayTimer;
                         if (ok3) {
                             [self finishFirstConnectionAfterCrashOrUpdate];
                             [self flushPendingMessages];
+                            [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+                                [self flushIncomingDeliveriesInContext:context];
+                            }];
                             [self flushPendingFiletransfers];
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"postLoginSyncCompleted"
                                                                                 object:self
@@ -1335,6 +1365,39 @@ static NSTimer * _stateNotificationDelayTimer;
         
     }
 }
+
+- (void) flushIncomingDeliveriesInContext:(NSManagedObjectContext*)context {
+    NSArray * deliveries = [self getPendingIncomingDeliveries:context];
+    NSLog(@"flushIncomingDeliveriesInContext: found %d pending incoming deliveries", deliveries.count);
+    for (Delivery * delivery in deliveries) {
+        if (delivery.message.isRead && delivery.isUnseen) {
+            if (DELIVERY_TRACE) NSLog(@"flushIncomingDeliveriesInContext: confirming seen message %@", delivery.message.messageId);
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[delivery.message, delivery] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                [self inDeliveryConfirmMessage:managedObjects[0] withDelivery:managedObjects[1]];
+            }];
+        }
+    }
+}
+
+- (NSArray*)getPendingIncomingDeliveries:(NSManagedObjectContext *)context{
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[Delivery entityName] inManagedObjectContext: context];
+    [fetchRequest setEntity:entity];
+    //[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"(state == '%@' OR state == '%@') AND message.isOutgoingFlag == NO",
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"(state == 'deliveredUnseen' OR state == 'deliveredUnseenAcknowledged') AND message.isOutgoingFlag == NO AND message.isReadFlag == YES"]];
+    
+    NSError *error;
+    NSArray *deliveries = [context executeFetchRequest:fetchRequest error:&error];
+    if (deliveries == nil)
+    {
+        NSLog(@"Fetch request for 'getPendingIncomingDeliveries' failed: %@", error);
+        abort();
+    }
+    return deliveries;
+}
+
+
 
 - (void) flushPendingInvites {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -1804,7 +1867,6 @@ static NSTimer * _stateNotificationDelayTimer;
         } else {
             contact.relationshipState = kRelationStateGroupFriend;
         }
-        //[contact updateNearbyFlag];
         return;
     }
     
@@ -3563,7 +3625,9 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) flushPendingAttachmentDownloads {
     NSArray * pendingAttachments = [self pendingAttachmentDownloads];
     for (Attachment * attachment in pendingAttachments) {
-        [self enqueueDownloadOfAttachment:attachment];
+        if (attachment.downloadable) {
+            [self enqueueDownloadOfAttachment:attachment];
+        }
 #ifdef DEBUG_TEST_DOWNLOAD
         [self testAttachmentDownload:attachment];
 #endif
@@ -3650,7 +3714,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment {
-    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment %@", theAttachment.remoteURL);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment %@ state %@", theAttachment.remoteURL, [Attachment getStateName:theAttachment.state]);
     if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment before active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
     if (_attachmentDownloadsActive.count >= kMaxConcurrentDownloads) {
         if ([_attachmentDownloadsWaiting indexOfObject:theAttachment] == NSNotFound) {
@@ -3737,19 +3801,28 @@ static NSTimer * _stateNotificationDelayTimer;
     if (TRANSFER_DEBUG) NSLog(@"downloadFinished of %@", theAttachment.remoteURL);
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
-    [self receivedFile:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
-    }];
+    [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
     [self dequeueDownloadOfAttachment:theAttachment];
     [SoundEffectPlayer messageArrived];
 }
 
 - (void) uploadStarted:(Attachment *)theAttachment {
     [self startedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        if (ok) {
+            if (![kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:result]) {
+                NSLog(@"startedFileUpload for file %@ returned strange attachment state %@",theAttachment.message.attachmentFileId, result);
+            }
+        }
     }];
 }
 
 - (void) uploadPaused:(Attachment *)theAttachment {
     [self pausedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        if (ok) {
+            if (![kDelivery_ATTACHMENT_STATE_UPLOAD_PAUSED isEqualToString:result]) {
+                NSLog(@"pausedFileUpload for file %@ returned strange attachment state %@",theAttachment.message.attachmentFileId, result);
+            }
+        }
     }];
 }
 
@@ -3758,6 +3831,11 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
     [self finishedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        if (ok) {
+            if (![kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:result]) {
+                NSLog(@"finishedFileUpload for file %@ returned strange attachment state %@",theAttachment.message.attachmentFileId, result);
+            }
+        }
     }];
     [self dequeueUploadOfAttachment:theAttachment];
 #ifdef DEBUG_CHECK_FINISHED_UPLOADS
@@ -3813,17 +3891,51 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 */
+
 - (void) updateAttachmentInDeliveryStateIfNecessary:(Attachment *)theAttachment {
-    Delivery * delivery = theAttachment.message.deliveries.anyObject;
-    AttachmentState state = theAttachment.state;
-    if (DELIVERY_TRACE) NSLog(@"updateAttachmentDeliveryStateIfNecessary: check if update server delivery about attachment with state '%@' and deliveryState '%@'", [Attachment getStateName:state], delivery.attachmentState);
-    
-    if ([kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:delivery.attachmentState] ||
-        [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:delivery.attachmentState]) {
-        if (state == kAttachmentTransfered) {
-            [self receivedFile:theAttachment.message.attachmentFileId withhandler:nil];
-        } else if (state == kAttachmentTransfersExhausted) {
-            [self failedFileDownload:theAttachment.message.attachmentFileId withhandler:nil];
+    NSString * fileId = theAttachment.message.attachmentFileId;
+    if ([_pendingAttachmentDeliveryUpdates containsObject:fileId]) {
+        if (DELIVERY_TRACE) NSLog(@"updateAttachmentInDeliveryStateIfNecessary: postponing attachment state update  for fileId '%@'", fileId);
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
+        });
+    } else {
+        [_pendingAttachmentDeliveryUpdates addObject:fileId];
+        Delivery * delivery = theAttachment.message.deliveries.anyObject;
+        AttachmentState state = theAttachment.state;
+        
+        if (DELIVERY_TRACE) NSLog(@"updateAttachmentInDeliveryStateIfNecessary: check if update server delivery about attachment with state '%@' and deliveryState '%@'", [Attachment getStateName:state], delivery.attachmentState);
+        
+        if ([kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:delivery.attachmentState] ||
+            [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:delivery.attachmentState]) {
+            if (state == kAttachmentTransfered) {
+                [self receivedFile:fileId withhandler:^(NSString *result, BOOL ok) {
+                    if (ok) {
+                        if (![kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:result]) {
+                            NSLog(@"receivedFile for file %@ returned strange attachment state %@",fileId, result);
+                        }
+                        delivery.attachmentState = result;
+                        [self.delegate saveDatabase];
+                    }
+                    [_pendingAttachmentDeliveryUpdates removeObject:fileId];
+                }];
+            } else if (state == kAttachmentTransfersExhausted) {
+                [self failedFileDownload:fileId withhandler:^(NSString *result, BOOL ok) {
+                    if (ok) {
+                        if (![kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:result]) {
+                            NSLog(@"failedFileDownload for file %@ returned strange attachment state %@",fileId, result);
+                        }
+                        delivery.attachmentState = result;
+                        [self.delegate saveDatabase];
+                    }
+                    [_pendingAttachmentDeliveryUpdates removeObject:fileId];
+                }];
+            } else {
+                [_pendingAttachmentDeliveryUpdates removeObject:fileId];
+            }
+        } else {
+            [_pendingAttachmentDeliveryUpdates removeObject:fileId];
         }
     }
 }
@@ -3890,13 +4002,13 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (![self.delegate.internetReachabilty isReachable]) {
         // do not schedule retrys without internet connection
-        if (TRANSFER_DEBUG) NSLog(@"No Internet, not scheduling: scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        if (TRANSFER_DEBUG) NSLog(@"No Internet, not scheduling: scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.outgoing ? theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
         return;
     }
     if (theAttachment.state == kAttachmentUploadIncomplete ||
         theAttachment.state == kAttachmentDownloadIncomplete ||
         theAttachment.state == kAttachmentWantsTransfer) {
-        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ , retry in = %f secs, failures = %i",[theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, retryTime, theAttachment.transferFailures);
+        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ , retry in = %f secs, failures = %i",theAttachment.outgoing ? theAttachment.uploadURL: theAttachment.remoteURL, retryTime, theAttachment.transferFailures);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
@@ -3912,13 +4024,13 @@ static NSTimer * _stateNotificationDelayTimer;
                                                otherButtonTitles: nil];
         [alert show];
         if (TRANSFER_DEBUG) NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
-              [theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures);
+              theAttachment.outgoing ? theAttachment.uploadURL : theAttachment.remoteURL, theAttachment.transferFailures);
     } else  if (theAttachment.state == kAttachmentTransfered) {
         NSLog(@"scheduleTransferRetryFor: attachment %@ already transfered, state=%@",
-              [theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, [Attachment getStateName:theAttachment.state]);
+              theAttachment.outgoing ? theAttachment.uploadURL : theAttachment.remoteURL, [Attachment getStateName:theAttachment.state]);
     } else {
         NSLog(@"#ERROR:scheduleTransferRetryFor: weird state for attachment %@, no transfer scheduled, state=%@",
-                                  [theAttachment.message.isOutgoing isEqual:@(YES)]?theAttachment.uploadURL: theAttachment.remoteURL, [Attachment getStateName:theAttachment.state]);
+                                  theAttachment.outgoing ? theAttachment.uploadURL : theAttachment.remoteURL, [Attachment getStateName:theAttachment.state]);
         NSLog(@"%@",theAttachment);
 
         
@@ -5281,8 +5393,11 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         }
         if (DELIVERY_TRACE) NSLog(@"myDelivery: message Id: %@ receiver:%@ group:%@ objId:%@",myDelivery.message.messageId, myDelivery.receiver.clientId, myDelivery.group.clientId, myDelivery.objectID);
         
-        HXOMessage * myMessage = [self getMessageById:myMessageId inContext:context];
-        if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%@",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries);
+        //HXOMessage * myMessage = [self getMessageById:myMessageId inContext:context];
+        HXOMessage * myMessage = [self getMessageByTag:myMessageTag inContext:context];
+        
+        //if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%@",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries);
+        if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%d",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries.count);
         
         /*
         // handle group delivery

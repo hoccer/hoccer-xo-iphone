@@ -20,9 +20,9 @@
 @property (nonatomic, strong) NSDate*   timeSent; // estimated server time when message was sent, set by client and passed unchanged to receivers in message object
 @property (nonatomic, strong) NSDate*   timeReceived; // estimated server time when message was received by client, set by client on reception, never passed
 @property (nonatomic, strong) NSDate*   timeAccepted; // server time stamp when message was accepted by the Server, passed on via Delivery
-@property (nonatomic, strong) NSNumber* isOutgoing;
+@property (nonatomic, strong) NSNumber* isOutgoingFlag;
 @property (nonatomic, strong) NSDate* timeSection;
-@property (nonatomic, strong) NSNumber* isRead;
+@property (nonatomic, strong) NSNumber* isReadFlag;
 @property (nonatomic, strong) NSString* messageId;
 @property (nonatomic, strong) NSString* messageTag;
 @property (nonatomic, strong) NSString* senderId;
@@ -57,6 +57,11 @@
 @property (nonatomic) double cachedMessageFontSize;
 
 @property (nonatomic) CGFloat cachedCellHeight;
+
+@property (nonatomic) BOOL isRead;
+@property (nonatomic) BOOL isOutgoing;
+
+@property (readonly) BOOL isIncoming;
 
 
 - (void) setupOutgoingEncryption;
