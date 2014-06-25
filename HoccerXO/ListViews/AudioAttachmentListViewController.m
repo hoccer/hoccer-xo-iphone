@@ -58,7 +58,11 @@
         self.navigationItem.title = self.contact.displayName;
     } else {
         self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
+        if (self.tableView.isEditing) {
+            self.navigationItem.leftBarButtonItem = nil;
+        } else {
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
+        }
     }
     
     UIBarButtonSystemItem item = self.tableView.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit;
