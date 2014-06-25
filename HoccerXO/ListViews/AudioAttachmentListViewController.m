@@ -96,6 +96,8 @@
     return fetchRequest;
 }
 
+#pragma mark - Table view data source
+
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
         NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
@@ -106,8 +108,6 @@
 
     return _fetchedResultsController;
 }
-
-#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [self.fetchedResultsController.sections count];
