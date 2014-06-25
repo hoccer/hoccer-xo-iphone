@@ -24,11 +24,12 @@
         <attribute name="transferPaused" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="transferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="uploadURL" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="collections" toMany="YES" deletionRule="Nullify" destinationEntity="Collection" inverseName="attachments" inverseEntity="Collection" syncable="YES"/>
         <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="attachment" inverseEntity="HXOMessage" syncable="YES"/>
     </entity>
     <entity name="Collection" representedClassName="Collection" syncable="YES">
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Attachment" syncable="YES"/>
+        <relationship name="attachments" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Attachment" inverseName="collections" inverseEntity="Attachment" syncable="YES"/>
     </entity>
     <entity name="Contact" representedClassName="Contact">
         <attribute name="alias" optional="YES" attributeType="String" syncable="YES"/>
@@ -160,13 +161,13 @@
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <fetchRequest name="ReceivedAudioAttachments" entity="Attachment" predicateString="mediaType == &quot;audio&quot; AND contentSize == transferSize AND message.isOutgoing == 0 AND playable == &quot;YES&quot; AND ($contact == nil OR message.contact == $contact) AND (NOT (humanReadableFileName BEGINSWITH &quot;recording&quot;))"/>
     <elements>
-        <element name="Attachment" positionX="0" positionY="0" width="128" height="30"/>
+        <element name="Attachment" positionX="0" positionY="0" width="128" height="418"/>
+        <element name="Collection" positionX="9" positionY="153" width="128" height="73"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="434"/>
         <element name="Delivery" positionX="0" positionY="0" width="128" height="165"/>
         <element name="Group" positionX="0" positionY="0" width="128" height="210"/>
         <element name="GroupMembership" positionX="0" positionY="0" width="128" height="255"/>
         <element name="HXOMessage" positionX="0" positionY="0" width="128" height="449"/>
         <element name="Invite" positionX="0" positionY="0" width="128" height="60"/>
-        <element name="Collection" positionX="9" positionY="153" width="128" height="73"/>
     </elements>
 </model>
