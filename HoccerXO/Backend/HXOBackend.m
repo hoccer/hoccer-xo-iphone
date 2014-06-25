@@ -4478,15 +4478,25 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 - (void) inDeliveryConfirmWithMethod:(NSString*)method withMessageId:(NSString*) messageId withDelivery: (Delivery*) delivery {
     // NSLog(@"deliveryConfirm: %@", delivery);
     [_serverConnection invoke: method withParams: @[messageId] onResponse: ^(id responseOrError, BOOL success) {
-        if (success && responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
-            
-            if (DELIVERY_TRACE) {NSLog(@"inDeliveryConfirm %@ result: state %@->%@ for messageTag %@",method, delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
-            if ([delivery.state isEqualToString: responseOrError[@"state"]]) {
-                if (GLITCH_TRACE) {NSLog(@"#GLITCH: inDeliveryConfirm %@result: state unchanged %@->%@ for messageTag %@",method,delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
+        if (responseOrError != nil && [responseOrError isKindOfClass:[NSDictionary class]]) {
+            if (success) {
+                if (DELIVERY_TRACE) {NSLog(@"inDeliveryConfirm %@ result: state %@->%@ for messageTag %@",method, delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
+                if ([delivery.state isEqualToString: responseOrError[@"state"]]) {
+                    if (GLITCH_TRACE) {NSLog(@"#GLITCH: inDeliveryConfirm %@result: state unchanged %@->%@ for messageTag %@",method,delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
+                }
+                [self incomingDeliveryUpdated:@[responseOrError]];
+            } else {
+                // it might happen that a delivery is gone on the server, but we still have it
+                // in these cases we will get an error with result code 0 and set the delivery state to unknown so
+                // we do not try to confirm it again and again on startup
+                NSLog(@"#ERROR: inDeliveryConfirm %@ failed, response: %@", method, responseOrError);
+                NSDictionary * myDict = (NSDictionary*)responseOrError;
+                NSNumber * errorCode = myDict[@"code"];
+                if (errorCode != nil && errorCode.intValue == 0) {
+                    NSLog(@"inDeliveryConfirm : setting delivery state to ‘unknown'");
+                    delivery.state = @"unknown";
+                }
             }
-            [self incomingDeliveryUpdated:@[responseOrError]];
-        } else {
-            NSLog(@"#ERROR: inDeliveryConfirm %@ failed, response: %@", method, responseOrError);
         }
     }];
 }
@@ -4620,6 +4630,19 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }];
 }
 
+- (void) callAttachmentStateChangeMethod:(NSString *)method withFileId:(NSString*) fileId forReceiver:(NSString*)receiverId withhandler:(StringResultHandler)handler{
+    
+    [_serverConnection invoke: method withParams: @[fileId, receiverId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"%@() got result: %@", method, responseOrError);
+            if (handler) handler(responseOrError, YES);
+        } else {
+            NSLog(@"%@() failed: %@", method, responseOrError);
+            if (handler) handler(responseOrError, NO);
+        }
+    }];
+}
+
 
 // should be called by the receiver of an transfer file after download; the server can the delete the file in case
 //String receivedFile(String fileId);
@@ -4675,16 +4698,16 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 }
 // should be called by the sender of an transfer file when a final attachment receiver set state has been seen
 //String acknowledgeReceivedFile(String fileId);
-- (void) acknowledgeReceivedFile:(NSString*)fileId withhandler:(StringResultHandler)handler{
-    [self callAttachmentStateChangeMethod:@"acknowledgeReceivedFile" withFileId:fileId withhandler:handler];
+- (void) acknowledgeReceivedFile:(NSString*)fileId forReceiver:(NSString*)receiverId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeReceivedFile" withFileId:fileId forReceiver:receiverId withhandler:handler];
 }
 //String acknowledgeAbortedFileDownload(String fileId);
-- (void) acknowledgeAbortedFileDownload:(NSString*)fileId withhandler:(StringResultHandler)handler{
-    [self callAttachmentStateChangeMethod:@"acknowledgeAbortedFileDownload" withFileId:fileId withhandler:handler];
+- (void) acknowledgeAbortedFileDownload:(NSString*)fileId forReceiver:(NSString*)receiverId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeAbortedFileDownload" withFileId:fileId forReceiver:receiverId withhandler:handler];
 }
 //String acknowledgeFailedFileDownload(String fileId);
-- (void) acknowledgeFailedFileDownload:(NSString*)fileId withhandler:(StringResultHandler)handler{
-    [self callAttachmentStateChangeMethod:@"acknowledgeFailedFileDownload" withFileId:fileId withhandler:handler];
+- (void) acknowledgeFailedFileDownload:(NSString*)fileId forReceiver:(NSString*)receiverId withhandler:(StringResultHandler)handler{
+    [self callAttachmentStateChangeMethod:@"acknowledgeFailedFileDownload" withFileId:fileId forReceiver:receiverId withhandler:handler];
 }
 
 
@@ -5336,19 +5359,19 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }
 }
 
-- (void) outDeliveryAcknowledgeAttachmentState:(NSString*)attachmentState withFileId:(NSString*)myFileId {
+- (void) outDeliveryAcknowledgeAttachmentState:(NSString*)attachmentState withFileId:(NSString*)myFileId forReceiver:(NSString*)receiverId withHandler:(StringResultHandler) handler{
     if ([Delivery shouldAcknowledgeAttachmentStateForOutgoing:attachmentState]) {
         if ([kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:attachmentState]) {
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self acknowledgeReceivedFile: myFileId withhandler:nil];
+                [self acknowledgeReceivedFile: myFileId forReceiver:receiverId withhandler:handler];
             }];
         } else if ([kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:attachmentState]) {
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self acknowledgeFailedFileDownload: myFileId withhandler:nil];
+                [self acknowledgeFailedFileDownload: myFileId forReceiver:receiverId withhandler:handler];
             }];
         } else if ([kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED isEqualToString:attachmentState]) {
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self acknowledgeAbortedFileDownload: myFileId withhandler:nil];
+                [self acknowledgeAbortedFileDownload: myFileId forReceiver:receiverId withhandler:handler];
             }];
         }
     }
@@ -5443,7 +5466,31 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             
             [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
             
-            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState withFileId:myMessage.attachmentFileId];
+            NSArray * myObjIds = objectIds(@[myDelivery]);
+            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState
+                                             withFileId:myMessage.attachmentFileId
+                                            forReceiver:myReceiverId
+                                            withHandler:^(NSString *result, BOOL ok)
+            {
+                NSArray * myObjects = managedObjects(myObjIds, self.delegate.mainObjectContext);
+                Delivery * myDelivery = (Delivery *)myObjects[0];
+                NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
+                if (ok) {
+                    myDelivery.attachmentState = result;
+                } else {
+                    // it might happen that a delivery is gone on the server, but we still have it
+                    // in these cases we will get an error with result code 0 and set the attachment delivery state to unknown so
+                    // we do not try to confirm it again and again on startup
+                    if ([result isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary * myDict = (NSDictionary*)result;
+                        NSNumber * errorCode = myDict[@"code"];
+                        if (errorCode != nil && errorCode.intValue == 0) {
+                            NSLog(@"outDeliveryAcknowledgeAttachmentState: setting attachmentState to 'unknown'");
+                            myDelivery.attachmentState = @"unknown";
+                        }
+                    }
+                }
+            }];
             
         } else {
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
