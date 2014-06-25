@@ -165,10 +165,11 @@ NSString * const kRelationStateKept        = @"kept";
     }
 }
 
-
+- (NSString*) displayName {
+    return self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
+}
 
 - (NSString*) nickNameWithStatus {
-    NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
     NSString * statusString = nil;
     if (self.isKept) {
         statusString = @"❌";
@@ -190,6 +191,8 @@ NSString * const kRelationStateKept        = @"kept";
         // show special connection status
         statusString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];
     }
+
+    NSString * name = self.displayName;
     return statusString ? [NSString stringWithFormat: @"%@ %@", name, statusString] : name;
 }
 

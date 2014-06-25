@@ -88,6 +88,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSMutableSet    * deliveriesSent;
 @property (nonatomic, strong)   NSMutableSet    * deliveriesReceived;
 @property (nonatomic, strong)   NSMutableSet    * groupMemberships;
+@property (readonly)            NSString        * displayName;
 @property (readonly)            NSString        * nickNameWithStatus;
 
 @property (nonatomic)           NSString        * groupMembershipList;
