@@ -763,7 +763,11 @@ nil
 }
 
 - (IBAction) unwindToChatView: (UIStoryboardSegue*) unwindSegue {
+    NSLog(@"ChatViewController:unwindToChatView");
+}
 
+- (IBAction) unwindToRootView: (UIStoryboardSegue*) unwindSegue {
+    NSLog(@"ChatViewController:unwindToRootView");
 }
 
 #pragma mark - Attachments
@@ -2269,6 +2273,8 @@ nil
         } else {
             NSLog(@"ERROR: showGroup segue on non-group-partner");
         }
+    } else if ([segue.identifier isEqualToString: @"unwindToRoot"]) {
+        NSLog(@"unwinding to %@", segue.destinationViewController);
     }
     if (contactOrProfile && [segue.destinationViewController respondsToSelector: @selector(setInspectedObject:)]) {
         [segue.destinationViewController setInspectedObject: contactOrProfile];

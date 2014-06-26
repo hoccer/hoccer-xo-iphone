@@ -994,6 +994,9 @@ static int  groupMemberContext;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    if (membership == nil || membership.contact == nil || membership.group == nil) {
+        return;
+    }
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.groupMemberItems insertObject: [self createGroupMemberItem: newIndexPath.row] atIndex: newIndexPath.row];

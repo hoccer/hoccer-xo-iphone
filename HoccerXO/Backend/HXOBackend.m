@@ -53,7 +53,7 @@
 #define TRANSFER_DEBUG YES
 #define CHECK_URL_TRACE NO
 #define CHECK_CERTS_DEBUG NO
-#define DEBUG_DELETION NO
+#define DEBUG_DELETION YES
 #define LOCKING_TRACE NO
 
 
@@ -1824,6 +1824,25 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+// returns true if objectToDelete object can be deleted, either because it is not inspected or could be unwinded
+- (BOOL)ensureUnwindView:(id)objectToDelete {
+    
+    if ([self.delegate isInspecting:objectToDelete]) {
+        // unwind e.g. a chat view if we have the deleted contact's chat open
+        id inspector = [self.delegate inspectorOf:objectToDelete];
+        if ([inspector respondsToSelector: @selector(unwindToRootView:)]) {
+            NSLog(@"ensureUnwindView: unwindToRoot, inspector=%@", inspector);
+            [inspector performSegueWithIdentifier: @"unwindToRoot" sender:self];
+            return YES;
+        } else {
+            NSLog(@"ensureUnwindView: can not unwind inspector");
+            return NO;
+        }
+    }
+    NSLog(@"ensureUnwindView: ok,  objectToDelete is not being inspected");
+    return YES;
+}
+
 // background context safe
 - (void) askForDeletionOfContact:(Contact*)contact {
     
@@ -1838,10 +1857,14 @@ static NSTimer * _stateNotificationDelayTimer;
                                                          message: message
                                                  completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                      switch (buttonIndex) {
-                                                         case 1:
-                                                             // delete all group member contacts that are not friends or contacts in other group
-                                                             [AppDelegate.instance deleteObject:contact inContext:context];
-                                                             break;
+                                                         case 1: // delete a group member contacts that is not friend or contact in other group
+                                                             if ([self ensureUnwindView:contact]) {
+                                                                 [self.delegate deleteObject:contact inContext:context];
+                                                             } else {
+                                                                 NSLog(@"#WARNING: could not unwind inspector of contact, autokeeping");
+                                                                 contact.relationshipState = kRelationStateInternalKept;
+                                                             }
+                                                            break;
                                                          case 0:
                                                              contact.relationshipState = kRelationStateInternalKept;
                                                              // keep contact and chats
@@ -1858,9 +1881,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // background context safe
 - (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context {
+    
+    BOOL isInspected = [AppDelegate.instance isInspecting:contact];
 
     // autokeep contacts that are currently inspected
-    if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) || [AppDelegate.instance isInspecting:contact])) {
+    if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) || isInspected)) { //TODO: remove "inspected" check, unwind instead
         if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: is active nearby or being inspected, autokeeping contact id %@",contact.clientId);
         if (contact.groupMemberships.count == 0) {
             contact.relationshipState = kRelationStateInternalKept;
@@ -1874,10 +1899,15 @@ static NSTimer * _stateNotificationDelayTimer;
     if (force || (contact.messages.count == 0 && contact.groupMemberships.count == 0 && contact.deliveriesSent.count == 0)) {
         // if there is nothing to save, delete right away and dont ask
         if (RELATIONSHIP_DEBUG || DEBUG_DELETION) NSLog(@"handleDeletionOfContact: nothing to save or kept, delete contact id %@",contact.clientId);
-        if (!force) {
-            [self removedAlertForContact:contact];
+        if ([self ensureUnwindView:contact]) {
+            if (!force) {
+                [self removedAlertForContact:contact];
+            }
+            [AppDelegate.instance deleteObject:contact inContext:context];
+        } else {
+            NSLog(@"#WARNING: could not unwind inspector of contact, autokeeping");
+            contact.relationshipState = kRelationStateInternalKept;
         }
-        [AppDelegate.instance deleteObject:contact inContext:context];
         [AppDelegate.instance saveContext:context];
         return;
     }
