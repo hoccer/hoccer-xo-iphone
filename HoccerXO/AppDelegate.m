@@ -204,7 +204,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     _inspectionLock = [NSObject new];
 
 #ifdef DEBUG
-#define DEFINE_OTHER_SERVERS
+//#define DEFINE_OTHER_SERVERS
 #endif
 #ifdef DEFINE_OTHER_SERVERS
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];

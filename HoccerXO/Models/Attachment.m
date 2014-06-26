@@ -183,11 +183,11 @@ NSArray * TransferStateName = @[@"detached",
 
 
 - (AttachmentState) _state {
-    if (self.message == nil) {
-        return kAttachmentDetached;
-    }
     if (self.contentSize == nil || [self.contentSize isEqualToNumber:@(0)]) {
         return kAttachmentEmpty;
+    }
+    if (self.message == nil) {
+        return kAttachmentDetached;
     }
     if ([self.contentSize isEqualToNumber: self.transferSize]) {
         return kAttachmentTransfered;
@@ -235,7 +235,7 @@ NSArray * TransferStateName = @[@"detached",
 
 - (BOOL) available {
     AttachmentState myState = self.state;
-    return myState == kAttachmentTransfered || (self.outgoing && !(myState <= kAttachmentEmpty));
+    return myState == kAttachmentTransfered || (self.outgoing && (myState != kAttachmentEmpty)) || (myState == kAttachmentDetached);
 }
 
 - (BOOL) uploadable {
