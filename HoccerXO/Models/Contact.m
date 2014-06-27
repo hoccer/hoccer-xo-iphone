@@ -177,46 +177,18 @@ NSString * const kPresenceStateTyping = @"typing";
 
 
 - (NSString*) nickNameWithStatus {
-#ifdef OLD_NICK_STATUS
-    if (self.isBlocked) {
-        return self.nickName;
-    }
-    if (self.isGroup) {
-        Group * group = (Group*)self;
-        if ([[group otherJoinedMembers] count] == 0) {
-            return [NSString stringWithFormat:@"%@ ⭕", self.nickName];
-        }
-    }
-    NSString * name = self.nickName;
-    if (self.isKept) {
-        name = [NSString stringWithFormat:@"%@ ❌", name];
-    }
-    if (!self.isGroup && self.isNotRelated) {
-        name = [NSString stringWithFormat:@"%@ ❓", name];
-    }
-    if (self.isGroupFriend) {
-        name = [NSString stringWithFormat:@"%@ 🔗", name];
-    }
-    if ( self.isTyping) {
-        name = [NSString stringWithFormat:@"%@ 💬", name];
-    }
-    if ( self.isBackground) {
-        name = [NSString stringWithFormat:@"%@ 💤", name];
-    }
-    if ( self.isInvited) {
-        name = [NSString stringWithFormat:@"%@ ★", name];
-    }
-    if ( self.invitedMe) {
-        name = [NSString stringWithFormat:@"%@ ☆", name];
-    }
-    if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
-        return name;
-#else
+
     if (self.isGroup && self.isNearby) {
         if (self.isKeptGroup) {
             return NSLocalizedString(@"group_name_nearby_kept", nil);
         } else {
-            return NSLocalizedString(@"group_name_nearby_active", nil);
+            Group * group = (Group*)self;
+            NSUInteger otherCount = group.otherMembers.count;
+            if (otherCount > 0) {
+                return [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount];
+            } else {
+                return NSLocalizedString(@"group_name_nearby_empty", nil);
+            }
         }
     }
     NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
@@ -241,7 +213,6 @@ NSString * const kPresenceStateTyping = @"typing";
         statusString = @""; // should be yellow online indicator
     } else if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
         statusString = nil;
-#endif
     } else {
         // show special connection status
         statusString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];

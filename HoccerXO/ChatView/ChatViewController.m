@@ -120,8 +120,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self setupChatbar];
     
-    UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAction target: self action: @selector(actionButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = actionButton;
+    self.actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAction target: self action: @selector(actionButtonPressed:)];
 
     [HXOBackend registerConnectionInfoObserverFor:self];
     
@@ -143,6 +142,19 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.titleLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
 
     [self configureView];
+}
+
+- (void)checkActionButtonVisible {
+    //NSLog(@"partner %d, button %@, entries %d",self.partner != nil, self.navigationItem.rightBarButtonItem , [self actionButtonContainsEntries]);
+    if (self.partner != nil && [self actionButtonContainsEntries]) {
+        if (self.navigationItem.rightBarButtonItem == nil) {
+            //NSLog(@"checkActionButtonVisible: on");
+            self.navigationItem.rightBarButtonItem = self.actionButton;
+        }
+    } else if (self.navigationItem.rightBarButtonItem != nil) {
+        // NSLog(@"checkActionButtonVisible: off");
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 - (void) setupChatbar {
@@ -341,6 +353,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void)configureView {
     if (self.partner) {
         [self configureTitle];
+        [self checkActionButtonVisible];
     }
 }
 
@@ -519,6 +532,11 @@ NSArrayObjectMaybeNil(__ARRAYNAME__, 8),\
 NSArrayObjectMaybeNil(__ARRAYNAME__, 9),\
 nil
 
+- (BOOL)actionButtonContainsEntries {
+    //NSLog(@"actionButtonContainsEntries: %d %d %d",[[self.fetchedResultsController sections] count], self.partner.isGroup,((Group*)self.partner).otherMembers.count > 0);
+    return self.partner != nil && ([[self.fetchedResultsController sections] count] > 0 || (self.partner.isGroup && ((Group*)self.partner).otherMembers.count > 0));
+}
+
 - (void) actionButtonPressed: (id) sender {
     
     NSArray * allMessagesInChat = [self allMessagesInChat];
@@ -576,7 +594,11 @@ nil
         makeGroupIndex = buttonIndex++;
         [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_create_new_from_group %d", nil), membersOther.count]];
     }
-
+    
+    if (buttonIndex == 0) {
+        // return when nothing can be shown
+        return;
+    }
     
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         
@@ -1485,6 +1507,12 @@ nil
     } else if ([keyPath isEqualToString: @"avatarImage"]) {
         [self updateVisibleCells];
     } else if ([keyPath isEqualToString: @"members"]) {
+        if (self.partner.isGroup) {
+            [self checkActionButtonVisible];
+            if (self.partner.isNearby) {
+                [self configureTitle];
+            }
+        }
         if ([change[NSKeyValueChangeKindKey] isEqualToNumber: @(NSKeyValueChangeInsertion)]) {
             // NSLog(@"==== got new group member");
             NSSet * oldMembers = change[NSKeyValueChangeOldKey];
@@ -1600,6 +1628,7 @@ nil
         [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(scrollToBottomAnimated) userInfo:nil repeats:NO];
         self.firstNewMessage = nil;
     }
+    [self checkActionButtonVisible];
 }
 
 #pragma mark - view/cell methods

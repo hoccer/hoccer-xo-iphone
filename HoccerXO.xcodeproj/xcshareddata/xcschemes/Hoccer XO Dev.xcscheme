@@ -131,6 +131,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-dumpRecordsForEntity Delivery"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-attachmentVerbosity trace"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -162,10 +166,6 @@
             argument = "-environment development"
             isEnabled = "NO">
          </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-dumpRecordsForEntity Group"
-            isEnabled = "NO">
-         </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
@@ -192,8 +192,8 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "../../Guineastr.gpx"
-         referenceType = "0">
+         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+         referenceType = "1">
       </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
