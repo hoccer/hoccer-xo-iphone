@@ -39,6 +39,8 @@
 #define SEARCHBAR_SCROLLING_DEBUG NO
 #define SEARCHBAR_SCROLLING_IN_HACK_ACTIVE NO
 
+#define SEPERATOR_DEBUG NO
+
 
 //#define SEARCHBAR_SCROLLING_IN_HACK_B
 
@@ -925,11 +927,11 @@ bool almostEqual(CGFloat a, CGFloat b) {
     
     BOOL isEmpty = [self tableViewIsEmpty];
     if (wasShowingPlaceHolder != isEmpty) {
-        NSLog(@"Changing place holder from %d -> %d", wasShowingPlaceHolder, isEmpty);
+        if (SEPERATOR_DEBUG) NSLog(@"Changing place holder from %d -> %d", wasShowingPlaceHolder, isEmpty);
         self.placeholderView.alpha = isEmpty ? 1 : 0;
     }
     if (hadTableHeader == isEmpty) {
-        NSLog(@"Changing table header from %d -> %d", hadTableHeader, isEmpty);
+        if (SEPERATOR_DEBUG) NSLog(@"Changing table header from %d -> %d", hadTableHeader, isEmpty);
         self.tableView.tableHeaderView = isEmpty ? nil : self.searchBar;
     }
     

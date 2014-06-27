@@ -171,11 +171,12 @@
 "contact_chat_title"                            = "Chat:";
 "contact_key_btn_title"                         = "Schlüssel:";
 
-"contact_unblock_btn_title_format"              = "%@ entblockieren";
-"contact_block_btn_title_format"                = "%@ blockieren";
+"contact_unblock_btn_title_format"              = "Blockiere %@";
+"contact_block_btn_title_format"                = "Entblockiere %@";
 
-"contact_invite_btn_title_format"               = "'%@' als Freund einladen";
-"contact_disinvite_btn_title_format"            = "'%@' ausladen";
+"contact_invite_btn_title_format"               = "Lade als Freund ein (%@)";
+"contact_invite_btn_title_format"               = "Einladung als Freund an '%@'";
+"contact_disinvite_btn_title_format"            = "Einladung zurückziehen an '%@'";
 
 "contact_message_count_format_s"                = "%@ Nachricht";
 "contact_message_count_format_p"                = "%@ Nachrichten";
