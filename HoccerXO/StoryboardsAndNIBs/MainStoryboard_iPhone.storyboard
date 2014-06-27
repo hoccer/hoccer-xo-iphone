@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -92,9 +92,11 @@
                         <segue destination="gLM-u6-CgJ" kind="push" identifier="showProfile" id="6i4-qU-VgJ"/>
                         <segue destination="21" kind="push" identifier="showChat" id="iwW-8u-tft"/>
                         <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="I8w-H7-Q9a"/>
+                        <segue destination="LoL-Ah-X5n" kind="unwind" identifier="unwindToRoot" unwindAction="unwindToRootView:" id="bMC-sc-wFf"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kaL-dN-SRW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="LoL-Ah-X5n" userLabel="Exit" sceneMemberID="exit"/>
                 <customObject id="bAW-nv-Hg8" customClass="ContactSheetController"/>
             </objects>
             <point key="canvasLocation" x="590" y="-695"/>
@@ -119,6 +121,7 @@
                         <segue destination="21" kind="push" identifier="showChat" id="k8Y-EQ-OHi"/>
                         <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="sc8-Bm-80f"/>
                         <segue destination="0GB-ZL-UwX" kind="unwind" identifier="unwindToChat" unwindAction="unwindToChatView:" id="fUD-5w-NDu"/>
+                        <segue destination="0GB-ZL-UwX" kind="unwind" identifier="unwindToRoot" unwindAction="unwindToRootView:" id="qu3-CF-56h"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E2G-hI-lkN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -323,6 +326,7 @@
                         <segue destination="gLM-u6-CgJ" kind="push" identifier="showProfile" id="nwS-55-3Qg"/>
                         <segue destination="yCh-Sb-rCK" kind="unwind" identifier="unwindToContact" unwindAction="unwindToSheetView:" id="dOa-ND-kcC"/>
                         <segue destination="VTA-Oa-XCk" kind="push" identifier="newGroup" id="UFf-pk-7rg"/>
+                        <segue destination="yCh-Sb-rCK" kind="unwind" identifier="unwindToRoot" unwindAction="unwindToRootView:" id="S5d-XO-UiN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>
@@ -836,13 +840,13 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="UJI-wH-YH7"/>
-        <segue reference="4Tx-uH-B8w"/>
-        <segue reference="yj0-Vd-HPq"/>
         <segue reference="fCA-bC-lkd"/>
-        <segue reference="I8w-H7-Q9a"/>
-        <segue reference="nwS-55-3Qg"/>
         <segue reference="rav-wy-jJw"/>
+        <segue reference="CES-Ic-Rhf"/>
+        <segue reference="UFf-pk-7rg"/>
+        <segue reference="iwW-8u-tft"/>
+        <segue reference="6i4-qU-VgJ"/>
+        <segue reference="I8w-H7-Q9a"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>

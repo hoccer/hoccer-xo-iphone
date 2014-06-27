@@ -66,6 +66,7 @@
 "attachment_type_audio"                  = "Audio";
 "attachment_type_vcard"                  = "Adresse";
 "attachment_type_geolocation"            = "Ort";
+"attachment_type_data"                   = "Dokument";
 
 "attachment_overlimit_title"             = "Nachricht versenden?";
 "attachment_overlimit_upload_question"   = "Der Anhang ist %@ groß. Willst du die Nachricht wirklich versenden?";
@@ -133,9 +134,14 @@
 "chat_message_sent"                 = "gesendet";
 "chat_message_delivered"            = "zugestellt";
 "chat_message_read"                 = "gelesen";
+"chat_message_unread"               = "ungelesen";
 "chat_message_failed"               = "unzustellbar";
+"chat_message_aborted"              = "abgebrochen";
+"chat_message_rejected"             = "zurückgewiesen";
 
-"chat_message_delivered_missing_attachment %@"="gesendet, wartet auf %@";
+"chat_message_delivered_missing_attachment %@"="erwartet %@";
+"chat_message_delivered_failed_attachment %@"="%@ gestört";
+
 
 "chat_resend_menu_item"             = "Senden";
 "chat_open_with_menu_item"          = "Öffnen mit...";

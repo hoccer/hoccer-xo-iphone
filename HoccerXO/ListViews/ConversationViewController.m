@@ -207,6 +207,10 @@
     }
 }
 
+- (IBAction) unwindToRootView: (UIStoryboardSegue*) unwindSegue {
+    NSLog(@"ConversationViewController:unwindToRootView");
+}
+
 - (void) addButtonPressed: (id) sender {
     [self invitePeople];
 }

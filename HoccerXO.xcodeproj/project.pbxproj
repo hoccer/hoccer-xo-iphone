@@ -592,7 +592,7 @@
 		63AEE2E516CA4D0200522F92 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		63AEE2E716CA4D0200522F92 /* HoccerXO-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoccerXO-Prefix.pch"; sourceTree = "<group>"; };
 		63AEE2E816CA4D0200522F92 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		63AEE2E916CA4D0200522F92 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		63AEE2E916CA4D0200522F92 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationViewController.h; sourceTree = "<group>"; };
 		63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationViewController.m; sourceTree = "<group>"; };
 		63AEE2FD16CA4D0300522F92 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
@@ -712,6 +712,7 @@
 		6AC25F0D193FAC0800ED5E61 /* navbar-profile-group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "navbar-profile-group.h"; sourceTree = "<group>"; };
 		6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-profile-group.m"; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
+		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
 		E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data@2x.png"; sourceTree = "<group>"; };
 		E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-data.png"; sourceTree = "<group>"; };
@@ -841,7 +842,7 @@
 		E9D1145D1732E74000737EF7 /* Vcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vcard.m; sourceTree = "<group>"; };
 		E9D11469173307FC00737EF7 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		E9D1147B1736702E00737EF7 /* GCHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHTTPRequestOperation.h; sourceTree = "<group>"; };
-		E9D1147C1736702E00737EF7 /* GCHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHTTPRequestOperation.m; sourceTree = "<group>"; };
+		E9D1147C1736702E00737EF7 /* GCHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GCHTTPRequestOperation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E9D1147D1736702E00737EF7 /* GCImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCImageRequestOperation.h; sourceTree = "<group>"; };
 		E9D1147E1736702E00737EF7 /* GCImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCImageRequestOperation.m; sourceTree = "<group>"; };
 		E9D1147F1736702E00737EF7 /* GCJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCJSONRequestOperation.h; sourceTree = "<group>"; };
@@ -3038,6 +3039,7 @@
 		E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */,
 				E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */,
 				E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */,
 				E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */,
@@ -3063,7 +3065,7 @@
 				E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */,
 				E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */,
 			);
-			currentVersion = E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */;
+			currentVersion = E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

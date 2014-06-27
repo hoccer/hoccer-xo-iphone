@@ -56,6 +56,10 @@ static const NSUInteger kHXOMaxNameLength = 25;
     self.avatarItem.segueIdentifier = @"showAvatar";
 }
 
+- (UIViewController*)unwindToRootController {
+    return self.delegate;
+}
+
 - (NSArray*) buildSections {
     NSMutableArray * sections = [NSMutableArray array];
 

@@ -119,6 +119,7 @@ extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * con
 -(void)endInspecting:(id)inspectedObject withInspector:(id)inspector;
 -(BOOL)isInspecting:(id)inspectedObject withInspector:(id)inspector;
 -(BOOL)isInspecting:(id)inspectedObject;
+-(id)inspectorOf:(id)inspectedObject;
 
 
 + (void) setDefaultAudioSession;

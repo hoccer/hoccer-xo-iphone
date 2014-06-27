@@ -80,6 +80,11 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 -(BOOL)isDelivered;
 -(BOOL)isInFinalState;
 
+-(BOOL)isAborted;
+-(BOOL)isRejected;
+-(BOOL)isFailed;
+
+
 -(BOOL)isSeen;
 -(BOOL)isUnseen;
 -(BOOL)isPrivate;
@@ -97,6 +102,10 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 +(BOOL)isSeenState:(NSString*)state;
 +(BOOL)isUnseenState:(NSString*)state;
 +(BOOL)isPrivateState:(NSString*)state;
+
++(BOOL)isFailedState:(NSString*) state;
++(BOOL)isRejectedState:(NSString*) state;
++(BOOL)isAbortedState:(NSString*) state;
 
 +(BOOL)shouldAcknowledgeStateForOutgoing:(NSString*) state;
 

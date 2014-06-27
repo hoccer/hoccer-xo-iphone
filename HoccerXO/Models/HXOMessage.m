@@ -25,13 +25,13 @@
 
 @implementation HXOMessage
 
-@dynamic isOutgoing;
+@dynamic isOutgoingFlag;
 @dynamic body;
 @dynamic timeSent;
 @dynamic timeReceived;
 @dynamic timeAccepted;
 @dynamic timeSection;
-@dynamic isRead;
+@dynamic isReadFlag;
 @dynamic messageId;
 @dynamic messageTag;
 @dynamic salt;
@@ -59,6 +59,11 @@
 @dynamic cachedMessageFontSize;
 @dynamic cachedCellHeight;
 
+@dynamic isOutgoing;
+@dynamic isRead;
+
+@dynamic isIncoming;
+
 @synthesize cryptoKey = _cryptoKey;
 
 @dynamic bodyCiphertext;
@@ -66,6 +71,33 @@
 
 #define KEY_DEBUG NO
 
+-(BOOL)isIncoming {
+    return !self.isOutgoingFlag.boolValue;
+}
+
+-(BOOL)isOutgoing {
+    return self.isOutgoingFlag.boolValue;
+}
+
+-(void)setIsOutgoing:(BOOL)isOutgoing {
+    if (isOutgoing) {
+        self.isOutgoingFlag = @YES;
+    }else {
+        self.isOutgoingFlag = @NO;
+    }
+}
+
+-(BOOL)isRead {
+    return self.isReadFlag.boolValue;
+}
+
+-(void)setIsRead:(BOOL)isRead {
+    if (isRead) {
+        self.isReadFlag = @YES;
+    }else {
+        self.isReadFlag = @NO;
+    }
+}
 
 - (NSSet*) deliveriesFailed {
     NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
@@ -178,7 +210,7 @@
 
 -(NSData*) cryptoKey {
     if (_cryptoKey == nil) {
-        if ([self.isOutgoing isEqualToNumber: @YES]) {
+        if (self.isOutgoing) {
             [self setupOutgoingEncryption];
         } else {
             // get the key from the incoming delivery object

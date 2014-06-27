@@ -48,17 +48,17 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-#define CONNECTION_TRACE NO
-#define MIGRATION_DEBUG NO
-#define AUDIOSESSION_DEBUG NO
-#define TRACE_DATABASE_SAVE NO
-#define TRACE_PROFILE_UPDATES NO
-#define TRACE_DELETES NO
-#define TRACE_INSPECTION NO
-#define TRACE_PENDING_CHANGES NO
+#define CONNECTION_TRACE            NO
+#define MIGRATION_DEBUG             NO
+#define AUDIOSESSION_DEBUG          NO
+#define TRACE_DATABASE_SAVE         NO
+#define TRACE_PROFILE_UPDATES       NO
+#define TRACE_DELETES               NO
+#define TRACE_INSPECTION            NO
+#define TRACE_PENDING_CHANGES       NO
 #define TRACE_BACKGROUND_PROCESSING NO
-#define TRACE_NEARBY_ACTIVATION NO
-#define TRACE_LOCKING NO
+#define TRACE_NEARBY_ACTIVATION     NO
+#define TRACE_LOCKING               NO
 
 
 #ifdef HOCCER_DEV
@@ -111,7 +111,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 -(void)beginInspecting:(id)inspectedObject withInspector:(id)inspector {
     @synchronized(_inspectionLock) {
-        if (TRACE_INSPECTION) NSLog(@"--> begin inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+        if (TRACE_INSPECTION) NSLog(@"--> begin inspecting type %@ id %@ name %@ withInspector %@",[inspectedObject class], [inspectedObject clientId], [inspectedObject nickName], [inspector class]);
         if (_inspectedObjects == nil) {
             _inspectedObjects = [NSMutableArray new];
             _inspectors = [NSMutableArray new];
@@ -126,7 +126,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 -(void)endInspecting:(id)inspectedObject withInspector:(id)inspector {
     @synchronized(_inspectionLock) {
-        if (TRACE_INSPECTION) NSLog(@"<-- end inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+        if (TRACE_INSPECTION) NSLog(@"<-- end inspecting type %@ id %@ name %@ withInspector %@",[inspectedObject class], [inspectedObject clientId], [inspectedObject nickName], [inspector class]);
         if (_inspectedObjects == nil) {
             _inspectedObjects = [NSMutableArray new];
             _inspectors = [NSMutableArray new];
@@ -148,7 +148,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             return false;
         }
         for (int i = 0; i < _inspectedObjects.count;++i) {
-            if (_inspectedObjects[i] == inspectedObject && _inspectors[i] == inspector) {
+            if (sameObjects(_inspectedObjects[i],inspectedObject) && _inspectors[i] == inspector) {
                 return YES;
             }
         }
@@ -156,18 +156,45 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
 }
 
+BOOL sameObjects(id obj1, id obj2) {
+    if ([obj1 isKindOfClass:[NSManagedObject class]] && [obj2 isKindOfClass:[NSManagedObject class]]) {
+        NSManagedObject * mo1 = (NSManagedObject*)obj1;
+        NSManagedObject * mo2 = (NSManagedObject*)obj2;
+        return [mo1.objectID isEqual:mo2.objectID];
+    }
+    return [obj1 isEqual:obj2];
+}
+
 -(BOOL)isInspecting:(id)inspectedObject {
     @synchronized(_inspectionLock) {
         if (_inspectedObjects == nil) {
             return false;
         }
-        if (inspectedObject != nil) {
-            return [_inspectedObjects containsObject:inspectedObject];
+        for (int i = 0; i < _inspectedObjects.count;++i) {
+            //NSLog(@"isInspecting: compare %@ with %@", _inspectedObjects[i], inspectedObject);
+            if (sameObjects(_inspectedObjects[i],inspectedObject)) {
+                return YES;
+            }
         }
         return NO;
     }
 }
 
+-(id)inspectorOf:(id)inspectedObject {
+    @synchronized(_inspectionLock) {
+        if (_inspectedObjects == nil) {
+            return false;
+        }
+        if (inspectedObject != nil) {
+            for (int i = 0; i < _inspectedObjects.count;++i) {
+                if (sameObjects(_inspectedObjects[i],inspectedObject)) {
+                    return _inspectors[i];
+                }
+            }
+        }
+        return nil;
+    }
+}
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self seedRand];
@@ -1266,7 +1293,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 - (NSUInteger) unreadMessageCount {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     fetchRequest.entity = [NSEntityDescription entityForName: [HXOMessage entityName] inManagedObjectContext: self.currentObjectContext];
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isRead == NO"];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isReadFlag == NO"];
 
     NSError *error = nil;
     NSUInteger numberOfRecords = [self.currentObjectContext countForFetchRequest:fetchRequest error:&error];
