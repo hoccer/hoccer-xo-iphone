@@ -39,9 +39,12 @@
     self.tabBarItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
     
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+    
     [self registerCellClass:[AudioAttachmentCell class]];
     self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
 
