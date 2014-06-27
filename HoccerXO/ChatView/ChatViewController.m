@@ -950,7 +950,7 @@ nil
             return;
         }
         if (_currentExportSession != nil) {
-            NSString * myDescription = [NSString stringWithFormat:@"An audio export is still in progress"];
+            NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
             NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
             [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
             return;
@@ -1100,40 +1100,62 @@ nil
             }
             return;
         } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
-            NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
-            NSURL * myURL2 = attachmentInfo[UIImagePickerControllerMediaURL];
+            NSURL * referenceURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+            NSURL * mediaURL = attachmentInfo[UIImagePickerControllerMediaURL];
 
-            // move file from temp directory to document directory
-            NSString * newFileName = @"video.mov";
-            NSURL * myNewURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-            NSError * myError = nil;
-            [[NSFileManager defaultManager] moveItemAtURL:myURL2 toURL:myNewURL error:&myError];
-            if (myError != nil) {
+            NSString * newFileName = @"video.mp4";
+            NSURL * outputURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+
+            if (_currentExportSession != nil) {
+                NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
+                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                 return;
             }
+
+            AVURLAsset * asset = [AVURLAsset assetWithURL:mediaURL];
+            _currentExportSession = [AVAssetExportSession exportSessionWithAsset:asset presetName:AVAssetExportPresetPassthrough];
+            _currentExportSession.outputURL = outputURL;
+            _currentExportSession.outputFileType = AVFileTypeMPEG4;
             
-            NSString *tempFilePath = [myNewURL path];
-            if (myURL == nil) { // video was just recorded
-                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
-                {
-                    UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-                    NSLog(@"Saved new video at %@ to album",tempFilePath);
+            [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
+                if (_currentExportSession.status == AVAssetExportSessionStatusCompleted) {
+                    _currentExportSession = nil;
+
+                    if (referenceURL == nil) { // video was just recorded
+                        NSString *outputFilePath = [outputURL path];
+
+                        if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
+                            UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                            NSLog(@"Saved new video at %@ to album",outputFilePath);
+                        } else {
+                            NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
+                            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                            NSLog(@"%@", myDescription);
+                            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                            return;
+                        }
+                    }
+                    
+                    NSString * outputURLString = [outputURL absoluteString];
+                    self.currentAttachment.ownedURL = outputURLString;
+                    
+                    [self.currentAttachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
+                        [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
+                    }];
                 } else {
-                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
-                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                    NSLog(@"%@", myDescription);
-                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                    return;
+                    [self finishPickedAttachmentProcessingWithImage:nil withError:_currentExportSession.error];
+                    _currentExportSession = nil;
                 }
-            }            
-            
-            NSString * myNewURLString = [myNewURL absoluteString];
-            self.currentAttachment.ownedURL = myNewURLString;
-            
-            [self.currentAttachment makeVideoAttachment: myNewURLString anOtherURL: nil withCompletion:^(NSError *theError) {
-                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
+                
+                NSError * myError = nil;
+                [[NSFileManager defaultManager] removeItemAtURL:mediaURL error:&myError];
+
+                if (myError != nil) {
+                    NSLog(@"Deleting media file failed: %@", myError);
+                }
             }];
+            
             return;
         }
     }
