@@ -233,8 +233,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         }
         [self.delegate controllerDidChangeContent: self];
 
-        // XXX Not sure yet...
-        //[self updateCurrentItems];
+        // We unfortunately need that here when visibility of items changes due to relationship updates (e.g. blockItem is not shown when contact is invited)
+        [self updateCurrentItems];
     }
 }
 

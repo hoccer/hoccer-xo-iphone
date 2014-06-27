@@ -518,7 +518,7 @@ static int  groupMemberContext;
 
 - (NSString*) blockItemTitle {
     NSString * formatKey = nil;
-    if (self.contact.isFriend) {
+    if (self.contact.isFriend || self.contact.isGroupFriend || self.contact.invitedMe) {
         formatKey = @"contact_block_btn_title_format";
     } else if (self.contact.isBlocked) {
         formatKey = @"contact_unblock_btn_title_format";
@@ -537,7 +537,7 @@ static int  groupMemberContext;
 }
 
 - (void) blockToggled: (id) sender {
-    if (self.contact.isFriend) {
+    if (self.contact.isFriend || self.contact.isGroupFriend || self.contact.invitedMe) {
         // NSLog(@"friend -> blocked");
         [self.chatBackend blockClient: self.contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"blockClient: %@", success ? @"success" : @"failed");
@@ -1042,7 +1042,7 @@ static int  groupMemberContext;
 // Thing is: If we are displaying a group our own membership cell needs a little
 // kick if we edit our own profile...
 - (void) addProfileObservers {
-    if ([self myMembershipItem]) {
+    if ([self myMembershipItem] && self.profileObserver == nil) {
         self.profileObserver = [[NSNotificationCenter defaultCenter] addObserverForName: @"profileUpdatedByUser"
                                                                                  object: nil
                                                                                   queue: [NSOperationQueue mainQueue]
@@ -1055,6 +1055,7 @@ static int  groupMemberContext;
 - (void) removeProfileObservers {
     if (self.profileObserver) {
         [[NSNotificationCenter defaultCenter] removeObserver: self.profileObserver];
+        self.profileObserver = nil;
     }
 }
 
