@@ -43,18 +43,18 @@
 
 #import <sys/utsname.h>
 
-#define DELIVERY_TRACE YES
-#define GLITCH_TRACE YES
-#define SECTION_TRACE NO
-#define CONNECTION_TRACE NO
-#define GROUPKEY_DEBUG NO
-#define GROUP_DEBUG NO
-#define RELATIONSHIP_DEBUG NO
-#define TRANSFER_DEBUG YES
-#define CHECK_URL_TRACE NO
-#define CHECK_CERTS_DEBUG NO
-#define DEBUG_DELETION YES
-#define LOCKING_TRACE NO
+#define DELIVERY_TRACE      NO
+#define GLITCH_TRACE        NO
+#define SECTION_TRACE       NO
+#define CONNECTION_TRACE    NO
+#define GROUPKEY_DEBUG      NO
+#define GROUP_DEBUG         NO
+#define RELATIONSHIP_DEBUG  NO
+#define TRANSFER_DEBUG      NO
+#define CHECK_URL_TRACE     NO
+#define CHECK_CERTS_DEBUG   NO
+#define DEBUG_DELETION      NO
+#define LOCKING_TRACE       NO
 
 
 #ifdef DEBUG
@@ -578,7 +578,7 @@ static NSTimer * _stateNotificationDelayTimer;
             [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment];
         } else {
             NSLog(@"ERROR: Could not get attachment urls, retrying");
-            [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
+            [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
         }
     }];
 }

@@ -48,17 +48,17 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-#define CONNECTION_TRACE NO
-#define MIGRATION_DEBUG NO
-#define AUDIOSESSION_DEBUG NO
-#define TRACE_DATABASE_SAVE NO
-#define TRACE_PROFILE_UPDATES NO
-#define TRACE_DELETES NO
-#define TRACE_INSPECTION YES
-#define TRACE_PENDING_CHANGES NO
+#define CONNECTION_TRACE            NO
+#define MIGRATION_DEBUG             NO
+#define AUDIOSESSION_DEBUG          NO
+#define TRACE_DATABASE_SAVE         NO
+#define TRACE_PROFILE_UPDATES       NO
+#define TRACE_DELETES               NO
+#define TRACE_INSPECTION            NO
+#define TRACE_PENDING_CHANGES       NO
 #define TRACE_BACKGROUND_PROCESSING NO
-#define TRACE_NEARBY_ACTIVATION NO
-#define TRACE_LOCKING NO
+#define TRACE_NEARBY_ACTIVATION     NO
+#define TRACE_LOCKING               NO
 
 
 #ifdef HOCCER_DEV

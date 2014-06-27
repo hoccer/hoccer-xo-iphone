@@ -663,9 +663,12 @@ static int  groupMemberContext;
 }
 
 - (void) quitInspection {
+    Contact * contact = self.contact;
+    if (contact != nil) {
+        [self removeContactObservers:contact];
+    }
     self.fetchedResultsController.delegate = nil;
     self.inspectedObject = nil;
-    //[self.delegate controllerDidFinish:self];
 }
 
 #pragma mark - Friend Invitation Response Section
@@ -811,12 +814,13 @@ static int  groupMemberContext;
         return self.groupInStatuNascendi.members[index];
     }
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
-    id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
-    if (objectAtIndexPath != nil) {
-        return [objectAtIndexPath contact];
-    } else {
-        return nil;
+    if (indexPath != nil && indexPath.length > 0) {
+        id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
+        if (objectAtIndexPath != nil) {
+            return [objectAtIndexPath contact];
+        }
     }
+    return nil;
 }
 
 - (DatasheetItem*) myMembershipItem {
