@@ -72,6 +72,8 @@ static int  groupMemberContext;
 
 @property (nonatomic, strong)   id                           profileObserver;
 
+@property (nonatomic, strong)   NSMutableSet               * contactObserverRegistered;
+
 @end
 
 @implementation ContactSheetController
@@ -83,11 +85,13 @@ static int  groupMemberContext;
 @synthesize chatBackend = _chatBackend;
 @synthesize groupMemberSection = _groupMemberSection;
 @synthesize aliasItem = _aliasItem;
+@synthesize contactObserverRegistered = _contactObserverRegistered;
 
 - (void) commonInit {
     [super commonInit];
 
     self.groupMemberItems = [NSMutableArray array];
+    self.contactObserverRegistered = [NSMutableSet new];
 
     self.nicknameItem.valuePlaceholder = nil;
 
@@ -943,14 +947,20 @@ static int  groupMemberContext;
 }
 
 - (void) addContactObservers: (Contact*) contact {
-    for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
-        [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &groupMemberContext];
+    if (![self.contactObserverRegistered containsObject:contact]) {
+        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
+            [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &groupMemberContext];
+        }
+        [self.contactObserverRegistered addObject:contact];
     }
 }
 
 - (void) removeContactObservers: (Contact*) contact {
-    for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
-        [contact removeObserver: self forKeyPath: keyPath context: &groupMemberContext];
+    if ([self.contactObserverRegistered containsObject:contact]) {
+        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
+            [contact removeObserver: self forKeyPath: keyPath context: &groupMemberContext];
+        }
+        [self.contactObserverRegistered removeObject:contact];
     }
 }
 

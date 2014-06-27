@@ -1577,10 +1577,19 @@ static NSTimer * _stateNotificationDelayTimer;
         if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
             // if there is a local contact, check if we should delete, otherwise do nothing and return
             if (contact != nil) {
-                [self checkRelationsipStateForGroupMembershipOfContact:contact];
-                if (!contact.isNotRelated && !contact.isKept && !contact.isGroupFriend) {
-                    contact.relationshipState = kRelationStateNone;
-                    [self handleDeletionOfContact:contact withForce:NO inContext:context];
+                BOOL disinvitation = contact.isInvited || contact.invitedMe;
+                if (disinvitation) {
+                    if (contact.groupMemberships.count > 0) {
+                        contact.relationshipState = kRelationStateGroupFriend;
+                    } else {
+                        contact.relationshipState = kRelationStateInternalKept;
+                    }
+                } else {
+                    [self checkRelationsipStateForGroupMembershipOfContact:contact];
+                    if (!contact.isNotRelated && !contact.isKept && !contact.isGroupFriend) {
+                        contact.relationshipState = kRelationStateNone;
+                        [self handleDeletionOfContact:contact withForce:NO inContext:context];
+                    }
                 }
             }
             if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",clientId);
@@ -1925,7 +1934,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self askForDeletionOfContact:contact];
     } else {
         // there is an active group membership for this contact, so keep it
-        if (![kRelationStateGroupFriend isEqualToString:contact.relationshipState]) {
+        if (!contact.isGroupFriend) {
             contact.relationshipState = kRelationStateGroupFriend;
             [self removedButKeptInGroupAlertForContact:contact];
         }
