@@ -506,6 +506,11 @@ bool almostEqual(CGFloat a, CGFloat b) {
     }
 }
 
+- (IBAction) unwindToRootView: (UIStoryboardSegue*) unwindSegue {
+    NSLog(@"ContactListViewController:unwindToRootView");
+}
+
+
 #pragma mark - Search Bar
 
 - (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {

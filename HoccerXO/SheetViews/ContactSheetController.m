@@ -113,7 +113,7 @@ static int  groupMemberContext;
 }
 
 - (BOOL) isEditable {
-    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup);
+    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup || self.group.isKept);
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -239,7 +239,8 @@ static int  groupMemberContext;
         return (self.contact.alias && ! [self.contact.alias isEqualToString: @""]) || [super isItemVisible:item];
 
     } else if ([item isEqual: self.blockContactItem]) {
-        return (self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe || self.contact.isGroupFriend) && [super isItemVisible:item];
+        if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible blockContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
+        return !self.contact.isGroup && !self.groupInStatuNascendi && (self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe || self.contact.isGroupFriend) && [super isItemVisible:item];
         
     } else if ([item isEqual: self.inviteContactItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
@@ -253,13 +254,13 @@ static int  groupMemberContext;
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
         
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && [super isItemVisible: item];
+        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && !self.group.isKept && [super isItemVisible: item];
         
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
         return self.group.myGroupMembership.isInvited;
         
     } else if ([item isEqual: self.destructiveButton]) {
-        if (self.group && self.group.isNearbyGroup && self.group.isKeptGroup) {
+        if (self.group && self.group.isKeptGroup) {
             return YES;
         }
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
@@ -810,7 +811,12 @@ static int  groupMemberContext;
         return self.groupInStatuNascendi.members[index];
     }
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
-    return [[self.fetchedResultsController objectAtIndexPath: indexPath] contact];
+    id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
+    if (objectAtIndexPath != nil) {
+        return [objectAtIndexPath contact];
+    } else {
+        return nil;
+    }
 }
 
 - (DatasheetItem*) myMembershipItem {

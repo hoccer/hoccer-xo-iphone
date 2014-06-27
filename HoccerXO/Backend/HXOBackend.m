@@ -1830,9 +1830,16 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([self.delegate isInspecting:objectToDelete]) {
         // unwind e.g. a chat view if we have the deleted contact's chat open
         id inspector = [self.delegate inspectorOf:objectToDelete];
-        if ([inspector respondsToSelector: @selector(unwindToRootView:)]) {
-            NSLog(@"ensureUnwindView: unwindToRoot, inspector=%@", inspector);
-            [inspector performSegueWithIdentifier: @"unwindToRoot" sender:self];
+        if ([inspector respondsToSelector: @selector(unwindToRootController)]) {
+            UIViewController * unwinder = [inspector performSelector:@selector(unwindToRootController)];
+            NSLog(@"ensureUnwindView: unwindToRoot, inspector=%@, unwinder=%@", inspector, unwinder);
+            if ([self.delegate.currentObjectContext isEqual:self.delegate.mainObjectContext]) {
+                [unwinder performSegueWithIdentifier: @"unwindToRoot" sender:self];
+            } else {
+                [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
+                    [unwinder performSegueWithIdentifier: @"unwindToRoot" sender:self];
+                }];
+            }
             return YES;
         } else {
             NSLog(@"ensureUnwindView: can not unwind inspector");
@@ -1885,7 +1892,7 @@ static NSTimer * _stateNotificationDelayTimer;
     BOOL isInspected = [AppDelegate.instance isInspecting:contact];
 
     // autokeep contacts that are currently inspected
-    if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) || isInspected)) { //TODO: remove "inspected" check, unwind instead
+    if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) /*|| isInspected*/)) { //TODO: remove "inspected" check, unwind instead
         if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: is active nearby or being inspected, autokeeping contact id %@",contact.clientId);
         if (contact.groupMemberships.count == 0) {
             contact.relationshipState = kRelationStateInternalKept;
@@ -2669,9 +2676,9 @@ static NSTimer * _stateNotificationDelayTimer;
                             for (int i = 0; i < memberFlags.count;++i) {
                                 if ([memberFlags[i] boolValue] == NO) {
                                     Group * group = [self getGroupById:groupsToCheck[i] inContext:context];
-                                    if (group != nil) {
-                                    NSLog(@"checkGroupMemberships: removing group with id: %@ nick: %@", group.clientId, group.nickName);
-                                    [self handleDeletionOfGroup:group inContext:context];
+                                    if (group != nil && !group.isKept) {
+                                        NSLog(@"checkGroupMemberships: removing group with id: %@ nick: %@", group.clientId, group.nickName);
+                                        [self handleDeletionOfGroup:group inContext:context];
                                     } else {
                                         NSLog(@"checkGroupMemberships: can not remove group with id: %@", groupsToCheck[i]);
                                     }
@@ -2738,7 +2745,9 @@ static NSTimer * _stateNotificationDelayTimer;
                                     NSManagedObjectID * contactObjId = contactObjIds[i];
                                     Contact * contact = (Contact*)[context objectWithID:contactObjId];
                                     NSLog(@"checkContacts: removing contact with id: %@ nick: %@", contact.clientId, contact.nickName);
-                                    [self handleDeletionOfContact:contact withForce:NO inContext:context];
+                                    if (!contact.isKept) {
+                                        [self handleDeletionOfContact:contact withForce:NO inContext:context];
+                                    }
                                 }
                             }
                         } else {

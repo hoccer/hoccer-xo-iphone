@@ -92,9 +92,11 @@
                         <segue destination="gLM-u6-CgJ" kind="push" identifier="showProfile" id="6i4-qU-VgJ"/>
                         <segue destination="21" kind="push" identifier="showChat" id="iwW-8u-tft"/>
                         <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="I8w-H7-Q9a"/>
+                        <segue destination="LoL-Ah-X5n" kind="unwind" identifier="unwindToRoot" unwindAction="unwindToRootView:" id="bMC-sc-wFf"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kaL-dN-SRW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="LoL-Ah-X5n" userLabel="Exit" sceneMemberID="exit"/>
                 <customObject id="bAW-nv-Hg8" customClass="ContactSheetController"/>
             </objects>
             <point key="canvasLocation" x="590" y="-695"/>
@@ -119,6 +121,7 @@
                         <segue destination="21" kind="push" identifier="showChat" id="k8Y-EQ-OHi"/>
                         <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="sc8-Bm-80f"/>
                         <segue destination="0GB-ZL-UwX" kind="unwind" identifier="unwindToChat" unwindAction="unwindToChatView:" id="fUD-5w-NDu"/>
+                        <segue destination="0GB-ZL-UwX" kind="unwind" identifier="unwindToRoot" unwindAction="unwindToRootView:" id="qu3-CF-56h"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E2G-hI-lkN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -323,7 +326,7 @@
                         <segue destination="gLM-u6-CgJ" kind="push" identifier="showProfile" id="nwS-55-3Qg"/>
                         <segue destination="yCh-Sb-rCK" kind="unwind" identifier="unwindToContact" unwindAction="unwindToSheetView:" id="dOa-ND-kcC"/>
                         <segue destination="VTA-Oa-XCk" kind="push" identifier="newGroup" id="UFf-pk-7rg"/>
-                        <segue destination="yCh-Sb-rCK" kind="unwind" identifier="unwindToRoot" unwindAction="unwindToRootView:" id="sKY-1n-Al9"/>
+                        <segue destination="yCh-Sb-rCK" kind="unwind" identifier="unwindToRoot" unwindAction="unwindToRootView:" id="S5d-XO-UiN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23" sceneMemberID="firstResponder"/>
@@ -837,12 +840,12 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="4Tx-uH-B8w"/>
         <segue reference="fCA-bC-lkd"/>
-        <segue reference="bP2-nJ-GWg"/>
-        <segue reference="nwS-55-3Qg"/>
-        <segue reference="UFf-pk-7rg"/>
         <segue reference="rav-wy-jJw"/>
+        <segue reference="CES-Ic-Rhf"/>
+        <segue reference="UFf-pk-7rg"/>
+        <segue reference="iwW-8u-tft"/>
+        <segue reference="6i4-qU-VgJ"/>
         <segue reference="I8w-H7-Q9a"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>

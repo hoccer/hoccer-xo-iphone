@@ -111,7 +111,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 -(void)beginInspecting:(id)inspectedObject withInspector:(id)inspector {
     @synchronized(_inspectionLock) {
-        if (TRACE_INSPECTION) NSLog(@"--> begin inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+        if (TRACE_INSPECTION) NSLog(@"--> begin inspecting type %@ id %@ name %@ withInspector %@",[inspectedObject class], [inspectedObject clientId], [inspectedObject nickName], [inspector class]);
         if (_inspectedObjects == nil) {
             _inspectedObjects = [NSMutableArray new];
             _inspectors = [NSMutableArray new];
@@ -126,7 +126,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 -(void)endInspecting:(id)inspectedObject withInspector:(id)inspector {
     @synchronized(_inspectionLock) {
-        if (TRACE_INSPECTION) NSLog(@"<-- end inspecting id %@ name %@ withInspector %@",[inspectedObject clientId], [inspectedObject nickName], [inspector class]);
+        if (TRACE_INSPECTION) NSLog(@"<-- end inspecting type %@ id %@ name %@ withInspector %@",[inspectedObject class], [inspectedObject clientId], [inspectedObject nickName], [inspector class]);
         if (_inspectedObjects == nil) {
             _inspectedObjects = [NSMutableArray new];
             _inspectors = [NSMutableArray new];

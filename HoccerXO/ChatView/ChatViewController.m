@@ -766,8 +766,8 @@ nil
     NSLog(@"ChatViewController:unwindToChatView");
 }
 
-- (IBAction) unwindToRootView: (UIStoryboardSegue*) unwindSegue {
-    NSLog(@"ChatViewController:unwindToRootView");
+- (UIViewController*)unwindToRootController {
+    return self;
 }
 
 #pragma mark - Attachments
