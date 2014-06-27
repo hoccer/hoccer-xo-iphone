@@ -16,6 +16,7 @@
 #import "Contact.h"
 #import "HXOAudioPlayer.h"
 #import "tab_attachments.h"
+#import "HXOUI.h"
 
 
 @interface AudioAttachmentListViewController ()
@@ -54,6 +55,28 @@
     [self updateNavigationBar];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    CGRect footerRect = self.tabBarController.tabBar.frame;
+    self.footerContainerView = [[UIView alloc] initWithFrame:footerRect];
+    self.footerContainerView.backgroundColor = [UIColor colorWithRed:248.0 green:248.0 blue:248.0 alpha:1.0];
+    
+    UILabel *label_send = [[UILabel alloc] initWithFrame: CGRectMake(2 * kHXOGridSpacing, 0.0, 100.0, footerRect.size.height)];
+    label_send.text = NSLocalizedString(@"audio_attachment_list_footer_send", nil);
+    //[self.footerContainerView addSubview: label_send];
+    
+    self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.sendButton.frame = CGRectMake(0.0, 0.0, 100.0, footerRect.size.height);
+    self.sendButton.tintColor = [UIColor blackColor];
+    //self.playbackButton.frame = CGRectMake(2 * kHXOGridSpacing, 0.0, 100.0, footerRect.size.height);
+    //self.playbackButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [self.sendButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_send", nil) forState:UIControlStateNormal];
+    [self.sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
+    [self.footerContainerView addSubview: self.sendButton];
+
+}
+
 - (void)updateNavigationBar {
     if (self.collection) {
         self.navigationItem.title = self.collection.name;
@@ -70,6 +93,18 @@
     
     UIBarButtonSystemItem item = self.tableView.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:item target:self action:@selector(toggleEditMode:)];
+}
+
+-(void)updateFooter {
+    
+
+    if (self.tableView.isEditing) {
+        NSLog(@"update footer is editing");
+        [self.tabBarController.tabBar.superview insertSubview:self.footerContainerView aboveSubview:self.tabBarController.view];
+    } else {
+        NSLog(@"update footer is not editing");
+        [self.footerContainerView removeFromSuperview];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -102,6 +137,11 @@
 - (void) toggleEditMode:(id)sender {
     [self.tableView setEditing:!self.tableView.isEditing animated:YES];
     [self updateNavigationBar];
+    [self updateFooter];
+}
+
+- (void) sendPressed:(id)sender {
+
 }
 
 #pragma mark - Core Data Stack

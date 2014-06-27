@@ -89,6 +89,9 @@
 //==============================================================================
 
 "audio_attachment_list_nav_title" = "Media";
+"audio_attachment_list_footer_send" = "send";
+"audio_attachment_list_footer_delete" = "delete";
+"audio_attachment_list_footer_add" = "add";
 
 //==============================================================================
 // Audio Player

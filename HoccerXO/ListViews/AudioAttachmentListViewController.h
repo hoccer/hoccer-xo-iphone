@@ -18,4 +18,7 @@
 @property (nonatomic, strong) Collection *collection;
 @property (nonatomic, strong) Contact *contact;
 
+@property (nonatomic, strong) UIView *footerContainerView;
+@property (nonatomic, strong) UIButton * sendButton;
+
 @end

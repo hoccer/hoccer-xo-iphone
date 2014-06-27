@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
@@ -188,7 +189,6 @@
 		C576EBD61934CC8400C0D254 /* AudioPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */; };
 		C576EBD71934CC8400C0D254 /* SeekSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD41934CC8400C0D254 /* SeekSlider.m */; };
 		C576EBDC1934CC9E00C0D254 /* AudioAttachmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */; };
-		C576EBDD1934CC9E00C0D254 /* AudioAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */; };
 		C576EC281934CCB200C0D254 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBDF1934CCB100C0D254 /* button-pause.png */; };
 		C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBE01934CCB100C0D254 /* button-pause@2x.png */; };
 		C576EC2A1934CCB200C0D254 /* button-play.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBE11934CCB100C0D254 /* button-play.png */; };
@@ -2774,7 +2774,6 @@
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
 				6365EB2C18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m in Sources */,
 				63B7900018D4E52D003A9125 /* tab_profile.m in Sources */,
-				C576EBDD1934CC9E00C0D254 /* AudioAttachmentListViewController.m in Sources */,
 				C53954721959CDFC007DBD04 /* Collection.m in Sources */,
 				636D400317106EC000304EDF /* Environment.m in Sources */,
 				E9E92F93187503F7007B8042 /* NSString+HTML.m in Sources */,
@@ -2808,6 +2807,7 @@
 				632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */,
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
 				C576EBCD1934CC6100C0D254 /* NSString+FromTimeInterval.m in Sources */,
+				1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */,
 				631FE51A1919A3B60073E980 /* HXOActivityIndicatorView.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
 				C576EC451934CCB200C0D254 /* player_close.m in Sources */,
