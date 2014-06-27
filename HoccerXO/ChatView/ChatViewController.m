@@ -542,7 +542,7 @@ nil
     NSMutableArray * buttonTitles = [NSMutableArray new];
     
     int deleteAllIndex = -1;
-    if (allMessagesBeforeVisible.count > 0) {
+    if (allMessagesInChat.count > 0) {
         deleteAllIndex = buttonIndex++;
         [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all %d", nil), allMessagesInChat.count]];
     }
