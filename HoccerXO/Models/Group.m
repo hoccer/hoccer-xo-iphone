@@ -44,9 +44,6 @@ NSString * const kGroupTypeNearby   = @"nearby";
 @dynamic keyDateMillis;
 @dynamic lastChangedMillis;
 
-@synthesize shouldPresentInvitation;
-@synthesize presentingInvitation;
-
 - (NSString*) sharedKeyIdString {
     return [self.sharedKeyId asBase64EncodedString];
 }

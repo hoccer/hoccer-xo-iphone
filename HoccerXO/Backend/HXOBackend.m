@@ -120,6 +120,11 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableSet * _pendingGroupDeletions;
     NSMutableSet * _idLocks;
     NSMutableSet * _pendingAttachmentDeliveryUpdates;
+    NSMutableSet * _groupsNotYetPresentedInvitation;
+    NSMutableSet * _groupsPresentingInvitation;
+    NSMutableSet * _contactPresentingFriendMessage;
+    NSMutableSet * _contactPresentingFriendInvitation;
+
     NSDate * _startedConnectingTime;
 }
 
@@ -142,6 +147,9 @@ static NSTimer * _stateNotificationDelayTimer;
         _startedConnectingTime = nil;
         _pendingGroupDeletions = [NSMutableSet new];
         _pendingAttachmentDeliveryUpdates = [NSMutableSet new];
+        _groupsNotYetPresentedInvitation = [NSMutableSet new];
+        _contactPresentingFriendMessage = [NSMutableSet new];
+        _contactPresentingFriendInvitation = [NSMutableSet new];
         
         _firstConnectionAfterCrashOrUpdate = theAppDelegate.launchedAfterCrash || theAppDelegate.runningNewBuild;
         
@@ -1705,14 +1713,18 @@ static NSTimer * _stateNotificationDelayTimer;
     [alert show];
 }
 
+
 // main context only
 - (void) invitationAsFriendAlertByContact:(Contact*)contact {
     [self.delegate assertMainContext];
     
-    if (contact.presentingFriendInvitation) {
-        return;
+    @synchronized(_contactPresentingFriendInvitation) {
+        if ([_contactPresentingFriendInvitation containsObject:contact.clientId]) {
+            return;
+        }
     }
-    contact.presentingFriendInvitation = YES;
+    [_contactPresentingFriendInvitation addObject:contact.clientId];
+
     
     NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_invited_me_as_friend_message %@",nil), contact.nickName];
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_invited_me_as_friend_title", nil)
@@ -1725,7 +1737,11 @@ static NSTimer * _stateNotificationDelayTimer;
                                                              if (!ok) {
                                                                  [self acceptFriendFailedAlertForContact:contact];
                                                              }
-                                                             contact.presentingFriendInvitation = NO;
+                                                             @synchronized(_contactPresentingFriendInvitation) {
+                                                                 if ([_contactPresentingFriendInvitation containsObject:contact.clientId]) {
+                                                                     [_contactPresentingFriendInvitation removeObject:contact.clientId];
+                                                                 }
+                                                             }
                                                          }];
                                                         }
                                                         break;
@@ -1735,13 +1751,21 @@ static NSTimer * _stateNotificationDelayTimer;
                                                              if (!ok) {
                                                                  [self refuseFriendFailedAlertForContact:contact];
                                                              }
-                                                             contact.presentingFriendInvitation = NO;
+                                                             @synchronized(_contactPresentingFriendInvitation) {
+                                                                 if ([_contactPresentingFriendInvitation containsObject:contact.clientId]) {
+                                                                     [_contactPresentingFriendInvitation removeObject:contact.clientId];
+                                                                 }
+                                                             }
                                                          }];
                                                         }
                                                         break;
                                                      case 2:
                                                          // do nothing
-                                                         contact.presentingFriendInvitation = NO;
+                                                         @synchronized(_contactPresentingFriendInvitation) {
+                                                             if ([_contactPresentingFriendInvitation containsObject:contact.clientId]) {
+                                                                 [_contactPresentingFriendInvitation removeObject:contact.clientId];
+                                                             }
+                                                         }
                                                          break;
                                                  }
                                              }
@@ -1753,16 +1777,25 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // background context safe
 - (void) newFriendAlertForContact:(Contact*)contact {
-    if (contact.friendMessageShown) {
-        return;
+    @synchronized(_contactPresentingFriendMessage) {
+        if ([_contactPresentingFriendMessage containsObject:contact.clientId]) {
+            return;
+        }
     }
-    contact.friendMessageShown = YES;
+    [_contactPresentingFriendMessage addObject:contact.clientId];
+
     NSString * contactName = contact.nickName;
     [self.delegate performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
         NSString * message = [NSString stringWithFormat: NSLocalizedString(@"contact_new_friend_message",nil), contactName];
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"contact_new_friend_title", nil)
                                                          message: message
-                                                        delegate:nil
+                                                 completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                     @synchronized(_contactPresentingFriendMessage) {
+                                                         if ([_contactPresentingFriendMessage containsObject:contact.clientId]) {
+                                                             [_contactPresentingFriendMessage removeObject:contact.clientId];
+                                                         }
+                                                     }
+                                                 }
                                                cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                otherButtonTitles: nil];
         [alert show];
@@ -3015,10 +3048,10 @@ static NSTimer * _stateNotificationDelayTimer;
             // we also have to make this checks in the main context because group has some non-persistent flags here that exist only in the main context
             [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
                 Group * group = managedObjects[0];
-                if (!group.shouldPresentInvitation) {
-                    if (![self tryPresentInvitationIfPossibleForGroup:group withMemberShip:myMembership]) {
-                        group.shouldPresentInvitation = true;
-                    }
+                BOOL shouldPresentInvitation = [_groupsNotYetPresentedInvitation containsObject:group.clientId];
+                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: shouldPresentInvitation=%d for group %@ ",shouldPresentInvitation, group.clientId);
+                if (!shouldPresentInvitation) {
+                    [self tryPresentInvitationIfPossibleForGroup:group withMemberShip:myMembership];
                 }
             }];
         } else {
@@ -3041,26 +3074,40 @@ static NSTimer * _stateNotificationDelayTimer;
     if (LOCKING_TRACE) NSLog(@"Done unsynchronized updateGroupMemberHere %@",groupId);
 }
 
-- (BOOL)tryPresentInvitationIfPossibleForGroup:(Group *) group withMemberShip:(GroupMembership*)myMembership {
+// will return true if the invitation is presented, false when there are not enough members to present it yes
+// in this case the caller should set group.shouldPresentInvitation to YES and call checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:
+// after presence of a new contact
+- (void)tryPresentInvitationIfPossibleForGroup:(Group *) group withMemberShip:(GroupMembership*)myMembership {
     [self.delegate assertMainContext];
     if (!group.isIncompleteGroup && group.hasAdmin) {
+        if (GROUP_DEBUG) NSLog(@"tryPresentInvitationIfPossibleForGroup: Presenting invitation alert for group %@ ",group.clientId);
         [self invitationAlertForGroup:group withMemberShip:myMembership];
-        return true;
+        BOOL shouldPresentInvitation = [_groupsNotYetPresentedInvitation containsObject:group.clientId];
+        if (shouldPresentInvitation) {
+            [_groupsNotYetPresentedInvitation removeObject:group.clientId];
+            if (GROUP_DEBUG) NSLog(@"tryPresentInvitationIfPossibleForGroup: removed _groupsNotYetPresentedInvitation entry for group %@ ",group.clientId);
+        }
+        return;
     }
-    return false;
+    if (GROUP_DEBUG) NSLog(@"group %@ isIncompleteGroup=%d hasAdmin=%d, added _groupsNotYetPresentedInvitation entry ",group.clientId, group.isIncompleteGroup ,group.hasAdmin);
+    [_groupsNotYetPresentedInvitation addObject:group.clientId];
 }
 
+// call after tryPresentInvitationIfPossibleForGroup failed when group information changes
 - (void)checkIfNeedToPresentInvitationForGroup:(Group *)group {
     [self.delegate assertMainContext];
-    if (group.shouldPresentInvitation) {
-        if ([self tryPresentInvitationIfPossibleForGroup:group withMemberShip:group.myGroupMembership]) {
-            group.shouldPresentInvitation = false;
-        }
+    BOOL shouldPresentInvitation = [_groupsNotYetPresentedInvitation containsObject:group.clientId];
+    if (GROUP_DEBUG) NSLog(@"checkIfNeedToPresentInvitationForGroup for group %@ , shouldPresentInvitation=%d",group.clientId,shouldPresentInvitation);
+    if (shouldPresentInvitation) {
+        [self tryPresentInvitationIfPossibleForGroup:group withMemberShip:group.myGroupMembership];
     }
 }
 
+// call to see if the appeareance of a new presence will yield the admins presence so that
+// the inviation can be presented
 - (void)checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf:(Contact *)contact {
     [self.delegate assertMainContext];
+    if (GROUP_DEBUG) NSLog(@"checkIfNeedToPresentInvitationForGroupAfterNewPresenceOf for group %@ ",contact.clientId);
     NSSet * memberShips = contact.groupMemberships;
     for (GroupMembership* m in memberShips) {
         [self checkIfNeedToPresentInvitationForGroup:m.group];
@@ -3256,10 +3303,11 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) invitationAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
     [self.delegate assertMainContext];
     
-    if (group.presentingInvitation) {
+    if ([_groupsPresentingInvitation containsObject:group.clientId]) {
         return;
     }
-    group.presentingInvitation = YES;
+    [_groupsPresentingInvitation addObject:group.clientId];
+
     NSMutableArray * admins = [[NSMutableArray alloc] init];
     if (group.iAmAdmin) {
         [admins addObject: NSLocalizedString(@"group_admin_you", nil)];
@@ -3276,33 +3324,29 @@ static NSTimer * _stateNotificationDelayTimer;
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"group_invite_title", nil)
                                                      message: NSLocalizedString(message, nil)
                                                     completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                        switch (buttonIndex) {
-                                                            case 0:
-                                                                // join group
-                                                                [self joinGroup:group onJoined:^(Group *group) {
-                                                                    if (group != nil) {
-                                                                        if (GROUP_DEBUG) NSLog(@"Joined group %@", group);
-                                                                    } else {
-                                                                        NSLog(@"ERROR: joinGroup %@ failed", group);
-                                                                    }
-                                                                    group.presentingInvitation = NO;
-                                                                }];
-                                                                break;
-                                                            case 1:
-                                                                // leave group
-                                                                [self leaveGroup: group onGroupLeft:^(Group *group) {
-                                                                    if (group != nil) {
-                                                                        if (GROUP_DEBUG) NSLog(@"TODO: Group left, now destroy everything (except our friends)");
-                                                                    } else {
-                                                                        NSLog(@"ERROR: leaveGroup %@ failed", group);
-                                                                    }
-                                                                    group.presentingInvitation = NO;
-                                                                }];
-                                                                break;
-                                                            case 2:
-                                                                // do nothing
-                                                                group.presentingInvitation = NO;
-                                                                break;
+                                                        if (buttonIndex == 0) {
+                                                            // join group
+                                                            [self joinGroup:group onJoined:^(Group *group) {
+                                                                if (group != nil) {
+                                                                    if (GROUP_DEBUG) NSLog(@"Joined group %@", group);
+                                                                } else {
+                                                                    NSLog(@"ERROR: joinGroup %@ failed", group);
+                                                                }
+                                                                [_groupsPresentingInvitation removeObject:group.clientId];
+                                                            }];
+                                                        } else if (buttonIndex == 1) {
+                                                            // leave group
+                                                            [self leaveGroup: group onGroupLeft:^(Group *group) {
+                                                                if (group != nil) {
+                                                                    if (GROUP_DEBUG) NSLog(@"TODO: Group left, now destroy everything (except our friends)");
+                                                                } else {
+                                                                    NSLog(@"ERROR: leaveGroup %@ failed", group);
+                                                                }
+                                                                [_groupsPresentingInvitation removeObject:group.clientId];
+                                                            }];
+                                                        } else if (buttonIndex == 2) {
+                                                            // do nothing
+                                                            [_groupsPresentingInvitation removeObject:group.clientId];
                                                         }
                                                     }
                                            cancelButtonTitle: nil

@@ -44,9 +44,6 @@ FOUNDATION_EXPORT NSString * const kGroupTypeNearby;
 @property (nonatomic, retain) NSNumber    * lastChangedMillis;
 @property (nonatomic, retain) NSNumber    * keyDateMillis;
 
-@property BOOL shouldPresentInvitation;
-@property BOOL presentingInvitation;
-
 // @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
 
 - (BOOL) iAmAdmin;

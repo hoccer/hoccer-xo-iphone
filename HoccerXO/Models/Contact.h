@@ -105,9 +105,6 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 
 @property (nonatomic, strong)   UIImage         * avatarImage;
 
-@property BOOL friendMessageShown;
-@property BOOL presentingFriendInvitation;
-
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
 //- (void) updateNearbyFlag;
