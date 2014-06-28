@@ -233,7 +233,7 @@
 "contact_relationship_groupfriend"              = "Gruppenbekanntschaft";
 "contact_relationship_kept"                     = "Keine Beziehung";
 "contact_relationship_blocked"                  = "Geblockt";
-"contact_relationship_invited"                  = "Eingeladen als Friend";
+"contact_relationship_invited"                  = "Eingeladen als Freund";
 "contact_relationship_invitedMe"                = "Hat dich als Freund eingeladen";
 
 "contact_list_placeholder"                      = "[Lade Freunde ein](http://hoccer.com/hoccer-xo-anleitung/#kontakte) sicher mit dir zu chatten.";

@@ -1658,6 +1658,10 @@ nil
 }
 
 - (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message withAttachmentPreview:(BOOL)loadPreview {
+    if (cell == nil) {
+        NSLog(@"#WARNING: ChatViewController:configureCell called with cell = nil");
+        return;
+    }
     if (DEBUG_TABLE_CELLS) NSLog(@"configureCell %@ withPreview=%d",cell,loadPreview);
 
     cell.delegate = self;
