@@ -821,6 +821,11 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 -(NSLock*)idLock:(NSString*)name {
+    if (name == nil) {
+        NSLog(@"#ERROR: idLock called with nil name, stack=%@", [NSThread callStackSymbols]);
+        name = @"NIL-LOCK";
+    }
+
     @synchronized(_idLocks) {
         NSLock * lock = _idLocks[name];
         if (lock != nil) {
@@ -836,6 +841,11 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 - (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
+    if (lockId == nil) {
+        NSLog(@"#ERROR: idLock called with nil lockId, stack=%@", [NSThread callStackSymbols]);
+        lockId = @"NIL-LOCK";
+    }
+    
     NSManagedObjectContext *temporaryContext = [self newBackgroundManagedObjectContext];
     if (temporaryContext != nil) {
         NSManagedObjectContext * mainMOC = [self mainObjectContext];

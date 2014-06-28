@@ -68,7 +68,6 @@
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v4";
 
-const int kGroupInvitationAlert = 1;
 static const NSUInteger kHXOMaxCertificateVerificationErrors = 3;
 
 static const NSUInteger     kHXOPairingTokenMaxUseCount = 10;
@@ -118,7 +117,6 @@ static NSTimer * _stateNotificationDelayTimer;
     unsigned        _loginFailures;
     unsigned        _loginRefusals;
     NSMutableSet * _pendingGroupDeletions;
-    NSMutableSet * _idLocks;
     NSMutableSet * _pendingAttachmentDeliveryUpdates;
     NSMutableSet * _groupsNotYetPresentedInvitation;
     NSMutableSet * _groupsPresentingInvitation;
@@ -637,12 +635,18 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
-    [self.delegate performWithLockingId:messageDictionary[@"messageId"] inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    NSString * myMessageId = messageDictionary[@"messageId"];
+    if (myMessageId == nil) {
+        NSLog(@"ERROR: receiveMessage: missing messageId");
+        return;
+    }
+    
+    [self.delegate performWithLockingId:myMessageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
         if (DELIVERY_TRACE) NSLog(@"receiveMessage");
         if (USE_VALIDATOR) [self validateObject: messageDictionary forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
         if (USE_VALIDATOR) [self validateObject: deliveryDictionary forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
         NSError *error;
-        NSDictionary * vars = @{ @"messageId" : messageDictionary[@"messageId"]};
+        NSDictionary * vars = @{ @"messageId" : myMessageId};
         NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessageByMessageId" substitutionVariables: vars];
         NSArray *messages = [context executeFetchRequest:fetchRequest error:&error];
         if (messages == nil) {
@@ -1573,7 +1577,10 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([clientId isEqualToString: [UserProfile sharedProfile].clientId]) {
         return;
     }
-    
+    if (clientId == nil) {
+        NSLog(@"ERROR: updateRelationship: missing clientId");
+        return;
+    }
     [self.delegate performWithLockingId:clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         if (USE_VALIDATOR) [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
@@ -2001,11 +2008,27 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionBlock)handler {
     
     [self getKeyForClientId: theContact.clientId withKeyId:theId keyHandler:^(NSDictionary * keyRecord) {
+        if (theContact.clientId == nil) {
+            NSLog(@"ERROR: fetchKeyForContact: nil contact or clientId");
+            return;
+        }
+        if (keyRecord == nil) {
+            // retry
+            // [self fetchKeyForContact:theContact withKeyId:theId withCompletion:handler];
+            NSLog(@"ERROR: could not fetch key with keyid %@ for contact id %@ nick %@", theId, theContact.clientId, theContact.nickName);
+            NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not fetch key with keyid %@ for contact: %@ nick %@", theId, theContact.clientId, theContact.nickName];
+            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9913 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            if (handler != nil) {
+                handler(myError);
+            }
+            return;
+        }
+        
         NSManagedObjectID * contactObjId = theContact.objectID;
         [self.delegate performWithLockingId:theContact.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
             if (USE_VALIDATOR) [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
             Contact * theContact = (Contact *)[context objectWithID:contactObjId];
-            if (keyRecord != nil) {
+            if (theContact != nil) {
                 if ([theId isEqualToString: keyRecord[@"keyId"]]) {
                     if (![keyRecord[@"keyId"] isEqualToString: theContact.publicKeyId] &&
                         theContact.verifiedKey != nil &&
@@ -2035,16 +2058,7 @@ static NSTimer * _stateNotificationDelayTimer;
                     }
                 }
             } else {
-                // retry
-                // [self fetchKeyForContact:theContact withKeyId:theId withCompletion:handler];
-                NSLog(@"ERROR: could not fetch key with keyid %@ for contact id %@ nick %@", theId, theContact.clientId, theContact.nickName);
-                NSString * myDescription = [NSString stringWithFormat:@"ERROR: key not fetch key with keyid %@ for contact: %@ nick %@", theId, theContact.clientId, theContact.nickName];
-                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.backend" code: 9913 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                if (handler != nil) {
-                    [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                        handler(myError);
-                    }];
-                }
+                NSLog(@"#ERROR:fetchKeyForContact: nil contact");
             }
         }];
     }];
@@ -2181,8 +2195,9 @@ static NSTimer * _stateNotificationDelayTimer;
     if (newKeyId != nil) {
         if (![myContact.publicKeyId isEqualToString: newKeyId]) {
             // fetch key
-            [self fetchKeyForContact: myContact withKeyId:newKeyId withCompletion:^(NSError *theError) {
-                // [self checkGroupKeysForGroupMembershipOfContact:myContact];
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myContact] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                [self fetchKeyForContact: managedObjects[0] withKeyId:newKeyId withCompletion:^(NSError *theError) {
+                }];
             }];
         }
     }
@@ -2661,10 +2676,10 @@ static NSTimer * _stateNotificationDelayTimer;
     [_serverConnection invoke: @"getGroupMembers" withParams: @[group.clientId,lastKnownMillis] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             if (GROUP_DEBUG) NSLog(@"getGroupMembers(): got result: %@", responseOrError);
-            handler(responseOrError);
+            if (handler != nil) handler(responseOrError);
         } else {
             NSLog(@"getGroupMembers(): failed: %@", responseOrError);
-            handler(nil);
+            if (handler != nil) handler(nil);
         }
     }];
 }
@@ -2673,16 +2688,20 @@ static NSTimer * _stateNotificationDelayTimer;
           withCompletion:(DoneBlock)completion
 {
     [self getGroupMembers: group lastKnown:lastKnown membershipsHandler:^(NSArray * changedMembers) {
-        [self.delegate performWithLockingId:group.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
-            for (NSDictionary * memberDict in changedMembers) {
-                [self updateGroupMemberHere: memberDict inContext:context];
-            }
-            if (completion) {
-                [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                    completion();
-                }];
-            }
-        }];
+        if (changedMembers != nil) {
+            [self.delegate performWithLockingId:group.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                for (NSDictionary * memberDict in changedMembers) {
+                    [self updateGroupMemberHere: memberDict inContext:context];
+                }
+                if (completion) {
+                    [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                        completion();
+                    }];
+                }
+            }];
+        } else {
+            if (completion) completion();
+        }
     }];
 }
 
@@ -2851,9 +2870,10 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) getGroupMember:(GroupMembership *)member {
-    [self getGroupMember:member.group.clientId clientId:member.contactClientId onResult:^(NSDictionary *memberDict) {
+    NSString * memberClientId = member.group.clientId;
+    [self getGroupMember:memberClientId clientId:member.contactClientId onResult:^(NSDictionary *memberDict) {
         if (memberDict != nil) {
-            [self.delegate performWithLockingId:member.group.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            [self.delegate performWithLockingId:memberClientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 [self updateGroupMemberHere: memberDict inContext:context];
             }];
         }
@@ -3303,10 +3323,12 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) invitationAlertForGroup:(Group*)group withMemberShip:(GroupMembership*)member {
     [self.delegate assertMainContext];
     
-    if ([_groupsPresentingInvitation containsObject:group.clientId]) {
-        return;
+    @synchronized(_groupsPresentingInvitation) {
+        if ([_groupsPresentingInvitation containsObject:group.clientId]) {
+            return;
+        }
+        [_groupsPresentingInvitation addObject:group.clientId];
     }
-    [_groupsPresentingInvitation addObject:group.clientId];
 
     NSMutableArray * admins = [[NSMutableArray alloc] init];
     if (group.iAmAdmin) {
@@ -3332,7 +3354,11 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                 } else {
                                                                     NSLog(@"ERROR: joinGroup %@ failed", group);
                                                                 }
-                                                                [_groupsPresentingInvitation removeObject:group.clientId];
+                                                                @synchronized(_groupsPresentingInvitation) {
+                                                                    if ([_groupsPresentingInvitation containsObject:group.clientId]) {
+                                                                        [_groupsPresentingInvitation removeObject:group.clientId];
+                                                                    }
+                                                                }
                                                             }];
                                                         } else if (buttonIndex == 1) {
                                                             // leave group
@@ -3342,11 +3368,19 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                 } else {
                                                                     NSLog(@"ERROR: leaveGroup %@ failed", group);
                                                                 }
-                                                                [_groupsPresentingInvitation removeObject:group.clientId];
+                                                                @synchronized(_groupsPresentingInvitation) {
+                                                                    if ([_groupsPresentingInvitation containsObject:group.clientId]) {
+                                                                        [_groupsPresentingInvitation removeObject:group.clientId];
+                                                                    }
+                                                                }
                                                             }];
-                                                        } else if (buttonIndex == 2) {
+                                                        } else /*if (buttonIndex == 2)*/ {
                                                             // do nothing
-                                                            [_groupsPresentingInvitation removeObject:group.clientId];
+                                                            @synchronized(_groupsPresentingInvitation) {
+                                                                if ([_groupsPresentingInvitation containsObject:group.clientId]) {
+                                                                    [_groupsPresentingInvitation removeObject:group.clientId];
+                                                                }
+                                                            }
                                                         }
                                                     }
                                            cancelButtonTitle: nil
@@ -5483,6 +5517,11 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         //NSLog(@"outgoingDelivery() called, dict = %@", deliveryDict);
         
     NSString * myMessageId = deliveryDict[@"messageId"];
+    
+    if (myMessageId == nil) {
+        NSLog(@"#ERROR:outgoingDeliveryUpdated: missing messageId");
+        return;
+    }
     
     [self.delegate performWithLockingId:myMessageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
