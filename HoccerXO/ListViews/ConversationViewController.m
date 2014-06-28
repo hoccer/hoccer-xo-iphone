@@ -190,20 +190,26 @@
     [self performSegueWithIdentifier: @"showChat" sender: indexPath];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath*) indexPath {
-    if ([segue.identifier isEqualToString:@"showChat"]) {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id) sender {
+    if ([sender isKindOfClass:[NSIndexPath class]]) {
+        
+        NSIndexPath * indexPath = (NSIndexPath *)sender;
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        if (self.caughtMessage == nil) {
+        
+        if ([segue.identifier isEqualToString:@"showChat"]) {
             _chatViewController = [segue destinationViewController];
             _chatViewController.inspectedObject = contact;
-        } else {
+            
+        } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
+            ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
+        }
+    } else {
+        // catch
+        if ([segue.identifier isEqualToString:@"showChat"] && self.caughtMessage != nil) {
             _chatViewController = [segue destinationViewController];
             _chatViewController.inspectedObject = self.caughtMessage.contact;
             self.caughtMessage = nil;
         }
-    } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
-        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
     }
 }
 

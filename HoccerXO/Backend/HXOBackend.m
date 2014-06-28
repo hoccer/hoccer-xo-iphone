@@ -1938,7 +1938,7 @@ static NSTimer * _stateNotificationDelayTimer;
 // background context safe
 - (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context {
     
-    BOOL isInspected = [AppDelegate.instance isInspecting:contact];
+    // BOOL isInspected = [AppDelegate.instance isInspecting:contact];
 
     // autokeep contacts that are currently inspected
     if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) /*|| isInspected*/)) { //TODO: remove "inspected" check, unwind instead

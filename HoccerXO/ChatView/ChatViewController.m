@@ -1873,14 +1873,14 @@ nil
 - (NSString*) stateStringForMessage: (HXOMessage*) message {
 
     if ([message.deliveries count] > 1) {
-        NSUInteger deliveredCount = message.deliveriesDelivered.count;
+        //NSUInteger deliveredCount = message.deliveriesDelivered.count;
         NSUInteger pendingCount = message.deliveriesPending.count;
         NSUInteger failedCount = message.deliveriesFailed.count;
         NSUInteger seenCount = message.deliveriesSeen.count;
         NSUInteger unseenCount = message.deliveriesUnseen.count;
         NSUInteger privateCount = message.deliveriesPrivate.count;
-        NSUInteger attachmentPendingCount = message.deliveriesAttachmentsPending.count;
-        NSUInteger attachmentReceivedCount = message.deliveriesAttachmentsReceived.count;
+        //NSUInteger attachmentPendingCount = message.deliveriesAttachmentsPending.count;
+        //NSUInteger attachmentReceivedCount = message.deliveriesAttachmentsReceived.count;
         NSUInteger attachmentFailedCount = message.deliveriesAttachmentsFailed.count;
         NSUInteger totalDeliveries = message.deliveries.count;
         
