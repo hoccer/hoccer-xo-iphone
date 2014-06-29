@@ -191,6 +191,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id) sender {
+    NSLog(@"ConversationViewController:prepareForSegue: %@", segue.identifier);
     if ([sender isKindOfClass:[NSIndexPath class]]) {
         
         NSIndexPath * indexPath = (NSIndexPath *)sender;
@@ -214,7 +215,10 @@
 }
 
 - (IBAction) unwindToRootView: (UIStoryboardSegue*) unwindSegue {
-    NSLog(@"ConversationViewController:unwindToRootView");
+    NSLog(@"ConversationViewController:unwindToRootView src=%@ dest=%@", [unwindSegue.sourceViewController class], [unwindSegue.destinationViewController class]);
+    if ([unwindSegue.sourceViewController respondsToSelector:@selector(setInspectedObject:)]) {
+        [unwindSegue.sourceViewController performSelector:@selector(setInspectedObject:) withObject:nil];
+    }
 }
 
 - (void) addButtonPressed: (id) sender {

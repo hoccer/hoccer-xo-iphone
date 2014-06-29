@@ -819,9 +819,15 @@ static int  groupMemberContext;
     }
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
     if (indexPath != nil && indexPath.length > 0) {
-        id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
-        if (objectAtIndexPath != nil) {
-            return [objectAtIndexPath contact];
+        //NSLog(@"indexPath length = %d, path =%@", indexPath.length, indexPath);
+        @try {
+            id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
+            if (objectAtIndexPath != nil) {
+                return [objectAtIndexPath contact];
+            }
+        }
+        @catch (NSException *exception) {
+            NSLog(@"Exception in self.fetchedResultsController objectAtIndexPath: %@", exception);
         }
     }
     return nil;
@@ -899,19 +905,21 @@ static int  groupMemberContext;
     if ([aCell.reuseIdentifier isEqualToString: @"SmallContactCell"]) {
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
-        BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
-        BOOL isInvited = membership.isInvited;
-        SmallContactCell * cell = (SmallContactCell*)aCell;
-        cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
-        cell.titleLabel.alpha     = isInvited ? 0.5 : 1;
-        cell.titleLabel.textColor = [UIColor blackColor];
-        cell.subtitleLabel.text   = isInvited ? NSLocalizedString(@"group_membership_state_invited", nil) : nil;
-        cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
-        cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
-        cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
-        cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
-        cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
-        cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
+        if (contact != nil && membership != nil) {
+            BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
+            BOOL isInvited = membership.isInvited;
+            SmallContactCell * cell = (SmallContactCell*)aCell;
+            cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
+            cell.titleLabel.alpha     = isInvited ? 0.5 : 1;
+            cell.titleLabel.textColor = [UIColor blackColor];
+            cell.subtitleLabel.text   = isInvited ? NSLocalizedString(@"group_membership_state_invited", nil) : nil;
+            cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
+            cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
+            cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
+            cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
+            cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
+            cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
+        }
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];
     }

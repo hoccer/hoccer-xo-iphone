@@ -1395,8 +1395,7 @@ nil
     // NSLog(@"setPartner %@", partner.nickName);
     // NSLog(@"%@", [NSThread callStackSymbols]);
     if (_partner != nil) {
-        [_partner removeObserver: self forKeyPath: @"nickName"];
-        [_partner removeObserver: self forKeyPath: @"connectionStatus"];
+        [self removeContactKVO:_partner];
     }
     _partner = partner;
     if (partner == nil) {
