@@ -4333,6 +4333,11 @@ static NSTimer * _stateNotificationDelayTimer;
     }else {
         supportTag = @"";
     }
+#ifdef DEBUG
+    NSString * clientBuildVariant = @"debug";
+#else
+    NSString * clientBuildVariant = @"release";
+#endif
     NSDictionary * initParams = @{
                              @"clientTime"     : clientTime,
                              @"systemLanguage" : [[NSLocale preferredLanguages] objectAtIndex:0],
@@ -4340,6 +4345,7 @@ static NSTimer * _stateNotificationDelayTimer;
                              @"systemName"     : [UIDevice currentDevice].systemName,
                              @"systemVersion"  : [UIDevice currentDevice].systemVersion,
                              @"clientName"     : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                             @"clientBuildVariant" : clientBuildVariant,
                              @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
                              @"clientBuildNumber"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
                              @"clientLanguage" : NSLocalizedString(@"language_code", nil),
