@@ -78,6 +78,7 @@
         <attribute name="lastChanged" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
         <attribute name="otherClientId" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="state" transient="YES" attributeType="String" minValueString="4" maxValueString="20" regularExpressionString="none|friend|blocked|invited|invitedMe" syncable="YES"/>
+        <attribute name="unblockState" transient="YES" attributeType="String" minValueString="4" maxValueString="20" regularExpressionString="none|friend|invited|invitedMe" syncable="YES"/>
     </entity>
     <elements>
         <element name="RPC_TalkDelivery" positionX="0" positionY="0" width="128" height="163"/>
@@ -92,6 +93,6 @@
         <element name="RPC_TalkPresence" positionX="0" positionY="0" width="128" height="105"/>
         <element name="RPC_TalkPresence_in" positionX="0" positionY="0" width="128" height="88"/>
         <element name="RPC_TalkPresence_out" positionX="0" positionY="0" width="128" height="88"/>
-        <element name="RPC_TalkRelationship" positionX="0" positionY="0" width="128" height="103"/>
+        <element name="RPC_TalkRelationship" positionX="0" positionY="0" width="128" height="120"/>
     </elements>
 </model>

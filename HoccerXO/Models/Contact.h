@@ -54,6 +54,7 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 @property (nonatomic, strong)   NSString        * connectionStatus;
 
 @property (nonatomic, retain)   NSString        * relationshipState;
+@property (nonatomic, retain)   NSString        * relationshipUnblockState;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
 
 // dynamic key properties

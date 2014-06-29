@@ -69,6 +69,7 @@ NSString * const kPresenceStateTyping = @"typing";
 
 @dynamic publicKeyString;
 @dynamic relationshipState;
+@dynamic relationshipUnblockState;
 @dynamic relationshipLastChanged;
 @dynamic relationshipLastChangedMillis;
 
@@ -360,6 +361,7 @@ NSString * const kPresenceStateTyping = @"typing";
 
 - (NSDictionary*) rpcKeys {
     return @{ @"state"     : @"relationshipState",
+              @"unblockState": @"relationshipUnblockState",
               @"lastChanged": @"relationshipLastChangedMillis",
               };
 }

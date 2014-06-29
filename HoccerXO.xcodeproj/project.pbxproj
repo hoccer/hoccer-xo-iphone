@@ -814,6 +814,7 @@
 		E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InAppSettingsKit.xcodeproj; path = InAppSettingsKit/InAppSettingsKit.xcodeproj; sourceTree = "<group>"; };
 		E9A619DC17DF6E3700D4CFC3 /* CopyableUITextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyableUITextField.h; sourceTree = "<group>"; };
 		E9A619DD17DF6E3700D4CFC3 /* CopyableUITextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CopyableUITextField.m; sourceTree = "<group>"; };
+		E9A7419419605104000E4C03 /* HoccerXO-43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-43.xcdatamodel"; sourceTree = "<group>"; };
 		E9A85D90184FD1AC00EB9B68 /* chatbar-attachment-icon-contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-contact.png"; sourceTree = "<group>"; };
 		E9A85D91184FD1AC00EB9B68 /* chatbar-attachment-icon-contact@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-contact@2x.png"; sourceTree = "<group>"; };
 		E9A85D92184FD1AC00EB9B68 /* chatbar-attachment-icon-location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatbar-attachment-icon-location.png"; sourceTree = "<group>"; };
@@ -3040,6 +3041,7 @@
 			isa = XCVersionGroup;
 			children = (
 				E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */,
+				E9A7419419605104000E4C03 /* HoccerXO-43.xcdatamodel */,
 				E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */,
 				E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */,
 				E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */,
@@ -3065,7 +3067,7 @@
 				E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */,
 				E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */,
 			);
-			currentVersion = E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */;
+			currentVersion = E9A7419419605104000E4C03 /* HoccerXO-43.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
