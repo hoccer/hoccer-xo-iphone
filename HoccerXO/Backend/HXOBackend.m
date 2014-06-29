@@ -5617,7 +5617,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             {
                 NSArray * myObjects = managedObjects(myObjIds, self.delegate.mainObjectContext);
                 Delivery * myDelivery = (Delivery *)myObjects[0];
-                NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
+                if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
                 if (ok) {
                     myDelivery.attachmentState = result;
                 } else {

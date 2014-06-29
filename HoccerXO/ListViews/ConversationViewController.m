@@ -29,6 +29,7 @@
 #define TRACE_NOTIFICATIONS NO
 #define FETCHED_RESULTS_DEBUG_PERF NO
 #define NEARBY_CONFIG_DEBUG NO
+#define SEGUE_DEBUG NO
 
 @interface ConversationViewController ()
 
@@ -191,7 +192,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id) sender {
-    NSLog(@"ConversationViewController:prepareForSegue: %@", segue.identifier);
+    if (SEGUE_DEBUG) NSLog(@"ConversationViewController:prepareForSegue: %@", segue.identifier);
     if ([sender isKindOfClass:[NSIndexPath class]]) {
         
         NSIndexPath * indexPath = (NSIndexPath *)sender;
@@ -215,7 +216,7 @@
 }
 
 - (IBAction) unwindToRootView: (UIStoryboardSegue*) unwindSegue {
-    NSLog(@"ConversationViewController:unwindToRootView src=%@ dest=%@", [unwindSegue.sourceViewController class], [unwindSegue.destinationViewController class]);
+    if (SEGUE_DEBUG) NSLog(@"ConversationViewController:unwindToRootView src=%@ dest=%@", [unwindSegue.sourceViewController class], [unwindSegue.destinationViewController class]);
     if ([unwindSegue.sourceViewController respondsToSelector:@selector(setInspectedObject:)]) {
         [unwindSegue.sourceViewController performSelector:@selector(setInspectedObject:) withObject:nil];
     }

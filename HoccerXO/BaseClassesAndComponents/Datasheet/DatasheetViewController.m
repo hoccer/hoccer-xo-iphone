@@ -20,6 +20,8 @@
 #import "WebViewController.h"
 #import "AppDelegate.h"
 
+#define SEGUE_DEBUG NO
+
 static CGFloat kHeaderHeight;
 
 @interface DatasheetViewController ()
@@ -82,13 +84,13 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
-    NSLog(@"DataSheetViewController:viewDidDisappear");
+    if (SEGUE_DEBUG) NSLog(@"DataSheetViewController:viewDidDisappear");
     if ([self isMovingFromParentViewController]) {
-        NSLog(@"isMovingFromParentViewController");
+        if (SEGUE_DEBUG) NSLog(@"isMovingFromParentViewController");
         [AppDelegate.instance endInspecting:self.dataSheetController.inspectedObject withInspector:self.dataSheetController];
     }
     if ([self isBeingDismissed]) {
-        NSLog(@"isBeingDismissed");
+        if (SEGUE_DEBUG) NSLog(@"isBeingDismissed");
     }
     [super viewDidDisappear: animated];
 }

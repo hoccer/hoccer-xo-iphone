@@ -95,6 +95,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @end
 
+#define READ_DEBUG NO
+
 @implementation ChatViewController
 
 //@synthesize managedObjectContext = _managedObjectContext;
@@ -1667,7 +1669,7 @@ nil
 
     if ([self viewIsVisible]){
         if (!message.isRead) {
-            NSLog(@"configureCell setting isReadFlag forMessage: %@", message.body);
+            if (READ_DEBUG) NSLog(@"configureCell setting isReadFlag forMessage: %@", message.body);
             message.isRead = YES;
             [AppDelegate.instance.mainObjectContext refreshObject: message.contact mergeChanges:YES];
             Delivery * delivery = (Delivery*)message.deliveries.anyObject;

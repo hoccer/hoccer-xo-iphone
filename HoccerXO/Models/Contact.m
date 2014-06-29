@@ -370,7 +370,8 @@ NSString * const kPresenceStateTyping = @"typing";
     if ([key isEqualToString: @"password"]) {
         return nil;
     }
-    return [super valueForUndefinedKey: key];
+    return @"<undefined>";
+    //return [super valueForUndefinedKey: key];
 }
 
 @end

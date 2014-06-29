@@ -621,7 +621,7 @@ static int  groupMemberContext;
     Group * group = self.group;
     [self quitInspection];
     [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: group inContext:AppDelegate.instance.mainObjectContext];
-    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: group");
+    if (GROUPVIEW_DEBUG) NSLog(@"ContactSheetController: cleanupGroup: deleteObject: group");
     [AppDelegate.instance deleteObject:group];
     [self.appDelegate saveDatabase];
 }
@@ -653,7 +653,7 @@ static int  groupMemberContext;
 }
 
 - (void) deleteContact {
-    NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
+    if (GROUPVIEW_DEBUG) NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
     Contact * contact = self.contact;
     [self quitInspection];
     if (contact.isGroupFriend || contact.isKept) {
@@ -818,17 +818,9 @@ static int  groupMemberContext;
         return self.groupInStatuNascendi.members[index];
     }
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
-    if (indexPath != nil && indexPath.length > 0) {
-        //NSLog(@"indexPath length = %d, path =%@", indexPath.length, indexPath);
-        @try {
-            id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
-            if (objectAtIndexPath != nil) {
-                return [objectAtIndexPath contact];
-            }
-        }
-        @catch (NSException *exception) {
-            NSLog(@"Exception in self.fetchedResultsController objectAtIndexPath: %@", exception);
-        }
+    id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
+    if (objectAtIndexPath != nil) {
+        return [objectAtIndexPath contact];
     }
     return nil;
 }
@@ -919,6 +911,8 @@ static int  groupMemberContext;
             cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
             cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
             cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
+        } else {
+            NSLog(@"#ERROR: configureCell: contact or membership is nil, contact = %@, membership=%@", contact, membership);
         }
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];
@@ -942,6 +936,7 @@ static int  groupMemberContext;
 
 - (DatasheetItem*) createGroupMemberItem: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
+    if (GROUPVIEW_DEBUG) NSLog(@"createGroupMemberItem index %d for contact %@ objectId %@", index, contact.nickName, contact.objectID);
     NSString * identifier = [NSString stringWithFormat: @"%@", contact.objectID];
     DatasheetItem * item = [self itemWithIdentifier: identifier cellIdentifier: [SmallContactCell reuseIdentifier]];
     item.accessoryStyle = DatasheetAccessoryDisclosure;
@@ -950,6 +945,7 @@ static int  groupMemberContext;
 }
 
 - (void) removeGroupMemberItem: (NSUInteger) index contact: (Contact*) contact {
+    if (GROUPVIEW_DEBUG) NSLog(@"removeGroupMemberItem %d for contact %@", index, contact.nickName);
     [self removeContactObservers: contact];
     [self.groupMemberItems removeObjectAtIndex: index];
 }
@@ -1009,7 +1005,8 @@ static int  groupMemberContext;
 
     NSMutableArray *predicates = [NSMutableArray array];
 
-    [predicates addObject: [NSPredicate predicateWithFormat:@"group == %@", self.group]];
+    //[predicates addObject: [NSPredicate predicateWithFormat:@"(group.clientId == %@) AND (contact.clientId != group.clientId)", self.group.clientId]];
+    [predicates addObject: [NSPredicate predicateWithFormat:@"group.clientId == %@", self.group.clientId]];
 
     NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates: predicates];
     [fetchRequest setPredicate:filterPredicate];
@@ -1023,7 +1020,7 @@ static int  groupMemberContext;
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     if (membership == nil || membership.contact == nil || membership.group == nil) {
-        return;
+        NSLog(@"#WARNING: membership=%@, membership.contact=%@, membership.group=%@", membership, membership?membership.contact:nil, membership?membership.group:nil);
     }
     switch(type) {
         case NSFetchedResultsChangeInsert:
