@@ -35,10 +35,10 @@
 
 - (void)newCollection:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"collection_new_collection_title", nil)
-                                                    message:NSLocalizedString(@"collection_new_collection_message", nil)
-                                                   delegate:self
-                                          cancelButtonTitle:NSLocalizedString(@"cancel", nil)
-                                          otherButtonTitles:NSLocalizedString(@"save", nil), nil];
+                                                        message:NSLocalizedString(@"collection_new_collection_message", nil)
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"cancel", nil)
+                                              otherButtonTitles:NSLocalizedString(@"save", nil), nil];
     
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alertView show];
