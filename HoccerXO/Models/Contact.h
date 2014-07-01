@@ -106,6 +106,8 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 
 @property (nonatomic, strong)   UIImage         * avatarImage;
 
+@property                       BOOL              deletedObject;
+
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
 //- (void) updateNearbyFlag;

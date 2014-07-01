@@ -15,6 +15,7 @@
 
 #import "Group.h"
 #import "GroupMembership.h"
+#import "AppDelegate.h"
 
 // const float kTimeSectionInterval = 2 * 60;
 
@@ -52,6 +53,7 @@
 @dynamic groupMembershipList;
 
 @synthesize rememberedLastVisibleChatCell;
+@synthesize deletedObject;
 
 NSString * const kRelationStateNone        = @"none";
 NSString * const kRelationStateFriend      = @"friend";
@@ -207,7 +209,10 @@ NSString * const kPresenceStateTyping = @"typing";
     } else if (!self.isGroup && self.isGroupFriend) {
         statusString = @"❖";
     } else if (self.isTyping) {
-        statusString = @"‣";
+        //statusString = @"✍"; //writing hand
+        //statusString = @"✎"; //Pen
+        //statusString = @"➽"; //arrow
+        statusString = @"↵"; //arrow
     } else if ( self.isBackground) {
         statusString = @""; // should be yellow online indicator
     } else if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
@@ -358,6 +363,16 @@ NSString * const kPresenceStateTyping = @"typing";
     NSLog(@"WARNING: setter called on groupMembershipList, value = %@",theList);
 }
 
+-(void)prepareForDeletion {
+    if ([AppDelegate.instance.currentObjectContext isEqual: AppDelegate.instance.mainObjectContext]) {
+        NSLog(@"Contact:prepareForDeletion type=%@ nick=%@ id = %@", [self class], self.nickName, self.clientId);
+        self.deletedObject = YES;
+    }
+}
+
+-(void)dealloc {
+    // NSLog(@"dealloc %@", [self class]);
+}
 
 - (NSDictionary*) rpcKeys {
     return @{ @"state"     : @"relationshipState",

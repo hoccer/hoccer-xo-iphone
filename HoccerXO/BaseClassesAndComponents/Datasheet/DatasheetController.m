@@ -8,8 +8,10 @@
 
 #import "DatasheetController.h"
 #import "AppDelegate.h"
+#import "Contact.h" // for debug purposes
 
 #define DEBUG_VALUE_UPDATING NO
+#define DEBUG_OBSERVERS NO
 
 typedef BOOL(^DatasheetItemVisitorBlock)(DatasheetItem * item);
 typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL doneWithSection);
@@ -20,6 +22,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 @property (nonatomic,strong) DatasheetSection * root;
 @property (nonatomic,strong) DatasheetSection * currentRoot;
 
+@property (nonatomic, strong) NSMutableSet * observedPaths;
+
 @end
 
 @implementation DatasheetController
@@ -27,6 +31,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (id) init {
     self = [super init];
     if (self) {
+        self.observedPaths = [NSMutableSet new];
         [self commonInit];
         self.root = [DatasheetSection datasheetSectionWithIdentifier: @"root"];
         self.root.items = [self buildSections];
@@ -41,9 +46,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (void) dealloc {
-    if (_inspectedObject) {
-        [self removeObjectObservers];
-    }
+    if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:dealloc");
+    [self removeObjectObservers];
 }
 
 - (NSArray*) buildSections {
@@ -102,16 +106,38 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 }
 
 - (void) removeObjectObservers {
-    NSArray * paths = [self collectAllObservedPaths];
-    for (NSString * path in paths) {
-        [_inspectedObject removeObserver: self forKeyPath: path];
+    if (_inspectedObject != nil) {
+        NSArray * paths = [self collectAllObservedPaths];
+        if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:removeObjectObservers on inspected object %@ id %@", [_inspectedObject class], ((Contact*)_inspectedObject).clientId);
+        for (NSString * path in paths) {
+            if ([self.observedPaths containsObject:path]) {
+                if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:removeObjectObservers for path: %@",path);
+                [_inspectedObject removeObserver: self forKeyPath: path];
+                [self.observedPaths removeObject:path];
+            } else {
+                if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:removeObjectObservers: not observer for path: %@",path);
+            }
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:removeObjectObservers: no inspected object, doing nothing");
     }
 }
 
 - (void) addObjectObservers {
-    NSArray * paths = [self collectAllObservedPaths];
-    for (NSString * path in paths) {
-        [_inspectedObject addObserver: self forKeyPath: path options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context: NULL];
+    if (_inspectedObject != nil) {
+        NSArray * paths = [self collectAllObservedPaths];
+        if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:addObjectObservers on inspected object %@ id %@:", [_inspectedObject class], ((Contact*)_inspectedObject).clientId);
+        for (NSString * path in paths) {
+            if (![self.observedPaths containsObject:path]) {
+                if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:addObjectObservers for path: %@",path);
+                [_inspectedObject addObserver: self forKeyPath: path options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context: NULL];
+                [self.observedPaths addObject:path];
+            } else {
+                if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:addObjectObservers: already has observer for path: %@",path);
+            }
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"DatasheetController:addObjectObservers: no inspected object, doing nothing");
     }
 }
 
@@ -325,7 +351,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     [self visitItems: self.root usingBlock:^BOOL(DatasheetItem *item) {
         if ([self isItemVisible: item]) {
             [stack addObject: item];
-            if (DEBUG_VALUE_UPDATING) NSLog(@"adding item: type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+            //if (DEBUG_VALUE_UPDATING) NSLog(@"adding item: type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+            if (DEBUG_VALUE_UPDATING) NSLog(@"adding item: type: %@ id: %@", item.class, item.identifier);
         }
         return NO;
     } sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {
@@ -372,10 +399,12 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     if (oldRoot) {
         [self visitItems: newRoot usingBlock:^BOOL(DatasheetItem *item) {
             if([self findItem: oldRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
-                if (DEBUG_VALUE_UPDATING) NSLog(@"surviving item type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+                //if (DEBUG_VALUE_UPDATING) NSLog(@"surviving item type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+                if (DEBUG_VALUE_UPDATING) NSLog(@"surviving item type: %@ id: %@", item.class, item.identifier);
                 [survivingItems addObject: item];
             } else {
-                if (DEBUG_VALUE_UPDATING) NSLog(@"inserted item type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+                //if (DEBUG_VALUE_UPDATING) NSLog(@"inserted item type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+                if (DEBUG_VALUE_UPDATING) NSLog(@"inserted item type: %@ id: %@ ", item.class, item.identifier);
                 [insertedItems addObject: item];
             }
             return NO;
@@ -395,7 +424,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     NSMutableArray * deletedSectionsIndexPaths = [NSMutableArray array];
     if (oldRoot) {
         [self visitItems: oldRoot usingBlock:^BOOL(DatasheetItem *item) {
-            if (DEBUG_VALUE_UPDATING) NSLog(@"visit item type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+            //if (DEBUG_VALUE_UPDATING) NSLog(@"visit item type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
+            if (DEBUG_VALUE_UPDATING) NSLog(@"visit item type: %@ id: %@", item.class, item.identifier);
             if ( ! [self findItem: newRoot withKeyPath: @"identifier" equalTo: item.identifier]) {
                 NSIndexPath * indexPath = [self indexPathForItem: item];
                 NSIndexPath * sectionPath = [indexPath indexPathByRemovingLastIndex];

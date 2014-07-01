@@ -33,6 +33,8 @@
 
 #define DEBUG_INVITE_ITEMS NO
 
+#define DEBUG_OBSERVERS NO
+
 static const BOOL GROUPVIEW_DEBUG    = NO;
 static const BOOL RELATIONSHIP_DEBUG = NO;
 
@@ -88,6 +90,7 @@ static int  groupMemberContext;
 @synthesize contactObserverRegistered = _contactObserverRegistered;
 
 - (void) commonInit {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:commonInit");
     [super commonInit];
 
     self.groupMemberItems = [NSMutableArray array];
@@ -114,6 +117,11 @@ static int  groupMemberContext;
     self.destructiveButton.action = @selector(destructiveButtonPressed:);
 
     self.destructiveSection.items = @[self.blockContactItem, self.destructiveButton];
+}
+
+- (void) dealloc {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:dealloc");
+    [self removeAllContactObservers];
 }
 
 - (BOOL) isEditable {
@@ -443,8 +451,10 @@ static int  groupMemberContext;
 }
 
 - (void) inspectedObjectWillChange {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:inspectedObjectWillChange");
     [super inspectedObjectWillChange];
     [self removeProfileObservers];
+    [self removeAllContactObservers];
     if (self.fetchedResultsController) {
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
@@ -459,6 +469,7 @@ static int  groupMemberContext;
 }
 
 - (void) inspectedObjectDidChange {
+    if (DEBUG_OBSERVERS) NSLog(@"inspectedObjectDidChange");
     if (self.groupInStatuNascendi) {
         if (self.groupMemberItems.count == 0) {
             
@@ -667,6 +678,7 @@ static int  groupMemberContext;
 }
 
 - (void) quitInspection {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:quitInspection");
     Contact * contact = self.contact;
     if (contact != nil) {
         [self removeContactObservers:contact];
@@ -897,23 +909,19 @@ static int  groupMemberContext;
     if ([aCell.reuseIdentifier isEqualToString: @"SmallContactCell"]) {
         Contact * contact = [self contactForItem: item];
         GroupMembership * membership = [self membershipOfContact: contact];
-        if (contact != nil && membership != nil) {
-            BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
-            BOOL isInvited = membership.isInvited;
-            SmallContactCell * cell = (SmallContactCell*)aCell;
-            cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
-            cell.titleLabel.alpha     = isInvited ? 0.5 : 1;
-            cell.titleLabel.textColor = [UIColor blackColor];
-            cell.subtitleLabel.text   = isInvited ? NSLocalizedString(@"group_membership_state_invited", nil) : nil;
-            cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
-            cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
-            cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
-            cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
-            cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
-            cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
-        } else {
-            NSLog(@"#ERROR: configureCell: contact or membership is nil, contact = %@, membership=%@", contact, membership);
-        }
+        BOOL isMyMembership = [item isEqual: [self myMembershipItem]];
+        BOOL isInvited = membership.isInvited;
+        SmallContactCell * cell = (SmallContactCell*)aCell;
+        cell.titleLabel.text      = isMyMembership ? [UserProfile sharedProfile].nickName : contact.nickName;
+        cell.titleLabel.alpha     = isInvited ? 0.5 : 1;
+        cell.titleLabel.textColor = [UIColor blackColor];
+        cell.subtitleLabel.text   = isInvited ? NSLocalizedString(@"group_membership_state_invited", nil) : nil;
+        cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
+        cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
+        cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
+        cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
+        cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
+        cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];
     }
@@ -952,24 +960,45 @@ static int  groupMemberContext;
 
 - (void) addContactObservers: (Contact*) contact {
     if (![self.contactObserverRegistered containsObject:contact]) {
-        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: addContactObservers for %@ %@", [contact class], contact.clientId);
+        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus", @"deletedObject"]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: addObserver in groupMemberContext for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
             [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &groupMemberContext];
         }
         [self.contactObserverRegistered addObject:contact];
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: addContactObservers: already registered for %@ %@", [contact class], contact.clientId);
     }
 }
 
 - (void) removeContactObservers: (Contact*) contact {
     if ([self.contactObserverRegistered containsObject:contact]) {
-        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeContactObservers for %@ %@", [contact class], contact.clientId);
+        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus", @"deletedObject"]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeObserver in groupMemberContext for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
             [contact removeObserver: self forKeyPath: keyPath context: &groupMemberContext];
         }
         [self.contactObserverRegistered removeObject:contact];
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeContactObservers: not registered for %@ %@", [contact class], contact.clientId);
+    }
+}
+
+- (void) removeAllContactObservers {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeAllContactObservers");
+    NSSet * registered = [NSSet setWithSet:self.contactObserverRegistered]; // avoid enumeration mutation exception
+    for (Contact * contact in registered) {
+        [self removeContactObservers:contact];
     }
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &groupMemberContext) {
+        if ([keyPath isEqualToString:@"deleted"]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removing observers for deleted %@", [object class]);
+            [self removeContactObservers:object];
+            return;
+        }
         [self performSelectorOnMainThread: @selector(updateCurrentItems) withObject: nil waitUntilDone: NO];
 //        [self updateCurrentItems]; // Bam!
     } else {
@@ -1020,7 +1049,7 @@ static int  groupMemberContext;
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     if (membership == nil || membership.contact == nil || membership.group == nil) {
-        NSLog(@"#WARNING: membership=%@, membership.contact=%@, membership.group=%@", membership, membership?membership.contact:nil, membership?membership.group:nil);
+        if (DEBUG_OBSERVERS) NSLog(@"#WARNING: membership=%@, membership.contact=%@, membership.group=%@", membership, membership?membership.contact:nil, membership?membership.group:nil);
     }
     switch(type) {
         case NSFetchedResultsChangeInsert:

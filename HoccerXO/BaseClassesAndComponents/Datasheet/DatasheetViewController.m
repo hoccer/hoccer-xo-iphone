@@ -21,6 +21,7 @@
 #import "AppDelegate.h"
 
 #define SEGUE_DEBUG NO
+#define INSPECTION_DEBUG NO
 
 static CGFloat kHeaderHeight;
 
@@ -88,6 +89,7 @@ static CGFloat kHeaderHeight;
     if ([self isMovingFromParentViewController]) {
         if (SEGUE_DEBUG) NSLog(@"isMovingFromParentViewController");
         [AppDelegate.instance endInspecting:self.dataSheetController.inspectedObject withInspector:self.dataSheetController];
+        self.dataSheetController.inspectedObject = nil;
     }
     if ([self isBeingDismissed]) {
         if (SEGUE_DEBUG) NSLog(@"isBeingDismissed");
@@ -489,6 +491,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) setInspectedObject: (id) inspectedObject {
+    if (INSPECTION_DEBUG) NSLog(@"DatasheetViewController:setInspectedObject %@", [inspectedObject class]);
     self.dataSheetController.inspectedObject = inspectedObject;
 }
 

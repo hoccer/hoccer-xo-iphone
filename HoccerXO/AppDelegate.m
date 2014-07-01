@@ -550,20 +550,33 @@ BOOL sameObjects(id obj1, id obj2) {
 
 #pragma mark - Core Data stack
 
+- (void)checkObjectsInContext:(NSManagedObjectContext*)context info:(NSString*)where {
+    NSSet * registeredObjects = context.deletedObjects;
+    //NSLog(@"------ checkObjectsInContext: %@", where);
+    for (NSManagedObject * obj in registeredObjects) {
+        if (obj.observationInfo != nil) {
+            NSLog(@"#ERROR:: observers still registered on save for entity %@ %@%@%@ observation:%@", obj.entity.name, obj.isDeleted?@"deleted ":@"", obj.isUpdated?@"updated":@"", obj.isInserted?@"inserted":@"", obj.observationInfo);
+        }
+    }
+    //NSLog(@"------ done %@", where);
+}
+
 - (void)saveContext
 {
+    [self assertMainContext];
     NSDate * start;
     if (TRACE_DATABASE_SAVE) {
         NSLog(@"Saving database");
         start = [[NSDate alloc] init];
     }
     NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.currentObjectContext;
+    NSManagedObjectContext *managedObjectContext = self.mainObjectContext;
     if (![managedObjectContext isEqual:self.mainObjectContext]) {
         NSLog(@"ERROR: saveContext must be called on main context only");
         return;
     }
     if (managedObjectContext != nil) {
+        [self checkObjectsInContext:managedObjectContext info:@"before save"];
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -576,6 +589,7 @@ BOOL sameObjects(id obj1, id obj2) {
             }
             // abort();
         }
+        [self checkObjectsInContext:managedObjectContext info:@"after save"];
     }
     if (start && TRACE_DATABASE_SAVE) {
         double elapsed = -[start timeIntervalSinceNow];
@@ -766,6 +780,7 @@ BOOL sameObjects(id obj1, id obj2) {
         _mainObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
         [_mainObjectContext setPersistentStoreCoordinator:coordinator];
         [_mainObjectContext setUndoManager: nil];
+        //[_mainObjectContext setRetainsRegisteredObjects:YES];
         [NSThread currentThread].threadDictionary[@"hxoMOContext"] = _mainObjectContext;
     }
     return _mainObjectContext;
@@ -866,6 +881,7 @@ BOOL sameObjects(id obj1, id obj2) {
             if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done", temporaryContext);
             
             // save parent to disk asynchronously
+            //[mainMOC performBlockAndWait:^{
             [mainMOC performBlock:^{
                 if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@,", temporaryContext);
                 [self saveDatabaseNow];
