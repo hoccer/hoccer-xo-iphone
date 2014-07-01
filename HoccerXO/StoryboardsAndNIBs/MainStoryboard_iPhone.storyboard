@@ -746,10 +746,10 @@
             </objects>
             <point key="canvasLocation" x="1128" y="-1932"/>
         </scene>
-        <!--Collection List View Controller - Root View Controller-->
+        <!--Add To Collection List View Controller - Root View Controller-->
         <scene sceneID="Ulc-X0-7Wn">
             <objects>
-                <tableViewController id="mFg-bP-lO5" customClass="CollectionListViewController" sceneMemberID="viewController">
+                <tableViewController id="mFg-bP-lO5" customClass="AddToCollectionListViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="CJb-X5-cvU">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

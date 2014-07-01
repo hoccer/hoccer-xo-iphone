@@ -58,20 +58,19 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
-    CGRect footerRect = self.tabBarController.tabBar.frame;
-    self.footerContainerView = [[UIView alloc] initWithFrame:footerRect];
-    self.footerContainerView.backgroundColor = [UIColor colorWithRed:248.0 green:248.0 blue:248.0 alpha:1.0];
-    
-    UILabel *label_send = [[UILabel alloc] initWithFrame: CGRectMake(2 * kHXOGridSpacing, 0.0, 100.0, footerRect.size.height)];
-    label_send.text = NSLocalizedString(@"audio_attachment_list_footer_send", nil);
-    
-    self.addToCollectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.addToCollectionButton.frame = CGRectMake(0.0, 0.0, 100.0, footerRect.size.height);
-    self.addToCollectionButton.tintColor = [UIColor blackColor];
-    [self.addToCollectionButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_add", nil) forState:UIControlStateNormal];
-    [self.addToCollectionButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
-    [self.footerContainerView addSubview: self.addToCollectionButton];
+
+    if (self.footerContainerView == nil) {
+        CGRect footerRect = self.tabBarController.tabBar.frame;
+        self.footerContainerView = [[UIView alloc] initWithFrame:footerRect];
+        self.footerContainerView.backgroundColor = [UIColor colorWithRed:248.0 green:248.0 blue:248.0 alpha:1.0];
+        
+        self.addToCollectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        self.addToCollectionButton.frame = CGRectMake(0.0, 0.0, 100.0, footerRect.size.height);
+        self.addToCollectionButton.tintColor = [UIColor blackColor];
+        [self.addToCollectionButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_add", nil) forState:UIControlStateNormal];
+        [self.addToCollectionButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
+        [self.footerContainerView addSubview: self.addToCollectionButton];
+    }
 }
 
 - (void)updateNavigationBar {
