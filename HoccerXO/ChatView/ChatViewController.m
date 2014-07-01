@@ -2039,12 +2039,12 @@ nil
     } else if (myDelivery.isDelivered) {
         if (myDelivery.isAttachmentFailure) {
             NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", myDelivery.message.attachment.mediaType];
-            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_failed_attachment %@", nil),
+            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_failed_attachment", nil),
                                       NSLocalizedString(attachment_type, nil)];
             return stateString;
         } else  if (myDelivery.isMissingAttachment) {
             NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", myDelivery.message.attachment.mediaType];
-            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_missing_attachment %@", nil),
+            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_missing_attachment", nil),
                                       NSLocalizedString(attachment_type, nil)];
             return stateString;
         } else {
