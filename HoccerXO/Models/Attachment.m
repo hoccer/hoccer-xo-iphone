@@ -1312,7 +1312,7 @@ NSArray * TransferStateName = @[@"detached",
         }
         NSLog(@"pausedTransfer transfer, cipherTransferSize=%@, cipheredSize=%@",self.cipherTransferSize,self.cipheredSize);
         self.transferPaused = [[NSDate alloc] init];
-        if (!self.outgoing) {
+        if (self.outgoing) {
             [self.chatBackend uploadPaused:self];
         }
     }
