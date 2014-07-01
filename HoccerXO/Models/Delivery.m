@@ -136,7 +136,6 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 }
 
 
-
 // attachment is not yet received
 -(BOOL)isMissingAttachment {
     return ![kDelivery_ATTACHMENT_STATE_NONE isEqualToString:self.attachmentState] && !self.isAttachmentReceived;

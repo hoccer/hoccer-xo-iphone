@@ -141,6 +141,13 @@
     return theMemberSet;
 }
 
+- (NSSet*) deliveriesDelivering {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isStateDelivering;
+    }];
+    return theMemberSet;
+}
+
 - (NSSet*) deliveriesPending {
     NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
         return obj.isPending;
@@ -169,6 +176,12 @@
     return theMemberSet;
 }
 
+- (NSSet*) deliveriesAttachmentsMissing {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isMissingAttachment;
+    }];
+    return theMemberSet;
+}
 
 
 -(CGFloat) cachedCellHeight {
