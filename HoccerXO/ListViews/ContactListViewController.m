@@ -256,6 +256,8 @@ static const CGFloat kMagicSearchBarHeight = 44;
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath: sender];
         DatasheetViewController * vc = [segue destinationViewController];
         vc.inspectedObject = contact;
+    } else if ([sid isEqualToString:@"showInviteMessageViewController"]) {
+        ((UIViewController*)((UINavigationController*)segue.destinationViewController).viewControllers[0]).title = NSLocalizedString(@"invite_recipient_picker_title", nil);
     }
 }
 
@@ -522,7 +524,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
     }
     if ([MFMailComposeViewController canSendMail]) {
         [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_mail_btn_title",@"Invite Actionsheet Button Title")];
-        [actions addObject: ^() { [self inviteByMail]; }];
+        [actions addObject: ^() { [self performSegueWithIdentifier: @"showInviteMessageViewController" sender: self];/*[self inviteByMail];*/ }];
     }
     [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_code_btn_title",@"Invite Actionsheet Button Title")];
     [actions addObject: ^() { [self inviteByCode]; }];

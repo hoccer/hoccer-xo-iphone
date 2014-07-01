@@ -320,6 +320,8 @@
 "invite_option_mail_btn_title"    = "Einladen per Mail";
 "invite_option_code_btn_title"    = "Einladen per Code";
 
+"invite_recipient_picker_title"   = "Recipients";
+
 "invite_mail_subject"             = "Einladung zu Hoccer XO";
 "invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
 "invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";

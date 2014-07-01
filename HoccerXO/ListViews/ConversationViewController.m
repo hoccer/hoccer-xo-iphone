@@ -204,6 +204,8 @@
     } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
         ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
+    } else {
+        [super prepareForSegue: segue sender: indexPath];
     }
 }
 
