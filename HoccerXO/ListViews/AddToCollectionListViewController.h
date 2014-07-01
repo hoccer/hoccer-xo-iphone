@@ -8,6 +8,10 @@
 
 #import "CollectionListViewController.h"
 
+@protocol AddToCollectionListViewControllerDelegate;
+
 @interface AddToCollectionListViewController : CollectionListViewController
+
+@property (nonatomic, strong) id<AddToCollectionListViewControllerDelegate> addToCollectionListViewControllerDelegate;
 
 @end

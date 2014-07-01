@@ -8,6 +8,8 @@
 
 #import "AddToCollectionListViewController.h"
 
+#import "AddToCollectionListViewControllerDelegate.h"
+
 @interface AddToCollectionListViewController ()
 
 @end
@@ -21,6 +23,15 @@
 
 - (void) cancelPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.addToCollectionListViewControllerDelegate) {
+        Collection *collection = [self collectionAtIndexPath:indexPath];
+        [self.addToCollectionListViewControllerDelegate addToCollectionListViewController:self didSelectCollection:collection];
+    }
 }
 
 @end

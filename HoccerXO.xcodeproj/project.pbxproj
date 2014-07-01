@@ -255,6 +255,7 @@
 		C576EC751934CD2E00C0D254 /* tab_attachments.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC721934CD2E00C0D254 /* tab_attachments.pcvd */; };
 		C576EC761934CD2E00C0D254 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC731934CD2E00C0D254 /* tab_attachments.svg */; };
 		C576EC791934CDD900C0D254 /* MessageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC781934CDD900C0D254 /* MessageItem.m */; };
+		C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -904,6 +905,9 @@
 		C576EC731934CD2E00C0D254 /* tab_attachments.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tab_attachments.svg; sourceTree = "<group>"; };
 		C576EC771934CDD900C0D254 /* MessageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageItem.h; sourceTree = "<group>"; };
 		C576EC781934CDD900C0D254 /* MessageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageItem.m; sourceTree = "<group>"; };
+		C5B167CE1962B982004D3A28 /* AddToCollectionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddToCollectionListViewController.h; sourceTree = "<group>"; };
+		C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddToCollectionListViewController.m; sourceTree = "<group>"; };
+		C5B167DF1962BE07004D3A28 /* AddToCollectionListViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddToCollectionListViewControllerDelegate.h; sourceTree = "<group>"; };
 		C5C3BD07193F5F9B0072AE5F /* HoccerXO-40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-40.xcdatamodel"; sourceTree = "<group>"; };
 		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
@@ -1594,6 +1598,9 @@
 		63848A9218F46F2D00C253A4 /* List Views */ = {
 			isa = PBXGroup;
 			children = (
+				C5B167CE1962B982004D3A28 /* AddToCollectionListViewController.h */,
+				C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */,
+				C5B167DF1962BE07004D3A28 /* AddToCollectionListViewControllerDelegate.h */,
 				C576EBD81934CC9E00C0D254 /* AudioAttachmentCell.h */,
 				C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */,
 				C576EBDA1934CC9E00C0D254 /* AudioAttachmentListViewController.h */,
@@ -2810,6 +2817,7 @@
 				1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */,
 				631FE51A1919A3B60073E980 /* HXOActivityIndicatorView.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
+				C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */,
 				C576EC451934CCB200C0D254 /* player_close.m in Sources */,
 				63638F8E18EC8210008DA997 /* avatar_group.m in Sources */,
 				E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */,

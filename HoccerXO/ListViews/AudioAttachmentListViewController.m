@@ -8,6 +8,7 @@
 
 #import "AudioAttachmentListViewController.h"
 
+#import "AddToCollectionListViewController.h"
 #import "AppDelegate.h"
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
@@ -15,8 +16,9 @@
 #import "Collection.h"
 #import "Contact.h"
 #import "HXOAudioPlayer.h"
-#import "tab_attachments.h"
 #import "HXOUI.h"
+#import "HXOThemedNavigationController.h"
+#import "tab_attachments.h"
 
 
 @interface AudioAttachmentListViewController ()
@@ -134,6 +136,28 @@
 
 - (void) addToCollectionPressed:(id)sender {
     [self performSegueWithIdentifier:@"showAddToCollection" sender:sender];
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showAddToCollection"]) {
+        if ([segue.destinationViewController isKindOfClass:[HXOThemedNavigationController class]]) {
+            HXOThemedNavigationController *destinationViewController = segue.destinationViewController;
+            if ([destinationViewController.topViewController isKindOfClass:[AddToCollectionListViewController class]]) {
+                AddToCollectionListViewController *viewController = (AddToCollectionListViewController *)destinationViewController.topViewController;
+                viewController.addToCollectionListViewControllerDelegate = self;
+            }
+        }
+    }
+}
+
+#pragma mark - AddToCollectionListViewControllerDelegate
+
+- (void)addToCollectionListViewController:(id)controller didSelectCollection:(Collection *)collection {
+    [controller dismissViewControllerAnimated:YES completion:nil];
+    [self toggleEditMode:nil];
+
+    // TODO: Get selected attachments
+    // TODO: Add attachments to collection
 }
 
 #pragma mark - Core Data Stack

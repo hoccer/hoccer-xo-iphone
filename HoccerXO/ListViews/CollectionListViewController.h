@@ -8,6 +8,10 @@
 
 #import "HXOTableViewController.h"
 
+@class Collection;
+
 @interface CollectionListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UIAlertViewDelegate>
+
+- (Collection *) collectionAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

@@ -7,11 +7,12 @@
 //
 
 #import "HXOTableViewController.h"
+#import "AddToCollectionListViewControllerDelegate.h"
 
 @class Collection;
 @class Contact;
 
-@interface AudioAttachmentListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate>
+@interface AudioAttachmentListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, AddToCollectionListViewControllerDelegate>
 
 + (NSFetchRequest *)fetchRequestForContact:(Contact *)contact collection:(Collection *)collection managedObjectModel:(NSManagedObjectModel *)managedObjectModel;
 
