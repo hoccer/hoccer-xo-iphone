@@ -154,10 +154,19 @@
 
 - (void)addToCollectionListViewController:(id)controller didSelectCollection:(Collection *)collection {
     [controller dismissViewControllerAnimated:YES completion:nil];
+    [collection appendAttachments:[self selectedAttachments]];
     [self toggleEditMode:nil];
+}
 
-    // TODO: Get selected attachments
-    // TODO: Add attachments to collection
+- (NSArray *)selectedAttachments {
+    NSMutableArray *attachments = [[NSMutableArray alloc] init];
+    NSArray *selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
+    
+    for (NSIndexPath *indexPath in selectedIndexPaths) {
+        [attachments addObject:[self attachmentAtIndexPath:indexPath]];
+    }
+    
+    return [NSArray arrayWithArray:attachments];
 }
 
 #pragma mark - Core Data Stack

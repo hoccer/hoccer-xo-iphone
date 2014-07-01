@@ -13,13 +13,6 @@
 @property (nonatomic, retain) NSOrderedSet *attachments;
 @property (nonatomic, retain) NSString     *name;
 
-@end
-
-@interface Collection (CoreDataGeneratedAccessors)
-
-- (void)addAttachmentsObject:(NSManagedObject *)value;
-- (void)removeAttachmentsObject:(NSManagedObject *)value;
-- (void)addAttachments:(NSSet *)values;
-- (void)removeAttachments:(NSSet *)values;
+- (void) appendAttachments:(NSArray *)attachments;
 
 @end
