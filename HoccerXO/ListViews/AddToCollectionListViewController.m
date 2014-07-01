@@ -25,6 +25,10 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (UITableViewCellAccessoryType)cellAccessoryType {
+    return UITableViewCellAccessoryNone;
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

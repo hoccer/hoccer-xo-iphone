@@ -116,7 +116,11 @@
 - (void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Collection *collection = [self collectionAtIndexPath:indexPath];
     cell.textLabel.text = collection.name;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryType = [self cellAccessoryType];
+}
+
+- (UITableViewCellAccessoryType)cellAccessoryType {
+    return UITableViewCellAccessoryDisclosureIndicator;
 }
 
 - (Collection *) collectionAtIndexPath:(NSIndexPath *)indexPath {

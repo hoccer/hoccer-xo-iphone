@@ -12,6 +12,7 @@
 
 @interface CollectionListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UIAlertViewDelegate>
 
+- (UITableViewCellAccessoryType) cellAccessoryType;
 - (Collection *) collectionAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
