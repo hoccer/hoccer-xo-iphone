@@ -21,9 +21,10 @@
 
 @interface AudioAttachmentListViewController ()
 
-@property (nonatomic, strong) NSFetchedResultsController * fetchedResultsController;
-@property (nonatomic, strong) NSManagedObjectContext     * managedObjectContext;
-@property (nonatomic, strong) NSManagedObjectModel       * managedObjectModel;
+@property (nonatomic, strong) NSFetchedResultsController     * fetchedResultsController;
+@property (nonatomic, strong) UIView                         * footerContainerView;
+@property (nonatomic, strong) NSManagedObjectContext         * managedObjectContext;
+@property (nonatomic, strong) NSManagedObjectModel           * managedObjectModel;
 @property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
 
 @end
@@ -65,12 +66,12 @@
     UILabel *label_send = [[UILabel alloc] initWithFrame: CGRectMake(2 * kHXOGridSpacing, 0.0, 100.0, footerRect.size.height)];
     label_send.text = NSLocalizedString(@"audio_attachment_list_footer_send", nil);
     
-    self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.sendButton.frame = CGRectMake(0.0, 0.0, 100.0, footerRect.size.height);
-    self.sendButton.tintColor = [UIColor blackColor];
-    [self.sendButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_send", nil) forState:UIControlStateNormal];
-    [self.sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
-    [self.footerContainerView addSubview: self.sendButton];
+    self.addToCollectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.addToCollectionButton.frame = CGRectMake(0.0, 0.0, 100.0, footerRect.size.height);
+    self.addToCollectionButton.tintColor = [UIColor blackColor];
+    [self.addToCollectionButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_add", nil) forState:UIControlStateNormal];
+    [self.addToCollectionButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
+    [self.footerContainerView addSubview: self.addToCollectionButton];
 }
 
 - (void)updateNavigationBar {
@@ -132,7 +133,7 @@
     [self updateFooter];
 }
 
-- (void) sendPressed:(id)sender {
+- (void) addToCollectionPressed:(id)sender {
 
 }
 
