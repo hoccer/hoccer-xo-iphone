@@ -111,12 +111,22 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:item target:self action:@selector(toggleEditMode:)];
 }
 
--(void)updateFooter {
+- (void)updateFooter {
     if (self.tableView.isEditing) {
         [self.tabBarController.tabBar.superview insertSubview:self.footerContainerView aboveSubview:self.tabBarController.view];
     } else {
         [self.footerContainerView removeFromSuperview];
     }
+    
+    [self updateFooterButtons];
+}
+
+- (void)updateFooterButtons {
+    BOOL enabled = [[self.tableView indexPathsForSelectedRows] count] > 0;
+
+    self.addToCollectionButton.enabled = enabled;
+    self.deleteButton.enabled = enabled;
+    self.sendButton.enabled = enabled;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -290,7 +300,9 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (!self.tableView.isEditing) {
+    if (self.tableView.isEditing) {
+        [self updateFooterButtons];
+    } else {
         // The fetchedObjects array seems to change, so we take an immutable copy
         NSArray * playlist = [[self.fetchedResultsController fetchedObjects] copy];
         
@@ -309,6 +321,12 @@
             [alert show];
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
         }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.tableView.isEditing) {
+        [self updateFooterButtons];
     }
 }
 
