@@ -64,7 +64,7 @@
     if (self.footerContainerView == nil) {
         CGRect tabBarFrame = self.tabBarController.tabBar.frame;
         self.footerContainerView = [[UIView alloc] initWithFrame:tabBarFrame];
-        self.footerContainerView.backgroundColor = [UIColor colorWithRed:248.0 green:248.0 blue:248.0 alpha:1.0];
+        self.footerContainerView.backgroundColor = [[HXOUI theme] navigationBarBackgroundColor];
         
         CGFloat x = tabBarFrame.size.width / 3.0;
         
