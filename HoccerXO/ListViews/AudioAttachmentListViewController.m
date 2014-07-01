@@ -134,7 +134,7 @@
 }
 
 - (void) addToCollectionPressed:(id)sender {
-
+    [self performSegueWithIdentifier:@"showAddToCollection" sender:sender];
 }
 
 #pragma mark - Core Data Stack

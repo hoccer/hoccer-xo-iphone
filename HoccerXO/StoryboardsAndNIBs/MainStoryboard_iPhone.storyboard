@@ -746,6 +746,40 @@
             </objects>
             <point key="canvasLocation" x="1128" y="-1932"/>
         </scene>
+        <!--Collection List View Controller - Root View Controller-->
+        <scene sceneID="Ulc-X0-7Wn">
+            <objects>
+                <tableViewController id="mFg-bP-lO5" customClass="CollectionListViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="CJb-X5-cvU">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="mFg-bP-lO5" id="y5f-hx-UuF"/>
+                            <outlet property="delegate" destination="mFg-bP-lO5" id="tui-hz-Tb6"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="A9R-s6-2ja"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8YM-EO-xb2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1476" y="87"/>
+        </scene>
+        <!--Themed Navigation Controller-->
+        <scene sceneID="TWo-z6-Pkp">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="CPN-um-qcX" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cjk-K4-55l">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="mFg-bP-lO5" kind="relationship" relationship="rootViewController" id="sci-oS-0kx"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Njd-VD-2lO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1014" y="87"/>
+        </scene>
         <!--Image View Controller-->
         <scene sceneID="Cde-1N-k7V">
             <objects>
@@ -755,7 +789,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gJ2-1g-qBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1662" y="-331"/>
+            <point key="canvasLocation" x="2114" y="-327"/>
         </scene>
         <!--Server View Controller - ServerViewController-->
         <scene sceneID="wA0-Za-oFP">
@@ -1105,6 +1139,7 @@
                     <navigationItem key="navigationItem" id="Skk-N9-fJi"/>
                     <connections>
                         <segue destination="1Mr-wx-hFf" kind="push" identifier="showCollections" id="dvD-69-Vwv"/>
+                        <segue destination="CPN-um-qcX" kind="modal" identifier="showAddToCollection" id="eIs-Gp-wFz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e4E-iZ-1D3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1354,14 +1389,14 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="iwW-8u-tft"/>
-        <segue reference="5v1-4P-ajP"/>
-        <segue reference="Kn0-3b-fVd"/>
-        <segue reference="S5q-xe-rQg"/>
+        <segue reference="thl-MY-iCZ"/>
         <segue reference="rav-wy-jJw"/>
-        <segue reference="I8w-H7-Q9a"/>
+        <segue reference="Kn0-3b-fVd"/>
+        <segue reference="5v1-4P-ajP"/>
+        <segue reference="S5q-xe-rQg"/>
         <segue reference="6i4-qU-VgJ"/>
         <segue reference="7Jz-jk-4yN"/>
-        <segue reference="thl-MY-iCZ"/>
+        <segue reference="iwW-8u-tft"/>
+        <segue reference="I8w-H7-Q9a"/>
     </inferredMetricsTieBreakers>
 </document>
