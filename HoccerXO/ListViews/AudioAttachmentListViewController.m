@@ -155,6 +155,7 @@
 - (void)addToCollectionListViewController:(id)controller didSelectCollection:(Collection *)collection {
     [controller dismissViewControllerAnimated:YES completion:nil];
     [collection appendAttachments:[self selectedAttachments]];
+    [[AppDelegate instance] saveDatabase];
     [self toggleEditMode:nil];
 }
 
