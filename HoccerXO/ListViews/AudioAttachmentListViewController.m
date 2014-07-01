@@ -167,13 +167,12 @@
 }
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"showAddToCollection"]) {
-        if ([segue.destinationViewController isKindOfClass:[HXOThemedNavigationController class]]) {
-            HXOThemedNavigationController *destinationViewController = segue.destinationViewController;
-            if ([destinationViewController.topViewController isKindOfClass:[AddToCollectionListViewController class]]) {
-                AddToCollectionListViewController *viewController = (AddToCollectionListViewController *)destinationViewController.topViewController;
-                viewController.addToCollectionListViewControllerDelegate = self;
-            }
+    if ([segue.identifier isEqualToString:@"showAddToCollection"] && [segue.destinationViewController isKindOfClass:[HXOThemedNavigationController class]]) {
+        HXOThemedNavigationController *navigationController = segue.destinationViewController;
+
+        if ([navigationController.topViewController isKindOfClass:[AddToCollectionListViewController class]]) {
+            AddToCollectionListViewController *addToCollectionListViewController = (AddToCollectionListViewController *)navigationController.topViewController;
+            addToCollectionListViewController.addToCollectionListViewControllerDelegate = self;
         }
     }
 }
