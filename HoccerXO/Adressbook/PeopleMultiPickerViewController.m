@@ -160,32 +160,23 @@
 
     BOOL isSelected = [self.selectedPeople indexOfObject: (__bridge id)(person)] == NSNotFound;
     cell.accessoryType = isSelected ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;
-    cell.detailTextLabel.text = [self selectedPropertyValueForPerson: person];
-}
-
-- (NSString*) selectedPropertyValueForPerson: (ABRecordRef) person {
-    NSUInteger index = [self.selectedPeople indexOfObject: (__bridge id)(person)];
-    if (index != NSNotFound) {
-        ABPropertyID property = [self.selectedProperties[index] integerValue];
-        ABMultiValueIdentifier identifier = [self.selectedPropertyMVI[index] integerValue];
-        ABMultiValueRef = ABRecordCopyValue( person,  property);
-
-
-    }
-    return nil;
 }
 
 #pragma mark - Actions
 
 - (void) cancel: (id) sender {
-    [self dismissViewControllerAnimated: YES completion: nil];
-
+    [self.delegate peopleMultiPickerDidCancel: self];
 }
 
 - (void) done: (id) sender {
-    AppDelegate * appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
-    UIViewController * vc = self.mode == PeoplePickerModeMail ? appDelegate.mailPicker : appDelegate.smsPicker;
-    [self.navigationController pushViewController: vc animated: YES];
+    NSMutableArray * selection = [NSMutableArray array];
+    for (int i = 0; i < self.selectedPeople.count; ++i) {
+        [selection addObject: @{@"person"    : self.selectedPeople[i],
+                                @"property"  : self.selectedProperties[i],
+                                @"identifier": self.selectedPropertyMVI[i]
+                                }];
+    }
+    [self.delegate peopleMultiPicker: self didFinishWithSelection: selection];
 }
 
 @end

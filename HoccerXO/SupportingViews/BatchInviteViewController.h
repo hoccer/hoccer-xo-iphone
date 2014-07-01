@@ -6,11 +6,13 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
+#import <MessageUI/MessageUI.h>
+
 #import "HXOThemedNavigationController.h"
 
 #import "PeopleMultiPickerViewController.h"
 
-@interface BatchInviteViewController : HXOThemedNavigationController
+@interface BatchInviteViewController : HXOThemedNavigationController <PeopleMultiPickerDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic,assign) PeoplePickerMode mode;
 
