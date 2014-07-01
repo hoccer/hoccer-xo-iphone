@@ -62,17 +62,35 @@
     [super viewWillAppear:animated];
 
     if (self.footerContainerView == nil) {
-        CGRect footerRect = self.tabBarController.tabBar.frame;
-        self.footerContainerView = [[UIView alloc] initWithFrame:footerRect];
+        CGRect tabBarFrame = self.tabBarController.tabBar.frame;
+        self.footerContainerView = [[UIView alloc] initWithFrame:tabBarFrame];
         self.footerContainerView.backgroundColor = [UIColor colorWithRed:248.0 green:248.0 blue:248.0 alpha:1.0];
         
-        self.addToCollectionButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        self.addToCollectionButton.frame = CGRectMake(0.0, 0.0, 100.0, footerRect.size.height);
-        self.addToCollectionButton.tintColor = [UIColor blackColor];
+        CGFloat x = tabBarFrame.size.width / 3.0;
+        
+        self.sendButton = [self createFooterButton];
+        self.sendButton.frame = CGRectMake(0.0, 0.0, x, tabBarFrame.size.height);
+        [self.sendButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_send", nil) forState:UIControlStateNormal];
+        [self.sendButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
+
+        self.deleteButton = [self createFooterButton];
+        self.deleteButton.frame = CGRectMake(x, 0.0, x, tabBarFrame.size.height);
+        [self.deleteButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_delete", nil) forState:UIControlStateNormal];
+        [self.deleteButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
+
+        self.addToCollectionButton = [self createFooterButton];
+        self.addToCollectionButton.frame = CGRectMake(2.0 * x, 0.0, x, tabBarFrame.size.height);
         [self.addToCollectionButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_add", nil) forState:UIControlStateNormal];
         [self.addToCollectionButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
-        [self.footerContainerView addSubview: self.addToCollectionButton];
     }
+}
+
+- (UIButton *)createFooterButton {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    button.tintColor = self.view.tintColor;
+    [self.footerContainerView addSubview:button];
+
+    return button;
 }
 
 - (void)updateNavigationBar {

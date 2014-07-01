@@ -20,5 +20,7 @@
 @property (nonatomic, strong) Contact *contact;
 
 @property (nonatomic, strong) UIButton *addToCollectionButton;
+@property (nonatomic, strong) UIButton *deleteButton;
+@property (nonatomic, strong) UIButton *sendButton;
 
 @end
