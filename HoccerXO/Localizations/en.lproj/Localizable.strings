@@ -418,7 +418,8 @@
 "key_state_mistrusted"                           = "Mistrusted";
 
 "key_fingerprint_title"                          = "Id:";
-"key_fingerprint_info"                           = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
+"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://hoccer.com/hoccer-xo-tutorial/#key_verification) of your friends. Ask them for their key ids and compare.";
+"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://hoccer.com/hoccer-xo-tutorial/#key_verification).";
 "key_length_item"                                = "Key Length:";
 "key_length_unit_format"                         = "%@ bit";
 
