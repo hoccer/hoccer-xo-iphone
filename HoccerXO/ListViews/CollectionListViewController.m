@@ -8,6 +8,7 @@
 
 #import "CollectionListViewController.h"
 
+#import "AudioAttachmentListViewController.h"
 #import "AppDelegate.h"
 #import "Collection.h"
 
@@ -131,6 +132,20 @@
     }
     
     return nil;
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    Collection *collection = [self collectionAtIndexPath:indexPath];
+    [self performSegueWithIdentifier:@"showCollection" sender:collection];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showCollection"] && [segue.destinationViewController isKindOfClass:[AudioAttachmentListViewController class]]) {
+        AudioAttachmentListViewController *audioAttachmentListViewController = (AudioAttachmentListViewController *)segue.destinationViewController;
+        audioAttachmentListViewController.collection = sender;
+    }
 }
 
 #pragma mark - Fetched results controller delegate

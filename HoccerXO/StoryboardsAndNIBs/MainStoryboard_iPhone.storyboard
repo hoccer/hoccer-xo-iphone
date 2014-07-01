@@ -442,7 +442,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GLZ-Ck-YSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2114" y="729"/>
+            <point key="canvasLocation" x="2114" y="821"/>
         </scene>
         <!--Collection List View Controller-->
         <scene sceneID="uQn-ju-hon">
@@ -458,6 +458,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="QWP-NG-awR"/>
+                    <connections>
+                        <segue destination="69M-9C-Zrd" kind="push" identifier="showCollection" id="r9n-Tc-8eU"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lVy-kG-Spy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1077,7 +1080,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q0R-Xq-qKj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1662" y="723"/>
+            <point key="canvasLocation" x="1662" y="815"/>
         </scene>
         <!--Geo Location View Controller-->
         <scene sceneID="Kqv-Ob-IEj">
@@ -1120,7 +1123,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kom-cA-fQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3044" y="723"/>
+            <point key="canvasLocation" x="3044" y="815"/>
         </scene>
         <!--Audio Attachment List View Controller - Music-->
         <scene sceneID="E9G-9o-6Wq">
@@ -1230,7 +1233,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="thc-tU-MYG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2577" y="723"/>
+            <point key="canvasLocation" x="2577" y="815"/>
         </scene>
         <!--FAQ View Controller-->
         <scene sceneID="77G-og-1tU">
@@ -1395,8 +1398,8 @@
         <segue reference="5v1-4P-ajP"/>
         <segue reference="S5q-xe-rQg"/>
         <segue reference="6i4-qU-VgJ"/>
-        <segue reference="7Jz-jk-4yN"/>
         <segue reference="iwW-8u-tft"/>
         <segue reference="I8w-H7-Q9a"/>
+        <segue reference="r9n-Tc-8eU"/>
     </inferredMetricsTieBreakers>
 </document>

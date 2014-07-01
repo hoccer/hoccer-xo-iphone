@@ -54,8 +54,6 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     [self preferredContentSizeChanged:nil];
-
-    [self updateNavigationBar];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -83,6 +81,8 @@
         [self.addToCollectionButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_add", nil) forState:UIControlStateNormal];
         [self.addToCollectionButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
     }
+
+    [self updateNavigationBar];
 }
 
 - (UIButton *)createFooterButton {
@@ -143,11 +143,13 @@
 - (void) setCollection:(Collection *)collection {
     self.fetchedResultsController = nil;
     _collection = collection;
+    [self.tableView reloadData];
 }
 
 - (void) setContact:(Contact *)contact {
     self.fetchedResultsController = nil;
     _contact = contact;
+    [self.tableView reloadData];
 }
 
 #pragma mark - Actions
@@ -243,7 +245,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
+    id<NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
     return [sectionInfo numberOfObjects];
 }
 
