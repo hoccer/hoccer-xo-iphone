@@ -959,6 +959,10 @@ static int  groupMemberContext;
 }
 
 - (void) addContactObservers: (Contact*) contact {
+    if (contact == nil) {
+        NSLog(@"ERROR: addContactObservers: contact is nil, not adding any observers");
+        return;
+    }
     if (![self.contactObserverRegistered containsObject:contact]) {
         if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: addContactObservers for %@ %@", [contact class], contact.clientId);
         for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus", @"deletedObject"]) {
@@ -972,6 +976,10 @@ static int  groupMemberContext;
 }
 
 - (void) removeContactObservers: (Contact*) contact {
+    if (contact == nil) {
+        NSLog(@"ERROR: removeContactObservers: contact is nil, not removing any observers");
+        return;
+    }
     if ([self.contactObserverRegistered containsObject:contact]) {
         if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeContactObservers for %@ %@", [contact class], contact.clientId);
         for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus", @"deletedObject"]) {
