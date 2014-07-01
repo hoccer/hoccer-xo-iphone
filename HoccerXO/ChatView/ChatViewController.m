@@ -57,9 +57,13 @@
 #define DEBUG_TABLE_CELLS NO
 #define DEBUG_NOTIFICATIONS NO
 #define DEBUG_APPEAR NO
+#define READ_DEBUG NO
+#define DEBUG_OBSERVERS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
+
+static int ChatViewObserverContext = 0;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
@@ -93,9 +97,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (strong) id catchObserver;
 @property (strong) id loginObserver;
 
+@property (nonatomic, readonly) NSMutableSet * observedContacts;
+@property (nonatomic, readonly) NSMutableSet * observedMembersGroups;
+
 @end
 
-#define READ_DEBUG NO
 
 @implementation ChatViewController
 
@@ -111,10 +117,28 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize messageItems = _messageItems;
 @synthesize dateFormatter = _dateFormatter;
 @synthesize byteCountFormatter = _byteCountFormatter;
+@synthesize observedContacts = _observedContacts;
+@synthesize observedMembersGroups = _observedMembersGroups;
+
+-(NSMutableSet *)observedContacts {
+    if (_observedContacts == nil) {
+        _observedContacts = [NSMutableSet new];
+    }
+    return _observedContacts;
+}
+
+-(NSMutableSet *)observedMembersGroups {
+    if (_observedMembersGroups == nil) {
+        _observedMembersGroups = [NSMutableSet new];
+    }
+    return _observedMembersGroups;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewDidLoad");
+ 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
@@ -337,6 +361,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if ([self isMovingFromParentViewController]) {
         if (DEBUG_APPEAR) NSLog(@"isMovingFromParentViewController");
         [AppDelegate.instance endInspecting:self.partner withInspector:self];
+        self.inspectedObject = nil;
     }
     if ([self isBeingDismissed]) {
         if (DEBUG_APPEAR) NSLog(@"isBeingDismissed");
@@ -1394,11 +1419,11 @@ nil
 
 
 - (void) setPartner: (Contact*) partner {
-    // NSLog(@"setPartner %@", partner.nickName);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:setPartner %@", partner.nickName);
     // NSLog(@"%@", [NSThread callStackSymbols]);
-    if (_partner != nil) {
-        [self removeContactKVO:_partner];
-    }
+    
+    [self removeAllContactAndMembersKVOs];
+
     _partner = partner;
     if (partner == nil) {
         return;
@@ -1413,7 +1438,7 @@ nil
             }
         }];
         // TODO: observe membership set and add/remove KVO on new/removed members
-        [group addObserver: self forKeyPath: @"members" options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context: nil];
+        [self addMembersKVO:group];
     }
 
     if (resultsControllers == nil) {
@@ -1461,16 +1486,96 @@ nil
 }
 
 - (void) addContactKVO: (Contact*) contact {
-    [contact addObserver: self forKeyPath: @"nickName" options: NSKeyValueObservingOptionNew context: nil];
-    [contact addObserver: self forKeyPath: @"connectionStatus" options: NSKeyValueObservingOptionNew context: nil];
-    [contact addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
+    if (contact != nil) {
+        if (![self.observedContacts containsObject:contact]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO for contact nick %@ id %@", contact.nickName, contact.clientId);
+            for (id keyPath in @[@"nickName", @"avatarImage", @"connectionStatus", @"deletedObject"]) {
+                if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
+                [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &ChatViewObserverContext];
+            }
+            [self.observedContacts addObject:contact];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO: already has observers for contact nick %@ id %@", contact.nickName, contact.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:addContactKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO: self.observedContacts.count = %d", self.observedContacts.count);
 }
 
 - (void) removeContactKVO: (Contact*) contact {
-    [contact removeObserver: self forKeyPath: @"nickName"];
-    [contact removeObserver: self forKeyPath: @"connectionStatus"];
-    [contact removeObserver: self forKeyPath: @"avatarImage"];
+    if (contact != nil) {
+        if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO for contact nick %@ id %@", contact.nickName, contact.clientId);
+        if ([self.observedContacts containsObject:contact]) {
+            for (id keyPath in @[@"nickName", @"avatarImage", @"connectionStatus", @"deletedObject"]) {
+                if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
+                [contact removeObserver: self forKeyPath: keyPath context: &ChatViewObserverContext];
+            }
+            [self.observedContacts removeObject:contact];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO: no observers for contact nick %@ id %@", contact.nickName, contact.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:removeContactKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO: self.observedContacts.count = %d", self.observedContacts.count);
 }
+
+- (void) removeAllContactKVOs {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeAllContactKVOs");
+    NSSet * registered = [NSSet setWithSet:self.observedContacts]; // avoid enumeration mutation exception
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllContactKVOs: registered.count = %d", registered.count);
+    for (Contact * contact in registered) {
+        [self removeContactKVO:contact];
+    }
+    [self.observedContacts removeAllObjects];
+}
+
+- (void) addMembersKVO: (Group*) group {
+    if (group != nil) {
+        if (![self.observedMembersGroups containsObject:group]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO for group nick %@ id %@", group.nickName, group.clientId);
+            [group addObserver: self forKeyPath: @"members" options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context: &ChatViewObserverContext];
+             [self.observedMembersGroups addObject:group];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO: already has observers for group nick %@ id %@", group.nickName, group.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:addMembersKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO: self.observedMembersGroups.count = %d", self.observedMembersGroups.count);
+}
+
+- (void) removeMembersKVO: (Group*) group {
+    if (group != nil) {
+        if ([self.observedMembersGroups containsObject:group]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO for group nick %@ id %@", group.nickName, group.clientId);
+            [group removeObserver: self forKeyPath: @"members" context:&ChatViewObserverContext];
+            [self.observedMembersGroups removeObject:group];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO: no observers for group nick %@ id %@", group.nickName, group.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:removeMembersKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO: self.observedMembersGroups.count = %d", self.observedMembersGroups.count);
+}
+
+- (void) removeAllMembersKVOs {
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController: removeAllMembersKVOs");
+    NSSet * registered = [NSSet setWithSet:self.observedMembersGroups]; // avoid enumeration mutation exception
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllMembersKVOs: registered.count = %d", registered.count);
+    for (Group * group in registered) {
+        [self removeMembersKVO:group];
+    }
+    [self.observedMembersGroups removeAllObjects];
+}
+
+- (void) removeAllContactAndMembersKVOs {
+    [self removeAllMembersKVOs];
+    [self removeAllContactKVOs];
+}
+
 
 /*
 - (void) insertForwardedMessage {
@@ -1496,6 +1601,15 @@ nil
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     //NSLog(@"observeValueForKeyPath %@ change %@", keyPath, change);
     //NSLog(@"%@", [NSThread callStackSymbols]);
+    if ([keyPath isEqualToString: @"deletedObject"]) {
+        if (DEBUG_OBSERVERS) NSLog(@"ChatViewController: observeValueForKeyPath: deletedObject");
+        if ([object deletedObject]) {
+            if (DEBUG_OBSERVERS) NSLog(@"DataSheetController:observeValueForKeyPath: observed deletedObject, removing observers");
+            [self removeContactKVO:object];
+        }
+        return;
+    }
+
     if ([keyPath isEqualToString: @"nickName"] ||
         [keyPath isEqualToString: @"connectionStatus"]) {
         // self.title = [object nickName];
@@ -2588,7 +2702,7 @@ nil
                 [self removeContactKVO: contact];
             }
         }];
-        [group removeObserver: self forKeyPath: @"members"];
+        [self removeMembersKVO:group];
     }
     [self.messageField removeObserver: self forKeyPath: @"contentSize"];
 }
@@ -2672,9 +2786,13 @@ nil
 }
 
 - (void) setInspectedObject:(Contact *)inspectedObject {
-    [AppDelegate.instance endInspecting:self.partner withInspector:self];
+    if (self.inspectedObject != nil) {
+        [AppDelegate.instance endInspecting:self.inspectedObject withInspector:self];
+    }
     self.partner = inspectedObject;
-    [AppDelegate.instance beginInspecting:self.partner withInspector:self];
+    if (self.inspectedObject != nil) {
+        [AppDelegate.instance beginInspecting:self.inspectedObject withInspector:self];
+    }
 }
 
 @end

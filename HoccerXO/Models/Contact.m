@@ -334,7 +334,7 @@ NSString * const kPresenceStateTyping = @"typing";
 }
 */
 - (NSString*) groupMembershipList {
-    NSLog(@"groupMembershipList called on contact %@",self);
+    // NSLog(@"groupMembershipList called on contact %@",self);
     NSMutableArray * groups = [[NSMutableArray alloc] init];
 
     [groups addObject: @""];
@@ -354,7 +354,7 @@ NSString * const kPresenceStateTyping = @"typing";
     if (groups.count == 0) {
         return @"-";
     }
-    NSLog(@"groupMembershipList returns %@",[groups componentsJoinedByString:@", "]);
+    // NSLog(@"groupMembershipList returns %@",[groups componentsJoinedByString:@", "]);
     return [groups componentsJoinedByString:@", "];
 }
 
@@ -365,7 +365,7 @@ NSString * const kPresenceStateTyping = @"typing";
 
 -(void)prepareForDeletion {
     if ([AppDelegate.instance.currentObjectContext isEqual: AppDelegate.instance.mainObjectContext]) {
-        NSLog(@"Contact:prepareForDeletion type=%@ nick=%@ id = %@", [self class], self.nickName, self.clientId);
+        // NSLog(@"Contact:prepareForDeletion type=%@ nick=%@ id = %@", [self class], self.nickName, self.clientId);
         self.deletedObject = YES;
     }
 }

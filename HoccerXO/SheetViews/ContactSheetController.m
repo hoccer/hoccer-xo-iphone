@@ -987,9 +987,11 @@ static int  groupMemberContext;
 - (void) removeAllContactObservers {
     if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeAllContactObservers");
     NSSet * registered = [NSSet setWithSet:self.contactObserverRegistered]; // avoid enumeration mutation exception
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:removeAllContactObservers: registered.count = %d", registered.count);
     for (Contact * contact in registered) {
         [self removeContactObservers:contact];
     }
+    [self.contactObserverRegistered removeAllObjects];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

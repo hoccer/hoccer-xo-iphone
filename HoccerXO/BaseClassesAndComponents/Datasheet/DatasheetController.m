@@ -10,8 +10,8 @@
 #import "AppDelegate.h"
 #import "Contact.h" // for debug purposes
 
-#define DEBUG_VALUE_UPDATING NO
-#define DEBUG_OBSERVERS NO
+#define DEBUG_VALUE_UPDATING    NO
+#define DEBUG_OBSERVERS         NO
 
 typedef BOOL(^DatasheetItemVisitorBlock)(DatasheetItem * item);
 typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL doneWithSection);
@@ -155,6 +155,9 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         }
         return NO;
     } sectionBlock: nil];
+    if (paths.count > 0) {
+        [paths addObject:@"deletedObject"];
+    }
     if (DEBUG_VALUE_UPDATING) NSLog(@"collectAllObservedPaths: paths =%@", paths);
     return [paths allObjects];
 }
@@ -249,6 +252,15 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (DEBUG_VALUE_UPDATING) NSLog(@"observeValueForKeyPath: %@, change=%@", keyPath, change);
     if ([object isEqual: _inspectedObject]) {
+        if ([keyPath isEqualToString:@"deletedObject"]) {
+            if (DEBUG_OBSERVERS) NSLog(@"DataSheetController:observeValueForKeyPath: observed deletedObject, deletedObject=%d",[object deletedObject]);
+            if ([object deletedObject]) {
+                if (DEBUG_OBSERVERS) NSLog(@"DataSheetController:observeValueForKeyPath: observed deletedObject, removing observers");
+                [self removeObjectObservers];
+            }
+            return;
+        }
+        
         NSArray * items = [self findItems: self.root interestedIn: keyPath];
         [self.delegate controllerWillChangeContent: self];
         for (DatasheetItem * item in items) {

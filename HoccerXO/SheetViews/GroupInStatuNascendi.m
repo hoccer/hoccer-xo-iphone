@@ -14,6 +14,8 @@
 
 @implementation GroupInStatuNascendi
 
+@synthesize deletedObject;
+
 @synthesize members = _members;
 - (NSMutableArray*) members {
     if ( ! _members) {

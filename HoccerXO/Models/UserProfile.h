@@ -34,6 +34,8 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 @property (nonatomic, strong) NSString * publicKeyString; // b64-string
 @property (readonly)          NSNumber * keyLength;       // length of public key in bits
 
+@property BOOL                            deletedObject;
+
 
 @property (nonatomic,readonly) NSString * groupMembershipList;
 

@@ -20,8 +20,8 @@
 #import "WebViewController.h"
 #import "AppDelegate.h"
 
-#define SEGUE_DEBUG NO
-#define INSPECTION_DEBUG NO
+#define SEGUE_DEBUG         NO
+#define INSPECTION_DEBUG    NO
 
 static CGFloat kHeaderHeight;
 
